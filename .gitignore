@@ -1,0 +1,71 @@
+# Build files
+Makefile.in
+/Makefile
+/src/Makefile
+/autom4te.cache
+/autoscan.log
+/autoscan-*.log
+/aclocal.m4
+/compile
+/config.h.in
+/configure
+/configure.scan
+/depcomp
+/install-sh
+/missing
+/stamp-h1
+/configure
+/config.status
+/config.log
+.deps
+
+# Project files
+fsearch*.tar.gz
+src/resources.c
+src/resources.h
+src/fsearch
+src/tags
+src/fsearch.glade~
+
+# QtCreator Files
+*.config
+*.creator
+*.files
+*.includes
+
+# VIM files
+*.swp
+*.ycm_extra_conf*
+
+# Object files
+*.o
+*.ko
+*.obj
+*.elf
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Libraries
+*.lib
+*.a
+*.la
+*.lo
+
+# Shared objects (inc. Windows DLLs)
+*.dll
+*.so
+*.so.*
+*.dylib
+
+# Executables
+*.exe
+*.out
+*.app
+*.i*86
+*.x86_64
+*.hex
+
+# Debug files
+*.dSYM/

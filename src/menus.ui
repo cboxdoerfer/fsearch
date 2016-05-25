@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<interface>
+  <menu id="fsearch_listview_popup_menu">
+    <section id="fsearch_listview_menu_clipboard_section">
+      <item>
+        <attribute name="label" translatable="yes">C_ut</attribute>
+        <attribute name="action">win.cut_clipboard</attribute>
+        <attribute name="accel">&lt;control&gt;x</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Copy</attribute>
+        <attribute name="action">win.copy_clipboard</attribute>
+        <attribute name="accel">&lt;control&gt;c</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Delete</attribute>
+        <attribute name="action">win.delete_selection</attribute>
+        <attribute name="accel">Delete</attribute>
+      </item>
+    </section>
+  </menu>
+</interface>
