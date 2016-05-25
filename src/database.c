@@ -359,7 +359,10 @@ save_fail:
 }
 
 int
-db_location_walk_tree_recursive (DatabaseLocation *location, const char *dname, GNode *parent, int spec)
+db_location_walk_tree_recursive (DatabaseLocation *location,
+                                 const char *dname,
+                                 GNode *parent,
+                                 int spec)
 {
     int res = WALK_OK;
     int len = strlen (dname);
@@ -460,7 +463,12 @@ db_list_insert_node (GNode *node, gpointer data)
 static void
 db_traverse_tree_insert (GNode *node, gpointer user_data)
 {
-    g_node_traverse (node, G_IN_ORDER, G_TRAVERSE_ALL, -1, db_list_insert_node, user_data);
+    g_node_traverse (node,
+                     G_IN_ORDER,
+                     G_TRAVERSE_ALL,
+                     -1,
+                     db_list_insert_node,
+                     user_data);
 }
 
 static uint32_t temp_index = 0;
@@ -477,7 +485,12 @@ db_list_add_node (GNode *node, gpointer data)
 static void
 db_traverse_tree_add (GNode *node, gpointer user_data)
 {
-    g_node_traverse (node, G_IN_ORDER, G_TRAVERSE_ALL, -1, db_list_add_node, user_data);
+    g_node_traverse (node,
+                     G_IN_ORDER,
+                     G_TRAVERSE_ALL,
+                     -1,
+                     db_list_add_node,
+                     user_data);
 }
 
 static void

@@ -236,7 +236,10 @@ perform_search (FsearchApplicationWindow *win, const char *text)
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config (app);
 
-    g_return_val_if_fail (config->locations != NULL, NULL);
+    if (!config->locations) {
+        show_overlay (win, NO_DATABASE_OVERLAY);
+        return NULL;
+    }
 
     Database *db = fsearch_application_get_db (app);
     if (!db_try_lock (db)) {
