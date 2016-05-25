@@ -80,7 +80,7 @@ enum {
 
 // Forward declarations
 static void
-db_clear_full (Database *db);
+db_entries_clear (Database *db);
 
 static DatabaseLocation *
 db_location_get_for_path (Database *db, const char *path);
@@ -618,11 +618,6 @@ db_save_location (Database *db, const char *location_name)
 {
     g_assert (db != NULL);
 
-//    if (db_has_location (db, location_name)) {
-//        printf("save location: location not found: %s\n", location_name);
-//        return false;
-//    }
-//
     gchar database_path[PATH_MAX] = "";
     build_location_path (database_path,
                          sizeof (database_path),
@@ -757,7 +752,7 @@ db_build_initial_entries_list (Database *db)
     g_assert (db->num_entries >= 0);
 
     db_lock (db);
-    db_clear_full (db);
+    db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
     printf("update list: %d\n", num_entries);
     db->entries = darray_new (num_entries);
@@ -779,7 +774,7 @@ db_update_entries_list (Database *db)
     g_assert (db->num_entries >= 0);
 
     db_lock (db);
-    db_clear_full (db);
+    db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
     printf("update list: %d\n", num_entries);
     db->entries = darray_new (num_entries);
@@ -797,100 +792,17 @@ db_location_get_entries (DatabaseLocation *location)
     g_assert (location != NULL);
     return location->entries;
 }
-// Forward declarations
-//bool
-//db_remove_node (Database *db, GNode *node)
-//{
-//    g_assert (db != NULL);
-//    g_assert (node != NULL);
-//
-//    bool res = g_ptr_array_remove (db->entries, node);
-//    if (res) {
-//        // TODO: remove entry from tree
-//    }
-//    return res;
-//}
-
-static void
-db_database_new_array (Database *db)
-{
-    g_assert (db != NULL);
-    db->entries = NULL;
-    //g_ptr_array_set_free_func (db->entries, (GDestroyNotify)db_entry_free);
-}
 
 Database *
 db_database_new ()
 {
     Database *db = g_new0 (Database, 1);
-    db_database_new_array (db);
     g_mutex_init (&db->mutex);
     return db;
 }
 
-//uint32_t
-//db_save (Database *db, const char *path)
-//{
-//    FILE *fp = fopen (path, "w");
-//    if (G_LIKELY (fp != NULL))
-//    {
-//        for (uint32_t i = 0; i < db->entries->len; ++i) {
-//            DatabaseEntry *record = g_ptr_array_index (db->entries, i);
-//            fprintf (fp, "\"%s/%s\" %d %ld %ld\n", record->path, record->name, record->is_dir, record->size, record->mtime);
-//        }
-//        /* cleanup */
-//        fclose (fp);
-//        return 1;
-//    }
-//    return 0;
-//}
-//
-//Database *
-//db_load (const char *path)
-//{
-//    FILE *fp = fopen (path, "r");
-//    gchar line[PATH_MAX];
-//
-//    if (G_LIKELY (fp != NULL)) {
-//        Database *db = db_database_new ();
-//        while (fgets (line, sizeof (line), fp) != NULL) {
-//            gchar path[PATH_MAX] = "";
-//            off_t mtime;
-//            time_t size;
-//            gint is_dir;
-//
-//            uint32_t res = sscanf (line, "\"%[^\"]\" %d %ld %ld\n", path, &is_dir, &size, &mtime);
-//            if (res == 4) {
-//                gchar *name = strrchr (path, '/');
-//                if (name) {
-//                    *name = '\0';
-//                    name++;
-//                    DatabaseEntry *new = db_entry_new (name, path, size, mtime, is_dir);
-//                    db_append_entry (db, new);
-//                }
-//            }
-//        }
-//
-//        fclose (fp);
-//        return db;
-//    }
-//    return NULL;
-//}
-
 static void
 db_entries_clear (Database *db)
-{
-    // free entries
-    g_assert (db != NULL);
-
-    if (db->entries) {
-        darray_clear (db->entries);
-        db->entries = NULL;
-    }
-}
-
-static void
-db_clear_full (Database *db)
 {
     // free entries
     g_assert (db != NULL);
@@ -907,7 +819,7 @@ db_free (Database *db)
 {
     g_assert (db != NULL);
 
-    db_clear_full (db);
+    db_entries_clear (db);
     g_mutex_clear (&db->mutex);
     g_free (db);
     db = NULL;
@@ -949,43 +861,6 @@ db_get_entries (Database *db)
     return db->entries;
 }
 
-//typedef struct search_regex_context_s {
-//    ListModel *list;
-//    DatabaseEntry **results;
-//    const gchar *query;
-//    uint32_t num_results;
-//    uint32_t start_pos;
-//    uint32_t end_pos;
-//} search_regex_context_t;
-//
-//gpointer
-//search_regex_thread (gpointer user_data)
-//{
-//    search_regex_context_t *ctx = (search_regex_context_t *)user_data;
-//
-//    GRegexCompileFlags regex_compile_flags = G_REGEX_CASELESS | G_REGEX_OPTIMIZE;
-//    GError *error = NULL;
-//    GRegex *regex = g_regex_new (ctx->query, regex_compile_flags, 0, &error);
-//
-//    if (regex) {
-//        uint32_t num_results = ctx->num_results;
-//        uint32_t start = ctx->start_pos;
-//        uint32_t end = ctx->end_pos;
-//        for (uint32_t i = start; i <= end; ++i) {
-//            DatabaseEntry *record = ctx->list->rows[i];
-//            GMatchInfo *match_info;
-//            if (g_regex_match (regex, record->name, 0, &match_info)) {
-//                ctx->results[num_results] = record;
-//                num_results++;
-//            }
-//            g_match_info_free (match_info);
-//        }
-//        ctx->num_results = num_results;
-//        g_regex_unref (regex);
-//    }
-//    return NULL;
-//}
-
 static int
 sort_by_name (const void *a, const void *b)
 {
@@ -1017,8 +892,6 @@ sort_by_path (const void *a, const void *b)
     char path_b[PATH_MAX] = "";
     db_node_get_path (node_a, path_a, sizeof (path_a));
     db_node_get_path (node_b, path_b, sizeof (path_b));
-    //printf("%s\n", path_a);
-    //printf("%s\n", path_b);
 
     return strverscmp (path_a, path_b);
 }
@@ -1056,8 +929,8 @@ db_clear (Database *db)
     g_assert (db != NULL);
 
     printf("clear locations\n");
-    db_location_free_all (db);
     db_entries_clear (db);
+    db_location_free_all (db);
     return true;
 }
 

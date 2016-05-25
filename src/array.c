@@ -46,6 +46,7 @@ darray_free (DynamicArray *array)
 {
     g_return_if_fail (array != NULL);
 
+    darray_clear (array);
     if (array->data) {
         free (array->data);
         array->data = NULL;
