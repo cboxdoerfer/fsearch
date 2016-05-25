@@ -23,7 +23,6 @@
 #include <linux/limits.h>
 #include "database_node.h"
 
-
 GNode *
 db_node_new (const char *name, off_t size, time_t mtime, bool is_dir, uint32_t pos)
 {
@@ -42,17 +41,21 @@ db_node_new (const char *name, off_t size, time_t mtime, bool is_dir, uint32_t p
 void
 db_node_free_data (GNode *node)
 {
-    if (node) {
-        DatabaseNodeData *data = node->data;
-        if (data) {
-            if (data->name) {
-                g_free (data->name);
-                data->name = NULL;
-            }
-            g_free (data);
-            data = NULL;
-        }
+    if (!node) {
+        return;
     }
+
+    DatabaseNodeData *data = node->data;
+    if (!data) {
+        return;
+    }
+
+    if (data->name) {
+        g_free (data->name);
+        data->name = NULL;
+    }
+    g_free (data);
+    data = NULL;
 }
 
 void
@@ -163,6 +166,7 @@ db_node_get_root_path (GNode *node)
     return NULL;
 }
 
+// TODO: Really hot function and not well implemented, make it faster
 bool
 db_node_get_path (GNode *node, char *path, size_t path_len)
 {

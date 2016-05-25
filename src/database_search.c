@@ -130,11 +130,6 @@ search_thread (gpointer user_data)
     const bool search_in_path = ctx->search->search_in_path;
     DynamicArray *entries = ctx->search->entries;
 
-    size_t queries_len [num_queries];
-    for (uint32_t i = 0; i < num_queries; i++) {
-        queries_len[i] = strlen (queries[i]);
-    }
-
     uint32_t num_results = 0;
     GNode **results = ctx->results;
     for (uint32_t i = start; i <= end; ++i) {
@@ -154,12 +149,10 @@ search_thread (gpointer user_data)
             uint32_t num_found = 0;
             DatabaseNodeData *data = node->data;
             const char *name = data->name;
-            //size_t name_len = strlen (name);
             gchar *ptr = queries[0];
+
             while (ptr) {
                 if (!strcasestr (name, ptr)) {
-                //if (!fsearch_strcasestr (ptr, name, queries_len[num_found], name_len)) {
-                //if (!fsearch_strstr (ptr, name, queries_len[num_found], name_len)) {
                     break;
                 }
                 num_found++;
@@ -355,6 +348,7 @@ db_perform_normal_search (DatabaseSearch *search,
 
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
     const uint32_t num_items_per_thread = search->num_entries / num_threads;
+
     search_context_t *thread_data[num_threads];
     memset (thread_data, 0, num_threads * sizeof (search_context_t *));
 
@@ -402,6 +396,7 @@ db_perform_normal_search (DatabaseSearch *search,
     stop ();
     start ();
 
+    // get total number of entries found
     uint32_t num_results = 0;
     for (uint32_t i = 0; i < num_threads; ++i) {
         num_results += thread_data[i]->num_results;

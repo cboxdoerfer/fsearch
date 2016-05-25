@@ -46,9 +46,6 @@ GNode *
 db_location_get_entries (DatabaseLocation *location);
 
 void
-db_clear (Database *db);
-
-void
 db_free (Database *db);
 
 Database *
@@ -89,4 +86,4 @@ void
 db_sort (Database *db);
 
 bool
-db_location_clear_all (Database *db);
+db_clear (Database *db);

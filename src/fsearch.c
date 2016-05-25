@@ -116,7 +116,7 @@ fsearch_application_shutdown (GApplication *app)
     FsearchApplication *fsearch = FSEARCH_APPLICATION (app);
     if (fsearch->db) {
         db_save_locations (fsearch->db);
-        db_location_clear_all (fsearch->db);
+        db_clear (fsearch->db);
     }
     if (fsearch->pool) {
         fsearch_thread_pool_free (fsearch->pool);
@@ -241,7 +241,7 @@ load_database (gpointer user_data)
     else {
         printf("update\n");
         start ();
-        db_location_clear_all (app->db);
+        db_clear (app->db);
         for (GList *l = app->config->locations; l != NULL; l = l->next) {
             db_location_build_new (app->db, l->data);
         }

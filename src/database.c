@@ -877,8 +877,8 @@ db_database_new ()
 //    return NULL;
 //}
 
-void
-db_clear (Database *db)
+static void
+db_entries_clear (Database *db)
 {
     // free entries
     g_assert (db != NULL);
@@ -1051,13 +1051,13 @@ db_location_free_all (Database *db)
 }
 
 bool
-db_location_clear_all (Database *db)
+db_clear (Database *db)
 {
     g_assert (db != NULL);
 
     printf("clear locations\n");
     db_location_free_all (db);
-    db_clear (db);
+    db_entries_clear (db);
     return true;
 }
 
