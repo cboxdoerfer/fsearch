@@ -130,6 +130,7 @@ search_thread (gpointer user_data)
     const bool search_in_path = ctx->search->search_in_path;
     DynamicArray *entries = ctx->search->entries;
 
+
     uint32_t num_results = 0;
     GNode **results = ctx->results;
     for (uint32_t i = start; i <= end; ++i) {
@@ -147,7 +148,7 @@ search_thread (gpointer user_data)
         GNode *temp = node;
         while (temp) {
             uint32_t num_found = 0;
-            DatabaseNodeData *data = node->data;
+            DatabaseNodeData *data = temp->data;
             const char *name = data->name;
             gchar *ptr = queries[0];
 
@@ -229,7 +230,8 @@ search_regex_thread (gpointer user_data)
             if (search_in_path) {
                 GNode *parent = node;
                 while (parent) {
-                    const char *name = db_node_get_name (parent);
+                    DatabaseNodeData *data = parent->data;
+                    const char *name = data->name;
                     GMatchInfo *match_info = NULL;
                     if (g_regex_match (regex, name, 0, &match_info)) {
                         results[num_results] = node;
@@ -241,7 +243,8 @@ search_regex_thread (gpointer user_data)
                 }
             }
             else {
-                const char *name = db_node_get_name (node);
+                DatabaseNodeData *data = node->data;
+                const char *name = data->name;
                 GMatchInfo *match_info = NULL;
                 if (g_regex_match (regex, name, 0, &match_info)) {
                     results[num_results] = node;

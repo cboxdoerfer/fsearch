@@ -242,10 +242,12 @@ load_database (gpointer user_data)
         printf("update\n");
         start ();
         db_clear (app->db);
-        for (GList *l = app->config->locations; l != NULL; l = l->next) {
-            db_location_build_new (app->db, l->data);
+        if (app->config->locations) {
+            for (GList *l = app->config->locations; l != NULL; l = l->next) {
+                db_location_build_new (app->db, l->data);
+            }
+            db_build_initial_entries_list (app->db);
         }
-        db_build_initial_entries_list (app->db);
         printf("loaded db in:");
         stop ();
     }
