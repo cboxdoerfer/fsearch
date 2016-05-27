@@ -166,15 +166,66 @@ db_node_get_root_path (GNode *node)
     return NULL;
 }
 
-static inline size_t
-string_copy (char *dest, const char *src, size_t dest_len)
+static inline int
+string_copy (char *dest, const char *src, int dest_len)
 {
-    size_t i = 0;
-    for (i = 0; i < dest_len - 1 && src[i] != '\0'; i++) {
+    int i = 0;
+    for (i = 0; i < dest_len && src[i] != '\0'; i++) {
         dest[i] = src[i];
     }
-    dest[i] = '\0';
+    if (i < dest_len) {
+        dest[i] = '\0';
+    }
+    else {
+        dest[dest_len - 1] = '\0';
+    }
     return i;
+}
+
+static bool
+get_path (GNode *node, char *path, size_t path_len)
+{
+    if (!node) {
+        // empty node
+        return false;
+    }
+    if (G_NODE_IS_ROOT (node)) {
+        DatabaseNodeData *data = node->data;
+        g_strlcpy (path, data->name, path_len);
+        return true;
+    }
+    const gint depth = g_node_depth (node);
+    GNode *temp = node;
+    if (depth > 1) {
+        char *parents[depth + 1];
+        parents[depth] = NULL;
+
+        for (int32_t i = depth - 1; i >= 0 && temp; i--) {
+            DatabaseNodeData *data = temp->data;
+            parents[i] = data->name;
+            temp = temp->parent;
+        }
+
+        char *ptr = path;
+        int bytes_left = path_len;
+        int bytes_written = string_copy (ptr, parents[0], bytes_left);
+        bytes_left -= bytes_written;
+        ptr += bytes_written;
+
+        uint32_t counter = 1;
+        char *item = parents[counter];
+        while (item && bytes_left > 0) {
+            *ptr++ = '/';
+            bytes_left--;
+            bytes_written = string_copy (ptr, item, bytes_left);
+            bytes_left -= bytes_written;
+            ptr += bytes_written;
+            counter++;
+            item = parents[counter];
+        }
+        return true;
+    }
+    return false;
 }
 
 // TODO: Really hot function and not well implemented, make it faster
@@ -185,41 +236,7 @@ db_node_get_path (GNode *node, char *path, size_t path_len)
         // empty node
         return false;
     }
-    if (G_NODE_IS_ROOT (node)) {
-        DatabaseNodeData *data = node->data;
-        g_strlcpy (path, data->name, path_len);
-        return true;
-    }
-    GNode *temp = node->parent;
-    const gint depth = g_node_depth (node);
-    if (depth > 1) {
-        char *parents[depth];
-        parents[depth - 1] = NULL;
-
-        for (int32_t i = depth - 2; i >= 0 && temp; i--) {
-            DatabaseNodeData *data = temp->data;
-            parents[i] = data->name;
-            temp = temp->parent;
-        }
-
-        size_t bytes_left = path_len;
-        size_t bytes_written = string_copy (path, parents[0], bytes_left);
-        bytes_left -= bytes_written;
-        path += bytes_written;
-        int counter = 1;
-        char *item = parents[counter];
-        while (item && bytes_left > 0) {
-            *path = '/';
-            path++;
-            bytes_written = string_copy (path, item, bytes_left);
-            bytes_left -= bytes_written;
-            path += bytes_written;
-            counter++;
-            item = parents[counter];
-        }
-        return true;
-    }
-    return false;
+    return get_path (node->parent, path, path_len);
 }
 
 // TODO: Really hot function and not well implemented, make it faster
@@ -230,46 +247,5 @@ db_node_get_path_full (GNode *node, char *path, size_t path_len)
         // empty node
         return false;
     }
-    if (G_NODE_IS_ROOT (node)) {
-        DatabaseNodeData *data = node->data;
-        g_strlcpy (path, data->name, path_len);
-        return true;
-    }
-    GNode *temp = node->parent;
-    const gint depth = g_node_depth (node);
-    if (depth > 1) {
-        char *parents[depth];
-        parents[depth - 1] = NULL;
-
-        for (int32_t i = depth - 2; i >= 0 && temp; i--) {
-            DatabaseNodeData *data = temp->data;
-            parents[i] = data->name;
-            temp = temp->parent;
-        }
-
-        size_t bytes_left = path_len;
-        size_t bytes_written = string_copy (path, parents[0], bytes_left);
-        bytes_left -= bytes_written;
-        path += bytes_written;
-
-        uint32_t counter = 1;
-        char *item = parents[counter];
-        while (item && bytes_left > 0) {
-            *path = '/';
-            path++;
-            bytes_left--;
-            bytes_written = string_copy (path, item, bytes_left);
-            bytes_left -= bytes_written;
-            path += bytes_written;
-            counter++;
-            item = parents[counter];
-        }
-        *path = '/';
-        path++;
-        bytes_left--;
-        DatabaseNodeData *data = node->data;
-        bytes_written = string_copy (path, data->name, bytes_left);
-        return true;
-    }
-    return false;
+    return get_path (node, path, path_len);
 }
