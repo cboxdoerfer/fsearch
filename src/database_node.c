@@ -228,7 +228,6 @@ get_path (GNode *node, char *path, size_t path_len)
     return false;
 }
 
-// TODO: Really hot function and not well implemented, make it faster
 bool
 db_node_get_path (GNode *node, char *path, size_t path_len)
 {
@@ -239,7 +238,6 @@ db_node_get_path (GNode *node, char *path, size_t path_len)
     return get_path (node->parent, path, path_len);
 }
 
-// TODO: Really hot function and not well implemented, make it faster
 bool
 db_node_get_path_full (GNode *node, char *path, size_t path_len)
 {
