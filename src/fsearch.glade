@@ -268,6 +268,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <property name="action_name">win.search_in_path</property>
                         <property name="label" translatable="yes">Search in Path</property>
                         <property name="use_underline">True</property>
+                        <accelerator key="u" signal="activate" modifiers="GDK_CONTROL_MASK"/>
                       </object>
                     </child>
                     <child>

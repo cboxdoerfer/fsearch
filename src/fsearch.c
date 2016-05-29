@@ -364,6 +364,8 @@ fsearch_application_startup (GApplication* app)
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.show_menubar", show_menubar);
     static const gchar *search_mode[] = { "<control>r", NULL };
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.search_mode", search_mode);
+    static const gchar *search_in_path[] = { "<control>u", NULL };
+    gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.search_in_path", search_in_path);
     static const gchar *quit[] = { "<control>q", NULL };
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.quit", quit);
     FSEARCH_APPLICATION (app)->pool = fsearch_thread_pool_init ();
