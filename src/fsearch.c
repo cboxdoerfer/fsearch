@@ -332,8 +332,18 @@ update_database_activated (GSimpleAction *action,
     update_database ();
 }
 
+static void
+new_window_activated (GSimpleAction *action,
+                      GVariant      *parameter,
+                      gpointer       app)
+{
+    GtkWindow *window = GTK_WINDOW (fsearch_application_window_new (FSEARCH_APPLICATION (app)));
+    gtk_window_present (window);
+}
+
 static GActionEntry app_entries[] =
 {
+    { "new_window", new_window_activated, NULL, NULL, NULL },
     { "about", about_activated, NULL, NULL, NULL },
     { "update_database", update_database_activated, NULL, NULL, NULL },
     { "preferences", preferences_activated, NULL, NULL, NULL },
@@ -358,6 +368,8 @@ fsearch_application_startup (GApplication* app)
 
     static const gchar *search[] = { "<control>f", NULL };
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.focus_search", search);
+    static const gchar *new_window[] = { "<control>n", NULL };
+    gtk_application_set_accels_for_action (GTK_APPLICATION (app), "app.new_window", new_window);
     static const gchar *hide_window[] = { "Escape", NULL };
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.hide_window", hide_window);
     static const gchar *show_menubar[] = { "<control>m", NULL };

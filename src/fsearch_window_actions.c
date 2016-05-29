@@ -89,7 +89,7 @@ fsearch_window_action_hide_window (GSimpleAction *action,
                                    gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
-    gtk_widget_hide (GTK_WIDGET (self));
+    gtk_window_iconify (GTK_WINDOW (self));
 }
 
 static void
