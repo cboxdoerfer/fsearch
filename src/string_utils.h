@@ -20,7 +20,11 @@
 #include <unistd.h>
 
 const char *
-fsearch_strstr (const char *needle, const char *haystack, size_t needle_len, size_t haystack_len);
+fsearch_strstr (const char *haystack,
+                const char *needle,
+                size_t needle_len);
 
 const char *
-fsearch_strcasestr (const char *needle, const char *haystack, size_t needle_len, size_t haystack_len);
+fsearch_strcasestr (const char *haystack,
+                    const char *needle,
+                    size_t needle_len);

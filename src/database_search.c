@@ -163,7 +163,7 @@ search_thread (gpointer user_data)
         while (temp) {
             search_query_t *query = temp->data;
             gchar *ptr = query->query;
-            if (!strcasestr (haystack, ptr)) {
+            if (!fsearch_strcasestr (haystack, ptr, query->query_len)) {
                 break;
             }
             num_found++;
@@ -280,6 +280,7 @@ is_regex (const char *query)
 bool
 str_has_upper (const char *string)
 {
+    return false;
     g_assert (string != NULL);
     const char *ptr = string;
     while (ptr != '\0') {
@@ -396,18 +397,11 @@ db_perform_normal_search (DatabaseSearch *search,
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
 
-        if (is_reg && search->enable_regex) {
-            fsearch_thread_pool_push_data (search->pool,
-                                           temp,
-                                           search_regex_thread,
-                                           thread_data[i]);
-        }
-        else {
-            fsearch_thread_pool_push_data (search->pool,
-                                           temp,
-                                           search_thread,
-                                           thread_data[i]);
-        }
+        fsearch_thread_pool_push_data (search->pool,
+                                       temp,
+                                       is_reg && search->enable_regex ?
+                                           search_regex_thread : search_thread,
+                                       thread_data[i]);
         temp = temp->next;
     }
 
