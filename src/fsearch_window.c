@@ -23,6 +23,7 @@
 #include "database.h"
 #include "iconstore.h"
 #include "config.h"
+#include "utils.h"
 #include "database_search.h"
 
 struct _FsearchApplicationWindow {
@@ -346,6 +347,22 @@ on_listview_popup_menu (GtkWidget *widget,
 }
 
 static gboolean
+on_listview_key_press_event (GtkWidget *widget,
+                             GdkEventKey  *event,
+                             gpointer   user_data)
+{
+    if (event->state & GDK_CONTROL_MASK) {
+        if ((event->keyval == GDK_KEY_Return)
+            || (event->keyval == GDK_KEY_KP_Enter)) {
+            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
+            g_action_group_activate_action (group, "open_folder", NULL);
+            return TRUE;
+        }
+    }
+    return FALSE;
+}
+
+static gboolean
 on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
     //printf("popup menu\n");
@@ -406,18 +423,6 @@ on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpoint
     return FALSE;
 }
 
-static gboolean
-open_uri (const char *uri)
-{
-    GError *error = NULL;
-    if (g_app_info_launch_default_for_uri (uri, NULL, &error)) {
-        return TRUE;
-    }
-    fprintf(stderr, "open_uri: error: %s\n", error->message);
-    g_error_free (error);
-    return FALSE;
-}
-
 static void
 on_listview_row_activated (GtkTreeView       *tree_view,
                            GtkTreePath       *path,
@@ -431,13 +436,7 @@ on_listview_row_activated (GtkTreeView       *tree_view,
         DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
         if (entry) {
             GNode * node = db_search_entry_get_node (entry);
-            char path[PATH_MAX] = "";
-            bool res = db_node_get_path_full (node, path, sizeof (path));
-            if (res) {
-                char uri[PATH_MAX] = "";
-                snprintf (uri, sizeof (uri), "file://%s", path);
-                open_uri (uri);
-            }
+            launch_node (node);
         }
     }
 }
@@ -904,6 +903,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
 
     gtk_widget_class_bind_template_callback (widget_class, on_search_entry_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_button_press_event);
+    gtk_widget_class_bind_template_callback (widget_class, on_listview_key_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_popup_menu);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_selection_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_row_activated);

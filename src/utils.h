@@ -22,3 +22,9 @@
 
 gboolean
 build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name);
+
+void
+launch_node (GNode *node);
+
+void
+launch_node_path (GNode *node);

@@ -434,6 +434,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="rubber_banding">True</property>
                     <property name="enable_grid_lines">vertical</property>
                     <signal name="button-press-event" handler="on_listview_button_press_event" swapped="no"/>
+                    <signal name="key-press-event" handler="on_listview_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
                     <signal name="popup-menu" handler="on_listview_popup_menu" swapped="no"/>
                     <signal name="query-tooltip" handler="on_listview_query_tooltip" object="FsearchApplicationWindow" swapped="no"/>
                     <signal name="row-activated" handler="on_listview_row_activated" swapped="no"/>

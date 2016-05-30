@@ -1,6 +1,19 @@
 <?xml version="1.0"?>
 <interface>
+  <requires lib="gtk+" version="3.16"/>
   <menu id="fsearch_listview_popup_menu">
+    <section id="fsearch_listview_menu_open_section">
+      <item>
+        <attribute name="label" translatable="yes">_Open</attribute>
+        <attribute name="action">win.open</attribute>
+        <attribute name="accel">Return</attribute>
+      </item>
+      <item>
+        <attribute name="label" translatable="yes">_Open Folder</attribute>
+        <attribute name="action">win.open_folder</attribute>
+        <attribute name="accel">&lt;control&gt;Return</attribute>
+      </item>
+    </section>
     <section id="fsearch_listview_menu_clipboard_section">
       <item>
         <attribute name="label" translatable="yes">C_ut</attribute>

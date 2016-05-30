@@ -17,7 +17,11 @@
    */
 
 #include <stdio.h>
+#include <stdbool.h>
+#include <linux/limits.h>
+#include <gio/gio.h>
 #include "utils.h"
+#include "database_node.h"
 
 gboolean
 build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name)
@@ -50,3 +54,40 @@ build_path_uri (gchar *dest, size_t dest_len, const gchar *path, const gchar *na
         return TRUE;
     }
 }
+
+static gboolean
+open_uri (const char *uri)
+{
+    GError *error = NULL;
+    if (g_app_info_launch_default_for_uri (uri, NULL, &error)) {
+        return TRUE;
+    }
+    fprintf(stderr, "open_uri: error: %s\n", error->message);
+    g_error_free (error);
+    return FALSE;
+}
+
+void
+launch_node (GNode *node)
+{
+    char path[PATH_MAX] = "";
+    bool res = db_node_get_path_full (node, path, sizeof (path));
+    if (res) {
+        char uri[PATH_MAX] = "";
+        snprintf (uri, sizeof (uri), "file://%s", path);
+        open_uri (uri);
+    }
+}
+
+void
+launch_node_path (GNode *node)
+{
+    char path[PATH_MAX] = "";
+    bool res = db_node_get_path (node, path, sizeof (path));
+    if (res) {
+        char uri[PATH_MAX] = "";
+        snprintf (uri, sizeof (uri), "file://%s", path);
+        open_uri (uri);
+    }
+}
+

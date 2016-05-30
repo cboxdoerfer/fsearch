@@ -4,6 +4,7 @@
 #include "fsearch_window_actions.h"
 #include "clipboard.h"
 #include "database_search.h"
+#include "utils.h"
 #include "config.h"
 
 static void
@@ -138,6 +139,66 @@ fsearch_window_action_copy (GSimpleAction *action,
 }
 
 static void
+open_cb (GtkTreeModel *model,
+         GtkTreePath *path,
+         GtkTreeIter *iter,
+         gpointer data)
+{
+    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
+    if (entry) {
+        GNode *node = db_search_entry_get_node (entry);
+        if (node) {
+            launch_node (node);
+        }
+    }
+}
+
+static void
+fsearch_window_action_open (GSimpleAction *action,
+                            GVariant      *variant,
+                            gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (selection) {
+        guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
+        if (selected_rows <= 10) {
+            gtk_tree_selection_selected_foreach (selection, open_cb, NULL);
+        }
+    }
+}
+
+static void
+open_folder_cb (GtkTreeModel *model,
+         GtkTreePath *path,
+         GtkTreeIter *iter,
+         gpointer data)
+{
+    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
+    if (entry) {
+        GNode *node = db_search_entry_get_node (entry);
+        if (node) {
+            launch_node_path (node);
+        }
+    }
+}
+
+static void
+fsearch_window_action_open_folder (GSimpleAction *action,
+                            GVariant      *variant,
+                            gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (selection) {
+        guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
+        if (selected_rows <= 10) {
+            gtk_tree_selection_selected_foreach (selection, open_folder_cb, NULL);
+        }
+    }
+}
+
+static void
 fsearch_window_action_focus_search (GSimpleAction *action,
                                     GVariant      *variant,
                                     gpointer       user_data)
@@ -244,6 +305,8 @@ action_toggle_state_cb (GSimpleAction *saction,
 
 
 static GActionEntry FsearchWindowActions[] = {
+    { "open",     fsearch_window_action_open },
+    { "open_folder",     fsearch_window_action_open_folder },
     { "copy_clipboard",     fsearch_window_action_copy },
     { "cut_clipboard",     fsearch_window_action_cut },
     { "delete_selection",     fsearch_window_action_delete },
@@ -286,6 +349,8 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "copy_clipboard", num_rows_selected);
     action_set_enabled (group, "cut_clipboard", num_rows_selected);
     action_set_enabled (group, "delete_selection", num_rows_selected);
+    action_set_enabled (group, "open", num_rows_selected);
+    action_set_enabled (group, "open_folder", num_rows_selected);
     action_set_enabled (group, "focus_search", TRUE);
     action_set_enabled (group, "hide_window", TRUE);
     action_set_enabled (group, "update_database", TRUE);
