@@ -139,17 +139,21 @@ load_config (FsearchConfig *config)
         printf("loaded config file\n");
         // Interface
         config->enable_list_tooltips = config_load_boolean (key_file,
-                                                    "Interface",
-                                                    "enable_list_tooltips",
-                                                    true);
+                                                            "Interface",
+                                                            "enable_list_tooltips",
+                                                            true);
         config->enable_dark_theme = config_load_boolean (key_file,
-                                                    "Interface",
-                                                    "enable_dark_theme",
-                                                    false);
+                                                         "Interface",
+                                                         "enable_dark_theme",
+                                                         false);
         config->show_menubar = config_load_boolean (key_file,
                                                     "Interface",
                                                     "show_menubar",
                                                     true);
+        config->show_statusbar = config_load_boolean (key_file,
+                                                      "Interface",
+                                                      "show_statusbar",
+                                                      true);
         config->show_filter = config_load_boolean (key_file,
                                                    "Interface",
                                                    "show_filter",
@@ -216,6 +220,7 @@ load_default_config (FsearchConfig *config)
     config->enable_dark_theme = false;
     config->enable_list_tooltips = true;
     config->show_menubar = true;
+    config->show_statusbar = true;
     config->show_filter = true;
     config->show_search_button = true;
 
@@ -238,6 +243,7 @@ save_config (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Interface", "enable_list_tooltips", config->enable_list_tooltips);
     g_key_file_set_boolean (key_file, "Interface", "enable_dark_theme", config->enable_dark_theme);
     g_key_file_set_boolean (key_file, "Interface", "show_menubar", config->show_menubar);
+    g_key_file_set_boolean (key_file, "Interface", "show_statusbar", config->show_statusbar);
     g_key_file_set_boolean (key_file, "Interface", "show_filter", config->show_filter);
     g_key_file_set_boolean (key_file, "Interface", "show_search_button", config->show_search_button);
 

@@ -37,6 +37,7 @@ struct _FsearchConfig
 
     // View menu
     bool show_menubar;
+    bool show_statusbar;
     bool show_filter;
     bool show_search_button;
 

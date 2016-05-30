@@ -36,6 +36,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *empty_database_overlay;
     GtkWidget *menubar;
     GtkWidget *search_overlay;
+    GtkWidget *statusbar;
     GtkWidget *statusbar_search_mode;
     GtkWidget *search_button;
     GtkWidget *search_entry;
@@ -138,6 +139,7 @@ fsearch_window_apply_config (FsearchApplicationWindow *self)
     FsearchConfig *config = fsearch_application_get_config (app);
 
     gtk_widget_set_visible (self->menubar, config->show_menubar);
+    gtk_widget_set_visible (self->statusbar, config->show_statusbar);
     gtk_widget_set_visible (self->filter_combobox, config->show_filter);
     gtk_widget_set_visible (self->search_button, config->show_search_button);
 
@@ -880,6 +882,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_set_template_from_resource (widget_class, "/org/fsearch/fsearch/fsearch.glade");
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_overlay);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, menubar);
+    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, statusbar);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, statusbar_search_mode);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_button);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_entry);
@@ -912,6 +915,13 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_callback (widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_search_button_clicked);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_query_tooltip);
+}
+
+GtkWidget *
+fsearch_application_window_get_statusbar (FsearchApplicationWindow *self)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+    return GTK_WIDGET (self->statusbar);
 }
 
 GtkWidget *
