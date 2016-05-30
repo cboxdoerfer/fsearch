@@ -67,6 +67,26 @@ static gpointer
 perform_search (FsearchApplicationWindow *win, const char *text);
 
 static void
+init_statusbar (FsearchApplicationWindow *self)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+
+    gtk_spinner_stop (GTK_SPINNER (self->database_spinner));
+
+    gtk_stack_set_visible_child (GTK_STACK (self->database_stack), self->database_box2);
+    Database *db = fsearch_application_get_db (FSEARCH_APPLICATION_DEFAULT);
+
+    uint32_t num_items = 0;
+    if (db) {
+        num_items = db_get_num_entries (db);
+    }
+
+    gchar db_text[100] = "";
+    snprintf (db_text, sizeof (db_text), "%'d Items", num_items);
+    gtk_label_set_text (GTK_LABEL (self->database_label), db_text);
+}
+
+static void
 remove_model_from_list (FsearchApplicationWindow *self)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
@@ -139,6 +159,7 @@ fsearch_application_window_constructed (GObject *object)
     g_mutex_init (&self->mutex);
     fsearch_window_apply_config (self);
     fsearch_window_actions_init (self);
+    init_statusbar (self);
 }
 
 static void
@@ -327,7 +348,7 @@ on_listview_popup_menu (GtkWidget *widget,
 static gboolean
 on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
-    printf("popup menu\n");
+    //printf("popup menu\n");
     g_return_val_if_fail (user_data != NULL, FALSE);
     g_return_val_if_fail (event != NULL, FALSE);
 

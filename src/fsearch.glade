@@ -99,6 +99,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     </child>
                     <child>
                       <object class="GtkSeparatorMenuItem" id="separatormenuitem1">
+                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
                       </object>
                     </child>
@@ -184,6 +185,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <object class="GtkMenuItem" id="deselect_all">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="action_name">win.deselect_all</property>
                         <property name="label" translatable="yes">Deselect All</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -192,6 +194,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <object class="GtkMenuItem" id="invert_selection">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="action_name">win.invert_selection</property>
                         <property name="label" translatable="yes">Invert Selection</property>
                         <property name="use_underline">True</property>
                       </object>
@@ -337,9 +340,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="name">search_entry</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
+                <property name="has_focus">True</property>
                 <property name="is_focus">True</property>
                 <property name="can_default">True</property>
                 <property name="has_default">True</property>
+                <property name="receives_default">True</property>
                 <property name="activates_default">True</property>
                 <property name="secondary_icon_name">edit-clear-symbolic</property>
                 <property name="primary_icon_activatable">False</property>

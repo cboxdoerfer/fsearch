@@ -22,6 +22,14 @@ action_set_active_bool (GActionGroup *group, const gchar *action_name, bool valu
 static void
 action_set_enabled (GActionGroup *group, const gchar *action_name, bool value)
 {
+    g_assert (G_IS_ACTION_GROUP (group));
+    g_assert (G_IS_ACTION_MAP (group));
+
+    GAction *action = g_action_map_lookup_action (G_ACTION_MAP (group), action_name);
+
+    if (action) {
+        g_simple_action_set_enabled (G_SIMPLE_ACTION (action), value);
+    }
 }
 
 static void
@@ -57,11 +65,67 @@ fsearch_window_action_cut (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_invert_selection (GSimpleAction *action,
+                                        GVariant      *variant,
+                                        gpointer       user_data)
+{
+    // TODO: can be very slow. Find a way how to optimize that.
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (!selection) {
+        return;
+    }
+    GtkTreeModel *model = NULL;
+    GList *selected_rows = gtk_tree_selection_get_selected_rows (selection, &model);
+    if (!selected_rows) {
+        return;
+    }
+    if (!model) {
+        return;
+    }
+    gtk_tree_selection_select_all (selection);
+
+    GList *temp  = selected_rows;
+    while (temp) {
+        GtkTreePath *path = temp->data;
+        GtkTreeIter iter = {0};
+        if (gtk_tree_model_get_iter (model, &iter, path)) {
+            gtk_tree_selection_unselect_iter (selection, &iter);
+        }
+        temp = temp->next;
+    }
+    g_list_free_full (selected_rows, (GDestroyNotify) gtk_tree_path_free);
+}
+
+static void
+fsearch_window_action_deselect_all (GSimpleAction *action,
+                                  GVariant      *variant,
+                                  gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (selection) {
+        gtk_tree_selection_unselect_all (selection);
+    }
+}
+
+static void
+fsearch_window_action_select_all (GSimpleAction *action,
+                                  GVariant      *variant,
+                                  gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (selection) {
+        gtk_tree_selection_select_all (selection);
+    }
+}
+
+static void
 fsearch_window_action_copy (GSimpleAction *action,
                             GVariant      *variant,
                             gpointer       user_data)
 {
-    printf("action: copy file\n");
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
     if (selection) {
@@ -164,7 +228,6 @@ fsearch_window_action_update_database (GSimpleAction *action,
                                        GVariant      *variant,
                                        gpointer       user_data)
 {
-    printf("update database action\n");
 }
 
 static void
@@ -184,6 +247,9 @@ static GActionEntry FsearchWindowActions[] = {
     { "copy_clipboard",     fsearch_window_action_copy },
     { "cut_clipboard",     fsearch_window_action_cut },
     { "delete_selection",     fsearch_window_action_delete },
+    { "select_all",     fsearch_window_action_select_all },
+    { "deselect_all",     fsearch_window_action_deselect_all },
+    { "invert_selection",     fsearch_window_action_invert_selection },
     { "focus_search",     fsearch_window_action_focus_search },
     { "hide_window",     fsearch_window_action_hide_window },
     //{ "update_database",     fsearch_window_action_update_database },
@@ -200,11 +266,23 @@ void
 fsearch_window_actions_update   (FsearchApplicationWindow *self)
 {
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    GtkTreeView *treeview = gtk_tree_selection_get_tree_view (selection);
+
+    gint num_rows = 0;
+    if (treeview) {
+        GtkTreeModel *model = gtk_tree_view_get_model (treeview);
+        if (model) {
+            num_rows = gtk_tree_model_iter_n_children (model, NULL);
+        }
+    }
 
     GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (self), "win");
     g_assert (G_IS_SIMPLE_ACTION_GROUP (group));
 
     gint num_rows_selected = gtk_tree_selection_count_selected_rows (selection);
+    action_set_enabled (group, "select_all", num_rows);
+    action_set_enabled (group, "deselect_all", num_rows_selected);
+    action_set_enabled (group, "invert_selection", num_rows_selected);
     action_set_enabled (group, "copy_clipboard", num_rows_selected);
     action_set_enabled (group, "cut_clipboard", num_rows_selected);
     action_set_enabled (group, "delete_selection", num_rows_selected);
