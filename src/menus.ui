@@ -7,11 +7,13 @@
         <attribute name="label" translatable="yes">_Open</attribute>
         <attribute name="action">win.open</attribute>
         <attribute name="accel">Return</attribute>
+        <attribute name="icon">document-open</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Open Folder</attribute>
         <attribute name="action">win.open_folder</attribute>
         <attribute name="accel">&lt;control&gt;Return</attribute>
+        <attribute name="icon">folder-open</attribute>
       </item>
     </section>
     <section id="fsearch_listview_menu_clipboard_section">
@@ -19,16 +21,19 @@
         <attribute name="label" translatable="yes">C_ut</attribute>
         <attribute name="action">win.cut_clipboard</attribute>
         <attribute name="accel">&lt;control&gt;x</attribute>
+        <attribute name="icon">edit-cut</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Copy</attribute>
         <attribute name="action">win.copy_clipboard</attribute>
         <attribute name="accel">&lt;control&gt;c</attribute>
+        <attribute name="icon">edit-copy</attribute>
       </item>
       <item>
         <attribute name="label" translatable="yes">_Delete</attribute>
         <attribute name="action">win.delete_selection</attribute>
         <attribute name="accel">Delete</attribute>
+        <attribute name="icon">edit-delete</attribute>
       </item>
     </section>
   </menu>
