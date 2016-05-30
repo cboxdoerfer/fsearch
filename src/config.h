@@ -31,8 +31,11 @@ struct _FsearchConfig
     bool search_in_path;
     bool enable_regex;
 
-    // View
+    // Interface
     bool enable_dark_theme;
+    bool enable_list_tooltips;
+
+    // View menu
     bool show_menubar;
     bool show_filter;
     bool show_search_button;

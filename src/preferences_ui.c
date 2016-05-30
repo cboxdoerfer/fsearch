@@ -200,6 +200,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (enable_dark_theme), main_config->enable_dark_theme);
     gtk_grid_attach (GTK_GRID (interface_table), enable_dark_theme, 0, 0, 1, 1);
 
+    GtkWidget *enable_list_tooltips = gtk_check_button_new_with_label ("Show Tooltips");
+    gtk_widget_set_tooltip_text (enable_list_tooltips, "When hovering a search results show a tooltip with the full path of that item.");
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (enable_list_tooltips), main_config->enable_list_tooltips);
+    gtk_grid_attach (GTK_GRID (interface_table), enable_list_tooltips, 0, 1, 1, 1);
+
     // First page: Search
     GtkWidget *search_box = gtk_box_new (GTK_ORIENTATION_HORIZONTAL, 8);
     gtk_container_set_border_width (GTK_CONTAINER (search_box), 8);
@@ -294,6 +299,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->limit_results = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (limit_num_results));
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (num_results));
         main_config->enable_dark_theme = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (enable_dark_theme));
+        main_config->enable_list_tooltips = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (enable_list_tooltips));
         g_object_set(gtk_settings_get_default(),
                      "gtk-application-prefer-dark-theme",
                      main_config->enable_dark_theme,

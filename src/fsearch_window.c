@@ -831,6 +831,11 @@ on_listview_query_tooltip (GtkWidget  *widget,
                            GtkTooltip *tooltip,
                            gpointer    user_data)
 {
+    FsearchApplication *app =FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config (app);
+    if (!config->enable_list_tooltips) {
+        return FALSE;
+    }
     gboolean ret_val = FALSE;
 
     GtkTreeModel *model = NULL;
