@@ -214,6 +214,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
 
     GtkWidget *limit_num_results = gtk_check_button_new_with_label ("Limit Number of Results:");
     gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (limit_num_results), main_config->limit_results);
+    gtk_widget_set_tooltip_text (limit_num_results, "Limiting the number of search results increases the performance a lot. That's because the GtkTreeView is quite slow when you add lots of items to it.");
     gtk_grid_attach (GTK_GRID (search_table), limit_num_results, 0, 0, 1, 1);
 
     GtkWidget *num_results = gtk_spin_button_new_with_range (10.0, 1000000.0, 1.0);
