@@ -30,6 +30,8 @@
       <section>
         <p>FSearch is a fast file search utility for GNU/Linux operating systems, inspired by Everything Search Engine. It's written in C and based on GTK+3.</p>
 
+<p><strong>Note: The application is in an early development stage and still considered pre-alpha</strong></p>
+
 <p><img src="https://i.imgur.com/lerqX2G.png" alt=""></p>
 
 <h2>
@@ -42,6 +44,27 @@
 <li>Fast sort by filename, path, size or modification time</li>
 <li>Customizable interface</li>
 </ul>
+
+<h2>
+<a id="why-yet-another-search-utility" class="anchor" href="#why-yet-another-search-utility" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why yet another search utility?</h2>
+
+<p>Easy one, Performance. On Windows I really like to use Everything Search Engine. It provides instant results as you type for all your files and lots of useful features (regex, filters, bookmarks, ...). On Linux however I couldn't find anything that's even remotely as fast and powerful.</p>
+
+<p>Before I started working on FSearch I took a look at all the existing solutions I found (MATE Search Tool (formerly GNOME Search Tool, Recoll, Krusader (locate based search), SpaceFM File Search, Nautilus, ANGRYsearch, Catfish, ...) to find out whether it makes sense to improve those, instead of building a completely new application. But unfortunately none of those meets my requirements:</p>
+
+<ul>
+<li>standalone application (not part of a file manager)</li>
+<li>written in a language with C like performance</li>
+<li>no dependencies to any specific desktop environment</li>
+<li>Qt5 or GTK+3 based</li>
+<li>small memory usage (both hard drive and RAM)</li>
+<li>target audience: advanced users</li>
+</ul>
+
+<h2>
+<a id="why-gtk3-and-not-qt5" class="anchor" href="#why-gtk3-and-not-qt5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why GTK+3 and not Qt5?</h2>
+
+<p>I like both of them. And in fact my long term goal is to provide console, GTK+3 and Qt5 interfaces, or at least make it possible for others to build those by splitting the search and database functionality into a core library. But for the time being it's only GTK+3 because I tend to like C more than C++, I'm more familiar with GTK+ development, I almost exclusively run GTK+ applications and I really like some of it's new widget (e.g. Popovers).</p>
 
 <h2>
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download</h2>
