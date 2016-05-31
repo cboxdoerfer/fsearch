@@ -1,6 +1,6 @@
 {
   "name": "FSearch",
   "tagline": "A search utility focusing on performance and advanced features",
-  "body": "FSearch is a fast file search utility for GNU/Linux operating systems, inspired by Everything Search Engine. It's written in C and based on GTK+3.\r\n\r\n![](https://i.imgur.com/lerqX2G.png)\r\n\r\n### Features\r\n- Instant (as you type) results\r\n- RegEx support\r\n- Filter support (only search for files, folders or everything)\r\n- Fast sort by filename, path, size or modification time\r\n- Customizable interface",
+  "body": "FSearch is a fast file search utility for GNU/Linux operating systems, inspired by Everything Search Engine. It's written in C and based on GTK+3.\r\n\r\n![](https://i.imgur.com/lerqX2G.png)\r\n\r\n## Features\r\n- Instant (as you type) results\r\n- RegEx support\r\n- Filter support (only search for files, folders or everything)\r\n- Fast sort by filename, path, size or modification time\r\n- Customizable interface\r\n\r\n## Download\r\n### AUR\r\nhttps://aur.archlinux.org/packages/fsearch-git/",
   "note": "Don't delete this file! It's used internally to help with page regeneration."
 }
