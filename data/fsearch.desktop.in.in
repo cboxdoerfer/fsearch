@@ -1,12 +1,11 @@
 [Desktop Entry]
-Version=1.0
+Version=0.1
 Type=Application
 Name=FSearch
 Comment=A file search application focusing on performance and advanced features
 Icon=system-search
-Exec=/home/christian/src/fsearch/src/fsearch
+TryExec=@PACKAGE@
+Exec=@PACKAGE@
 Categories=GTK;Utility;Core;
 Keywords=search;fsearch;files;find;tool;
-NoDisplay=false
 StartupNotify=true
-Terminal=false
