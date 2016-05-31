@@ -365,9 +365,6 @@ db_perform_normal_search (DatabaseSearch *search,
     g_assert (search != NULL);
     g_assert (search->entries != NULL);
 
-    printf("init search: ");
-    start ();
-
     GList *queries = build_queries (search);
 
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
@@ -382,7 +379,6 @@ db_perform_normal_search (DatabaseSearch *search,
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
 
-    stop ();
     start ();
     GList *temp = fsearch_thread_pool_get_threads (search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
@@ -413,7 +409,6 @@ db_perform_normal_search (DatabaseSearch *search,
 
     printf("search done: ");
     stop ();
-    start ();
 
     // get total number of entries found
     uint32_t num_results = 0;
@@ -458,7 +453,6 @@ db_perform_normal_search (DatabaseSearch *search,
     }
 
     g_list_free_full (queries, search_query_free);
-    stop ();
     return search->results->len;
 }
 

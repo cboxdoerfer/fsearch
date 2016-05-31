@@ -2,6 +2,9 @@ AC_INIT([FSearch], [1], [christian.boxdoerfer@posteo.de])
 AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CONFIG_SRCDIR([src/fsearch.c])
 AM_SILENT_RULES([yes])
+
+IT_PROG_INTLTOOL([0.50.1])
+
 AC_PROG_CC
 
 CFLAGS+=" -Os"
@@ -28,5 +31,7 @@ AC_SUBST(GIO_LIBS)
 
 
 AC_CONFIG_FILES([Makefile
+                 data/Makefile
+                 data/fsearch.desktop.in
                  src/Makefile])
 AC_OUTPUT
