@@ -37,7 +37,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *menubar;
     GtkWidget *search_overlay;
     GtkWidget *statusbar;
-    GtkWidget *statusbar_search_mode;
+    GtkWidget *search_mode_revealer;
+    GtkWidget *search_in_path_revealer;
     GtkWidget *search_button;
     GtkWidget *search_entry;
     GtkWidget *filter_combobox;
@@ -106,13 +107,14 @@ apply_model_to_list (FsearchApplicationWindow *self)
 
 }
 
-void
+gboolean
 fsearch_application_window_update_search (gpointer window)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (window));
     FsearchApplicationWindow *win = window;
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     perform_search (win, text);
+    return FALSE;
 }
 
 void
@@ -142,6 +144,9 @@ fsearch_window_apply_config (FsearchApplicationWindow *self)
     gtk_widget_set_visible (self->statusbar, config->show_statusbar);
     gtk_widget_set_visible (self->filter_combobox, config->show_filter);
     gtk_widget_set_visible (self->search_button, config->show_search_button);
+    gtk_revealer_set_reveal_child (GTK_REVEALER (self->search_mode_revealer), config->enable_regex);
+    gtk_revealer_set_reveal_child (GTK_REVEALER (self->search_in_path_revealer), config->search_in_path);
+
 
     if (!config->locations) {
         gtk_widget_show (self->empty_database_overlay);
@@ -419,6 +424,22 @@ on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpoint
                     event->button, event->time);
             g_object_unref (builder);
             return TRUE;
+        }
+    }
+    else if (event->type == GDK_2BUTTON_PRESS) {
+        if (event->window == gtk_tree_view_get_bin_window (GTK_TREE_VIEW (widget))) {
+            GtkTreeViewColumn *column = NULL;
+            GtkTreePath *path = NULL;
+            gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
+                                           event->x,
+                                           event->y,
+                                           &path,
+                                           &column,
+                                           NULL,
+                                           NULL);
+            if (path) {
+                gtk_tree_path_free(path);
+            }
         }
     }
 
@@ -883,7 +904,8 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_overlay);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, menubar);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, statusbar);
-    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, statusbar_search_mode);
+    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_in_path_revealer);
+    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_mode_revealer);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_button);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_entry);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, filter_combobox);
@@ -953,10 +975,17 @@ fsearch_application_window_get_search_entry (FsearchApplicationWindow *self)
 }
 
 GtkWidget *
-fsearch_application_window_get_statusbar_search_mode_button (FsearchApplicationWindow *self)
+fsearch_application_window_get_search_in_path_revealer (FsearchApplicationWindow *self)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
-    return self->statusbar_search_mode;
+    return self->search_in_path_revealer;
+}
+
+GtkWidget *
+fsearch_application_window_get_search_mode_revealer (FsearchApplicationWindow *self)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+    return self->search_mode_revealer;
 }
 
 GtkTreeSelection *

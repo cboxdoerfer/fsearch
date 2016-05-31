@@ -274,9 +274,21 @@ fsearch_window_action_search_in_path (GSimpleAction *action,
                                    GVariant      *variant,
                                    gpointer       user_data)
 {
+    FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state (action, variant);
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    bool search_in_path_old = config->search_in_path;
     config->search_in_path = g_variant_get_boolean (variant);
+    GtkWidget *revealer = fsearch_application_window_get_search_in_path_revealer (self);
+    if (config->search_in_path) {
+        gtk_revealer_set_reveal_child (GTK_REVEALER (revealer), TRUE);
+    }
+    else {
+        gtk_revealer_set_reveal_child (GTK_REVEALER (revealer), FALSE);
+    }
+    if (search_in_path_old != config->search_in_path) {
+        g_idle_add (fsearch_application_window_update_search, self);
+    }
 }
 
 static void
@@ -287,13 +299,17 @@ fsearch_window_action_search_mode (GSimpleAction *action,
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state (action, variant);
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    bool enable_regex_old = config->enable_regex;
     config->enable_regex = g_variant_get_boolean (variant);
-    GtkWidget *button = fsearch_application_window_get_statusbar_search_mode_button (self);
+    GtkWidget *revealer = fsearch_application_window_get_search_mode_revealer (self);
     if (config->enable_regex) {
-        gtk_button_set_label (GTK_BUTTON (button), "REGEX");
+        gtk_revealer_set_reveal_child (GTK_REVEALER (revealer), TRUE);
     }
     else {
-        gtk_button_set_label (GTK_BUTTON (button), "NORMAL");
+        gtk_revealer_set_reveal_child (GTK_REVEALER (revealer), FALSE);
+    }
+    if (enable_regex_old != config->enable_regex) {
+        g_idle_add (fsearch_application_window_update_search, self);
     }
 }
 
@@ -315,7 +331,6 @@ action_toggle_state_cb (GSimpleAction *saction,
     g_action_change_state (action, g_variant_new_boolean (!g_variant_get_boolean (state)));
     g_variant_unref (state);
 }
-
 
 static GActionEntry FsearchWindowActions[] = {
     { "open",     fsearch_window_action_open },

@@ -496,8 +496,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           <object class="GtkBox" id="statusbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">3</property>
-            <property name="margin_right">3</property>
+            <property name="margin_left">6</property>
+            <property name="margin_right">6</property>
             <property name="margin_top">3</property>
             <property name="margin_bottom">3</property>
             <property name="spacing">4</property>
@@ -713,19 +713,91 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
               </packing>
             </child>
             <child>
-              <object class="GtkToggleButton" id="statusbar_search_mode">
-                <property name="label" translatable="yes">NORMAL</property>
+              <object class="GtkRevealer" id="search_in_path_revealer">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Switch between Normal and Regex search</property>
-                <property name="action_name">win.search_mode</property>
-                <property name="relief">none</property>
+                <property name="can_focus">False</property>
+                <property name="transition_type">slide-left</property>
+                <property name="transition_duration">150</property>
+                <property name="reveal_child">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkSeparator" id="search_in_path_separator">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="search_in_path_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">PATH</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">3</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkRevealer" id="search_mode_revealer">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="transition_type">slide-left</property>
+                <property name="transition_duration">150</property>
+                <property name="reveal_child">True</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkSeparator" id="search_mode_separator">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="search_mode_label">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">REGEX</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">4</property>
               </packing>
             </child>
           </object>
