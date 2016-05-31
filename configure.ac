@@ -3,7 +3,12 @@ AM_INIT_AUTOMAKE([-Wall foreign])
 AC_CONFIG_SRCDIR([src/fsearch.c])
 AM_SILENT_RULES([yes])
 
+AX_REQUIRE_DEFINED([IT_PROG_INTLTOOL])
 IT_PROG_INTLTOOL([0.50.1])
+GETTEXT_PACKAGE=AC_PACKAGE_TARNAME
+AC_DEFINE_UNQUOTED([GETTEXT_PACKAGE], ["$GETTEXT_PACKAGE"], [GETTEXT package name])
+AC_SUBST(GETTEXT_PACKAGE)
+AM_GLIB_GNU_GETTEXT
 
 AC_PROG_CC
 
@@ -33,5 +38,6 @@ AC_SUBST(GIO_LIBS)
 AC_CONFIG_FILES([Makefile
                  data/Makefile
                  data/fsearch.desktop.in
+                 po/Makefile.in
                  src/Makefile])
 AC_OUTPUT
