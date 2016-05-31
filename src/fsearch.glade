@@ -496,8 +496,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           <object class="GtkBox" id="statusbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">6</property>
-            <property name="margin_right">6</property>
+            <property name="margin_left">3</property>
+            <property name="margin_right">3</property>
             <property name="margin_top">3</property>
             <property name="margin_bottom">3</property>
             <property name="spacing">4</property>
@@ -720,7 +720,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="transition_duration">150</property>
                 <property name="reveal_child">True</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="search_in_path_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="spacing">6</property>
@@ -736,10 +736,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="search_in_path_label">
+                      <object class="GtkEventBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">PATH</property>
+                        <signal name="button-press-event" handler="on_search_in_path_label_button_press_event" object="FsearchApplicationWindow" swapped="no"/>
+                        <child>
+                          <object class="GtkLabel" id="search_in_path_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+                            <property name="label" translatable="yes">PATH</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -764,7 +772,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="transition_duration">150</property>
                 <property name="reveal_child">True</property>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="search_mode_box">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="spacing">6</property>
@@ -780,10 +788,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="search_mode_label">
+                      <object class="GtkEventBox">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">REGEX</property>
+                        <signal name="button-press-event" handler="on_search_mode_label_button_press_event" object="FsearchApplicationWindow" swapped="no"/>
+                        <child>
+                          <object class="GtkLabel" id="search_mode_label">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+                            <property name="label" translatable="yes">REGEX</property>
+                          </object>
+                        </child>
                       </object>
                       <packing>
                         <property name="expand">False</property>

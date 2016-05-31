@@ -502,6 +502,37 @@ on_listview_selection_changed (GtkTreeSelection *sel,
     }
 }
 
+static gboolean
+toggle_action_on_2button_press (GdkEventButton *event, const char *action, gpointer user_data)
+{
+    if (event->button == GDK_BUTTON_PRIMARY
+        && event->type == GDK_2BUTTON_PRESS) {
+        GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
+        GVariant *state = g_action_group_get_action_state (group, action);
+        g_action_group_change_action_state (group,
+                                            action,
+                                            g_variant_new_boolean (!g_variant_get_boolean (state)));
+        g_variant_unref (state);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static gboolean
+on_search_mode_label_button_press_event (GtkWidget *widget,
+                                         GdkEventButton *event,
+                                         gpointer user_data)
+{
+    return toggle_action_on_2button_press (event, "search_mode", user_data);
+}
+
+static gboolean
+on_search_in_path_label_button_press_event (GtkWidget *widget,
+                                            GdkEventButton *event,
+                                            gpointer user_data)
+{
+    return toggle_action_on_2button_press (event, "search_in_path", user_data);
+}
 
 static void
 on_search_entry_changed (GtkEntry *entry, gpointer user_data)
@@ -933,6 +964,8 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_callback (widget_class, on_listview_selection_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_row_activated);
     gtk_widget_class_bind_template_callback (widget_class, on_selection_toggle_button_toggled);
+    gtk_widget_class_bind_template_callback (widget_class, on_search_in_path_label_button_press_event);
+    gtk_widget_class_bind_template_callback (widget_class, on_search_mode_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_database_toggle_button_toggled);
     gtk_widget_class_bind_template_callback (widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_search_button_clicked);
