@@ -157,7 +157,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkImageMenuItem" id="cut_menu_item">
                         <property name="label">gtk-cut</property>
-                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="action_name">win.cut_clipboard</property>
                         <property name="use_underline">True</property>
@@ -179,7 +178,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkImageMenuItem" id="delete_menu_item">
                         <property name="label">gtk-delete</property>
-                        <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="action_name">win.delete_selection</property>
                         <property name="use_underline">True</property>
