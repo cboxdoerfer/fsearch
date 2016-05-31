@@ -59,11 +59,15 @@ static gboolean
 open_uri (const char *uri)
 {
     GError *error = NULL;
-    if (g_app_info_launch_default_for_uri (uri, NULL, &error)) {
-        return TRUE;
+    gchar *uri_escaped = g_filename_to_uri (uri, NULL, NULL);
+    if (uri_escaped) {
+        if (g_app_info_launch_default_for_uri (uri_escaped, NULL, &error)) {
+            return TRUE;
+        }
+        fprintf(stderr, "open_uri: error: %s\n", error->message);
+        g_error_free (error);
+        g_free (uri_escaped);
     }
-    fprintf(stderr, "open_uri: error: %s\n", error->message);
-    g_error_free (error);
     return FALSE;
 }
 
@@ -73,9 +77,7 @@ launch_node (GNode *node)
     char path[PATH_MAX] = "";
     bool res = db_node_get_path_full (node, path, sizeof (path));
     if (res) {
-        char uri[PATH_MAX] = "";
-        snprintf (uri, sizeof (uri), "file://%s", path);
-        open_uri (uri);
+        open_uri (path);
     }
 }
 
@@ -85,9 +87,7 @@ launch_node_path (GNode *node)
     char path[PATH_MAX] = "";
     bool res = db_node_get_path (node, path, sizeof (path));
     if (res) {
-        char uri[PATH_MAX] = "";
-        snprintf (uri, sizeof (uri), "file://%s", path);
-        open_uri (uri);
+        open_uri (path);
     }
 }
 
