@@ -4,7 +4,7 @@ EXTRA_DIST = fsearch.glade \
 	     overlay.ui \
 	     menus.ui
 
-AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) -Wall -std=c11 -g -Ofast
+AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) -Wall -std=c11 -g -Ofast
 bin_PROGRAMS = fsearch
 fsearch_SOURCES = main.c \
 		  fsearch.c \
@@ -36,5 +36,5 @@ resources.h:
 resources.c: gresource.xml $(resource_files) resources.h
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/gresource.xml
 
-fsearch_LDADD = $(FSEARCH_LIBS) $(GTK_LIBS) $(GLIB_LIBS) $(GIO_LIBS)
+fsearch_LDADD = $(FSEARCH_LIBS) $(GTK_LIBS) $(GLIB_LIBS) $(GIO_LIBS) $(PCRE_LIBS)
 

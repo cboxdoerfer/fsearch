@@ -22,8 +22,11 @@
 #include <unistd.h>
 #include <string.h>
 #include <ctype.h>
+#include <pcre.h>
 #include "database_search.h"
 #include "string_utils.h"
+
+#define OVECCOUNT 3
 
 struct _DatabaseSearch
 {
@@ -204,9 +207,15 @@ search_regex_thread (gpointer user_data)
 
     GList *queries = ctx->queries;
     search_query_t *query = queries->data;
-    GRegexCompileFlags regex_compile_flags = G_REGEX_CASELESS | G_REGEX_OPTIMIZE;
-    GError *error = NULL;
-    GRegex *regex = g_regex_new (query->query, regex_compile_flags, 0, &error);
+    const char *error;
+    int erroffset;
+    pcre *regex = pcre_compile (query->query,
+                                PCRE_CASELESS,
+                                &error,
+                                &erroffset,
+                                NULL);
+
+    int ovector[OVECCOUNT];
 
     if (regex) {
         const uint32_t start = ctx->start_pos;
@@ -241,16 +250,23 @@ search_regex_thread (gpointer user_data)
                 DatabaseNodeData *data = node->data;
                 haystack = data->name;
             }
+            size_t haystack_len = strlen (haystack);
 
-            GMatchInfo *match_info = NULL;
-            if (g_regex_match (regex, haystack, 0, &match_info)) {
+            if (pcre_exec (regex,
+                           NULL,
+                           haystack,
+                           haystack_len,
+                           0,
+                           0,
+                           ovector,
+                           OVECCOUNT)
+                >= 0) {
                 results[num_results] = node;
                 num_results++;
             }
-            g_match_info_free (match_info);
         }
         ctx->num_results = num_results;
-        g_regex_unref (regex);
+        pcre_free (regex);
     }
     return NULL;
 }
