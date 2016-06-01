@@ -32,7 +32,6 @@
 #include <glib/gstdio.h>
 
 #include "database.h"
-#include "database_node.h"
 #include "config.h"
 
 #define WS_NONE		0
@@ -62,12 +61,10 @@ struct _DatabaseSearch
     uint32_t search_in_path;
 };
 
-typedef GNode DatabaseItem;
-
 struct _DatabaseLocation
 {
     // B+ tree of entry nodes
-    GNode *entries;
+    BTreeNode *entries;
     uint32_t num_items;
 };
 
@@ -108,7 +105,7 @@ db_location_load_from_file (const char *fname)
         return NULL;
     }
 
-    GNode *root = NULL;
+    BTreeNode *root = NULL;
 
     char magic[4];
     if (fread (magic, 1, 4, fp) != 4) {
@@ -145,7 +142,7 @@ db_location_load_from_file (const char *fname)
     }
 
     uint32_t num_items_read = 0;
-    GNode *prev = NULL;
+    BTreeNode *prev = NULL;
     while (true) {
         uint16_t name_len = 0;
         if (fread (&name_len, 1, 2, fp) != 2) {
@@ -203,18 +200,19 @@ db_location_load_from_file (const char *fname)
             goto load_fail;
         }
 
-        GNode *new = db_node_new (name, size, mtime, is_dir, pos);
+        BTreeNode *new = btree_node_new (name, mtime, size, pos, is_dir);
         if (!prev) {
             prev = new;
             root = new;
             continue;
         }
-        prev = g_node_prepend (prev, new);
+        prev = btree_node_prepend (prev, new);
         num_items_read++;
     }
     printf("read database: %d/%d\n", num_items_read, num_items);
 
     DatabaseLocation *location = db_location_new ();
+    location->num_items = num_items_read;
     location->entries = root;
 
     return location;
@@ -225,7 +223,7 @@ load_fail:
         fclose (fp);
     }
     if (root) {
-        db_node_free_tree (root);
+        btree_node_free (root);
     }
     return NULL;
 }
@@ -264,17 +262,17 @@ db_location_write_to_file (DatabaseLocation *location, const char *path)
         goto save_fail;
     }
 
-    uint32_t num_items = g_node_n_nodes (location->entries, G_TRAVERSE_ALL);
+    uint32_t num_items = btree_node_n_nodes (location->entries);
     if (fwrite (&num_items, 1, 4, fp) != 4) {
         goto save_fail;
     }
 
     const uint16_t del = 0;
 
-    GNode *root = location->entries;
-    GNode *node = root;
+    BTreeNode *root = location->entries;
+    BTreeNode *node = root;
     while (node) {
-        const char *name = db_node_get_name (node);
+        const char *name = node->name;
         uint16_t len = strlen (name);
         if (len) {
             // write length of node name
@@ -286,38 +284,38 @@ db_location_write_to_file (DatabaseLocation *location, const char *path)
                 goto save_fail;
             }
             // write node name
-            uint8_t is_dir = db_node_is_dir (node);
+            uint8_t is_dir = node->is_dir;
             if (fwrite (&is_dir, 1, 1, fp) != 1) {
                 goto save_fail;
             }
 
             // write node name
-            uint64_t size = db_node_get_size (node);
+            uint64_t size = node->size;
             if (fwrite (&size, 1, 8, fp) != 8) {
                 goto save_fail;
             }
 
             // write node name
-            uint64_t mtime = db_node_get_mtime (node);
+            uint64_t mtime = node->mtime;
             if (fwrite (&mtime, 1, 8, fp) != 8) {
                 goto save_fail;
             }
 
             // write node name
-            uint32_t pos = db_node_get_pos (node);
+            uint32_t pos = node->pos;
             if (fwrite (&pos, 1, 4, fp) != 4) {
                 goto save_fail;
             }
 
-            GNode *temp = g_node_first_child (node);
+            BTreeNode *temp = node->children;
             if (!temp) {
                 // reached end of children, write delimiter
                 if (fwrite (&del, 1, 2, fp) != 2) {
                     goto save_fail;
                 }
-                GNode *current = node;
+                BTreeNode *current = node;
                 while (true) {
-                    temp = g_node_next_sibling (current);
+                    temp = current->next;
                     if (temp) {
                         // found next, sibling add that
                         node = temp;
@@ -361,7 +359,7 @@ save_fail:
 int
 db_location_walk_tree_recursive (DatabaseLocation *location,
                                  const char *dname,
-                                 GNode *parent,
+                                 BTreeNode *parent,
                                  int spec)
 {
     int res = WALK_OK;
@@ -406,12 +404,12 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         /* will be false for symlinked dirs */
 
         const bool is_dir = S_ISDIR (st.st_mode);
-        GNode *node = db_node_new (dent->d_name,
-                                   st.st_size,
-                                   st.st_mtime,
-                                   is_dir,
-                                   0);
-        db_node_append (parent, node);
+        BTreeNode *node = btree_node_new (dent->d_name,
+                                          st.st_mtime,
+                                          st.st_size,
+                                          0,
+                                          is_dir);
+        btree_node_prepend (parent, node);
         location->num_items++;
         if (is_dir) {
             /* recursively follow dirs */
@@ -430,7 +428,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
 static DatabaseLocation *
 db_location_build_tree (const char *dname, int spec)
 {
-    GNode *root = db_node_new (dname, 0, 0, true, 0);
+    BTreeNode *root = btree_node_new (dname, 0, 0, 0, true);
     DatabaseLocation *location = db_location_new ();
     location->entries = root;
     uint32_t res = db_location_walk_tree_recursive (location, dname, root, spec);
@@ -450,47 +448,36 @@ db_location_new (void)
     return location;
 }
 
-gboolean
-db_list_insert_node (GNode *node, gpointer data)
+bool
+db_list_insert_node (BTreeNode *node, void *data)
 {
     Database *db = data;
-    uint32_t pos = db_node_get_pos (node);
-    darray_set_item (db->entries, node, pos);
+    darray_set_item (db->entries, node, node->pos);
     db->num_entries++;
-    return FALSE;
+    return true;
 }
 
 static void
-db_traverse_tree_insert (GNode *node, gpointer user_data)
+db_traverse_tree_insert (BTreeNode *node, void *data)
 {
-    g_node_traverse (node,
-                     G_IN_ORDER,
-                     G_TRAVERSE_ALL,
-                     -1,
-                     db_list_insert_node,
-                     user_data);
+    btree_node_traverse (node, db_list_insert_node, data);
 }
 
 static uint32_t temp_index = 0;
 
-gboolean
-db_list_add_node (GNode *node, gpointer data)
+bool
+db_list_add_node (BTreeNode *node, void *data)
 {
     Database *db = data;
     darray_set_item (db->entries, node, temp_index++);
     db->num_entries++;
-    return FALSE;
+    return true;
 }
 
 static void
-db_traverse_tree_add (GNode *node, gpointer user_data)
+db_traverse_tree_add (BTreeNode *node, void *data)
 {
-    g_node_traverse (node,
-                     G_IN_ORDER,
-                     G_TRAVERSE_ALL,
-                     -1,
-                     db_list_add_node,
-                     user_data);
+    btree_node_traverse (node, db_list_add_node, data);
 }
 
 static void
@@ -500,10 +487,7 @@ db_list_insert_location (Database *db, DatabaseLocation *location)
     g_assert (location != NULL);
     g_assert (location->entries != NULL);
 
-    g_node_children_foreach (location->entries,
-                             G_TRAVERSE_ALL,
-                             db_traverse_tree_insert,
-                             db);
+    btree_node_children_foreach (location->entries, db_traverse_tree_insert, db);
 }
 
 
@@ -514,10 +498,7 @@ db_list_add_location (Database *db, DatabaseLocation *location)
     g_assert (location != NULL);
     g_assert (location->entries != NULL);
 
-    g_node_children_foreach (location->entries,
-                             G_TRAVERSE_ALL,
-                             db_traverse_tree_add,
-                             db);
+    btree_node_children_foreach (location->entries, db_traverse_tree_add, db);
 }
 
 static DatabaseLocation *
@@ -529,7 +510,8 @@ db_location_get_for_path (Database *db, const char *path)
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
         DatabaseLocation *location = (DatabaseLocation *)l->data;
-        const char *location_path = db_node_get_root_path (location->entries);
+        BTreeNode *root = btree_node_get_root (location->entries);
+        const char *location_path = root->name;
         if (!strcmp (location_path, path)) {
             return location;
         }
@@ -546,7 +528,8 @@ db_has_location (Database *db, const char *path)
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
         DatabaseLocation *location = (DatabaseLocation *)l->data;
-        const char *location_path = db_node_get_root_path (location->entries);
+        BTreeNode *root = btree_node_get_root (location->entries);
+        const char *location_path = root->name;
         if (!strcmp (location_path, path)) {
             return true;
         }
@@ -560,7 +543,7 @@ db_location_free (DatabaseLocation *location)
     g_assert (location != NULL);
 
     if (location->entries) {
-        db_node_free_tree (location->entries);
+        btree_node_free (location->entries);
     }
     g_free (location);
     location = NULL;
@@ -659,7 +642,8 @@ db_save_locations (Database *db)
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
         DatabaseLocation *location = (DatabaseLocation *)l->data;
-        const char *location_path = db_node_get_root_path (location->entries);
+        BTreeNode *root = btree_node_get_root (location->entries);
+        const char *location_path = root->name;
         db_save_location (db, location_path);
     }
     return true;
@@ -698,7 +682,8 @@ db_location_load (Database *db, const char *location_name)
     load_path = NULL;
 
     if (location) {
-        location->num_items = g_node_n_nodes (location->entries, G_TRAVERSE_ALL);
+        location->num_items = btree_node_n_nodes (location->entries);
+        printf("number of nodes: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db->busy = false;
@@ -738,8 +723,8 @@ db_update_sort_index (Database *db)
     g_assert (db->entries != NULL);
 
     for (uint32_t i = 0; i < db->num_entries; ++i) {
-        GNode *node = darray_get_item (db->entries, i);
-        db_node_set_pos (node, i);
+        BTreeNode *node = darray_get_item (db->entries, i);
+        node->pos = i;
     }
 }
 
@@ -799,7 +784,7 @@ db_update_entries_list (Database *db)
     db_unlock (db);
 }
 
-GNode *
+BTreeNode *
 db_location_get_entries (DatabaseLocation *location)
 {
     g_assert (location != NULL);
@@ -877,34 +862,34 @@ db_get_entries (Database *db)
 static int
 sort_by_name (const void *a, const void *b)
 {
-    GNode *node_a = *(GNode **)a;
-    GNode *node_b = *(GNode **)b;
+    BTreeNode *node_a = *(BTreeNode **)a;
+    BTreeNode *node_b = *(BTreeNode **)b;
 
-    const bool is_dir_a = db_node_is_dir (node_a);
-    const bool is_dir_b = db_node_is_dir (node_b);
+    const bool is_dir_a = node_a->is_dir;
+    const bool is_dir_b = node_b->is_dir;
     if (is_dir_a != is_dir_b) {
         return is_dir_a ? -1 : 1;
     }
 
-    return strverscmp (db_node_get_name (node_a), db_node_get_name (node_b));
+    return strverscmp (node_a->name, node_b->name);
 }
 
 static int
 sort_by_path (const void *a, const void *b)
 {
-    GNode *node_a = *(GNode **)a;
-    GNode *node_b = *(GNode **)b;
+    BTreeNode *node_a = *(BTreeNode **)a;
+    BTreeNode *node_b = *(BTreeNode **)b;
 
-    const bool is_dir_a = db_node_is_dir (node_a);
-    const bool is_dir_b = db_node_is_dir (node_b);
+    const bool is_dir_a = node_a->is_dir;
+    const bool is_dir_b = node_b->is_dir;
     if (is_dir_a != is_dir_b) {
         return is_dir_a ? -1 : 1;
     }
 
     char path_a[PATH_MAX] = "";
     char path_b[PATH_MAX] = "";
-    db_node_get_path (node_a, path_a, sizeof (path_a));
-    db_node_get_path (node_b, path_b, sizeof (path_b));
+    btree_node_get_path (node_a, path_a, sizeof (path_a));
+    btree_node_get_path (node_b, path_b, sizeof (path_b));
 
     return strverscmp (path_a, path_b);
 }

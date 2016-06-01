@@ -20,7 +20,7 @@
 
 #include <stdint.h>
 #include "array.h"
-#include "database_node.h"
+#include "btree.h"
 #include "fsearch_thread_pool.h"
 
 typedef struct _DatabaseSearch DatabaseSearch;
@@ -50,7 +50,7 @@ db_search_new (FsearchThreadPool *pool,
                bool enable_regex,
                bool search_in_path);
 
-GNode *
+BTreeNode *
 db_search_entry_get_node (DatabaseSearchEntry *entry);
 
 uint32_t

@@ -24,6 +24,7 @@
 #include "iconstore.h"
 #include "config.h"
 #include "utils.h"
+#include "array.h"
 #include "database_search.h"
 
 struct _FsearchApplicationWindow {
@@ -338,8 +339,8 @@ count_results_cb (GtkTreeModel *model,
     count_results_ctx *ctx = (count_results_ctx *)data;
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
     if (entry) {
-        GNode *node = db_search_entry_get_node (entry);
-        if (db_node_is_dir (node)) {
+        BTreeNode *node = db_search_entry_get_node (entry);
+        if (node->is_dir) {
             ctx->num_folders++;
         }
         else {
@@ -461,7 +462,7 @@ on_listview_row_activated (GtkTreeView       *tree_view,
     if (gtk_tree_model_get_iter(model, &iter, path)) {
         DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
         if (entry) {
-            GNode * node = db_search_entry_get_node (entry);
+            BTreeNode * node = db_search_entry_get_node (entry);
             launch_node (node);
         }
     }
@@ -919,10 +920,10 @@ on_listview_query_tooltip (GtkWidget  *widget,
 
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
     if (entry) {
-        GNode *node = db_search_entry_get_node (entry);
+        BTreeNode *node = db_search_entry_get_node (entry);
         if (node) {
             char path_name[PATH_MAX] = "";
-            db_node_get_path_full (node, path_name, sizeof (path_name));
+            btree_node_get_path_full (node, path_name, sizeof (path_name));
             gtk_tree_view_set_tooltip_row (GTK_TREE_VIEW (widget),
                                            tooltip,
                                            path);

@@ -14,7 +14,6 @@ fsearch_SOURCES = main.c \
 		  clipboard.h \
 		  config.c \
 		  database.c \
-		  database_node.c \
 		  database_search.c \
 		  iconstore.c \
 		  list_model.c \
@@ -24,6 +23,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_thread_pool.c \
 		  array.c \
 		  string_utils.c \
+		  btree.c \
 		  utils.c
 
 BUILT_SOURCES=resources.c resources.h

@@ -6,6 +6,7 @@
 #include "database_search.h"
 #include "utils.h"
 #include "config.h"
+#include "btree.h"
 
 static void
 action_set_active_bool (GActionGroup *group, const gchar *action_name, bool value)
@@ -42,9 +43,9 @@ copy_file (GtkTreeModel *model,
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
     GList **file_list = (GList **)userdata;
     if (entry) {
-        GNode * node = db_search_entry_get_node (entry);
+        BTreeNode *node = db_search_entry_get_node (entry);
         char path[PATH_MAX] = "";
-        bool res = db_node_get_path_full (node, path, sizeof (path));
+        bool res = btree_node_get_path_full (node, path, sizeof (path));
         if (res) {
             *file_list = g_list_prepend (*file_list, g_strdup (path));
         }
@@ -146,7 +147,7 @@ open_cb (GtkTreeModel *model,
 {
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
     if (entry) {
-        GNode *node = db_search_entry_get_node (entry);
+        BTreeNode *node = db_search_entry_get_node (entry);
         if (node) {
             launch_node (node);
         }
@@ -176,7 +177,7 @@ open_folder_cb (GtkTreeModel *model,
 {
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
     if (entry) {
-        GNode *node = db_search_entry_get_node (entry);
+        BTreeNode *node = db_search_entry_get_node (entry);
         if (node) {
             launch_node_path (node);
         }

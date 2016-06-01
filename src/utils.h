@@ -19,12 +19,13 @@
 #pragma once
 
 #include <glib.h>
+#include "btree.h"
 
 gboolean
 build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name);
 
 void
-launch_node (GNode *node);
+launch_node (BTreeNode *node);
 
 void
-launch_node_path (GNode *node);
+launch_node_path (BTreeNode *node);

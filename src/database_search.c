@@ -17,6 +17,7 @@
    */
 
 #define _GNU_SOURCE
+#include <sys/time.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <unistd.h>
@@ -46,7 +47,7 @@ struct _DatabaseSearch
 
 struct _DatabaseSearchEntry
 {
-    GNode *node;
+    BTreeNode *node;
     uint32_t pos;
 };
 
@@ -59,7 +60,7 @@ typedef struct search_query_s {
 
 typedef struct search_context_s {
     DatabaseSearch *search;
-    GNode **results;
+    BTreeNode **results;
     GList *queries;
     uint32_t num_queries;
     uint32_t num_results;
@@ -70,7 +71,7 @@ typedef struct search_context_s {
 } search_context_t;
 
 DatabaseSearchEntry *
-db_search_entry_new (GNode *node, uint32_t pos);
+db_search_entry_new (BTreeNode *node, uint32_t pos);
 
 static void
 db_search_entry_free (DatabaseSearchEntry *entry);
@@ -90,7 +91,7 @@ new_thread_data (DatabaseSearch *search,
     ctx->search = search;
     ctx->queries = queries;
     ctx->num_queries = num_queries;
-    ctx->results = calloc (end_pos - start_pos + 1, sizeof (GNode *));
+    ctx->results = calloc (end_pos - start_pos + 1, sizeof (BTreeNode *));
     g_assert (ctx->results != NULL);
 
     ctx->num_results = 0;
@@ -102,12 +103,12 @@ new_thread_data (DatabaseSearch *search,
 }
 
 static inline bool
-filter_node (GNode *node, FsearchFilter filter)
+filter_node (BTreeNode *node, FsearchFilter filter)
 {
     if (filter == FSEARCH_FILTER_NONE) {
         return true;
     }
-    bool is_dir = db_node_is_dir (node);
+    bool is_dir = node->is_dir;
     if (filter == FSEARCH_FILTER_FILES
         && !is_dir) {
         return true;
@@ -138,12 +139,12 @@ search_thread (gpointer user_data)
 
 
     uint32_t num_results = 0;
-    GNode **results = ctx->results;
+    BTreeNode **results = ctx->results;
     for (uint32_t i = start; i <= end; i++) {
         if (num_results == max_results) {
             break;
         }
-        GNode *node = darray_get_item (entries, i);
+        BTreeNode *node = darray_get_item (entries, i);
         if (!node) {
             continue;
         }
@@ -154,12 +155,11 @@ search_thread (gpointer user_data)
         const char *haystack = NULL;
         if (search_in_path) {
             gchar full_path[PATH_MAX] = "";
-            db_node_get_path_full (node, full_path, sizeof (full_path));
+            btree_node_get_path_full (node, full_path, sizeof (full_path));
             haystack = full_path;
         }
         else {
-            DatabaseNodeData *data = node->data;
-            haystack = data->name;
+            haystack = node->name;
         }
 
 
@@ -232,7 +232,7 @@ search_regex_thread (gpointer user_data)
         const uint32_t max_results = ctx->max_results;
         const bool search_in_path = ctx->search->search_in_path;
         DynamicArray *entries = ctx->search->entries;
-        GNode **results = ctx->results;
+        BTreeNode **results = ctx->results;
         const FsearchFilter filter = ctx->filter;
 
         uint32_t num_results = 0;
@@ -240,7 +240,7 @@ search_regex_thread (gpointer user_data)
             if (num_results == max_results) {
                 break;
             }
-            GNode *node = darray_get_item (entries, i);
+            BTreeNode *node = darray_get_item (entries, i);
             if (!node) {
                 continue;
             }
@@ -252,12 +252,11 @@ search_regex_thread (gpointer user_data)
             const char *haystack = NULL;
             if (search_in_path) {
                 gchar full_path[PATH_MAX] = "";
-                db_node_get_path_full (node, full_path, sizeof (full_path));
+                btree_node_get_path_full (node, full_path, sizeof (full_path));
                 haystack = full_path;
             }
             else {
-                DatabaseNodeData *data = node->data;
-                haystack = data->name;
+                haystack = node->name;
             }
             size_t haystack_len = strlen (haystack);
 
@@ -456,8 +455,8 @@ db_perform_normal_search (DatabaseSearch *search,
                     break;
                 }
             }
-            GNode *node = ctx->results[j];
-            if (db_node_is_dir (node)) {
+            BTreeNode *node = ctx->results[j];
+            if (node->is_dir) {
                 search->num_folders++;
             }
             else {
@@ -511,7 +510,7 @@ db_search_free (DatabaseSearch *search)
     return;
 }
 
-GNode *
+BTreeNode *
 db_search_entry_get_node (DatabaseSearchEntry *entry)
 {
     return entry->node;
@@ -539,7 +538,7 @@ db_search_entry_free (DatabaseSearchEntry *entry)
 }
 
 DatabaseSearchEntry *
-db_search_entry_new (GNode *node, uint32_t pos)
+db_search_entry_new (BTreeNode *node, uint32_t pos)
 {
     DatabaseSearchEntry *entry = g_new0 (DatabaseSearchEntry, 1);
     g_assert (entry != NULL);

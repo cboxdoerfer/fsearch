@@ -22,6 +22,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "array.h"
+#include "btree.h"
 
 typedef struct _Database Database;
 
@@ -42,7 +43,7 @@ db_location_remove (Database *db, const char *path);
 bool
 db_location_write_to_file (DatabaseLocation *location, const char *fname);
 
-GNode *
+BTreeNode *
 db_location_get_entries (DatabaseLocation *location);
 
 void
@@ -52,7 +53,7 @@ Database *
 db_database_new ();
 
 gboolean
-db_list_append_node (GNode *node,
+db_list_append_node (BTreeNode *node,
                      gpointer data);
 
 void

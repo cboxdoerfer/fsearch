@@ -25,6 +25,7 @@
 #include <glib/gstdio.h>
 #include "iconstore.h"
 #include "database_search.h"
+#include "btree.h"
 
 
 /* boring declarations of local functions */
@@ -140,7 +141,8 @@ get_mimetype (const gchar *path)
 static gchar *
 get_file_type (DatabaseSearchEntry *entry, const gchar *path) {
     gchar *type = NULL;
-    if (db_node_is_dir (db_search_entry_get_node (entry))) {
+    BTreeNode *node = db_search_entry_get_node (entry);
+    if (node->is_dir) {
         type = strdup ("Folder");
     }
     else {
@@ -479,10 +481,10 @@ list_model_get_value (GtkTreeModel *tree_model,
     GFileInfo * file_info = NULL;
     GFile * g_file = NULL;
 
-    GNode *node = db_search_entry_get_node (record);
-    const char *name = db_node_get_name (node);
+    BTreeNode *node = db_search_entry_get_node (record);
+    const char *name = node->name;
     gchar node_path[PATH_MAX] = "";
-    time_t mtime = db_node_get_mtime (node);
+    time_t mtime = node->mtime;
 
     g_value_init (value, list_model->column_types[column]);
     switch(column)
@@ -492,7 +494,7 @@ list_model_get_value (GtkTreeModel *tree_model,
             break;
 
         case LIST_MODEL_COL_ICON:
-            db_node_get_path (node, node_path, sizeof (node_path));
+            btree_node_get_path (node, node_path, sizeof (node_path));
             snprintf (path, sizeof (path), "%s/%s", node_path, name);
             g_file = g_file_new_for_path (path);
             file_info = g_file_query_info (g_file, "standard::*,thumbnail::path", 0, NULL, NULL);
@@ -506,29 +508,29 @@ list_model_get_value (GtkTreeModel *tree_model,
             break;
 
         case LIST_MODEL_COL_PATH:
-            db_node_get_path (node, node_path, sizeof (node_path));
+            btree_node_get_path (node, node_path, sizeof (node_path));
             g_value_set_static_string(value, node_path);
             break;
 
         case LIST_MODEL_COL_SIZE:
-            if (db_node_is_dir (node)) {
-                uint32_t num_children = db_node_get_num_children (node);
+            if (node->is_dir) {
+                uint32_t num_children = btree_node_n_children (node);
                 if (num_children == 1) {
-                    snprintf (output, sizeof (output), "%d Item", db_node_get_num_children (node));
+                    snprintf (output, sizeof (output), "%d Item", btree_node_n_children (node));
                 }
                 else {
-                    snprintf (output, sizeof (output), "%d Items", db_node_get_num_children (node));
+                    snprintf (output, sizeof (output), "%d Items", btree_node_n_children (node));
                 }
                 g_value_set_static_string(value, output);
             }
             else {
-                formatted_size = g_format_size (db_node_get_size (node));
+                formatted_size = g_format_size (node->size);
                 g_value_set_string(value, formatted_size);
             }
             break;
 
         case LIST_MODEL_COL_TYPE:
-            db_node_get_path (node, node_path, sizeof (node_path));
+            btree_node_get_path (node, node_path, sizeof (node_path));
             snprintf (path, sizeof (path), "%s/%s", node_path, name);
             mime_type = get_file_type (record, path);
             g_value_set_string(value, mime_type);
@@ -868,14 +870,14 @@ list_model_sortable_has_default_sort_func (GtkTreeSortable *sortable)
 static gint
 list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearchEntry *b)
 {
-    GNode *node_a = db_search_entry_get_node (a);
-    GNode *node_b = db_search_entry_get_node (b);
+    BTreeNode *node_a = db_search_entry_get_node (a);
+    BTreeNode *node_b = db_search_entry_get_node (b);
 
-    const bool is_dir_a = db_node_is_dir (node_a);
-    const bool is_dir_b = db_node_is_dir (node_b);
+    const bool is_dir_a = node_a->is_dir;
+    const bool is_dir_b = node_b->is_dir;
 
-    const gchar *name_a = db_node_get_name (node_a);
-    const gchar *name_b = db_node_get_name (node_b);
+    const gchar *name_a = node_a->name;
+    const gchar *name_b = node_b->name;
 
     gchar *type_a = NULL;
     gchar *type_b = NULL;
@@ -913,8 +915,8 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
                     return is_dir_b - is_dir_a;
                 }
 
-                db_node_get_path (node_a, path_a, sizeof (path_a));
-                db_node_get_path (node_b, path_b, sizeof (path_b));
+                btree_node_get_path (node_a, path_a, sizeof (path_a));
+                btree_node_get_path (node_b, path_b, sizeof (path_b));
                 return strverscmp (path_a, path_b);
             }
         case SORT_ID_TYPE:
@@ -926,9 +928,9 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
                     return 0;
                 }
 
-                db_node_get_path_full (node_a, path_a, sizeof (path_a));
+                btree_node_get_path_full (node_a, path_a, sizeof (path_a));
                 type_a = get_file_type (a, path_a);
-                db_node_get_path_full (node_b, path_b, sizeof (path_b));
+                btree_node_get_path_full (node_b, path_b, sizeof (path_b));
                 type_b = get_file_type (b, path_b);
 
                 if ((type_a) && (type_b)) {
@@ -941,17 +943,17 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
             }
         case SORT_ID_SIZE:
             {
-                if (db_node_get_size (node_a) == db_node_get_size (node_b))
+                if (node_a->size == node_b->size)
                     return 0;
 
-                return (db_node_get_size (node_a) > db_node_get_size (node_b)) ? 1 : -1;
+                return (node_a->size > node_b->size) ? 1 : -1;
             }
         case SORT_ID_CHANGED:
             {
-                if (db_node_get_mtime (node_a) == db_node_get_mtime (node_b))
+                if (node_a->mtime == node_b->mtime)
                     return 0;
 
-                return (db_node_get_mtime (node_a) > db_node_get_mtime (node_b)) ? 1 : -1;
+                return (node_a->mtime > node_b->mtime) ? 1 : -1;
             }
         default:
             return 0;

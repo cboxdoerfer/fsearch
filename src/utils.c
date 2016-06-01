@@ -21,7 +21,6 @@
 #include <linux/limits.h>
 #include <gio/gio.h>
 #include "utils.h"
-#include "database_node.h"
 
 gboolean
 build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name)
@@ -72,20 +71,20 @@ open_uri (const char *uri)
 }
 
 void
-launch_node (GNode *node)
+launch_node (BTreeNode *node)
 {
     char path[PATH_MAX] = "";
-    bool res = db_node_get_path_full (node, path, sizeof (path));
+    bool res = btree_node_get_path_full (node, path, sizeof (path));
     if (res) {
         open_uri (path);
     }
 }
 
 void
-launch_node_path (GNode *node)
+launch_node_path (BTreeNode *node)
 {
     char path[PATH_MAX] = "";
-    bool res = db_node_get_path (node, path, sizeof (path));
+    bool res = btree_node_get_path (node, path, sizeof (path));
     if (res) {
         open_uri (path);
     }
