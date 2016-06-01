@@ -11,6 +11,9 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 - Fast sort by filename, path, size or modification time
 - Customizable interface
 
+## Requirements
+- GTK+ 3.12 or newer
+
 ## Why yet another search utility?
 Easy one, Performance. On Windows I really like to use Everything Search Engine. It provides instant results as you type for all your files and lots of useful features (regex, filters, bookmarks, ...). On Linux however I couldn't find anything that's even remotely as fast and powerful.
 
