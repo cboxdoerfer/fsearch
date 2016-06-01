@@ -1,6 +1,13 @@
 # Build files
 Makefile.in
 /Makefile
+/data/Makefile
+/data/fsearch.desktop
+/data/fsearch.desktop.in
+/build
+/po
+/po/Makefile
+/po/Makefile.in.in
 /src/Makefile
 /autom4te.cache
 /autoscan.log
