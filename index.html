@@ -50,6 +50,7 @@
 
 <ul>
 <li>GTK+ 3.12 or newer</li>
+<li>PCRE (libpcre)</li>
 </ul>
 
 <h2>
@@ -57,7 +58,7 @@
 
 <p>Easy one, Performance. On Windows I really like to use Everything Search Engine. It provides instant results as you type for all your files and lots of useful features (regex, filters, bookmarks, ...). On Linux however I couldn't find anything that's even remotely as fast and powerful.</p>
 
-<p>Before I started working on FSearch I took a look at all the existing solutions I found (MATE Search Tool (formerly GNOME Search Tool), Recoll, Krusader (locate based search), SpaceFM File Search, Nautilus, ANGRYsearch, Catfish, ...) to find out whether it makes sense to improve those, instead of building a completely new application. But unfortunately none of those met my requirements:</p>
+<p>Before I started working on FSearch I took a look at all the existing solutions I found (locate, fzf, MATE Search Tool (formerly GNOME Search Tool), Recoll, Krusader (locate based search), SpaceFM File Search, Nautilus, ANGRYsearch, Catfish, ...) to find out whether it makes sense to improve those, instead of building a completely new application. But unfortunately none of those met my requirements:</p>
 
 <ul>
 <li>standalone application (not part of a file manager)</li>
@@ -71,7 +72,7 @@
 <h2>
 <a id="why-gtk3-and-not-qt5" class="anchor" href="#why-gtk3-and-not-qt5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Why GTK+3 and not Qt5?</h2>
 
-<p>I like both of them. And in fact my long term goal is to provide console, GTK+3 and Qt5 interfaces, or at least make it possible for others to build those by splitting the search and database functionality into a core library. But for the time being it's only GTK+3 because I tend to like C more than C++, I'm more familiar with GTK+ development, I almost exclusively run GTK+ applications and I really like some of it's new widget (e.g. Popovers).</p>
+<p>I like both of them. And in fact my long term goal is to provide console, GTK+3 and Qt5 interfaces, or at least make it possible for others to build those by splitting the search and database functionality into a core library. But for the time being it's only GTK+3 because I tend to like C more than C++, I'm more familiar with GTK+ development, I almost exclusively run GTK+ applications and I really like some of its new widgets (e.g. Popovers).</p>
 
 <h2>
 <a id="download" class="anchor" href="#download" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Download</h2>
