@@ -215,6 +215,8 @@ db_location_load_from_file (const char *fname)
     location->num_items = num_items_read;
     location->entries = root;
 
+    fclose (fp);
+
     return location;
 
 load_fail:
