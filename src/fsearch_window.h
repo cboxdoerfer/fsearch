@@ -42,6 +42,9 @@ GtkWidget *
 fsearch_application_window_get_search_mode_revealer (FsearchApplicationWindow *self);
 
 GtkWidget *
+fsearch_application_window_get_match_case_revealer (FsearchApplicationWindow *self);
+
+GtkWidget *
 fsearch_application_window_get_search_in_path_revealer (FsearchApplicationWindow *self);
 
 GtkWidget *

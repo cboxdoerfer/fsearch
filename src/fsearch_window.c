@@ -38,6 +38,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_overlay;
     GtkWidget *statusbar;
     GtkWidget *search_mode_revealer;
+    GtkWidget *match_case_revealer;
     GtkWidget *search_in_path_revealer;
     GtkWidget *search_button;
     GtkWidget *search_entry;
@@ -144,6 +145,7 @@ fsearch_window_apply_config (FsearchApplicationWindow *self)
     gtk_widget_set_visible (self->statusbar, config->show_statusbar);
     gtk_widget_set_visible (self->filter_combobox, config->show_filter);
     gtk_widget_set_visible (self->search_button, config->show_search_button);
+    gtk_revealer_set_reveal_child (GTK_REVEALER (self->match_case_revealer), config->match_case);
     gtk_revealer_set_reveal_child (GTK_REVEALER (self->search_mode_revealer), config->enable_regex);
     gtk_revealer_set_reveal_child (GTK_REVEALER (self->search_in_path_revealer), config->search_in_path);
 
@@ -284,15 +286,16 @@ perform_search (FsearchApplicationWindow *win, const char *text)
                           db_get_entries (db),
                           db_get_num_entries (db),
                           text,
+                          config->match_case,
                           config->enable_regex,
                           config->search_in_path);
     }
     else {
-        printf("new search again\n");
         win->search = db_search_new (fsearch_application_get_thread_pool (app),
                                      db_get_entries (db),
                                      db_get_num_entries (db),
                                      text,
+                                     config->match_case,
                                      config->enable_regex,
                                      config->search_in_path);
     }
@@ -349,7 +352,7 @@ static gboolean
 on_listview_popup_menu (GtkWidget *widget,
                         gpointer   user_data)
 {
-    printf("popup menu launch\n");
+    //printf("popup menu launch\n");
     return FALSE;
 }
 
@@ -936,6 +939,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, menubar);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, statusbar);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_in_path_revealer);
+    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, match_case_revealer);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_mode_revealer);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_button);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_entry);
@@ -1012,6 +1016,13 @@ fsearch_application_window_get_search_in_path_revealer (FsearchApplicationWindow
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
     return self->search_in_path_revealer;
+}
+
+GtkWidget *
+fsearch_application_window_get_match_case_revealer (FsearchApplicationWindow *self)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+    return self->match_case_revealer;
 }
 
 GtkWidget *

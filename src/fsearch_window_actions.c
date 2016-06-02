@@ -314,6 +314,28 @@ fsearch_window_action_search_mode (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_match_case (GSimpleAction *action,
+                                  GVariant      *variant,
+                                  gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state (action, variant);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    bool match_case_old = config->match_case;
+    config->match_case = g_variant_get_boolean (variant);
+    GtkWidget *revealer = fsearch_application_window_get_match_case_revealer (self);
+    if (config->match_case) {
+        gtk_revealer_set_reveal_child (GTK_REVEALER (revealer), TRUE);
+    }
+    else {
+        gtk_revealer_set_reveal_child (GTK_REVEALER (revealer), FALSE);
+    }
+    if (match_case_old != config->match_case) {
+        g_idle_add (fsearch_application_window_update_search, self);
+    }
+}
+
+static void
 fsearch_window_action_update_database (GSimpleAction *action,
                                        GVariant      *variant,
                                        gpointer       user_data)
@@ -352,6 +374,7 @@ static GActionEntry FsearchWindowActions[] = {
     // Search
     { "search_in_path", action_toggle_state_cb, NULL, "true", fsearch_window_action_search_in_path },
     { "search_mode", action_toggle_state_cb, NULL, "true", fsearch_window_action_search_mode },
+    { "match_case", action_toggle_state_cb, NULL, "true", fsearch_window_action_match_case },
 };
 
 void
@@ -395,6 +418,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_active_bool (group, "show_search_button", config->show_search_button);
     action_set_active_bool (group, "search_in_path", config->search_in_path);
     action_set_active_bool (group, "search_mode", config->enable_regex);
+    action_set_active_bool (group, "match_case", config->match_case);
 }
 
 void

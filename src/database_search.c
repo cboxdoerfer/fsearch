@@ -39,6 +39,7 @@ struct _DatabaseSearch
     gchar *query;
     uint32_t num_folders;
     uint32_t num_files;
+    bool match_case;
     bool enable_regex;
     bool search_in_path;
 };
@@ -132,6 +133,7 @@ search_thread (gpointer user_data)
     const FsearchFilter filter = ctx->filter;
     GList *queries = ctx->queries;
     const bool search_in_path = ctx->search->search_in_path;
+    const bool match_case = ctx->search->match_case;
     DynamicArray *entries = ctx->search->entries;
 
 
@@ -166,8 +168,15 @@ search_thread (gpointer user_data)
         while (temp) {
             search_query_t *query = temp->data;
             gchar *ptr = query->query;
-            if (!fsearch_strcasestr (haystack, ptr, query->query_len)) {
-                break;
+            if (match_case) {
+                if (!fsearch_strstr (haystack, ptr, query->query_len)) {
+                    break;
+                }
+            }
+            else {
+                if (!fsearch_strcasestr (haystack, ptr, query->query_len)) {
+                    break;
+                }
             }
             num_found++;
             temp = temp->next;
@@ -210,7 +219,7 @@ search_regex_thread (gpointer user_data)
     const char *error;
     int erroffset;
     pcre *regex = pcre_compile (query->query,
-                                PCRE_CASELESS,
+                                ctx->search->match_case ? 0 : PCRE_CASELESS,
                                 &error,
                                 &erroffset,
                                 NULL);
@@ -545,6 +554,7 @@ db_search_new (FsearchThreadPool *pool,
                DynamicArray *entries,
                uint32_t num_entries,
                const char *query,
+               bool match_case,
                bool enable_regex,
                bool search_in_path)
 {
@@ -565,6 +575,7 @@ db_search_new (FsearchThreadPool *pool,
     db_search->num_files = 0;
     db_search->enable_regex = enable_regex;
     db_search->search_in_path = search_in_path;
+    db_search->match_case = match_case;
     return db_search;
 }
 
@@ -592,6 +603,7 @@ db_search_update (DatabaseSearch *search,
                   DynamicArray *entries,
                   uint32_t num_entries,
                   const char *query,
+                  bool match_case,
                   bool enable_regex,
                   bool search_in_path)
 {
@@ -602,6 +614,7 @@ db_search_update (DatabaseSearch *search,
     db_search_set_query (search, query);
     search->enable_regex = enable_regex;
     search->search_in_path = search_in_path;
+    search->match_case = match_case;
 }
 
 uint32_t

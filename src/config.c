@@ -163,6 +163,10 @@ load_config (FsearchConfig *config)
                                                           "show_search_button",
                                                           true);
         // Search
+        config->match_case = config_load_boolean (key_file,
+                                                  "Search",
+                                                  "match_case",
+                                                  false);
         config->enable_regex = config_load_boolean (key_file,
                                                     "Search",
                                                     "enable_regex",
@@ -211,6 +215,7 @@ load_default_config (FsearchConfig *config)
     g_assert (config != NULL);
 
     // Search
+    config->match_case = false;
     config->enable_regex = false;
     config->search_in_path = false;
     config->limit_results = true;
@@ -250,6 +255,7 @@ save_config (FsearchConfig *config)
     // Search
     g_key_file_set_boolean (key_file, "Search", "search_in_path", config->search_in_path);
     g_key_file_set_boolean (key_file, "Search", "enable_regex", config->enable_regex);
+    g_key_file_set_boolean (key_file, "Search", "match_case", config->match_case);
     g_key_file_set_boolean (key_file, "Search", "limit_results", config->limit_results);
     g_key_file_set_integer (key_file, "Search", "num_results", config->num_results);
 

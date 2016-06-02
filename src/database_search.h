@@ -46,6 +46,7 @@ db_search_new (FsearchThreadPool *pool,
                DynamicArray *entries,
                uint32_t num_entries,
                const char *query,
+               bool match_case,
                bool enable_regex,
                bool search_in_path);
 
@@ -66,6 +67,7 @@ db_search_update (DatabaseSearch *search,
                   DynamicArray *entries,
                   uint32_t num_entries,
                   const char *query,
+                  bool match_case,
                   bool enable_regex,
                   bool search_in_path);
 

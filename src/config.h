@@ -30,6 +30,7 @@ struct _FsearchConfig
     bool limit_results;
     bool search_in_path;
     bool enable_regex;
+    bool match_case;
 
     // Interface
     bool enable_dark_theme;
