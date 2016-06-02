@@ -539,8 +539,8 @@ on_search_in_path_label_button_press_event (GtkWidget *widget,
 
 static gboolean
 on_match_case_label_button_press_event (GtkWidget *widget,
-                                            GdkEventButton *event,
-                                            gpointer user_data)
+                                        GdkEventButton *event,
+                                        gpointer user_data)
 {
     return toggle_action_on_2button_press (event, "match_case", user_data);
 }
