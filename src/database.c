@@ -546,6 +546,7 @@ db_location_free (DatabaseLocation *location)
 
     if (location->entries) {
         btree_node_free (location->entries);
+        location->entries = NULL;
     }
     g_free (location);
     location = NULL;
