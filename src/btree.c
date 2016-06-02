@@ -53,14 +53,12 @@ btree_node_data_free (BTreeNode *node)
     if (!node) {
         return;
     }
-    if (!node->parent) {
-        btree_node_unlink (node);
-    }
     if (node->name) {
         free (node->name);
         node->name = NULL;
     }
     free (node);
+    node = NULL;
 }
 
 static void
@@ -111,11 +109,7 @@ btree_node_free (BTreeNode *node)
     if (node->children) {
         btree_nodes_free (node->children);
     }
-    if (node->name) {
-        free (node->name);
-        node->name = NULL;
-    }
-    free (node);
+    btree_node_data_free (node);
 }
 
 BTreeNode *
