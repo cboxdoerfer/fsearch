@@ -537,6 +537,14 @@ on_search_in_path_label_button_press_event (GtkWidget *widget,
     return toggle_action_on_2button_press (event, "search_in_path", user_data);
 }
 
+static gboolean
+on_match_case_label_button_press_event (GtkWidget *widget,
+                                            GdkEventButton *event,
+                                            gpointer user_data)
+{
+    return toggle_action_on_2button_press (event, "match_case", user_data);
+}
+
 static void
 on_search_entry_changed (GtkEntry *entry, gpointer user_data)
 {
@@ -968,6 +976,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_callback (widget_class, on_listview_selection_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_row_activated);
     gtk_widget_class_bind_template_callback (widget_class, on_selection_toggle_button_toggled);
+    gtk_widget_class_bind_template_callback (widget_class, on_match_case_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_search_in_path_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_search_mode_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_database_toggle_button_toggled);
