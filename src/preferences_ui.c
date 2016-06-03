@@ -241,13 +241,18 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_grid_set_row_spacing (GTK_GRID (database_table), 4);
     gtk_grid_set_column_spacing (GTK_GRID (database_table), 4);
     //gtk_grid_set_column_homogeneous (GTK_GRID (database_table), TRUE);
-    gtk_grid_set_row_homogeneous (GTK_GRID (database_table), TRUE);
+    gtk_grid_set_row_homogeneous (GTK_GRID (database_table), FALSE);
     gtk_box_pack_start (GTK_BOX (database_box), database_table, TRUE, TRUE, 0);
+
+    GtkWidget *update_database_on_launch = gtk_check_button_new_with_label ("Update Database on Application Launch");
+    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (update_database_on_launch),
+                                  main_config->update_database_on_launch);
+    gtk_grid_attach (GTK_GRID (database_table), update_database_on_launch, 0, 0, 1, 1);
 
     GtkWidget *scrolled_window = gtk_scrolled_window_new (NULL, NULL);
     gtk_scrolled_window_set_shadow_type (GTK_SCROLLED_WINDOW (scrolled_window), GTK_SHADOW_ETCHED_IN);
     gtk_scrolled_window_set_policy (GTK_SCROLLED_WINDOW (scrolled_window), GTK_POLICY_AUTOMATIC, GTK_POLICY_AUTOMATIC);
-    gtk_grid_attach (GTK_GRID (database_table), scrolled_window, 0, 0, 1, 1);
+    gtk_grid_attach (GTK_GRID (database_table), scrolled_window, 0, 1, 1, 1);
     gtk_widget_set_hexpand (scrolled_window, TRUE);
     gtk_widget_set_size_request (scrolled_window, 300, 150);
 
@@ -265,7 +270,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
 
     GtkWidget *folder_box = gtk_box_new (GTK_ORIENTATION_VERTICAL, 4);
     gtk_box_set_homogeneous (GTK_BOX (folder_box), FALSE);
-    gtk_grid_attach (GTK_GRID (database_table), folder_box, 1, 0, 1, 1);
+    gtk_grid_attach (GTK_GRID (database_table), folder_box, 1, 1, 1, 1);
 
     GtkWidget *add_folder = gtk_button_new_with_label ("Add");
     gtk_box_pack_start (GTK_BOX (folder_box), add_folder, FALSE, FALSE, 0);
@@ -300,6 +305,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (num_results));
         main_config->enable_dark_theme = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (enable_dark_theme));
         main_config->enable_list_tooltips = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (enable_list_tooltips));
+        main_config->update_database_on_launch = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (update_database_on_launch));
         g_object_set(gtk_settings_get_default(),
                      "gtk-application-prefer-dark-theme",
                      main_config->enable_dark_theme,

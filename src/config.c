@@ -184,6 +184,12 @@ load_config (FsearchConfig *config)
                                                    "num_results",
                                                    10000);
 
+        // Database
+        config->update_database_on_launch = config_load_boolean (key_file,
+                                                                 "Database",
+                                                                 "update_database_on_launch",
+                                                                 false);
+
         // Locations
         uint32_t pos = 1;
         while (true) {
@@ -229,6 +235,9 @@ load_default_config (FsearchConfig *config)
     config->show_filter = true;
     config->show_search_button = true;
 
+    // Database
+    config->update_database_on_launch = false;
+
     // Locations
     config->locations = NULL;
 
@@ -258,6 +267,9 @@ save_config (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Search", "match_case", config->match_case);
     g_key_file_set_boolean (key_file, "Search", "limit_results", config->limit_results);
     g_key_file_set_integer (key_file, "Search", "num_results", config->num_results);
+
+    // Database
+    g_key_file_set_boolean (key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
 
     if (config->locations) {
         uint32_t pos = 1;

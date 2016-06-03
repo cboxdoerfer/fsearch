@@ -42,6 +42,9 @@ struct _FsearchConfig
     bool show_filter;
     bool show_search_button;
 
+    // database
+    bool update_database_on_launch;
+
     uint32_t num_results;
 
     GList *locations;
