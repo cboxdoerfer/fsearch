@@ -91,9 +91,6 @@ db_location_new (void);
 static void
 db_list_add_location (Database *db, DatabaseLocation *location);
 
-static bool
-db_has_location (Database *db, const char *path);
-
 // Implemenation
 DatabaseLocation *
 db_location_load_from_file (const char *fname)
@@ -521,24 +518,6 @@ db_location_get_for_path (Database *db, const char *path)
     return NULL;
 }
 
-static bool
-db_has_location (Database *db, const char *path)
-{
-    g_assert (db != NULL);
-    g_assert (path != NULL);
-
-    GList *locations = db->locations;
-    for (GList *l = locations; l != NULL; l = l->next) {
-        DatabaseLocation *location = (DatabaseLocation *)l->data;
-        BTreeNode *root = btree_node_get_root (location->entries);
-        const char *location_path = root->name;
-        if (!strcmp (location_path, path)) {
-            return true;
-        }
-    }
-    return false;
-}
-
 void
 db_location_free (DatabaseLocation *location)
 {
@@ -877,25 +856,25 @@ sort_by_name (const void *a, const void *b)
     return strverscmp (node_a->name, node_b->name);
 }
 
-static int
-sort_by_path (const void *a, const void *b)
-{
-    BTreeNode *node_a = *(BTreeNode **)a;
-    BTreeNode *node_b = *(BTreeNode **)b;
-
-    const bool is_dir_a = node_a->is_dir;
-    const bool is_dir_b = node_b->is_dir;
-    if (is_dir_a != is_dir_b) {
-        return is_dir_a ? -1 : 1;
-    }
-
-    char path_a[PATH_MAX] = "";
-    char path_b[PATH_MAX] = "";
-    btree_node_get_path (node_a, path_a, sizeof (path_a));
-    btree_node_get_path (node_b, path_b, sizeof (path_b));
-
-    return strverscmp (path_a, path_b);
-}
+//static int
+//sort_by_path (const void *a, const void *b)
+//{
+//    BTreeNode *node_a = *(BTreeNode **)a;
+//    BTreeNode *node_b = *(BTreeNode **)b;
+//
+//    const bool is_dir_a = node_a->is_dir;
+//    const bool is_dir_b = node_b->is_dir;
+//    if (is_dir_a != is_dir_b) {
+//        return is_dir_a ? -1 : 1;
+//    }
+//
+//    char path_a[PATH_MAX] = "";
+//    char path_b[PATH_MAX] = "";
+//    btree_node_get_path (node_a, path_a, sizeof (path_a));
+//    btree_node_get_path (node_b, path_b, sizeof (path_b));
+//
+//    return strverscmp (path_a, path_b);
+//}
 
 void
 db_sort (Database *db)

@@ -337,13 +337,6 @@ fsearch_window_action_match_case (GSimpleAction *action,
 }
 
 static void
-fsearch_window_action_update_database (GSimpleAction *action,
-                                       GVariant      *variant,
-                                       gpointer       user_data)
-{
-}
-
-static void
 action_toggle_state_cb (GSimpleAction *saction,
                         GVariant *parameter,
                         gpointer user_data)

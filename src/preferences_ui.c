@@ -92,8 +92,8 @@ static void
 on_scan_folder_button_clicked (GtkButton *button,
                                gpointer user_data)
 {
-    GtkTreeView *tree_view = GTK_TREE_VIEW (user_data);
-    GtkTreeSelection *sel = gtk_tree_view_get_selection (tree_view);
+    //GtkTreeView *tree_view = GTK_TREE_VIEW (user_data);
+    //GtkTreeSelection *sel = gtk_tree_view_get_selection (tree_view);
 }
 
 static void

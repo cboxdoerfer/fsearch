@@ -134,23 +134,6 @@ fsearch_application_finalize (GObject *object)
     G_OBJECT_CLASS (fsearch_application_parent_class)->finalize (object);
 }
 
-static void
-update_windows_after_db_update (FsearchApplication *app)
-{
-    GtkWindow *window = NULL;
-    GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
-
-    for (; windows; windows = windows->next) {
-        window = windows->data;
-
-        if (FSEARCH_WINDOW_IS_WINDOW (window)) {
-            //fsearch_application_window_update_search (window);
-            //fsearch_application_window_apply_model (window);
-        }
-    }
-    return;
-}
-
 static gboolean
 updated_database_signal_emit_cb (gpointer user_data)
 {
