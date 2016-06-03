@@ -304,15 +304,13 @@ is_regex (const char *query)
 bool
 str_has_upper (const char *string)
 {
-    return false;
     g_assert (string != NULL);
     const char *ptr = string;
-    while (ptr != '\0') {
-        if (g_ascii_isupper (ptr)) {
+    while (*ptr != '\0') {
+        if (isupper (*ptr)) {
             return true;
         }
         ptr++;
-
     }
     return false;
 }
