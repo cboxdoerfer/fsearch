@@ -279,7 +279,7 @@ search_regex_thread (gpointer user_data)
     return NULL;
 }
 
-int
+static int
 is_regex (const char *query)
 {
     char regex_chars[] = {
@@ -301,7 +301,7 @@ is_regex (const char *query)
     return (strpbrk(query, regex_chars) != NULL);
 }
 
-bool
+static bool
 str_has_upper (const char *string)
 {
     g_assert (string != NULL);
