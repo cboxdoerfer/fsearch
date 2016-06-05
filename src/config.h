@@ -32,6 +32,11 @@ struct _FsearchConfig
     bool enable_regex;
     bool match_case;
 
+    // Window
+    bool restore_window_size;
+    int32_t window_width;
+    int32_t window_height;
+
     // Interface
     bool enable_dark_theme;
     bool enable_list_tooltips;

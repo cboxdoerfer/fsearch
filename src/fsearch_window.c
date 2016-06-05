@@ -121,6 +121,20 @@ fsearch_application_window_update_search (gpointer window)
 }
 
 void
+fsearch_application_window_prepare_shutdown (gpointer self)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config (app);
+
+    gint width = 800;
+    gint height = 800;
+    gtk_window_get_size (GTK_WINDOW (self), &width, &height);
+    config->window_width = width;
+    config->window_height = height;
+}
+
+void
 fsearch_application_window_apply_model (gpointer window)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (window));
@@ -143,6 +157,11 @@ fsearch_window_apply_config (FsearchApplicationWindow *self)
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config (app);
 
+    if (config->restore_window_size) {
+        gtk_window_set_default_size (GTK_WINDOW (self),
+                                     config->window_width,
+                                     config->window_height);
+    }
     gtk_widget_set_visible (self->menubar, config->show_menubar);
     gtk_widget_set_visible (self->statusbar, config->show_statusbar);
     gtk_widget_set_visible (self->filter_combobox, config->show_filter);

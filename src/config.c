@@ -163,6 +163,20 @@ load_config (FsearchConfig *config)
                                                           "show_search_button",
                                                           true);
 
+        // Window
+        config->restore_window_size = config_load_boolean (key_file,
+                                                         "Interface",
+                                                         "restore_window_size",
+                                                         true);
+        config->window_width = config_load_integer (key_file,
+                                                    "Interface",
+                                                    "window_width",
+                                                    800);
+        config->window_height = config_load_integer (key_file,
+                                                     "Interface",
+                                                     "window_height",
+                                                     600);
+
         // Columns
         config->show_path_column = config_load_boolean (key_file,
                                                         "Interface",
@@ -298,6 +312,11 @@ load_default_config (FsearchConfig *config)
     config->show_filter = true;
     config->show_search_button = true;
 
+    // Window
+    config->restore_window_size = true;
+    config->window_width = 800;
+    config->window_height = 600;
+
     // Database
     config->update_database_on_launch = false;
 
@@ -323,6 +342,11 @@ save_config (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Interface", "show_statusbar", config->show_statusbar);
     g_key_file_set_boolean (key_file, "Interface", "show_filter", config->show_filter);
     g_key_file_set_boolean (key_file, "Interface", "show_search_button", config->show_search_button);
+
+    // Window
+    g_key_file_set_boolean (key_file, "Interface", "restore_window_size", config->restore_window_size);
+    g_key_file_set_integer (key_file, "Interface", "window_width", config->window_width);
+    g_key_file_set_integer (key_file, "Interface", "window_height", config->window_height);
 
     // Columns visibility
     g_key_file_set_boolean (key_file, "Interface", "show_path_column", config->show_path_column);
