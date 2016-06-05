@@ -26,6 +26,7 @@
 #include "utils.h"
 #include "array.h"
 #include "database_search.h"
+#include "listview.h"
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
@@ -561,139 +562,17 @@ create_view_and_model (FsearchApplicationWindow *app)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (app));
 
-    GtkTreeViewColumn   *col;
-    GtkCellRenderer     *renderer;
-
     app->list_model = list_model_new();
+    GtkTreeView *list = GTK_TREE_VIEW (app->listview);
+    listview_add_column (list, LIST_MODEL_COL_NAME, 250, -1);
+    listview_add_column (list, LIST_MODEL_COL_PATH, 250, -1);
+    listview_add_column (list, LIST_MODEL_COL_TYPE, 100, -1);
+    listview_add_column (list, LIST_MODEL_COL_SIZE, 75, -1);
+    listview_add_column (list, LIST_MODEL_COL_CHANGED, 75, -1);
 
-    gtk_tree_view_set_model (GTK_TREE_VIEW (app->listview),
+    gtk_tree_view_set_model (list,
                              GTK_TREE_MODEL(app->list_model));
-    gtk_tree_view_set_fixed_height_mode (GTK_TREE_VIEW (app->listview), TRUE);
-
-    gtk_widget_set_has_tooltip (GTK_WIDGET (app->listview), TRUE);
-
     g_object_unref(app->list_model); /* destroy store automatically with view */
-
-    col = gtk_tree_view_column_new();
-    renderer = gtk_cell_renderer_pixbuf_new ();
-    gtk_tree_view_column_pack_start (col, renderer, FALSE);
-    gtk_tree_view_column_add_attribute (col,
-                                        renderer,
-                                        "pixbuf",
-                                        LIST_MODEL_COL_ICON);
-
-    renderer = gtk_cell_renderer_text_new();
-    g_object_set (G_OBJECT (renderer),
-                  "ellipsize",
-                  PANGO_ELLIPSIZE_END,
-                  NULL);
-
-    gtk_tree_view_column_pack_start (col, renderer, TRUE);
-    gtk_tree_view_column_add_attribute (col,
-                                        renderer,
-                                        "text",
-                                        LIST_MODEL_COL_NAME);
-    gtk_tree_view_column_set_title (col, "Name");
-    gtk_tree_view_column_set_fixed_width (col, 250);
-    gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_resizable (col, TRUE);
-    gtk_tree_view_column_set_sort_column_id (col, SORT_ID_NAME);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (app->listview),col);
-
-    renderer = gtk_cell_renderer_text_new();
-    g_object_set (G_OBJECT (renderer),
-                  "ellipsize",
-                  PANGO_ELLIPSIZE_END,
-                  NULL);
-    g_object_set (G_OBJECT (renderer),
-                  "foreground",
-                  "grey",
-                  NULL);
-
-    col = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start (col, renderer, TRUE);
-    gtk_tree_view_column_add_attribute (col,
-                                        renderer,
-                                        "text",
-                                        LIST_MODEL_COL_PATH);
-    gtk_tree_view_column_set_title (col, "Path");
-    gtk_tree_view_column_set_fixed_width (col, 250);
-    gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_resizable (col, TRUE);
-    gtk_tree_view_column_set_sort_column_id (col, SORT_ID_PATH);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (app->listview),col);
-
-    renderer = gtk_cell_renderer_text_new();
-    g_object_set (G_OBJECT (renderer),
-                  "ellipsize",
-                  PANGO_ELLIPSIZE_END,
-                  NULL);
-    g_object_set (G_OBJECT (renderer),
-                  "foreground",
-                  "grey",
-                  NULL);
-
-    col = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start (col, renderer, TRUE);
-    gtk_tree_view_column_add_attribute (col,
-                                        renderer,
-                                        "text",
-                                        LIST_MODEL_COL_TYPE);
-    gtk_tree_view_column_set_title (col, "Type");
-    gtk_tree_view_column_set_fixed_width (col, 100);
-    gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_resizable (col, TRUE);
-    gtk_tree_view_column_set_sort_column_id (col, SORT_ID_TYPE);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (app->listview),col);
-
-    renderer = gtk_cell_renderer_text_new();
-    g_object_set (G_OBJECT (renderer),
-                  "ellipsize",
-                  PANGO_ELLIPSIZE_END,
-                  "xalign",
-                  1.0,
-                  NULL);
-    g_object_set (G_OBJECT (renderer), "foreground", "grey", NULL);
-
-    col = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start (col, renderer, TRUE);
-    gtk_tree_view_column_add_attribute (col,
-                                        renderer,
-                                        "text",
-                                        LIST_MODEL_COL_SIZE);
-    gtk_tree_view_column_set_alignment (col, 1.0);
-    gtk_tree_view_column_set_title (col, "Size");
-    gtk_tree_view_column_set_fixed_width (col, 75);
-    gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_resizable (col, TRUE);
-    gtk_tree_view_column_set_sort_column_id (col, SORT_ID_SIZE);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (app->listview),col);
-
-    renderer = gtk_cell_renderer_text_new();
-    g_object_set (G_OBJECT (renderer),
-                  "ellipsize",
-                  PANGO_ELLIPSIZE_END,
-                  "xalign",
-                  1.0,
-                  NULL);
-    g_object_set (G_OBJECT (renderer),
-                  "foreground",
-                  "grey",
-                  NULL);
-
-    col = gtk_tree_view_column_new();
-    gtk_tree_view_column_pack_start (col, renderer, TRUE);
-    gtk_tree_view_column_add_attribute (col,
-                                        renderer,
-                                        "text",
-                                        LIST_MODEL_COL_CHANGED);
-    gtk_tree_view_column_set_alignment (col, 1.0);
-    gtk_tree_view_column_set_title (col, "Date Modified");
-    gtk_tree_view_column_set_fixed_width (col, 75);
-    gtk_tree_view_column_set_sizing (col, GTK_TREE_VIEW_COLUMN_FIXED);
-    gtk_tree_view_column_set_resizable (col, TRUE);
-    gtk_tree_view_column_set_sort_column_id (col, SORT_ID_CHANGED);
-    gtk_tree_view_append_column (GTK_TREE_VIEW (app->listview),col);
 }
 
 void

@@ -24,6 +24,7 @@ fsearch_SOURCES = main.c \
 		  array.c \
 		  string_utils.c \
 		  btree.c \
+		  listview.c \
 		  utils.c
 
 BUILT_SOURCES=resources.c resources.h

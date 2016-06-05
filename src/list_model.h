@@ -44,7 +44,7 @@ enum
     LIST_MODEL_COL_SIZE,
     LIST_MODEL_COL_CHANGED,
     LIST_MODEL_N_COLUMNS,
-} ;
+};
 
 enum
 {
