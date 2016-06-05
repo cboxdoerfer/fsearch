@@ -312,6 +312,24 @@ load_default_config (FsearchConfig *config)
     config->show_filter = true;
     config->show_search_button = true;
 
+    // Columns
+    config->show_path_column = true;
+    config->show_type_column = true;
+    config->show_size_column = true;
+    config->show_modified_column = true;
+
+    config->name_column_pos = 0;
+    config->path_column_pos = 1;
+    config->type_column_pos = 2;
+    config->size_column_pos = 3;
+    config->modified_column_pos = 4;
+
+    config->name_column_width = 250;
+    config->path_column_width = 250;
+    config->type_column_width = 100;
+    config->size_column_width = 75;
+    config->modified_column_width = 125;
+
     // Window
     config->restore_window_size = false;
     config->window_width = 800;
