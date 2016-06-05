@@ -167,7 +167,7 @@ load_config (FsearchConfig *config)
         config->restore_window_size = config_load_boolean (key_file,
                                                          "Interface",
                                                          "restore_window_size",
-                                                         true);
+                                                         false);
         config->window_width = config_load_integer (key_file,
                                                     "Interface",
                                                     "window_width",
@@ -313,7 +313,7 @@ load_default_config (FsearchConfig *config)
     config->show_search_button = true;
 
     // Window
-    config->restore_window_size = true;
+    config->restore_window_size = false;
     config->window_width = 800;
     config->window_height = 600;
 
