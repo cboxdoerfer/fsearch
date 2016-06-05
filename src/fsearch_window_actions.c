@@ -354,7 +354,7 @@ fsearch_window_action_show_name_column (GSimpleAction *action,
         listview_add_column (list, LIST_MODEL_COL_NAME, 250, 0);
     }
     //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    //config->show_statusbar = g_variant_get_boolean (variant);
+    //config->show_name_column = g_variant_get_boolean (variant);
 }
 
 static void
@@ -372,8 +372,8 @@ fsearch_window_action_show_path_column (GSimpleAction *action,
     else {
         listview_add_column (list, LIST_MODEL_COL_PATH, 250, 1);
     }
-    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    //config->show_statusbar = g_variant_get_boolean (variant);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    config->show_path_column = g_variant_get_boolean (variant);
 }
 
 static void
@@ -391,8 +391,8 @@ fsearch_window_action_show_type_column (GSimpleAction *action,
     else {
         listview_add_column (list, LIST_MODEL_COL_TYPE, 100, 2);
     }
-    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    //config->show_statusbar = g_variant_get_boolean (variant);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    config->show_type_column = g_variant_get_boolean (variant);
 }
 
 static void
@@ -410,8 +410,8 @@ fsearch_window_action_show_size_column (GSimpleAction *action,
     else {
         listview_add_column (list, LIST_MODEL_COL_SIZE, 75, 3);
     }
-    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    //config->show_statusbar = g_variant_get_boolean (variant);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    config->show_size_column = g_variant_get_boolean (variant);
 }
 
 static void
@@ -429,8 +429,8 @@ fsearch_window_action_show_modified_column (GSimpleAction *action,
     else {
         listview_add_column (list, LIST_MODEL_COL_CHANGED, 75, 4);
     }
-    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    //config->show_statusbar = g_variant_get_boolean (variant);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    config->show_modified_column = g_variant_get_boolean (variant);
 }
 
 static void
@@ -522,10 +522,10 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_active_bool (group, "search_mode", config->enable_regex);
     action_set_active_bool (group, "match_case", config->match_case);
     action_set_active_bool (group, "show_name_column", true);
-    action_set_active_bool (group, "show_path_column", true);
-    action_set_active_bool (group, "show_type_column", true);
-    action_set_active_bool (group, "show_size_column", true);
-    action_set_active_bool (group, "show_modified_column", true);
+    action_set_active_bool (group, "show_path_column", config->show_path_column);
+    action_set_active_bool (group, "show_type_column", config->show_type_column);
+    action_set_active_bool (group, "show_size_column", config->show_size_column);
+    action_set_active_bool (group, "show_modified_column", config->show_modified_column);
 }
 
 void

@@ -562,13 +562,39 @@ create_view_and_model (FsearchApplicationWindow *app)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (app));
 
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+
     app->list_model = list_model_new();
     GtkTreeView *list = GTK_TREE_VIEW (app->listview);
-    listview_add_column (list, LIST_MODEL_COL_NAME, 250, -1);
-    listview_add_column (list, LIST_MODEL_COL_PATH, 250, -1);
-    listview_add_column (list, LIST_MODEL_COL_TYPE, 100, -1);
-    listview_add_column (list, LIST_MODEL_COL_SIZE, 75, -1);
-    listview_add_column (list, LIST_MODEL_COL_CHANGED, 75, -1);
+
+    listview_add_column (list,
+                         LIST_MODEL_COL_NAME,
+                         config->name_column_width,
+                         config->name_column_pos);
+
+    if (config->show_path_column) {
+        listview_add_column (list, LIST_MODEL_COL_PATH,
+                             config->path_column_width,
+                             config->path_column_pos);
+    }
+    if (config->show_type_column) {
+        listview_add_column (list,
+                             LIST_MODEL_COL_TYPE,
+                             config->type_column_width,
+                             config->type_column_pos);
+    }
+    if (config->show_size_column) {
+        listview_add_column (list,
+                             LIST_MODEL_COL_SIZE,
+                             config->size_column_width,
+                             config->size_column_pos);
+    }
+    if (config->show_modified_column) {
+        listview_add_column (list,
+                             LIST_MODEL_COL_CHANGED,
+                             config->modified_column_width,
+                             config->modified_column_pos);
+    }
 
     gtk_tree_view_set_model (list,
                              GTK_TREE_MODEL(app->list_model));

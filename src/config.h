@@ -42,6 +42,24 @@ struct _FsearchConfig
     bool show_filter;
     bool show_search_button;
 
+    // Columns
+    bool show_path_column;
+    bool show_type_column;
+    bool show_size_column;
+    bool show_modified_column;
+
+    uint32_t name_column_width;
+    uint32_t path_column_width;
+    uint32_t type_column_width;
+    uint32_t size_column_width;
+    uint32_t modified_column_width;
+
+    uint32_t name_column_pos;
+    uint32_t path_column_pos;
+    uint32_t type_column_pos;
+    uint32_t size_column_pos;
+    uint32_t modified_column_pos;
+
     // database
     bool update_database_on_launch;
 

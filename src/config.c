@@ -162,6 +162,69 @@ load_config (FsearchConfig *config)
                                                           "Interface",
                                                           "show_search_button",
                                                           true);
+
+        // Columns
+        config->show_path_column = config_load_boolean (key_file,
+                                                        "Interface",
+                                                        "show_path_column",
+                                                        true);
+        config->show_type_column = config_load_boolean (key_file,
+                                                        "Interface",
+                                                        "show_type_column",
+                                                        true);
+        config->show_size_column = config_load_boolean (key_file,
+                                                        "Interface",
+                                                        "show_size_column",
+                                                        true);
+        config->show_modified_column = config_load_boolean (key_file,
+                                                            "Interface",
+                                                            "show_modified_column",
+                                                            true);
+
+        // Column Size
+        config->name_column_width = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "name_column_width",
+                                                   250);
+        config->path_column_width = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "path_column_width",
+                                                   250);
+        config->type_column_width = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "type_column_width",
+                                                   100);
+        config->size_column_width = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "size_column_width",
+                                                   75);
+        config->modified_column_width = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "modified_column_width",
+                                                   75);
+
+        // Column position
+        config->name_column_pos = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "name_column_pos",
+                                                   0);
+        config->path_column_pos = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "path_column_pos",
+                                                   1);
+        config->type_column_pos = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "type_column_pos",
+                                                   2);
+        config->size_column_pos = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "size_column_pos",
+                                                   3);
+        config->modified_column_pos = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "modified_column_pos",
+                                                   4);
+
         // Search
         config->match_case = config_load_boolean (key_file,
                                                   "Search",
@@ -260,6 +323,26 @@ save_config (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Interface", "show_statusbar", config->show_statusbar);
     g_key_file_set_boolean (key_file, "Interface", "show_filter", config->show_filter);
     g_key_file_set_boolean (key_file, "Interface", "show_search_button", config->show_search_button);
+
+    // Columns visibility
+    g_key_file_set_boolean (key_file, "Interface", "show_path_column", config->show_path_column);
+    g_key_file_set_boolean (key_file, "Interface", "show_type_column", config->show_type_column);
+    g_key_file_set_boolean (key_file, "Interface", "show_size_column", config->show_size_column);
+    g_key_file_set_boolean (key_file, "Interface", "show_modified_column", config->show_modified_column);
+
+    // Column width
+    g_key_file_set_integer (key_file, "Interface", "name_column_width", config->name_column_width);
+    g_key_file_set_integer (key_file, "Interface", "path_column_width", config->path_column_width);
+    g_key_file_set_integer (key_file, "Interface", "type_column_width", config->type_column_width);
+    g_key_file_set_integer (key_file, "Interface", "size_column_width", config->size_column_width);
+    g_key_file_set_integer (key_file, "Interface", "modified_column_width", config->modified_column_width);
+
+    // Column position
+    g_key_file_set_integer (key_file, "Interface", "name_column_pos", config->name_column_pos);
+    g_key_file_set_integer (key_file, "Interface", "path_column_pos", config->path_column_pos);
+    g_key_file_set_integer (key_file, "Interface", "type_column_pos", config->type_column_pos);
+    g_key_file_set_integer (key_file, "Interface", "size_column_pos", config->size_column_pos);
+    g_key_file_set_integer (key_file, "Interface", "modified_column_pos", config->modified_column_pos);
 
     // Search
     g_key_file_set_boolean (key_file, "Search", "search_in_path", config->search_in_path);
