@@ -32,6 +32,9 @@ G_DECLARE_FINAL_TYPE (FsearchApplicationWindow, fsearch_application_window, FSEA
 FsearchApplicationWindow *
 fsearch_application_window_new (FsearchApplication *app);
 
+GtkTreeView *
+fsearch_application_window_get_listview (FsearchApplicationWindow *self);
+
 GtkTreeSelection *
 fsearch_application_window_get_listview_selection (FsearchApplicationWindow *self);
 

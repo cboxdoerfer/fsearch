@@ -921,6 +921,13 @@ fsearch_application_window_get_search_mode_revealer (FsearchApplicationWindow *s
     return self->search_mode_revealer;
 }
 
+GtkTreeView *
+fsearch_application_window_get_listview (FsearchApplicationWindow *self)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+    return GTK_TREE_VIEW (self->listview);
+}
+
 GtkTreeSelection *
 fsearch_application_window_get_listview_selection (FsearchApplicationWindow *self)
 {

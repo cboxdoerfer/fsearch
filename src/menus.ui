@@ -41,4 +41,28 @@
       -->
     </section>
   </menu>
+  <menu id="fsearch_listview_column_popup_menu">
+      <section>
+          <item>
+              <attribute name="label" translatable="yes">Name</attribute>
+              <attribute name="action">win.show_name_column</attribute>
+          </item>
+          <item>
+              <attribute name="label" translatable="yes">Path</attribute>
+              <attribute name="action">win.show_path_column</attribute>
+          </item>
+          <item>
+              <attribute name="label" translatable="yes">Type</attribute>
+              <attribute name="action">win.show_type_column</attribute>
+          </item>
+          <item>
+              <attribute name="label" translatable="yes">Size</attribute>
+              <attribute name="action">win.show_size_column</attribute>
+          </item>
+          <item>
+              <attribute name="label" translatable="yes">Date Modified</attribute>
+              <attribute name="action">win.show_modified_column</attribute>
+          </item>
+      </section>
+  </menu>
 </interface>

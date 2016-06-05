@@ -6,6 +6,8 @@
 #include "database_search.h"
 #include "utils.h"
 #include "config.h"
+#include "listview.h"
+#include "list_model.h"
 #include "btree.h"
 
 static void
@@ -337,6 +339,101 @@ fsearch_window_action_match_case (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_show_name_column (GSimpleAction *action,
+                                        GVariant      *variant,
+                                        gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state (action, variant);
+    gboolean value = g_variant_get_boolean (variant);
+    GtkTreeView *list = GTK_TREE_VIEW (fsearch_application_window_get_listview (self));
+    if (value == FALSE) {
+        listview_remove_column (list, LIST_MODEL_COL_NAME);
+    }
+    else {
+        listview_add_column (list, LIST_MODEL_COL_NAME, 250, 0);
+    }
+    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    //config->show_statusbar = g_variant_get_boolean (variant);
+}
+
+static void
+fsearch_window_action_show_path_column (GSimpleAction *action,
+                                        GVariant      *variant,
+                                        gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state (action, variant);
+    gboolean value = g_variant_get_boolean (variant);
+    GtkTreeView *list = GTK_TREE_VIEW (fsearch_application_window_get_listview (self));
+    if (value == FALSE) {
+        listview_remove_column (list, LIST_MODEL_COL_PATH);
+    }
+    else {
+        listview_add_column (list, LIST_MODEL_COL_PATH, 250, 1);
+    }
+    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    //config->show_statusbar = g_variant_get_boolean (variant);
+}
+
+static void
+fsearch_window_action_show_type_column (GSimpleAction *action,
+                                        GVariant      *variant,
+                                        gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state (action, variant);
+    gboolean value = g_variant_get_boolean (variant);
+    GtkTreeView *list = GTK_TREE_VIEW (fsearch_application_window_get_listview (self));
+    if (value == FALSE) {
+        listview_remove_column (list, LIST_MODEL_COL_TYPE);
+    }
+    else {
+        listview_add_column (list, LIST_MODEL_COL_TYPE, 100, 2);
+    }
+    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    //config->show_statusbar = g_variant_get_boolean (variant);
+}
+
+static void
+fsearch_window_action_show_size_column (GSimpleAction *action,
+                                        GVariant      *variant,
+                                        gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state (action, variant);
+    gboolean value = g_variant_get_boolean (variant);
+    GtkTreeView *list = GTK_TREE_VIEW (fsearch_application_window_get_listview (self));
+    if (value == FALSE) {
+        listview_remove_column (list, LIST_MODEL_COL_SIZE);
+    }
+    else {
+        listview_add_column (list, LIST_MODEL_COL_SIZE, 75, 3);
+    }
+    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    //config->show_statusbar = g_variant_get_boolean (variant);
+}
+
+static void
+fsearch_window_action_show_modified_column (GSimpleAction *action,
+                                            GVariant      *variant,
+                                            gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state (action, variant);
+    gboolean value = g_variant_get_boolean (variant);
+    GtkTreeView *list = GTK_TREE_VIEW (fsearch_application_window_get_listview (self));
+    if (value == FALSE) {
+        listview_remove_column (list, LIST_MODEL_COL_CHANGED);
+    }
+    else {
+        listview_add_column (list, LIST_MODEL_COL_CHANGED, 75, 4);
+    }
+    //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    //config->show_statusbar = g_variant_get_boolean (variant);
+}
+
+static void
 action_toggle_state_cb (GSimpleAction *saction,
                         GVariant *parameter,
                         gpointer user_data)
@@ -359,6 +456,12 @@ static GActionEntry FsearchWindowActions[] = {
     { "invert_selection",     fsearch_window_action_invert_selection },
     { "focus_search",     fsearch_window_action_focus_search },
     { "hide_window",     fsearch_window_action_hide_window },
+    // Column popup
+    { "show_name_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_name_column },
+    { "show_path_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_path_column },
+    { "show_type_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_type_column },
+    { "show_size_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_size_column },
+    { "show_modified_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_modified_column },
     //{ "update_database",     fsearch_window_action_update_database },
     // View
     { "show_statusbar", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_statusbar },
@@ -404,6 +507,11 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "show_statusbar", TRUE);
     action_set_enabled (group, "show_filter", TRUE);
     action_set_enabled (group, "show_search_button", TRUE);
+    action_set_enabled (group, "show_name_column", FALSE);
+    action_set_enabled (group, "show_path_column", TRUE);
+    action_set_enabled (group, "show_type_column", TRUE);
+    action_set_enabled (group, "show_size_column", TRUE);
+    action_set_enabled (group, "show_modified_column", TRUE);
 
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     action_set_active_bool (group, "show_menubar", config->show_menubar);
@@ -413,6 +521,11 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_active_bool (group, "search_in_path", config->search_in_path);
     action_set_active_bool (group, "search_mode", config->enable_regex);
     action_set_active_bool (group, "match_case", config->match_case);
+    action_set_active_bool (group, "show_name_column", true);
+    action_set_active_bool (group, "show_path_column", true);
+    action_set_active_bool (group, "show_type_column", true);
+    action_set_active_bool (group, "show_size_column", true);
+    action_set_active_bool (group, "show_modified_column", true);
 }
 
 void

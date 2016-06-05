@@ -25,10 +25,45 @@ listview_new (void)
 {
     GtkTreeView *list = GTK_TREE_VIEW (gtk_tree_view_new ());
     gtk_tree_view_set_fixed_height_mode (list, TRUE);
-
     gtk_widget_set_has_tooltip (GTK_WIDGET (list), TRUE);
 
     return list;
+}
+
+static gboolean
+on_listview_header_clicked (GtkWidget *widget,
+                            GdkEventButton *event,
+                            gpointer user_data)
+{
+    if (event->type == GDK_BUTTON_PRESS) {
+        if (event->button == 3) {
+            GtkBuilder *builder = gtk_builder_new_from_resource ("/org/fsearch/fsearch/menus.ui");
+            GMenuModel *menu_model = G_MENU_MODEL (gtk_builder_get_object (builder,
+                                                                           "fsearch_listview_column_popup_menu"));
+            GtkWidget *menu_widget = gtk_menu_new_from_model (G_MENU_MODEL (menu_model));
+            gtk_menu_attach_to_widget (GTK_MENU (menu_widget),
+                                       GTK_WIDGET (widget),
+                                       NULL);
+            gtk_menu_popup (GTK_MENU (menu_widget),
+                            NULL,
+                            NULL,
+                            NULL,
+                            NULL,
+                            event->button,
+                            event->time);
+            g_object_unref (builder);
+        }
+    }
+    return FALSE;
+}
+
+static void
+listview_column_add_label (GtkTreeViewColumn *col, const char *title)
+{
+    gtk_tree_view_column_set_title (col, title);
+    g_signal_connect (gtk_tree_view_column_get_button (col), "button-press-event",
+                      G_CALLBACK (on_listview_header_clicked),
+                      NULL);
 }
 
 static void
@@ -61,7 +96,7 @@ listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_NAME);
-    gtk_tree_view_column_set_title (col, "Name");
+    listview_column_add_label (col, "Name");
     listview_column_set_size (col, 250);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_NAME);
     gtk_tree_view_insert_column (list, col, pos);
@@ -87,7 +122,7 @@ listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_PATH);
-    gtk_tree_view_column_set_title (col, "Path");
+    listview_column_add_label (col, "Path");
     listview_column_set_size (col, 250);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_PATH);
     gtk_tree_view_insert_column (list, col, pos);
@@ -113,7 +148,7 @@ listview_add_size_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         "text",
                                         LIST_MODEL_COL_SIZE);
     gtk_tree_view_column_set_alignment (col, 1.0);
-    gtk_tree_view_column_set_title (col, "Size");
+    listview_column_add_label (col, "Size");
     listview_column_set_size (col, 75);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_SIZE);
     gtk_tree_view_insert_column (list, col, pos);
@@ -142,7 +177,7 @@ listview_add_modified_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         "text",
                                         LIST_MODEL_COL_CHANGED);
     gtk_tree_view_column_set_alignment (col, 1.0);
-    gtk_tree_view_column_set_title (col, "Date Modified");
+    listview_column_add_label (col, "Date Modified");
     listview_column_set_size (col, 75);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_CHANGED);
     gtk_tree_view_insert_column (list, col, pos);
@@ -167,7 +202,7 @@ listview_add_type_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_TYPE);
-    gtk_tree_view_column_set_title (col, "Type");
+    listview_column_add_label (col, "Type");
     listview_column_set_size (col, 100);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_TYPE);
     gtk_tree_view_insert_column (list, col, pos);
@@ -225,6 +260,7 @@ listview_remove_column (GtkTreeView *view, uint32_t col_type)
             gtk_tree_view_remove_column (view, temp->data);
             break;
         }
+        temp = temp->next;
     }
     g_list_free (columns);
     columns = NULL;
