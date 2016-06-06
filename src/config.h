@@ -71,6 +71,7 @@ struct _FsearchConfig
     uint32_t num_results;
 
     GList *locations;
+    GList *exclude_locations;
 };
 
 

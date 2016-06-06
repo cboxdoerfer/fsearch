@@ -1,6 +1,7 @@
 EXTRA_DIST = fsearch.glade \
 	     shared.css \
 	     popover.ui \
+	     preferences.ui \
 	     overlay.ui \
 	     menus.ui
 

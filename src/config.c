@@ -280,6 +280,19 @@ load_config (FsearchConfig *config)
                 break;
             }
         }
+        // Exclude
+        pos = 1;
+        while (true) {
+            char key[100] = "";
+            snprintf (key, sizeof (key), "exclude_location_%d", pos++);
+            char *value = config_load_string (key_file, "Database", key, NULL);
+            if (value) {
+                config->exclude_locations = g_list_append (config->exclude_locations, value);
+            }
+            else {
+                break;
+            }
+        }
 
         result = true;
     }
@@ -340,6 +353,7 @@ load_default_config (FsearchConfig *config)
 
     // Locations
     config->locations = NULL;
+    config->exclude_locations = NULL;
 
     return true;
 }
@@ -406,6 +420,16 @@ save_config (FsearchConfig *config)
         }
     }
 
+    if (config->exclude_locations) {
+        uint32_t pos = 1;
+        for (GList *l = config->exclude_locations; l != NULL; l = l->next) {
+            char location[100] = "";
+            snprintf (location, sizeof (location), "exclude_location_%d", pos);
+            g_key_file_set_string (key_file, "Database", location, l->data);
+            pos++;
+        }
+    }
+
     gchar config_path[PATH_MAX] = "";
     build_config_path (config_path, sizeof (config_path));
 
@@ -430,6 +454,10 @@ config_free (FsearchConfig *config)
     if (config->locations) {
         g_list_free_full (config->locations, (GDestroyNotify)free);
         config->locations = NULL;
+    }
+    if (config->exclude_locations) {
+        g_list_free_full (config->exclude_locations, (GDestroyNotify)free);
+        config->exclude_locations = NULL;
     }
     free (config);
     config = NULL;

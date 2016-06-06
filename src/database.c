@@ -33,6 +33,7 @@
 
 #include "database.h"
 #include "config.h"
+#include "fsearch.h"
 
 #define WS_NONE		0
 #define WS_RECURSIVE	(1 << 0)
@@ -365,8 +366,21 @@ save_fail:
     return false;
 }
 
+static bool
+directory_is_excluded (const char *name, GList *excludes)
+{
+    while (excludes) {
+        if (!strcmp (name, excludes->data)) {
+            return true;
+        }
+        excludes = excludes->next;
+    }
+    return false;
+}
+
 int
 db_location_walk_tree_recursive (DatabaseLocation *location,
+                                 GList *excludes,
                                  const char *dname,
                                  BTreeNode *parent,
                                  int spec)
@@ -405,6 +419,11 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
             continue;
         }
 
+        if (directory_is_excluded (fn, excludes)) {
+            printf("excluded: %s\n", fn);
+            continue;
+        }
+
         /* don't follow symlink unless told so */
         if (S_ISLNK (st.st_mode) && !(spec & WS_FOLLOWLINK)) {
             continue;
@@ -423,7 +442,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         if (is_dir) {
             /* recursively follow dirs */
             if ((spec & WS_RECURSIVE))
-                db_location_walk_tree_recursive (location, fn, node, spec);
+                db_location_walk_tree_recursive (location, excludes, fn, node, spec);
 
         }
     }
@@ -440,7 +459,8 @@ db_location_build_tree (const char *dname, int spec)
     BTreeNode *root = btree_node_new (dname, 0, 0, 0, true);
     DatabaseLocation *location = db_location_new ();
     location->entries = root;
-    uint32_t res = db_location_walk_tree_recursive (location, dname, root, spec);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    uint32_t res = db_location_walk_tree_recursive (location, config->exclude_locations, dname, root, spec);
     if (res == WALK_OK) {
         return location;
     }
