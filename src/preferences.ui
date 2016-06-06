@@ -219,6 +219,7 @@
                               <object class="GtkButton" id="include_remove_button">
                                 <property name="label" translatable="yes">Remove</property>
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <style>
@@ -307,6 +308,7 @@
                               <object class="GtkButton" id="exclude_remove_button">
                                 <property name="label" translatable="yes">Remove</property>
                                 <property name="visible">True</property>
+                                <property name="sensitive">False</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
                                 <style>
