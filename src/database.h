@@ -68,6 +68,9 @@ db_update_entries_list (Database *db);
 void
 db_build_initial_entries_list (Database *db);
 
+time_t
+db_get_timestamp (Database *db);
+
 uint32_t
 db_get_num_entries (Database *db);
 

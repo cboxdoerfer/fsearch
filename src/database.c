@@ -48,6 +48,8 @@ struct _Database
     GPtrArray *filtered_entries;
     uint32_t num_entries;
 
+    time_t timestamp;
+
     GMutex mutex;
     bool busy;
 };
@@ -92,6 +94,14 @@ static void
 db_list_add_location (Database *db, DatabaseLocation *location);
 
 // Implemenation
+
+static void
+db_update_timestamp (Database *db)
+{
+    g_assert (db != NULL);
+    db->timestamp = time(NULL);
+}
+
 DatabaseLocation *
 db_location_load_from_file (const char *fname)
 {
@@ -669,10 +679,12 @@ db_location_load (Database *db, const char *location_name)
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db->busy = false;
+        db_update_timestamp (db);
         db_unlock (db);
         return true;
     }
     db->busy = false;
+    db_update_timestamp (db);
     db_unlock (db);
     return false;
 }
@@ -690,10 +702,12 @@ db_location_build_new (Database *db, const char *location_name)
         printf("loation num entries: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
+        db_update_timestamp (db);
         db_unlock (db);
         return true;
     }
 
+    db_update_timestamp (db);
     db_unlock (db);
     return false;
 }
@@ -804,6 +818,13 @@ db_free (Database *db)
     g_free (db);
     db = NULL;
     return;
+}
+
+time_t
+db_get_timestamp (Database *db)
+{
+    g_assert (db != NULL);
+    return db->timestamp;
 }
 
 uint32_t
