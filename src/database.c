@@ -86,7 +86,7 @@ static DatabaseLocation *
 db_location_get_for_path (Database *db, const char *path);
 
 static DatabaseLocation *
-db_location_build_tree (const char *dname, int spec);
+db_location_build_tree (const char *dname);
 
 static DatabaseLocation *
 db_location_new (void);
@@ -378,7 +378,7 @@ directory_is_excluded (const char *name, GList *excludes)
     return false;
 }
 
-int
+static int
 db_location_walk_tree_recursive (DatabaseLocation *location,
                                  GList *excludes,
                                  const char *dname,
@@ -404,10 +404,10 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
     struct dirent *dent = NULL;
     errno = 0;
     while ((dent = readdir (dir))) {
-        //if (!(spec & WS_DOTFILES) && dent->d_name[0] == '.') {
-        //    // file is dotfile, skip
-        //    continue;
-        //}
+        if (!(spec & WS_DOTFILES) && dent->d_name[0] == '.') {
+            // file is dotfile, skip
+            continue;
+        }
         if (!strcmp (dent->d_name, ".") || !strcmp (dent->d_name, "..")) {
             continue;
         }
@@ -442,7 +442,11 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         if (is_dir) {
             /* recursively follow dirs */
             if ((spec & WS_RECURSIVE))
-                db_location_walk_tree_recursive (location, excludes, fn, node, spec);
+                db_location_walk_tree_recursive (location,
+                                                 excludes,
+                                                 fn,
+                                                 node,
+                                                 spec);
 
         }
     }
@@ -454,13 +458,22 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
 }
 
 static DatabaseLocation *
-db_location_build_tree (const char *dname, int spec)
+db_location_build_tree (const char *dname)
 {
     BTreeNode *root = btree_node_new (dname, 0, 0, 0, true);
     DatabaseLocation *location = db_location_new ();
     location->entries = root;
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    uint32_t res = db_location_walk_tree_recursive (location, config->exclude_locations, dname, root, spec);
+
+    int spec = WS_DEFAULT;
+    if (!config->exclude_hidden_items) {
+        spec |= WS_DOTFILES;
+    }
+    uint32_t res = db_location_walk_tree_recursive (location,
+                                                    config->exclude_locations,
+                                                    dname,
+                                                    root,
+                                                    spec);
     if (res == WALK_OK) {
         return location;
     }
@@ -716,7 +729,7 @@ db_location_build_new (Database *db, const char *location_name)
     db_lock (db);
     printf("load location: %s\n", location_name);
 
-    DatabaseLocation *location = db_location_build_tree (location_name, WS_DEFAULT);
+    DatabaseLocation *location = db_location_build_tree (location_name);
 
     if (location) {
         printf("loation num entries: %d\n", location->num_items);

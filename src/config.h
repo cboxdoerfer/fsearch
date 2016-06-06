@@ -67,6 +67,7 @@ struct _FsearchConfig
 
     // database
     bool update_database_on_launch;
+    bool exclude_hidden_items;
 
     uint32_t num_results;
 

@@ -327,6 +327,12 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       G_CALLBACK (on_list_selection_changed),
                       exclude_remove_button);
 
+    GtkToggleButton *exclude_hidden_items_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                        "exclude_hidden_items_button"));
+    gtk_toggle_button_set_active (exclude_hidden_items_button,
+                                  main_config->exclude_hidden_items);
+
+
     model_changed = false;
 
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
@@ -343,6 +349,13 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->restore_window_size = gtk_toggle_button_get_active (restore_win_size_button);
 
         main_config->update_database_on_launch = gtk_toggle_button_get_active (update_db_at_start_button);
+
+
+        bool old_exclude_hidden_items = main_config->exclude_hidden_items;
+        main_config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);
+        if (old_exclude_hidden_items != main_config->exclude_hidden_items) {
+            model_changed = true;
+        }
 
         g_object_set(gtk_settings_get_default(),
                      "gtk-application-prefer-dark-theme",

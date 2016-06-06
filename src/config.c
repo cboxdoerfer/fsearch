@@ -266,6 +266,10 @@ load_config (FsearchConfig *config)
                                                                  "Database",
                                                                  "update_database_on_launch",
                                                                  false);
+        config->exclude_hidden_items = config_load_boolean (key_file,
+                                                            "Database",
+                                                            "exclude_hidden_files_and_folders",
+                                                            false);
 
         // Locations
         uint32_t pos = 1;
@@ -350,6 +354,7 @@ load_default_config (FsearchConfig *config)
 
     // Database
     config->update_database_on_launch = false;
+    config->exclude_hidden_items = false;
 
     // Locations
     config->locations = NULL;
@@ -409,6 +414,7 @@ save_config (FsearchConfig *config)
 
     // Database
     g_key_file_set_boolean (key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
+    g_key_file_set_boolean (key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
 
     if (config->locations) {
         uint32_t pos = 1;
