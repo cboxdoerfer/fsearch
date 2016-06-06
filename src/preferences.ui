@@ -131,6 +131,7 @@
                   <object class="GtkSpinButton" id="limit_num_results_spin">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="hexpand">True</property>
                     <property name="input_purpose">digits</property>
                     <property name="adjustment">limit_num_results_adjustment</property>
                   </object>
