@@ -469,6 +469,9 @@ db_location_build_tree (const char *dname)
     if (!config->exclude_hidden_items) {
         spec |= WS_DOTFILES;
     }
+    if (config->follow_symlinks) {
+        spec |= WS_FOLLOWLINK;
+    }
     uint32_t res = db_location_walk_tree_recursive (location,
                                                     config->exclude_locations,
                                                     dname,

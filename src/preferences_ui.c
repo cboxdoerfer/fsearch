@@ -291,6 +291,12 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       G_CALLBACK (on_list_selection_changed),
                       include_remove_button);
 
+    GtkToggleButton *follow_symlinks_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                     "follow_symlinks_button"));
+    gtk_toggle_button_set_active (follow_symlinks_button,
+                                  main_config->follow_symlinks);
+
+
     // Exclude model
     GtkTreeModel *exclude_model = create_tree_model (main_config->exclude_locations);
     GtkTreeView *exclude_list = GTK_TREE_VIEW (builder_get_object (builder,
@@ -328,7 +334,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       exclude_remove_button);
 
     GtkToggleButton *exclude_hidden_items_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                        "exclude_hidden_items_button"));
+                                                                                          "exclude_hidden_items_button"));
     gtk_toggle_button_set_active (exclude_hidden_items_button,
                                   main_config->exclude_hidden_items);
 
@@ -356,6 +362,13 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         if (old_exclude_hidden_items != main_config->exclude_hidden_items) {
             model_changed = true;
         }
+
+        bool old_follow_symlinks = main_config->follow_symlinks;
+        main_config->follow_symlinks = gtk_toggle_button_get_active (follow_symlinks_button);
+        if (old_follow_symlinks != main_config->follow_symlinks) {
+            model_changed = true;
+        }
+
 
         g_object_set(gtk_settings_get_default(),
                      "gtk-application-prefer-dark-theme",

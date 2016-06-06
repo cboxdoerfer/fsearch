@@ -270,6 +270,10 @@ load_config (FsearchConfig *config)
                                                             "Database",
                                                             "exclude_hidden_files_and_folders",
                                                             false);
+        config->follow_symlinks = config_load_boolean (key_file,
+                                                       "Database",
+                                                       "follow_symbolic_links",
+                                                       false);
 
         // Locations
         uint32_t pos = 1;
@@ -355,6 +359,7 @@ load_default_config (FsearchConfig *config)
     // Database
     config->update_database_on_launch = false;
     config->exclude_hidden_items = false;
+    config->follow_symlinks = false;
 
     // Locations
     config->locations = NULL;
@@ -415,6 +420,7 @@ save_config (FsearchConfig *config)
     // Database
     g_key_file_set_boolean (key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
     g_key_file_set_boolean (key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
+    g_key_file_set_boolean (key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
 
     if (config->locations) {
         uint32_t pos = 1;

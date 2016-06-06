@@ -262,6 +262,20 @@
                             <property name="top_attach">0</property>
                           </packing>
                         </child>
+                        <child>
+                          <object class="GtkCheckButton" id="follow_symlinks_button">
+                            <property name="label" translatable="yes">Follow Symbolic Links</property>
+                            <property name="visible">True</property>
+                            <property name="can_focus">True</property>
+                            <property name="receives_default">False</property>
+                            <property name="draw_indicator">True</property>
+                          </object>
+                          <packing>
+                            <property name="left_attach">0</property>
+                            <property name="top_attach">1</property>
+                            <property name="width">2</property>
+                          </packing>
+                        </child>
                       </object>
                     </child>
                     <child type="tab">
