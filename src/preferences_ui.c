@@ -73,9 +73,18 @@ create_folder_model (void)
                             COLUMN_NAME, l->data,
                             -1);
     }
-    g_signal_connect ((gpointer)store, "row-changed", G_CALLBACK (location_tree_row_changed), NULL);
-    g_signal_connect ((gpointer)store, "row-deleted", G_CALLBACK (location_tree_row_deleted), NULL);
-    g_signal_connect ((gpointer)store, "row-inserted", G_CALLBACK (location_tree_row_inserted), NULL);
+    g_signal_connect ((gpointer)store,
+                      "row-changed",
+                      G_CALLBACK (location_tree_row_changed),
+                      NULL);
+    g_signal_connect ((gpointer)store,
+                      "row-deleted",
+                      G_CALLBACK (location_tree_row_deleted),
+                      NULL);
+    g_signal_connect ((gpointer)store,
+                      "row-inserted",
+                      G_CALLBACK (location_tree_row_inserted),
+                      NULL);
 
     return GTK_TREE_MODEL (store);
 }
