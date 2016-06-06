@@ -151,21 +151,21 @@ run_file_chooser_dialog (GtkButton *button, GtkTreeModel *model, GList *list)
 
 static void
 on_exclude_add_button_clicked (GtkButton *button,
-                              gpointer user_data)
+                               gpointer user_data)
 {
     run_file_chooser_dialog (button, user_data, main_config->exclude_locations);
 }
 
 static void
 on_include_add_button_clicked (GtkButton *button,
-                              gpointer user_data)
+                               gpointer user_data)
 {
     run_file_chooser_dialog (button, user_data, main_config->locations);
 }
 
 static void
 on_list_selection_changed (GtkTreeSelection *sel,
-                                   gpointer user_data)
+                           gpointer user_data)
 {
     gboolean selected = gtk_tree_selection_get_selected (sel, NULL, NULL);
     gtk_widget_set_sensitive (GTK_WIDGET (user_data), selected);
@@ -217,25 +217,25 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_dialog_add_button (GTK_DIALOG (dialog), "_Cancel", GTK_RESPONSE_CANCEL);
 
     // Interface page
-    GtkWidget *enable_dark_theme_button = builder_get_object (builder,
-                                                              "enable_dark_theme_button");
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (enable_dark_theme_button),
+    GtkToggleButton *enable_dark_theme_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                       "enable_dark_theme_button"));
+    gtk_toggle_button_set_active (enable_dark_theme_button,
                                   main_config->enable_dark_theme);
 
-    GtkWidget *show_tooltips_button = builder_get_object (builder,
-                                                          "show_tooltips_button");
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (show_tooltips_button),
+    GtkToggleButton *show_tooltips_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                   "show_tooltips_button"));
+    gtk_toggle_button_set_active (show_tooltips_button,
                                   main_config->enable_list_tooltips);
 
-    GtkWidget *restore_win_size_button = builder_get_object (builder,
-                                                                "restore_win_size_button");
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (restore_win_size_button),
+    GtkToggleButton *restore_win_size_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                      "restore_win_size_button"));
+    gtk_toggle_button_set_active (restore_win_size_button,
                                   main_config->restore_window_size);
 
     // Search page
-    GtkWidget *limit_num_results_button = builder_get_object (builder,
-                                                              "limit_num_results_button");
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (limit_num_results_button),
+    GtkToggleButton *limit_num_results_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                       "limit_num_results_button"));
+    gtk_toggle_button_set_active (limit_num_results_button,
                                   main_config->limit_results);
 
     GtkWidget *limit_num_results_spin = builder_get_object (builder,
@@ -250,18 +250,18 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       limit_num_results_spin);
 
     // Database page
-    GtkWidget *update_db_at_start_button = builder_get_object (builder,
-                                                               "update_db_at_start_button");
-    gtk_toggle_button_set_active (GTK_TOGGLE_BUTTON (update_db_at_start_button),
+    GtkToggleButton *update_db_at_start_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                        "update_db_at_start_button"));
+    gtk_toggle_button_set_active (update_db_at_start_button,
                                   main_config->update_database_on_launch);
 
     // Include page
     GtkTreeModel *include_model = create_tree_model (main_config->locations);
-    GtkWidget *include_list = builder_get_object (builder,
-                                                  "include_list");
-    gtk_tree_view_set_model (GTK_TREE_VIEW (include_list), include_model);
-    gtk_tree_view_set_search_column (GTK_TREE_VIEW (include_list), COLUMN_NAME);
-    gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (include_list), FALSE);
+    GtkTreeView *include_list = GTK_TREE_VIEW (builder_get_object (builder,
+                                                                   "include_list"));
+    gtk_tree_view_set_model (include_list, include_model);
+    gtk_tree_view_set_search_column (include_list, COLUMN_NAME);
+    gtk_tree_view_set_headers_visible (include_list, FALSE);
 
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes ("Name",
@@ -269,7 +269,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                                                                        "text",
                                                                        COLUMN_NAME,
                                                                        NULL);
-    gtk_tree_view_append_column (GTK_TREE_VIEW(include_list), col);
+    gtk_tree_view_append_column (include_list, col);
 
     GtkWidget *include_add_button = builder_get_object (builder,
                                                         "include_add_button");
@@ -285,7 +285,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       G_CALLBACK (on_remove_button_clicked),
                       include_list);
 
-    GtkTreeSelection *sel = gtk_tree_view_get_selection (GTK_TREE_VIEW (include_list));
+    GtkTreeSelection *sel = gtk_tree_view_get_selection (include_list);
     g_signal_connect (sel,
                       "changed",
                       G_CALLBACK (on_list_selection_changed),
@@ -293,11 +293,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
 
     // Exclude model
     GtkTreeModel *exclude_model = create_tree_model (main_config->exclude_locations);
-    GtkWidget *exclude_list = builder_get_object (builder,
-                                                  "exclude_list");
-    gtk_tree_view_set_model (GTK_TREE_VIEW (exclude_list), exclude_model);
-    gtk_tree_view_set_search_column (GTK_TREE_VIEW (exclude_list), COLUMN_NAME);
-    gtk_tree_view_set_headers_visible (GTK_TREE_VIEW (exclude_list), FALSE);
+    GtkTreeView *exclude_list = GTK_TREE_VIEW (builder_get_object (builder,
+                                                                   "exclude_list"));
+    gtk_tree_view_set_model (exclude_list, exclude_model);
+    gtk_tree_view_set_search_column (exclude_list, COLUMN_NAME);
+    gtk_tree_view_set_headers_visible (exclude_list, FALSE);
 
     renderer = gtk_cell_renderer_text_new();
     col = gtk_tree_view_column_new_with_attributes ("Name",
@@ -305,7 +305,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                                                     "text",
                                                     COLUMN_NAME,
                                                     NULL);
-    gtk_tree_view_append_column (GTK_TREE_VIEW(exclude_list), col);
+    gtk_tree_view_append_column (exclude_list, col);
 
     GtkWidget *exclude_add_button = builder_get_object (builder,
                                                         "exclude_add_button");
@@ -321,7 +321,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       G_CALLBACK (on_remove_button_clicked),
                       exclude_list);
 
-    GtkTreeSelection *exclude_selection = gtk_tree_view_get_selection (GTK_TREE_VIEW (exclude_list));
+    GtkTreeSelection *exclude_selection = gtk_tree_view_get_selection (exclude_list);
     g_signal_connect (exclude_selection,
                       "changed",
                       G_CALLBACK (on_list_selection_changed),
@@ -332,17 +332,17 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
 
     if (response == GTK_RESPONSE_OK) {
-        main_config->limit_results = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (limit_num_results_button));
+        main_config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
 
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
 
-        main_config->enable_dark_theme = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (enable_dark_theme_button));
+        main_config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
 
-        main_config->enable_list_tooltips = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (show_tooltips_button));
+        main_config->enable_list_tooltips = gtk_toggle_button_get_active (show_tooltips_button);
 
-        main_config->restore_window_size = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (restore_win_size_button));
+        main_config->restore_window_size = gtk_toggle_button_get_active (restore_win_size_button);
 
-        main_config->update_database_on_launch = gtk_toggle_button_get_active (GTK_TOGGLE_BUTTON (update_db_at_start_button));
+        main_config->update_database_on_launch = gtk_toggle_button_get_active (update_db_at_start_button);
 
         g_object_set(gtk_settings_get_default(),
                      "gtk-application-prefer-dark-theme",
