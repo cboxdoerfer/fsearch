@@ -183,6 +183,7 @@
                   <object class="GtkNotebook">
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
+                    <property name="tab_pos">left</property>
                     <child>
                       <object class="GtkGrid">
                         <property name="visible">True</property>
