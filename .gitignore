@@ -33,6 +33,7 @@ src/resources.h
 src/fsearch
 src/tags
 src/fsearch.glade~
+src/*.ui~
 
 # QtCreator Files
 *.config
