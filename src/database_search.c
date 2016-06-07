@@ -155,10 +155,10 @@ search_thread (gpointer user_data)
             continue;
         }
 
+        gchar full_path[PATH_MAX] = "";
         const char *haystack_path = NULL;
         const char *haystack_name = node->name;
         if (search_in_path) {
-            gchar full_path[PATH_MAX] = "";
             btree_node_get_path_full (node, full_path, sizeof (full_path));
             haystack_path = full_path;
         }
