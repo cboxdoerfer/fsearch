@@ -55,7 +55,7 @@
                 <property name="column_spacing">6</property>
                 <child>
                   <object class="GtkCheckButton" id="enable_dark_theme_button">
-                    <property name="label" translatable="yes">Enable Dark Theme</property>
+                    <property name="label" translatable="yes">Enable dark theme</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -68,7 +68,7 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="show_tooltips_button">
-                    <property name="label" translatable="yes">Show Tooltips</property>
+                    <property name="label" translatable="yes">Show tooltips</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -81,7 +81,7 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="restore_win_size_button">
-                    <property name="label" translatable="yes">Restore Window Size</property>
+                    <property name="label" translatable="yes">Restore window size</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -116,7 +116,7 @@
                 <property name="column_spacing">6</property>
                 <child>
                   <object class="GtkCheckButton" id="limit_num_results_button">
-                    <property name="label" translatable="yes">Limit Number of Results</property>
+                    <property name="label" translatable="yes">Limit number of results</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -182,7 +182,7 @@
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkCheckButton" id="update_db_at_start_button">
-                    <property name="label" translatable="yes">Update Database on Start</property>
+                    <property name="label" translatable="yes">Update database on start</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -278,7 +278,7 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="follow_symlinks_button">
-                            <property name="label" translatable="yes">Follow Symbolic Links</property>
+                            <property name="label" translatable="yes">Follow symbolic links</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
@@ -381,7 +381,7 @@
                         </child>
                         <child>
                           <object class="GtkCheckButton" id="exclude_hidden_items_button">
-                            <property name="label" translatable="yes">Exclude Hidden Files and Folders</property>
+                            <property name="label" translatable="yes">Exclude hidden files and folders</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
