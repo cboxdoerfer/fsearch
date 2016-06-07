@@ -143,6 +143,7 @@ search_thread (gpointer user_data)
 
     uint32_t num_results = 0;
     BTreeNode **results = ctx->results;
+    gchar full_path[PATH_MAX] = "";
     for (uint32_t i = start; i <= end; i++) {
         if (num_results == max_results) {
             break;
@@ -155,7 +156,6 @@ search_thread (gpointer user_data)
             continue;
         }
 
-        gchar full_path[PATH_MAX] = "";
         const char *haystack_path = NULL;
         const char *haystack_name = node->name;
         if (search_in_path) {
@@ -171,7 +171,6 @@ search_thread (gpointer user_data)
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && query->has_separator)) {
                 if (!haystack_path) {
-                    gchar full_path[PATH_MAX] = "";
                     btree_node_get_path_full (node, full_path, sizeof (full_path));
                     haystack_path = full_path;
                 }
@@ -249,6 +248,7 @@ search_regex_thread (gpointer user_data)
         const FsearchFilter filter = ctx->filter;
 
         uint32_t num_results = 0;
+        gchar full_path[PATH_MAX] = "";
         for (uint32_t i = start; i <= end; ++i) {
             if (num_results == max_results) {
                 break;
@@ -263,7 +263,6 @@ search_regex_thread (gpointer user_data)
             }
 
             const char *haystack = NULL;
-            gchar full_path[PATH_MAX] = "";
             if (search_in_path || (auto_search_in_path && query->has_separator)) {
                 btree_node_get_path_full (node, full_path, sizeof (full_path));
                 haystack = full_path;
