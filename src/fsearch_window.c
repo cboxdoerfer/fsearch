@@ -309,6 +309,7 @@ perform_search (FsearchApplicationWindow *win, const char *text)
                           text,
                           config->match_case,
                           config->enable_regex,
+                          config->auto_search_in_path,
                           config->search_in_path);
     }
     else {
@@ -318,6 +319,7 @@ perform_search (FsearchApplicationWindow *win, const char *text)
                                      text,
                                      config->match_case,
                                      config->enable_regex,
+                                     config->auto_search_in_path,
                                      config->search_in_path);
     }
     uint32_t num = db_perform_search (win->search,

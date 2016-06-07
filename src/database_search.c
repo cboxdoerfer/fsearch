@@ -43,6 +43,7 @@ struct _DatabaseSearch
     bool match_case;
     bool enable_regex;
     bool search_in_path;
+    bool auto_search_in_path;
 };
 
 struct _DatabaseSearchEntry
@@ -55,6 +56,7 @@ typedef struct search_query_s {
     gchar *query;
     size_t query_len;
     bool has_uppercase;
+    bool has_separator;
     bool found;
 } search_query_t;
 
@@ -134,6 +136,7 @@ search_thread (gpointer user_data)
     const FsearchFilter filter = ctx->filter;
     GList *queries = ctx->queries;
     const bool search_in_path = ctx->search->search_in_path;
+    const bool auto_search_in_path = ctx->search->auto_search_in_path;
     const bool match_case = ctx->search->match_case;
     DynamicArray *entries = ctx->search->entries;
 
@@ -152,14 +155,12 @@ search_thread (gpointer user_data)
             continue;
         }
 
-        const char *haystack = NULL;
+        const char *haystack_path = NULL;
+        const char *haystack_name = node->name;
         if (search_in_path) {
             gchar full_path[PATH_MAX] = "";
             btree_node_get_path_full (node, full_path, sizeof (full_path));
-            haystack = full_path;
-        }
-        else {
-            haystack = node->name;
+            haystack_path = full_path;
         }
 
         uint32_t num_found = 0;
@@ -167,6 +168,18 @@ search_thread (gpointer user_data)
         while (temp) {
             search_query_t *query = temp->data;
             gchar *ptr = query->query;
+            const char *haystack = NULL;
+            if (search_in_path || (auto_search_in_path && query->has_separator)) {
+                if (!haystack_path) {
+                    gchar full_path[PATH_MAX] = "";
+                    btree_node_get_path_full (node, full_path, sizeof (full_path));
+                    haystack_path = full_path;
+                }
+                haystack = haystack_path;
+            }
+            else {
+                haystack = haystack_name;
+            }
             if (match_case) {
                 if (!fsearch_strstr (haystack, ptr, query->query_len)) {
                     break;
@@ -336,6 +349,7 @@ search_query_new (const char *query)
     new->query = g_strdup (query);
     new->query_len = strlen (query);
     new->has_uppercase = str_has_upper (query);
+    new->has_separator = strchr (query, '/') ? true : false;
     new->found = false;
     return new;
 }
@@ -552,6 +566,7 @@ db_search_new (FsearchThreadPool *pool,
                const char *query,
                bool match_case,
                bool enable_regex,
+               bool auto_search_in_path,
                bool search_in_path)
 {
     DatabaseSearch *db_search = g_new0 (DatabaseSearch, 1);
@@ -570,6 +585,7 @@ db_search_new (FsearchThreadPool *pool,
     db_search->num_folders = 0;
     db_search->num_files = 0;
     db_search->enable_regex = enable_regex;
+    db_search->auto_search_in_path = auto_search_in_path;
     db_search->search_in_path = search_in_path;
     db_search->match_case = match_case;
     return db_search;
@@ -601,6 +617,7 @@ db_search_update (DatabaseSearch *search,
                   const char *query,
                   bool match_case,
                   bool enable_regex,
+                  bool auto_search_in_path,
                   bool search_in_path)
 {
     g_assert (search != NULL);
@@ -610,6 +627,7 @@ db_search_update (DatabaseSearch *search,
     db_search_set_query (search, query);
     search->enable_regex = enable_regex;
     search->search_in_path = search_in_path;
+    search->auto_search_in_path = auto_search_in_path;
     search->match_case = match_case;
 }
 

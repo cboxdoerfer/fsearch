@@ -233,6 +233,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                                   main_config->restore_window_size);
 
     // Search page
+    GtkToggleButton *auto_search_in_path_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                         "auto_search_in_path_button"));
+    gtk_toggle_button_set_active (auto_search_in_path_button,
+                                  main_config->auto_search_in_path);
+
     GtkToggleButton *limit_num_results_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                        "limit_num_results_button"));
     gtk_toggle_button_set_active (limit_num_results_button,
@@ -344,6 +349,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
 
     if (response == GTK_RESPONSE_OK) {
+        main_config->auto_search_in_path = gtk_toggle_button_get_active (auto_search_in_path_button);
         main_config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
 
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));

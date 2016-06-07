@@ -48,6 +48,7 @@ db_search_new (FsearchThreadPool *pool,
                const char *query,
                bool match_case,
                bool enable_regex,
+               bool auto_search_in_path,
                bool search_in_path);
 
 BTreeNode *
@@ -69,6 +70,7 @@ db_search_update (DatabaseSearch *search,
                   const char *query,
                   bool match_case,
                   bool enable_regex,
+                  bool auto_search_in_path,
                   bool search_in_path);
 
 void

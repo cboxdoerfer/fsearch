@@ -31,6 +31,7 @@ struct _FsearchConfig
     bool search_in_path;
     bool enable_regex;
     bool match_case;
+    bool auto_search_in_path;
 
     // Window
     bool restore_window_size;
