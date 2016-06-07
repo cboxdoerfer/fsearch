@@ -292,6 +292,30 @@ listview_add_column (GtkTreeView *list, uint32_t col_type, int32_t size, int32_t
 }
 
 void
+listview_add_default_columns (GtkTreeView *view)
+{
+    listview_add_column (view,
+                         LIST_MODEL_COL_NAME,
+                         250,
+                         0);
+    listview_add_column (view, LIST_MODEL_COL_PATH,
+                         250,
+                         1);
+    listview_add_column (view,
+                         LIST_MODEL_COL_TYPE,
+                         100,
+                         2);
+    listview_add_column (view,
+                         LIST_MODEL_COL_SIZE,
+                         75,
+                         3);
+    listview_add_column (view,
+                         LIST_MODEL_COL_CHANGED,
+                         125,
+                         4);
+}
+
+void
 listview_remove_column_at_pos (GtkTreeView *view, int32_t pos)
 {
 }

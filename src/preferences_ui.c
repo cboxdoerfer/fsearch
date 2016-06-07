@@ -232,6 +232,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active (restore_win_size_button,
                                   main_config->restore_window_size);
 
+    GtkToggleButton *restore_column_config_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                           "restore_column_config_button"));
+    gtk_toggle_button_set_active (restore_column_config_button,
+                                  main_config->restore_column_config);
+
     // Search page
     GtkToggleButton *auto_search_in_path_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                          "auto_search_in_path_button"));
@@ -361,6 +366,8 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
 
         main_config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
+
+        main_config->restore_column_config = gtk_toggle_button_get_active (restore_column_config_button);
 
         main_config->enable_list_tooltips = gtk_toggle_button_get_active (show_tooltips_button);
 

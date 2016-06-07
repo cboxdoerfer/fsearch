@@ -591,33 +591,38 @@ create_view_and_model (FsearchApplicationWindow *app)
     app->list_model = list_model_new();
     GtkTreeView *list = GTK_TREE_VIEW (app->listview);
 
-    listview_add_column (list,
-                         LIST_MODEL_COL_NAME,
-                         config->name_column_width,
-                         config->name_column_pos);
+    if (!config->restore_column_config) {
+        listview_add_default_columns (list);
+    }
+    else {
+        listview_add_column (list,
+                             LIST_MODEL_COL_NAME,
+                             config->name_column_width,
+                             config->name_column_pos);
 
-    if (config->show_path_column) {
-        listview_add_column (list, LIST_MODEL_COL_PATH,
-                             config->path_column_width,
-                             config->path_column_pos);
-    }
-    if (config->show_type_column) {
-        listview_add_column (list,
-                             LIST_MODEL_COL_TYPE,
-                             config->type_column_width,
-                             config->type_column_pos);
-    }
-    if (config->show_size_column) {
-        listview_add_column (list,
-                             LIST_MODEL_COL_SIZE,
-                             config->size_column_width,
-                             config->size_column_pos);
-    }
-    if (config->show_modified_column) {
-        listview_add_column (list,
-                             LIST_MODEL_COL_CHANGED,
-                             config->modified_column_width,
-                             config->modified_column_pos);
+        if (config->show_path_column) {
+            listview_add_column (list, LIST_MODEL_COL_PATH,
+                                 config->path_column_width,
+                                 config->path_column_pos);
+        }
+        if (config->show_type_column) {
+            listview_add_column (list,
+                                 LIST_MODEL_COL_TYPE,
+                                 config->type_column_width,
+                                 config->type_column_pos);
+        }
+        if (config->show_size_column) {
+            listview_add_column (list,
+                                 LIST_MODEL_COL_SIZE,
+                                 config->size_column_width,
+                                 config->size_column_pos);
+        }
+        if (config->show_modified_column) {
+            listview_add_column (list,
+                                 LIST_MODEL_COL_CHANGED,
+                                 config->modified_column_width,
+                                 config->modified_column_pos);
+        }
     }
 
     gtk_tree_view_set_model (list,
