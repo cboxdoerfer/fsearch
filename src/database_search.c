@@ -162,7 +162,6 @@ search_thread (gpointer user_data)
             haystack = node->name;
         }
 
-
         uint32_t num_found = 0;
         GList *temp = queries;
         while (temp) {
