@@ -240,6 +240,10 @@ load_config (FsearchConfig *config)
                                                    4);
 
         // Search
+        config->search_as_you_type = config_load_boolean (key_file,
+                                                          "Search",
+                                                          "search_as_you_type",
+                                                          true);
         config->auto_search_in_path = config_load_boolean (key_file,
                                                            "Search",
                                                            "auto_search_in_path",
@@ -324,6 +328,7 @@ load_default_config (FsearchConfig *config)
 
     // Search
     config->auto_search_in_path = true;
+    config->search_as_you_type = true;
     config->match_case = false;
     config->enable_regex = false;
     config->search_in_path = false;
@@ -416,6 +421,7 @@ save_config (FsearchConfig *config)
     g_key_file_set_integer (key_file, "Interface", "modified_column_pos", config->modified_column_pos);
 
     // Search
+    g_key_file_set_boolean (key_file, "Search", "search_as_you_type", config->search_as_you_type);
     g_key_file_set_boolean (key_file, "Search", "auto_search_in_path", config->auto_search_in_path);
     g_key_file_set_boolean (key_file, "Search", "search_in_path", config->search_in_path);
     g_key_file_set_boolean (key_file, "Search", "enable_regex", config->enable_regex);

@@ -574,8 +574,11 @@ on_search_entry_changed (GtkEntry *entry, gpointer user_data)
     FsearchApplicationWindow *win = user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
-    const gchar *text = gtk_entry_get_text (entry);
-    perform_search (win, text);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    if (config->search_as_you_type) {
+        const gchar *text = gtk_entry_get_text (entry);
+        perform_search (win, text);
+    }
 }
 
 static void
@@ -811,8 +814,8 @@ on_filter_combobox_changed (GtkComboBox *widget,
 }
 
 void
-on_search_button_clicked (GtkButton *widget,
-                          gpointer   user_data)
+on_search_entry_activate (GtkButton *widget,
+                    gpointer   user_data)
 {
     FsearchApplicationWindow *win = user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
@@ -915,7 +918,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_callback (widget_class, on_search_mode_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_database_toggle_button_toggled);
     gtk_widget_class_bind_template_callback (widget_class, on_filter_combobox_changed);
-    gtk_widget_class_bind_template_callback (widget_class, on_search_button_clicked);
+    gtk_widget_class_bind_template_callback (widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_query_tooltip);
 }
 
