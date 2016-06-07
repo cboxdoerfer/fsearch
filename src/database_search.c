@@ -243,6 +243,7 @@ search_regex_thread (gpointer user_data)
         const uint32_t end = ctx->end_pos;
         const uint32_t max_results = ctx->max_results;
         const bool search_in_path = ctx->search->search_in_path;
+        const bool auto_search_in_path = ctx->search->auto_search_in_path;
         DynamicArray *entries = ctx->search->entries;
         BTreeNode **results = ctx->results;
         const FsearchFilter filter = ctx->filter;
@@ -262,8 +263,8 @@ search_regex_thread (gpointer user_data)
             }
 
             const char *haystack = NULL;
-            if (search_in_path) {
-                gchar full_path[PATH_MAX] = "";
+            gchar full_path[PATH_MAX] = "";
+            if (search_in_path || (auto_search_in_path && query->has_separator)) {
                 btree_node_get_path_full (node, full_path, sizeof (full_path));
                 haystack = full_path;
             }
