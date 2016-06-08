@@ -56,15 +56,15 @@ struct _DatabaseSearchEntry
 typedef struct search_query_s {
     gchar *query;
     size_t query_len;
-    bool has_uppercase;
-    bool has_separator;
-    bool found;
+    uint32_t has_uppercase;
+    uint32_t has_separator;
+    //uint32_t found;
 } search_query_t;
 
 typedef struct search_context_s {
     DatabaseSearch *search;
     BTreeNode **results;
-    GList *queries;
+    search_query_t **queries;
     uint32_t num_queries;
     uint32_t num_results;
     FsearchFilter filter;
@@ -81,7 +81,7 @@ db_search_entry_free (DatabaseSearchEntry *entry);
 
 static search_context_t *
 new_thread_data (DatabaseSearch *search,
-                 GList *queries,
+                 search_query_t **queries,
                  uint32_t num_queries,
                  FsearchFilter filter,
                  uint32_t max_results,
@@ -135,7 +135,7 @@ search_thread (gpointer user_data)
     const uint32_t max_results = ctx->max_results;
     const uint32_t num_queries = ctx->num_queries;
     const FsearchFilter filter = ctx->filter;
-    GList *queries = ctx->queries;
+    search_query_t **queries = ctx->queries;
     const bool search_in_path = ctx->search->search_in_path;
     const bool auto_search_in_path = ctx->search->auto_search_in_path;
     const bool match_case = ctx->search->match_case;
@@ -165,9 +165,16 @@ search_thread (gpointer user_data)
         }
 
         uint32_t num_found = 0;
-        GList *temp = queries;
-        while (temp) {
-            search_query_t *query = temp->data;
+        while (true) {
+            if (num_found == num_queries) {
+                results[num_results] = node;
+                num_results++;
+                break;
+            }
+            search_query_t *query = queries[num_found++];
+            if (!query) {
+                break;
+            }
             gchar *ptr = query->query;
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && query->has_separator)) {
@@ -190,14 +197,8 @@ search_thread (gpointer user_data)
                     break;
                 }
             }
-            num_found++;
-            temp = temp->next;
         }
 
-        if (num_found == num_queries) {
-            results[num_results] = node;
-            num_results++;
-        }
     }
     ctx->num_results = num_results;
     return NULL;
@@ -226,8 +227,8 @@ search_regex_thread (gpointer user_data)
     assert (ctx != NULL);
     assert (ctx->results != NULL);
 
-    GList *queries = ctx->queries;
-    search_query_t *query = queries->data;
+    search_query_t **queries = ctx->queries;
+    search_query_t *query = queries[0];
     const char *error;
     int erroffset;
     pcre *regex = pcre_compile (query->query,
@@ -352,12 +353,12 @@ search_query_new (const char *query)
     new->query = g_strdup (query);
     new->query_len = strlen (query);
     new->has_uppercase = str_has_upper (query);
-    new->has_separator = strchr (query, '/') ? true : false;
-    new->found = false;
+    new->has_separator = strchr (query, '/') ? 1 : 0;
+    //new->found = 0;
     return new;
 }
 
-static GList *
+static search_query_t **
 build_queries (DatabaseSearch *search)
 {
     assert (search != NULL);
@@ -371,7 +372,9 @@ build_queries (DatabaseSearch *search)
     // check if regex characters are present
     const bool is_reg = is_regex (search->query);
     if (is_reg && search->enable_regex) {
-        GList *queries = g_list_append (NULL, search_query_new (tmp_query_copy));
+        search_query_t **queries = calloc (2, sizeof (search_context_t *));
+        queries[0] = search_query_new (tmp_query_copy);
+        queries[1] = NULL;
         g_free (tmp_query_copy);
         tmp_query_copy = NULL;
 
@@ -382,9 +385,9 @@ build_queries (DatabaseSearch *search)
     assert (tmp_queries != NULL);
 
     uint32_t tmp_queries_len = g_strv_length (tmp_queries);
-    GList *queries = NULL;
+    search_query_t **queries = calloc (tmp_queries_len + 1, sizeof (search_context_t *));
     for (uint32_t i = 0; i < tmp_queries_len; i++) {
-        queries = g_list_append (queries, search_query_new (tmp_queries[i]));
+        queries[i] = search_query_new (tmp_queries[i]);
     }
 
     g_free (tmp_query_copy);
@@ -403,7 +406,7 @@ db_perform_normal_search (DatabaseSearch *search,
     assert (search != NULL);
     assert (search->entries != NULL);
 
-    GList *queries = build_queries (search);
+    search_query_t **queries = build_queries (search);
 
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
     const uint32_t num_items_per_thread = search->num_entries / num_threads;
@@ -413,7 +416,10 @@ db_perform_normal_search (DatabaseSearch *search,
 
     const bool limit_results = max_results ? true : false;
     const bool is_reg = is_regex (search->query);
-    const uint32_t num_queries = g_list_length (queries);
+    uint32_t num_queries = 0;
+    while (queries[num_queries]) {
+        num_queries++;
+    }
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
 
@@ -490,7 +496,12 @@ db_perform_normal_search (DatabaseSearch *search,
         }
     }
 
-    g_list_free_full (queries, search_query_free);
+    for (uint32_t i = 0; i < num_queries; ++i) {
+        search_query_free (queries[i]);
+        queries[i] = NULL;
+    }
+    free (queries);
+    queries = NULL;
     return search->results->len;
 }
 
