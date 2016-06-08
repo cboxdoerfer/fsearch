@@ -136,9 +136,9 @@ search_thread (gpointer user_data)
     const uint32_t num_queries = ctx->num_queries;
     const FsearchFilter filter = ctx->filter;
     search_query_t **queries = ctx->queries;
-    const bool search_in_path = ctx->search->search_in_path;
-    const bool auto_search_in_path = ctx->search->auto_search_in_path;
-    const bool match_case = ctx->search->match_case;
+    const uint32_t search_in_path = ctx->search->search_in_path;
+    const uint32_t auto_search_in_path = ctx->search->auto_search_in_path;
+    const uint32_t match_case = ctx->search->match_case;
     DynamicArray *entries = ctx->search->entries;
 
 
