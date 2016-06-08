@@ -77,3 +77,7 @@ src/*.ui~
 
 # Debug files
 *.dSYM/
+
+# perf files
+perf.data
+perf.data.old
