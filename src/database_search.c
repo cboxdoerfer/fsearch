@@ -688,8 +688,11 @@ db_search_get_results (DatabaseSearch *search)
 }
 
 static bool
-is_empty (const gchar *s)
+query_is_empty (const gchar *s)
 {
+    // query is considered empty if:
+    // - fist character is null terminator
+    // - or it has only space characters
     while (*s != '\0') {
         if (!isspace (*s)) {
             return 0;
@@ -705,12 +708,14 @@ db_perform_search (DatabaseSearch *search,
                    uint32_t max_results)
 {
     assert (search != NULL);
-    g_return_val_if_fail (search->entries != NULL, 0);
+    if (search->entries != NULL) {
+        return 0;
+    }
 
     db_search_results_clear (search);
 
     // if query is empty string we are done here
-    if (is_empty (search->query)) {
+    if (query_is_empty (search->query)) {
         return 0;
     }
     db_perform_normal_search (search, filter, max_results);
