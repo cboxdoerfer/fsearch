@@ -188,12 +188,14 @@ search_thread (gpointer user_data)
                 haystack = haystack_name;
             }
             if (match_case) {
-                if (!fsearch_strstr (haystack, ptr, query->query_len)) {
+                if (!strstr (haystack, ptr)) {
+                //if (!fsearch_strstr (haystack, ptr, query->query_len)) {
                     break;
                 }
             }
             else {
-                if (!fsearch_strcasestr (haystack, ptr, query->query_len)) {
+                if (!strcasestr (haystack, ptr)) {
+                //if (!fsearch_strcasestr (haystack, ptr, query->query_len)) {
                     break;
                 }
             }
