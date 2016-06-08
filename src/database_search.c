@@ -708,7 +708,7 @@ db_perform_search (DatabaseSearch *search,
                    uint32_t max_results)
 {
     assert (search != NULL);
-    if (search->entries != NULL) {
+    if (search->entries == NULL) {
         return 0;
     }
 
