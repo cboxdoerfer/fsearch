@@ -72,7 +72,7 @@ config_load_handle_error (GError *error)
             // new config, use default value and don't report anything
             break;
         default:
-            fprintf(stderr, "load_config: unkown error: %s\n", error->message);
+            fprintf(stderr, "load_config: unknown error: %s\n", error->message);
     }
     g_error_free (error);
 }
