@@ -51,6 +51,7 @@ struct _FsearchConfig
     bool show_search_button;
 
     // Columns
+    bool show_listview_icons;
     bool show_path_column;
     bool show_type_column;
     bool show_size_column;

@@ -182,6 +182,10 @@ load_config (FsearchConfig *config)
                                                      600);
 
         // Columns
+        config->show_listview_icons = config_load_boolean (key_file,
+                                                        "Interface",
+                                                        "show_listview_icons",
+                                                        true);
         config->show_path_column = config_load_boolean (key_file,
                                                         "Interface",
                                                         "show_path_column",
@@ -349,6 +353,7 @@ load_default_config (FsearchConfig *config)
     config->show_search_button = true;
 
     // Columns
+    config->show_listview_icons = true;
     config->show_path_column = true;
     config->show_type_column = true;
     config->show_size_column = true;
@@ -407,6 +412,7 @@ save_config (FsearchConfig *config)
     g_key_file_set_integer (key_file, "Interface", "window_height", config->window_height);
 
     // Columns visibility
+    g_key_file_set_boolean (key_file, "Interface", "show_listview_icons", config->show_listview_icons);
     g_key_file_set_boolean (key_file, "Interface", "show_path_column", config->show_path_column);
     g_key_file_set_boolean (key_file, "Interface", "show_type_column", config->show_type_column);
     g_key_file_set_boolean (key_file, "Interface", "show_size_column", config->show_size_column);
