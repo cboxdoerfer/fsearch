@@ -149,7 +149,7 @@ get_file_type (DatabaseSearchEntry *entry, const gchar *path) {
         type = get_mimetype (path);
     }
     if (type == NULL) {
-        type = strdup ("Unkown Type");
+        type = strdup ("Unknown Type");
     }
     return type;
 }
@@ -277,7 +277,7 @@ list_model_model_sortable_init (GtkTreeSortableIface *iface)
 
 /*****************************************************************************
  *
- *  list_model_init: this is called everytime a new custom list object
+ *  list_model_init: this is called every time a new custom list object
  *                    instance is created (we do that in list_model_new).
  *                    Initialise the list structure's fields here.
  *
