@@ -66,11 +66,13 @@ struct _FsearchApplicationWindow {
 
     ListModel *list_model;
 
+    guint search_delay_timer;
+
     GMutex mutex;
 };
 
-static gpointer
-perform_search (FsearchApplicationWindow *win, const char *text);
+static gboolean
+perform_search (FsearchApplicationWindow *win);
 
 static void
 init_statusbar (FsearchApplicationWindow *self)
@@ -115,8 +117,7 @@ fsearch_application_window_update_search (gpointer window)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (window));
     FsearchApplicationWindow *win = window;
-    const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
-    perform_search (win, text);
+    perform_search (win);
     return FALSE;
 }
 
@@ -280,27 +281,33 @@ update_statusbar (FsearchApplicationWindow *win, const char *text)
     gtk_label_set_text (GTK_LABEL (win->search_label), text);
 }
 
-static gpointer
-perform_search (FsearchApplicationWindow *win, const char *text)
+static gboolean
+perform_search (FsearchApplicationWindow *win)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config (app);
 
+    if (win->search_delay_timer) {
+        g_source_remove (win->search_delay_timer);
+        win->search_delay_timer = 0;
+    }
+
     if (!config->locations) {
         show_overlay (win, NO_DATABASE_OVERLAY);
-        return NULL;
+        return FALSE;
     }
 
     Database *db = fsearch_application_get_db (app);
     if (!db_try_lock (db)) {
         printf("search: database locked\n");
-        return NULL;
+        return FALSE;
     }
     g_mutex_lock (&win->mutex);
     remove_model_from_list (win);
 
+    const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     FsearchFilter filter = gtk_combo_box_get_active (GTK_COMBO_BOX (win->filter_combobox));
     if (win->search) {
         db_search_update (win->search,
@@ -344,7 +351,7 @@ perform_search (FsearchApplicationWindow *win, const char *text)
     }
     g_mutex_unlock (&win->mutex);
     db_unlock (db);
-    return NULL;
+    return FALSE;
 }
 
 typedef struct {
@@ -576,8 +583,11 @@ on_search_entry_changed (GtkEntry *entry, gpointer user_data)
 
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     if (config->search_as_you_type) {
-        const gchar *text = gtk_entry_get_text (entry);
-        perform_search (win, text);
+        if (win->search_delay_timer) {
+            g_source_remove (win->search_delay_timer);
+            win->search_delay_timer = 0;
+        }
+        win->search_delay_timer = g_timeout_add (100, (GSourceFunc)perform_search, win);
     }
 }
 
@@ -814,8 +824,7 @@ on_filter_combobox_changed (GtkComboBox *widget,
     FsearchApplicationWindow *win = user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
-    const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
-    perform_search (win, text);
+    perform_search (win);
 }
 
 void
@@ -825,8 +834,7 @@ on_search_entry_activate (GtkButton *widget,
     FsearchApplicationWindow *win = user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
-    const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
-    perform_search (win, text);
+    perform_search (win);
 }
 
 gboolean

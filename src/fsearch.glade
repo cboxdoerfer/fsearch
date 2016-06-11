@@ -505,7 +505,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="secondary_icon_sensitive">False</property>
                 <property name="placeholder_text" translatable="yes">Search...</property>
                 <signal name="activate" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
-                <signal name="search-changed" handler="on_search_entry_changed" object="FsearchApplicationWindow" swapped="no"/>
+                <signal name="changed" handler="on_search_entry_changed" object="FsearchApplicationWindow" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
