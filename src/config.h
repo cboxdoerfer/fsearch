@@ -33,6 +33,7 @@ struct _FsearchConfig
     bool match_case;
     bool auto_search_in_path;
     bool search_as_you_type;
+    uint32_t search_delay;
 
     // Window
     bool restore_window_size;

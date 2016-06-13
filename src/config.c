@@ -276,6 +276,10 @@ load_config (FsearchConfig *config)
                                                    "Search",
                                                    "num_results",
                                                    10000);
+        config->search_delay = config_load_integer (key_file,
+                                                   "Search",
+                                                   "search_delay",
+                                                   100);
 
         // Database
         config->update_database_on_launch = config_load_boolean (key_file,
@@ -340,6 +344,7 @@ load_default_config (FsearchConfig *config)
     config->match_case = false;
     config->enable_regex = false;
     config->search_in_path = false;
+    config->search_delay = 100;
     config->limit_results = true;
     config->num_results = 10000;
 
@@ -440,6 +445,7 @@ save_config (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Search", "match_case", config->match_case);
     g_key_file_set_boolean (key_file, "Search", "limit_results", config->limit_results);
     g_key_file_set_integer (key_file, "Search", "num_results", config->num_results);
+    g_key_file_set_integer (key_file, "Search", "search_delay", config->search_delay);
 
     // Database
     g_key_file_set_boolean (key_file, "Database", "update_database_on_launch", config->update_database_on_launch);

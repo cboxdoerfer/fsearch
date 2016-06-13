@@ -583,11 +583,16 @@ on_search_entry_changed (GtkEntry *entry, gpointer user_data)
 
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     if (config->search_as_you_type) {
-        if (win->search_delay_timer) {
-            g_source_remove (win->search_delay_timer);
-            win->search_delay_timer = 0;
+        if (config->search_delay > 0) {
+            if (win->search_delay_timer) {
+                g_source_remove (win->search_delay_timer);
+                win->search_delay_timer = 0;
+            }
+            win->search_delay_timer = g_timeout_add (config->search_delay, (GSourceFunc)perform_search, win);
         }
-        win->search_delay_timer = g_timeout_add (100, (GSourceFunc)perform_search, win);
+        else {
+            perform_search (win);
+        }
     }
 }
 
