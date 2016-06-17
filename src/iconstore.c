@@ -35,12 +35,12 @@ get_themed_icon_pixbuf (GThemedIcon *icon, int size, GtkIconTheme *icon_theme)
     GtkIconInfo *icon_info = gtk_icon_theme_choose_icon (icon_theme,
                                             (const char **)icon_names,
                                             size,
-                                            0);
+                                            GTK_ICON_LOOKUP_FORCE_SIZE);
     if (icon_info == NULL) {
         icon_info = gtk_icon_theme_lookup_icon (icon_theme,
                                                 "text-x-generic",
                                                 size,
-                                                GTK_ICON_LOOKUP_USE_BUILTIN);
+                                                GTK_ICON_LOOKUP_FORCE_SIZE);
     }
 
     GError * error = NULL;
