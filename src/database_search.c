@@ -38,7 +38,7 @@ struct _DatabaseSearch
     DynamicArray *entries;
     uint32_t num_entries;
 
-    gchar *query;
+    char *query;
     uint32_t num_folders;
     uint32_t num_files;
     bool match_case;
@@ -54,7 +54,7 @@ struct _DatabaseSearchEntry
 };
 
 typedef struct search_query_s {
-    gchar *query;
+    char *query;
     size_t query_len;
     uint32_t has_uppercase;
     uint32_t has_separator;
@@ -123,8 +123,8 @@ filter_node (BTreeNode *node, FsearchFilter filter)
     return false;
 }
 
-static gpointer
-search_thread (gpointer user_data)
+static void *
+search_thread (void * user_data)
 {
     search_context_t *ctx = (search_context_t *)user_data;
     assert (ctx != NULL);
@@ -144,7 +144,7 @@ search_thread (gpointer user_data)
 
     uint32_t num_results = 0;
     BTreeNode **results = ctx->results;
-    gchar full_path[PATH_MAX] = "";
+    char full_path[PATH_MAX] = "";
     for (uint32_t i = start; i <= end; i++) {
         if (num_results == max_results) {
             break;
@@ -175,7 +175,7 @@ search_thread (gpointer user_data)
             if (!query) {
                 break;
             }
-            gchar *ptr = query->query;
+            char *ptr = query->query;
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && query->has_separator)) {
                 if (!haystack_path) {
@@ -222,8 +222,8 @@ static inline void stop()
     printf("%llu ms\n", t);
 }
 
-static gpointer
-search_regex_thread (gpointer user_data)
+static void *
+search_regex_thread (void * user_data)
 {
     search_context_t *ctx = (search_context_t *)user_data;
     assert (ctx != NULL);
@@ -252,7 +252,7 @@ search_regex_thread (gpointer user_data)
         const FsearchFilter filter = ctx->filter;
 
         uint32_t num_results = 0;
-        gchar full_path[PATH_MAX] = "";
+        char full_path[PATH_MAX] = "";
         for (uint32_t i = start; i <= end; ++i) {
             if (num_results == max_results) {
                 break;
@@ -332,7 +332,7 @@ str_has_upper (const char *string)
 }
 
 static void
-search_query_free (gpointer data)
+search_query_free (void * data)
 {
     search_query_t *query = data;
     if (query != NULL) {
@@ -349,7 +349,7 @@ search_query_free (gpointer data)
 static search_query_t *
 search_query_new (const char *query)
 {
-    search_query_t *new = g_new0 (search_query_t, 1);
+    search_query_t *new = calloc (1, sizeof (search_query_t));
     assert (new != NULL);
 
     new->query = g_strdup (query);
@@ -366,7 +366,7 @@ build_queries (DatabaseSearch *search)
     assert (search != NULL);
     assert (search->query != NULL);
 
-    gchar *tmp_query_copy = strdup (search->query);
+    char *tmp_query_copy = strdup (search->query);
     assert (tmp_query_copy != NULL);
     // remove leading/trailing whitespace
     g_strstrip (tmp_query_copy);
@@ -383,7 +383,7 @@ build_queries (DatabaseSearch *search)
         return queries;
     }
     // whitespace is regarded as AND so split query there in multiple queries
-    gchar **tmp_queries = g_strsplit_set (tmp_query_copy, " ", -1);
+    char **tmp_queries = g_strsplit_set (tmp_query_copy, " ", -1);
     assert (tmp_queries != NULL);
 
     uint32_t tmp_queries_len = g_strv_length (tmp_queries);
@@ -567,7 +567,7 @@ db_search_entry_free (DatabaseSearchEntry *entry)
 DatabaseSearchEntry *
 db_search_entry_new (BTreeNode *node, uint32_t pos)
 {
-    DatabaseSearchEntry *entry = g_new0 (DatabaseSearchEntry, 1);
+    DatabaseSearchEntry *entry = calloc (1, sizeof (DatabaseSearchEntry));
     assert (entry != NULL);
 
     entry->node = node;
@@ -585,7 +585,7 @@ db_search_new (FsearchThreadPool *pool,
                bool auto_search_in_path,
                bool search_in_path)
 {
-    DatabaseSearch *db_search = g_new0 (DatabaseSearch, 1);
+    DatabaseSearch *db_search = calloc (1, sizeof (DatabaseSearch));
     assert (db_search != NULL);
 
     db_search->entries = entries;
@@ -689,7 +689,7 @@ db_search_remove_entry (DatabaseSearch *search, DatabaseSearchEntry *entry)
         return;
     }
 
-    g_ptr_array_remove (search->results, (gpointer) entry);
+    g_ptr_array_remove (search->results, (void *) entry);
     update_index (search);
 }
 
@@ -701,7 +701,7 @@ db_search_get_results (DatabaseSearch *search)
 }
 
 static bool
-query_is_empty (const gchar *s)
+query_is_empty (const char *s)
 {
     // query is considered empty if:
     // - fist character is null terminator
