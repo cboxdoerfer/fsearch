@@ -309,10 +309,13 @@ perform_search (FsearchApplicationWindow *win)
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     FsearchFilter filter = gtk_combo_box_get_active (GTK_COMBO_BOX (win->filter_combobox));
+    uint32_t max_results = config->limit_results ? config->num_results : 0;
     if (win->search) {
         db_search_update (win->search,
                           db_get_entries (db),
                           db_get_num_entries (db),
+                          max_results,
+                          filter,
                           text,
                           config->match_case,
                           config->enable_regex,
@@ -323,15 +326,15 @@ perform_search (FsearchApplicationWindow *win)
         win->search = db_search_new (fsearch_application_get_thread_pool (app),
                                      db_get_entries (db),
                                      db_get_num_entries (db),
+                                     max_results,
+                                     filter,
                                      text,
                                      config->match_case,
                                      config->enable_regex,
                                      config->auto_search_in_path,
                                      config->search_in_path);
     }
-    uint32_t num = db_perform_search (win->search,
-                                      filter,
-                                      config->limit_results ? config->num_results : 0);
+    uint32_t num = db_perform_search (win->search);
     list_set_results (win->list_model, db_search_get_results (win->search));
 
     apply_model_to_list (win);

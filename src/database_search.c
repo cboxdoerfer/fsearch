@@ -39,6 +39,8 @@ struct _DatabaseSearch
     uint32_t num_entries;
 
     char *query;
+    FsearchFilter filter;
+    uint32_t max_results;
     uint32_t num_folders;
     uint32_t num_files;
     bool match_case;
@@ -67,8 +69,6 @@ typedef struct search_context_s {
     search_query_t **queries;
     uint32_t num_queries;
     uint32_t num_results;
-    FsearchFilter filter;
-    uint32_t max_results;
     uint32_t start_pos;
     uint32_t end_pos;
 } search_context_t;
@@ -83,8 +83,6 @@ static search_context_t *
 new_thread_data (DatabaseSearch *search,
                  search_query_t **queries,
                  uint32_t num_queries,
-                 FsearchFilter filter,
-                 uint32_t max_results,
                  uint32_t start_pos,
                  uint32_t end_pos)
 {
@@ -98,8 +96,6 @@ new_thread_data (DatabaseSearch *search,
     assert (ctx->results != NULL);
 
     ctx->num_results = 0;
-    ctx->filter = filter;
-    ctx->max_results = max_results;
     ctx->start_pos = start_pos;
     ctx->end_pos = end_pos;
     return ctx;
@@ -132,9 +128,9 @@ search_thread (void * user_data)
 
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
-    const uint32_t max_results = ctx->max_results;
+    const uint32_t max_results = ctx->search->max_results;
     const uint32_t num_queries = ctx->num_queries;
-    const FsearchFilter filter = ctx->filter;
+    const FsearchFilter filter = ctx->search->filter;
     search_query_t **queries = ctx->queries;
     const uint32_t search_in_path = ctx->search->search_in_path;
     const uint32_t auto_search_in_path = ctx->search->auto_search_in_path;
@@ -146,7 +142,7 @@ search_thread (void * user_data)
     BTreeNode **results = ctx->results;
     char full_path[PATH_MAX] = "";
     for (uint32_t i = start; i <= end; i++) {
-        if (num_results == max_results) {
+        if (max_results && num_results == max_results) {
             break;
         }
         BTreeNode *node = darray_get_item (entries, i);
@@ -244,17 +240,17 @@ search_regex_thread (void * user_data)
     if (regex) {
         const uint32_t start = ctx->start_pos;
         const uint32_t end = ctx->end_pos;
-        const uint32_t max_results = ctx->max_results;
+        const uint32_t max_results = ctx->search->max_results;
         const bool search_in_path = ctx->search->search_in_path;
         const bool auto_search_in_path = ctx->search->auto_search_in_path;
         DynamicArray *entries = ctx->search->entries;
         BTreeNode **results = ctx->results;
-        const FsearchFilter filter = ctx->filter;
+        const FsearchFilter filter = ctx->search->filter;
 
         uint32_t num_results = 0;
         char full_path[PATH_MAX] = "";
         for (uint32_t i = start; i <= end; ++i) {
-            if (num_results == max_results) {
+            if (max_results && num_results == max_results) {
                 break;
             }
             BTreeNode *node = darray_get_item (entries, i);
@@ -401,9 +397,7 @@ build_queries (DatabaseSearch *search)
 }
 
 static uint32_t
-db_perform_normal_search (DatabaseSearch *search,
-                          FsearchFilter filter,
-                          uint32_t max_results)
+db_perform_normal_search (DatabaseSearch *search)
 {
     assert (search != NULL);
     assert (search->entries != NULL);
@@ -416,6 +410,7 @@ db_perform_normal_search (DatabaseSearch *search,
     search_context_t *thread_data[num_threads];
     memset (thread_data, 0, num_threads * sizeof (search_context_t *));
 
+    const uint32_t max_results = search->max_results;
     const bool limit_results = max_results ? true : false;
     const bool is_reg = is_regex (search->query);
     uint32_t num_queries = 0;
@@ -431,8 +426,6 @@ db_perform_normal_search (DatabaseSearch *search,
         thread_data[i] = new_thread_data (search,
                 queries,
                 num_queries,
-                filter,
-                limit_results ? max_results : -1,
                 start_pos,
                 i == num_threads - 1 ? search->num_entries - 1 : end_pos);
 
@@ -579,6 +572,8 @@ DatabaseSearch *
 db_search_new (FsearchThreadPool *pool,
                DynamicArray *entries,
                uint32_t num_entries,
+               uint32_t max_results,
+               FsearchFilter filter,
                const char *query,
                bool match_case,
                bool enable_regex,
@@ -604,6 +599,8 @@ db_search_new (FsearchThreadPool *pool,
     db_search->auto_search_in_path = auto_search_in_path;
     db_search->search_in_path = search_in_path;
     db_search->match_case = match_case;
+    db_search->max_results = max_results;
+    db_search->filter = filter;
     return db_search;
 }
 
@@ -630,6 +627,8 @@ void
 db_search_update (DatabaseSearch *search,
                   DynamicArray *entries,
                   uint32_t num_entries,
+                  uint32_t max_results,
+                  FsearchFilter filter,
                   const char *query,
                   bool match_case,
                   bool enable_regex,
@@ -645,6 +644,8 @@ db_search_update (DatabaseSearch *search,
     search->search_in_path = search_in_path;
     search->auto_search_in_path = auto_search_in_path;
     search->match_case = match_case;
+    search->max_results = max_results;
+    search->filter = filter;
 }
 
 uint32_t
@@ -716,9 +717,7 @@ query_is_empty (const char *s)
 }
 
 uint32_t
-db_perform_search (DatabaseSearch *search,
-                   FsearchFilter filter,
-                   uint32_t max_results)
+db_perform_search (DatabaseSearch *search)
 {
     assert (search != NULL);
     if (search->entries == NULL) {
@@ -731,7 +730,7 @@ db_perform_search (DatabaseSearch *search,
     if (query_is_empty (search->query)) {
         return 0;
     }
-    db_perform_normal_search (search, filter, max_results);
+    db_perform_normal_search (search);
 
     if (search->results) {
         return search->results->len;

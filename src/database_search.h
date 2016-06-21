@@ -45,6 +45,8 @@ DatabaseSearch *
 db_search_new (FsearchThreadPool *pool,
                DynamicArray *entries,
                uint32_t num_entries,
+               uint32_t max_results,
+               FsearchFilter filter,
                const char *query,
                bool match_case,
                bool enable_regex,
@@ -67,6 +69,8 @@ void
 db_search_update (DatabaseSearch *search,
                   DynamicArray *entries,
                   uint32_t num_entries,
+                  uint32_t max_results,
+                  FsearchFilter filter,
                   const char *query,
                   bool match_case,
                   bool enable_regex,
@@ -92,6 +96,4 @@ void
 db_search_remove_entry (DatabaseSearch *search, DatabaseSearchEntry *entry);
 
 uint32_t
-db_perform_search (DatabaseSearch *search,
-                   FsearchFilter filter,
-                   uint32_t max_results);
+db_perform_search (DatabaseSearch *search);
