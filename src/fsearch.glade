@@ -131,11 +131,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   </object>
   <template class="FsearchApplicationWindow" parent="GtkApplicationWindow">
     <property name="name">application_window</property>
-    <property name="width_request">800</property>
-    <property name="height_request">600</property>
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">FSearch</property>
     <property name="window_position">center</property>
+    <property name="default_width">800</property>
+    <property name="default_height">600</property>
     <property name="icon_name">system-search</property>
     <signal name="delete-event" handler="gtk_widget_destroy" swapped="no"/>
     <child>
