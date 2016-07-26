@@ -28,6 +28,7 @@ struct _FsearchConfig
 {
     // Search
     bool limit_results;
+    bool hide_results_on_empty_search;
     bool search_in_path;
     bool enable_regex;
     bool match_case;

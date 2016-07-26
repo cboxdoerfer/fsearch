@@ -43,6 +43,7 @@ struct _DatabaseSearch
     uint32_t max_results;
     uint32_t num_folders;
     uint32_t num_files;
+    bool hide_results;
     bool match_case;
     bool enable_regex;
     bool search_in_path;
@@ -397,6 +398,41 @@ build_queries (DatabaseSearch *search)
 }
 
 static uint32_t
+db_perform_empty_search (DatabaseSearch *search)
+{
+    assert (search != NULL);
+    assert (search->entries != NULL);
+
+    const uint32_t num_results = MIN (search->max_results, search->num_entries);
+    search->results = g_ptr_array_sized_new (num_results);
+    g_ptr_array_set_free_func (search->results, (GDestroyNotify)db_search_entry_free);
+
+    DynamicArray *entries = search->entries;
+
+    uint32_t pos = 0;
+    for (uint32_t i = 0; pos < num_results && i < search->num_entries; ++i) {
+        BTreeNode *node = darray_get_item (entries, i);
+        if (!node) {
+            continue;
+        }
+
+        if (!filter_node (node, search->filter)) {
+            continue;
+        }
+        if (node->is_dir) {
+            search->num_folders++;
+        }
+        else {
+            search->num_files++;
+        }
+        DatabaseSearchEntry *entry = db_search_entry_new (node, pos);
+        g_ptr_array_add (search->results, entry);
+        pos++;
+    }
+    return pos;
+}
+
+static uint32_t
 db_perform_normal_search (DatabaseSearch *search)
 {
     assert (search != NULL);
@@ -575,6 +611,7 @@ db_search_new (FsearchThreadPool *pool,
                uint32_t max_results,
                FsearchFilter filter,
                const char *query,
+               bool hide_results,
                bool match_case,
                bool enable_regex,
                bool auto_search_in_path,
@@ -598,6 +635,7 @@ db_search_new (FsearchThreadPool *pool,
     db_search->enable_regex = enable_regex;
     db_search->auto_search_in_path = auto_search_in_path;
     db_search->search_in_path = search_in_path;
+    db_search->hide_results = hide_results;
     db_search->match_case = match_case;
     db_search->max_results = max_results;
     db_search->filter = filter;
@@ -630,6 +668,7 @@ db_search_update (DatabaseSearch *search,
                   uint32_t max_results,
                   FsearchFilter filter,
                   const char *query,
+                  bool hide_results,
                   bool match_case,
                   bool enable_regex,
                   bool auto_search_in_path,
@@ -643,6 +682,7 @@ db_search_update (DatabaseSearch *search,
     search->enable_regex = enable_regex;
     search->search_in_path = search_in_path;
     search->auto_search_in_path = auto_search_in_path;
+    search->hide_results = hide_results;
     search->match_case = match_case;
     search->max_results = max_results;
     search->filter = filter;
@@ -728,7 +768,12 @@ db_perform_search (DatabaseSearch *search)
 
     // if query is empty string we are done here
     if (query_is_empty (search->query)) {
-        return 0;
+        if (!search->hide_results) {
+            return db_perform_empty_search (search);
+        }
+        else {
+            return 0;
+        }
     }
     db_perform_normal_search (search);
 

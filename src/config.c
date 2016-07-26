@@ -268,6 +268,10 @@ load_config (FsearchConfig *config)
                                                       "Search",
                                                       "search_in_path",
                                                       false);
+        config->hide_results_on_empty_search = config_load_boolean (key_file,
+                                                                    "Search",
+                                                                    "hide_results_on_empty_search",
+                                                                    true);
         config->limit_results = config_load_boolean (key_file,
                                                      "Search",
                                                      "limit_results",
@@ -345,6 +349,7 @@ load_default_config (FsearchConfig *config)
     config->enable_regex = false;
     config->search_in_path = false;
     config->search_delay = 100;
+    config->hide_results_on_empty_search = true;
     config->limit_results = true;
     config->num_results = 10000;
 
@@ -443,6 +448,7 @@ save_config (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Search", "search_in_path", config->search_in_path);
     g_key_file_set_boolean (key_file, "Search", "enable_regex", config->enable_regex);
     g_key_file_set_boolean (key_file, "Search", "match_case", config->match_case);
+    g_key_file_set_boolean (key_file, "Search", "hide_results_on_empty_search", config->hide_results_on_empty_search);
     g_key_file_set_boolean (key_file, "Search", "limit_results", config->limit_results);
     g_key_file_set_integer (key_file, "Search", "num_results", config->num_results);
     g_key_file_set_integer (key_file, "Search", "search_delay", config->search_delay);

@@ -317,6 +317,7 @@ perform_search (FsearchApplicationWindow *win)
                           max_results,
                           filter,
                           text,
+                          config->hide_results_on_empty_search,
                           config->match_case,
                           config->enable_regex,
                           config->auto_search_in_path,
@@ -329,6 +330,7 @@ perform_search (FsearchApplicationWindow *win)
                                      max_results,
                                      filter,
                                      text,
+                                     config->hide_results_on_empty_search,
                                      config->match_case,
                                      config->enable_regex,
                                      config->auto_search_in_path,
@@ -343,7 +345,7 @@ perform_search (FsearchApplicationWindow *win)
     update_statusbar (win, sb_text);
     reset_sort_order (win);
 
-    if (text[0] == '\0') {
+    if (text[0] == '\0' && config->hide_results_on_empty_search) {
         show_overlay (win, NO_SEARCH_QUERY_OVERLAY);
     }
     else if (num == 0) {
