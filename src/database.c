@@ -735,7 +735,7 @@ db_location_build_new (Database *db, const char *location_name)
     DatabaseLocation *location = db_location_build_tree (location_name);
 
     if (location) {
-        printf("loation num entries: %d\n", location->num_items);
+        printf("location num entries: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db_update_timestamp (db);
