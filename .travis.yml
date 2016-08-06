@@ -14,4 +14,4 @@ addons:
             - libgtk-3-dev
             - libxml2-utils
 
-script: ./autogen.sh && ./configure && make
+script: ls -l && ./autogen.sh && ./configure && make
