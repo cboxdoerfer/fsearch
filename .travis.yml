@@ -1,4 +1,18 @@
 language: c
 
+addons:
+    apt:
+        packages:
+            - automake
+            - autoconf
+            - libtool
+            - pkg-config
+            - intltool
+            - autoconf-archive
+            - libpcre3-dev
+            - libglib2.0-dev
+            - libgtk-3-dev
+            - libxml2-utils
+
 before_script:
     - ./autogen.sh
