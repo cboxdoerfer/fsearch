@@ -4,7 +4,6 @@ Makefile.in
 /data/Makefile
 /data/fsearch.desktop
 /data/fsearch.desktop.in
-/build
 /po
 /po/Makefile
 /po/Makefile.in.in
