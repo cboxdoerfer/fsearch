@@ -38,3 +38,5 @@ I like both of them. And in fact my long term goal is to provide console, GTK+3 
 ## Download
 ### AUR
 https://aur.archlinux.org/packages/fsearch-git/
+### Ubuntu 16.04
+https://github.com/cboxdoerfer/fsearch/releases/download/0.1alpha1/fsearch-dev_0.1-1_amd64.deb
