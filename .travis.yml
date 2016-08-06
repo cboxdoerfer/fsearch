@@ -3,6 +3,7 @@ language: c
 addons:
     apt:
         packages:
+            - build-essential
             - automake
             - autoconf
             - libtool
