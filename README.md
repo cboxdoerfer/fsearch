@@ -21,7 +21,7 @@ https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
 ## Building
 https://github.com/cboxdoerfer/fsearch/wiki/Build-instructions
 
-## Questions?´
+## Questions?
 
 Email: christian.boxdoerfer@posteo.de
 
