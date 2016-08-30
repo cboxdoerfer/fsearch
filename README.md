@@ -2,7 +2,7 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 
 **Note: The application is still in beta stage, but will see its first release as soon as localization support has been added**
 
-![](https://i.imgur.com/ccBezbU.png)
+![](http://i.imgur.com/4dLN7Jl.png)
 
 ## Features
 - Instant (as you type) results
