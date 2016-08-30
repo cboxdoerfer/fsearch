@@ -21,6 +21,12 @@ https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
 ## Building
 https://github.com/cboxdoerfer/fsearch/wiki/Build-instructions
 
+## Questions?´
+
+Email: christian.boxdoerfer@posteo.de
+
+IRC:   chat.freenode.net #fsearch
+
 ## Why yet another search utility?
 Performance. On Windows I really like to use Everything Search Engine. It provides instant results as you type for all your files and lots of useful features (regex, filters, bookmarks, ...). On Linux however I couldn't find anything that's even remotely as fast and powerful.
 
