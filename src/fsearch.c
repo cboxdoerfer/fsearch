@@ -289,7 +289,7 @@ about_activated (GSimpleAction *action,
                                "license-type", GTK_LICENSE_GPL_2_0,
                                "copyright", "Christian Boxdörfer",
                                "website", "https://github.com/cboxdoerfer/fsearch",
-                               "version", "0.1alpha",
+                               "version", "0.1beta",
                                "comments", "A search utility focusing on performance and advanced features",
                                NULL);
         break;
