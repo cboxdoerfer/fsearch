@@ -25,8 +25,10 @@
 #include <assert.h>
 #include <ctype.h>
 #include <pcre.h>
+
 #include "database_search.h"
 #include "string_utils.h"
+#include "debug.h"
 
 #define OVECCOUNT 3
 
@@ -203,20 +205,26 @@ search_thread (void * user_data)
     return NULL;
 }
 
+#ifdef DEBUG
 static struct timeval tm1;
+#endif
 
 static inline void start()
 {
+#ifdef DEBUG
     gettimeofday(&tm1, NULL);
+#endif
 }
 
 static inline void stop()
 {
+#ifdef DEBUG
     struct timeval tm2;
     gettimeofday(&tm2, NULL);
 
     unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
-    printf("%llu ms\n", t);
+    trace ("%llu ms\n", t);
+#endif
 }
 
 static void *
@@ -482,7 +490,7 @@ db_perform_normal_search (DatabaseSearch *search)
         temp = temp->next;
     }
 
-    printf("search done: ");
+    trace ("search done: ");
     stop ();
 
     // get total number of entries found

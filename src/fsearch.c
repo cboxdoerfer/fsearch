@@ -36,6 +36,7 @@
 #include "ui_utils.h"
 #include "preferences_ui.h"
 #include "fsearch_window.h"
+#include "debug.h"
 
 struct _FsearchApplication
 {
@@ -179,20 +180,26 @@ prepare_windows_for_db_update (FsearchApplication *app)
     return;
 }
 
+#ifdef DEBUG
 static struct timeval tm1;
+#endif
 
 static inline void start()
 {
+#ifdef DEBUG
     gettimeofday(&tm1, NULL);
+#endif
 }
 
 static inline void stop()
 {
+#ifdef DEBUG
     struct timeval tm2;
     gettimeofday(&tm2, NULL);
 
     unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
-    printf("%llu ms\n", t);
+    trace ("%llu ms\n", t);
+#endif
 }
 
 static gpointer
@@ -239,11 +246,11 @@ load_database (gpointer user_data)
                 db_update_entries_list (app->db);
             }
         }
-        printf("loaded db in:");
+        trace ("loaded db in:");
         stop ();
     }
     else {
-        printf("update\n");
+        trace ("update\n");
         start ();
         db_clear (app->db);
         if (app->config->locations) {
@@ -252,7 +259,7 @@ load_database (gpointer user_data)
             }
             db_build_initial_entries_list (app->db);
         }
-        printf("loaded db in:");
+        trace ("loaded db in:");
         stop ();
     }
     uint32_t num_items = db_get_num_entries (app->db);

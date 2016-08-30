@@ -23,10 +23,10 @@
 #include <sys/time.h>
 #include <ctype.h>
 #include <glib/gstdio.h>
+
 #include "iconstore.h"
 #include "database_search.h"
 #include "btree.h"
-
 
 /* boring declarations of local functions */
 

@@ -17,9 +17,11 @@
    */
 
 #include <stdio.h>
+
 #include "listview.h"
 #include "list_model.h"
 #include "fsearch.h"
+#include "debug.h"
 
 GtkTreeView *
 listview_new (void)
@@ -56,7 +58,7 @@ on_listview_column_width_changed (GtkTreeViewColumn *col,
             config->modified_column_width = width;
             break;
         default:
-            printf("width changed: unknown column\n");
+            trace ("width changed: unknown column\n");
     }
 }
 
@@ -291,7 +293,7 @@ listview_add_column (GtkTreeView *list, uint32_t col_type, int32_t size, int32_t
             listview_add_size_column (list, size, pos);
             break;
         default:
-            printf("add column: unknown column type\n");
+            trace ("add column: unknown column type\n");
     }
 }
 

@@ -22,7 +22,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <linux/limits.h>
+
 #include "config.h"
+#include "debug.h"
 
 const char *config_file_name = "fsearch.conf";
 const char *config_folder_name = "fsearch";
@@ -136,7 +138,7 @@ load_config (FsearchConfig *config)
 
     GError *error = NULL;
     if (g_key_file_load_from_file (key_file, config_path, G_KEY_FILE_NONE, &error)) {
-        printf("loaded config file\n");
+        trace ("loaded config file\n");
         // Interface
         config->restore_column_config = config_load_boolean (key_file,
                                                             "Interface",
@@ -483,7 +485,7 @@ save_config (FsearchConfig *config)
 
     GError *error = NULL;
     if (g_key_file_save_to_file (key_file, config_path, &error)) {
-        printf("saved config file\n");
+        trace ("saved config file\n");
         result = true;
     }
     else {

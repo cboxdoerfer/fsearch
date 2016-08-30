@@ -34,6 +34,7 @@
 #include "database.h"
 #include "config.h"
 #include "fsearch.h"
+#include "debug.h"
 
 #define WS_NONE		0
 #define WS_RECURSIVE	(1 << 0)
@@ -217,7 +218,7 @@ db_location_load_from_file (const char *fname)
         prev = btree_node_prepend (prev, new);
         num_items_read++;
     }
-    printf("read database: %d/%d\n", num_items_read, num_items);
+    trace ("read database: %d/%d\n", num_items_read, num_items);
 
     DatabaseLocation *location = db_location_new ();
     location->num_items = num_items_read;
@@ -420,7 +421,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         }
 
         if (directory_is_excluded (fn, excludes)) {
-            printf("excluded: %s\n", fn);
+            trace ("excluded: %s\n", fn);
             continue;
         }
 
@@ -646,7 +647,7 @@ db_save_location (Database *db, const char *location_name)
     build_location_path (database_path,
                          sizeof (database_path),
                          location_name);
-    printf("%s\n", database_path);
+    trace ("%s\n", database_path);
 
     gchar database_fname[PATH_MAX] = "";
     snprintf (database_fname,
@@ -684,7 +685,7 @@ db_location_get_path (const char *location_name)
     build_location_path (database_path,
                          sizeof (database_path),
                          location_name);
-    printf("%s\n", database_path);
+    trace ("%s\n", database_path);
 
     gchar database_fname[PATH_MAX] = "";
     snprintf (database_fname,
@@ -711,7 +712,7 @@ db_location_load (Database *db, const char *location_name)
 
     if (location) {
         location->num_items = btree_node_n_nodes (location->entries);
-        printf("number of nodes: %d\n", location->num_items);
+        trace ("number of nodes: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db->busy = false;
@@ -730,12 +731,12 @@ db_location_build_new (Database *db, const char *location_name)
 {
     g_assert (db != NULL);
     db_lock (db);
-    printf("load location: %s\n", location_name);
+    trace ("load location: %s\n", location_name);
 
     DatabaseLocation *location = db_location_build_tree (location_name);
 
     if (location) {
-        printf("location num entries: %d\n", location->num_items);
+        trace ("location num entries: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db_update_timestamp (db);
@@ -784,7 +785,7 @@ db_build_initial_entries_list (Database *db)
     db_lock (db);
     db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
-    printf("update list: %d\n", num_entries);
+    trace ("update list: %d\n", num_entries);
     db->entries = darray_new (num_entries);
 
     GList *locations = db->locations;
@@ -806,7 +807,7 @@ db_update_entries_list (Database *db)
     db_lock (db);
     db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
-    printf("update list: %d\n", num_entries);
+    trace ("update list: %d\n", num_entries);
     db->entries = darray_new (num_entries);
 
     GList *locations = db->locations;
@@ -939,9 +940,9 @@ db_sort (Database *db)
     g_assert (db != NULL);
     g_assert (db->entries != NULL);
 
-    printf("start sorting\n");
+    trace ("start sorting\n");
     darray_sort (db->entries, sort_by_name);
-    printf("finished sorting\n");
+    trace ("finished sorting\n");
 }
 
 static void
@@ -952,7 +953,7 @@ db_location_free_all (Database *db)
 
     GList *l = db->locations;
     while (l) {
-        printf("free location\n");
+        trace ("free location\n");
         db_location_free (l->data);
         l = l->next;
     }
@@ -965,7 +966,7 @@ db_clear (Database *db)
 {
     g_assert (db != NULL);
 
-    printf("clear locations\n");
+    trace ("clear locations\n");
     db_entries_clear (db);
     db_location_free_all (db);
     return true;

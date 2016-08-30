@@ -5,9 +5,15 @@ EXTRA_DIST = fsearch.glade \
 	     overlay.ui \
 	     menus.ui
 
-AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) -Wall -std=c11 -g -Ofast
+if DEBUG
+AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) -Wall -std=c11 -Ofast
+else
+AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) -Wall -std=c11 -g -Ofast -DDEBUG=1
+endif
+
 bin_PROGRAMS = fsearch
 fsearch_SOURCES = main.c \
+		  debug.h \
 		  fsearch.c \
 		  fsearch_window.c \
 		  fsearch_window_actions.c \

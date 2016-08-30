@@ -12,12 +12,26 @@ AM_GLIB_GNU_GETTEXT
 
 AC_PROG_CC
 
+AC_ARG_ENABLE(debug,
+              AS_HELP_STRING([--enable-debug],
+                             [enable debugging, default: no]),
+                             [case "${enableval}" in
+                              yes) debug=true;;
+                              no)  debug=false;;
+                              *) AC_MSG_ERROR([bad value ${enableval} for --enable-debug]) ;;
+                          esac],
+                          [debug=false])
+
+AM_CONDITIONAL(DEBUG, text x"$debug" = x"true")
+
 CFLAGS+=" -Os"
 
 AX_CHECK_COMPILE_FLAG([-std=c11], [CFLAGS+=" -std=c11" ],
                       [echo "C compiler cannot compile C11 code. Abort"
                        exit -1
                       ])
+
+
 
 PKG_PROG_PKG_CONFIG
 AC_PATH_PROG([GLIB_COMPILE_RESOURCES], [glib-compile-resources])
