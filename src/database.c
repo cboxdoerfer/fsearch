@@ -87,7 +87,7 @@ static DatabaseLocation *
 db_location_get_for_path (Database *db, const char *path);
 
 static DatabaseLocation *
-db_location_build_tree (const char *dname);
+db_location_build_tree (const char *dname, void (*callback)(const char *));
 
 static DatabaseLocation *
 db_location_new (void);
@@ -383,6 +383,8 @@ static int
 db_location_walk_tree_recursive (DatabaseLocation *location,
                                  GList *excludes,
                                  const char *dname,
+                                 GTimer *timer,
+                                 void (*callback)(const char *),
                                  BTreeNode *parent,
                                  int spec)
 {
@@ -399,6 +401,15 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
     if (!(dir = opendir (dname))) {
         //warn("can't open %s", dname);
         return WALK_BADIO;
+    }
+    gulong duration = 0;
+    g_timer_elapsed (timer, &duration);
+
+    if (duration > 100000) {
+        if (callback) {
+            callback (dname);
+        }
+        g_timer_reset (timer);
     }
 
     struct stat st;
@@ -446,6 +457,8 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
                 db_location_walk_tree_recursive (location,
                                                  excludes,
                                                  fn,
+                                                 timer,
+                                                 callback,
                                                  node,
                                                  spec);
 
@@ -459,7 +472,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
 }
 
 static DatabaseLocation *
-db_location_build_tree (const char *dname)
+db_location_build_tree (const char *dname, void (*callback)(const char *))
 {
     BTreeNode *root = btree_node_new (dname, 0, 0, 0, true);
     DatabaseLocation *location = db_location_new ();
@@ -473,11 +486,16 @@ db_location_build_tree (const char *dname)
     if (config->follow_symlinks) {
         spec |= WS_FOLLOWLINK;
     }
+    GTimer *timer = g_timer_new ();
+    g_timer_start (timer);
     uint32_t res = db_location_walk_tree_recursive (location,
                                                     config->exclude_locations,
                                                     dname,
+                                                    timer,
+                                                    callback,
                                                     root,
                                                     spec);
+    g_timer_destroy (timer);
     if (res == WALK_OK) {
         return location;
     }
@@ -727,13 +745,15 @@ db_location_load (Database *db, const char *location_name)
 }
 
 bool
-db_location_build_new (Database *db, const char *location_name)
+db_location_build_new (Database *db,
+                       const char *location_name,
+                       void (*callback)(const char *))
 {
     g_assert (db != NULL);
     db_lock (db);
     trace ("load location: %s\n", location_name);
 
-    DatabaseLocation *location = db_location_build_tree (location_name);
+    DatabaseLocation *location = db_location_build_tree (location_name, callback);
 
     if (location) {
         trace ("location num entries: %d\n", location->num_items);

@@ -73,5 +73,8 @@ fsearch_application_window_apply_model (gpointer window);
 
 void
 fsearch_application_window_remove_model (gpointer window);
+
+void
+fsearch_application_window_update_database_label (FsearchApplicationWindow *self, const char *text);
 G_END_DECLS
 

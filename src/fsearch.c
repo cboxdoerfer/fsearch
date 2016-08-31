@@ -84,6 +84,45 @@ fsearch_application_get_config (FsearchApplication *fsearch)
     return fsearch->config;
 }
 
+gboolean
+update_db_cb (gpointer user_data)
+{
+    const char *text = user_data;
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
+
+    for (; windows; windows = windows->next) {
+        GtkWindow *window = windows->data;
+
+        if (FSEARCH_WINDOW_IS_WINDOW (window))
+        {
+            fsearch_application_window_update_database_label ((FsearchApplicationWindow *) window, text);
+        }
+    }
+    return FALSE;
+}
+
+void
+build_location_callback (const char *text)
+{
+    g_idle_add (update_db_cb, (gpointer)text);
+    //FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    //GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
+
+    //for (; windows; windows = windows->next) {
+    //    window = windows->data;
+
+    //    if (FSEARCH_WINDOW_IS_WINDOW (window))
+    //    {
+    //        GtkWidget *entry = GTK_WIDGET (fsearch_application_window_get_database_label ((FsearchApplicationWindow *) window));
+    //        if (entry) {
+    //        }
+    //        return;
+    //    }
+    //}
+    //printf("%s\n", text);
+}
+
 static bool
 make_location_dir (void)
 {
@@ -221,14 +260,14 @@ load_database (gpointer user_data)
         bool build_new = false;
         for (GList *l = app->config->locations; l != NULL; l = l->next) {
             if (app->config->update_database_on_launch) {
-                if (db_location_build_new (app->db, l->data)) {
+                if (db_location_build_new (app->db, l->data, build_location_callback)) {
                     loaded = true;
                     build_new = true;
                 }
             }
             else {
                 if (!db_location_load (app->db, l->data)) {
-                    if (db_location_build_new (app->db, l->data)) {
+                    if (db_location_build_new (app->db, l->data, build_location_callback)) {
                         loaded = true;
                         build_new = true;
                     }
@@ -255,7 +294,7 @@ load_database (gpointer user_data)
         db_clear (app->db);
         if (app->config->locations) {
             for (GList *l = app->config->locations; l != NULL; l = l->next) {
-                db_location_build_new (app->db, l->data);
+                db_location_build_new (app->db, l->data, build_location_callback);
             }
             db_build_initial_entries_list (app->db);
         }

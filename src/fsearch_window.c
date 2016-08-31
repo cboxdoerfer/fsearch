@@ -33,6 +33,7 @@ struct _FsearchApplicationWindow {
     DatabaseSearch *search;
 
     GtkWidget *database_updating_overlay;
+    GtkWidget *database_updating_label;
     GtkWidget *empty_search_query_overlay;
     GtkWidget *no_search_results_overlay;
     GtkWidget *empty_database_overlay;
@@ -58,6 +59,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *database_icon;
     GtkWidget *database_spinner;
     GtkWidget *database_label;
+    GtkWidget *database_label1;
     GtkWidget *database_popover;
     GtkWidget *search_label;
     GtkWidget *search_icon;
@@ -801,6 +803,8 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
     gtk_overlay_set_overlay_pass_through (GTK_OVERLAY (self->search_overlay),
                                           self->database_updating_overlay,
                                           FALSE);
+    self->database_updating_label = GTK_WIDGET (gtk_builder_get_object (builder,
+                                                                        "database_updating_label"));
 
     g_object_unref (builder);
 }
@@ -924,6 +928,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_box1);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_box2);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_label);
+    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_label1);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_label);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_icon);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, revealer);
@@ -978,6 +983,13 @@ fsearch_application_window_get_search_entry (FsearchApplicationWindow *self)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
     return GTK_ENTRY (self->search_entry);
+}
+
+void
+fsearch_application_window_update_database_label (FsearchApplicationWindow *self, const char *text)
+{
+    //printf("%s\n", text);
+    gtk_label_set_text (GTK_LABEL (self->database_updating_label), text);
 }
 
 GtkWidget *

@@ -647,6 +647,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="tooltip_text" translatable="yes">Number of Search Results</property>
                     <property name="label" translatable="yes">0 Items</property>
                     <property name="use_markup">True</property>
+                    <property name="ellipsize">end</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -775,6 +776,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <property name="label" translatable="yes">Updating Database...</property>
+                            <property name="ellipsize">end</property>
+                            <property name="max_width_chars">30</property>
+                            <property name="track_visited_links">False</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>

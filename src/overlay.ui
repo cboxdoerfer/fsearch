@@ -152,17 +152,32 @@
       </packing>
     </child>
     <child>
+      <object class="GtkLabel" id="database_updating_label">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">...</property>
+        <property name="ellipsize">end</property>
+        <attributes>
+          <attribute name="scale" value="1.4399999999999999"/>
+        </attributes>
+      </object>
+      <packing>
+        <property name="left_attach">0</property>
+        <property name="top_attach">2</property>
+      </packing>
+    </child>
+    <child>
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">This may take while.</property>
+        <property name="label" translatable="yes">This may take a while.</property>
         <style>
           <class name="dim-label"/>
         </style>
       </object>
       <packing>
         <property name="left_attach">0</property>
-        <property name="top_attach">2</property>
+        <property name="top_attach">3</property>
       </packing>
     </child>
     <style>

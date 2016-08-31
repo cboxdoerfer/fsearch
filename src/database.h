@@ -35,7 +35,9 @@ bool
 db_location_load (Database *db, const char *location_name);
 
 bool
-db_location_build_new (Database *db, const char *location_name);
+db_location_build_new (Database *db,
+                       const char *location_name,
+                       void (*callback)(const char *));
 
 bool
 db_location_remove (Database *db, const char *path);
