@@ -989,7 +989,7 @@ void
 fsearch_application_window_update_database_label (FsearchApplicationWindow *self, const char *text)
 {
     //printf("%s\n", text);
-    gtk_label_set_text (GTK_LABEL (self->database_updating_label), text);
+    gtk_label_set_text (GTK_LABEL (self->search_label), text);
 }
 
 GtkWidget *
