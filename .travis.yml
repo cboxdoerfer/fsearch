@@ -13,8 +13,8 @@ script:
   - wget http://ftp.gnome.org/pub/gnome/sources/glib/2.49/glib-2.49.1.tar.xz
   - tar xf glib-2.49.1.tar.xz
   - cd glib-2.49.1/
-   - cd ~/build/cboxdoerfer/fsearch
   - ./configure && make && sudo make install
+  - cd ~/build/cboxdoerfer/fsearch
   - ./autogen.sh
   - ./configure
   - make
