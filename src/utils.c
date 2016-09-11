@@ -19,6 +19,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <linux/limits.h>
+#include <gtk/gtk.h>
 #include <gio/gio.h>
 #include "utils.h"
 
@@ -64,6 +65,15 @@ open_uri (const char *uri)
             return TRUE;
         }
         fprintf(stderr, "open_uri: error: %s\n", error->message);
+        GtkWidget *dialog = gtk_message_dialog_new (NULL,
+                                         GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
+                                         GTK_MESSAGE_ERROR,
+                                         GTK_BUTTONS_OK_CANCEL,
+                                         "Error while opening file:");
+        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+                                                  "%s", error->message);
+        gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
         g_error_free (error);
         g_free (uri_escaped);
     }
