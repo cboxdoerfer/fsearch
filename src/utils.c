@@ -19,9 +19,9 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include <linux/limits.h>
-#include <gtk/gtk.h>
 #include <gio/gio.h>
 #include "utils.h"
+#include "ui_utils.h"
 
 gboolean
 build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name)
@@ -63,15 +63,11 @@ open_uri (const char *uri)
         GError *error = NULL;
         if (!g_app_info_launch_default_for_uri (uri_escaped, NULL, &error)) {
             fprintf(stderr, "open_uri: error: %s\n", error->message);
-            GtkWidget *dialog = gtk_message_dialog_new (NULL,
-                                                        GTK_DIALOG_MODAL | GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                        GTK_MESSAGE_ERROR,
-                                                        GTK_BUTTONS_OK_CANCEL,
-                                                        "Error while opening file:");
-            gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-                                                      "%s", error->message);
-            gtk_dialog_run (GTK_DIALOG (dialog));
-            gtk_widget_destroy (dialog);
+            ui_utils_run_gtk_dialog (NULL,
+                                     GTK_MESSAGE_ERROR,
+                                     GTK_BUTTONS_OK,
+                                     "Error while opening file:",
+                                     error->message);
             g_error_free (error);
         }
         g_free (uri_escaped);
