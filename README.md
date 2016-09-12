@@ -1,5 +1,3 @@
-[![Build Status](https://travis-ci.org/cboxdoerfer/fsearch.svg?branch=master)](https://travis-ci.org/cboxdoerfer/fsearch)
-
 FSearch is a fast file search utility for GNU/Linux operating systems, inspired by Everything Search Engine. It's written in C and based on GTK+3.
 
 **Note: The application is still in beta stage, but will see its first release as soon as localization support has been added**
