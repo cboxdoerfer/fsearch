@@ -86,7 +86,7 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="restore_win_size_button">
-                    <property name="label" translatable="yes">Restore window size</property>
+                    <property name="label" translatable="yes">Remember window size</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
@@ -99,7 +99,7 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="restore_column_config_button">
-                    <property name="label" translatable="yes">Restore column configuration</property>
+                    <property name="label" translatable="yes">Remember column configuration</property>
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
