@@ -274,10 +274,6 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       G_CALLBACK (limit_num_results_toggled),
                       limit_num_results_spin);
 
-    GtkWidget *search_delay_spin = builder_get_object (builder, "search_delay_spin");
-    gtk_spin_button_set_value (GTK_SPIN_BUTTON (search_delay_spin),
-                               (double)main_config->search_delay);
-
     // Database page
     GtkToggleButton *update_db_at_start_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                         "update_db_at_start_button"));
@@ -379,8 +375,6 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
 
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
-
-        main_config->search_delay = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (search_delay_spin));
 
         main_config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
 

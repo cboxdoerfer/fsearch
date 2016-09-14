@@ -69,8 +69,6 @@ struct _FsearchApplicationWindow {
 
     ListModel *list_model;
 
-    guint search_delay_timer;
-
     GMutex mutex;
 };
 
@@ -284,6 +282,59 @@ update_statusbar (FsearchApplicationWindow *win, const char *text)
     gtk_label_set_text (GTK_LABEL (win->search_label), text);
 }
 
+gboolean
+update_model_cb (gpointer user_data)
+{
+
+    DatabaseSearchResult *result = user_data;
+    FsearchApplicationWindow *win = result->cb_data;
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config (app);
+
+    remove_model_from_list (win);
+    db_search_results_clear (win->search);
+
+    uint32_t num_results = 0;
+    GPtrArray *results = result->results;
+    if (results) {
+        list_set_results (win->list_model, results);
+        win->search->results = results;
+        num_results = results->len;
+    }
+    else {
+        list_set_results (win->list_model, NULL);
+        win->search->results = NULL;
+        num_results = 0;
+    }
+
+    apply_model_to_list (win);
+    gchar sb_text[100] = "";
+    snprintf (sb_text, sizeof (sb_text), "%'d Items", num_results);
+    update_statusbar (win, sb_text);
+    reset_sort_order (win);
+
+    const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
+    if (text[0] == '\0' && config->hide_results_on_empty_search) {
+        show_overlay (win, NO_SEARCH_QUERY_OVERLAY);
+    }
+    else if (num_results == 0) {
+        show_overlay (win, NO_SEARCH_RESULTS_OVERLAY);
+    }
+    else {
+        hide_overlays (win);
+    }
+
+    free (result);
+    result = NULL;
+    return FALSE;
+}
+
+void
+fsearch_application_window_update_results (void *data)
+{
+    g_idle_add (update_model_cb, data);
+}
+
 static gboolean
 perform_search (FsearchApplicationWindow *win)
 {
@@ -291,11 +342,6 @@ perform_search (FsearchApplicationWindow *win)
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config (app);
-
-    if (win->search_delay_timer) {
-        g_source_remove (win->search_delay_timer);
-        win->search_delay_timer = 0;
-    }
 
     if (!config->locations) {
         show_overlay (win, NO_DATABASE_OVERLAY);
@@ -307,8 +353,7 @@ perform_search (FsearchApplicationWindow *win)
         trace ("search: database locked\n");
         return FALSE;
     }
-    g_mutex_lock (&win->mutex);
-    remove_model_from_list (win);
+    //g_mutex_lock (&win->mutex);
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     FsearchFilter filter = gtk_combo_box_get_active (GTK_COMBO_BOX (win->filter_combobox));
@@ -339,25 +384,7 @@ perform_search (FsearchApplicationWindow *win)
                                      config->auto_search_in_path,
                                      config->search_in_path);
     }
-    uint32_t num = db_perform_search (win->search);
-    list_set_results (win->list_model, db_search_get_results (win->search));
-
-    apply_model_to_list (win);
-    gchar sb_text[100] = "";
-    snprintf (sb_text, sizeof (sb_text), "%'d Items", num);
-    update_statusbar (win, sb_text);
-    reset_sort_order (win);
-
-    if (text[0] == '\0' && config->hide_results_on_empty_search) {
-        show_overlay (win, NO_SEARCH_QUERY_OVERLAY);
-    }
-    else if (num == 0) {
-        show_overlay (win, NO_SEARCH_RESULTS_OVERLAY);
-    }
-    else {
-        hide_overlays (win);
-    }
-    g_mutex_unlock (&win->mutex);
+    db_perform_search (win->search, fsearch_application_window_update_results, win);
     db_unlock (db);
     return FALSE;
 }
@@ -591,16 +618,7 @@ on_search_entry_changed (GtkEntry *entry, gpointer user_data)
 
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     if (config->search_as_you_type) {
-        if (config->search_delay > 0) {
-            if (win->search_delay_timer) {
-                g_source_remove (win->search_delay_timer);
-                win->search_delay_timer = 0;
-            }
-            win->search_delay_timer = g_timeout_add (config->search_delay, (GSourceFunc)perform_search, win);
-        }
-        else {
-            perform_search (win);
-        }
+        perform_search (win);
     }
 }
 

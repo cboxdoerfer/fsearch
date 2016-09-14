@@ -21,6 +21,7 @@
 #include <stdint.h>
 #include "array.h"
 #include "btree.h"
+#include "query.h"
 #include "fsearch_thread_pool.h"
 
 typedef struct _DatabaseSearch DatabaseSearch;
@@ -37,6 +38,40 @@ typedef enum {
     FSEARCH_FILTER_FOLDERS,
     FSEARCH_FILTER_FILES,
 } FsearchFilter;
+
+typedef struct
+{
+    GPtrArray *results;
+    void *cb_data;
+    uint32_t num_folders;
+    uint32_t num_files;
+} DatabaseSearchResult;
+
+struct _DatabaseSearch
+{
+    GPtrArray *results;
+    FsearchThreadPool *pool;
+
+    DynamicArray *entries;
+    uint32_t num_entries;
+
+    GThread *search_thread;
+    bool search_thread_terminate;
+    GMutex query_mutex;
+    GCond search_thread_start_cond;
+
+    char *query;
+    FsearchQuery *query_ctx;
+    FsearchFilter filter;
+    uint32_t max_results;
+    uint32_t num_folders;
+    uint32_t num_files;
+    bool hide_results;
+    bool match_case;
+    bool enable_regex;
+    bool search_in_path;
+    bool auto_search_in_path;
+};
 
 void
 db_search_free (DatabaseSearch *search);
@@ -80,6 +115,9 @@ db_search_update (DatabaseSearch *search,
                   bool search_in_path);
 
 void
+db_search_results_clear (DatabaseSearch *search);
+
+void
 db_search_set_search_in_path (DatabaseSearch *search, bool search_in_path);
 
 uint32_t
@@ -97,5 +135,5 @@ db_search_get_results (DatabaseSearch *search);
 void
 db_search_remove_entry (DatabaseSearch *search, DatabaseSearchEntry *entry);
 
-uint32_t
-db_perform_search (DatabaseSearch *search);
+void
+db_perform_search (DatabaseSearch *search, void (*callback)(void *), void *callback_data);
