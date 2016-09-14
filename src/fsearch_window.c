@@ -27,6 +27,7 @@
 #include "array.h"
 #include "database_search.h"
 #include "listview.h"
+#include "debug.h"
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
@@ -303,7 +304,7 @@ perform_search (FsearchApplicationWindow *win)
 
     Database *db = fsearch_application_get_db (app);
     if (!db_try_lock (db)) {
-        printf("search: database locked\n");
+        trace ("search: database locked\n");
         return FALSE;
     }
     g_mutex_lock (&win->mutex);
