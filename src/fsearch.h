@@ -37,7 +37,6 @@ FsearchApplication     *fsearch_application_new                  (void);
 
 G_END_DECLS
 
-// config values
 void
 update_database (void);
 
