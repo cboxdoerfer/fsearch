@@ -12,7 +12,8 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 - Customizable interface
 
 ## Requirements
-- GTK+ 3.12 or newer
+- GTK+ 3.12
+- GLib 2.44
 - PCRE (libpcre)
  
 ## Roadmap
