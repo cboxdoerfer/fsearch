@@ -185,11 +185,13 @@ btree_node_n_children (BTreeNode *node)
     if (!node->children) {
         return 0;
     }
-    uint32_t num_children = 1;
+    uint32_t num_children = 0;
     BTreeNode *child = node->children;
-    while (child->next) {
-        child = child->next;
-        num_children++;
+    if (child) {
+        while (child->next) {
+            child = child->next;
+            num_children++;
+        }
     }
     return num_children;
 }

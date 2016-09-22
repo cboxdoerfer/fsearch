@@ -709,7 +709,6 @@ updated_database_cb (gpointer data, gpointer user_data)
     hide_overlays (win);
 
     fsearch_application_window_update_search (win);
-    fsearch_application_window_apply_model (win);
 
     gtk_spinner_stop (GTK_SPINNER (win->database_spinner));
 
