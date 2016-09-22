@@ -416,6 +416,8 @@ fsearch_application_startup (GApplication* app)
                                    app_entries, G_N_ELEMENTS (app_entries),
                                    app);
 
+    static const gchar *toggle_focus[] = { "Tab", NULL };
+    gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.toggle_focus", toggle_focus);
     static const gchar *search[] = { "<control>f", NULL };
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.focus_search", search);
     static const gchar *new_window[] = { "<control>n", NULL };

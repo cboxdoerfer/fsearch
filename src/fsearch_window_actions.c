@@ -202,6 +202,19 @@ fsearch_window_action_open_folder (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_toggle_focus (GSimpleAction *action,
+                                    GVariant      *variant,
+                                    gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkWidget *widget = GTK_WIDGET (fsearch_application_window_get_search_entry (self));
+    if (gtk_widget_is_focus (widget)) {
+        widget = GTK_WIDGET (fsearch_application_window_get_listview (self));
+    }
+    gtk_widget_grab_focus (widget);
+}
+
+static void
 fsearch_window_action_focus_search (GSimpleAction *action,
                                     GVariant      *variant,
                                     gpointer       user_data)
@@ -454,6 +467,7 @@ static GActionEntry FsearchWindowActions[] = {
     { "select_all",     fsearch_window_action_select_all },
     { "deselect_all",     fsearch_window_action_deselect_all },
     { "invert_selection",     fsearch_window_action_invert_selection },
+    { "toggle_focus",     fsearch_window_action_toggle_focus },
     { "focus_search",     fsearch_window_action_focus_search },
     { "hide_window",     fsearch_window_action_hide_window },
     // Column popup
@@ -501,6 +515,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "open", num_rows_selected);
     action_set_enabled (group, "open_folder", num_rows_selected);
     action_set_enabled (group, "focus_search", TRUE);
+    action_set_enabled (group, "toggle_focus", TRUE);
     action_set_enabled (group, "hide_window", TRUE);
     action_set_enabled (group, "update_database", TRUE);
     action_set_enabled (group, "show_menubar", TRUE);
