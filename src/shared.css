@@ -1,10 +1,10 @@
-.toggle#database-toggle-button {
+.database-toggle-button {
     border-radius: 0px;
     border-top: none;
     border-bottom: none;
 }
 
-.frame {
-  border-left: none;
-  border-right: none;
+.listview-frame {
+    border-left: none;
+    border-right: none;
 }

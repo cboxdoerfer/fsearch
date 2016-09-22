@@ -601,6 +601,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="listview-frame"/>
+                </style>
               </object>
               <packing>
                 <property name="index">-1</property>
