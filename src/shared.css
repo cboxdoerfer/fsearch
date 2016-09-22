@@ -1,5 +1,10 @@
+.toggle#database-toggle-button {
+    border-radius: 0px;
+    border-top: none;
+    border-bottom: none;
+}
+
 .frame {
   border-left: none;
   border-right: none;
 }
-

@@ -619,8 +619,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <property name="can_focus">False</property>
             <property name="margin_left">3</property>
             <property name="margin_right">3</property>
-            <property name="margin_top">3</property>
-            <property name="margin_bottom">3</property>
             <property name="spacing">4</property>
             <child>
               <object class="GtkBox" id="box6">
@@ -743,6 +741,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             </child>
             <child>
               <object class="GtkToggleButton" id="database_toggle_button">
+                <property name="name">database-toggle-button</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -830,6 +829,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     </child>
                   </object>
                 </child>
+                <style>
+                  <class name="database-toggle-button"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
