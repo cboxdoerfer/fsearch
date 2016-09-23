@@ -285,7 +285,6 @@ update_statusbar (FsearchApplicationWindow *win, const char *text)
 gboolean
 update_model_cb (gpointer user_data)
 {
-
     DatabaseSearchResult *result = user_data;
     FsearchApplicationWindow *win = result->cb_data;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -707,6 +706,7 @@ updated_database_cb (gpointer data, gpointer user_data)
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
     hide_overlays (win);
+    update_statusbar (win, "");
 
     fsearch_application_window_update_search (win);
 
