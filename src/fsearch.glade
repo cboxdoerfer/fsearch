@@ -602,7 +602,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </object>
                 </child>
                 <style>
-                  <class name="listview-frame"/>
+                  <class name="fsearch-results-frame"/>
                 </style>
               </object>
               <packing>
@@ -733,6 +733,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         </child>
                       </object>
                     </child>
+                    <style>
+                      <class name="fsearch-statusbar-button"/>
+                    </style>
                   </object>
                 </child>
               </object>
@@ -833,7 +836,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </object>
                 </child>
                 <style>
-                  <class name="database-toggle-button"/>
+                  <class name="fsearch-statusbar-button"/>
                 </style>
               </object>
               <packing>
