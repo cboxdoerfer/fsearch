@@ -32,6 +32,7 @@
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
     DatabaseSearch *search;
+    DatabaseSearchResult *search_result;
 
     GtkWidget *database_updating_overlay;
     GtkWidget *database_updating_label;
@@ -298,11 +299,15 @@ update_model_cb (gpointer user_data)
     if (results) {
         list_set_results (win->list_model, results);
         win->search->results = results;
+        win->search->num_folders = result->num_folders;;
+        win->search->num_files = result->num_files;
         num_results = results->len;
     }
     else {
         list_set_results (win->list_model, NULL);
         win->search->results = NULL;
+        win->search->num_folders = 0;
+        win->search->num_files = 0;
         num_results = 0;
     }
 
@@ -430,6 +435,11 @@ on_listview_key_press_event (GtkWidget *widget,
             || (event->keyval == GDK_KEY_KP_Enter)) {
             GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
             g_action_group_activate_action (group, "open_folder", NULL);
+            return TRUE;
+        }
+        else if (event->keyval == GDK_KEY_c) {
+            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
+            g_action_group_activate_action (group, "copy_clipboard", NULL);
             return TRUE;
         }
     }

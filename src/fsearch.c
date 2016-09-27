@@ -448,8 +448,7 @@ fsearch_application_activate (GApplication *app)
     for (; windows; windows = windows->next) {
         window = windows->data;
 
-        if (FSEARCH_WINDOW_IS_WINDOW (window))
-        {
+        if (FSEARCH_WINDOW_IS_WINDOW (window)) {
             GtkWidget *entry = GTK_WIDGET (fsearch_application_window_get_search_entry ((FsearchApplicationWindow *) window));
             if (entry) {
             gtk_widget_grab_focus (entry);
@@ -499,7 +498,9 @@ FsearchApplication *
 fsearch_application_new (void)
 {
     return g_object_new (FSEARCH_APPLICATION_TYPE,
-            "application-id", "org.fsearch.fsearch",
-            "flags", G_APPLICATION_HANDLES_OPEN,
-            NULL);
+                         "application-id",
+                         "org.fsearch.fsearch",
+                         "flags",
+                         G_APPLICATION_HANDLES_OPEN,
+                         NULL);
 }
