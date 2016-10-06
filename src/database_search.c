@@ -638,6 +638,7 @@ db_search_free (DatabaseSearch *search)
     g_mutex_unlock (&search->query_mutex);
 
     search->search_thread_terminate = true;
+    g_cond_signal (&search->search_thread_start_cond);
     g_thread_join (search->search_thread);
     g_mutex_clear (&search->query_mutex);
     g_cond_clear (&search->search_thread_start_cond);
