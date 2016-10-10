@@ -21,7 +21,7 @@ AC_ARG_ENABLE(debug,
                           esac],
                           [debug=false])
 
-AM_CONDITIONAL(DEBUG, text x"$debug" = x"true")
+AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
 CFLAGS+=" -Os"
 
