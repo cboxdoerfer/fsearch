@@ -18,7 +18,7 @@
 
 #include <string.h>
 #include <sys/param.h>
-#include <glib.h>
+#include <assert.h>
 #include "array.h"
 
 struct _DynamicArray {
@@ -33,7 +33,7 @@ struct _DynamicArray {
 void
 darray_clear (DynamicArray *array)
 {
-    g_assert (array != NULL);
+    assert (array != NULL);
     if (array->num_items > 0) {
         for (uint32_t i = 0; i < array->max_items; i++) {
             array->data[i] = NULL;
@@ -44,7 +44,9 @@ darray_clear (DynamicArray *array)
 void
 darray_free (DynamicArray *array)
 {
-    g_return_if_fail (array != NULL);
+    if (array == NULL) {
+        return;
+    }
 
     darray_clear (array);
     if (array->data) {
@@ -59,13 +61,13 @@ DynamicArray *
 darray_new (size_t num_items)
 {
     DynamicArray *new = calloc (1, sizeof (DynamicArray));
-    g_assert (new != NULL);
+    assert (new != NULL);
 
     new->max_items = num_items;
     new->num_items = 0;
 
     new->data = calloc (num_items, sizeof (void *));
-    g_assert (new->data != NULL);
+    assert (new->data != NULL);
 
     return new;
 }
@@ -73,15 +75,15 @@ darray_new (size_t num_items)
 static void
 darray_expand (DynamicArray *array, size_t min)
 {
-    g_assert (array != NULL);
-    g_assert (array->data != NULL);
+    assert (array != NULL);
+    assert (array->data != NULL);
 
     size_t old_max_items = array->max_items;
     size_t expand_rate = MAX (array->max_items/2, min - old_max_items);
     array->max_items += expand_rate;
 
     void *new_data = realloc (array->data, array->max_items * sizeof (void *));
-    g_assert (new_data != NULL);
+    assert (new_data != NULL);
     array->data = new_data;
     memset (array->data + old_max_items, 0, expand_rate + 1);
 }
@@ -89,8 +91,8 @@ darray_expand (DynamicArray *array, size_t min)
 void
 darray_set_item (DynamicArray *array, void *data, uint32_t idx)
 {
-    g_assert (array != NULL);
-    g_assert (array->data != NULL);
+    assert (array != NULL);
+    assert (array->data != NULL);
 
     if (idx >= array->max_items) {
         darray_expand (array, idx + 1);
@@ -105,8 +107,8 @@ darray_set_item (DynamicArray *array, void *data, uint32_t idx)
 void
 darray_remove_item (DynamicArray *array, uint32_t idx)
 {
-    g_assert (array != NULL);
-    g_assert (array->data != NULL);
+    assert (array != NULL);
+    assert (array->data != NULL);
 
     if (idx >= array->max_items) {
         return;
@@ -119,8 +121,8 @@ darray_remove_item (DynamicArray *array, uint32_t idx)
 void *
 darray_get_item (DynamicArray *array, uint32_t idx)
 {
-    g_assert (array != NULL);
-    g_assert (array->data != NULL);
+    assert (array != NULL);
+    assert (array->data != NULL);
 
     if (idx >= array->max_items) {
         return NULL;
@@ -132,8 +134,8 @@ darray_get_item (DynamicArray *array, uint32_t idx)
 uint32_t
 darray_get_num_items (DynamicArray *array)
 {
-    g_assert (array != NULL);
-    g_assert (array->data != NULL);
+    assert (array != NULL);
+    assert (array->data != NULL);
 
     return array->num_items;
 }
@@ -141,8 +143,8 @@ darray_get_num_items (DynamicArray *array)
 uint32_t
 darray_get_size (DynamicArray *array)
 {
-    g_assert (array != NULL);
-    g_assert (array->data != NULL);
+    assert (array != NULL);
+    assert (array->data != NULL);
 
     return array->max_items;
 }
@@ -150,9 +152,9 @@ darray_get_size (DynamicArray *array)
 void
 darray_sort (DynamicArray *array, int (*comp_func)(const void *, const void *))
 {
-    g_assert (array != NULL);
-    g_assert (array->data != NULL);
-    g_assert (comp_func != NULL);
+    assert (array != NULL);
+    assert (array->data != NULL);
+    assert (comp_func != NULL);
 
     qsort (array->data, array->num_items, sizeof (void *), comp_func);
 }
