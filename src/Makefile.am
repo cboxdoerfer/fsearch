@@ -6,9 +6,9 @@ EXTRA_DIST = fsearch.glade \
 	     menus.ui
 
 if DEBUG
-AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) -Wall -std=c11 -Ofast
-else
 AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) -Wall -std=c11 -g -Ofast -DDEBUG=1
+else
+AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) -Wall -std=c11 -Ofast
 endif
 
 bin_PROGRAMS = fsearch
