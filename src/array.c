@@ -58,8 +58,6 @@ darray_free (DynamicArray *array)
 DynamicArray *
 darray_new (size_t num_items)
 {
-    g_assert (num_items > 0);
-
     DynamicArray *new = calloc (1, sizeof (DynamicArray));
     g_assert (new != NULL);
 
