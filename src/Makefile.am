@@ -60,6 +60,8 @@ BUILT_SOURCES=resources.c resources.h
 
 CLEANFILES = $(BUILT_SOURCES)
 
+fsearch_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
+
 resource_files=$(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/gresource.xml)
 
 resources.h:

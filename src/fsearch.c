@@ -25,6 +25,7 @@
 #include <stdint.h>
 #include <glib.h>
 #include <glib/gstdio.h>
+#include <glib/gi18n.h>
 #include "fsearch.h"
 #include "config.h"
 #include "list_model.h"
