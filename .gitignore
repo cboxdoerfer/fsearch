@@ -24,6 +24,7 @@ Makefile.in
 /config.status
 /config.log
 .deps
+/config.h*
 
 # Project files
 fsearch*.tar.gz
