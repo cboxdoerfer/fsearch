@@ -58,6 +58,8 @@ fsearch_SOURCES = main.c \
 
 BUILT_SOURCES=resources.c resources.h
 
+CLEANFILES = $(BUILT_SOURCES)
+
 resource_files=$(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/gresource.xml)
 
 resources.h:
