@@ -13,13 +13,32 @@ AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_
 endif
 
 bin_PROGRAMS = fsearch
+
+fsearch_NOINST_H_FILES = fsearch.h \
+			 array.h \
+			 btree.h \
+			 clipboard.h \
+			 config.h \
+			 database.h \
+			 database_search.h \
+			 debug.h \
+			 fsearch_thread_pool.h \
+			 fsearch_window.h \
+			 fsearch_window_actions.h \
+			 iconstore.h \
+			 list_model.h \
+			 listview.h \
+			 preferences_ui.h \
+			 query.h \
+			 string_utils.h \
+			 ui_utils.h \
+			 utils.h
+
 fsearch_SOURCES = main.c \
-		  debug.h \
 		  fsearch.c \
 		  fsearch_window.c \
 		  fsearch_window_actions.c \
 		  clipboard.c \
-		  clipboard.h \
 		  config.c \
 		  database.c \
 		  database_search.c \
@@ -34,7 +53,8 @@ fsearch_SOURCES = main.c \
 		  btree.c \
 		  listview.c \
 		  query.c \
-		  utils.c
+		  utils.c \
+		  $(fsearch_NOINST_H_FILES)
 
 BUILT_SOURCES=resources.c resources.h
 
