@@ -1,0 +1,5 @@
+[type: gettext/glade]src/fsearch.glade
+[type: gettext/glade]src/menus.ui
+[type: gettext/glade]src/overlay.ui
+[type: gettext/glade]src/popover.ui
+[type: gettext/glade]src/preferences.ui
