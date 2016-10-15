@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-14 23:49+0200\n"
+"POT-Creation-Date: 2016-10-15 20:08+0200\n"
 "PO-Revision-Date: 2016-10-14 23:51+0200\n"
 "Last-Translator:  <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German\n"
@@ -23,8 +23,8 @@ msgid "Open File(s)"
 msgstr "Öffnen"
 
 #: ../src/fsearch.glade.h:2
-msgid "Öffne mit..."
-msgstr ""
+msgid "Open With Other Application"
+msgstr "Öffne mit..."
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
@@ -47,134 +47,138 @@ msgid "_File"
 msgstr "Datei"
 
 #: ../src/fsearch.glade.h:8
+msgid "New Window"
+msgstr "Neues Fenster"
+
+#: ../src/fsearch.glade.h:9
 msgid "Open Folder"
 msgstr "Pfad öffnen"
 
-#: ../src/fsearch.glade.h:9 ../src/popover.ui.h:1
+#: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
 msgid "Update Database"
 msgstr "Datenbank aktualisieren"
 
-#: ../src/fsearch.glade.h:10
+#: ../src/fsearch.glade.h:11
 msgid "_Edit"
 msgstr "Bearbeiten"
 
-#: ../src/fsearch.glade.h:11
+#: ../src/fsearch.glade.h:12
 msgid "Deselect All"
 msgstr "Auswahl aufheben"
 
-#: ../src/fsearch.glade.h:12
+#: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
 msgstr "Auswahl umkehren"
 
-#: ../src/fsearch.glade.h:13
+#: ../src/fsearch.glade.h:14
 msgid "_View"
 msgstr "Ansicht"
 
-#: ../src/fsearch.glade.h:14
+#: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
 msgstr "Zeige Menüleiste"
 
-#: ../src/fsearch.glade.h:15
+#: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
 msgstr "Zeige Statusleiste"
 
-#: ../src/fsearch.glade.h:16
+#: ../src/fsearch.glade.h:17
 msgid "Show Filter"
 msgstr "Zeige Filter"
 
-#: ../src/fsearch.glade.h:17
+#: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
 msgstr "Zeige Suchbutton"
 
-#: ../src/fsearch.glade.h:18
+#: ../src/fsearch.glade.h:19
 msgid "_Search"
 msgstr "Suche"
 
-#: ../src/fsearch.glade.h:19
+#: ../src/fsearch.glade.h:20
 msgid "Search in Path"
 msgstr "Suche in Pfad"
 
-#: ../src/fsearch.glade.h:20
+#: ../src/fsearch.glade.h:21
 msgid "Match Case"
 msgstr "Beachte Groß- und Kleinschreibung"
 
-#: ../src/fsearch.glade.h:21
+#: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
 msgstr "Aktiviere RegEx"
 
-#: ../src/fsearch.glade.h:22
+#: ../src/fsearch.glade.h:23
 msgid "_Help"
 msgstr "Hilfe"
 
-#: ../src/fsearch.glade.h:23
+#: ../src/fsearch.glade.h:24
 msgid "Search..."
 msgstr "Suche..."
 
-#: ../src/fsearch.glade.h:24
+#: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
 msgstr "Wähle einen Filter"
 
-#: ../src/fsearch.glade.h:25
+#: ../src/fsearch.glade.h:26
 msgid "All"
 msgstr "Alles"
 
-#: ../src/fsearch.glade.h:26
+#: ../src/fsearch.glade.h:27
 msgid "Folders"
 msgstr "Ordner"
 
-#: ../src/fsearch.glade.h:27
+#: ../src/fsearch.glade.h:28
 msgid "Files"
 msgstr "Dateien"
 
-#: ../src/fsearch.glade.h:28 ../src/preferences.ui.h:12
+#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:12
 msgid "Search"
 msgstr "Suche"
 
-#: ../src/fsearch.glade.h:29
+#: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
 msgstr "Anzahl der Ergebnisse"
 
-#: ../src/fsearch.glade.h:30
+#: ../src/fsearch.glade.h:31
 msgid "0 Items"
 msgstr "0 Einträge"
 
-#: ../src/fsearch.glade.h:31
+#: ../src/fsearch.glade.h:32
 msgid "Selected Folder and Files"
 msgstr "Markierte Ordner und Dateien"
 
-#: ../src/fsearch.glade.h:32
+#: ../src/fsearch.glade.h:33
 msgid "0/0"
 msgstr "0/0"
 
-#: ../src/fsearch.glade.h:33 ../src/preferences.ui.h:20
+#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:20
 msgid "Database"
 msgstr "Datenbank"
 
-#: ../src/fsearch.glade.h:34 ../src/overlay.ui.h:5
+#: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
 msgid "Updating Database..."
 msgstr "Aktualisiere Datenbank..."
 
-#: ../src/fsearch.glade.h:35
+#: ../src/fsearch.glade.h:36
 msgid "page0"
 msgstr ""
 
-#: ../src/fsearch.glade.h:36
+#: ../src/fsearch.glade.h:37
 msgid "(empty)"
 msgstr "(leer)"
 
-#: ../src/fsearch.glade.h:37
+#: ../src/fsearch.glade.h:38
 msgid "page1"
 msgstr ""
 
-#: ../src/fsearch.glade.h:38
+#: ../src/fsearch.glade.h:39
 msgid "CASE"
 msgstr ""
 
-#: ../src/fsearch.glade.h:39
+#: ../src/fsearch.glade.h:40
 msgid "PATH"
 msgstr ""
 
-#: ../src/fsearch.glade.h:40
+#: ../src/fsearch.glade.h:41
 msgid "REGEX"
 msgstr ""
 
@@ -224,7 +228,9 @@ msgstr "Leere Datenbank"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr "Gehe zu <b>Bearbeiten → Einstellungen → Datenbank</b> und füge einige Ordner zur Überwachung hinzu"
+msgstr ""
+"Gehe zu <b>Bearbeiten → Einstellungen → Datenbank</b> und füge einige Ordner "
+"zur Überwachung hinzu"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
