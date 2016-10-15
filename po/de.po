@@ -20,15 +20,15 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr "Öffne Dateien"
+msgstr "Öffnen"
 
 #: ../src/fsearch.glade.h:2
-msgid "Open With Other Application"
+msgid "Öffne mit..."
 msgstr ""
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr "Öffne Ordner"
+msgstr "Pfad öffnen"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
@@ -36,7 +36,7 @@ msgstr "Öffne in Dateimanager"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "In den Papierkorb verschieben"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
@@ -48,11 +48,11 @@ msgstr "Datei"
 
 #: ../src/fsearch.glade.h:8
 msgid "Open Folder"
-msgstr "Öffne Ordner"
+msgstr "Pfad öffnen"
 
 #: ../src/fsearch.glade.h:9 ../src/popover.ui.h:1
 msgid "Update Database"
-msgstr "Aktualisiere Datenbank"
+msgstr "Datenbank aktualisieren"
 
 #: ../src/fsearch.glade.h:10
 msgid "_Edit"
@@ -60,7 +60,7 @@ msgstr "Bearbeiten"
 
 #: ../src/fsearch.glade.h:11
 msgid "Deselect All"
-msgstr ""
+msgstr "Auswahl aufheben"
 
 #: ../src/fsearch.glade.h:12
 msgid "Invert Selection"
@@ -88,7 +88,7 @@ msgstr "Zeige Suchbutton"
 
 #: ../src/fsearch.glade.h:18
 msgid "_Search"
-msgstr ""
+msgstr "Suche"
 
 #: ../src/fsearch.glade.h:19
 msgid "Search in Path"
@@ -112,47 +112,47 @@ msgstr "Suche..."
 
 #: ../src/fsearch.glade.h:24
 msgid "Select a Filter"
-msgstr ""
+msgstr "Wähle einen Filter"
 
 #: ../src/fsearch.glade.h:25
 msgid "All"
-msgstr ""
+msgstr "Alles"
 
 #: ../src/fsearch.glade.h:26
 msgid "Folders"
-msgstr ""
+msgstr "Ordner"
 
 #: ../src/fsearch.glade.h:27
 msgid "Files"
-msgstr ""
+msgstr "Dateien"
 
 #: ../src/fsearch.glade.h:28 ../src/preferences.ui.h:12
 msgid "Search"
-msgstr ""
+msgstr "Suche"
 
 #: ../src/fsearch.glade.h:29
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Anzahl der Ergebnisse"
 
 #: ../src/fsearch.glade.h:30
 msgid "0 Items"
-msgstr ""
+msgstr "0 Einträge"
 
 #: ../src/fsearch.glade.h:31
 msgid "Selected Folder and Files"
-msgstr ""
+msgstr "Markierte Ordner und Dateien"
 
 #: ../src/fsearch.glade.h:32
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: ../src/fsearch.glade.h:33 ../src/preferences.ui.h:20
 msgid "Database"
-msgstr ""
+msgstr "Datenbank"
 
 #: ../src/fsearch.glade.h:34 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr ""
+msgstr "Aktualisiere Datenbank..."
 
 #: ../src/fsearch.glade.h:35
 msgid "page0"
@@ -160,7 +160,7 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:36
 msgid "(empty)"
-msgstr ""
+msgstr "(leer)"
 
 #: ../src/fsearch.glade.h:37
 msgid "page1"
@@ -180,144 +180,144 @@ msgstr ""
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr ""
+msgstr "Öffnen"
 
 #: ../src/menus.ui.h:2
 msgid "_Open Folder"
-msgstr ""
+msgstr "Pfad öffnen"
 
 #: ../src/menus.ui.h:3
 msgid "C_ut"
-msgstr ""
+msgstr "Ausschneiden"
 
 #: ../src/menus.ui.h:4
 msgid "_Copy"
-msgstr ""
+msgstr "Kopieren"
 
 #: ../src/menus.ui.h:5
 msgid "_Delete"
-msgstr ""
+msgstr "Löschen"
 
 #: ../src/menus.ui.h:6
 msgid "Name"
-msgstr ""
+msgstr "Name"
 
 #: ../src/menus.ui.h:7
 msgid "Path"
-msgstr ""
+msgstr "Pfad"
 
 #: ../src/menus.ui.h:8
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: ../src/menus.ui.h:9
 msgid "Size"
-msgstr ""
+msgstr "Größe"
 
 #: ../src/menus.ui.h:10
 msgid "Date Modified"
-msgstr ""
+msgstr "Geändert am"
 
 #: ../src/overlay.ui.h:1
 msgid "Emtpy Database"
-msgstr ""
+msgstr "Leere Datenbank"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr ""
+msgstr "Gehe zu <b>Bearbeiten → Einstellungen → Datenbank</b> und füge einige Ordner zur Überwachung hinzu"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr ""
+msgstr "Leere Suche"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Drücke <b>Strg + F</b> und tippe los."
 
 #: ../src/overlay.ui.h:6
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr ""
+msgstr "Dies kann einige Zeit dauern."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr ""
+msgstr "Keine Ergebnisse gefunden"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr ""
+msgstr "Versuche eine andere Suche"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
-msgstr ""
+msgstr "Einstellungen"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Aktiviere dunkles Theme"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr ""
+msgstr "Tooltips anzeigen"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr ""
+msgstr "Fenstergröße wiederherstellen"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Spaltenkonfiguration wiederherstellen"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Dateisymbole anzeigen"
 
 #: ../src/preferences.ui.h:7
 msgid "Interface"
-msgstr ""
+msgstr "Bedienoberfläche"
 
 #: ../src/preferences.ui.h:8
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Anzahl der Ergebnisse beschränken:"
 
 #: ../src/preferences.ui.h:9
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Pfad beachten, falls die Suche Pfadseparatoren enthält"
 
 #: ../src/preferences.ui.h:10
 msgid "Search as you type"
-msgstr ""
+msgstr "Suche beim Tippen starten"
 
 #: ../src/preferences.ui.h:11
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Bei leerem Suchfeld nichts anzeigen"
 
 #: ../src/preferences.ui.h:13
 msgid "Update database on start"
-msgstr ""
+msgstr "Datenbank beim Start aktualisieren"
 
 #: ../src/preferences.ui.h:14
 msgid "Add"
-msgstr ""
+msgstr "Hinzufügen"
 
 #: ../src/preferences.ui.h:15
 msgid "Remove"
-msgstr ""
+msgstr "Entfernen"
 
 #: ../src/preferences.ui.h:16
 msgid "Follow symbolic links"
-msgstr ""
+msgstr "Folge symbolischen Links"
 
 #: ../src/preferences.ui.h:17
 msgid "Include"
-msgstr ""
+msgstr "Einschließen"
 
 #: ../src/preferences.ui.h:18
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Versteckte Dateien und Ordner ausschließen"
 
 #: ../src/preferences.ui.h:19
 msgid "Exclude"
-msgstr ""
+msgstr "Ausschließen"
