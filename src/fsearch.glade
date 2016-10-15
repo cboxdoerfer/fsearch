@@ -160,7 +160,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="can_focus">False</property>
                     <child>
                       <object class="GtkImageMenuItem" id="imagemenuitem1">
-                        <property name="label">New Window</property>
+                        <property name="label" translatable="yes">New Window</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <property name="action_name">app.new_window</property>
@@ -1009,6 +1009,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           </packing>
         </child>
       </object>
+    </child>
+    <child type="titlebar">
+      <placeholder/>
     </child>
   </template>
 </interface>
