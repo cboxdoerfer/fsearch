@@ -16,7 +16,12 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#ifdef HAVE_CONFIG_H
+#include "../config.h"
+#endif
+
 #include <linux/limits.h>
+#include <glib/gi18n.h>
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
 #include "list_model.h"
@@ -92,7 +97,7 @@ init_statusbar (FsearchApplicationWindow *self)
     }
 
     gchar db_text[100] = "";
-    snprintf (db_text, sizeof (db_text), "%'d Items", num_items);
+    snprintf (db_text, sizeof (db_text), _("%'d Items"), num_items);
     gtk_label_set_text (GTK_LABEL (self->database_label), db_text);
 }
 
@@ -313,7 +318,7 @@ update_model_cb (gpointer user_data)
 
     apply_model_to_list (win);
     gchar sb_text[100] = "";
-    snprintf (sb_text, sizeof (sb_text), "%'d Items", num_results);
+    snprintf (sb_text, sizeof (sb_text), _("%'d Items"), num_results);
     update_statusbar (win, sb_text);
     reset_sort_order (win);
 
@@ -726,7 +731,7 @@ updated_database_cb (gpointer data, gpointer user_data)
     Database *db = fsearch_application_get_db (FSEARCH_APPLICATION_DEFAULT);
     uint32_t num_items = db_get_num_entries (db);
     gchar db_text[100] = "";
-    snprintf (db_text, sizeof (db_text), "%'d Items", num_items);
+    snprintf (db_text, sizeof (db_text), _("%'d Items"), num_items);
     gtk_label_set_text (GTK_LABEL (win->database_label), db_text);
 
 
@@ -748,7 +753,7 @@ update_database_cb (gpointer data, gpointer user_data)
     gtk_stack_set_visible_child (GTK_STACK (win->database_stack), win->database_box1);
     gtk_spinner_start (GTK_SPINNER (win->database_spinner));
     gchar db_text[100] = "";
-    snprintf (db_text, sizeof (db_text), "Loading Database...");
+    snprintf (db_text, sizeof (db_text), _("Loading Database..."));
     gtk_label_set_text (GTK_LABEL (win->database_label), db_text);
 }
 

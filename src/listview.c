@@ -16,6 +16,11 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#ifdef HAVE_CONFIG_H
+#include "../config.h"
+#endif
+
+#include <glib/gi18n.h>
 #include <stdio.h>
 
 #include "listview.h"
@@ -137,7 +142,7 @@ listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_NAME);
-    listview_column_add_label (col, "Name");
+    listview_column_add_label (col, _("Name"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_NAME);
     gtk_tree_view_insert_column (list, col, pos);
@@ -167,7 +172,7 @@ listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_PATH);
-    listview_column_add_label (col, "Path");
+    listview_column_add_label (col, _("Path"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_PATH);
     gtk_tree_view_insert_column (list, col, pos);
@@ -196,7 +201,7 @@ listview_add_size_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         "text",
                                         LIST_MODEL_COL_SIZE);
     gtk_tree_view_column_set_alignment (col, 1.0);
-    listview_column_add_label (col, "Size");
+    listview_column_add_label (col, _("Size"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_SIZE);
     gtk_tree_view_insert_column (list, col, pos);
@@ -228,7 +233,7 @@ listview_add_modified_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         "text",
                                         LIST_MODEL_COL_CHANGED);
     gtk_tree_view_column_set_alignment (col, 1.0);
-    listview_column_add_label (col, "Date Modified");
+    listview_column_add_label (col, _("Date Modified"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_CHANGED);
     gtk_tree_view_insert_column (list, col, pos);
@@ -257,7 +262,7 @@ listview_add_type_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_TYPE);
-    listview_column_add_label (col, "Type");
+    listview_column_add_label (col, _("Type"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_TYPE);
     gtk_tree_view_insert_column (list, col, pos);

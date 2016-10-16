@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-15 20:08+0200\n"
+"POT-Creation-Date: 2016-10-16 17:30+0200\n"
 "PO-Revision-Date: 2016-10-14 23:51+0200\n"
 "Last-Translator:  <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German\n"
@@ -202,23 +202,23 @@ msgstr "Kopieren"
 msgid "_Delete"
 msgstr "Löschen"
 
-#: ../src/menus.ui.h:6
+#: ../src/menus.ui.h:6 ../src/listview.c:145
 msgid "Name"
 msgstr "Name"
 
-#: ../src/menus.ui.h:7
+#: ../src/menus.ui.h:7 ../src/listview.c:175
 msgid "Path"
 msgstr "Pfad"
 
-#: ../src/menus.ui.h:8
+#: ../src/menus.ui.h:8 ../src/listview.c:265
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/menus.ui.h:9
+#: ../src/menus.ui.h:9 ../src/listview.c:204
 msgid "Size"
 msgstr "Größe"
 
-#: ../src/menus.ui.h:10
+#: ../src/menus.ui.h:10 ../src/listview.c:236
 msgid "Date Modified"
 msgstr "Geändert am"
 
@@ -327,3 +327,14 @@ msgstr "Versteckte Dateien und Ordner ausschließen"
 #: ../src/preferences.ui.h:19
 msgid "Exclude"
 msgstr "Ausschließen"
+
+#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:321
+#: ../src/fsearch_window.c:734
+#, fuzzy, c-format
+msgid "%'d Items"
+msgstr "%'d Einträge"
+
+#: ../src/fsearch_window.c:756
+#, fuzzy, c-format
+msgid "Loading Database..."
+msgstr "Lade Datenbank..."
