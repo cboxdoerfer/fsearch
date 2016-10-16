@@ -330,11 +330,11 @@ msgstr "Ausschließen"
 
 #: ../src/fsearch_window.c:100 ../src/fsearch_window.c:321
 #: ../src/fsearch_window.c:734
-#, fuzzy, c-format
+#, c-format
 msgid "%'d Items"
 msgstr "%'d Einträge"
 
 #: ../src/fsearch_window.c:756
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Database..."
 msgstr "Lade Datenbank..."
