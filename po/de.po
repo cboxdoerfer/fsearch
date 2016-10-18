@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-16 17:30+0200\n"
-"PO-Revision-Date: 2016-10-14 23:51+0200\n"
-"Last-Translator:  <christian.boxdoerfer@posteo.de>\n"
+"PO-Revision-Date: 2016-10-18 17:56+0200\n"
+"Last-Translator:  <atalanttore@gmail.com>\n"
 "Language-Team: German\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
@@ -20,19 +20,19 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr "Öffnen"
+msgstr "Datei(en) öffnen"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr "Öffne mit..."
+msgstr "Mit anderer Anwendung öffnen"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr "Pfad öffnen"
+msgstr "Beinhaltenden Ordner öffnen"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr "Öffne in Dateimanager"
+msgstr "Datei(en) in Dateimanager öffnen"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
@@ -44,7 +44,7 @@ msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr "Datei"
+msgstr "_Datei"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
@@ -52,7 +52,7 @@ msgstr "Neues Fenster"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr "Pfad öffnen"
+msgstr "Ordner öffnen"
 
 #: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
 msgid "Update Database"
@@ -60,7 +60,7 @@ msgstr "Datenbank aktualisieren"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr "Bearbeiten"
+msgstr "B_earbeiten"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
@@ -72,7 +72,7 @@ msgstr "Auswahl umkehren"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr "Ansicht"
+msgstr "_Ansicht"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
@@ -92,7 +92,7 @@ msgstr "Zeige Suchbutton"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr "Suche"
+msgstr "_Suche"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
@@ -108,7 +108,7 @@ msgstr "Aktiviere RegEx"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr "Hilfe"
+msgstr "_Hilfe"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
@@ -136,7 +136,7 @@ msgstr "Suche"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr "Anzahl der Ergebnisse"
+msgstr "Anzahl der Suchergebnisse"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
@@ -184,23 +184,23 @@ msgstr ""
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr "Öffnen"
+msgstr "_Öffnen"
 
 #: ../src/menus.ui.h:2
 msgid "_Open Folder"
-msgstr "Pfad öffnen"
+msgstr "Ordner _öffnen"
 
 #: ../src/menus.ui.h:3
 msgid "C_ut"
-msgstr "Ausschneiden"
+msgstr "Auss_chneiden"
 
 #: ../src/menus.ui.h:4
 msgid "_Copy"
-msgstr "Kopieren"
+msgstr "_Kopieren"
 
 #: ../src/menus.ui.h:5
 msgid "_Delete"
-msgstr "Löschen"
+msgstr "_Löschen"
 
 #: ../src/menus.ui.h:6 ../src/listview.c:145
 msgid "Name"
@@ -278,7 +278,7 @@ msgstr "Spaltenkonfiguration wiederherstellen"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr "Dateisymbole anzeigen"
+msgstr "Symbole in der Namensspalte anzeigen"
 
 #: ../src/preferences.ui.h:7
 msgid "Interface"
