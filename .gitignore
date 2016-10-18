@@ -4,7 +4,8 @@ Makefile.in
 /data/Makefile
 /data/fsearch.desktop
 /data/fsearch.desktop.in
-/po
+/po/*.mo
+/po/*.gmo
 /po/Makefile
 /po/Makefile.in.in
 /po/.intltool-merge-cache
