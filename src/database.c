@@ -395,7 +395,10 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
 
     char fn[FILENAME_MAX];
     strcpy (fn, dname);
-    fn[len++] = '/';
+    if (strcmp (dname, "/")) {
+        // TODO: use a more performant fix to handle root directory
+        fn[len++] = '/';
+    }
 
     DIR *dir = NULL;
     if (!(dir = opendir (dname))) {
