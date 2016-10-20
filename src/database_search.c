@@ -25,6 +25,7 @@
 #include <assert.h>
 #include <ctype.h>
 #include <pcre.h>
+#include <fnmatch.h>
 
 #include "database_search.h"
 #include "fsearch_window.h"
@@ -42,6 +43,7 @@ struct _DatabaseSearchEntry
 
 typedef struct search_query_s {
     char *query;
+    uint32_t (*search_func)(const char *, const char *);
     size_t query_len;
     uint32_t has_uppercase;
     uint32_t has_separator;
@@ -182,7 +184,6 @@ search_thread (void * user_data)
     search_query_t **queries = ctx->queries;
     const uint32_t search_in_path = ctx->search->search_in_path;
     const uint32_t auto_search_in_path = ctx->search->auto_search_in_path;
-    const uint32_t match_case = ctx->search->match_case;
     DynamicArray *entries = ctx->search->entries;
 
 
@@ -220,6 +221,8 @@ search_thread (void * user_data)
                 break;
             }
             char *ptr = query->query;
+            uint32_t (*search_func)(const char *, const char *) = query->search_func;
+
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && query->has_separator)) {
                 if (!haystack_path) {
@@ -231,17 +234,8 @@ search_thread (void * user_data)
             else {
                 haystack = haystack_name;
             }
-            if (match_case) {
-                if (!strstr (haystack, ptr)) {
-                //if (!fsearch_strstr (haystack, ptr, query->query_len)) {
-                    break;
-                }
-            }
-            else {
-                if (!strcasestr (haystack, ptr)) {
-                //if (!fsearch_strcasestr (haystack, ptr, query->query_len)) {
-                    break;
-                }
+            if (!search_func (haystack, ptr)) {
+                break;
             }
         }
 
@@ -381,6 +375,30 @@ str_has_upper (const char *string)
     return false;
 }
 
+static uint32_t
+search_wildcard_icase (const char *haystack, const char *needle)
+{
+    return !fnmatch (needle, haystack, FNM_CASEFOLD) ? 1 : 0;
+}
+
+static uint32_t
+search_wildcard (const char *haystack, const char *needle)
+{
+    return !fnmatch (needle, haystack, 0) ? 1 : 0;
+}
+
+static uint32_t
+search_normal_icase (const char *haystack, const char *needle)
+{
+    return strcasestr (haystack, needle) ? 1 : 0;
+}
+
+static uint32_t
+search_normal (const char *haystack, const char *needle)
+{
+    return strstr (haystack, needle) ? 1 : 0;
+}
+
 static void
 search_query_free (void * data)
 {
@@ -397,11 +415,27 @@ search_query_free (void * data)
 }
 
 static search_query_t *
-search_query_new (const char *query)
+search_query_new (const char *query, bool match_case)
 {
     search_query_t *new = calloc (1, sizeof (search_query_t));
     assert (new != NULL);
 
+    if (strchr (query, '*')) {
+        if (match_case) {
+            new->search_func = search_wildcard;
+        }
+        else {
+            new->search_func = search_wildcard_icase;
+        }
+    }
+    else {
+        if (match_case) {
+            new->search_func = search_normal;
+        }
+        else {
+            new->search_func = search_normal_icase;
+        }
+    }
     new->query = g_strdup (query);
     new->query_len = strlen (query);
     new->has_uppercase = str_has_upper (query);
@@ -425,7 +459,7 @@ build_queries (DatabaseSearch *search, FsearchQuery *q)
     const bool is_reg = is_regex (q->query);
     if (is_reg && q->enable_regex) {
         search_query_t **queries = calloc (2, sizeof (search_thread_context_t *));
-        queries[0] = search_query_new (tmp_query_copy);
+        queries[0] = search_query_new (tmp_query_copy, search->match_case);
         queries[1] = NULL;
         g_free (tmp_query_copy);
         tmp_query_copy = NULL;
@@ -439,7 +473,7 @@ build_queries (DatabaseSearch *search, FsearchQuery *q)
     uint32_t tmp_queries_len = g_strv_length (tmp_queries);
     search_query_t **queries = calloc (tmp_queries_len + 1, sizeof (search_thread_context_t *));
     for (uint32_t i = 0; i < tmp_queries_len; i++) {
-        queries[i] = search_query_new (tmp_queries[i]);
+        queries[i] = search_query_new (tmp_queries[i], search->match_case);
     }
 
     g_free (tmp_query_copy);
