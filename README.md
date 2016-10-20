@@ -19,7 +19,7 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 - PCRE (libpcre)
 
 ## Download
-#### AUR
+#### Arch Linux (AUR)
 https://aur.archlinux.org/packages/fsearch-git/
 #### Ubuntu
 ##### Daily Builds PPA
