@@ -21,11 +21,9 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 ## Download
 #### AUR
 https://aur.archlinux.org/packages/fsearch-git/
-#### Ubuntu 16.04
-Beta 1: https://github.com/cboxdoerfer/fsearch/releases/download/0.1beta1/fsearch_0.1beta1-1_amd64.deb
-
-NOTE: If you installed the previous alpha deb package you should remove that first before installing the new beta.
-`sudo apt-get remove fsearch-dev`
+#### Ubuntu
+##### Daily Builds PPA
+https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
  
 ## Roadmap
 https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
