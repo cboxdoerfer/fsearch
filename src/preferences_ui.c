@@ -400,6 +400,13 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active (exclude_hidden_items_button,
                                   main_config->exclude_hidden_items);
 
+    GtkEntry *exclude_files_entry = GTK_ENTRY (builder_get_object (builder,
+                                                                   "exclude_files_entry"));
+    gchar *exclude_files_str = NULL;
+    if (main_config->exclude_files) {
+        exclude_files_str = g_strjoinv (";", main_config->exclude_files);
+        gtk_entry_set_text (exclude_files_entry, exclude_files_str);
+    }
 
     model_changed = false;
 
@@ -438,6 +445,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
             model_changed = true;
         }
 
+        if ((exclude_files_str
+            && strcmp (exclude_files_str, gtk_entry_get_text (exclude_files_entry)))
+            || (!exclude_files_str && strlen (gtk_entry_get_text (exclude_files_entry)) > 0)) {
+            model_changed = true;
+        }
 
         g_object_set(gtk_settings_get_default(),
                      "gtk-application-prefer-dark-theme",
@@ -445,6 +457,16 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                      NULL );
 
         if (model_changed) {
+            if (main_config->exclude_files) {
+                g_strfreev (main_config->exclude_files);
+                main_config->exclude_files = NULL;
+            }
+            printf("%s\n", gtk_entry_get_text (exclude_files_entry));
+            main_config->exclude_files = g_strsplit (gtk_entry_get_text (exclude_files_entry), ";", -1);
+            for (int i = 0; main_config->exclude_files[i]; ++i) {
+                printf("entry: %s\n", main_config->exclude_files[i]);
+            }
+
             g_list_free_full (main_config->locations, (GDestroyNotify)free);
             g_list_free_full (main_config->exclude_locations, (GDestroyNotify)free);
             main_config->locations = NULL;
@@ -454,6 +476,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
             main_config->exclude_locations = update_location_config (exclude_model, main_config->exclude_locations);
             update_database ();
         }
+    }
+
+    if (exclude_files_str) {
+        free (exclude_files_str);
+        exclude_files_str = NULL;
     }
 
     g_object_unref (builder);

@@ -30,6 +30,7 @@
 #include <errno.h>
 #include <err.h>
 #include <glib/gstdio.h>
+#include <fnmatch.h>
 
 #include "database.h"
 #include "fsearch_config.h"
@@ -376,6 +377,19 @@ save_fail:
 }
 
 static bool
+file_is_excluded (const char *name, char **exclude_files)
+{
+    if (exclude_files) {
+        for (int i = 0; exclude_files[i]; ++i) {
+            if (!fnmatch (exclude_files[i], name, 0)) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
+static bool
 directory_is_excluded (const char *name, GList *excludes)
 {
     while (excludes) {
@@ -390,6 +404,7 @@ directory_is_excluded (const char *name, GList *excludes)
 static int
 db_location_walk_tree_recursive (DatabaseLocation *location,
                                  GList *excludes,
+                                 char **exclude_files,
                                  const char *dname,
                                  GTimer *timer,
                                  void (*callback)(const char *),
@@ -434,6 +449,10 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         if (!strcmp (dent->d_name, ".") || !strcmp (dent->d_name, "..")) {
             continue;
         }
+        if (file_is_excluded (dent->d_name, exclude_files)) {
+            //trace ("excluded file: %s\n", dent->d_name);
+            continue;
+        }
 
         strncpy (fn + len, dent->d_name, FILENAME_MAX - len);
         if (lstat (fn, &st) == -1) {
@@ -443,7 +462,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         }
 
         if (directory_is_excluded (fn, excludes)) {
-            trace ("excluded: %s\n", fn);
+            trace ("excluded directory: %s\n", fn);
             continue;
         }
 
@@ -467,6 +486,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
             if ((spec & WS_RECURSIVE))
                 db_location_walk_tree_recursive (location,
                                                  excludes,
+                                                 exclude_files,
                                                  fn,
                                                  timer,
                                                  callback,
@@ -508,6 +528,7 @@ db_location_build_tree (const char *dname, void (*callback)(const char *))
     g_timer_start (timer);
     uint32_t res = db_location_walk_tree_recursive (location,
                                                     config->exclude_locations,
+                                                    config->exclude_files,
                                                     dname,
                                                     timer,
                                                     callback,

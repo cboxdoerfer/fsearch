@@ -297,6 +297,11 @@ load_config (FsearchConfig *config)
                                                        "follow_symbolic_links",
                                                        false);
 
+        char *exclude_files_str = config_load_string (key_file, "Database", "exclude_files", NULL);
+        if (exclude_files_str) {
+            config->exclude_files = g_strsplit (exclude_files_str, ";", -1);
+        }
+
         // Locations
         uint32_t pos = 1;
         while (true) {
@@ -474,6 +479,12 @@ save_config (FsearchConfig *config)
         }
     }
 
+    if (config->exclude_files) {
+        char *exclude_files_str = g_strjoinv (";", config->exclude_files);
+        g_key_file_set_string (key_file, "Database", "exclude_files", exclude_files_str);
+        free (exclude_files_str);
+    }
+
     gchar config_path[PATH_MAX] = "";
     build_config_path (config_path, sizeof (config_path));
 
@@ -502,6 +513,10 @@ config_free (FsearchConfig *config)
     if (config->exclude_locations) {
         g_list_free_full (config->exclude_locations, (GDestroyNotify)free);
         config->exclude_locations = NULL;
+    }
+    if (config->exclude_files) {
+        g_strfreev (config->exclude_files);
+        config->exclude_files = NULL;
     }
     free (config);
     config = NULL;

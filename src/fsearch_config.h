@@ -79,6 +79,7 @@ struct _FsearchConfig
 
     GList *locations;
     GList *exclude_locations;
+    char **exclude_files;
 };
 
 
