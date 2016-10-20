@@ -420,7 +420,7 @@ search_query_new (const char *query, bool match_case)
     search_query_t *new = calloc (1, sizeof (search_query_t));
     assert (new != NULL);
 
-    if (strchr (query, '*')) {
+    if (strchr (query, '*') || strchr (query, '?')) {
         if (match_case) {
             new->search_func = search_wildcard;
         }
