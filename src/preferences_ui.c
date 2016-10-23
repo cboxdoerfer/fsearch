@@ -89,7 +89,32 @@ create_tree_model (GList *list)
     return GTK_TREE_MODEL (store);
 }
 
-void
+static void
+enable_dark_theme_infobar_response (GtkInfoBar *info_bar,
+                                    gint response_id,
+                                    gpointer user_data)
+{
+    if (response_id == GTK_RESPONSE_CLOSE)
+    {
+        gtk_widget_hide (GTK_WIDGET (info_bar));
+        return;
+    }
+}
+
+static void
+enable_dark_theme_button_toggled (GtkToggleButton *togglebutton,
+                                  gpointer user_data)
+{
+    GtkWidget *infobar = GTK_WIDGET (user_data);
+    if (gtk_toggle_button_get_active (togglebutton)) {
+        gtk_widget_show (infobar);
+    }
+    else {
+        gtk_widget_hide (infobar);
+    }
+}
+
+static void
 limit_num_results_toggled (GtkToggleButton *togglebutton,
                            gpointer user_data)
 {
@@ -221,6 +246,18 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                                                                                        "enable_dark_theme_button"));
     gtk_toggle_button_set_active (enable_dark_theme_button,
                                   main_config->enable_dark_theme);
+
+    GtkInfoBar *enable_dark_theme_infobar = GTK_INFO_BAR (builder_get_object (builder,
+                                                                              "enable_dark_theme_infobar"));
+    g_signal_connect (enable_dark_theme_infobar,
+                      "response",
+                      G_CALLBACK (enable_dark_theme_infobar_response),
+                      NULL);
+
+    g_signal_connect (enable_dark_theme_button,
+                      "toggled",
+                      G_CALLBACK (enable_dark_theme_button_toggled),
+                      enable_dark_theme_infobar);
 
     GtkToggleButton *show_tooltips_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                    "show_tooltips_button"));
