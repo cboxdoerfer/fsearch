@@ -19,7 +19,7 @@
 #pragma once
 
 #include <gtk/gtk.h>
-#include "config.h"
+#include "fsearch_config.h"
 
 void
 preferences_ui_launch (FsearchConfig *main_config, GtkWindow *window);

@@ -32,7 +32,7 @@
 #include <glib/gstdio.h>
 
 #include "database.h"
-#include "config.h"
+#include "fsearch_config.h"
 #include "fsearch.h"
 #include "debug.h"
 

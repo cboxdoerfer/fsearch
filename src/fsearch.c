@@ -28,7 +28,7 @@
 #include <glib/gi18n.h>
 #include "../config.h"
 #include "fsearch.h"
-#include "config.h"
+#include "fsearch_config.h"
 #include "list_model.h"
 #include "resources.h"
 #include "clipboard.h"

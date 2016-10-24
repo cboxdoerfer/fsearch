@@ -27,7 +27,7 @@
 #include "list_model.h"
 #include "database.h"
 #include "iconstore.h"
-#include "config.h"
+#include "fsearch_config.h"
 #include "utils.h"
 #include "array.h"
 #include "database_search.h"

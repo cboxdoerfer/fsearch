@@ -23,7 +23,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <glib.h>
 #include <gtk/gtk.h>
 #include "database.h"
-#include "config.h"
+#include "fsearch_config.h"
 #include "fsearch_thread_pool.h"
 
 G_BEGIN_DECLS

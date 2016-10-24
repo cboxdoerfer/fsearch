@@ -18,7 +18,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 array.h \
 			 btree.h \
 			 clipboard.h \
-			 config.h \
+			 fsearch_config.h \
 			 database.h \
 			 database_search.h \
 			 debug.h \
@@ -39,7 +39,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_window.c \
 		  fsearch_window_actions.c \
 		  clipboard.c \
-		  config.c \
+		  fsearch_config.c \
 		  database.c \
 		  database_search.c \
 		  iconstore.c \

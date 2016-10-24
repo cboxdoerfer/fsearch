@@ -23,7 +23,7 @@
 #include <string.h>
 #include <linux/limits.h>
 
-#include "config.h"
+#include "fsearch_config.h"
 #include "debug.h"
 
 const char *config_file_name = "fsearch.conf";

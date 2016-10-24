@@ -20,7 +20,7 @@
 
 #include <gtk/gtk.h>
 #include <stdint.h>
-#include "config.h"
+#include "fsearch_config.h"
 
 GtkTreeView *
 listview_new (void);

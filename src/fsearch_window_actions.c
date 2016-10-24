@@ -5,7 +5,7 @@
 #include "clipboard.h"
 #include "database_search.h"
 #include "utils.h"
-#include "config.h"
+#include "fsearch_config.h"
 #include "listview.h"
 #include "list_model.h"
 #include "btree.h"
