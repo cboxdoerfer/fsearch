@@ -26,6 +26,7 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
+#include "../config.h"
 #include "fsearch.h"
 #include "config.h"
 #include "list_model.h"
@@ -331,12 +332,12 @@ about_activated (GSimpleAction *action,
     {
         GtkWindow *window = windows->data;
         gtk_show_about_dialog (GTK_WINDOW (window),
-                               "program-name", "FSearch",
+                               "program-name", PACKAGE_NAME,
                                "logo-icon-name", "system-search",
                                "license-type", GTK_LICENSE_GPL_2_0,
                                "copyright", "Christian Boxdörfer",
-                               "website", "https://github.com/cboxdoerfer/fsearch",
-                               "version", "0.1beta",
+                               "website", PACKAGE_URL,
+                               "version", PACKAGE_VERSION,
                                "comments", "A search utility focusing on performance and advanced features",
                                NULL);
         break;
