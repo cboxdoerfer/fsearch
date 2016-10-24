@@ -16,6 +16,10 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <sys/time.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -26,7 +30,6 @@
 #include <glib.h>
 #include <glib/gstdio.h>
 #include <glib/gi18n.h>
-#include "../config.h"
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "list_model.h"
