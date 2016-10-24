@@ -705,7 +705,6 @@ icon_theme_changed_cb (GtkIconTheme *icon_theme,
 static void
 updated_database_cb (gpointer data, gpointer user_data)
 {
-    printf("database updated\n");
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
