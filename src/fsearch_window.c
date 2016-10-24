@@ -195,6 +195,7 @@ fsearch_application_window_constructed (GObject *object)
     G_OBJECT_CLASS (fsearch_application_window_parent_class)->constructed (object);
 
     self->search = NULL;
+    self->search = db_search_new (fsearch_application_get_thread_pool (FSEARCH_APPLICATION_DEFAULT));
     g_mutex_init (&self->mutex);
     fsearch_window_apply_config (self);
     fsearch_window_actions_init (self);
@@ -362,7 +363,6 @@ perform_search (FsearchApplicationWindow *win)
         trace ("search: database locked\n");
         return FALSE;
     }
-    //g_mutex_lock (&win->mutex);
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     FsearchFilter filter = gtk_combo_box_get_active (GTK_COMBO_BOX (win->filter_combobox));
@@ -379,21 +379,9 @@ perform_search (FsearchApplicationWindow *win)
                           config->enable_regex,
                           config->auto_search_in_path,
                           config->search_in_path);
+
+        db_perform_search (win->search, fsearch_application_window_update_results, win);
     }
-    else {
-        win->search = db_search_new (fsearch_application_get_thread_pool (app),
-                                     db_get_entries (db),
-                                     db_get_num_entries (db),
-                                     max_results,
-                                     filter,
-                                     text,
-                                     config->hide_results_on_empty_search,
-                                     config->match_case,
-                                     config->enable_regex,
-                                     config->auto_search_in_path,
-                                     config->search_in_path);
-    }
-    db_perform_search (win->search, fsearch_application_window_update_results, win);
     db_unlock (db);
     return FALSE;
 }
@@ -717,6 +705,7 @@ icon_theme_changed_cb (GtkIconTheme *icon_theme,
 static void
 updated_database_cb (gpointer data, gpointer user_data)
 {
+    printf("database updated\n");
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 

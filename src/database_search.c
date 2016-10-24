@@ -720,40 +720,12 @@ db_search_entry_new (BTreeNode *node, uint32_t pos)
 }
 
 DatabaseSearch *
-db_search_new (FsearchThreadPool *pool,
-               DynamicArray *entries,
-               uint32_t num_entries,
-               uint32_t max_results,
-               FsearchFilter filter,
-               const char *query,
-               bool hide_results,
-               bool match_case,
-               bool enable_regex,
-               bool auto_search_in_path,
-               bool search_in_path)
+db_search_new (FsearchThreadPool *pool)
 {
     DatabaseSearch *db_search = calloc (1, sizeof (DatabaseSearch));
     assert (db_search != NULL);
 
-    db_search->entries = entries;
-    db_search->num_entries = num_entries;
-    db_search->results = NULL;
-    if (query) {
-        db_search->query = g_strdup (query);
-    }
-    else {
-        db_search->query = NULL;
-    }
     db_search->pool = pool;
-    db_search->num_folders = 0;
-    db_search->num_files = 0;
-    db_search->enable_regex = enable_regex;
-    db_search->auto_search_in_path = auto_search_in_path;
-    db_search->search_in_path = search_in_path;
-    db_search->hide_results = hide_results;
-    db_search->match_case = match_case;
-    db_search->max_results = max_results;
-    db_search->filter = filter;
     g_mutex_init (&db_search->query_mutex);
     g_cond_init (&db_search->search_thread_start_cond);
     db_search->search_thread = g_thread_new("fsearch_search_thread", fsearch_search_thread, db_search);

@@ -77,17 +77,7 @@ void
 db_search_free (DatabaseSearch *search);
 
 DatabaseSearch *
-db_search_new (FsearchThreadPool *pool,
-               DynamicArray *entries,
-               uint32_t num_entries,
-               uint32_t max_results,
-               FsearchFilter filter,
-               const char *query,
-               bool hide_results,
-               bool match_case,
-               bool enable_regex,
-               bool auto_search_in_path,
-               bool search_in_path);
+db_search_new (FsearchThreadPool *pool);
 
 BTreeNode *
 db_search_entry_get_node (DatabaseSearchEntry *entry);
