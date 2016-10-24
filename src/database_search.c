@@ -392,6 +392,7 @@ search_wildcard (const char *haystack, const char *needle)
 static uint32_t
 search_normal_icase_u8 (const char *haystack, const char *needle)
 {
+    // TODO: make this faster
     return utfcasestr (haystack, needle) ? 1 : 0;
 }
 

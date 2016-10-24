@@ -33,6 +33,8 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 string_utils.h \
 			 ui_utils.h \
 			 utf8.h \
+			 u8_lc_map.h \
+			 u8_uc_map.h \
 			 utils.h
 
 fsearch_SOURCES = main.c \
