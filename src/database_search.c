@@ -32,6 +32,7 @@
 #include "string_utils.h"
 #include "query.h"
 #include "debug.h"
+#include "utf8.h"
 
 #define OVECCOUNT 3
 
@@ -47,6 +48,7 @@ typedef struct search_query_s {
     size_t query_len;
     uint32_t has_uppercase;
     uint32_t has_separator;
+    uint32_t is_utf8;
     //uint32_t found;
 } search_query_t;
 
@@ -388,6 +390,12 @@ search_wildcard (const char *haystack, const char *needle)
 }
 
 static uint32_t
+search_normal_icase_u8 (const char *haystack, const char *needle)
+{
+    return utfcasestr (haystack, needle) ? 1 : 0;
+}
+
+static uint32_t
 search_normal_icase (const char *haystack, const char *needle)
 {
     return strcasestr (haystack, needle) ? 1 : 0;
@@ -420,6 +428,17 @@ search_query_new (const char *query, bool match_case)
     search_query_t *new = calloc (1, sizeof (search_query_t));
     assert (new != NULL);
 
+    new->query = g_strdup (query);
+    new->query_len = strlen (query);
+    new->has_uppercase = str_has_upper (query);
+    new->has_separator = strchr (query, '/') ? 1 : 0;
+    // TODO: this might not work at all times?
+    if (u8_strlen (query) != new->query_len) {
+        new->is_utf8 = 1;
+    }
+    else {
+        new->is_utf8 = 0;
+    }
     if (strchr (query, '*') || strchr (query, '?')) {
         if (match_case) {
             new->search_func = search_wildcard;
@@ -433,14 +452,14 @@ search_query_new (const char *query, bool match_case)
             new->search_func = search_normal;
         }
         else {
-            new->search_func = search_normal_icase;
+            if (new->is_utf8) {
+                new->search_func = search_normal_icase_u8;
+            }
+            else {
+                new->search_func = search_normal_icase;
+            }
         }
     }
-    new->query = g_strdup (query);
-    new->query_len = strlen (query);
-    new->has_uppercase = str_has_upper (query);
-    new->has_separator = strchr (query, '/') ? 1 : 0;
-    //new->found = 0;
     return new;
 }
 

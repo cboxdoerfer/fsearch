@@ -32,6 +32,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 query.h \
 			 string_utils.h \
 			 ui_utils.h \
+			 utf8.h \
 			 utils.h
 
 fsearch_SOURCES = main.c \
@@ -54,6 +55,7 @@ fsearch_SOURCES = main.c \
 		  listview.c \
 		  query.c \
 		  utils.c \
+		  utf8.c \
 		  $(fsearch_NOINST_H_FILES)
 
 BUILT_SOURCES=resources.c resources.h
