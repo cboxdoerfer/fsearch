@@ -758,11 +758,10 @@ utfcasestr (const char *s1, const char *s2) {
             int32_t i2 = 0;
             char lw1[10];
             char lw2[10];
-            const char *next;
             u8_nextchar (p1, &i1);
             u8_nextchar (p2, &i2);
-            int l1 = u8_tolower (p1, i1, lw1);
-            int l2 = u8_tolower (p2, i2, lw2);
+            u8_tolower (p1, i1, lw1);
+            u8_tolower (p2, i2, lw2);
             //fprintf (stderr, "comparing %s to %s\n", lw1, lw2);
             if (strcmp (lw1, lw2)) {
                 //fprintf (stderr, "fail\n");
@@ -793,7 +792,6 @@ utfcasestr_fast (const char *s1, const char *s2) {
             int32_t i1 = 0;
             int32_t i2 = 0;
             char lw1[10];
-            const char *next;
             u8_nextchar (p1, &i1);
             u8_nextchar (p2, &i2);
             int l1 = u8_tolower (p1, i1, lw1);
@@ -820,7 +818,6 @@ u8_strcasecmp (const char *a, const char *b) {
         int32_t i1 = 0;
         int32_t i2 = 0;
         char s1[10], s2[10];
-        const char *next;
         u8_nextchar (p1, &i1);
         u8_nextchar (p2, &i2);
         int l1 = u8_tolower (p1, i1, s1);

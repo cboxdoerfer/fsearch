@@ -794,36 +794,24 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
                                                                           "no_search_results"));
     gtk_overlay_add_overlay (GTK_OVERLAY (self->search_overlay),
                              self->no_search_results_overlay);
-    gtk_overlay_set_overlay_pass_through (GTK_OVERLAY (self->search_overlay),
-                                          self->no_search_results_overlay,
-                                          FALSE);
 
     // Overlay when database is empty
     self->empty_database_overlay = GTK_WIDGET (gtk_builder_get_object (builder,
                                                                        "empty_database"));
     gtk_overlay_add_overlay (GTK_OVERLAY (self->search_overlay),
                              self->empty_database_overlay);
-    gtk_overlay_set_overlay_pass_through (GTK_OVERLAY (self->search_overlay),
-                                          self->empty_database_overlay,
-                                          FALSE);
 
     // Overlay when search query is empty
     self->empty_search_query_overlay = GTK_WIDGET (gtk_builder_get_object (builder,
                                                                            "empty_search_query"));
     gtk_overlay_add_overlay (GTK_OVERLAY (self->search_overlay),
                              self->empty_search_query_overlay);
-    gtk_overlay_set_overlay_pass_through (GTK_OVERLAY (self->search_overlay),
-                                          self->empty_search_query_overlay,
-                                          FALSE);
 
     // Overlay when database is updating
     self->database_updating_overlay = GTK_WIDGET (gtk_builder_get_object (builder,
                                                                            "database_updating"));
     gtk_overlay_add_overlay (GTK_OVERLAY (self->search_overlay),
                              self->database_updating_overlay);
-    gtk_overlay_set_overlay_pass_through (GTK_OVERLAY (self->search_overlay),
-                                          self->database_updating_overlay,
-                                          FALSE);
     self->database_updating_label = GTK_WIDGET (gtk_builder_get_object (builder,
                                                                         "database_updating_label"));
 
