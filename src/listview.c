@@ -142,11 +142,11 @@ listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_NAME);
-    listview_column_add_label (col, _("Name"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_NAME);
     gtk_tree_view_insert_column (list, col, pos);
     gtk_tree_view_column_set_expand (col, TRUE);
+    listview_column_add_label (col, _("Name"));
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
@@ -172,10 +172,10 @@ listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_PATH);
-    listview_column_add_label (col, _("Path"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_PATH);
     gtk_tree_view_insert_column (list, col, pos);
+    listview_column_add_label (col, _("Path"));
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
@@ -201,10 +201,10 @@ listview_add_size_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         "text",
                                         LIST_MODEL_COL_SIZE);
     gtk_tree_view_column_set_alignment (col, 1.0);
-    listview_column_add_label (col, _("Size"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_SIZE);
     gtk_tree_view_insert_column (list, col, pos);
+    listview_column_add_label (col, _("Size"));
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
@@ -233,10 +233,10 @@ listview_add_modified_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         "text",
                                         LIST_MODEL_COL_CHANGED);
     gtk_tree_view_column_set_alignment (col, 1.0);
-    listview_column_add_label (col, _("Date Modified"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_CHANGED);
     gtk_tree_view_insert_column (list, col, pos);
+    listview_column_add_label (col, _("Date Modified"));
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
@@ -262,10 +262,10 @@ listview_add_type_column (GtkTreeView *list, int32_t size, int32_t pos)
                                         renderer,
                                         "text",
                                         LIST_MODEL_COL_TYPE);
-    listview_column_add_label (col, _("Type"));
     listview_column_set_size (col, size);
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_TYPE);
     gtk_tree_view_insert_column (list, col, pos);
+    listview_column_add_label (col, _("Type"));
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
