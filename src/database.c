@@ -209,7 +209,12 @@ db_location_load_from_file (const char *fname)
             goto load_fail;
         }
 
-        BTreeNode *new = btree_node_new (name, mtime, size, pos, is_dir);
+        int is_root = !strcmp (name, "/");
+        BTreeNode *new = btree_node_new (is_root ? "" : name,
+                                         mtime,
+                                         size,
+                                         pos,
+                                         is_dir);
         if (!prev) {
             prev = new;
             root = new;
@@ -282,8 +287,11 @@ db_location_write_to_file (DatabaseLocation *location, const char *path)
 
     BTreeNode *root = location->entries;
     BTreeNode *node = root;
+    uint32_t is_root = !strcmp (root->name, "");
+
     while (node) {
-        const char *name = node->name;
+        const char *name = is_root ? "/" : node->name;
+        is_root = 0;
         uint16_t len = strlen (name);
         if (len) {
             // write length of node name
@@ -477,7 +485,14 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
 static DatabaseLocation *
 db_location_build_tree (const char *dname, void (*callback)(const char *))
 {
-    BTreeNode *root = btree_node_new (dname, 0, 0, 0, true);
+    const char *root_name = NULL;
+    if (!strcmp (dname, "/")) {
+        root_name = "";
+    }
+    else {
+        root_name = dname;
+    }
+    BTreeNode *root = btree_node_new (root_name, 0, 0, 0, true);
     DatabaseLocation *location = db_location_new ();
     location->entries = root;
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);

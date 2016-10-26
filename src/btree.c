@@ -299,7 +299,12 @@ get_path (BTreeNode *node, char *path, size_t path_len)
         return false;
     }
     if (btree_node_is_root (node)) {
-        strncpy (path, node->name, path_len);
+        if (strlen (node->name) == 0) {
+            strncpy (path, "/", path_len);
+        }
+        else {
+            strncpy (path, node->name, path_len);
+        }
         return true;
     }
     const int32_t depth = btree_node_depth (node);
