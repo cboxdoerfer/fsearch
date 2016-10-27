@@ -8,8 +8,11 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 
 ## Features
 - Instant (as you type) results
+- Wildcard support
 - RegEx support
 - Filter support (only search for files, folders or everything)
+- Include and exclude specific folders to be indexed
+- Ability to exclude certain files/folders from index using wildcard expressions
 - Fast sort by filename, path, size or modification time
 - Customizable interface
 
