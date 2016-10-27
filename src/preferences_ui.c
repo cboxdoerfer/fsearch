@@ -461,11 +461,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                 g_strfreev (main_config->exclude_files);
                 main_config->exclude_files = NULL;
             }
-            printf("%s\n", gtk_entry_get_text (exclude_files_entry));
             main_config->exclude_files = g_strsplit (gtk_entry_get_text (exclude_files_entry), ";", -1);
-            for (int i = 0; main_config->exclude_files[i]; ++i) {
-                printf("entry: %s\n", main_config->exclude_files[i]);
-            }
 
             g_list_free_full (main_config->locations, (GDestroyNotify)free);
             g_list_free_full (main_config->exclude_locations, (GDestroyNotify)free);
