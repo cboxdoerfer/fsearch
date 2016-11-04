@@ -1,23 +1,35 @@
 <?xml version="1.0"?>
 <interface>
-  <requires lib="gtk+" version="3.16"/>
-  <menu id="fsearch_listview_popup_menu">
-    <section id="fsearch_listview_menu_open_section">
-      <item>
-        <attribute name="label" translatable="yes">_Open</attribute>
-        <attribute name="action">win.open</attribute>
-        <attribute name="accel">Return</attribute>
-        <attribute name="icon">document-open</attribute>
-      </item>
-      <item>
-        <attribute name="label" translatable="yes">_Open Folder</attribute>
-        <attribute name="action">win.open_folder</attribute>
-        <attribute name="accel">&lt;control&gt;Return</attribute>
-        <attribute name="icon">folder-open</attribute>
-      </item>
-    </section>
-    <section id="fsearch_listview_menu_clipboard_section">
-      <!--
+    <requires lib="gtk+" version="3.16"/>
+    <menu id="fsearch_listview_popup_menu">
+        <section id="fsearch_listview_menu_open_section">
+            <item>
+                <attribute name="label" translatable="yes">_Open</attribute>
+                <attribute name="action">win.open</attribute>
+                <attribute name="accel">Return</attribute>
+                <attribute name="icon">document-open</attribute>
+            </item>
+            <submenu id="fsearch_listview_menu_open_with_submenu">
+                <attribute name="label" translatable="yes">Open _With</attribute>
+                <attribute name="icon">document-open</attribute>
+                <section id="fsearch_listview_menu_open_with_mime_section">
+                </section>
+                <section id="fsearch_listview_menu_open_with_other_section">
+                    <item>
+                        <attribute name="label" translatable="yes">Other Application</attribute>
+                        <attribute name="action">win.open_with_other</attribute>
+                    </item>
+                </section>
+            </submenu>
+            <item>
+                <attribute name="label" translatable="yes">_Open Folder</attribute>
+                <attribute name="action">win.open_folder</attribute>
+                <attribute name="accel">&lt;control&gt;Return</attribute>
+                <attribute name="icon">folder-open</attribute>
+            </item>
+        </section>
+        <section id="fsearch_listview_menu_clipboard_section">
+            <!--
       <item>
         <attribute name="label" translatable="yes">C_ut</attribute>
         <attribute name="action">win.cut_clipboard</attribute>
@@ -26,10 +38,10 @@
       </item>
       -->
       <item>
-        <attribute name="label" translatable="yes">_Copy</attribute>
-        <attribute name="action">win.copy_clipboard</attribute>
-        <attribute name="accel">&lt;control&gt;c</attribute>
-        <attribute name="icon">edit-copy</attribute>
+          <attribute name="label" translatable="yes">_Copy</attribute>
+          <attribute name="action">win.copy_clipboard</attribute>
+          <attribute name="accel">&lt;control&gt;c</attribute>
+          <attribute name="icon">edit-copy</attribute>
       </item>
       <!--
       <item>
@@ -40,29 +52,29 @@
       </item>
       -->
     </section>
-  </menu>
-  <menu id="fsearch_listview_column_popup_menu">
-      <section>
-          <item>
-              <attribute name="label" translatable="yes">Name</attribute>
-              <attribute name="action">win.show_name_column</attribute>
-          </item>
-          <item>
-              <attribute name="label" translatable="yes">Path</attribute>
-              <attribute name="action">win.show_path_column</attribute>
-          </item>
-          <item>
-              <attribute name="label" translatable="yes">Type</attribute>
-              <attribute name="action">win.show_type_column</attribute>
-          </item>
-          <item>
-              <attribute name="label" translatable="yes">Size</attribute>
-              <attribute name="action">win.show_size_column</attribute>
-          </item>
-          <item>
-              <attribute name="label" translatable="yes">Date Modified</attribute>
-              <attribute name="action">win.show_modified_column</attribute>
-          </item>
-      </section>
-  </menu>
+</menu>
+<menu id="fsearch_listview_column_popup_menu">
+    <section>
+        <item>
+            <attribute name="label" translatable="yes">Name</attribute>
+            <attribute name="action">win.show_name_column</attribute>
+        </item>
+        <item>
+            <attribute name="label" translatable="yes">Path</attribute>
+            <attribute name="action">win.show_path_column</attribute>
+        </item>
+        <item>
+            <attribute name="label" translatable="yes">Type</attribute>
+            <attribute name="action">win.show_type_column</attribute>
+        </item>
+        <item>
+            <attribute name="label" translatable="yes">Size</attribute>
+            <attribute name="action">win.show_size_column</attribute>
+        </item>
+        <item>
+            <attribute name="label" translatable="yes">Date Modified</attribute>
+            <attribute name="action">win.show_modified_column</attribute>
+        </item>
+    </section>
+</menu>
 </interface>

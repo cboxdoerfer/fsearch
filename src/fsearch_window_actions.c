@@ -1,5 +1,6 @@
 #include <limits.h>
 #include <linux/limits.h>
+#include <gio/gdesktopappinfo.h>
 
 #include "fsearch_window_actions.h"
 #include "clipboard.h"
@@ -157,6 +158,75 @@ open_cb (GtkTreeModel *model,
 }
 
 static void
+open_with_cb (GtkTreeModel *model,
+              GtkTreePath *path,
+              GtkTreeIter *iter,
+              gpointer data)
+{
+    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
+    if (entry) {
+        BTreeNode *node = db_search_entry_get_node (entry);
+        if (node) {
+            BTreeNode * node = db_search_entry_get_node (entry);
+            char path_name[PATH_MAX] = "";
+            btree_node_get_path_full (node, path_name, sizeof (path_name));
+            GList **list = data;
+            *list = g_list_append (*list, g_file_new_for_path (path_name));
+        }
+    }
+}
+
+static void
+fsearch_window_action_open_with (GSimpleAction *action,
+                                 GVariant      *variant,
+                                 gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    GList *file_list = NULL;
+    if (selection) {
+        guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
+        if (selected_rows <= 10) {
+            gtk_tree_selection_selected_foreach (selection, open_with_cb, &file_list);
+        }
+    }
+
+    GDesktopAppInfo *app_info = NULL;
+    GdkAppLaunchContext *launch_context = NULL;
+
+    const char *app_id = g_variant_get_string (variant, NULL);
+    if (!app_id) {
+        goto out;
+    }
+    app_info = g_desktop_app_info_new (app_id);
+    if (!app_info) {
+        goto out;
+    }
+
+    GdkDisplay *display = gtk_widget_get_display (GTK_WIDGET (self));
+    launch_context = gdk_display_get_app_launch_context (display);
+    if (!launch_context) {
+        goto out;
+    }
+
+    g_app_info_launch (G_APP_INFO (app_info), file_list, G_APP_LAUNCH_CONTEXT (launch_context), NULL);
+
+out:
+    if (launch_context) {
+        g_object_unref (launch_context);
+        launch_context = NULL;
+    }
+    if (app_info) {
+        g_object_unref (app_info);
+        app_info = NULL;
+    }
+    if (file_list) {
+        g_list_free_full (file_list, g_object_unref);
+        file_list = NULL;
+    }
+}
+
+static void
 fsearch_window_action_open (GSimpleAction *action,
                             GVariant      *variant,
                             gpointer       user_data)
@@ -199,6 +269,14 @@ fsearch_window_action_open_folder (GSimpleAction *action,
             gtk_tree_selection_selected_foreach (selection, open_folder_cb, NULL);
         }
     }
+}
+
+static void
+fsearch_window_action_open_with_other (GSimpleAction *action,
+                                       GVariant      *variant,
+                                       gpointer       user_data)
+{
+    //FsearchApplicationWindow *self = user_data;
 }
 
 static void
@@ -459,17 +537,19 @@ action_toggle_state_cb (GSimpleAction *saction,
 }
 
 static GActionEntry FsearchWindowActions[] = {
-    { "open",     fsearch_window_action_open },
-    { "open_folder",     fsearch_window_action_open_folder },
-    { "copy_clipboard",     fsearch_window_action_copy },
-    { "cut_clipboard",     fsearch_window_action_cut },
-    { "delete_selection",     fsearch_window_action_delete },
-    { "select_all",     fsearch_window_action_select_all },
-    { "deselect_all",     fsearch_window_action_deselect_all },
-    { "invert_selection",     fsearch_window_action_invert_selection },
-    { "toggle_focus",     fsearch_window_action_toggle_focus },
-    { "focus_search",     fsearch_window_action_focus_search },
-    { "hide_window",     fsearch_window_action_hide_window },
+    { "open", fsearch_window_action_open },
+    { "open_with", fsearch_window_action_open_with, "s"},
+    { "open_with_other", fsearch_window_action_open_with_other },
+    { "open_folder", fsearch_window_action_open_folder },
+    { "copy_clipboard", fsearch_window_action_copy },
+    { "cut_clipboard", fsearch_window_action_cut },
+    { "delete_selection", fsearch_window_action_delete },
+    { "select_all", fsearch_window_action_select_all },
+    { "deselect_all", fsearch_window_action_deselect_all },
+    { "invert_selection", fsearch_window_action_invert_selection },
+    { "toggle_focus", fsearch_window_action_toggle_focus },
+    { "focus_search", fsearch_window_action_focus_search },
+    { "hide_window", fsearch_window_action_hide_window },
     // Column popup
     { "show_name_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_name_column },
     { "show_path_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_path_column },
@@ -513,6 +593,8 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "cut_clipboard", num_rows_selected);
     action_set_enabled (group, "delete_selection", num_rows_selected);
     action_set_enabled (group, "open", num_rows_selected);
+    action_set_enabled (group, "open_with", num_rows_selected);
+    action_set_enabled (group, "open_with_other", FALSE);
     action_set_enabled (group, "open_folder", num_rows_selected);
     action_set_enabled (group, "focus_search", TRUE);
     action_set_enabled (group, "toggle_focus", TRUE);
