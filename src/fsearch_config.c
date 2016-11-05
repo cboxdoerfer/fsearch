@@ -281,7 +281,7 @@ load_config (FsearchConfig *config)
         config->num_results = config_load_integer (key_file,
                                                    "Search",
                                                    "num_results",
-                                                   10000);
+                                                   1000);
 
         // Database
         config->update_database_on_launch = config_load_boolean (key_file,
@@ -353,7 +353,7 @@ load_default_config (FsearchConfig *config)
     config->search_in_path = false;
     config->hide_results_on_empty_search = true;
     config->limit_results = true;
-    config->num_results = 10000;
+    config->num_results = 1000;
 
     // Interface
     config->enable_dark_theme = false;
