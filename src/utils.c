@@ -58,19 +58,28 @@ build_path_uri (gchar *dest, size_t dest_len, const gchar *path, const gchar *na
 static void
 open_uri (const char *uri)
 {
-    gchar *uri_escaped = g_filename_to_uri (uri, NULL, NULL);
-    if (uri_escaped) {
-        GError *error = NULL;
-        if (!g_app_info_launch_default_for_uri (uri_escaped, NULL, &error)) {
-            fprintf(stderr, "open_uri: error: %s\n", error->message);
-            ui_utils_run_gtk_dialog (NULL,
-                                     GTK_MESSAGE_ERROR,
-                                     GTK_BUTTONS_OK,
-                                     "Error while opening file:",
-                                     error->message);
-            g_error_free (error);
-        }
-        g_free (uri_escaped);
+    GError *error = NULL;
+    const char *argv[3];
+    argv[0] = "xdg-open";
+    argv[1] = uri;
+    argv[2] = NULL;
+
+    if (!g_spawn_async (NULL,
+                        (gchar **) argv,
+                        NULL,
+                        G_SPAWN_SEARCH_PATH,
+                        NULL,
+                        NULL,
+                        NULL,
+                        &error)) {
+
+        fprintf(stderr, "xdg-open: error: %s\n", error->message);
+        ui_utils_run_gtk_dialog (NULL,
+                                 GTK_MESSAGE_ERROR,
+                                 GTK_BUTTONS_OK,
+                                 "Error while opening file:",
+                                 error->message);
+        g_error_free (error);
     }
 }
 
