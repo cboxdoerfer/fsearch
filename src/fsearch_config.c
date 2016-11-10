@@ -300,6 +300,8 @@ load_config (FsearchConfig *config)
         char *exclude_files_str = config_load_string (key_file, "Database", "exclude_files", NULL);
         if (exclude_files_str) {
             config->exclude_files = g_strsplit (exclude_files_str, ";", -1);
+            free (exclude_files_str);
+            exclude_files_str = NULL;
         }
 
         // Locations
