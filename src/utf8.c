@@ -1,10 +1,8 @@
 /*
-  This file is part of Deadbeef Player source code
-  http://deadbeef.sourceforge.net
-
   utf8 string manipulation
 
-  Copyright (C) 2009-2013 Alexey Yakovenko
+  Copyright (C) 2009-2016 Alexey Yakovenko
+  Copyright (C) 2016 Christian Boxdörfer
 
   This software is provided 'as-is', without any express or implied
   warranty.  In no event will the authors be held liable for any damages
@@ -25,11 +23,12 @@
   Alexey Yakovenko waker@users.sourceforge.net
 */
 
-/* 
+/*
     based on Basic UTF-8 manipulation routines
     by Jeff Bezanson
     placed in the public domain Fall 2005
 */
+
 #ifdef HAVE_CONFIG_H
 #  include "config.h"
 #endif
@@ -215,7 +214,7 @@ int u8_strlen(const char *s)
     int32_t count = 0;
     int32_t i = 0;
 
-    while (u8_nextchar(s, &i) != 0)
+    while (s[i] && u8_nextchar(s, &i) != 0)
         count++;
 
     return count;
