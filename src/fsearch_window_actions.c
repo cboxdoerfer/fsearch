@@ -121,7 +121,11 @@ fsearch_window_action_select_all (GSimpleAction *action,
 {
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
-    if (selection) {
+    GtkEntry *entry = fsearch_application_window_get_search_entry (self);
+    if (entry && gtk_widget_is_focus (GTK_WIDGET (entry))) {
+        gtk_editable_select_region (GTK_EDITABLE (entry), 0, -1);
+    }
+    else if (selection) {
         gtk_tree_selection_select_all (selection);
     }
 }
