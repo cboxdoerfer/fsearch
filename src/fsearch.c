@@ -92,7 +92,11 @@ fsearch_application_get_config (FsearchApplication *fsearch)
 gboolean
 update_db_cb (gpointer user_data)
 {
-    const char *text = user_data;
+    char *text = user_data;
+    if (!text) {
+        return FALSE;
+    }
+
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
 
@@ -104,28 +108,19 @@ update_db_cb (gpointer user_data)
             fsearch_application_window_update_database_label ((FsearchApplicationWindow *) window, text);
         }
     }
+
+    free (text);
+    text = NULL;
+
     return FALSE;
 }
 
 void
 build_location_callback (const char *text)
 {
-    g_idle_add (update_db_cb, (gpointer)text);
-    //FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    //GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
-
-    //for (; windows; windows = windows->next) {
-    //    window = windows->data;
-
-    //    if (FSEARCH_WINDOW_IS_WINDOW (window))
-    //    {
-    //        GtkWidget *entry = GTK_WIDGET (fsearch_application_window_get_database_label ((FsearchApplicationWindow *) window));
-    //        if (entry) {
-    //        }
-    //        return;
-    //    }
-    //}
-    //printf("%s\n", text);
+    if (text) {
+        g_idle_add (update_db_cb, g_strdup (text));
+    }
 }
 
 static bool
