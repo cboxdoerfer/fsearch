@@ -1,4 +1,4 @@
-# Slovak translatio for FSearch.
+# Slovak translation for FSearch.
 # Copyright (C) 2016 THE FSearch'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the FSearch package.
 #  <christian.boxdoerfer@posteo.de>, 2016.
@@ -223,7 +223,7 @@ msgid "Date Modified"
 msgstr "Dátum zmeny"
 
 #: ../src/overlay.ui.h:1
-msgid "Emtpy Database"
+msgid "Empty Database"
 msgstr "Vyprázdniť databázu"
 
 #: ../src/overlay.ui.h:2
