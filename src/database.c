@@ -657,8 +657,10 @@ build_location_path (char *path, size_t path_len, const char *location_name)
     g_assert (path != NULL);
     g_assert (location_name != NULL);
 
+    const char *location = !strcmp (location_name, "") ? "/" : location_name;
+
     gchar *path_checksum = g_compute_checksum_for_string (G_CHECKSUM_SHA256,
-                                                          location_name,
+                                                          location,
                                                           -1);
 
     g_assert (path_checksum != NULL);
