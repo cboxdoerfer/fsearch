@@ -9,14 +9,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-10-16 17:30+0200\n"
-"PO-Revision-Date: 2016-10-18 17:56+0200\n"
-"Last-Translator:  <atalanttore@gmail.com>\n"
-"Language-Team: German\n"
+"PO-Revision-Date: 2016-11-18 19:02+0000\n"
+"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
+"Language-Team: German "
+"<https://hosted.weblate.org/projects/fsearch/translations/de/>\n"
 "Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.10-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -168,19 +170,19 @@ msgstr "(leer)"
 
 #: ../src/fsearch.glade.h:38
 msgid "page1"
-msgstr ""
+msgstr "page1"
 
 #: ../src/fsearch.glade.h:39
 msgid "CASE"
-msgstr ""
+msgstr "CASE"
 
 #: ../src/fsearch.glade.h:40
 msgid "PATH"
-msgstr ""
+msgstr "PATH"
 
 #: ../src/fsearch.glade.h:41
 msgid "REGEX"
-msgstr ""
+msgstr "REGEX"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
