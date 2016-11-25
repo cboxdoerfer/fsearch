@@ -272,11 +272,6 @@ listview_add_type_column (GtkTreeView *list, int32_t size, int32_t pos)
                       NULL);
 }
 
-static void
-listview_has_column (GtkTreeView *list, uint32_t col_type)
-{
-}
-
 void
 listview_add_column (GtkTreeView *list, uint32_t col_type, int32_t size, int32_t pos)
 {
