@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 16:03+0100\n"
-"PO-Revision-Date: 2016-11-29 15:35+0000\n"
+"PO-Revision-Date: 2016-11-29 15:46+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German "
 "<https://hosted.weblate.org/projects/fsearch/translations/de/>\n"
@@ -272,7 +272,7 @@ msgstr "Einstellungen"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr "Aktiviere dunkles Theme"
+msgstr "Aktiviere dunkles Thema"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
@@ -295,8 +295,8 @@ msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
-"INFO: \"Aktiviere dunkles Theme\" könnte keinen Effekt haben,\n"
-"da nicht jedes GTK+ Theme über eine dunkle Version verfügt."
+"INFO: \"Aktiviere dunkles Thema\" könnte keinen Effekt haben,\n"
+"da nicht jedes GTK+ Thema über eine dunkle Version verfügt."
 
 #: ../src/preferences.ui.h:9
 msgid "Interface"
