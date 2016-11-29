@@ -336,7 +336,7 @@ about_activated (GSimpleAction *action,
                                "copyright", "Christian Boxdörfer",
                                "website", PACKAGE_URL,
                                "version", PACKAGE_VERSION,
-                               "comments", "A search utility focusing on performance and advanced features",
+                               "comments", _("A search utility focusing on performance and advanced features"),
                                NULL);
         break;
     }
