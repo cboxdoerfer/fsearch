@@ -794,7 +794,7 @@ updated_database_cb (gpointer data, gpointer user_data)
 
     time_t timestamp = db_get_timestamp (db);
     strftime (db_text, sizeof(db_text),
-             "Last Updated: %Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+             _("Last Updated: %Y-%m-%d %H:%M"), //"%Y-%m-%d %H:%M",
              localtime (&timestamp));
     gtk_widget_set_tooltip_text (win->database_toggle_button, db_text);
 }

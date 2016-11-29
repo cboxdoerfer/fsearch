@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-18 19:46+0100\n"
+"POT-Creation-Date: 2016-11-29 16:03+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -355,6 +355,10 @@ msgstr ""
 #: ../src/fsearch_window.c:791
 #, c-format
 msgid "%'d Items"
+msgstr ""
+
+#: ../src/fsearch_window.c:797
+msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr ""
 
 #: ../src/fsearch_window.c:813
