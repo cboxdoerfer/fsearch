@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-29 18:01+0100\n"
+"POT-Creation-Date: 2016-11-29 18:09+0100\n"
 "PO-Revision-Date: 2016-10-17 17:14-0400\n"
 "Last-Translator: Pavel Milanes (CO7WT) <pavelmc@gmail.com>\n"
 "Language-Team: Spanish\n"
@@ -373,3 +373,7 @@ msgstr ""
 #, c-format
 msgid "Loading Database..."
 msgstr "Cargando base de datos..."
+
+#: ../src/fsearch.c:339
+msgid "A search utility focusing on performance and advanced features"
+msgstr ""

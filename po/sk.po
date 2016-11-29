@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-29 18:01+0100\n"
+"POT-Creation-Date: 2016-11-29 18:09+0100\n"
 "PO-Revision-Date: 2016-11-06 22:08+0100\n"
 "Last-Translator: pyler.inbox@gmail.com\n"
 "Language-Team: Slovak\n"
@@ -372,3 +372,7 @@ msgstr ""
 #, c-format
 msgid "Loading Database..."
 msgstr "Načítavanie databázy..."
+
+#: ../src/fsearch.c:339
+msgid "A search utility focusing on performance and advanced features"
+msgstr ""
