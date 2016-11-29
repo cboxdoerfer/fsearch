@@ -5,3 +5,4 @@
 [type: gettext/glade]src/preferences.ui
 src/fsearch_window.c
 src/listview.c
+src/fsearch.c
