@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-10-16 17:30+0200\n"
+"POT-Creation-Date: 2016-11-29 16:03+0100\n"
 "PO-Revision-Date: 2016-11-06 22:08+0100\n"
 "Last-Translator: pyler.inbox@gmail.com\n"
 "Language-Team: Slovak\n"
@@ -130,7 +130,7 @@ msgstr "Priečinky"
 msgid "Files"
 msgstr "Súbory"
 
-#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:12
+#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
 msgid "Search"
 msgstr "Vyhľadávanie"
 
@@ -150,7 +150,7 @@ msgstr "Vybraté súbory a priečinky"
 msgid "0/0"
 msgstr "0/0"
 
-#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:20
+#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
 msgid "Database"
 msgstr "Databáza"
 
@@ -187,38 +187,47 @@ msgid "_Open"
 msgstr "_Otvoriť"
 
 #: ../src/menus.ui.h:2
+msgid "Open _With"
+msgstr ""
+
+#: ../src/menus.ui.h:3
+#, fuzzy
+msgid "Other Application"
+msgstr "Otvoriť s iným programom"
+
+#: ../src/menus.ui.h:4
 msgid "_Open Folder"
 msgstr "_Otvoriť priečinok"
 
-#: ../src/menus.ui.h:3
+#: ../src/menus.ui.h:5
 msgid "C_ut"
 msgstr "_Vystrihnúť"
 
-#: ../src/menus.ui.h:4
+#: ../src/menus.ui.h:6
 msgid "_Copy"
 msgstr "_Kopírovať"
 
-#: ../src/menus.ui.h:5
+#: ../src/menus.ui.h:7
 msgid "_Delete"
 msgstr "_Vymazať"
 
-#: ../src/menus.ui.h:6 ../src/listview.c:145
+#: ../src/menus.ui.h:8 ../src/listview.c:149
 msgid "Name"
 msgstr "Názov"
 
-#: ../src/menus.ui.h:7 ../src/listview.c:175
+#: ../src/menus.ui.h:9 ../src/listview.c:178
 msgid "Path"
 msgstr "Umiestnenie"
 
-#: ../src/menus.ui.h:8 ../src/listview.c:265
+#: ../src/menus.ui.h:10 ../src/listview.c:268
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/menus.ui.h:9 ../src/listview.c:204
+#: ../src/menus.ui.h:11 ../src/listview.c:207
 msgid "Size"
 msgstr "Veľkosť"
 
-#: ../src/menus.ui.h:10 ../src/listview.c:236
+#: ../src/menus.ui.h:12 ../src/listview.c:239
 msgid "Date Modified"
 msgstr "Dátum zmeny"
 
@@ -281,62 +290,85 @@ msgid "Show icons in name column"
 msgstr "Zobraziť ikony v stĺpci s názvami"
 
 #: ../src/preferences.ui.h:7
+msgid ""
+"INFO: \"Enable dark theme\" might not have an effect,\n"
+"since not every GTK+ theme provides a dark version."
+msgstr ""
+
+#: ../src/preferences.ui.h:9
 msgid "Interface"
 msgstr "Rozhranie"
 
-#: ../src/preferences.ui.h:8
+#: ../src/preferences.ui.h:10
 msgid "Limit number of results:"
 msgstr "Limit výsledkov vyhľadávania:"
 
-#: ../src/preferences.ui.h:9
+#: ../src/preferences.ui.h:11
 msgid "Search in path when query contains path separators"
 msgstr ""
-"Vyhľadávať v umiestnení, ak požiadavka na vyhľadanie obsahuje "
-"oddeľovače ciest"
+"Vyhľadávať v umiestnení, ak požiadavka na vyhľadanie obsahuje oddeľovače "
+"ciest"
 
-#: ../src/preferences.ui.h:10
+#: ../src/preferences.ui.h:12
 msgid "Search as you type"
 msgstr "Vyhľadávať počas písania"
 
-#: ../src/preferences.ui.h:11
+#: ../src/preferences.ui.h:13
 msgid "Hide results when search is empty"
 msgstr "Skryť výsledky pri prázdnej požiadavke na vyhľadanie"
 
-#: ../src/preferences.ui.h:13
+#: ../src/preferences.ui.h:15
 msgid "Update database on start"
 msgstr "Aktualizovať databázu pri spustení"
 
-#: ../src/preferences.ui.h:14
+#: ../src/preferences.ui.h:16
 msgid "Add"
 msgstr "Pridať"
 
-#: ../src/preferences.ui.h:15
+#: ../src/preferences.ui.h:17
 msgid "Remove"
 msgstr "Odstrániť"
 
-#: ../src/preferences.ui.h:16
+#: ../src/preferences.ui.h:18
 msgid "Follow symbolic links"
 msgstr "Sledovať symbolické odkazy"
 
-#: ../src/preferences.ui.h:17
+#: ../src/preferences.ui.h:19
 msgid "Include"
 msgstr "Zahrnúť"
 
-#: ../src/preferences.ui.h:18
+#: ../src/preferences.ui.h:20
 msgid "Exclude hidden files and folders"
 msgstr "Vylúčiť skryté súbory a priečinky"
 
-#: ../src/preferences.ui.h:19
+#: ../src/preferences.ui.h:21
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr ""
+
+#: ../src/preferences.ui.h:22
+#, fuzzy
+msgid "Exclude files:"
+msgstr "Vylúčiť"
+
+#: ../src/preferences.ui.h:23
+msgid "e.g. \".git;*.tmp\""
+msgstr ""
+
+#: ../src/preferences.ui.h:24
 msgid "Exclude"
 msgstr "Vylúčiť"
 
-#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:321
-#: ../src/fsearch_window.c:734
+#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
+#: ../src/fsearch_window.c:791
 #, c-format
 msgid "%'d Items"
 msgstr "Počet položiek: %'d"
 
-#: ../src/fsearch_window.c:756
+#: ../src/fsearch_window.c:797
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr ""
+
+#: ../src/fsearch_window.c:813
 #, c-format
 msgid "Loading Database..."
 msgstr "Načítavanie databázy..."

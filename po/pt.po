@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
-"Report-Msgid-Bugs-To: <pavelmc@gmail.com>\n"
-"POT-Creation-Date: 2016-10-16 17:30+0200\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2016-11-29 16:03+0100\n"
 "PO-Revision-Date: 2016-10-20 22:38+0100\n"
 "Last-Translator: Ricardo Simões <xmcorporation@gmail.com>\n"
 "Language-Team: Ricardo Simões <xmcorporation@gmail.com>\n"
@@ -131,7 +131,7 @@ msgstr "Pastas"
 msgid "Files"
 msgstr "Ficheiros"
 
-#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:12
+#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
 msgid "Search"
 msgstr "Pesquisar"
 
@@ -151,7 +151,7 @@ msgstr "Pastas e Ficheiros Selecionados"
 msgid "0/0"
 msgstr "0/0"
 
-#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:20
+#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
 msgid "Database"
 msgstr "Base de Dados"
 
@@ -188,48 +188,60 @@ msgid "_Open"
 msgstr "_Abrir"
 
 #: ../src/menus.ui.h:2
+msgid "Open _With"
+msgstr ""
+
+#: ../src/menus.ui.h:3
+#, fuzzy
+msgid "Other Application"
+msgstr "Abrir com..."
+
+#: ../src/menus.ui.h:4
 msgid "_Open Folder"
 msgstr "_Abrir Pasta"
 
-#: ../src/menus.ui.h:3
+#: ../src/menus.ui.h:5
 msgid "C_ut"
 msgstr "C_ortar"
 
-#: ../src/menus.ui.h:4
+#: ../src/menus.ui.h:6
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: ../src/menus.ui.h:5
+#: ../src/menus.ui.h:7
 msgid "_Delete"
 msgstr "_Eliminar"
 
-#: ../src/menus.ui.h:6 ../src/listview.c:145
+#: ../src/menus.ui.h:8 ../src/listview.c:149
 msgid "Name"
 msgstr "Nome"
 
-#: ../src/menus.ui.h:7 ../src/listview.c:175
+#: ../src/menus.ui.h:9 ../src/listview.c:178
 msgid "Path"
 msgstr "Caminho"
 
-#: ../src/menus.ui.h:8 ../src/listview.c:265
+#: ../src/menus.ui.h:10 ../src/listview.c:268
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/menus.ui.h:9 ../src/listview.c:204
+#: ../src/menus.ui.h:11 ../src/listview.c:207
 msgid "Size"
 msgstr "Tamanho"
 
-#: ../src/menus.ui.h:10 ../src/listview.c:236
+#: ../src/menus.ui.h:12 ../src/listview.c:239
 msgid "Date Modified"
 msgstr "Data de Modificação"
 
 #: ../src/overlay.ui.h:1
-msgid "Emtpy Database"
+#, fuzzy
+msgid "Empty Database"
 msgstr "Base de Dados Vazia"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr "Ir a <b>Editar → Preferências → Base de Dados</b> e adicionar algumas localizações"
+msgstr ""
+"Ir a <b>Editar → Preferências → Base de Dados</b> e adicionar algumas "
+"localizações"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
@@ -280,60 +292,83 @@ msgid "Show icons in name column"
 msgstr "Mostrar ícones no nome da coluna"
 
 #: ../src/preferences.ui.h:7
+msgid ""
+"INFO: \"Enable dark theme\" might not have an effect,\n"
+"since not every GTK+ theme provides a dark version."
+msgstr ""
+
+#: ../src/preferences.ui.h:9
 msgid "Interface"
 msgstr "Interface"
 
-#: ../src/preferences.ui.h:8
+#: ../src/preferences.ui.h:10
 msgid "Limit number of results:"
 msgstr "Limitar número de resultados a:"
 
-#: ../src/preferences.ui.h:9
+#: ../src/preferences.ui.h:11
 msgid "Search in path when query contains path separators"
 msgstr "Procurar no caminho quando a consulta contém separadores de caminho"
 
-#: ../src/preferences.ui.h:10
+#: ../src/preferences.ui.h:12
 msgid "Search as you type"
 msgstr "Procurar enquanto escrevre"
 
-#: ../src/preferences.ui.h:11
+#: ../src/preferences.ui.h:13
 msgid "Hide results when search is empty"
 msgstr "Esconder resultados quando a pesquisa está vazia"
 
-#: ../src/preferences.ui.h:13
+#: ../src/preferences.ui.h:15
 msgid "Update database on start"
 msgstr "Atualizar base de dados ao iniciar"
 
-#: ../src/preferences.ui.h:14
+#: ../src/preferences.ui.h:16
 msgid "Add"
 msgstr "Adicionar"
 
-#: ../src/preferences.ui.h:15
+#: ../src/preferences.ui.h:17
 msgid "Remove"
 msgstr "Remover"
 
-#: ../src/preferences.ui.h:16
+#: ../src/preferences.ui.h:18
 msgid "Follow symbolic links"
 msgstr "Seguir ligações simbólicas"
 
-#: ../src/preferences.ui.h:17
+#: ../src/preferences.ui.h:19
 msgid "Include"
 msgstr "Incluir"
 
-#: ../src/preferences.ui.h:18
+#: ../src/preferences.ui.h:20
 msgid "Exclude hidden files and folders"
 msgstr "Excluir ficheiros e pastas escondidos"
 
-#: ../src/preferences.ui.h:19
+#: ../src/preferences.ui.h:21
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr ""
+
+#: ../src/preferences.ui.h:22
+#, fuzzy
+msgid "Exclude files:"
+msgstr "Excluir"
+
+#: ../src/preferences.ui.h:23
+msgid "e.g. \".git;*.tmp\""
+msgstr ""
+
+#: ../src/preferences.ui.h:24
 msgid "Exclude"
 msgstr "Excluir"
 
-#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:321
-#: ../src/fsearch_window.c:734
+#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
+#: ../src/fsearch_window.c:791
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Itens"
 
-#: ../src/fsearch_window.c:756
+#: ../src/fsearch_window.c:797
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr ""
+
+#: ../src/fsearch_window.c:813
 #, c-format
 msgid "Loading Database..."
 msgstr "A carregar a Base de Dados..."
