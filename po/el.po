@@ -8,364 +8,373 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 18:09+0100\n"
-"PO-Revision-Date: 2016-11-29 18:09+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2016-11-30 12:26+0000\n"
+"Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
+"Language-Team: Greek "
+"<https://hosted.weblate.org/projects/fsearch/translations/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.10-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr ""
+msgstr "Άνοιγμα Αρχείου(ων)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr ""
+msgstr "Άνοιγμα Με Άλλη Εφαρμογή"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr ""
+msgstr "Άνοιγμα Περιέχοντος Φακέλου"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr ""
+msgstr "Άνοιγμα Αρχείου(ων) στον Διαχειριστή Αρχείων"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "Μετακίνηση στο Καλάθι"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr ""
+msgstr "_Αρχείο"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr ""
+msgstr "Νέο Παράθυρο"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr ""
+msgstr "Άνοιγμα Φακέλου"
 
 #: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
 msgid "Update Database"
-msgstr ""
+msgstr "Ενημέρωση Βάσης Δεδομένων"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr ""
+msgstr "_Επεξεργασία"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr ""
+msgstr "Αποεπιλογή Όλων"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr ""
+msgstr "Αντιστροφή Επιλογής"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr ""
+msgstr "_Προβολή"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr ""
+msgstr "Εμφάνιση Γραμμής Μενού"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr ""
+msgstr "Εμφάνιση Γραμμής Κατάστασης"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr ""
+msgstr "Εμφάνιση Φίλτρου"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr ""
+msgstr "Εμφάνιση Κουμπιού Αναζήτησης"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr ""
+msgstr "_Αναζήτηση"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr ""
+msgstr "Αναζήτηση στη Διαδρομή"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr ""
+msgstr "Ταίριασμα Πεζών-Κεφαλαίων"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr ""
+msgstr "Ενεργοποίηση RegEx"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr ""
+msgstr "_Βοήθεια"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
-msgstr ""
+msgstr "Αναζήτηση..."
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr ""
+msgstr "Επιλογή Φίλτρου"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr ""
+msgstr "Όλα"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
-msgstr ""
+msgstr "Φάκελοι"
 
 #: ../src/fsearch.glade.h:28
 msgid "Files"
-msgstr ""
+msgstr "Αρχεία"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
 msgid "Search"
-msgstr ""
+msgstr "Αναζήτηση"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Αριθμός Αποτελεσμάτων Αναζήτησης"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
-msgstr ""
+msgstr "0 Αντικείμενα"
 
 #: ../src/fsearch.glade.h:32
 msgid "Selected Folder and Files"
-msgstr ""
+msgstr "Επιλεγμένοι Φάκελοι και Αρχεία"
 
 #: ../src/fsearch.glade.h:33
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
 msgid "Database"
-msgstr ""
+msgstr "Βάση Δεδομένων"
 
 #: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr ""
+msgstr "Η Βάση Δεδομένων Ενημερώνεται..."
 
 #: ../src/fsearch.glade.h:36
 msgid "page0"
-msgstr ""
+msgstr "σελίδα0"
 
 #: ../src/fsearch.glade.h:37
 msgid "(empty)"
-msgstr ""
+msgstr "(κενό)"
 
 #: ../src/fsearch.glade.h:38
 msgid "page1"
-msgstr ""
+msgstr "σελίδα1"
 
 #: ../src/fsearch.glade.h:39
 msgid "CASE"
-msgstr ""
+msgstr "ΠΕΖΑ-ΚΕΦΑΛΑΙΑ"
 
 #: ../src/fsearch.glade.h:40
 msgid "PATH"
-msgstr ""
+msgstr "ΔΙΑΔΡΟΜΗ"
 
 #: ../src/fsearch.glade.h:41
 msgid "REGEX"
-msgstr ""
+msgstr "REGEX"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr ""
+msgstr "_Άνοιγμα"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr ""
+msgstr "Άνοιγμα_Με"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr ""
+msgstr "Άλλη Εφαρμογή"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr ""
+msgstr "_Άνοιγμα Φακέλου"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr ""
+msgstr "Α_ποκοπή"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr ""
+msgstr "_Αντιγραφή"
 
 #: ../src/menus.ui.h:7
 msgid "_Delete"
-msgstr ""
+msgstr "_Διαγραφή"
 
 #: ../src/menus.ui.h:8 ../src/listview.c:149
 msgid "Name"
-msgstr ""
+msgstr "Όνομα"
 
 #: ../src/menus.ui.h:9 ../src/listview.c:178
 msgid "Path"
-msgstr ""
+msgstr "Διαδρομή"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:268
 msgid "Type"
-msgstr ""
+msgstr "Τύπος"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:207
 msgid "Size"
-msgstr ""
+msgstr "Μέγεθος"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:239
 msgid "Date Modified"
-msgstr ""
+msgstr "Ημερομηνία Τροποποίησης"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr ""
+msgstr "Κενή Βάση Δεδομένων"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
+"Πήγαινε στο <b>Επεξεργασία → Προτιμήσεις → Βάση Δεδομένων</b> και πρόσθεσε "
+"μερικές τοποθεσίες"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr ""
+msgstr "Κενό Ερώτημα"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Πίεσε <b>Ctrl + F</b> και ξεκίνα να πληκτρολογείς"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr ""
+msgstr "Αυτό μπορεί να πάρει λίγο χρόνο."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr ""
+msgstr "Δε Βρέθηκαν Αποτελέσματα"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr ""
+msgstr "Δοκίμασε διαφορετική αναζήτηση"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
-msgstr ""
+msgstr "Προτιμήσεις"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Ενεργοποίση σκοτεινού θέματος"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr ""
+msgstr "Εμφάνιση επεξηγήσεων"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr ""
+msgstr "Απομνημόμνευση μεγέθους παραθύρου"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Απομνημόνευση διαμόρφωσης στηλών"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Εμφάνιση εικονιδίων στη στήλη ονόματος"
 
 #: ../src/preferences.ui.h:7
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
+"INFO: Η \"Ενεργοποίηση σκοτεινού θέματος\" μπορεί να μην έχει αποτέλεσμα,\n"
+"καθώς δεν παρέχουν όλα τα GTK+ θέματα σκοτεινή έκδοση."
 
 #: ../src/preferences.ui.h:9
 msgid "Interface"
-msgstr ""
+msgstr "Διεπαφή"
 
 #: ../src/preferences.ui.h:10
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Περιορισμός του αριθμού των αποτελεσμάτων:"
 
 #: ../src/preferences.ui.h:11
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Αναζήτηση στη διαδρομή όταν το ερώτημα περιέχει διαχωριστές διαδρομής"
 
 #: ../src/preferences.ui.h:12
 msgid "Search as you type"
-msgstr ""
+msgstr "Αναζήτηση κατά την πληκτρολόγηση"
 
 #: ../src/preferences.ui.h:13
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Απόκρυψη αποτελεσμάτων όταν η αναζήτηση είναι κενή"
 
 #: ../src/preferences.ui.h:15
 msgid "Update database on start"
-msgstr ""
+msgstr "Ενημέρωση της βάσης δεδομένων κατά την εκκίνηση"
 
 #: ../src/preferences.ui.h:16
 msgid "Add"
-msgstr ""
+msgstr "Προσθήκη"
 
 #: ../src/preferences.ui.h:17
 msgid "Remove"
-msgstr ""
+msgstr "Αφαίρεση"
 
 #: ../src/preferences.ui.h:18
 msgid "Follow symbolic links"
-msgstr ""
+msgstr "Ακολούθησε συμβολικές συνδέσεις"
 
 #: ../src/preferences.ui.h:19
 msgid "Include"
-msgstr ""
+msgstr "Συμπερίλαβε"
 
 #: ../src/preferences.ui.h:20
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Αποκλεισμός κρυφών αρχείων και φακέλων"
 
 #: ../src/preferences.ui.h:21
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
+"Υποστηρίζονται wildcards. Πολλαπλές εισαγωγές πρέπει να διαχωρίζονται με ';'"
 
 #: ../src/preferences.ui.h:22
 msgid "Exclude files:"
-msgstr ""
+msgstr "Απόκλεισε αρχεία:"
 
 #: ../src/preferences.ui.h:23
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "π.χ. \".git;*.tmp\""
 
 #: ../src/preferences.ui.h:24
 msgid "Exclude"
-msgstr ""
+msgstr "Απόκλεισε"
 
 #: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
 #: ../src/fsearch_window.c:791
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d Αντικείμενα"
 
 #: ../src/fsearch_window.c:797
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Τελευταία Ενημέρωση: %Y-%m-%d %H:%M"
 
 #: ../src/fsearch_window.c:813
 #, c-format
 msgid "Loading Database..."
-msgstr ""
+msgstr "Φόρτωση Βάσης Δεδομένων..."
 
 #: ../src/fsearch.c:339
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
+"Μια εφαρμογή αναζήτησης με έμφαση στην επίδοση και τα προηγμένα "
+"χαρακτηριστικά"
