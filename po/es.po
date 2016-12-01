@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 18:09+0100\n"
-"PO-Revision-Date: 2016-12-01 20:35+0000\n"
+"PO-Revision-Date: 2016-12-01 20:37+0000\n"
 "Last-Translator: Pavel Milanes Costa <pavelmc@gmail.com>\n"
 "Language-Team: Spanish "
 "<https://hosted.weblate.org/projects/fsearch/translations/es/>\n"
@@ -26,7 +26,7 @@ msgstr "Abrir fichero(s)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr "Abrir con..."
+msgstr "Abrir con"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
