@@ -9,15 +9,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 18:09+0100\n"
-"PO-Revision-Date: 2016-10-17 17:14-0400\n"
-"Last-Translator: Pavel Milanes (CO7WT) <pavelmc@gmail.com>\n"
-"Language-Team: Spanish\n"
+"PO-Revision-Date: 2016-12-01 20:35+0000\n"
+"Last-Translator: Pavel Milanes Costa <pavelmc@gmail.com>\n"
+"Language-Team: Spanish "
+"<https://hosted.weblate.org/projects/fsearch/translations/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 2.10-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -172,17 +173,14 @@ msgid "page1"
 msgstr "Página 1"
 
 #: ../src/fsearch.glade.h:39
-#, fuzzy
 msgid "CASE"
-msgstr "CASO"
+msgstr "MAYÚSCULAS"
 
 #: ../src/fsearch.glade.h:40
-#, fuzzy
 msgid "PATH"
-msgstr "CAMINO"
+msgstr "LUGAR"
 
 #: ../src/fsearch.glade.h:41
-#, fuzzy
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -192,12 +190,11 @@ msgstr "_Abrir"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr ""
+msgstr "Abrir con"
 
 #: ../src/menus.ui.h:3
-#, fuzzy
 msgid "Other Application"
-msgstr "Abrir con..."
+msgstr "Otra Aplicación"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
@@ -236,7 +233,6 @@ msgid "Date Modified"
 msgstr "Fecha"
 
 #: ../src/overlay.ui.h:1
-#, fuzzy
 msgid "Empty Database"
 msgstr "Base de datos vacía"
 
@@ -297,6 +293,8 @@ msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
+"Nota: \"Habilitar tema oscuro\" puede no funcionar,\n"
+"ya que no todos los temas GTK+ tienen versión oscura."
 
 #: ../src/preferences.ui.h:9
 msgid "Interface"
@@ -344,16 +342,15 @@ msgstr "Excluir archivos y carpetas ocultas"
 
 #: ../src/preferences.ui.h:21
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "Soporta comodines, separar múltiples entradas con ';'"
 
 #: ../src/preferences.ui.h:22
-#, fuzzy
 msgid "Exclude files:"
-msgstr "Excluir"
+msgstr "Excluir ficheros:"
 
 #: ../src/preferences.ui.h:23
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "Ejemplo: \".git;*.tmp\""
 
 #: ../src/preferences.ui.h:24
 msgid "Exclude"
@@ -367,7 +364,7 @@ msgstr "%'d resultados"
 
 #: ../src/fsearch_window.c:797
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Actualizado: %Y-%m-%d %H:%M"
 
 #: ../src/fsearch_window.c:813
 #, c-format
@@ -377,3 +374,5 @@ msgstr "Cargando base de datos..."
 #: ../src/fsearch.c:339
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
+"Un software de búsqueda enfocado en la velocidad y con características "
+"avanzadas."
