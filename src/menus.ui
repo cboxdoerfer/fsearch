@@ -30,28 +30,42 @@
         </section>
         <section id="fsearch_listview_menu_clipboard_section">
             <!--
-      <item>
-        <attribute name="label" translatable="yes">C_ut</attribute>
-        <attribute name="action">win.cut_clipboard</attribute>
-        <attribute name="accel">&lt;control&gt;x</attribute>
-        <attribute name="icon">edit-cut</attribute>
-      </item>
-      -->
-      <item>
-          <attribute name="label" translatable="yes">_Copy</attribute>
-          <attribute name="action">win.copy_clipboard</attribute>
-          <attribute name="accel">&lt;control&gt;c</attribute>
-          <attribute name="icon">edit-copy</attribute>
-      </item>
-      <!--
-      <item>
-        <attribute name="label" translatable="yes">_Delete</attribute>
-        <attribute name="action">win.delete_selection</attribute>
-        <attribute name="accel">Delete</attribute>
-        <attribute name="icon">edit-delete</attribute>
-      </item>
-      -->
-    </section>
+                <item>
+            <attribute name="label" translatable="yes">C_ut</attribute>
+            <attribute name="action">win.cut_clipboard</attribute>
+            <attribute name="accel">&lt;control&gt;x</attribute>
+            <attribute name="icon">edit-cut</attribute>
+          </item>
+          -->
+            <item>
+                <attribute name="label" translatable="yes">_Copy</attribute>
+                <attribute name="action">win.copy_clipboard</attribute>
+                <attribute name="accel">&lt;control&gt;c</attribute>
+                <attribute name="icon">edit-copy</attribute>
+            </item>
+        </section>
+        <section id="fsearch_listview_menu_delete_section">
+            <item>
+                <attribute name="label" translatable="yes">Move to _Trash</attribute>
+                <attribute name="action">win.move_to_trash</attribute>
+                <attribute name="accel">Delete</attribute>
+                <attribute name="icon">user-trash</attribute>
+            </item>
+            <item>
+                <attribute name="label" translatable="yes">_Delete</attribute>
+                <attribute name="action">win.delete_selection</attribute>
+                <attribute name="accel">&lt;control&gt;Delete</attribute>
+                <attribute name="icon">edit-delete</attribute>
+            </item>
+            <!--
+            <item>
+              <attribute name="label" translatable="yes">_Delete</attribute>
+              <attribute name="action">win.delete_selection</attribute>
+              <attribute name="accel">Delete</attribute>
+              <attribute name="icon">edit-delete</attribute>
+            </item>
+            -->
+        </section>
 </menu>
 <menu id="fsearch_listview_column_popup_menu">
     <section>

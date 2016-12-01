@@ -743,11 +743,11 @@ void
 list_model_remove_entry (ListModel *list, DatabaseSearch *search, DatabaseSearchEntry *entry)
 {
     guint row = db_search_entry_get_pos (entry);
+    db_search_remove_entry (search, entry);
     GtkTreePath *path = gtk_tree_path_new();
     gtk_tree_path_append_index(path, row);
     gtk_tree_model_row_deleted (GTK_TREE_MODEL (list), path);
     gtk_tree_path_free (path);
-    db_search_remove_entry (search, entry);
 }
 
 

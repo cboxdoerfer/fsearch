@@ -435,6 +435,18 @@ on_listview_key_press_event (GtkWidget *widget,
             g_action_group_activate_action (group, "copy_clipboard", NULL);
             return TRUE;
         }
+        else if (event->keyval == GDK_KEY_Delete) {
+            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
+            g_action_group_activate_action (group, "delete_selection", NULL);
+            return TRUE;
+        }
+    }
+    else {
+        if (event->keyval == GDK_KEY_Delete) {
+            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
+            g_action_group_activate_action (group, "move_to_trash", NULL);
+            return TRUE;
+        }
     }
     return FALSE;
 }
@@ -1104,11 +1116,9 @@ fsearch_application_window_get_listview_selection (FsearchApplicationWindow *sel
     return self->listview_selection;
 }
 
-
 FsearchApplicationWindow *
 fsearch_application_window_new (FsearchApplication *app)
 {
     g_assert (FSEARCH_IS_APPLICATION (app));
     return g_object_new (FSEARCH_APPLICATION_WINDOW_TYPE, "application", app, NULL);
 }
-

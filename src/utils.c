@@ -21,6 +21,7 @@
 #include <linux/limits.h>
 #include <gio/gio.h>
 #include "utils.h"
+#include "debug.h"
 #include "ui_utils.h"
 
 gboolean
@@ -81,6 +82,53 @@ open_uri (const char *uri)
                                  error->message);
         g_error_free (error);
     }
+}
+
+bool
+node_remove (BTreeNode *node, bool delete)
+{
+    char path[PATH_MAX] = "";
+    bool res = btree_node_get_path_full (node, path, sizeof (path));
+    if (!res) {
+        return false;
+    }
+    GFile *file = g_file_new_for_path (path);
+    if (!file) {
+        return false;
+    }
+    bool success = false;
+    if (delete) {
+        success = g_file_delete (file, NULL, NULL);
+    }
+    else {
+        success = g_file_trash (file, NULL, NULL);
+    }
+    g_object_unref (file);
+
+    if (success) {
+        if (delete) {
+            trace ("deleted file.\n");
+        }
+        else {
+            trace ("moved file to trash.\n");
+        }
+    }
+    else {
+        trace ("failed removing file: %s\n", path);
+    }
+    return success;
+}
+
+bool
+node_delete (BTreeNode *node)
+{
+    return node_remove (node, true);
+}
+
+bool
+node_move_to_trash (BTreeNode *node)
+{
+    return node_remove (node, false);
 }
 
 void

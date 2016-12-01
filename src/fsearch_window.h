@@ -80,4 +80,3 @@ fsearch_application_window_update_database_label (FsearchApplicationWindow *self
 void
 fsearch_application_window_update_results (void *data);
 G_END_DECLS
-

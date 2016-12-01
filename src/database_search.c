@@ -833,10 +833,10 @@ update_index (DatabaseSearch *search)
 void
 db_search_remove_entry (DatabaseSearch *search, DatabaseSearchEntry *entry)
 {
-    if (search != NULL) {
+    if (search == NULL) {
         return;
     }
-    if (entry != NULL) {
+    if (entry == NULL) {
         return;
     }
 

@@ -37,6 +37,26 @@ action_set_enabled (GActionGroup *group, const gchar *action_name, bool value)
     }
 }
 
+static GList *
+build_entry_list (GList *selection, GtkTreeModel *model)
+{
+    if (!selection || !model) {
+        return NULL;
+    }
+
+    GList *entry_list = NULL;
+    GList *temp  = selection;
+    while (temp) {
+        GtkTreePath *path = temp->data;
+        GtkTreeIter iter = {0};
+        if (gtk_tree_model_get_iter (model, &iter, path)) {
+            entry_list = g_list_append (entry_list, iter.user_data);
+        }
+        temp = temp->next;
+    }
+    return entry_list;
+}
+
 static void
 copy_file (GtkTreeModel *model,
            GtkTreePath  *path,
@@ -55,11 +75,78 @@ copy_file (GtkTreeModel *model,
     }
 }
 
+static bool
+delete_file (DatabaseSearchEntry *entry, bool delete)
+{
+    if (!entry) {
+        return false;
+    }
+
+    BTreeNode *node = db_search_entry_get_node (entry);
+    if (!node) {
+        return false;
+    }
+
+    if ((delete && node_delete (node))
+        || (!delete && node_move_to_trash (node))) {
+        return true;
+    }
+    return false;
+}
+
+static void
+fsearch_delete_selection (GSimpleAction *action,
+                          GVariant      *variant,
+                          bool delete,
+                          gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (!selection) {
+        return;
+    }
+
+    GtkTreeModel *model = NULL;
+    GList *selected_rows = gtk_tree_selection_get_selected_rows (selection, &model);
+    GList *selected_entries = build_entry_list (selected_rows, model);
+
+    bool removed_files = false;
+    GList *temp  = selected_entries;
+    while (temp) {
+        if (temp->data) {
+            removed_files = delete_file (temp->data, delete);
+        }
+        temp = temp->next;
+    }
+
+    if (removed_files) {
+        // Files were removed, update the listview
+        GtkTreeView *view = fsearch_application_window_get_listview (self);
+        gtk_widget_queue_draw (GTK_WIDGET (view));
+    }
+
+    if (selected_entries) {
+        g_list_free (selected_entries);
+    }
+    if (selected_rows) {
+        g_list_free_full (selected_rows, (GDestroyNotify) gtk_tree_path_free);
+    }
+}
+
+static void
+fsearch_window_action_move_to_trash (GSimpleAction *action,
+                                     GVariant      *variant,
+                                     gpointer       user_data)
+{
+    fsearch_delete_selection (action, variant, false, user_data);
+}
+
 static void
 fsearch_window_action_delete (GSimpleAction *action,
                               GVariant      *variant,
                               gpointer       user_data)
 {
+    fsearch_delete_selection (action, variant, true, user_data);
 }
 
 static void
@@ -547,6 +634,7 @@ static GActionEntry FsearchWindowActions[] = {
     { "open_folder", fsearch_window_action_open_folder },
     { "copy_clipboard", fsearch_window_action_copy },
     { "cut_clipboard", fsearch_window_action_cut },
+    { "move_to_trash", fsearch_window_action_move_to_trash },
     { "delete_selection", fsearch_window_action_delete },
     { "select_all", fsearch_window_action_select_all },
     { "deselect_all", fsearch_window_action_deselect_all },
@@ -596,6 +684,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "copy_clipboard", num_rows_selected);
     action_set_enabled (group, "cut_clipboard", num_rows_selected);
     action_set_enabled (group, "delete_selection", num_rows_selected);
+    action_set_enabled (group, "move_to_trash", num_rows_selected);
     action_set_enabled (group, "open", num_rows_selected);
     action_set_enabled (group, "open_with", num_rows_selected);
     action_set_enabled (group, "open_with_other", FALSE);

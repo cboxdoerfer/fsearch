@@ -19,10 +19,17 @@
 #pragma once
 
 #include <glib.h>
+#include <stdbool.h>
 #include "btree.h"
 
 gboolean
 build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name);
+
+bool
+node_move_to_trash (BTreeNode *node);
+
+bool
+node_delete (BTreeNode *node);
 
 void
 launch_node (BTreeNode *node);
