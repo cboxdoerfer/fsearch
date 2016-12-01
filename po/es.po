@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 18:09+0100\n"
-"PO-Revision-Date: 2016-12-01 20:37+0000\n"
+"PO-Revision-Date: 2016-12-01 20:38+0000\n"
 "Last-Translator: Pavel Milanes Costa <pavelmc@gmail.com>\n"
 "Language-Team: Spanish "
 "<https://hosted.weblate.org/projects/fsearch/translations/es/>\n"
@@ -278,7 +278,7 @@ msgstr "Mostrar ayudas emergentes"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr "Recordar tamaño de la ventana "
+msgstr "Recordar tamaño de la ventana"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
@@ -375,4 +375,4 @@ msgstr "Cargando base de datos..."
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Un software de búsqueda enfocado en la velocidad y con características "
-"avanzadas."
+"avanzadas"
