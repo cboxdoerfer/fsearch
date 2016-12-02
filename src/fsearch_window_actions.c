@@ -6,6 +6,7 @@
 #include "clipboard.h"
 #include "database_search.h"
 #include "utils.h"
+#include "ui_utils.h"
 #include "fsearch_config.h"
 #include "listview.h"
 #include "list_model.h"
@@ -108,6 +109,19 @@ fsearch_delete_selection (GSimpleAction *action,
 
     GtkTreeModel *model = NULL;
     GList *selected_rows = gtk_tree_selection_get_selected_rows (selection, &model);
+    guint num_selected_rows = g_list_length (selected_rows);
+    if (num_selected_rows > 20) {
+        char error_msg[PATH_MAX] = "";
+        snprintf (error_msg, sizeof (error_msg), "%s %d %s", "Do you really want to remove", num_selected_rows, "files?");
+        gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
+                                                 GTK_MESSAGE_WARNING,
+                                                 GTK_BUTTONS_OK_CANCEL,
+                                                 error_msg,
+                                                 NULL);
+        if (response != GTK_RESPONSE_OK) {
+            goto save_fail;
+        }
+    }
     GList *selected_entries = build_entry_list (selected_rows, model);
 
     bool removed_files = false;
@@ -128,6 +142,8 @@ fsearch_delete_selection (GSimpleAction *action,
     if (selected_entries) {
         g_list_free (selected_entries);
     }
+
+save_fail:
     if (selected_rows) {
         g_list_free_full (selected_rows, (GDestroyNotify) gtk_tree_path_free);
     }
