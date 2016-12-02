@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-11-29 18:09+0100\n"
-"PO-Revision-Date: 2016-11-30 12:26+0000\n"
+"PO-Revision-Date: 2016-12-02 13:25+0000\n"
 "Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
 "Language-Team: Greek "
 "<https://hosted.weblate.org/projects/fsearch/translations/el/>\n"
@@ -21,23 +21,23 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr "Άνοιγμα Αρχείου(ων)"
+msgstr "Άνοιγμα αρχείου(ων)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr "Άνοιγμα Με Άλλη Εφαρμογή"
+msgstr "Άνοιγμα με άλλη εφαρμογή"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr "Άνοιγμα Περιέχοντος Φακέλου"
+msgstr "Άνοιγμα περιέχοντος φακέλου"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr "Άνοιγμα Αρχείου(ων) στον Διαχειριστή Αρχείων"
+msgstr "Άνοιγμα αρχείου(ων) στον διαχειριστή αρχείων"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr "Μετακίνηση στο Καλάθι"
+msgstr "Μετακίνηση στα απορρίματα"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
@@ -49,15 +49,15 @@ msgstr "_Αρχείο"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr "Νέο Παράθυρο"
+msgstr "Νέο παράθυρο"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr "Άνοιγμα Φακέλου"
+msgstr "Άνοιγμα φακέλου"
 
 #: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
 msgid "Update Database"
-msgstr "Ενημέρωση Βάσης Δεδομένων"
+msgstr "Ενημέρωση βάσης δεδομένων"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
@@ -65,11 +65,11 @@ msgstr "_Επεξεργασία"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr "Αποεπιλογή Όλων"
+msgstr "Αποεπιλογή όλων"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr "Αντιστροφή Επιλογής"
+msgstr "Αντιστροφή επιλογής"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
@@ -77,19 +77,19 @@ msgstr "_Προβολή"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr "Εμφάνιση Γραμμής Μενού"
+msgstr "Εμφάνιση γραμμής μενού"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr "Εμφάνιση Γραμμής Κατάστασης"
+msgstr "Εμφάνιση γραμμής κατάστασης"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr "Εμφάνιση Φίλτρου"
+msgstr "Εμφάνιση φίλτρου"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr "Εμφάνιση Κουμπιού Αναζήτησης"
+msgstr "Εμφάνιση κουμπιού αναζήτησης"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
@@ -97,11 +97,11 @@ msgstr "_Αναζήτηση"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr "Αναζήτηση στη Διαδρομή"
+msgstr "Αναζήτηση στη διαδρομή"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr "Ταίριασμα Πεζών-Κεφαλαίων"
+msgstr "Ταίριασμα πεζών-κεφαλαίων"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
@@ -117,7 +117,7 @@ msgstr "Αναζήτηση..."
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr "Επιλογή Φίλτρου"
+msgstr "Επιλογή φίλτρου"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
@@ -137,7 +137,7 @@ msgstr "Αναζήτηση"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr "Αριθμός Αποτελεσμάτων Αναζήτησης"
+msgstr "Αριθμός αποτελεσμάτων αναζήτησης"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
@@ -145,7 +145,7 @@ msgstr "0 Αντικείμενα"
 
 #: ../src/fsearch.glade.h:32
 msgid "Selected Folder and Files"
-msgstr "Επιλεγμένοι Φάκελοι και Αρχεία"
+msgstr "Επιλεγμένοι φάκελοι και αρχεία"
 
 #: ../src/fsearch.glade.h:33
 msgid "0/0"
@@ -153,11 +153,11 @@ msgstr "0/0"
 
 #: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
 msgid "Database"
-msgstr "Βάση Δεδομένων"
+msgstr "Βάση δεδομένων"
 
 #: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr "Η Βάση Δεδομένων Ενημερώνεται..."
+msgstr "Η βάση δεδομένων ενημερώνεται..."
 
 #: ../src/fsearch.glade.h:36
 msgid "page0"
@@ -189,15 +189,15 @@ msgstr "_Άνοιγμα"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr "Άνοιγμα_Με"
+msgstr "Άνοιγμα _Με"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr "Άλλη Εφαρμογή"
+msgstr "Άλλη εφαρμογή"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr "_Άνοιγμα Φακέλου"
+msgstr "_Άνοιγμα φακέλου"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
@@ -229,21 +229,21 @@ msgstr "Μέγεθος"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:239
 msgid "Date Modified"
-msgstr "Ημερομηνία Τροποποίησης"
+msgstr "Ημερομηνία τροποποίησης"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr "Κενή Βάση Δεδομένων"
+msgstr "Κενή βάση δεδομένων"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
-"Πήγαινε στο <b>Επεξεργασία → Προτιμήσεις → Βάση Δεδομένων</b> και πρόσθεσε "
+"Πήγαινε στο <b>Επεξεργασία → Προτιμήσεις → Βάση δεδομένων</b> και πρόσθεσε "
 "μερικές τοποθεσίες"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr "Κενό Ερώτημα"
+msgstr "Κενό ερώτημα"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
@@ -259,7 +259,7 @@ msgstr "Αυτό μπορεί να πάρει λίγο χρόνο."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr "Δε Βρέθηκαν Αποτελέσματα"
+msgstr "Δε βρέθηκαν αποτελέσματα"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
@@ -271,7 +271,7 @@ msgstr "Προτιμήσεις"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr "Ενεργοποίση σκοτεινού θέματος"
+msgstr "Ενεργοποίηση σκοτεινού θέματος"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
@@ -279,7 +279,7 @@ msgstr "Εμφάνιση επεξηγήσεων"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr "Απομνημόμνευση μεγέθους παραθύρου"
+msgstr "Απομνημόνευση μεγέθους παραθύρου"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
@@ -366,15 +366,15 @@ msgstr "%'d Αντικείμενα"
 
 #: ../src/fsearch_window.c:797
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Τελευταία Ενημέρωση: %Y-%m-%d %H:%M"
+msgstr "Τελευταία ενημέρωση: %Y-%m-%d %H:%M"
 
 #: ../src/fsearch_window.c:813
 #, c-format
 msgid "Loading Database..."
-msgstr "Φόρτωση Βάσης Δεδομένων..."
+msgstr "Φόρτωση βάσης δεδομένων..."
 
 #: ../src/fsearch.c:339
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
-"Μια εφαρμογή αναζήτησης με έμφαση στην επίδοση και τα προηγμένα "
+"Μια εφαρμογή αναζήτησης που δίνει έμφαση στις επιδόσεις και τα προηγμένα "
 "χαρακτηριστικά"
