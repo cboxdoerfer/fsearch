@@ -116,8 +116,8 @@ fsearch_delete_selection (GSimpleAction *action,
         gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
                                                  GTK_MESSAGE_WARNING,
                                                  GTK_BUTTONS_OK_CANCEL,
-                                                 error_msg,
-                                                 NULL);
+                                                 delete ? "Deleting files..." : "Moving files to trash...",
+                                                 error_msg);
         if (response != GTK_RESPONSE_OK) {
             goto save_fail;
         }
