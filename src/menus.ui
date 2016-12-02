@@ -54,7 +54,7 @@
             <item>
                 <attribute name="label" translatable="yes">_Delete</attribute>
                 <attribute name="action">win.delete_selection</attribute>
-                <attribute name="accel">&lt;control&gt;Delete</attribute>
+                <attribute name="accel">&lt;shift&gt;Delete</attribute>
                 <attribute name="icon">edit-delete</attribute>
             </item>
             <!--
