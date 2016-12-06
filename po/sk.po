@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-11-29 18:09+0100\n"
+"POT-Creation-Date: 2016-12-06 21:28+0100\n"
 "PO-Revision-Date: 2016-11-06 22:08+0100\n"
 "Last-Translator: pyler.inbox@gmail.com\n"
 "Language-Team: Slovak\n"
@@ -208,26 +208,31 @@ msgid "_Copy"
 msgstr "_Kopírovať"
 
 #: ../src/menus.ui.h:7
+#, fuzzy
+msgid "Move to _Trash"
+msgstr "Presunúť do koša"
+
+#: ../src/menus.ui.h:8
 msgid "_Delete"
 msgstr "_Vymazať"
 
-#: ../src/menus.ui.h:8 ../src/listview.c:149
+#: ../src/menus.ui.h:9 ../src/listview.c:149
 msgid "Name"
 msgstr "Názov"
 
-#: ../src/menus.ui.h:9 ../src/listview.c:178
+#: ../src/menus.ui.h:10 ../src/listview.c:178
 msgid "Path"
 msgstr "Umiestnenie"
 
-#: ../src/menus.ui.h:10 ../src/listview.c:268
+#: ../src/menus.ui.h:11 ../src/listview.c:268
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/menus.ui.h:11 ../src/listview.c:207
+#: ../src/menus.ui.h:12 ../src/listview.c:207
 msgid "Size"
 msgstr "Veľkosť"
 
-#: ../src/menus.ui.h:12 ../src/listview.c:239
+#: ../src/menus.ui.h:13 ../src/listview.c:239
 msgid "Date Modified"
 msgstr "Dátum zmeny"
 
@@ -359,16 +364,16 @@ msgid "Exclude"
 msgstr "Vylúčiť"
 
 #: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
-#: ../src/fsearch_window.c:791
+#: ../src/fsearch_window.c:805
 #, c-format
 msgid "%'d Items"
 msgstr "Počet položiek: %'d"
 
-#: ../src/fsearch_window.c:797
+#: ../src/fsearch_window.c:811
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr ""
 
-#: ../src/fsearch_window.c:813
+#: ../src/fsearch_window.c:827
 #, c-format
 msgid "Loading Database..."
 msgstr "Načítavanie databázy..."
