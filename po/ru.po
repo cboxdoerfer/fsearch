@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-06 21:28+0100\n"
-"PO-Revision-Date: 2016-12-06 21:27+0000\n"
+"PO-Revision-Date: 2016-12-06 21:28+0000\n"
 "Last-Translator: Konstantin Yablochkin <yakonstb@yandex.ru>\n"
 "Language-Team: Russian "
 "<https://hosted.weblate.org/projects/fsearch/translations/ru/>\n"
@@ -290,9 +290,8 @@ msgid "Remember column configuration"
 msgstr "Запоминать конфигурацию колонок"
 
 #: ../src/preferences.ui.h:6
-#, fuzzy
 msgid "Show icons in name column"
-msgstr "Показывать иконки в колонке \\\"имя\\\""
+msgstr "Показывать иконки в колонке \"имя\""
 
 #: ../src/preferences.ui.h:7
 msgid ""
