@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-06 21:28+0100\n"
-"PO-Revision-Date: 2016-12-06 21:28+0000\n"
+"PO-Revision-Date: 2016-12-06 21:42+0000\n"
 "Last-Translator: Konstantin Yablochkin <yakonstb@yandex.ru>\n"
 "Language-Team: Russian "
 "<https://hosted.weblate.org/projects/fsearch/translations/ru/>\n"
@@ -182,7 +182,7 @@ msgstr "ПУТЬ"
 
 #: ../src/fsearch.glade.h:41
 msgid "REGEX"
-msgstr "РЕГ. ВЫР."
+msgstr "РЕГ ВЫР"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
@@ -298,7 +298,7 @@ msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
-"ИНФОРМАЦИЯ: \\\"Включить тёмную тему\\\" может не иметь эффекта,\n"
+"ИНФОРМАЦИЯ: \"Включить тёмную тему\" может не иметь эффекта,\n"
 "т.к. не все темы GTK+ имеют тёмную версию."
 
 #: ../src/preferences.ui.h:9
@@ -356,7 +356,7 @@ msgstr "Исключить файлы:"
 
 #: ../src/preferences.ui.h:23
 msgid "e.g. \".git;*.tmp\""
-msgstr "например, \\\".git;*.tmp\\\""
+msgstr "например, \".git;*.tmp\""
 
 #: ../src/preferences.ui.h:24
 msgid "Exclude"
