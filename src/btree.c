@@ -103,7 +103,7 @@ btree_node_free (BTreeNode *node)
     if (!node) {
         return;
     }
-    if (!node->parent) {
+    if (node->parent) {
         btree_node_unlink (node);
     }
     if (node->children) {
