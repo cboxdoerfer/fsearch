@@ -110,7 +110,8 @@ fsearch_delete_selection (GSimpleAction *action,
     GtkTreeModel *model = NULL;
     GList *selected_rows = gtk_tree_selection_get_selected_rows (selection, &model);
     guint num_selected_rows = g_list_length (selected_rows);
-    if (num_selected_rows > 20) {
+
+    if (delete || num_selected_rows > 20) {
         char error_msg[PATH_MAX] = "";
         snprintf (error_msg, sizeof (error_msg), "%s %d %s", "Do you really want to remove", num_selected_rows, "files?");
         gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
