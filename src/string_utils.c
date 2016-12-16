@@ -220,3 +220,20 @@ fsearch_strstr (const char *haystack,
 {
     return my_strstr (haystack, needle);
 }
+
+int
+fsearch_string_copy (char *dest, const char *src, int dest_len)
+{
+    int i = 0;
+    for (i = 0; i < dest_len && src[i] != '\0'; i++) {
+        dest[i] = src[i];
+    }
+    if (i < dest_len) {
+        dest[i] = '\0';
+    }
+    else {
+        dest[dest_len - 1] = '\0';
+    }
+    return i;
+}
+

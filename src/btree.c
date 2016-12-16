@@ -22,6 +22,7 @@
 #include <string.h>
 #include <assert.h>
 #include "btree.h"
+#include "string_utils.h"
 
 BTreeNode *
 btree_node_new (const char *name,
@@ -275,24 +276,8 @@ btree_node_traverse (BTreeNode *node,
     btree_node_traverse_cb (node, func, data);
 }
 
-static inline int
-string_copy (char *dest, const char *src, int dest_len)
-{
-    int i = 0;
-    for (i = 0; i < dest_len && src[i] != '\0'; i++) {
-        dest[i] = src[i];
-    }
-    if (i < dest_len) {
-        dest[i] = '\0';
-    }
-    else {
-        dest[dest_len - 1] = '\0';
-    }
-    return i;
-}
-
 static bool
-get_path (BTreeNode *node, char *path, size_t path_len)
+btree_node_build_path (BTreeNode *node, char *path, size_t path_len)
 {
     if (!node) {
         // empty node
@@ -320,7 +305,7 @@ get_path (BTreeNode *node, char *path, size_t path_len)
 
         char *ptr = path;
         int bytes_left = path_len;
-        int bytes_written = string_copy (ptr, parents[0], bytes_left);
+        int bytes_written = fsearch_string_copy (ptr, parents[0], bytes_left);
         bytes_left -= bytes_written;
         ptr += bytes_written;
 
@@ -329,7 +314,7 @@ get_path (BTreeNode *node, char *path, size_t path_len)
         while (item && bytes_left > 0) {
             *ptr++ = '/';
             bytes_left--;
-            bytes_written = string_copy (ptr, item, bytes_left);
+            bytes_written = fsearch_string_copy (ptr, item, bytes_left);
             bytes_left -= bytes_written;
             ptr += bytes_written;
             counter++;
@@ -347,7 +332,7 @@ btree_node_get_path (BTreeNode *node, char *path, size_t path_len)
         // empty node
         return false;
     }
-    return get_path (node->parent, path, path_len);
+    return btree_node_build_path (node->parent, path, path_len);
 }
 
 bool
@@ -357,5 +342,5 @@ btree_node_get_path_full (BTreeNode *node, char *path, size_t path_len)
         // empty node
         return false;
     }
-    return get_path (node, path, path_len);
+    return btree_node_build_path (node, path, path_len);
 }

@@ -28,3 +28,8 @@ const char *
 fsearch_strcasestr (const char *haystack,
                     const char *needle,
                     size_t needle_len);
+
+int
+fsearch_string_copy (char *dest,
+                     const char *src,
+                     int dest_len);
