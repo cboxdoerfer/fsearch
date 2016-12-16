@@ -208,8 +208,8 @@ fsearch_window_action_invert_selection (GSimpleAction *action,
 
 static void
 fsearch_window_action_deselect_all (GSimpleAction *action,
-                                  GVariant      *variant,
-                                  gpointer       user_data)
+                                    GVariant      *variant,
+                                    gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
@@ -351,9 +351,9 @@ fsearch_window_action_open (GSimpleAction *action,
 
 static void
 open_folder_cb (GtkTreeModel *model,
-         GtkTreePath *path,
-         GtkTreeIter *iter,
-         gpointer data)
+                GtkTreePath *path,
+                GtkTreeIter *iter,
+                gpointer data)
 {
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
     if (entry) {
@@ -366,8 +366,8 @@ open_folder_cb (GtkTreeModel *model,
 
 static void
 fsearch_window_action_open_folder (GSimpleAction *action,
-                            GVariant      *variant,
-                            gpointer       user_data)
+                                   GVariant      *variant,
+                                   gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
@@ -434,8 +434,8 @@ fsearch_window_action_show_filter (GSimpleAction *action,
 
 static void
 fsearch_window_action_show_search_button (GSimpleAction *action,
-                                   GVariant      *variant,
-                                   gpointer       user_data)
+                                          GVariant      *variant,
+                                          gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state (action, variant);
@@ -447,8 +447,8 @@ fsearch_window_action_show_search_button (GSimpleAction *action,
 
 static void
 fsearch_window_action_show_statusbar (GSimpleAction *action,
-                                   GVariant      *variant,
-                                   gpointer       user_data)
+                                      GVariant      *variant,
+                                      gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state (action, variant);
@@ -460,8 +460,8 @@ fsearch_window_action_show_statusbar (GSimpleAction *action,
 
 static void
 fsearch_window_action_show_menubar (GSimpleAction *action,
-                                   GVariant      *variant,
-                                   gpointer       user_data)
+                                    GVariant      *variant,
+                                    gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state (action, variant);
@@ -473,8 +473,8 @@ fsearch_window_action_show_menubar (GSimpleAction *action,
 
 static void
 fsearch_window_action_search_in_path (GSimpleAction *action,
-                                   GVariant      *variant,
-                                   gpointer       user_data)
+                                      GVariant      *variant,
+                                      gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state (action, variant);
