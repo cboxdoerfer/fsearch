@@ -1,6 +1,29 @@
+/*
+   FSearch - A fast file search utility
+   Copyright © 2016 Christian Boxdörfer
+
+   This program is free software; you can redistribute it and/or modify
+   it under the terms of the GNU General Public License as published by
+   the Free Software Foundation; either version 2 of the License, or
+   (at your option) any later version.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU General Public License for more details.
+
+   You should have received a copy of the GNU General Public License
+   along with this program; if not, see <http://www.gnu.org/licenses/>.
+   */
+
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #include <limits.h>
 #include <linux/limits.h>
 #include <gio/gdesktopappinfo.h>
+#include <glib/gi18n.h>
 
 #include "fsearch_window_actions.h"
 #include "clipboard.h"
@@ -113,11 +136,11 @@ fsearch_delete_selection (GSimpleAction *action,
 
     if (delete || num_selected_rows > 20) {
         char error_msg[PATH_MAX] = "";
-        snprintf (error_msg, sizeof (error_msg), "%s %d %s", "Do you really want to remove", num_selected_rows, "files?");
+        snprintf (error_msg, sizeof (error_msg), "%s %d %s", _("Do you really want to remove"), num_selected_rows, _("files?"));
         gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
                                                  GTK_MESSAGE_WARNING,
                                                  GTK_BUTTONS_OK_CANCEL,
-                                                 delete ? "Deleting files..." : "Moving files to trash...",
+                                                 delete ? _("Deleting files...") : _("Moving files to trash..."),
                                                  error_msg);
         if (response != GTK_RESPONSE_OK) {
             goto save_fail;

@@ -6,3 +6,4 @@
 src/fsearch_window.c
 src/listview.c
 src/fsearch.c
+src/fsearch_window_actions.c

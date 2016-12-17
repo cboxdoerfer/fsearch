@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-06 21:28+0100\n"
+"POT-Creation-Date: 2016-12-17 18:39+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -372,4 +372,20 @@ msgstr ""
 
 #: ../src/fsearch.c:339
 msgid "A search utility focusing on performance and advanced features"
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:139
+msgid "Do you really want to remove"
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:139
+msgid "files?"
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:143
+msgid "Deleting files..."
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:143
+msgid "Moving files to trash..."
 msgstr ""

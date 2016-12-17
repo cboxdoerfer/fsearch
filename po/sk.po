@@ -2,11 +2,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slovak (FSearch)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-08 11:56+0200\n"
+"POT-Creation-Date: 2016-12-17 18:39+0100\n"
 "PO-Revision-Date: 2016-12-08 12:01+0100\n"
 "Last-Translator: \n"
-"Language-Team: Slovak "
-"<https://hosted.weblate.org/projects/fsearch/translations/sk/>\n"
+"Language-Team: Slovak <https://hosted.weblate.org/projects/fsearch/"
+"translations/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,7 +51,6 @@ msgid "Open Folder"
 msgstr "Otvoriť priečinok"
 
 #: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
-#: ../src/fsearch.glade.h:10,
 msgid "Update Database"
 msgstr "Aktualizovať databázu"
 
@@ -128,7 +127,6 @@ msgid "Files"
 msgstr "Súbory"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
-#: ../src/fsearch.glade.h:29,
 msgid "Search"
 msgstr "Vyhľadávanie"
 
@@ -149,12 +147,10 @@ msgid "0/0"
 msgstr "0/0"
 
 #: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
-#: ../src/fsearch.glade.h:34,
 msgid "Database"
 msgstr "Databáza"
 
 #: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
-#: ../src/fsearch.glade.h:35,
 msgid "Updating Database..."
 msgstr "Aktualizácia databázy..."
 
@@ -215,27 +211,22 @@ msgid "_Delete"
 msgstr "_Vymazať"
 
 #: ../src/menus.ui.h:9 ../src/listview.c:149
-#: ../src/menus.ui.h:9,
 msgid "Name"
 msgstr "Názov"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:178
-#: ../src/menus.ui.h:10,
 msgid "Path"
 msgstr "Umiestnenie"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:268
-#: ../src/menus.ui.h:11,
 msgid "Type"
 msgstr "Typ"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:207
-#: ../src/menus.ui.h:12,
 msgid "Size"
 msgstr "Veľkosť"
 
 #: ../src/menus.ui.h:13 ../src/listview.c:239
-#: ../src/menus.ui.h:13,
 msgid "Date Modified"
 msgstr "Dátum zmeny"
 
@@ -370,8 +361,6 @@ msgstr "Vylúčiť"
 
 #: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
 #: ../src/fsearch_window.c:805
-#: ../src/fsearch_window.c:100,
-#: ../src/fsearch_window.c:322,
 #, c-format
 msgid "%'d Items"
 msgstr "Počet položiek: %'d"
@@ -388,3 +377,21 @@ msgstr "Načítavanie databázy..."
 #: ../src/fsearch.c:339
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Program na vyhľadávanie súborov zameraný na výkon a pokročilé funkcie"
+
+#: ../src/fsearch_window_actions.c:139
+msgid "Do you really want to remove"
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:139
+#, fuzzy
+msgid "files?"
+msgstr "Súbory"
+
+#: ../src/fsearch_window_actions.c:143
+msgid "Deleting files..."
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:143
+#, fuzzy
+msgid "Moving files to trash..."
+msgstr "Presunúť do koša"

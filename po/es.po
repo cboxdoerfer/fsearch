@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-06 21:28+0100\n"
+"POT-Creation-Date: 2016-12-17 18:39+0100\n"
 "PO-Revision-Date: 2016-12-01 20:38+0000\n"
 "Last-Translator: Pavel Milanes Costa <pavelmc@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -381,3 +381,21 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Un software de búsqueda enfocado en la velocidad y con características "
 "avanzadas"
+
+#: ../src/fsearch_window_actions.c:139
+msgid "Do you really want to remove"
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:139
+#, fuzzy
+msgid "files?"
+msgstr "Ficheros"
+
+#: ../src/fsearch_window_actions.c:143
+msgid "Deleting files..."
+msgstr ""
+
+#: ../src/fsearch_window_actions.c:143
+#, fuzzy
+msgid "Moving files to trash..."
+msgstr "Eliminar"
