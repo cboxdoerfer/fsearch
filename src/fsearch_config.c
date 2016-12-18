@@ -21,9 +21,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <linux/limits.h>
 
 #include "fsearch_config.h"
+#include "fsearch_limits.h"
 #include "debug.h"
 
 const char *config_file_name = "fsearch.conf";

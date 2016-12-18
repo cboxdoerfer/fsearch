@@ -24,7 +24,6 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <limits.h>
-#include <linux/limits.h>
 #include <string.h>
 #include <stdint.h>
 #include <glib.h>
@@ -32,6 +31,7 @@
 #include <glib/gi18n.h>
 #include "fsearch.h"
 #include "fsearch_config.h"
+#include "fsearch_limits.h"
 #include "list_model.h"
 #include "resources.h"
 #include "clipboard.h"

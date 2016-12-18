@@ -25,6 +25,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_thread_pool.h \
 			 fsearch_window.h \
 			 fsearch_window_actions.h \
+			 fsearch_limits.h \
 			 iconstore.h \
 			 list_model.h \
 			 listview.h \

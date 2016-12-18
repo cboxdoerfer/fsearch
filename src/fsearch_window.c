@@ -20,7 +20,6 @@
 #include <config.h>
 #endif
 
-#include <linux/limits.h>
 #include <glib/gi18n.h>
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
@@ -33,6 +32,7 @@
 #include "database_search.h"
 #include "listview.h"
 #include "debug.h"
+#include "fsearch_limits.h"
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
