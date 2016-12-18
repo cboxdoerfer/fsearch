@@ -20,12 +20,11 @@
 #include <config.h>
 #endif
 
-#include <limits.h>
-#include <linux/limits.h>
 #include <gio/gdesktopappinfo.h>
 #include <glib/gi18n.h>
 
 #include "fsearch_window_actions.h"
+#include "fsearch_limits.h"
 #include "clipboard.h"
 #include "database_search.h"
 #include "utils.h"

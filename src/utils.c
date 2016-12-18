@@ -18,11 +18,11 @@
 
 #include <stdio.h>
 #include <stdbool.h>
-#include <linux/limits.h>
 #include <gio/gio.h>
 #include "utils.h"
 #include "debug.h"
 #include "ui_utils.h"
+#include "fsearch_limits.h"
 
 gboolean
 build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name)
