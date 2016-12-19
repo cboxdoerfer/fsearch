@@ -24,9 +24,13 @@ https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
 
 ## Download
 ### Arch Linux (AUR)
+
 https://aur.archlinux.org/packages/fsearch-git/
+
 ### Ubuntu
+
 #### Daily Development Builds PPA
+
 https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
 
 ## Building
