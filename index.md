@@ -23,6 +23,7 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
 
 ## Download
+
 ### Arch Linux (AUR)
 
 https://aur.archlinux.org/packages/fsearch-git/
