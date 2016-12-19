@@ -2,20 +2,32 @@ FSearch is a fast file search utility for GNU/Linux operating systems, inspired 
 
 **Note: The application is in an early development stage and still considered alpha**
 
-![](https://i.imgur.com/LvsxlWD.png)!
+![](https://i.imgur.com/LvsxlWD.png)
+
 ## Features
 - Instant (as you type) results
 - RegEx support
+- Wildcard support
 - Filter support (only search for files, folders or everything)
 - Fast sort by filename, path, size or modification time
+- Include and exclude specific folders to be indexed
+- Ability to exclude certain files/folders from index using wildcard expressions
 - Customizable interface
 
 ## Requirements
 - GTK+ 3.12 or newer
+- GLib 2.44
 - PCRE (libpcre)
 
 ## Roadmap
 https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
+
+## Download
+#### Arch Linux (AUR)
+https://aur.archlinux.org/packages/fsearch-git/
+#### Ubuntu
+##### Daily Development Builds PPA
+https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
 
 ## Building
 https://github.com/cboxdoerfer/fsearch/wiki/Build-instructions
@@ -33,10 +45,3 @@ Before I started working on FSearch I took a look at all the existing solutions 
 
 ## Why GTK+3 and not Qt5?
 I like both of them. And in fact my long term goal is to provide console, GTK+3 and Qt5 interfaces, or at least make it possible for others to build those by splitting the search and database functionality into a core library. But for the time being it's only GTK+3 because I tend to like C more than C++, I'm more familiar with GTK+ development, I almost exclusively run GTK+ applications and I really like some of it's new widget (e.g. Popovers).
-
-## Download
-#### Arch Linux (AUR)
-https://aur.archlinux.org/packages/fsearch-git/
-#### Ubuntu
-##### Daily Development Builds PPA
-https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
