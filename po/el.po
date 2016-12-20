@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-17 18:39+0100\n"
-"PO-Revision-Date: 2016-12-06 20:38+0000\n"
-"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
-"Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
-"translations/el/>\n"
+"PO-Revision-Date: 2016-12-20 19:58+0000\n"
+"Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
+"Language-Team: Greek "
+"<https://hosted.weblate.org/projects/fsearch/translations/el/>\n"
 "Language: el\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.10-dev\n"
+"X-Generator: Weblate 2.10\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -385,18 +385,16 @@ msgstr ""
 
 #: ../src/fsearch_window_actions.c:139
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Θέλετε πραγματικά να αφαιρέσετε"
 
 #: ../src/fsearch_window_actions.c:139
-#, fuzzy
 msgid "files?"
-msgstr "Αρχεία"
+msgstr "αρχεία;"
 
 #: ../src/fsearch_window_actions.c:143
 msgid "Deleting files..."
-msgstr ""
+msgstr "Διαγραφή αρχείων..."
 
 #: ../src/fsearch_window_actions.c:143
-#, fuzzy
 msgid "Moving files to trash..."
-msgstr "Μετακίνηση στα απορρίματα"
+msgstr "Μετακίνηση των αρχείων στα απορρίματα..."
