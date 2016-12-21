@@ -13,15 +13,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2016-10-20 22:38+0100\n"
-"Last-Translator: Gustavo H. M. Silva <gustavohmsilva@member.fsf.org>\n"
-"Language-Team: Gustavo H. M. Silva <gustavohmsilva@member.fsf.org>\n"
+"PO-Revision-Date: 2016-12-21 12:39+0000\n"
+"Last-Translator: Gustavo H M Silva <gustavohmsilva@tuta.io>\n"
+"Language-Team: Portuguese (Brazil) "
+"<https://hosted.weblate.org/projects/fsearch/translations/pt_BR/>\n"
 "Language: pt-br\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 2.10\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -196,9 +197,8 @@ msgid "Open _With"
 msgstr "Abrir _Com"
 
 #: ../src/menus.ui.h:3
-#, fuzzy
 msgid "Other Application"
-msgstr "Abrir com..."
+msgstr "Outro Aplicativo"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
@@ -213,7 +213,6 @@ msgid "_Copy"
 msgstr "_Copiar"
 
 #: ../src/menus.ui.h:7
-#, fuzzy
 msgid "Move to _Trash"
 msgstr "Mover para o _Lixo"
 
@@ -242,7 +241,6 @@ msgid "Date Modified"
 msgstr "Data de Modificação"
 
 #: ../src/overlay.ui.h:1
-#, fuzzy
 msgid "Empty Database"
 msgstr "Base de Dados Vazia"
 
@@ -357,9 +355,8 @@ msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Suporta coringas. Múltiplas entradas precisam ser separadas por ';'"
 
 #: ../src/preferences.ui.h:22
-#, fuzzy
 msgid "Exclude files:"
-msgstr "Excluir arquivos"
+msgstr "Excluir arquivos:"
 
 #: ../src/preferences.ui.h:23
 msgid "e.g. \".git;*.tmp\""
@@ -393,7 +390,6 @@ msgid "Do you really want to remove"
 msgstr "Você realmente deseja remover"
 
 #: ../src/fsearch_window_actions.c:138
-#, fuzzy
 msgid "files?"
 msgstr "Arquivos?"
 
@@ -402,6 +398,5 @@ msgid "Deleting files..."
 msgstr "Deletando arquivos..."
 
 #: ../src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Moving files to trash..."
 msgstr "Movendo arquivos para a lixeira..."
