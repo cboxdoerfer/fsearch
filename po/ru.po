@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 18:39+0100\n"
+"POT-Creation-Date: 2016-12-21 13:20+0100\n"
 "PO-Revision-Date: 2016-12-06 21:42+0000\n"
 "Last-Translator: Konstantin Yablochkin <yakonstb@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
@@ -381,20 +381,20 @@ msgstr "Загрузка базы данных..."
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Специализированный инструмент поиска, нацеленный на быстродействие"
 
-#: ../src/fsearch_window_actions.c:139
+#: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
 msgstr ""
 
-#: ../src/fsearch_window_actions.c:139
+#: ../src/fsearch_window_actions.c:138
 #, fuzzy
 msgid "files?"
 msgstr "Файлы"
 
-#: ../src/fsearch_window_actions.c:143
+#: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
 msgstr ""
 
-#: ../src/fsearch_window_actions.c:143
+#: ../src/fsearch_window_actions.c:142
 #, fuzzy
 msgid "Moving files to trash..."
 msgstr "Переместить в корзину"

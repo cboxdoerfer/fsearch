@@ -2,17 +2,17 @@
 # Embora o software original possa não possuir as mesmas licenças, a tradução produzida por mim está protegida sobre o 
 # Creative Commons, Attribution-ShareAlike 4.0 International
 # Contate-me via email no endereço gustavohmsilva@member.fsf.org
-# 
+#
 # Translation to brazilian portuguese done by Gustavo Henrique Machado da Silva (www.linkedin.com/in/gustavohmsilva)
 # Even though this software may not share the same licenses, the translation produced by me is protected under
 # Creative commons, Attribution-ShareAlike 4.0 International
 # You can contact me over email on gustavohmsilva@member.fsf.org
-# 
+#
 msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 18:39+0100\n"
+"POT-Creation-Date: 2016-12-21 13:20+0100\n"
 "PO-Revision-Date: 2016-10-20 22:38+0100\n"
 "Last-Translator: Gustavo H. M. Silva <gustavohmsilva@member.fsf.org>\n"
 "Language-Team: Gustavo H. M. Silva <gustavohmsilva@member.fsf.org>\n"
@@ -388,20 +388,20 @@ msgstr "Carregando Base de Dados..."
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
-#: ../src/fsearch_window_actions.c:139
+#: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
 msgstr "Você realmente deseja remover"
 
-#: ../src/fsearch_window_actions.c:139
+#: ../src/fsearch_window_actions.c:138
 #, fuzzy
 msgid "files?"
 msgstr "Arquivos?"
 
-#: ../src/fsearch_window_actions.c:143
+#: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
 msgstr "Deletando arquivos..."
 
-#: ../src/fsearch_window_actions.c:143
+#: ../src/fsearch_window_actions.c:142
 #, fuzzy
 msgid "Moving files to trash..."
 msgstr "Movendo arquivos para a lixeira..."
