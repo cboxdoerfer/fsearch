@@ -7,9 +7,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-17 18:39+0100\n"
-"PO-Revision-Date: 2016-12-06 20:38+0000\n"
-"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
+"POT-Creation-Date: 2016-12-21 13:20+0100\n"
+"PO-Revision-Date: 2016-12-20 19:58+0000\n"
+"Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
 "translations/el/>\n"
 "Language: el\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.10-dev\n"
+"X-Generator: Weblate 2.10\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -383,20 +383,18 @@ msgstr ""
 "Μια εφαρμογή αναζήτησης που δίνει έμφαση στις επιδόσεις και τα προηγμένα "
 "χαρακτηριστικά"
 
-#: ../src/fsearch_window_actions.c:139
+#: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Θέλετε πραγματικά να αφαιρέσετε"
 
-#: ../src/fsearch_window_actions.c:139
-#, fuzzy
+#: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr "Αρχεία"
+msgstr "αρχεία;"
 
-#: ../src/fsearch_window_actions.c:143
+#: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Διαγραφή αρχείων..."
 
-#: ../src/fsearch_window_actions.c:143
-#, fuzzy
+#: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr "Μετακίνηση στα απορρίματα"
+msgstr "Μετακίνηση των αρχείων στα απορρίματα..."

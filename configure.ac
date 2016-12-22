@@ -35,7 +35,7 @@ AX_CHECK_COMPILE_FLAG([-std=c11], [CFLAGS+=" -std=c11" ],
                        exit -1
                       ])
 
-
+AC_FUNC_ALLOCA
 
 PKG_PROG_PKG_CONFIG
 AC_PATH_PROG([GLIB_COMPILE_RESOURCES], [glib-compile-resources])
