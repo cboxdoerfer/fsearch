@@ -12,9 +12,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2016-12-21 12:39+0000\n"
-"Last-Translator: Gustavo H M Silva <gustavohmsilva@tuta.io>\n"
+"POT-Creation-Date: 2016-12-22 13:20+0100\n"
+"PO-Revision-Date: 2016-12-22 12:39+0000\n"
+"Last-Translator: Gustavo H M Silva <gustavohmsilva@member.fsf.org>\n"
 "Language-Team: Portuguese (Brazil) "
 "<https://hosted.weblate.org/projects/fsearch/translations/pt_BR/>\n"
 "Language: pt-br\n"
@@ -30,7 +30,7 @@ msgstr "Abrir arquivo(s)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr "Abrir com..."
+msgstr "Abrir com outro aplicativo"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
@@ -268,7 +268,7 @@ msgstr "Isto pode demorar um pouco."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr "Não foram encontrados resultados"
+msgstr "Nenhum Resultado Encontrado"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
@@ -378,8 +378,8 @@ msgstr "Última modificação: %H:%M, %d-%m-%y"
 
 #: ../src/fsearch_window.c:827
 #, c-format
-msgid "Loading Database..."
-msgstr "Carregando Base de Dados..."
+msgid "Loading Database…"
+msgstr "Carregando Base de Dados…"
 
 #: ../src/fsearch.c:339
 msgid "A search utility focusing on performance and advanced features"
@@ -395,8 +395,8 @@ msgstr "Arquivos?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr "Deletando arquivos..."
+msgstr "Deletando arquivos…"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr "Movendo arquivos para a lixeira..."
+msgstr "Movendo arquivos para a lixeira…"
