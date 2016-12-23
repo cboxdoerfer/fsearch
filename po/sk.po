@@ -2,17 +2,17 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slovak (FSearch)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2016-12-08 12:01+0100\n"
+"POT-Creation-Date: 2016-12-23 20:58+0200\n"
+"PO-Revision-Date: 2016-12-23 20:59+0100\n"
 "Last-Translator: \n"
-"Language-Team: Slovak <https://hosted.weblate.org/projects/fsearch/"
-"translations/sk/>\n"
+"Language-Team: Slovak "
+"<https://hosted.weblate.org/projects/fsearch/translations/sk/>\n"
 "Language: sk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
-"X-Generator: Poedit 1.8.7.1\n"
+"X-Generator: Poedit 1.8.11\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -380,18 +380,18 @@ msgstr "Program na vyhľadávanie súborov zameraný na výkon a pokročilé fun
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Naozaj chcete odstrániť"
 
 #: ../src/fsearch_window_actions.c:138
 #, fuzzy
 msgid "files?"
-msgstr "Súbory"
+msgstr "súborov?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Vymazávanie súborov..."
 
 #: ../src/fsearch_window_actions.c:142
 #, fuzzy
 msgid "Moving files to trash..."
-msgstr "Presunúť do koša"
+msgstr "Presúvanie súborov do koša..."
