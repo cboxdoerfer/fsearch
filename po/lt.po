@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-13 10:56+0100\n"
-"PO-Revision-Date: 2017-01-13 22:08+0000\n"
+"PO-Revision-Date: 2017-01-13 22:12+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian "
 "<https://hosted.weblate.org/projects/fsearch/translations/lt/>\n"
@@ -174,7 +174,7 @@ msgstr "puslapis1"
 
 #: ../src/fsearch.glade.h:39
 msgid "CASE"
-msgstr "RAIDŽIŲ LYGIS"
+msgstr "REGISTRAS"
 
 #: ../src/fsearch.glade.h:40
 msgid "PATH"
