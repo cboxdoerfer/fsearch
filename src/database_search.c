@@ -132,11 +132,11 @@ fsearch_search_thread (gpointer user_data)
 
 
 static search_thread_context_t *
-new_thread_data (DatabaseSearch *search,
-                 search_query_t **queries,
-                 uint32_t num_queries,
-                 uint32_t start_pos,
-                 uint32_t end_pos)
+search_thread_context_new (DatabaseSearch *search,
+                           search_query_t **queries,
+                           uint32_t num_queries,
+                           uint32_t start_pos,
+                           uint32_t end_pos)
 {
     search_thread_context_t *ctx = calloc (1, sizeof(search_thread_context_t));
     assert (ctx != NULL);
@@ -573,7 +573,7 @@ db_perform_normal_search (DatabaseSearch *search, FsearchQuery *q)
     start ();
     GList *temp = fsearch_thread_pool_get_threads (search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-        thread_data[i] = new_thread_data (search,
+        thread_data[i] = search_thread_context_new (search,
                 queries,
                 num_queries,
                 start_pos,
