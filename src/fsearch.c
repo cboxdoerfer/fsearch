@@ -68,6 +68,12 @@ static guint signals [LAST_SIGNAL];
 
 G_DEFINE_TYPE (FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
+static void
+fsearch_action_enable (const char *action_name);
+
+static void
+fsearch_action_disable (const char *action_name);
+
 Database *
 fsearch_application_get_db (FsearchApplication *fsearch)
 {
@@ -190,7 +196,7 @@ static gboolean
 updated_database_signal_emit_cb (gpointer user_data)
 {
     FsearchApplication *self = FSEARCH_APPLICATION (user_data);
-    //update_windows_after_db_update (self);
+    fsearch_action_enable ("update_database");
     g_signal_emit (self, signals [DATABASE_UPDATED], 0);
     return G_SOURCE_REMOVE;
 }
@@ -206,11 +212,10 @@ update_database_signal_emit_cb (gpointer user_data)
 static void
 prepare_windows_for_db_update (FsearchApplication *app)
 {
-    GtkWindow *window = NULL;
     GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
 
     for (; windows; windows = windows->next) {
-        window = windows->data;
+        FsearchApplicationWindow *window = windows->data;
 
         if (FSEARCH_WINDOW_IS_WINDOW (window)) {
             fsearch_application_window_remove_model (window);
@@ -369,6 +374,7 @@ void
 update_database (void)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    fsearch_action_disable ("update_database");
     prepare_windows_for_db_update (app);
     g_thread_new("update_database", load_database, app);
     return;
@@ -389,6 +395,30 @@ new_window_activated (GSimpleAction *action,
 {
     GtkWindow *window = GTK_WINDOW (fsearch_application_window_new (FSEARCH_APPLICATION (app)));
     gtk_window_present (window);
+}
+
+static void
+fsearch_action_enable (const char *action_name)
+{
+    GAction *action = g_action_map_lookup_action (G_ACTION_MAP (FSEARCH_APPLICATION_DEFAULT),
+                                                  action_name);
+
+    if (action) {
+        printf("enable action: %s\n", action_name);
+        g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
+    }
+}
+
+static void
+fsearch_action_disable (const char *action_name)
+{
+    GAction *action = g_action_map_lookup_action (G_ACTION_MAP (FSEARCH_APPLICATION_DEFAULT),
+                                                  action_name);
+
+    if (action) {
+        printf("disable action: %s\n", action_name);
+        g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
+    }
 }
 
 static GActionEntry app_entries[] =
