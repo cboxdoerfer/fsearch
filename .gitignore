@@ -29,6 +29,7 @@ Makefile.in
 /config.h*
 
 # Project files
+tags
 fsearch*.tar.gz
 src/resources.c
 src/resources.h
