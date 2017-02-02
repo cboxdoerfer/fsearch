@@ -312,7 +312,7 @@ load_database (gpointer user_data)
 static GThread *
 load_database_thread (FsearchApplication *app)
 {
-    return g_thread_new("update_database", load_database, app);
+    return g_thread_new("fsearch_db_load_thread", load_database, app);
 }
 
 static void
@@ -368,7 +368,7 @@ update_database (void)
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     fsearch_action_disable ("update_database");
     prepare_windows_for_db_update (app);
-    g_thread_new("update_database", load_database, app);
+    g_thread_new("fsearch_db_update_thread", load_database, app);
     return;
 }
 
