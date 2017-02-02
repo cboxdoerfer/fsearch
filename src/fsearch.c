@@ -228,14 +228,14 @@ prepare_windows_for_db_update (FsearchApplication *app)
 static struct timeval tm1;
 #endif
 
-static inline void start()
+static inline void timer_start()
 {
 #ifdef DEBUG
     gettimeofday(&tm1, NULL);
 #endif
 }
 
-static inline void stop()
+static inline void timer_stop()
 {
 #ifdef DEBUG
     struct timeval tm2;
@@ -258,7 +258,7 @@ load_database (gpointer user_data)
 
     if (!app->db) {
         // create new database
-        start ();
+        timer_start ();
         app->db = db_new ();
 
         bool loaded = false;
@@ -291,11 +291,11 @@ load_database (gpointer user_data)
             }
         }
         trace ("loaded db in:");
-        stop ();
+        timer_stop ();
     }
     else {
         trace ("update\n");
-        start ();
+        timer_start ();
         db_clear (app->db);
         if (app->config->locations) {
             for (GList *l = app->config->locations; l != NULL; l = l->next) {
@@ -304,7 +304,7 @@ load_database (gpointer user_data)
             db_build_initial_entries_list (app->db);
         }
         trace ("loaded db in:");
-        stop ();
+        timer_stop ();
     }
     uint32_t num_items = db_get_num_entries (app->db);
     app->initialized = true;

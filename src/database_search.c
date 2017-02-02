@@ -250,14 +250,14 @@ search_thread (void * user_data)
 static struct timeval tm1;
 #endif
 
-static inline void start()
+static inline void timer_start()
 {
 #ifdef DEBUG
     gettimeofday(&tm1, NULL);
 #endif
 }
 
-static inline void stop()
+static inline void timer_stop()
 {
 #ifdef DEBUG
     struct timeval tm2;
@@ -570,7 +570,7 @@ db_perform_normal_search (DatabaseSearch *search, FsearchQuery *q)
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
 
-    start ();
+    timer_start ();
     GList *temp = fsearch_thread_pool_get_threads (search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] = search_thread_context_new (search,
@@ -597,7 +597,7 @@ db_perform_normal_search (DatabaseSearch *search, FsearchQuery *q)
     }
 
     trace ("search done: ");
-    stop ();
+    timer_stop ();
 
     // get total number of entries found
     uint32_t num_results = 0;
