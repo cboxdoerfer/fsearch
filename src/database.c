@@ -37,10 +37,7 @@
 #include "fsearch.h"
 #include "debug.h"
 
-#define WS_NONE		0
-#define WS_RECURSIVE	(1 << 0)
-#define WS_DEFAULT	WS_RECURSIVE
-#define WS_FOLLOWLINK	(1 << 1)	/* follow symlinks */
+//#define WS_FOLLOWLINK	(1 << 1)	/* follow symlinks */
 #define WS_DOTFILES	(1 << 2)	/* per unix convention, .file is hidden */
 
 struct _Database
@@ -416,7 +413,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
     if (len >= FILENAME_MAX - 1)
         return WALK_NAMETOOLONG;
 
-    char fn[FILENAME_MAX];
+    char fn[FILENAME_MAX] = "";
     strcpy (fn, dname);
     if (strcmp (dname, "/")) {
         // TODO: use a more performant fix to handle root directory
@@ -438,7 +435,6 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         g_timer_reset (timer);
     }
 
-    struct stat st;
     struct dirent *dent = NULL;
     errno = 0;
     while ((dent = readdir (dir))) {
@@ -454,6 +450,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
             continue;
         }
 
+        struct stat st;
         strncpy (fn + len, dent->d_name, FILENAME_MAX - len);
         if (lstat (fn, &st) == -1) {
             //warn("Can't stat %s", fn);
@@ -466,13 +463,6 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
             continue;
         }
 
-        /* don't follow symlink unless told so */
-        if (S_ISLNK (st.st_mode) && !(spec & WS_FOLLOWLINK)) {
-            continue;
-        }
-
-        /* will be false for symlinked dirs */
-
         const bool is_dir = S_ISDIR (st.st_mode);
         BTreeNode *node = btree_node_new (dent->d_name,
                                           st.st_mtime,
@@ -482,16 +472,14 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         btree_node_prepend (parent, node);
         location->num_items++;
         if (is_dir) {
-            /* recursively follow dirs */
-            if ((spec & WS_RECURSIVE))
-                db_location_walk_tree_recursive (location,
-                                                 excludes,
-                                                 exclude_files,
-                                                 fn,
-                                                 timer,
-                                                 callback,
-                                                 node,
-                                                 spec);
+            db_location_walk_tree_recursive (location,
+                                             excludes,
+                                             exclude_files,
+                                             fn,
+                                             timer,
+                                             callback,
+                                             node,
+                                             spec);
 
         }
     }
@@ -517,13 +505,13 @@ db_location_build_tree (const char *dname, void (*callback)(const char *))
     location->entries = root;
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
 
-    int spec = WS_DEFAULT;
+    int spec = 0;
     if (!config->exclude_hidden_items) {
         spec |= WS_DOTFILES;
     }
-    if (config->follow_symlinks) {
-        spec |= WS_FOLLOWLINK;
-    }
+    //if (config->follow_symlinks) {
+    //    spec |= WS_FOLLOWLINK;
+    //}
     GTimer *timer = g_timer_new ();
     g_timer_start (timer);
     uint32_t res = db_location_walk_tree_recursive (location,

@@ -404,7 +404,6 @@ since not every GTK+ theme provides a dark version.</property>
                         <child>
                           <object class="GtkCheckButton" id="follow_symlinks_button">
                             <property name="label" translatable="yes">Follow symbolic links</property>
-                            <property name="visible">True</property>
                             <property name="can_focus">True</property>
                             <property name="receives_default">False</property>
                             <property name="draw_indicator">True</property>
