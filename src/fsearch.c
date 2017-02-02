@@ -53,7 +53,6 @@ struct _FsearchApplication
 
     ListModel *list_model;
     gint sb_context_id;
-    bool initialized;
 
     GMutex mutex;
 };
@@ -151,7 +150,6 @@ fsearch_application_init (FsearchApplication *app)
     }
     app->db = NULL;
     app->search = NULL;
-    app->initialized = false;
     app->sb_context_id = -1;
     g_mutex_init (&app->mutex);
 }
@@ -253,7 +251,6 @@ load_database (gpointer user_data)
     g_assert (user_data != NULL);
     g_assert (FSEARCH_IS_APPLICATION (user_data));
     FsearchApplication *app = FSEARCH_APPLICATION (user_data);
-    app->initialized = false;
     g_idle_add (update_database_signal_emit_cb, app);
 
     if (!app->db) {
@@ -307,7 +304,6 @@ load_database (gpointer user_data)
         timer_stop ();
     }
     uint32_t num_items = db_get_num_entries (app->db);
-    app->initialized = true;
 
     gchar sb_text[100] = "";
     snprintf (sb_text, sizeof (sb_text), "Database loaded (%'d Items)", num_items);
