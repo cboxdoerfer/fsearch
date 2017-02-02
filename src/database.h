@@ -35,9 +35,9 @@ bool
 db_location_load (Database *db, const char *location_name);
 
 bool
-db_location_build_new (Database *db,
-                       const char *location_name,
-                       void (*callback)(const char *));
+db_location_add (Database *db,
+                 const char *location_name,
+                 void (*callback)(const char *));
 
 bool
 db_location_remove (Database *db, const char *path);
@@ -52,7 +52,7 @@ void
 db_free (Database *db);
 
 Database *
-db_database_new ();
+db_new ();
 
 gboolean
 db_list_append_node (BTreeNode *node,

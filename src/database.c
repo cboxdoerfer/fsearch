@@ -774,9 +774,9 @@ db_location_load (Database *db, const char *location_name)
 }
 
 bool
-db_location_build_new (Database *db,
-                       const char *location_name,
-                       void (*callback)(const char *))
+db_location_add (Database *db,
+                 const char *location_name,
+                 void (*callback)(const char *))
 {
     g_assert (db != NULL);
     db_lock (db);
@@ -874,7 +874,7 @@ db_location_get_entries (DatabaseLocation *location)
 }
 
 Database *
-db_database_new ()
+db_new ()
 {
     Database *db = g_new0 (Database, 1);
     g_mutex_init (&db->mutex);

@@ -259,20 +259,20 @@ load_database (gpointer user_data)
     if (!app->db) {
         // create new database
         start ();
-        app->db = db_database_new ();
+        app->db = db_new ();
 
         bool loaded = false;
         bool build_new = false;
         for (GList *l = app->config->locations; l != NULL; l = l->next) {
             if (app->config->update_database_on_launch) {
-                if (db_location_build_new (app->db, l->data, build_location_callback)) {
+                if (db_location_add (app->db, l->data, build_location_callback)) {
                     loaded = true;
                     build_new = true;
                 }
             }
             else {
                 if (!db_location_load (app->db, l->data)) {
-                    if (db_location_build_new (app->db, l->data, build_location_callback)) {
+                    if (db_location_add (app->db, l->data, build_location_callback)) {
                         loaded = true;
                         build_new = true;
                     }
@@ -299,7 +299,7 @@ load_database (gpointer user_data)
         db_clear (app->db);
         if (app->config->locations) {
             for (GList *l = app->config->locations; l != NULL; l = l->next) {
-                db_location_build_new (app->db, l->data, build_location_callback);
+                db_location_add (app->db, l->data, build_location_callback);
             }
             db_build_initial_entries_list (app->db);
         }
