@@ -303,10 +303,6 @@ load_database (gpointer user_data)
         trace ("loaded db in:");
         timer_stop ();
     }
-    uint32_t num_items = db_get_num_entries (app->db);
-
-    gchar sb_text[100] = "";
-    snprintf (sb_text, sizeof (sb_text), "Database loaded (%'d Items)", num_items);
 
     g_idle_add (updated_database_signal_emit_cb, app);
 
