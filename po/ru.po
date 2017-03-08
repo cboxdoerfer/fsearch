@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2016-12-06 21:42+0000\n"
-"Last-Translator: Konstantin Yablochkin <yakonstb@yandex.ru>\n"
-"Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
-"translations/ru/>\n"
+"PO-Revision-Date: 2017-03-08 11:50+0000\n"
+"Last-Translator: Igor <f2404@yandex.ru>\n"
+"Language-Team: Russian "
+"<https://hosted.weblate.org/projects/fsearch/translations/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.10-dev\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
+"4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 2.12\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -383,18 +383,16 @@ msgstr "Специализированный инструмент поиска, 
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Вы действительно хотите удалить"
 
 #: ../src/fsearch_window_actions.c:138
-#, fuzzy
 msgid "files?"
-msgstr "Файлы"
+msgstr "файлы?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Удаление файлов..."
 
 #: ../src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Moving files to trash..."
-msgstr "Переместить в корзину"
+msgstr "Перемещение файлов в корзину..."
