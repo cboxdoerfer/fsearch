@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2017-04-03 21:41+0000\n"
+"PO-Revision-Date: 2017-04-03 21:42+0000\n"
 "Last-Translator: Gustavo H M Silva <gustavohmsilva@tuta.io>\n"
 "Language-Team: Portuguese "
 "<https://hosted.weblate.org/projects/fsearch/translations/pt/>\n"
@@ -352,7 +352,7 @@ msgstr "Suporta coringas. Entradas múltiplas devem ser separadas por ';'"
 
 #: ../src/preferences.ui.h:22
 msgid "Exclude files:"
-msgstr "Excluir:"
+msgstr "Excluir arquivos:"
 
 #: ../src/preferences.ui.h:23
 msgid "e.g. \".git;*.tmp\""
