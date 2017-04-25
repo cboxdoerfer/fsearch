@@ -516,10 +516,10 @@ list_model_get_value (GtkTreeModel *tree_model,
             if (node->is_dir) {
                 uint32_t num_children = btree_node_n_children (node);
                 if (num_children == 1) {
-                    snprintf (output, sizeof (output), "%d Item", btree_node_n_children (node));
+                    snprintf (output, sizeof (output), "%d Item", num_children);
                 }
                 else {
-                    snprintf (output, sizeof (output), "%d Items", btree_node_n_children (node));
+                    snprintf (output, sizeof (output), "%d Items", num_children);
                 }
                 g_value_set_static_string(value, output);
             }
