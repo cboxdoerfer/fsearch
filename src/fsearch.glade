@@ -137,7 +137,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <property name="default_width">800</property>
     <property name="default_height">600</property>
     <property name="icon_name">system-search</property>
-    <signal name="delete-event" handler="gtk_widget_destroy" swapped="no"/>
+    <signal name="delete-event" handler="on_fsearch_window_delete_event" swapped="no"/>
     <child>
       <object class="GtkBox" id="box1">
         <property name="visible">True</property>

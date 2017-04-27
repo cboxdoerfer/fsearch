@@ -990,6 +990,16 @@ on_listview_query_tooltip (GtkWidget  *widget,
     return ret_val;
 }
 
+static gboolean
+on_fsearch_window_delete_event (GtkWidget *widget,
+                        GdkEvent *event,
+                        gpointer user_data)
+{
+    fsearch_application_window_prepare_shutdown (widget);
+    gtk_widget_destroy (widget);
+    return TRUE;
+}
+
 static void
 fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
 {
@@ -1026,6 +1036,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, revealer);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, scrolledwindow1);
 
+    gtk_widget_class_bind_template_callback (widget_class, on_fsearch_window_delete_event);
     gtk_widget_class_bind_template_callback (widget_class, on_search_entry_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_key_press_event);
