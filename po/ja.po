@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-01-13 10:56+0100\n"
-"PO-Revision-Date: 2017-04-29 08:01+0000\n"
+"PO-Revision-Date: 2017-04-29 08:05+0000\n"
 "Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
 "Language-Team: Japanese "
 "<https://hosted.weblate.org/projects/fsearch/translations/ja/>\n"
@@ -45,7 +45,7 @@ msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr "_ファイル"
+msgstr "ファイル"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
@@ -61,7 +61,7 @@ msgstr "データベースをアップデート"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr "_編集"
+msgstr "編集"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
@@ -73,7 +73,7 @@ msgstr "選択を反転"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr "_表示"
+msgstr "表示"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
@@ -93,7 +93,7 @@ msgstr "検索ボタンを表示"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr "_検索"
+msgstr "検索"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
@@ -109,7 +109,7 @@ msgstr "正規表現を有効"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr "_ヘルプ"
+msgstr "ヘルプ"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
@@ -185,11 +185,11 @@ msgstr "正規表現"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr "_開く"
+msgstr "開く"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr "_〜で開く"
+msgstr "〜で開く"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
@@ -197,23 +197,23 @@ msgstr "他のアプリケーション"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr "_フォルダを開く"
+msgstr "フォルダを開く"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr "C_ut"
+msgstr "切り取り"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr "_コピー"
+msgstr "コピー"
 
 #: ../src/menus.ui.h:7
 msgid "Move to _Trash"
-msgstr "_ゴミ箱へ送る"
+msgstr "ゴミ箱へ送る"
 
 #: ../src/menus.ui.h:8
 msgid "_Delete"
-msgstr "_削除"
+msgstr "削除"
 
 #: ../src/menus.ui.h:9 ../src/listview.c:149
 msgid "Name"
