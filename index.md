@@ -1,6 +1,6 @@
 FSearch is a fast file search utility for GNU/Linux operating systems, inspired by Everything Search Engine. It's written in C and based on GTK+3.
 
-**Note: The application is in an early development stage and still considered alpha**
+**Note: The application is in an early development stage and still considered beta**
 
 ![](https://i.imgur.com/LvsxlWD.png)
 
