@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2016-12-01 20:38+0000\n"
-"Last-Translator: Pavel Milanes Costa <pavelmc@gmail.com>\n"
-"Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
-"translations/es/>\n"
+"PO-Revision-Date: 2017-05-02 06:25+0000\n"
+"Last-Translator: conradolandia <andresconrado@gmail.com>\n"
+"Language-Team: Spanish "
+"<https://hosted.weblate.org/projects/fsearch/translations/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.10-dev\n"
+"X-Generator: Weblate 2.14-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -209,7 +209,6 @@ msgid "_Copy"
 msgstr "_Copiar"
 
 #: ../src/menus.ui.h:7
-#, fuzzy
 msgid "Move to _Trash"
 msgstr "Eliminar"
 
@@ -384,18 +383,16 @@ msgstr ""
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Realmente desea eliminar"
 
 #: ../src/fsearch_window_actions.c:138
-#, fuzzy
 msgid "files?"
-msgstr "Ficheros"
+msgstr "Archivos?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Borrando archivos..."
 
 #: ../src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Moving files to trash..."
-msgstr "Eliminar"
+msgstr "Moviendo archivos a la papelera..."
