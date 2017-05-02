@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2017-05-02 06:26+0000\n"
+"PO-Revision-Date: 2017-05-02 06:29+0000\n"
 "Last-Translator: conradolandia <andresconrado@gmail.com>\n"
 "Language-Team: Spanish "
 "<https://hosted.weblate.org/projects/fsearch/translations/es/>\n"
@@ -38,7 +38,7 @@ msgstr "Abrir fichero(s) en el navegador"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr "Eliminar"
+msgstr "Mover a la Papelera"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
@@ -98,7 +98,7 @@ msgstr "_Buscar"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr "Buscar en el camino actual"
+msgstr "Buscar en la ruta actual"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
@@ -222,7 +222,7 @@ msgstr "Nombre"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:178
 msgid "Path"
-msgstr "Camino"
+msgstr "Ruta"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:268
 msgid "Type"
@@ -310,7 +310,7 @@ msgstr "Limitar cantidad de resultados a:"
 
 #: ../src/preferences.ui.h:11
 msgid "Search in path when query contains path separators"
-msgstr "Buscar en el camino cuando la consulta tenga separadores de caminos"
+msgstr "Buscar en la ruta cuando la consulta tenga separadores de ruta"
 
 #: ../src/preferences.ui.h:12
 msgid "Search as you type"
