@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2016-12-21 13:20+0100\n"
-"PO-Revision-Date: 2017-05-02 06:25+0000\n"
+"PO-Revision-Date: 2017-05-02 06:26+0000\n"
 "Last-Translator: conradolandia <andresconrado@gmail.com>\n"
 "Language-Team: Spanish "
 "<https://hosted.weblate.org/projects/fsearch/translations/es/>\n"
@@ -210,7 +210,7 @@ msgstr "_Copiar"
 
 #: ../src/menus.ui.h:7
 msgid "Move to _Trash"
-msgstr "Eliminar"
+msgstr "Mover a _Papelera"
 
 #: ../src/menus.ui.h:8
 msgid "_Delete"
