@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-13 10:56+0100\n"
+"POT-Creation-Date: 2017-05-23 19:31+0200\n"
 "PO-Revision-Date: 2017-01-13 12:16+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
-"Language-Team: Dutch "
-"<https://hosted.weblate.org/projects/fsearch/translations/nl/>\n"
+"Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
+"translations/nl/>\n"
 "Language: nl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,7 +55,7 @@ msgstr "Nieuw venster"
 msgid "Open Folder"
 msgstr "Map openen"
 
-#: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
+#: ../src/fsearch.glade.h:10
 msgid "Update Database"
 msgstr "Database bijwerken"
 
@@ -144,42 +144,34 @@ msgid "0 Items"
 msgstr "0 items"
 
 #: ../src/fsearch.glade.h:32
-msgid "Selected Folder and Files"
-msgstr "Geselecteerde map en bestanden"
-
-#: ../src/fsearch.glade.h:33
 msgid "0/0"
 msgstr "0/0"
 
-#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
-msgid "Database"
-msgstr "Database"
-
-#: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
+#: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
 msgstr "Bezig met bijwerken van database..."
 
-#: ../src/fsearch.glade.h:36
+#: ../src/fsearch.glade.h:34
 msgid "page0"
 msgstr "pagina0"
 
-#: ../src/fsearch.glade.h:37
+#: ../src/fsearch.glade.h:35
 msgid "(empty)"
 msgstr "(leeg)"
 
-#: ../src/fsearch.glade.h:38
+#: ../src/fsearch.glade.h:36
 msgid "page1"
 msgstr "pagina1"
 
-#: ../src/fsearch.glade.h:39
+#: ../src/fsearch.glade.h:37
 msgid "CASE"
 msgstr "HOOFDLETTERS"
 
-#: ../src/fsearch.glade.h:40
+#: ../src/fsearch.glade.h:38
 msgid "PATH"
 msgstr "PAD"
 
-#: ../src/fsearch.glade.h:41
+#: ../src/fsearch.glade.h:39
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -361,22 +353,26 @@ msgstr "bijv. \".git;*.tmp\""
 msgid "Exclude"
 msgstr "Uitsluiten"
 
-#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
-#: ../src/fsearch_window.c:805
+#: ../src/preferences.ui.h:25
+msgid "Database"
+msgstr "Database"
+
+#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
+#: ../src/fsearch_window.c:780
 #, c-format
 msgid "%'d Items"
 msgstr "%'d items"
 
-#: ../src/fsearch_window.c:811
+#: ../src/fsearch_window.c:786
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Laatst bijgewerkt: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch_window.c:827
+#: ../src/fsearch_window.c:801
 #, c-format
 msgid "Loading Database..."
 msgstr "Bezig met laden van database..."
 
-#: ../src/fsearch.c:339
+#: ../src/fsearch.c:336
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Een zoekhulpmiddel dat zich focust op snelheid en geavanceerde mogelijkheden"
@@ -396,3 +392,6 @@ msgstr "Bezig met verwijderen van bestanden..."
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
 msgstr "Bezig met verplaatsen naar prullenbak..."
+
+#~ msgid "Selected Folder and Files"
+#~ msgstr "Geselecteerde map en bestanden"

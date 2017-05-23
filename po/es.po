@@ -8,11 +8,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-21 13:20+0100\n"
+"POT-Creation-Date: 2017-05-23 19:31+0200\n"
 "PO-Revision-Date: 2017-05-02 06:29+0000\n"
 "Last-Translator: conradolandia <andresconrado@gmail.com>\n"
-"Language-Team: Spanish "
-"<https://hosted.weblate.org/projects/fsearch/translations/es/>\n"
+"Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
+"translations/es/>\n"
 "Language: es\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr "Nueva ventana"
 msgid "Open Folder"
 msgstr "Abrir carpeta"
 
-#: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
+#: ../src/fsearch.glade.h:10
 msgid "Update Database"
 msgstr "Actualizar base de datos"
 
@@ -145,42 +145,34 @@ msgid "0 Items"
 msgstr "0 Encontrados"
 
 #: ../src/fsearch.glade.h:32
-msgid "Selected Folder and Files"
-msgstr "Seleccionar carpetas y archivos"
-
-#: ../src/fsearch.glade.h:33
 msgid "0/0"
 msgstr "0/0"
 
-#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
-msgid "Database"
-msgstr "Base de datos"
-
-#: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
+#: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
 msgstr "Actualizando base de datos..."
 
-#: ../src/fsearch.glade.h:36
+#: ../src/fsearch.glade.h:34
 msgid "page0"
 msgstr "Página 0"
 
-#: ../src/fsearch.glade.h:37
+#: ../src/fsearch.glade.h:35
 msgid "(empty)"
 msgstr "(vacío)"
 
-#: ../src/fsearch.glade.h:38
+#: ../src/fsearch.glade.h:36
 msgid "page1"
 msgstr "Página 1"
 
-#: ../src/fsearch.glade.h:39
+#: ../src/fsearch.glade.h:37
 msgid "CASE"
 msgstr "MAYÚSCULAS"
 
-#: ../src/fsearch.glade.h:40
+#: ../src/fsearch.glade.h:38
 msgid "PATH"
 msgstr "LUGAR"
 
-#: ../src/fsearch.glade.h:41
+#: ../src/fsearch.glade.h:39
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -360,22 +352,26 @@ msgstr "Ejemplo: \".git;*.tmp\""
 msgid "Exclude"
 msgstr "Excluir"
 
-#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
-#: ../src/fsearch_window.c:805
+#: ../src/preferences.ui.h:25
+msgid "Database"
+msgstr "Base de datos"
+
+#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
+#: ../src/fsearch_window.c:780
 #, c-format
 msgid "%'d Items"
 msgstr "%'d resultados"
 
-#: ../src/fsearch_window.c:811
+#: ../src/fsearch_window.c:786
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Actualizado: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch_window.c:827
+#: ../src/fsearch_window.c:801
 #, c-format
 msgid "Loading Database..."
 msgstr "Cargando base de datos..."
 
-#: ../src/fsearch.c:339
+#: ../src/fsearch.c:336
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Un software de búsqueda enfocado en la velocidad y con características "
@@ -396,3 +392,6 @@ msgstr "Borrando archivos..."
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
 msgstr "Moviendo archivos a la papelera..."
+
+#~ msgid "Selected Folder and Files"
+#~ msgstr "Seleccionar carpetas y archivos"

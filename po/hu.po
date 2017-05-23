@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-01-13 10:56+0100\n"
+"POT-Creation-Date: 2017-05-23 19:31+0200\n"
 "PO-Revision-Date: 2017-01-13 10:56+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -53,7 +53,7 @@ msgstr ""
 msgid "Open Folder"
 msgstr ""
 
-#: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
+#: ../src/fsearch.glade.h:10
 msgid "Update Database"
 msgstr ""
 
@@ -142,42 +142,34 @@ msgid "0 Items"
 msgstr ""
 
 #: ../src/fsearch.glade.h:32
-msgid "Selected Folder and Files"
-msgstr ""
-
-#: ../src/fsearch.glade.h:33
 msgid "0/0"
 msgstr ""
 
-#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
-msgid "Database"
-msgstr ""
-
-#: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
+#: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
 msgstr ""
 
-#: ../src/fsearch.glade.h:36
+#: ../src/fsearch.glade.h:34
 msgid "page0"
 msgstr ""
 
-#: ../src/fsearch.glade.h:37
+#: ../src/fsearch.glade.h:35
 msgid "(empty)"
 msgstr ""
 
-#: ../src/fsearch.glade.h:38
+#: ../src/fsearch.glade.h:36
 msgid "page1"
 msgstr ""
 
-#: ../src/fsearch.glade.h:39
+#: ../src/fsearch.glade.h:37
 msgid "CASE"
 msgstr ""
 
-#: ../src/fsearch.glade.h:40
+#: ../src/fsearch.glade.h:38
 msgid "PATH"
 msgstr ""
 
-#: ../src/fsearch.glade.h:41
+#: ../src/fsearch.glade.h:39
 msgid "REGEX"
 msgstr ""
 
@@ -355,22 +347,26 @@ msgstr ""
 msgid "Exclude"
 msgstr ""
 
-#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
-#: ../src/fsearch_window.c:805
+#: ../src/preferences.ui.h:25
+msgid "Database"
+msgstr ""
+
+#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
+#: ../src/fsearch_window.c:780
 #, c-format
 msgid "%'d Items"
 msgstr ""
 
-#: ../src/fsearch_window.c:811
+#: ../src/fsearch_window.c:786
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr ""
 
-#: ../src/fsearch_window.c:827
+#: ../src/fsearch_window.c:801
 #, c-format
 msgid "Loading Database..."
 msgstr ""
 
-#: ../src/fsearch.c:339
+#: ../src/fsearch.c:336
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 

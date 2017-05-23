@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-12-21 13:20+0100\n"
+"POT-Creation-Date: 2017-05-23 19:31+0200\n"
 "PO-Revision-Date: 2016-12-17 18:07+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
@@ -56,7 +56,7 @@ msgstr "Neues Fenster"
 msgid "Open Folder"
 msgstr "Ordner öffnen"
 
-#: ../src/fsearch.glade.h:10 ../src/popover.ui.h:1
+#: ../src/fsearch.glade.h:10
 msgid "Update Database"
 msgstr "Datenbank aktualisieren"
 
@@ -145,42 +145,34 @@ msgid "0 Items"
 msgstr "0 Einträge"
 
 #: ../src/fsearch.glade.h:32
-msgid "Selected Folder and Files"
-msgstr "Markierte Ordner und Dateien"
-
-#: ../src/fsearch.glade.h:33
 msgid "0/0"
 msgstr "0/0"
 
-#: ../src/fsearch.glade.h:34 ../src/preferences.ui.h:25
-msgid "Database"
-msgstr "Datenbank"
-
-#: ../src/fsearch.glade.h:35 ../src/overlay.ui.h:5
+#: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
 msgstr "Aktualisiere Datenbank..."
 
-#: ../src/fsearch.glade.h:36
+#: ../src/fsearch.glade.h:34
 msgid "page0"
 msgstr "page0"
 
-#: ../src/fsearch.glade.h:37
+#: ../src/fsearch.glade.h:35
 msgid "(empty)"
 msgstr "(leer)"
 
-#: ../src/fsearch.glade.h:38
+#: ../src/fsearch.glade.h:36
 msgid "page1"
 msgstr "page1"
 
-#: ../src/fsearch.glade.h:39
+#: ../src/fsearch.glade.h:37
 msgid "CASE"
 msgstr "CASE"
 
-#: ../src/fsearch.glade.h:40
+#: ../src/fsearch.glade.h:38
 msgid "PATH"
 msgstr "PATH"
 
-#: ../src/fsearch.glade.h:41
+#: ../src/fsearch.glade.h:39
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -362,22 +354,26 @@ msgstr "z. B. \".git;*.tmp\""
 msgid "Exclude"
 msgstr "Ausschließen"
 
-#: ../src/fsearch_window.c:100 ../src/fsearch_window.c:322
-#: ../src/fsearch_window.c:805
+#: ../src/preferences.ui.h:25
+msgid "Database"
+msgstr "Datenbank"
+
+#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
+#: ../src/fsearch_window.c:780
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Einträge"
 
-#: ../src/fsearch_window.c:811
+#: ../src/fsearch_window.c:786
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Zuletzt aktualisiert: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch_window.c:827
+#: ../src/fsearch_window.c:801
 #, c-format
 msgid "Loading Database..."
 msgstr "Lade Datenbank..."
 
-#: ../src/fsearch.c:339
+#: ../src/fsearch.c:336
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Eine Dateisuche mit vielen nützlichen Funktionen und hoher Performanz"
 
@@ -396,3 +392,6 @@ msgstr "Mehrere Elemente löschen"
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
 msgstr "Mehrere Elemente in den Papierkorb verschieben"
+
+#~ msgid "Selected Folder and Files"
+#~ msgstr "Markierte Ordner und Dateien"
