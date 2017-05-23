@@ -713,8 +713,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
         }
     }
 
-    GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (self), "win");
-    g_assert (G_IS_SIMPLE_ACTION_GROUP (group));
+    GActionGroup *group = G_ACTION_GROUP (self);
 
     gint num_rows_selected = gtk_tree_selection_count_selected_rows (selection);
     action_set_enabled (group, "select_all", num_rows);

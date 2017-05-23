@@ -423,29 +423,28 @@ on_listview_key_press_event (GtkWidget *widget,
                              GdkEventKey  *event,
                              gpointer   user_data)
 {
+    FsearchApplicationWindow *win = user_data;
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
+    GActionGroup *group = G_ACTION_GROUP (win);
     if (event->state & GDK_CONTROL_MASK) {
         if ((event->keyval == GDK_KEY_Return)
             || (event->keyval == GDK_KEY_KP_Enter)) {
-            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
             g_action_group_activate_action (group, "open_folder", NULL);
             return TRUE;
         }
         else if (event->keyval == GDK_KEY_c) {
-            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
             g_action_group_activate_action (group, "copy_clipboard", NULL);
             return TRUE;
         }
     }
     else if (event->state & GDK_SHIFT_MASK) {
         if (event->keyval == GDK_KEY_Delete) {
-            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
             g_action_group_activate_action (group, "delete_selection", NULL);
             return TRUE;
         }
     }
     else {
         if (event->keyval == GDK_KEY_Delete) {
-            GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
             g_action_group_activate_action (group, "move_to_trash", NULL);
             return TRUE;
         }
@@ -660,7 +659,9 @@ toggle_action_on_2button_press (GdkEventButton *event, const char *action, gpoin
 {
     if (event->button == GDK_BUTTON_PRIMARY
         && event->type == GDK_2BUTTON_PRESS) {
-        GActionGroup *group = gtk_widget_get_action_group (GTK_WIDGET (user_data), "win");
+        FsearchApplicationWindow *win = user_data;
+        g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
+        GActionGroup *group = G_ACTION_GROUP (win);
         GVariant *state = g_action_group_get_action_state (group, action);
         g_action_group_change_action_state (group,
                                             action,
