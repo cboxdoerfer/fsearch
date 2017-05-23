@@ -1,7 +1,6 @@
 EXTRA_DIST = fsearch.glade \
 	     shared.css \
 	     gresource.xml \
-	     popover.ui \
 	     preferences.ui \
 	     overlay.ui \
 	     menus.ui

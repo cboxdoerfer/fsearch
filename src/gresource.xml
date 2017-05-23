@@ -4,7 +4,6 @@
     <file compressed="true">fsearch.glade</file>
     <file compressed="true">shared.css</file>
     <file compressed="true">menus.ui</file>
-    <file compressed="true">popover.ui</file>
     <file compressed="true">preferences.ui</file>
     <file compressed="true">overlay.ui</file>
   </gresource>

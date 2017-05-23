@@ -55,11 +55,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *filter_combobox;
     GtkWidget *listview;
     GtkTreeSelection *listview_selection;
-    GtkWidget *selection_toggle_button;
-    GtkWidget *selection_popover;
     GtkWidget *num_folders_label;
     GtkWidget *num_files_label;
-    GtkWidget *database_toggle_button;
     GtkWidget *database_stack;
     GtkWidget *database_box1;
     GtkWidget *database_box2;
@@ -67,7 +64,6 @@ struct _FsearchApplicationWindow {
     GtkWidget *database_spinner;
     GtkWidget *database_label;
     GtkWidget *database_label1;
-    GtkWidget *database_popover;
     GtkWidget *search_label;
     GtkWidget *search_icon;
     GtkWidget *revealer;
@@ -758,28 +754,6 @@ create_view_and_model (FsearchApplicationWindow *app)
 }
 
 void
-set_toggle_button (GtkPopover *popover,
-               gpointer    user_data)
-{
-    GtkToggleButton *button = GTK_TOGGLE_BUTTON (user_data);
-    gtk_toggle_button_set_active (button, FALSE);
-}
-
-static GtkWidget *
-create_popover (GtkWidget *child)
-{
-    GtkBuilder *builder = gtk_builder_new_from_resource ("/org/fsearch/fsearch/popover.ui");
-    GtkWidget *popover = GTK_WIDGET (gtk_builder_get_object (builder, "DatabasePopover"));
-    gtk_popover_set_relative_to (GTK_POPOVER (popover), child);
-    return popover;
-}
-
-static void
-fill_database_popover (GtkWidget *popover)
-{
-}
-
-void
 icon_theme_changed_cb (GtkIconTheme *icon_theme,
                        gpointer      user_data)
 {
@@ -811,7 +785,6 @@ updated_database_cb (gpointer data, gpointer user_data)
     strftime (db_text, sizeof(db_text),
              _("Last Updated: %Y-%m-%d %H:%M"), //"%Y-%m-%d %H:%M",
              localtime (&timestamp));
-    gtk_widget_set_tooltip_text (win->database_toggle_button, db_text);
 }
 
 static void
@@ -844,17 +817,6 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
     g_object_unref (provider);
 
     create_view_and_model (self);
-    //self->selection_popover = create_popover (self->selection_toggle_button);
-    //g_signal_connect (self->selection_popover,
-    //                  "closed",
-    //                  G_CALLBACK (set_toggle_button),
-    //                  (gpointer)self->selection_toggle_button);
-    self->database_popover = create_popover (self->database_toggle_button);
-    fill_database_popover (self->database_popover);
-    g_signal_connect (self->database_popover,
-                      "closed",
-                      G_CALLBACK (set_toggle_button),
-                      (gpointer)self->database_toggle_button);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     g_signal_connect (app,
@@ -900,28 +862,6 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
                                                                         "database_updating_label"));
 
     g_object_unref (builder);
-}
-
-void
-on_database_toggle_button_toggled (GtkToggleButton *togglebutton,
-                                   gpointer         user_data)
-{
-    FsearchApplicationWindow *self = (FsearchApplicationWindow *)user_data;
-    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
-    gtk_widget_set_visible (self->database_popover,
-                            gtk_toggle_button_get_active (togglebutton));
-}
-
-void
-on_selection_toggle_button_toggled (GtkToggleButton *togglebutton,
-                                    gpointer         user_data)
-{
-    return;
-
-    FsearchApplicationWindow *self = (FsearchApplicationWindow *)user_data;
-    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
-    gtk_widget_set_visible (self->selection_popover,
-                            gtk_toggle_button_get_active (togglebutton));
 }
 
 void
@@ -1021,10 +961,8 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, filter_combobox);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, listview);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, listview_selection);
-    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, selection_toggle_button);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, num_folders_label);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, num_files_label);
-    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_toggle_button);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_spinner);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_icon);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, database_stack);
@@ -1044,11 +982,9 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_callback (widget_class, on_listview_popup_menu);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_selection_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_row_activated);
-    gtk_widget_class_bind_template_callback (widget_class, on_selection_toggle_button_toggled);
     gtk_widget_class_bind_template_callback (widget_class, on_match_case_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_search_in_path_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_search_mode_label_button_press_event);
-    gtk_widget_class_bind_template_callback (widget_class, on_database_toggle_button_toggled);
     gtk_widget_class_bind_template_callback (widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_query_tooltip);
