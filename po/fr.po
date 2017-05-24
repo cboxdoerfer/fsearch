@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-23 19:31+0200\n"
-"PO-Revision-Date: 2016-12-26 16:57+0000\n"
-"Last-Translator: lc-guy <aptyget@gmail.com>\n"
-"Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
-"translations/fr/>\n"
+"PO-Revision-Date: 2017-05-24 14:32+0000\n"
+"Last-Translator: Hugo Locurcio <hugo.l@openmailbox.org>\n"
+"Language-Team: French "
+"<https://hosted.weblate.org/projects/fsearch/translations/fr/>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.11-dev\n"
+"X-Generator: Weblate 2.14.1\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -181,15 +181,15 @@ msgstr "_Ouvrir"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr "Ouvrir _Avec"
+msgstr "Ouvrir _avec"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr "Autre Application"
+msgstr "Autre application"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr "_Ouvrir Dossier"
+msgstr "_Ouvrir dossier"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
@@ -201,7 +201,7 @@ msgstr "_Copier"
 
 #: ../src/menus.ui.h:7
 msgid "Move to _Trash"
-msgstr "Déplacer dans la _Corbeille"
+msgstr "Déplacer dans la _corbeille"
 
 #: ../src/menus.ui.h:8
 msgid "_Delete"
@@ -267,11 +267,11 @@ msgstr "Préférences"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr "Activez le thème obscur"
+msgstr "Activer le thème sombre"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr "Afficher les info-bulles"
+msgstr "Afficher les infobulles"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
@@ -299,7 +299,7 @@ msgstr "Interface"
 
 #: ../src/preferences.ui.h:10
 msgid "Limit number of results:"
-msgstr "Limiter le nombre de résultats:"
+msgstr "Limiter le nombre de résultats :"
 
 #: ../src/preferences.ui.h:11
 msgid "Search in path when query contains path separators"
@@ -340,12 +340,11 @@ msgstr "Exclure les fichiers et dossiers cachés"
 
 #: ../src/preferences.ui.h:21
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
-"Supporte les métacaractères. Plusieurs entrées peuvent être séparées par ';'"
+msgstr "Supporte les métacaractères. Séparez les entrées avec un point-virgule"
 
 #: ../src/preferences.ui.h:22
 msgid "Exclude files:"
-msgstr "Exclure les fichiers:"
+msgstr "Exclure les fichiers :"
 
 #: ../src/preferences.ui.h:23
 msgid "e.g. \".git;*.tmp\""
@@ -357,28 +356,28 @@ msgstr "Exclure"
 
 #: ../src/preferences.ui.h:25
 msgid "Database"
-msgstr "Base de Donnée"
+msgstr "Base de données"
 
 #: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
 #: ../src/fsearch_window.c:780
 #, c-format
 msgid "%'d Items"
-msgstr "%'d Éléments"
+msgstr "%'d éléments"
 
 #: ../src/fsearch_window.c:786
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Dernière Mise à Jour: %Y-%m-%d %H:%M"
+msgstr "Dernière mise à jour: %d/%m/%Y à %H:%M"
 
 #: ../src/fsearch_window.c:801
 #, c-format
 msgid "Loading Database..."
-msgstr "Chargement de la Base de Donnée..."
+msgstr "Chargement de la base de données…"
 
 #: ../src/fsearch.c:336
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
-"Un utilitaire de recherche axé sur la performance et les fonctionnalités "
-"avancées"
+"Un utilitaire de recherche axé sur la performance et avec des "
+"fonctionnalités avancées"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
@@ -386,15 +385,15 @@ msgstr "Voulez-vous vraiment supprimer"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr "fichiers?"
+msgstr "fichiers ?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr "Suppression des fichiers..."
+msgstr "Suppression des fichiers…"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr "Déplacement des fichiers dans la corbeille..."
+msgstr "Déplacement des fichiers dans la corbeille…"
 
 #~ msgid "Selected Folder and Files"
 #~ msgstr "Dossiers et Fichiers Sélectionnés"
