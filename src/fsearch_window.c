@@ -221,8 +221,7 @@ reset_sort_order (FsearchApplicationWindow *win)
 
     GList *list = gtk_tree_view_get_columns (GTK_TREE_VIEW (win->listview));
     GList *l;
-    for (l = list; l != NULL; l = l->next)
-    {
+    for (l = list; l != NULL; l = l->next) {
         GtkTreeViewColumn *col = GTK_TREE_VIEW_COLUMN (l->data);
         if (l == list) {
             gtk_tree_view_column_set_sort_order (col, GTK_SORT_ASCENDING);
@@ -242,7 +241,6 @@ typedef enum {
     NO_SEARCH_QUERY_OVERLAY,
     NO_DATABASE_OVERLAY,
     DATABASE_UPDATING_OVERLAY,
-    N_FSEARCH_OVERLAYS
 } FsearchOverlay;
 
 static void
@@ -272,8 +270,6 @@ show_overlay (FsearchApplicationWindow *win, FsearchOverlay overlay)
         case DATABASE_UPDATING_OVERLAY:
             gtk_widget_show (win->database_updating_overlay);
             break;
-        default:
-            return;
     }
 }
 
@@ -423,26 +419,34 @@ on_listview_key_press_event (GtkWidget *widget,
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
     GActionGroup *group = G_ACTION_GROUP (win);
     if (event->state & GDK_CONTROL_MASK) {
-        if ((event->keyval == GDK_KEY_Return)
-            || (event->keyval == GDK_KEY_KP_Enter)) {
-            g_action_group_activate_action (group, "open_folder", NULL);
-            return TRUE;
-        }
-        else if (event->keyval == GDK_KEY_c) {
-            g_action_group_activate_action (group, "copy_clipboard", NULL);
-            return TRUE;
+        switch (event->keyval) {
+            case GDK_KEY_Return:
+            case GDK_KEY_KP_Enter:
+                g_action_group_activate_action (group, "open_folder", NULL);
+                return TRUE;
+            case GDK_KEY_c:
+                g_action_group_activate_action (group, "copy_clipboard", NULL);
+                return TRUE;
+            default:
+                return FALSE;
         }
     }
     else if (event->state & GDK_SHIFT_MASK) {
-        if (event->keyval == GDK_KEY_Delete) {
-            g_action_group_activate_action (group, "delete_selection", NULL);
-            return TRUE;
+        switch (event->keyval) {
+            case GDK_KEY_Delete:
+                g_action_group_activate_action (group, "delete_selection", NULL);
+                return TRUE;
+            default:
+                return FALSE;
         }
     }
     else {
-        if (event->keyval == GDK_KEY_Delete) {
-            g_action_group_activate_action (group, "move_to_trash", NULL);
-            return TRUE;
+        switch (event->keyval) {
+            case GDK_KEY_Delete:
+                g_action_group_activate_action (group, "move_to_trash", NULL);
+                return TRUE;
+            default:
+                return FALSE;
         }
     }
     return FALSE;
