@@ -20,7 +20,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 -->
 <interface>
-  <requires lib="gtk+" version="3.16"/>
+  <requires lib="gtk+" version="3.12"/>
   <!-- interface-license-type gplv2 -->
   <!-- interface-name FSearch -->
   <!-- interface-copyright Christian Boxd\303\266rfer -->
@@ -604,9 +604,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <class name="fsearch-results-frame"/>
                 </style>
               </object>
-              <packing>
-                <property name="index">-1</property>
-              </packing>
             </child>
           </object>
           <packing>
@@ -758,7 +755,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
               <object class="GtkStack" id="database_stack">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="hhomogeneous">False</property>
                 <property name="transition_type">crossfade</property>
                 <child>
                   <object class="GtkBox" id="database_box1">

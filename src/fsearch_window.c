@@ -33,6 +33,7 @@
 #include "listview.h"
 #include "debug.h"
 #include "fsearch_limits.h"
+#include "gtk_support.h"
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
