@@ -446,6 +446,10 @@ on_listview_key_press_event (GtkWidget *widget,
             case GDK_KEY_Delete:
                 g_action_group_activate_action (group, "move_to_trash", NULL);
                 return TRUE;
+            case GDK_KEY_Return:
+            case GDK_KEY_KP_Enter:
+                g_action_group_activate_action (group, "open", NULL);
+                return TRUE;
             default:
                 return FALSE;
         }
