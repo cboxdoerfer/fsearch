@@ -408,10 +408,11 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
                                  BTreeNode *parent,
                                  int spec)
 {
-    int res = WALK_OK;
     int len = strlen (dname);
-    if (len >= FILENAME_MAX - 1)
+    if (len >= FILENAME_MAX - 1) {
+        //trace ("filename too long: %s\n", dname);
         return WALK_NAMETOOLONG;
+    }
 
     char fn[FILENAME_MAX] = "";
     strcpy (fn, dname);
@@ -422,7 +423,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
 
     DIR *dir = NULL;
     if (!(dir = opendir (dname))) {
-        //warn("can't open %s", dname);
+        //trace ("can't open: %s\n", dname);
         return WALK_BADIO;
     }
     gulong duration = 0;
@@ -436,7 +437,6 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
     }
 
     struct dirent *dent = NULL;
-    errno = 0;
     while ((dent = readdir (dir))) {
         if (!(spec & WS_DOTFILES) && dent->d_name[0] == '.') {
             // file is dotfile, skip
@@ -454,7 +454,6 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         strncpy (fn + len, dent->d_name, FILENAME_MAX - len);
         if (lstat (fn, &st) == -1) {
             //warn("Can't stat %s", fn);
-            res = WALK_BADIO;
             continue;
         }
 
@@ -487,7 +486,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
     if (dir) {
         closedir (dir);
     }
-    return res ? res : errno ? WALK_BADIO : WALK_OK;
+    return WALK_OK;
 }
 
 static DatabaseLocation *
@@ -527,6 +526,7 @@ db_location_build_tree (const char *dname, void (*callback)(const char *))
         return location;
     }
     else {
+        trace ("walk error: %d", res);
         db_location_free (location);
     }
     return NULL;
