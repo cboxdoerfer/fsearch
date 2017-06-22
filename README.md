@@ -19,7 +19,8 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ## Requirements
 - GTK+ 3.12
-- GLib 2.44 or musl 1.1.15 (other C standard libraries might work too, those are just the ones I verified)
+- GLib 2.44
+- glibc 2.19 or musl 1.1.15 (other C standard libraries might work too, those are just the ones I verified)
 - PCRE (libpcre)
 
 ## Download
