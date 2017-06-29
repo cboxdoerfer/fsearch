@@ -8,21 +8,24 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-23 19:31+0200\n"
-"PO-Revision-Date: 2017-01-13 10:56+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2017-06-29 01:19+0000\n"
+"Last-Translator: anonymous <>\n"
+"Language-Team: Chinese (Simplified) "
+"<https://hosted.weblate.org/projects/fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Weblate 2.15-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr ""
+msgstr "打开文件"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr ""
+msgstr "使用其他程序打开"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
@@ -30,55 +33,55 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr ""
+msgstr "在文件管理器中打开文件"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "删除到回收站"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr ""
+msgstr "搜索"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr ""
+msgstr "_文件"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr ""
+msgstr "新窗口"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr ""
+msgstr "打开文件夹"
 
 #: ../src/fsearch.glade.h:10
 msgid "Update Database"
-msgstr ""
+msgstr "更新数据库"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr ""
+msgstr "_编辑"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr ""
+msgstr "取消所有选择"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr ""
+msgstr "反选"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr ""
+msgstr "_视图"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr ""
+msgstr "显示菜单"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr ""
+msgstr "显示状态栏"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
