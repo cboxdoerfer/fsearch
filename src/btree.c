@@ -290,37 +290,30 @@ btree_node_build_path (BTreeNode *node, char *path, size_t path_len)
         }
         return true;
     }
+
     const int32_t depth = btree_node_depth (node);
+    char *parents[depth + 1];
+    parents[depth] = NULL;
+
     BTreeNode *temp = node;
-    if (depth > 1) {
-        char *parents[depth + 1];
-        parents[depth] = NULL;
-
-        for (int32_t i = depth - 1; i >= 0 && temp; i--) {
-            parents[i] = temp->name;
-            temp = temp->parent;
-        }
-
-        char *ptr = path;
-        int bytes_left = path_len;
-        int bytes_written = fsearch_string_copy (ptr, parents[0], bytes_left);
-        bytes_left -= bytes_written;
-        ptr += bytes_written;
-
-        uint32_t counter = 1;
-        char *item = parents[counter];
-        while (item && bytes_left > 0) {
-            *ptr++ = '/';
-            bytes_left--;
-            bytes_written = fsearch_string_copy (ptr, item, bytes_left);
-            bytes_left -= bytes_written;
-            ptr += bytes_written;
-            counter++;
-            item = parents[counter];
-        }
-        return true;
+    for (int32_t i = depth - 1; i >= 0 && temp; i--) {
+        parents[i] = temp->name;
+        temp = temp->parent;
     }
-    return false;
+
+    char *ptr = path;
+    char *end = &path[path_len - 1];
+
+    uint32_t counter = 0;
+    ptr = fsearch_string_copy (ptr, end, parents[counter++]);
+
+    char *item = parents[counter++];
+    while (item && ptr != end) {
+        ptr = fsearch_string_copy (ptr, end, "/");
+        ptr = fsearch_string_copy (ptr, end, item);
+        item = parents[counter++];
+    }
+    return true;
 }
 
 bool
