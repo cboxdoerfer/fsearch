@@ -45,7 +45,6 @@ struct _Database
     GList *locations;
     GList *searches;
     DynamicArray *entries;
-    GPtrArray *filtered_entries;
     uint32_t num_entries;
 
     time_t timestamp;
