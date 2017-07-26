@@ -107,9 +107,7 @@ update_db_cb (gpointer user_data)
 
     for (; windows; windows = windows->next) {
         GtkWindow *window = windows->data;
-
-        if (FSEARCH_WINDOW_IS_WINDOW (window))
-        {
+        if (FSEARCH_WINDOW_IS_WINDOW (window)) {
             fsearch_application_window_update_database_label ((FsearchApplicationWindow *) window, text);
         }
     }
@@ -165,7 +163,6 @@ fsearch_application_shutdown (GApplication *app)
 
     for (; windows; windows = windows->next) {
         window = windows->data;
-
         if (FSEARCH_WINDOW_IS_WINDOW (window)) {
             fsearch_application_window_prepare_shutdown (window);
         }
