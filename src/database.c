@@ -640,7 +640,7 @@ db_location_remove (Database *db, const char *path)
 }
 
 static void
-build_location_path (char *path, size_t path_len, const char *location_name)
+location_build_path (char *path, size_t path_len, const char *location_name)
 {
     g_assert (path != NULL);
     g_assert (location_name != NULL);
@@ -672,7 +672,7 @@ db_location_delete (DatabaseLocation *location, const char *location_name)
     g_assert (location_name != NULL);
 
     gchar database_path[PATH_MAX] = "";
-    build_location_path (database_path,
+    location_build_path (database_path,
                          sizeof (database_path),
                          location_name);
 
@@ -691,7 +691,7 @@ db_save_location (Database *db, const char *location_name)
     g_assert (db != NULL);
 
     gchar database_path[PATH_MAX] = "";
-    build_location_path (database_path,
+    location_build_path (database_path,
                          sizeof (database_path),
                          location_name);
     trace ("%s\n", database_path);
@@ -729,7 +729,7 @@ static gchar *
 db_location_get_path (const char *location_name)
 {
     gchar database_path[PATH_MAX] = "";
-    build_location_path (database_path,
+    location_build_path (database_path,
                          sizeof (database_path),
                          location_name);
     trace ("%s\n", database_path);
