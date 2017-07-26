@@ -654,7 +654,7 @@ build_location_path (char *path, size_t path_len, const char *location_name)
     g_assert (path_checksum != NULL);
 
     gchar config_dir[PATH_MAX] = "";
-    build_config_dir (config_dir, sizeof (config_dir));
+    config_build_dir (config_dir, sizeof (config_dir));
 
     snprintf (path,
               path_len,

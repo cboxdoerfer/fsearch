@@ -30,7 +30,7 @@ const char *config_file_name = "fsearch.conf";
 const char *config_folder_name = "fsearch";
 
 void
-build_config_dir (char *path, size_t len)
+config_build_dir (char *path, size_t len)
 {
     g_assert (path != NULL);
     g_assert (len >= 0);
@@ -41,7 +41,7 @@ build_config_dir (char *path, size_t len)
 }
 
 static void
-build_config_path (char *path, size_t len)
+config_build_path (char *path, size_t len)
 {
     g_assert (path != NULL);
     g_assert (len >= 0);
@@ -52,10 +52,10 @@ build_config_path (char *path, size_t len)
 }
 
 bool
-make_config_dir (void)
+config_make_dir (void)
 {
     gchar config_dir[PATH_MAX] = "";
-    build_config_dir (config_dir, sizeof (config_dir));
+    config_build_dir (config_dir, sizeof (config_dir));
     return !g_mkdir_with_parents (config_dir, 0700);
 }
 
@@ -125,7 +125,7 @@ config_load_string (GKeyFile *key_file,
 }
 
 bool
-load_config (FsearchConfig *config)
+config_load (FsearchConfig *config)
 {
     g_assert (config != NULL);
 
@@ -134,7 +134,7 @@ load_config (FsearchConfig *config)
     g_assert (key_file != NULL);
 
     gchar config_path[PATH_MAX] = "";
-    build_config_path (config_path, sizeof (config_path));
+    config_build_path (config_path, sizeof (config_path));
 
     GError *error = NULL;
     if (g_key_file_load_from_file (key_file, config_path, G_KEY_FILE_NONE, &error)) {
@@ -343,7 +343,7 @@ load_config (FsearchConfig *config)
 }
 
 bool
-load_default_config (FsearchConfig *config)
+config_load_default (FsearchConfig *config)
 {
     g_assert (config != NULL);
 
@@ -403,7 +403,7 @@ load_default_config (FsearchConfig *config)
 }
 
 bool
-save_config (FsearchConfig *config)
+config_save (FsearchConfig *config)
 {
     g_assert (config != NULL);
 
@@ -488,7 +488,7 @@ save_config (FsearchConfig *config)
     }
 
     gchar config_path[PATH_MAX] = "";
-    build_config_path (config_path, sizeof (config_path));
+    config_build_path (config_path, sizeof (config_path));
 
     GError *error = NULL;
     if (g_key_file_save_to_file (key_file, config_path, &error)) {

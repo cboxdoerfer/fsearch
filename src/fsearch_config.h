@@ -84,19 +84,19 @@ struct _FsearchConfig
 
 
 bool
-make_config_dir (void);
+config_make_dir (void);
 
 bool
-load_config (FsearchConfig *config);
+config_load (FsearchConfig *config);
 
 bool
-load_default_config (FsearchConfig *config);
+config_load_default (FsearchConfig *config);
 
 bool
-save_config (FsearchConfig *config);
+config_save (FsearchConfig *config);
 
 void
-build_config_dir (char *path, size_t len);
+config_build_dir (char *path, size_t len);
 
 void
 config_free (FsearchConfig *config);

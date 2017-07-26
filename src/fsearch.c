@@ -130,7 +130,7 @@ static bool
 make_location_dir (void)
 {
     gchar config_dir[PATH_MAX] = "";
-    build_config_dir (config_dir, sizeof (config_dir));
+    config_build_dir (config_dir, sizeof (config_dir));
     gchar location_dir[PATH_MAX] = "";
     snprintf (location_dir, sizeof (location_dir), "%s/%s", config_dir, "database");
     return !g_mkdir_with_parents (location_dir, 0700);
@@ -139,11 +139,11 @@ make_location_dir (void)
 static void
 fsearch_application_init (FsearchApplication *app)
 {
-    make_config_dir ();
+    config_make_dir ();
     make_location_dir ();
     app->config = calloc (1, sizeof (FsearchConfig));
-    if (!load_config (app->config)) {
-        if (!load_default_config (app->config)) {
+    if (!config_load (app->config)) {
+        if (!config_load_default (app->config)) {
         }
     }
     app->db = NULL;
@@ -175,7 +175,7 @@ fsearch_application_shutdown (GApplication *app)
     if (fsearch->pool) {
         fsearch_thread_pool_free (fsearch->pool);
     }
-    save_config (fsearch->config);
+    config_save (fsearch->config);
     config_free (fsearch->config);
     g_mutex_clear (&fsearch->mutex);
     G_APPLICATION_CLASS (fsearch_application_parent_class)->shutdown (app);
