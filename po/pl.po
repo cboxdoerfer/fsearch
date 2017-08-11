@@ -8,381 +8,389 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-23 19:31+0200\n"
-"PO-Revision-Date: 2017-05-23 19:31+0200\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2017-08-11 21:30+0000\n"
+"Last-Translator: Daniel Napora <napcok@gmail.com>\n"
+"Language-Team: Polish "
+"<https://hosted.weblate.org/projects/fsearch/translations/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=(n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
-"|| n%100>=20) ? 1 : 2);\n"
+"Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
+"|| n%100>=20) ? 1 : 2;\n"
+"X-Generator: Weblate 2.16\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr ""
+msgstr "Otwórz plik(i)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr ""
+msgstr "Otwórz za pomocą innej aplikacji"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr ""
+msgstr "Otwórz katalog"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr ""
+msgstr "Otwórz pliki w Menedżerze plików"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "Usuń"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr ""
+msgstr "_Plik"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr ""
+msgstr "Nowe okno"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr ""
+msgstr "Otwórz katalog"
 
 #: ../src/fsearch.glade.h:10
 msgid "Update Database"
-msgstr ""
+msgstr "Uaktualnij bazę danych"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr ""
+msgstr "_Edycja"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr ""
+msgstr "Odznacz wszystko"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr ""
+msgstr "Odwróć zaznaczenie"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr ""
+msgstr "_Widok"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr ""
+msgstr "Pokaż pasek menu"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr ""
+msgstr "Pokaż pasek stanu"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr ""
+msgstr "Pokaż filtr"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr ""
+msgstr "Pokaż przycisk Szukaj"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr ""
+msgstr "_Szukaj"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr ""
+msgstr "Szukaj w ścieżce"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr ""
+msgstr "Uwzględniaj wielkość liter"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr ""
+msgstr "Wyrażenia regularne"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr ""
+msgstr "_Pomoc"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
-msgstr ""
+msgstr "Szukaj..."
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr ""
+msgstr "Wybierz filtr"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr ""
+msgstr "Wszystkie"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
-msgstr ""
+msgstr "Katalogi"
 
 #: ../src/fsearch.glade.h:28
 msgid "Files"
-msgstr ""
+msgstr "Pliki"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
 msgid "Search"
-msgstr ""
+msgstr "Szukaj"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Liczba wyników wyszukiwania"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
-msgstr ""
+msgstr "0 wyników"
 
 #: ../src/fsearch.glade.h:32
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr ""
+msgstr "Aktualizowanie bazy danych..."
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
-msgstr ""
+msgstr "page0"
 
 #: ../src/fsearch.glade.h:35
 msgid "(empty)"
-msgstr ""
+msgstr "(puste)"
 
 #: ../src/fsearch.glade.h:36
 msgid "page1"
-msgstr ""
+msgstr "Strona1"
 
 #: ../src/fsearch.glade.h:37
 msgid "CASE"
-msgstr ""
+msgstr "CASE"
 
 #: ../src/fsearch.glade.h:38
 msgid "PATH"
-msgstr ""
+msgstr "ŚCIEŻKA"
 
 #: ../src/fsearch.glade.h:39
 msgid "REGEX"
-msgstr ""
+msgstr "REGEX"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr ""
+msgstr "_Otwórz"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr ""
+msgstr "Otwórz za pomocą"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr ""
+msgstr "Inna aplikacja"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr ""
+msgstr "_Otwórz katalog"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr ""
+msgstr "C_ut"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr ""
+msgstr "_Kopiuj"
 
 #: ../src/menus.ui.h:7
 msgid "Move to _Trash"
-msgstr ""
+msgstr "Przenieś do kosza"
 
 #: ../src/menus.ui.h:8
 msgid "_Delete"
-msgstr ""
+msgstr "_Usuń"
 
 #: ../src/menus.ui.h:9 ../src/listview.c:149
 msgid "Name"
-msgstr ""
+msgstr "Nazwa"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:178
 msgid "Path"
-msgstr ""
+msgstr "Ścieżka"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:268
 msgid "Type"
-msgstr ""
+msgstr "Typ"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:207
 msgid "Size"
-msgstr ""
+msgstr "Rozmiar"
 
 #: ../src/menus.ui.h:13 ../src/listview.c:239
 msgid "Date Modified"
-msgstr ""
+msgstr "Data modyfikacji"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr ""
+msgstr "Pusta baza danych"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
+"Przejdź do <b>Edycja → Preferencje → Baza danych</b> i dodaj jakieś "
+"lokalizacje"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr ""
+msgstr "Puste zapytanie"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Naciśnij <b>Ctrl + F</b> i wpisz zapytanie"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr ""
+msgstr "To może trochę potrwać."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr ""
+msgstr "Nie znaleziono wyników"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr ""
+msgstr "Spróbuj innego wyszukiwania"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
-msgstr ""
+msgstr "Preferencje"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Włącz ciemny motyw"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr ""
+msgstr "Wyświetlaj podpowiedzi"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr ""
+msgstr "Pamiętaj rozmiar okna"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Pamiętaj konfigurację kolumn"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Pokaż ikony w kolumnie Nazwa"
 
 #: ../src/preferences.ui.h:7
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
+"INFO: \"Włącz ciemny motyw\" może nie przynieść efektu, ponieważ nie każdy "
+"temat GTK + udostępnia wersję ciemną."
 
 #: ../src/preferences.ui.h:9
 msgid "Interface"
-msgstr ""
+msgstr "Interfejs"
 
 #: ../src/preferences.ui.h:10
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Ogranicz liczbę wyników:"
 
 #: ../src/preferences.ui.h:11
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Wyszukuj w ścieżce, gdy kwerenda zawiera separatory ścieżki"
 
 #: ../src/preferences.ui.h:12
 msgid "Search as you type"
-msgstr ""
+msgstr "Wyszukiwanie podczas pisania"
 
 #: ../src/preferences.ui.h:13
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Ukryj wyniki gdy kwerenda jest pusta"
 
 #: ../src/preferences.ui.h:15
 msgid "Update database on start"
-msgstr ""
+msgstr "Uaktualnij bazę danych przy starcie"
 
 #: ../src/preferences.ui.h:16
 msgid "Add"
-msgstr ""
+msgstr "Dodaj"
 
 #: ../src/preferences.ui.h:17
 msgid "Remove"
-msgstr ""
+msgstr "Usuń"
 
 #: ../src/preferences.ui.h:18
 msgid "Follow symbolic links"
-msgstr ""
+msgstr "Podążaj za dowiązaniami symbolicznymi"
 
 #: ../src/preferences.ui.h:19
 msgid "Include"
-msgstr ""
+msgstr "Dołącz"
 
 #: ../src/preferences.ui.h:20
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Wykluczenie ukrytych plików i katalogów"
 
 #: ../src/preferences.ui.h:21
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "Obsługuje symbole wieloznaczne. Wpisy muszą być oddzielone znakiem ';'"
 
 #: ../src/preferences.ui.h:22
 msgid "Exclude files:"
-msgstr ""
+msgstr "Wyklucz pliki:"
 
 #: ../src/preferences.ui.h:23
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "np.: \".git; *.tmp\""
 
 #: ../src/preferences.ui.h:24
 msgid "Exclude"
-msgstr ""
+msgstr "Wyklucz"
 
 #: ../src/preferences.ui.h:25
 msgid "Database"
-msgstr ""
+msgstr "Baza danych"
 
 #: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
 #: ../src/fsearch_window.c:780
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d wyniki"
 
 #: ../src/fsearch_window.c:786
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Ostatnia aktualizacja: %Y-%m-%d % H: %M"
 
 #: ../src/fsearch_window.c:801
 #, c-format
 msgid "Loading Database..."
-msgstr ""
+msgstr "Ładowania bazy danych..."
 
 #: ../src/fsearch.c:336
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
+"Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
+"funkcjach"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Na pewno chcesz usunąć"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr ""
+msgstr "pliki?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Usuwanie plików..."
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr ""
+msgstr "Przenoszenie plików do kosza..."
