@@ -32,26 +32,8 @@ static bool model_changed = false;
 static FsearchConfig *main_config = NULL;
 
 static void
-location_tree_row_deleted (GtkTreeModel *tree_model,
+location_tree_row_modified (GtkTreeModel *tree_model,
                            GtkTreePath  *path,
-                           gpointer      user_data)
-{
-    model_changed = true;
-}
-
-static void
-location_tree_row_inserted (GtkTreeModel *tree_model,
-                            GtkTreePath  *path,
-                            GtkTreeIter  *iter,
-                            gpointer      user_data)
-{
-    model_changed = true;
-}
-
-static void
-location_tree_row_changed (GtkTreeModel *tree_model,
-                           GtkTreePath  *path,
-                           GtkTreeIter  *iter,
                            gpointer      user_data)
 {
     model_changed = true;
@@ -75,15 +57,7 @@ create_tree_model (GList *list)
     }
     g_signal_connect ((gpointer)store,
                       "row-changed",
-                      G_CALLBACK (location_tree_row_changed),
-                      NULL);
-    g_signal_connect ((gpointer)store,
-                      "row-deleted",
-                      G_CALLBACK (location_tree_row_deleted),
-                      NULL);
-    g_signal_connect ((gpointer)store,
-                      "row-inserted",
-                      G_CALLBACK (location_tree_row_inserted),
+                      G_CALLBACK (location_tree_row_modified),
                       NULL);
 
     return GTK_TREE_MODEL (store);
@@ -94,8 +68,7 @@ enable_dark_theme_infobar_response (GtkInfoBar *info_bar,
                                     gint response_id,
                                     gpointer user_data)
 {
-    if (response_id == GTK_RESPONSE_CLOSE)
-    {
+    if (response_id == GTK_RESPONSE_CLOSE) {
         gtk_widget_hide (GTK_WIDGET (info_bar));
         return;
     }
@@ -417,21 +390,13 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->auto_search_in_path = gtk_toggle_button_get_active (auto_search_in_path_button);
         main_config->hide_results_on_empty_search = gtk_toggle_button_get_active (hide_results_button);
         main_config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
-
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
-
         main_config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
-
         main_config->show_listview_icons = gtk_toggle_button_get_active (show_icons_button);
-
         main_config->restore_column_config = gtk_toggle_button_get_active (restore_column_config_button);
-
         main_config->enable_list_tooltips = gtk_toggle_button_get_active (show_tooltips_button);
-
         main_config->restore_window_size = gtk_toggle_button_get_active (restore_win_size_button);
-
         main_config->update_database_on_launch = gtk_toggle_button_get_active (update_db_at_start_button);
-
 
         bool old_exclude_hidden_items = main_config->exclude_hidden_items;
         main_config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);
