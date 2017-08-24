@@ -8,16 +8,17 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-23 19:31+0200\n"
-"PO-Revision-Date: 2017-04-29 08:05+0000\n"
-"Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
-"Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
-"translations/ja/>\n"
+"PO-Revision-Date: 2017-08-25 07:46+0000\n"
+"Last-Translator: YAMADA Shinichirou "
+"<yamada_strong_yamada_nice_64bit@yahoo.co.jp>\n"
+"Language-Team: Japanese "
+"<https://hosted.weblate.org/projects/fsearch/translations/ja/>\n"
 "Language: ja\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.14-dev\n"
+"X-Generator: Weblate 2.17-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -45,7 +46,7 @@ msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr "ファイル"
+msgstr "ファイル(_F)"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
@@ -61,7 +62,7 @@ msgstr "データベースをアップデート"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr "編集"
+msgstr "編集(_E)"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
@@ -73,7 +74,7 @@ msgstr "選択を反転"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr "表示"
+msgstr "表示(_V)"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
@@ -93,7 +94,7 @@ msgstr "検索ボタンを表示"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr "検索"
+msgstr "検索(_S)"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
@@ -109,7 +110,7 @@ msgstr "正規表現を有効"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr "ヘルプ"
+msgstr "ヘルプ(_H)"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
@@ -177,11 +178,11 @@ msgstr "正規表現"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr "開く"
+msgstr "開く(_O)"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr "〜で開く"
+msgstr "次で開く(_W)"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
@@ -189,23 +190,23 @@ msgstr "他のアプリケーション"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr "フォルダを開く"
+msgstr "フォルダを開く(_O)"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr "切り取り"
+msgstr "切り取り(_U)"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr "コピー"
+msgstr "コピー(_C)"
 
 #: ../src/menus.ui.h:7
 msgid "Move to _Trash"
-msgstr "ゴミ箱へ送る"
+msgstr "ゴミ箱に送る(_T)"
 
 #: ../src/menus.ui.h:8
 msgid "_Delete"
-msgstr "削除"
+msgstr "削除(_D)"
 
 #: ../src/menus.ui.h:9 ../src/listview.c:149
 msgid "Name"
@@ -301,7 +302,7 @@ msgstr "検索結果数を制限:"
 
 #: ../src/preferences.ui.h:11
 msgid "Search in path when query contains path separators"
-msgstr "クエリがパスセパレータを含むときはパスを検索する"
+msgstr "クエリがパス区切り文字を含む場合はパスを検索"
 
 #: ../src/preferences.ui.h:12
 msgid "Search as you type"
@@ -309,11 +310,11 @@ msgstr "文字入力ごとに検索"
 
 #: ../src/preferences.ui.h:13
 msgid "Hide results when search is empty"
-msgstr "検索結果が空のときは結果を隠す"
+msgstr "検索結果が空の場合は結果を隠す"
 
 #: ../src/preferences.ui.h:15
 msgid "Update database on start"
-msgstr "起動時にデータベースをアップデートする"
+msgstr "起動時にデータベースをアップデート"
 
 #: ../src/preferences.ui.h:16
 msgid "Add"
@@ -333,7 +334,7 @@ msgstr "含む"
 
 #: ../src/preferences.ui.h:20
 msgid "Exclude hidden files and folders"
-msgstr "隠しファイルとフォルダを除く"
+msgstr "隠しファイルと隠しフォルダを除外"
 
 #: ../src/preferences.ui.h:21
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -376,11 +377,11 @@ msgstr "検索ユーティリティはパフォーマンスと追加機能にフ
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr "本当に削除しますか"
+msgstr "本当に"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr "ファイル？"
+msgstr "個のファイルを削除しますか？"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
@@ -388,7 +389,7 @@ msgstr "ファイルを削除中…"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr "ゴミ箱へ移動中…"
+msgstr "ゴミ箱に移動中…"
 
 #~ msgid "Selected Folder and Files"
 #~ msgstr "選択されたフォルダとファイル"
