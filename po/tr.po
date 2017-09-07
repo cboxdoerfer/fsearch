@@ -1,0 +1,391 @@
+# Turkish translations for FSearch package
+# Turkish translation for FSearch.
+# Copyright (C) 2017 Şeref Erçelik, SEGO
+# This file is distributed under the same license as the FSearch package.
+#  <seref@ercelik.net>, 2017.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2017-09-07 05:07+0300\n"
+"PO-Revision-Date: 2017-09-07 05:24+0300\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: Poedit 1.8.7.1\n"
+"Last-Translator: \n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Language: tr\n"
+
+#: ../src/fsearch.glade.h:1
+msgid "Open File(s)"
+msgstr "Dosya Aç"
+
+#: ../src/fsearch.glade.h:2
+msgid "Open With Other Application"
+msgstr "Başka Bir Uygulama İle Aç"
+
+#: ../src/fsearch.glade.h:3
+msgid "Open Containing Folder"
+msgstr "Dosyayı İçeren Klasörü Aç"
+
+#: ../src/fsearch.glade.h:4
+msgid "Open File(s) in File Manager"
+msgstr "Dosyayı Dosya Yöneticisi İle Aç"
+
+#: ../src/fsearch.glade.h:5
+msgid "Move to Trash"
+msgstr "Çöp Sepetine Taşı"
+
+#: ../src/fsearch.glade.h:6
+msgid "FSearch"
+msgstr "FSearch"
+
+#: ../src/fsearch.glade.h:7
+msgid "_File"
+msgstr "_Dosya"
+
+#: ../src/fsearch.glade.h:8
+msgid "New Window"
+msgstr "Yeni Pencere"
+
+#: ../src/fsearch.glade.h:9
+msgid "Open Folder"
+msgstr "Klasörü Aç"
+
+#: ../src/fsearch.glade.h:10
+msgid "Update Database"
+msgstr "Veritabanını Güncelle"
+
+#: ../src/fsearch.glade.h:11
+msgid "_Edit"
+msgstr "_Düzenle"
+
+#: ../src/fsearch.glade.h:12
+msgid "Deselect All"
+msgstr "Bütün Seçimi Kaldır"
+
+#: ../src/fsearch.glade.h:13
+msgid "Invert Selection"
+msgstr "Seçimini Tersine Çevir"
+
+#: ../src/fsearch.glade.h:14
+msgid "_View"
+msgstr "_Görüntüle"
+
+#: ../src/fsearch.glade.h:15
+msgid "Show Menubar"
+msgstr "Menü Çubuğunu Göster"
+
+#: ../src/fsearch.glade.h:16
+msgid "Show Statusbar"
+msgstr "Durum Çubuğunu Göster"
+
+#: ../src/fsearch.glade.h:17
+msgid "Show Filter"
+msgstr "Filtreyi Göster"
+
+#: ../src/fsearch.glade.h:18
+msgid "Show Search Button"
+msgstr "Arama Bununu Göster"
+
+#: ../src/fsearch.glade.h:19
+msgid "_Search"
+msgstr "_Ara"
+
+#: ../src/fsearch.glade.h:20
+msgid "Search in Path"
+msgstr "Dosya Yolunda Ara"
+
+#: ../src/fsearch.glade.h:21
+msgid "Match Case"
+msgstr "Büyük Küçük Harfe Duyarlı"
+
+#: ../src/fsearch.glade.h:22
+msgid "Enable RegEx"
+msgstr "RegEx'i Aktifleştir"
+
+#: ../src/fsearch.glade.h:23
+msgid "_Help"
+msgstr "_Yardım"
+
+#: ../src/fsearch.glade.h:24
+msgid "Search..."
+msgstr "Ara.."
+
+#: ../src/fsearch.glade.h:25
+msgid "Select a Filter"
+msgstr "Bir Filtre Seç"
+
+#: ../src/fsearch.glade.h:26
+msgid "All"
+msgstr "Hepsi"
+
+#: ../src/fsearch.glade.h:27
+msgid "Folders"
+msgstr "Klasörler"
+
+#: ../src/fsearch.glade.h:28
+msgid "Files"
+msgstr "Dosyalar"
+
+#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
+msgid "Search"
+msgstr "Ara"
+
+#: ../src/fsearch.glade.h:30
+msgid "Number of Search Results"
+msgstr "Arama Sonucunun Sayısı"
+
+#: ../src/fsearch.glade.h:31
+msgid "0 Items"
+msgstr "0 Öğe"
+
+#: ../src/fsearch.glade.h:32
+msgid "0/0"
+msgstr "0/0"
+
+#: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
+msgid "Updating Database..."
+msgstr "Veritabanı Güncelleniyor.."
+
+#: ../src/fsearch.glade.h:34
+msgid "page0"
+msgstr "sayfa0"
+
+#: ../src/fsearch.glade.h:35
+msgid "(empty)"
+msgstr "(boş)"
+
+#: ../src/fsearch.glade.h:36
+msgid "page1"
+msgstr "sayfa1"
+
+#: ../src/fsearch.glade.h:37
+msgid "CASE"
+msgstr "DURUM"
+
+#: ../src/fsearch.glade.h:38
+msgid "PATH"
+msgstr "YOL"
+
+#: ../src/fsearch.glade.h:39
+msgid "REGEX"
+msgstr "REGEX"
+
+#: ../src/menus.ui.h:1
+msgid "_Open"
+msgstr "_Aç"
+
+#: ../src/menus.ui.h:2
+msgid "Open _With"
+msgstr "İle_Aç"
+
+#: ../src/menus.ui.h:3
+msgid "Other Application"
+msgstr "Diğer Uygulama"
+
+#: ../src/menus.ui.h:4
+msgid "_Open Folder"
+msgstr "_Klasörü Aç"
+
+#: ../src/menus.ui.h:5
+msgid "C_ut"
+msgstr "_Kes"
+
+#: ../src/menus.ui.h:6
+msgid "_Copy"
+msgstr "_Kopyala"
+
+#: ../src/menus.ui.h:7
+msgid "Move to _Trash"
+msgstr "_Çöp Sepetine Taşı"
+
+#: ../src/menus.ui.h:8
+msgid "_Delete"
+msgstr "Sil"
+
+#: ../src/menus.ui.h:9 ../src/listview.c:149
+msgid "Name"
+msgstr "İsim"
+
+#: ../src/menus.ui.h:10 ../src/listview.c:178
+msgid "Path"
+msgstr "Yol"
+
+#: ../src/menus.ui.h:11 ../src/listview.c:268
+msgid "Type"
+msgstr "Tür"
+
+#: ../src/menus.ui.h:12 ../src/listview.c:207
+msgid "Size"
+msgstr "Boyut"
+
+#: ../src/menus.ui.h:13 ../src/listview.c:239
+msgid "Date Modified"
+msgstr "Düzenlenme Tarihi"
+
+#: ../src/overlay.ui.h:1
+msgid "Empty Database"
+msgstr "Boş Veritabanı"
+
+#: ../src/overlay.ui.h:2
+msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+msgstr "<b>Düzenle  → Ayarlar → Veritabanı</b> seçeneğine giderek bir klasör yolu ekleyin"
+
+#: ../src/overlay.ui.h:3
+msgid "Empty Query"
+msgstr "Boş Sorgu"
+
+#: ../src/overlay.ui.h:4
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
+
+#: ../src/overlay.ui.h:6
+msgid "..."
+msgstr "..."
+
+#: ../src/overlay.ui.h:7
+msgid "This may take a while."
+msgstr "Bu biraz zaman alacak."
+
+#: ../src/overlay.ui.h:8
+msgid "No Results Found"
+msgstr "Hiç bir sonuç bulunamadı."
+
+#: ../src/overlay.ui.h:9
+msgid "Try a different search"
+msgstr "Farklı bir arama deneyiniz"
+
+#: ../src/preferences.ui.h:1
+msgid "Preferences"
+msgstr "Ayarlar"
+
+#: ../src/preferences.ui.h:2
+msgid "Enable dark theme"
+msgstr "Karanlık Temayı Aktifleştir"
+
+#: ../src/preferences.ui.h:3
+msgid "Show tooltips"
+msgstr "İpuçlarını Göster"
+
+#: ../src/preferences.ui.h:4
+msgid "Remember window size"
+msgstr "Ekran Boyutunu Hatırla"
+
+#: ../src/preferences.ui.h:5
+msgid "Remember column configuration"
+msgstr "Kolon Yapısını Hatırla"
+
+#: ../src/preferences.ui.h:6
+msgid "Show icons in name column"
+msgstr "İsim Kolonunda İkonları Göster"
+
+#: ../src/preferences.ui.h:7
+msgid ""
+"INFO: \"Enable dark theme\" might not have an effect,\n"
+"since not every GTK+ theme provides a dark version."
+msgstr ""
+"BİLGİ: \"Karanlık Temayı Aktifleştir\" çalışmayabilir,\n"
+"Çünkü her GTK + teması karanlık temayı desteklemiyor. "
+
+#: ../src/preferences.ui.h:9
+msgid "Interface"
+msgstr "Arayüz"
+
+#: ../src/preferences.ui.h:10
+msgid "Limit number of results:"
+msgstr "Arama Sonucu Limiti: "
+
+#: ../src/preferences.ui.h:11
+msgid "Search in path when query contains path separators"
+msgstr "Sorgu dosya yolu içerdiği zaman dosya yollarında arama yap"
+
+#: ../src/preferences.ui.h:12
+msgid "Search as you type"
+msgstr "Yazarken ara"
+
+#: ../src/preferences.ui.h:13
+msgid "Hide results when search is empty"
+msgstr "Eğer sonuç boşsa sonuçları gizle"
+
+#: ../src/preferences.ui.h:15
+msgid "Update database on start"
+msgstr "Başlangıçta veritabanını güncelle"
+
+#: ../src/preferences.ui.h:16
+msgid "Add"
+msgstr "Ekle"
+
+#: ../src/preferences.ui.h:17
+msgid "Remove"
+msgstr "Sil"
+
+#: ../src/preferences.ui.h:18
+msgid "Follow symbolic links"
+msgstr "Sembolik Linkleri Takip Et"
+
+#: ../src/preferences.ui.h:19
+msgid "Include"
+msgstr "Aktar"
+
+#: ../src/preferences.ui.h:20
+msgid "Exclude hidden files and folders"
+msgstr "Gizli dosya ve klasörleri hariç tut"
+
+#: ../src/preferences.ui.h:21
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr "Birden fazla girdiyi destekler. Birden fazla girdi ';' ile ayrılmalıdır."
+
+#: ../src/preferences.ui.h:22
+msgid "Exclude files:"
+msgstr "Hariç tutulan dosyalar: "
+
+#: ../src/preferences.ui.h:23
+msgid "e.g. \".git;*.tmp\""
+msgstr "örn: \".git,*.tmp\""
+
+#: ../src/preferences.ui.h:24
+msgid "Exclude"
+msgstr "Hariç Tut"
+
+#: ../src/preferences.ui.h:25
+msgid "Database"
+msgstr "Veritabanı"
+
+#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
+#: ../src/fsearch_window.c:780
+#, c-format
+msgid "%'d Items"
+msgstr "%'d Öğe"
+
+#: ../src/fsearch_window.c:786
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr "Son Güncelleme Tarihi:  %Y-%m-%d %H:%M"
+
+#: ../src/fsearch_window.c:801
+#, c-format
+msgid "Loading Database..."
+msgstr "Veritabanı Yükleniyor..."
+
+#: ../src/fsearch.c:336
+msgid "A search utility focusing on performance and advanced features"
+msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
+
+#: ../src/fsearch_window_actions.c:138
+msgid "Do you really want to remove"
+msgstr "Gerçekten silmek istediğinize emin misiniz?"
+
+#: ../src/fsearch_window_actions.c:138
+msgid "files?"
+msgstr "dosyalar?"
+
+#: ../src/fsearch_window_actions.c:142
+msgid "Deleting files..."
+msgstr "Dosyalar Siliniyor..."
+
+#: ../src/fsearch_window_actions.c:142
+msgid "Moving files to trash..."
+msgstr "Dosyalar çöp sepetine taşınıyor."
