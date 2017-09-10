@@ -477,7 +477,7 @@ build_queries (DatabaseSearch *search, FsearchQuery *q)
 
     // check if regex characters are present
     const bool is_reg = is_regex (q->query);
-    if (is_reg && q->enable_regex) {
+    if (is_reg && search->enable_regex) {
         search_query_t **queries = calloc (2, sizeof (search_thread_context_t *));
         queries[0] = search_query_new (tmp_query_copy, search->match_case);
         queries[1] = NULL;
