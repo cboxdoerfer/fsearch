@@ -8,8 +8,9 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-05-23 19:31+0200\n"
-"PO-Revision-Date: 2017-09-26 07:47+0000\n"
-"Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
+"PO-Revision-Date: 2017-09-26 18:11+0000\n"
+"Last-Translator: YAMADA Shinichirou "
+"<yamada_strong_yamada_nice_64bit@yahoo.co.jp>\n"
 "Language-Team: Japanese "
 "<https://hosted.weblate.org/projects/fsearch/translations/ja/>\n"
 "Language: ja\n"
@@ -376,7 +377,7 @@ msgstr "検索ユーティリティはパフォーマンスと追加機能にフ
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr "本当に削除しますか"
+msgstr "本当に"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
