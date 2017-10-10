@@ -168,6 +168,10 @@ config_load (FsearchConfig *config)
                                                           "Interface",
                                                           "show_search_button",
                                                           true);
+        config->show_base_2_units = config_load_boolean (key_file,
+                                                         "Interface",
+                                                         "show_base_2_units",
+                                                         false);
 
         // Window
         config->restore_window_size = config_load_boolean (key_file,
@@ -365,6 +369,7 @@ config_load_default (FsearchConfig *config)
     config->show_statusbar = true;
     config->show_filter = true;
     config->show_search_button = true;
+    config->show_base_2_units = false;
 
     // Columns
     config->show_listview_icons = true;
@@ -419,6 +424,7 @@ config_save (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Interface", "show_statusbar", config->show_statusbar);
     g_key_file_set_boolean (key_file, "Interface", "show_filter", config->show_filter);
     g_key_file_set_boolean (key_file, "Interface", "show_search_button", config->show_search_button);
+    g_key_file_set_boolean (key_file, "Interface", "show_base_2_units", config->show_base_2_units);
 
     // Window
     g_key_file_set_boolean (key_file, "Interface", "restore_window_size", config->restore_window_size);
