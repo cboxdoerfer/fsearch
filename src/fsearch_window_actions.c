@@ -273,6 +273,21 @@ fsearch_window_action_copy (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_copy_filepath (GSimpleAction *action,
+                                     GVariant      *variant,
+                                     gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (selection) {
+        GList *file_list = NULL;
+        gtk_tree_selection_selected_foreach (selection, copy_file, &file_list);
+        file_list = g_list_reverse (file_list);
+        clipboard_copy_filepath_list (file_list);
+    }
+}
+
+static void
 open_cb (GtkTreeModel *model,
          GtkTreePath *path,
          GtkTreeIter *iter,
@@ -672,6 +687,7 @@ static GActionEntry FsearchWindowActions[] = {
     { "open_with_other", fsearch_window_action_open_with_other },
     { "open_folder", fsearch_window_action_open_folder },
     { "copy_clipboard", fsearch_window_action_copy },
+    { "copy_filepath_clipboard", fsearch_window_action_copy_filepath },
     { "cut_clipboard", fsearch_window_action_cut },
     { "move_to_trash", fsearch_window_action_move_to_trash },
     { "delete_selection", fsearch_window_action_delete },
@@ -720,6 +736,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "deselect_all", num_rows_selected);
     action_set_enabled (group, "invert_selection", num_rows_selected);
     action_set_enabled (group, "copy_clipboard", num_rows_selected);
+    action_set_enabled (group, "copy_filepath_clipboard", num_rows_selected);
     action_set_enabled (group, "cut_clipboard", num_rows_selected);
     action_set_enabled (group, "delete_selection", num_rows_selected);
     action_set_enabled (group, "move_to_trash", num_rows_selected);
