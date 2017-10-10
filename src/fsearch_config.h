@@ -34,6 +34,7 @@ struct _FsearchConfig
     bool match_case;
     bool auto_search_in_path;
     bool search_as_you_type;
+    bool show_base_2_units;
 
     // Window
     bool restore_window_size;

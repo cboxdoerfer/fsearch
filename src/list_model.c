@@ -27,6 +27,8 @@
 #include "iconstore.h"
 #include "database_search.h"
 #include "btree.h"
+#include "fsearch.h"
+#include "fsearch_config.h"
 
 /* boring declarations of local functions */
 
@@ -524,7 +526,12 @@ list_model_get_value (GtkTreeModel *tree_model,
                 g_value_set_static_string(value, output);
             }
             else {
-                formatted_size = g_format_size (node->size);
+                FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+                if (config->show_base_2_units) {
+                    formatted_size = g_format_size_full (node->size, G_FORMAT_SIZE_IEC_UNITS);
+                } else {
+                    formatted_size = g_format_size_full (node->size, G_FORMAT_SIZE_DEFAULT);
+                }
                 g_value_set_string(value, formatted_size);
             }
             break;
