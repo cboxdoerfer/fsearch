@@ -117,3 +117,20 @@ clipboard_copy_file_list (GList* file_list, guint32 copy)
     clipboard_file_list = file_list;
     clipboard_action = copy ? GDK_ACTION_COPY : GDK_ACTION_MOVE;
 }
+
+void
+clipboard_copy_filepath_list (GList* file_list)
+{
+    GtkClipboard * clip = gtk_clipboard_get (GDK_SELECTION_CLIPBOARD);
+    GString *filepathlist = g_string_sized_new (8192);
+    for (GList *file = file_list; file != NULL; file = file->next)
+    {
+        gchar* file_name = NULL;
+        file_name = (char*) file->data;
+
+        g_string_append(filepathlist , file_name);
+        g_string_append(filepathlist , "\r\n");
+    }
+    gtk_clipboard_set_text (clip, filepathlist->str, filepathlist->len);
+    g_string_free(filepathlist, TRUE);
+}

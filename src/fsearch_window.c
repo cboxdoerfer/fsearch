@@ -419,7 +419,17 @@ on_listview_key_press_event (GtkWidget *widget,
     FsearchApplicationWindow *win = user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
     GActionGroup *group = G_ACTION_GROUP (win);
-    if (event->state & GDK_CONTROL_MASK) {
+    GdkModifierType modifiers;
+    modifiers = gtk_accelerator_get_default_mod_mask ();
+    if ((event->state & modifiers) == (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) {
+        switch (event->keyval) {
+            case GDK_KEY_C:
+                g_action_group_activate_action (group, "copy_filepath_clipboard", NULL);
+                return TRUE;
+            default:
+                return FALSE;
+        }
+    } else if ((event->state & modifiers) == GDK_CONTROL_MASK) {
         switch (event->keyval) {
             case GDK_KEY_Return:
             case GDK_KEY_KP_Enter:
@@ -432,7 +442,7 @@ on_listview_key_press_event (GtkWidget *widget,
                 return FALSE;
         }
     }
-    else if (event->state & GDK_SHIFT_MASK) {
+    else if ((event->state & modifiers) == GDK_SHIFT_MASK) {
         switch (event->keyval) {
             case GDK_KEY_Delete:
                 g_action_group_activate_action (group, "delete_selection", NULL);
