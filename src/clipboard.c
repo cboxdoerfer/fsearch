@@ -132,4 +132,5 @@ clipboard_copy_filepath_list (GList* file_list)
         g_string_append(filepathlist , "\r\n");
     }
     gtk_clipboard_set_text (clip, filepathlist->str, filepathlist->len);
+    g_string_free(filepathlist, TRUE);
 }

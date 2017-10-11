@@ -22,3 +22,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 void
 clipboard_copy_file_list (GList *file_list, guint32 copy);
+
+void
+clipboard_copy_filepath_list (GList *file_list);
