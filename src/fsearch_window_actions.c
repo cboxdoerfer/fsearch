@@ -384,6 +384,11 @@ fsearch_window_action_open (GSimpleAction *action,
             gtk_tree_selection_selected_foreach (selection, open_cb, NULL);
         }
     }
+
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    if (config->close_after_file_open) {
+        g_application_quit (G_APPLICATION (FSEARCH_APPLICATION_DEFAULT));
+    }
 }
 
 static void
