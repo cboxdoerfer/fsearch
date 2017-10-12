@@ -629,6 +629,7 @@ on_listview_row_activated (GtkTreeView       *tree_view,
             launch_node (node);
         }
     }
+    fsearch_window_action_after_file_open(true);
 }
 
 static void

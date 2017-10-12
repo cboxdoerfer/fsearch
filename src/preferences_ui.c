@@ -257,10 +257,20 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active(show_base_2_units,
                                  main_config->show_base_2_units);
 
-    GtkToggleButton *close_after_file_open = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                    "close_after_file_open"));
-    gtk_toggle_button_set_active(close_after_file_open,
-                                 main_config->close_after_file_open);
+    GtkComboBoxText *action_after_file_open = GTK_COMBO_BOX_TEXT( builder_get_object(builder,
+                                                                                     "action_after_file_open"));
+    gtk_combo_box_set_active(action_after_file_open,
+                             main_config->action_after_file_open);
+
+    GtkToggleButton *action_after_file_open_keyboard = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                              "action_after_file_open_keyboard"));
+    gtk_toggle_button_set_active(action_after_file_open_keyboard,
+                                 main_config->action_after_file_open_keyboard);
+
+    GtkToggleButton *action_after_file_open_mouse = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                           "action_after_file_open_mouse"));
+    gtk_toggle_button_set_active(action_after_file_open_mouse,
+                                 main_config->action_after_file_open_mouse);
 
     // Search page
     GtkToggleButton *auto_search_in_path_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
@@ -408,7 +418,9 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->restore_window_size = gtk_toggle_button_get_active (restore_win_size_button);
         main_config->update_database_on_launch = gtk_toggle_button_get_active (update_db_at_start_button);
         main_config->show_base_2_units = gtk_toggle_button_get_active (show_base_2_units);
-        main_config->close_after_file_open = gtk_toggle_button_get_active (close_after_file_open);
+        main_config->action_after_file_open = gtk_combo_box_get_active(action_after_file_open);
+        main_config->action_after_file_open_keyboard = gtk_toggle_button_get_active (action_after_file_open_keyboard);
+        main_config->action_after_file_open_mouse = gtk_toggle_button_get_active (action_after_file_open_mouse);
 
         bool old_exclude_hidden_items = main_config->exclude_hidden_items;
         main_config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);

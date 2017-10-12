@@ -172,10 +172,18 @@ config_load (FsearchConfig *config)
                                                          "Interface",
                                                          "show_base_2_units",
                                                          false);
-        config->close_after_file_open = config_load_boolean (key_file,
+        config->action_after_file_open = config_load_integer(key_file,
                                                              "Interface",
-                                                             "close_after_file_open",
-                                                             false);
+                                                             "action_after_file_open",
+                                                             0);
+        config->action_after_file_open_keyboard = config_load_boolean (key_file,
+                                                                    "Interface",
+                                                                    "action_after_file_open_keyboard",
+                                                                    false);
+        config->action_after_file_open_mouse = config_load_boolean (key_file,
+                                                                    "Interface",
+                                                                    "action_after_file_open_mouse",
+                                                                    false);
 
         // Window
         config->restore_window_size = config_load_boolean (key_file,
@@ -374,7 +382,9 @@ config_load_default (FsearchConfig *config)
     config->show_filter = true;
     config->show_search_button = true;
     config->show_base_2_units = false;
-    config->close_after_file_open = false;
+    config->action_after_file_open = 0;
+    config->action_after_file_open_keyboard = false;
+    config->action_after_file_open_mouse = false;
 
     // Columns
     config->show_listview_icons = true;
@@ -430,7 +440,9 @@ config_save (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Interface", "show_filter", config->show_filter);
     g_key_file_set_boolean (key_file, "Interface", "show_search_button", config->show_search_button);
     g_key_file_set_boolean (key_file, "Interface", "show_base_2_units", config->show_base_2_units);
-    g_key_file_set_boolean (key_file, "Interface", "close_after_file_open", config->close_after_file_open);
+    g_key_file_set_integer (key_file, "Interface", "action_after_file_open", config->action_after_file_open);
+    g_key_file_set_boolean (key_file, "Interface", "action_after_file_open_keyboard", config->action_after_file_open_keyboard);
+    g_key_file_set_boolean (key_file, "Interface", "action_after_file_open_mouse", config->action_after_file_open_mouse);
 
     // Window
     g_key_file_set_boolean (key_file, "Interface", "restore_window_size", config->restore_window_size);

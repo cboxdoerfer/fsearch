@@ -321,6 +321,20 @@ open_with_cb (GtkTreeModel *model,
     }
 }
 
+void
+fsearch_window_action_after_file_open(bool action_mouse) {
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+
+    if ((config->action_after_file_open_keyboard && !action_mouse)
+    || (config->action_after_file_open_mouse && action_mouse)) {
+        if (config->action_after_file_open == 1) {
+            g_application_quit (G_APPLICATION (FSEARCH_APPLICATION_DEFAULT));
+        } else {
+            gtk_window_iconify (gtk_application_get_active_window (G_APPLICATION (FSEARCH_APPLICATION_DEFAULT)));
+        }
+    }
+}
+
 static void
 fsearch_window_action_open_with (GSimpleAction *action,
                                  GVariant      *variant,
@@ -384,11 +398,7 @@ fsearch_window_action_open (GSimpleAction *action,
             gtk_tree_selection_selected_foreach (selection, open_cb, NULL);
         }
     }
-
-    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    if (config->close_after_file_open) {
-        g_application_quit (G_APPLICATION (FSEARCH_APPLICATION_DEFAULT));
-    }
+    fsearch_window_action_after_file_open(false);
 }
 
 static void
@@ -419,11 +429,7 @@ fsearch_window_action_open_folder (GSimpleAction *action,
             gtk_tree_selection_selected_foreach (selection, open_folder_cb, NULL);
         }
     }
-
-    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-    if (config->close_after_file_open) {
-        g_application_quit (G_APPLICATION (FSEARCH_APPLICATION_DEFAULT));
-    }
+    fsearch_window_action_after_file_open(false);
 }
 
 static void
