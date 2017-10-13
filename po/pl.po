@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-23 19:31+0200\n"
+"POT-Creation-Date: 2017-10-13 18:11+0200\n"
 "PO-Revision-Date: 2017-08-11 21:30+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
-"Language-Team: Polish "
-"<https://hosted.weblate.org/projects/fsearch/translations/pl/>\n"
+"Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
+"translations/pl/>\n"
 "Language: pl\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -132,7 +132,7 @@ msgstr "Katalogi"
 msgid "Files"
 msgstr "Pliki"
 
-#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
+#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
 msgstr "Szukaj"
 
@@ -201,30 +201,34 @@ msgid "_Copy"
 msgstr "_Kopiuj"
 
 #: ../src/menus.ui.h:7
+msgid "_Copy Filepath"
+msgstr ""
+
+#: ../src/menus.ui.h:8
 msgid "Move to _Trash"
 msgstr "Przenieś do kosza"
 
-#: ../src/menus.ui.h:8
+#: ../src/menus.ui.h:9
 msgid "_Delete"
 msgstr "_Usuń"
 
-#: ../src/menus.ui.h:9 ../src/listview.c:149
+#: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
 msgstr "Nazwa"
 
-#: ../src/menus.ui.h:10 ../src/listview.c:178
+#: ../src/menus.ui.h:11 ../src/listview.c:178
 msgid "Path"
 msgstr "Ścieżka"
 
-#: ../src/menus.ui.h:11 ../src/listview.c:268
+#: ../src/menus.ui.h:12 ../src/listview.c:268
 msgid "Type"
 msgstr "Typ"
 
-#: ../src/menus.ui.h:12 ../src/listview.c:207
+#: ../src/menus.ui.h:13 ../src/listview.c:207
 msgid "Size"
 msgstr "Rozmiar"
 
-#: ../src/menus.ui.h:13 ../src/listview.c:239
+#: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
 msgstr "Data modyfikacji"
 
@@ -287,6 +291,10 @@ msgid "Show icons in name column"
 msgstr "Pokaż ikony w kolumnie Nazwa"
 
 #: ../src/preferences.ui.h:7
+msgid "Use binary units instead of decimal units"
+msgstr ""
+
+#: ../src/preferences.ui.h:8
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
@@ -294,86 +302,86 @@ msgstr ""
 "INFO: \"Włącz ciemny motyw\" może nie przynieść efektu, ponieważ nie każdy "
 "temat GTK + udostępnia wersję ciemną."
 
-#: ../src/preferences.ui.h:9
+#: ../src/preferences.ui.h:10
 msgid "Interface"
 msgstr "Interfejs"
 
-#: ../src/preferences.ui.h:10
+#: ../src/preferences.ui.h:11
 msgid "Limit number of results:"
 msgstr "Ogranicz liczbę wyników:"
 
-#: ../src/preferences.ui.h:11
+#: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
 msgstr "Wyszukuj w ścieżce, gdy kwerenda zawiera separatory ścieżki"
 
-#: ../src/preferences.ui.h:12
+#: ../src/preferences.ui.h:13
 msgid "Search as you type"
 msgstr "Wyszukiwanie podczas pisania"
 
-#: ../src/preferences.ui.h:13
+#: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
 msgstr "Ukryj wyniki gdy kwerenda jest pusta"
 
-#: ../src/preferences.ui.h:15
+#: ../src/preferences.ui.h:16
 msgid "Update database on start"
 msgstr "Uaktualnij bazę danych przy starcie"
 
-#: ../src/preferences.ui.h:16
+#: ../src/preferences.ui.h:17
 msgid "Add"
 msgstr "Dodaj"
 
-#: ../src/preferences.ui.h:17
+#: ../src/preferences.ui.h:18
 msgid "Remove"
 msgstr "Usuń"
 
-#: ../src/preferences.ui.h:18
+#: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
 msgstr "Podążaj za dowiązaniami symbolicznymi"
 
-#: ../src/preferences.ui.h:19
+#: ../src/preferences.ui.h:20
 msgid "Include"
 msgstr "Dołącz"
 
-#: ../src/preferences.ui.h:20
+#: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
 msgstr "Wykluczenie ukrytych plików i katalogów"
 
-#: ../src/preferences.ui.h:21
+#: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Obsługuje symbole wieloznaczne. Wpisy muszą być oddzielone znakiem ';'"
 
-#: ../src/preferences.ui.h:22
+#: ../src/preferences.ui.h:23
 msgid "Exclude files:"
 msgstr "Wyklucz pliki:"
 
-#: ../src/preferences.ui.h:23
+#: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
 msgstr "np.: \".git; *.tmp\""
 
-#: ../src/preferences.ui.h:24
+#: ../src/preferences.ui.h:25
 msgid "Exclude"
 msgstr "Wyklucz"
 
-#: ../src/preferences.ui.h:25
+#: ../src/preferences.ui.h:26
 msgid "Database"
 msgstr "Baza danych"
 
-#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
-#: ../src/fsearch_window.c:780
+#: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
+#: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
 msgstr "%'d wyniki"
 
-#: ../src/fsearch_window.c:786
+#: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Ostatnia aktualizacja: %Y-%m-%d % H: %M"
 
-#: ../src/fsearch_window.c:801
+#: ../src/fsearch_window.c:820
 #, c-format
 msgid "Loading Database..."
 msgstr "Ładowania bazy danych..."
 
-#: ../src/fsearch.c:336
+#: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
