@@ -31,8 +31,8 @@ node_move_to_trash (BTreeNode *node);
 bool
 node_delete (BTreeNode *node);
 
-void
+bool
 launch_node (BTreeNode *node);
 
-void
+bool
 launch_node_path (BTreeNode *node);
