@@ -297,7 +297,10 @@ open_cb (GtkTreeModel *model,
     if (entry) {
         BTreeNode *node = db_search_entry_get_node (entry);
         if (node) {
-            launch_node (node);
+            if (!launch_node (node)) {
+                bool *open_failed = data;
+                *open_failed = true;
+            }
         }
     }
 }
@@ -381,7 +384,11 @@ fsearch_window_action_open (GSimpleAction *action,
     if (selection) {
         guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
         if (selected_rows <= 10) {
-            gtk_tree_selection_selected_foreach (selection, open_cb, NULL);
+            bool open_failed = false;
+            gtk_tree_selection_selected_foreach (selection, open_cb, &open_failed);
+            if (!open_failed) {
+                // open succeeded
+            }
         }
     }
 }
@@ -396,7 +403,10 @@ open_folder_cb (GtkTreeModel *model,
     if (entry) {
         BTreeNode *node = db_search_entry_get_node (entry);
         if (node) {
-            launch_node_path (node);
+            if (!launch_node_path (node)) {
+                bool *open_failed = data;
+                *open_failed = true;
+            }
         }
     }
 }
@@ -411,7 +421,11 @@ fsearch_window_action_open_folder (GSimpleAction *action,
     if (selection) {
         guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
         if (selected_rows <= 10) {
-            gtk_tree_selection_selected_foreach (selection, open_folder_cb, NULL);
+            bool open_failed = false;
+            gtk_tree_selection_selected_foreach (selection, open_folder_cb, &open_failed);
+            if (!open_failed) {
+                // open succeeded
+            }
         }
     }
 }
