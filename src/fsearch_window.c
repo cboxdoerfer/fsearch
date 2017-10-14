@@ -626,7 +626,9 @@ on_listview_row_activated (GtkTreeView       *tree_view,
         DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
         if (entry) {
             BTreeNode * node = db_search_entry_get_node (entry);
-            launch_node (node);
+            if (launch_node (node)) {
+                // open succeeded
+            }
         }
     }
     fsearch_window_action_after_file_open(true);

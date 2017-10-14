@@ -59,6 +59,10 @@ create_tree_model (GList *list)
                       "row-changed",
                       G_CALLBACK (location_tree_row_modified),
                       NULL);
+    g_signal_connect ((gpointer)store,
+                      "row-deleted",
+                      G_CALLBACK (location_tree_row_modified),
+                      NULL);
 
     return GTK_TREE_MODEL (store);
 }

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-23 19:31+0200\n"
+"POT-Creation-Date: 2017-10-13 18:11+0200\n"
 "PO-Revision-Date: 2017-05-02 06:29+0000\n"
 "Last-Translator: conradolandia <andresconrado@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -132,7 +132,7 @@ msgstr "Carpetas"
 msgid "Files"
 msgstr "Ficheros"
 
-#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
+#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
 msgstr "Buscar"
 
@@ -201,30 +201,34 @@ msgid "_Copy"
 msgstr "_Copiar"
 
 #: ../src/menus.ui.h:7
+msgid "_Copy Filepath"
+msgstr ""
+
+#: ../src/menus.ui.h:8
 msgid "Move to _Trash"
 msgstr "Mover a _Papelera"
 
-#: ../src/menus.ui.h:8
+#: ../src/menus.ui.h:9
 msgid "_Delete"
 msgstr "_Eliminar"
 
-#: ../src/menus.ui.h:9 ../src/listview.c:149
+#: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
 msgstr "Nombre"
 
-#: ../src/menus.ui.h:10 ../src/listview.c:178
+#: ../src/menus.ui.h:11 ../src/listview.c:178
 msgid "Path"
 msgstr "Ruta"
 
-#: ../src/menus.ui.h:11 ../src/listview.c:268
+#: ../src/menus.ui.h:12 ../src/listview.c:268
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/menus.ui.h:12 ../src/listview.c:207
+#: ../src/menus.ui.h:13 ../src/listview.c:207
 msgid "Size"
 msgstr "Tamaño"
 
-#: ../src/menus.ui.h:13 ../src/listview.c:239
+#: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
 msgstr "Fecha"
 
@@ -285,6 +289,10 @@ msgid "Show icons in name column"
 msgstr "Mostrar íconos en la columna Nombre"
 
 #: ../src/preferences.ui.h:7
+msgid "Use binary units instead of decimal units"
+msgstr ""
+
+#: ../src/preferences.ui.h:8
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
@@ -292,86 +300,86 @@ msgstr ""
 "Nota: \"Habilitar tema oscuro\" puede no funcionar,\n"
 "ya que no todos los temas GTK+ tienen versión oscura."
 
-#: ../src/preferences.ui.h:9
+#: ../src/preferences.ui.h:10
 msgid "Interface"
 msgstr "Interfaz"
 
-#: ../src/preferences.ui.h:10
+#: ../src/preferences.ui.h:11
 msgid "Limit number of results:"
 msgstr "Limitar cantidad de resultados a:"
 
-#: ../src/preferences.ui.h:11
+#: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
 msgstr "Buscar en la ruta cuando la consulta tenga separadores de ruta"
 
-#: ../src/preferences.ui.h:12
+#: ../src/preferences.ui.h:13
 msgid "Search as you type"
 msgstr "Buscar mientras escribe"
 
-#: ../src/preferences.ui.h:13
+#: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
 msgstr "Esconder resultados cuando la búsqueda está vacia"
 
-#: ../src/preferences.ui.h:15
+#: ../src/preferences.ui.h:16
 msgid "Update database on start"
 msgstr "Actualizar base de datos al inicio"
 
-#: ../src/preferences.ui.h:16
+#: ../src/preferences.ui.h:17
 msgid "Add"
 msgstr "Añadir"
 
-#: ../src/preferences.ui.h:17
+#: ../src/preferences.ui.h:18
 msgid "Remove"
 msgstr "Eliminar"
 
-#: ../src/preferences.ui.h:18
+#: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
 msgstr "Seguir enlaces simbólicos"
 
-#: ../src/preferences.ui.h:19
+#: ../src/preferences.ui.h:20
 msgid "Include"
 msgstr "Incluir"
 
-#: ../src/preferences.ui.h:20
+#: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
 msgstr "Excluir archivos y carpetas ocultas"
 
-#: ../src/preferences.ui.h:21
+#: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Soporta comodines, separar múltiples entradas con ';'"
 
-#: ../src/preferences.ui.h:22
+#: ../src/preferences.ui.h:23
 msgid "Exclude files:"
 msgstr "Excluir ficheros:"
 
-#: ../src/preferences.ui.h:23
+#: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
 msgstr "Ejemplo: \".git;*.tmp\""
 
-#: ../src/preferences.ui.h:24
+#: ../src/preferences.ui.h:25
 msgid "Exclude"
 msgstr "Excluir"
 
-#: ../src/preferences.ui.h:25
+#: ../src/preferences.ui.h:26
 msgid "Database"
 msgstr "Base de datos"
 
-#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
-#: ../src/fsearch_window.c:780
+#: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
+#: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
 msgstr "%'d resultados"
 
-#: ../src/fsearch_window.c:786
+#: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Actualizado: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch_window.c:801
+#: ../src/fsearch_window.c:820
 #, c-format
 msgid "Loading Database..."
 msgstr "Cargando base de datos..."
 
-#: ../src/fsearch.c:336
+#: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Un software de búsqueda enfocado en la velocidad y con características "

@@ -7,11 +7,11 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-05-23 19:31+0200\n"
+"POT-Creation-Date: 2017-10-13 18:11+0200\n"
 "PO-Revision-Date: 2017-06-29 02:09+0000\n"
 "Last-Translator: zhangxg <13853499678@139.com>\n"
-"Language-Team: Chinese (Simplified) "
-"<https://hosted.weblate.org/projects/fsearch/translations/zh_Hans/>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -131,7 +131,7 @@ msgstr "文件夹"
 msgid "Files"
 msgstr "文件"
 
-#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:14
+#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
 msgstr "搜索"
 
@@ -200,30 +200,34 @@ msgid "_Copy"
 msgstr "_复制"
 
 #: ../src/menus.ui.h:7
+msgid "_Copy Filepath"
+msgstr ""
+
+#: ../src/menus.ui.h:8
 msgid "Move to _Trash"
 msgstr "移动到回收站"
 
-#: ../src/menus.ui.h:8
+#: ../src/menus.ui.h:9
 msgid "_Delete"
 msgstr "_删除"
 
-#: ../src/menus.ui.h:9 ../src/listview.c:149
+#: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
 msgstr "名称"
 
-#: ../src/menus.ui.h:10 ../src/listview.c:178
+#: ../src/menus.ui.h:11 ../src/listview.c:178
 msgid "Path"
 msgstr "路径"
 
-#: ../src/menus.ui.h:11 ../src/listview.c:268
+#: ../src/menus.ui.h:12 ../src/listview.c:268
 msgid "Type"
 msgstr "类型"
 
-#: ../src/menus.ui.h:12 ../src/listview.c:207
+#: ../src/menus.ui.h:13 ../src/listview.c:207
 msgid "Size"
 msgstr "大小"
 
-#: ../src/menus.ui.h:13 ../src/listview.c:239
+#: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
 msgstr "修改日期"
 
@@ -284,6 +288,10 @@ msgid "Show icons in name column"
 msgstr "显示图标"
 
 #: ../src/preferences.ui.h:7
+msgid "Use binary units instead of decimal units"
+msgstr ""
+
+#: ../src/preferences.ui.h:8
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
@@ -291,86 +299,86 @@ msgstr ""
 "消息: \"启用暗色主题\" 可能没有效果,\n"
 "因为不是每个 gtk+ 主题都提供了一个支持暗色的版本."
 
-#: ../src/preferences.ui.h:9
+#: ../src/preferences.ui.h:10
 msgid "Interface"
 msgstr "接口"
 
-#: ../src/preferences.ui.h:10
+#: ../src/preferences.ui.h:11
 msgid "Limit number of results:"
 msgstr "限制结果的数量:"
 
-#: ../src/preferences.ui.h:11
+#: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
 msgstr "搜索路径(如有路径分隔符)"
 
-#: ../src/preferences.ui.h:12
+#: ../src/preferences.ui.h:13
 msgid "Search as you type"
 msgstr "即时搜索"
 
-#: ../src/preferences.ui.h:13
+#: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
 msgstr "搜索不到则不显示"
 
-#: ../src/preferences.ui.h:15
+#: ../src/preferences.ui.h:16
 msgid "Update database on start"
 msgstr "开始更新数据库"
 
-#: ../src/preferences.ui.h:16
+#: ../src/preferences.ui.h:17
 msgid "Add"
 msgstr "添加"
 
-#: ../src/preferences.ui.h:17
+#: ../src/preferences.ui.h:18
 msgid "Remove"
 msgstr "删除"
 
-#: ../src/preferences.ui.h:18
+#: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
 msgstr "关注连接"
 
-#: ../src/preferences.ui.h:19
+#: ../src/preferences.ui.h:20
 msgid "Include"
 msgstr "包含"
 
-#: ../src/preferences.ui.h:20
+#: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
 msgstr "不包含隐藏的文件及文件夹"
 
-#: ../src/preferences.ui.h:21
+#: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "支持通配符.多个命令必须用 ';'"
 
-#: ../src/preferences.ui.h:22
+#: ../src/preferences.ui.h:23
 msgid "Exclude files:"
 msgstr "排除文件:"
 
-#: ../src/preferences.ui.h:23
+#: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
 msgstr "即 \".git;*.tmp\""
 
-#: ../src/preferences.ui.h:24
+#: ../src/preferences.ui.h:25
 msgid "Exclude"
 msgstr "排除"
 
-#: ../src/preferences.ui.h:25
+#: ../src/preferences.ui.h:26
 msgid "Database"
 msgstr "数据库"
 
-#: ../src/fsearch_window.c:96 ../src/fsearch_window.c:318
-#: ../src/fsearch_window.c:780
+#: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
+#: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 项"
 
-#: ../src/fsearch_window.c:786
+#: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "最后更新: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch_window.c:801
+#: ../src/fsearch_window.c:820
 #, c-format
 msgid "Loading Database..."
 msgstr "加载数据库..."
 
-#: ../src/fsearch.c:336
+#: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
 msgstr "更多选项的搜索"
 

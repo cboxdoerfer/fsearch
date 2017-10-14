@@ -56,7 +56,7 @@ build_path_uri (gchar *dest, size_t dest_len, const gchar *path, const gchar *na
     }
 }
 
-static void
+static bool
 open_uri (const char *uri)
 {
     GError *error = NULL;
@@ -81,7 +81,10 @@ open_uri (const char *uri)
                                  "Error while opening file:",
                                  error->message);
         g_error_free (error);
+
+        return false;
     }
+    return true;
 }
 
 bool
@@ -131,23 +134,25 @@ node_move_to_trash (BTreeNode *node)
     return node_remove (node, false);
 }
 
-void
+bool
 launch_node (BTreeNode *node)
 {
     char path[PATH_MAX] = "";
     bool res = btree_node_get_path_full (node, path, sizeof (path));
     if (res) {
-        open_uri (path);
+        return open_uri (path);
     }
+    return false;
 }
 
-void
+bool
 launch_node_path (BTreeNode *node)
 {
     char path[PATH_MAX] = "";
     bool res = btree_node_get_path (node, path, sizeof (path));
     if (res) {
-        open_uri (path);
+        return open_uri (path);
     }
+    return false;
 }
 
