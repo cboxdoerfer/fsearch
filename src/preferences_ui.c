@@ -207,6 +207,14 @@ update_location_config (GtkTreeModel *model, GList *list)
     return list;
 }
 
+static void
+show_dialog_failed_opening_toggled(GtkToggleButton *togglebutton, gpointer user_data)
+{
+    if (!gtk_toggle_button_get_active(togglebutton)) {
+        
+    }
+}
+
 void
 preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
 {
@@ -313,6 +321,16 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                                                                                         "update_db_at_start_button"));
     gtk_toggle_button_set_active (update_db_at_start_button,
                                   main_config->update_database_on_launch);
+
+    // Dialog page
+    GtkToggleButton *show_dialog_failed_opening = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                         "show_dialog_failed_opening"));
+    gtk_toggle_button_set_active(show_dialog_failed_opening,
+                                 main_config->show_dialog_failed_opening);
+    g_signal_connect(show_dialog_failed_opening,
+                     "toggled",
+                     G_CALLBACK (show_dialog_failed_opening_toggled),
+                     show_dialog_failed_opening);
 
     // Include page
     GtkTreeModel *include_model = create_tree_model (main_config->locations);
@@ -425,6 +443,8 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->action_after_file_open = gtk_combo_box_get_active(action_after_file_open);
         main_config->action_after_file_open_keyboard = gtk_toggle_button_get_active (action_after_file_open_keyboard);
         main_config->action_after_file_open_mouse = gtk_toggle_button_get_active (action_after_file_open_mouse);
+        // Dialogs
+        main_config->show_dialog_failed_opening = gtk_toggle_button_get_active (show_dialog_failed_opening);
 
         bool old_exclude_hidden_items = main_config->exclude_hidden_items;
         main_config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);
