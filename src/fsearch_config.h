@@ -49,6 +49,9 @@ struct _FsearchConfig
     bool action_after_file_open_keyboard;
     bool action_after_file_open_mouse;
 
+    // Warning Dialogs
+    bool show_dialog_failed_opening;
+
     // View menu
     bool show_menubar;
     bool show_statusbar;

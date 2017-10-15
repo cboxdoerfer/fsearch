@@ -185,6 +185,12 @@ config_load (FsearchConfig *config)
                                                                     "action_after_file_open_mouse",
                                                                     false);
 
+        // Warning Dialogs
+        config->show_dialog_failed_opening = config_load_boolean(key_file,
+                                                                 "Dialogs",
+                                                                 "show_dialog_failed_opening",
+                                                                 true);
+
         // Window
         config->restore_window_size = config_load_boolean (key_file,
                                                          "Interface",
@@ -405,6 +411,9 @@ config_load_default (FsearchConfig *config)
     config->size_column_width = 75;
     config->modified_column_width = 125;
 
+    // Warning Dialogs
+    config->show_dialog_failed_opening = true;
+
     // Window
     config->restore_window_size = false;
     config->window_width = 800;
@@ -443,6 +452,9 @@ config_save (FsearchConfig *config)
     g_key_file_set_integer (key_file, "Interface", "action_after_file_open", config->action_after_file_open);
     g_key_file_set_boolean (key_file, "Interface", "action_after_file_open_keyboard", config->action_after_file_open_keyboard);
     g_key_file_set_boolean (key_file, "Interface", "action_after_file_open_mouse", config->action_after_file_open_mouse);
+
+    // Warning Dialogs
+    g_key_file_set_boolean (key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);
 
     // Window
     g_key_file_set_boolean (key_file, "Interface", "restore_window_size", config->restore_window_size);
