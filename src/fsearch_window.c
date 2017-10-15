@@ -619,7 +619,7 @@ on_listview_row_activated (GtkTreeView       *tree_view,
                            GtkTreeViewColumn *column,
                            gpointer           user_data)
 {
-
+    FsearchApplicationWindow *self = user_data;
     GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
     GtkTreeIter   iter;
     if (gtk_tree_model_get_iter(model, &iter, path)) {
@@ -630,7 +630,18 @@ on_listview_row_activated (GtkTreeView       *tree_view,
                 // open succeeded
                 fsearch_window_action_after_file_open(true);
             } else {
-                
+                // open failed
+                FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+                if (config->show_dialog_failed_opening) {
+                    gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
+                                                             GTK_MESSAGE_WARNING,
+                                                             GTK_BUTTONS_YES_NO,
+                                                             _("Failed to open file"),
+                                                             _("Do you want to keep the window open?"));
+                    if (response != GTK_RESPONSE_YES) {
+                        fsearch_window_action_after_file_open(false);
+                    }
+                }
             }
         }
     }

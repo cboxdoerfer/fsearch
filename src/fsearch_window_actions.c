@@ -405,7 +405,17 @@ fsearch_window_action_open (GSimpleAction *action,
                 fsearch_window_action_after_file_open(false);
             } else {
                 // open failed
-
+                FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+                if (config->show_dialog_failed_opening) {
+                    gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
+                                                             GTK_MESSAGE_WARNING,
+                                                             GTK_BUTTONS_YES_NO,
+                                                             _("Failed to open file"),
+                                                             _("Do you want to keep the window open?"));
+                    if (response != GTK_RESPONSE_YES) {
+                        fsearch_window_action_after_file_open(false);
+                    }
+                }
             }
         }
     }
@@ -445,7 +455,18 @@ fsearch_window_action_open_folder (GSimpleAction *action,
                 // open succeeded
                 fsearch_window_action_after_file_open(false);
             } else {
-
+                // open failed
+                FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+                if (config->show_dialog_failed_opening) {
+                    gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
+                                                             GTK_MESSAGE_WARNING,
+                                                             GTK_BUTTONS_YES_NO,
+                                                             _("Failed to open file"),
+                                                             _("Do you want to keep the window open?"));
+                    if (response != GTK_RESPONSE_YES) {
+                        fsearch_window_action_after_file_open(false);
+                    }
+                }
             }
         }
     }
