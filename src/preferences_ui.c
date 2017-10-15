@@ -18,9 +18,11 @@
 
 #include <gtk/gtk.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <stdlib.h>
 #include <string.h>
 #include "fsearch.h"
+#include "ui_utils.h"
 
 enum
 {
@@ -211,7 +213,18 @@ static void
 show_dialog_failed_opening_toggled(GtkToggleButton *togglebutton, gpointer user_data)
 {
     if (!gtk_toggle_button_get_active(togglebutton)) {
-        
+        GtkWidget *window = gtk_widget_get_toplevel (GTK_WIDGET (togglebutton));
+        gint response = ui_utils_run_gtk_dialog (GTK_WINDOW (window),
+                                                 GTK_MESSAGE_QUESTION,
+                                                 GTK_BUTTONS_YES_NO,
+                                                 _("Default action if file / folder failed to open"),
+                                                 _("Do you want to keep the window open instead of closing it?"));
+        FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+        if (response == GTK_RESPONSE_YES) {            
+            config->action_failed_opening_stay_open = true;
+        } else {
+            config->action_failed_opening_stay_open = false;
+        }
     }
 }
 

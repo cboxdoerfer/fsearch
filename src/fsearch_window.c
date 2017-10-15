@@ -641,6 +641,10 @@ on_listview_row_activated (GtkTreeView       *tree_view,
                     if (response != GTK_RESPONSE_YES) {
                         fsearch_window_action_after_file_open(false);
                     }
+                } else {
+                    if (!config->action_failed_opening_stay_open) {
+                        fsearch_window_action_after_file_open(false);
+                    }
                 }
             }
         }

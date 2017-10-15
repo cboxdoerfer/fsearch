@@ -191,6 +191,12 @@ config_load (FsearchConfig *config)
                                                                  "show_dialog_failed_opening",
                                                                  true);
 
+        // Default actions
+        config->action_failed_opening_stay_open = config_load_boolean(key_file,
+                                                                     "Default_Actions",
+                                                                     "action_failed_opening_stay_open",
+                                                                     true);
+
         // Window
         config->restore_window_size = config_load_boolean (key_file,
                                                          "Interface",
@@ -414,6 +420,9 @@ config_load_default (FsearchConfig *config)
     // Warning Dialogs
     config->show_dialog_failed_opening = true;
 
+    // Default Actions
+    config->action_failed_opening_stay_open = true;
+
     // Window
     config->restore_window_size = false;
     config->window_width = 800;
@@ -455,6 +464,9 @@ config_save (FsearchConfig *config)
 
     // Warning Dialogs
     g_key_file_set_boolean (key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);
+
+    // Default Actions
+    g_key_file_set_boolean (key_file, "Default_Actions", "action_failed_opening_stay_open", config->action_failed_opening_stay_open);
 
     // Window
     g_key_file_set_boolean (key_file, "Interface", "restore_window_size", config->restore_window_size);

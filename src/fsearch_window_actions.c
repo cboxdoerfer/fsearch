@@ -415,6 +415,10 @@ fsearch_window_action_open (GSimpleAction *action,
                     if (response != GTK_RESPONSE_YES) {
                         fsearch_window_action_after_file_open(false);
                     }
+                } else {
+                    if (!config->action_failed_opening_stay_open) {
+                        fsearch_window_action_after_file_open(false);
+                    }
                 }
             }
         }
@@ -464,6 +468,10 @@ fsearch_window_action_open_folder (GSimpleAction *action,
                                                              _("Failed to open file"),
                                                              _("Do you want to keep the window open?"));
                     if (response != GTK_RESPONSE_YES) {
+                        fsearch_window_action_after_file_open(false);
+                    }
+                } else {
+                    if (!config->action_failed_opening_stay_open) {
                         fsearch_window_action_after_file_open(false);
                     }
                 }
