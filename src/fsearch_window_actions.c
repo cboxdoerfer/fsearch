@@ -333,7 +333,7 @@ fsearch_window_action_after_file_open(bool action_mouse) {
         if (config->action_after_file_open == 1) {
             g_application_quit (G_APPLICATION (FSEARCH_APPLICATION_DEFAULT));
         } else {
-            gtk_window_iconify (gtk_application_get_active_window (G_APPLICATION (FSEARCH_APPLICATION_DEFAULT)));
+            gtk_window_iconify (gtk_application_get_active_window (GTK_APPLICATION (FSEARCH_APPLICATION_DEFAULT)));
         }
     }
 }
@@ -402,10 +402,13 @@ fsearch_window_action_open (GSimpleAction *action,
             gtk_tree_selection_selected_foreach (selection, open_cb, &open_failed);
             if (!open_failed) {
                 // open succeeded
+                fsearch_window_action_after_file_open(false);
+            } else {
+                // open failed
+
             }
         }
     }
-    fsearch_window_action_after_file_open(false);
 }
 
 static void
@@ -440,10 +443,12 @@ fsearch_window_action_open_folder (GSimpleAction *action,
             gtk_tree_selection_selected_foreach (selection, open_folder_cb, &open_failed);
             if (!open_failed) {
                 // open succeeded
+                fsearch_window_action_after_file_open(false);
+            } else {
+
             }
         }
     }
-    fsearch_window_action_after_file_open(false);
 }
 
 static void
