@@ -59,6 +59,14 @@ build_path_uri (gchar *dest, size_t dest_len, const gchar *path, const gchar *na
 static bool
 open_uri (const char *uri)
 {
+    if (!uri) {
+        return false;
+    }
+
+    if (!g_file_test (uri, G_FILE_TEST_EXISTS)) {
+        return false;
+    }
+
     GError *error = NULL;
     const char *argv[3];
     argv[0] = "xdg-open";

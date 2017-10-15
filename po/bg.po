@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-06-27 13:57+0000\n"
+"PO-Revision-Date: 2017-10-15 17:10+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
-"Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
-"translations/bg/>\n"
+"Language-Team: Bulgarian "
+"<https://hosted.weblate.org/projects/fsearch/translations/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.15-dev\n"
+"X-Generator: Weblate 2.17\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -201,7 +201,7 @@ msgstr "_Копиране"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_Копиране на пътя до файла"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
@@ -291,7 +291,7 @@ msgstr "Показване на икони в имената на колонит
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Използване на бинарни единици вместо десетични"
 
 #: ../src/preferences.ui.h:8
 msgid ""
