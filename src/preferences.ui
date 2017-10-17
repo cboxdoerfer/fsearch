@@ -143,7 +143,7 @@
                     <property name="halign">start</property>
                     <property name="margin-left">6</property>
                     <property name="expand">False</property>
-                    <property name="label" translatable="yes">Behaviour after opening a file</property>
+                    <property name="label" translatable="yes">Behaviour after successfully opening a file</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
