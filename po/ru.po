@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-10-20 17:32+0000\n"
+"PO-Revision-Date: 2017-10-20 21:29+0000\n"
 "Last-Translator: Igor <f2404@yandex.ru>\n"
 "Language-Team: Russian "
 "<https://hosted.weblate.org/projects/fsearch/translations/ru/>\n"
@@ -178,11 +178,11 @@ msgstr "РЕГ ВЫР"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr "Открыть"
+msgstr "_Открыть"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr "Открыть с помощью"
+msgstr "От_крыть с помощью"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
@@ -190,27 +190,27 @@ msgstr "Другая программа"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr "Открыть папку"
+msgstr "Открыть _папку"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr "Вырезать"
+msgstr "_Вырезать"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr "Копировать"
+msgstr "_Копировать"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr "_Копировать путь"
+msgstr "Копировать п_уть"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
-msgstr "Переместить в корзину"
+msgstr "_Переместить в корзину"
 
 #: ../src/menus.ui.h:9
 msgid "_Delete"
-msgstr "Удалить"
+msgstr "_Удалить"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
@@ -287,7 +287,7 @@ msgstr "Запоминать конфигурацию колонок"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr "Показывать иконки в колонке \"имя\""
+msgstr "Показывать иконки в колонке «имя»"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
@@ -298,7 +298,7 @@ msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
-"ИНФОРМАЦИЯ: \"Включить тёмную тему\" может не иметь эффекта,\n"
+"ИНФОРМАЦИЯ: «Включить тёмную тему» может не иметь эффекта,\n"
 "т.к. не все темы GTK+ имеют тёмную версию."
 
 #: ../src/preferences.ui.h:10
@@ -356,7 +356,7 @@ msgstr "Исключить файлы:"
 
 #: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
-msgstr "например, \".git;*.tmp\""
+msgstr "например, «.git;*.tmp»"
 
 #: ../src/preferences.ui.h:25
 msgid "Exclude"
@@ -383,7 +383,8 @@ msgstr "Загрузка базы данных..."
 
 #: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
-msgstr "Специализированный инструмент поиска, нацеленный на быстродействие"
+msgstr ""
+"Инструмент поиска, нацеленный на быстродействие и продвинутые возможности"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
