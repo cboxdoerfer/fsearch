@@ -633,7 +633,8 @@ on_listview_row_activated (GtkTreeView       *tree_view,
             } else {
                 // open failed
                 FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-                if (config->show_dialog_failed_opening) {
+                if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse) 
+                && config->show_dialog_failed_opening) {
                     gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
                                                              GTK_MESSAGE_WARNING,
                                                              GTK_BUTTONS_YES_NO,
