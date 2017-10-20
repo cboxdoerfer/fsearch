@@ -25,3 +25,6 @@ fsearch_window_actions_init   (FsearchApplicationWindow *self);
 
 void
 fsearch_window_actions_update   (FsearchApplicationWindow *self);
+
+void
+fsearch_window_action_after_file_open(bool action_mouse);

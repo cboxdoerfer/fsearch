@@ -18,9 +18,11 @@
 
 #include <gtk/gtk.h>
 #include <glib.h>
+#include <glib/gi18n.h>
 #include <stdlib.h>
 #include <string.h>
 #include "fsearch.h"
+#include "ui_utils.h"
 
 enum
 {
@@ -261,6 +263,21 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active(show_base_2_units,
                                  main_config->show_base_2_units);
 
+    GtkComboBoxText *action_after_file_open = GTK_COMBO_BOX_TEXT( builder_get_object(builder,
+                                                                                     "action_after_file_open"));
+    gtk_combo_box_set_active(action_after_file_open,
+                             main_config->action_after_file_open);
+
+    GtkToggleButton *action_after_file_open_keyboard = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                              "action_after_file_open_keyboard"));
+    gtk_toggle_button_set_active(action_after_file_open_keyboard,
+                                 main_config->action_after_file_open_keyboard);
+
+    GtkToggleButton *action_after_file_open_mouse = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                           "action_after_file_open_mouse"));
+    gtk_toggle_button_set_active(action_after_file_open_mouse,
+                                 main_config->action_after_file_open_mouse);
+
     // Search page
     GtkToggleButton *auto_search_in_path_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                          "auto_search_in_path_button"));
@@ -298,6 +315,12 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                                                                                         "update_db_at_start_button"));
     gtk_toggle_button_set_active (update_db_at_start_button,
                                   main_config->update_database_on_launch);
+
+    // Dialog page
+    GtkToggleButton *show_dialog_failed_opening = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                         "show_dialog_failed_opening"));
+    gtk_toggle_button_set_active(show_dialog_failed_opening,
+                                 main_config->show_dialog_failed_opening);
 
     // Include page
     GtkTreeModel *include_model = create_tree_model (main_config->locations);
@@ -407,6 +430,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->restore_window_size = gtk_toggle_button_get_active (restore_win_size_button);
         main_config->update_database_on_launch = gtk_toggle_button_get_active (update_db_at_start_button);
         main_config->show_base_2_units = gtk_toggle_button_get_active (show_base_2_units);
+        main_config->action_after_file_open = gtk_combo_box_get_active(action_after_file_open);
+        main_config->action_after_file_open_keyboard = gtk_toggle_button_get_active (action_after_file_open_keyboard);
+        main_config->action_after_file_open_mouse = gtk_toggle_button_get_active (action_after_file_open_mouse);
+        // Dialogs
+        main_config->show_dialog_failed_opening = gtk_toggle_button_get_active (show_dialog_failed_opening);
 
         bool old_exclude_hidden_items = main_config->exclude_hidden_items;
         main_config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);

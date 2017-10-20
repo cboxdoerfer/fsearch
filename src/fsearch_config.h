@@ -45,6 +45,12 @@ struct _FsearchConfig
     bool enable_dark_theme;
     bool enable_list_tooltips;
     bool restore_column_config;
+    uint32_t action_after_file_open;
+    bool action_after_file_open_keyboard;
+    bool action_after_file_open_mouse;
+
+    // Warning Dialogs
+    bool show_dialog_failed_opening;
 
     // View menu
     bool show_menubar;
