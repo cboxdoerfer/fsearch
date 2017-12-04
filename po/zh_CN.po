@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
 "PO-Revision-Date: 2017-12-04 08:17+0000\n"
-"Last-Translator: 草剑 <gmaso87@163.com>\n"
+"Last-Translator: anonymous <>\n"
 "Language-Team: Chinese (Simplified) "
 "<https://hosted.weblate.org/projects/fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -289,7 +289,7 @@ msgstr "显示图标"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "使用二进制单位（代替十进制单位）"
 
 #: ../src/preferences.ui.h:8
 msgid ""
