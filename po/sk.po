@@ -195,7 +195,7 @@ msgid "_Copy"
 msgstr "_Kopírovať"
 
 #: ../src/menus.ui.h:7
-msgid "_Copy Filepath"
+msgid "_Kopírovať cestu k súboru"
 msgstr ""
 
 #: ../src/menus.ui.h:8
@@ -285,7 +285,7 @@ msgid "Show icons in name column"
 msgstr "Zobraziť ikony v stĺpci s názvami"
 
 #: ../src/preferences.ui.h:7
-msgid "Use binary units instead of decimal units"
+msgid "Používať binárne jednotky namiesto desatinných jednotiek"
 msgstr ""
 
 #: ../src/preferences.ui.h:8
