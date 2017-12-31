@@ -51,16 +51,6 @@ struct _Database
     time_t timestamp;
 
     GMutex mutex;
-    bool busy;
-};
-
-struct _DatabaseSearch
-{
-    GPtrArray *results;
-
-    gchar *query;
-    uint32_t search_mode;
-    uint32_t search_in_path;
 };
 
 struct _DatabaseLocation
@@ -508,9 +498,6 @@ db_location_build_tree (const char *dname, void (*callback)(const char *))
     if (!config->exclude_hidden_items) {
         spec |= WS_DOTFILES;
     }
-    //if (config->follow_symlinks) {
-    //    spec |= WS_FOLLOWLINK;
-    //}
     GTimer *timer = g_timer_new ();
     g_timer_start (timer);
     uint32_t res = db_location_walk_tree_recursive (location,
@@ -746,10 +733,8 @@ bool
 db_location_load (Database *db, const char *location_name)
 {
     db_lock (db);
-    db->busy = true;
     gchar *load_path = db_location_get_path (location_name);
     if (!load_path) {
-        db->busy = false;
         db_unlock (db);
         return false;
     }
@@ -762,12 +747,10 @@ db_location_load (Database *db, const char *location_name)
         trace ("number of nodes: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
-        db->busy = false;
         db_update_timestamp (db);
         db_unlock (db);
         return true;
     }
-    db->busy = false;
     db_update_timestamp (db);
     db_unlock (db);
     return false;
