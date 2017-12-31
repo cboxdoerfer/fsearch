@@ -29,6 +29,7 @@
 #include <dirent.h>
 #include <errno.h>
 #include <err.h>
+#include <assert.h>
 #include <glib/gstdio.h>
 #include <fnmatch.h>
 
@@ -97,14 +98,14 @@ db_list_add_location (Database *db, DatabaseLocation *location);
 static void
 db_update_timestamp (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     db->timestamp = time(NULL);
 }
 
 DatabaseLocation *
 db_location_load_from_file (const char *fname)
 {
-    g_assert (fname != NULL);
+    assert (fname != NULL);
 
     FILE *fp = fopen (fname, "rb");
     if (!fp) {
@@ -244,8 +245,8 @@ load_fail:
 bool
 db_location_write_to_file (DatabaseLocation *location, const char *path)
 {
-    g_assert (path != NULL);
-    g_assert (location != NULL);
+    assert (path != NULL);
+    assert (location != NULL);
 
     if (!location->entries) {
         return false;
@@ -573,9 +574,9 @@ db_traverse_tree_add (BTreeNode *node, void *data)
 static void
 db_list_insert_location (Database *db, DatabaseLocation *location)
 {
-    g_assert (db != NULL);
-    g_assert (location != NULL);
-    g_assert (location->entries != NULL);
+    assert (db != NULL);
+    assert (location != NULL);
+    assert (location->entries != NULL);
 
     btree_node_children_foreach (location->entries, db_traverse_tree_insert, db);
 }
@@ -584,9 +585,9 @@ db_list_insert_location (Database *db, DatabaseLocation *location)
 static void
 db_list_add_location (Database *db, DatabaseLocation *location)
 {
-    g_assert (db != NULL);
-    g_assert (location != NULL);
-    g_assert (location->entries != NULL);
+    assert (db != NULL);
+    assert (location != NULL);
+    assert (location->entries != NULL);
 
     btree_node_children_foreach (location->entries, db_traverse_tree_add, db);
 }
@@ -594,8 +595,8 @@ db_list_add_location (Database *db, DatabaseLocation *location)
 static DatabaseLocation *
 db_location_get_for_path (Database *db, const char *path)
 {
-    g_assert (db != NULL);
-    g_assert (path != NULL);
+    assert (db != NULL);
+    assert (path != NULL);
 
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
@@ -612,7 +613,7 @@ db_location_get_for_path (Database *db, const char *path)
 void
 db_location_free (DatabaseLocation *location)
 {
-    g_assert (location != NULL);
+    assert (location != NULL);
 
     if (location->entries) {
         btree_node_free (location->entries);
@@ -625,8 +626,8 @@ db_location_free (DatabaseLocation *location)
 bool
 db_location_remove (Database *db, const char *path)
 {
-    g_assert (db != NULL);
-    g_assert (path != NULL);
+    assert (db != NULL);
+    assert (path != NULL);
 
     DatabaseLocation *location = db_location_get_for_path (db, path);
     if (location) {
@@ -641,8 +642,8 @@ db_location_remove (Database *db, const char *path)
 static void
 location_build_path (char *path, size_t path_len, const char *location_name)
 {
-    g_assert (path != NULL);
-    g_assert (location_name != NULL);
+    assert (path != NULL);
+    assert (location_name != NULL);
 
     const char *location = !strcmp (location_name, "") ? "/" : location_name;
 
@@ -650,7 +651,7 @@ location_build_path (char *path, size_t path_len, const char *location_name)
                                                           location,
                                                           -1);
 
-    g_assert (path_checksum != NULL);
+    assert (path_checksum != NULL);
 
     gchar config_dir[PATH_MAX] = "";
     config_build_dir (config_dir, sizeof (config_dir));
@@ -667,8 +668,8 @@ location_build_path (char *path, size_t path_len, const char *location_name)
 void
 db_location_delete (DatabaseLocation *location, const char *location_name)
 {
-    g_assert (location != NULL);
-    g_assert (location_name != NULL);
+    assert (location != NULL);
+    assert (location_name != NULL);
 
     gchar database_path[PATH_MAX] = "";
     location_build_path (database_path,
@@ -687,7 +688,7 @@ db_location_delete (DatabaseLocation *location, const char *location_name)
 bool
 db_save_location (Database *db, const char *location_name)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
 
     gchar database_path[PATH_MAX] = "";
     location_build_path (database_path,
@@ -710,7 +711,7 @@ db_save_location (Database *db, const char *location_name)
 bool
 db_save_locations (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     g_return_val_if_fail (db->locations != NULL, false);
 
     //db_update_sort_index (db);
@@ -777,7 +778,7 @@ db_location_add (Database *db,
                  const char *location_name,
                  void (*callback)(const char *))
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     db_lock (db);
     trace ("load location: %s\n", location_name);
 
@@ -800,8 +801,8 @@ db_location_add (Database *db,
 void
 db_update_sort_index (Database *db)
 {
-    g_assert (db != NULL);
-    g_assert (db->entries != NULL);
+    assert (db != NULL);
+    assert (db->entries != NULL);
 
     for (uint32_t i = 0; i < db->num_entries; ++i) {
         BTreeNode *node = darray_get_item (db->entries, i);
@@ -812,8 +813,8 @@ db_update_sort_index (Database *db)
 static uint32_t
 db_locations_get_num_entries (Database *db)
 {
-    g_assert (db != NULL);
-    g_assert (db->locations != NULL);
+    assert (db != NULL);
+    assert (db->locations != NULL);
 
     uint32_t num_entries = 0;
     GList *locations = db->locations;
@@ -827,8 +828,8 @@ db_locations_get_num_entries (Database *db)
 void
 db_build_initial_entries_list (Database *db)
 {
-    g_assert (db != NULL);
-    g_assert (db->num_entries >= 0);
+    assert (db != NULL);
+    assert (db->num_entries >= 0);
 
     db_lock (db);
     db_entries_clear (db);
@@ -849,8 +850,8 @@ db_build_initial_entries_list (Database *db)
 void
 db_update_entries_list (Database *db)
 {
-    g_assert (db != NULL);
-    g_assert (db->num_entries >= 0);
+    assert (db != NULL);
+    assert (db->num_entries >= 0);
 
     db_lock (db);
     db_entries_clear (db);
@@ -868,7 +869,7 @@ db_update_entries_list (Database *db)
 BTreeNode *
 db_location_get_entries (DatabaseLocation *location)
 {
-    g_assert (location != NULL);
+    assert (location != NULL);
     return location->entries;
 }
 
@@ -884,7 +885,7 @@ static void
 db_entries_clear (Database *db)
 {
     // free entries
-    g_assert (db != NULL);
+    assert (db != NULL);
 
     if (db->entries) {
         darray_free (db->entries);
@@ -896,7 +897,7 @@ db_entries_clear (Database *db)
 void
 db_free (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
 
     db_entries_clear (db);
     g_mutex_clear (&db->mutex);
@@ -908,42 +909,42 @@ db_free (Database *db)
 time_t
 db_get_timestamp (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     return db->timestamp;
 }
 
 uint32_t
 db_get_num_entries (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     return db->num_entries;
 }
 
 void
 db_unlock (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     g_mutex_unlock (&db->mutex);
 }
 
 void
 db_lock (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     g_mutex_lock (&db->mutex);
 }
 
 bool
 db_try_lock (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     return g_mutex_trylock (&db->mutex);
 }
 
 DynamicArray *
 db_get_entries (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     return db->entries;
 }
 
@@ -985,8 +986,8 @@ sort_by_name (const void *a, const void *b)
 void
 db_sort (Database *db)
 {
-    g_assert (db != NULL);
-    g_assert (db->entries != NULL);
+    assert (db != NULL);
+    assert (db->entries != NULL);
 
     trace ("start sorting\n");
     darray_sort (db->entries, sort_by_name);
@@ -996,7 +997,7 @@ db_sort (Database *db)
 static void
 db_location_free_all (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
     g_return_if_fail (db->locations != NULL);
 
     GList *l = db->locations;
@@ -1012,7 +1013,7 @@ db_location_free_all (Database *db)
 bool
 db_clear (Database *db)
 {
-    g_assert (db != NULL);
+    assert (db != NULL);
 
     trace ("clear locations\n");
     db_entries_clear (db);
