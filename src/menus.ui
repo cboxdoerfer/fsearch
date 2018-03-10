@@ -14,12 +14,14 @@
                 <attribute name="icon">document-open</attribute>
                 <section id="fsearch_listview_menu_open_with_mime_section">
                 </section>
+                <!--
                 <section id="fsearch_listview_menu_open_with_other_section">
                     <item>
                         <attribute name="label" translatable="yes">Other Application</attribute>
                         <attribute name="action">win.open_with_other</attribute>
                     </item>
                 </section>
+                -->
             </submenu>
             <item>
                 <attribute name="label" translatable="yes">_Open Folder</attribute>

@@ -797,7 +797,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "delete_selection", num_rows_selected);
     action_set_enabled (group, "move_to_trash", num_rows_selected);
     action_set_enabled (group, "open", num_rows_selected);
-    action_set_enabled (group, "open_with", num_rows_selected);
+    action_set_enabled (group, "open_with", num_rows_selected == 1 ? TRUE : FALSE);
     action_set_enabled (group, "open_with_other", FALSE);
     action_set_enabled (group, "open_folder", num_rows_selected);
     action_set_enabled (group, "focus_search", TRUE);

@@ -31,6 +31,7 @@
 #include "array.h"
 #include "database_search.h"
 #include "listview.h"
+#include "listview_popup.h"
 #include "debug.h"
 #include "fsearch_limits.h"
 #include "gtk_support.h"
@@ -408,8 +409,8 @@ static gboolean
 on_listview_popup_menu (GtkWidget *widget,
                         gpointer   user_data)
 {
-    //printf("popup menu launch\n");
-    return FALSE;
+    listview_popup_menu (widget, NULL);
+    return TRUE;
 }
 
 static gboolean
@@ -468,71 +469,6 @@ on_listview_key_press_event (GtkWidget *widget,
     return FALSE;
 }
 
-static void
-fill_open_with_menu (GtkTreeView *view, GtkBuilder *builder, GtkTreePath *path)
-{
-    GtkTreeModel *model = gtk_tree_view_get_model (view);
-    if (!model) {
-        return;
-    }
-    GtkTreeIter iter;
-    if (!gtk_tree_model_get_iter(model, &iter, path)) {
-        return;
-    }
-    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
-    if (!entry) {
-        return;
-    }
-
-    BTreeNode * node = db_search_entry_get_node (entry);
-
-    GList *app_list = NULL;
-    char *content_type = NULL;
-
-    if (node->is_dir) {
-        content_type = g_content_type_from_mime_type ("inode/directory");
-    }
-    else {
-        content_type = g_content_type_guess (node->name, NULL, 0, NULL);
-    }
-
-    if (!content_type) {
-        goto clean_up;
-    }
-
-    app_list = g_app_info_get_all_for_type (content_type);
-    if (!app_list) {
-        goto clean_up;
-    }
-
-    GMenu *menu_mime = G_MENU (gtk_builder_get_object (builder,
-                                                       "fsearch_listview_menu_open_with_mime_section"));
-
-    for (GList *list_iter = app_list; list_iter; list_iter = list_iter->next) {
-        GAppInfo *app_info = list_iter->data;
-        const char *display_name = g_app_info_get_display_name (app_info);
-        const char *app_id = g_app_info_get_id (app_info);
-
-        char detailed_action[1024] = "";
-        snprintf (detailed_action, sizeof (detailed_action), "win.open_with('%s')", app_id);
-
-        GMenuItem *menu_item = g_menu_item_new (display_name, detailed_action);
-        g_menu_item_set_icon (menu_item, g_app_info_get_icon (app_info));
-        g_menu_append_item (menu_mime, menu_item);
-        g_object_unref (menu_item);
-    }
-
-clean_up:
-    if (content_type) {
-        g_free (content_type);
-        content_type = NULL;
-    }
-    if (app_list) {
-        g_list_free_full (app_list, g_object_unref);
-        app_list = NULL;
-    }
-}
-
 static gboolean
 on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
@@ -547,50 +483,9 @@ on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpoint
 
     if (event->type == GDK_BUTTON_PRESS)
     {
-        if (event->button == GDK_BUTTON_SECONDARY)
+        if (gdk_event_triggers_context_menu ((GdkEvent *) event))
         {
-            GtkTreeView *view = GTK_TREE_VIEW (widget);
-
-            GtkTreePath *path = NULL;
-            GtkTreeSelection *selection = gtk_tree_view_get_selection (view);
-
-            if ((event->state & gtk_accelerator_get_default_mod_mask ()) == 0
-                && !gtk_tree_view_get_path_at_pos (view,
-                                                   event->x,
-                                                   event->y,
-                                                   &path,
-                                                   NULL,
-                                                   NULL,
-                                                   NULL))
-            {
-                // clicked empty area
-                gtk_tree_selection_unselect_all (selection);
-                return FALSE;
-            }
-
-            if (!path) {
-                return FALSE;
-            }
-
-            if (!gtk_tree_selection_path_is_selected (selection, path)) {
-                gtk_tree_selection_unselect_all (selection);
-                gtk_tree_selection_select_path (selection, path);
-            }
-
-            GtkBuilder *builder = gtk_builder_new_from_resource ("/org/fsearch/fsearch/menus.ui");
-
-            fill_open_with_menu (GTK_TREE_VIEW (widget), builder, path);
-
-            GMenu *menu_root = G_MENU (gtk_builder_get_object (builder,
-                                                               "fsearch_listview_popup_menu"));
-            GtkWidget *menu_widget = gtk_menu_new_from_model (G_MENU_MODEL (menu_root));
-            gtk_menu_attach_to_widget (GTK_MENU (menu_widget),
-                    GTK_WIDGET (widget),
-                    NULL);
-            gtk_menu_popup (GTK_MENU (menu_widget), NULL, NULL, NULL, NULL,
-                    event->button, event->time);
-
-            g_object_unref (builder);
+            listview_popup_menu (widget, event);
             return TRUE;
         }
     }
@@ -608,6 +503,7 @@ on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpoint
             if (path) {
                 gtk_tree_path_free(path);
             }
+            return TRUE;
         }
     }
 

@@ -30,6 +30,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 iconstore.h \
 			 list_model.h \
 			 listview.h \
+			 listview_popup.h \
 			 preferences_ui.h \
 			 query.h \
 			 string_utils.h \
@@ -57,6 +58,7 @@ fsearch_SOURCES = main.c \
 		  string_utils.c \
 		  btree.c \
 		  listview.c \
+		  listview_popup.c \
 		  query.c \
 		  utils.c \
 		  utf8.c \
