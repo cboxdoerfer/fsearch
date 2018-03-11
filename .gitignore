@@ -26,6 +26,7 @@ Makefile.in
 /config.status
 /config.log
 .deps
+/.version
 /config.h*
 
 # Project files
