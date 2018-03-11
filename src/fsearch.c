@@ -52,7 +52,6 @@ struct _FsearchApplication
     FsearchThreadPool *pool;
 
     ListModel *list_model;
-    gint sb_context_id;
 
     GMutex mutex;
 };
@@ -94,7 +93,7 @@ fsearch_application_get_config (FsearchApplication *fsearch)
     return fsearch->config;
 }
 
-gboolean
+static gboolean
 update_db_cb (gpointer user_data)
 {
     char *text = user_data;
@@ -118,7 +117,7 @@ update_db_cb (gpointer user_data)
     return FALSE;
 }
 
-void
+static void
 build_location_callback (const char *text)
 {
     if (text) {
@@ -136,6 +135,21 @@ make_location_dir (void)
     return !g_mkdir_with_parents (location_dir, 0700);
 }
 
+static gint
+fsearch_options_handler(GApplication *gapp,
+                            GVariantDict *options,
+                            gpointer data )
+{
+    gboolean version = FALSE;
+    g_variant_dict_lookup(options, "version", "b", &version);
+
+    if (version) {
+        g_printf (PACKAGE_NAME " " PACKAGE_VERSION "\n");
+    }
+
+    return version ? 0 : -1;
+}
+
 static void
 fsearch_application_init (FsearchApplication *app)
 {
@@ -148,8 +162,19 @@ fsearch_application_init (FsearchApplication *app)
     }
     app->db = NULL;
     app->search = NULL;
-    app->sb_context_id = -1;
     g_mutex_init (&app->mutex);
+
+    g_application_add_main_option (G_APPLICATION(app),
+                                   "version",
+                                   '\0',
+                                   G_OPTION_FLAG_NONE,
+                                   G_OPTION_ARG_NONE,
+                                   _("Show version information"),
+                                   NULL );
+    g_signal_connect (app,
+                      "handle-local-options",
+                      G_CALLBACK(fsearch_options_handler),
+                      app);
 }
 
 static void
@@ -360,7 +385,7 @@ preferences_activated (GSimpleAction *action,
 }
 
 void
-update_database (void)
+fsearch_update_database (void)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     fsearch_action_disable ("update_database");
@@ -371,10 +396,10 @@ update_database (void)
 
 static void
 update_database_activated (GSimpleAction *action,
-                GVariant      *parameter,
-                gpointer       app)
+                           GVariant      *parameter,
+                           gpointer       app)
 {
-    update_database ();
+    fsearch_update_database ();
 }
 
 static void
@@ -432,8 +457,8 @@ fsearch_application_startup (GApplication* app)
                  NULL );
 
     g_action_map_add_action_entries (G_ACTION_MAP (app),
-                                   app_entries, G_N_ELEMENTS (app_entries),
-                                   app);
+                                     app_entries, G_N_ELEMENTS (app_entries),
+                                     app);
 
     static const gchar *toggle_focus[] = { "Tab", NULL };
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.toggle_focus", toggle_focus);
@@ -474,7 +499,7 @@ fsearch_application_activate (GApplication *app)
         if (FSEARCH_WINDOW_IS_WINDOW (window)) {
             GtkWidget *entry = GTK_WIDGET (fsearch_application_window_get_search_entry ((FsearchApplicationWindow *) window));
             if (entry) {
-            gtk_widget_grab_focus (entry);
+                gtk_widget_grab_focus (entry);
             }
             gtk_window_present (window);
             return;
@@ -499,23 +524,22 @@ fsearch_application_class_init (FsearchApplicationClass *klass)
 
     signals [DATABASE_UPDATE] =
         g_signal_new ("database-update",
-                G_TYPE_FROM_CLASS (klass),
-                G_SIGNAL_RUN_LAST,
-                0,
-                NULL, NULL, NULL,
-                G_TYPE_NONE,
-                0);
+                      G_TYPE_FROM_CLASS (klass),
+                      G_SIGNAL_RUN_LAST,
+                      0,
+                      NULL, NULL, NULL,
+                      G_TYPE_NONE,
+                      0);
 
     signals [DATABASE_UPDATED] =
         g_signal_new ("database-updated",
-                G_TYPE_FROM_CLASS (klass),
-                G_SIGNAL_RUN_LAST,
-                0,
-                NULL, NULL, NULL,
-                G_TYPE_NONE,
-                0);
+                      G_TYPE_FROM_CLASS (klass),
+                      G_SIGNAL_RUN_LAST,
+                      0,
+                      NULL, NULL, NULL,
+                      G_TYPE_NONE,
+                      0);
 }
-
 
 FsearchApplication *
 fsearch_application_new (void)
@@ -524,6 +548,7 @@ fsearch_application_new (void)
                          "application-id",
                          "org.fsearch.fsearch",
                          "flags",
-                         G_APPLICATION_HANDLES_OPEN,
+                         G_APPLICATION_FLAGS_NONE,
                          NULL);
 }
+

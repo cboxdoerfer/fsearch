@@ -473,7 +473,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
 
             main_config->locations = update_location_config (include_model, main_config->locations);
             main_config->exclude_locations = update_location_config (exclude_model, main_config->exclude_locations);
-            update_database ();
+            fsearch_update_database ();
         }
     }
 
