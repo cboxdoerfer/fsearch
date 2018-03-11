@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-03-11 11:38+0000\n"
+"PO-Revision-Date: 2018-03-11 15:02+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian "
 "<https://hosted.weblate.org/projects/fsearch/translations/uk/>\n"
@@ -66,11 +66,11 @@ msgstr "_Зміни"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr ""
+msgstr "Скасувати виділення"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr ""
+msgstr "Обернути виділення"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
@@ -78,23 +78,23 @@ msgstr "_Вигляд"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr ""
+msgstr "Показати панель меню"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr ""
+msgstr "Показати рядок стану"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr ""
+msgstr "Показати фільтр"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr ""
+msgstr "Показати кнопку пошуку"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr ""
+msgstr "_Пошук"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
@@ -110,7 +110,7 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr ""
+msgstr "_Довідка"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
@@ -118,39 +118,39 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr ""
+msgstr "Обрати фільтр"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr ""
+msgstr "Усі"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
-msgstr ""
+msgstr "Каталоги"
 
 #: ../src/fsearch.glade.h:28
 msgid "Files"
-msgstr ""
+msgstr "Файли"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
-msgstr ""
+msgstr "Шукати"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Число знайдених результатів"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
-msgstr ""
+msgstr "0 пунктів"
 
 #: ../src/fsearch.glade.h:32
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr ""
+msgstr "Оновлення бази даних..."
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
@@ -178,11 +178,11 @@ msgstr ""
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr ""
+msgstr "_Відкрити"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr ""
+msgstr "Відкрити _через"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
@@ -190,47 +190,47 @@ msgstr ""
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr ""
+msgstr "Відкрити _теку"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr ""
+msgstr "В_ирізати"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr ""
+msgstr "_Копіювати"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "Копіювати _шлях"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
-msgstr ""
+msgstr "Перемістити у _смітник"
 
 #: ../src/menus.ui.h:9
 msgid "_Delete"
-msgstr ""
+msgstr "Ви_далити"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
-msgstr ""
+msgstr "Назва"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:178
 msgid "Path"
-msgstr ""
+msgstr "Шлях"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:268
 msgid "Type"
-msgstr ""
+msgstr "Тип"
 
 #: ../src/menus.ui.h:13 ../src/listview.c:207
 msgid "Size"
-msgstr ""
+msgstr "Розмір"
 
 #: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
-msgstr ""
+msgstr "Дата зміни"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
@@ -250,7 +250,7 @@ msgstr ""
 
 #: ../src/overlay.ui.h:6
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
@@ -258,7 +258,7 @@ msgstr ""
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr ""
+msgstr "Нічого не знайдено"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
@@ -266,7 +266,7 @@ msgstr ""
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
-msgstr ""
+msgstr "Налаштування"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
@@ -278,15 +278,15 @@ msgstr ""
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr ""
+msgstr "Запам'ятати розмір вікна"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Запам'ятати налаштування колонок"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Показувати значки в колонці з назвою"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
@@ -297,14 +297,16 @@ msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
+"INFO: \"Увімкнути темну тему\" може не дати ефекту,\n"
+"тому що не кожна GTK+ тема підтримує темну версію."
 
 #: ../src/preferences.ui.h:10
 msgid "Interface"
-msgstr ""
+msgstr "Інтерфейс"
 
 #: ../src/preferences.ui.h:11
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Обмежити к-сть результатів:"
 
 #: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
@@ -312,7 +314,7 @@ msgstr ""
 
 #: ../src/preferences.ui.h:13
 msgid "Search as you type"
-msgstr ""
+msgstr "Шукати під час набирання"
 
 #: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
@@ -320,15 +322,15 @@ msgstr ""
 
 #: ../src/preferences.ui.h:16
 msgid "Update database on start"
-msgstr ""
+msgstr "Оновлювати базу даних під час запуску"
 
 #: ../src/preferences.ui.h:17
 msgid "Add"
-msgstr ""
+msgstr "Додати"
 
 #: ../src/preferences.ui.h:18
 msgid "Remove"
-msgstr ""
+msgstr "Видалити"
 
 #: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
@@ -360,22 +362,22 @@ msgstr ""
 
 #: ../src/preferences.ui.h:26
 msgid "Database"
-msgstr ""
+msgstr "База даних"
 
 #: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
 #: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d пункт"
 
 #: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Востаннє оновлено: %Y-%m-%d %H:%M"
 
 #: ../src/fsearch_window.c:820
 #, c-format
 msgid "Loading Database..."
-msgstr ""
+msgstr "Завантаження бази даних..."
 
 #: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
