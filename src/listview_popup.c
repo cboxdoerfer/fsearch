@@ -148,13 +148,12 @@ listview_popup_menu (GtkWidget *widget, GdkEventButton *event)
     GMenu *menu_root = G_MENU (gtk_builder_get_object (builder,
                                                        "fsearch_listview_popup_menu"));
     GtkWidget *menu_widget = gtk_menu_new_from_model (G_MENU_MODEL (menu_root));
-    g_signal_connect (menu_widget, "deactivate", G_CALLBACK (gtk_widget_destroy), NULL);
+    g_object_unref (builder);
+
     gtk_menu_attach_to_widget (GTK_MENU (menu_widget),
                                GTK_WIDGET (widget),
                                NULL);
     gtk_menu_popup (GTK_MENU (menu_widget), NULL, NULL, NULL, NULL,
                     button, event_time);
-
-    g_object_unref (builder);
 }
 
