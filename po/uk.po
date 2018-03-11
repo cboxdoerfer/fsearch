@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-03-11 19:24+0000\n"
+"PO-Revision-Date: 2018-03-12 07:58+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
-"Language-Team: Ukrainian "
-"<https://hosted.weblate.org/projects/fsearch/translations/uk/>\n"
+"Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
+"translations/uk/>\n"
 "Language: uk\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -230,7 +230,7 @@ msgstr "Розмір"
 
 #: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
-msgstr "Дата зміни"
+msgstr "Змінено"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
@@ -369,7 +369,7 @@ msgstr "База даних"
 #: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
-msgstr "%'d пункт(и/ів)"
+msgstr "%'d пунктів"
 
 #: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
