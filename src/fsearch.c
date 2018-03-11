@@ -52,7 +52,6 @@ struct _FsearchApplication
     FsearchThreadPool *pool;
 
     ListModel *list_model;
-    gint sb_context_id;
 
     GMutex mutex;
 };
@@ -136,6 +135,21 @@ make_location_dir (void)
     return !g_mkdir_with_parents (location_dir, 0700);
 }
 
+static gint
+fsearch_options_handler(GApplication *gapp,
+                            GVariantDict *options,
+                            gpointer data )
+{
+    gboolean version = FALSE;
+    g_variant_dict_lookup(options, "version", "b", &version);
+
+    if (version) {
+        g_printf (PACKAGE_NAME " " PACKAGE_VERSION "\n");
+    }
+
+    return version ? 0 : -1;
+}
+
 static void
 fsearch_application_init (FsearchApplication *app)
 {
@@ -148,8 +162,19 @@ fsearch_application_init (FsearchApplication *app)
     }
     app->db = NULL;
     app->search = NULL;
-    app->sb_context_id = -1;
     g_mutex_init (&app->mutex);
+
+    g_application_add_main_option (G_APPLICATION(app),
+                                   "version",
+                                   '\0',
+                                   G_OPTION_FLAG_NONE,
+                                   G_OPTION_ARG_NONE,
+                                   _("Show version information"),
+                                   NULL );
+    g_signal_connect (app,
+                      "handle-local-options",
+                      G_CALLBACK(fsearch_options_handler),
+                      app);
 }
 
 static void
@@ -523,7 +548,7 @@ fsearch_application_new (void)
                          "application-id",
                          "org.fsearch.fsearch",
                          "flags",
-                         G_APPLICATION_HANDLES_OPEN,
+                         G_APPLICATION_FLAGS_NONE,
                          NULL);
 }
 
