@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-03-11 15:02+0000\n"
+"PO-Revision-Date: 2018-03-11 19:24+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian "
 "<https://hosted.weblate.org/projects/fsearch/translations/uk/>\n"
@@ -22,23 +22,23 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr ""
+msgstr "Відкрити файл(и)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr ""
+msgstr "Відкрити за допомогою"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr ""
+msgstr "Відкрити вміщаєму теку"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr ""
+msgstr "Відкрити файл(и) в Файловому менеджері"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "Перемістити у смітник"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
@@ -98,15 +98,15 @@ msgstr "_Пошук"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr ""
+msgstr "Шукати по шляху"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr ""
+msgstr "Враховувати регістр"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr ""
+msgstr "Дозволити регулярні вирази"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
@@ -114,7 +114,7 @@ msgstr "_Довідка"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
-msgstr ""
+msgstr "Шукати..."
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
@@ -154,27 +154,27 @@ msgstr "Оновлення бази даних..."
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
-msgstr ""
+msgstr "сторінка0"
 
 #: ../src/fsearch.glade.h:35
 msgid "(empty)"
-msgstr ""
+msgstr "(порожньо)"
 
 #: ../src/fsearch.glade.h:36
 msgid "page1"
-msgstr ""
+msgstr "сторінка1"
 
 #: ../src/fsearch.glade.h:37
 msgid "CASE"
-msgstr ""
+msgstr "РЕГ"
 
 #: ../src/fsearch.glade.h:38
 msgid "PATH"
-msgstr ""
+msgstr "ШЛЯХ"
 
 #: ../src/fsearch.glade.h:39
 msgid "REGEX"
-msgstr ""
+msgstr "ВИР"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
@@ -186,7 +186,7 @@ msgstr "Відкрити _через"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr ""
+msgstr "інші програми"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
@@ -234,19 +234,20 @@ msgstr "Дата зміни"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr ""
+msgstr "База даних порожня"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
+"Перейдіть у <b>Зміни → Налаштування → База даних</b> і додайте розташування"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr ""
+msgstr "Запит порожній"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Натисніть <b>Ctrl + F</b> і почніть набирати"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
@@ -254,7 +255,7 @@ msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr ""
+msgstr "Це може зайняти деякий час."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
@@ -262,7 +263,7 @@ msgstr "Нічого не знайдено"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr ""
+msgstr "Пробуйте шукати по іншому"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
@@ -270,11 +271,11 @@ msgstr "Налаштування"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Увімкнути темну тему"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr ""
+msgstr "Показувати підказки"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
@@ -290,7 +291,7 @@ msgstr "Показувати значки в колонці з назвою"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Використовувати бінарні одиниці замість десяткових"
 
 #: ../src/preferences.ui.h:8
 msgid ""
@@ -310,7 +311,7 @@ msgstr "Обмежити к-сть результатів:"
 
 #: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Шукати по шляху, коли запит містить роздільники"
 
 #: ../src/preferences.ui.h:13
 msgid "Search as you type"
@@ -318,7 +319,7 @@ msgstr "Шукати під час набирання"
 
 #: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Сховати результати, коли пошук порожній"
 
 #: ../src/preferences.ui.h:16
 msgid "Update database on start"
@@ -334,31 +335,31 @@ msgstr "Видалити"
 
 #: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
-msgstr ""
+msgstr "Переходити за символьними посиланнями"
 
 #: ../src/preferences.ui.h:20
 msgid "Include"
-msgstr ""
+msgstr "Включати"
 
 #: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Виключати приховані файли і папки"
 
 #: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "Підтримка шаблонів. Багато записів мають бути розділені символом ';'"
 
 #: ../src/preferences.ui.h:23
 msgid "Exclude files:"
-msgstr ""
+msgstr "Виключати файли:"
 
 #: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "напр. \".git;*.tmp\""
 
 #: ../src/preferences.ui.h:25
 msgid "Exclude"
-msgstr ""
+msgstr "Виключати"
 
 #: ../src/preferences.ui.h:26
 msgid "Database"
@@ -368,7 +369,7 @@ msgstr "База даних"
 #: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
-msgstr "%'d пункт"
+msgstr "%'d пункт(и/ів)"
 
 #: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -381,20 +382,20 @@ msgstr "Завантаження бази даних..."
 
 #: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
-msgstr ""
+msgstr "Пошукова утиліта орієнтована на швидкість та розширені можливості"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Ви дійсно хочете видалити"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr ""
+msgstr "файли?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Видалення файлів..."
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr ""
+msgstr "Переміщення файлів у смітник..."
