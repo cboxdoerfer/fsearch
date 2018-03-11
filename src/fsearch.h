@@ -39,7 +39,7 @@ FsearchApplication     *fsearch_application_new                  (void);
 G_END_DECLS
 
 void
-update_database (void);
+fsearch_update_database (void);
 
 Database *
 fsearch_application_get_db (FsearchApplication *fsearch);

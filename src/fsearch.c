@@ -94,7 +94,7 @@ fsearch_application_get_config (FsearchApplication *fsearch)
     return fsearch->config;
 }
 
-gboolean
+static gboolean
 update_db_cb (gpointer user_data)
 {
     char *text = user_data;
@@ -118,7 +118,7 @@ update_db_cb (gpointer user_data)
     return FALSE;
 }
 
-void
+static void
 build_location_callback (const char *text)
 {
     if (text) {
@@ -360,7 +360,7 @@ preferences_activated (GSimpleAction *action,
 }
 
 void
-update_database (void)
+fsearch_update_database (void)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     fsearch_action_disable ("update_database");
@@ -371,10 +371,10 @@ update_database (void)
 
 static void
 update_database_activated (GSimpleAction *action,
-                GVariant      *parameter,
-                gpointer       app)
+                           GVariant      *parameter,
+                           gpointer       app)
 {
-    update_database ();
+    fsearch_update_database ();
 }
 
 static void
@@ -432,8 +432,8 @@ fsearch_application_startup (GApplication* app)
                  NULL );
 
     g_action_map_add_action_entries (G_ACTION_MAP (app),
-                                   app_entries, G_N_ELEMENTS (app_entries),
-                                   app);
+                                     app_entries, G_N_ELEMENTS (app_entries),
+                                     app);
 
     static const gchar *toggle_focus[] = { "Tab", NULL };
     gtk_application_set_accels_for_action (GTK_APPLICATION (app), "win.toggle_focus", toggle_focus);
@@ -474,7 +474,7 @@ fsearch_application_activate (GApplication *app)
         if (FSEARCH_WINDOW_IS_WINDOW (window)) {
             GtkWidget *entry = GTK_WIDGET (fsearch_application_window_get_search_entry ((FsearchApplicationWindow *) window));
             if (entry) {
-            gtk_widget_grab_focus (entry);
+                gtk_widget_grab_focus (entry);
             }
             gtk_window_present (window);
             return;
@@ -499,23 +499,22 @@ fsearch_application_class_init (FsearchApplicationClass *klass)
 
     signals [DATABASE_UPDATE] =
         g_signal_new ("database-update",
-                G_TYPE_FROM_CLASS (klass),
-                G_SIGNAL_RUN_LAST,
-                0,
-                NULL, NULL, NULL,
-                G_TYPE_NONE,
-                0);
+                      G_TYPE_FROM_CLASS (klass),
+                      G_SIGNAL_RUN_LAST,
+                      0,
+                      NULL, NULL, NULL,
+                      G_TYPE_NONE,
+                      0);
 
     signals [DATABASE_UPDATED] =
         g_signal_new ("database-updated",
-                G_TYPE_FROM_CLASS (klass),
-                G_SIGNAL_RUN_LAST,
-                0,
-                NULL, NULL, NULL,
-                G_TYPE_NONE,
-                0);
+                      G_TYPE_FROM_CLASS (klass),
+                      G_SIGNAL_RUN_LAST,
+                      0,
+                      NULL, NULL, NULL,
+                      G_TYPE_NONE,
+                      0);
 }
-
 
 FsearchApplication *
 fsearch_application_new (void)
@@ -527,3 +526,4 @@ fsearch_application_new (void)
                          G_APPLICATION_HANDLES_OPEN,
                          NULL);
 }
+
