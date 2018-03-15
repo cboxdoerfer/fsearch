@@ -431,7 +431,8 @@ open_folder_cb (GtkTreeModel *model,
     if (entry) {
         BTreeNode *node = db_search_entry_get_node (entry);
         if (node) {
-            if (!launch_node_path (node)) {
+            FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+            if (!launch_node_path (node, config->folder_open_cmd)) {
                 bool *open_failed = data;
                 *open_failed = true;
             }

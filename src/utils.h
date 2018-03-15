@@ -35,4 +35,4 @@ bool
 launch_node (BTreeNode *node);
 
 bool
-launch_node_path (BTreeNode *node);
+launch_node_path (BTreeNode *node, const char *cmd);

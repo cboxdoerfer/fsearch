@@ -191,6 +191,12 @@ config_load (FsearchConfig *config)
                                                                  "show_dialog_failed_opening",
                                                                  true);
 
+        // Applications
+        config->folder_open_cmd = config_load_string (key_file,
+                                                      "Applications",
+                                                      "folder_open_cmd",
+                                                      NULL);
+
         // Window
         config->restore_window_size = config_load_boolean (key_file,
                                                          "Interface",
@@ -482,6 +488,11 @@ config_save (FsearchConfig *config)
     g_key_file_set_integer (key_file, "Interface", "size_column_pos", config->size_column_pos);
     g_key_file_set_integer (key_file, "Interface", "modified_column_pos", config->modified_column_pos);
 
+    // Applications
+    if (config->folder_open_cmd) {
+        g_key_file_set_string (key_file, "Applications", "folder_open_cmd", config->folder_open_cmd);
+    }
+
     // Search
     g_key_file_set_boolean (key_file, "Search", "search_as_you_type", config->search_as_you_type);
     g_key_file_set_boolean (key_file, "Search", "auto_search_in_path", config->auto_search_in_path);
@@ -544,6 +555,10 @@ config_free (FsearchConfig *config)
 {
     g_assert (config != NULL);
 
+    if (config->folder_open_cmd) {
+        free (config->folder_open_cmd);
+        config->folder_open_cmd = NULL;
+    }
     if (config->locations) {
         g_list_free_full (config->locations, (GDestroyNotify)free);
         config->locations = NULL;

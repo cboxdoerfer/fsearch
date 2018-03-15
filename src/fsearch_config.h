@@ -36,6 +36,9 @@ struct _FsearchConfig
     bool search_as_you_type;
     bool show_base_2_units;
 
+    // Applications
+    char *folder_open_cmd;
+
     // Window
     bool restore_window_size;
     int32_t window_width;

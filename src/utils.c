@@ -56,6 +56,108 @@ build_path_uri (gchar *dest, size_t dest_len, const gchar *path, const gchar *na
     }
 }
 
+static gboolean
+keyword_eval_cb (const GMatchInfo *info, GString *res, gpointer data)
+{
+    gchar *match = g_match_info_fetch (info, 0);
+    if (!match) {
+        return FALSE;
+    }
+    gchar *r = g_hash_table_lookup ((GHashTable *)data, match);
+    if (res) {
+        g_string_append (res, r);
+    }
+    g_free (match);
+
+    return FALSE;
+}
+
+static char *
+build_folder_open_cmd (BTreeNode *node, const char *cmd)
+{
+    if (!cmd || !node) {
+        return NULL;
+    }
+
+    char path[PATH_MAX] = "";
+    if (!btree_node_get_path (node, path, sizeof (path))) {
+        return NULL;
+    }
+    char path_full[PATH_MAX] = "";
+    if (!btree_node_get_path_full (node, path_full, sizeof (path_full))) {
+        return NULL;
+    }
+    char *path_quoted = g_shell_quote (path);
+    char *path_full_quoted = g_shell_quote (path_full);
+
+    // The following code is mostly based on the example code found here:
+    // https://developer.gnome.org/glib/stable/glib-Perl-compatible-regular-expressions.html#g-regex-replace-eval
+    //
+    // Create hash table which hold all valid keywords as keys
+    // and their replacements as values
+    // All valid keywords are:
+    // - {path_raw}
+    //     The raw path of a file or folder. E.g. the path of /foo/bar is /foo
+    // - {path_full_raw}
+    //     The raw full path of a file or folder. E.g. the full path of /foo/bar is /foo/bar
+    // - {path_quoted} and {path_full_quoted}
+    //     Those are the same as {path_raw} and {path_full_raw} but they get properly escaped and quoted
+    //     for the usage in shells. E.g. /foo/'bar becomes '/foo/'\''bar'
+
+    GHashTable *keywords = g_hash_table_new (g_str_hash, g_str_equal);
+    g_hash_table_insert (keywords, "{path_raw}", path);
+    g_hash_table_insert (keywords, "{path_full_raw}", path_full);
+    g_hash_table_insert (keywords, "{path}", path_quoted);
+    g_hash_table_insert (keywords, "{path_full}", path_full_quoted);
+
+    // Regular expression which matches multiple words (and underscores) surrouned with {}
+    GRegex *reg = g_regex_new ( "{[\\w]+}", 0, 0, NULL );
+    // Replace all the matched keywords
+    char *cmd_res = g_regex_replace_eval (reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL );
+
+    g_regex_unref (reg);
+    g_hash_table_destroy (keywords);
+    g_free (path_quoted);
+    g_free (path_full_quoted);
+
+    return cmd_res;
+}
+
+static bool
+open_with_cmd (BTreeNode *node, const char *cmd)
+{
+    if (!cmd) {
+        return false;
+    }
+
+    char *cmd_res = build_folder_open_cmd (node, cmd);
+    if (!cmd_res) {
+        return false;
+    }
+
+    GError *error = NULL;
+    if (!g_spawn_command_line_async (cmd_res,
+                                     &error)) {
+
+        fprintf(stderr, "open: error: %s\n", error->message);
+        ui_utils_run_gtk_dialog (NULL,
+                                 GTK_MESSAGE_ERROR,
+                                 GTK_BUTTONS_OK,
+                                 "Error while opening file:",
+                                 error->message);
+        g_error_free (error);
+        free (cmd_res);
+        cmd_res = NULL;
+
+        return false;
+    }
+
+    free (cmd_res);
+    cmd_res = NULL;
+
+    return true;
+}
+
 static bool
 open_uri (const char *uri)
 {
@@ -154,12 +256,17 @@ launch_node (BTreeNode *node)
 }
 
 bool
-launch_node_path (BTreeNode *node)
+launch_node_path (BTreeNode *node, const char *cmd)
 {
-    char path[PATH_MAX] = "";
-    bool res = btree_node_get_path (node, path, sizeof (path));
-    if (res) {
-        return open_uri (path);
+    if (cmd) {
+        return open_with_cmd (node, cmd);
+    }
+    else {
+        char path[PATH_MAX] = "";
+        bool res = btree_node_get_path (node, path, sizeof (path));
+        if (res) {
+            return open_uri (path);
+        }
     }
     return false;
 }
