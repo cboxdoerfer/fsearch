@@ -64,7 +64,7 @@ keyword_eval_cb (const GMatchInfo *info, GString *res, gpointer data)
         return FALSE;
     }
     gchar *r = g_hash_table_lookup ((GHashTable *)data, match);
-    if (res) {
+    if (r) {
         g_string_append (res, r);
     }
     g_free (match);
