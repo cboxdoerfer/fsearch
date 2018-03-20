@@ -8,17 +8,17 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-10-20 21:29+0000\n"
+"PO-Revision-Date: 2018-03-21 22:40+0000\n"
 "Last-Translator: Igor <f2404@yandex.ru>\n"
-"Language-Team: Russian "
-"<https://hosted.weblate.org/projects/fsearch/translations/ru/>\n"
+"Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
+"translations/ru/>\n"
 "Language: ru\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.17\n"
+"X-Generator: Weblate 2.20-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -255,7 +255,7 @@ msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr "Может занять некоторое время."
+msgstr "Это может занять некоторое время."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
@@ -343,12 +343,12 @@ msgstr "Включить"
 
 #: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
-msgstr "Исключить скрытые файлы и каталоги"
+msgstr "Исключить скрытые файлы и папки"
 
 #: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
-"Можно использовать шаблоны. Несколько вхождений должны быть разделены ';'"
+"Можно использовать шаблоны. Вхождения должны быть разделены с помощью ';'"
 
 #: ../src/preferences.ui.h:23
 msgid "Exclude files:"
