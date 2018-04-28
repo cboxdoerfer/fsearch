@@ -59,7 +59,7 @@ Before I started working on FSearch I took a look at all the existing solutions 
 I highly recommend [fzf](https://github.com/junegunn/fzf) or the obvious tools: find and (m)locate
 
 ## Why GTK+3 and not Qt5?
-I like both of them. And in fact my long term goal is to provide console, GTK+3 and Qt5 interfaces, or at least make it possible for others to build those by splitting the search and database functionality into a core library. But for the time being it's only GTK+3 because I tend to like C more than C++, I'm more familiar with GTK+ development, I almost exclusively run GTK+ applications and I really like some of its new widgets (e.g. Popovers).
+I like both of them. And in fact my long term goal is to provide console, GTK+3 and Qt5 interfaces, or at least make it possible for others to build those by splitting the search and database functionality into a core library. But for the time being it's only GTK+3 because I tend to like C more than C++ and I'm more familiar with GTK+ development.
 
 ## Questions?
 
