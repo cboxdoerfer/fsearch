@@ -220,16 +220,13 @@ btree_node_children_foreach (BTreeNode *node,
 void
 btree_node_count_nodes (BTreeNode *node, uint32_t *num_nodes)
 {
+    (*num_nodes)++;
     if (node->children) {
-        (*num_nodes)++;
         BTreeNode *child = node->children;
         while (child) {
             btree_node_count_nodes (child, num_nodes);
             child = child->next;
         }
-    }
-    else {
-        (*num_nodes)++;
     }
 }
 
@@ -249,16 +246,13 @@ btree_node_traverse_cb (BTreeNode *node,
                         bool (*func)(BTreeNode *, void *),
                         void *data)
 {
+    func (node, data);
     if (node->children) {
-        func (node, data);
         BTreeNode *child = node->children;
         while (child) {
             btree_node_traverse_cb (child, func, data);
             child = child->next;
         }
-    }
-    else {
-        func (node, data);
     }
 }
 
