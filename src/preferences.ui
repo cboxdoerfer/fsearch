@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 -->
+<!-- Generated with glade 3.22.1 -->
 <interface>
   <requires lib="gtk+" version="3.12"/>
   <object class="GtkAdjustment" id="adjustment1">
@@ -129,6 +129,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">True</property>
                     <property name="receives_default">False</property>
+                    <property name="valign">end</property>
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
@@ -141,8 +142,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="margin-left">6</property>
-                    <property name="expand">False</property>
+                    <property name="margin_left">6</property>
                     <property name="label" translatable="yes">Behaviour after successfully opening a file</property>
                   </object>
                   <packing>
@@ -154,9 +154,9 @@
                   <object class="GtkComboBoxText" id="action_after_file_open">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="active">0</property>
                     <property name="halign">end</property>
-                    <property name="hexpand">true</property>
+                    <property name="hexpand">True</property>
+                    <property name="active">0</property>
                     <items>
                       <item id="FSEARCH_AFTER_FILE_OPEN_MINIMIZE" translatable="yes">Minimize</item>
                       <item id="FSEARCH_AFTER_FILE_OPEN_CLOSE" translatable="yes">Close</item>
@@ -173,8 +173,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="receives_default">False</property>
+                    <property name="margin_left">24</property>
                     <property name="draw_indicator">True</property>
-                    <property name="margin-left">24</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -188,8 +188,8 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="receives_default">False</property>
+                    <property name="margin_left">24</property>
                     <property name="draw_indicator">True</property>
-                    <property name="margin-left">24</property>
                   </object>
                   <packing>
                     <property name="left_attach">0</property>
@@ -200,6 +200,9 @@
                 <child>
                   <object class="GtkInfoBar" id="enable_dark_theme_infobar">
                     <property name="can_focus">False</property>
+                    <property name="valign">start</property>
+                    <property name="margin_bottom">35</property>
+                    <property name="orientation">vertical</property>
                     <property name="show_close_button">True</property>
                     <child internal-child="action_area">
                       <object class="GtkButtonBox">
@@ -457,10 +460,10 @@ since not every GTK+ theme provides a dark version.</property>
                           <object class="GtkScrolledWindow">
                             <property name="width_request">300</property>
                             <property name="height_request">150</property>
-                            <property name="hexpand">True</property>
-                            <property name="vexpand">True</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
                             <property name="shadow_type">in</property>
                             <child>
                               <object class="GtkTreeView" id="include_list">
@@ -561,10 +564,10 @@ since not every GTK+ theme provides a dark version.</property>
                           <object class="GtkScrolledWindow">
                             <property name="width_request">300</property>
                             <property name="height_request">150</property>
-                            <property name="hexpand">True</property>
-                            <property name="vexpand">True</property>
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
                             <property name="shadow_type">in</property>
                             <child>
                               <object class="GtkTreeView" id="exclude_list">
@@ -687,7 +690,6 @@ since not every GTK+ theme provides a dark version.</property>
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="halign">start</property>
-                    <property name="expand">False</property>
                     <property name="label" translatable="yes">Show warning dialogs when:</property>
                   </object>
                   <packing>
@@ -709,6 +711,9 @@ since not every GTK+ theme provides a dark version.</property>
                   </packing>
                 </child>
               </object>
+              <packing>
+                <property name="position">3</property>
+              </packing>
             </child>
             <child type="tab">
               <object class="GtkLabel">
@@ -717,6 +722,7 @@ since not every GTK+ theme provides a dark version.</property>
                 <property name="label" translatable="yes">Dialogs</property>
               </object>
               <packing>
+                <property name="position">3</property>
                 <property name="tab_fill">False</property>
               </packing>
             </child>
@@ -728,9 +734,6 @@ since not every GTK+ theme provides a dark version.</property>
           </packing>
         </child>
       </object>
-    </child>
-    <child>
-      <placeholder/>
     </child>
   </object>
 </interface>
