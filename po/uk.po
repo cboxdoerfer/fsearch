@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-03-25 23:40+0000\n"
+"PO-Revision-Date: 2018-05-02 21:45+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 2.20-dev\n"
+"X-Generator: Weblate 3.0-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -82,15 +82,15 @@ msgstr "Показати панель меню"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr "Показати рядок стану"
+msgstr "Показувати рядок стану"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr "Показати фільтр"
+msgstr "Показувати фільтр"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr "Показати кнопку пошуку"
+msgstr "Показувати кнопку пошуку"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
@@ -98,7 +98,7 @@ msgstr "_Пошук"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr "Шукати по шляху"
+msgstr "Шукати в назві шляху"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
@@ -122,7 +122,7 @@ msgstr "Обрати фільтр"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr "Усі"
+msgstr "Усе"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
