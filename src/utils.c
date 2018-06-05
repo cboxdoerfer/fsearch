@@ -135,6 +135,7 @@ open_with_cmd (BTreeNode *node, const char *cmd)
         return false;
     }
 
+    bool result = true;
     GError *error = NULL;
     if (!g_spawn_command_line_async (cmd_res,
                                      &error)) {
@@ -146,16 +147,13 @@ open_with_cmd (BTreeNode *node, const char *cmd)
                                  "Error while opening file:",
                                  error->message);
         g_error_free (error);
-        free (cmd_res);
-        cmd_res = NULL;
-
-        return false;
+        result = false;
     }
 
-    free (cmd_res);
+    g_free (cmd_res);
     cmd_res = NULL;
 
-    return true;
+    return result;
 }
 
 static bool
