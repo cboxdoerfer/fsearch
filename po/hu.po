@@ -8,388 +8,398 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-01-13 10:56+0100\n"
-"Last-Translator: Automatically generated\n"
-"Language-Team: none\n"
+"PO-Revision-Date: 2018-06-16 05:10+0000\n"
+"Last-Translator: Doma Gergő <domag02@gmail.com>\n"
+"Language-Team: Hungarian <https://hosted.weblate.org/projects/fsearch/"
+"translations/hu/>\n"
 "Language: hu\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.0.1\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr ""
+msgstr "Fájl(ok) megnyitása"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr ""
+msgstr "Megnyitás más alkalmazással"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr ""
+msgstr "Tartalmazó mappa megnyitása"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr ""
+msgstr "Fájl(ok) megnyitása fájlkezelőben"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "Áthelyezés a Kukába"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr ""
+msgstr "_Fájl"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr ""
+msgstr "Új ablak"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr ""
+msgstr "Mappa megnyitása"
 
 #: ../src/fsearch.glade.h:10
 msgid "Update Database"
-msgstr ""
+msgstr "Adatbázis frissítése"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr ""
+msgstr "_Szerkesztés"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr ""
+msgstr "Minden kijelölés megszüntetése"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr ""
+msgstr "Kijelölés megfordítása"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr ""
+msgstr "_Nézet"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr ""
+msgstr "Menüsor mutatása"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr ""
+msgstr "Státuszsor mutatása"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr ""
+msgstr "Szűrés mutatása"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr ""
+msgstr "Keresés gomb mutatása"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr ""
+msgstr "_Keresés"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr ""
+msgstr "Keresés az élérési útban"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr ""
+msgstr "Kis- és nagybetű különböző"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr ""
+msgstr "Reguláris kifejezések engedélyezése"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr ""
+msgstr "_Súgó"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
-msgstr ""
+msgstr "Keresés..."
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr ""
+msgstr "Szűrő kiválasztása"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr ""
+msgstr "Összes"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
-msgstr ""
+msgstr "Mappák"
 
 #: ../src/fsearch.glade.h:28
 msgid "Files"
-msgstr ""
+msgstr "Fájlok"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
-msgstr ""
+msgstr "Keresés"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Keresési eredmények száma"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
-msgstr ""
+msgstr "0 elem"
 
 #: ../src/fsearch.glade.h:32
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr ""
+msgstr "Adatbázis frissítése..."
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
-msgstr ""
+msgstr "0. lap"
 
 #: ../src/fsearch.glade.h:35
 msgid "(empty)"
-msgstr ""
+msgstr "(üres)"
 
 #: ../src/fsearch.glade.h:36
 msgid "page1"
-msgstr ""
+msgstr "1. lap"
 
 #: ../src/fsearch.glade.h:37
 msgid "CASE"
-msgstr ""
+msgstr "BETŰMÉRET"
 
 #: ../src/fsearch.glade.h:38
 msgid "PATH"
-msgstr ""
+msgstr "ÚT"
 
 #: ../src/fsearch.glade.h:39
 msgid "REGEX"
-msgstr ""
+msgstr "REGULÁRIS KIF."
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr ""
+msgstr "_Megnyitás"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr ""
+msgstr "Megnyitás _ezzel"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr ""
+msgstr "Más alkalmazás"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr ""
+msgstr "_Mappa megnyitása"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr ""
+msgstr "_Kivág"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr ""
+msgstr "_Másol"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_Elérési út másolása"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
-msgstr ""
+msgstr "Áthelyezés a K_ukába"
 
 #: ../src/menus.ui.h:9
 msgid "_Delete"
-msgstr ""
+msgstr "_Törlés"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
-msgstr ""
+msgstr "Név"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:178
 msgid "Path"
-msgstr ""
+msgstr "Elérési út"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:268
 msgid "Type"
-msgstr ""
+msgstr "Típus"
 
 #: ../src/menus.ui.h:13 ../src/listview.c:207
 msgid "Size"
-msgstr ""
+msgstr "Méret"
 
 #: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
-msgstr ""
+msgstr "Módosítás dátuma"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr ""
+msgstr "Adatbázis kiürítése"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
+"Nyisd meg a <b>Szerkesztés → Beállítások → Adatbázis</b>-t és adj hozzá "
+"néhány helyet"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr ""
+msgstr "Lekérdezés kiürítése"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Nyomj <b>Ctrl + F</b>-et és kezdj el gépelni"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr ""
+msgstr "Ez eltarthat egy ideig."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr ""
+msgstr "Nincs találat"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr ""
+msgstr "Próbálj ki egy másik keresést"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
-msgstr ""
+msgstr "Beállítások"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Sötét téma engedélyezése"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr ""
+msgstr "Eszköztippek mutatása"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr ""
+msgstr "Ablakméret megjegyzése"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Oszlopok elrendezésének megjegyzése"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Ikonok mutatása a név oszlopban"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Használj bináris egységeket a decimálisak helyett"
 
 #: ../src/preferences.ui.h:8
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
+"MEGJEGYZÉS: \"Sötét téma engedélyezése\" lehet hogy hatástalan,\n"
+"mivel nem minden GTK+ téma biztosít sötét változatot."
 
 #: ../src/preferences.ui.h:10
 msgid "Interface"
-msgstr ""
+msgstr "Felület"
 
 #: ../src/preferences.ui.h:11
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Eredmények számának korlátozása:"
 
 #: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
 msgstr ""
+"Keresés az elérési útban, ha a lekérdezésben útvonal elválasztó karakter van"
 
 #: ../src/preferences.ui.h:13
 msgid "Search as you type"
-msgstr ""
+msgstr "Keresés gépelés közben"
 
 #: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Eredmények elrejtése, ha a keresési mező üres"
 
 #: ../src/preferences.ui.h:16
 msgid "Update database on start"
-msgstr ""
+msgstr "Adatbázis frissítése indításkor"
 
 #: ../src/preferences.ui.h:17
 msgid "Add"
-msgstr ""
+msgstr "Hozzáad"
 
 #: ../src/preferences.ui.h:18
 msgid "Remove"
-msgstr ""
+msgstr "Eltávolít"
 
 #: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
-msgstr ""
+msgstr "Szimbolikus linkek követése"
 
 #: ../src/preferences.ui.h:20
 msgid "Include"
-msgstr ""
+msgstr "Belefoglalás"
 
 #: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Rejtett fájlok és mappák kizárása"
 
 #: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
+"Helyettesítő karakterek támogatva. A bejegyzéseket ';'-vel kell elválasztani"
 
 #: ../src/preferences.ui.h:23
 msgid "Exclude files:"
-msgstr ""
+msgstr "Fájlok kizárása:"
 
 #: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "pl. \".git;*.tmp\""
 
 #: ../src/preferences.ui.h:25
 msgid "Exclude"
-msgstr ""
+msgstr "Kizárás"
 
 #: ../src/preferences.ui.h:26
 msgid "Database"
-msgstr ""
+msgstr "Adatbázis"
 
 #: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
 #: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d elem"
 
 #: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Utoljára frissítve: %Y-%m-%d %H:%M"
 
 #: ../src/fsearch_window.c:820
 #, c-format
 msgid "Loading Database..."
-msgstr ""
+msgstr "Adatbázis betöltése..."
 
 #: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
+"Egy keresési segédprogram, mely a teljesítményre és a fejlett képességekre "
+"összpontosít"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Biztosan el akarsz távolítani"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr ""
+msgstr "fájlt?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Fájlok törlése..."
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr ""
+msgstr "Fájlok áthelyezése a Kukába..."
