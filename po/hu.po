@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-06-16 05:10+0000\n"
+"PO-Revision-Date: 2018-06-17 05:39+0000\n"
 "Last-Translator: Doma Gergő <domag02@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/hu/>\n"
@@ -173,7 +173,7 @@ msgstr "ÚT"
 
 #: ../src/fsearch.glade.h:39
 msgid "REGEX"
-msgstr "REGULÁRIS KIF."
+msgstr "REGULÁRIS KIFEJEZÉS"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
