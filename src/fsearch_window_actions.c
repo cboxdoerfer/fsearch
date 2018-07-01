@@ -727,6 +727,25 @@ fsearch_window_action_show_modified_column (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_show_tags_column (GSimpleAction *action,
+                                        GVariant      *variant,
+                                        gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state (action, variant);
+    gboolean value = g_variant_get_boolean (variant);
+    GtkTreeView *list = GTK_TREE_VIEW (fsearch_application_window_get_listview (self));
+    if (value == FALSE) {
+        listview_remove_column (list, LIST_MODEL_COL_TAGS);
+    }
+    else {
+        listview_add_column (list, LIST_MODEL_COL_TAGS, 75, 5);
+    }
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    config->show_tags_column = g_variant_get_boolean (variant);
+}
+
+static void
 action_toggle_state_cb (GSimpleAction *saction,
                         GVariant *parameter,
                         gpointer user_data)
@@ -760,6 +779,7 @@ static GActionEntry FsearchWindowActions[] = {
     { "show_type_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_type_column },
     { "show_size_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_size_column },
     { "show_modified_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_modified_column },
+    { "show_tags_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_tags_column },
     //{ "update_database",     fsearch_window_action_update_database },
     // View
     { "show_statusbar", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_statusbar },
@@ -814,6 +834,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "show_type_column", TRUE);
     action_set_enabled (group, "show_size_column", TRUE);
     action_set_enabled (group, "show_modified_column", TRUE);
+    action_set_enabled (group, "show_tags_column", TRUE);
 
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     action_set_active_bool (group, "show_menubar", config->show_menubar);
@@ -828,6 +849,7 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_active_bool (group, "show_type_column", config->show_type_column);
     action_set_active_bool (group, "show_size_column", config->show_size_column);
     action_set_active_bool (group, "show_modified_column", config->show_modified_column);
+    action_set_active_bool (group, "show_tags_column", config->show_tags_column);
 }
 
 void

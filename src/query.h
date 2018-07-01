@@ -25,6 +25,7 @@ typedef struct
     char *query;
     bool match_case;
     bool enable_regex;
+    bool enable_tags;
     bool auto_search_in_path;
     bool search_in_path;
 
@@ -38,6 +39,7 @@ fsearch_query_new (const char *query,
                    void *callback_data,
                    bool match_case,
                    bool enable_regex,
+                   bool enable_tags,
                    bool auto_search_in_path,
                    bool search_in_path);
 

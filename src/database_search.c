@@ -168,6 +168,12 @@ filter_node (BTreeNode *node, FsearchFilter filter)
         && is_dir) {
         return true;
     }
+
+    bool has_tags = node->tags != NULL && strlen(node->tags) > 0;
+    if (filter == FSEARCH_FILTER_TAGS
+        && has_tags) {
+        return true;
+    }
     return false;
 }
 
@@ -185,6 +191,7 @@ search_thread (void * user_data)
     const FsearchFilter filter = ctx->search->filter;
     search_query_t **queries = ctx->queries;
     const uint32_t search_in_path = ctx->search->search_in_path;
+    const uint32_t enable_tags = ctx->search->enable_tags;
     const uint32_t auto_search_in_path = ctx->search->auto_search_in_path;
     DynamicArray *entries = ctx->search->entries;
 
@@ -206,9 +213,17 @@ search_thread (void * user_data)
 
         const char *haystack_path = NULL;
         const char *haystack_name = node->name;
+        const char *haystack_tags = node->tags;
+        gchar *haystack_name_with_tags = NULL;
         if (search_in_path) {
             btree_node_get_path_full (node, full_path, sizeof (full_path));
             haystack_path = full_path;
+        }
+
+        if (filter == FSEARCH_FILTER_NONE) {
+            if (enable_tags && haystack_tags != NULL && strlen (haystack_tags) > 0) {
+                haystack_name_with_tags = g_strdup_printf("%s %s", haystack_name, haystack_tags);
+            }
         }
 
         uint32_t num_found = 0;
@@ -226,22 +241,35 @@ search_thread (void * user_data)
             uint32_t (*search_func)(const char *, const char *) = query->search_func;
 
             const char *haystack = NULL;
-            if (search_in_path || (auto_search_in_path && query->has_separator)) {
-                if (!haystack_path) {
-                    btree_node_get_path_full (node, full_path, sizeof (full_path));
-                    haystack_path = full_path;
+            if (filter == FSEARCH_FILTER_TAGS) {
+                if (!enable_tags || node->tags == NULL || strlen(node->tags) == 0) {
+                    continue;
                 }
-                haystack = haystack_path;
+                haystack = haystack_tags;
+            } else {
+                if (search_in_path ||
+                    (auto_search_in_path && query->has_separator)) {
+                    if (!haystack_path) {
+                        btree_node_get_path_full (node, full_path,
+                                                  sizeof (full_path));
+                        haystack_path = full_path;
+                    }
+                    haystack = haystack_path;
+                } else {
+                    haystack = haystack_name_with_tags == NULL ? haystack_name : haystack_name_with_tags;
+                }
             }
-            else {
-                haystack = haystack_name;
-            }
+
             if (!search_func (haystack, ptr)) {
                 break;
             }
         }
 
+        if (haystack_name_with_tags != NULL) {
+            g_free(haystack_name_with_tags);
+        }
     }
+
     ctx->num_results = num_results;
     return NULL;
 }
@@ -781,6 +809,7 @@ db_search_update (DatabaseSearch *search,
                   bool hide_results,
                   bool match_case,
                   bool enable_regex,
+                  bool enable_tags,
                   bool auto_search_in_path,
                   bool search_in_path)
 {
@@ -794,6 +823,7 @@ db_search_update (DatabaseSearch *search,
     search->auto_search_in_path = auto_search_in_path;
     search->hide_results = hide_results;
     search->match_case = match_case;
+    search->enable_tags = enable_tags;
     search->max_results = max_results;
     search->filter = filter;
 }
@@ -873,7 +903,7 @@ db_perform_search (DatabaseSearch *search, void (*callback)(void *), void *callb
 
     //db_search_results_clear (search);
 
-    FsearchQuery *q = fsearch_query_new (search->query, callback, callback_data, false, false, false, false);
+    FsearchQuery *q = fsearch_query_new (search->query, callback, callback_data, false, false, false, false, false);
     db_queue_search (search, q);
     //db_perform_normal_search (search);
 }

@@ -522,6 +522,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <item id="FSEARCH_FILTER_NONE" translatable="yes">All</item>
                   <item id="FSEARCH_FILTER_FOLDERS" translatable="yes">Folders</item>
                   <item id="FSEARCH_FILTER_FILES" translatable="yes">Files</item>
+                  <item id="FSEARCH_FILTER_TAGS" translatable="yes">Tags</item>
                 </items>
                 <signal name="changed" handler="on_filter_combobox_changed" object="FsearchApplicationWindow" swapped="no"/>
               </object>

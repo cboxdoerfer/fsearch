@@ -37,6 +37,7 @@ typedef enum {
     FSEARCH_FILTER_NONE,
     FSEARCH_FILTER_FOLDERS,
     FSEARCH_FILTER_FILES,
+    FSEARCH_FILTER_TAGS,
 } FsearchFilter;
 
 typedef struct
@@ -69,6 +70,7 @@ struct _DatabaseSearch
     bool hide_results;
     bool match_case;
     bool enable_regex;
+    bool enable_tags;
     bool search_in_path;
     bool auto_search_in_path;
 };
@@ -101,6 +103,7 @@ db_search_update (DatabaseSearch *search,
                   bool hide_results,
                   bool match_case,
                   bool enable_regex,
+                  bool enable_tags,
                   bool auto_search_in_path,
                   bool search_in_path);
 

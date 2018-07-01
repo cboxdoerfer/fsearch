@@ -31,6 +31,7 @@ struct _FsearchConfig
     bool hide_results_on_empty_search;
     bool search_in_path;
     bool enable_regex;
+    bool enable_tags;
     bool match_case;
     bool auto_search_in_path;
     bool search_as_you_type;
@@ -67,18 +68,21 @@ struct _FsearchConfig
     bool show_type_column;
     bool show_size_column;
     bool show_modified_column;
+    bool show_tags_column;
 
     uint32_t name_column_width;
     uint32_t path_column_width;
     uint32_t type_column_width;
     uint32_t size_column_width;
     uint32_t modified_column_width;
+    uint32_t tags_column_width;
 
     uint32_t name_column_pos;
     uint32_t path_column_pos;
     uint32_t type_column_pos;
     uint32_t size_column_pos;
     uint32_t modified_column_pos;
+    uint32_t tags_column_pos;
 
     // database
     bool update_database_on_launch;

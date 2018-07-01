@@ -232,6 +232,10 @@ config_load (FsearchConfig *config)
                                                             "Interface",
                                                             "show_modified_column",
                                                             true);
+        config->show_tags_column = config_load_boolean (key_file,
+                                                        "Interface",
+                                                        "show_tags_column",
+                                                        true);
 
         // Column Size
         config->name_column_width = config_load_integer (key_file,
@@ -253,6 +257,10 @@ config_load (FsearchConfig *config)
         config->modified_column_width = config_load_integer (key_file,
                                                    "Interface",
                                                    "modified_column_width",
+                                                   75);
+        config->tags_column_width = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "tags_column_width",
                                                    75);
 
         // Column position
@@ -276,6 +284,10 @@ config_load (FsearchConfig *config)
                                                    "Interface",
                                                    "modified_column_pos",
                                                    4);
+        config->tags_column_pos = config_load_integer (key_file,
+                                                   "Interface",
+                                                   "tags_column_pos",
+                                                   5);
 
         // Search
         config->search_as_you_type = config_load_boolean (key_file,
@@ -294,6 +306,10 @@ config_load (FsearchConfig *config)
                                                     "Search",
                                                     "enable_regex",
                                                     false);
+        config->enable_tags = config_load_boolean (key_file,
+                                                   "Search",
+                                                   "enable_tags",
+                                                   false);
         config->search_in_path = config_load_boolean (key_file,
                                                       "Search",
                                                       "search_in_path",
@@ -381,6 +397,7 @@ config_load_default (FsearchConfig *config)
     config->match_case = false;
     config->enable_regex = false;
     config->search_in_path = false;
+    config->enable_tags = false;
     config->hide_results_on_empty_search = true;
     config->limit_results = true;
     config->num_results = 1000;
@@ -404,6 +421,7 @@ config_load_default (FsearchConfig *config)
     config->show_type_column = true;
     config->show_size_column = true;
     config->show_modified_column = true;
+    config->show_tags_column = true;
 
     config->name_column_pos = 0;
     config->path_column_pos = 1;
@@ -473,6 +491,7 @@ config_save (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Interface", "show_type_column", config->show_type_column);
     g_key_file_set_boolean (key_file, "Interface", "show_size_column", config->show_size_column);
     g_key_file_set_boolean (key_file, "Interface", "show_modified_column", config->show_modified_column);
+    g_key_file_set_boolean (key_file, "Interface", "show_tags_column", config->show_tags_column);
 
     // Column width
     g_key_file_set_integer (key_file, "Interface", "name_column_width", config->name_column_width);
@@ -480,6 +499,7 @@ config_save (FsearchConfig *config)
     g_key_file_set_integer (key_file, "Interface", "type_column_width", config->type_column_width);
     g_key_file_set_integer (key_file, "Interface", "size_column_width", config->size_column_width);
     g_key_file_set_integer (key_file, "Interface", "modified_column_width", config->modified_column_width);
+    g_key_file_set_integer (key_file, "Interface", "tags_column_width", config->tags_column_width);
 
     // Column position
     g_key_file_set_integer (key_file, "Interface", "name_column_pos", config->name_column_pos);
@@ -487,6 +507,7 @@ config_save (FsearchConfig *config)
     g_key_file_set_integer (key_file, "Interface", "type_column_pos", config->type_column_pos);
     g_key_file_set_integer (key_file, "Interface", "size_column_pos", config->size_column_pos);
     g_key_file_set_integer (key_file, "Interface", "modified_column_pos", config->modified_column_pos);
+    g_key_file_set_integer (key_file, "Interface", "tags_column_pos", config->tags_column_pos);
 
     // Applications
     if (config->folder_open_cmd) {
@@ -498,6 +519,7 @@ config_save (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Search", "auto_search_in_path", config->auto_search_in_path);
     g_key_file_set_boolean (key_file, "Search", "search_in_path", config->search_in_path);
     g_key_file_set_boolean (key_file, "Search", "enable_regex", config->enable_regex);
+    g_key_file_set_boolean (key_file, "Search", "enable_tags", config->enable_tags);
     g_key_file_set_boolean (key_file, "Search", "match_case", config->match_case);
     g_key_file_set_boolean (key_file, "Search", "hide_results_on_empty_search", config->hide_results_on_empty_search);
     g_key_file_set_boolean (key_file, "Search", "limit_results", config->limit_results);

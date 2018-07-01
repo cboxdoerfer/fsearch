@@ -29,7 +29,8 @@ btree_node_new (const char *name,
                 time_t mtime,
                 off_t size,
                 uint32_t pos,
-                bool is_dir)
+                bool is_dir,
+                const char *tags)
 {
     BTreeNode *new = calloc (1, sizeof (BTreeNode));
     assert (new);
@@ -44,6 +45,7 @@ btree_node_new (const char *name,
     new->size = size;
     new->pos = pos;
     new->is_dir = is_dir;
+    new->tags = tags == NULL ? NULL : strdup(tags);
 
     return new;
 }
@@ -57,6 +59,10 @@ btree_node_data_free (BTreeNode *node)
     if (node->name) {
         free (node->name);
         node->name = NULL;
+    }
+    if (node->tags) {
+        free (node->tags);
+        node->tags = NULL;
     }
     free (node);
     node = NULL;

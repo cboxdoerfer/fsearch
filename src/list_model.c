@@ -297,8 +297,9 @@ list_model_init (ListModel *list_model)
     list_model->column_types[4] = G_TYPE_STRING;     /* LIST_MODEL_COL_TYPE */
     list_model->column_types[5] = G_TYPE_STRING;     /* LIST_MODEL_COL_SIZE */
     list_model->column_types[6] = G_TYPE_STRING;     /* LIST_MODEL_COL_CHANGED */
+    list_model->column_types[7] = G_TYPE_STRING;     /* LIST_MODEL_COL_TAGS */
 
-    g_assert (LIST_MODEL_N_COLUMNS == 7);
+    g_assert (LIST_MODEL_N_COLUMNS == 8);
 
     list_model->results     = NULL;
 
@@ -487,6 +488,7 @@ list_model_get_value (GtkTreeModel *tree_model,
     const char *name = node->name;
     gchar node_path[PATH_MAX] = "";
     time_t mtime = node->mtime;
+    const char *tags = node->tags;
 
     g_value_init (value, list_model->column_types[column]);
     switch(column)
@@ -548,6 +550,10 @@ list_model_get_value (GtkTreeModel *tree_model,
                     "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
                     localtime(&mtime));
             g_value_set_static_string(value, output);
+            break;
+
+        case LIST_MODEL_COL_TAGS:
+            g_value_set_static_string(value, tags);
             break;
     }
 
@@ -886,6 +892,9 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
     const gchar *name_a = node_a->name;
     const gchar *name_b = node_b->name;
 
+    const gchar *tags_a = node_a->tags;
+    const gchar *tags_b = node_b->tags;
+
     gchar *type_a = NULL;
     gchar *type_b = NULL;
 
@@ -961,6 +970,23 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
                     return 0;
 
                 return (node_a->mtime > node_b->mtime) ? 1 : -1;
+            }
+        case SORT_ID_TAGS:
+            {
+                if (is_dir_a != is_dir_b) {
+                    return is_dir_b - is_dir_a;
+                }
+
+                if ((tags_a) && (tags_b)) {
+                    return strverscmp (tags_a, tags_b);
+                }
+
+                if (tags_a == tags_b) {
+                    return 0; /* both are NULL */
+                }
+                else {
+                    return (tags_a == NULL) ? -1 : 1;
+                }
             }
         default:
             return 0;

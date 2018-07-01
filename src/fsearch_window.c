@@ -372,6 +372,7 @@ perform_search (FsearchApplicationWindow *win)
                           config->hide_results_on_empty_search,
                           config->match_case,
                           config->enable_regex,
+                          config->enable_tags,
                           config->auto_search_in_path,
                           config->search_in_path);
 
@@ -678,6 +679,12 @@ create_view_and_model (FsearchApplicationWindow *app)
                                  LIST_MODEL_COL_CHANGED,
                                  config->modified_column_width,
                                  config->modified_column_pos);
+        }
+        if (config->show_tags_column) {
+            listview_add_column (list,
+                                 LIST_MODEL_COL_TAGS,
+                                 config->tags_column_width,
+                                 config->tags_column_pos);
         }
     }
 

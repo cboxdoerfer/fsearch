@@ -32,6 +32,7 @@ struct _BTreeNode
 
     // data
     char *name;
+    char *tags;
 
     time_t mtime;
     off_t size;
@@ -44,7 +45,8 @@ btree_node_new (const char *name,
                 time_t mtime,
                 off_t size,
                 uint32_t pos,
-                bool is_dir);
+                bool is_dir,
+                const char *tags);
 
 void
 btree_node_free (BTreeNode *node);
