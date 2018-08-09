@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-12-04 08:17+0000\n"
-"Last-Translator: anonymous <>\n"
-"Language-Team: Chinese (Simplified) "
-"<https://hosted.weblate.org/projects/fsearch/translations/zh_Hans/>\n"
+"PO-Revision-Date: 2018-08-10 03:36+0000\n"
+"Last-Translator: i <i@ghosts.work>\n"
+"Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
+"fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.18-dev\n"
+"X-Generator: Weblate 3.2-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -41,7 +41,7 @@ msgstr "删除到回收站"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr "搜索"
+msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
@@ -105,7 +105,7 @@ msgstr "区分大小写"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr "启用 regex"
+msgstr "启用正则"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
@@ -117,7 +117,7 @@ msgstr "搜索..."
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr "选择文件夹"
+msgstr "选择过滤器"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
@@ -237,7 +237,7 @@ msgstr "空数据库"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr "去<b> 编辑 → 选项 → 数据库</b> 并添加路径"
+msgstr "前往 <b>编辑 → 选项 → 数据库</b> 添加路径"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
@@ -245,7 +245,7 @@ msgstr "空的查询"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "按下 <b> Ctrl + F</b> 并开始输入"
+msgstr "按 <b>Ctrl + F</b> 开始输入"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
@@ -253,7 +253,7 @@ msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr "现在可能需要等待一段时间."
+msgstr "可能需要一些时间。"
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
@@ -261,7 +261,7 @@ msgstr "没有找到结果"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr "尝试其他的搜索"
+msgstr "试试其他搜索条件"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
@@ -277,7 +277,7 @@ msgstr "显示工具提示"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr "记住窗口的大小"
+msgstr "记住窗口大小"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
@@ -296,8 +296,8 @@ msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
-"消息: \"启用暗色主题\" 可能没有效果,\n"
-"因为不是每个 gtk+ 主题都提供了一个支持暗色的版本."
+"消息: \"启用暗色主题\" 可能不会生效，\n"
+"因为不是每个 gtk+ 主题都支持暗色系。"
 
 #: ../src/preferences.ui.h:10
 msgid "Interface"
@@ -317,11 +317,11 @@ msgstr "即时搜索"
 
 #: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
-msgstr "搜索不到则不显示"
+msgstr "搜索条件为空时不显示结果"
 
 #: ../src/preferences.ui.h:16
 msgid "Update database on start"
-msgstr "开始更新数据库"
+msgstr "启动时更新数据库"
 
 #: ../src/preferences.ui.h:17
 msgid "Add"
@@ -333,7 +333,7 @@ msgstr "删除"
 
 #: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
-msgstr "关注连接"
+msgstr "展开软链接"
 
 #: ../src/preferences.ui.h:20
 msgid "Include"
@@ -345,7 +345,7 @@ msgstr "不包含隐藏的文件及文件夹"
 
 #: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "支持通配符.多个命令必须用 ';'"
+msgstr "支持通配符。多个条件必须用 ';' 分开"
 
 #: ../src/preferences.ui.h:23
 msgid "Exclude files:"
@@ -353,7 +353,7 @@ msgstr "排除文件:"
 
 #: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
-msgstr "即 \".git;*.tmp\""
+msgstr "例如 \".git;*.tmp\""
 
 #: ../src/preferences.ui.h:25
 msgid "Exclude"
@@ -380,11 +380,11 @@ msgstr "加载数据库..."
 
 #: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
-msgstr "更多选项的搜索"
+msgstr "注重性能和高级功能的搜索工具"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr "是否真的要删除"
+msgstr "确认要删除"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
