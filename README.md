@@ -64,6 +64,3 @@ I like both of them. And in fact my long term goal is to provide console, GTK+3 
 ## Questions?
 
 Email: christian.boxdoerfer[AT]posteo.de
-
-IRC:   chat.freenode.net #fsearch
-
