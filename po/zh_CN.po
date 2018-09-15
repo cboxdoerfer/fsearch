@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-08-10 03:36+0000\n"
+"PO-Revision-Date: 2018-09-16 11:21+0000\n"
 "Last-Translator: i <i@ghosts.work>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
@@ -388,7 +388,7 @@ msgstr "确认要删除"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr "文件?"
+msgstr "项文件?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
