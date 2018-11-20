@@ -8,16 +8,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-10-15 17:10+0000\n"
-"Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
-"Language-Team: Bulgarian "
-"<https://hosted.weblate.org/projects/fsearch/translations/bg/>\n"
+"PO-Revision-Date: 2018-11-21 19:07+0000\n"
+"Last-Translator: Whod <whodizhod@gmail.com>\n"
+"Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
+"translations/bg/>\n"
 "Language: bg\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.17\n"
+"X-Generator: Weblate 3.3-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -41,7 +41,7 @@ msgstr "Преместване в кошчето"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr "FSearch"
+msgstr "ФТърсене"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
