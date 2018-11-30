@@ -9,16 +9,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-04-03 21:42+0000\n"
-"Last-Translator: Gustavo H M Silva <gustavohmsilva@tuta.io>\n"
+"PO-Revision-Date: 2018-12-01 20:09+0000\n"
+"Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
 "Language: pt\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.13-dev\n"
+"Plural-Forms: nplurals=2; plural=n > 1;\n"
+"X-Generator: Weblate 3.3\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -202,7 +202,7 @@ msgstr "_Copiar"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_Copiar Caminho do Ficheiro"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
@@ -292,7 +292,7 @@ msgstr "Mostrar ícones no nome da coluna"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Use unidades binárias em vez de unidades decimais"
 
 #: ../src/preferences.ui.h:8
 msgid ""
