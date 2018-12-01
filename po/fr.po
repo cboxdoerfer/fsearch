@@ -61,7 +61,7 @@ msgstr "Mettre à jour la base de données"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr "_Modifier"
+msgstr "_Édition"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
