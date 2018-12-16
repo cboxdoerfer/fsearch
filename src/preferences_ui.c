@@ -310,6 +310,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
                       G_CALLBACK (limit_num_results_toggled),
                       limit_num_results_spin);
 
+    GtkToggleButton *enable_tags_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                 "enable_tags"));
+    gtk_toggle_button_set_active (enable_tags_button,
+                                  main_config->enable_tags);
+
     // Database page
     GtkToggleButton *update_db_at_start_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                         "update_db_at_start_button"));
@@ -422,6 +427,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->auto_search_in_path = gtk_toggle_button_get_active (auto_search_in_path_button);
         main_config->hide_results_on_empty_search = gtk_toggle_button_get_active (hide_results_button);
         main_config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
+        main_config->enable_tags = gtk_toggle_button_get_active (enable_tags_button);
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
         main_config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
         main_config->show_listview_icons = gtk_toggle_button_get_active (show_icons_button);

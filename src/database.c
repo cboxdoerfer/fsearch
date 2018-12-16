@@ -24,6 +24,7 @@
 #include <sys/time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/xattr.h>
 #include <string.h>
 #include <unistd.h>
 #include <dirent.h>
@@ -40,6 +41,7 @@
 
 //#define WS_FOLLOWLINK	(1 << 1)	/* follow symlinks */
 #define WS_DOTFILES	(1 << 2)	/* per unix convention, .file is hidden */
+#define XATTRS_TAGS "user.xdg.tags"
 
 struct _Database
 {
@@ -197,12 +199,35 @@ db_location_load_from_file (const char *fname)
             goto load_fail;
         }
 
+        // read tags
+        uint16_t tags_len = 0;
+        if (fread (&tags_len, 1, 2, fp) != 2) {
+            printf("failed to read tags length\n");
+            goto load_fail;
+        }
+
+        char *tags = NULL;
+        if (tags_len > 0) {
+            tags = (char*) malloc (tags_len + 1);
+            if (fread (tags, 1, tags_len, fp) != tags_len) {
+                printf ("failed to read tags\n");
+                goto load_fail;
+            }
+            tags[tags_len] = '\0';
+        }
+
         int is_root = !strcmp (name, "/");
         BTreeNode *new = btree_node_new (is_root ? "" : name,
                                          mtime,
                                          size,
                                          pos,
-                                         is_dir);
+                                         is_dir,
+                                         tags_len > 0 ? tags : NULL);
+
+        if (tags != NULL) {
+            free(tags);
+        }
+
         if (!prev) {
             prev = new;
             root = new;
@@ -281,6 +306,7 @@ db_location_write_to_file (DatabaseLocation *location, const char *path)
         const char *name = is_root ? "/" : node->name;
         is_root = 0;
         uint16_t len = strlen (name);
+        uint16_t tags_len = node->tags == NULL ? 0 : strlen(node->tags);
         if (len) {
             // write length of node name
             if (fwrite (&len, 1, 2, fp) != 2) {
@@ -290,25 +316,38 @@ db_location_write_to_file (DatabaseLocation *location, const char *path)
             if (fwrite (name, 1, len, fp) != len) {
                 goto save_fail;
             }
-            // write node name
+
+            // write is_dir
             uint8_t is_dir = node->is_dir;
             if (fwrite (&is_dir, 1, 1, fp) != 1) {
                 goto save_fail;
             }
 
-            // write node name
+            // write size
             uint64_t size = node->size;
             if (fwrite (&size, 1, 8, fp) != 8) {
                 goto save_fail;
             }
 
-            // write node name
+            // write mtime
             uint64_t mtime = node->mtime;
             if (fwrite (&mtime, 1, 8, fp) != 8) {
                 goto save_fail;
             }
 
-            // write node name
+            // write length of node tags
+            if (fwrite (&tags_len, 1, 2, fp) != 2) {
+                goto save_fail;
+            }
+
+            // write node tags
+            if (node->tags != NULL) {
+                if (fwrite (node->tags, 1, tags_len, fp) != tags_len) {
+                    goto save_fail;
+                }
+            }
+
+            // write node pos
             uint32_t pos = node->pos;
             if (fwrite (&pos, 1, 4, fp) != 4) {
                 goto save_fail;
@@ -392,13 +431,14 @@ static int
 db_location_walk_tree_recursive (DatabaseLocation *location,
                                  GList *excludes,
                                  char **exclude_files,
+                                 bool enable_tags,
                                  const char *dname,
                                  GTimer *timer,
                                  void (*callback)(const char *),
                                  BTreeNode *parent,
                                  int spec)
 {
-    int len = strlen (dname);
+    size_t len = strlen (dname);
     if (len >= FILENAME_MAX - 1) {
         //trace ("filename too long: %s\n", dname);
         return WALK_NAMETOOLONG;
@@ -426,7 +466,10 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         g_timer_reset (timer);
     }
 
+    char tags_buffer[XATTR_SIZE_MAX + 1];
+
     struct dirent *dent = NULL;
+
     while ((dent = readdir (dir))) {
         if (!(spec & WS_DOTFILES) && dent->d_name[0] == '.') {
             // file is dotfile, skip
@@ -453,17 +496,31 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         }
 
         const bool is_dir = S_ISDIR (st.st_mode);
+
+        bool tag_found = false;
+        if (enable_tags) {
+            bzero(&tags_buffer, XATTR_SIZE_MAX + 1);
+            if (getxattr(fn, XATTRS_TAGS, &tags_buffer, XATTR_SIZE_MAX) != -1) {
+                // trace ("tags found: %s: %s\n", fn, tags_buffer);
+                tag_found = true;
+            } else {
+                // trace ("tags not found: %s\n", fn);
+            }
+        }
+
         BTreeNode *node = btree_node_new (dent->d_name,
                                           st.st_mtime,
                                           st.st_size,
                                           0,
-                                          is_dir);
+                                          is_dir,
+                                          tag_found ? tags_buffer : NULL);
         btree_node_prepend (parent, node);
         location->num_items++;
         if (is_dir) {
             db_location_walk_tree_recursive (location,
                                              excludes,
                                              exclude_files,
+                                             enable_tags,
                                              fn,
                                              timer,
                                              callback,
@@ -489,7 +546,7 @@ db_location_build_tree (const char *dname, void (*callback)(const char *))
     else {
         root_name = dname;
     }
-    BTreeNode *root = btree_node_new (root_name, 0, 0, 0, true);
+    BTreeNode *root = btree_node_new (root_name, 0, 0, 0, true, NULL);
     DatabaseLocation *location = db_location_new ();
     location->entries = root;
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
@@ -503,6 +560,7 @@ db_location_build_tree (const char *dname, void (*callback)(const char *))
     uint32_t res = db_location_walk_tree_recursive (location,
                                                     config->exclude_locations,
                                                     config->exclude_files,
+                                                    config->enable_tags,
                                                     dname,
                                                     timer,
                                                     callback,

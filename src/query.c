@@ -28,6 +28,7 @@ fsearch_query_new (const char *query,
                    void *callback_data,
                    bool match_case,
                    bool enable_regex,
+                   bool enable_tags,
                    bool auto_search_in_path,
                    bool search_in_path)
 {
@@ -40,6 +41,7 @@ fsearch_query_new (const char *query,
     q->callback_data = callback_data;
     q->match_case = match_case;
     q->enable_regex = enable_regex;
+    q->enable_tags = enable_tags;
     q->auto_search_in_path = auto_search_in_path;
     q->search_in_path = search_in_path;
     return q;

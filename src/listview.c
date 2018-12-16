@@ -62,6 +62,9 @@ on_listview_column_width_changed (GtkTreeViewColumn *col,
         case LIST_MODEL_COL_CHANGED:
             config->modified_column_width = width;
             break;
+        case LIST_MODEL_COL_TAGS:
+            config->tags_column_width = width;
+            break;
         default:
             trace ("width changed: unknown column\n");
     }
@@ -244,6 +247,35 @@ listview_add_modified_column (GtkTreeView *list, int32_t size, int32_t pos)
 }
 
 void
+listview_add_tags_column (GtkTreeView *list, int32_t size, int32_t pos)
+{
+    GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+    g_object_set (G_OBJECT (renderer),
+                  "ellipsize",
+                  PANGO_ELLIPSIZE_END,
+                  NULL);
+    g_object_set (G_OBJECT (renderer),
+                  "foreground",
+                  "grey",
+                  NULL);
+
+    GtkTreeViewColumn *col = gtk_tree_view_column_new();
+    gtk_tree_view_column_pack_start (col, renderer, TRUE);
+    gtk_tree_view_column_add_attribute (col,
+                                        renderer,
+                                        "text",
+                                        LIST_MODEL_COL_TAGS);
+    listview_column_set_size (col, size);
+    gtk_tree_view_column_set_sort_column_id (col, SORT_ID_TAGS);
+    gtk_tree_view_insert_column (list, col, pos);
+    listview_column_add_label (col, _("Tags"));
+
+    g_signal_connect (col, "notify::width",
+                      G_CALLBACK (on_listview_column_width_changed),
+                      NULL);
+}
+
+void
 listview_add_type_column (GtkTreeView *list, int32_t size, int32_t pos)
 {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -289,6 +321,9 @@ listview_add_column (GtkTreeView *list, uint32_t col_type, int32_t size, int32_t
         case LIST_MODEL_COL_CHANGED:
             listview_add_modified_column (list, size, pos);
             break;
+        case LIST_MODEL_COL_TAGS:
+            listview_add_tags_column (list, size, pos);
+            break;
         case LIST_MODEL_COL_SIZE:
             listview_add_size_column (list, size, pos);
             break;
@@ -319,6 +354,10 @@ listview_add_default_columns (GtkTreeView *view)
                          LIST_MODEL_COL_CHANGED,
                          125,
                          4);
+    listview_add_column (view,
+                         LIST_MODEL_COL_TAGS,
+                         125,
+                         5);
 }
 
 void
