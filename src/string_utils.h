@@ -18,18 +18,12 @@
 
 #pragma once
 #include <unistd.h>
+#include <stdbool.h>
 
-const char *
-fsearch_strstr (const char *haystack,
-                const char *needle,
-                size_t needle_len);
-
-const char *
-fsearch_strcasestr (const char *haystack,
-                    const char *needle,
-                    size_t needle_len);
+bool
+fs_str_has_upper (const char *str);
 
 char *
-fsearch_string_copy (char *dest,
-                     char *end,
-                     const char *src);
+fs_str_copy (char *dest,
+             char *end,
+             const char *src);

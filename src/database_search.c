@@ -187,10 +187,9 @@ search_thread (void * user_data)
     const uint32_t search_in_path = ctx->search->search_in_path;
     const uint32_t auto_search_in_path = ctx->search->auto_search_in_path;
     DynamicArray *entries = ctx->search->entries;
-
+    BTreeNode **results = ctx->results;
 
     uint32_t num_results = 0;
-    BTreeNode **results = ctx->results;
     char full_path[PATH_MAX] = "";
     for (uint32_t i = start; i <= end; i++) {
         if (max_results && num_results == max_results) {
@@ -285,7 +284,7 @@ search_regex_thread (void * user_data)
                                 &erroffset,
                                 NULL);
 
-    int ovector[OVECCOUNT];
+    int ovector[OVECCOUNT] = {0};
 
     if (regex) {
         const uint32_t start = ctx->start_pos;
@@ -363,20 +362,6 @@ is_regex (const char *query)
     return (strpbrk(query, regex_chars) != NULL);
 }
 
-static bool
-str_has_upper (const char *string)
-{
-    assert (string != NULL);
-    const char *ptr = string;
-    while (*ptr != '\0') {
-        if (isupper (*ptr)) {
-            return true;
-        }
-        ptr++;
-    }
-    return false;
-}
-
 static uint32_t
 search_wildcard_icase (const char *haystack, const char *needle)
 {
@@ -431,7 +416,7 @@ search_query_new (const char *query, bool match_case)
 
     new->query = g_strdup (query);
     new->query_len = strlen (query);
-    new->has_uppercase = str_has_upper (query);
+    new->has_uppercase = fs_str_has_upper (query);
     new->has_separator = strchr (query, '/') ? 1 : 0;
     // TODO: this might not work at all times?
     if (u8_strlen (query) != new->query_len) {

@@ -299,12 +299,12 @@ btree_node_build_path (BTreeNode *node, char *path, size_t path_len)
     char *end = &path[path_len - 1];
 
     uint32_t counter = 0;
-    ptr = fsearch_string_copy (ptr, end, parents[counter++]);
+    ptr = fs_str_copy (ptr, end, parents[counter++]);
 
     char *item = parents[counter++];
     while (item && ptr != end) {
-        ptr = fsearch_string_copy (ptr, end, "/");
-        ptr = fsearch_string_copy (ptr, end, item);
+        ptr = fs_str_copy (ptr, end, "/");
+        ptr = fs_str_copy (ptr, end, item);
         item = parents[counter++];
     }
     return true;
