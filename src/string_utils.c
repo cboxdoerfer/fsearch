@@ -23,6 +23,21 @@
 #include "string_utils.h"
 
 bool
+fs_str_is_empty (const char *str)
+{
+    // query is considered empty if:
+    // - fist character is null terminator
+    // - or it has only space characters
+    while (*str != '\0') {
+        if (!isspace (*str)) {
+            return false;
+        }
+        str++;
+    }
+    return true;
+}
+
+bool
 fs_str_has_upper (const char *strc)
 {
     assert (strc != NULL);

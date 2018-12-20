@@ -63,31 +63,16 @@ typedef struct search_context_s {
 } search_thread_context_t;
 
 static DatabaseSearchResult *
-db_perform_normal_search (DatabaseSearch *search, FsearchQuery *q);
+db_search (DatabaseSearch *search, FsearchQuery *q);
 
 static DatabaseSearchResult *
-db_perform_empty_search (DatabaseSearch *search);
+db_search_empty (DatabaseSearch *search);
 
 DatabaseSearchEntry *
 db_search_entry_new (BTreeNode *node, uint32_t pos);
 
 static void
 db_search_entry_free (DatabaseSearchEntry *entry);
-
-static bool
-query_is_empty (const char *s)
-{
-    // query is considered empty if:
-    // - fist character is null terminator
-    // - or it has only space characters
-    while (*s != '\0') {
-        if (!isspace (*s)) {
-            return 0;
-        }
-        s++;
-    }
-    return 1;
-}
 
 static gpointer
 fsearch_search_thread (gpointer user_data)
@@ -109,16 +94,16 @@ fsearch_search_thread (gpointer user_data)
             g_mutex_unlock (&search->query_mutex);
             // if query is empty string we are done here
             DatabaseSearchResult *result = NULL;
-            if (query_is_empty (query->query)) {
+            if (fs_str_is_empty (query->query)) {
                 if (!search->hide_results) {
-                    result = db_perform_empty_search (search);
+                    result = db_search_empty (search);
                 }
                 else {
                     result = calloc (1, sizeof (DatabaseSearchResult));
                 }
             }
             else {
-                result = db_perform_normal_search (search, query);
+                result = db_search (search, query);
             }
             result->cb_data = query->callback_data;
             query->callback (result);
@@ -140,6 +125,7 @@ search_thread_context_new (DatabaseSearch *search,
 {
     search_thread_context_t *ctx = calloc (1, sizeof(search_thread_context_t));
     assert (ctx != NULL);
+    assert (end_pos >= start_pos);
 
     ctx->search = search;
     ctx->queries = queries;
@@ -490,7 +476,7 @@ build_queries (DatabaseSearch *search, FsearchQuery *q)
 }
 
 static DatabaseSearchResult *
-db_perform_empty_search (DatabaseSearch *search)
+db_search_empty (DatabaseSearch *search)
 {
     assert (search != NULL);
     assert (search->entries != NULL);
@@ -532,7 +518,7 @@ db_perform_empty_search (DatabaseSearch *search)
 }
 
 static DatabaseSearchResult *
-db_perform_normal_search (DatabaseSearch *search, FsearchQuery *q)
+db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
     assert (search->entries != NULL);
@@ -860,6 +846,5 @@ db_perform_search (DatabaseSearch *search, void (*callback)(void *), void *callb
 
     FsearchQuery *q = fsearch_query_new (search->query, callback, callback_data, false, false, false, false);
     db_search_queue (search, q);
-    //db_perform_normal_search (search);
 }
 

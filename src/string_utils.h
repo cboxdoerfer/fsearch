@@ -21,6 +21,9 @@
 #include <stdbool.h>
 
 bool
+fs_str_is_empty (const char *str);
+
+bool
 fs_str_has_upper (const char *str);
 
 char *
