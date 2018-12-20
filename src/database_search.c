@@ -836,8 +836,8 @@ db_search_get_results (DatabaseSearch *search)
     return search->results;
 }
 
-void
-db_queue_search (DatabaseSearch *search, FsearchQuery *query)
+static void
+db_search_queue (DatabaseSearch *search, FsearchQuery *query)
 {
     g_mutex_lock (&search->query_mutex);
     if (search->query_ctx) {
@@ -859,7 +859,7 @@ db_perform_search (DatabaseSearch *search, void (*callback)(void *), void *callb
     //db_search_results_clear (search);
 
     FsearchQuery *q = fsearch_query_new (search->query, callback, callback_data, false, false, false, false);
-    db_queue_search (search, q);
+    db_search_queue (search, q);
     //db_perform_normal_search (search);
 }
 
