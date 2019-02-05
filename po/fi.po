@@ -8,388 +8,393 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2019-01-31 21:29+0100\n"
-"Last-Translator:  <christian.boxdoerfer@posteo.de>\n"
-"Language-Team: Finnish\n"
+"PO-Revision-Date: 2019-02-06 07:09+0000\n"
+"Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
+"Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
+"translations/fi/>\n"
 "Language: fi\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.5-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr ""
+msgstr "Avaa tiedosto(t)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr ""
+msgstr "Avaa muussa sovelluksessa"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr ""
+msgstr "Avaa sisältävä kansio"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr ""
+msgstr "Avaa tiedosto(t) tiedostonhallinnassa"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "Siirrä roskakoriin"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr ""
+msgstr "_Tiedosto"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr ""
+msgstr "Uusi ikkuna"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr ""
+msgstr "Avaa kansio"
 
 #: ../src/fsearch.glade.h:10
 msgid "Update Database"
-msgstr ""
+msgstr "Päivitä tietokanta"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr ""
+msgstr "_Muokkaa"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr ""
+msgstr "Poista kaikkien valinta"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr ""
+msgstr "Käänteinen valinta"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr ""
+msgstr "_Näytä"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr ""
+msgstr "Näytä valikkopalkki"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr ""
+msgstr "Näytä tilapalkki"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr ""
+msgstr "Näytä suodatin"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr ""
+msgstr "Näytä Etsi-painike"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr ""
+msgstr "_Etsi"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr ""
+msgstr "Etsi polusta"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr ""
+msgstr "Sama kirjainkoko"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr ""
+msgstr "Käytä säännöllisiä lausekkeita"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr ""
+msgstr "_Ohje"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
-msgstr ""
+msgstr "Etsi..."
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr ""
+msgstr "Valitse suodatin"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr ""
+msgstr "Kaikki"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
-msgstr ""
+msgstr "Kansiot"
 
 #: ../src/fsearch.glade.h:28
 msgid "Files"
-msgstr ""
+msgstr "Tiedostot"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
-msgstr ""
+msgstr "Etsi"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Hakutulosten lukumäärä"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
-msgstr ""
+msgstr "0 kohdetta"
 
 #: ../src/fsearch.glade.h:32
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr ""
+msgstr "Päivitetään tietokantaa..."
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
-msgstr ""
+msgstr "sivu0"
 
 #: ../src/fsearch.glade.h:35
 msgid "(empty)"
-msgstr ""
+msgstr "(tyhjä)"
 
 #: ../src/fsearch.glade.h:36
 msgid "page1"
-msgstr ""
+msgstr "sivu1"
 
 #: ../src/fsearch.glade.h:37
 msgid "CASE"
-msgstr ""
+msgstr "KIRJAINKOKO"
 
 #: ../src/fsearch.glade.h:38
 msgid "PATH"
-msgstr ""
+msgstr "POLKU"
 
 #: ../src/fsearch.glade.h:39
 msgid "REGEX"
-msgstr ""
+msgstr "SÄÄNNÖLLINEN LAUSEKE"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr ""
+msgstr "_Avaa"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr ""
+msgstr "Avaa _Sovelluksessa"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr ""
+msgstr "Muu sovellus"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr ""
+msgstr "_Avaa kansio"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr ""
+msgstr "L_eikkaa"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr ""
+msgstr "_Kopioi"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_Kopioi tiedostopolku"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
-msgstr ""
+msgstr "Siirrä _roskakoriin"
 
 #: ../src/menus.ui.h:9
 msgid "_Delete"
-msgstr ""
+msgstr "_Poista"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
-msgstr ""
+msgstr "Nimi"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:178
 msgid "Path"
-msgstr ""
+msgstr "Polku"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:268
 msgid "Type"
-msgstr ""
+msgstr "Tyyppi"
 
 #: ../src/menus.ui.h:13 ../src/listview.c:207
 msgid "Size"
-msgstr ""
+msgstr "Koko"
 
 #: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
-msgstr ""
+msgstr "Muokattu"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr ""
+msgstr "Tyhjä tietokanta"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr ""
+msgstr "Valitse <b>Muokkaa → Asetukset → Tietokanta</b> ja lisää sijainteja"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr ""
+msgstr "Tyhjä haku"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Paina <b>Ctrl + F</b> ja aloita kirjoittaminen"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr ""
+msgstr "Tämä voi kestää jonkin aikaa."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr ""
+msgstr "Ei tuloksia"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr ""
+msgstr "Kokeile eri Hakusanalla"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
-msgstr ""
+msgstr "Asetukset"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Käytä tummaa teemaa"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr ""
+msgstr "Näytä työkaluvihjeet"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr ""
+msgstr "Muista ikkunan koko"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Muista sarakemääritykset"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Näytä kuvakkeet Nimi-sarakkeesta"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Käytä binääri yksiköitä desimaali yksiköiden sijaan"
 
 #: ../src/preferences.ui.h:8
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
+"TIEDOKSI: \"Käytä tummaa teemaa\" ei ehkä vaikuta,\n"
+"koska kaikki GTK+ teemat eivät tarjoa tummaa versiota."
 
 #: ../src/preferences.ui.h:10
 msgid "Interface"
-msgstr ""
+msgstr "Käyttöliittymä"
 
 #: ../src/preferences.ui.h:11
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Rajoita tulosten määrää:"
 
 #: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Etsi polusta, kun haku sisältää polkuerottimia"
 
 #: ../src/preferences.ui.h:13
 msgid "Search as you type"
-msgstr ""
+msgstr "Etsi kirjoitettaessa"
 
 #: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Piilota tulokset, kun haku on tyhjä"
 
 #: ../src/preferences.ui.h:16
 msgid "Update database on start"
-msgstr ""
+msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
 
 #: ../src/preferences.ui.h:17
 msgid "Add"
-msgstr ""
+msgstr "Lisää"
 
 #: ../src/preferences.ui.h:18
 msgid "Remove"
-msgstr ""
+msgstr "Poista"
 
 #: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
-msgstr ""
+msgstr "Seuraa symbolisia linkkejä"
 
 #: ../src/preferences.ui.h:20
 msgid "Include"
-msgstr ""
+msgstr "Sisällytä"
 
 #: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Ohita piilotetut tiedostot ja kansiot"
 
 #: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
+"Tukee yleismerkkejä. Useat merkinnät on eroteltava toisistaan merkillä ';'"
 
 #: ../src/preferences.ui.h:23
 msgid "Exclude files:"
-msgstr ""
+msgstr "Ohita tiedostot:"
 
 #: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "esim. \".git;*.tmp\""
 
 #: ../src/preferences.ui.h:25
 msgid "Exclude"
-msgstr ""
+msgstr "Ohita"
 
 #: ../src/preferences.ui.h:26
 msgid "Database"
-msgstr ""
+msgstr "Tietokanta"
 
 #: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
 #: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d kohdetta"
 
 #: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Viimeksi päivitetty: %Y-%m-%d % H: %M"
 
 #: ../src/fsearch_window.c:820
 #, c-format
 msgid "Loading Database..."
-msgstr ""
+msgstr "Ladataan tietokanta..."
 
 #: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
-msgstr ""
+msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Haluatko todella poistaa"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr ""
+msgstr "tiedostot?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "Poistetaan tiedostoja..."
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr ""
+msgstr "Siirretään tiedostoja roskakoriin..."
