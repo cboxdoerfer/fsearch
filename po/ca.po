@@ -8,21 +8,24 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2019-01-31 21:35+0100\n"
-"Last-Translator:  <christian.boxdoerfer@posteo.de>\n"
-"Language-Team: Catalan\n"
+"PO-Revision-Date: 2019-03-29 20:04+0000\n"
+"Last-Translator: roger <616steam@gmail.com>\n"
+"Language-Team: Catalan <https://hosted.weblate.org/projects/fsearch/"
+"translations/ca/>\n"
 "Language: ca\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 3.6-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr ""
+msgstr "Obrir Fitxer(s)"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr ""
+msgstr "Obrira amb una altra aplicació"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
@@ -34,7 +37,7 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr ""
+msgstr "Moure a la paperera"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
@@ -46,15 +49,15 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr ""
+msgstr "Nova Finestra"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr ""
+msgstr "Obrir Carpeta"
 
 #: ../src/fsearch.glade.h:10
 msgid "Update Database"
-msgstr ""
+msgstr "Actualitzar base de dades"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
@@ -66,7 +69,7 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr ""
+msgstr "Invertir Selecció"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
@@ -74,19 +77,19 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr ""
+msgstr "Mostrar barra del menú"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr ""
+msgstr "Mostrar barra d'estat"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr ""
+msgstr "Mostrar filtre"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr ""
+msgstr "Mostrar botó de cerca"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
@@ -118,19 +121,19 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr ""
+msgstr "Tots"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
-msgstr ""
+msgstr "Carpetes"
 
 #: ../src/fsearch.glade.h:28
 msgid "Files"
-msgstr ""
+msgstr "Fitxers"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
-msgstr ""
+msgstr "Cercar"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
@@ -138,7 +141,7 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
-msgstr ""
+msgstr "0 Elements"
 
 #: ../src/fsearch.glade.h:32
 msgid "0/0"
@@ -146,7 +149,7 @@ msgstr ""
 
 #: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr ""
+msgstr "Actualitzant base de dades..."
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
@@ -178,7 +181,7 @@ msgstr ""
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr ""
+msgstr "Obrir_Amb"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
@@ -210,27 +213,27 @@ msgstr ""
 
 #: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: ../src/menus.ui.h:11 ../src/listview.c:178
 msgid "Path"
-msgstr ""
+msgstr "Camí"
 
 #: ../src/menus.ui.h:12 ../src/listview.c:268
 msgid "Type"
-msgstr ""
+msgstr "Tipus"
 
 #: ../src/menus.ui.h:13 ../src/listview.c:207
 msgid "Size"
-msgstr ""
+msgstr "Mida"
 
 #: ../src/menus.ui.h:14 ../src/listview.c:239
 msgid "Date Modified"
-msgstr ""
+msgstr "Data de modificació"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr ""
+msgstr "Base de dades buida"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
@@ -238,7 +241,7 @@ msgstr ""
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr ""
+msgstr "Consulta buida"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
@@ -254,7 +257,7 @@ msgstr ""
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr ""
+msgstr "No s'han trobat resultats"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
@@ -262,11 +265,11 @@ msgstr ""
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
-msgstr ""
+msgstr "Preferències"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Activar tema fosc"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
