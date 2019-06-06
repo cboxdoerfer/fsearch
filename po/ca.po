@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2019-03-29 20:04+0000\n"
-"Last-Translator: roger <616steam@gmail.com>\n"
+"PO-Revision-Date: 2019-06-18 19:03+0000\n"
+"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/fsearch/"
 "translations/ca/>\n"
 "Language: ca\n"
@@ -17,111 +17,111 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.6-dev\n"
+"X-Generator: Weblate 3.7\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
-msgstr "Obrir Fitxer(s)"
+msgstr "Obre fitxers"
 
 #: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
-msgstr "Obrira amb una altra aplicació"
+msgstr "Obre amb una altra aplicació"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr ""
+msgstr "Abre la carpeta contenidora"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr ""
+msgstr "Obre els fitxers al gestor de fitxers"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr "Moure a la paperera"
+msgstr "Envia a la paperera"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
-msgstr ""
+msgstr "_Fitxer"
 
 #: ../src/fsearch.glade.h:8
 msgid "New Window"
-msgstr "Nova Finestra"
+msgstr "Finestra nova"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr "Obrir Carpeta"
+msgstr "Obre una carpeta"
 
 #: ../src/fsearch.glade.h:10
 msgid "Update Database"
-msgstr "Actualitzar base de dades"
+msgstr "Actualitza la base de dades"
 
 #: ../src/fsearch.glade.h:11
 msgid "_Edit"
-msgstr ""
+msgstr "_Edita"
 
 #: ../src/fsearch.glade.h:12
 msgid "Deselect All"
-msgstr ""
+msgstr "Desselecciona-ho tot"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr "Invertir Selecció"
+msgstr "Inverteix la selecció"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
-msgstr ""
+msgstr "_Visualitza"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr "Mostrar barra del menú"
+msgstr "Mostra la barra de menús"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr "Mostrar barra d'estat"
+msgstr "Mostra la barra d’estat"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr "Mostrar filtre"
+msgstr "Mostra el filtre"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr "Mostrar botó de cerca"
+msgstr "Mostra el botó de cerca"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
-msgstr ""
+msgstr "_Cerca"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr ""
+msgstr "Cerca al camí"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr ""
+msgstr "Fes concordar les majúscules"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr ""
+msgstr "Activa les expressions regulars"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
-msgstr ""
+msgstr "_Ajuda"
 
 #: ../src/fsearch.glade.h:24
 msgid "Search..."
-msgstr ""
+msgstr "Cerca…"
 
 #: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
-msgstr ""
+msgstr "Seleccioneu un filtre"
 
 #: ../src/fsearch.glade.h:26
 msgid "All"
-msgstr "Tots"
+msgstr "Tot"
 
 #: ../src/fsearch.glade.h:27
 msgid "Folders"
@@ -133,83 +133,83 @@ msgstr "Fitxers"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
-msgstr "Cercar"
+msgstr "Cerca"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Nombre de resultats de la cerca"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
-msgstr "0 Elements"
+msgstr "0 elements"
 
 #: ../src/fsearch.glade.h:32
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr "Actualitzant base de dades..."
+msgstr "S’està actualitzant la base de dades…"
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
-msgstr ""
+msgstr "pàgina0"
 
 #: ../src/fsearch.glade.h:35
 msgid "(empty)"
-msgstr ""
+msgstr "(buit)"
 
 #: ../src/fsearch.glade.h:36
 msgid "page1"
-msgstr ""
+msgstr "pàgina1"
 
 #: ../src/fsearch.glade.h:37
 msgid "CASE"
-msgstr ""
+msgstr "MAJÚSCULES"
 
 #: ../src/fsearch.glade.h:38
 msgid "PATH"
-msgstr ""
+msgstr "CAMÍ"
 
 #: ../src/fsearch.glade.h:39
 msgid "REGEX"
-msgstr ""
+msgstr "EXPRESSIÓREGULAR"
 
 #: ../src/menus.ui.h:1
 msgid "_Open"
-msgstr ""
+msgstr "_Obre"
 
 #: ../src/menus.ui.h:2
 msgid "Open _With"
-msgstr "Obrir_Amb"
+msgstr "O_bre amb"
 
 #: ../src/menus.ui.h:3
 msgid "Other Application"
-msgstr ""
+msgstr "Una altra aplicació"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr ""
+msgstr "_Obre una carpeta"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
-msgstr ""
+msgstr "_Retalla"
 
 #: ../src/menus.ui.h:6
 msgid "_Copy"
-msgstr ""
+msgstr "_Copia"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_Copia el camí del fitxer"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
-msgstr ""
+msgstr "Envia a la _paperera"
 
 #: ../src/menus.ui.h:9
 msgid "_Delete"
-msgstr ""
+msgstr "_Suprimeix"
 
 #: ../src/menus.ui.h:10 ../src/listview.c:149
 msgid "Name"
@@ -238,6 +238,8 @@ msgstr "Base de dades buida"
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
+"Aneu a <b>Edita ▸ Preferències ▸ Base de dades</b> u afegiu algunes "
+"ubicacions"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
@@ -245,23 +247,23 @@ msgstr "Consulta buida"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Premeu <b>Ctrl + F</b> i comenceu a escriure"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
-msgstr ""
+msgstr "…"
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr ""
+msgstr "Això pot trigar una estona."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
-msgstr "No s'han trobat resultats"
+msgstr "No s’ha trobat cap resultat"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr ""
+msgstr "Proveu de fer una cerca diferent"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
@@ -269,129 +271,133 @@ msgstr "Preferències"
 
 #: ../src/preferences.ui.h:2
 msgid "Enable dark theme"
-msgstr "Activar tema fosc"
+msgstr "Activa el tema fosc"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr ""
+msgstr "Mostra els indicadors de funcions"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr ""
+msgstr "Recorda la mida de la finestra"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Recorda la configuració de les columnes"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Mostra icones al nom de les columnes"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Utilitza unitats binàries en comptes d’unitats decimals"
 
 #: ../src/preferences.ui.h:8
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
+"Observeu: «Activa el tema fosc» pot no tenir cap efecte\n"
+"perquè no tots els temes GTK inclouen versions fosques."
 
 #: ../src/preferences.ui.h:10
 msgid "Interface"
-msgstr ""
+msgstr "Interfície"
 
 #: ../src/preferences.ui.h:11
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Limita el nombre de resultats:"
 
 #: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Cerca al camí quan la consulta inclogui separadors de camí"
 
 #: ../src/preferences.ui.h:13
 msgid "Search as you type"
-msgstr ""
+msgstr "Cerca mentre es tecleja"
 
 #: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Amaga els resultats si la cerca és buida"
 
 #: ../src/preferences.ui.h:16
 msgid "Update database on start"
-msgstr ""
+msgstr "Actualitza la base de dades en iniciar"
 
 #: ../src/preferences.ui.h:17
 msgid "Add"
-msgstr ""
+msgstr "Afegeix"
 
 #: ../src/preferences.ui.h:18
 msgid "Remove"
-msgstr ""
+msgstr "Suprimeix"
 
 #: ../src/preferences.ui.h:19
 msgid "Follow symbolic links"
-msgstr ""
+msgstr "Segueix els enllaços simbòlics"
 
 #: ../src/preferences.ui.h:20
 msgid "Include"
-msgstr ""
+msgstr "Inclou"
 
 #: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Exclou els fitxers i les carpetes amagats"
 
 #: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "Podeu fer servir comodins. Separeu diverses entrades amb un «;»"
 
 #: ../src/preferences.ui.h:23
 msgid "Exclude files:"
-msgstr ""
+msgstr "Exclou els fitxers:"
 
 #: ../src/preferences.ui.h:24
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "p. ex., «.git;*.tmp»"
 
 #: ../src/preferences.ui.h:25
 msgid "Exclude"
-msgstr ""
+msgstr "Exclou"
 
 #: ../src/preferences.ui.h:26
 msgid "Database"
-msgstr ""
+msgstr "Base de dades"
 
 #: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
 #: ../src/fsearch_window.c:799
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d elements"
 
 #: ../src/fsearch_window.c:805
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Darrera actualització: %d %m %Y, %H:%M"
 
 #: ../src/fsearch_window.c:820
 #, c-format
 msgid "Loading Database..."
-msgstr ""
+msgstr "S’està carregant la base de dades…"
 
 #: ../src/fsearch.c:333
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
+"Una eina de cerca caracteritzada pel seu rendiment i les prestacions "
+"avançades"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr ""
+msgstr "Realment voleu suprimir"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr ""
+msgstr "fitxers?"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Deleting files..."
-msgstr ""
+msgstr "S’estan suprimint els fitxers…"
 
 #: ../src/fsearch_window_actions.c:142
 msgid "Moving files to trash..."
-msgstr ""
+msgstr "S’estan enviant els fitxers a la paperera…"
