@@ -353,7 +353,7 @@ about_activated (GSimpleAction *action,
                                "logo-icon-name", "system-search",
                                "license-type", GTK_LICENSE_GPL_2_0,
                                "copyright", "Christian Boxdörfer",
-                               "website", PACKAGE_URL,
+                               "website", "https://github.com/cboxdoerfer/fsearch",
                                "version", PACKAGE_VERSION,
                                "comments", _("A search utility focusing on performance and advanced features"),
                                NULL);
