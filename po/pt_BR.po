@@ -13,16 +13,16 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2017-07-20 17:27+0000\n"
-"Last-Translator: Luiz Fernando Ranghetti <elchevive@opensuse.org>\n"
+"PO-Revision-Date: 2019-07-23 03:07+0000\n"
+"Last-Translator: Wilker Santana da Silva <wilker@tutamail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
-"Language: pt-br\n"
+"Language: pt_BR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 2.16-dev\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -206,7 +206,7 @@ msgstr "_Copiar"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_Copiar Caminho do Arquivo"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
@@ -296,15 +296,15 @@ msgstr "Mostrar ícones no nome da coluna"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Usar unidades binárias no lugar de unidades decimais"
 
 #: ../src/preferences.ui.h:8
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
 msgstr ""
-"INFO: \"Enable dark theme\" pode não funcionar,\n"
-"since not every GTK+ theme provides a dark version."
+"INFO: \"Habilitar tema escuro\" pode não funcionar,\n"
+"desde que nem todo tema GTK+ dispõe de uma versão escura."
 
 #: ../src/preferences.ui.h:10
 msgid "Interface"
