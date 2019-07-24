@@ -263,8 +263,8 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active(show_base_2_units,
                                  main_config->show_base_2_units);
 
-    GtkComboBoxText *action_after_file_open = GTK_COMBO_BOX_TEXT( builder_get_object(builder,
-                                                                                     "action_after_file_open"));
+    GtkComboBox *action_after_file_open = GTK_COMBO_BOX ( builder_get_object(builder,
+                                                                             "action_after_file_open"));
     gtk_combo_box_set_active(action_after_file_open,
                              main_config->action_after_file_open);
 
