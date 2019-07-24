@@ -643,11 +643,7 @@ location_build_path (char *path, size_t path_len, const char *location_name)
     gchar config_dir[PATH_MAX] = "";
     config_build_dir (config_dir, sizeof (config_dir));
 
-    snprintf (path,
-              path_len,
-              "%s/database/%s",
-              config_dir,
-              path_checksum);
+    assert (0 <= snprintf (path, path_len, "%s/database/%s", config_dir, path_checksum));
     g_free (path_checksum);
     return;
 }
@@ -664,9 +660,7 @@ db_location_delete (DatabaseLocation *location, const char *location_name)
                          location_name);
 
     gchar database_file_path[PATH_MAX] = "";
-    snprintf (database_file_path,
-              sizeof (database_file_path),
-              "%s/%s", database_path, "database.db");
+    assert (0 <= snprintf (database_file_path, sizeof (database_file_path), "%s/%s", database_path, "database.db"));
 
     g_remove (database_file_path);
     g_remove (database_path);
@@ -684,9 +678,7 @@ db_save_location (Database *db, const char *location_name)
     trace ("%s\n", database_path);
 
     gchar database_fname[PATH_MAX] = "";
-    snprintf (database_fname,
-              sizeof (database_fname),
-              "%s/database.db", database_path);
+    assert (0 <= snprintf (database_fname, sizeof (database_fname), "%s/database.db", database_path));
     DatabaseLocation *location = db_location_get_for_path (db, location_name);
     if (location) {
         db_location_write_to_file (location, database_path);
@@ -722,9 +714,7 @@ db_location_get_path (const char *location_name)
     trace ("%s\n", database_path);
 
     gchar database_fname[PATH_MAX] = "";
-    snprintf (database_fname,
-              sizeof (database_fname),
-              "%s/database.db", database_path);
+    assert (0 <= snprintf (database_fname, sizeof (database_fname), "%s/database.db", database_path));
 
     return g_strdup (database_fname);
 }

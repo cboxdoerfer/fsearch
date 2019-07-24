@@ -131,7 +131,7 @@ make_location_dir (void)
     gchar config_dir[PATH_MAX] = "";
     config_build_dir (config_dir, sizeof (config_dir));
     gchar location_dir[PATH_MAX] = "";
-    snprintf (location_dir, sizeof (location_dir), "%s/%s", config_dir, "database");
+    assert (0 <= snprintf (location_dir, sizeof (location_dir), "%s/%s", config_dir, "database"));
     return !g_mkdir_with_parents (location_dir, 0700);
 }
 
