@@ -298,14 +298,15 @@ update_model_cb (gpointer user_data)
     uint32_t num_results = 0;
     GPtrArray *results = result->results;
     if (results) {
-        list_set_results (win->list_model, results);
+        list_model_set_results (win->list_model, results);
         win->search->results = results;
         win->search->num_folders = result->num_folders;;
         win->search->num_files = result->num_files;
         num_results = results->len;
+        list_model_sort (win->list_model);
     }
     else {
-        list_set_results (win->list_model, NULL);
+        list_model_set_results (win->list_model, NULL);
         win->search->results = NULL;
         win->search->num_folders = 0;
         win->search->num_files = 0;
@@ -316,7 +317,8 @@ update_model_cb (gpointer user_data)
     gchar sb_text[100] = "";
     snprintf (sb_text, sizeof (sb_text), _("%'d Items"), num_results);
     update_statusbar (win, sb_text);
-    reset_sort_order (win);
+
+    //reset_sort_order (win);
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     if (text[0] == '\0' && config->hide_results_on_empty_search) {

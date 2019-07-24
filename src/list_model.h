@@ -105,7 +105,8 @@ void
 list_model_sort (ListModel *list_model);
 
 void
-list_set_results (ListModel *list, GPtrArray *results);
+list_model_set_results (ListModel *list, GPtrArray *results);
 
 void
 list_model_remove_entry (ListModel *list, DatabaseSearch *search, DatabaseSearchEntry *entry);
+

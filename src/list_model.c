@@ -104,9 +104,7 @@ static void list_model_sortable_set_default_sort_func (GtkTreeSortable *sortable
 
 static gboolean list_model_sortable_has_default_sort_func (GtkTreeSortable *sortable);
 
-static void list_model_resort (ListModel *list_model);
-
-
+void list_model_sort (ListModel *list_model);
 
 static GObjectClass *parent_class = NULL;  /* GObject stuff - nothing to worry about */
 
@@ -835,7 +833,7 @@ list_model_sortable_set_sort_column_id (GtkTreeSortable *sortable,
         //reverse_results (list_model->results, list_model->results->len);
     }
     else {
-        list_model_resort(list_model);
+        list_model_sort (list_model);
     }
 
     /* emit "sort-column-changed" signal to tell any tree views
@@ -984,8 +982,8 @@ list_model_qsort_compare_func (DatabaseSearchEntry **a, DatabaseSearchEntry **b,
     return ret;
 }
 
-static void
-list_model_resort (ListModel *list_model)
+void
+list_model_sort (ListModel *list_model)
 {
     g_return_if_fail (list_model);
     g_return_if_fail (IS_LIST_MODEL(list_model));
@@ -1026,7 +1024,7 @@ list_model_resort (ListModel *list_model)
 }
 
 void
-list_set_results (ListModel *list, GPtrArray *results)
+list_model_set_results (ListModel *list, GPtrArray *results)
 {
     list->results = results;
 }
