@@ -495,12 +495,14 @@ list_model_get_value (GtkTreeModel *tree_model,
 
         case LIST_MODEL_COL_ICON:
             btree_node_get_path (node, node_path, sizeof (node_path));
-            snprintf (path, sizeof (path), "%s/%s", node_path, name);
-            g_file = g_file_new_for_path (path);
-            file_info = g_file_query_info (g_file, "standard::icon", 0, NULL, NULL);
 
-            pixbuf = iconstore_get_pixbuf (file_info);
-            g_value_set_object(value, pixbuf);
+            if (0 <= snprintf (path, sizeof (path), "%s/%s", node_path, name)) {
+                g_file = g_file_new_for_path (path);
+                file_info = g_file_query_info (g_file, "standard::icon", 0, NULL, NULL);
+
+                pixbuf = iconstore_get_pixbuf (file_info);
+                g_value_set_object(value, pixbuf);
+            }
             break;
 
         case LIST_MODEL_COL_NAME:
@@ -536,9 +538,10 @@ list_model_get_value (GtkTreeModel *tree_model,
 
         case LIST_MODEL_COL_TYPE:
             btree_node_get_path (node, node_path, sizeof (node_path));
-            snprintf (path, sizeof (path), "%s/%s", node_path, name);
-            mime_type = get_file_type (record, path);
-            g_value_set_string(value, mime_type);
+            if (0 <= snprintf (path, sizeof (path), "%s/%s", node_path, name)) {
+                mime_type = get_file_type (record, path);
+                g_value_set_string(value, mime_type);
+            }
             break;
 
         case LIST_MODEL_COL_CHANGED:
