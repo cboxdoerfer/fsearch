@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-05-02 21:45+0000\n"
+"PO-Revision-Date: 2019-08-01 05:11+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.0-dev\n"
+"X-Generator: Weblate 3.8-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -30,15 +30,15 @@ msgstr "Відкрити за допомогою"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr "Відкрити вміщаєму теку"
+msgstr "Відкрити вміщаємий каталог"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
-msgstr "Відкрити файл(и) в Файловому менеджері"
+msgstr "Відкрити файл(и) у Файловому менеджері"
 
 #: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
-msgstr "Перемістити у смітник"
+msgstr "Перенести у смітник"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
@@ -54,7 +54,7 @@ msgstr "Нове вікно"
 
 #: ../src/fsearch.glade.h:9
 msgid "Open Folder"
-msgstr "Відкрити теку"
+msgstr "Відкрити каталог"
 
 #: ../src/fsearch.glade.h:10
 msgid "Update Database"
@@ -70,7 +70,7 @@ msgstr "Скасувати виділення"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr "Обернути виділення"
+msgstr "Інвертувати виділене"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
@@ -78,19 +78,19 @@ msgstr "_Вигляд"
 
 #: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
-msgstr "Показати панель меню"
+msgstr "Відображати меню"
 
 #: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
-msgstr "Показувати рядок стану"
+msgstr "Відображати рядок стану"
 
 #: ../src/fsearch.glade.h:17
 msgid "Show Filter"
-msgstr "Показувати фільтр"
+msgstr "Відображати фільтр"
 
 #: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
-msgstr "Показувати кнопку пошуку"
+msgstr "Відображати кнопку Пошук"
 
 #: ../src/fsearch.glade.h:19
 msgid "_Search"
@@ -98,7 +98,7 @@ msgstr "_Пошук"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr "Шукати в назві шляху"
+msgstr "Шукати у назві шляху"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
@@ -134,11 +134,11 @@ msgstr "Файли"
 
 #: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
 msgid "Search"
-msgstr "Шукати"
+msgstr "Пошук"
 
 #: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
-msgstr "Кількість знайдених результатів"
+msgstr "Знайдені результати"
 
 #: ../src/fsearch.glade.h:31
 msgid "0 Items"
@@ -150,7 +150,7 @@ msgstr "0/0"
 
 #: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
 msgid "Updating Database..."
-msgstr "Оновлення бази даних..."
+msgstr "Оновлення бази..."
 
 #: ../src/fsearch.glade.h:34
 msgid "page0"
@@ -190,7 +190,7 @@ msgstr "інші програми"
 
 #: ../src/menus.ui.h:4
 msgid "_Open Folder"
-msgstr "Відкрити _теку"
+msgstr "Відкрити ка_талог"
 
 #: ../src/menus.ui.h:5
 msgid "C_ut"
@@ -202,11 +202,11 @@ msgstr "_Копіювати"
 
 #: ../src/menus.ui.h:7
 msgid "_Copy Filepath"
-msgstr "Копіювати _шлях"
+msgstr "Скопіювати _шлях"
 
 #: ../src/menus.ui.h:8
 msgid "Move to _Trash"
-msgstr "Перемістити у _смітник"
+msgstr "Перенести у _смітник"
 
 #: ../src/menus.ui.h:9
 msgid "_Delete"
@@ -234,20 +234,19 @@ msgstr "Дата зміни"
 
 #: ../src/overlay.ui.h:1
 msgid "Empty Database"
-msgstr "База даних порожня"
+msgstr "База порожня"
 
 #: ../src/overlay.ui.h:2
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr ""
-"Перейдіть у <b>Зміни → Налаштування → База даних</b> і додайте розташування"
+msgstr "Перейдіть у <b>Зміни → Параметри → База даних</b> та додайте каталоги"
 
 #: ../src/overlay.ui.h:3
 msgid "Empty Query"
-msgstr "Запит порожній"
+msgstr "Пустий запит"
 
 #: ../src/overlay.ui.h:4
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "Натисніть <b>Ctrl + F</b> і почніть набирати"
+msgstr "Натисніть <b>Ctrl + F</b> та почніть набирати"
 
 #: ../src/overlay.ui.h:6
 msgid "..."
@@ -255,7 +254,7 @@ msgstr "..."
 
 #: ../src/overlay.ui.h:7
 msgid "This may take a while."
-msgstr "Це може зайняти деякий час."
+msgstr "Це займе деякий час."
 
 #: ../src/overlay.ui.h:8
 msgid "No Results Found"
@@ -263,7 +262,7 @@ msgstr "Нічого не знайдено"
 
 #: ../src/overlay.ui.h:9
 msgid "Try a different search"
-msgstr "Пробуйте шукати по іншому"
+msgstr "Спробуйте написати по іншому"
 
 #: ../src/preferences.ui.h:1
 msgid "Preferences"
@@ -275,23 +274,23 @@ msgstr "Увімкнути темну тему"
 
 #: ../src/preferences.ui.h:3
 msgid "Show tooltips"
-msgstr "Показувати підказки"
+msgstr "Відображати підказки"
 
 #: ../src/preferences.ui.h:4
 msgid "Remember window size"
-msgstr "Запам'ятати розмір вікна"
+msgstr "Пам'ятати розмір вікна"
 
 #: ../src/preferences.ui.h:5
 msgid "Remember column configuration"
-msgstr "Запам'ятати налаштування колонок"
+msgstr "Пам'ятати налаштування стовпців"
 
 #: ../src/preferences.ui.h:6
 msgid "Show icons in name column"
-msgstr "Показувати значки в колонці з назвою"
+msgstr "Відображати іконки в колонці Назва"
 
 #: ../src/preferences.ui.h:7
 msgid "Use binary units instead of decimal units"
-msgstr "Використовувати бінарні одиниці замість десяткових"
+msgstr "Використовувати двійкову СЧ замість десяткової"
 
 #: ../src/preferences.ui.h:8
 msgid ""
@@ -311,7 +310,7 @@ msgstr "Обмежити к-сть результатів:"
 
 #: ../src/preferences.ui.h:12
 msgid "Search in path when query contains path separators"
-msgstr "Шукати по шляху, коли запит містить роздільники"
+msgstr "Шукати по шляху, якщо запит містить роздільники"
 
 #: ../src/preferences.ui.h:13
 msgid "Search as you type"
@@ -319,7 +318,7 @@ msgstr "Шукати під час набирання"
 
 #: ../src/preferences.ui.h:14
 msgid "Hide results when search is empty"
-msgstr "Сховати результати, коли пошук порожній"
+msgstr "Ховати результати, якщо поле пошуку порожнє"
 
 #: ../src/preferences.ui.h:16
 msgid "Update database on start"
@@ -343,11 +342,11 @@ msgstr "Включати"
 
 #: ../src/preferences.ui.h:21
 msgid "Exclude hidden files and folders"
-msgstr "Виключати приховані файли і папки"
+msgstr "Виключати приховані файли і каталоги"
 
 #: ../src/preferences.ui.h:22
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "Підтримка шаблонів. Багато записів мають бути розділені символом ';'"
+msgstr "Підтримка шаблонів. Багато запитів розділяються символом ';'"
 
 #: ../src/preferences.ui.h:23
 msgid "Exclude files:"
@@ -386,7 +385,7 @@ msgstr "Пошукова утиліта орієнтована на швидкі
 
 #: ../src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr "Ви дійсно хочете видалити"
+msgstr "Ви справді бажаєте видалити"
 
 #: ../src/fsearch_window_actions.c:138
 msgid "files?"
