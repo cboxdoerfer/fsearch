@@ -1,0 +1,27 @@
+Source: fsearch
+Section: utils
+Priority: optional
+Homepage: https://cboxdoerfer.github.io/fsearch/
+Maintainer: Christian Boxdörfer <christian.boxdoerfer@posteo.de>
+Build-Depends: debhelper (>=9),
+    autotools-dev,
+    build-essential,
+    automake,
+    autoconf,
+    libtool,
+    pkg-config,
+    intltool,
+    autoconf-archive,
+    libpcre3-dev,
+    libglib2.0-dev,
+    libgtk-3-dev,
+    libxml2-utils
+Standards-Version: 3.9.6
+
+Package: fsearch-trunk
+Architecture: any
+Conflicts: fsearch-dev, fsearch
+Depends: ${shlibs:Depends}, ${misc:Depends}
+Description: A fast file search utility
+    FSearch is a fast file search utility for Unix operating systems,
+    inspired by Everything Search Engine and based on GTK+3
