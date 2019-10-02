@@ -2,7 +2,9 @@
 Version=1.0
 Type=Application
 Name=FSearch
+Name[ko]=데스크탑 검색
 Comment=A file search application focusing on performance and advanced features
+Comment[ko]=빠른 데스크탑 검색 프로그램
 Comment[sk]=Program na vyhľadávanie súborov zameraný na výkon a pokročilé funkcie
 Comment[ru]=Специализированный инструмент поиска, нацеленный на быстродействие
 Comment[tr]=Performansa ve gelişmiş özelliklere odaklanan bir dosya arama uygulaması
@@ -11,6 +13,7 @@ TryExec=@PACKAGE@
 Exec=@PACKAGE@
 Categories=GTK;Utility;Core;
 Keywords=search;fsearch;files;folders;music;video;documents;find;tool;everything;
+Keywords[ko]=search,fsearch,검색,files,파일,폴더,문서,찾기,everything,파인더
 Keywords[sk]=vyhľadať;fsearch;súbory;hľadať;nástroj;všetko;
 Keywords[ru]=fsearch;инструмент;поиск;найти;файлы;папки;хлам;музыка;видео;документы;
 Keywords[tr]=fsearch;dosyalar;klasörler;müzik;video;dökümanlar;bul;araç;herşey;
