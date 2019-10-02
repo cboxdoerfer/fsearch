@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-02 13:54+0900\n"
+"POT-Creation-Date: 2019-10-02 16:27+0900\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Kevin Kim <root@hamonikr.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -41,7 +41,7 @@ msgstr "휴지통으로 이동"
 
 #: ../src/fsearch.glade.h:6
 msgid "FSearch"
-msgstr "FSearch"
+msgstr "데스크탑 검색"
 
 #: ../src/fsearch.glade.h:7
 msgid "_File"
@@ -293,23 +293,23 @@ msgstr "십진수 대신 이진수 사용"
 
 #: ../src/preferences.ui.h:8
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "파일을 열고 나서 할 일"
 
 #: ../src/preferences.ui.h:9
 msgid "Minimize"
-msgstr ""
+msgstr "최소화"
 
 #: ../src/preferences.ui.h:10
 msgid "Close"
-msgstr ""
+msgstr "닫기"
 
 #: ../src/preferences.ui.h:11
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "메뉴 또는 키보드 단축키 사용"
 
 #: ../src/preferences.ui.h:12
 msgid "with double click"
-msgstr ""
+msgstr "더블 클릭 사용"
 
 #: ../src/preferences.ui.h:13
 msgid ""
@@ -385,15 +385,15 @@ msgstr "데이터베이스"
 
 #: ../src/preferences.ui.h:32
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "경고 대화상자 보이기"
 
 #: ../src/preferences.ui.h:33
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "파일 또는 폴더를 열 수 없음"
 
 #: ../src/preferences.ui.h:34
 msgid "Dialogs"
-msgstr ""
+msgstr "대화상자"
 
 #: ../src/fsearch_window.c:99 ../src/fsearch_window.c:318
 #: ../src/fsearch_window.c:715
@@ -404,12 +404,12 @@ msgstr "%'d 건"
 #: ../src/fsearch_window.c:539 ../src/fsearch_window_actions.c:413
 #: ../src/fsearch_window_actions.c:465
 msgid "Failed to open file"
-msgstr ""
+msgstr "파일을 열 수 없습니다."
 
 #: ../src/fsearch_window.c:540 ../src/fsearch_window_actions.c:414
 #: ../src/fsearch_window_actions.c:466
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "현재 검색창을 유지하시겠습니까?"
 
 #: ../src/fsearch_window.c:721
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -422,7 +422,7 @@ msgstr "데이터베이스 로딩중…"
 
 #: ../src/fsearch.c:172
 msgid "Show version information"
-msgstr ""
+msgstr "버전 정보 보기"
 
 #: ../src/fsearch.c:358
 msgid "A search utility focusing on performance and advanced features"
