@@ -66,6 +66,9 @@ static guint signals [LAST_SIGNAL];
 
 G_DEFINE_TYPE (FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
+static gpointer
+load_database (gpointer user_data);
+
 static void
 fsearch_action_enable (const char *action_name);
 
@@ -140,14 +143,31 @@ fsearch_options_handler(GApplication *gapp,
                             GVariantDict *options,
                             gpointer data )
 {
-    gboolean version = FALSE;
+    gboolean version = FALSE, updatedb = FALSE;
     g_variant_dict_lookup(options, "version", "b", &version);
+    g_variant_dict_lookup(options, "updatedb", "b", &updatedb);
 
     if (version) {
         g_printf (PACKAGE_NAME " " PACKAGE_VERSION "\n");
     }
 
-    return version ? 0 : -1;
+    if (updatedb) {
+        g_printf ("Updating database...");
+        fflush(stdout);
+
+        FsearchApplication *fsearch = FSEARCH_APPLICATION (gapp);
+        fsearch->config->update_database_on_launch = true;
+
+        load_database(fsearch);
+        if (fsearch->db) {
+            db_save_locations (fsearch->db);
+            db_clear (fsearch->db);
+        }
+
+        printf (" done!\n");
+    }
+
+    return (version || updatedb) ? 0 : -1;
 }
 
 static void
@@ -171,6 +191,14 @@ fsearch_application_init (FsearchApplication *app)
                                    G_OPTION_ARG_NONE,
                                    _("Show version information"),
                                    NULL );
+    g_application_add_main_option (G_APPLICATION(app),
+                                   "updatedb",
+                                   'u',
+                                   G_OPTION_FLAG_NONE,
+                                   G_OPTION_ARG_NONE,
+                                   _("Update the database"),
+                                   NULL );
+
     g_signal_connect (app,
                       "handle-local-options",
                       G_CALLBACK(fsearch_options_handler),
