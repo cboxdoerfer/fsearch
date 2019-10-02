@@ -733,7 +733,7 @@ update_database_cb (gpointer data, gpointer user_data)
     gtk_stack_set_visible_child (GTK_STACK (win->database_stack), win->database_box1);
     gtk_spinner_start (GTK_SPINNER (win->database_spinner));
     gchar db_text[100] = "";
-    snprintf (db_text, sizeof (db_text), _("Loading Database..."));
+    snprintf (db_text, sizeof (db_text), _("Loading Database…"));
     gtk_label_set_text (GTK_LABEL (win->database_label), db_text);
 }
 
