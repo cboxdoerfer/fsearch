@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2018-03-13 14:41+0000\n"
-"Last-Translator: marcos lans <marcoslansgarza@gmail.com>\n"
+"PO-Revision-Date: 2019-10-12 12:52+0000\n"
+"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 2.20-dev\n"
+"X-Generator: Weblate 3.9-dev\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -70,7 +70,7 @@ msgstr "Desmarcar todo"
 
 #: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
-msgstr "Inverter selección"
+msgstr "Invertir selección"
 
 #: ../src/fsearch.glade.h:14
 msgid "_View"
@@ -98,15 +98,15 @@ msgstr "_Buscar"
 
 #: ../src/fsearch.glade.h:20
 msgid "Search in Path"
-msgstr "Buscar na ruta"
+msgstr "Buscar en la ruta"
 
 #: ../src/fsearch.glade.h:21
 msgid "Match Case"
-msgstr "Coincidir maiúsculas e minúsculas"
+msgstr "Distinguir mayúsculas y minúsculas"
 
 #: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
-msgstr "Activar expresións regulares"
+msgstr "Activar expresiones regulares"
 
 #: ../src/fsearch.glade.h:23
 msgid "_Help"
