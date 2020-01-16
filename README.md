@@ -29,6 +29,14 @@ https://aur.archlinux.org/packages/fsearch-git/
 #### Ubuntu
 ##### Daily Development Builds PPA
 https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
+
+##### PPA Installation
+
+```
+sudo add-apt-repository ppa:christian-boxdoerfer/fsearch-daily
+sudo apt-get update
+sudo apt install fsearch-trunk
+```
  
 ## Roadmap
 https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
