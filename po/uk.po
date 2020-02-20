@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2017-10-13 18:11+0200\n"
-"PO-Revision-Date: 2019-08-01 05:11+0000\n"
-"Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
+"PO-Revision-Date: 2020-02-21 00:32+0000\n"
+"Last-Translator: Tymofij Lytvynenko <till.svit@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<="
 "4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.8-dev\n"
+"X-Generator: Weblate 3.11.1\n"
 
 #: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
@@ -30,7 +30,7 @@ msgstr "Відкрити за допомогою"
 
 #: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
-msgstr "Відкрити вміщаємий каталог"
+msgstr "Відкрити вмістимий каталог"
 
 #: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
