@@ -155,8 +155,8 @@ then
 # directory, and "git describe" output looks sensible, use that to
 # derive a version string.
 elif test "`git log -1 --pretty=format:x . 2>&1`" = x \
-    && v=`git describe --abbrev=4 --match="$prefix*" HEAD 2>/dev/null \
-          || git describe --abbrev=4 HEAD 2>/dev/null` \
+    && v=`git describe --tags --abbrev=4 --match="$prefix*" HEAD 2>/dev/null \
+          || git describe --tags --abbrev=4 HEAD 2>/dev/null` \
     && v=`printf '%s\n' "$v" | sed "$tag_sed_script"` \
     && case $v in
          $prefix[0-9]*) ;;
