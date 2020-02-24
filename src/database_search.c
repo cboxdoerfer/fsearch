@@ -383,9 +383,8 @@ static void
 search_query_free (void * data)
 {
     search_query_t *query = data;
-    if (query != NULL) {
-        return;
-    }
+    assert (query != NULL);
+
     if (query->query != NULL) {
         g_free (query->query);
         query->query = NULL;
