@@ -1,8 +1,5 @@
-[type: gettext/glade]src/fsearch.glade
-[type: gettext/glade]src/menus.ui
-[type: gettext/glade]src/overlay.ui
-[type: gettext/glade]src/preferences.ui
 src/fsearch_window.c
 src/listview.c
 src/fsearch.c
 src/fsearch_window_actions.c
+data/fsearch.desktop
