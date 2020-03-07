@@ -2,4 +2,8 @@ src/fsearch_window.c
 src/listview.c
 src/fsearch.c
 src/fsearch_window_actions.c
+src/menus.ui
+src/overlay.ui
+src/preferences.ui
+src/fsearch.glade
 data/fsearch.desktop
