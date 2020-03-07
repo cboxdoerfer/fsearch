@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-10-13 18:11+0200\n"
+"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
+"POT-Creation-Date: 2020-03-07 19:17+0100\n"
 "PO-Revision-Date: 2019-12-22 08:21+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -19,281 +19,198 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.10\n"
 
-#: ../src/fsearch.glade.h:1
-msgid "Open File(s)"
-msgstr "Отваряне на Файл (ове)"
+#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
+#, c-format
+msgid "%'d Items"
+msgstr "%'d елемента"
 
-#: ../src/fsearch.glade.h:2
-msgid "Open With Other Application"
-msgstr "Отваряне с друга програма"
+#: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
+#: src/fsearch_window_actions.c:465
+msgid "Failed to open file"
+msgstr ""
 
-#: ../src/fsearch.glade.h:3
-msgid "Open Containing Folder"
-msgstr "Отваряне на съдържащата папка"
+#: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
+#: src/fsearch_window_actions.c:466
+msgid "Do you want to keep the window open?"
+msgstr ""
 
-#: ../src/fsearch.glade.h:4
-msgid "Open File(s) in File Manager"
-msgstr "Отваряне на файл (ове) във Файлов мениджър"
+#: src/fsearch_window.c:721
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr "Последно обновяване: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch.glade.h:5
-msgid "Move to Trash"
-msgstr "Преместване в кошчето"
+#: src/fsearch_window.c:736
+#, fuzzy, c-format
+msgid "Loading Database…"
+msgstr "Зареждане на базата с данни..."
 
-#: ../src/fsearch.glade.h:6
-msgid "FSearch"
-msgstr "Търсене на файлове"
-
-#: ../src/fsearch.glade.h:7
-msgid "_File"
-msgstr "_Файл"
-
-#: ../src/fsearch.glade.h:8
-msgid "New Window"
-msgstr "Нов прозорец"
-
-#: ../src/fsearch.glade.h:9
-msgid "Open Folder"
-msgstr "Отваряне на папка"
-
-#: ../src/fsearch.glade.h:10
-msgid "Update Database"
-msgstr "Обновяване на базата с данни"
-
-#: ../src/fsearch.glade.h:11
-msgid "_Edit"
-msgstr "_Редактиране"
-
-#: ../src/fsearch.glade.h:12
-msgid "Deselect All"
-msgstr "Премахване на цялата селекция"
-
-#: ../src/fsearch.glade.h:13
-msgid "Invert Selection"
-msgstr "Обръщане на селекцията"
-
-#: ../src/fsearch.glade.h:14
-msgid "_View"
-msgstr "_Преглед"
-
-#: ../src/fsearch.glade.h:15
-msgid "Show Menubar"
-msgstr "Показване на лента с менюта"
-
-#: ../src/fsearch.glade.h:16
-msgid "Show Statusbar"
-msgstr "Показване на лентата на състоянието"
-
-#: ../src/fsearch.glade.h:17
-msgid "Show Filter"
-msgstr "Показване на филтър"
-
-#: ../src/fsearch.glade.h:18
-msgid "Show Search Button"
-msgstr "Показване на бутон за търсене"
-
-#: ../src/fsearch.glade.h:19
-msgid "_Search"
-msgstr "_Търсене"
-
-#: ../src/fsearch.glade.h:20
-msgid "Search in Path"
-msgstr "Търсене в Пътя"
-
-#: ../src/fsearch.glade.h:21
-msgid "Match Case"
-msgstr "Точно съвпадение"
-
-#: ../src/fsearch.glade.h:22
-msgid "Enable RegEx"
-msgstr "Включване на регулярни изрази"
-
-#: ../src/fsearch.glade.h:23
-msgid "_Help"
-msgstr "_Помощ"
-
-#: ../src/fsearch.glade.h:24
-msgid "Search..."
-msgstr "Търсене..."
-
-#: ../src/fsearch.glade.h:25
-msgid "Select a Filter"
-msgstr "Избор на Филтър"
-
-#: ../src/fsearch.glade.h:26
-msgid "All"
-msgstr "Всички"
-
-#: ../src/fsearch.glade.h:27
-msgid "Folders"
-msgstr "Папки"
-
-#: ../src/fsearch.glade.h:28
-msgid "Files"
-msgstr "Файлове"
-
-#: ../src/fsearch.glade.h:29 ../src/preferences.ui.h:15
-msgid "Search"
-msgstr "Търсене"
-
-#: ../src/fsearch.glade.h:30
-msgid "Number of Search Results"
-msgstr "Брой на резултатите от търсенето"
-
-#: ../src/fsearch.glade.h:31
-msgid "0 Items"
-msgstr "0 елемента"
-
-#: ../src/fsearch.glade.h:32
-msgid "0/0"
-msgstr "0/0"
-
-#: ../src/fsearch.glade.h:33 ../src/overlay.ui.h:5
-msgid "Updating Database..."
-msgstr "Обновяване на базата с данни..."
-
-#: ../src/fsearch.glade.h:34
-msgid "page0"
-msgstr "страница0"
-
-#: ../src/fsearch.glade.h:35
-msgid "(empty)"
-msgstr "(празно)"
-
-#: ../src/fsearch.glade.h:36
-msgid "page1"
-msgstr "страница1"
-
-#: ../src/fsearch.glade.h:37
-msgid "CASE"
-msgstr "Папка"
-
-#: ../src/fsearch.glade.h:38
-msgid "PATH"
-msgstr "Път"
-
-#: ../src/fsearch.glade.h:39
-msgid "REGEX"
-msgstr "Регулярен израз"
-
-#: ../src/menus.ui.h:1
-msgid "_Open"
-msgstr "_Отваряне"
-
-#: ../src/menus.ui.h:2
-msgid "Open _With"
-msgstr "Отваряне с"
-
-#: ../src/menus.ui.h:3
-msgid "Other Application"
-msgstr "Друга програма"
-
-#: ../src/menus.ui.h:4
-msgid "_Open Folder"
-msgstr "Отваряне на папка"
-
-#: ../src/menus.ui.h:5
-msgid "C_ut"
-msgstr "Отрязване"
-
-#: ../src/menus.ui.h:6
-msgid "_Copy"
-msgstr "_Копиране"
-
-#: ../src/menus.ui.h:7
-msgid "_Copy Filepath"
-msgstr "_Копиране на пътя до файла"
-
-#: ../src/menus.ui.h:8
-msgid "Move to _Trash"
-msgstr "Преместване в кошчето"
-
-#: ../src/menus.ui.h:9
-msgid "_Delete"
-msgstr "_Изтриване"
-
-#: ../src/menus.ui.h:10 ../src/listview.c:149
+#: src/listview.c:149 src/menus.ui:80
 msgid "Name"
 msgstr "Име"
 
-#: ../src/menus.ui.h:11 ../src/listview.c:178
+#: src/listview.c:178 src/menus.ui:84
 msgid "Path"
 msgstr "Път"
 
-#: ../src/menus.ui.h:12 ../src/listview.c:268
-msgid "Type"
-msgstr "Тип"
-
-#: ../src/menus.ui.h:13 ../src/listview.c:207
+#: src/listview.c:207 src/menus.ui:92
 msgid "Size"
 msgstr "Размер"
 
-#: ../src/menus.ui.h:14 ../src/listview.c:239
+#: src/listview.c:239 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Дата на промяна"
 
-#: ../src/overlay.ui.h:1
+#: src/listview.c:268 src/menus.ui:88
+msgid "Type"
+msgstr "Тип"
+
+#: src/fsearch.c:192
+msgid "Show version information"
+msgstr ""
+
+#: src/fsearch.c:199
+#, fuzzy
+msgid "Update the database"
+msgstr "Обновяване на базата с данни"
+
+#: src/fsearch.c:386
+msgid "A search utility focusing on performance and advanced features"
+msgstr ""
+"Инструмент за търсене, фокусиран върху висока производителност и разширени "
+"възможности"
+
+#: src/fsearch_window_actions.c:138
+msgid "Do you really want to remove"
+msgstr "Наистина ли искате да премахнете"
+
+#: src/fsearch_window_actions.c:138
+msgid "files?"
+msgstr "файлa?"
+
+#: src/fsearch_window_actions.c:142
+#, fuzzy
+msgid "Deleting files…"
+msgstr "Изтриване на файлове..."
+
+#: src/fsearch_window_actions.c:142
+#, fuzzy
+msgid "Moving files to trash…"
+msgstr "Преместване на файловете в кошчето..."
+
+#: src/menus.ui:7
+msgid "_Open"
+msgstr "_Отваряне"
+
+#: src/menus.ui:13
+msgid "Open _With"
+msgstr "Отваряне с"
+
+#: src/menus.ui:27
+msgid "_Open Folder"
+msgstr "Отваряне на папка"
+
+#: src/menus.ui:43
+msgid "_Copy"
+msgstr "_Копиране"
+
+#: src/menus.ui:49
+msgid "_Copy Filepath"
+msgstr "_Копиране на пътя до файла"
+
+#: src/menus.ui:56
+msgid "Move to _Trash"
+msgstr "Преместване в кошчето"
+
+#: src/menus.ui:62
+msgid "_Delete"
+msgstr "_Изтриване"
+
+#: src/overlay.ui:31
 msgid "Empty Database"
 msgstr "Базата с данни е празна"
 
-#: ../src/overlay.ui.h:2
+#: src/overlay.ui:46
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
 "Отидете до <b>Редактиране → Настройки → База с данни</b>  и добавете "
 "желаните местоположения"
 
-#: ../src/overlay.ui.h:3
+#: src/overlay.ui:87
 msgid "Empty Query"
 msgstr "Няма задание"
 
-#: ../src/overlay.ui.h:4
+#: src/overlay.ui:102
 msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете"
 
-#: ../src/overlay.ui.h:6
+#: src/overlay.ui:143 src/fsearch.glade:779
+msgid "Updating Database..."
+msgstr "Обновяване на базата с данни..."
+
+#: src/overlay.ui:158
 msgid "..."
 msgstr "..."
 
-#: ../src/overlay.ui.h:7
+#: src/overlay.ui:173
 msgid "This may take a while."
 msgstr "Това може да отнеме известно време."
 
-#: ../src/overlay.ui.h:8
+#: src/overlay.ui:213
 msgid "No Results Found"
 msgstr "Не са намерени резултати"
 
-#: ../src/overlay.ui.h:9
+#: src/overlay.ui:228
 msgid "Try a different search"
 msgstr "Опитайте с друго търсене"
 
-#: ../src/preferences.ui.h:1
+#: src/preferences.ui:17
 msgid "Preferences"
 msgstr "Предпочитания"
 
-#: ../src/preferences.ui.h:2
+#: src/preferences.ui:63
 msgid "Enable dark theme"
 msgstr "Включване на тъмната тема"
 
-#: ../src/preferences.ui.h:3
+#: src/preferences.ui:76
 msgid "Show tooltips"
 msgstr "Показване на подсказки"
 
-#: ../src/preferences.ui.h:4
+#: src/preferences.ui:89
 msgid "Remember window size"
 msgstr "Запомняне на размера на прозореца"
 
-#: ../src/preferences.ui.h:5
+#: src/preferences.ui:102
 msgid "Remember column configuration"
 msgstr "Запомняне конфигурацията на колоните"
 
-#: ../src/preferences.ui.h:6
+#: src/preferences.ui:115
 msgid "Show icons in name column"
 msgstr "Показване на икони в имената на колоните"
 
-#: ../src/preferences.ui.h:7
+#: src/preferences.ui:128
 msgid "Use binary units instead of decimal units"
 msgstr "Използване на бинарни единици вместо десетични"
 
-#: ../src/preferences.ui.h:8
+#: src/preferences.ui:146
+msgid "Behaviour after successfully opening a file"
+msgstr ""
+
+#: src/preferences.ui:161
+msgid "Minimize"
+msgstr ""
+
+#: src/preferences.ui:162
+msgid "Close"
+msgstr ""
+
+#: src/preferences.ui:172
+msgid "with keyboard shortcuts or menu entries"
+msgstr ""
+
+#: src/preferences.ui:187
+msgid "with double click"
+msgstr ""
+
+#: src/preferences.ui:236
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
 "since not every GTK+ theme provides a dark version."
@@ -301,105 +218,254 @@ msgstr ""
 "Информация: Опция \"Включи тъмната тема\" може да няма ефект,\n"
 "защото не всяка GTK+ тема предлага тъмен вариант."
 
-#: ../src/preferences.ui.h:10
+#: src/preferences.ui:273
 msgid "Interface"
 msgstr "Интерфейс"
 
-#: ../src/preferences.ui.h:11
+#: src/preferences.ui:291
 msgid "Limit number of results:"
 msgstr "Ограничаване броя на резултатите:"
 
-#: ../src/preferences.ui.h:12
+#: src/preferences.ui:319
 msgid "Search in path when query contains path separators"
 msgstr "Търсене в пътя, когато заявката съдържа разделители"
 
-#: ../src/preferences.ui.h:13
+#: src/preferences.ui:333
 msgid "Search as you type"
 msgstr "Търсене по време на въвеждането"
 
-#: ../src/preferences.ui.h:14
+#: src/preferences.ui:347
 msgid "Hide results when search is empty"
 msgstr "Скриване на резултатите, когато заявката е празна"
 
-#: ../src/preferences.ui.h:16
+#: src/preferences.ui:368 src/fsearch.glade:544
+msgid "Search"
+msgstr "Търсене"
+
+#: src/preferences.ui:387
 msgid "Update database on start"
 msgstr "Обновяване на базата с данни при стартиране"
 
-#: ../src/preferences.ui.h:17
+#: src/preferences.ui:422 src/preferences.ui:526
 msgid "Add"
 msgstr "Добавяне"
 
-#: ../src/preferences.ui.h:18
+#: src/preferences.ui:438 src/preferences.ui:542
 msgid "Remove"
 msgstr "Премахване"
 
-#: ../src/preferences.ui.h:19
+#: src/preferences.ui:485
 msgid "Follow symbolic links"
 msgstr "Следване на символните връзки"
 
-#: ../src/preferences.ui.h:20
+#: src/preferences.ui:502
 msgid "Include"
 msgstr "Включване"
 
-#: ../src/preferences.ui.h:21
+#: src/preferences.ui:589
 msgid "Exclude hidden files and folders"
 msgstr "Изключване на скритите файлове и папки"
 
-#: ../src/preferences.ui.h:22
+#: src/preferences.ui:610 src/preferences.ui:623
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Поддържа заместващи символи. Многократните записи трябва да бъдат разделени "
 "от  ';'"
 
-#: ../src/preferences.ui.h:23
+#: src/preferences.ui:611
 msgid "Exclude files:"
 msgstr "Изключване на файлове:"
 
-#: ../src/preferences.ui.h:24
+#: src/preferences.ui:624
 msgid "e.g. \".git;*.tmp\""
 msgstr "напр. \".git;*.tmp\""
 
-#: ../src/preferences.ui.h:25
+#: src/preferences.ui:648
 msgid "Exclude"
 msgstr "Изключване"
 
-#: ../src/preferences.ui.h:26
+#: src/preferences.ui:671
 msgid "Database"
 msgstr "База с данни"
 
-#: ../src/fsearch_window.c:97 ../src/fsearch_window.c:315
-#: ../src/fsearch_window.c:799
-#, c-format
-msgid "%'d Items"
-msgstr "%'d елемента"
+#: src/preferences.ui:693
+msgid "Show warning dialogs when:"
+msgstr ""
 
-#: ../src/fsearch_window.c:805
-msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Последно обновяване: %Y-%m-%d %H:%M"
+#: src/preferences.ui:702
+msgid "file / folder failed to open"
+msgstr ""
 
-#: ../src/fsearch_window.c:820
-#, c-format
-msgid "Loading Database..."
-msgstr "Зареждане на базата с данни..."
+#: src/preferences.ui:722
+msgid "Dialogs"
+msgstr ""
 
-#: ../src/fsearch.c:333
-msgid "A search utility focusing on performance and advanced features"
+#: src/fsearch.glade:55
+msgid "Open File(s)"
+msgstr "Отваряне на Файл (ове)"
+
+#: src/fsearch.glade:65
+msgid "Open With Other Application"
+msgstr "Отваряне с друга програма"
+
+#: src/fsearch.glade:70
+msgid "Open Containing Folder"
+msgstr "Отваряне на съдържащата папка"
+
+#: src/fsearch.glade:73
+msgid "Open File(s) in File Manager"
+msgstr "Отваряне на файл (ове) във Файлов мениджър"
+
+#: src/fsearch.glade:109
+msgid "Move to Trash"
+msgstr "Преместване в кошчето"
+
+#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
+msgid "FSearch"
+msgstr "Търсене на файлове"
+
+#: src/fsearch.glade:154
+msgid "_File"
+msgstr "_Файл"
+
+#: src/fsearch.glade:162
+msgid "New Window"
+msgstr "Нов прозорец"
+
+#: src/fsearch.glade:191
+msgid "Open Folder"
+msgstr "Отваряне на папка"
+
+#: src/fsearch.glade:226
+msgid "Update Database"
+msgstr "Обновяване на базата с данни"
+
+#: src/fsearch.glade:261
+msgid "_Edit"
+msgstr "_Редактиране"
+
+#: src/fsearch.glade:322
+msgid "Deselect All"
+msgstr "Премахване на цялата селекция"
+
+#: src/fsearch.glade:331
+msgid "Invert Selection"
+msgstr "Обръщане на селекцията"
+
+#: src/fsearch.glade:360
+msgid "_View"
+msgstr "_Преглед"
+
+#: src/fsearch.glade:371
+msgid "Show Menubar"
+msgstr "Показване на лента с менюта"
+
+#: src/fsearch.glade:381
+msgid "Show Statusbar"
+msgstr "Показване на лентата на състоянието"
+
+#: src/fsearch.glade:390
+msgid "Show Filter"
+msgstr "Показване на филтър"
+
+#: src/fsearch.glade:399
+msgid "Show Search Button"
+msgstr "Показване на бутон за търсене"
+
+#: src/fsearch.glade:411
+msgid "_Search"
+msgstr "_Търсене"
+
+#: src/fsearch.glade:422
+msgid "Search in Path"
+msgstr "Търсене в Пътя"
+
+#: src/fsearch.glade:432
+msgid "Match Case"
+msgstr "Точно съвпадение"
+
+#: src/fsearch.glade:442
+msgid "Enable RegEx"
+msgstr "Включване на регулярни изрази"
+
+#: src/fsearch.glade:455
+msgid "_Help"
+msgstr "_Помощ"
+
+#: src/fsearch.glade:505
+msgid "Search..."
+msgstr "Търсене..."
+
+#: src/fsearch.glade:519
+msgid "Select a Filter"
+msgstr "Избор на Филтър"
+
+#: src/fsearch.glade:522
+msgid "All"
+msgstr "Всички"
+
+#: src/fsearch.glade:523
+msgid "Folders"
+msgstr "Папки"
+
+#: src/fsearch.glade:524
+msgid "Files"
+msgstr "Файлове"
+
+#: src/fsearch.glade:646
+msgid "Number of Search Results"
+msgstr "Брой на резултатите от търсенето"
+
+#: src/fsearch.glade:647
+msgid "0 Items"
+msgstr "0 елемента"
+
+#: src/fsearch.glade:702 src/fsearch.glade:726
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:793
+msgid "page0"
+msgstr "страница0"
+
+#: src/fsearch.glade:817
+msgid "(empty)"
+msgstr "(празно)"
+
+#: src/fsearch.glade:828
+msgid "page1"
+msgstr "страница1"
+
+#: src/fsearch.glade:872
+msgid "CASE"
+msgstr "Папка"
+
+#: src/fsearch.glade:924
+msgid "PATH"
+msgstr "Път"
+
+#: src/fsearch.glade:976
+msgid "REGEX"
+msgstr "Регулярен израз"
+
+#: data/fsearch.desktop.in.in:7
+#, fuzzy
+msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Инструмент за търсене, фокусиран върху висока производителност и разширени "
 "възможности"
 
-#: ../src/fsearch_window_actions.c:138
-msgid "Do you really want to remove"
-msgstr "Наистина ли искате да премахнете"
+#: data/fsearch.desktop.in.in:12
+msgid "system-search"
+msgstr ""
 
-#: ../src/fsearch_window_actions.c:138
-msgid "files?"
-msgstr "файлa?"
+#: data/fsearch.desktop.in.in:16
+msgid ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+msgstr ""
 
-#: ../src/fsearch_window_actions.c:142
-msgid "Deleting files..."
-msgstr "Изтриване на файлове..."
+#~ msgid "Other Application"
+#~ msgstr "Друга програма"
 
-#: ../src/fsearch_window_actions.c:142
-msgid "Moving files to trash..."
-msgstr "Преместване на файловете в кошчето..."
+#~ msgid "C_ut"
+#~ msgstr "Отрязване"

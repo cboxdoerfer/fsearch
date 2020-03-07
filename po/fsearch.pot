@@ -6,9 +6,9 @@
 #, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: fsearch 0.1beta4.6-348e-dirty\n"
+"Project-Id-Version: fsearch 0.1beta4.16-03b2\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-03-07 18:54+0100\n"
+"POT-Creation-Date: 2020-03-07 19:17+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -307,7 +307,7 @@ msgstr ""
 msgid "Move to Trash"
 msgstr ""
 
-#: src/fsearch.glade:135 data/fsearch.desktop:27
+#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
 msgid "FSearch"
 msgstr ""
 
@@ -435,15 +435,15 @@ msgstr ""
 msgid "REGEX"
 msgstr ""
 
-#: data/fsearch.desktop:29
+#: data/fsearch.desktop.in.in:7
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 
-#: data/fsearch.desktop:34
+#: data/fsearch.desktop.in.in:12
 msgid "system-search"
 msgstr ""
 
-#: data/fsearch.desktop:38
+#: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
