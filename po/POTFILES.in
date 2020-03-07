@@ -6,4 +6,4 @@ src/menus.ui
 src/overlay.ui
 src/preferences.ui
 src/fsearch.glade
-data/fsearch.desktop
+data/fsearch.desktop.in.in
