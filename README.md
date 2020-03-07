@@ -26,7 +26,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 ## Download
 #### Arch Linux (AUR)
 https://aur.archlinux.org/packages/fsearch-git/
-#### openSUSE
+#### openSUSE (unoffical)
 https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch
 #### Ubuntu
 ##### Daily Development Builds PPA
