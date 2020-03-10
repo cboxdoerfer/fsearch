@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
 "PO-Revision-Date: 2018-09-16 11:21+0000\n"
-"Last-Translator: i <i@ghosts.work>\n"
+"Last-Translator: Junyi <me@junyi.pw>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -27,12 +27,12 @@ msgstr "%'d 项"
 #: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
 #: src/fsearch_window_actions.c:465
 msgid "Failed to open file"
-msgstr ""
+msgstr "打开文件失败"
 
 #: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
 #: src/fsearch_window_actions.c:466
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "你想保持窗口打开吗?"
 
 #: src/fsearch_window.c:721
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -65,7 +65,7 @@ msgstr "类型"
 
 #: src/fsearch.c:192
 msgid "Show version information"
-msgstr ""
+msgstr "显示版本信息"
 
 #: src/fsearch.c:199
 #, fuzzy
@@ -188,15 +188,15 @@ msgstr "使用二进制单位（代替十进制单位）"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "当成功打开一个文件后"
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "最小化"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "关闭"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
@@ -212,7 +212,7 @@ msgid ""
 "since not every GTK+ theme provides a dark version."
 msgstr ""
 "消息: \"启用暗色主题\" 可能不会生效，\n"
-"因为不是每个 gtk+ 主题都支持暗色系。"
+"因为不是每个 GTK+ 主题都支持暗色系。"
 
 #: src/preferences.ui:273
 msgid "Interface"
@@ -284,15 +284,15 @@ msgstr "数据库"
 
 #: src/preferences.ui:693
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "在以下情况显示警告:"
 
 #: src/preferences.ui:702
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "文件或文件夹打开失败"
 
 #: src/preferences.ui:722
 msgid "Dialogs"
-msgstr ""
+msgstr "信息"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
