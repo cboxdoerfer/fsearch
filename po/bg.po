@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2019-12-22 08:21+0000\n"
+"PO-Revision-Date: 2020-03-18 15:58+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.10\n"
+"X-Generator: Weblate 4.0-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -27,21 +27,21 @@ msgstr "%'d елемента"
 #: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
 #: src/fsearch_window_actions.c:465
 msgid "Failed to open file"
-msgstr ""
+msgstr "Файлът не може да бъде отворен"
 
 #: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
 #: src/fsearch_window_actions.c:466
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Искате ли да оставите прозореца отворен?"
 
 #: src/fsearch_window.c:721
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Последно обновяване: %Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:736
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Database…"
-msgstr "Зареждане на базата с данни..."
+msgstr "Зареждане на базата с данни…"
 
 #: src/listview.c:149 src/menus.ui:80
 msgid "Name"
@@ -65,10 +65,9 @@ msgstr "Тип"
 
 #: src/fsearch.c:192
 msgid "Show version information"
-msgstr ""
+msgstr "Показване на информация за версията"
 
 #: src/fsearch.c:199
-#, fuzzy
 msgid "Update the database"
 msgstr "Обновяване на базата с данни"
 
@@ -84,17 +83,15 @@ msgstr "Наистина ли искате да премахнете"
 
 #: src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr "файлa?"
+msgstr "файловете?"
 
 #: src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Deleting files…"
-msgstr "Изтриване на файлове..."
+msgstr "Изтриване на файловете…"
 
 #: src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "Преместване на файловете в кошчето..."
+msgstr "Преместване на файловете в кошчето…"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -192,23 +189,23 @@ msgstr "Използване на бинарни единици вместо д�
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "Поведение след успешно отваряне на файл"
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "Минимизиране"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "Затваряне"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "с преки пътища или елементи в менюто"
 
 #: src/preferences.ui:187
 msgid "with double click"
-msgstr ""
+msgstr "с двойно кликване"
 
 #: src/preferences.ui:236
 msgid ""
@@ -290,15 +287,15 @@ msgstr "База с данни"
 
 #: src/preferences.ui:693
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Показване на диалог за предупреждение, когато:"
 
 #: src/preferences.ui:702
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "файлът / папката не могат да бъдат отворени"
 
 #: src/preferences.ui:722
 msgid "Dialogs"
-msgstr ""
+msgstr "Диалози"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
@@ -449,7 +446,6 @@ msgid "REGEX"
 msgstr "Регулярен израз"
 
 #: data/fsearch.desktop.in.in:7
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Инструмент за търсене, фокусиран върху висока производителност и разширени "
@@ -457,12 +453,14 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "търсене в системата"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"търсене;търсене на "
+"файлове;файлове;папки;музика;видео;документи;намиране;инструмент;всичко;"
 
 #~ msgid "Other Application"
 #~ msgstr "Друга програма"
