@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-04-06 16:56+0000\n"
-"Last-Translator: anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2020-04-06 23:36+0000\n"
+"Last-Translator: QuickWrite <playk3603@gmail.com>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -33,7 +33,7 @@ msgstr "Datei konnte nicht geöffnet werden"
 #: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
 #: src/fsearch_window_actions.c:466
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Möchten Sie das Fenster offen lassen?"
 
 #: src/fsearch_window.c:721
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -80,21 +80,19 @@ msgstr ""
 
 #: src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr "Möchte Sie wirklich löschen"
+msgstr "Möchten Sie wirklich löschen"
 
 #: src/fsearch_window_actions.c:138
 msgid "files?"
 msgstr "Elemente wirklich entfernen?"
 
 #: src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Deleting files…"
-msgstr "Mehrere Elemente löschen"
+msgstr "Lösche Elemente…"
 
 #: src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "Mehrere Elemente in den Papierkorb verschieben"
+msgstr "Verschiebe Elemente in den Papierkorb…"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -192,23 +190,23 @@ msgstr "SI Dezimalpräfixe anstatt IEC Binärpräfixe verwenden"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "Verhalten nach erfolgreichem Öffnen eines Elementes"
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "Minimieren"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "Schließen"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "mit Tastaturkürzeln oder Menüeinträgen"
 
 #: src/preferences.ui:187
 msgid "with double click"
-msgstr ""
+msgstr "mit einem Doppelklick"
 
 #: src/preferences.ui:236
 msgid ""
@@ -288,7 +286,7 @@ msgstr "Datenbank"
 
 #: src/preferences.ui:693
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Zeige Warndialoge an, wenn:"
 
 #: src/preferences.ui:702
 msgid "file / folder failed to open"
@@ -453,7 +451,7 @@ msgstr "Eine Dateisuche mit vielen nützlichen Funktionen und hoher Performanz"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "Systemsuche"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
