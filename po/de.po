@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
 "PO-Revision-Date: 2020-04-06 23:36+0000\n"
-"Last-Translator: QuickWrite <playk3603@gmail.com>\n"
+"Last-Translator: anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -338,7 +338,7 @@ msgstr "Datenbank aktualisieren"
 
 #: src/fsearch.glade:261
 msgid "_Edit"
-msgstr "B_earbeiten"
+msgstr "_Bearbeiten"
 
 #: src/fsearch.glade:322
 msgid "Deselect All"
@@ -438,7 +438,7 @@ msgstr "CASE"
 
 #: src/fsearch.glade:924
 msgid "PATH"
-msgstr "PATH"
+msgstr "Pfad"
 
 #: src/fsearch.glade:976
 msgid "REGEX"
