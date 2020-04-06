@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-03-09 21:32+0000\n"
+"PO-Revision-Date: 2020-04-06 03:03+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
@@ -189,7 +189,7 @@ msgstr "Utilizar unidades binarias en lugar de decimales"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "Acción luego de abrir con éxito un archivo"
 
 #: src/preferences.ui:161
 msgid "Minimize"
@@ -285,7 +285,7 @@ msgstr "Base de datos"
 
 #: src/preferences.ui:693
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Mostrar advertencias cuando:"
 
 #: src/preferences.ui:702
 msgid "file / folder failed to open"
