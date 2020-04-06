@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-04-06 03:03+0000\n"
+"PO-Revision-Date: 2020-04-06 03:27+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
@@ -83,7 +83,7 @@ msgstr "¿En verdad quiere eliminar"
 
 #: src/fsearch_window_actions.c:138
 msgid "files?"
-msgstr "archivos?"
+msgstr "¿archivos?"
 
 #: src/fsearch_window_actions.c:142
 msgid "Deleting files…"
@@ -157,7 +157,7 @@ msgstr "No se encontraron resultados"
 
 #: src/overlay.ui:228
 msgid "Try a different search"
-msgstr "Pruebe a buscar otra cosa"
+msgstr "Pruebe una búsqueda distinta"
 
 #: src/preferences.ui:17
 msgid "Preferences"
@@ -450,12 +450,14 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "sistema de búsqueda"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"buscar;fsearch;archivos;carpetas;música;video;documentos;encontrar;herramient"
+"a;todo;"
 
 #~ msgid "Other Application"
 #~ msgstr "Otra aplicación"
