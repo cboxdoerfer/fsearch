@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-04-06 03:27+0000\n"
-"Last-Translator: anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2020-04-06 23:36+0000\n"
+"Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -189,7 +189,7 @@ msgstr "Utilizar unidades binarias en lugar de decimales"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr "Comportamiento tras abrir un archivo"
+msgstr "Comportamiento tras abrir un archivo con éxito"
 
 #: src/preferences.ui:161
 msgid "Minimize"
