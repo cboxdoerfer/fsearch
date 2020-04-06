@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
 "PO-Revision-Date: 2020-04-06 16:56+0000\n"
-"Last-Translator: QuickWrite <playk3603@gmail.com>\n"
+"Last-Translator: anonymous <noreply@weblate.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -80,7 +80,7 @@ msgstr ""
 
 #: src/fsearch_window_actions.c:138
 msgid "Do you really want to remove"
-msgstr "Möchte Sie diese"
+msgstr "Möchte Sie wirklich löschen"
 
 #: src/fsearch_window_actions.c:138
 msgid "files?"
