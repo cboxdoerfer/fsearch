@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
 "PO-Revision-Date: 2020-04-09 17:59+0000\n"
-"Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
+"Last-Translator: anonymous <noreply@weblate.org>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -65,7 +65,7 @@ msgstr "Type"
 
 #: src/fsearch.c:192
 msgid "Show version information"
-msgstr "Afficher les informations sur la version"
+msgstr " Afficher les informations sur la version"
 
 #: src/fsearch.c:199
 msgid "Update the database"
