@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-04-09 17:59+0000\n"
-"Last-Translator: anonymous <noreply@weblate.org>\n"
+"PO-Revision-Date: 2020-04-11 18:09+0000\n"
+"Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -65,7 +65,7 @@ msgstr "Type"
 
 #: src/fsearch.c:192
 msgid "Show version information"
-msgstr " Afficher les informations sur la version"
+msgstr "Afficher les informations sur la version"
 
 #: src/fsearch.c:199
 msgid "Update the database"
@@ -422,7 +422,7 @@ msgstr "0/0"
 
 #: src/fsearch.glade:793
 msgid "page0"
-msgstr "page0"
+msgstr "Page 0"
 
 #: src/fsearch.glade:817
 msgid "(empty)"
@@ -430,7 +430,7 @@ msgstr "(vide)"
 
 #: src/fsearch.glade:828
 msgid "page1"
-msgstr "page1"
+msgstr "Page 2"
 
 #: src/fsearch.glade:872
 msgid "CASE"
