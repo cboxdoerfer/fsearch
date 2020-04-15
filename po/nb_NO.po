@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2019-02-20 23:17+0000\n"
+"PO-Revision-Date: 2020-04-16 17:11+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.5-dev\n"
+"X-Generator: Weblate 4.0.1-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, fuzzy, c-format
@@ -26,13 +26,14 @@ msgstr "%'d elementer"
 
 #: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
 #: src/fsearch_window_actions.c:465
+#, fuzzy
 msgid "Failed to open file"
-msgstr ""
+msgstr "Klarte ikke å åpne fil"
 
 #: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
 #: src/fsearch_window_actions.c:466
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Ønsker du å beholde vinduet oppe?"
 
 #: src/fsearch_window.c:721
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -64,8 +65,9 @@ msgid "Type"
 msgstr "Type"
 
 #: src/fsearch.c:192
+#, fuzzy
 msgid "Show version information"
-msgstr ""
+msgstr "Vis versjonsinfo"
 
 #: src/fsearch.c:199
 #, fuzzy
@@ -193,24 +195,25 @@ msgid "Use binary units instead of decimal units"
 msgstr "Bruk totallsenheter istedenfor titallsenheter"
 
 #: src/preferences.ui:146
+#, fuzzy
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "Foretagende etter åpning av fil"
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "Minimer"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "Lukk"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "med tastatursnarveier eller menyoppføringer"
 
 #: src/preferences.ui:187
 msgid "with double click"
-msgstr ""
+msgstr "med dobbeltklikk"
 
 #: src/preferences.ui:236
 #, fuzzy
@@ -293,15 +296,16 @@ msgstr "Database"
 
 #: src/preferences.ui:693
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Vis advarselsdialoger når:"
 
 #: src/preferences.ui:702
+#, fuzzy
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "klarte ikke å åpne fil/mappe"
 
 #: src/preferences.ui:722
 msgid "Dialogs"
-msgstr ""
+msgstr "Dialogvinduer"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
@@ -464,12 +468,12 @@ msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "systemsøk"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+msgstr "søk;fsearch;filer;mapper;musikk;video;dokumenter;finn;verktøy;alt;"
 
 #~ msgid "Other Application"
 #~ msgstr "Annet program"
