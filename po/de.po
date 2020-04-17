@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
 "PO-Revision-Date: 2020-04-18 20:11+0000\n"
-"Last-Translator: anonymous <noreply@weblate.org>\n"
+"Last-Translator: Martin Beer <der_baer@yadim.dismail.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -445,9 +445,9 @@ msgid "REGEX"
 msgstr "REGEX"
 
 #: data/fsearch.desktop.in.in:7
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
-msgstr "Eine Dateisuche mit vielen nützlichen Funktionen und hoher Performanz"
+msgstr ""
+"Eine Dateisuche mit Fokus auf Geschwindigkeit und erweitertem Funktionsumfang"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
@@ -456,7 +456,7 @@ msgstr "Systemsuche"
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+msgstr "suchen;fsearch;dateien;ordner;musik;video;dokumente;finden;tool;alles;"
 
 #~ msgid "Other Application"
 #~ msgstr "Mit anderer Anwendung öffnen"
