@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-01-22 17:21+0000\n"
-"Last-Translator: Daniel Napora <napcok@gmail.com>\n"
+"PO-Revision-Date: 2020-06-06 00:41+0000\n"
+"Last-Translator: Fabian Zi <Fabianziet@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.11-dev\n"
+"X-Generator: Weblate 4.1-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -28,7 +28,7 @@ msgstr "%'d wyniki"
 #: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
 #: src/fsearch_window_actions.c:465
 msgid "Failed to open file"
-msgstr ""
+msgstr "Nie udało się otworzyć pliku"
 
 #: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
 #: src/fsearch_window_actions.c:466
@@ -66,7 +66,7 @@ msgstr "Typ"
 
 #: src/fsearch.c:192
 msgid "Show version information"
-msgstr ""
+msgstr "Pokaż informacje o wersji"
 
 #: src/fsearch.c:199
 #, fuzzy
