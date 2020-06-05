@@ -696,7 +696,7 @@ icon_theme_changed_cb (GtkIconTheme *icon_theme,
 }
 
 static void
-updated_database_cb (gpointer data, gpointer user_data)
+database_update_finished_cb (gpointer data, gpointer user_data)
 {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
@@ -723,7 +723,7 @@ updated_database_cb (gpointer data, gpointer user_data)
 }
 
 static void
-update_database_cb (gpointer data, gpointer user_data)
+database_update_started_cb (gpointer data, gpointer user_data)
 {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
@@ -755,12 +755,12 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     g_signal_connect (app,
-                      "database-update",
-                      G_CALLBACK (update_database_cb),
+                      "database-update-started",
+                      G_CALLBACK (database_update_started_cb),
                       self);
     g_signal_connect (app,
-                      "database-updated",
-                      G_CALLBACK (updated_database_cb),
+                      "database-update-finished",
+                      G_CALLBACK (database_update_finished_cb),
                       self);
 
     g_signal_connect (gtk_icon_theme_get_default (),

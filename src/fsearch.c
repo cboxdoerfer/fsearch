@@ -57,12 +57,12 @@ struct _FsearchApplication
 };
 
 enum {
-    DATABASE_UPDATE,
-    DATABASE_UPDATED,
-    LAST_SIGNAL
+    DATABASE_UPDATE_STARTED,
+    DATABASE_UPDATE_FINISHED,
+    NUM_SIGNALS
 };
 
-static guint signals [LAST_SIGNAL];
+static guint signals [NUM_SIGNALS];
 
 G_DEFINE_TYPE (FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
@@ -245,7 +245,7 @@ updated_database_signal_emit_cb (gpointer user_data)
 {
     FsearchApplication *self = FSEARCH_APPLICATION (user_data);
     fsearch_action_enable ("update_database");
-    g_signal_emit (self, signals [DATABASE_UPDATED], 0);
+    g_signal_emit (self, signals [DATABASE_UPDATE_FINISHED], 0);
     return G_SOURCE_REMOVE;
 }
 
@@ -253,7 +253,7 @@ static gboolean
 update_database_signal_emit_cb (gpointer user_data)
 {
     FsearchApplication *self = FSEARCH_APPLICATION (user_data);
-    g_signal_emit (self, signals [DATABASE_UPDATE], 0);
+    g_signal_emit (self, signals [DATABASE_UPDATE_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
@@ -550,8 +550,8 @@ fsearch_application_class_init (FsearchApplicationClass *klass)
     g_app_class->startup = fsearch_application_startup;
     g_app_class->shutdown = fsearch_application_shutdown;
 
-    signals [DATABASE_UPDATE] =
-        g_signal_new ("database-update",
+    signals [DATABASE_UPDATE_STARTED] =
+        g_signal_new ("database-update-started",
                       G_TYPE_FROM_CLASS (klass),
                       G_SIGNAL_RUN_LAST,
                       0,
@@ -559,8 +559,8 @@ fsearch_application_class_init (FsearchApplicationClass *klass)
                       G_TYPE_NONE,
                       0);
 
-    signals [DATABASE_UPDATED] =
-        g_signal_new ("database-updated",
+    signals [DATABASE_UPDATE_FINISHED] =
+        g_signal_new ("database-update-finished",
                       G_TYPE_FROM_CLASS (klass),
                       G_SIGNAL_RUN_LAST,
                       0,
