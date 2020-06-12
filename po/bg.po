@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-03-18 15:58+0000\n"
+"PO-Revision-Date: 2020-06-13 10:41+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.0-dev\n"
+"X-Generator: Weblate 4.1-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -128,8 +128,8 @@ msgstr "Базата с данни е празна"
 #: src/overlay.ui:46
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
-"Отидете до <b>Редактиране → Настройки → База с данни</b>  и добавете "
-"желаните местоположения"
+"Отидете до <b>Редактиране → Настройки → База с данни</b> и добавете желаните "
+"местоположения"
 
 #: src/overlay.ui:87
 msgid "Empty Query"
@@ -267,7 +267,7 @@ msgstr "Изключване на скритите файлове и папки"
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Поддържа заместващи символи. Многократните записи трябва да бъдат разделени "
-"от  ';'"
+"от ';'"
 
 #: src/preferences.ui:611
 msgid "Exclude files:"
