@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-03-26 18:46+0000\n"
+"PO-Revision-Date: 2020-07-04 15:41+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/lt/>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || "
-"n%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
-"X-Generator: Weblate 4.0-dev\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || n"
+"%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -287,7 +287,7 @@ msgstr "Duomenų bazė"
 
 #: src/preferences.ui:693
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Rodyti įspėjimo dialogus, kai:"
 
 #: src/preferences.ui:702
 msgid "file / folder failed to open"
@@ -295,7 +295,7 @@ msgstr ""
 
 #: src/preferences.ui:722
 msgid "Dialogs"
-msgstr ""
+msgstr "Dialogai"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
@@ -446,14 +446,14 @@ msgid "REGEX"
 msgstr "REG REIŠK"
 
 #: data/fsearch.desktop.in.in:7
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
-"Paieškos programa, kuri susitelkia ties našumu ir išplėstinėmis ypatybėmis"
+"Failų paieškos programa, kuri susitelkia ties našumu ir išplėstinėmis "
+"ypatybėmis"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
