@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2018-12-04 23:10+0000\n"
-"Last-Translator: Kolomona Myer <kolomona@kolomona.com>\n"
+"PO-Revision-Date: 2020-07-15 16:41+0000\n"
+"Last-Translator: TA <semifluid12@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
 "Language: id\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 3.4-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -27,7 +27,7 @@ msgstr ""
 #: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
 #: src/fsearch_window_actions.c:465
 msgid "Failed to open file"
-msgstr ""
+msgstr "Gagal membuka berkas"
 
 #: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
 #: src/fsearch_window_actions.c:466
@@ -36,16 +36,16 @@ msgstr ""
 
 #: src/fsearch_window.c:721
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Terakhir Diperbarui: %Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:736
 #, c-format
 msgid "Loading Database…"
-msgstr ""
+msgstr "Memuat database…"
 
 #: src/listview.c:149 src/menus.ui:80
 msgid "Name"
-msgstr ""
+msgstr "Nama"
 
 #: src/listview.c:178 src/menus.ui:84
 msgid "Path"
@@ -53,15 +53,15 @@ msgstr ""
 
 #: src/listview.c:207 src/menus.ui:92
 msgid "Size"
-msgstr ""
+msgstr "Ukuran"
 
 #: src/listview.c:239 src/menus.ui:96
 msgid "Date Modified"
-msgstr ""
+msgstr "Tanggal Dimodifikasi"
 
 #: src/listview.c:268 src/menus.ui:88
 msgid "Type"
-msgstr ""
+msgstr "Jenis"
 
 #: src/fsearch.c:192
 msgid "Show version information"
