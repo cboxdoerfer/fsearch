@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2018-06-17 05:39+0000\n"
+"PO-Revision-Date: 2020-07-18 03:41+0000\n"
 "Last-Translator: Doma Gergő <domag02@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/hu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.0.1\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -27,21 +27,21 @@ msgstr "%'d elem"
 #: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
 #: src/fsearch_window_actions.c:465
 msgid "Failed to open file"
-msgstr ""
+msgstr "Fájl megnyitása sikertelen"
 
 #: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
 #: src/fsearch_window_actions.c:466
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Nyitva akarja hagyni az ablakot?"
 
 #: src/fsearch_window.c:721
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Utoljára frissítve: %Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:736
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Database…"
-msgstr "Adatbázis betöltése..."
+msgstr "Adatbázis betöltése…"
 
 #: src/listview.c:149 src/menus.ui:80
 msgid "Name"
@@ -65,10 +65,9 @@ msgstr "Típus"
 
 #: src/fsearch.c:192
 msgid "Show version information"
-msgstr ""
+msgstr "Verzióinformáció megjelenítése"
 
 #: src/fsearch.c:199
-#, fuzzy
 msgid "Update the database"
 msgstr "Adatbázis frissítése"
 
@@ -87,14 +86,12 @@ msgid "files?"
 msgstr "fájlt?"
 
 #: src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Deleting files…"
-msgstr "Fájlok törlése..."
+msgstr "Fájlok törlése…"
 
 #: src/fsearch_window_actions.c:142
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "Fájlok áthelyezése a Kukába..."
+msgstr "Fájlok áthelyezése a Kukába…"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -192,23 +189,23 @@ msgstr "Használj bináris egységeket a decimálisak helyett"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "Viselkedés a fájl sikeres megnyitása után"
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "Lekicsinyít"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "Bezár"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "gyorsbillentyűkkel vagy menübejegyzésekkel"
 
 #: src/preferences.ui:187
 msgid "with double click"
-msgstr ""
+msgstr "dupla kattintással"
 
 #: src/preferences.ui:236
 msgid ""
@@ -290,15 +287,15 @@ msgstr "Adatbázis"
 
 #: src/preferences.ui:693
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Figyelmeztető párbeszédpanelek megjelenítése, ha:"
 
 #: src/preferences.ui:702
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "fájl / mappa megnyitása sikertelen"
 
 #: src/preferences.ui:722
 msgid "Dialogs"
-msgstr ""
+msgstr "Párbeszédpanelek"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
@@ -449,20 +446,21 @@ msgid "REGEX"
 msgstr "REGULÁRIS KIFEJEZÉS"
 
 #: data/fsearch.desktop.in.in:7
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
-"Egy keresési segédprogram, mely a teljesítményre és a fejlett képességekre "
+"Egy fájlkereső alkalmazás, mely a teljesítményre és a fejlett képességekre "
 "összpontosít"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"keres;search;fsearch;fájlok;mappák;könyvtárak;zene;videó;dokumentumok;talál;m"
+"egtalál;rátalál;találat;eszköz;minden;"
 
 #~ msgid "Other Application"
 #~ msgstr "Más alkalmazás"
