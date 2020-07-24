@@ -217,27 +217,27 @@ fsearch_application_window_finalize (GObject *object)
     G_OBJECT_CLASS (fsearch_application_window_parent_class)->finalize (object);
 }
 
-static void
-reset_sort_order (FsearchApplicationWindow *win)
-{
-    g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
-
-    GList *list = gtk_tree_view_get_columns (GTK_TREE_VIEW (win->listview));
-    GList *l;
-    for (l = list; l != NULL; l = l->next) {
-        GtkTreeViewColumn *col = GTK_TREE_VIEW_COLUMN (l->data);
-        if (l == list) {
-            gtk_tree_view_column_set_sort_order (col, GTK_SORT_ASCENDING);
-            gtk_tree_view_column_set_sort_indicator (col, TRUE);
-            gtk_tree_view_column_set_sort_column_id (col, SORT_ID_NAME);
-        }
-        else {
-            gtk_tree_view_column_set_sort_order (col, GTK_SORT_ASCENDING);
-            gtk_tree_view_column_set_sort_indicator (col, FALSE);
-        }
-    }
-    g_list_free (list);
-}
+//static void
+//reset_sort_order (FsearchApplicationWindow *win)
+//{
+//    g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
+//
+//    GList *list = gtk_tree_view_get_columns (GTK_TREE_VIEW (win->listview));
+//    GList *l;
+//    for (l = list; l != NULL; l = l->next) {
+//        GtkTreeViewColumn *col = GTK_TREE_VIEW_COLUMN (l->data);
+//        if (l == list) {
+//            gtk_tree_view_column_set_sort_order (col, GTK_SORT_ASCENDING);
+//            gtk_tree_view_column_set_sort_indicator (col, TRUE);
+//            gtk_tree_view_column_set_sort_column_id (col, SORT_ID_NAME);
+//        }
+//        else {
+//            gtk_tree_view_column_set_sort_order (col, GTK_SORT_ASCENDING);
+//            gtk_tree_view_column_set_sort_indicator (col, FALSE);
+//        }
+//    }
+//    g_list_free (list);
+//}
 
 typedef enum {
     NO_SEARCH_RESULTS_OVERLAY,
