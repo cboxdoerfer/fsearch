@@ -153,7 +153,11 @@ listview_popup_menu (GtkWidget *widget, GdkEventButton *event)
     gtk_menu_attach_to_widget (GTK_MENU (menu_widget),
                                GTK_WIDGET (widget),
                                NULL);
+#if !GTK_CHECK_VERSION (3,22,0)
     gtk_menu_popup (GTK_MENU (menu_widget), NULL, NULL, NULL, NULL,
                     button, event_time);
+#else
+    gtk_menu_popup_at_pointer (GTK_MENU (menu_widget), NULL);
+#endif
 }
 
