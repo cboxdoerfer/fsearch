@@ -48,6 +48,7 @@ struct _FsearchConfig
     bool enable_dark_theme;
     bool enable_list_tooltips;
     bool restore_column_config;
+    bool double_click_path;
     uint32_t action_after_file_open;
     bool action_after_file_open_keyboard;
     bool action_after_file_open_mouse;

@@ -528,14 +528,15 @@ on_listview_row_activated (GtkTreeView       *tree_view,
     if (!entry) {
         return;
     }
+
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     int launch_folder = false;
-    if (gtk_tree_view_column_get_sort_column_id (column) + 1 == LIST_MODEL_COL_PATH) {
+    if (config->double_click_path && gtk_tree_view_column_get_sort_column_id (column) + 1 == LIST_MODEL_COL_PATH) {
         launch_folder = true;
     }
 
     BTreeNode * node = db_search_entry_get_node (entry);
 
-    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
 
     if (!launch_folder ? launch_node (node) : launch_node_path (node, config->folder_open_cmd)) {
         // open succeeded

@@ -253,6 +253,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active (restore_column_config_button,
                                   main_config->restore_column_config);
 
+    GtkToggleButton *double_click_path_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                       "double_click_path_button"));
+    gtk_toggle_button_set_active (double_click_path_button,
+                                  main_config->double_click_path);
+
     GtkToggleButton *show_icons_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                 "show_icons_button"));
     gtk_toggle_button_set_active (show_icons_button,
@@ -426,6 +431,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
         main_config->show_listview_icons = gtk_toggle_button_get_active (show_icons_button);
         main_config->restore_column_config = gtk_toggle_button_get_active (restore_column_config_button);
+        main_config->double_click_path = gtk_toggle_button_get_active (double_click_path_button);
         main_config->enable_list_tooltips = gtk_toggle_button_get_active (show_tooltips_button);
         main_config->restore_window_size = gtk_toggle_button_get_active (restore_win_size_button);
         main_config->update_database_on_launch = gtk_toggle_button_get_active (update_db_at_start_button);
