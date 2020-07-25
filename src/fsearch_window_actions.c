@@ -339,12 +339,19 @@ fsearch_window_action_after_file_open(bool action_mouse) {
 }
 
 static void
-fsearch_window_action_open_with (GSimpleAction *action,
-                                 GVariant      *variant,
-                                 gpointer       user_data)
+launch_selection_for_app_info (FsearchApplicationWindow *win, GAppInfo *app_info)
 {
-    FsearchApplicationWindow *self = user_data;
-    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
+    if (!app_info) {
+        return;
+    }
+
+    GdkDisplay *display = gtk_widget_get_display (GTK_WIDGET (win));
+    GdkAppLaunchContext *launch_context = gdk_display_get_app_launch_context (display);
+    if (!launch_context) {
+        return;
+    }
+
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (win);
     GList *file_list = NULL;
     if (selection) {
         guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
@@ -353,39 +360,36 @@ fsearch_window_action_open_with (GSimpleAction *action,
         }
     }
 
-    GDesktopAppInfo *app_info = NULL;
-    GdkAppLaunchContext *launch_context = NULL;
+    g_app_info_launch (app_info, file_list, G_APP_LAUNCH_CONTEXT (launch_context), NULL);
 
-    const char *app_id = g_variant_get_string (variant, NULL);
-    if (!app_id) {
-        goto out;
-    }
-    app_info = g_desktop_app_info_new (app_id);
-    if (!app_info) {
-        goto out;
-    }
+    g_object_unref (launch_context);
+    launch_context = NULL;
 
-    GdkDisplay *display = gtk_widget_get_display (GTK_WIDGET (self));
-    launch_context = gdk_display_get_app_launch_context (display);
-    if (!launch_context) {
-        goto out;
-    }
-
-    g_app_info_launch (G_APP_INFO (app_info), file_list, G_APP_LAUNCH_CONTEXT (launch_context), NULL);
-
-out:
-    if (launch_context) {
-        g_object_unref (launch_context);
-        launch_context = NULL;
-    }
-    if (app_info) {
-        g_object_unref (app_info);
-        app_info = NULL;
-    }
     if (file_list) {
         g_list_free_full (file_list, g_object_unref);
         file_list = NULL;
     }
+}
+
+static void
+fsearch_window_action_open_with (GSimpleAction *action,
+                                 GVariant      *variant,
+                                 gpointer       user_data)
+{
+    FsearchApplicationWindow *self = user_data;
+
+    const char *app_id = g_variant_get_string (variant, NULL);
+    if (!app_id) {
+        return;
+    }
+    GDesktopAppInfo *app_info = g_desktop_app_info_new (app_id);
+    if (!app_info) {
+        return;
+    }
+    launch_selection_for_app_info (self, G_APP_INFO (app_info));
+
+    g_object_unref (app_info);
+    app_info = NULL;
 }
 
 static void
@@ -474,11 +478,48 @@ fsearch_window_action_open_folder (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_open_with_response_cb (GtkDialog *dialog,
+                                             gint       response_id,
+                                             gpointer   user_data)
+{
+    if (response_id != GTK_RESPONSE_OK) {
+        gtk_widget_destroy (GTK_WIDGET (dialog));
+        return;
+    }
+
+    FsearchApplicationWindow *self = user_data;
+    GAppInfo *app_info = gtk_app_chooser_get_app_info (GTK_APP_CHOOSER (dialog));
+    gtk_widget_destroy (GTK_WIDGET (dialog));
+
+    launch_selection_for_app_info (self, app_info);
+
+    g_object_unref (app_info);
+}
+static void
 fsearch_window_action_open_with_other (GSimpleAction *action,
                                        GVariant      *variant,
                                        gpointer       user_data)
 {
-    //FsearchApplicationWindow *self = user_data;
+    FsearchApplicationWindow *self = user_data;
+
+    const char *content_type = g_variant_get_string (variant, NULL);
+    if (!content_type) {
+        content_type = "";
+    }
+
+    GtkWidget *app_chooser_dlg = gtk_app_chooser_dialog_new_for_content_type (GTK_WINDOW (self),
+                                                                              GTK_DIALOG_MODAL,
+                                                                              content_type);
+    gtk_widget_show (app_chooser_dlg);
+
+    GtkWidget *widget = gtk_app_chooser_dialog_get_widget (GTK_APP_CHOOSER_DIALOG (app_chooser_dlg));
+    g_object_set (widget,
+                  "show-fallback", TRUE,
+                  "show-other", TRUE,
+                  NULL);
+
+    g_signal_connect (app_chooser_dlg, "response",
+                      G_CALLBACK (fsearch_window_action_open_with_response_cb), self);
 }
 
 static void
@@ -741,7 +782,7 @@ action_toggle_state_cb (GSimpleAction *saction,
 static GActionEntry FsearchWindowActions[] = {
     { "open", fsearch_window_action_open },
     { "open_with", fsearch_window_action_open_with, "s"},
-    { "open_with_other", fsearch_window_action_open_with_other },
+    { "open_with_other", fsearch_window_action_open_with_other, "s"},
     { "open_folder", fsearch_window_action_open_folder },
     { "copy_clipboard", fsearch_window_action_copy },
     { "copy_filepath_clipboard", fsearch_window_action_copy_filepath },
@@ -798,8 +839,8 @@ fsearch_window_actions_update   (FsearchApplicationWindow *self)
     action_set_enabled (group, "delete_selection", num_rows_selected);
     action_set_enabled (group, "move_to_trash", num_rows_selected);
     action_set_enabled (group, "open", num_rows_selected);
-    action_set_enabled (group, "open_with", num_rows_selected == 1 ? TRUE : FALSE);
-    action_set_enabled (group, "open_with_other", FALSE);
+    action_set_enabled (group, "open_with", num_rows_selected >= 1 ? TRUE : FALSE);
+    action_set_enabled (group, "open_with_other", num_rows_selected >= 1 ? TRUE : FALSE);
     action_set_enabled (group, "open_folder", num_rows_selected);
     action_set_enabled (group, "focus_search", TRUE);
     action_set_enabled (group, "toggle_focus", TRUE);

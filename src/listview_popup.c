@@ -20,6 +20,8 @@
 #include <config.h>
 #endif
 
+#include <glib/gi18n.h>
+
 #include "listview_popup.h"
 #include "database_search.h"
 
@@ -48,9 +50,6 @@ fill_open_with_menu (GtkTreeView *view, GtkBuilder *builder, GtkTreeIter *iter)
     }
 
     app_list = g_app_info_get_all_for_type (content_type);
-    if (!app_list) {
-        goto clean_up;
-    }
 
     GMenu *menu_mime = G_MENU (gtk_builder_get_object (builder,
                                                        "fsearch_listview_menu_open_with_mime_section"));
@@ -68,6 +67,12 @@ fill_open_with_menu (GtkTreeView *view, GtkBuilder *builder, GtkTreeIter *iter)
         g_menu_append_item (menu_mime, menu_item);
         g_object_unref (menu_item);
     }
+
+    char detailed_action[1024] = "";
+    snprintf (detailed_action, sizeof (detailed_action), "win.open_with_other('%s')", content_type);
+    GMenuItem *open_with_item = g_menu_item_new (_("Other Application..."), detailed_action);
+    g_menu_append_item (menu_mime, open_with_item);
+    g_object_unref (open_with_item);
 
 clean_up:
     if (content_type) {
@@ -141,9 +146,7 @@ listview_popup_menu (GtkWidget *widget, GdkEventButton *event)
 
     GtkBuilder *builder = gtk_builder_new_from_resource ("/org/fsearch/fsearch/menus.ui");
 
-    if (gtk_tree_selection_count_selected_rows (selection) == 1) {
-        fill_open_with_menu (GTK_TREE_VIEW (widget), builder, &iter);
-    }
+    fill_open_with_menu (GTK_TREE_VIEW (widget), builder, &iter);
 
     GMenu *menu_root = G_MENU (gtk_builder_get_object (builder,
                                                        "fsearch_listview_popup_menu"));
