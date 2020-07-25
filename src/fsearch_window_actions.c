@@ -423,36 +423,45 @@ fsearch_window_action_open_with (GSimpleAction *action,
 }
 
 static void
+fsearch_window_action_open_generic (FsearchApplicationWindow *win, void(*open_func)(GtkTreeModel *, GtkTreePath *, GtkTreeIter *, gpointer))
+{
+    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (win);
+    if (!selection) {
+        return;
+    }
+    guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
+    if (!confirm_file_open_action (GTK_WIDGET (win), selected_rows)) {
+        return;
+    }
+
+    bool open_failed = false;
+    gtk_tree_selection_selected_foreach (selection, open_func, &open_failed);
+    if (!open_failed) {
+        // open succeeded
+        fsearch_window_action_after_file_open(false);
+    } else {
+        // open failed
+        FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+        if (config->show_dialog_failed_opening) {
+            gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (win),
+                                                     GTK_MESSAGE_WARNING,
+                                                     GTK_BUTTONS_YES_NO,
+                                                     _("Failed to open file"),
+                                                     _("Do you want to keep the window open?"));
+            if (response != GTK_RESPONSE_YES) {
+                fsearch_window_action_after_file_open(false);
+            }
+        }
+    }
+}
+
+static void
 fsearch_window_action_open (GSimpleAction *action,
                             GVariant      *variant,
                             gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
-    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
-    if (selection) {
-        guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
-        if (confirm_file_open_action (GTK_WIDGET (self), selected_rows)) {
-            bool open_failed = false;
-            gtk_tree_selection_selected_foreach (selection, open_cb, &open_failed);
-            if (!open_failed) {
-                // open succeeded
-                fsearch_window_action_after_file_open(false);
-            } else {
-                // open failed
-                FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-                if (config->show_dialog_failed_opening) {
-                    gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
-                                                             GTK_MESSAGE_WARNING,
-                                                             GTK_BUTTONS_YES_NO,
-                                                             _("Failed to open file"),
-                                                             _("Do you want to keep the window open?"));
-                    if (response != GTK_RESPONSE_YES) {
-                        fsearch_window_action_after_file_open(false);
-                    }
-                }
-            }
-        }
-    }
+    fsearch_window_action_open_generic (self, open_cb);
 }
 
 static void
@@ -480,31 +489,7 @@ fsearch_window_action_open_folder (GSimpleAction *action,
                                    gpointer       user_data)
 {
     FsearchApplicationWindow *self = user_data;
-    GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
-    if (selection) {
-        guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
-        if (confirm_file_open_action (GTK_WIDGET (self), selected_rows)) {
-            bool open_failed = false;
-            gtk_tree_selection_selected_foreach (selection, open_folder_cb, &open_failed);
-            if (!open_failed) {
-                // open succeeded
-                fsearch_window_action_after_file_open(false);
-            } else {
-                // open failed
-                FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-                if (config->show_dialog_failed_opening) {
-                    gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
-                                                             GTK_MESSAGE_WARNING,
-                                                             GTK_BUTTONS_YES_NO,
-                                                             _("Failed to open file"),
-                                                             _("Do you want to keep the window open?"));
-                    if (response != GTK_RESPONSE_YES) {
-                        fsearch_window_action_after_file_open(false);
-                    }
-                }
-            }
-        }
-    }
+    fsearch_window_action_open_generic (self, open_folder_cb);
 }
 
 static void
