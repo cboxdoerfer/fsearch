@@ -521,27 +521,36 @@ on_listview_row_activated (GtkTreeView       *tree_view,
     FsearchApplicationWindow *self = user_data;
     GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
     GtkTreeIter   iter;
-    if (gtk_tree_model_get_iter(model, &iter, path)) {
-        DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
-        if (entry) {
-            BTreeNode * node = db_search_entry_get_node (entry);
-            if (launch_node (node)) {
-                // open succeeded
-                fsearch_window_action_after_file_open(true);
-            } else {
-                // open failed
-                FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-                if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse) 
-                && config->show_dialog_failed_opening) {
-                    gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
-                                                             GTK_MESSAGE_WARNING,
-                                                             GTK_BUTTONS_YES_NO,
-                                                             _("Failed to open file"),
-                                                             _("Do you want to keep the window open?"));
-                    if (response != GTK_RESPONSE_YES) {
-                        fsearch_window_action_after_file_open(false);
-                    }
-                }
+    if (!gtk_tree_model_get_iter(model, &iter, path)) {
+        return;
+    }
+    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
+    if (!entry) {
+        return;
+    }
+    int launch_folder = false;
+    if (gtk_tree_view_column_get_sort_column_id (column) + 1 == LIST_MODEL_COL_PATH) {
+        launch_folder = true;
+    }
+
+    BTreeNode * node = db_search_entry_get_node (entry);
+
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+
+    if (!launch_folder ? launch_node (node) : launch_node_path (node, config->folder_open_cmd)) {
+        // open succeeded
+        fsearch_window_action_after_file_open(true);
+    } else {
+        // open failed
+        if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse) 
+            && config->show_dialog_failed_opening) {
+            gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
+                                                     GTK_MESSAGE_WARNING,
+                                                     GTK_BUTTONS_YES_NO,
+                                                     _("Failed to open file"),
+                                                     _("Do you want to keep the window open?"));
+            if (response != GTK_RESPONSE_YES) {
+                fsearch_window_action_after_file_open(false);
             }
         }
     }
