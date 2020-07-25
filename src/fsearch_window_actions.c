@@ -60,6 +60,34 @@ action_set_enabled (GActionGroup *group, const gchar *action_name, bool value)
     }
 }
 
+static bool
+confirm_action (GtkWidget *parent, const char *title, const char *question, int limit, int value)
+{
+    if (value >= limit) {
+        gint response = ui_utils_run_gtk_dialog (parent,
+                                                 GTK_MESSAGE_WARNING,
+                                                 GTK_BUTTONS_YES_NO,
+                                                 title,
+                                                 question);
+        if (response == GTK_RESPONSE_YES) {
+            return true;
+        }
+        return false;
+    }
+    else {
+        return true;
+    }
+}
+
+static bool
+confirm_file_open_action (GtkWidget *parent, int num_files)
+{
+    char question[1024] = "";
+    snprintf (question, sizeof (question), "%s %d %s", _("Do you really want to open"), num_files, _("files?"));
+
+    return confirm_action (parent, _("Opening Files..."), question, 10, num_files);
+}
+
 static GList *
 build_entry_list (GList *selection, GtkTreeModel *model)
 {
@@ -352,14 +380,16 @@ launch_selection_for_app_info (FsearchApplicationWindow *win, GAppInfo *app_info
     }
 
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (win);
-    GList *file_list = NULL;
-    if (selection) {
-        guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
-        if (selected_rows <= 10) {
-            gtk_tree_selection_selected_foreach (selection, open_with_cb, &file_list);
-        }
+    if (!selection) {
+        return;
+    }
+    guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
+    if (!confirm_file_open_action (GTK_WIDGET (win), selected_rows)) {
+        return;
     }
 
+    GList *file_list = NULL;
+    gtk_tree_selection_selected_foreach (selection, open_with_cb, &file_list);
     g_app_info_launch (app_info, file_list, G_APP_LAUNCH_CONTEXT (launch_context), NULL);
 
     g_object_unref (launch_context);
@@ -401,7 +431,7 @@ fsearch_window_action_open (GSimpleAction *action,
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
     if (selection) {
         guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
-        if (selected_rows <= 10) {
+        if (confirm_file_open_action (GTK_WIDGET (self), selected_rows)) {
             bool open_failed = false;
             gtk_tree_selection_selected_foreach (selection, open_cb, &open_failed);
             if (!open_failed) {
@@ -453,7 +483,7 @@ fsearch_window_action_open_folder (GSimpleAction *action,
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
     if (selection) {
         guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
-        if (selected_rows <= 10) {
+        if (confirm_file_open_action (GTK_WIDGET (self), selected_rows)) {
             bool open_failed = false;
             gtk_tree_selection_selected_foreach (selection, open_folder_cb, &open_failed);
             if (!open_failed) {
