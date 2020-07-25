@@ -423,7 +423,7 @@ fsearch_window_action_open_with (GSimpleAction *action,
 }
 
 static void
-fsearch_window_action_open_generic (FsearchApplicationWindow *win, void(*open_func)(GtkTreeModel *, GtkTreePath *, GtkTreeIter *, gpointer))
+fsearch_window_action_open_generic (FsearchApplicationWindow *win, GtkTreeSelectionForeachFunc open_func)
 {
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (win);
     if (!selection) {
