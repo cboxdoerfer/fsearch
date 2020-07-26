@@ -731,7 +731,6 @@ database_update_finished_cb (gpointer data, gpointer user_data)
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
-    hide_overlays (win);
     update_statusbar (win, "");
 
     fsearch_application_window_update_search (win);
@@ -757,8 +756,6 @@ database_update_started_cb (gpointer data, gpointer user_data)
 {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
-
-    show_overlay (win, DATABASE_UPDATING_OVERLAY);
 
     gtk_stack_set_visible_child (GTK_STACK (win->database_stack), win->database_box1);
     gtk_spinner_start (GTK_SPINNER (win->database_spinner));
