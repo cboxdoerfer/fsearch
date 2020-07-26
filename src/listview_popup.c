@@ -95,8 +95,10 @@ listview_popup_menu (GtkWidget *widget, GdkEventButton *event)
         return;
     }
 
+#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
     int button = 0;
     int event_time = 0;
+#pragma GCC diagnostic pop
 
     GtkTreeIter iter;
     gboolean iter_set = FALSE;
