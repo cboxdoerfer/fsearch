@@ -238,23 +238,6 @@ fsearch_application_finalize (GObject *object)
     G_OBJECT_CLASS (fsearch_application_parent_class)->finalize (object);
 }
 
-static gboolean
-updated_database_signal_emit_cb (gpointer user_data)
-{
-    FsearchApplication *self = FSEARCH_APPLICATION (user_data);
-    fsearch_action_enable ("update_database");
-    g_signal_emit (self, signals [DATABASE_UPDATE_FINISHED], 0);
-    return G_SOURCE_REMOVE;
-}
-
-static gboolean
-update_database_signal_emit_cb (gpointer user_data)
-{
-    FsearchApplication *self = FSEARCH_APPLICATION (user_data);
-    g_signal_emit (self, signals [DATABASE_UPDATE_STARTED], 0);
-    return G_SOURCE_REMOVE;
-}
-
 static void
 prepare_windows_for_db_update (FsearchApplication *app)
 {
@@ -268,6 +251,28 @@ prepare_windows_for_db_update (FsearchApplication *app)
         }
     }
     return;
+}
+
+static gboolean
+updated_database_signal_emit_cb (gpointer user_data)
+{
+    FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
+    prepare_windows_for_db_update (self);
+    if (self->db) {
+        db_free (self->db);
+    }
+    self->db = (Database *)user_data;
+    fsearch_action_enable ("update_database");
+    g_signal_emit (self, signals [DATABASE_UPDATE_FINISHED], 0);
+    return G_SOURCE_REMOVE;
+}
+
+static gboolean
+update_database_signal_emit_cb (gpointer user_data)
+{
+    FsearchApplication *self = FSEARCH_APPLICATION (user_data);
+    g_signal_emit (self, signals [DATABASE_UPDATE_STARTED], 0);
+    return G_SOURCE_REMOVE;
 }
 
 #ifdef DEBUG
@@ -301,37 +306,37 @@ load_database (gpointer user_data)
     FsearchApplication *app = FSEARCH_APPLICATION (user_data);
     g_idle_add (update_database_signal_emit_cb, app);
 
+    Database *db = NULL;
     timer_start ();
     if (!app->db) {
         // create new database
-        app->db = db_new (app->config->locations,
+        db = db_new (app->config->locations,
                           app->config->exclude_locations,
                           app->config->exclude_files,
                           app->config->exclude_hidden_items);
-        db_lock (app->db);
+        db_lock (db);
 
-        if (app->config->update_database_on_launch || !db_load_from_file (app->db, NULL, NULL)) {
-            db_scan (app->db, build_location_callback);
-            db_save_locations (app->db);
+        if (app->config->update_database_on_launch || !db_load_from_file (db, NULL, NULL)) {
+            db_scan (db, build_location_callback);
+            db_save_locations (db);
         }
     }
     else {
-        db_free (app->db);
-        app->db = db_new (app->config->locations,
+        db = db_new (app->config->locations,
                           app->config->exclude_locations,
                           app->config->exclude_files,
                           app->config->exclude_hidden_items);
-        db_lock (app->db);
+        db_lock (db);
 
-        db_scan (app->db, build_location_callback);
-        db_save_locations (app->db);
+        db_scan (db, build_location_callback);
+        db_save_locations (db);
     }
 
     trace ("loaded db in: ");
     timer_stop ();
-    db_unlock (app->db);
+    db_unlock (db);
 
-    g_idle_add (updated_database_signal_emit_cb, app);
+    g_idle_add (updated_database_signal_emit_cb, db);
 
     return NULL;
 }
@@ -407,7 +412,6 @@ fsearch_update_database (void)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     fsearch_action_disable ("update_database");
-    prepare_windows_for_db_update (app);
     g_thread_new("fsearch_db_update_thread", load_database, app);
     return;
 }
