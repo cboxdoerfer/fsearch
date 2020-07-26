@@ -258,6 +258,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     gtk_toggle_button_set_active (double_click_path_button,
                                   main_config->double_click_path);
 
+    GtkToggleButton *single_click_open_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                       "single_click_open_button"));
+    gtk_toggle_button_set_active (single_click_open_button,
+                                  main_config->single_click_open);
+
     GtkToggleButton *show_icons_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                 "show_icons_button"));
     gtk_toggle_button_set_active (show_icons_button,
@@ -419,6 +424,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
     }
 
     model_changed = false;
+    bool list_changed = false;
 
     gint response = gtk_dialog_run (GTK_DIALOG (dialog));
 
@@ -429,7 +435,6 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
         main_config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
         main_config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
-        main_config->show_listview_icons = gtk_toggle_button_get_active (show_icons_button);
         main_config->restore_column_config = gtk_toggle_button_get_active (restore_column_config_button);
         main_config->double_click_path = gtk_toggle_button_get_active (double_click_path_button);
         main_config->enable_list_tooltips = gtk_toggle_button_get_active (show_tooltips_button);
@@ -441,6 +446,18 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
         main_config->action_after_file_open_mouse = gtk_toggle_button_get_active (action_after_file_open_mouse);
         // Dialogs
         main_config->show_dialog_failed_opening = gtk_toggle_button_get_active (show_dialog_failed_opening);
+
+        bool old_single_click_open = main_config->single_click_open;
+        main_config->single_click_open = gtk_toggle_button_get_active (single_click_open_button);
+        if (old_single_click_open != main_config->single_click_open) {
+            list_changed = true;
+        }
+
+        bool old_show_icons = main_config->show_listview_icons;
+        main_config->show_listview_icons = gtk_toggle_button_get_active (show_icons_button);
+        if (old_show_icons != main_config->show_listview_icons) {
+            list_changed = true;
+        }
 
         bool old_exclude_hidden_items = main_config->exclude_hidden_items;
         main_config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);
@@ -480,6 +497,10 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window)
             main_config->locations = update_location_config (include_model, main_config->locations);
             main_config->exclude_locations = update_location_config (exclude_model, main_config->exclude_locations);
             fsearch_update_database ();
+        }
+
+        if (list_changed) {
+            fsearch_application_update_listview_config ();
         }
     }
 

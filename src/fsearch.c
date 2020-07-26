@@ -413,6 +413,19 @@ preferences_activated (GSimpleAction *action,
 }
 
 void
+fsearch_application_update_listview_config (void)
+{
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
+
+    for (; windows; windows = windows->next) {
+        GtkWindow *window = windows->data;
+        fsearch_application_window_update_listview_config (FSEARCH_WINDOW_WINDOW (window));
+        break;
+    }
+}
+
+void
 fsearch_update_database (void)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;

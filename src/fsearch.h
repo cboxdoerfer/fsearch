@@ -47,5 +47,8 @@ fsearch_application_get_db (FsearchApplication *fsearch);
 FsearchConfig *
 fsearch_application_get_config (FsearchApplication *fsearch);
 
+void
+fsearch_application_update_listview_config (void);
+
 FsearchThreadPool *
 fsearch_application_get_thread_pool (FsearchApplication *fsearch);

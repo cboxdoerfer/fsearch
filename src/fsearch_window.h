@@ -41,6 +41,9 @@ fsearch_application_window_get_listview (FsearchApplicationWindow *self);
 GtkTreeSelection *
 fsearch_application_window_get_listview_selection (FsearchApplicationWindow *self);
 
+void
+fsearch_application_window_update_listview_config (FsearchApplicationWindow *self);
+
 GtkWidget *
 fsearch_application_window_get_statusbar (FsearchApplicationWindow *self);
 

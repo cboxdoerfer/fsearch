@@ -493,18 +493,18 @@ on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpoint
     }
     else if (event->type == GDK_2BUTTON_PRESS) {
         if (event->window == gtk_tree_view_get_bin_window (GTK_TREE_VIEW (widget))) {
-            GtkTreeViewColumn *column = NULL;
-            GtkTreePath *path = NULL;
-            gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
-                                           event->x,
-                                           event->y,
-                                           &path,
-                                           &column,
-                                           NULL,
-                                           NULL);
-            if (path) {
-                gtk_tree_path_free(path);
-            }
+            //GtkTreeViewColumn *column = NULL;
+            //GtkTreePath *path = NULL;
+            //gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
+            //                               event->x,
+            //                               event->y,
+            //                               &path,
+            //                               &column,
+            //                               NULL,
+            //                               NULL);
+            //if (path) {
+            //    gtk_tree_path_free(path);
+            //}
             return TRUE;
         }
     }
@@ -649,6 +649,24 @@ on_search_entry_changed (GtkEntry *entry, gpointer user_data)
     }
 }
 
+void
+fsearch_application_window_update_listview_config (FsearchApplicationWindow *app)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (app));
+
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+
+    GtkTreeView *list = GTK_TREE_VIEW (app->listview);
+
+    listview_remove_column (list, LIST_MODEL_COL_NAME);
+    listview_add_column (list,
+                         LIST_MODEL_COL_NAME,
+                         config->name_column_width,
+                         config->name_column_pos);
+
+    gtk_tree_view_set_activate_on_single_click (list, config->single_click_open);
+}
+
 static void
 create_view_and_model (FsearchApplicationWindow *app)
 {
@@ -692,6 +710,8 @@ create_view_and_model (FsearchApplicationWindow *app)
                                  config->modified_column_pos);
         }
     }
+
+    gtk_tree_view_set_activate_on_single_click (list, config->single_click_open);
 
     gtk_tree_view_set_model (list,
                              GTK_TREE_MODEL(app->list_model));
