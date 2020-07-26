@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-05-13 05:41+0000\n"
-"Last-Translator: Samuel Carvalho de Araújo <samuelnegro12345@gmail.com>\n"
+"PO-Revision-Date: 2020-07-27 12:44+0000\n"
+"Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.1-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -140,7 +140,7 @@ msgstr "Consulta vazia"
 
 #: src/overlay.ui:102
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "Pressione <b>Ctrl + F</b> e comece a escrever"
+msgstr "Pressione <b>Ctrl + F</b> e comece a digitar"
 
 #: src/overlay.ui:143 src/fsearch.glade:779
 msgid "Updating Database..."
@@ -232,7 +232,7 @@ msgstr "Pesquisar no caminho quando a consulta contém separadores de caminho"
 
 #: src/preferences.ui:333
 msgid "Search as you type"
-msgstr "Procurar enquanto escreve"
+msgstr "Procurar enquanto digita"
 
 #: src/preferences.ui:347
 msgid "Hide results when search is empty"
@@ -292,7 +292,7 @@ msgstr "Mostrar caixas de diálogo de aviso quando:"
 
 #: src/preferences.ui:702
 msgid "file / folder failed to open"
-msgstr "Arquivo/pasta falhou ao abrir"
+msgstr "Arquivo/pasta falhar ao abrir"
 
 #: src/preferences.ui:722
 msgid "Dialogs"
@@ -436,7 +436,7 @@ msgstr "Página 1"
 
 #: src/fsearch.glade:872
 msgid "CASE"
-msgstr "CASO"
+msgstr "CASE-SENSITIVE"
 
 #: src/fsearch.glade:924
 msgid "PATH"
@@ -452,7 +452,7 @@ msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr "Busca em sistema"
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
