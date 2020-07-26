@@ -301,32 +301,21 @@ load_database (gpointer user_data)
     FsearchApplication *app = FSEARCH_APPLICATION (user_data);
     g_idle_add (update_database_signal_emit_cb, app);
 
+    timer_start ();
     if (!app->db) {
         // create new database
-        timer_start ();
         app->db = db_new (app->config->locations,
                           app->config->exclude_locations,
                           app->config->exclude_files,
                           app->config->exclude_hidden_items);
         db_lock (app->db);
 
-        bool build_new = false;
         if (app->config->update_database_on_launch || !db_load_from_file (app->db, NULL, NULL)) {
-            if (db_scan (app->db, build_location_callback)) {
-                build_new = true;
-            }
-        }
-        if (build_new) {
+            db_scan (app->db, build_location_callback);
             db_save_locations (app->db);
         }
-        
-        trace ("loaded db in: ");
-        timer_stop ();
-        db_unlock (app->db);
     }
     else {
-        trace ("update\n");
-        timer_start ();
         db_free (app->db);
         app->db = db_new (app->config->locations,
                           app->config->exclude_locations,
@@ -336,11 +325,11 @@ load_database (gpointer user_data)
 
         db_scan (app->db, build_location_callback);
         db_save_locations (app->db);
-
-        trace ("loaded db in: ");
-        timer_stop ();
-        db_unlock (app->db);
     }
+
+    trace ("loaded db in: ");
+    timer_stop ();
+    db_unlock (app->db);
 
     g_idle_add (updated_database_signal_emit_cb, app);
 
