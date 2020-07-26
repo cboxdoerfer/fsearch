@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-03-07 19:17+0100\n"
-"PO-Revision-Date: 2020-04-11 18:09+0000\n"
+"PO-Revision-Date: 2020-07-27 12:44+0000\n"
 "Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.0-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
 #, c-format
@@ -42,7 +42,7 @@ msgstr "Última atualização: %H:%M %d/%m/%Y"
 #: src/fsearch_window.c:736
 #, c-format
 msgid "Loading Database…"
-msgstr "A carregar a Base de Dados…"
+msgstr "Carregando a base de dados…"
 
 #: src/listview.c:149 src/menus.ui:80
 msgid "Name"
@@ -448,7 +448,7 @@ msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr "Busca em sistema"
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
