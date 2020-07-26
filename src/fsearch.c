@@ -160,10 +160,10 @@ fsearch_options_handler(GApplication *gapp,
 
         load_database(fsearch);
         if (fsearch->db) {
-            db_clear (fsearch->db);
+            db_free (fsearch->db);
         }
 
-        printf (" done!\n");
+        printf ("done!\n");
     }
 
     return (version || updatedb) ? 0 : -1;
@@ -221,7 +221,7 @@ fsearch_application_shutdown (GApplication *app)
     }
 
     if (fsearch->db) {
-        db_clear (fsearch->db);
+        db_free (fsearch->db);
     }
     if (fsearch->pool) {
         fsearch_thread_pool_free (fsearch->pool);
@@ -320,7 +320,7 @@ load_database (gpointer user_data)
             db_save_locations (app->db);
         }
         
-        trace ("loaded db in:");
+        trace ("loaded db in: ");
         timer_stop ();
         db_unlock (app->db);
     }
@@ -337,7 +337,7 @@ load_database (gpointer user_data)
         db_scan (app->db, build_location_callback);
         db_save_locations (app->db);
 
-        trace ("loaded db in:");
+        trace ("loaded db in: ");
         timer_stop ();
         db_unlock (app->db);
     }

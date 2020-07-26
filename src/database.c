@@ -480,6 +480,19 @@ db_location_walk_tree_recursive (Database *db,
     return WALK_OK;
 }
 
+static void
+db_location_free (DatabaseLocation *location)
+{
+    assert (location != NULL);
+
+    if (location->entries) {
+        btree_node_free (location->entries);
+        location->entries = NULL;
+    }
+    g_free (location);
+    location = NULL;
+}
+
 static DatabaseLocation *
 db_location_build_tree (Database *db, const char *dname, void (*callback)(const char *))
 {
@@ -594,19 +607,6 @@ db_location_get_for_path (Database *db, const char *path)
         }
     }
     return NULL;
-}
-
-void
-db_location_free (DatabaseLocation *location)
-{
-    assert (location != NULL);
-
-    if (location->entries) {
-        btree_node_free (location->entries);
-        location->entries = NULL;
-    }
-    g_free (location);
-    location = NULL;
 }
 
 bool
