@@ -160,7 +160,6 @@ fsearch_options_handler(GApplication *gapp,
 
         load_database(fsearch);
         if (fsearch->db) {
-            db_save_locations (fsearch->db);
             db_clear (fsearch->db);
         }
 
@@ -222,7 +221,6 @@ fsearch_application_shutdown (GApplication *app)
     }
 
     if (fsearch->db) {
-        db_save_locations (fsearch->db);
         db_clear (fsearch->db);
     }
     if (fsearch->pool) {
@@ -332,6 +330,7 @@ load_database (gpointer user_data)
         if (loaded) {
             if (build_new) {
                 db_build_initial_entries_list (app->db);
+                db_save_locations (app->db);
             }
             else {
                 db_update_entries_list (app->db);
@@ -349,6 +348,7 @@ load_database (gpointer user_data)
                 db_location_add (app->db, l->data, build_location_callback);
             }
             db_build_initial_entries_list (app->db);
+            db_save_locations (app->db);
         }
         trace ("loaded db in:");
         timer_stop ();
