@@ -40,6 +40,14 @@ db_location_add (Database *db,
                  void (*callback)(const char *));
 
 bool
+db_load_from_file (Database *db,
+                   const char *path,
+                   void (*callback)(const char *));
+
+bool
+db_scan (Database *db, void (*callback)(const char *));
+
+bool
 db_location_remove (Database *db, const char *path);
 
 bool
@@ -52,7 +60,7 @@ void
 db_free (Database *db);
 
 Database *
-db_new ();
+db_new (GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden);
 
 gboolean
 db_list_append_node (BTreeNode *node,

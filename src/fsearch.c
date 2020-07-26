@@ -304,46 +304,42 @@ load_database (gpointer user_data)
     if (!app->db) {
         // create new database
         timer_start ();
-        app->db = db_new ();
+        app->db = db_new (app->config->locations,
+                          app->config->exclude_locations,
+                          app->config->exclude_files,
+                          app->config->exclude_hidden_items);
+        db_lock (app->db);
 
-        bool loaded = false;
         bool build_new = false;
-        for (GList *l = app->config->locations; l != NULL; l = l->next) {
-            if (app->config->update_database_on_launch || !db_location_load (app->db, l->data)) {
-                if (db_location_add (app->db, l->data, build_location_callback)) {
-                    loaded = true;
-                    build_new = true;
-                }
-            }
-            else {
-                loaded = true;
+        if (app->config->update_database_on_launch || !db_load_from_file (app->db, NULL, NULL)) {
+            if (db_scan (app->db, build_location_callback)) {
+                build_new = true;
             }
         }
-        if (loaded) {
-            if (build_new) {
-                db_build_initial_entries_list (app->db);
-                db_save_locations (app->db);
-            }
-            else {
-                db_update_entries_list (app->db);
-            }
+        if (build_new) {
+            db_save_locations (app->db);
         }
+        
         trace ("loaded db in:");
         timer_stop ();
+        db_unlock (app->db);
     }
     else {
         trace ("update\n");
         timer_start ();
-        db_clear (app->db);
-        if (app->config->locations) {
-            for (GList *l = app->config->locations; l != NULL; l = l->next) {
-                db_location_add (app->db, l->data, build_location_callback);
-            }
-            db_build_initial_entries_list (app->db);
-            db_save_locations (app->db);
-        }
+        db_free (app->db);
+        app->db = db_new (app->config->locations,
+                          app->config->exclude_locations,
+                          app->config->exclude_files,
+                          app->config->exclude_hidden_items);
+        db_lock (app->db);
+
+        db_scan (app->db, build_location_callback);
+        db_save_locations (app->db);
+
         trace ("loaded db in:");
         timer_stop ();
+        db_unlock (app->db);
     }
 
     g_idle_add (updated_database_signal_emit_cb, app);

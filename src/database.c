@@ -34,7 +34,6 @@
 #include <fnmatch.h>
 
 #include "database.h"
-#include "fsearch_config.h"
 #include "fsearch.h"
 #include "debug.h"
 
@@ -45,9 +44,13 @@ struct _Database
 {
     GList *locations;
     GList *searches;
+    GList *includes;
+    GList *excludes;
+    char **exclude_files;
     DynamicArray *entries;
     uint32_t num_entries;
 
+    bool exclude_hidden;
     time_t timestamp;
 
     GMutex mutex;
@@ -75,7 +78,7 @@ static DatabaseLocation *
 db_location_get_for_path (Database *db, const char *path);
 
 static DatabaseLocation *
-db_location_build_tree (const char *dname, void (*callback)(const char *));
+db_location_build_tree (Database *db, const char *dname, void (*callback)(const char *));
 
 static DatabaseLocation *
 db_location_new (void);
@@ -389,9 +392,8 @@ directory_is_excluded (const char *name, GList *excludes)
 }
 
 static int
-db_location_walk_tree_recursive (DatabaseLocation *location,
-                                 GList *excludes,
-                                 char **exclude_files,
+db_location_walk_tree_recursive (Database *db,
+                                 DatabaseLocation *location,
                                  const char *dname,
                                  GTimer *timer,
                                  void (*callback)(const char *),
@@ -435,7 +437,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         if (!strcmp (dent->d_name, ".") || !strcmp (dent->d_name, "..")) {
             continue;
         }
-        if (file_is_excluded (dent->d_name, exclude_files)) {
+        if (file_is_excluded (dent->d_name, db->exclude_files)) {
             //trace ("excluded file: %s\n", dent->d_name);
             continue;
         }
@@ -447,7 +449,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
             continue;
         }
 
-        if (directory_is_excluded (fn, excludes)) {
+        if (directory_is_excluded (fn, db->excludes)) {
             trace ("excluded directory: %s\n", fn);
             continue;
         }
@@ -461,9 +463,8 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
         btree_node_prepend (parent, node);
         location->num_items++;
         if (is_dir) {
-            db_location_walk_tree_recursive (location,
-                                             excludes,
-                                             exclude_files,
+            db_location_walk_tree_recursive (db,
+                                             location,
                                              fn,
                                              timer,
                                              callback,
@@ -480,7 +481,7 @@ db_location_walk_tree_recursive (DatabaseLocation *location,
 }
 
 static DatabaseLocation *
-db_location_build_tree (const char *dname, void (*callback)(const char *))
+db_location_build_tree (Database *db, const char *dname, void (*callback)(const char *))
 {
     const char *root_name = NULL;
     if (!strcmp (dname, "/")) {
@@ -492,17 +493,15 @@ db_location_build_tree (const char *dname, void (*callback)(const char *))
     BTreeNode *root = btree_node_new (root_name, 0, 0, 0, true);
     DatabaseLocation *location = db_location_new ();
     location->entries = root;
-    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
 
     int spec = 0;
-    if (!config->exclude_hidden_items) {
+    if (!db->exclude_hidden) {
         spec |= WS_DOTFILES;
     }
     GTimer *timer = g_timer_new ();
     g_timer_start (timer);
-    uint32_t res = db_location_walk_tree_recursive (location,
-                                                    config->exclude_locations,
-                                                    config->exclude_files,
+    uint32_t res = db_location_walk_tree_recursive (db,
+                                                    location,
                                                     dname,
                                                     timer,
                                                     callback,
@@ -722,10 +721,8 @@ db_location_get_path (const char *location_name)
 bool
 db_location_load (Database *db, const char *location_name)
 {
-    db_lock (db);
     gchar *load_path = db_location_get_path (location_name);
     if (!load_path) {
-        db_unlock (db);
         return false;
     }
     DatabaseLocation *location = db_location_load_from_file (load_path);
@@ -738,11 +735,9 @@ db_location_load (Database *db, const char *location_name)
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db_update_timestamp (db);
-        db_unlock (db);
         return true;
     }
     db_update_timestamp (db);
-    db_unlock (db);
     return false;
 }
 
@@ -752,22 +747,19 @@ db_location_add (Database *db,
                  void (*callback)(const char *))
 {
     assert (db != NULL);
-    db_lock (db);
     trace ("load location: %s\n", location_name);
 
-    DatabaseLocation *location = db_location_build_tree (location_name, callback);
+    DatabaseLocation *location = db_location_build_tree (db, location_name, callback);
 
     if (location) {
         trace ("location num entries: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db_update_timestamp (db);
-        db_unlock (db);
         return true;
     }
 
     db_update_timestamp (db);
-    db_unlock (db);
     return false;
 }
 
@@ -804,7 +796,6 @@ db_build_initial_entries_list (Database *db)
     assert (db != NULL);
     assert (db->num_entries >= 0);
 
-    db_lock (db);
     db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
     trace ("update list: %d\n", num_entries);
@@ -817,7 +808,6 @@ db_build_initial_entries_list (Database *db)
     }
     db_sort (db);
     db_update_sort_index (db);
-    db_unlock (db);
 }
 
 void
@@ -826,7 +816,6 @@ db_update_entries_list (Database *db)
     assert (db != NULL);
     assert (db->num_entries >= 0);
 
-    db_lock (db);
     db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
     trace ("update list: %d\n", num_entries);
@@ -836,7 +825,6 @@ db_update_entries_list (Database *db)
     for (GList *l = locations; l != NULL; l = l->next) {
         db_list_insert_location (db, l->data);
     }
-    db_unlock (db);
 }
 
 BTreeNode *
@@ -847,10 +835,20 @@ db_location_get_entries (DatabaseLocation *location)
 }
 
 Database *
-db_new ()
+db_new (GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden)
 {
     Database *db = g_new0 (Database, 1);
     g_mutex_init (&db->mutex);
+    if (includes) {
+        db->includes = g_list_copy_deep (includes, (GCopyFunc) g_strdup, NULL);
+    }
+    if (excludes) {
+        db->excludes = g_list_copy_deep (excludes, (GCopyFunc) g_strdup, NULL);
+    }
+    if (exclude_files) {
+        db->exclude_files = g_strdupv (exclude_files);
+    }
+    db->exclude_hidden = exclude_hidden;
     return db;
 }
 
@@ -867,12 +865,45 @@ db_entries_clear (Database *db)
     db->num_entries = 0;
 }
 
+static void
+db_location_free_all (Database *db)
+{
+    assert (db != NULL);
+    g_return_if_fail (db->locations != NULL);
+
+    GList *l = db->locations;
+    while (l) {
+        trace ("free location\n");
+        db_location_free (l->data);
+        l = l->next;
+    }
+    g_list_free (db->locations);
+    db->locations = NULL;
+}
+
 void
 db_free (Database *db)
 {
     assert (db != NULL);
 
+    db_lock (db);
     db_entries_clear (db);
+    db_location_free_all (db);
+
+    if (db->includes) {
+        g_list_free_full (db->includes, (GDestroyNotify)free);
+        db->includes = NULL;
+    }
+    if (db->excludes) {
+        g_list_free_full (db->excludes, (GDestroyNotify)free);
+        db->excludes = NULL;
+    }
+    if (db->exclude_files) {
+        g_strfreev (db->exclude_files);
+        db->exclude_files = NULL;
+    }
+    db_unlock (db);
+
     g_mutex_clear (&db->mutex);
     g_free (db);
     db = NULL;
@@ -956,6 +987,40 @@ sort_by_name (const void *a, const void *b)
 //    return strverscmp (path_a, path_b);
 //}
 
+bool
+db_load_from_file (Database *db,
+                   const char *path,
+                   void (*callback)(const char *))
+{
+    assert (db != NULL);
+    assert (db->includes != NULL);
+
+    bool ret = true;
+    for (GList *l = db->includes; l != NULL; l = l->next) {
+        ret = db_location_load (db, l->data);
+    }
+    if (ret) {
+        db_update_entries_list (db);
+    }
+    return ret;
+}
+
+bool
+db_scan (Database *db, void (*callback)(const char *))
+{
+    assert (db != NULL);
+    assert (db->includes != NULL);
+
+    bool ret = true;
+    for (GList *l = db->includes; l != NULL; l = l->next) {
+        ret = db_location_add (db, l->data, callback);
+    }
+    if (ret) {
+        db_build_initial_entries_list (db);
+    }
+    return ret;
+}
+
 void
 db_sort (Database *db)
 {
@@ -965,22 +1030,6 @@ db_sort (Database *db)
     trace ("start sorting\n");
     darray_sort (db->entries, sort_by_name);
     trace ("finished sorting\n");
-}
-
-static void
-db_location_free_all (Database *db)
-{
-    assert (db != NULL);
-    g_return_if_fail (db->locations != NULL);
-
-    GList *l = db->locations;
-    while (l) {
-        trace ("free location\n");
-        db_location_free (l->data);
-        l = l->next;
-    }
-    g_list_free (db->locations);
-    db->locations = NULL;
 }
 
 bool
