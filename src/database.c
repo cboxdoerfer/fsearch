@@ -1032,14 +1032,3 @@ db_sort (Database *db)
     trace ("finished sorting\n");
 }
 
-bool
-db_clear (Database *db)
-{
-    assert (db != NULL);
-
-    trace ("clear locations\n");
-    db_entries_clear (db);
-    db_location_free_all (db);
-    return true;
-}
-
