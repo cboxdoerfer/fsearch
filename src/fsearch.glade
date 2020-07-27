@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.20.0 
+<!-- Generated with glade 3.36.0 
 
 FSearch - 
 Copyright (C) Christian Boxdörfer
@@ -505,6 +505,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="placeholder_text" translatable="yes">Search...</property>
                 <signal name="activate" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
                 <signal name="changed" handler="on_search_entry_changed" object="FsearchApplicationWindow" swapped="no"/>
+                <signal name="key-press-event" handler="on_search_entry_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -604,6 +605,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <class name="fsearch-results-frame"/>
                 </style>
               </object>
+              <packing>
+                <property name="index">-1</property>
+              </packing>
             </child>
           </object>
           <packing>

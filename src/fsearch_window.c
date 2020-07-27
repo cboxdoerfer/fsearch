@@ -836,6 +836,35 @@ on_filter_combobox_changed (GtkComboBox *widget,
     perform_search (win);
 }
 
+static gboolean
+on_search_entry_key_press_event (GtkWidget *widget,
+                                GdkEvent	*event,
+                                gpointer user_data)
+{
+    FsearchApplicationWindow *win = user_data;
+    if (event->key.keyval == GDK_KEY_Down) {
+        GtkTreeIter iter = {};
+        GtkTreePath *path = NULL;
+
+        gtk_tree_view_get_cursor (GTK_TREE_VIEW (win->listview), &path, NULL);
+        if (!path) {
+            gtk_tree_model_get_iter_first (GTK_TREE_MODEL (win->list_model), &iter);
+            path = gtk_tree_model_get_path (GTK_TREE_MODEL (win->list_model), &iter);
+        }
+
+        if (path) {
+            gtk_widget_grab_focus (win->listview);
+            gtk_tree_view_set_cursor (GTK_TREE_VIEW (win->listview),
+                                      path,
+                                      NULL,
+                                      FALSE);
+            gtk_tree_path_free (path);
+        }
+        return TRUE;
+    }
+    return FALSE;
+}
+
 void
 on_search_entry_activate (GtkButton *widget,
                     gpointer   user_data)
@@ -949,6 +978,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_bind_template_callback (widget_class, on_search_mode_label_button_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback (widget_class, on_search_entry_activate);
+    gtk_widget_class_bind_template_callback (widget_class, on_search_entry_key_press_event);
     gtk_widget_class_bind_template_callback (widget_class, on_listview_query_tooltip);
 }
 
