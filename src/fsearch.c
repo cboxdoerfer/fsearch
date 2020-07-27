@@ -140,8 +140,8 @@ make_location_dir (void)
 
 static gint
 fsearch_options_handler(GApplication *gapp,
-                            GVariantDict *options,
-                            gpointer data )
+                        GVariantDict *options,
+                        gpointer data )
 {
     gboolean version = FALSE, updatedb = FALSE;
     g_variant_dict_lookup(options, "version", "b", &version);
