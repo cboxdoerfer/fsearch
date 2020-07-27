@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-03-07 19:17+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-27 14:38+0200\n"
 "PO-Revision-Date: 2018-11-13 19:07+0000\n"
 "Last-Translator: MESUT AKCAN <makcan@gmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,444 +20,373 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.3-dev\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
+#: ../src/fsearch_window.c:99 ../src/fsearch_window.c:318
+#: ../src/fsearch_window.c:744
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Öğe"
 
-#: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
-#: src/fsearch_window_actions.c:465
+#: ../src/fsearch_window.c:551 ../src/fsearch_window_actions.c:449
 msgid "Failed to open file"
 msgstr ""
 
-#: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
-#: src/fsearch_window_actions.c:466
+#: ../src/fsearch_window.c:552 ../src/fsearch_window_actions.c:450
 msgid "Do you want to keep the window open?"
 msgstr ""
 
-#: src/fsearch_window.c:721
+#: ../src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Son Güncelleme Tarihi:  %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:736
+#: ../src/fsearch_window.c:763
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "Veritabanı Yükleniyor..."
 
-#: src/listview.c:149 src/menus.ui:80
+#: ../src/listview.c:153
 msgid "Name"
 msgstr "İsim"
 
-#: src/listview.c:178 src/menus.ui:84
+#: ../src/listview.c:182
 msgid "Path"
 msgstr "Yol"
 
-#: src/listview.c:207 src/menus.ui:92
+#: ../src/listview.c:211
 msgid "Size"
 msgstr "Boyut"
 
-#: src/listview.c:239 src/menus.ui:96
+#: ../src/listview.c:243
 msgid "Date Modified"
 msgstr "Düzenlenme Tarihi"
 
-#: src/listview.c:268 src/menus.ui:88
+#: ../src/listview.c:272
 msgid "Type"
 msgstr "Tür"
 
-#: src/fsearch.c:192
+#: ../src/fsearch.c:191
 msgid "Show version information"
 msgstr ""
 
-#: src/fsearch.c:199
+#: ../src/fsearch.c:198
 #, fuzzy
 msgid "Update the database"
 msgstr "Veritabanını Güncelle"
 
-#: src/fsearch.c:386
+#: ../src/fsearch.c:370
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
-#: src/fsearch_window_actions.c:138
-msgid "Do you really want to remove"
+#: ../src/fsearch_window_actions.c:86
+#, fuzzy
+msgid "Do you really want to open"
 msgstr "Gerçekten kaldırmak istiyor musun"
 
-#: src/fsearch_window_actions.c:138
+#: ../src/fsearch_window_actions.c:86 ../src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "dosyalar?"
 
-#: src/fsearch_window_actions.c:142
+#: ../src/fsearch_window_actions.c:88
+#, fuzzy
+msgid "Opening Files..."
+msgstr "Dosya Aç"
+
+#: ../src/fsearch_window_actions.c:166
+msgid "Do you really want to remove"
+msgstr "Gerçekten kaldırmak istiyor musun"
+
+#: ../src/fsearch_window_actions.c:170
 #, fuzzy
 msgid "Deleting files…"
 msgstr "Dosyalar Siliniyor..."
 
-#: src/fsearch_window_actions.c:142
+#: ../src/fsearch_window_actions.c:170
 #, fuzzy
 msgid "Moving files to trash…"
 msgstr "Dosyalar çöp sepetine taşınıyor."
 
-#: src/menus.ui:7
-msgid "_Open"
-msgstr "_Aç"
-
-#: src/menus.ui:13
-msgid "Open _With"
-msgstr "İle_Aç"
-
-#: src/menus.ui:27
-msgid "_Open Folder"
-msgstr "_Klasörü Aç"
-
-#: src/menus.ui:43
-msgid "_Copy"
-msgstr "_Kopyala"
-
-#: src/menus.ui:49
-msgid "_Copy Filepath"
-msgstr "_Dosya Yolunu Kopyala"
-
-#: src/menus.ui:56
-msgid "Move to _Trash"
-msgstr "_Çöp Sepetine Taşı"
-
-#: src/menus.ui:62
-msgid "_Delete"
-msgstr "Sil"
-
-#: src/overlay.ui:31
-msgid "Empty Database"
-msgstr "Boş Veritabanı"
-
-#: src/overlay.ui:46
-msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr ""
-"<b>Düzenle  → Ayarlar → Veritabanı</b> seçeneğine giderek bir klasör yolu "
-"ekleyin"
-
-#: src/overlay.ui:87
-msgid "Empty Query"
-msgstr "Boş Sorgu"
-
-#: src/overlay.ui:102
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
-
-#: src/overlay.ui:143 src/fsearch.glade:779
-msgid "Updating Database..."
-msgstr "Veritabanı Güncelleniyor.."
-
-#: src/overlay.ui:158
-msgid "..."
-msgstr "..."
-
-#: src/overlay.ui:173
-msgid "This may take a while."
-msgstr "Bu biraz zaman alacak."
-
-#: src/overlay.ui:213
-msgid "No Results Found"
-msgstr "Hiç bir sonuç bulunamadı"
-
-#: src/overlay.ui:228
-msgid "Try a different search"
-msgstr "Farklı bir arama deneyiniz"
-
-#: src/preferences.ui:17
-msgid "Preferences"
-msgstr "Ayarlar"
-
-#: src/preferences.ui:63
-msgid "Enable dark theme"
-msgstr "Karanlık Temayı Aktifleştir"
-
-#: src/preferences.ui:76
-msgid "Show tooltips"
-msgstr "İpuçlarını Göster"
-
-#: src/preferences.ui:89
-msgid "Remember window size"
-msgstr "Ekran Boyutunu Hatırla"
-
-#: src/preferences.ui:102
-msgid "Remember column configuration"
-msgstr "Kolon Yapısını Hatırla"
-
-#: src/preferences.ui:115
-msgid "Show icons in name column"
-msgstr "İsim Kolonunda İkonları Göster"
-
-#: src/preferences.ui:128
-msgid "Use binary units instead of decimal units"
-msgstr "Ondalık birimler yerine ikili birimleri kullanın"
-
-#: src/preferences.ui:146
-msgid "Behaviour after successfully opening a file"
-msgstr ""
-
-#: src/preferences.ui:161
-msgid "Minimize"
-msgstr ""
-
-#: src/preferences.ui:162
-msgid "Close"
-msgstr ""
-
-#: src/preferences.ui:172
-msgid "with keyboard shortcuts or menu entries"
-msgstr ""
-
-#: src/preferences.ui:187
-msgid "with double click"
-msgstr ""
-
-#: src/preferences.ui:236
-msgid ""
-"INFO: \"Enable dark theme\" might not have an effect,\n"
-"since not every GTK+ theme provides a dark version."
-msgstr ""
-"BİLGİ: \"Karanlık Temayı Aktifleştir\" çalışmayabilir,\n"
-"Çünkü her GTK + teması karanlık temayı desteklemiyor."
-
-#: src/preferences.ui:273
-msgid "Interface"
-msgstr "Arayüz"
-
-#: src/preferences.ui:291
-msgid "Limit number of results:"
-msgstr "Sonuç sayısının sınırı:"
-
-#: src/preferences.ui:319
-msgid "Search in path when query contains path separators"
-msgstr "Sorgu dosya yolu içerdiği zaman dosya yollarında arama yap"
-
-#: src/preferences.ui:333
-msgid "Search as you type"
-msgstr "Yazarken ara"
-
-#: src/preferences.ui:347
-msgid "Hide results when search is empty"
-msgstr "Eğer sonuç boşsa sonuçları gizle"
-
-#: src/preferences.ui:368 src/fsearch.glade:544
-msgid "Search"
-msgstr "Ara"
-
-#: src/preferences.ui:387
-msgid "Update database on start"
-msgstr "Başlangıçta veritabanını güncelle"
-
-#: src/preferences.ui:422 src/preferences.ui:526
-msgid "Add"
-msgstr "Ekle"
-
-#: src/preferences.ui:438 src/preferences.ui:542
-msgid "Remove"
-msgstr "Sil"
-
-#: src/preferences.ui:485
-msgid "Follow symbolic links"
-msgstr "Sembolik Linkleri Takip Et"
-
-#: src/preferences.ui:502
-msgid "Include"
-msgstr "Aktar"
-
-#: src/preferences.ui:589
-msgid "Exclude hidden files and folders"
-msgstr "Gizli dosya ve klasörleri hariç tut"
-
-#: src/preferences.ui:610 src/preferences.ui:623
-msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "Joker karakterleri destekler. Çoklu girdiler ';' ile ayrılmalıdır"
-
-#: src/preferences.ui:611
-msgid "Exclude files:"
-msgstr "Hariç tutulan dosyalar:"
-
-#: src/preferences.ui:624
-msgid "e.g. \".git;*.tmp\""
-msgstr "örn: \".git,*.tmp\""
-
-#: src/preferences.ui:648
-msgid "Exclude"
-msgstr "Hariç Tut"
-
-#: src/preferences.ui:671
-msgid "Database"
-msgstr "Veritabanı"
-
-#: src/preferences.ui:693
-msgid "Show warning dialogs when:"
-msgstr ""
-
-#: src/preferences.ui:702
-msgid "file / folder failed to open"
-msgstr ""
-
-#: src/preferences.ui:722
-msgid "Dialogs"
-msgstr ""
-
-#: src/fsearch.glade:55
+#: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
 msgstr "Dosya Aç"
 
-#: src/fsearch.glade:65
+#: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
 msgstr "Başka Bir Uygulama İle Aç"
 
-#: src/fsearch.glade:70
+#: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
 msgstr "Dosyayı İçeren Klasörü Aç"
 
-#: src/fsearch.glade:73
+#: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
 msgstr "Dosyayı Dosya Yöneticisi İle Aç"
 
-#: src/fsearch.glade:109
+#: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
 msgstr "Çöp Sepetine Taşı"
 
-#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
+#: ../src/fsearch.glade.h:6
 msgid "FSearch"
 msgstr "FSearch"
 
-#: src/fsearch.glade:154
+#: ../src/fsearch.glade.h:7
 msgid "_File"
 msgstr "_Dosya"
 
-#: src/fsearch.glade:162
+#: ../src/fsearch.glade.h:8
 msgid "New Window"
 msgstr "Yeni Pencere"
 
-#: src/fsearch.glade:191
+#: ../src/fsearch.glade.h:9
 msgid "Open Folder"
 msgstr "Klasörü Aç"
 
-#: src/fsearch.glade:226
+#: ../src/fsearch.glade.h:10
 msgid "Update Database"
 msgstr "Veritabanını Güncelle"
 
-#: src/fsearch.glade:261
+#: ../src/fsearch.glade.h:11
 msgid "_Edit"
 msgstr "_Düzenle"
 
-#: src/fsearch.glade:322
+#: ../src/fsearch.glade.h:12
 msgid "Deselect All"
 msgstr "Bütün Seçimi Kaldır"
 
-#: src/fsearch.glade:331
+#: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
 msgstr "Seçimini Tersine Çevir"
 
-#: src/fsearch.glade:360
+#: ../src/fsearch.glade.h:14
 msgid "_View"
 msgstr "_Görüntüle"
 
-#: src/fsearch.glade:371
+#: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
 msgstr "Menü Çubuğunu Göster"
 
-#: src/fsearch.glade:381
+#: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
 msgstr "Durum Çubuğunu Göster"
 
-#: src/fsearch.glade:390
+#: ../src/fsearch.glade.h:17
 msgid "Show Filter"
 msgstr "Filtreyi Göster"
 
-#: src/fsearch.glade:399
+#: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
 msgstr "Arama Bununu Göster"
 
-#: src/fsearch.glade:411
+#: ../src/fsearch.glade.h:19
 msgid "_Search"
 msgstr "_Ara"
 
-#: src/fsearch.glade:422
+#: ../src/fsearch.glade.h:20
 msgid "Search in Path"
 msgstr "Dosya Yolunda Ara"
 
-#: src/fsearch.glade:432
+#: ../src/fsearch.glade.h:21
 msgid "Match Case"
 msgstr "Büyük Küçük Harfe Duyarlı"
 
-#: src/fsearch.glade:442
+#: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
 msgstr "RegEx'i Aktifleştir"
 
-#: src/fsearch.glade:455
+#: ../src/fsearch.glade.h:23
 msgid "_Help"
 msgstr "_Yardım"
 
-#: src/fsearch.glade:505
+#: ../src/fsearch.glade.h:24
 msgid "Search..."
 msgstr "Ara.."
 
-#: src/fsearch.glade:519
+#: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
 msgstr "Bir Filtre Seç"
 
-#: src/fsearch.glade:522
+#: ../src/fsearch.glade.h:26
 msgid "All"
 msgstr "Hepsi"
 
-#: src/fsearch.glade:523
+#: ../src/fsearch.glade.h:27
 msgid "Folders"
 msgstr "Klasörler"
 
-#: src/fsearch.glade:524
+#: ../src/fsearch.glade.h:28
 msgid "Files"
 msgstr "Dosyalar"
 
-#: src/fsearch.glade:646
+#: ../src/fsearch.glade.h:29
+msgid "Search"
+msgstr "Ara"
+
+#: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
 msgstr "Arama Sonucunun Sayısı"
 
-#: src/fsearch.glade:647
+#: ../src/fsearch.glade.h:31
 msgid "0 Items"
 msgstr "0 Öğe"
 
-#: src/fsearch.glade:702 src/fsearch.glade:726
+#: ../src/fsearch.glade.h:32
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:793
+#: ../src/fsearch.glade.h:33
+msgid "Updating Database..."
+msgstr "Veritabanı Güncelleniyor.."
+
+#: ../src/fsearch.glade.h:34
 msgid "page0"
 msgstr "sayfa0"
 
-#: src/fsearch.glade:817
+#: ../src/fsearch.glade.h:35
 msgid "(empty)"
 msgstr "(boş)"
 
-#: src/fsearch.glade:828
+#: ../src/fsearch.glade.h:36
 msgid "page1"
 msgstr "sayfa1"
 
-#: src/fsearch.glade:872
+#: ../src/fsearch.glade.h:37
 msgid "CASE"
 msgstr "DURUM"
 
-#: src/fsearch.glade:924
+#: ../src/fsearch.glade.h:38
 msgid "PATH"
 msgstr "YOL"
 
-#: src/fsearch.glade:976
+#: ../src/fsearch.glade.h:39
 msgid "REGEX"
 msgstr "REGEX"
 
-#: data/fsearch.desktop.in.in:7
+#~ msgid "_Open"
+#~ msgstr "_Aç"
+
+#~ msgid "Open _With"
+#~ msgstr "İle_Aç"
+
+#~ msgid "_Open Folder"
+#~ msgstr "_Klasörü Aç"
+
+#~ msgid "_Copy"
+#~ msgstr "_Kopyala"
+
+#~ msgid "_Copy Filepath"
+#~ msgstr "_Dosya Yolunu Kopyala"
+
+#~ msgid "Move to _Trash"
+#~ msgstr "_Çöp Sepetine Taşı"
+
+#~ msgid "_Delete"
+#~ msgstr "Sil"
+
+#~ msgid "Empty Database"
+#~ msgstr "Boş Veritabanı"
+
+#~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+#~ msgstr ""
+#~ "<b>Düzenle  → Ayarlar → Veritabanı</b> seçeneğine giderek bir klasör yolu "
+#~ "ekleyin"
+
+#~ msgid "Empty Query"
+#~ msgstr "Boş Sorgu"
+
+#~ msgid "Press <b>Ctrl + F</b> and start typing"
+#~ msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
+
+#~ msgid "..."
+#~ msgstr "..."
+
+#~ msgid "This may take a while."
+#~ msgstr "Bu biraz zaman alacak."
+
+#~ msgid "No Results Found"
+#~ msgstr "Hiç bir sonuç bulunamadı"
+
+#~ msgid "Try a different search"
+#~ msgstr "Farklı bir arama deneyiniz"
+
+#~ msgid "Preferences"
+#~ msgstr "Ayarlar"
+
+#~ msgid "Enable dark theme"
+#~ msgstr "Karanlık Temayı Aktifleştir"
+
+#~ msgid "Show tooltips"
+#~ msgstr "İpuçlarını Göster"
+
+#~ msgid "Remember window size"
+#~ msgstr "Ekran Boyutunu Hatırla"
+
+#~ msgid "Remember column configuration"
+#~ msgstr "Kolon Yapısını Hatırla"
+
+#~ msgid "Show icons in name column"
+#~ msgstr "İsim Kolonunda İkonları Göster"
+
+#~ msgid "Use binary units instead of decimal units"
+#~ msgstr "Ondalık birimler yerine ikili birimleri kullanın"
+
+#~ msgid ""
+#~ "INFO: \"Enable dark theme\" might not have an effect,\n"
+#~ "since not every GTK+ theme provides a dark version."
+#~ msgstr ""
+#~ "BİLGİ: \"Karanlık Temayı Aktifleştir\" çalışmayabilir,\n"
+#~ "Çünkü her GTK + teması karanlık temayı desteklemiyor."
+
+#~ msgid "Interface"
+#~ msgstr "Arayüz"
+
+#~ msgid "Limit number of results:"
+#~ msgstr "Sonuç sayısının sınırı:"
+
+#~ msgid "Search in path when query contains path separators"
+#~ msgstr "Sorgu dosya yolu içerdiği zaman dosya yollarında arama yap"
+
+#~ msgid "Search as you type"
+#~ msgstr "Yazarken ara"
+
+#~ msgid "Hide results when search is empty"
+#~ msgstr "Eğer sonuç boşsa sonuçları gizle"
+
+#~ msgid "Update database on start"
+#~ msgstr "Başlangıçta veritabanını güncelle"
+
+#~ msgid "Add"
+#~ msgstr "Ekle"
+
+#~ msgid "Remove"
+#~ msgstr "Sil"
+
+#~ msgid "Follow symbolic links"
+#~ msgstr "Sembolik Linkleri Takip Et"
+
+#~ msgid "Include"
+#~ msgstr "Aktar"
+
+#~ msgid "Exclude hidden files and folders"
+#~ msgstr "Gizli dosya ve klasörleri hariç tut"
+
+#~ msgid "Supports wildcards. Multiple entries must be separated by ';'"
+#~ msgstr "Joker karakterleri destekler. Çoklu girdiler ';' ile ayrılmalıdır"
+
+#~ msgid "Exclude files:"
+#~ msgstr "Hariç tutulan dosyalar:"
+
+#~ msgid "e.g. \".git;*.tmp\""
+#~ msgstr "örn: \".git,*.tmp\""
+
+#~ msgid "Exclude"
+#~ msgstr "Hariç Tut"
+
+#~ msgid "Database"
+#~ msgstr "Veritabanı"
+
 #, fuzzy
-msgid "A file search application focusing on performance and advanced features"
-msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
-
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr ""
-
-#: data/fsearch.desktop.in.in:16
-msgid ""
-"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+#~ msgid ""
+#~ "A file search application focusing on performance and advanced features"
+#~ msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
 #~ msgid "Other Application"
 #~ msgstr "Diğer Uygulama"

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
-"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-03-07 19:17+0100\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-07-27 14:38+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Kevin Kim <root@hamonikr.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -19,442 +19,395 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.17-dev\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:715
+#: ../src/fsearch_window.c:99 ../src/fsearch_window.c:318
+#: ../src/fsearch_window.c:744
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 건"
 
-#: src/fsearch_window.c:539 src/fsearch_window_actions.c:413
-#: src/fsearch_window_actions.c:465
+#: ../src/fsearch_window.c:551 ../src/fsearch_window_actions.c:449
 msgid "Failed to open file"
 msgstr "파일을 열 수 없습니다."
 
-#: src/fsearch_window.c:540 src/fsearch_window_actions.c:414
-#: src/fsearch_window_actions.c:466
+#: ../src/fsearch_window.c:552 ../src/fsearch_window_actions.c:450
 msgid "Do you want to keep the window open?"
 msgstr "현재 검색창을 유지하시겠습니까?"
 
-#: src/fsearch_window.c:721
+#: ../src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "최근 업데이트: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:736
+#: ../src/fsearch_window.c:763
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "데이터베이스 로딩중…"
 
-#: src/listview.c:149 src/menus.ui:80
+#: ../src/listview.c:153
 msgid "Name"
 msgstr "파일명"
 
-#: src/listview.c:178 src/menus.ui:84
+#: ../src/listview.c:182
 msgid "Path"
 msgstr "경로"
 
-#: src/listview.c:207 src/menus.ui:92
+#: ../src/listview.c:211
 msgid "Size"
 msgstr "크기"
 
-#: src/listview.c:239 src/menus.ui:96
+#: ../src/listview.c:243
 msgid "Date Modified"
 msgstr "수정일시"
 
-#: src/listview.c:268 src/menus.ui:88
+#: ../src/listview.c:272
 msgid "Type"
 msgstr "유형"
 
-#: src/fsearch.c:192
+#: ../src/fsearch.c:191
 msgid "Show version information"
 msgstr "버전 정보 보기"
 
-#: src/fsearch.c:199
+#: ../src/fsearch.c:198
 #, fuzzy
 msgid "Update the database"
 msgstr "데이터베이스 업데이트"
 
-#: src/fsearch.c:386
+#: ../src/fsearch.c:370
 msgid "A search utility focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
-#: src/fsearch_window_actions.c:138
-msgid "Do you really want to remove"
+#: ../src/fsearch_window_actions.c:86
+#, fuzzy
+msgid "Do you really want to open"
 msgstr "정말 삭제 하시겠습니까?"
 
-#: src/fsearch_window_actions.c:138
+#: ../src/fsearch_window_actions.c:86 ../src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "파일을 삭제하시겠습니까?"
 
-#: src/fsearch_window_actions.c:142
+#: ../src/fsearch_window_actions.c:88
+#, fuzzy
+msgid "Opening Files..."
+msgstr "파일 열기"
+
+#: ../src/fsearch_window_actions.c:166
+msgid "Do you really want to remove"
+msgstr "정말 삭제 하시겠습니까?"
+
+#: ../src/fsearch_window_actions.c:170
 #, fuzzy
 msgid "Deleting files…"
 msgstr "파일 삭제 중…"
 
-#: src/fsearch_window_actions.c:142
+#: ../src/fsearch_window_actions.c:170
 #, fuzzy
 msgid "Moving files to trash…"
 msgstr "휴지통으로 이동 중…"
 
-#: src/menus.ui:7
-msgid "_Open"
-msgstr "열기く(_O)"
-
-#: src/menus.ui:13
-msgid "Open _With"
-msgstr "다른프로그램으로 열기(_W)"
-
-#: src/menus.ui:27
-msgid "_Open Folder"
-msgstr "폴더 열기(_O)"
-
-#: src/menus.ui:43
-msgid "_Copy"
-msgstr "복사(_C)"
-
-#: src/menus.ui:49
-msgid "_Copy Filepath"
-msgstr "파일경로 복사"
-
-#: src/menus.ui:56
-msgid "Move to _Trash"
-msgstr "휴지통으로 이동(_T)"
-
-#: src/menus.ui:62
-msgid "_Delete"
-msgstr "삭제(_D)"
-
-#: src/overlay.ui:31
-msgid "Empty Database"
-msgstr "데이터베이스 없음"
-
-#: src/overlay.ui:46
-msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr "<b>편집 → 설정 → 데이터베이스</b>에서 위치를 추가하세요"
-
-#: src/overlay.ui:87
-msgid "Empty Query"
-msgstr "검색어가 없습니다."
-
-#: src/overlay.ui:102
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "<b>Ctrl + F</b>를 누르고 키워드를 입력하세요"
-
-#: src/overlay.ui:143 src/fsearch.glade:779
-msgid "Updating Database..."
-msgstr "데이터베이스 업데이트"
-
-#: src/overlay.ui:158
-msgid "..."
-msgstr "…"
-
-#: src/overlay.ui:173
-msgid "This may take a while."
-msgstr "작업에 시간이 걸릴 수 있습니다"
-
-#: src/overlay.ui:213
-msgid "No Results Found"
-msgstr "결과를 찾을 수 없습니다."
-
-#: src/overlay.ui:228
-msgid "Try a different search"
-msgstr "다른 조건으로 검색을 해보세요"
-
-#: src/preferences.ui:17
-msgid "Preferences"
-msgstr "설정"
-
-#: src/preferences.ui:63
-msgid "Enable dark theme"
-msgstr "어두운 테마 적용"
-
-#: src/preferences.ui:76
-msgid "Show tooltips"
-msgstr "풍선도움말 보이기"
-
-#: src/preferences.ui:89
-msgid "Remember window size"
-msgstr "현재 검색 창 크기 저장"
-
-#: src/preferences.ui:102
-msgid "Remember column configuration"
-msgstr "설정된 컬럼 저장"
-
-#: src/preferences.ui:115
-msgid "Show icons in name column"
-msgstr "컬럼 아이콘 보이기"
-
-#: src/preferences.ui:128
-msgid "Use binary units instead of decimal units"
-msgstr "십진수 대신 이진수 사용"
-
-#: src/preferences.ui:146
-msgid "Behaviour after successfully opening a file"
-msgstr "파일을 열고 나서 할 일"
-
-#: src/preferences.ui:161
-msgid "Minimize"
-msgstr "최소화"
-
-#: src/preferences.ui:162
-msgid "Close"
-msgstr "닫기"
-
-#: src/preferences.ui:172
-msgid "with keyboard shortcuts or menu entries"
-msgstr "메뉴 또는 키보드 단축키 사용"
-
-#: src/preferences.ui:187
-msgid "with double click"
-msgstr "더블 클릭 사용"
-
-#: src/preferences.ui:236
-msgid ""
-"INFO: \"Enable dark theme\" might not have an effect,\n"
-"since not every GTK+ theme provides a dark version."
-msgstr ""
-"알림: 모든 GTK+ 테마가 어두운 버전을 제공하는 것이 아니기 때문에,\n"
-"어두운 색상의 GTK 테마가 작동하지 않을 수 있습니다."
-
-#: src/preferences.ui:273
-msgid "Interface"
-msgstr "인터페이스"
-
-#: src/preferences.ui:291
-msgid "Limit number of results:"
-msgstr "검색 결과 수 제한:"
-
-#: src/preferences.ui:319
-msgid "Search in path when query contains path separators"
-msgstr "검색어에 겅로를 포함하여 검색하는 경우 경로 검색"
-
-#: src/preferences.ui:333
-msgid "Search as you type"
-msgstr "문자 입력 시 즉시 검색"
-
-#: src/preferences.ui:347
-msgid "Hide results when search is empty"
-msgstr "검색 결과가 없으면 결과 숨기기"
-
-#: src/preferences.ui:368 src/fsearch.glade:544
-msgid "Search"
-msgstr "검색"
-
-#: src/preferences.ui:387
-msgid "Update database on start"
-msgstr "프로그램 시작 시 DB 업데이트"
-
-#: src/preferences.ui:422 src/preferences.ui:526
-msgid "Add"
-msgstr "추가"
-
-#: src/preferences.ui:438 src/preferences.ui:542
-msgid "Remove"
-msgstr "제거"
-
-#: src/preferences.ui:485
-msgid "Follow symbolic links"
-msgstr "심볼릭 링크 따라가기"
-
-#: src/preferences.ui:502
-msgid "Include"
-msgstr "포함"
-
-#: src/preferences.ui:589
-msgid "Exclude hidden files and folders"
-msgstr "숨김 파일 과 폴더 제외"
-
-#: src/preferences.ui:610 src/preferences.ui:623
-msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "와일드카드(*) 지원. 여러 항목은 ';'로 구분"
-
-#: src/preferences.ui:611
-msgid "Exclude files:"
-msgstr "제외할 파일:"
-
-#: src/preferences.ui:624
-msgid "e.g. \".git;*.tmp\""
-msgstr "예. \".git;*.tmp\""
-
-#: src/preferences.ui:648
-msgid "Exclude"
-msgstr "제외"
-
-#: src/preferences.ui:671
-msgid "Database"
-msgstr "데이터베이스"
-
-#: src/preferences.ui:693
-msgid "Show warning dialogs when:"
-msgstr "경고 대화상자 보이기"
-
-#: src/preferences.ui:702
-msgid "file / folder failed to open"
-msgstr "파일 또는 폴더를 열 수 없음"
-
-#: src/preferences.ui:722
-msgid "Dialogs"
-msgstr "대화상자"
-
-#: src/fsearch.glade:55
+#: ../src/fsearch.glade.h:1
 msgid "Open File(s)"
 msgstr "파일 열기"
 
-#: src/fsearch.glade:65
+#: ../src/fsearch.glade.h:2
 msgid "Open With Other Application"
 msgstr "다른 프로그램 열기"
 
-#: src/fsearch.glade:70
+#: ../src/fsearch.glade.h:3
 msgid "Open Containing Folder"
 msgstr "포함된 폴더 열기"
 
-#: src/fsearch.glade:73
+#: ../src/fsearch.glade.h:4
 msgid "Open File(s) in File Manager"
 msgstr "파일관리자에서 파일열기"
 
-#: src/fsearch.glade:109
+#: ../src/fsearch.glade.h:5
 msgid "Move to Trash"
 msgstr "휴지통으로 이동"
 
-#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
+#: ../src/fsearch.glade.h:6
 msgid "FSearch"
 msgstr "데스크탑 검색"
 
-#: src/fsearch.glade:154
+#: ../src/fsearch.glade.h:7
 msgid "_File"
 msgstr "파일(_F)"
 
-#: src/fsearch.glade:162
+#: ../src/fsearch.glade.h:8
 msgid "New Window"
 msgstr "새 검색창"
 
-#: src/fsearch.glade:191
+#: ../src/fsearch.glade.h:9
 msgid "Open Folder"
 msgstr "폴더 열기"
 
-#: src/fsearch.glade:226
+#: ../src/fsearch.glade.h:10
 msgid "Update Database"
 msgstr "데이터베이스 업데이트"
 
-#: src/fsearch.glade:261
+#: ../src/fsearch.glade.h:11
 msgid "_Edit"
 msgstr "편집(_E)"
 
-#: src/fsearch.glade:322
+#: ../src/fsearch.glade.h:12
 msgid "Deselect All"
 msgstr "전체선택 해제"
 
-#: src/fsearch.glade:331
+#: ../src/fsearch.glade.h:13
 msgid "Invert Selection"
 msgstr "선택 반전"
 
-#: src/fsearch.glade:360
+#: ../src/fsearch.glade.h:14
 msgid "_View"
 msgstr "보기(_V)"
 
-#: src/fsearch.glade:371
+#: ../src/fsearch.glade.h:15
 msgid "Show Menubar"
 msgstr "메뉴 보이기"
 
-#: src/fsearch.glade:381
+#: ../src/fsearch.glade.h:16
 msgid "Show Statusbar"
 msgstr "상태 표시줄 보이기"
 
-#: src/fsearch.glade:390
+#: ../src/fsearch.glade.h:17
 msgid "Show Filter"
 msgstr "필터 보이기"
 
-#: src/fsearch.glade:399
+#: ../src/fsearch.glade.h:18
 msgid "Show Search Button"
 msgstr "검색 버튼 보이기"
 
-#: src/fsearch.glade:411
+#: ../src/fsearch.glade.h:19
 msgid "_Search"
 msgstr "검색(_S)"
 
-#: src/fsearch.glade:422
+#: ../src/fsearch.glade.h:20
 msgid "Search in Path"
 msgstr "현재 경로에서 검색"
 
-#: src/fsearch.glade:432
+#: ../src/fsearch.glade.h:21
 msgid "Match Case"
 msgstr "일치하는 결과"
 
-#: src/fsearch.glade:442
+#: ../src/fsearch.glade.h:22
 msgid "Enable RegEx"
 msgstr "정규표현식 가능"
 
-#: src/fsearch.glade:455
+#: ../src/fsearch.glade.h:23
 msgid "_Help"
 msgstr "도움말(_H)"
 
-#: src/fsearch.glade:505
+#: ../src/fsearch.glade.h:24
 msgid "Search..."
 msgstr "검색중…"
 
-#: src/fsearch.glade:519
+#: ../src/fsearch.glade.h:25
 msgid "Select a Filter"
 msgstr "필터 선택"
 
-#: src/fsearch.glade:522
+#: ../src/fsearch.glade.h:26
 msgid "All"
 msgstr "전체"
 
-#: src/fsearch.glade:523
+#: ../src/fsearch.glade.h:27
 msgid "Folders"
 msgstr "폴더"
 
-#: src/fsearch.glade:524
+#: ../src/fsearch.glade.h:28
 msgid "Files"
 msgstr "파일"
 
-#: src/fsearch.glade:646
+#: ../src/fsearch.glade.h:29
+msgid "Search"
+msgstr "검색"
+
+#: ../src/fsearch.glade.h:30
 msgid "Number of Search Results"
 msgstr "검색 결과 수"
 
-#: src/fsearch.glade:647
+#: ../src/fsearch.glade.h:31
 msgid "0 Items"
 msgstr "0 건"
 
-#: src/fsearch.glade:702 src/fsearch.glade:726
+#: ../src/fsearch.glade.h:32
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:793
+#: ../src/fsearch.glade.h:33
+msgid "Updating Database..."
+msgstr "데이터베이스 업데이트"
+
+#: ../src/fsearch.glade.h:34
 msgid "page0"
 msgstr "페이지0"
 
-#: src/fsearch.glade:817
+#: ../src/fsearch.glade.h:35
 msgid "(empty)"
 msgstr "(비어있음)"
 
-#: src/fsearch.glade:828
+#: ../src/fsearch.glade.h:36
 msgid "page1"
 msgstr "페이지1"
 
-#: src/fsearch.glade:872
+#: ../src/fsearch.glade.h:37
 msgid "CASE"
 msgstr "대소문자"
 
-#: src/fsearch.glade:924
+#: ../src/fsearch.glade.h:38
 msgid "PATH"
 msgstr "경로"
 
-#: src/fsearch.glade:976
+#: ../src/fsearch.glade.h:39
 msgid "REGEX"
 msgstr "정규표현식"
 
-#: data/fsearch.desktop.in.in:7
+#~ msgid "_Open"
+#~ msgstr "열기く(_O)"
+
+#~ msgid "Open _With"
+#~ msgstr "다른프로그램으로 열기(_W)"
+
+#~ msgid "_Open Folder"
+#~ msgstr "폴더 열기(_O)"
+
+#~ msgid "_Copy"
+#~ msgstr "복사(_C)"
+
+#~ msgid "_Copy Filepath"
+#~ msgstr "파일경로 복사"
+
+#~ msgid "Move to _Trash"
+#~ msgstr "휴지통으로 이동(_T)"
+
+#~ msgid "_Delete"
+#~ msgstr "삭제(_D)"
+
+#~ msgid "Empty Database"
+#~ msgstr "데이터베이스 없음"
+
+#~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+#~ msgstr "<b>편집 → 설정 → 데이터베이스</b>에서 위치를 추가하세요"
+
+#~ msgid "Empty Query"
+#~ msgstr "검색어가 없습니다."
+
+#~ msgid "Press <b>Ctrl + F</b> and start typing"
+#~ msgstr "<b>Ctrl + F</b>를 누르고 키워드를 입력하세요"
+
+#~ msgid "..."
+#~ msgstr "…"
+
+#~ msgid "This may take a while."
+#~ msgstr "작업에 시간이 걸릴 수 있습니다"
+
+#~ msgid "No Results Found"
+#~ msgstr "결과를 찾을 수 없습니다."
+
+#~ msgid "Try a different search"
+#~ msgstr "다른 조건으로 검색을 해보세요"
+
+#~ msgid "Preferences"
+#~ msgstr "설정"
+
+#~ msgid "Enable dark theme"
+#~ msgstr "어두운 테마 적용"
+
+#~ msgid "Show tooltips"
+#~ msgstr "풍선도움말 보이기"
+
+#~ msgid "Remember window size"
+#~ msgstr "현재 검색 창 크기 저장"
+
+#~ msgid "Remember column configuration"
+#~ msgstr "설정된 컬럼 저장"
+
+#~ msgid "Show icons in name column"
+#~ msgstr "컬럼 아이콘 보이기"
+
+#~ msgid "Use binary units instead of decimal units"
+#~ msgstr "십진수 대신 이진수 사용"
+
+#~ msgid "Behaviour after successfully opening a file"
+#~ msgstr "파일을 열고 나서 할 일"
+
+#~ msgid "Minimize"
+#~ msgstr "최소화"
+
+#~ msgid "Close"
+#~ msgstr "닫기"
+
+#~ msgid "with keyboard shortcuts or menu entries"
+#~ msgstr "메뉴 또는 키보드 단축키 사용"
+
+#~ msgid "with double click"
+#~ msgstr "더블 클릭 사용"
+
+#~ msgid ""
+#~ "INFO: \"Enable dark theme\" might not have an effect,\n"
+#~ "since not every GTK+ theme provides a dark version."
+#~ msgstr ""
+#~ "알림: 모든 GTK+ 테마가 어두운 버전을 제공하는 것이 아니기 때문에,\n"
+#~ "어두운 색상의 GTK 테마가 작동하지 않을 수 있습니다."
+
+#~ msgid "Interface"
+#~ msgstr "인터페이스"
+
+#~ msgid "Limit number of results:"
+#~ msgstr "검색 결과 수 제한:"
+
+#~ msgid "Search in path when query contains path separators"
+#~ msgstr "검색어에 겅로를 포함하여 검색하는 경우 경로 검색"
+
+#~ msgid "Search as you type"
+#~ msgstr "문자 입력 시 즉시 검색"
+
+#~ msgid "Hide results when search is empty"
+#~ msgstr "검색 결과가 없으면 결과 숨기기"
+
+#~ msgid "Update database on start"
+#~ msgstr "프로그램 시작 시 DB 업데이트"
+
+#~ msgid "Add"
+#~ msgstr "추가"
+
+#~ msgid "Remove"
+#~ msgstr "제거"
+
+#~ msgid "Follow symbolic links"
+#~ msgstr "심볼릭 링크 따라가기"
+
+#~ msgid "Include"
+#~ msgstr "포함"
+
+#~ msgid "Exclude hidden files and folders"
+#~ msgstr "숨김 파일 과 폴더 제외"
+
+#~ msgid "Supports wildcards. Multiple entries must be separated by ';'"
+#~ msgstr "와일드카드(*) 지원. 여러 항목은 ';'로 구분"
+
+#~ msgid "Exclude files:"
+#~ msgstr "제외할 파일:"
+
+#~ msgid "e.g. \".git;*.tmp\""
+#~ msgstr "예. \".git;*.tmp\""
+
+#~ msgid "Exclude"
+#~ msgstr "제외"
+
+#~ msgid "Database"
+#~ msgstr "데이터베이스"
+
+#~ msgid "Show warning dialogs when:"
+#~ msgstr "경고 대화상자 보이기"
+
+#~ msgid "file / folder failed to open"
+#~ msgstr "파일 또는 폴더를 열 수 없음"
+
+#~ msgid "Dialogs"
+#~ msgstr "대화상자"
+
 #, fuzzy
-msgid "A file search application focusing on performance and advanced features"
-msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
-
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr ""
-
-#: data/fsearch.desktop.in.in:16
-msgid ""
-"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+#~ msgid ""
+#~ "A file search application focusing on performance and advanced features"
+#~ msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
 #~ msgid "Other Application"
 #~ msgstr "다른 프로그램"
