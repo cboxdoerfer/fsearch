@@ -304,6 +304,9 @@ load_database (gpointer user_data)
     g_assert (user_data != NULL);
     g_assert (FSEARCH_IS_APPLICATION (user_data));
     FsearchApplication *app = FSEARCH_APPLICATION (user_data);
+
+    g_mutex_lock (&app->mutex);
+
     g_idle_add (update_database_signal_emit_cb, app);
 
     Database *db = NULL;
@@ -336,6 +339,7 @@ load_database (gpointer user_data)
     timer_stop ();
     db_unlock (db);
 
+    g_mutex_unlock (&app->mutex);
     g_idle_add (updated_database_signal_emit_cb, db);
 
     return NULL;
