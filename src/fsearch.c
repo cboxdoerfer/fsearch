@@ -305,6 +305,10 @@ load_database (gpointer user_data)
     g_assert (FSEARCH_IS_APPLICATION (user_data));
     FsearchApplication *app = FSEARCH_APPLICATION (user_data);
 
+    if (!app->config->locations) {
+        return NULL;
+    }
+
     g_mutex_lock (&app->mutex);
 
     g_idle_add (update_database_signal_emit_cb, app);
@@ -415,8 +419,10 @@ void
 fsearch_update_database (void)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    fsearch_action_disable ("update_database");
-    g_thread_new("fsearch_db_update_thread", load_database, app);
+    if (app->config->locations) {
+        fsearch_action_disable ("update_database");
+        g_thread_new("fsearch_db_update_thread", load_database, app);
+    }
     return;
 }
 
