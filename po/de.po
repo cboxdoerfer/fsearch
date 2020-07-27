@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-07-27 15:03+0200\n"
-"PO-Revision-Date: 2020-04-18 20:11+0000\n"
-"Last-Translator: Martin Beer <der_baer@yadim.dismail.de>\n"
+"PO-Revision-Date: 2020-07-29 16:41+0000\n"
+"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.0.2-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
@@ -77,9 +77,8 @@ msgstr ""
 "konzentriert"
 
 #: src/fsearch_window_actions.c:86
-#, fuzzy
 msgid "Do you really want to open"
-msgstr "Möchten Sie wirklich löschen"
+msgstr "Möchten Sie wirklich"
 
 #: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
 msgid "files?"
