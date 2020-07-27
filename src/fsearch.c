@@ -349,12 +349,6 @@ load_database (gpointer user_data)
     return NULL;
 }
 
-static GThread *
-load_database_thread (FsearchApplication *app)
-{
-    return g_thread_new("fsearch_db_load_thread", load_database, app);
-}
-
 static void
 about_activated (GSimpleAction *action,
                  GVariant      *parameter,
@@ -539,7 +533,7 @@ fsearch_application_activate (GApplication *app)
     }
     window = GTK_WINDOW (fsearch_application_window_new (FSEARCH_APPLICATION (app)));
     gtk_window_present (window);
-    load_database_thread (FSEARCH_APPLICATION (app));
+    fsearch_update_database ();
 }
 
 static void
