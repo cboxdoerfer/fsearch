@@ -356,7 +356,7 @@ perform_search (FsearchApplicationWindow *win)
     }
 
     Database *db = fsearch_application_get_db (app);
-    if (!db_try_lock (db)) {
+    if (!db || !db_try_lock (db)) {
         trace ("search: database locked\n");
         return FALSE;
     }
