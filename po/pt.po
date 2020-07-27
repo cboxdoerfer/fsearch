@@ -7,8 +7,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 14:38+0200\n"
+"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
+"POT-Creation-Date: 2020-07-27 15:03+0200\n"
 "PO-Revision-Date: 2020-07-27 12:44+0000\n"
 "Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
@@ -20,402 +20,458 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.2-dev\n"
 
-#: ../src/fsearch_window.c:99 ../src/fsearch_window.c:318
-#: ../src/fsearch_window.c:744
+#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Itens"
 
-#: ../src/fsearch_window.c:551 ../src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
 msgid "Failed to open file"
 msgstr "Falhou ao abrir arquivo"
 
-#: ../src/fsearch_window.c:552 ../src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
 msgid "Do you want to keep the window open?"
 msgstr "Você quer manter a janela aberta?"
 
-#: ../src/fsearch_window.c:750
+#: src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Última atualização: %H:%M %d/%m/%Y"
 
-#: ../src/fsearch_window.c:763
+#: src/fsearch_window.c:763
 #, c-format
 msgid "Loading Database…"
 msgstr "Carregando a base de dados…"
 
-#: ../src/listview.c:153
+#: src/listview.c:153 src/menus.ui:80
 msgid "Name"
 msgstr "Nome"
 
-#: ../src/listview.c:182
+#: src/listview.c:182 src/menus.ui:84
 msgid "Path"
 msgstr "Caminho"
 
-#: ../src/listview.c:211
+#: src/listview.c:211 src/menus.ui:92
 msgid "Size"
 msgstr "Tamanho"
 
-#: ../src/listview.c:243
+#: src/listview.c:243 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Data de Modificação"
 
-#: ../src/listview.c:272
+#: src/listview.c:272 src/menus.ui:88
 msgid "Type"
 msgstr "Tipo"
 
-#: ../src/fsearch.c:191
+#: src/fsearch.c:191
 msgid "Show version information"
 msgstr "Mostrar informações da versão"
 
-#: ../src/fsearch.c:198
+#: src/fsearch.c:198
 msgid "Update the database"
 msgstr "Atualizar a base de dados"
 
-#: ../src/fsearch.c:370
+#: src/fsearch.c:370
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em performance e funções avançadas"
 
-#: ../src/fsearch_window_actions.c:86
+#: src/fsearch_window_actions.c:86
 #, fuzzy
 msgid "Do you really want to open"
 msgstr "Você realmente deseja remover"
 
-#: ../src/fsearch_window_actions.c:86 ../src/fsearch_window_actions.c:166
+#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "Arquivos?"
 
-#: ../src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:88
 #, fuzzy
 msgid "Opening Files..."
 msgstr "Abrir ficheiro(s)"
 
-#: ../src/fsearch_window_actions.c:166
+#: src/fsearch_window_actions.c:166
 msgid "Do you really want to remove"
 msgstr "Você realmente deseja remover"
 
-#: ../src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:170
 msgid "Deleting files…"
 msgstr "Deletando arquivos…"
 
-#: ../src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:170
 msgid "Moving files to trash…"
 msgstr "Mover para o Lixo…"
 
-#: ../src/fsearch.glade.h:1
-msgid "Open File(s)"
-msgstr "Abrir ficheiro(s)"
+#: src/menus.ui:7
+msgid "_Open"
+msgstr "_Abrir"
 
-#: ../src/fsearch.glade.h:2
-msgid "Open With Other Application"
-msgstr "Abrir com outra Aplicação"
+#: src/menus.ui:13
+msgid "Open _With"
+msgstr "Abrir _Como"
 
-#: ../src/fsearch.glade.h:3
-msgid "Open Containing Folder"
-msgstr "Abrir Pasta de Conteúdo"
+#: src/menus.ui:27
+msgid "_Open Folder"
+msgstr "_Abrir Pasta"
 
-#: ../src/fsearch.glade.h:4
-msgid "Open File(s) in File Manager"
-msgstr "Abrir ficheiro(s) no Gestor de Ficheiros"
+#: src/menus.ui:43
+msgid "_Copy"
+msgstr "_Copiar"
 
-#: ../src/fsearch.glade.h:5
-msgid "Move to Trash"
-msgstr "Mover para o Lixo"
+#: src/menus.ui:49
+msgid "_Copy Filepath"
+msgstr "_Copiar Caminho do Ficheiro"
 
-#: ../src/fsearch.glade.h:6
-msgid "FSearch"
-msgstr "FSearch"
+#: src/menus.ui:56
+msgid "Move to _Trash"
+msgstr "Mover para o _Lixo"
 
-#: ../src/fsearch.glade.h:7
-msgid "_File"
-msgstr "_Ficheiro"
+#: src/menus.ui:62
+msgid "_Delete"
+msgstr "_Eliminar"
 
-#: ../src/fsearch.glade.h:8
-msgid "New Window"
-msgstr "Nova Janela"
+#: src/overlay.ui:31
+msgid "Empty Database"
+msgstr "Base de Dados Vazia"
 
-#: ../src/fsearch.glade.h:9
-msgid "Open Folder"
-msgstr "Abrir Pasta"
+#: src/overlay.ui:46
+msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+msgstr ""
+"Ir a <b>Editar → Preferências → Base de Dados</b> e adicionar algumas "
+"localizações"
 
-#: ../src/fsearch.glade.h:10
-msgid "Update Database"
-msgstr "Atualizar Base de Dados"
+#: src/overlay.ui:87
+msgid "Empty Query"
+msgstr "Consulta Vazia"
 
-#: ../src/fsearch.glade.h:11
-msgid "_Edit"
-msgstr "_Editar"
+#: src/overlay.ui:102
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "Carregar em <b>Ctrl + F</b> e começar a escrever"
 
-#: ../src/fsearch.glade.h:12
-msgid "Deselect All"
-msgstr "Desmarcar Tudo"
-
-#: ../src/fsearch.glade.h:13
-msgid "Invert Selection"
-msgstr "Inverter Seleção"
-
-#: ../src/fsearch.glade.h:14
-msgid "_View"
-msgstr "_Ver"
-
-#: ../src/fsearch.glade.h:15
-msgid "Show Menubar"
-msgstr "Mostrar Barra de Menu"
-
-#: ../src/fsearch.glade.h:16
-msgid "Show Statusbar"
-msgstr "Mostrar Barra de Estado"
-
-#: ../src/fsearch.glade.h:17
-msgid "Show Filter"
-msgstr "Mostrar Filtro"
-
-#: ../src/fsearch.glade.h:18
-msgid "Show Search Button"
-msgstr "Mostrar Botão de Pesquisa"
-
-#: ../src/fsearch.glade.h:19
-msgid "_Search"
-msgstr "_Pesquisar"
-
-#: ../src/fsearch.glade.h:20
-msgid "Search in Path"
-msgstr "Procurar no Caminho"
-
-#: ../src/fsearch.glade.h:21
-msgid "Match Case"
-msgstr "Coincidir Capitalização"
-
-#: ../src/fsearch.glade.h:22
-msgid "Enable RegEx"
-msgstr "Ativar RegEx"
-
-#: ../src/fsearch.glade.h:23
-msgid "_Help"
-msgstr "_Ajuda"
-
-#: ../src/fsearch.glade.h:24
-msgid "Search..."
-msgstr "Pesquisar..."
-
-#: ../src/fsearch.glade.h:25
-msgid "Select a Filter"
-msgstr "Selecionar um filtro"
-
-#: ../src/fsearch.glade.h:26
-msgid "All"
-msgstr "Tudo"
-
-#: ../src/fsearch.glade.h:27
-msgid "Folders"
-msgstr "Pastas"
-
-#: ../src/fsearch.glade.h:28
-msgid "Files"
-msgstr "Ficheiros"
-
-#: ../src/fsearch.glade.h:29
-msgid "Search"
-msgstr "Pesquisar"
-
-#: ../src/fsearch.glade.h:30
-msgid "Number of Search Results"
-msgstr "Número de Resultados de Pesquisa"
-
-#: ../src/fsearch.glade.h:31
-msgid "0 Items"
-msgstr "0 Itens"
-
-#: ../src/fsearch.glade.h:32
-msgid "0/0"
-msgstr "0/0"
-
-#: ../src/fsearch.glade.h:33
+#: src/overlay.ui:143 src/fsearch.glade:783
 msgid "Updating Database..."
 msgstr "A atualizar a Base de Dados..."
 
-#: ../src/fsearch.glade.h:34
+#: src/overlay.ui:158
+msgid "..."
+msgstr "..."
+
+#: src/overlay.ui:173
+msgid "This may take a while."
+msgstr "Isto pode demorar um bocado."
+
+#: src/overlay.ui:213
+msgid "No Results Found"
+msgstr "Não foram encontrados resultados"
+
+#: src/overlay.ui:228
+msgid "Try a different search"
+msgstr "Tentar uma pesquisa diferente"
+
+#: src/preferences.ui:17
+msgid "Preferences"
+msgstr "Preferências"
+
+#: src/preferences.ui:63
+msgid "Enable dark theme"
+msgstr "Ativar tema escuro"
+
+#: src/preferences.ui:76
+msgid "Show tooltips"
+msgstr "Mostrar dicas"
+
+#: src/preferences.ui:89
+msgid "Remember window size"
+msgstr "Lembrar tamanho da janela"
+
+#: src/preferences.ui:102
+msgid "Remember column configuration"
+msgstr "Lembrar configuração da colina"
+
+#: src/preferences.ui:115
+msgid "Show icons in name column"
+msgstr "Mostrar ícones no nome da coluna"
+
+#: src/preferences.ui:128
+msgid "Use binary units instead of decimal units"
+msgstr "Use unidades binárias em vez de unidades decimais"
+
+#: src/preferences.ui:146
+msgid "Behaviour after successfully opening a file"
+msgstr "Comportamento após abrir um arquivo com sucesso"
+
+#: src/preferences.ui:161
+msgid "Minimize"
+msgstr "Minimizar"
+
+#: src/preferences.ui:162
+msgid "Close"
+msgstr "Fechar"
+
+#: src/preferences.ui:172
+msgid "with keyboard shortcuts or menu entries"
+msgstr "com atalhos de teclado ou entradas de menu"
+
+#: src/preferences.ui:187
+msgid "with double click"
+msgstr "com clique duplo"
+
+#: src/preferences.ui:236
+msgid ""
+"INFO: \"Enable dark theme\" might not have an effect,\n"
+"since not every GTK+ theme provides a dark version."
+msgstr ""
+"INFO: \"Ativar tema escuro\" pode não surtir efeito,\n"
+"já que nem todos os temas GTK+ disponibilizam versão escura."
+
+#: src/preferences.ui:269
+msgid "Open path with double click in path column"
+msgstr ""
+
+#: src/preferences.ui:282
+msgid "Single click to open"
+msgstr ""
+
+#: src/preferences.ui:323
+msgid "Interface"
+msgstr "Interface"
+
+#: src/preferences.ui:341
+msgid "Limit number of results:"
+msgstr "Limitar número de resultados a:"
+
+#: src/preferences.ui:369
+msgid "Search in path when query contains path separators"
+msgstr "Procurar no caminho quando a consulta contém separadores de caminho"
+
+#: src/preferences.ui:383
+msgid "Search as you type"
+msgstr "Procure enquanto escreve"
+
+#: src/preferences.ui:397
+msgid "Hide results when search is empty"
+msgstr "Esconder resultados quando a pesquisa está vazia"
+
+#: src/preferences.ui:418 src/fsearch.glade:545
+msgid "Search"
+msgstr "Pesquisar"
+
+#: src/preferences.ui:437
+msgid "Update database on start"
+msgstr "Atualizar base de dados ao iniciar"
+
+#: src/preferences.ui:472 src/preferences.ui:576
+msgid "Add"
+msgstr "Adicionar"
+
+#: src/preferences.ui:488 src/preferences.ui:592
+msgid "Remove"
+msgstr "Remover"
+
+#: src/preferences.ui:535
+msgid "Follow symbolic links"
+msgstr "Seguir ligações simbólicas"
+
+#: src/preferences.ui:552
+msgid "Include"
+msgstr "Incluir"
+
+#: src/preferences.ui:639
+msgid "Exclude hidden files and folders"
+msgstr "Excluir ficheiros e pastas escondidos"
+
+#: src/preferences.ui:660 src/preferences.ui:673
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr "Suporta coringas. Entradas múltiplas devem ser separadas por ';'"
+
+#: src/preferences.ui:661
+msgid "Exclude files:"
+msgstr "Excluir arquivos:"
+
+#: src/preferences.ui:674
+msgid "e.g. \".git;*.tmp\""
+msgstr "Ex. \".git;*.tmp\""
+
+#: src/preferences.ui:698
+msgid "Exclude"
+msgstr "Excluir"
+
+#: src/preferences.ui:721
+msgid "Database"
+msgstr "Base de Dados"
+
+#: src/preferences.ui:743
+msgid "Show warning dialogs when:"
+msgstr "Mostrar caixa de diálogo de aviso quando:"
+
+#: src/preferences.ui:752
+msgid "file / folder failed to open"
+msgstr "Falhar ao abrir arquivo/pasta"
+
+#: src/preferences.ui:772
+msgid "Dialogs"
+msgstr "Caixas de diálogos"
+
+#: src/fsearch.glade:55
+msgid "Open File(s)"
+msgstr "Abrir ficheiro(s)"
+
+#: src/fsearch.glade:65
+msgid "Open With Other Application"
+msgstr "Abrir com outra Aplicação"
+
+#: src/fsearch.glade:70
+msgid "Open Containing Folder"
+msgstr "Abrir Pasta de Conteúdo"
+
+#: src/fsearch.glade:73
+msgid "Open File(s) in File Manager"
+msgstr "Abrir ficheiro(s) no Gestor de Ficheiros"
+
+#: src/fsearch.glade:109
+msgid "Move to Trash"
+msgstr "Mover para o Lixo"
+
+#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
+msgid "FSearch"
+msgstr "FSearch"
+
+#: src/fsearch.glade:154
+msgid "_File"
+msgstr "_Ficheiro"
+
+#: src/fsearch.glade:162
+msgid "New Window"
+msgstr "Nova Janela"
+
+#: src/fsearch.glade:191
+msgid "Open Folder"
+msgstr "Abrir Pasta"
+
+#: src/fsearch.glade:226
+msgid "Update Database"
+msgstr "Atualizar Base de Dados"
+
+#: src/fsearch.glade:261
+msgid "_Edit"
+msgstr "_Editar"
+
+#: src/fsearch.glade:322
+msgid "Deselect All"
+msgstr "Desmarcar Tudo"
+
+#: src/fsearch.glade:331
+msgid "Invert Selection"
+msgstr "Inverter Seleção"
+
+#: src/fsearch.glade:360
+msgid "_View"
+msgstr "_Ver"
+
+#: src/fsearch.glade:371
+msgid "Show Menubar"
+msgstr "Mostrar Barra de Menu"
+
+#: src/fsearch.glade:381
+msgid "Show Statusbar"
+msgstr "Mostrar Barra de Estado"
+
+#: src/fsearch.glade:390
+msgid "Show Filter"
+msgstr "Mostrar Filtro"
+
+#: src/fsearch.glade:399
+msgid "Show Search Button"
+msgstr "Mostrar Botão de Pesquisa"
+
+#: src/fsearch.glade:411
+msgid "_Search"
+msgstr "_Pesquisar"
+
+#: src/fsearch.glade:422
+msgid "Search in Path"
+msgstr "Procurar no Caminho"
+
+#: src/fsearch.glade:432
+msgid "Match Case"
+msgstr "Coincidir Capitalização"
+
+#: src/fsearch.glade:442
+msgid "Enable RegEx"
+msgstr "Ativar RegEx"
+
+#: src/fsearch.glade:455
+msgid "_Help"
+msgstr "_Ajuda"
+
+#: src/fsearch.glade:505
+msgid "Search..."
+msgstr "Pesquisar..."
+
+#: src/fsearch.glade:520
+msgid "Select a Filter"
+msgstr "Selecionar um filtro"
+
+#: src/fsearch.glade:523
+msgid "All"
+msgstr "Tudo"
+
+#: src/fsearch.glade:524
+msgid "Folders"
+msgstr "Pastas"
+
+#: src/fsearch.glade:525
+msgid "Files"
+msgstr "Ficheiros"
+
+#: src/fsearch.glade:650
+msgid "Number of Search Results"
+msgstr "Número de Resultados de Pesquisa"
+
+#: src/fsearch.glade:651
+msgid "0 Items"
+msgstr "0 Itens"
+
+#: src/fsearch.glade:706 src/fsearch.glade:730
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:797
 msgid "page0"
 msgstr "Página 0"
 
-#: ../src/fsearch.glade.h:35
+#: src/fsearch.glade:821
 msgid "(empty)"
 msgstr "(vazio)"
 
-#: ../src/fsearch.glade.h:36
+#: src/fsearch.glade:832
 msgid "page1"
 msgstr "Página 1"
 
-#: ../src/fsearch.glade.h:37
+#: src/fsearch.glade:876
 msgid "CASE"
 msgstr "CASO"
 
-#: ../src/fsearch.glade.h:38
+#: src/fsearch.glade:928
 msgid "PATH"
 msgstr "CAMINHO"
 
-#: ../src/fsearch.glade.h:39
+#: src/fsearch.glade:980
 msgid "REGEX"
 msgstr "REGEX"
 
-#~ msgid "_Open"
-#~ msgstr "_Abrir"
+#: data/fsearch.desktop.in.in:7
+msgid "A file search application focusing on performance and advanced features"
+msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
-#~ msgid "Open _With"
-#~ msgstr "Abrir _Como"
+#: data/fsearch.desktop.in.in:12
+msgid "system-search"
+msgstr "system-search"
 
-#~ msgid "_Open Folder"
-#~ msgstr "_Abrir Pasta"
-
-#~ msgid "_Copy"
-#~ msgstr "_Copiar"
-
-#~ msgid "_Copy Filepath"
-#~ msgstr "_Copiar Caminho do Ficheiro"
-
-#~ msgid "Move to _Trash"
-#~ msgstr "Mover para o _Lixo"
-
-#~ msgid "_Delete"
-#~ msgstr "_Eliminar"
-
-#~ msgid "Empty Database"
-#~ msgstr "Base de Dados Vazia"
-
-#~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-#~ msgstr ""
-#~ "Ir a <b>Editar → Preferências → Base de Dados</b> e adicionar algumas "
-#~ "localizações"
-
-#~ msgid "Empty Query"
-#~ msgstr "Consulta Vazia"
-
-#~ msgid "Press <b>Ctrl + F</b> and start typing"
-#~ msgstr "Carregar em <b>Ctrl + F</b> e começar a escrever"
-
-#~ msgid "..."
-#~ msgstr "..."
-
-#~ msgid "This may take a while."
-#~ msgstr "Isto pode demorar um bocado."
-
-#~ msgid "No Results Found"
-#~ msgstr "Não foram encontrados resultados"
-
-#~ msgid "Try a different search"
-#~ msgstr "Tentar uma pesquisa diferente"
-
-#~ msgid "Preferences"
-#~ msgstr "Preferências"
-
-#~ msgid "Enable dark theme"
-#~ msgstr "Ativar tema escuro"
-
-#~ msgid "Show tooltips"
-#~ msgstr "Mostrar dicas"
-
-#~ msgid "Remember window size"
-#~ msgstr "Lembrar tamanho da janela"
-
-#~ msgid "Remember column configuration"
-#~ msgstr "Lembrar configuração da colina"
-
-#~ msgid "Show icons in name column"
-#~ msgstr "Mostrar ícones no nome da coluna"
-
-#~ msgid "Use binary units instead of decimal units"
-#~ msgstr "Use unidades binárias em vez de unidades decimais"
-
-#~ msgid "Behaviour after successfully opening a file"
-#~ msgstr "Comportamento após abrir um arquivo com sucesso"
-
-#~ msgid "Minimize"
-#~ msgstr "Minimizar"
-
-#~ msgid "Close"
-#~ msgstr "Fechar"
-
-#~ msgid "with keyboard shortcuts or menu entries"
-#~ msgstr "com atalhos de teclado ou entradas de menu"
-
-#~ msgid "with double click"
-#~ msgstr "com clique duplo"
-
-#~ msgid ""
-#~ "INFO: \"Enable dark theme\" might not have an effect,\n"
-#~ "since not every GTK+ theme provides a dark version."
-#~ msgstr ""
-#~ "INFO: \"Ativar tema escuro\" pode não surtir efeito,\n"
-#~ "já que nem todos os temas GTK+ disponibilizam versão escura."
-
-#~ msgid "Interface"
-#~ msgstr "Interface"
-
-#~ msgid "Limit number of results:"
-#~ msgstr "Limitar número de resultados a:"
-
-#~ msgid "Search in path when query contains path separators"
-#~ msgstr "Procurar no caminho quando a consulta contém separadores de caminho"
-
-#~ msgid "Search as you type"
-#~ msgstr "Procure enquanto escreve"
-
-#~ msgid "Hide results when search is empty"
-#~ msgstr "Esconder resultados quando a pesquisa está vazia"
-
-#~ msgid "Update database on start"
-#~ msgstr "Atualizar base de dados ao iniciar"
-
-#~ msgid "Add"
-#~ msgstr "Adicionar"
-
-#~ msgid "Remove"
-#~ msgstr "Remover"
-
-#~ msgid "Follow symbolic links"
-#~ msgstr "Seguir ligações simbólicas"
-
-#~ msgid "Include"
-#~ msgstr "Incluir"
-
-#~ msgid "Exclude hidden files and folders"
-#~ msgstr "Excluir ficheiros e pastas escondidos"
-
-#~ msgid "Supports wildcards. Multiple entries must be separated by ';'"
-#~ msgstr "Suporta coringas. Entradas múltiplas devem ser separadas por ';'"
-
-#~ msgid "Exclude files:"
-#~ msgstr "Excluir arquivos:"
-
-#~ msgid "e.g. \".git;*.tmp\""
-#~ msgstr "Ex. \".git;*.tmp\""
-
-#~ msgid "Exclude"
-#~ msgstr "Excluir"
-
-#~ msgid "Database"
-#~ msgstr "Base de Dados"
-
-#~ msgid "Show warning dialogs when:"
-#~ msgstr "Mostrar caixa de diálogo de aviso quando:"
-
-#~ msgid "file / folder failed to open"
-#~ msgstr "Falhar ao abrir arquivo/pasta"
-
-#~ msgid "Dialogs"
-#~ msgstr "Caixas de diálogos"
-
-#~ msgid ""
-#~ "A file search application focusing on performance and advanced features"
-#~ msgstr "Um utilitário de busca focado em performance e recursos avançados"
-
-#~ msgid "system-search"
-#~ msgstr "system-search"
-
-#~ msgid ""
-#~ "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-#~ msgstr ""
-#~ "busca;fsearch;arquivos;pastas;músicas;vídeos;documentos;encontrar;"
-#~ "ferramenta;everything;"
+#: data/fsearch.desktop.in.in:16
+msgid ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+msgstr ""
+"busca;fsearch;arquivos;pastas;músicas;vídeos;documentos;encontrar;ferramenta;"
+"everything;"
 
 #~ msgid "Other Application"
 #~ msgstr "Outra Aplicação"

@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 14:38+0200\n"
+"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
+"POT-Creation-Date: 2020-07-27 15:03+0200\n"
 "PO-Revision-Date: 2020-03-25 10:46+0000\n"
 "Last-Translator: 只要香菜 <cwbddzxx@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,398 +19,454 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.0-dev\n"
 
-#: ../src/fsearch_window.c:99 ../src/fsearch_window.c:318
-#: ../src/fsearch_window.c:744
+#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 项"
 
-#: ../src/fsearch_window.c:551 ../src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
 msgid "Failed to open file"
 msgstr "打开文件失败"
 
-#: ../src/fsearch_window.c:552 ../src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
 msgid "Do you want to keep the window open?"
 msgstr "是否保持窗口打开？"
 
-#: ../src/fsearch_window.c:750
+#: src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "最后更新: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch_window.c:763
+#: src/fsearch_window.c:763
 #, c-format
 msgid "Loading Database…"
 msgstr "加载数据库…"
 
-#: ../src/listview.c:153
+#: src/listview.c:153 src/menus.ui:80
 msgid "Name"
 msgstr "名称"
 
-#: ../src/listview.c:182
+#: src/listview.c:182 src/menus.ui:84
 msgid "Path"
 msgstr "路径"
 
-#: ../src/listview.c:211
+#: src/listview.c:211 src/menus.ui:92
 msgid "Size"
 msgstr "大小"
 
-#: ../src/listview.c:243
+#: src/listview.c:243 src/menus.ui:96
 msgid "Date Modified"
 msgstr "修改日期"
 
-#: ../src/listview.c:272
+#: src/listview.c:272 src/menus.ui:88
 msgid "Type"
 msgstr "类型"
 
-#: ../src/fsearch.c:191
+#: src/fsearch.c:191
 msgid "Show version information"
 msgstr "显示版本信息"
 
-#: ../src/fsearch.c:198
+#: src/fsearch.c:198
 msgid "Update the database"
 msgstr "更新数据库"
 
-#: ../src/fsearch.c:370
+#: src/fsearch.c:370
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
-#: ../src/fsearch_window_actions.c:86
+#: src/fsearch_window_actions.c:86
 #, fuzzy
 msgid "Do you really want to open"
 msgstr "确认要删除"
 
-#: ../src/fsearch_window_actions.c:86 ../src/fsearch_window_actions.c:166
+#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "项文件?"
 
-#: ../src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:88
 #, fuzzy
 msgid "Opening Files..."
 msgstr "打开文件"
 
-#: ../src/fsearch_window_actions.c:166
+#: src/fsearch_window_actions.c:166
 msgid "Do you really want to remove"
 msgstr "确认要删除"
 
-#: ../src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:170
 msgid "Deleting files…"
 msgstr "删除文件中…"
 
-#: ../src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:170
 msgid "Moving files to trash…"
 msgstr "正在移动文件到回收站…"
 
-#: ../src/fsearch.glade.h:1
-msgid "Open File(s)"
-msgstr "打开文件"
+#: src/menus.ui:7
+msgid "_Open"
+msgstr "_打开"
 
-#: ../src/fsearch.glade.h:2
-msgid "Open With Other Application"
-msgstr "使用其他程序打开"
+#: src/menus.ui:13
+msgid "Open _With"
+msgstr "打开方式"
 
-#: ../src/fsearch.glade.h:3
-msgid "Open Containing Folder"
-msgstr "打开文件夹"
+#: src/menus.ui:27
+msgid "_Open Folder"
+msgstr "_打开文件夹"
 
-#: ../src/fsearch.glade.h:4
-msgid "Open File(s) in File Manager"
-msgstr "在文件管理器中打开文件"
+#: src/menus.ui:43
+msgid "_Copy"
+msgstr "_复制"
 
-#: ../src/fsearch.glade.h:5
-msgid "Move to Trash"
-msgstr "删除到回收站"
+#: src/menus.ui:49
+msgid "_Copy Filepath"
+msgstr "(_C)复制文件路径"
 
-#: ../src/fsearch.glade.h:6
-msgid "FSearch"
-msgstr "FSearch"
+#: src/menus.ui:56
+msgid "Move to _Trash"
+msgstr "移动到回收站"
 
-#: ../src/fsearch.glade.h:7
-msgid "_File"
-msgstr "_文件"
+#: src/menus.ui:62
+msgid "_Delete"
+msgstr "_删除"
 
-#: ../src/fsearch.glade.h:8
-msgid "New Window"
-msgstr "新窗口"
+#: src/overlay.ui:31
+msgid "Empty Database"
+msgstr "空数据库"
 
-#: ../src/fsearch.glade.h:9
-msgid "Open Folder"
-msgstr "打开文件夹"
+#: src/overlay.ui:46
+msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+msgstr "前往 <b>编辑 → 选项 → 数据库</b> 添加路径"
 
-#: ../src/fsearch.glade.h:10
-msgid "Update Database"
-msgstr "更新数据库"
+#: src/overlay.ui:87
+msgid "Empty Query"
+msgstr "空的查询"
 
-#: ../src/fsearch.glade.h:11
-msgid "_Edit"
-msgstr "_编辑"
+#: src/overlay.ui:102
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "按 <b>Ctrl + F</b> 开始输入"
 
-#: ../src/fsearch.glade.h:12
-msgid "Deselect All"
-msgstr "取消所有选择"
-
-#: ../src/fsearch.glade.h:13
-msgid "Invert Selection"
-msgstr "反选"
-
-#: ../src/fsearch.glade.h:14
-msgid "_View"
-msgstr "_视图"
-
-#: ../src/fsearch.glade.h:15
-msgid "Show Menubar"
-msgstr "显示菜单"
-
-#: ../src/fsearch.glade.h:16
-msgid "Show Statusbar"
-msgstr "显示状态栏"
-
-#: ../src/fsearch.glade.h:17
-msgid "Show Filter"
-msgstr "筛选设置"
-
-#: ../src/fsearch.glade.h:18
-msgid "Show Search Button"
-msgstr "显示搜索按钮"
-
-#: ../src/fsearch.glade.h:19
-msgid "_Search"
-msgstr "_搜索"
-
-#: ../src/fsearch.glade.h:20
-msgid "Search in Path"
-msgstr "搜索路径"
-
-#: ../src/fsearch.glade.h:21
-msgid "Match Case"
-msgstr "区分大小写"
-
-#: ../src/fsearch.glade.h:22
-msgid "Enable RegEx"
-msgstr "启用正则"
-
-#: ../src/fsearch.glade.h:23
-msgid "_Help"
-msgstr "_帮助"
-
-#: ../src/fsearch.glade.h:24
-msgid "Search..."
-msgstr "搜索..."
-
-#: ../src/fsearch.glade.h:25
-msgid "Select a Filter"
-msgstr "选择过滤器"
-
-#: ../src/fsearch.glade.h:26
-msgid "All"
-msgstr "所有"
-
-#: ../src/fsearch.glade.h:27
-msgid "Folders"
-msgstr "文件夹"
-
-#: ../src/fsearch.glade.h:28
-msgid "Files"
-msgstr "文件"
-
-#: ../src/fsearch.glade.h:29
-msgid "Search"
-msgstr "搜索"
-
-#: ../src/fsearch.glade.h:30
-msgid "Number of Search Results"
-msgstr "搜索到的数量"
-
-#: ../src/fsearch.glade.h:31
-msgid "0 Items"
-msgstr "0 项"
-
-#: ../src/fsearch.glade.h:32
-msgid "0/0"
-msgstr "0/0"
-
-#: ../src/fsearch.glade.h:33
+#: src/overlay.ui:143 src/fsearch.glade:783
 msgid "Updating Database..."
 msgstr "数据库更新中..."
 
-#: ../src/fsearch.glade.h:34
+#: src/overlay.ui:158
+msgid "..."
+msgstr "..."
+
+#: src/overlay.ui:173
+msgid "This may take a while."
+msgstr "可能需要一些时间。"
+
+#: src/overlay.ui:213
+msgid "No Results Found"
+msgstr "没有找到结果"
+
+#: src/overlay.ui:228
+msgid "Try a different search"
+msgstr "试试其他搜索条件"
+
+#: src/preferences.ui:17
+msgid "Preferences"
+msgstr "选项"
+
+#: src/preferences.ui:63
+msgid "Enable dark theme"
+msgstr "启用暗色主题"
+
+#: src/preferences.ui:76
+msgid "Show tooltips"
+msgstr "显示工具提示"
+
+#: src/preferences.ui:89
+msgid "Remember window size"
+msgstr "记住窗口大小"
+
+#: src/preferences.ui:102
+msgid "Remember column configuration"
+msgstr "记住列的配置"
+
+#: src/preferences.ui:115
+msgid "Show icons in name column"
+msgstr "显示图标"
+
+#: src/preferences.ui:128
+msgid "Use binary units instead of decimal units"
+msgstr "使用二进制单位（代替十进制单位）"
+
+#: src/preferences.ui:146
+msgid "Behaviour after successfully opening a file"
+msgstr "打开文件成功后的动作"
+
+#: src/preferences.ui:161
+msgid "Minimize"
+msgstr "最小化"
+
+#: src/preferences.ui:162
+msgid "Close"
+msgstr "关闭"
+
+#: src/preferences.ui:172
+msgid "with keyboard shortcuts or menu entries"
+msgstr "使用快捷键或菜单"
+
+#: src/preferences.ui:187
+msgid "with double click"
+msgstr "使用双击"
+
+#: src/preferences.ui:236
+msgid ""
+"INFO: \"Enable dark theme\" might not have an effect,\n"
+"since not every GTK+ theme provides a dark version."
+msgstr ""
+"消息: \"启用暗色主题\" 可能不会生效，\n"
+"因为不是每个 gtk+ 主题都支持暗色系。"
+
+#: src/preferences.ui:269
+msgid "Open path with double click in path column"
+msgstr ""
+
+#: src/preferences.ui:282
+msgid "Single click to open"
+msgstr ""
+
+#: src/preferences.ui:323
+msgid "Interface"
+msgstr "接口"
+
+#: src/preferences.ui:341
+msgid "Limit number of results:"
+msgstr "限制结果的数量:"
+
+#: src/preferences.ui:369
+msgid "Search in path when query contains path separators"
+msgstr "搜索路径(如有路径分隔符)"
+
+#: src/preferences.ui:383
+msgid "Search as you type"
+msgstr "即时搜索"
+
+#: src/preferences.ui:397
+msgid "Hide results when search is empty"
+msgstr "搜索条件为空时不显示结果"
+
+#: src/preferences.ui:418 src/fsearch.glade:545
+msgid "Search"
+msgstr "搜索"
+
+#: src/preferences.ui:437
+msgid "Update database on start"
+msgstr "启动时更新数据库"
+
+#: src/preferences.ui:472 src/preferences.ui:576
+msgid "Add"
+msgstr "添加"
+
+#: src/preferences.ui:488 src/preferences.ui:592
+msgid "Remove"
+msgstr "删除"
+
+#: src/preferences.ui:535
+msgid "Follow symbolic links"
+msgstr "展开软链接"
+
+#: src/preferences.ui:552
+msgid "Include"
+msgstr "包含"
+
+#: src/preferences.ui:639
+msgid "Exclude hidden files and folders"
+msgstr "不包含隐藏的文件及文件夹"
+
+#: src/preferences.ui:660 src/preferences.ui:673
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr "支持通配符。多个条件必须用 ';' 分开"
+
+#: src/preferences.ui:661
+msgid "Exclude files:"
+msgstr "排除文件:"
+
+#: src/preferences.ui:674
+msgid "e.g. \".git;*.tmp\""
+msgstr "例如 \".git;*.tmp\""
+
+#: src/preferences.ui:698
+msgid "Exclude"
+msgstr "排除"
+
+#: src/preferences.ui:721
+msgid "Database"
+msgstr "数据库"
+
+#: src/preferences.ui:743
+msgid "Show warning dialogs when:"
+msgstr "显示警告窗口，当："
+
+#: src/preferences.ui:752
+msgid "file / folder failed to open"
+msgstr "文件或目录打开失败"
+
+#: src/preferences.ui:772
+msgid "Dialogs"
+msgstr "对话框"
+
+#: src/fsearch.glade:55
+msgid "Open File(s)"
+msgstr "打开文件"
+
+#: src/fsearch.glade:65
+msgid "Open With Other Application"
+msgstr "使用其他程序打开"
+
+#: src/fsearch.glade:70
+msgid "Open Containing Folder"
+msgstr "打开文件夹"
+
+#: src/fsearch.glade:73
+msgid "Open File(s) in File Manager"
+msgstr "在文件管理器中打开文件"
+
+#: src/fsearch.glade:109
+msgid "Move to Trash"
+msgstr "删除到回收站"
+
+#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
+msgid "FSearch"
+msgstr "FSearch"
+
+#: src/fsearch.glade:154
+msgid "_File"
+msgstr "_文件"
+
+#: src/fsearch.glade:162
+msgid "New Window"
+msgstr "新窗口"
+
+#: src/fsearch.glade:191
+msgid "Open Folder"
+msgstr "打开文件夹"
+
+#: src/fsearch.glade:226
+msgid "Update Database"
+msgstr "更新数据库"
+
+#: src/fsearch.glade:261
+msgid "_Edit"
+msgstr "_编辑"
+
+#: src/fsearch.glade:322
+msgid "Deselect All"
+msgstr "取消所有选择"
+
+#: src/fsearch.glade:331
+msgid "Invert Selection"
+msgstr "反选"
+
+#: src/fsearch.glade:360
+msgid "_View"
+msgstr "_视图"
+
+#: src/fsearch.glade:371
+msgid "Show Menubar"
+msgstr "显示菜单"
+
+#: src/fsearch.glade:381
+msgid "Show Statusbar"
+msgstr "显示状态栏"
+
+#: src/fsearch.glade:390
+msgid "Show Filter"
+msgstr "筛选设置"
+
+#: src/fsearch.glade:399
+msgid "Show Search Button"
+msgstr "显示搜索按钮"
+
+#: src/fsearch.glade:411
+msgid "_Search"
+msgstr "_搜索"
+
+#: src/fsearch.glade:422
+msgid "Search in Path"
+msgstr "搜索路径"
+
+#: src/fsearch.glade:432
+msgid "Match Case"
+msgstr "区分大小写"
+
+#: src/fsearch.glade:442
+msgid "Enable RegEx"
+msgstr "启用正则"
+
+#: src/fsearch.glade:455
+msgid "_Help"
+msgstr "_帮助"
+
+#: src/fsearch.glade:505
+msgid "Search..."
+msgstr "搜索..."
+
+#: src/fsearch.glade:520
+msgid "Select a Filter"
+msgstr "选择过滤器"
+
+#: src/fsearch.glade:523
+msgid "All"
+msgstr "所有"
+
+#: src/fsearch.glade:524
+msgid "Folders"
+msgstr "文件夹"
+
+#: src/fsearch.glade:525
+msgid "Files"
+msgstr "文件"
+
+#: src/fsearch.glade:650
+msgid "Number of Search Results"
+msgstr "搜索到的数量"
+
+#: src/fsearch.glade:651
+msgid "0 Items"
+msgstr "0 项"
+
+#: src/fsearch.glade:706 src/fsearch.glade:730
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:797
 msgid "page0"
 msgstr "页0"
 
-#: ../src/fsearch.glade.h:35
+#: src/fsearch.glade:821
 msgid "(empty)"
 msgstr "(空)"
 
-#: ../src/fsearch.glade.h:36
+#: src/fsearch.glade:832
 msgid "page1"
 msgstr "页1"
 
-#: ../src/fsearch.glade.h:37
+#: src/fsearch.glade:876
 msgid "CASE"
 msgstr "实例"
 
-#: ../src/fsearch.glade.h:38
+#: src/fsearch.glade:928
 msgid "PATH"
 msgstr "路径"
 
-#: ../src/fsearch.glade.h:39
+#: src/fsearch.glade:980
 msgid "REGEX"
 msgstr "正则表达式"
 
-#~ msgid "_Open"
-#~ msgstr "_打开"
+#: data/fsearch.desktop.in.in:7
+msgid "A file search application focusing on performance and advanced features"
+msgstr "注重性能和高级功能的文件搜索工具"
 
-#~ msgid "Open _With"
-#~ msgstr "打开方式"
+#: data/fsearch.desktop.in.in:12
+msgid "system-search"
+msgstr "系统搜索"
 
-#~ msgid "_Open Folder"
-#~ msgstr "_打开文件夹"
-
-#~ msgid "_Copy"
-#~ msgstr "_复制"
-
-#~ msgid "_Copy Filepath"
-#~ msgstr "(_C)复制文件路径"
-
-#~ msgid "Move to _Trash"
-#~ msgstr "移动到回收站"
-
-#~ msgid "_Delete"
-#~ msgstr "_删除"
-
-#~ msgid "Empty Database"
-#~ msgstr "空数据库"
-
-#~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-#~ msgstr "前往 <b>编辑 → 选项 → 数据库</b> 添加路径"
-
-#~ msgid "Empty Query"
-#~ msgstr "空的查询"
-
-#~ msgid "Press <b>Ctrl + F</b> and start typing"
-#~ msgstr "按 <b>Ctrl + F</b> 开始输入"
-
-#~ msgid "..."
-#~ msgstr "..."
-
-#~ msgid "This may take a while."
-#~ msgstr "可能需要一些时间。"
-
-#~ msgid "No Results Found"
-#~ msgstr "没有找到结果"
-
-#~ msgid "Try a different search"
-#~ msgstr "试试其他搜索条件"
-
-#~ msgid "Preferences"
-#~ msgstr "选项"
-
-#~ msgid "Enable dark theme"
-#~ msgstr "启用暗色主题"
-
-#~ msgid "Show tooltips"
-#~ msgstr "显示工具提示"
-
-#~ msgid "Remember window size"
-#~ msgstr "记住窗口大小"
-
-#~ msgid "Remember column configuration"
-#~ msgstr "记住列的配置"
-
-#~ msgid "Show icons in name column"
-#~ msgstr "显示图标"
-
-#~ msgid "Use binary units instead of decimal units"
-#~ msgstr "使用二进制单位（代替十进制单位）"
-
-#~ msgid "Behaviour after successfully opening a file"
-#~ msgstr "打开文件成功后的动作"
-
-#~ msgid "Minimize"
-#~ msgstr "最小化"
-
-#~ msgid "Close"
-#~ msgstr "关闭"
-
-#~ msgid "with keyboard shortcuts or menu entries"
-#~ msgstr "使用快捷键或菜单"
-
-#~ msgid "with double click"
-#~ msgstr "使用双击"
-
-#~ msgid ""
-#~ "INFO: \"Enable dark theme\" might not have an effect,\n"
-#~ "since not every GTK+ theme provides a dark version."
-#~ msgstr ""
-#~ "消息: \"启用暗色主题\" 可能不会生效，\n"
-#~ "因为不是每个 gtk+ 主题都支持暗色系。"
-
-#~ msgid "Interface"
-#~ msgstr "接口"
-
-#~ msgid "Limit number of results:"
-#~ msgstr "限制结果的数量:"
-
-#~ msgid "Search in path when query contains path separators"
-#~ msgstr "搜索路径(如有路径分隔符)"
-
-#~ msgid "Search as you type"
-#~ msgstr "即时搜索"
-
-#~ msgid "Hide results when search is empty"
-#~ msgstr "搜索条件为空时不显示结果"
-
-#~ msgid "Update database on start"
-#~ msgstr "启动时更新数据库"
-
-#~ msgid "Add"
-#~ msgstr "添加"
-
-#~ msgid "Remove"
-#~ msgstr "删除"
-
-#~ msgid "Follow symbolic links"
-#~ msgstr "展开软链接"
-
-#~ msgid "Include"
-#~ msgstr "包含"
-
-#~ msgid "Exclude hidden files and folders"
-#~ msgstr "不包含隐藏的文件及文件夹"
-
-#~ msgid "Supports wildcards. Multiple entries must be separated by ';'"
-#~ msgstr "支持通配符。多个条件必须用 ';' 分开"
-
-#~ msgid "Exclude files:"
-#~ msgstr "排除文件:"
-
-#~ msgid "e.g. \".git;*.tmp\""
-#~ msgstr "例如 \".git;*.tmp\""
-
-#~ msgid "Exclude"
-#~ msgstr "排除"
-
-#~ msgid "Database"
-#~ msgstr "数据库"
-
-#~ msgid "Show warning dialogs when:"
-#~ msgstr "显示警告窗口，当："
-
-#~ msgid "file / folder failed to open"
-#~ msgstr "文件或目录打开失败"
-
-#~ msgid "Dialogs"
-#~ msgstr "对话框"
-
-#~ msgid ""
-#~ "A file search application focusing on performance and advanced features"
-#~ msgstr "注重性能和高级功能的文件搜索工具"
-
-#~ msgid "system-search"
-#~ msgstr "系统搜索"
-
-#~ msgid ""
-#~ "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-#~ msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
+#: data/fsearch.desktop.in.in:16
+msgid ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
 
 #~ msgid "Other Application"
 #~ msgstr "其他应用程序"

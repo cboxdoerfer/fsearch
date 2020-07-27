@@ -6,8 +6,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-27 14:38+0200\n"
+"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
+"POT-Creation-Date: 2020-07-27 15:03+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -19,365 +19,458 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.17-dev\n"
 
-#: ../src/fsearch_window.c:99 ../src/fsearch_window.c:318
-#: ../src/fsearch_window.c:744
+#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 個"
 
-#: ../src/fsearch_window.c:551 ../src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
 msgid "Failed to open file"
 msgstr ""
 
-#: ../src/fsearch_window.c:552 ../src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
 msgid "Do you want to keep the window open?"
 msgstr ""
 
-#: ../src/fsearch_window.c:750
+#: src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "最終更新日: %Y-%m-%d %H:%M"
 
-#: ../src/fsearch_window.c:763
+#: src/fsearch_window.c:763
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "データベースを読み込み中…"
 
-#: ../src/listview.c:153
+#: src/listview.c:153 src/menus.ui:80
 msgid "Name"
 msgstr "名前"
 
-#: ../src/listview.c:182
+#: src/listview.c:182 src/menus.ui:84
 msgid "Path"
 msgstr "パス"
 
-#: ../src/listview.c:211
+#: src/listview.c:211 src/menus.ui:92
 msgid "Size"
 msgstr "サイズ"
 
-#: ../src/listview.c:243
+#: src/listview.c:243 src/menus.ui:96
 msgid "Date Modified"
 msgstr "更新日時"
 
-#: ../src/listview.c:272
+#: src/listview.c:272 src/menus.ui:88
 msgid "Type"
 msgstr "タイプ"
 
-#: ../src/fsearch.c:191
+#: src/fsearch.c:191
 msgid "Show version information"
 msgstr ""
 
-#: ../src/fsearch.c:198
+#: src/fsearch.c:198
 #, fuzzy
 msgid "Update the database"
 msgstr "データベースをアップデート"
 
-#: ../src/fsearch.c:370
+#: src/fsearch.c:370
 msgid "A search utility focusing on performance and advanced features"
 msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
 
-#: ../src/fsearch_window_actions.c:86
+#: src/fsearch_window_actions.c:86
 #, fuzzy
 msgid "Do you really want to open"
 msgstr "本当に"
 
-#: ../src/fsearch_window_actions.c:86 ../src/fsearch_window_actions.c:166
+#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "個のファイルを削除しますか？"
 
-#: ../src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:88
 #, fuzzy
 msgid "Opening Files..."
 msgstr "ファイルを開く"
 
-#: ../src/fsearch_window_actions.c:166
+#: src/fsearch_window_actions.c:166
 msgid "Do you really want to remove"
 msgstr "本当に"
 
-#: ../src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:170
 #, fuzzy
 msgid "Deleting files…"
 msgstr "ファイルを削除中…"
 
-#: ../src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:170
 #, fuzzy
 msgid "Moving files to trash…"
 msgstr "ゴミ箱に移動中…"
 
-#: ../src/fsearch.glade.h:1
-msgid "Open File(s)"
-msgstr "ファイルを開く"
+#: src/menus.ui:7
+msgid "_Open"
+msgstr "開く(_O)"
 
-#: ../src/fsearch.glade.h:2
-msgid "Open With Other Application"
-msgstr "他のアプリケーションで開く"
+#: src/menus.ui:13
+msgid "Open _With"
+msgstr "次で開く(_W)"
 
-#: ../src/fsearch.glade.h:3
-msgid "Open Containing Folder"
-msgstr "親フォルダを開く"
+#: src/menus.ui:27
+msgid "_Open Folder"
+msgstr "フォルダを開く(_O)"
 
-#: ../src/fsearch.glade.h:4
-msgid "Open File(s) in File Manager"
-msgstr "ファイルマネージャーで開く"
+#: src/menus.ui:43
+msgid "_Copy"
+msgstr "コピー(_C)"
 
-#: ../src/fsearch.glade.h:5
-msgid "Move to Trash"
-msgstr "ゴミ箱に送る"
+#: src/menus.ui:49
+msgid "_Copy Filepath"
+msgstr ""
 
-#: ../src/fsearch.glade.h:6
-msgid "FSearch"
-msgstr "FSearch"
+#: src/menus.ui:56
+msgid "Move to _Trash"
+msgstr "ゴミ箱に送る(_T)"
 
-#: ../src/fsearch.glade.h:7
-msgid "_File"
-msgstr "ファイル(_F)"
+#: src/menus.ui:62
+msgid "_Delete"
+msgstr "削除(_D)"
 
-#: ../src/fsearch.glade.h:8
-msgid "New Window"
-msgstr "新しいウィンドウ"
+#: src/overlay.ui:31
+msgid "Empty Database"
+msgstr "空のデータベース"
 
-#: ../src/fsearch.glade.h:9
-msgid "Open Folder"
-msgstr "フォルダを開く"
+#: src/overlay.ui:46
+msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+msgstr "<b>編集→設定→データベース</b>から場所を追加して下さい"
 
-#: ../src/fsearch.glade.h:10
-msgid "Update Database"
-msgstr "データベースをアップデート"
+#: src/overlay.ui:87
+msgid "Empty Query"
+msgstr "空のクエリ"
 
-#: ../src/fsearch.glade.h:11
-msgid "_Edit"
-msgstr "編集(_E)"
+#: src/overlay.ui:102
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "<b>Ctrl + F</b>を押して入力してください"
 
-#: ../src/fsearch.glade.h:12
-msgid "Deselect All"
-msgstr "すべての選択を解除"
-
-#: ../src/fsearch.glade.h:13
-msgid "Invert Selection"
-msgstr "選択を反転"
-
-#: ../src/fsearch.glade.h:14
-msgid "_View"
-msgstr "表示(_V)"
-
-#: ../src/fsearch.glade.h:15
-msgid "Show Menubar"
-msgstr "メニューバーを表示"
-
-#: ../src/fsearch.glade.h:16
-msgid "Show Statusbar"
-msgstr "ステータスバーを表示"
-
-#: ../src/fsearch.glade.h:17
-msgid "Show Filter"
-msgstr "フィルターを表示"
-
-#: ../src/fsearch.glade.h:18
-msgid "Show Search Button"
-msgstr "検索ボタンを表示"
-
-#: ../src/fsearch.glade.h:19
-msgid "_Search"
-msgstr "検索(_S)"
-
-#: ../src/fsearch.glade.h:20
-msgid "Search in Path"
-msgstr "パスを検索"
-
-#: ../src/fsearch.glade.h:21
-msgid "Match Case"
-msgstr "大文字小文字を区別"
-
-#: ../src/fsearch.glade.h:22
-msgid "Enable RegEx"
-msgstr "正規表現を有効"
-
-#: ../src/fsearch.glade.h:23
-msgid "_Help"
-msgstr "ヘルプ(_H)"
-
-#: ../src/fsearch.glade.h:24
-msgid "Search..."
-msgstr "検索…"
-
-#: ../src/fsearch.glade.h:25
-msgid "Select a Filter"
-msgstr "フィルターを選択"
-
-#: ../src/fsearch.glade.h:26
-msgid "All"
-msgstr "すべて"
-
-#: ../src/fsearch.glade.h:27
-msgid "Folders"
-msgstr "フォルダ"
-
-#: ../src/fsearch.glade.h:28
-msgid "Files"
-msgstr "ファイル"
-
-#: ../src/fsearch.glade.h:29
-msgid "Search"
-msgstr "検索"
-
-#: ../src/fsearch.glade.h:30
-msgid "Number of Search Results"
-msgstr "検索ヒット数"
-
-#: ../src/fsearch.glade.h:31
-msgid "0 Items"
-msgstr "0 個"
-
-#: ../src/fsearch.glade.h:32
-msgid "0/0"
-msgstr "0/0"
-
-#: ../src/fsearch.glade.h:33
+#: src/overlay.ui:143 src/fsearch.glade:783
 msgid "Updating Database..."
 msgstr "データベースをアップデート中…"
 
-#: ../src/fsearch.glade.h:34
+#: src/overlay.ui:158
+msgid "..."
+msgstr "…"
+
+#: src/overlay.ui:173
+msgid "This may take a while."
+msgstr "しばらくかかるかもしれません。"
+
+#: src/overlay.ui:213
+msgid "No Results Found"
+msgstr "検索結果なし"
+
+#: src/overlay.ui:228
+msgid "Try a different search"
+msgstr "違う条件で検索してみてください"
+
+#: src/preferences.ui:17
+msgid "Preferences"
+msgstr "設定"
+
+#: src/preferences.ui:63
+msgid "Enable dark theme"
+msgstr "暗い色のテーマを有効"
+
+#: src/preferences.ui:76
+msgid "Show tooltips"
+msgstr "ツールチップを表示"
+
+#: src/preferences.ui:89
+msgid "Remember window size"
+msgstr "ウィンドウサイズを記憶"
+
+#: src/preferences.ui:102
+msgid "Remember column configuration"
+msgstr "カラム設定を記憶"
+
+#: src/preferences.ui:115
+msgid "Show icons in name column"
+msgstr "名前カラムにアイコンを表示"
+
+#: src/preferences.ui:128
+msgid "Use binary units instead of decimal units"
+msgstr ""
+
+#: src/preferences.ui:146
+msgid "Behaviour after successfully opening a file"
+msgstr ""
+
+#: src/preferences.ui:161
+msgid "Minimize"
+msgstr ""
+
+#: src/preferences.ui:162
+msgid "Close"
+msgstr ""
+
+#: src/preferences.ui:172
+msgid "with keyboard shortcuts or menu entries"
+msgstr ""
+
+#: src/preferences.ui:187
+msgid "with double click"
+msgstr ""
+
+#: src/preferences.ui:236
+msgid ""
+"INFO: \"Enable dark theme\" might not have an effect,\n"
+"since not every GTK+ theme provides a dark version."
+msgstr ""
+"お知らせ: ”暗い色のテーマを有効” はGTK+の\n"
+"暗い色のテーマによって機能しないかもしれません。"
+
+#: src/preferences.ui:269
+msgid "Open path with double click in path column"
+msgstr ""
+
+#: src/preferences.ui:282
+msgid "Single click to open"
+msgstr ""
+
+#: src/preferences.ui:323
+msgid "Interface"
+msgstr "インターフェイス"
+
+#: src/preferences.ui:341
+msgid "Limit number of results:"
+msgstr "検索結果数を制限:"
+
+#: src/preferences.ui:369
+msgid "Search in path when query contains path separators"
+msgstr "クエリがパス区切り文字を含む場合はパスを検索"
+
+#: src/preferences.ui:383
+msgid "Search as you type"
+msgstr "文字入力ごとに検索"
+
+#: src/preferences.ui:397
+msgid "Hide results when search is empty"
+msgstr "検索結果が空の場合は結果を隠す"
+
+#: src/preferences.ui:418 src/fsearch.glade:545
+msgid "Search"
+msgstr "検索"
+
+#: src/preferences.ui:437
+msgid "Update database on start"
+msgstr "起動時にデータベースをアップデート"
+
+#: src/preferences.ui:472 src/preferences.ui:576
+msgid "Add"
+msgstr "追加"
+
+#: src/preferences.ui:488 src/preferences.ui:592
+msgid "Remove"
+msgstr "削除"
+
+#: src/preferences.ui:535
+msgid "Follow symbolic links"
+msgstr "シンボリックリンクに追従"
+
+#: src/preferences.ui:552
+msgid "Include"
+msgstr "含む"
+
+#: src/preferences.ui:639
+msgid "Exclude hidden files and folders"
+msgstr "隠しファイルと隠しフォルダを除外"
+
+#: src/preferences.ui:660 src/preferences.ui:673
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr "ワイルドカードをサポート。複数のエントリーは ';' で分割します"
+
+#: src/preferences.ui:661
+msgid "Exclude files:"
+msgstr "除外ファイル:"
+
+#: src/preferences.ui:674
+msgid "e.g. \".git;*.tmp\""
+msgstr "例. \".git;*.tmp\""
+
+#: src/preferences.ui:698
+msgid "Exclude"
+msgstr "除外"
+
+#: src/preferences.ui:721
+msgid "Database"
+msgstr "データベース"
+
+#: src/preferences.ui:743
+msgid "Show warning dialogs when:"
+msgstr ""
+
+#: src/preferences.ui:752
+msgid "file / folder failed to open"
+msgstr ""
+
+#: src/preferences.ui:772
+msgid "Dialogs"
+msgstr ""
+
+#: src/fsearch.glade:55
+msgid "Open File(s)"
+msgstr "ファイルを開く"
+
+#: src/fsearch.glade:65
+msgid "Open With Other Application"
+msgstr "他のアプリケーションで開く"
+
+#: src/fsearch.glade:70
+msgid "Open Containing Folder"
+msgstr "親フォルダを開く"
+
+#: src/fsearch.glade:73
+msgid "Open File(s) in File Manager"
+msgstr "ファイルマネージャーで開く"
+
+#: src/fsearch.glade:109
+msgid "Move to Trash"
+msgstr "ゴミ箱に送る"
+
+#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
+msgid "FSearch"
+msgstr "FSearch"
+
+#: src/fsearch.glade:154
+msgid "_File"
+msgstr "ファイル(_F)"
+
+#: src/fsearch.glade:162
+msgid "New Window"
+msgstr "新しいウィンドウ"
+
+#: src/fsearch.glade:191
+msgid "Open Folder"
+msgstr "フォルダを開く"
+
+#: src/fsearch.glade:226
+msgid "Update Database"
+msgstr "データベースをアップデート"
+
+#: src/fsearch.glade:261
+msgid "_Edit"
+msgstr "編集(_E)"
+
+#: src/fsearch.glade:322
+msgid "Deselect All"
+msgstr "すべての選択を解除"
+
+#: src/fsearch.glade:331
+msgid "Invert Selection"
+msgstr "選択を反転"
+
+#: src/fsearch.glade:360
+msgid "_View"
+msgstr "表示(_V)"
+
+#: src/fsearch.glade:371
+msgid "Show Menubar"
+msgstr "メニューバーを表示"
+
+#: src/fsearch.glade:381
+msgid "Show Statusbar"
+msgstr "ステータスバーを表示"
+
+#: src/fsearch.glade:390
+msgid "Show Filter"
+msgstr "フィルターを表示"
+
+#: src/fsearch.glade:399
+msgid "Show Search Button"
+msgstr "検索ボタンを表示"
+
+#: src/fsearch.glade:411
+msgid "_Search"
+msgstr "検索(_S)"
+
+#: src/fsearch.glade:422
+msgid "Search in Path"
+msgstr "パスを検索"
+
+#: src/fsearch.glade:432
+msgid "Match Case"
+msgstr "大文字小文字を区別"
+
+#: src/fsearch.glade:442
+msgid "Enable RegEx"
+msgstr "正規表現を有効"
+
+#: src/fsearch.glade:455
+msgid "_Help"
+msgstr "ヘルプ(_H)"
+
+#: src/fsearch.glade:505
+msgid "Search..."
+msgstr "検索…"
+
+#: src/fsearch.glade:520
+msgid "Select a Filter"
+msgstr "フィルターを選択"
+
+#: src/fsearch.glade:523
+msgid "All"
+msgstr "すべて"
+
+#: src/fsearch.glade:524
+msgid "Folders"
+msgstr "フォルダ"
+
+#: src/fsearch.glade:525
+msgid "Files"
+msgstr "ファイル"
+
+#: src/fsearch.glade:650
+msgid "Number of Search Results"
+msgstr "検索ヒット数"
+
+#: src/fsearch.glade:651
+msgid "0 Items"
+msgstr "0 個"
+
+#: src/fsearch.glade:706 src/fsearch.glade:730
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:797
 msgid "page0"
 msgstr "ページ0"
 
-#: ../src/fsearch.glade.h:35
+#: src/fsearch.glade:821
 msgid "(empty)"
 msgstr "(空)"
 
-#: ../src/fsearch.glade.h:36
+#: src/fsearch.glade:832
 msgid "page1"
 msgstr "ページ1"
 
-#: ../src/fsearch.glade.h:37
+#: src/fsearch.glade:876
 msgid "CASE"
 msgstr "大文字小文字"
 
-#: ../src/fsearch.glade.h:38
+#: src/fsearch.glade:928
 msgid "PATH"
 msgstr "パス"
 
-#: ../src/fsearch.glade.h:39
+#: src/fsearch.glade:980
 msgid "REGEX"
 msgstr "正規表現"
 
-#~ msgid "_Open"
-#~ msgstr "開く(_O)"
-
-#~ msgid "Open _With"
-#~ msgstr "次で開く(_W)"
-
-#~ msgid "_Open Folder"
-#~ msgstr "フォルダを開く(_O)"
-
-#~ msgid "_Copy"
-#~ msgstr "コピー(_C)"
-
-#~ msgid "Move to _Trash"
-#~ msgstr "ゴミ箱に送る(_T)"
-
-#~ msgid "_Delete"
-#~ msgstr "削除(_D)"
-
-#~ msgid "Empty Database"
-#~ msgstr "空のデータベース"
-
-#~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-#~ msgstr "<b>編集→設定→データベース</b>から場所を追加して下さい"
-
-#~ msgid "Empty Query"
-#~ msgstr "空のクエリ"
-
-#~ msgid "Press <b>Ctrl + F</b> and start typing"
-#~ msgstr "<b>Ctrl + F</b>を押して入力してください"
-
-#~ msgid "..."
-#~ msgstr "…"
-
-#~ msgid "This may take a while."
-#~ msgstr "しばらくかかるかもしれません。"
-
-#~ msgid "No Results Found"
-#~ msgstr "検索結果なし"
-
-#~ msgid "Try a different search"
-#~ msgstr "違う条件で検索してみてください"
-
-#~ msgid "Preferences"
-#~ msgstr "設定"
-
-#~ msgid "Enable dark theme"
-#~ msgstr "暗い色のテーマを有効"
-
-#~ msgid "Show tooltips"
-#~ msgstr "ツールチップを表示"
-
-#~ msgid "Remember window size"
-#~ msgstr "ウィンドウサイズを記憶"
-
-#~ msgid "Remember column configuration"
-#~ msgstr "カラム設定を記憶"
-
-#~ msgid "Show icons in name column"
-#~ msgstr "名前カラムにアイコンを表示"
-
-#~ msgid ""
-#~ "INFO: \"Enable dark theme\" might not have an effect,\n"
-#~ "since not every GTK+ theme provides a dark version."
-#~ msgstr ""
-#~ "お知らせ: ”暗い色のテーマを有効” はGTK+の\n"
-#~ "暗い色のテーマによって機能しないかもしれません。"
-
-#~ msgid "Interface"
-#~ msgstr "インターフェイス"
-
-#~ msgid "Limit number of results:"
-#~ msgstr "検索結果数を制限:"
-
-#~ msgid "Search in path when query contains path separators"
-#~ msgstr "クエリがパス区切り文字を含む場合はパスを検索"
-
-#~ msgid "Search as you type"
-#~ msgstr "文字入力ごとに検索"
-
-#~ msgid "Hide results when search is empty"
-#~ msgstr "検索結果が空の場合は結果を隠す"
-
-#~ msgid "Update database on start"
-#~ msgstr "起動時にデータベースをアップデート"
-
-#~ msgid "Add"
-#~ msgstr "追加"
-
-#~ msgid "Remove"
-#~ msgstr "削除"
-
-#~ msgid "Follow symbolic links"
-#~ msgstr "シンボリックリンクに追従"
-
-#~ msgid "Include"
-#~ msgstr "含む"
-
-#~ msgid "Exclude hidden files and folders"
-#~ msgstr "隠しファイルと隠しフォルダを除外"
-
-#~ msgid "Supports wildcards. Multiple entries must be separated by ';'"
-#~ msgstr "ワイルドカードをサポート。複数のエントリーは ';' で分割します"
-
-#~ msgid "Exclude files:"
-#~ msgstr "除外ファイル:"
-
-#~ msgid "e.g. \".git;*.tmp\""
-#~ msgstr "例. \".git;*.tmp\""
-
-#~ msgid "Exclude"
-#~ msgstr "除外"
-
-#~ msgid "Database"
-#~ msgstr "データベース"
-
+#: data/fsearch.desktop.in.in:7
 #, fuzzy
-#~ msgid ""
-#~ "A file search application focusing on performance and advanced features"
-#~ msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
+msgid "A file search application focusing on performance and advanced features"
+msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
+
+#: data/fsearch.desktop.in.in:12
+msgid "system-search"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:16
+msgid ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+msgstr ""
 
 #~ msgid "Other Application"
 #~ msgstr "他のアプリケーション"
