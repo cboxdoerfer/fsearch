@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-07-27 15:03+0200\n"
-"PO-Revision-Date: 2018-11-13 19:07+0000\n"
-"Last-Translator: MESUT AKCAN <makcan@gmail.com>\n"
+"PO-Revision-Date: 2020-07-29 16:41+0000\n"
+"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 3.3-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
@@ -27,20 +27,20 @@ msgstr "%'d Öğe"
 
 #: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
 msgid "Failed to open file"
-msgstr ""
+msgstr "Dosya açılamadı"
 
 #: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Pencereyi açık tutmak istiyor musunuz?"
 
 #: src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Son Güncelleme Tarihi:  %Y-%m-%d %H:%M"
+msgstr "Son Güncelleme Tarihi: %Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:763
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Database…"
-msgstr "Veritabanı Yükleniyor..."
+msgstr "Veri Tabanı Yükleniyor…"
 
 #: src/listview.c:153 src/menus.ui:80
 msgid "Name"
@@ -64,44 +64,39 @@ msgstr "Tür"
 
 #: src/fsearch.c:191
 msgid "Show version information"
-msgstr ""
+msgstr "Sürüm bilgilerini göster"
 
 #: src/fsearch.c:198
-#, fuzzy
 msgid "Update the database"
-msgstr "Veritabanını Güncelle"
+msgstr "Veri tabanını güncelle"
 
 #: src/fsearch.c:370
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
 #: src/fsearch_window_actions.c:86
-#, fuzzy
 msgid "Do you really want to open"
-msgstr "Gerçekten kaldırmak istiyor musun"
+msgstr "Gerçekten açmak istiyor musunuz"
 
 #: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "dosyalar?"
 
 #: src/fsearch_window_actions.c:88
-#, fuzzy
 msgid "Opening Files..."
-msgstr "Dosya Aç"
+msgstr "Dosyalar Açılıyor..."
 
 #: src/fsearch_window_actions.c:166
 msgid "Do you really want to remove"
 msgstr "Gerçekten kaldırmak istiyor musun"
 
 #: src/fsearch_window_actions.c:170
-#, fuzzy
 msgid "Deleting files…"
-msgstr "Dosyalar Siliniyor..."
+msgstr "Dosyalar siliniyor…"
 
 #: src/fsearch_window_actions.c:170
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "Dosyalar çöp sepetine taşınıyor."
+msgstr "Dosyalar çöp sepetine taşınıyor…"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -133,12 +128,12 @@ msgstr "Sil"
 
 #: src/overlay.ui:31
 msgid "Empty Database"
-msgstr "Boş Veritabanı"
+msgstr "Boş Veri Tabanı"
 
 #: src/overlay.ui:46
 msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 msgstr ""
-"<b>Düzenle  → Ayarlar → Veritabanı</b> seçeneğine giderek bir klasör yolu "
+"<b>Düzenle → Tercihler → Veri Tabanı</b> seçeneğine gidin ve birkaç konum "
 "ekleyin"
 
 #: src/overlay.ui:87
@@ -151,7 +146,7 @@ msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
 
 #: src/overlay.ui:143 src/fsearch.glade:783
 msgid "Updating Database..."
-msgstr "Veritabanı Güncelleniyor.."
+msgstr "Veri Tabanı Güncelleniyor.."
 
 #: src/overlay.ui:158
 msgid "..."
@@ -171,7 +166,7 @@ msgstr "Farklı bir arama deneyiniz"
 
 #: src/preferences.ui:17
 msgid "Preferences"
-msgstr "Ayarlar"
+msgstr "Tercihler"
 
 #: src/preferences.ui:63
 msgid "Enable dark theme"
@@ -199,23 +194,23 @@ msgstr "Ondalık birimler yerine ikili birimleri kullanın"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "Bir dosyayı başarıyla açtıktan sonraki davranış"
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "Küçült"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "Kapat"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "klavye kısayolları veya menü girdileri ile"
 
 #: src/preferences.ui:187
 msgid "with double click"
-msgstr ""
+msgstr "çift tıklama ile"
 
 #: src/preferences.ui:236
 msgid ""
@@ -227,11 +222,11 @@ msgstr ""
 
 #: src/preferences.ui:269
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Yol sütununda çift tıklama ile yolu aç"
 
 #: src/preferences.ui:282
 msgid "Single click to open"
-msgstr ""
+msgstr "Açmak için tek tıklama"
 
 #: src/preferences.ui:323
 msgid "Interface"
@@ -259,7 +254,7 @@ msgstr "Ara"
 
 #: src/preferences.ui:437
 msgid "Update database on start"
-msgstr "Başlangıçta veritabanını güncelle"
+msgstr "Başlangıçta veri tabanını güncelle"
 
 #: src/preferences.ui:472 src/preferences.ui:576
 msgid "Add"
@@ -299,19 +294,19 @@ msgstr "Hariç Tut"
 
 #: src/preferences.ui:721
 msgid "Database"
-msgstr "Veritabanı"
+msgstr "Veri tabanı"
 
 #: src/preferences.ui:743
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Şu durumlarda uyarı iletişim kutularını göster:"
 
 #: src/preferences.ui:752
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "dosya / klasör açılamadı"
 
 #: src/preferences.ui:772
 msgid "Dialogs"
-msgstr ""
+msgstr "İletişim kutuları"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
@@ -351,7 +346,7 @@ msgstr "Klasörü Aç"
 
 #: src/fsearch.glade:226
 msgid "Update Database"
-msgstr "Veritabanını Güncelle"
+msgstr "Veri Tabanını Güncelle"
 
 #: src/fsearch.glade:261
 msgid "_Edit"
@@ -462,18 +457,17 @@ msgid "REGEX"
 msgstr "REGEX"
 
 #: data/fsearch.desktop.in.in:7
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
-msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
+msgstr "Performans ve gelişmiş özelliklere odaklanan bir dosya arama uygulaması"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+msgstr "arama;fsearch;dosyalar;klasörler;müzik;video;belgeler;bul;araç;her şey;"
 
 #~ msgid "Other Application"
 #~ msgstr "Diğer Uygulama"
