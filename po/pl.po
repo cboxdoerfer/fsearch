@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-07-27 15:03+0200\n"
-"PO-Revision-Date: 2020-06-06 00:41+0000\n"
-"Last-Translator: Fabian Zi <Fabianziet@gmail.com>\n"
+"PO-Revision-Date: 2020-07-29 16:41+0000\n"
+"Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
 "Language: pl\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.1-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
@@ -38,9 +38,9 @@ msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Ostatnia aktualizacja: %Y-%m-%d % H: %M"
 
 #: src/fsearch_window.c:763
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Database…"
-msgstr "Ładowania bazy danych..."
+msgstr "Ładowania bazy danych…"
 
 #: src/listview.c:153 src/menus.ui:80
 msgid "Name"
@@ -67,7 +67,6 @@ msgid "Show version information"
 msgstr "Pokaż informacje o wersji"
 
 #: src/fsearch.c:198
-#, fuzzy
 msgid "Update the database"
 msgstr "Uaktualnij bazę danych"
 
@@ -78,32 +77,28 @@ msgstr ""
 "funkcjach"
 
 #: src/fsearch_window_actions.c:86
-#, fuzzy
 msgid "Do you really want to open"
-msgstr "Na pewno chcesz usunąć"
+msgstr "Na pewno chcesz otworzyć"
 
 #: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "pliki?"
 
 #: src/fsearch_window_actions.c:88
-#, fuzzy
 msgid "Opening Files..."
-msgstr "Otwórz plik(i)"
+msgstr "Otwieranie plików..."
 
 #: src/fsearch_window_actions.c:166
 msgid "Do you really want to remove"
 msgstr "Na pewno chcesz usunąć"
 
 #: src/fsearch_window_actions.c:170
-#, fuzzy
 msgid "Deleting files…"
-msgstr "Usuwanie plików..."
+msgstr "Usuwanie plików…"
 
 #: src/fsearch_window_actions.c:170
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "Przenoszenie plików do kosza..."
+msgstr "Przenoszenie plików do kosza…"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -201,23 +196,23 @@ msgstr "Użyj jednostek binarnych zamiast jednostek dziesiętnych"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr ""
+msgstr "Zachowanie po udanym otwarciu pliku"
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "Zminimalizuj"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "Zamknij"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "za pomocą skrótu klawiszowego lub z menu"
 
 #: src/preferences.ui:187
 msgid "with double click"
-msgstr ""
+msgstr "za pomocą podwójnego kliknięcia"
 
 #: src/preferences.ui:236
 msgid ""
@@ -229,11 +224,11 @@ msgstr ""
 
 #: src/preferences.ui:269
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Otwórz ścieżkę przez dwuklik w kolumnie ścieżka"
 
 #: src/preferences.ui:282
 msgid "Single click to open"
-msgstr ""
+msgstr "Pojedyncze kliknięcie otwiera"
 
 #: src/preferences.ui:323
 msgid "Interface"
@@ -305,15 +300,15 @@ msgstr "Baza danych"
 
 #: src/preferences.ui:743
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Pokaż ostrzeżenie gdy:"
 
 #: src/preferences.ui:752
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "nie udało się otworzyć pliku / katalogu"
 
 #: src/preferences.ui:772
 msgid "Dialogs"
-msgstr ""
+msgstr "Okna dialogowe"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
@@ -464,7 +459,6 @@ msgid "REGEX"
 msgstr "REGEX"
 
 #: data/fsearch.desktop.in.in:7
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
