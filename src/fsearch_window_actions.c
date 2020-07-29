@@ -63,20 +63,19 @@ action_set_enabled (GActionGroup *group, const gchar *action_name, bool value)
 static bool
 confirm_action (GtkWidget *parent, const char *title, const char *question, int limit, int value)
 {
-    if (value >= limit) {
-        gint response = ui_utils_run_gtk_dialog (parent,
-                                                 GTK_MESSAGE_WARNING,
-                                                 GTK_BUTTONS_YES_NO,
-                                                 title,
-                                                 question);
-        if (response == GTK_RESPONSE_YES) {
-            return true;
-        }
-        return false;
-    }
-    else {
+    if (value < limit) {
         return true;
     }
+
+    gint response = ui_utils_run_gtk_dialog (parent,
+                                             GTK_MESSAGE_WARNING,
+                                             GTK_BUTTONS_YES_NO,
+                                             title,
+                                             question);
+    if (response == GTK_RESPONSE_YES) {
+        return true;
+    }
+    return false;
 }
 
 static bool
@@ -116,13 +115,15 @@ copy_file (GtkTreeModel *model,
 {
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
     GList **file_list = (GList **)userdata;
-    if (entry) {
-        BTreeNode *node = db_search_entry_get_node (entry);
-        char path[PATH_MAX] = "";
-        bool res = btree_node_get_path_full (node, path, sizeof (path));
-        if (res) {
-            *file_list = g_list_prepend (*file_list, g_strdup (path));
-        }
+    if (!entry) {
+        return;
+    }
+
+    BTreeNode *node = db_search_entry_get_node (entry);
+    char path_str[PATH_MAX] = "";
+    bool res = btree_node_get_path_full (node, path_str, sizeof (path_str));
+    if (res) {
+        *file_list = g_list_prepend (*file_list, g_strdup (path_str));
     }
 }
 
@@ -291,13 +292,13 @@ fsearch_window_action_copy (GSimpleAction *action,
 {
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
-    if (selection) {
-        //guint selected_rows = gtk_tree_selection_count_selected_rows (selection);
-        GList *file_list = NULL;
-        gtk_tree_selection_selected_foreach (selection, copy_file, &file_list);
-        file_list = g_list_reverse (file_list);
-        clipboard_copy_file_list (file_list, 1);
+    if (!selection) {
+        return;
     }
+    GList *file_list = NULL;
+    gtk_tree_selection_selected_foreach (selection, copy_file, &file_list);
+    file_list = g_list_reverse (file_list);
+    clipboard_copy_file_list (file_list, 1);
 }
 
 static void
@@ -307,12 +308,13 @@ fsearch_window_action_copy_filepath (GSimpleAction *action,
 {
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection (self);
-    if (selection) {
-        GList *file_list = NULL;
-        gtk_tree_selection_selected_foreach (selection, copy_file, &file_list);
-        file_list = g_list_reverse (file_list);
-        clipboard_copy_filepath_list (file_list);
+    if (!selection) {
+        return;
     }
+    GList *file_list = NULL;
+    gtk_tree_selection_selected_foreach (selection, copy_file, &file_list);
+    file_list = g_list_reverse (file_list);
+    clipboard_copy_filepath_list (file_list);
 }
 
 static void
@@ -322,14 +324,16 @@ open_cb (GtkTreeModel *model,
          gpointer data)
 {
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
-    if (entry) {
-        BTreeNode *node = db_search_entry_get_node (entry);
-        if (node) {
-            if (!launch_node (node)) {
-                bool *open_failed = data;
-                *open_failed = true;
-            }
-        }
+    if (!entry) {
+        return;
+    }
+    BTreeNode *node = db_search_entry_get_node (entry);
+    if (!node) {
+        return;
+    }
+    if (!launch_node (node)) {
+        bool *open_failed = data;
+        *open_failed = true;
     }
 }
 
@@ -340,16 +344,17 @@ open_with_cb (GtkTreeModel *model,
               gpointer data)
 {
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
-    if (entry) {
-        BTreeNode *node = db_search_entry_get_node (entry);
-        if (node) {
-            BTreeNode * node = db_search_entry_get_node (entry);
-            char path_name[PATH_MAX] = "";
-            btree_node_get_path_full (node, path_name, sizeof (path_name));
-            GList **list = data;
-            *list = g_list_append (*list, g_file_new_for_path (path_name));
-        }
+    if (!entry) {
+        return;
     }
+    BTreeNode *node = db_search_entry_get_node (entry);
+    if (!node) {
+        return;
+    }
+    char path_name[PATH_MAX] = "";
+    btree_node_get_path_full (node, path_name, sizeof (path_name));
+    GList **list = data;
+    *list = g_list_append (*list, g_file_new_for_path (path_name));
 }
 
 void
@@ -471,15 +476,17 @@ open_folder_cb (GtkTreeModel *model,
                 gpointer data)
 {
     DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
-    if (entry) {
-        BTreeNode *node = db_search_entry_get_node (entry);
-        if (node) {
-            FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
-            if (!launch_node_path (node, config->folder_open_cmd)) {
-                bool *open_failed = data;
-                *open_failed = true;
-            }
-        }
+    if (!entry) {
+        return;
+    }
+    BTreeNode *node = db_search_entry_get_node (entry);
+    if (!node) {
+        return;
+    }
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    if (!launch_node_path (node, config->folder_open_cmd)) {
+        bool *open_failed = data;
+        *open_failed = true;
     }
 }
 
