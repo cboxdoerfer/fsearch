@@ -82,7 +82,7 @@ static bool
 confirm_file_open_action (GtkWidget *parent, int num_files)
 {
     char question[1024] = "";
-    snprintf (question, sizeof (question), "%s %d %s", _("Do you really want to open"), num_files, _("files?"));
+    snprintf (question, sizeof (question), _("Do you really want to open %d file(s)?"), num_files);
 
     return confirm_action (parent, _("Opening Files..."), question, 10, num_files);
 }
@@ -164,7 +164,7 @@ fsearch_delete_selection (GSimpleAction *action,
 
     if (delete || num_selected_rows > 20) {
         char error_msg[PATH_MAX] = "";
-        snprintf (error_msg, sizeof (error_msg), "%s %d %s", _("Do you really want to remove"), num_selected_rows, _("files?"));
+        snprintf (error_msg, sizeof (error_msg), _("Do you really want to remove %d file(s)?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
                                                  GTK_MESSAGE_WARNING,
                                                  GTK_BUTTONS_OK_CANCEL,
