@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 11:17-0300\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Kevin Kim <root@hamonikr.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -61,16 +61,16 @@ msgstr "수정일시"
 msgid "Type"
 msgstr "유형"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "버전 정보 보기"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 #, fuzzy
 msgid "Update the database"
 msgstr "데이터베이스 업데이트"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
@@ -462,10 +462,6 @@ msgstr "정규표현식"
 #, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
-
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr ""
 
 #: data/fsearch.desktop.in.in:16
 msgid ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 11:17-0300\n"
 "PO-Revision-Date: 2020-06-13 10:41+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -61,15 +61,15 @@ msgstr "Дата на промяна"
 msgid "Type"
 msgstr "Тип"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "Показване на информация за версията"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "Обновяване на базата с данни"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Инструмент за търсене, фокусиран върху висока производителност и разширени "
@@ -467,16 +467,15 @@ msgstr ""
 "Инструмент за търсене, фокусиран върху висока производителност и разширени "
 "възможности"
 
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr "търсене в системата"
-
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "търсене;търсене на файлове;файлове;папки;музика;видео;документи;намиране;"
 "инструмент;всичко;"
+
+#~ msgid "system-search"
+#~ msgstr "търсене в системата"
 
 #~ msgid "Other Application"
 #~ msgstr "Друга програма"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 11:17-0300\n"
 "PO-Revision-Date: 2020-07-27 12:44+0000\n"
 "Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
@@ -62,15 +62,15 @@ msgstr "Data de Modificação"
 msgid "Type"
 msgstr "Tipo"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "Mostrar informações da versão"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "Atualizar a base de dados"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em performance e funções avançadas"
 
@@ -462,16 +462,15 @@ msgstr "REGEX"
 msgid "A file search application focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr "system-search"
-
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "busca;fsearch;arquivos;pastas;músicas;vídeos;documentos;encontrar;ferramenta;"
 "everything;"
+
+#~ msgid "system-search"
+#~ msgstr "system-search"
 
 #~ msgid "Other Application"
 #~ msgstr "Outra Aplicação"

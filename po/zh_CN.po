@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 11:17-0300\n"
 "PO-Revision-Date: 2020-03-25 10:46+0000\n"
 "Last-Translator: 只要香菜 <cwbddzxx@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -61,15 +61,15 @@ msgstr "修改日期"
 msgid "Type"
 msgstr "类型"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "显示版本信息"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "更新数据库"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
@@ -459,14 +459,13 @@ msgstr "正则表达式"
 msgid "A file search application focusing on performance and advanced features"
 msgstr "注重性能和高级功能的文件搜索工具"
 
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr "系统搜索"
-
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
+
+#~ msgid "system-search"
+#~ msgstr "系统搜索"
 
 #~ msgid "Other Application"
 #~ msgstr "其他应用程序"

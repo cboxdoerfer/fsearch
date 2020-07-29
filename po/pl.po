@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 11:17-0300\n"
 "PO-Revision-Date: 2020-06-06 00:41+0000\n"
 "Last-Translator: Fabian Zi <Fabianziet@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -62,16 +62,16 @@ msgstr "Data modyfikacji"
 msgid "Type"
 msgstr "Typ"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "Pokaż informacje o wersji"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 #, fuzzy
 msgid "Update the database"
 msgstr "Uaktualnij bazę danych"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
@@ -469,10 +469,6 @@ msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
 "funkcjach"
-
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr ""
 
 #: data/fsearch.desktop.in.in:16
 msgid ""

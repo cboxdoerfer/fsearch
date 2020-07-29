@@ -1,5 +1,5 @@
 # Tradução para protuguês brasileiro efetuada por Gustavo Henrique Machado da Silva (www.linkedin.com/in/gustavohmsilva)
-# Embora o software original possa não possuir as mesmas licenças, a tradução produzida por mim está protegida sobre o 
+# Embora o software original possa não possuir as mesmas licenças, a tradução produzida por mim está protegida sobre o
 # Creative Commons, Attribution-ShareAlike 4.0 International
 # Contate-me via email no endereço gustavohmsilva@member.fsf.org
 #
@@ -12,8 +12,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
-"PO-Revision-Date: 2020-07-27 12:44+0000\n"
+"POT-Creation-Date: 2020-07-29 11:17-0300\n"
+"PO-Revision-Date: 2020-07-29 12:39-0300\n"
 "Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Poedit 2.3.1\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
@@ -39,7 +39,7 @@ msgstr "Deseja manter a janela aberta?"
 
 #: src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Última atualização: %H:%M, %d-%m-%y"
+msgstr "Última Atualização: +%H:%M:%S, %d/%m/%Y"
 
 #: src/fsearch_window.c:763
 #, c-format
@@ -66,31 +66,29 @@ msgstr "Data de Modificação"
 msgid "Type"
 msgstr "Tipo"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "Mostrar informações da versão"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "Atualizar a base de dados"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
-msgstr "Um utilitário de busca focado em performance e recursos avançados"
+msgstr "Um utilitário de busca focado em desempenho e recursos avançados"
 
 #: src/fsearch_window_actions.c:86
-#, fuzzy
 msgid "Do you really want to open"
-msgstr "Deseja mesmo remover"
+msgstr "Deseja mesmo abrir"
 
 #: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
 msgid "files?"
 msgstr "arquivos?"
 
 #: src/fsearch_window_actions.c:88
-#, fuzzy
 msgid "Opening Files..."
-msgstr "Abrir arquivo(s)"
+msgstr "Abrindo arquivo..."
 
 #: src/fsearch_window_actions.c:166
 msgid "Do you really want to remove"
@@ -152,7 +150,7 @@ msgstr "Pressione <b>Ctrl + F</b> e comece a digitar"
 
 #: src/overlay.ui:143 src/fsearch.glade:783
 msgid "Updating Database..."
-msgstr "Atualizando base de dados..."
+msgstr "Atualizando Base de Dados..."
 
 #: src/overlay.ui:158
 msgid "..."
@@ -164,7 +162,7 @@ msgstr "Isto pode demorar um pouco."
 
 #: src/overlay.ui:213
 msgid "No Results Found"
-msgstr "Sem resultados encontrados"
+msgstr "Sem Resultados Encontrados"
 
 #: src/overlay.ui:228
 msgid "Try a different search"
@@ -192,15 +190,15 @@ msgstr "Lembrar configuração da coluna"
 
 #: src/preferences.ui:115
 msgid "Show icons in name column"
-msgstr "Mostrar ícones na coluna de nome"
+msgstr "Mostrar ícones na coluna Nome"
 
 #: src/preferences.ui:128
 msgid "Use binary units instead of decimal units"
-msgstr "Usar unidades binárias no lugar de decimais"
+msgstr "Usar unidades binárias ao invés de decimais"
 
 #: src/preferences.ui:146
 msgid "Behaviour after successfully opening a file"
-msgstr "Comportamento ao abrir arquivo com êxito"
+msgstr "Comportamento após abrir arquivo com êxito"
 
 #: src/preferences.ui:161
 msgid "Minimize"
@@ -212,11 +210,11 @@ msgstr "Fechar"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
-msgstr "Com atalhos de teclado ou entradas de menu"
+msgstr "com atalhos de teclado ou entradas de menu"
 
 #: src/preferences.ui:187
 msgid "with double click"
-msgstr "Com clique duplo"
+msgstr "com clique duplo"
 
 #: src/preferences.ui:236
 msgid ""
@@ -224,15 +222,15 @@ msgid ""
 "since not every GTK+ theme provides a dark version."
 msgstr ""
 "INFO: \"Ativar tema escuro\" pode não ter efeito,\n"
-"pois nem todo tema GTK+ fornece uma versão escura."
+"já que nem todo tema GTK+ tem uma versão escura."
 
 #: src/preferences.ui:269
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Abrir caminho com duplo clique na coluna caminho"
 
 #: src/preferences.ui:282
 msgid "Single click to open"
-msgstr ""
+msgstr "Clique único para abrir"
 
 #: src/preferences.ui:323
 msgid "Interface"
@@ -248,7 +246,7 @@ msgstr "Pesquisar no caminho quando a consulta contém separadores de caminho"
 
 #: src/preferences.ui:383
 msgid "Search as you type"
-msgstr "Procurar enquanto digita"
+msgstr "Pesquisar enquanto digita"
 
 #: src/preferences.ui:397
 msgid "Hide results when search is empty"
@@ -272,7 +270,7 @@ msgstr "Remover"
 
 #: src/preferences.ui:535
 msgid "Follow symbolic links"
-msgstr "Seguir ligações simbólicas"
+msgstr "Seguir links simbólicas"
 
 #: src/preferences.ui:552
 msgid "Include"
@@ -292,7 +290,7 @@ msgstr "Excluir arquivos:"
 
 #: src/preferences.ui:674
 msgid "e.g. \".git;*.tmp\""
-msgstr "Ex. \".git;*.tmp\""
+msgstr "ex. \".git;*.tmp\""
 
 #: src/preferences.ui:698
 msgid "Exclude"
@@ -304,15 +302,15 @@ msgstr "Base de Dados"
 
 #: src/preferences.ui:743
 msgid "Show warning dialogs when:"
-msgstr "Mostrar caixas de diálogo de aviso quando:"
+msgstr "Mostrar diálogos de aviso quando:"
 
 #: src/preferences.ui:752
 msgid "file / folder failed to open"
-msgstr "Arquivo/pasta falhar ao abrir"
+msgstr "arquivo/pasta falhou ao abrir"
 
 #: src/preferences.ui:772
 msgid "Dialogs"
-msgstr "Caixas de diálogo"
+msgstr "Diálogos"
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
@@ -320,7 +318,7 @@ msgstr "Abrir arquivo(s)"
 
 #: src/fsearch.glade:65
 msgid "Open With Other Application"
-msgstr "Abrir com outro aplicativo"
+msgstr "Abrir Com Outro Aplicativo"
 
 #: src/fsearch.glade:70
 msgid "Open Containing Folder"
@@ -328,7 +326,7 @@ msgstr "Abrir Pasta superior"
 
 #: src/fsearch.glade:73
 msgid "Open File(s) in File Manager"
-msgstr "Abrir arquivo(s) no Gerenciador de Arquivos"
+msgstr "Abrir Arquivo(s) no Gerenciador de Arquivos"
 
 #: src/fsearch.glade:109
 msgid "Move to Trash"
@@ -372,11 +370,11 @@ msgstr "_Ver"
 
 #: src/fsearch.glade:371
 msgid "Show Menubar"
-msgstr "Mostrar barra de menu"
+msgstr "Mostrar Barra de Menu"
 
 #: src/fsearch.glade:381
 msgid "Show Statusbar"
-msgstr "Mostrar barra de status"
+msgstr "Mostrar Barra de Status"
 
 #: src/fsearch.glade:390
 msgid "Show Filter"
@@ -384,7 +382,7 @@ msgstr "Mostrar filtro"
 
 #: src/fsearch.glade:399
 msgid "Show Search Button"
-msgstr "Mostrar botão de pesquisa"
+msgstr "Mostrar Botão de Pesquisa"
 
 #: src/fsearch.glade:411
 msgid "_Search"
@@ -392,11 +390,11 @@ msgstr "_Pesquisar"
 
 #: src/fsearch.glade:422
 msgid "Search in Path"
-msgstr "Procurar no caminho"
+msgstr "Pesquisar no caminho"
 
 #: src/fsearch.glade:432
 msgid "Match Case"
-msgstr "Coincidir capitalização"
+msgstr "Coincidir Caixa"
 
 #: src/fsearch.glade:442
 msgid "Enable RegEx"
@@ -428,7 +426,7 @@ msgstr "Arquivos"
 
 #: src/fsearch.glade:650
 msgid "Number of Search Results"
-msgstr "Número de resultados da pesquisa"
+msgstr "Número de Resultados da Pesquisa"
 
 #: src/fsearch.glade:651
 msgid "0 Items"
@@ -440,7 +438,7 @@ msgstr "0/0"
 
 #: src/fsearch.glade:797
 msgid "page0"
-msgstr "Página 0"
+msgstr "página0"
 
 #: src/fsearch.glade:821
 msgid "(empty)"
@@ -448,11 +446,11 @@ msgstr "(vazio)"
 
 #: src/fsearch.glade:832
 msgid "page1"
-msgstr "Página 1"
+msgstr "página1"
 
 #: src/fsearch.glade:876
 msgid "CASE"
-msgstr "CASE-SENSITIVE"
+msgstr "CAIXA"
 
 #: src/fsearch.glade:928
 msgid "PATH"
@@ -466,16 +464,15 @@ msgstr "REGEX"
 msgid "A file search application focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
-#: data/fsearch.desktop.in.in:12
-msgid "system-search"
-msgstr "system-search"
-
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "busca;fsearch;arquivos;pastas;músicas;vídeos;documentos;encontrar;ferramenta;"
 "tudo;"
+
+#~ msgid "system-search"
+#~ msgstr "system-search"
 
 #~ msgid "Other Application"
 #~ msgstr "Outro Aplicativo"
