@@ -382,6 +382,7 @@ about_activated (GSimpleAction *action,
                                "copyright", "Christian Boxdörfer",
                                "website", "https://github.com/cboxdoerfer/fsearch",
                                "version", PACKAGE_VERSION,
+                               "translator-credits", _("Dear translator(s):\nIf you want to be mentioned, please add your names here.\nThank you!"),
                                "comments", _("A search utility focusing on performance and advanced features"),
                                NULL);
         break;
