@@ -1,0 +1,461 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Christian Boxdörfer
+# This file is distributed under the same license as the fsearch package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
+"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
+"POT-Creation-Date: 2020-07-29 22:56+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
+#, c-format
+msgid "%'d Items"
+msgstr ""
+
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
+msgid "Failed to open file"
+msgstr ""
+
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
+msgid "Do you want to keep the window open?"
+msgstr ""
+
+#: src/fsearch_window.c:750
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr ""
+
+#: src/fsearch_window.c:763
+#, c-format
+msgid "Loading Database…"
+msgstr ""
+
+#: src/listview.c:153 src/menus.ui:80
+msgid "Name"
+msgstr ""
+
+#: src/listview.c:182 src/menus.ui:84
+msgid "Path"
+msgstr ""
+
+#: src/listview.c:211 src/menus.ui:92
+msgid "Size"
+msgstr ""
+
+#: src/listview.c:243 src/menus.ui:96
+msgid "Date Modified"
+msgstr ""
+
+#: src/listview.c:272 src/menus.ui:88
+msgid "Type"
+msgstr ""
+
+#: src/fsearch.c:193
+msgid "Show version information"
+msgstr ""
+
+#: src/fsearch.c:200
+msgid "Update the database"
+msgstr ""
+
+#: src/fsearch.c:385
+msgid "A search utility focusing on performance and advanced features"
+msgstr ""
+
+#: src/fsearch_window_actions.c:85
+#, c-format
+msgid "Do you really want to open %d file(s)?"
+msgstr ""
+
+#: src/fsearch_window_actions.c:87
+msgid "Opening Files..."
+msgstr ""
+
+#: src/fsearch_window_actions.c:167
+#, c-format
+msgid "Do you really want to remove %d file(s)?"
+msgstr ""
+
+#: src/fsearch_window_actions.c:171
+msgid "Deleting files…"
+msgstr ""
+
+#: src/fsearch_window_actions.c:171
+msgid "Moving files to trash…"
+msgstr ""
+
+#: src/menus.ui:7
+msgid "_Open"
+msgstr ""
+
+#: src/menus.ui:13
+msgid "Open _With"
+msgstr ""
+
+#: src/menus.ui:27
+msgid "_Open Folder"
+msgstr ""
+
+#: src/menus.ui:43
+msgid "_Copy"
+msgstr ""
+
+#: src/menus.ui:49
+msgid "_Copy Filepath"
+msgstr ""
+
+#: src/menus.ui:56
+msgid "Move to _Trash"
+msgstr ""
+
+#: src/menus.ui:62
+msgid "_Delete"
+msgstr ""
+
+#: src/overlay.ui:31
+msgid "Empty Database"
+msgstr ""
+
+#: src/overlay.ui:46
+msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+msgstr ""
+
+#: src/overlay.ui:87
+msgid "Empty Query"
+msgstr ""
+
+#: src/overlay.ui:102
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr ""
+
+#: src/overlay.ui:143 src/fsearch.glade:783
+msgid "Updating Database..."
+msgstr ""
+
+#: src/overlay.ui:158
+msgid "..."
+msgstr ""
+
+#: src/overlay.ui:173
+msgid "This may take a while."
+msgstr ""
+
+#: src/overlay.ui:213
+msgid "No Results Found"
+msgstr ""
+
+#: src/overlay.ui:228
+msgid "Try a different search"
+msgstr ""
+
+#: src/preferences.ui:17
+msgid "Preferences"
+msgstr ""
+
+#: src/preferences.ui:63
+msgid "Enable dark theme"
+msgstr ""
+
+#: src/preferences.ui:76
+msgid "Show tooltips"
+msgstr ""
+
+#: src/preferences.ui:89
+msgid "Remember window size"
+msgstr ""
+
+#: src/preferences.ui:102
+msgid "Remember column configuration"
+msgstr ""
+
+#: src/preferences.ui:115
+msgid "Show icons in name column"
+msgstr ""
+
+#: src/preferences.ui:128
+msgid "Use binary units instead of decimal units"
+msgstr ""
+
+#: src/preferences.ui:146
+msgid "Behaviour after successfully opening a file"
+msgstr ""
+
+#: src/preferences.ui:161
+msgid "Minimize"
+msgstr ""
+
+#: src/preferences.ui:162
+msgid "Close"
+msgstr ""
+
+#: src/preferences.ui:172
+msgid "with keyboard shortcuts or menu entries"
+msgstr ""
+
+#: src/preferences.ui:187
+msgid "with double click"
+msgstr ""
+
+#: src/preferences.ui:236
+msgid ""
+"INFO: \"Enable dark theme\" might not have an effect,\n"
+"since not every GTK+ theme provides a dark version."
+msgstr ""
+
+#: src/preferences.ui:269
+msgid "Open path with double click in path column"
+msgstr ""
+
+#: src/preferences.ui:282
+msgid "Single click to open"
+msgstr ""
+
+#: src/preferences.ui:323
+msgid "Interface"
+msgstr ""
+
+#: src/preferences.ui:341
+msgid "Limit number of results:"
+msgstr ""
+
+#: src/preferences.ui:369
+msgid "Search in path when query contains path separators"
+msgstr ""
+
+#: src/preferences.ui:383
+msgid "Search as you type"
+msgstr ""
+
+#: src/preferences.ui:397
+msgid "Hide results when search is empty"
+msgstr ""
+
+#: src/preferences.ui:418 src/fsearch.glade:545
+msgid "Search"
+msgstr ""
+
+#: src/preferences.ui:437
+msgid "Update database on start"
+msgstr ""
+
+#: src/preferences.ui:472 src/preferences.ui:576
+msgid "Add"
+msgstr ""
+
+#: src/preferences.ui:488 src/preferences.ui:592
+msgid "Remove"
+msgstr ""
+
+#: src/preferences.ui:535
+msgid "Follow symbolic links"
+msgstr ""
+
+#: src/preferences.ui:552
+msgid "Include"
+msgstr ""
+
+#: src/preferences.ui:639
+msgid "Exclude hidden files and folders"
+msgstr ""
+
+#: src/preferences.ui:660 src/preferences.ui:673
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr ""
+
+#: src/preferences.ui:661
+msgid "Exclude files:"
+msgstr ""
+
+#: src/preferences.ui:674
+msgid "e.g. \".git;*.tmp\""
+msgstr ""
+
+#: src/preferences.ui:698
+msgid "Exclude"
+msgstr ""
+
+#: src/preferences.ui:721
+msgid "Database"
+msgstr ""
+
+#: src/preferences.ui:743
+msgid "Show warning dialogs when:"
+msgstr ""
+
+#: src/preferences.ui:752
+msgid "file / folder failed to open"
+msgstr ""
+
+#: src/preferences.ui:772
+msgid "Dialogs"
+msgstr ""
+
+#: src/fsearch.glade:55
+msgid "Open File(s)"
+msgstr ""
+
+#: src/fsearch.glade:65
+msgid "Open With Other Application"
+msgstr ""
+
+#: src/fsearch.glade:70
+msgid "Open Containing Folder"
+msgstr ""
+
+#: src/fsearch.glade:73
+msgid "Open File(s) in File Manager"
+msgstr ""
+
+#: src/fsearch.glade:109
+msgid "Move to Trash"
+msgstr ""
+
+#: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
+msgid "FSearch"
+msgstr ""
+
+#: src/fsearch.glade:154
+msgid "_File"
+msgstr ""
+
+#: src/fsearch.glade:162
+msgid "New Window"
+msgstr ""
+
+#: src/fsearch.glade:191
+msgid "Open Folder"
+msgstr ""
+
+#: src/fsearch.glade:226
+msgid "Update Database"
+msgstr ""
+
+#: src/fsearch.glade:261
+msgid "_Edit"
+msgstr ""
+
+#: src/fsearch.glade:322
+msgid "Deselect All"
+msgstr ""
+
+#: src/fsearch.glade:331
+msgid "Invert Selection"
+msgstr ""
+
+#: src/fsearch.glade:360
+msgid "_View"
+msgstr ""
+
+#: src/fsearch.glade:371
+msgid "Show Menubar"
+msgstr ""
+
+#: src/fsearch.glade:381
+msgid "Show Statusbar"
+msgstr ""
+
+#: src/fsearch.glade:390
+msgid "Show Filter"
+msgstr ""
+
+#: src/fsearch.glade:399
+msgid "Show Search Button"
+msgstr ""
+
+#: src/fsearch.glade:411
+msgid "_Search"
+msgstr ""
+
+#: src/fsearch.glade:422
+msgid "Search in Path"
+msgstr ""
+
+#: src/fsearch.glade:432
+msgid "Match Case"
+msgstr ""
+
+#: src/fsearch.glade:442
+msgid "Enable RegEx"
+msgstr ""
+
+#: src/fsearch.glade:455
+msgid "_Help"
+msgstr ""
+
+#: src/fsearch.glade:505
+msgid "Search..."
+msgstr ""
+
+#: src/fsearch.glade:520
+msgid "Select a Filter"
+msgstr ""
+
+#: src/fsearch.glade:523
+msgid "All"
+msgstr ""
+
+#: src/fsearch.glade:524
+msgid "Folders"
+msgstr ""
+
+#: src/fsearch.glade:525
+msgid "Files"
+msgstr ""
+
+#: src/fsearch.glade:650
+msgid "Number of Search Results"
+msgstr ""
+
+#: src/fsearch.glade:651
+msgid "0 Items"
+msgstr ""
+
+#: src/fsearch.glade:706 src/fsearch.glade:730
+msgid "0/0"
+msgstr ""
+
+#: src/fsearch.glade:797
+msgid "page0"
+msgstr ""
+
+#: src/fsearch.glade:821
+msgid "(empty)"
+msgstr ""
+
+#: src/fsearch.glade:832
+msgid "page1"
+msgstr ""
+
+#: src/fsearch.glade:876
+msgid "CASE"
+msgstr ""
+
+#: src/fsearch.glade:928
+msgid "PATH"
+msgstr ""
+
+#: src/fsearch.glade:980
+msgid "REGEX"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:7
+msgid "A file search application focusing on performance and advanced features"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:12
+msgid "system-search"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:16
+msgid ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+msgstr ""
