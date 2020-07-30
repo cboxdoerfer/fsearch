@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-07-30 10:56+0200\n"
-"PO-Revision-Date: 2020-04-16 17:11+0000\n"
+"PO-Revision-Date: 2020-07-31 18:42+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.0.1-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, fuzzy, c-format
@@ -74,7 +74,7 @@ msgstr "Oppdater database"
 
 #: src/fsearch.c:385
 msgid "translator-credits"
-msgstr ""
+msgstr "Allan Nordhøy"
 
 #: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
@@ -83,18 +83,17 @@ msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
 #: src/fsearch_window_actions.c:85
 #, fuzzy, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Ønsker du virkelig å fjerne"
+msgstr "Ønsker du virkelig å fjerne %d fil(er)?"
 
 #: src/fsearch_window_actions.c:87
 #, fuzzy
 msgid "Opening Files…"
-msgstr "Åpne fil(er)"
+msgstr "Åpne fil(er)…"
 
 #: src/fsearch_window_actions.c:167
-#, fuzzy, c-format
-#| msgid "Do you really want to remove"
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Ønsker du virkelig å fjerne"
+msgstr "Ønsker du virkelig å fjerne %d fil(er)?"
 
 #: src/fsearch_window_actions.c:171
 #, fuzzy
@@ -236,11 +235,11 @@ msgstr ""
 
 #: src/preferences.ui:269
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Åpne sti ved å dobbeltklikke i sti-kolonnen"
 
 #: src/preferences.ui:282
 msgid "Single click to open"
-msgstr ""
+msgstr "Trykk én gang for å åpne"
 
 #: src/preferences.ui:323
 msgid "Interface"
