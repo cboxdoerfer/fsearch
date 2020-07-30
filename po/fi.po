@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 09:37+0200\n"
+"POT-Creation-Date: 2020-07-30 10:56+0200\n"
 "PO-Revision-Date: 2020-04-20 02:11+0000\n"
 "Last-Translator: Jeannette L <j.lavoie@net-c.ca>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
@@ -70,6 +70,10 @@ msgid "Update the database"
 msgstr "Päivitä tietokanta"
 
 #: src/fsearch.c:385
+msgid "translator-credits"
+msgstr ""
+
+#: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 

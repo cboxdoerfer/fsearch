@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 09:37+0200\n"
+"POT-Creation-Date: 2020-07-30 10:56+0200\n"
 "PO-Revision-Date: 2020-04-06 23:36+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -71,6 +71,10 @@ msgid "Update the database"
 msgstr "Actualizar base de datos"
 
 #: src/fsearch.c:385
+msgid "translator-credits"
+msgstr ""
+
+#: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Herramienta de búsqueda centrada en la velocidad y con prestaciones avanzadas"
