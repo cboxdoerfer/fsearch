@@ -84,7 +84,7 @@ confirm_file_open_action (GtkWidget *parent, int num_files)
     char question[1024] = "";
     snprintf (question, sizeof (question), _("Do you really want to open %d file(s)?"), num_files);
 
-    return confirm_action (parent, _("Opening Files..."), question, 10, num_files);
+    return confirm_action (parent, _("Opening Files…"), question, 10, num_files);
 }
 
 static GList *
