@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 10:53+0200\n"
+"POT-Creation-Date: 2020-07-30 10:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -68,10 +68,7 @@ msgid "Update the database"
 msgstr ""
 
 #: src/fsearch.c:385
-msgid ""
-"Dear translator(s):\n"
-"If you want to be mentioned, please add your names here.\n"
-"Thank you!"
+msgid "translator-credits"
 msgstr ""
 
 #: src/fsearch.c:386
