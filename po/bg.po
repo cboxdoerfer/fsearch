@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-29 22:56+0200\n"
+"POT-Creation-Date: 2020-07-30 09:37+0200\n"
 "PO-Revision-Date: 2020-06-13 10:41+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -82,7 +82,7 @@ msgstr "Наистина ли искате да премахнете"
 
 #: src/fsearch_window_actions.c:87
 #, fuzzy
-msgid "Opening Files..."
+msgid "Opening Files…"
 msgstr "Отваряне на Файл (ове)"
 
 #: src/fsearch_window_actions.c:167

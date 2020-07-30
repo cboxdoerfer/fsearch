@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-29 22:56+0200\n"
+"POT-Creation-Date: 2020-07-30 09:37+0200\n"
 "PO-Revision-Date: 2020-07-29 16:41+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
@@ -80,7 +80,9 @@ msgid "Do you really want to open %d file(s)?"
 msgstr "Weet je zeker dat je de volgende bestanden"
 
 #: src/fsearch_window_actions.c:87
-msgid "Opening Files..."
+#, fuzzy
+#| msgid "Opening Files..."
+msgid "Opening Files…"
 msgstr "Bezig met openen..."
 
 #: src/fsearch_window_actions.c:167

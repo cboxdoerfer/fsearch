@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-29 22:56+0200\n"
+"POT-Creation-Date: 2020-07-30 09:37+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -81,7 +81,7 @@ msgstr "本当に"
 
 #: src/fsearch_window_actions.c:87
 #, fuzzy
-msgid "Opening Files..."
+msgid "Opening Files…"
 msgstr "ファイルを開く"
 
 #: src/fsearch_window_actions.c:167

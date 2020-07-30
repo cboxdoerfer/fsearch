@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-29 22:56+0200\n"
+"POT-Creation-Date: 2020-07-30 09:37+0200\n"
 "PO-Revision-Date: 2020-04-20 02:11+0000\n"
 "Last-Translator: Jeannette L <j.lavoie@net-c.ca>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
@@ -80,7 +80,7 @@ msgstr "Haluatko todella poistaa"
 
 #: src/fsearch_window_actions.c:87
 #, fuzzy
-msgid "Opening Files..."
+msgid "Opening Files…"
 msgstr "Avaa tiedosto(t)"
 
 #: src/fsearch_window_actions.c:167

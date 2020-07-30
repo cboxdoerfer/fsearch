@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-29 22:56+0200\n"
+"POT-Creation-Date: 2020-07-30 09:37+0200\n"
 "PO-Revision-Date: 2020-03-25 10:46+0000\n"
 "Last-Translator: 只要香菜 <cwbddzxx@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -80,7 +80,7 @@ msgstr "确认要删除"
 
 #: src/fsearch_window_actions.c:87
 #, fuzzy
-msgid "Opening Files..."
+msgid "Opening Files…"
 msgstr "打开文件"
 
 #: src/fsearch_window_actions.c:167

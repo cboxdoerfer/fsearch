@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.4-e3cd\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-29 22:56+0200\n"
+"POT-Creation-Date: 2020-07-30 09:37+0200\n"
 "PO-Revision-Date: 2018-10-23 21:29+0000\n"
 "Last-Translator: Iván <ivanrsm1997@gmail.com>\n"
 "Language-Team: Galician <https://hosted.weblate.org/projects/fsearch/"
@@ -82,7 +82,7 @@ msgstr "Confirma a eliminación"
 
 #: src/fsearch_window_actions.c:87
 #, fuzzy
-msgid "Opening Files..."
+msgid "Opening Files…"
 msgstr "Abrir ficheiro(s)"
 
 #: src/fsearch_window_actions.c:167
