@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 22:56+0200\n"
 "PO-Revision-Date: 2019-10-12 12:52+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/fsearch/"
@@ -24,11 +24,11 @@ msgstr ""
 msgid "%'d Items"
 msgstr "%'d elements"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr ""
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr ""
 
@@ -61,45 +61,43 @@ msgstr "Data de modificació"
 msgid "Type"
 msgstr "Tipus"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr ""
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 #, fuzzy
 msgid "Update the database"
 msgstr "Actualitza la base de dades"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Una eina de cerca caracteritzada pel seu rendiment i les prestacions "
 "avançades"
 
-#: src/fsearch_window_actions.c:86
-#, fuzzy
-msgid "Do you really want to open"
+#: src/fsearch_window_actions.c:85
+#, fuzzy, c-format
+msgid "Do you really want to open %d file(s)?"
 msgstr "Realment voleu suprimir"
 
-#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
-msgid "files?"
-msgstr "fitxers?"
-
-#: src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:87
 #, fuzzy
 msgid "Opening Files..."
 msgstr "Obre fitxers"
 
-#: src/fsearch_window_actions.c:166
-msgid "Do you really want to remove"
+#: src/fsearch_window_actions.c:167
+#, fuzzy, c-format
+#| msgid "Do you really want to remove"
+msgid "Do you really want to remove %d file(s)?"
 msgstr "Realment voleu suprimir"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 #, fuzzy
 msgid "Deleting files…"
 msgstr "S’estan suprimint els fitxers…"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 #, fuzzy
 msgid "Moving files to trash…"
 msgstr "S’estan enviant els fitxers a la paperera…"
@@ -477,6 +475,9 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#~ msgid "files?"
+#~ msgstr "fitxers?"
 
 #~ msgid "Other Application"
 #~ msgstr "Una altra aplicació"

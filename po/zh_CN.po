@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 22:56+0200\n"
 "PO-Revision-Date: 2020-03-25 10:46+0000\n"
 "Last-Translator: 只要香菜 <cwbddzxx@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -24,11 +24,11 @@ msgstr ""
 msgid "%'d Items"
 msgstr "%'d 项"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "打开文件失败"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "是否保持窗口打开？"
 
@@ -61,41 +61,39 @@ msgstr "修改日期"
 msgid "Type"
 msgstr "类型"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "显示版本信息"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "更新数据库"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
-#: src/fsearch_window_actions.c:86
-#, fuzzy
-msgid "Do you really want to open"
+#: src/fsearch_window_actions.c:85
+#, fuzzy, c-format
+msgid "Do you really want to open %d file(s)?"
 msgstr "确认要删除"
 
-#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
-msgid "files?"
-msgstr "项文件?"
-
-#: src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:87
 #, fuzzy
 msgid "Opening Files..."
 msgstr "打开文件"
 
-#: src/fsearch_window_actions.c:166
-msgid "Do you really want to remove"
+#: src/fsearch_window_actions.c:167
+#, fuzzy, c-format
+#| msgid "Do you really want to remove"
+msgid "Do you really want to remove %d file(s)?"
 msgstr "确认要删除"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
 msgstr "删除文件中…"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "正在移动文件到回收站…"
 
@@ -467,6 +465,9 @@ msgstr "系统搜索"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
+
+#~ msgid "files?"
+#~ msgstr "项文件?"
 
 #~ msgid "Other Application"
 #~ msgstr "其他应用程序"

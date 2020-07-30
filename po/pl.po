@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 22:56+0200\n"
 "PO-Revision-Date: 2020-07-29 16:41+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "%'d Items"
 msgstr "%'d wyniki"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Nie udało się otworzyć pliku"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr ""
 
@@ -62,41 +62,41 @@ msgstr "Data modyfikacji"
 msgid "Type"
 msgstr "Typ"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "Pokaż informacje o wersji"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "Uaktualnij bazę danych"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
 "funkcjach"
 
-#: src/fsearch_window_actions.c:86
-msgid "Do you really want to open"
+#: src/fsearch_window_actions.c:85
+#, fuzzy, c-format
+#| msgid "Do you really want to open"
+msgid "Do you really want to open %d file(s)?"
 msgstr "Na pewno chcesz otworzyć"
 
-#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
-msgid "files?"
-msgstr "pliki?"
-
-#: src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:87
 msgid "Opening Files..."
 msgstr "Otwieranie plików..."
 
-#: src/fsearch_window_actions.c:166
-msgid "Do you really want to remove"
+#: src/fsearch_window_actions.c:167
+#, fuzzy, c-format
+#| msgid "Do you really want to remove"
+msgid "Do you really want to remove %d file(s)?"
 msgstr "Na pewno chcesz usunąć"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
 msgstr "Usuwanie plików…"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "Przenoszenie plików do kosza…"
 
@@ -472,6 +472,9 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#~ msgid "files?"
+#~ msgstr "pliki?"
 
 #~ msgid "Other Application"
 #~ msgstr "Inna aplikacja"

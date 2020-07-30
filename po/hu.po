@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 22:56+0200\n"
 "PO-Revision-Date: 2020-07-18 03:41+0000\n"
 "Last-Translator: Doma Gergő <domag02@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/fsearch/"
@@ -24,11 +24,11 @@ msgstr ""
 msgid "%'d Items"
 msgstr "%'d elem"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Fájl megnyitása sikertelen"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Nyitva akarja hagyni az ablakot?"
 
@@ -61,43 +61,41 @@ msgstr "Módosítás dátuma"
 msgid "Type"
 msgstr "Típus"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "Verzióinformáció megjelenítése"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "Adatbázis frissítése"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Egy keresési segédprogram, mely a teljesítményre és a fejlett képességekre "
 "összpontosít"
 
-#: src/fsearch_window_actions.c:86
-#, fuzzy
-msgid "Do you really want to open"
+#: src/fsearch_window_actions.c:85
+#, fuzzy, c-format
+msgid "Do you really want to open %d file(s)?"
 msgstr "Biztosan el akarsz távolítani"
 
-#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
-msgid "files?"
-msgstr "fájlt?"
-
-#: src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:87
 #, fuzzy
 msgid "Opening Files..."
 msgstr "Fájl(ok) megnyitása"
 
-#: src/fsearch_window_actions.c:166
-msgid "Do you really want to remove"
+#: src/fsearch_window_actions.c:167
+#, fuzzy, c-format
+#| msgid "Do you really want to remove"
+msgid "Do you really want to remove %d file(s)?"
 msgstr "Biztosan el akarsz távolítani"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
 msgstr "Fájlok törlése…"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "Fájlok áthelyezése a Kukába…"
 
@@ -477,6 +475,9 @@ msgid ""
 msgstr ""
 "keres;search;fsearch;fájlok;mappák;könyvtárak;zene;videó;dokumentumok;talál;"
 "megtalál;rátalál;találat;eszköz;minden;"
+
+#~ msgid "files?"
+#~ msgstr "fájlt?"
 
 #~ msgid "Other Application"
 #~ msgstr "Más alkalmazás"

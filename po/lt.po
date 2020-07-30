@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-27 15:03+0200\n"
+"POT-Creation-Date: 2020-07-29 22:56+0200\n"
 "PO-Revision-Date: 2020-07-04 15:41+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
@@ -25,11 +25,11 @@ msgstr ""
 msgid "%'d Items"
 msgstr "%'d elementų"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:449
+#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Nepavyko atverti failo"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:450
+#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Ar norite palikti langą atvertą?"
 
@@ -62,42 +62,40 @@ msgstr "Keitimo data"
 msgid "Type"
 msgstr "Tipas"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:193
 msgid "Show version information"
 msgstr "Rodyti versijos informaciją"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:200
 msgid "Update the database"
 msgstr "Atnaujinti duomenų bazę"
 
-#: src/fsearch.c:370
+#: src/fsearch.c:385
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Paieškos programa, kuri susitelkia ties našumu ir išplėstinėmis ypatybėmis"
 
-#: src/fsearch_window_actions.c:86
-#, fuzzy
-msgid "Do you really want to open"
+#: src/fsearch_window_actions.c:85
+#, fuzzy, c-format
+msgid "Do you really want to open %d file(s)?"
 msgstr "Ar tikrai norite pašalinti"
 
-#: src/fsearch_window_actions.c:86 src/fsearch_window_actions.c:166
-msgid "files?"
-msgstr "failus?"
-
-#: src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:87
 #, fuzzy
 msgid "Opening Files..."
 msgstr "Atverti failą(-us)"
 
-#: src/fsearch_window_actions.c:166
-msgid "Do you really want to remove"
+#: src/fsearch_window_actions.c:167
+#, fuzzy, c-format
+#| msgid "Do you really want to remove"
+msgid "Do you really want to remove %d file(s)?"
 msgstr "Ar tikrai norite pašalinti"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
 msgstr "Ištrinami failai…"
 
-#: src/fsearch_window_actions.c:170
+#: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "Perkeliami failai į šiukšlinę…"
 
@@ -475,6 +473,9 @@ msgstr "system-search"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#~ msgid "files?"
+#~ msgstr "failus?"
 
 #~ msgid "Other Application"
 #~ msgstr "Kitą programą"
