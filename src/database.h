@@ -24,45 +24,45 @@
 #include "array.h"
 #include "btree.h"
 
-typedef struct _Database Database;
+typedef struct _FsearchDatabase FsearchDatabase;
 
-typedef struct _DatabaseLocation DatabaseLocation;
+typedef struct _FsearchDatabaseNode FsearchDatabaseNode;
 
 bool
-db_load_from_file (Database *db,
+db_load_from_file (FsearchDatabase *db,
                    const char *path,
                    void (*callback)(const char *));
 
 bool
-db_scan (Database *db, void (*callback)(const char *));
+db_scan (FsearchDatabase *db, void (*callback)(const char *));
 
 void
-db_free (Database *db);
+db_free (FsearchDatabase *db);
 
-Database *
+FsearchDatabase *
 db_new (GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden);
 
 bool
-db_save_locations (Database *db);
+db_save_locations (FsearchDatabase *db);
 
 time_t
-db_get_timestamp (Database *db);
+db_get_timestamp (FsearchDatabase *db);
 
 uint32_t
-db_get_num_entries (Database *db);
+db_get_num_entries (FsearchDatabase *db);
 
 void
-db_unlock (Database *db);
+db_unlock (FsearchDatabase *db);
 
 void
-db_lock (Database *db);
+db_lock (FsearchDatabase *db);
 
 bool
-db_try_lock (Database *db);
+db_try_lock (FsearchDatabase *db);
 
 DynamicArray *
-db_get_entries (Database *db);
+db_get_entries (FsearchDatabase *db);
 
 void
-db_sort (Database *db);
+db_sort (FsearchDatabase *db);
 

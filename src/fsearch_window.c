@@ -88,7 +88,7 @@ init_statusbar (FsearchApplicationWindow *self)
     gtk_spinner_stop (GTK_SPINNER (self->database_spinner));
 
     gtk_stack_set_visible_child (GTK_STACK (self->database_stack), self->database_box2);
-    Database *db = fsearch_application_get_db (FSEARCH_APPLICATION_DEFAULT);
+    FsearchDatabase *db = fsearch_application_get_db (FSEARCH_APPLICATION_DEFAULT);
 
     uint32_t num_items = 0;
     if (db) {
@@ -355,7 +355,7 @@ perform_search (FsearchApplicationWindow *win)
         return FALSE;
     }
 
-    Database *db = fsearch_application_get_db (app);
+    FsearchDatabase *db = fsearch_application_get_db (app);
     if (!db || !db_try_lock (db)) {
         trace ("search: database locked\n");
         return FALSE;
@@ -738,7 +738,7 @@ database_update_finished_cb (gpointer data, gpointer user_data)
     gtk_spinner_stop (GTK_SPINNER (win->database_spinner));
 
     gtk_stack_set_visible_child (GTK_STACK (win->database_stack), win->database_box2);
-    Database *db = fsearch_application_get_db (FSEARCH_APPLICATION_DEFAULT);
+    FsearchDatabase *db = fsearch_application_get_db (FSEARCH_APPLICATION_DEFAULT);
     uint32_t num_items = db_get_num_entries (db);
     gchar db_text[100] = "";
     snprintf (db_text, sizeof (db_text), _("%'d Items"), num_items);

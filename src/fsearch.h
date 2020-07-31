@@ -41,7 +41,7 @@ G_END_DECLS
 void
 fsearch_database_update (bool fullscan);
 
-Database *
+FsearchDatabase *
 fsearch_application_get_db (FsearchApplication *fsearch);
 
 FsearchConfig *

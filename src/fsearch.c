@@ -46,7 +46,7 @@
 struct _FsearchApplication
 {
     GtkApplication parent;
-    Database *db;
+    FsearchDatabase *db;
     DatabaseSearch *search;
     FsearchConfig *config;
     FsearchThreadPool *pool;
@@ -76,7 +76,7 @@ fsearch_action_enable (const char *action_name);
 static void
 fsearch_action_disable (const char *action_name);
 
-Database *
+FsearchDatabase *
 fsearch_application_get_db (FsearchApplication *fsearch)
 {
     g_assert (FSEARCH_IS_APPLICATION (fsearch));
@@ -263,7 +263,7 @@ updated_database_signal_emit_cb (gpointer user_data)
     if (self->db) {
         db_free (self->db);
     }
-    self->db = (Database *)user_data;
+    self->db = (FsearchDatabase *)user_data;
     fsearch_action_enable ("update_database");
     g_signal_emit (self, signals [DATABASE_UPDATE_FINISHED], 0);
     return G_SOURCE_REMOVE;
@@ -317,7 +317,7 @@ update_database_thread (bool rescan)
 
     timer_start ();
 
-    Database *db = db_new (app->config->locations,
+    FsearchDatabase *db = db_new (app->config->locations,
                            app->config->exclude_locations,
                            app->config->exclude_files,
                            app->config->exclude_hidden_items);
