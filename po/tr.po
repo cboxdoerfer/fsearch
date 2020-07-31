@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-07-30 10:56+0200\n"
-"PO-Revision-Date: 2020-07-29 16:41+0000\n"
+"PO-Revision-Date: 2020-07-31 18:42+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -72,29 +72,25 @@ msgstr "Veri tabanını güncelle"
 
 #: src/fsearch.c:385
 msgid "translator-credits"
-msgstr ""
+msgstr "Oğuz Ersen"
 
 #: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
 #: src/fsearch_window_actions.c:85
-#, fuzzy, c-format
-#| msgid "Do you really want to open"
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Gerçekten açmak istiyor musunuz"
+msgstr "%d dosyayı gerçekten açmak istiyor musunuz?"
 
 #: src/fsearch_window_actions.c:87
-#, fuzzy
-#| msgid "Opening Files..."
 msgid "Opening Files…"
-msgstr "Dosyalar Açılıyor..."
+msgstr "Dosyalar Açılıyor…"
 
 #: src/fsearch_window_actions.c:167
-#, fuzzy, c-format
-#| msgid "Do you really want to remove"
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Gerçekten kaldırmak istiyor musun"
+msgstr "%d dosyayı gerçekten kaldırmak istiyor musunuz?"
 
 #: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
