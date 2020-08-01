@@ -35,6 +35,8 @@
 
 #include "database.h"
 #include "fsearch.h"
+#include "fsearch_include_path.h"
+#include "fsearch_exclude_path.h"
 #include "debug.h"
 
 //#define WS_FOLLOWLINK	(1 << 1)	/* follow symlinks */
@@ -383,8 +385,12 @@ static bool
 directory_is_excluded (const char *name, GList *excludes)
 {
     while (excludes) {
-        if (!strcmp (name, excludes->data)) {
-            return true;
+        FsearchExcludePath *fs_path = excludes->data;
+        if (!strcmp (name, fs_path->path)) {
+            if (fs_path->enabled) {
+                return true;
+            }
+            return false;
         }
         excludes = excludes->next;
     }
@@ -840,10 +846,10 @@ db_new (GList *includes, GList *excludes, char **exclude_files, bool exclude_hid
     FsearchDatabase *db = g_new0 (FsearchDatabase, 1);
     g_mutex_init (&db->mutex);
     if (includes) {
-        db->includes = g_list_copy_deep (includes, (GCopyFunc) g_strdup, NULL);
+        db->includes = g_list_copy_deep (includes, (GCopyFunc) fsearch_include_path_copy, NULL);
     }
     if (excludes) {
-        db->excludes = g_list_copy_deep (excludes, (GCopyFunc) g_strdup, NULL);
+        db->excludes = g_list_copy_deep (excludes, (GCopyFunc) fsearch_exclude_path_copy, NULL);
     }
     if (exclude_files) {
         db->exclude_files = g_strdupv (exclude_files);
@@ -891,11 +897,11 @@ db_free (FsearchDatabase *db)
     db_location_free_all (db);
 
     if (db->includes) {
-        g_list_free_full (db->includes, (GDestroyNotify)free);
+        g_list_free_full (db->includes, (GDestroyNotify)fsearch_include_path_free);
         db->includes = NULL;
     }
     if (db->excludes) {
-        g_list_free_full (db->excludes, (GDestroyNotify)free);
+        g_list_free_full (db->excludes, (GDestroyNotify)fsearch_exclude_path_free);
         db->excludes = NULL;
     }
     if (db->exclude_files) {
@@ -997,7 +1003,8 @@ db_load_from_file (FsearchDatabase *db,
 
     bool ret = true;
     for (GList *l = db->includes; l != NULL; l = l->next) {
-        ret = db_location_load (db, l->data);
+        FsearchIncludePath *fs_path = l->data;
+        ret = db_location_load (db, fs_path->path);
     }
     if (ret) {
         db_update_entries_list (db);
@@ -1013,7 +1020,10 @@ db_scan (FsearchDatabase *db, void (*callback)(const char *))
 
     bool ret = true;
     for (GList *l = db->includes; l != NULL; l = l->next) {
-        ret = db_location_add (db, l->data, callback);
+        FsearchIncludePath *fs_path = l->data;
+        if (fs_path->path && fs_path->update) {
+            ret = db_location_add (db, fs_path->path, callback);
+        }
     }
     if (ret) {
         db_build_initial_entries_list (db);
