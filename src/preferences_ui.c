@@ -489,4 +489,3 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
     return pref.config;
 }
 
-
