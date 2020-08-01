@@ -21,5 +21,5 @@
 #include <gtk/gtk.h>
 #include "fsearch_config.h"
 
-void
-preferences_ui_launch (FsearchConfig *main_config, GtkWindow *window);
+FsearchConfig *
+preferences_ui_launch (FsearchConfig *main_config, GtkWindow *window, bool *update_db, bool *update_list);

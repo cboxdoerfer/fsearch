@@ -333,18 +333,14 @@ listview_remove_column_at_pos (GtkTreeView *view, int32_t pos)
 void
 listview_remove_column (GtkTreeView *view, uint32_t col_type)
 {
-    GList *columns = gtk_tree_view_get_columns (view);
-    GList *temp = columns;
-    while (temp) {
-        int32_t id = gtk_tree_view_column_get_sort_column_id (temp->data) + 1;
+    for (int i = 0; i < LIST_MODEL_N_COLUMNS; i++) {
+        GtkTreeViewColumn *col = gtk_tree_view_get_column (view, i);
+        int32_t id = gtk_tree_view_column_get_sort_column_id (col) + 1;
         if (id == col_type) {
-            gtk_tree_view_remove_column (view, temp->data);
+            gtk_tree_view_remove_column (view, col);
             break;
         }
-        temp = temp->next;
     }
-    g_list_free (columns);
-    columns = NULL;
 }
 
 uint32_t

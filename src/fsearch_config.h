@@ -110,5 +110,11 @@ config_save (FsearchConfig *config);
 void
 config_build_dir (char *path, size_t len);
 
+bool
+config_cmp (FsearchConfig *c1, FsearchConfig *c2);
+
+FsearchConfig *
+config_copy (FsearchConfig *config);
+
 void
 config_free (FsearchConfig *config);

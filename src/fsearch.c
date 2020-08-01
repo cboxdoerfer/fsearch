@@ -400,14 +400,27 @@ quit_activated (GSimpleAction *action,
 static void
 preferences_activated (GSimpleAction *action,
                        GVariant      *parameter,
-                       gpointer       app)
+                       gpointer       gapp)
 {
-    g_assert (FSEARCH_IS_APPLICATION (app));
+    g_assert (FSEARCH_IS_APPLICATION (gapp));
+    FsearchApplication *app = FSEARCH_APPLICATION (gapp);
     GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
 
     for (; windows; windows = windows->next) {
         GtkWindow *window = windows->data;
-        preferences_ui_launch (FSEARCH_APPLICATION (app)->config, window);
+        bool update_db = false;
+        bool update_list = false;
+        FsearchConfig *new = preferences_ui_launch (app->config, window, &update_db, &update_list);
+        if (new) {
+            config_free (app->config);
+            app->config = new;
+            if (update_db) {
+                fsearch_database_update (true);
+            }
+            if (update_list) {
+                fsearch_application_update_listview_config ();
+            }
+        }
         break;
     }
 }

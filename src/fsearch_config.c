@@ -562,6 +562,36 @@ config_save (FsearchConfig *config)
     return result;
 }
 
+bool
+config_cmp (FsearchConfig *c1, FsearchConfig *c2)
+{
+    return true;
+}
+
+FsearchConfig *
+config_copy (FsearchConfig *config)
+{
+    FsearchConfig *copy = calloc (1, sizeof (FsearchConfig));
+    g_assert (copy != NULL);
+
+    memcpy (copy, config, sizeof (*config));
+
+    if (config->folder_open_cmd) {
+        copy->folder_open_cmd = g_strdup (config->folder_open_cmd);
+    }
+    if (config->locations) {
+        copy->locations = g_list_copy_deep (config->locations, (GCopyFunc)g_strdup, NULL);
+    }
+    if (config->exclude_locations) {
+        copy->exclude_locations = g_list_copy_deep (config->exclude_locations, (GCopyFunc)g_strdup, NULL);
+    }
+    if (config->exclude_files) {
+        copy->exclude_files = g_strdupv (config->exclude_files);
+    }
+    return copy;
+}
+
+
 void
 config_free (FsearchConfig *config)
 {
