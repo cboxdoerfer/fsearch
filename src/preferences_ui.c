@@ -22,6 +22,8 @@
 #include <stdlib.h>
 #include <string.h>
 #include "fsearch.h"
+#include "preferences_ui.h"
+#include "fsearch_preferences_widgets.h"
 #include "fsearch_include_path.h"
 #include "fsearch_exclude_path.h"
 #include "ui_utils.h"
@@ -31,79 +33,6 @@ enum
     COLUMN_NAME,
     NUM_COLUMNS
 };
-
-typedef struct _FsearchPreferences {
-    FsearchConfig *config;
-    GtkTreeModel *include_model;
-    GtkTreeModel *exclude_model;
-    bool update_db;
-    bool update_list;
-} FsearchPreferences;
-
-static void
-location_tree_row_modified (GtkTreeModel *tree_model,
-                           GtkTreePath  *path,
-                           gpointer      user_data)
-{
-    FsearchPreferences *pref = user_data;
-    pref->update_db = true;
-}
-
-static GtkTreeModel *
-create_exclude_tree_model (FsearchPreferences *pref , GList *list)
-{
-    /* create list store */
-    GtkListStore *store = gtk_list_store_new (NUM_COLUMNS,
-                                              G_TYPE_STRING);
-
-    /* add data to the list store */
-    for (GList *l = list; l != NULL; l = l->next) {
-        FsearchExcludePath *fs_path = l->data;
-        GtkTreeIter iter;
-        gtk_list_store_append (store, &iter);
-        gtk_list_store_set (store, &iter,
-                            COLUMN_NAME, fs_path->path,
-                            -1);
-    }
-    g_signal_connect ((gpointer)store,
-                      "row-changed",
-                      G_CALLBACK (location_tree_row_modified),
-                      pref);
-    g_signal_connect ((gpointer)store,
-                      "row-deleted",
-                      G_CALLBACK (location_tree_row_modified),
-                      pref);
-
-    return GTK_TREE_MODEL (store);
-}
-
-static GtkTreeModel *
-create_include_tree_model (FsearchPreferences *pref , GList *list)
-{
-    /* create list store */
-    GtkListStore *store = gtk_list_store_new (NUM_COLUMNS,
-                                              G_TYPE_STRING);
-
-    /* add data to the list store */
-    for (GList *l = list; l != NULL; l = l->next) {
-        FsearchIncludePath *fs_path = l->data;
-        GtkTreeIter iter;
-        gtk_list_store_append (store, &iter);
-        gtk_list_store_set (store, &iter,
-                            COLUMN_NAME, fs_path->path,
-                            -1);
-    }
-    g_signal_connect ((gpointer)store,
-                      "row-changed",
-                      G_CALLBACK (location_tree_row_modified),
-                      pref);
-    g_signal_connect ((gpointer)store,
-                      "row-deleted",
-                      G_CALLBACK (location_tree_row_modified),
-                      pref);
-
-    return GTK_TREE_MODEL (store);
-}
 
 static void
 enable_dark_theme_infobar_response (GtkInfoBar *info_bar,
@@ -138,21 +67,12 @@ limit_num_results_toggled (GtkToggleButton *togglebutton,
 }
 
 static void
-remove_list_store_item (GtkTreeModel *model,
-                        GtkTreePath  *path,
-                        GtkTreeIter  *iter,
-                        gpointer      userdata)
-{
-    gtk_list_store_remove (GTK_LIST_STORE (model), iter);
-}
-
-static void
 on_remove_button_clicked (GtkButton *button,
                           gpointer user_data)
 {
     GtkTreeView *tree_view = GTK_TREE_VIEW (user_data);
     GtkTreeSelection *sel = gtk_tree_view_get_selection (tree_view);
-    gtk_tree_selection_selected_foreach (sel, remove_list_store_item, NULL);
+    gtk_tree_selection_selected_foreach (sel, pref_treeview_row_remove, NULL);
 }
 
 static char *
@@ -189,13 +109,10 @@ on_exclude_add_button_clicked (GtkButton *button,
 {
     FsearchPreferences *pref = user_data;
     char *path = run_file_chooser_dialog (button);
-    if (path) {
-        GtkTreeIter iter;
-        gtk_list_store_append (GTK_LIST_STORE (pref->exclude_model), &iter);
-        gtk_list_store_set (GTK_LIST_STORE (pref->exclude_model), &iter, COLUMN_NAME, path, -1);
-        FsearchExcludePath *fs_path = fsearch_exclude_path_new (path, true);
-        pref->config->exclude_locations = g_list_append (pref->config->exclude_locations, fs_path);
+    if (!path) {
+        return;
     }
+    pref_exclude_treeview_row_add (pref, path);
 }
 
 static void
@@ -204,13 +121,10 @@ on_include_add_button_clicked (GtkButton *button,
 {
     FsearchPreferences *pref = user_data;
     char *path = run_file_chooser_dialog (button);
-    if (path) {
-        GtkTreeIter iter;
-        gtk_list_store_append (GTK_LIST_STORE (pref->include_model), &iter);
-        gtk_list_store_set (GTK_LIST_STORE (pref->include_model), &iter, COLUMN_NAME, path, -1);
-        FsearchIncludePath *fs_path = fsearch_include_path_new (path, true, true, 0, 0);
-        pref->config->locations = g_list_append (pref->config->locations, fs_path);
+    if (!path) {
+        return;
     }
+    pref_include_treeview_row_add (pref, path);
 }
 
 static void
@@ -352,20 +266,10 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
                                  pref.config->show_dialog_failed_opening);
 
     // Include page
-    pref.include_model = create_include_tree_model (&pref, pref.config->locations);
+    //pref.include_model = create_include_tree_model (&pref, pref.config->locations);
     GtkTreeView *include_list = GTK_TREE_VIEW (builder_get_object (builder,
                                                                    "include_list"));
-    gtk_tree_view_set_model (include_list, pref.include_model);
-    gtk_tree_view_set_search_column (include_list, COLUMN_NAME);
-    gtk_tree_view_set_headers_visible (include_list, FALSE);
-
-    GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
-    GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes ("Name",
-                                                                       renderer,
-                                                                       "text",
-                                                                       COLUMN_NAME,
-                                                                       NULL);
-    gtk_tree_view_append_column (include_list, col);
+    pref_include_treeview_init (include_list, &pref);
 
     GtkWidget *include_add_button = builder_get_object (builder,
                                                         "include_add_button");
@@ -394,20 +298,10 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
 
 
     // Exclude model
-    pref.exclude_model = create_exclude_tree_model (&pref, pref.config->exclude_locations);
+    //pref.exclude_model = create_exclude_tree_model (&pref, pref.config->exclude_locations);
     GtkTreeView *exclude_list = GTK_TREE_VIEW (builder_get_object (builder,
                                                                    "exclude_list"));
-    gtk_tree_view_set_model (exclude_list, pref.exclude_model);
-    gtk_tree_view_set_search_column (exclude_list, COLUMN_NAME);
-    gtk_tree_view_set_headers_visible (exclude_list, FALSE);
-
-    renderer = gtk_cell_renderer_text_new();
-    col = gtk_tree_view_column_new_with_attributes ("Name",
-                                                    renderer,
-                                                    "text",
-                                                    COLUMN_NAME,
-                                                    NULL);
-    gtk_tree_view_append_column (exclude_list, col);
+    pref_exclude_treeview_init (exclude_list, &pref);
 
     GtkWidget *exclude_add_button = builder_get_object (builder,
                                                         "exclude_add_button");
@@ -505,6 +399,16 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
             }
             pref.config->exclude_files = g_strsplit (gtk_entry_get_text (exclude_files_entry), ";", -1);
         }
+
+        if (pref.config->locations) {
+            g_list_free_full (pref.config->locations, (GDestroyNotify)fsearch_include_path_free);
+        }
+        pref.config->locations = pref_include_treeview_data_get (include_list);
+
+        if (pref.config->exclude_locations) {
+            g_list_free_full (pref.config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
+        }
+        pref.config->exclude_locations = pref_exclude_treeview_data_get (exclude_list);
     }
     else {
         config_free (pref.config);

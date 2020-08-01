@@ -27,6 +27,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_limits.h \
 			 fsearch_include_path.h \
 			 fsearch_exclude_path.h \
+			 fsearch_preferences_widgets.h \
 			 glib_support.h \
 			 gtk_support.h \
 			 iconstore.h \
@@ -56,6 +57,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_thread_pool.c \
 		  fsearch_include_path.c \
 		  fsearch_exclude_path.c \
+		  fsearch_preferences_widgets.c \
 		  array.c \
 		  string_utils.c \
 		  btree.c \

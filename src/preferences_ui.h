@@ -21,5 +21,13 @@
 #include <gtk/gtk.h>
 #include "fsearch_config.h"
 
+typedef struct _FsearchPreferences {
+    FsearchConfig *config;
+    GtkTreeModel *include_model;
+    GtkTreeModel *exclude_model;
+    bool update_db;
+    bool update_list;
+} FsearchPreferences;
+
 FsearchConfig *
 preferences_ui_launch (FsearchConfig *main_config, GtkWindow *window, bool *update_db, bool *update_list);

@@ -132,16 +132,19 @@ config_load_include_locations (GKeyFile *key_file, GList *locations, const char 
     uint32_t pos = 1;
     while (true) {
         char key[100] = "";
-        snprintf (key, sizeof (key), "%s_%d", prefix, pos++);
+        snprintf (key, sizeof (key), "%s_%d", prefix, pos);
         char *path = config_load_string (key_file, "Database", key, NULL);
-        snprintf (key, sizeof (key), "%s_search_in_%d", prefix, pos++);
-        bool search_in = config_load_boolean (key_file, "Database", key, true);
-        snprintf (key, sizeof (key), "%s_update_%d", prefix, pos++);
+        snprintf (key, sizeof (key), "%s_enabled_%d", prefix, pos);
+        bool enabled = config_load_boolean (key_file, "Database", key, true);
+        printf("load: %d\n", enabled);
+        snprintf (key, sizeof (key), "%s_update_%d", prefix, pos);
         bool update = config_load_boolean (key_file, "Database", key, true);
-        snprintf (key, sizeof (key), "%s_num_items_%d", prefix, pos++);
+        snprintf (key, sizeof (key), "%s_num_items_%d", prefix, pos);
         bool num_items = config_load_integer (key_file, "Database", key, 0);
+
+        pos++;
         if (path) {
-            FsearchIncludePath *fs_path = fsearch_include_path_new (path, search_in, update, num_items, 0);
+            FsearchIncludePath *fs_path = fsearch_include_path_new (path, enabled, update, num_items, 0);
             locations = g_list_append (locations, fs_path);
         }
         else {
@@ -157,10 +160,12 @@ config_load_exclude_locations (GKeyFile *key_file, GList *locations, const char 
     uint32_t pos = 1;
     while (true) {
         char key[100] = "";
-        snprintf (key, sizeof (key), "%s_%d", prefix, pos++);
+        snprintf (key, sizeof (key), "%s_%d", prefix, pos);
         char *path = config_load_string (key_file, "Database", key, NULL);
-        snprintf (key, sizeof (key), "%s_enabled_%d", prefix, pos++);
+        snprintf (key, sizeof (key), "%s_enabled_%d", prefix, pos);
         bool enabled = config_load_boolean (key_file, "Database", key, true);
+
+        pos++;
         if (path) {
             FsearchExcludePath *fs_path = fsearch_exclude_path_new (path, enabled);
             locations = g_list_append (locations, fs_path);
@@ -489,8 +494,8 @@ config_save_include_locations (GKeyFile *key_file, GList *locations, const char 
         snprintf (key, sizeof (key), "%s_%d", prefix, pos);
         g_key_file_set_string (key_file, "Database", key, fs_path->path);
 
-        snprintf (key, sizeof (key), "%s_search_in_%d", prefix, pos);
-        g_key_file_set_boolean (key_file, "Database", key, fs_path->search_in);
+        snprintf (key, sizeof (key), "%s_enabled_%d", prefix, pos);
+        g_key_file_set_boolean (key_file, "Database", key, fs_path->enabled);
 
         snprintf (key, sizeof (key), "%s_update_%d", prefix, pos);
         g_key_file_set_boolean (key_file, "Database", key, fs_path->update);

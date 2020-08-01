@@ -177,8 +177,13 @@ fsearch_window_apply_config (FsearchApplicationWindow *self)
     gtk_revealer_set_reveal_child (GTK_REVEALER (self->search_mode_revealer), config->enable_regex);
     gtk_revealer_set_reveal_child (GTK_REVEALER (self->search_in_path_revealer), config->search_in_path);
 
+    FsearchDatabase *db = fsearch_application_get_db (app);
+    uint32_t num_items = 0;
+    if (db) {
+        num_items = db_get_num_entries (db);
+    }
 
-    if (!config->locations) {
+    if (!db || !config->locations || num_items == 0) {
         gtk_widget_show (self->empty_database_overlay);
     }
 }
@@ -732,6 +737,7 @@ database_update_finished_cb (gpointer data, gpointer user_data)
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
     update_statusbar (win, "");
+    hide_overlays (win);
 
     fsearch_application_window_update_search (win);
 
@@ -757,11 +763,18 @@ database_update_started_cb (gpointer data, gpointer user_data)
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
 
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    if (config->hide_results_on_empty_search) {
+        show_overlay (win, DATABASE_UPDATING_OVERLAY);
+    }
+
     gtk_stack_set_visible_child (GTK_STACK (win->database_stack), win->database_box1);
     gtk_spinner_start (GTK_SPINNER (win->database_spinner));
     gchar db_text[100] = "";
     snprintf (db_text, sizeof (db_text), _("Loading Database…"));
     gtk_label_set_text (GTK_LABEL (win->database_label), db_text);
+
+
 }
 
 static void

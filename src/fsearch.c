@@ -304,9 +304,6 @@ update_database_thread (bool rescan)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
 
-    if (!app->config->locations) {
-        return;
-    }
     if (app->startup_finished) {
         return;
     }
@@ -453,14 +450,13 @@ void
 fsearch_database_update (bool scan)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    if (app->config->locations) {
-        fsearch_action_disable ("update_database");
-        if (scan) {
-            g_thread_new("fsearch_db_update_thread", scan_database, app);
-        }
-        else {
-            g_thread_new("fsearch_db_load_thread", load_database, app);
-        }
+    printf("update database\n");
+    fsearch_action_disable ("update_database");
+    if (scan) {
+        g_thread_new("fsearch_db_update_thread", scan_database, app);
+    }
+    else {
+        g_thread_new("fsearch_db_load_thread", load_database, app);
     }
     return;
 }

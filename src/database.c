@@ -696,7 +696,6 @@ bool
 db_save_locations (FsearchDatabase *db)
 {
     assert (db != NULL);
-    g_return_val_if_fail (db->locations != NULL, false);
 
     //db_update_sort_index (db);
     GList *locations = db->locations;
@@ -875,7 +874,9 @@ static void
 db_location_free_all (FsearchDatabase *db)
 {
     assert (db != NULL);
-    g_return_if_fail (db->locations != NULL);
+    if (!db->locations) {
+        return;
+    }
 
     GList *l = db->locations;
     while (l) {
@@ -999,11 +1000,13 @@ db_load_from_file (FsearchDatabase *db,
                    void (*callback)(const char *))
 {
     assert (db != NULL);
-    assert (db->includes != NULL);
 
-    bool ret = true;
+    bool ret = false;
     for (GList *l = db->includes; l != NULL; l = l->next) {
         FsearchIncludePath *fs_path = l->data;
+        if (!fs_path->enabled) {
+            continue;
+        }
         ret = db_location_load (db, fs_path->path);
     }
     if (ret) {
@@ -1016,17 +1019,32 @@ bool
 db_scan (FsearchDatabase *db, void (*callback)(const char *))
 {
     assert (db != NULL);
-    assert (db->includes != NULL);
 
-    bool ret = true;
+    bool ret = false;
+    bool init_list = false;
     for (GList *l = db->includes; l != NULL; l = l->next) {
         FsearchIncludePath *fs_path = l->data;
-        if (fs_path->path && fs_path->update) {
+        if (!fs_path->path) {
+            continue;
+        }
+        if (!fs_path->enabled) {
+            continue;
+        }
+        if (fs_path->update) {
             ret = db_location_add (db, fs_path->path, callback);
+            init_list = true;
+        }
+        else {
+            ret = db_location_load (db, fs_path->path);
         }
     }
     if (ret) {
-        db_build_initial_entries_list (db);
+        if (init_list) {
+            db_build_initial_entries_list (db);
+        }
+        else {
+            db_update_entries_list (db);
+        }
     }
     return ret;
 }
