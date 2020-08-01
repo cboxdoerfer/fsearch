@@ -22,9 +22,6 @@
 #include <stdint.h>
 #include "fsearch_config.h"
 
-GtkTreeView *
-listview_new (void);
-
 void
 listview_add_column (GtkTreeView *view, uint32_t col_type, int32_t size, int32_t pos);
 

@@ -28,16 +28,6 @@
 #include "fsearch.h"
 #include "debug.h"
 
-GtkTreeView *
-listview_new (void)
-{
-    GtkTreeView *list = GTK_TREE_VIEW (gtk_tree_view_new ());
-    gtk_tree_view_set_fixed_height_mode (list, TRUE);
-    gtk_widget_set_has_tooltip (GTK_WIDGET (list), TRUE);
-
-    return list;
-}
-
 static void
 on_listview_column_width_changed (GtkTreeViewColumn *col,
                                  GParamSpec *pspec,
