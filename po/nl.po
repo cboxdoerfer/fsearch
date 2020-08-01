@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-07-30 10:56+0200\n"
-"PO-Revision-Date: 2020-07-29 16:41+0000\n"
+"PO-Revision-Date: 2020-08-02 12:42+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -71,29 +71,25 @@ msgstr "Databank bijwerken"
 
 #: src/fsearch.c:385
 msgid "translator-credits"
-msgstr ""
+msgstr "Heimen Stoffels"
 
 #: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
 
 #: src/fsearch_window_actions.c:85
-#, fuzzy, c-format
-#| msgid "Do you really want to open"
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Weet je zeker dat je de volgende bestanden"
+msgstr "Weet je zeker dat je %d bestand(en) wilt openen?"
 
 #: src/fsearch_window_actions.c:87
-#, fuzzy
-#| msgid "Opening Files..."
 msgid "Opening Files…"
-msgstr "Bezig met openen..."
+msgstr "Bezig met openen…"
 
 #: src/fsearch_window_actions.c:167
-#, fuzzy, c-format
-#| msgid "Do you really want to remove"
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Weet je zeker dat je de volgende bestanden"
+msgstr "Weet je zeker dat je %d bestand(en) wilt verwijderen?"
 
 #: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
