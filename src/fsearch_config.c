@@ -115,12 +115,12 @@ static char *
 config_load_string (GKeyFile *key_file,
                     const char *group_name,
                     const char *key,
-                    char *default_value)
+                    const char *default_value)
 {
     GError *error = NULL;
     char *result = g_key_file_get_string (key_file, group_name, key, &error);
     if (error != NULL) {
-        result = default_value;
+        result = g_strdup (default_value);
         config_load_handle_error (error);
     }
     return result;
@@ -293,6 +293,16 @@ config_load (FsearchConfig *config)
                                                             "show_modified_column",
                                                             true);
 
+        // Column Sort
+        config->sort_ascending = config_load_boolean (key_file,
+                                                      "Interface",
+                                                      "sort_ascending",
+                                                      true);
+        config->sort_by = config_load_string (key_file,
+                                              "Interface",
+                                              "sort_by",
+                                              "Name");
+
         // Column Size
         config->name_column_width = config_load_integer (key_file,
                                                    "Interface",
@@ -444,6 +454,9 @@ config_load_default (FsearchConfig *config)
     config->show_size_column = true;
     config->show_modified_column = true;
 
+    config->sort_by = NULL;
+    config->sort_ascending = true;
+
     config->name_column_pos = 0;
     config->path_column_pos = 1;
     config->type_column_pos = 2;
@@ -572,6 +585,11 @@ config_save (FsearchConfig *config)
     g_key_file_set_boolean (key_file, "Interface", "show_size_column", config->show_size_column);
     g_key_file_set_boolean (key_file, "Interface", "show_modified_column", config->show_modified_column);
 
+    g_key_file_set_boolean (key_file, "Interface", "sort_ascending", config->sort_ascending);
+    if (config->sort_by) {
+        g_key_file_set_string (key_file, "Interface", "sort_by", config->sort_by);
+    }
+
     // Column width
     g_key_file_set_integer (key_file, "Interface", "name_column_width", config->name_column_width);
     g_key_file_set_integer (key_file, "Interface", "path_column_width", config->path_column_width);
@@ -648,6 +666,9 @@ config_copy (FsearchConfig *config)
     if (config->folder_open_cmd) {
         copy->folder_open_cmd = g_strdup (config->folder_open_cmd);
     }
+    if (config->sort_by) {
+        copy->sort_by = g_strdup (config->sort_by);
+    }
     if (config->locations) {
         copy->locations = g_list_copy_deep (config->locations, (GCopyFunc)fsearch_include_path_copy, NULL);
     }
@@ -669,6 +690,10 @@ config_free (FsearchConfig *config)
     if (config->folder_open_cmd) {
         free (config->folder_open_cmd);
         config->folder_open_cmd = NULL;
+    }
+    if (config->sort_by) {
+        free (config->sort_by);
+        config->sort_by = NULL;
     }
     if (config->locations) {
         g_list_free_full (config->locations, (GDestroyNotify)fsearch_include_path_free);

@@ -131,6 +131,7 @@ void
 fsearch_application_window_prepare_shutdown (gpointer self)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+    FsearchApplicationWindow *win = self;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config (app);
 
@@ -139,6 +140,42 @@ fsearch_application_window_prepare_shutdown (gpointer self)
     gtk_window_get_size (GTK_WINDOW (self), &width, &height);
     config->window_width = width;
     config->window_height = height;
+
+    gint sort_column_id = 0;
+    GtkSortType order = GTK_SORT_ASCENDING;
+    gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (win->list_model), &sort_column_id, &order);
+
+    if (config->sort_by) {
+        g_free (config->sort_by);
+        config->sort_by = NULL;
+    }
+
+    if (sort_column_id == SORT_ID_NAME) {
+        config->sort_by = g_strdup ("Name");
+    }
+    else if (sort_column_id == SORT_ID_PATH) {
+        config->sort_by = g_strdup ("Path");
+    }
+    else if (sort_column_id == SORT_ID_TYPE) {
+        config->sort_by = g_strdup ("Type");
+    }
+    else if (sort_column_id == SORT_ID_SIZE) {
+        config->sort_by = g_strdup ("Size");
+    }
+    else if (sort_column_id == SORT_ID_CHANGED) {
+        config->sort_by = g_strdup ("Date Modified");
+    }
+    else {
+        config->sort_by = g_strdup ("Name");
+    }
+
+    if (order == GTK_SORT_ASCENDING) {
+        config->sort_ascending = true;
+    }
+    else {
+        config->sort_ascending = false;
+    }
+
 }
 
 void
@@ -715,12 +752,14 @@ create_view_and_model (FsearchApplicationWindow *app)
                                  config->modified_column_pos);
         }
     }
+    list_model_sort_init (app->list_model, config->sort_by, config->sort_ascending);
 
     gtk_tree_view_set_activate_on_single_click (list, config->single_click_open);
 
     gtk_tree_view_set_model (list,
                              GTK_TREE_MODEL(app->list_model));
     g_object_unref(app->list_model); /* destroy store automatically with view */
+
 }
 
 void

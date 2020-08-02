@@ -105,6 +105,9 @@ void
 list_model_sort (ListModel *list_model);
 
 void
+list_model_sort_init (ListModel *list_model, char *sort_by, bool sort_ascending);
+
+void
 list_model_set_results (ListModel *list, GPtrArray *results);
 
 void
