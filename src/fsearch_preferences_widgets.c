@@ -1,3 +1,5 @@
+#include <glib/gi18n.h>
+
 #include "fsearch_preferences_widgets.h"
 
 #include "fsearch_include_path.h"
@@ -218,9 +220,9 @@ pref_include_treeview_init (GtkTreeView *view, FsearchPreferences *pref)
                                               G_TYPE_BOOLEAN);
     gtk_tree_view_set_model (view, GTK_TREE_MODEL (store));
 
-    column_toggle_append (view, GTK_TREE_MODEL (store), "Enable", COL_INCLUDE_ENABLE, G_CALLBACK (on_column_include_enable_toggled), pref);
-    column_text_append (view, "Path", TRUE, COL_INCLUDE_PATH);
-    column_toggle_append (view, GTK_TREE_MODEL (store), "Update", COL_INCLUDE_UPDATE, G_CALLBACK (on_column_include_toggled), pref);
+    column_toggle_append (view, GTK_TREE_MODEL (store), _("Enable"), COL_INCLUDE_ENABLE, G_CALLBACK (on_column_include_enable_toggled), pref);
+    column_text_append (view, _("Path"), TRUE, COL_INCLUDE_PATH);
+    column_toggle_append (view, GTK_TREE_MODEL (store), _("Update"), COL_INCLUDE_UPDATE, G_CALLBACK (on_column_include_toggled), pref);
 
     for (GList *l = pref->config->locations; l != NULL; l = l->next) {
         GtkTreeIter iter = {};
@@ -252,8 +254,8 @@ pref_exclude_treeview_init (GtkTreeView *view, FsearchPreferences *pref)
                                               G_TYPE_STRING);
     gtk_tree_view_set_model (view, GTK_TREE_MODEL (store));
 
-    column_toggle_append (view, GTK_TREE_MODEL (store), "Enable", COL_EXCLUDE_ENABLE, G_CALLBACK (on_column_exclude_toggled), pref);
-    column_text_append (view, "Path", TRUE, COL_EXCLUDE_PATH);
+    column_toggle_append (view, GTK_TREE_MODEL (store), _("Enable"), COL_EXCLUDE_ENABLE, G_CALLBACK (on_column_exclude_toggled), pref);
+    column_text_append (view, _("Path"), TRUE, COL_EXCLUDE_PATH);
 
     for (GList *l = pref->config->exclude_locations; l != NULL; l = l->next) {
         GtkTreeIter iter = {};
