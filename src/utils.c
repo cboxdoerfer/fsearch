@@ -218,14 +218,14 @@ node_remove (BTreeNode *node, bool delete)
 
     if (success) {
         if (delete) {
-            trace ("deleted file.\n");
+            trace ("[file_remove] deleted file: %s\n", path);
         }
         else {
-            trace ("moved file to trash.\n");
+            trace ("[file_remove] moved file to trash: %s\n", path);
         }
     }
     else {
-        trace ("failed removing file: %s\n", path);
+        trace ("[file_remove] failed removing: %s\n", path);
     }
     return success;
 }

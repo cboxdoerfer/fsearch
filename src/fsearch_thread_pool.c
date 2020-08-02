@@ -82,7 +82,7 @@ thread_context_free (thread_context_t *ctx)
 
     g_mutex_lock (&ctx->mutex);
     if (ctx->thread_data) {
-        trace ("search data still there\n");
+        trace ("[thread_pool] search data still there\n");
     }
 
     // terminate thread
@@ -218,8 +218,9 @@ fsearch_thread_pool_wait_for_thread (FsearchThreadPool *pool, GList *thread)
     thread_context_t *ctx = thread->data;
     g_mutex_lock (&ctx->mutex);
     while (fsearch_thread_pool_task_is_busy (pool, thread)) {
-        trace ("waiting...\n");
+        trace ("[thread_pool] busy, waiting...\n");
         g_cond_wait (&ctx->finished_cond, &ctx->mutex);
+        trace ("[thread_pool] continue...\n");
     }
     g_mutex_unlock (&ctx->mutex);
     return true;

@@ -136,7 +136,6 @@ config_load_include_locations (GKeyFile *key_file, GList *locations, const char 
         char *path = config_load_string (key_file, "Database", key, NULL);
         snprintf (key, sizeof (key), "%s_enabled_%d", prefix, pos);
         bool enabled = config_load_boolean (key_file, "Database", key, true);
-        printf("load: %d\n", enabled);
         snprintf (key, sizeof (key), "%s_update_%d", prefix, pos);
         bool update = config_load_boolean (key_file, "Database", key, true);
         snprintf (key, sizeof (key), "%s_num_items_%d", prefix, pos);
@@ -191,7 +190,7 @@ config_load (FsearchConfig *config)
 
     GError *error = NULL;
     if (g_key_file_load_from_file (key_file, config_path, G_KEY_FILE_NONE, &error)) {
-        trace ("loaded config file\n");
+        trace ("[config] loading...\n");
         // Interface
         config->single_click_open = config_load_boolean (key_file,
                                                         "Interface",
@@ -397,9 +396,10 @@ config_load (FsearchConfig *config)
         config->exclude_locations = config_load_exclude_locations (key_file, config->exclude_locations, "exclude_location");
 
         result = true;
+        trace ("[config] loaded\n");
     }
     else {
-        fprintf(stderr, "load config failed: %s\n", error->message);
+        trace ("[config] loading failed: %s\n", error->message);
         g_error_free (error);
     }
 
@@ -541,6 +541,7 @@ config_save (FsearchConfig *config)
     GKeyFile *key_file = g_key_file_new ();
     g_assert (key_file != NULL);
 
+    trace ("[config] saving...\n");
     // Interface
     g_key_file_set_boolean (key_file, "Interface", "single_click_open", config->single_click_open);
     g_key_file_set_boolean (key_file, "Interface", "restore_column_configuration", config->restore_column_config);
@@ -619,11 +620,11 @@ config_save (FsearchConfig *config)
 
     GError *error = NULL;
     if (g_key_file_save_to_file (key_file, config_path, &error)) {
-        trace ("saved config file\n");
+        trace ("[config] saved\n");
         result = true;
     }
     else {
-        fprintf(stderr, "save config failed: %s\n", error->message);
+        trace ("[config] saving failed: %s\n", error->message);
     }
 
     g_key_file_free (key_file);

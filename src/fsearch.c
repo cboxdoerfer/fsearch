@@ -153,7 +153,7 @@ fsearch_options_handler(GApplication *gapp,
     }
 
     if (updatedb) {
-        g_printf ("Updating database...");
+        g_printf ("Updating database... ");
         fflush(stdout);
 
         FsearchApplication *fsearch = FSEARCH_APPLICATION (gapp);
@@ -327,7 +327,7 @@ update_database_thread (bool rescan)
         db_load_from_file (db, NULL, NULL);
     }
 
-    trace ("loaded db in: ");
+    trace ("[database_update] finished in : ");
     timer_stop ();
     db_unlock (db);
 
@@ -450,7 +450,6 @@ void
 fsearch_database_update (bool scan)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    printf("update database\n");
     fsearch_action_disable ("update_database");
     if (scan) {
         g_thread_new("fsearch_db_update_thread", scan_database, app);
@@ -485,7 +484,7 @@ fsearch_action_enable (const char *action_name)
                                                   action_name);
 
     if (action) {
-        printf("enable action: %s\n", action_name);
+        trace ("[application] enable action: %s\n", action_name);
         g_simple_action_set_enabled (G_SIMPLE_ACTION (action), TRUE);
     }
 }
@@ -497,7 +496,7 @@ fsearch_action_disable (const char *action_name)
                                                   action_name);
 
     if (action) {
-        printf("disable action: %s\n", action_name);
+        trace ("[application] disable action: %s\n", action_name);
         g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
     }
 }

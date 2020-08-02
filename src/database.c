@@ -111,11 +111,11 @@ db_location_load_from_file (const char *fname)
 
     char magic[4];
     if (fread (magic, 1, 4, fp) != 4) {
-        printf ("failed to read magic\n");
+        trace ("[database_read_file] failed to read magic\n");
         goto load_fail;
     }
     if (strncmp (magic, "FSDB", 4)) {
-        printf ("bad signature\n");
+        trace ("[database_read_file] bad signature\n");
         goto load_fail;
     }
 
@@ -124,7 +124,7 @@ db_location_load_from_file (const char *fname)
         goto load_fail;
     }
     if (majorver != 0) {
-        printf ("bad majorver=%d\n", majorver);
+        trace ("[database_read_file] bad majorver=%d\n", majorver);
         goto load_fail;
     }
 
@@ -133,10 +133,10 @@ db_location_load_from_file (const char *fname)
         goto load_fail;
     }
     if (minorver != 1) {
-        printf ("bad minorver=%d\n", minorver);
+        trace ("[database_read_file] bad minorver=%d\n", minorver);
         goto load_fail;
     }
-    printf ("database version=%d.%d\n", majorver, minorver);
+    trace ("[database_read_file] database version=%d.%d\n", majorver, minorver);
 
     uint32_t num_items = 0;
     if (fread (&num_items, 1, 4, fp) != 4) {
@@ -148,7 +148,7 @@ db_location_load_from_file (const char *fname)
     while (true) {
         uint16_t name_len = 0;
         if (fread (&name_len, 1, 2, fp) != 2) {
-            printf("failed to read name length\n");
+            trace ("[database_read_file] failed to read name length\n");
             goto load_fail;
         }
 
@@ -160,7 +160,7 @@ db_location_load_from_file (const char *fname)
             prev = prev->parent;
             if (!prev) {
                 // prev was root node, we're done
-                printf("reached root node. done\n");
+                trace ("[database_read_file] reached root node. done\n");
                 break;
             }
             continue;
@@ -169,7 +169,7 @@ db_location_load_from_file (const char *fname)
         // read name
         char name[name_len + 1];
         if (fread (&name, 1, name_len, fp) != name_len) {
-            printf("failed to read name\n");
+            trace ("[database_read_file] failed to read name\n");
             goto load_fail;
         }
         name[name_len] = '\0';
@@ -177,28 +177,28 @@ db_location_load_from_file (const char *fname)
         // read is_dir
         uint8_t is_dir = 0;
         if (fread (&is_dir, 1, 1, fp) != 1) {
-            printf("failed to read is_dir\n");
+            trace ("[database_read_file] failed to read is_dir\n");
             goto load_fail;
         }
 
         // read size
         uint64_t size = 0;
         if (fread (&size, 1, 8, fp) != 8) {
-            printf("failed to read size\n");
+            trace ("[database_read_file] failed to read size\n");
             goto load_fail;
         }
 
         // read mtime
         uint64_t mtime = 0;
         if (fread (&mtime, 1, 8, fp) != 8) {
-            printf("failed to read mtime\n");
+            trace ("[database_read_file] failed to read mtime\n");
             goto load_fail;
         }
 
         // read mtime
         uint32_t pos = 0;
         if (fread (&pos, 1, 4, fp) != 4) {
-            printf("failed to read sort position\n");
+            trace ("[database_read_file] failed to read sort position\n");
             goto load_fail;
         }
 
@@ -209,6 +209,7 @@ db_location_load_from_file (const char *fname)
                                          pos,
                                          is_dir);
         if (!prev) {
+            num_items_read++;
             prev = new;
             root = new;
             continue;
@@ -216,7 +217,7 @@ db_location_load_from_file (const char *fname)
         prev = btree_node_prepend (prev, new);
         num_items_read++;
     }
-    trace ("read database: %d/%d\n", num_items_read, num_items);
+    trace ("[database_load] finished with %d of %d items successfully read\n", num_items_read, num_items);
 
     FsearchDatabaseNode *location = db_location_new ();
     location->num_items = num_items_read;
@@ -359,6 +360,8 @@ db_location_write_to_file (FsearchDatabaseNode *location, const char *path)
     }
 
     fclose (fp);
+
+    trace ("[database_save] saved %s\n", path);
     return true;
 
 save_fail:
@@ -408,7 +411,6 @@ db_location_walk_tree_recursive (FsearchDatabase *db,
 {
     int len = strlen (dname);
     if (len >= FILENAME_MAX - 1) {
-        //trace ("filename too long: %s\n", dname);
         return WALK_NAMETOOLONG;
     }
 
@@ -421,7 +423,6 @@ db_location_walk_tree_recursive (FsearchDatabase *db,
 
     DIR *dir = NULL;
     if (!(dir = opendir (dname))) {
-        //trace ("can't open: %s\n", dname);
         return WALK_BADIO;
     }
     gulong duration = 0;
@@ -444,7 +445,6 @@ db_location_walk_tree_recursive (FsearchDatabase *db,
             continue;
         }
         if (file_is_excluded (dent->d_name, db->exclude_files)) {
-            //trace ("excluded file: %s\n", dent->d_name);
             continue;
         }
 
@@ -456,7 +456,7 @@ db_location_walk_tree_recursive (FsearchDatabase *db,
         }
 
         if (directory_is_excluded (fn, db->excludes)) {
-            trace ("excluded directory: %s\n", fn);
+            trace ("[database_scan] excluded directory: %s\n", fn);
             continue;
         }
 
@@ -530,10 +530,9 @@ db_location_build_tree (FsearchDatabase *db, const char *dname, void (*callback)
     if (res == WALK_OK) {
         return location;
     }
-    else {
-        trace ("walk error: %d", res);
-        db_location_free (location);
-    }
+
+    trace ("[database_scan] walk error: %d", res);
+    db_location_free (location);
     return NULL;
 }
 
@@ -680,7 +679,7 @@ db_save_location (FsearchDatabase *db, const char *location_name)
     location_build_path (database_path,
                          sizeof (database_path),
                          location_name);
-    trace ("%s\n", database_path);
+    trace ("[database_save] saving %s to %s\n", location_name, database_path);
 
     gchar database_fname[PATH_MAX] = "";
     assert (0 <= snprintf (database_fname, sizeof (database_fname), "%s/database.db", database_path));
@@ -715,7 +714,6 @@ db_location_get_path (const char *location_name)
     location_build_path (database_path,
                          sizeof (database_path),
                          location_name);
-    trace ("%s\n", database_path);
 
     gchar database_fname[PATH_MAX] = "";
     assert (0 <= snprintf (database_fname, sizeof (database_fname), "%s/database.db", database_path));
@@ -736,7 +734,6 @@ db_location_load (FsearchDatabase *db, const char *location_name)
 
     if (location) {
         location->num_items = btree_node_n_nodes (location->entries);
-        trace ("number of nodes: %d\n", location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db_update_timestamp (db);
@@ -752,12 +749,12 @@ db_location_add (FsearchDatabase *db,
                  void (*callback)(const char *))
 {
     assert (db != NULL);
-    trace ("load location: %s\n", location_name);
+    trace ("[database_scan] scan location: %s\n", location_name);
 
     FsearchDatabaseNode *location = db_location_build_tree (db, location_name, callback);
 
     if (location) {
-        trace ("location num entries: %d\n", location->num_items);
+        trace ("[database_scan] %s scanned with %d entries\n", location_name, location->num_items);
         db->locations = g_list_append (db->locations, location);
         db->num_entries += location->num_items;
         db_update_timestamp (db);
@@ -803,7 +800,7 @@ db_build_initial_entries_list (FsearchDatabase *db)
 
     db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
-    trace ("update list: %d\n", num_entries);
+    trace ("[database_build_list] create list for %d entries\n", num_entries);
     db->entries = darray_new (num_entries);
 
     GList *locations = db->locations;
@@ -813,6 +810,7 @@ db_build_initial_entries_list (FsearchDatabase *db)
     }
     db_sort (db);
     db_update_sort_index (db);
+    trace ("[database_build_list] list created\n");
 }
 
 void
@@ -823,13 +821,14 @@ db_update_entries_list (FsearchDatabase *db)
 
     db_entries_clear (db);
     uint32_t num_entries = db_locations_get_num_entries (db);
-    trace ("update list: %d\n", num_entries);
+    trace ("[database_update_list] create list for %d entries\n", num_entries);
     db->entries = darray_new (num_entries);
 
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
         db_list_insert_location (db, l->data);
     }
+    trace ("[database_update_list] updated list\n");
 }
 
 BTreeNode *
@@ -878,14 +877,15 @@ db_location_free_all (FsearchDatabase *db)
         return;
     }
 
+    trace ("[database_location_free_all] freeing...\n");
     GList *l = db->locations;
     while (l) {
-        trace ("free location\n");
         db_location_free (l->data);
         l = l->next;
     }
     g_list_free (db->locations);
     db->locations = NULL;
+    trace ("[database_location_free_all] freed\n");
 }
 
 void
@@ -893,6 +893,7 @@ db_free (FsearchDatabase *db)
 {
     assert (db != NULL);
 
+    trace ("[database_free] freeing...\n");
     db_lock (db);
     db_entries_clear (db);
     db_location_free_all (db);
@@ -914,6 +915,8 @@ db_free (FsearchDatabase *db)
     g_mutex_clear (&db->mutex);
     g_free (db);
     db = NULL;
+
+    trace ("[database_free] freed\n");
     return;
 }
 
@@ -1055,8 +1058,8 @@ db_sort (FsearchDatabase *db)
     assert (db != NULL);
     assert (db->entries != NULL);
 
-    trace ("start sorting\n");
+    trace ("[database] sorting...\n");
     darray_sort (db->entries, sort_by_name);
-    trace ("finished sorting\n");
+    trace ("[database] sorted\n");
 }
 

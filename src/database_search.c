@@ -566,7 +566,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
         temp = temp->next;
     }
 
-    trace ("search done: ");
+    trace ("[search] search finished in ");
     timer_stop ();
 
     // get total number of entries found
