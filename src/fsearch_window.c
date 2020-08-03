@@ -93,6 +93,7 @@ init_statusbar (FsearchApplicationWindow *self)
     uint32_t num_items = 0;
     if (db) {
         num_items = db_get_num_entries (db);
+        db_unref (db);
     }
 
     gchar db_text[100] = "";
@@ -215,14 +216,18 @@ fsearch_window_apply_config (FsearchApplicationWindow *self)
     gtk_revealer_set_reveal_child (GTK_REVEALER (self->search_in_path_revealer), config->search_in_path);
 
     FsearchDatabase *db = fsearch_application_get_db (app);
-    uint32_t num_items = 0;
-    if (db) {
-        num_items = db_get_num_entries (db);
+    if (!db) {
+        gtk_widget_show (self->empty_database_overlay);
+        return;
     }
 
-    if (!db || !config->locations || num_items == 0) {
+    uint32_t num_items = db_get_num_entries (db);
+
+    if (!config->locations || num_items == 0) {
         gtk_widget_show (self->empty_database_overlay);
     }
+
+    db_unref (db);
 }
 
 G_DEFINE_TYPE (FsearchApplicationWindow, fsearch_application_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -373,6 +378,9 @@ update_model_cb (gpointer user_data)
         hide_overlays (win);
     }
 
+    if (result->db) {
+        db_unref (result->db);
+    }
     free (result);
     result = NULL;
     return FALSE;
@@ -398,8 +406,12 @@ perform_search (FsearchApplicationWindow *win)
     }
 
     FsearchDatabase *db = fsearch_application_get_db (app);
-    if (!db || !db_try_lock (db)) {
+    if (!db) {
+        return FALSE;
+    }
+    if (!db_try_lock (db)) {
         trace ("[search] database locked\n");
+        db_unlock (db);
         return FALSE;
     }
 
@@ -792,6 +804,7 @@ database_update_finished_cb (gpointer data, gpointer user_data)
     strftime (db_text, sizeof(db_text),
              _("Last Updated: %Y-%m-%d %H:%M"), //"%Y-%m-%d %H:%M",
              localtime (&timestamp));
+    db_unref (db);
 }
 
 static void

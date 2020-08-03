@@ -106,6 +106,7 @@ fsearch_search_thread (gpointer user_data)
                 result = db_search (search, query);
             }
             result->cb_data = query->callback_data;
+            result->db = search->db;
             query->callback (result);
             fsearch_query_free (query);
             g_mutex_lock (&search->query_mutex);

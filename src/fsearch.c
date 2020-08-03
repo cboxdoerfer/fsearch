@@ -80,7 +80,11 @@ FsearchDatabase *
 fsearch_application_get_db (FsearchApplication *fsearch)
 {
     g_assert (FSEARCH_IS_APPLICATION (fsearch));
-    return fsearch->db;
+    if (fsearch->db) {
+        db_ref (fsearch->db);
+        return fsearch->db;
+    }
+    return NULL;
 }
 
 FsearchThreadPool *
@@ -161,7 +165,7 @@ fsearch_options_handler(GApplication *gapp,
 
         scan_database(fsearch);
         if (fsearch->db) {
-            db_free (fsearch->db);
+            db_unref (fsearch->db);
         }
 
         printf ("done!\n");
@@ -223,7 +227,7 @@ fsearch_application_shutdown (GApplication *app)
     }
 
     if (fsearch->db) {
-        db_free (fsearch->db);
+        db_unref (fsearch->db);
     }
     if (fsearch->pool) {
         fsearch_thread_pool_free (fsearch->pool);
@@ -261,7 +265,7 @@ updated_database_signal_emit_cb (gpointer user_data)
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     prepare_windows_for_db_update (self);
     if (self->db) {
-        db_free (self->db);
+        db_unref (self->db);
     }
     self->db = (FsearchDatabase *)user_data;
     fsearch_action_enable ("update_database");

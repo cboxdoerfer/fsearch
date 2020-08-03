@@ -37,7 +37,10 @@ bool
 db_scan (FsearchDatabase *db, void (*callback)(const char *));
 
 void
-db_free (FsearchDatabase *db);
+db_ref (FsearchDatabase *db);
+
+void
+db_unref (FsearchDatabase *db);
 
 FsearchDatabase *
 db_new (GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden);

@@ -55,6 +55,7 @@ struct _FsearchDatabase
     bool exclude_hidden;
     time_t timestamp;
 
+    int32_t ref_count;
     GMutex mutex;
 };
 
@@ -853,6 +854,7 @@ db_new (GList *includes, GList *excludes, char **exclude_files, bool exclude_hid
         db->exclude_files = g_strdupv (exclude_files);
     }
     db->exclude_hidden = exclude_hidden;
+    db->ref_count = 1;
     return db;
 }
 
@@ -895,6 +897,9 @@ db_free (FsearchDatabase *db)
 
     trace ("[database_free] freeing...\n");
     db_lock (db);
+    if (db->ref_count > 0) {
+        trace ("[database_free] pending references on free: %d\n", db->ref_count);
+    }
     db_entries_clear (db);
     db_location_free_all (db);
 
@@ -1061,5 +1066,28 @@ db_sort (FsearchDatabase *db)
     trace ("[database] sorting...\n");
     darray_sort (db->entries, sort_by_name);
     trace ("[database] sorted\n");
+}
+
+void
+db_ref (FsearchDatabase *db)
+{
+    assert (db != NULL);
+    db_lock (db);
+    db->ref_count++;
+    db_unlock (db);
+    trace ("[database_ref] increased to: %d\n", db->ref_count);
+}
+
+void
+db_unref (FsearchDatabase *db)
+{
+    assert (db != NULL);
+    db_lock (db);
+    db->ref_count--;
+    db_unlock (db);
+    trace ("[database_unref] dropped to: %d\n", db->ref_count);
+    if (db->ref_count <= 0) {
+        db_free (db);
+    }
 }
 

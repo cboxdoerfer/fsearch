@@ -42,6 +42,7 @@ typedef enum {
 
 typedef struct
 {
+    FsearchDatabase *db;
     GPtrArray *results;
     void *cb_data;
     uint32_t num_folders;
