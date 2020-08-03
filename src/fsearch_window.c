@@ -408,8 +408,7 @@ perform_search (FsearchApplicationWindow *win)
     uint32_t max_results = config->limit_results ? config->num_results : 0;
     if (win->search) {
         db_search_update (win->search,
-                          db_get_entries (db),
-                          db_get_num_entries (db),
+                          db,
                           max_results,
                           filter,
                           text,

@@ -172,7 +172,7 @@ search_thread (void * user_data)
     search_query_t **queries = ctx->queries;
     const uint32_t search_in_path = ctx->search->search_in_path;
     const uint32_t auto_search_in_path = ctx->search->auto_search_in_path;
-    DynamicArray *entries = ctx->search->entries;
+    DynamicArray *entries = db_get_entries (ctx->search->db);
     BTreeNode **results = ctx->results;
 
     uint32_t num_results = 0;
@@ -278,7 +278,7 @@ search_regex_thread (void * user_data)
         const uint32_t max_results = ctx->search->max_results;
         const bool search_in_path = ctx->search->search_in_path;
         const bool auto_search_in_path = ctx->search->auto_search_in_path;
-        DynamicArray *entries = ctx->search->entries;
+        DynamicArray *entries = db_get_entries (ctx->search->db);
         BTreeNode **results = ctx->results;
         const FsearchFilter filter = ctx->search->filter;
 
@@ -478,18 +478,19 @@ static DatabaseSearchResult *
 db_search_empty (DatabaseSearch *search)
 {
     assert (search != NULL);
-    assert (search->entries != NULL);
+    assert (search->db != NULL);
 
-    const uint32_t num_results = MIN (search->max_results, search->num_entries);
+    const uint32_t num_entries = db_get_num_entries (search->db);
+    const uint32_t num_results = MIN (search->max_results, num_entries);
     GPtrArray *results = g_ptr_array_sized_new (num_results);
     g_ptr_array_set_free_func (results, (GDestroyNotify)db_search_entry_free);
 
-    DynamicArray *entries = search->entries;
+    DynamicArray *entries = db_get_entries (search->db);
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
     uint32_t pos = 0;
-    for (uint32_t i = 0; pos < num_results && i < search->num_entries; ++i) {
+    for (uint32_t i = 0; pos < num_results && i < num_entries; ++i) {
         BTreeNode *node = darray_get_item (entries, i);
         if (!node) {
             continue;
@@ -520,12 +521,13 @@ static DatabaseSearchResult *
 db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
-    assert (search->entries != NULL);
+    assert (search->db != NULL);
 
     search_query_t **queries = build_queries (search, q);
 
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
-    const uint32_t num_items_per_thread = search->num_entries / num_threads;
+    const uint32_t num_entries = db_get_num_entries (search->db);
+    const uint32_t num_items_per_thread = num_entries / num_threads;
 
     search_thread_context_t *thread_data[num_threads];
     memset (thread_data, 0, num_threads * sizeof (search_thread_context_t *));
@@ -547,7 +549,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
                 queries,
                 num_queries,
                 start_pos,
-                i == num_threads - 1 ? search->num_entries - 1 : end_pos);
+                i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
@@ -743,8 +745,7 @@ db_search_set_query (DatabaseSearch *search, const char *query)
 
 void
 db_search_update (DatabaseSearch *search,
-                  DynamicArray *entries,
-                  uint32_t num_entries,
+                  FsearchDatabase *db,
                   uint32_t max_results,
                   FsearchFilter filter,
                   const char *query,
@@ -756,8 +757,7 @@ db_search_update (DatabaseSearch *search,
 {
     assert (search != NULL);
 
-    search->entries = entries;
-    search->num_entries = num_entries;
+    search->db = db;
     db_search_set_query (search, query);
     search->enable_regex = enable_regex;
     search->search_in_path = search_in_path;
@@ -837,7 +837,7 @@ void
 db_perform_search (DatabaseSearch *search, void (*callback)(void *), void *callback_data)
 {
     assert (search != NULL);
-    if (search->entries == NULL) {
+    if (search->db == NULL) {
         return;
     }
 

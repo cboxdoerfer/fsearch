@@ -22,6 +22,7 @@
 #include "array.h"
 #include "btree.h"
 #include "query.h"
+#include "database.h"
 #include "fsearch_thread_pool.h"
 
 typedef struct _DatabaseSearch DatabaseSearch;
@@ -51,9 +52,7 @@ struct _DatabaseSearch
 {
     GPtrArray *results;
     FsearchThreadPool *pool;
-
-    DynamicArray *entries;
-    uint32_t num_entries;
+    FsearchDatabase *db;
 
     GThread *search_thread;
     bool search_thread_terminate;
@@ -93,8 +92,7 @@ db_search_set_query (DatabaseSearch *search, const char *query);
 
 void
 db_search_update (DatabaseSearch *search,
-                  DynamicArray *entries,
-                  uint32_t num_entries,
+                  FsearchDatabase *db,
                   uint32_t max_results,
                   FsearchFilter filter,
                   const char *query,
