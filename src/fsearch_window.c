@@ -338,34 +338,35 @@ update_model_cb (gpointer user_data)
     FsearchApplicationWindow *win = result->cb_data;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config (app);
+    FsearchDatabase *db = fsearch_application_get_db (app);
 
     remove_model_from_list (win);
     db_search_results_clear (win->search);
 
     uint32_t num_results = 0;
-    GPtrArray *results = result->results;
-    if (results) {
-        list_model_set_results (win->list_model, results);
-        win->search->results = results;
-        win->search->num_folders = result->num_folders;;
-        win->search->num_files = result->num_files;
-        num_results = results->len;
-        list_model_sort (win->list_model);
-    }
-    else {
-        list_model_set_results (win->list_model, NULL);
-        win->search->results = NULL;
-        win->search->num_folders = 0;
-        win->search->num_files = 0;
-        num_results = 0;
+    if (db == result->db) {
+        GPtrArray *results = result->results;
+        if (results && results->len > 0) {
+            list_model_set_results (win->list_model, results);
+            win->search->results = results;
+            win->search->num_folders = result->num_folders;;
+            win->search->num_files = result->num_files;
+            num_results = results->len;
+            list_model_sort (win->list_model);
+        }
+        else {
+            list_model_set_results (win->list_model, NULL);
+            win->search->results = NULL;
+            win->search->num_folders = 0;
+            win->search->num_files = 0;
+            num_results = 0;
+        }
     }
 
     apply_model_to_list (win);
     gchar sb_text[100] = "";
     snprintf (sb_text, sizeof (sb_text), _("%'d Items"), num_results);
     update_statusbar (win, sb_text);
-
-    //reset_sort_order (win);
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     if (text[0] == '\0' && config->hide_results_on_empty_search) {
@@ -378,6 +379,9 @@ update_model_cb (gpointer user_data)
         hide_overlays (win);
     }
 
+    if (db) {
+        db_unref (db);
+    }
     if (result->db) {
         db_unref (result->db);
     }
@@ -399,40 +403,46 @@ perform_search (FsearchApplicationWindow *win)
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config (app);
+    if (!win->search) {
+        trace ("[search] not set\n");
+        return FALSE;
+    }
 
     if (!config->locations) {
         show_overlay (win, NO_DATABASE_OVERLAY);
         return FALSE;
     }
 
+    fsearch_application_state_lock (app);
     FsearchDatabase *db = fsearch_application_get_db (app);
     if (!db) {
+        fsearch_application_state_unlock (app);
         return FALSE;
     }
     if (!db_try_lock (db)) {
         trace ("[search] database locked\n");
-        db_unlock (db);
+        db_unref (db);
+        fsearch_application_state_unlock (app);
         return FALSE;
     }
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
+    trace ("[search] %s\n", text); 
     FsearchFilter filter = gtk_combo_box_get_active (GTK_COMBO_BOX (win->filter_combobox));
     uint32_t max_results = config->limit_results ? config->num_results : 0;
-    if (win->search) {
-        db_search_update (win->search,
-                          db,
-                          max_results,
-                          filter,
-                          text,
-                          config->hide_results_on_empty_search,
-                          config->match_case,
-                          config->enable_regex,
-                          config->auto_search_in_path,
-                          config->search_in_path);
-
-        db_perform_search (win->search, fsearch_application_window_update_results, win);
-    }
+    FsearchQuery *q = fsearch_query_new (text,
+                                         db,
+                                         filter,
+                                         fsearch_application_window_update_results, win,
+                                         max_results,
+                                         config->match_case,
+                                         config->enable_regex,
+                                         config->auto_search_in_path,
+                                         config->search_in_path,
+                                         !config->hide_results_on_empty_search);
     db_unlock (db);
+    db_search_queue (win->search, q);
+    fsearch_application_state_unlock (app);
     return FALSE;
 }
 
@@ -527,7 +537,6 @@ on_listview_key_press_event (GtkWidget *widget,
 static gboolean
 on_listview_button_press_event (GtkWidget *widget, GdkEventButton *event, gpointer user_data)
 {
-    //printf("popup menu\n");
     g_return_val_if_fail (user_data != NULL, FALSE);
     g_return_val_if_fail (event != NULL, FALSE);
 

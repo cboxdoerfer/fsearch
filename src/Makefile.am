@@ -25,6 +25,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_window.h \
 			 fsearch_window_actions.h \
 			 fsearch_limits.h \
+			 fsearch_filter.h \
 			 fsearch_include_path.h \
 			 fsearch_exclude_path.h \
 			 fsearch_preferences_widgets.h \

@@ -990,7 +990,6 @@ list_model_sort_init (ListModel *list_model, char *sort_by, bool sort_ascending)
     g_return_if_fail (IS_LIST_MODEL(list_model));
 
     if (sort_by) {
-        printf("sortby: %s\n", sort_by);
         if (!strcmp (sort_by, "Name")) {
             list_model->sort_id = SORT_ID_NAME;
         }

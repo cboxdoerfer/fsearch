@@ -20,13 +20,22 @@
 
 #include <stdbool.h>
 
+#include "database.h"
+#include "fsearch_filter.h"
+
 typedef struct
 {
     char *query;
+    FsearchDatabase *db;
+    FsearchFilter filter;
+
+    uint32_t max_results;
+
     bool match_case;
     bool enable_regex;
     bool auto_search_in_path;
     bool search_in_path;
+    bool pass_on_empty_query;
 
     void (*callback)(void *);
     void *callback_data;
@@ -34,12 +43,17 @@ typedef struct
 
 FsearchQuery *
 fsearch_query_new (const char *query,
+                   FsearchDatabase *db,
+                   FsearchFilter filter,
                    void (*callback)(void *),
                    void *callback_data,
+                   uint32_t max_results,
                    bool match_case,
                    bool enable_regex,
                    bool auto_search_in_path,
-                   bool search_in_path);
+                   bool search_in_path,
+                   bool pass_on_empty_query);
 
 void
 fsearch_query_free (FsearchQuery *query);
+

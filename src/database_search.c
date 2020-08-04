@@ -30,7 +30,6 @@
 #include "database_search.h"
 #include "fsearch_window.h"
 #include "string_utils.h"
-#include "query.h"
 #include "debug.h"
 #include "utf8.h"
 
@@ -53,7 +52,7 @@ typedef struct search_query_s {
 } search_query_t;
 
 typedef struct search_context_s {
-    DatabaseSearch *search;
+    FsearchQuery *query;
     BTreeNode **results;
     search_query_t **queries;
     uint32_t num_queries;
@@ -66,7 +65,7 @@ static DatabaseSearchResult *
 db_search (DatabaseSearch *search, FsearchQuery *q);
 
 static DatabaseSearchResult *
-db_search_empty (DatabaseSearch *search);
+db_search_empty (FsearchQuery *query);
 
 DatabaseSearchEntry *
 db_search_entry_new (BTreeNode *node, uint32_t pos);
@@ -85,7 +84,7 @@ fsearch_search_thread (gpointer user_data)
         if (search->search_thread_terminate) {
             break;
         }
-        while (true) {
+        while (search->query_ctx) {
             FsearchQuery *query = search->query_ctx;
             if (!query) {
                 break;
@@ -95,8 +94,8 @@ fsearch_search_thread (gpointer user_data)
             // if query is empty string we are done here
             DatabaseSearchResult *result = NULL;
             if (fs_str_is_empty (query->query)) {
-                if (!search->hide_results) {
-                    result = db_search_empty (search);
+                if (query->pass_on_empty_query) {
+                    result = db_search_empty (query);
                 }
                 else {
                     result = calloc (1, sizeof (DatabaseSearchResult));
@@ -105,11 +104,11 @@ fsearch_search_thread (gpointer user_data)
             else {
                 result = db_search (search, query);
             }
+            g_mutex_lock (&search->query_mutex);
             result->cb_data = query->callback_data;
-            result->db = search->db;
+            result->db = query->db;
             query->callback (result);
             fsearch_query_free (query);
-            g_mutex_lock (&search->query_mutex);
         }
     }
     g_mutex_unlock (&search->query_mutex);
@@ -118,7 +117,7 @@ fsearch_search_thread (gpointer user_data)
 
 
 static search_thread_context_t *
-search_thread_context_new (DatabaseSearch *search,
+search_thread_context_new (FsearchQuery *query,
                            search_query_t **queries,
                            uint32_t num_queries,
                            uint32_t start_pos,
@@ -128,7 +127,7 @@ search_thread_context_new (DatabaseSearch *search,
     assert (ctx != NULL);
     assert (end_pos >= start_pos);
 
-    ctx->search = search;
+    ctx->query = query;
     ctx->queries = queries;
     ctx->num_queries = num_queries;
     ctx->results = calloc (end_pos - start_pos + 1, sizeof (BTreeNode *));
@@ -167,14 +166,20 @@ search_thread (void * user_data)
 
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
-    const uint32_t max_results = ctx->search->max_results;
+    const uint32_t max_results = ctx->query->max_results;
     const uint32_t num_queries = ctx->num_queries;
-    const FsearchFilter filter = ctx->search->filter;
+    const FsearchFilter filter = ctx->query->filter;
     search_query_t **queries = ctx->queries;
-    const uint32_t search_in_path = ctx->search->search_in_path;
-    const uint32_t auto_search_in_path = ctx->search->auto_search_in_path;
-    DynamicArray *entries = db_get_entries (ctx->search->db);
+    const uint32_t search_in_path = ctx->query->search_in_path;
+    const uint32_t auto_search_in_path = ctx->query->auto_search_in_path;
+    DynamicArray *entries = db_get_entries (ctx->query->db);
     BTreeNode **results = ctx->results;
+
+    if (!entries) {
+        ctx->num_results = 0;
+        trace ("[database_search] entries empty\n");
+        return NULL;
+    }
 
     uint32_t num_results = 0;
     char full_path[PATH_MAX] = "";
@@ -266,7 +271,7 @@ search_regex_thread (void * user_data)
     const char *error;
     int erroffset;
     pcre *regex = pcre_compile (query->query,
-                                ctx->search->match_case ? 0 : PCRE_CASELESS,
+                                ctx->query->match_case ? 0 : PCRE_CASELESS,
                                 &error,
                                 &erroffset,
                                 NULL);
@@ -276,12 +281,12 @@ search_regex_thread (void * user_data)
     if (regex) {
         const uint32_t start = ctx->start_pos;
         const uint32_t end = ctx->end_pos;
-        const uint32_t max_results = ctx->search->max_results;
-        const bool search_in_path = ctx->search->search_in_path;
-        const bool auto_search_in_path = ctx->search->auto_search_in_path;
-        DynamicArray *entries = db_get_entries (ctx->search->db);
+        const uint32_t max_results = ctx->query->max_results;
+        const bool search_in_path = ctx->query->search_in_path;
+        const bool auto_search_in_path = ctx->query->auto_search_in_path;
+        DynamicArray *entries = db_get_entries (ctx->query->db);
         BTreeNode **results = ctx->results;
-        const FsearchFilter filter = ctx->search->filter;
+        const FsearchFilter filter = ctx->query->filter;
 
         uint32_t num_results = 0;
         char full_path[PATH_MAX] = "";
@@ -436,9 +441,9 @@ search_query_new (const char *query, bool match_case)
 }
 
 static search_query_t **
-build_queries (DatabaseSearch *search, FsearchQuery *q)
+build_queries (FsearchQuery *q)
 {
-    assert (search != NULL);
+    assert (q != NULL);
     assert (q->query != NULL);
 
     char *tmp_query_copy = strdup (q->query);
@@ -448,9 +453,9 @@ build_queries (DatabaseSearch *search, FsearchQuery *q)
 
     // check if regex characters are present
     const bool is_reg = is_regex (q->query);
-    if (is_reg && search->enable_regex) {
+    if (is_reg && q->enable_regex) {
         search_query_t **queries = calloc (2, sizeof (search_query_t *));
-        queries[0] = search_query_new (tmp_query_copy, search->match_case);
+        queries[0] = search_query_new (tmp_query_copy, q->match_case);
         queries[1] = NULL;
         g_free (tmp_query_copy);
         tmp_query_copy = NULL;
@@ -464,7 +469,7 @@ build_queries (DatabaseSearch *search, FsearchQuery *q)
     uint32_t tmp_queries_len = g_strv_length (tmp_queries);
     search_query_t **queries = calloc (tmp_queries_len + 1, sizeof (search_query_t *));
     for (uint32_t i = 0; i < tmp_queries_len; i++) {
-        queries[i] = search_query_new (tmp_queries[i], search->match_case);
+        queries[i] = search_query_new (tmp_queries[i], q->match_case);
     }
 
     g_free (tmp_query_copy);
@@ -476,17 +481,17 @@ build_queries (DatabaseSearch *search, FsearchQuery *q)
 }
 
 static DatabaseSearchResult *
-db_search_empty (DatabaseSearch *search)
+db_search_empty (FsearchQuery *query)
 {
-    assert (search != NULL);
-    assert (search->db != NULL);
+    assert (query != NULL);
+    assert (query->db != NULL);
 
-    const uint32_t num_entries = db_get_num_entries (search->db);
-    const uint32_t num_results = MIN (search->max_results, num_entries);
+    const uint32_t num_entries = db_get_num_entries (query->db);
+    const uint32_t num_results = MIN (query->max_results, num_entries);
     GPtrArray *results = g_ptr_array_sized_new (num_results);
     g_ptr_array_set_free_func (results, (GDestroyNotify)db_search_entry_free);
 
-    DynamicArray *entries = db_get_entries (search->db);
+    DynamicArray *entries = db_get_entries (query->db);
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
@@ -497,7 +502,7 @@ db_search_empty (DatabaseSearch *search)
             continue;
         }
 
-        if (!filter_node (node, search->filter)) {
+        if (!filter_node (node, query->filter)) {
             continue;
         }
         if (node->is_dir) {
@@ -522,20 +527,19 @@ static DatabaseSearchResult *
 db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
-    assert (search->db != NULL);
 
-    search_query_t **queries = build_queries (search, q);
+    search_query_t **queries = build_queries (q);
 
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
-    const uint32_t num_entries = db_get_num_entries (search->db);
+    const uint32_t num_entries = db_get_num_entries (q->db);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     search_thread_context_t *thread_data[num_threads];
     memset (thread_data, 0, num_threads * sizeof (search_thread_context_t *));
 
-    const uint32_t max_results = search->max_results;
+    const uint32_t max_results = q->max_results;
     const bool limit_results = max_results ? true : false;
-    const bool is_reg = is_regex (search->query);
+    const bool is_reg = is_regex (q->query);
     uint32_t num_queries = 0;
     while (queries[num_queries]) {
         num_queries++;
@@ -546,18 +550,18 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
     timer_start ();
     GList *temp = fsearch_thread_pool_get_threads (search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-        thread_data[i] = search_thread_context_new (search,
-                queries,
-                num_queries,
-                start_pos,
-                i == num_threads - 1 ? num_entries - 1 : end_pos);
+        thread_data[i] = search_thread_context_new (q,
+                                                    queries,
+                                                    num_queries,
+                                                    start_pos,
+                                                    i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
 
         fsearch_thread_pool_push_data (search->pool,
                                        temp,
-                                       is_reg && search->enable_regex ?
+                                       is_reg && q->enable_regex ?
                                            search_regex_thread : search_thread,
                                        thread_data[i]);
         temp = temp->next;
@@ -653,10 +657,6 @@ db_search_free (DatabaseSearch *search)
     assert (search != NULL);
 
     db_search_results_clear (search);
-    if (search->query) {
-        g_free (search->query);
-        search->query = NULL;
-    }
     g_mutex_lock (&search->query_mutex);
     if (search->query_ctx) {
         fsearch_query_free (search->query_ctx);
@@ -725,50 +725,6 @@ db_search_new (FsearchThreadPool *pool)
     return db_search;
 }
 
-void
-db_search_set_search_in_path (DatabaseSearch *search, bool search_in_path)
-{
-    assert (search != NULL);
-
-    search->search_in_path = search_in_path;
-}
-
-void
-db_search_set_query (DatabaseSearch *search, const char *query)
-{
-    assert (search != NULL);
-
-    if (search->query) {
-        g_free (search->query);
-    }
-    search->query = g_strdup (query);
-}
-
-void
-db_search_update (DatabaseSearch *search,
-                  FsearchDatabase *db,
-                  uint32_t max_results,
-                  FsearchFilter filter,
-                  const char *query,
-                  bool hide_results,
-                  bool match_case,
-                  bool enable_regex,
-                  bool auto_search_in_path,
-                  bool search_in_path)
-{
-    assert (search != NULL);
-
-    search->db = db;
-    db_search_set_query (search, query);
-    search->enable_regex = enable_regex;
-    search->search_in_path = search_in_path;
-    search->auto_search_in_path = auto_search_in_path;
-    search->hide_results = hide_results;
-    search->match_case = match_case;
-    search->max_results = max_results;
-    search->filter = filter;
-}
-
 uint32_t
 db_search_get_num_results (DatabaseSearch *search)
 {
@@ -822,29 +778,19 @@ db_search_get_results (DatabaseSearch *search)
     return search->results;
 }
 
-static void
+void
 db_search_queue (DatabaseSearch *search, FsearchQuery *query)
 {
     g_mutex_lock (&search->query_mutex);
     if (search->query_ctx) {
+        if (search->query_ctx->db) {
+            db_unref (search->query_ctx->db);
+        }
         fsearch_query_free (search->query_ctx);
+        search->query_ctx = NULL;
     }
     search->query_ctx = query;
     g_mutex_unlock (&search->query_mutex);
     g_cond_signal (&search->search_thread_start_cond);
-}
-
-void
-db_perform_search (DatabaseSearch *search, void (*callback)(void *), void *callback_data)
-{
-    assert (search != NULL);
-    if (search->db == NULL) {
-        return;
-    }
-
-    //db_search_results_clear (search);
-
-    FsearchQuery *q = fsearch_query_new (search->query, callback, callback_data, false, false, false, false);
-    db_search_queue (search, q);
 }
 

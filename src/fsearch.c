@@ -80,11 +80,12 @@ FsearchDatabase *
 fsearch_application_get_db (FsearchApplication *fsearch)
 {
     g_assert (FSEARCH_IS_APPLICATION (fsearch));
+    FsearchDatabase *db = NULL;
     if (fsearch->db) {
         db_ref (fsearch->db);
-        return fsearch->db;
+        db = fsearch->db;
     }
-    return NULL;
+    return db;
 }
 
 FsearchThreadPool *
@@ -263,12 +264,22 @@ static gboolean
 updated_database_signal_emit_cb (gpointer user_data)
 {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
+    g_mutex_lock (&self->mutex);
     prepare_windows_for_db_update (self);
     if (self->db) {
         db_unref (self->db);
     }
-    self->db = (FsearchDatabase *)user_data;
+    FsearchDatabase *db = user_data;
+    if (db) {
+        db_lock (db);
+        self->db = db;
+        db_unlock (db);
+    }
+    else {
+        self->db = NULL;
+    }
     fsearch_action_enable ("update_database");
+    g_mutex_unlock (&self->mutex);
     g_signal_emit (self, signals [DATABASE_UPDATE_FINISHED], 0);
     return G_SOURCE_REMOVE;
 }
@@ -312,16 +323,17 @@ update_database_thread (bool rescan)
         return;
     }
 
-    g_mutex_lock (&app->mutex);
 
     g_idle_add (update_database_signal_emit_cb, app);
 
     timer_start ();
 
+    g_mutex_lock (&app->mutex);
     FsearchDatabase *db = db_new (app->config->locations,
                            app->config->exclude_locations,
                            app->config->exclude_files,
                            app->config->exclude_hidden_items);
+    g_mutex_unlock (&app->mutex);
     db_lock (db);
     if (rescan) {
         db_scan (db, build_location_callback);
@@ -335,7 +347,7 @@ update_database_thread (bool rescan)
     timer_stop ();
     db_unlock (db);
 
-    g_mutex_unlock (&app->mutex);
+
     g_idle_add (updated_database_signal_emit_cb, db);
 
 }
@@ -503,6 +515,18 @@ fsearch_action_disable (const char *action_name)
         trace ("[application] disable action: %s\n", action_name);
         g_simple_action_set_enabled (G_SIMPLE_ACTION (action), FALSE);
     }
+}
+
+void
+fsearch_application_state_lock (FsearchApplication *fsearch)
+{
+    g_mutex_lock (&fsearch->mutex);
+}
+
+void
+fsearch_application_state_unlock (FsearchApplication *fsearch)
+{
+    g_mutex_unlock (&fsearch->mutex);
 }
 
 static GActionEntry app_entries[] =

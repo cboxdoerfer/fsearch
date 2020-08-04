@@ -48,6 +48,12 @@ FsearchConfig *
 fsearch_application_get_config (FsearchApplication *fsearch);
 
 void
+fsearch_application_state_lock (FsearchApplication *fsearch);
+
+void
+fsearch_application_state_unlock (FsearchApplication *fsearch);
+
+void
 fsearch_application_update_listview_config (void);
 
 FsearchThreadPool *
