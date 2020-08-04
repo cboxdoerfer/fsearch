@@ -75,7 +75,7 @@ on_column_exclude_toggled (GtkCellRendererToggle *cell,
                            gpointer               data)
 {
     FsearchPreferences *pref = data;
-    bool val = on_column_toggled (path_str, pref->exclude_model, COL_EXCLUDE_ENABLE);
+    on_column_toggled (path_str, pref->exclude_model, COL_EXCLUDE_ENABLE);
     pref->update_db = true;
 }
 
@@ -85,7 +85,7 @@ on_column_include_enable_toggled (GtkCellRendererToggle *cell,
                                   gpointer               data)
 {
     FsearchPreferences *pref = data;
-    bool val = on_column_toggled (path_str, pref->include_model, COL_INCLUDE_ENABLE);
+    on_column_toggled (path_str, pref->include_model, COL_INCLUDE_ENABLE);
     pref->update_db = true;
 }
 
@@ -95,7 +95,7 @@ on_column_include_toggled (GtkCellRendererToggle *cell,
                            gpointer               data)
 {
     FsearchPreferences *pref = data;
-    bool val = on_column_toggled (path_str, pref->include_model, COL_INCLUDE_UPDATE);
+    on_column_toggled (path_str, pref->include_model, COL_INCLUDE_UPDATE);
     pref->update_db = true;
 }
 
