@@ -60,6 +60,7 @@ struct _FsearchApplication
 enum {
     DATABASE_UPDATE_STARTED,
     DATABASE_UPDATE_FINISHED,
+    DATABASE_LOAD_STARTED,
     NUM_SIGNALS
 };
 
@@ -285,6 +286,14 @@ updated_database_signal_emit_cb (gpointer user_data)
 }
 
 static gboolean
+load_database_signal_emit_cb (gpointer user_data)
+{
+    FsearchApplication *self = FSEARCH_APPLICATION (user_data);
+    g_signal_emit (self, signals [DATABASE_LOAD_STARTED], 0);
+    return G_SOURCE_REMOVE;
+}
+
+static gboolean
 update_database_signal_emit_cb (gpointer user_data)
 {
     FsearchApplication *self = FSEARCH_APPLICATION (user_data);
@@ -324,7 +333,12 @@ update_database_thread (bool rescan)
     }
 
 
-    g_idle_add (update_database_signal_emit_cb, app);
+    if (rescan) {
+        g_idle_add (update_database_signal_emit_cb, app);
+    }
+    else {
+        g_idle_add (load_database_signal_emit_cb, app);
+    }
 
     timer_start ();
 
@@ -631,6 +645,14 @@ fsearch_application_class_init (FsearchApplicationClass *klass)
 
     signals [DATABASE_UPDATE_FINISHED] =
         g_signal_new ("database-update-finished",
+                      G_TYPE_FROM_CLASS (klass),
+                      G_SIGNAL_RUN_LAST,
+                      0,
+                      NULL, NULL, NULL,
+                      G_TYPE_NONE,
+                      0);
+    signals [DATABASE_LOAD_STARTED] =
+        g_signal_new ("database-load-started",
                       G_TYPE_FROM_CLASS (klass),
                       G_SIGNAL_RUN_LAST,
                       0,

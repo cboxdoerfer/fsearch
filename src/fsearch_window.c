@@ -43,7 +43,9 @@ struct _FsearchApplicationWindow {
     DatabaseSearchResult *search_result;
 
     GtkWidget *database_updating_overlay;
+    GtkWidget *database_loading_overlay;
     GtkWidget *database_updating_label;
+    GtkWidget *database_loading_label;
     GtkWidget *empty_search_query_overlay;
     GtkWidget *no_search_results_overlay;
     GtkWidget *empty_database_overlay;
@@ -291,6 +293,7 @@ typedef enum {
     NO_SEARCH_QUERY_OVERLAY,
     NO_DATABASE_OVERLAY,
     DATABASE_UPDATING_OVERLAY,
+    DATABASE_LOADING_OVERLAY,
 } FsearchOverlay;
 
 static void
@@ -300,6 +303,7 @@ hide_overlays (FsearchApplicationWindow *win)
     gtk_widget_hide (win->empty_database_overlay);
     gtk_widget_hide (win->empty_search_query_overlay);
     gtk_widget_hide (win->database_updating_overlay);
+    gtk_widget_hide (win->database_loading_overlay);
 }
 
 static void
@@ -319,6 +323,9 @@ show_overlay (FsearchApplicationWindow *win, FsearchOverlay overlay)
             break;
         case DATABASE_UPDATING_OVERLAY:
             gtk_widget_show (win->database_updating_overlay);
+            break;
+        case DATABASE_LOADING_OVERLAY:
+            gtk_widget_show (win->database_loading_overlay);
             break;
     }
 }
@@ -799,11 +806,17 @@ database_update_finished_cb (gpointer data, gpointer user_data)
 
     fsearch_application_window_update_search (win);
 
+    hide_overlays (win);
     gtk_spinner_stop (GTK_SPINNER (win->database_spinner));
 
     gtk_stack_set_visible_child (GTK_STACK (win->database_stack), win->database_box2);
     FsearchDatabase *db = fsearch_application_get_db (FSEARCH_APPLICATION_DEFAULT);
     uint32_t num_items = db_get_num_entries (db);
+
+    if (!db || num_items == 0) {
+        show_overlay (win, NO_DATABASE_OVERLAY);
+    }
+
     gchar db_text[100] = "";
     snprintf (db_text, sizeof (db_text), _("%'d Items"), num_items);
     gtk_label_set_text (GTK_LABEL (win->database_label), db_text);
@@ -817,7 +830,7 @@ database_update_finished_cb (gpointer data, gpointer user_data)
 }
 
 static void
-database_update_started_cb (gpointer data, gpointer user_data)
+database_load_started_cb (gpointer data, gpointer user_data)
 {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
     g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
@@ -826,9 +839,22 @@ database_update_started_cb (gpointer data, gpointer user_data)
     gtk_spinner_start (GTK_SPINNER (win->database_spinner));
     gchar db_text[100] = "";
     snprintf (db_text, sizeof (db_text), _("Loading Database…"));
-    gtk_label_set_text (GTK_LABEL (win->database_label), db_text);
+    gtk_label_set_text (GTK_LABEL (win->database_label1), db_text);
 
+    show_overlay (win, DATABASE_LOADING_OVERLAY);
+}
 
+static void
+database_update_started_cb (gpointer data, gpointer user_data)
+{
+    FsearchApplicationWindow *win = (FsearchApplicationWindow *) user_data;
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (win));
+
+    gtk_stack_set_visible_child (GTK_STACK (win->database_stack), win->database_box1);
+    gtk_spinner_start (GTK_SPINNER (win->database_spinner));
+    gchar db_text[100] = "";
+    snprintf (db_text, sizeof (db_text), _("Updating Database…"));
+    gtk_label_set_text (GTK_LABEL (win->database_label1), db_text);
 }
 
 static void
@@ -855,6 +881,10 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
     g_signal_connect (app,
                       "database-update-finished",
                       G_CALLBACK (database_update_finished_cb),
+                      self);
+    g_signal_connect (app,
+                      "database-load-started",
+                      G_CALLBACK (database_load_started_cb),
                       self);
 
     g_signal_connect (gtk_icon_theme_get_default (),
@@ -889,6 +919,14 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
                              self->database_updating_overlay);
     self->database_updating_label = GTK_WIDGET (gtk_builder_get_object (builder,
                                                                         "database_updating_label"));
+
+    // Overlay when database is loading
+    self->database_loading_overlay = GTK_WIDGET (gtk_builder_get_object (builder,
+                                                                         "database_loading"));
+    gtk_overlay_add_overlay (GTK_OVERLAY (self->search_overlay),
+                             self->database_loading_overlay);
+    self->database_loading_label = GTK_WIDGET (gtk_builder_get_object (builder,
+                                                                       "database_loading_label"));
 
     g_object_unref (builder);
 }
