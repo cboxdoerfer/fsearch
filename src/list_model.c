@@ -24,6 +24,7 @@
 #include <ctype.h>
 #include <glib/gstdio.h>
 
+#include "debug.h"
 #include "iconstore.h"
 #include "database_search.h"
 #include "btree.h"
@@ -1015,6 +1016,28 @@ list_model_sort_init (ListModel *list_model, char *sort_by, bool sort_ascending)
     }
 }
 
+#ifdef DEBUG
+static struct timeval tm1;
+#endif
+
+static inline void timer_start()
+{
+#ifdef DEBUG
+    gettimeofday(&tm1, NULL);
+#endif
+}
+
+static inline void timer_stop()
+{
+#ifdef DEBUG
+    struct timeval tm2;
+    gettimeofday(&tm2, NULL);
+
+    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
+    trace ("%llu ms\n", t);
+#endif
+}
+
 void
 list_model_sort (ListModel *list_model)
 {
@@ -1030,6 +1053,8 @@ list_model_sort (ListModel *list_model)
         return;
     }
 
+    trace ("[list_model] sort started\n");
+    timer_start ();
     /* resort */
     g_ptr_array_sort_with_data (list_model->results,
                                 (GCompareDataFunc) list_model_qsort_compare_func,
@@ -1054,6 +1079,8 @@ list_model_sort (ListModel *list_model)
 
     gtk_tree_path_free(path);
     g_free(neworder);
+    trace ("[list_model] sort finished in ");
+    timer_stop ();
 }
 
 void
