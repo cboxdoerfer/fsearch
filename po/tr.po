@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-04 14:39+0200\n"
-"PO-Revision-Date: 2020-07-31 18:42+0000\n"
+"PO-Revision-Date: 2020-08-09 16:32+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -43,10 +43,9 @@ msgid "Loading Database…"
 msgstr "Veri Tabanı Yükleniyor…"
 
 #: src/fsearch_window.c:856
-#, fuzzy, c-format
-#| msgid "Updating Database..."
+#, c-format
 msgid "Updating Database…"
-msgstr "Veri Tabanı Güncelleniyor.."
+msgstr "Veri Tabanı Güncelleniyor…"
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -108,14 +107,12 @@ msgid "Moving files to trash…"
 msgstr "Dosyalar çöp sepetine taşınıyor…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
-msgstr "RegEx'i Aktifleştir"
+msgstr "Etkinleştir"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Güncelle"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -164,20 +161,16 @@ msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
 
 #: src/overlay.ui:143
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading Database..."
-msgstr "Veri Tabanı Yükleniyor…"
+msgstr "Veri Tabanı Yükleniyor..."
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
-msgstr "Bu biraz zaman alacak."
+msgstr "Bu uzun sürmeyecek."
 
 #: src/overlay.ui:213 src/fsearch.glade:783
 msgid "Updating Database..."
