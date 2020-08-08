@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 10:56+0200\n"
+"POT-Creation-Date: 2020-08-04 14:39+0200\n"
 "PO-Revision-Date: 2020-07-18 03:41+0000\n"
 "Last-Translator: Doma Gergő <domag02@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/fsearch/"
@@ -19,61 +19,68 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.2-dev\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
+#: src/fsearch_window.c:102 src/fsearch_window.c:375 src/fsearch_window.c:821
 #, c-format
 msgid "%'d Items"
 msgstr "%'d elem"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:620 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Fájl megnyitása sikertelen"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:621 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Nyitva akarja hagyni az ablakot?"
 
-#: src/fsearch_window.c:750
+#: src/fsearch_window.c:827
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Utoljára frissítve: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:763
+#: src/fsearch_window.c:841
 #, c-format
 msgid "Loading Database…"
 msgstr "Adatbázis betöltése…"
 
-#: src/listview.c:153 src/menus.ui:80
+#: src/fsearch_window.c:856
+#, fuzzy, c-format
+#| msgid "Updating Database..."
+msgid "Updating Database…"
+msgstr "Adatbázis frissítése..."
+
+#: src/listview.c:143 src/menus.ui:80
 msgid "Name"
 msgstr "Név"
 
-#: src/listview.c:182 src/menus.ui:84
+#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "Elérési út"
 
-#: src/listview.c:211 src/menus.ui:92
+#: src/listview.c:201 src/menus.ui:92
 msgid "Size"
 msgstr "Méret"
 
-#: src/listview.c:243 src/menus.ui:96
+#: src/listview.c:233 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Módosítás dátuma"
 
-#: src/listview.c:272 src/menus.ui:88
+#: src/listview.c:262 src/menus.ui:88
 msgid "Type"
 msgstr "Típus"
 
-#: src/fsearch.c:193
+#: src/fsearch.c:199
 msgid "Show version information"
 msgstr "Verzióinformáció megjelenítése"
 
-#: src/fsearch.c:200
+#: src/fsearch.c:206
 msgid "Update the database"
 msgstr "Adatbázis frissítése"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:412
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:386
+#: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Egy keresési segédprogram, mely a teljesítményre és a fejlett képességekre "
@@ -102,6 +109,16 @@ msgstr "Fájlok törlése…"
 #: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "Fájlok áthelyezése a Kukába…"
+
+#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
+#, fuzzy
+#| msgid "Enable RegEx"
+msgid "Enable"
+msgstr "Reguláris kifejezések engedélyezése"
+
+#: src/fsearch_preferences_widgets.c:225
+msgid "Update"
+msgstr ""
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -149,23 +166,35 @@ msgstr "Lekérdezés kiürítése"
 msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "Nyomj <b>Ctrl + F</b>-et és kezdj el gépelni"
 
-#: src/overlay.ui:143 src/fsearch.glade:783
-msgid "Updating Database..."
-msgstr "Adatbázis frissítése..."
+#: src/overlay.ui:143
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Loading Database..."
+msgstr "Adatbázis betöltése…"
 
-#: src/overlay.ui:158
+#: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
+#, fuzzy
+#| msgid "This may take a while."
+msgid "This won't take long."
+msgstr "Ez eltarthat egy ideig."
+
+#: src/overlay.ui:213 src/fsearch.glade:783
+msgid "Updating Database..."
+msgstr "Adatbázis frissítése..."
+
+#: src/overlay.ui:243
 msgid "This may take a while."
 msgstr "Ez eltarthat egy ideig."
 
-#: src/overlay.ui:213
+#: src/overlay.ui:283
 msgid "No Results Found"
 msgstr "Nincs találat"
 
-#: src/overlay.ui:228
+#: src/overlay.ui:298
 msgid "Try a different search"
 msgstr "Próbálj ki egy másik keresést"
 

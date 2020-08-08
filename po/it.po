@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 10:56+0200\n"
+"POT-Creation-Date: 2020-08-04 14:39+0200\n"
 "PO-Revision-Date: 2020-07-30 09:52+0200\n"
 "Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: Italian\n"
@@ -17,61 +17,67 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
+#: src/fsearch_window.c:102 src/fsearch_window.c:375 src/fsearch_window.c:821
 #, c-format
 msgid "%'d Items"
 msgstr ""
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:620 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr ""
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:621 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr ""
 
-#: src/fsearch_window.c:750
+#: src/fsearch_window.c:827
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr ""
 
-#: src/fsearch_window.c:763
+#: src/fsearch_window.c:841
 #, c-format
 msgid "Loading Database…"
 msgstr ""
 
-#: src/listview.c:153 src/menus.ui:80
+#: src/fsearch_window.c:856
+#, c-format
+msgid "Updating Database…"
+msgstr ""
+
+#: src/listview.c:143 src/menus.ui:80
 msgid "Name"
 msgstr ""
 
-#: src/listview.c:182 src/menus.ui:84
+#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr ""
 
-#: src/listview.c:211 src/menus.ui:92
+#: src/listview.c:201 src/menus.ui:92
 msgid "Size"
 msgstr ""
 
-#: src/listview.c:243 src/menus.ui:96
+#: src/listview.c:233 src/menus.ui:96
 msgid "Date Modified"
 msgstr ""
 
-#: src/listview.c:272 src/menus.ui:88
+#: src/listview.c:262 src/menus.ui:88
 msgid "Type"
 msgstr ""
 
-#: src/fsearch.c:193
+#: src/fsearch.c:199
 msgid "Show version information"
 msgstr ""
 
-#: src/fsearch.c:200
+#: src/fsearch.c:206
 msgid "Update the database"
 msgstr ""
 
-#: src/fsearch.c:385
+#: src/fsearch.c:412
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:386
+#: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 
@@ -95,6 +101,14 @@ msgstr ""
 
 #: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
+msgid "Enable"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:225
+msgid "Update"
 msgstr ""
 
 #: src/menus.ui:7
@@ -141,23 +155,31 @@ msgstr ""
 msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr ""
 
-#: src/overlay.ui:143 src/fsearch.glade:783
-msgid "Updating Database..."
+#: src/overlay.ui:143
+msgid "Loading Database..."
 msgstr ""
 
-#: src/overlay.ui:158
+#: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr ""
 
 #: src/overlay.ui:173
+msgid "This won't take long."
+msgstr ""
+
+#: src/overlay.ui:213 src/fsearch.glade:783
+msgid "Updating Database..."
+msgstr ""
+
+#: src/overlay.ui:243
 msgid "This may take a while."
 msgstr ""
 
-#: src/overlay.ui:213
+#: src/overlay.ui:283
 msgid "No Results Found"
 msgstr ""
 
-#: src/overlay.ui:228
+#: src/overlay.ui:298
 msgid "Try a different search"
 msgstr ""
 

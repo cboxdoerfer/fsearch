@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 10:56+0200\n"
+"POT-Creation-Date: 2020-08-04 14:39+0200\n"
 "PO-Revision-Date: 2020-07-31 18:42+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,61 +20,68 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.2-dev\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
+#: src/fsearch_window.c:102 src/fsearch_window.c:375 src/fsearch_window.c:821
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Öğe"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:620 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Dosya açılamadı"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:621 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Pencereyi açık tutmak istiyor musunuz?"
 
-#: src/fsearch_window.c:750
+#: src/fsearch_window.c:827
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Son Güncelleme Tarihi: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:763
+#: src/fsearch_window.c:841
 #, c-format
 msgid "Loading Database…"
 msgstr "Veri Tabanı Yükleniyor…"
 
-#: src/listview.c:153 src/menus.ui:80
+#: src/fsearch_window.c:856
+#, fuzzy, c-format
+#| msgid "Updating Database..."
+msgid "Updating Database…"
+msgstr "Veri Tabanı Güncelleniyor.."
+
+#: src/listview.c:143 src/menus.ui:80
 msgid "Name"
 msgstr "İsim"
 
-#: src/listview.c:182 src/menus.ui:84
+#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "Yol"
 
-#: src/listview.c:211 src/menus.ui:92
+#: src/listview.c:201 src/menus.ui:92
 msgid "Size"
 msgstr "Boyut"
 
-#: src/listview.c:243 src/menus.ui:96
+#: src/listview.c:233 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Düzenlenme Tarihi"
 
-#: src/listview.c:272 src/menus.ui:88
+#: src/listview.c:262 src/menus.ui:88
 msgid "Type"
 msgstr "Tür"
 
-#: src/fsearch.c:193
+#: src/fsearch.c:199
 msgid "Show version information"
 msgstr "Sürüm bilgilerini göster"
 
-#: src/fsearch.c:200
+#: src/fsearch.c:206
 msgid "Update the database"
 msgstr "Veri tabanını güncelle"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:412
 msgid "translator-credits"
 msgstr "Oğuz Ersen"
 
-#: src/fsearch.c:386
+#: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
@@ -99,6 +106,16 @@ msgstr "Dosyalar siliniyor…"
 #: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "Dosyalar çöp sepetine taşınıyor…"
+
+#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
+#, fuzzy
+#| msgid "Enable RegEx"
+msgid "Enable"
+msgstr "RegEx'i Aktifleştir"
+
+#: src/fsearch_preferences_widgets.c:225
+msgid "Update"
+msgstr ""
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -146,23 +163,35 @@ msgstr "Boş Sorgu"
 msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
 
-#: src/overlay.ui:143 src/fsearch.glade:783
-msgid "Updating Database..."
-msgstr "Veri Tabanı Güncelleniyor.."
+#: src/overlay.ui:143
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Loading Database..."
+msgstr "Veri Tabanı Yükleniyor…"
 
-#: src/overlay.ui:158
+#: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
+#, fuzzy
+#| msgid "This may take a while."
+msgid "This won't take long."
+msgstr "Bu biraz zaman alacak."
+
+#: src/overlay.ui:213 src/fsearch.glade:783
+msgid "Updating Database..."
+msgstr "Veri Tabanı Güncelleniyor.."
+
+#: src/overlay.ui:243
 msgid "This may take a while."
 msgstr "Bu biraz zaman alacak."
 
-#: src/overlay.ui:213
+#: src/overlay.ui:283
 msgid "No Results Found"
 msgstr "Hiç bir sonuç bulunamadı"
 
-#: src/overlay.ui:228
+#: src/overlay.ui:298
 msgid "Try a different search"
 msgstr "Farklı bir arama deneyiniz"
 

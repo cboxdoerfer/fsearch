@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 10:56+0200\n"
+"POT-Creation-Date: 2020-08-04 14:39+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Kevin Kim <root@hamonikr.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -19,62 +19,69 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.17-dev\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
+#: src/fsearch_window.c:102 src/fsearch_window.c:375 src/fsearch_window.c:821
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 건"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:620 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "파일을 열 수 없습니다."
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:621 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "현재 검색창을 유지하시겠습니까?"
 
-#: src/fsearch_window.c:750
+#: src/fsearch_window.c:827
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "최근 업데이트: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:763
+#: src/fsearch_window.c:841
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "데이터베이스 로딩중…"
 
-#: src/listview.c:153 src/menus.ui:80
+#: src/fsearch_window.c:856
+#, fuzzy, c-format
+#| msgid "Updating Database..."
+msgid "Updating Database…"
+msgstr "데이터베이스 업데이트"
+
+#: src/listview.c:143 src/menus.ui:80
 msgid "Name"
 msgstr "파일명"
 
-#: src/listview.c:182 src/menus.ui:84
+#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "경로"
 
-#: src/listview.c:211 src/menus.ui:92
+#: src/listview.c:201 src/menus.ui:92
 msgid "Size"
 msgstr "크기"
 
-#: src/listview.c:243 src/menus.ui:96
+#: src/listview.c:233 src/menus.ui:96
 msgid "Date Modified"
 msgstr "수정일시"
 
-#: src/listview.c:272 src/menus.ui:88
+#: src/listview.c:262 src/menus.ui:88
 msgid "Type"
 msgstr "유형"
 
-#: src/fsearch.c:193
+#: src/fsearch.c:199
 msgid "Show version information"
 msgstr "버전 정보 보기"
 
-#: src/fsearch.c:200
+#: src/fsearch.c:206
 #, fuzzy
 msgid "Update the database"
 msgstr "데이터베이스 업데이트"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:412
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:386
+#: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
@@ -103,6 +110,16 @@ msgstr "파일 삭제 중…"
 #, fuzzy
 msgid "Moving files to trash…"
 msgstr "휴지통으로 이동 중…"
+
+#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
+#, fuzzy
+#| msgid "Enable RegEx"
+msgid "Enable"
+msgstr "정규표현식 가능"
+
+#: src/fsearch_preferences_widgets.c:225
+msgid "Update"
+msgstr ""
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -148,23 +165,34 @@ msgstr "검색어가 없습니다."
 msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "<b>Ctrl + F</b>를 누르고 키워드를 입력하세요"
 
-#: src/overlay.ui:143 src/fsearch.glade:783
-msgid "Updating Database..."
-msgstr "데이터베이스 업데이트"
+#: src/overlay.ui:143
+#, fuzzy
+msgid "Loading Database..."
+msgstr "데이터베이스 로딩중…"
 
-#: src/overlay.ui:158
+#: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr "…"
 
 #: src/overlay.ui:173
+#, fuzzy
+#| msgid "This may take a while."
+msgid "This won't take long."
+msgstr "작업에 시간이 걸릴 수 있습니다"
+
+#: src/overlay.ui:213 src/fsearch.glade:783
+msgid "Updating Database..."
+msgstr "데이터베이스 업데이트"
+
+#: src/overlay.ui:243
 msgid "This may take a while."
 msgstr "작업에 시간이 걸릴 수 있습니다"
 
-#: src/overlay.ui:213
+#: src/overlay.ui:283
 msgid "No Results Found"
 msgstr "결과를 찾을 수 없습니다."
 
-#: src/overlay.ui:228
+#: src/overlay.ui:298
 msgid "Try a different search"
 msgstr "다른 조건으로 검색을 해보세요"
 

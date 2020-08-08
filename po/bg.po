@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 10:56+0200\n"
+"POT-Creation-Date: 2020-08-04 14:39+0200\n"
 "PO-Revision-Date: 2020-06-13 10:41+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -19,61 +19,68 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.1-dev\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
+#: src/fsearch_window.c:102 src/fsearch_window.c:375 src/fsearch_window.c:821
 #, c-format
 msgid "%'d Items"
 msgstr "%'d елемента"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:620 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Файлът не може да бъде отворен"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:621 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Искате ли да оставите прозореца отворен?"
 
-#: src/fsearch_window.c:750
+#: src/fsearch_window.c:827
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Последно обновяване: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:763
+#: src/fsearch_window.c:841
 #, c-format
 msgid "Loading Database…"
 msgstr "Зареждане на базата с данни…"
 
-#: src/listview.c:153 src/menus.ui:80
+#: src/fsearch_window.c:856
+#, fuzzy, c-format
+#| msgid "Updating Database..."
+msgid "Updating Database…"
+msgstr "Обновяване на базата с данни..."
+
+#: src/listview.c:143 src/menus.ui:80
 msgid "Name"
 msgstr "Име"
 
-#: src/listview.c:182 src/menus.ui:84
+#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "Път"
 
-#: src/listview.c:211 src/menus.ui:92
+#: src/listview.c:201 src/menus.ui:92
 msgid "Size"
 msgstr "Размер"
 
-#: src/listview.c:243 src/menus.ui:96
+#: src/listview.c:233 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Дата на промяна"
 
-#: src/listview.c:272 src/menus.ui:88
+#: src/listview.c:262 src/menus.ui:88
 msgid "Type"
 msgstr "Тип"
 
-#: src/fsearch.c:193
+#: src/fsearch.c:199
 msgid "Show version information"
 msgstr "Показване на информация за версията"
 
-#: src/fsearch.c:200
+#: src/fsearch.c:206
 msgid "Update the database"
 msgstr "Обновяване на базата с данни"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:412
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:386
+#: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Инструмент за търсене, фокусиран върху висока производителност и разширени "
@@ -102,6 +109,16 @@ msgstr "Изтриване на файловете…"
 #: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "Преместване на файловете в кошчето…"
+
+#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
+#, fuzzy
+#| msgid "Enable RegEx"
+msgid "Enable"
+msgstr "Включване на регулярни изрази"
+
+#: src/fsearch_preferences_widgets.c:225
+msgid "Update"
+msgstr ""
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -149,23 +166,35 @@ msgstr "Няма задание"
 msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете"
 
-#: src/overlay.ui:143 src/fsearch.glade:783
-msgid "Updating Database..."
-msgstr "Обновяване на базата с данни..."
+#: src/overlay.ui:143
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Loading Database..."
+msgstr "Зареждане на базата с данни…"
 
-#: src/overlay.ui:158
+#: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
+#, fuzzy
+#| msgid "This may take a while."
+msgid "This won't take long."
+msgstr "Това може да отнеме известно време."
+
+#: src/overlay.ui:213 src/fsearch.glade:783
+msgid "Updating Database..."
+msgstr "Обновяване на базата с данни..."
+
+#: src/overlay.ui:243
 msgid "This may take a while."
 msgstr "Това може да отнеме известно време."
 
-#: src/overlay.ui:213
+#: src/overlay.ui:283
 msgid "No Results Found"
 msgstr "Не са намерени резултати"
 
-#: src/overlay.ui:228
+#: src/overlay.ui:298
 msgid "Try a different search"
 msgstr "Опитайте с друго търсене"
 

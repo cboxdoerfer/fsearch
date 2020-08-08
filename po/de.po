@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-07-30 10:56+0200\n"
+"POT-Creation-Date: 2020-08-04 14:39+0200\n"
 "PO-Revision-Date: 2020-07-31 18:42+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
@@ -20,61 +20,68 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.2-dev\n"
 
-#: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
+#: src/fsearch_window.c:102 src/fsearch_window.c:375 src/fsearch_window.c:821
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Einträge"
 
-#: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:620 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Datei konnte nicht geöffnet werden"
 
-#: src/fsearch_window.c:552 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:621 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Möchten Sie das Fenster offen lassen?"
 
-#: src/fsearch_window.c:750
+#: src/fsearch_window.c:827
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Zuletzt aktualisiert: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:763
+#: src/fsearch_window.c:841
 #, c-format
 msgid "Loading Database…"
 msgstr "Lade Datenbank…"
 
-#: src/listview.c:153 src/menus.ui:80
+#: src/fsearch_window.c:856
+#, fuzzy, c-format
+#| msgid "Updating Database..."
+msgid "Updating Database…"
+msgstr "Aktualisiere Datenbank..."
+
+#: src/listview.c:143 src/menus.ui:80
 msgid "Name"
 msgstr "Name"
 
-#: src/listview.c:182 src/menus.ui:84
+#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "Pfad"
 
-#: src/listview.c:211 src/menus.ui:92
+#: src/listview.c:201 src/menus.ui:92
 msgid "Size"
 msgstr "Größe"
 
-#: src/listview.c:243 src/menus.ui:96
+#: src/listview.c:233 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Geändert am"
 
-#: src/listview.c:272 src/menus.ui:88
+#: src/listview.c:262 src/menus.ui:88
 msgid "Type"
 msgstr "Typ"
 
-#: src/fsearch.c:193
+#: src/fsearch.c:199
 msgid "Show version information"
 msgstr "Versionsinformationen anzeigen"
 
-#: src/fsearch.c:200
+#: src/fsearch.c:206
 msgid "Update the database"
 msgstr "Aktualisiere die Datenbank"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:412
 msgid "translator-credits"
 msgstr "Christian Boxdörfer"
 
-#: src/fsearch.c:386
+#: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Eine Dateisuche, das sich auf Leistung und erweiterten Funktionen "
@@ -101,6 +108,16 @@ msgstr "Lösche Elemente…"
 #: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
 msgstr "Verschiebe Elemente in den Papierkorb…"
+
+#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
+#, fuzzy
+#| msgid "Enable RegEx"
+msgid "Enable"
+msgstr "Aktiviere RegEx"
+
+#: src/fsearch_preferences_widgets.c:225
+msgid "Update"
+msgstr ""
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -148,23 +165,35 @@ msgstr "Leere Suche"
 msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "Drücke <b>Strg + F</b> und tippe los"
 
-#: src/overlay.ui:143 src/fsearch.glade:783
-msgid "Updating Database..."
-msgstr "Aktualisiere Datenbank..."
+#: src/overlay.ui:143
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Loading Database..."
+msgstr "Lade Datenbank…"
 
-#: src/overlay.ui:158
+#: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
+#, fuzzy
+#| msgid "This may take a while."
+msgid "This won't take long."
+msgstr "Dies kann einige Zeit dauern."
+
+#: src/overlay.ui:213 src/fsearch.glade:783
+msgid "Updating Database..."
+msgstr "Aktualisiere Datenbank..."
+
+#: src/overlay.ui:243
 msgid "This may take a while."
 msgstr "Dies kann einige Zeit dauern."
 
-#: src/overlay.ui:213
+#: src/overlay.ui:283
 msgid "No Results Found"
 msgstr "Keine Ergebnisse gefunden"
 
-#: src/overlay.ui:228
+#: src/overlay.ui:298
 msgid "Try a different search"
 msgstr "Versuche eine andere Suche"
 
