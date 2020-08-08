@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-04 14:39+0200\n"
-"PO-Revision-Date: 2020-08-02 12:42+0000\n"
+"PO-Revision-Date: 2020-08-09 16:32+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -42,10 +42,9 @@ msgid "Loading Database…"
 msgstr "Bezig met laden van databank…"
 
 #: src/fsearch_window.c:856
-#, fuzzy, c-format
-#| msgid "Updating Database..."
+#, c-format
 msgid "Updating Database…"
-msgstr "Bezig met bijwerken van databank..."
+msgstr "Bezig met bijwerken van databank…"
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -107,14 +106,12 @@ msgid "Moving files to trash…"
 msgstr "Bezig met verplaatsen naar prullenbak…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
-msgstr "Reguliere expressies gebruiken"
+msgstr "Inschakelen"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Bijwerken"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -161,18 +158,14 @@ msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "Druk op <b>Ctrl + F</b> en begin met typen"
 
 #: src/overlay.ui:143
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading Database..."
-msgstr "Bezig met laden van databank…"
+msgstr "Bezig met laden van databank..."
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
 msgstr "Dit kan even duren."
 
