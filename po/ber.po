@@ -8,18 +8,21 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-07-30 10:56+0200\n"
-"PO-Revision-Date: 2020-07-30 09:50+0200\n"
-"Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
-"Language-Team: Language ber\n"
+"PO-Revision-Date: 2020-08-08 00:38+0000\n"
+"Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
+"Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
+"translations/ber/>\n"
 "Language: ber\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:99 src/fsearch_window.c:318 src/fsearch_window.c:744
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d ⵉⴼⵔⴷⴰⵙ"
 
 #: src/fsearch_window.c:551 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
@@ -31,24 +34,24 @@ msgstr ""
 
 #: src/fsearch_window.c:750
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "ⴰⵙⴷⵖⵉ ⴰⵎⴳⴳⴰⵔⵓ:%Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:763
 #, c-format
 msgid "Loading Database…"
-msgstr ""
+msgstr "ⴰⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/listview.c:153 src/menus.ui:80
 msgid "Name"
-msgstr ""
+msgstr "ⵉⵙⵎ"
 
 #: src/listview.c:182 src/menus.ui:84
 msgid "Path"
-msgstr ""
+msgstr "ⴰⴱⵔⵉⴷ"
 
 #: src/listview.c:211 src/menus.ui:92
 msgid "Size"
-msgstr ""
+msgstr "ⴰⴷⴷⵓⴷ"
 
 #: src/listview.c:243 src/menus.ui:96
 msgid "Date Modified"
@@ -56,7 +59,7 @@ msgstr ""
 
 #: src/listview.c:272 src/menus.ui:88
 msgid "Type"
-msgstr ""
+msgstr "ⴰⵙⵔⵜⵓ"
 
 #: src/fsearch.c:193
 msgid "Show version information"
@@ -68,7 +71,7 @@ msgstr ""
 
 #: src/fsearch.c:385
 msgid "translator-credits"
-msgstr ""
+msgstr "ⵓⴱⵓⵄⵍⵉ ⵃⴰⴽⵉⵎ"
 
 #: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
@@ -77,11 +80,11 @@ msgstr ""
 #: src/fsearch_window_actions.c:85
 #, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr ""
+msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
 
 #: src/fsearch_window_actions.c:87
 msgid "Opening Files…"
-msgstr ""
+msgstr "ⴰⵕⵥⵥⵓⵎ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
 #: src/fsearch_window_actions.c:167
 #, c-format
@@ -90,27 +93,27 @@ msgstr ""
 
 #: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
-msgstr ""
+msgstr "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
 #: src/fsearch_window_actions.c:171
 msgid "Moving files to trash…"
-msgstr ""
+msgstr "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
 
 #: src/menus.ui:7
 msgid "_Open"
-msgstr ""
+msgstr "_ⵕⵥⵎ"
 
 #: src/menus.ui:13
 msgid "Open _With"
-msgstr ""
+msgstr "ⵕⵥⵎ_ⵙ"
 
 #: src/menus.ui:27
 msgid "_Open Folder"
-msgstr ""
+msgstr "_ⵕⵥⵎ ⴰⵙⴷⴰⵡ"
 
 #: src/menus.ui:43
 msgid "_Copy"
-msgstr ""
+msgstr "_ⵙⵙⵏⵖⵍ"
 
 #: src/menus.ui:49
 msgid "_Copy Filepath"
@@ -118,11 +121,11 @@ msgstr ""
 
 #: src/menus.ui:56
 msgid "Move to _Trash"
-msgstr ""
+msgstr "ⵙⵉⵜⵜⵉ ⵙ_ⵓⵚⵏⵏⴰⵊ"
 
 #: src/menus.ui:62
 msgid "_Delete"
-msgstr ""
+msgstr "_ⴽⴽⵙ"
 
 #: src/overlay.ui:31
 msgid "Empty Database"
