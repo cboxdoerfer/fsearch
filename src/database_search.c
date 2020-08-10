@@ -278,57 +278,60 @@ search_regex_thread (void * user_data)
 
     int ovector[OVECCOUNT] = {0};
 
-    if (regex) {
-        const uint32_t start = ctx->start_pos;
-        const uint32_t end = ctx->end_pos;
-        const uint32_t max_results = ctx->query->max_results;
-        const bool search_in_path = ctx->query->search_in_path;
-        const bool auto_search_in_path = ctx->query->auto_search_in_path;
-        DynamicArray *entries = db_get_entries (ctx->query->db);
-        BTreeNode **results = ctx->results;
-        const FsearchFilter filter = ctx->query->filter;
-
-        uint32_t num_results = 0;
-        char full_path[PATH_MAX] = "";
-        for (uint32_t i = start; i <= end; ++i) {
-            if (max_results && num_results == max_results) {
-                break;
-            }
-            BTreeNode *node = darray_get_item (entries, i);
-            if (!node) {
-                continue;
-            }
-
-            if (!filter_node (node, filter)) {
-                continue;
-            }
-
-            const char *haystack = NULL;
-            if (search_in_path || (auto_search_in_path && query->has_separator)) {
-                btree_node_get_path_full (node, full_path, sizeof (full_path));
-                haystack = full_path;
-            }
-            else {
-                haystack = node->name;
-            }
-            size_t haystack_len = strlen (haystack);
-
-            if (pcre_exec (regex,
-                           NULL,
-                           haystack,
-                           haystack_len,
-                           0,
-                           0,
-                           ovector,
-                           OVECCOUNT)
-                >= 0) {
-                results[num_results] = node;
-                num_results++;
-            }
-        }
-        ctx->num_results = num_results;
-        pcre_free (regex);
+    if (!regex) {
+        return NULL;
     }
+
+    const uint32_t start = ctx->start_pos;
+    const uint32_t end = ctx->end_pos;
+    const uint32_t max_results = ctx->query->max_results;
+    const bool search_in_path = ctx->query->search_in_path;
+    const bool auto_search_in_path = ctx->query->auto_search_in_path;
+    DynamicArray *entries = db_get_entries (ctx->query->db);
+    BTreeNode **results = ctx->results;
+    const FsearchFilter filter = ctx->query->filter;
+
+    uint32_t num_results = 0;
+    char full_path[PATH_MAX] = "";
+    for (uint32_t i = start; i <= end; ++i) {
+        if (max_results && num_results == max_results) {
+            break;
+        }
+        BTreeNode *node = darray_get_item (entries, i);
+        if (!node) {
+            continue;
+        }
+
+        if (!filter_node (node, filter)) {
+            continue;
+        }
+
+        const char *haystack = NULL;
+        if (search_in_path || (auto_search_in_path && query->has_separator)) {
+            btree_node_get_path_full (node, full_path, sizeof (full_path));
+            haystack = full_path;
+        }
+        else {
+            haystack = node->name;
+        }
+        size_t haystack_len = strlen (haystack);
+
+        if (pcre_exec (regex,
+                       NULL,
+                       haystack,
+                       haystack_len,
+                       0,
+                       0,
+                       ovector,
+                       OVECCOUNT)
+            >= 0) {
+            results[num_results] = node;
+            num_results++;
+        }
+    }
+    ctx->num_results = num_results;
+    pcre_free (regex);
+
     return NULL;
 }
 
