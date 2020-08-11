@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-04 14:39+0200\n"
-"PO-Revision-Date: 2020-08-08 00:38+0000\n"
+"PO-Revision-Date: 2020-08-12 07:32+0000\n"
 "Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
 "Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
 "translations/ber/>\n"
@@ -30,7 +30,7 @@ msgstr ""
 
 #: src/fsearch_window.c:621 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵊⵊⵉⴷ ⴰⵙⴰⵜⵎ ⵉⵕⵥⵎ?"
 
 #: src/fsearch_window.c:827
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -42,10 +42,9 @@ msgid "Loading Database…"
 msgstr "ⴰⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/fsearch_window.c:856
-#, fuzzy, c-format
-#| msgid "Loading Database…"
+#, c-format
 msgid "Updating Database…"
-msgstr "ⴰⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
+msgstr "ⵓⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -62,7 +61,7 @@ msgstr "ⴰⴷⴷⵓⴷ"
 
 #: src/listview.c:233 src/menus.ui:96
 msgid "Date Modified"
-msgstr ""
+msgstr "ⴰⵙⴰⴽⵓⴷ ⵉⵜⵜⵓⵙⵏⴼⵍⵏ"
 
 #: src/listview.c:262 src/menus.ui:88
 msgid "Type"
@@ -96,7 +95,7 @@ msgstr "ⴰⵕⵥⵥⵓⵎ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 #: src/fsearch_window_actions.c:167
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr ""
+msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴽⴽⵙ %d (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)?"
 
 #: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
@@ -108,11 +107,12 @@ msgstr "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ�
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
 msgid "Enable"
-msgstr ""
+msgstr "ⵙⵔⴼⵓ"
 
 #: src/fsearch_preferences_widgets.c:225
+#, fuzzy
 msgid "Update"
-msgstr ""
+msgstr "ⴰⵙⵜⵔⴰⵔ"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -132,7 +132,7 @@ msgstr "_ⵙⵙⵏⵖⵍ"
 
 #: src/menus.ui:49
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_ⵙⵙⵏⵖⵍ ⴰⴱⵔⵉⴷ ⵓⴼⴰⵢⵍⵓ"
 
 #: src/menus.ui:56
 msgid "Move to _Trash"
@@ -156,25 +156,24 @@ msgstr ""
 
 #: src/overlay.ui:102
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "ⴰⴷⵔ ⵅ <b>Ctrl + F</b> ⴷ ⵜⴰⵡⵍⴷ ⵜⵜⴰⵔⵉⴷ"
 
 #: src/overlay.ui:143
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading Database..."
 msgstr "ⴰⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "..."
-msgstr ""
+msgstr "..."
 
 #: src/overlay.ui:173
 msgid "This won't take long."
-msgstr ""
+msgstr "ⴰⵢⴰ ⵓⵔ ⵉⵜⵜⴰⵙⵉ ⴰⵜⵜⴰⵙ."
 
 #: src/overlay.ui:213 src/fsearch.glade:783
+#, fuzzy
 msgid "Updating Database..."
-msgstr ""
+msgstr "ⵓⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -222,11 +221,11 @@ msgstr ""
 
 #: src/preferences.ui:161
 msgid "Minimize"
-msgstr ""
+msgstr "ⵙⵎⵥⵉ"
 
 #: src/preferences.ui:162
 msgid "Close"
-msgstr ""
+msgstr "ⵔⴳⵍ"
 
 #: src/preferences.ui:172
 msgid "with keyboard shortcuts or menu entries"
@@ -248,7 +247,7 @@ msgstr ""
 
 #: src/preferences.ui:282
 msgid "Single click to open"
-msgstr ""
+msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
 #: src/preferences.ui:323
 msgid "Interface"
@@ -272,7 +271,7 @@ msgstr ""
 
 #: src/preferences.ui:418 src/fsearch.glade:545
 msgid "Search"
-msgstr ""
+msgstr "ⵔⵣⵓ"
 
 #: src/preferences.ui:437
 msgid "Update database on start"
@@ -280,11 +279,11 @@ msgstr ""
 
 #: src/preferences.ui:472 src/preferences.ui:576
 msgid "Add"
-msgstr ""
+msgstr "ⵔⵏⵓ"
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
-msgstr ""
+msgstr "ⴽⴽⵙ"
 
 #: src/preferences.ui:535
 msgid "Follow symbolic links"
@@ -308,7 +307,7 @@ msgstr ""
 
 #: src/preferences.ui:674
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "ⴰⵎ. \".git;*.tmp\""
 
 #: src/preferences.ui:698
 msgid "Exclude"
@@ -332,7 +331,7 @@ msgstr ""
 
 #: src/fsearch.glade:55
 msgid "Open File(s)"
-msgstr ""
+msgstr "ⵕⵥⵎ (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)"
 
 #: src/fsearch.glade:65
 msgid "Open With Other Application"
@@ -348,23 +347,23 @@ msgstr ""
 
 #: src/fsearch.glade:109
 msgid "Move to Trash"
-msgstr ""
+msgstr "ⵙⵉⵜⵜⵉ ⵙ ⵓⵚⵏⵏⴰⵊ"
 
 #: src/fsearch.glade:135 data/fsearch.desktop.in.in:5
 msgid "FSearch"
-msgstr ""
+msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
 #: src/fsearch.glade:154
 msgid "_File"
-msgstr ""
+msgstr "_ⴰⴼⴰⵢⵍⵓ"
 
 #: src/fsearch.glade:162
 msgid "New Window"
-msgstr ""
+msgstr "ⵜⴰⵣⵏⵓⵜ ⵜⴰⵎⴰⵢⵏⵓⵜ"
 
 #: src/fsearch.glade:191
 msgid "Open Folder"
-msgstr ""
+msgstr "ⵕⵥⵎ ⴰⵙⴷⴰⵡ"
 
 #: src/fsearch.glade:226
 msgid "Update Database"
@@ -384,7 +383,7 @@ msgstr ""
 
 #: src/fsearch.glade:360
 msgid "_View"
-msgstr ""
+msgstr "_ⵥⵕ"
 
 #: src/fsearch.glade:371
 msgid "Show Menubar"
@@ -404,11 +403,11 @@ msgstr ""
 
 #: src/fsearch.glade:411
 msgid "_Search"
-msgstr ""
+msgstr "_ⴰⵔⵣⵣⵓ"
 
 #: src/fsearch.glade:422
 msgid "Search in Path"
-msgstr ""
+msgstr "ⴰⵔⵣⵣⵓ ⴳ ⵓⴱⵔⵉⴷ"
 
 #: src/fsearch.glade:432
 msgid "Match Case"
@@ -420,19 +419,19 @@ msgstr ""
 
 #: src/fsearch.glade:455
 msgid "_Help"
-msgstr ""
+msgstr "_ⵜⵉⵡⵉⵙⵉ"
 
 #: src/fsearch.glade:505
 msgid "Search..."
-msgstr ""
+msgstr "ⵔⵣⵓ..."
 
 #: src/fsearch.glade:520
 msgid "Select a Filter"
-msgstr ""
+msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
 #: src/fsearch.glade:523
 msgid "All"
-msgstr ""
+msgstr "ⵎⴰⵕⵕⴰ"
 
 #: src/fsearch.glade:524
 msgid "Folders"
@@ -440,7 +439,7 @@ msgstr ""
 
 #: src/fsearch.glade:525
 msgid "Files"
-msgstr ""
+msgstr "ⵉⴼⴰⵢⵍⵓⵜⵏ"
 
 #: src/fsearch.glade:650
 msgid "Number of Search Results"
@@ -448,23 +447,23 @@ msgstr ""
 
 #: src/fsearch.glade:651
 msgid "0 Items"
-msgstr ""
+msgstr "0 ⵓⴼⵔⴷⵉⵙ"
 
 #: src/fsearch.glade:706 src/fsearch.glade:730
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: src/fsearch.glade:797
 msgid "page0"
-msgstr ""
+msgstr "ⵜⴰⵙⵏⴰ0"
 
 #: src/fsearch.glade:821
 msgid "(empty)"
-msgstr ""
+msgstr "(ⵡⴰⵍⵓ)"
 
 #: src/fsearch.glade:832
 msgid "page1"
-msgstr ""
+msgstr "ⵜⴰⵙⵏⴰ1"
 
 #: src/fsearch.glade:876
 msgid "CASE"
@@ -472,7 +471,7 @@ msgstr ""
 
 #: src/fsearch.glade:928
 msgid "PATH"
-msgstr ""
+msgstr "ⴰⴱⵔⵉⴷ"
 
 #: src/fsearch.glade:980
 msgid "REGEX"
