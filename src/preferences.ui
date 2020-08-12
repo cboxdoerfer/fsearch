@@ -21,8 +21,8 @@
     <child internal-child="vbox">
       <object class="GtkBox">
         <property name="can_focus">False</property>
-        <property name="margin_left">4</property>
-        <property name="margin_right">4</property>
+        <property name="margin_start">4</property>
+        <property name="margin_end">4</property>
         <property name="margin_top">4</property>
         <property name="margin_bottom">4</property>
         <property name="orientation">vertical</property>
@@ -52,8 +52,8 @@
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">6</property>
-                <property name="margin_right">6</property>
+                <property name="margin_start">6</property>
+                <property name="margin_end">6</property>
                 <property name="margin_top">6</property>
                 <property name="margin_bottom">6</property>
                 <property name="row_spacing">6</property>
@@ -143,7 +143,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">24</property>
+                    <property name="margin_start">24</property>
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
@@ -158,7 +158,7 @@
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
                     <property name="receives_default">False</property>
-                    <property name="margin_left">24</property>
+                    <property name="margin_start">24</property>
                     <property name="draw_indicator">True</property>
                   </object>
                   <packing>
@@ -264,6 +264,7 @@ since not every GTK+ theme provides a dark version.</property>
                   <object class="GtkBox">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <property name="margin_start">6</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkLabel">
@@ -345,8 +346,8 @@ since not every GTK+ theme provides a dark version.</property>
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">6</property>
-                <property name="margin_right">6</property>
+                <property name="margin_start">6</property>
+                <property name="margin_end">6</property>
                 <property name="margin_top">6</property>
                 <property name="margin_bottom">6</property>
                 <property name="row_spacing">6</property>
@@ -441,8 +442,8 @@ since not every GTK+ theme provides a dark version.</property>
               <object class="GtkBox">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">6</property>
-                <property name="margin_right">6</property>
+                <property name="margin_start">6</property>
+                <property name="margin_end">6</property>
                 <property name="margin_top">6</property>
                 <property name="margin_bottom">6</property>
                 <property name="orientation">vertical</property>
@@ -470,8 +471,8 @@ since not every GTK+ theme provides a dark version.</property>
                       <object class="GtkGrid">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_left">6</property>
-                        <property name="margin_right">6</property>
+                        <property name="margin_start">6</property>
+                        <property name="margin_end">6</property>
                         <property name="margin_top">6</property>
                         <property name="margin_bottom">6</property>
                         <property name="row_spacing">6</property>
@@ -574,8 +575,8 @@ since not every GTK+ theme provides a dark version.</property>
                       <object class="GtkGrid">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="margin_left">6</property>
-                        <property name="margin_right">6</property>
+                        <property name="margin_start">6</property>
+                        <property name="margin_end">6</property>
                         <property name="margin_top">6</property>
                         <property name="margin_bottom">6</property>
                         <property name="row_spacing">6</property>
@@ -744,8 +745,8 @@ since not every GTK+ theme provides a dark version.</property>
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="margin_left">6</property>
-                <property name="margin_right">6</property>
+                <property name="margin_start">6</property>
+                <property name="margin_end">6</property>
                 <property name="margin_top">6</property>
                 <property name="margin_bottom">6</property>
                 <property name="row_spacing">6</property>
