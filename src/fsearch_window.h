@@ -57,6 +57,9 @@ GtkWidget *
 fsearch_application_window_get_search_in_path_revealer (FsearchApplicationWindow *self);
 
 GtkWidget *
+fsearch_application_window_get_app_menu (FsearchApplicationWindow *self);
+
+GtkWidget *
 fsearch_application_window_get_menubar (FsearchApplicationWindow *self);
 
 GtkEntry *

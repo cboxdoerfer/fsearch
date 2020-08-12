@@ -50,6 +50,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *no_search_results_overlay;
     GtkWidget *empty_database_overlay;
     GtkWidget *menubar;
+    GtkWidget *app_menu;
     GtkWidget *search_overlay;
     GtkWidget *statusbar;
     GtkWidget *search_mode_revealer;
@@ -210,6 +211,7 @@ fsearch_window_apply_config (FsearchApplicationWindow *self)
                                      config->window_height);
     }
     gtk_widget_set_visible (self->menubar, config->show_menubar);
+    gtk_widget_set_visible (self->app_menu, !config->show_menubar);
     gtk_widget_set_visible (self->statusbar, config->show_statusbar);
     gtk_widget_set_visible (self->filter_combobox, config->show_filter);
     gtk_widget_set_visible (self->search_button, config->show_search_button);
@@ -1048,6 +1050,7 @@ fsearch_application_window_class_init (FsearchApplicationWindowClass *klass)
     gtk_widget_class_set_template_from_resource (widget_class, "/org/fsearch/fsearch/fsearch.glade");
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_overlay);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, menubar);
+    gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, app_menu);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, statusbar);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, search_in_path_revealer);
     gtk_widget_class_bind_template_child (widget_class, FsearchApplicationWindow, match_case_revealer);
@@ -1092,6 +1095,13 @@ fsearch_application_window_get_statusbar (FsearchApplicationWindow *self)
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
     return GTK_WIDGET (self->statusbar);
+}
+
+GtkWidget *
+fsearch_application_window_get_app_menu (FsearchApplicationWindow *self)
+{
+    g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
+    return GTK_WIDGET (self->app_menu);
 }
 
 GtkWidget *
