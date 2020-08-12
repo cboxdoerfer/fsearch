@@ -469,7 +469,7 @@ since not every GTK+ theme provides a dark version.</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton" id="include_add_button">
-                                <property name="label" translatable="yes">Add</property>
+                                <property name="label" translatable="yes">Add...</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
@@ -573,7 +573,7 @@ since not every GTK+ theme provides a dark version.</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkButton" id="exclude_add_button">
-                                <property name="label" translatable="yes">Add</property>
+                                <property name="label" translatable="yes">Add...</property>
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
                                 <property name="receives_default">True</property>
