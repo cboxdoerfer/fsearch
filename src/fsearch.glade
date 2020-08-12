@@ -27,102 +27,22 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <object class="GtkImage" id="imag">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="stock">gtk-open</property>
+    <property name="icon_name">folder-open</property>
   </object>
   <object class="GtkImage" id="image">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="icon_name">document-new</property>
+    <property name="icon_name">window-new</property>
   </object>
   <object class="GtkImage" id="image1">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
-    <property name="stock">gtk-open</property>
+    <property name="icon_name">system-file-manager</property>
   </object>
   <object class="GtkImage" id="image3">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">user-trash</property>
-  </object>
-  <object class="GtkMenu" id="menu4">
-    <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <child>
-      <object class="GtkImageMenuItem" id="open_file">
-        <property name="label">gtk-open</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="tooltip_text" translatable="yes">Open File(s)</property>
-        <property name="use_underline">True</property>
-        <property name="use_stock">True</property>
-        <property name="always_show_image">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkMenuItem" id="open_with">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Open With Other Application</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImageMenuItem" id="open_in_file_manager">
-        <property name="label" translatable="yes">Open Containing Folder</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="tooltip_text" translatable="yes">Open File(s) in File Manager</property>
-        <property name="image">image1</property>
-        <property name="use_stock">False</property>
-        <property name="always_show_image">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkSeparatorMenuItem" id="menuitem5">
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImageMenuItem" id="popup_cut_item">
-        <property name="label">gtk-cut</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="use_underline">True</property>
-        <property name="use_stock">True</property>
-        <property name="always_show_image">True</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImageMenuItem" id="popup_copy_item">
-        <property name="label">gtk-copy</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="action_name">win.copy</property>
-        <property name="use_underline">True</property>
-        <property name="use_stock">True</property>
-        <property name="always_show_image">True</property>
-        <accelerator key="c" signal="activate" modifiers="GDK_CONTROL_MASK"/>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImageMenuItem" id="popup_trash">
-        <property name="label" translatable="yes">Move to Trash</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="image">image3</property>
-        <property name="use_stock">False</property>
-      </object>
-    </child>
-    <child>
-      <object class="GtkImageMenuItem" id="popup_delete_item">
-        <property name="label">gtk-delete</property>
-        <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="use_underline">True</property>
-        <property name="use_stock">True</property>
-        <property name="always_show_image">True</property>
-      </object>
-    </child>
   </object>
   <object class="GtkImage" id="image5">
     <property name="visible">True</property>
@@ -483,8 +403,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           <object class="GtkBox" id="search_box">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">3</property>
-            <property name="margin_right">3</property>
+            <property name="margin_start">3</property>
+            <property name="margin_end">3</property>
             <property name="margin_top">3</property>
             <property name="margin_bottom">3</property>
             <child>
@@ -620,8 +540,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           <object class="GtkBox" id="statusbar">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="margin_left">3</property>
-            <property name="margin_right">3</property>
+            <property name="margin_start">3</property>
+            <property name="margin_end">3</property>
             <property name="margin_top">3</property>
             <property name="margin_bottom">3</property>
             <property name="spacing">6</property>
@@ -1009,4 +929,89 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       <placeholder/>
     </child>
   </template>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">document-open</property>
+  </object>
+  <object class="GtkMenu" id="menu4">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <child>
+      <object class="GtkImageMenuItem" id="open_file">
+        <property name="label">Open</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Open File(s)</property>
+        <property name="image">image6</property>
+        <property name="use_stock">False</property>
+        <property name="always_show_image">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkMenuItem" id="open_with">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="label" translatable="yes">Open With Other Application</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="open_in_file_manager">
+        <property name="label" translatable="yes">Open Containing Folder</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="tooltip_text" translatable="yes">Open File(s) in File Manager</property>
+        <property name="image">image1</property>
+        <property name="use_stock">False</property>
+        <property name="always_show_image">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkSeparatorMenuItem" id="menuitem5">
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="popup_cut_item">
+        <property name="label">gtk-cut</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+        <property name="always_show_image">True</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="popup_copy_item">
+        <property name="label">gtk-copy</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="action_name">win.copy</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+        <property name="always_show_image">True</property>
+        <accelerator key="c" signal="activate" modifiers="GDK_CONTROL_MASK"/>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="popup_trash">
+        <property name="label" translatable="yes">Move to Trash</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="image">image3</property>
+        <property name="use_stock">False</property>
+      </object>
+    </child>
+    <child>
+      <object class="GtkImageMenuItem" id="popup_delete_item">
+        <property name="label">gtk-delete</property>
+        <property name="visible">True</property>
+        <property name="can_focus">False</property>
+        <property name="use_underline">True</property>
+        <property name="use_stock">True</property>
+        <property name="always_show_image">True</property>
+      </object>
+    </child>
+  </object>
 </interface>
