@@ -138,36 +138,6 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">start</property>
-                    <property name="margin_left">6</property>
-                    <property name="label" translatable="yes">Behaviour after successfully opening a file</property>
-                  </object>
-                  <packing>
-                    <property name="left_attach">0</property>
-                    <property name="top_attach">8</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkComboBoxText" id="action_after_file_open">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="halign">end</property>
-                    <property name="hexpand">True</property>
-                    <property name="active">0</property>
-                    <items>
-                      <item id="FSEARCH_AFTER_FILE_OPEN_MINIMIZE" translatable="yes">Minimize</item>
-                      <item id="FSEARCH_AFTER_FILE_OPEN_CLOSE" translatable="yes">Close</item>
-                    </items>
-                  </object>
-                  <packing>
-                    <property name="left_attach">1</property>
-                    <property name="top_attach">8</property>
-                  </packing>
-                </child>
-                <child>
                   <object class="GtkCheckButton" id="action_after_file_open_keyboard">
                     <property name="label" translatable="yes">with keyboard shortcuts or menu entries</property>
                     <property name="visible">True</property>
@@ -289,6 +259,51 @@ since not every GTK+ theme provides a dark version.</property>
                     <property name="left_attach">0</property>
                     <property name="top_attach">6</property>
                   </packing>
+                </child>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="label" translatable="yes">Behaviour after successfully opening a file:</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkComboBoxText" id="action_after_file_open">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="halign">start</property>
+                        <property name="hexpand">True</property>
+                        <property name="active">0</property>
+                        <items>
+                          <item id="FSEARCH_AFTER_FILE_OPEN_MINIMIZE" translatable="yes">Minimize</item>
+                          <item id="FSEARCH_AFTER_FILE_OPEN_CLOSE" translatable="yes">Close</item>
+                        </items>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left_attach">0</property>
+                    <property name="top_attach">8</property>
+                  </packing>
+                </child>
+                <child>
+                  <placeholder/>
                 </child>
                 <child>
                   <placeholder/>
