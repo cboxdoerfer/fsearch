@@ -1044,6 +1044,16 @@ on_fsearch_window_delete_event (GtkWidget *widget,
 {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW (widget);
     if (win->num_searches_active > 0) {
+        GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW (win),
+                                                    GTK_DIALOG_DESTROY_WITH_PARENT,
+                                                    GTK_MESSAGE_INFO,
+                                                    GTK_BUTTONS_OK,
+                                                    _("Background tasks are active."));
+        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
+                                                  _("Closing the window isn't possible right now.\nPlease wait a moment and then try again."));
+        gtk_dialog_run (GTK_DIALOG (dialog));
+        gtk_widget_destroy (dialog);
+
         trace ("[window] search is pending, window close blocked\n");
         return TRUE;
     }
