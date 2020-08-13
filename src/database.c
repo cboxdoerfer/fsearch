@@ -1039,11 +1039,11 @@ db_scan (FsearchDatabase *db, void (*callback)(const char *))
             continue;
         }
         if (fs_path->update) {
-            ret = db_location_add (db, fs_path->path, callback);
+            ret = db_location_add (db, fs_path->path, callback) ? true : ret;
             init_list = true;
         }
         else {
-            ret = db_location_load (db, fs_path->path);
+            ret = db_location_load (db, fs_path->path) ? true : ret;
         }
     }
     if (ret) {
