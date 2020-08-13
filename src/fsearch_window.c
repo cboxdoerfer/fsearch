@@ -876,18 +876,21 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
     create_view_and_model (self);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    g_signal_connect (app,
-                      "database-update-started",
-                      G_CALLBACK (database_update_started_cb),
-                      self);
-    g_signal_connect (app,
-                      "database-update-finished",
-                      G_CALLBACK (database_update_finished_cb),
-                      self);
-    g_signal_connect (app,
-                      "database-load-started",
-                      G_CALLBACK (database_load_started_cb),
-                      self);
+    g_signal_connect_object (app,
+                             "database-update-started",
+                             G_CALLBACK (database_update_started_cb),
+                             self,
+                             G_CONNECT_AFTER);
+    g_signal_connect_object (app,
+                             "database-update-finished",
+                             G_CALLBACK (database_update_finished_cb),
+                             self,
+                             G_CONNECT_AFTER);
+    g_signal_connect_object (app,
+                             "database-load-started",
+                             G_CALLBACK (database_load_started_cb),
+                             self,
+                             G_CONNECT_AFTER);
 
     g_signal_connect (gtk_icon_theme_get_default (),
                       "changed",
