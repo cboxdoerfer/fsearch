@@ -155,7 +155,7 @@ fsearch_options_handler(GApplication *gapp,
     g_variant_dict_lookup(options, "updatedb", "b", &updatedb);
 
     if (version) {
-        g_printf (PACKAGE_NAME " " PACKAGE_VERSION "\n");
+        g_printf (PACKAGE_NAME " " VERSION "\n");
     }
 
     if (updatedb) {
