@@ -77,6 +77,8 @@ struct _FsearchApplicationWindow {
 
     ListModel *list_model;
 
+    int32_t num_searches_active;
+
     GMutex mutex;
 };
 
@@ -349,6 +351,7 @@ update_model_cb (gpointer user_data)
     FsearchConfig *config = fsearch_application_get_config (app);
     FsearchDatabase *db = fsearch_application_get_db (app);
 
+    win->num_searches_active--;
     remove_model_from_list (win);
     db_search_results_clear (win->search);
 
@@ -434,6 +437,8 @@ perform_search (FsearchApplicationWindow *win)
         fsearch_application_state_unlock (app);
         return FALSE;
     }
+
+    win->num_searches_active++;
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     trace ("[search] %s\n", text); 
@@ -1034,10 +1039,15 @@ on_listview_query_tooltip (GtkWidget  *widget,
 
 static gboolean
 on_fsearch_window_delete_event (GtkWidget *widget,
-                        GdkEvent *event,
-                        gpointer user_data)
+                                GdkEvent *event,
+                                gpointer user_data)
 {
-    fsearch_application_window_prepare_shutdown (widget);
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW (widget);
+    if (win->num_searches_active > 0) {
+        trace ("[window] search is pending, window close blocked\n");
+        return TRUE;
+    }
+    fsearch_application_window_prepare_shutdown (win);
     gtk_widget_destroy (widget);
     return TRUE;
 }
