@@ -940,12 +940,18 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
                 btree_node_get_path_full (node_b, path_b, sizeof (path_b));
                 type_b = get_file_type (b, path_b);
 
-                if ((type_a) && (type_b)) {
+                if (type_a && type_b) {
                     return_val = strverscmp (type_a, type_b);
-                    g_free (type_a);
-                    g_free (type_b);
-                    return return_val;
                 }
+                if (type_a) {
+                    g_free (type_a);
+                    type_a = NULL;
+                }
+                if (type_b) {
+                    g_free (type_b);
+                    type_b = NULL;
+                }
+                return return_val;
 
             }
         case SORT_ID_SIZE:
