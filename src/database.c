@@ -1038,8 +1038,8 @@ db_scan (FsearchDatabase *db, void (*callback)(const char *))
         if (!fs_path->enabled) {
             continue;
         }
-        if (fs_path->update) {
-            ret = db_location_add (db, fs_path->path, callback) ? true : ret;
+        if (fs_path->update && db_location_add (db, fs_path->path, callback)) {
+            ret = true;
             init_list = true;
         }
         else {
