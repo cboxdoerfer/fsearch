@@ -1042,8 +1042,8 @@ db_scan (FsearchDatabase *db, void (*callback)(const char *))
             ret = true;
             init_list = true;
         }
-        else {
-            ret = db_location_load (db, fs_path->path) ? true : ret;
+        else if (db_location_load (db, fs_path->path)) {
+            ret = true;
         }
     }
     if (ret) {
