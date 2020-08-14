@@ -106,7 +106,7 @@ listview_column_set_size (GtkTreeViewColumn *col, int32_t size)
     gtk_tree_view_column_set_expand (col, FALSE);
 }
 
-void
+static void
 listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos)
 {
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
@@ -147,7 +147,7 @@ listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos)
                       NULL);
 }
 
-void
+static void
 listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos)
 {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -176,7 +176,7 @@ listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos)
                       NULL);
 }
 
-void
+static void
 listview_add_size_column (GtkTreeView *list, int32_t size, int32_t pos)
 {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -205,7 +205,7 @@ listview_add_size_column (GtkTreeView *list, int32_t size, int32_t pos)
                       NULL);
 }
 
-void
+static void
 listview_add_modified_column (GtkTreeView *list, int32_t size, int32_t pos)
 {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -237,7 +237,7 @@ listview_add_modified_column (GtkTreeView *list, int32_t size, int32_t pos)
                       NULL);
 }
 
-void
+static void
 listview_add_type_column (GtkTreeView *list, int32_t size, int32_t pos)
 {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();

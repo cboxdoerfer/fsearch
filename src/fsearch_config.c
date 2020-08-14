@@ -126,7 +126,7 @@ config_load_string (GKeyFile *key_file,
     return result;
 }
 
-GList *
+static GList *
 config_load_include_locations (GKeyFile *key_file, GList *locations, const char *prefix)
 {
     uint32_t pos = 1;
@@ -153,7 +153,7 @@ config_load_include_locations (GKeyFile *key_file, GList *locations, const char 
     return locations;
 }
 
-GList *
+static GList *
 config_load_exclude_locations (GKeyFile *key_file, GList *locations, const char *prefix)
 {
     uint32_t pos = 1;
@@ -489,7 +489,7 @@ config_load_default (FsearchConfig *config)
     return true;
 }
 
-void
+static void
 config_save_include_locations (GKeyFile *key_file, GList *locations, const char *prefix)
 {
     if (!locations) {
@@ -520,7 +520,7 @@ config_save_include_locations (GKeyFile *key_file, GList *locations, const char 
     }
 }
 
-void
+static void
 config_save_exclude_locations (GKeyFile *key_file, GList *locations, const char *prefix)
 {
     if (!locations) {

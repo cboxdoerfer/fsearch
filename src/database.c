@@ -98,7 +98,7 @@ db_update_timestamp (FsearchDatabase *db)
     db->timestamp = time(NULL);
 }
 
-FsearchDatabaseNode *
+static FsearchDatabaseNode *
 db_location_load_from_file (const char *fname)
 {
     assert (fname != NULL);
@@ -239,7 +239,7 @@ load_fail:
     return NULL;
 }
 
-bool
+static bool
 db_location_write_to_file (FsearchDatabaseNode *location, const char *path)
 {
     assert (path != NULL);
@@ -544,7 +544,7 @@ db_location_new (void)
     return location;
 }
 
-bool
+static bool
 db_list_insert_node (BTreeNode *node, void *data)
 {
     FsearchDatabase *db = data;
@@ -561,7 +561,7 @@ db_traverse_tree_insert (BTreeNode *node, void *data)
 
 static uint32_t temp_index = 0;
 
-bool
+static bool
 db_list_add_node (BTreeNode *node, void *data)
 {
     FsearchDatabase *db = data;
@@ -615,7 +615,7 @@ db_location_get_for_path (FsearchDatabase *db, const char *path)
     return NULL;
 }
 
-bool
+static bool
 db_location_remove (FsearchDatabase *db, const char *path)
 {
     assert (db != NULL);
@@ -653,7 +653,7 @@ location_build_path (char *path, size_t path_len, const char *location_name)
     return;
 }
 
-void
+static void
 db_location_delete (FsearchDatabaseNode *location, const char *location_name)
 {
     assert (location != NULL);
@@ -671,7 +671,7 @@ db_location_delete (FsearchDatabaseNode *location, const char *location_name)
     g_remove (database_path);
 }
 
-bool
+static bool
 db_save_location (FsearchDatabase *db, const char *location_name)
 {
     assert (db != NULL);
@@ -722,7 +722,7 @@ db_location_get_path (const char *location_name)
     return g_strdup (database_fname);
 }
 
-bool
+static bool
 db_location_load (FsearchDatabase *db, const char *location_name)
 {
     gchar *load_path = db_location_get_path (location_name);
@@ -744,7 +744,7 @@ db_location_load (FsearchDatabase *db, const char *location_name)
     return false;
 }
 
-bool
+static bool
 db_location_add (FsearchDatabase *db,
                  const char *location_name,
                  void (*callback)(const char *))
@@ -766,7 +766,7 @@ db_location_add (FsearchDatabase *db,
     return false;
 }
 
-void
+static void
 db_update_sort_index (FsearchDatabase *db)
 {
     assert (db != NULL);
@@ -793,7 +793,7 @@ db_locations_get_num_entries (FsearchDatabase *db)
     return num_entries;
 }
 
-void
+static void
 db_build_initial_entries_list (FsearchDatabase *db)
 {
     assert (db != NULL);
@@ -814,7 +814,7 @@ db_build_initial_entries_list (FsearchDatabase *db)
     trace ("[database_build_list] list created\n");
 }
 
-void
+static void
 db_update_entries_list (FsearchDatabase *db)
 {
     assert (db != NULL);
@@ -832,7 +832,7 @@ db_update_entries_list (FsearchDatabase *db)
     trace ("[database_update_list] updated list\n");
 }
 
-BTreeNode *
+static BTreeNode *
 db_location_get_entries (FsearchDatabaseNode *location)
 {
     assert (location != NULL);
@@ -890,7 +890,7 @@ db_location_free_all (FsearchDatabase *db)
     trace ("[database_location_free_all] freed\n");
 }
 
-void
+static void
 db_free (FsearchDatabase *db)
 {
     assert (db != NULL);

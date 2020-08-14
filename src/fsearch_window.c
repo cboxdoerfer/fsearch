@@ -342,7 +342,7 @@ update_statusbar (FsearchApplicationWindow *win, const char *text)
     gtk_label_set_text (GTK_LABEL (win->search_label), text);
 }
 
-gboolean
+static gboolean
 update_model_cb (gpointer user_data)
 {
     DatabaseSearchResult *result = user_data;
@@ -796,7 +796,7 @@ create_view_and_model (FsearchApplicationWindow *app)
 
 }
 
-void
+static void
 icon_theme_changed_cb (GtkIconTheme *icon_theme,
                        gpointer      user_data)
 {
@@ -941,7 +941,7 @@ fsearch_application_window_init (FsearchApplicationWindow *self)
     g_object_unref (builder);
 }
 
-void
+static void
 on_filter_combobox_changed (GtkComboBox *widget,
                             gpointer     user_data)
 {
@@ -980,7 +980,7 @@ on_search_entry_key_press_event (GtkWidget *widget,
     return FALSE;
 }
 
-void
+static void
 on_search_entry_activate (GtkButton *widget,
                     gpointer   user_data)
 {
@@ -990,7 +990,7 @@ on_search_entry_activate (GtkButton *widget,
     perform_search (win);
 }
 
-gboolean
+static gboolean
 on_listview_query_tooltip (GtkWidget  *widget,
                            gint        x,
                            gint        y,
