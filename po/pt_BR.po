@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-04 14:39+0200\n"
-"PO-Revision-Date: 2020-07-29 16:41+0000\n"
+"PO-Revision-Date: 2020-08-16 13:32+0000\n"
 "Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
@@ -47,10 +47,9 @@ msgid "Loading Database…"
 msgstr "Carregando base de dados…"
 
 #: src/fsearch_window.c:856
-#, fuzzy, c-format
-#| msgid "Updating Database..."
+#, c-format
 msgid "Updating Database…"
-msgstr "Atualizando base de dados..."
+msgstr "Atualizando base de dados…"
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -83,29 +82,25 @@ msgstr "Atualizar a base de dados"
 
 #: src/fsearch.c:412
 msgid "translator-credits"
-msgstr ""
+msgstr "Atílio Antônio"
 
 #: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
 #: src/fsearch_window_actions.c:85
-#, fuzzy, c-format
-#| msgid "Do you really want to open"
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Deseja mesmo remover"
+msgstr "Deseja mesmo abrir %d arquivo(s)?"
 
 #: src/fsearch_window_actions.c:87
-#, fuzzy
-#| msgid "Opening Files..."
 msgid "Opening Files…"
-msgstr "Abrindo arquivos..."
+msgstr "Abrindo arquivos…"
 
 #: src/fsearch_window_actions.c:167
-#, fuzzy, c-format
-#| msgid "Do you really want to remove"
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Deseja mesmo remover"
+msgstr "Deseja mesmo remover %d arquivo(s)?"
 
 #: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
@@ -116,14 +111,12 @@ msgid "Moving files to trash…"
 msgstr "Movendo arquivos para a lixeira…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
 msgstr "Ativar RegEx"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Atualizar"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -172,8 +165,6 @@ msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "Pressione <b>Ctrl + F</b> e comece a digitar"
 
 #: src/overlay.ui:143
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading Database..."
 msgstr "Carregando base de dados…"
 
@@ -182,10 +173,8 @@ msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
-msgstr "Isto pode demorar um pouco."
+msgstr "Isto não vai demorar muito."
 
 #: src/overlay.ui:213 src/fsearch.glade:783
 msgid "Updating Database..."
