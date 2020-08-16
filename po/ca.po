@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2019-10-12 12:52+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/fsearch/"
@@ -293,8 +293,8 @@ msgid "Update database on start"
 msgstr "Actualitza la base de dades en iniciar"
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
-msgstr "Afegeix"
+msgid "Add..."
+msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -507,6 +507,9 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#~ msgid "Add"
+#~ msgstr "Afegeix"
 
 #~ msgid "files?"
 #~ msgstr "fitxers?"

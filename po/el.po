@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2016-12-20 19:58+0000\n"
 "Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
@@ -293,8 +293,8 @@ msgid "Update database on start"
 msgstr "Ενημέρωση της βάσης δεδομένων κατά την εκκίνηση"
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
-msgstr "Προσθήκη"
+msgid "Add..."
+msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -508,6 +508,9 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#~ msgid "Add"
+#~ msgstr "Προσθήκη"
 
 #~ msgid "files?"
 #~ msgstr "αρχεία;"

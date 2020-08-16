@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2020-04-06 23:36+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -291,8 +291,8 @@ msgid "Update database on start"
 msgstr "Actualizar base de datos al inicio"
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
-msgstr "Añadir"
+msgid "Add..."
+msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -505,6 +505,9 @@ msgid ""
 msgstr ""
 "buscar;fsearch;archivos;carpetas;música;video;documentos;encontrar;"
 "herramienta;todo;"
+
+#~ msgid "Add"
+#~ msgstr "Añadir"
 
 #~ msgid "files?"
 #~ msgstr "¿archivos?"

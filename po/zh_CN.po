@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2020-03-25 10:46+0000\n"
 "Last-Translator: 只要香菜 <cwbddzxx@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -287,8 +287,8 @@ msgid "Update database on start"
 msgstr "启动时更新数据库"
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
-msgstr "添加"
+msgid "Add..."
+msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -498,6 +498,9 @@ msgstr "系统搜索"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
+
+#~ msgid "Add"
+#~ msgstr "添加"
 
 #~ msgid "files?"
 #~ msgstr "项文件?"

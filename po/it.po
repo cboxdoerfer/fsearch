@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2020-08-09 16:32+0000\n"
 "Last-Translator: Lorenzo Maria Fasoli <lorenzo.fasoli.94@gmail.com>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/fsearch/"
@@ -280,8 +280,8 @@ msgid "Update database on start"
 msgstr "Aggiorna il database all'avvio"
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
-msgstr "Aggiungi"
+msgid "Add..."
+msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -496,3 +496,6 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "cerca;fsearch;file;cartelle;musica;video;documenti;trova;strumento;tutto;"
+
+#~ msgid "Add"
+#~ msgstr "Aggiungi"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -289,8 +289,8 @@ msgid "Update database on start"
 msgstr "起動時にデータベースをアップデート"
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
-msgstr "追加"
+msgid "Add..."
+msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -501,6 +501,9 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#~ msgid "Add"
+#~ msgstr "追加"
 
 #~ msgid "files?"
 #~ msgstr "個のファイルを削除しますか？"

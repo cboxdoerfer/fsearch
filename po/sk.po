@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slovak (FSearch)\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2018-01-02 18:35+0000\n"
 "Last-Translator: Dávid Bolvanský <david.bolvansky@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/fsearch/"
@@ -289,8 +289,8 @@ msgid "Update database on start"
 msgstr "Aktualizovať databázu pri spustení"
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
-msgstr "Pridať"
+msgid "Add..."
+msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -501,6 +501,9 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#~ msgid "Add"
+#~ msgstr "Pridať"
 
 #, fuzzy
 #~ msgid "files?"

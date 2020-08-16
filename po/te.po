@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-04 14:39+0200\n"
+"POT-Creation-Date: 2020-08-12 16:39+0200\n"
 "PO-Revision-Date: 2020-07-30 09:54+0200\n"
 "Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: Telugu\n"
@@ -273,7 +273,7 @@ msgid "Update database on start"
 msgstr ""
 
 #: src/preferences.ui:472 src/preferences.ui:576
-msgid "Add"
+msgid "Add..."
 msgstr ""
 
 #: src/preferences.ui:488 src/preferences.ui:592
