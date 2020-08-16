@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-12 16:39+0200\n"
-"PO-Revision-Date: 2020-07-31 18:42+0000\n"
+"PO-Revision-Date: 2020-08-18 17:32+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -118,7 +118,7 @@ msgstr "Skru på regulære uttrykk"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Oppdater"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -299,7 +299,7 @@ msgstr "Oppdater database ved oppstart"
 
 #: src/preferences.ui:472 src/preferences.ui:576
 msgid "Add..."
-msgstr ""
+msgstr "Legg til…"
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
