@@ -54,6 +54,8 @@ struct _FsearchApplication
     ListModel *list_model;
 
     bool startup_finished;
+
+    GThread *db_thread;
     GMutex mutex;
 };
 
@@ -226,6 +228,12 @@ fsearch_application_shutdown (GApplication *app)
         if (FSEARCH_WINDOW_IS_WINDOW (window)) {
             fsearch_application_window_prepare_shutdown (window);
         }
+    }
+
+    if (fsearch->db_thread) {
+        trace ("[exit] waiting for database thread to exit...\n");
+        g_thread_join (fsearch->db_thread);
+        trace ("[exit] database thread finished.\n");
     }
 
     if (fsearch->db) {
@@ -471,7 +479,10 @@ fsearch_load_database (void)
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     if (app->config->locations) {
         fsearch_action_disable ("update_database");
-        g_thread_new("fsearch_db_load_thread", load_database, app);
+        if (app->db_thread) {
+            g_thread_join (app->db_thread);
+        }
+        app->db_thread = g_thread_new("fsearch_db_load_thread", load_database, app);
     }
     return;
 }
@@ -481,11 +492,14 @@ fsearch_database_update (bool scan)
 {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     fsearch_action_disable ("update_database");
+    if (app->db_thread) {
+        g_thread_join (app->db_thread);
+    }
     if (scan) {
-        g_thread_new("fsearch_db_update_thread", scan_database, app);
+        app->db_thread = g_thread_new("fsearch_db_update_thread", scan_database, app);
     }
     else {
-        g_thread_new("fsearch_db_load_thread", load_database, app);
+        app->db_thread = g_thread_new("fsearch_db_load_thread", load_database, app);
     }
     return;
 }
