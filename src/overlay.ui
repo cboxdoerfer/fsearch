@@ -140,7 +140,7 @@
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Loading Database...</property>
+        <property name="label" translatable="yes">Loading Database…</property>
         <attributes>
           <attribute name="weight" value="bold"/>
           <attribute name="scale" value="1.4399999999999999"/>
@@ -155,7 +155,7 @@
       <object class="GtkLabel" id="database_loading_label">
         <property name="visible">False</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">...</property>
+        <property name="label" translatable="yes">…</property>
         <property name="ellipsize">end</property>
         <attributes>
           <attribute name="scale" value="1.4399999999999999"/>
@@ -210,7 +210,7 @@
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Updating Database...</property>
+        <property name="label" translatable="yes">Updating Database…</property>
         <attributes>
           <attribute name="weight" value="bold"/>
           <attribute name="scale" value="1.4399999999999999"/>
@@ -225,7 +225,7 @@
       <object class="GtkLabel" id="database_updating_label">
         <property name="visible">False</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">...</property>
+        <property name="label" translatable="yes">…</property>
         <property name="ellipsize">end</property>
         <attributes>
           <attribute name="scale" value="1.4399999999999999"/>

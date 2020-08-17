@@ -778,7 +778,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="primary_icon_activatable">False</property>
                     <property name="primary_icon_sensitive">False</property>
                     <property name="secondary_icon_sensitive">False</property>
-                    <property name="placeholder_text" translatable="yes">Search...</property>
+                    <property name="placeholder_text" translatable="yes">Search…</property>
                     <signal name="activate" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
                     <signal name="changed" handler="on_search_entry_changed" object="FsearchApplicationWindow" swapped="no"/>
                     <signal name="key-press-event" handler="on_search_entry_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
@@ -1087,7 +1087,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <object class="GtkLabel" id="database_label1">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">Updating Database...</property>
+                        <property name="label" translatable="yes">Updating Database…</property>
                         <property name="ellipsize">end</property>
                         <property name="max_width_chars">30</property>
                         <property name="track_visited_links">False</property>

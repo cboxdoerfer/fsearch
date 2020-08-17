@@ -70,7 +70,7 @@ fill_open_with_menu (GtkTreeView *view, GtkBuilder *builder, GtkTreeIter *iter)
 
     char detailed_action[1024] = "";
     snprintf (detailed_action, sizeof (detailed_action), "win.open_with_other('%s')", content_type);
-    GMenuItem *open_with_item = g_menu_item_new (_("Other Application..."), detailed_action);
+    GMenuItem *open_with_item = g_menu_item_new (_("Other Application…"), detailed_action);
     g_menu_append_item (menu_mime, open_with_item);
     g_object_unref (open_with_item);
 
