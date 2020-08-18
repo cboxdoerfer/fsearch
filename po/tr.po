@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-17 21:01+0200\n"
-"PO-Revision-Date: 2020-08-18 17:32+0000\n"
+"PO-Revision-Date: 2020-08-20 18:36+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
 #, c-format
@@ -49,13 +49,15 @@ msgstr "Veri Tabanı Güncelleniyor…"
 
 #: src/fsearch_window.c:1051
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Arka plan görevleri etkin."
 
 #: src/fsearch_window.c:1053
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Şu anda pencereyi kapatmak mümkün değil.\n"
+"Lütfen biraz bekleyip tekrar deneyin."
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -172,7 +174,7 @@ msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
 msgid "This won't take long."
@@ -243,10 +245,8 @@ msgid "Single click to open"
 msgstr "Açmak için tek tıklama"
 
 #: src/preferences.ui:274
-#, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
-msgstr "Bir dosyayı başarıyla açtıktan sonraki davranış"
+msgstr "Bir dosyayı başarıyla açtıktan sonraki davranış:"
 
 #: src/preferences.ui:290
 msgid "Minimize"
@@ -286,7 +286,7 @@ msgstr "Başlangıçta veri tabanını güncelle"
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Add…"
-msgstr ""
+msgstr "Ekle…"
 
 #: src/preferences.ui:504 src/preferences.ui:608
 msgid "Remove"
@@ -357,16 +357,12 @@ msgid "Move to Trash"
 msgstr "Çöp Sepetine Taşı"
 
 #: src/fsearch.glade:173
-#, fuzzy
-#| msgid "New Window"
 msgid "New window"
-msgstr "Yeni Pencere"
+msgstr "Yeni pencere"
 
 #: src/fsearch.glade:188
-#, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
-msgstr "Veri Tabanını Güncelle"
+msgstr "Veri tabanını güncelle"
 
 #: src/fsearch.glade:222 src/fsearch.glade:694
 msgid "Search in Path"
@@ -398,11 +394,11 @@ msgstr "Arama Bununu Göster"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "Hakkında"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Çık"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -445,10 +441,8 @@ msgid "_Help"
 msgstr "_Yardım"
 
 #: src/fsearch.glade:781
-#, fuzzy
-#| msgid "Search"
 msgid "Search…"
-msgstr "Ara"
+msgstr "Ara…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
