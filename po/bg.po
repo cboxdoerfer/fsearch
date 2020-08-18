@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-12 16:39+0200\n"
-"PO-Revision-Date: 2020-06-13 10:41+0000\n"
+"PO-Revision-Date: 2020-08-18 17:32+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.1-dev\n"
+"X-Generator: Weblate 4.2-dev\n"
 
 #: src/fsearch_window.c:102 src/fsearch_window.c:375 src/fsearch_window.c:821
 #, c-format
@@ -42,10 +42,9 @@ msgid "Loading Database…"
 msgstr "Зареждане на базата с данни…"
 
 #: src/fsearch_window.c:856
-#, fuzzy, c-format
-#| msgid "Updating Database..."
+#, c-format
 msgid "Updating Database…"
-msgstr "Обновяване на базата с данни..."
+msgstr "Обновяване на Базата с данни…"
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -78,7 +77,7 @@ msgstr "Обновяване на базата с данни"
 
 #: src/fsearch.c:412
 msgid "translator-credits"
-msgstr ""
+msgstr "cybercop (cybercop_montana@abv.bg)"
 
 #: src/fsearch.c:413
 msgid "A search utility focusing on performance and advanced features"
@@ -87,20 +86,18 @@ msgstr ""
 "възможности"
 
 #: src/fsearch_window_actions.c:85
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Наистина ли искате да премахнете"
+msgstr "Наистина ли искате да отворите %d файл (а)?"
 
 #: src/fsearch_window_actions.c:87
-#, fuzzy
 msgid "Opening Files…"
-msgstr "Отваряне на Файл (ове)"
+msgstr "Отваряне на Файл (ове)…"
 
 #: src/fsearch_window_actions.c:167
-#, fuzzy, c-format
-#| msgid "Do you really want to remove"
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Наистина ли искате да премахнете"
+msgstr "Наистина ли искате да премахнете %d файл (а)?"
 
 #: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
@@ -111,14 +108,12 @@ msgid "Moving files to trash…"
 msgstr "Преместване на файловете в кошчето…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
-msgstr "Включване на регулярни изрази"
+msgstr "Включване"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Обновяване"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -167,8 +162,6 @@ msgid "Press <b>Ctrl + F</b> and start typing"
 msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете"
 
 #: src/overlay.ui:143
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading Database..."
 msgstr "Зареждане на базата с данни…"
 
@@ -177,10 +170,8 @@ msgid "..."
 msgstr "..."
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
-msgstr "Това може да отнеме известно време."
+msgstr "Това няма да отнеме много време."
 
 #: src/overlay.ui:213 src/fsearch.glade:783
 msgid "Updating Database..."
@@ -256,11 +247,11 @@ msgstr ""
 
 #: src/preferences.ui:269
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Отваряне на пътя с двойно кликване в колоната с пътя"
 
 #: src/preferences.ui:282
 msgid "Single click to open"
-msgstr ""
+msgstr "Отваряне с едно кликване"
 
 #: src/preferences.ui:323
 msgid "Interface"
@@ -292,7 +283,7 @@ msgstr "Обновяване на базата с данни при старти
 
 #: src/preferences.ui:472 src/preferences.ui:576
 msgid "Add..."
-msgstr ""
+msgstr "Добавяне..."
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Remove"
@@ -506,8 +497,8 @@ msgstr "търсене в системата"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
-"търсене;търсене на файлове;файлове;папки;музика;видео;документи;намиране;"
-"инструмент;всичко;"
+"търсене;fsearch;файлове;папки;музика;видео;документи;намиране;инструмент;всич"
+"ко;"
 
 #~ msgid "Add"
 #~ msgstr "Добавяне"
