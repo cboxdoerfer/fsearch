@@ -137,16 +137,6 @@ build_location_callback (const char *text)
     }
 }
 
-static bool
-make_location_dir (void)
-{
-    gchar config_dir[PATH_MAX] = "";
-    config_build_dir (config_dir, sizeof (config_dir));
-    gchar location_dir[PATH_MAX] = "";
-    g_assert (0 <= snprintf (location_dir, sizeof (location_dir), "%s/%s", config_dir, "database"));
-    return !g_mkdir_with_parents (location_dir, 0700);
-}
-
 static gint
 fsearch_options_handler(GApplication *gapp,
                         GVariantDict *options,
@@ -182,7 +172,7 @@ static void
 fsearch_application_init (FsearchApplication *app)
 {
     config_make_dir ();
-    make_location_dir ();
+    db_make_data_dir ();
     app->config = calloc (1, sizeof (FsearchConfig));
     if (!config_load (app->config)) {
         if (!config_load_default (app->config)) {
