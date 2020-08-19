@@ -26,6 +26,7 @@
 #include <string.h>
 
 #include "listview.h"
+#include "fsearch_limits.h"
 #include "list_model.h"
 #include "fsearch.h"
 #include "database_search.h"
