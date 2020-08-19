@@ -21,12 +21,13 @@
 #include <gtk/gtk.h>
 #include <stdint.h>
 #include "fsearch_config.h"
+#include "fsearch_window.h"
 
 void
-listview_add_column (GtkTreeView *view, uint32_t col_type, int32_t size, int32_t pos);
+listview_add_column (GtkTreeView *view, uint32_t col_type, int32_t size, int32_t pos, FsearchApplicationWindow *win);
 
 void
-listview_add_default_columns (GtkTreeView *view);
+listview_add_default_columns (GtkTreeView *view, FsearchApplicationWindow *win);
 
 void
 listview_remove_column_at_pos (GtkTreeView *view, int32_t pos);

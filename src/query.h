@@ -19,9 +19,20 @@
 #pragma once
 
 #include <stdbool.h>
+#include <glib.h>
+#include <pango/pango.h>
 
 #include "database.h"
 #include "fsearch_filter.h"
+
+typedef struct
+{
+    GList *regex;
+
+    bool auto_search_in_path;
+    bool search_in_path;
+    bool has_separator;
+} FsearchQueryHighlight;
 
 typedef struct
 {
@@ -56,4 +67,17 @@ fsearch_query_new (const char *query,
 
 void
 fsearch_query_free (FsearchQuery *query);
+
+PangoAttrList *
+fsearch_query_highlight_match (FsearchQueryHighlight *q, const char *input);
+
+FsearchQueryHighlight *
+fsearch_query_highlight_new (const char *text,
+                              bool enable_regex,
+                              bool match_case,
+                              bool auto_search_in_path,
+                              bool search_in_path);
+
+void
+fsearch_query_highlight_free (FsearchQueryHighlight *query_highlight);
 

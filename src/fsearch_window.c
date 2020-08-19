@@ -77,6 +77,7 @@ struct _FsearchApplicationWindow {
 
     ListModel *list_model;
 
+    FsearchQueryHighlight *query_highlight;
     int32_t num_searches_active;
 
     GMutex mutex;
@@ -151,6 +152,10 @@ fsearch_application_window_prepare_shutdown (gpointer self)
     GtkSortType order = GTK_SORT_ASCENDING;
     gtk_tree_sortable_get_sort_column_id (GTK_TREE_SORTABLE (win->list_model), &sort_column_id, &order);
 
+    if (win->query_highlight) {
+        fsearch_query_highlight_free (win->query_highlight);
+        win->query_highlight = NULL;
+    }
     if (config->sort_by) {
         g_free (config->sort_by);
         config->sort_by = NULL;
@@ -355,6 +360,7 @@ update_model_cb (gpointer user_data)
     remove_model_from_list (win);
     db_search_results_clear (win->search);
 
+    const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     uint32_t num_results = 0;
     if (db == result->db) {
         GPtrArray *results = result->results;
@@ -365,6 +371,15 @@ update_model_cb (gpointer user_data)
             win->search->num_files = result->num_files;
             num_results = results->len;
             list_model_sort (win->list_model);
+            if (win->query_highlight) {
+                fsearch_query_highlight_free (win->query_highlight);
+                win->query_highlight = NULL;
+            }
+            win->query_highlight = fsearch_query_highlight_new (text,
+                                                                config->enable_regex,
+                                                                config->match_case,
+                                                                config->auto_search_in_path,
+                                                                config->search_in_path);
         }
         else {
             list_model_set_results (win->list_model, NULL);
@@ -380,7 +395,6 @@ update_model_cb (gpointer user_data)
     snprintf (sb_text, sizeof (sb_text), _("%'d Items"), num_results);
     update_statusbar (win, sb_text);
 
-    const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
     if (text[0] == '\0' && config->hide_results_on_empty_search) {
         show_overlay (win, NO_SEARCH_QUERY_OVERLAY);
     }
@@ -738,7 +752,8 @@ fsearch_application_window_update_listview_config (FsearchApplicationWindow *app
     listview_add_column (list,
                          LIST_MODEL_COL_NAME,
                          config->name_column_width,
-                         config->name_column_pos);
+                         config->name_column_pos,
+                         app);
 
     gtk_tree_view_set_activate_on_single_click (list, config->single_click_open);
 }
@@ -754,36 +769,41 @@ create_view_and_model (FsearchApplicationWindow *app)
     GtkTreeView *list = GTK_TREE_VIEW (app->listview);
 
     if (!config->restore_column_config) {
-        listview_add_default_columns (list);
+        listview_add_default_columns (list, app);
     }
     else {
         listview_add_column (list,
                              LIST_MODEL_COL_NAME,
                              config->name_column_width,
-                             config->name_column_pos);
+                             config->name_column_pos,
+                             app);
 
         if (config->show_path_column) {
             listview_add_column (list, LIST_MODEL_COL_PATH,
                                  config->path_column_width,
-                                 config->path_column_pos);
+                                 config->path_column_pos,
+                                 app);
         }
         if (config->show_type_column) {
             listview_add_column (list,
                                  LIST_MODEL_COL_TYPE,
                                  config->type_column_width,
-                                 config->type_column_pos);
+                                 config->type_column_pos,
+                                 app);
         }
         if (config->show_size_column) {
             listview_add_column (list,
                                  LIST_MODEL_COL_SIZE,
                                  config->size_column_width,
-                                 config->size_column_pos);
+                                 config->size_column_pos,
+                                 app);
         }
         if (config->show_modified_column) {
             listview_add_column (list,
                                  LIST_MODEL_COL_CHANGED,
                                  config->modified_column_width,
-                                 config->modified_column_pos);
+                                 config->modified_column_pos,
+                                 app);
         }
     }
     list_model_sort_init (app->list_model, config->sort_by, config->sort_ascending);
@@ -1194,6 +1214,15 @@ fsearch_application_window_get_listview_selection (FsearchApplicationWindow *sel
 {
     g_assert (FSEARCH_WINDOW_IS_WINDOW (self));
     return self->listview_selection;
+}
+
+FsearchQueryHighlight *
+fsearch_application_window_get_query_highlight (FsearchApplicationWindow *self)
+{
+    if (self->query_highlight) {
+        return self->query_highlight;
+    }
+    return NULL;
 }
 
 FsearchApplicationWindow *

@@ -709,7 +709,7 @@ fsearch_window_action_show_name_column (GSimpleAction *action,
         listview_remove_column (list, LIST_MODEL_COL_NAME);
     }
     else {
-        listview_add_column (list, LIST_MODEL_COL_NAME, 250, 0);
+        listview_add_column (list, LIST_MODEL_COL_NAME, 250, 0, self);
     }
     //FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     //config->show_name_column = g_variant_get_boolean (variant);
@@ -728,7 +728,7 @@ fsearch_window_action_show_path_column (GSimpleAction *action,
         listview_remove_column (list, LIST_MODEL_COL_PATH);
     }
     else {
-        listview_add_column (list, LIST_MODEL_COL_PATH, 250, 1);
+        listview_add_column (list, LIST_MODEL_COL_PATH, 250, 1, self);
     }
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     config->show_path_column = g_variant_get_boolean (variant);
@@ -747,7 +747,7 @@ fsearch_window_action_show_type_column (GSimpleAction *action,
         listview_remove_column (list, LIST_MODEL_COL_TYPE);
     }
     else {
-        listview_add_column (list, LIST_MODEL_COL_TYPE, 100, 2);
+        listview_add_column (list, LIST_MODEL_COL_TYPE, 100, 2, self);
     }
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     config->show_type_column = g_variant_get_boolean (variant);
@@ -766,7 +766,7 @@ fsearch_window_action_show_size_column (GSimpleAction *action,
         listview_remove_column (list, LIST_MODEL_COL_SIZE);
     }
     else {
-        listview_add_column (list, LIST_MODEL_COL_SIZE, 75, 3);
+        listview_add_column (list, LIST_MODEL_COL_SIZE, 75, 3, self);
     }
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     config->show_size_column = g_variant_get_boolean (variant);
@@ -785,7 +785,7 @@ fsearch_window_action_show_modified_column (GSimpleAction *action,
         listview_remove_column (list, LIST_MODEL_COL_CHANGED);
     }
     else {
-        listview_add_column (list, LIST_MODEL_COL_CHANGED, 75, 4);
+        listview_add_column (list, LIST_MODEL_COL_CHANGED, 75, 4, self);
     }
     FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
     config->show_modified_column = g_variant_get_boolean (variant);

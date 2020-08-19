@@ -20,6 +20,9 @@
 #include <unistd.h>
 #include <stdbool.h>
 
+int
+fs_str_is_regex (const char *str);
+
 bool
 fs_str_is_empty (const char *str);
 

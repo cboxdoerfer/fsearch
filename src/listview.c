@@ -22,10 +22,13 @@
 
 #include <glib/gi18n.h>
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 #include "listview.h"
 #include "list_model.h"
 #include "fsearch.h"
+#include "database_search.h"
 #include "debug.h"
 
 static void
@@ -107,7 +110,81 @@ listview_column_set_size (GtkTreeViewColumn *col, int32_t size)
 }
 
 static void
-listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos)
+listview_path_cell_data_func (GtkTreeViewColumn *col, 
+                              GtkCellRenderer *cell,
+                              GtkTreeModel *tree_model,
+                              GtkTreeIter *iter,
+                              gpointer data)
+{
+    FsearchApplicationWindow *win = (FsearchApplicationWindow *)data;
+    FsearchQueryHighlight *q = fsearch_application_window_get_query_highlight (win);
+    if (!q) {
+        return;
+    }
+
+    DatabaseSearchEntry *entry = iter->user_data;
+    BTreeNode *node = db_search_entry_get_node (entry);
+    if (!node) {
+        return;
+    }
+
+    char path[PATH_MAX] = "";
+    if ((q->has_separator && q->auto_search_in_path) || q->search_in_path) {
+        btree_node_get_path (node, path, sizeof (path));
+    }
+    else {
+        g_object_set (G_OBJECT (cell),
+                      "attributes",
+                      NULL,
+                      NULL);
+        return;
+    }
+
+    PangoAttrList *attr = fsearch_query_highlight_match (q, path);
+    if (!attr) {
+        return;
+    }
+
+    g_object_set (G_OBJECT (cell),
+                  "attributes",
+                  attr,
+                  NULL);
+    pango_attr_list_unref (attr);
+}
+
+static void
+listview_name_cell_data_func (GtkTreeViewColumn *col, 
+                              GtkCellRenderer *cell,
+                              GtkTreeModel *tree_model,
+                              GtkTreeIter *iter,
+                              gpointer data)
+{
+    FsearchApplicationWindow *win = (FsearchApplicationWindow *)data;
+    FsearchQueryHighlight *q = fsearch_application_window_get_query_highlight (win);
+    if (!q) {
+        return;
+    }
+
+    DatabaseSearchEntry *entry = iter->user_data;
+    BTreeNode *node = db_search_entry_get_node (entry);
+    if (!node) {
+        return;
+    }
+
+    PangoAttrList *attr = fsearch_query_highlight_match (q, node->name);
+    if (!attr) {
+        return;
+    }
+
+    g_object_set (G_OBJECT (cell),
+                  "attributes",
+                  attr,
+                  NULL);
+    pango_attr_list_unref (attr);
+}
+
+static void
+listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos, FsearchApplicationWindow *win)
 {
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
     GtkCellRenderer *renderer = NULL;
@@ -142,13 +219,15 @@ listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos)
     gtk_tree_view_column_set_expand (col, TRUE);
     listview_column_add_label (col, _("Name"));
 
+    gtk_tree_view_column_set_cell_data_func (col, renderer, (GtkTreeCellDataFunc)listview_name_cell_data_func, win, NULL);
+
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
                       NULL);
 }
 
 static void
-listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos)
+listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos, FsearchApplicationWindow *win)
 {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     g_object_set (G_OBJECT (renderer),
@@ -170,6 +249,8 @@ listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos)
     gtk_tree_view_column_set_sort_column_id (col, SORT_ID_PATH);
     gtk_tree_view_insert_column (list, col, pos);
     listview_column_add_label (col, _("Path"));
+
+    gtk_tree_view_column_set_cell_data_func (col, renderer, (GtkTreeCellDataFunc)listview_path_cell_data_func, win, NULL);
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
@@ -267,15 +348,15 @@ listview_add_type_column (GtkTreeView *list, int32_t size, int32_t pos)
 }
 
 void
-listview_add_column (GtkTreeView *list, uint32_t col_type, int32_t size, int32_t pos)
+listview_add_column (GtkTreeView *list, uint32_t col_type, int32_t size, int32_t pos, FsearchApplicationWindow *win)
 {
     switch (col_type) {
         case LIST_MODEL_COL_ICON:
         case LIST_MODEL_COL_NAME:
-            listview_add_name_column (list, size, pos);
+            listview_add_name_column (list, size, pos, win);
             break;
         case LIST_MODEL_COL_PATH:
-            listview_add_path_column (list, size, pos);
+            listview_add_path_column (list, size, pos, win);
             break;
         case LIST_MODEL_COL_TYPE:
             listview_add_type_column (list, size, pos);
@@ -292,27 +373,32 @@ listview_add_column (GtkTreeView *list, uint32_t col_type, int32_t size, int32_t
 }
 
 void
-listview_add_default_columns (GtkTreeView *view)
+listview_add_default_columns (GtkTreeView *view, FsearchApplicationWindow *win)
 {
     listview_add_column (view,
                          LIST_MODEL_COL_NAME,
                          250,
-                         0);
+                         0,
+                         win);
     listview_add_column (view, LIST_MODEL_COL_PATH,
                          250,
-                         1);
+                         1,
+                         win);
     listview_add_column (view,
                          LIST_MODEL_COL_TYPE,
                          100,
-                         2);
+                         2,
+                         NULL);
     listview_add_column (view,
                          LIST_MODEL_COL_SIZE,
                          75,
-                         3);
+                         3,
+                         NULL);
     listview_add_column (view,
                          LIST_MODEL_COL_CHANGED,
                          125,
-                         4);
+                         4,
+                         NULL);
 }
 
 void

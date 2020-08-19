@@ -37,6 +37,28 @@ fs_str_is_empty (const char *str)
     return true;
 }
 
+int
+fs_str_is_regex (const char *str)
+{
+    char regex_chars[] = {
+        '$',
+        '(',
+        ')',
+        '*',
+        '+',
+        '.',
+        '?',
+        '[',
+        '\\',
+        '^',
+        '{',
+        '|',
+        '\0'
+    };
+
+    return (strpbrk(str, regex_chars) != NULL);
+}
+
 bool
 fs_str_has_upper (const char *strc)
 {

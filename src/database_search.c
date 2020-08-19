@@ -335,28 +335,6 @@ search_regex_thread (void * user_data)
     return NULL;
 }
 
-static int
-is_regex (const char *query)
-{
-    char regex_chars[] = {
-        '$',
-        '(',
-        ')',
-        '*',
-        '+',
-        '.',
-        '?',
-        '[',
-        '\\',
-        '^',
-        '{',
-        '|',
-        '\0'
-    };
-
-    return (strpbrk(query, regex_chars) != NULL);
-}
-
 static uint32_t
 search_wildcard_icase (const char *haystack, const char *needle)
 {
@@ -444,7 +422,7 @@ search_query_new (const char *query, bool match_case)
 }
 
 static search_query_t **
-build_queries (FsearchQuery *q)
+db_search_build_queries (FsearchQuery *q)
 {
     assert (q != NULL);
     assert (q->query != NULL);
@@ -455,7 +433,7 @@ build_queries (FsearchQuery *q)
     g_strstrip (tmp_query_copy);
 
     // check if regex characters are present
-    const bool is_reg = is_regex (q->query);
+    const bool is_reg = fs_str_is_regex (q->query);
     if (is_reg && q->enable_regex) {
         search_query_t **queries = calloc (2, sizeof (search_query_t *));
         queries[0] = search_query_new (tmp_query_copy, q->match_case);
@@ -531,7 +509,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
 
-    search_query_t **queries = build_queries (q);
+    search_query_t **queries = db_search_build_queries (q);
 
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
     const uint32_t num_entries = db_get_num_entries (q->db);
@@ -542,7 +520,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 
     const uint32_t max_results = q->max_results;
     const bool limit_results = max_results ? true : false;
-    const bool is_reg = is_regex (q->query);
+    const bool is_reg = fs_str_is_regex (q->query);
     uint32_t num_queries = 0;
     while (queries[num_queries]) {
         num_queries++;
