@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-17 21:01+0200\n"
-"PO-Revision-Date: 2020-08-18 17:32+0000\n"
+"PO-Revision-Date: 2020-08-20 18:36+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
 #, c-format
@@ -48,13 +48,15 @@ msgstr "Обновяване на Базата с данни…"
 
 #: src/fsearch_window.c:1051
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Задачите във фонов режим са активни."
 
 #: src/fsearch_window.c:1053
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Затварянето на прозореца не е възможно точно сега.\n"
+"Моля, изчакайте малко и опитайте отново."
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -173,7 +175,7 @@ msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишет
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
 msgid "This won't take long."
@@ -244,10 +246,8 @@ msgid "Single click to open"
 msgstr "Отваряне с едно кликване"
 
 #: src/preferences.ui:274
-#, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
-msgstr "Поведение след успешно отваряне на файл"
+msgstr "Поведение след успешно отваряне на файл:"
 
 #: src/preferences.ui:290
 msgid "Minimize"
@@ -287,7 +287,7 @@ msgstr "Обновяване на базата с данни при старти
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Add…"
-msgstr ""
+msgstr "Добавяне…"
 
 #: src/preferences.ui:504 src/preferences.ui:608
 msgid "Remove"
@@ -360,14 +360,10 @@ msgid "Move to Trash"
 msgstr "Преместване в кошчето"
 
 #: src/fsearch.glade:173
-#, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Нов прозорец"
 
 #: src/fsearch.glade:188
-#, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Обновяване на базата с данни"
 
@@ -401,11 +397,11 @@ msgstr "Показване на бутон за търсене"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "Относно"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Изход"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -448,10 +444,8 @@ msgid "_Help"
 msgstr "_Помощ"
 
 #: src/fsearch.glade:781
-#, fuzzy
-#| msgid "Search"
 msgid "Search…"
-msgstr "Търсене"
+msgstr "Търсене…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
