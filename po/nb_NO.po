@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-20 12:20+0200\n"
-"PO-Revision-Date: 2020-08-18 17:32+0000\n"
+"PO-Revision-Date: 2020-08-22 12:40+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, fuzzy, c-format
@@ -49,13 +49,15 @@ msgstr "Oppdaterer database…"
 
 #: src/fsearch_window.c:1077
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Bakgrunnsoppgaver aktive."
 
 #: src/fsearch_window.c:1079
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Lukking av vindu er ikke mulig nå.\n"
+"Vent et øyeblikk og prøv igjen."
 
 #: src/listview.c:221 src/menus.ui:80
 msgid "Name"
@@ -178,13 +180,11 @@ msgstr "Trykk <b>Ctrl + F</b> og begynn å skrive"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
-msgstr "Dette kan ta sin tid."
+msgstr "Dette tar ikke lang tid."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -267,8 +267,9 @@ msgid "Close"
 msgstr "Lukk"
 
 #: src/preferences.ui:308
+#, fuzzy
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Vis framhevede søkeord"
 
 #: src/preferences.ui:356
 msgid "Interface"
@@ -302,7 +303,7 @@ msgstr "Oppdater database ved oppstart"
 
 #: src/preferences.ui:505 src/preferences.ui:609
 msgid "Add…"
-msgstr ""
+msgstr "Legg til…"
 
 #: src/preferences.ui:521 src/preferences.ui:625
 msgid "Remove"
@@ -418,11 +419,11 @@ msgstr "Vis søkeknapp"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "Om"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Avslutt"
 
 #: src/fsearch.glade:425
 msgid "_File"
