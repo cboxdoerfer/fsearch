@@ -141,6 +141,15 @@ builder_get_object (GtkBuilder *builder, const char *name)
     return GTK_WIDGET (gtk_builder_get_object (builder, name));
 }
 
+static GtkToggleButton *
+toggle_button_get (GtkBuilder *builder, const char *name, bool val)
+{
+    GtkToggleButton *button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                     name));
+    gtk_toggle_button_set_active (button, val);
+    return button;
+}
+
 FsearchConfig *
 preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db, bool *update_list)
 {
@@ -154,10 +163,9 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
     gtk_dialog_add_button (GTK_DIALOG (dialog), "_Cancel", GTK_RESPONSE_CANCEL);
 
     // Interface page
-    GtkToggleButton *enable_dark_theme_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                       "enable_dark_theme_button"));
-    gtk_toggle_button_set_active (enable_dark_theme_button,
-                                  pref.config->enable_dark_theme);
+    GtkToggleButton *enable_dark_theme_button = toggle_button_get (builder,
+                                                                   "enable_dark_theme_button",
+                                                                   pref.config->enable_dark_theme);
 
     GtkInfoBar *enable_dark_theme_infobar = GTK_INFO_BAR (builder_get_object (builder,
                                                                               "enable_dark_theme_infobar"));
@@ -171,81 +179,67 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
                       G_CALLBACK (enable_dark_theme_button_toggled),
                       enable_dark_theme_infobar);
 
-    GtkToggleButton *show_tooltips_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                   "show_tooltips_button"));
-    gtk_toggle_button_set_active (show_tooltips_button,
-                                  pref.config->enable_list_tooltips);
+    GtkToggleButton *show_tooltips_button = toggle_button_get (builder,
+                                                               "show_tooltips_button",
+                                                               pref.config->enable_list_tooltips);
 
-    GtkToggleButton *restore_win_size_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                      "restore_win_size_button"));
-    gtk_toggle_button_set_active (restore_win_size_button,
-                                  pref.config->restore_window_size);
+    GtkToggleButton *restore_win_size_button = toggle_button_get (builder,
+                                                                  "restore_win_size_button",
+                                                                  pref.config->restore_window_size);
 
-    GtkToggleButton *restore_column_config_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                           "restore_column_config_button"));
-    gtk_toggle_button_set_active (restore_column_config_button,
-                                  pref.config->restore_column_config);
+    GtkToggleButton *restore_column_config_button = toggle_button_get (builder,
+                                                                       "restore_column_config_button",
+                                                                       pref.config->restore_column_config);
 
-    GtkToggleButton *double_click_path_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                       "double_click_path_button"));
-    gtk_toggle_button_set_active (double_click_path_button,
-                                  pref.config->double_click_path);
+    GtkToggleButton *double_click_path_button = toggle_button_get (builder,
+                                                                   "double_click_path_button",
+                                                                   pref.config->double_click_path);
 
-    GtkToggleButton *single_click_open_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                       "single_click_open_button"));
-    gtk_toggle_button_set_active (single_click_open_button,
-                                  pref.config->single_click_open);
+    GtkToggleButton *single_click_open_button = toggle_button_get (builder,
+                                                                   "single_click_open_button",
+                                                                   pref.config->single_click_open);
 
-    GtkToggleButton *show_icons_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                "show_icons_button"));
-    gtk_toggle_button_set_active (show_icons_button,
-                                  pref.config->show_listview_icons);
+    GtkToggleButton *show_icons_button = toggle_button_get (builder,
+                                                            "show_icons_button",
+                                                            pref.config->show_listview_icons);
 
-    GtkToggleButton *highlight_search_terms = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                     "highlight_search_terms"));
-    gtk_toggle_button_set_active(highlight_search_terms,
-                                 pref.config->highlight_search_terms);
+    GtkToggleButton *highlight_search_terms = toggle_button_get (builder,
+                                                                 "highlight_search_terms",
+                                                                 pref.config->highlight_search_terms);
 
-    GtkToggleButton *show_base_2_units = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                "show_base_2_units"));
-    gtk_toggle_button_set_active(show_base_2_units,
-                                 pref.config->show_base_2_units);
+    GtkToggleButton *show_base_2_units = toggle_button_get (builder,
+                                                            "show_base_2_units",
+                                                            pref.config->show_base_2_units);
 
-    GtkComboBox *action_after_file_open = GTK_COMBO_BOX ( builder_get_object(builder,
-                                                                             "action_after_file_open"));
+    GtkComboBox *action_after_file_open = GTK_COMBO_BOX (builder_get_object(builder,
+                                                                            "action_after_file_open"));
     gtk_combo_box_set_active(action_after_file_open,
                              pref.config->action_after_file_open);
 
-    GtkToggleButton *action_after_file_open_keyboard = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                              "action_after_file_open_keyboard"));
-    gtk_toggle_button_set_active(action_after_file_open_keyboard,
-                                 pref.config->action_after_file_open_keyboard);
+    GtkToggleButton *action_after_file_open_keyboard = toggle_button_get (builder,
+                                                                          "action_after_file_open_keyboard",
+                                                                          pref.config->action_after_file_open_keyboard);
 
-    GtkToggleButton *action_after_file_open_mouse = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                           "action_after_file_open_mouse"));
-    gtk_toggle_button_set_active(action_after_file_open_mouse,
-                                 pref.config->action_after_file_open_mouse);
+    GtkToggleButton *action_after_file_open_mouse = toggle_button_get (builder,
+                                                                       "action_after_file_open_mouse",
+                                                                       pref.config->action_after_file_open_mouse);
 
     // Search page
-    GtkToggleButton *auto_search_in_path_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                         "auto_search_in_path_button"));
-    gtk_toggle_button_set_active (auto_search_in_path_button,
-                                  pref.config->auto_search_in_path);
+    GtkToggleButton *auto_search_in_path_button = toggle_button_get (builder,
+                                                                     "auto_search_in_path_button",
+                                                                     pref.config->auto_search_in_path);
 
-    GtkToggleButton *search_as_you_type_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                        "search_as_you_type_button"));
-    gtk_toggle_button_set_active (search_as_you_type_button,
-                                  pref.config->search_as_you_type);
+    GtkToggleButton *search_as_you_type_button = toggle_button_get (builder,
+                                                                    "search_as_you_type_button",
+                                                                    pref.config->search_as_you_type);
 
-    GtkToggleButton *hide_results_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                  "hide_results_button"));
-    gtk_toggle_button_set_active (hide_results_button,
-                                  pref.config->hide_results_on_empty_search);
+    GtkToggleButton *hide_results_button = toggle_button_get (builder,
+                                                              "hide_results_button",
+                                                              pref.config->hide_results_on_empty_search);
 
-    GtkToggleButton *limit_num_results_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                       "limit_num_results_button"));
-    gtk_toggle_button_set_active (limit_num_results_button,
-                                  pref.config->limit_results);
+    GtkToggleButton *limit_num_results_button = toggle_button_get (builder,
+                                                                   "limit_num_results_button",
+                                                                   pref.config->limit_results);
 
     GtkWidget *limit_num_results_spin = builder_get_object (builder,
                                                             "limit_num_results_spin");
@@ -259,16 +253,14 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
                       limit_num_results_spin);
 
     // Database page
-    GtkToggleButton *update_db_at_start_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                        "update_db_at_start_button"));
-    gtk_toggle_button_set_active (update_db_at_start_button,
-                                  pref.config->update_database_on_launch);
+    GtkToggleButton *update_db_at_start_button = toggle_button_get (builder,
+                                                                    "update_db_at_start_button",
+                                                                    pref.config->update_database_on_launch);
 
     // Dialog page
-    GtkToggleButton *show_dialog_failed_opening = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                         "show_dialog_failed_opening"));
-    gtk_toggle_button_set_active(show_dialog_failed_opening,
-                                 pref.config->show_dialog_failed_opening);
+    GtkToggleButton *show_dialog_failed_opening = toggle_button_get (builder,
+                                                                     "show_dialog_failed_opening",
+                                                                     pref.config->show_dialog_failed_opening);
 
     // Include page
     //pref.include_model = create_include_tree_model (&pref, pref.config->locations);
@@ -296,11 +288,9 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
                       G_CALLBACK (on_list_selection_changed),
                       include_remove_button);
 
-    GtkToggleButton *follow_symlinks_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                     "follow_symlinks_button"));
-    gtk_toggle_button_set_active (follow_symlinks_button,
-                                  pref.config->follow_symlinks);
-
+    GtkToggleButton *follow_symlinks_button = toggle_button_get (builder,
+                                                                 "follow_symlinks_button",
+                                                                 pref.config->follow_symlinks);
 
     // Exclude model
     //pref.exclude_model = create_exclude_tree_model (&pref, pref.config->exclude_locations);
@@ -328,10 +318,9 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
                       G_CALLBACK (on_list_selection_changed),
                       exclude_remove_button);
 
-    GtkToggleButton *exclude_hidden_items_button = GTK_TOGGLE_BUTTON (builder_get_object (builder,
-                                                                                          "exclude_hidden_items_button"));
-    gtk_toggle_button_set_active (exclude_hidden_items_button,
-                                  pref.config->exclude_hidden_items);
+    GtkToggleButton *exclude_hidden_items_button = toggle_button_get (builder,
+                                                                      "exclude_hidden_items_button",
+                                                                      pref.config->exclude_hidden_items);
 
     GtkEntry *exclude_files_entry = GTK_ENTRY (builder_get_object (builder,
                                                                    "exclude_files_entry"));
