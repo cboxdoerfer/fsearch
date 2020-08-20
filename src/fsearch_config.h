@@ -45,6 +45,7 @@ struct _FsearchConfig
     int32_t window_height;
 
     // Interface
+    bool highlight_search_terms;
     bool single_click_open;
     bool enable_dark_theme;
     bool enable_list_tooltips;

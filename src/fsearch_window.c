@@ -754,6 +754,12 @@ fsearch_application_window_update_listview_config (FsearchApplicationWindow *app
                          config->name_column_width,
                          config->name_column_pos,
                          app);
+    listview_remove_column (list, LIST_MODEL_COL_PATH);
+    listview_add_column (list,
+                         LIST_MODEL_COL_PATH,
+                         config->path_column_width,
+                         config->path_column_pos,
+                         app);
 
     gtk_tree_view_set_activate_on_single_click (list, config->single_click_open);
 }

@@ -201,6 +201,11 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
     gtk_toggle_button_set_active (show_icons_button,
                                   pref.config->show_listview_icons);
 
+    GtkToggleButton *highlight_search_terms = GTK_TOGGLE_BUTTON (builder_get_object (builder,
+                                                                                     "highlight_search_terms"));
+    gtk_toggle_button_set_active(highlight_search_terms,
+                                 pref.config->highlight_search_terms);
+
     GtkToggleButton *show_base_2_units = GTK_TOGGLE_BUTTON (builder_get_object (builder,
                                                                                 "show_base_2_units"));
     gtk_toggle_button_set_active(show_base_2_units,
@@ -356,6 +361,12 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
         pref.config->action_after_file_open_mouse = gtk_toggle_button_get_active (action_after_file_open_mouse);
         // Dialogs
         pref.config->show_dialog_failed_opening = gtk_toggle_button_get_active (show_dialog_failed_opening);
+
+        bool old_highlight_search_terms = pref.config->highlight_search_terms;
+        pref.config->highlight_search_terms = gtk_toggle_button_get_active (highlight_search_terms);
+        if (old_highlight_search_terms != pref.config->highlight_search_terms) {
+            pref.update_list = true;
+        }
 
         bool old_single_click_open = pref.config->single_click_open;
         pref.config->single_click_open = gtk_toggle_button_get_active (single_click_open_button);

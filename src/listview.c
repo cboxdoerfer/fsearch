@@ -220,7 +220,9 @@ listview_add_name_column (GtkTreeView *list, int32_t size, int32_t pos, FsearchA
     gtk_tree_view_column_set_expand (col, TRUE);
     listview_column_add_label (col, _("Name"));
 
-    gtk_tree_view_column_set_cell_data_func (col, renderer, (GtkTreeCellDataFunc)listview_name_cell_data_func, win, NULL);
+    if (config->highlight_search_terms) {
+        gtk_tree_view_column_set_cell_data_func (col, renderer, (GtkTreeCellDataFunc)listview_name_cell_data_func, win, NULL);
+    }
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),
@@ -251,7 +253,10 @@ listview_add_path_column (GtkTreeView *list, int32_t size, int32_t pos, FsearchA
     gtk_tree_view_insert_column (list, col, pos);
     listview_column_add_label (col, _("Path"));
 
-    gtk_tree_view_column_set_cell_data_func (col, renderer, (GtkTreeCellDataFunc)listview_path_cell_data_func, win, NULL);
+    FsearchConfig *config = fsearch_application_get_config (FSEARCH_APPLICATION_DEFAULT);
+    if (config->highlight_search_terms) {
+        gtk_tree_view_column_set_cell_data_func (col, renderer, (GtkTreeCellDataFunc)listview_path_cell_data_func, win, NULL);
+    }
 
     g_signal_connect (col, "notify::width",
                       G_CALLBACK (on_listview_column_width_changed),

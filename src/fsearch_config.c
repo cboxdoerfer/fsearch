@@ -192,6 +192,10 @@ config_load (FsearchConfig *config)
     if (g_key_file_load_from_file (key_file, config_path, G_KEY_FILE_NONE, &error)) {
         trace ("[config] loading...\n");
         // Interface
+        config->highlight_search_terms = config_load_boolean (key_file,
+                                                              "Interface",
+                                                              "highlight_search_terms",
+                                                              true);
         config->single_click_open = config_load_boolean (key_file,
                                                         "Interface",
                                                         "single_click_open",
@@ -434,6 +438,7 @@ config_load_default (FsearchConfig *config)
 
     // Interface
     config->single_click_open = false;
+    config->highlight_search_terms = true;
     config->enable_dark_theme = false;
     config->enable_list_tooltips = true;
     config->restore_column_config = false;
@@ -557,6 +562,7 @@ config_save (FsearchConfig *config)
     trace ("[config] saving...\n");
     // Interface
     g_key_file_set_boolean (key_file, "Interface", "single_click_open", config->single_click_open);
+    g_key_file_set_boolean (key_file, "Interface", "highlight_search_terms", config->highlight_search_terms);
     g_key_file_set_boolean (key_file, "Interface", "restore_column_configuration", config->restore_column_config);
     g_key_file_set_boolean (key_file, "Interface", "double_click_path", config->double_click_path);
     g_key_file_set_boolean (key_file, "Interface", "enable_list_tooltips", config->enable_list_tooltips);
