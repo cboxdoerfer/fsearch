@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-17 21:01+0200\n"
-"PO-Revision-Date: 2020-07-29 16:41+0000\n"
+"PO-Revision-Date: 2020-08-20 18:36+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
 #, c-format
@@ -31,7 +31,7 @@ msgstr "Nie udało się otworzyć pliku"
 
 #: src/fsearch_window.c:628 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Czy chcesz aby okno pozostało widoczne?"
 
 #: src/fsearch_window.c:834
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -43,20 +43,21 @@ msgid "Loading Database…"
 msgstr "Ładowania bazy danych…"
 
 #: src/fsearch_window.c:863 src/overlay.ui:213 src/fsearch.glade:1090
-#, fuzzy, c-format
-#| msgid "Updating Database..."
+#, c-format
 msgid "Updating Database…"
-msgstr "Aktualizowanie bazy danych..."
+msgstr "Aktualizowanie bazy danych…"
 
 #: src/fsearch_window.c:1051
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Zadania w tle są wykonywane."
 
 #: src/fsearch_window.c:1053
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Zamknięcie okna nie jest możliwe w tej chwili.\n"
+"Poczekaj chwilę i spróbuj ponownie."
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -89,7 +90,7 @@ msgstr "Uaktualnij bazę danych"
 
 #: src/fsearch.c:420
 msgid "translator-credits"
-msgstr ""
+msgstr "Daniel Napora"
 
 #: src/fsearch.c:421
 msgid "A search utility focusing on performance and advanced features"
@@ -98,22 +99,18 @@ msgstr ""
 "funkcjach"
 
 #: src/fsearch_window_actions.c:85
-#, fuzzy, c-format
-#| msgid "Do you really want to open"
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Na pewno chcesz otworzyć"
+msgstr "Na pewno chcesz otworzyć %d plik(i)?"
 
 #: src/fsearch_window_actions.c:87
-#, fuzzy
-#| msgid "Opening Files..."
 msgid "Opening Files…"
-msgstr "Otwieranie plików..."
+msgstr "Otwieranie plików…"
 
 #: src/fsearch_window_actions.c:167
-#, fuzzy, c-format
-#| msgid "Do you really want to remove"
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Na pewno chcesz usunąć"
+msgstr "Na pewno chcesz usunąć %d plik(i)?"
 
 #: src/fsearch_window_actions.c:171
 msgid "Deleting files…"
@@ -124,14 +121,12 @@ msgid "Moving files to trash…"
 msgstr "Przenoszenie plików do kosza…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
-msgstr "Wyrażenia regularne"
+msgstr "Włącz"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Aktualizacja"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -181,13 +176,11 @@ msgstr "Naciśnij <b>Ctrl + F</b> i wpisz zapytanie"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
-msgstr "To może trochę potrwać."
+msgstr "To nie potrwa długo."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -254,10 +247,8 @@ msgid "Single click to open"
 msgstr "Pojedyncze kliknięcie otwiera"
 
 #: src/preferences.ui:274
-#, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
-msgstr "Zachowanie po udanym otwarciu pliku"
+msgstr "Zachowanie po udanym otwarciu pliku:"
 
 #: src/preferences.ui:290
 msgid "Minimize"
@@ -297,7 +288,7 @@ msgstr "Uaktualnij bazę danych przy starcie"
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Add…"
-msgstr ""
+msgstr "Dodaj…"
 
 #: src/preferences.ui:504 src/preferences.ui:608
 msgid "Remove"
@@ -368,14 +359,10 @@ msgid "Move to Trash"
 msgstr "Usuń"
 
 #: src/fsearch.glade:173
-#, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Nowe okno"
 
 #: src/fsearch.glade:188
-#, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Uaktualnij bazę danych"
 
@@ -409,11 +396,11 @@ msgstr "Pokaż przycisk Szukaj"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "O programie"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Zakończ"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -456,10 +443,8 @@ msgid "_Help"
 msgstr "_Pomoc"
 
 #: src/fsearch.glade:781
-#, fuzzy
-#| msgid "Search"
 msgid "Search…"
-msgstr "Szukaj"
+msgstr "Szukaj…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
@@ -525,12 +510,14 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"szukanie;fsearch;pliki;katalogi;muzyka;wideo;dokumenty;szukanie;narzędzie;wsz"
+"ystko;"
 
 #, fuzzy
 #~| msgid "Loading Database…"

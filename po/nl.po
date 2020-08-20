@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-17 21:01+0200\n"
-"PO-Revision-Date: 2020-08-18 17:32+0000\n"
+"PO-Revision-Date: 2020-08-20 18:36+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
 #, c-format
@@ -48,13 +48,15 @@ msgstr "Bezig met bijwerken van databank…"
 
 #: src/fsearch_window.c:1051
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Achtergrondtaken zijn actief."
 
 #: src/fsearch_window.c:1053
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Het venster kan momenteel niet worden gesloten.\n"
+"Wacht even en probeer het dan opnieuw."
 
 #: src/listview.c:143 src/menus.ui:80
 msgid "Name"
@@ -169,7 +171,7 @@ msgstr "Druk op <b>Ctrl + F</b> en begin met typen"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
 msgid "This won't take long."
@@ -240,10 +242,8 @@ msgid "Single click to open"
 msgstr "Eénmaal klikken om te openen"
 
 #: src/preferences.ui:274
-#, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
-msgstr "Wat te doen na het openen van een bestand"
+msgstr "Wat te doen na het openen van een bestand:"
 
 #: src/preferences.ui:290
 msgid "Minimize"
@@ -283,7 +283,7 @@ msgstr "Databank bijwerken na opstarten"
 
 #: src/preferences.ui:488 src/preferences.ui:592
 msgid "Add…"
-msgstr ""
+msgstr "Toevoegen…"
 
 #: src/preferences.ui:504 src/preferences.ui:608
 msgid "Remove"
@@ -356,14 +356,10 @@ msgid "Move to Trash"
 msgstr "Verplaatsen naar prullenbak"
 
 #: src/fsearch.glade:173
-#, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Nieuw venster"
 
 #: src/fsearch.glade:188
-#, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Databank bijwerken"
 
@@ -397,11 +393,11 @@ msgstr "Zoekknop tonen"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "Over"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Afsluiten"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -444,10 +440,8 @@ msgid "_Help"
 msgstr "_Hulp"
 
 #: src/fsearch.glade:781
-#, fuzzy
-#| msgid "Search"
 msgid "Search…"
-msgstr "Zoeken"
+msgstr "Zoeken…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
