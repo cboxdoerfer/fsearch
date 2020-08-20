@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-17 21:01+0200\n"
+"POT-Creation-Date: 2020-08-20 12:20+0200\n"
 "PO-Revision-Date: 2020-08-20 18:36+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
@@ -19,38 +19,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.2.1-dev\n"
 
-#: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
+#: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, c-format
 msgid "%'d Items"
 msgstr "%'d items"
 
-#: src/fsearch_window.c:627 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Kan bestand niet openen"
 
-#: src/fsearch_window.c:628 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Wil je het venster openhouden?"
 
-#: src/fsearch_window.c:834
+#: src/fsearch_window.c:860
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Laatst bijgewerkt: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:848 src/overlay.ui:143
+#: src/fsearch_window.c:874 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Bezig met laden van databank…"
 
-#: src/fsearch_window.c:863 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
 #, c-format
 msgid "Updating Database…"
 msgstr "Bezig met bijwerken van databank…"
 
-#: src/fsearch_window.c:1051
+#: src/fsearch_window.c:1077
 msgid "Background tasks are active."
 msgstr "Achtergrondtaken zijn actief."
 
-#: src/fsearch_window.c:1053
+#: src/fsearch_window.c:1079
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -58,40 +58,40 @@ msgstr ""
 "Het venster kan momenteel niet worden gesloten.\n"
 "Wacht even en probeer het dan opnieuw."
 
-#: src/listview.c:143 src/menus.ui:80
+#: src/listview.c:221 src/menus.ui:80
 msgid "Name"
 msgstr "Naam"
 
-#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
 #: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "Pad"
 
-#: src/listview.c:201 src/menus.ui:92
+#: src/listview.c:288 src/menus.ui:92
 msgid "Size"
 msgstr "Grootte"
 
-#: src/listview.c:233 src/menus.ui:96
+#: src/listview.c:320 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Aangepast op"
 
-#: src/listview.c:262 src/menus.ui:88
+#: src/listview.c:349 src/menus.ui:88
 msgid "Type"
 msgstr "Type"
 
-#: src/fsearch.c:201
+#: src/fsearch.c:191
 msgid "Show version information"
 msgstr "Versie-informatie tonen"
 
-#: src/fsearch.c:208
+#: src/fsearch.c:198
 msgid "Update the database"
 msgstr "Databank bijwerken"
 
-#: src/fsearch.c:420
+#: src/fsearch.c:410
 msgid "translator-credits"
 msgstr "Heimen Stoffels"
 
-#: src/fsearch.c:421
+#: src/fsearch.c:411
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
 
@@ -253,85 +253,89 @@ msgstr "Minimaliseren"
 msgid "Close"
 msgstr "Sluiten"
 
-#: src/preferences.ui:339
+#: src/preferences.ui:308
+msgid "Show highlighted search terms"
+msgstr ""
+
+#: src/preferences.ui:356
 msgid "Interface"
 msgstr "Uiterlijk"
 
-#: src/preferences.ui:357
+#: src/preferences.ui:374
 msgid "Limit number of results:"
 msgstr "Aantal zoekresultaten beperken:"
 
-#: src/preferences.ui:385
+#: src/preferences.ui:402
 msgid "Search in path when query contains path separators"
 msgstr "Pad doorzoeken als de zoekopdracht padscheidingsteken bevat"
 
-#: src/preferences.ui:399
+#: src/preferences.ui:416
 msgid "Search as you type"
 msgstr "Zoeken terwijl je typt"
 
-#: src/preferences.ui:413
+#: src/preferences.ui:430
 msgid "Hide results when search is empty"
 msgstr "Resultaten verbergen als de zoekopdracht blanco is"
 
-#: src/preferences.ui:434 src/fsearch.glade:821
+#: src/preferences.ui:451 src/fsearch.glade:821
 msgid "Search"
 msgstr "Zoeken"
 
-#: src/preferences.ui:453
+#: src/preferences.ui:470
 msgid "Update database on start"
 msgstr "Databank bijwerken na opstarten"
 
-#: src/preferences.ui:488 src/preferences.ui:592
+#: src/preferences.ui:505 src/preferences.ui:609
 msgid "Add…"
 msgstr "Toevoegen…"
 
-#: src/preferences.ui:504 src/preferences.ui:608
+#: src/preferences.ui:521 src/preferences.ui:625
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: src/preferences.ui:551
+#: src/preferences.ui:568
 msgid "Follow symbolic links"
 msgstr "Symbolische koppelingen volgen"
 
-#: src/preferences.ui:568
+#: src/preferences.ui:585
 msgid "Include"
 msgstr "Opnemen"
 
-#: src/preferences.ui:655
+#: src/preferences.ui:672
 msgid "Exclude hidden files and folders"
 msgstr "Verborgen bestanden en mappen uitsluiten"
 
-#: src/preferences.ui:676 src/preferences.ui:689
+#: src/preferences.ui:693 src/preferences.ui:706
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Jokertekens worden ondersteund. Meerdere items moeten worden gescheiden door "
 "';'"
 
-#: src/preferences.ui:677
+#: src/preferences.ui:694
 msgid "Exclude files:"
 msgstr "Bestanden uitsluiten:"
 
-#: src/preferences.ui:690
+#: src/preferences.ui:707
 msgid "e.g. \".git;*.tmp\""
 msgstr "bijv. \".git;*.tmp\""
 
-#: src/preferences.ui:714
+#: src/preferences.ui:731
 msgid "Exclude"
 msgstr "Uitsluiten"
 
-#: src/preferences.ui:737
+#: src/preferences.ui:754
 msgid "Database"
 msgstr "Databank"
 
-#: src/preferences.ui:760
+#: src/preferences.ui:777
 msgid "Show warning dialogs when:"
 msgstr "Waarschuwingen tonen als:"
 
-#: src/preferences.ui:769
+#: src/preferences.ui:786
 msgid "file / folder failed to open"
 msgstr "bestand/map niet kan worden geopend"
 
-#: src/preferences.ui:790
+#: src/preferences.ui:807
 msgid "Dialogs"
 msgstr "Vensters"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-17 21:01+0200\n"
+"POT-Creation-Date: 2020-08-20 12:20+0200\n"
 "PO-Revision-Date: 2020-08-18 17:32+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -19,80 +19,80 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.2-dev\n"
 
-#: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
+#: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, fuzzy, c-format
 msgid "%'d Items"
 msgstr "%'d elementer"
 
-#: src/fsearch_window.c:627 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
 #, fuzzy
 msgid "Failed to open file"
 msgstr "Klarte ikke å åpne fil"
 
-#: src/fsearch_window.c:628 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Ønsker du å beholde vinduet oppe?"
 
-#: src/fsearch_window.c:834
+#: src/fsearch_window.c:860
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Sist oppdatert: %d %m %Y %H:%M"
 
-#: src/fsearch_window.c:848 src/overlay.ui:143
+#: src/fsearch_window.c:874 src/overlay.ui:143
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "Laster database…"
 
-#: src/fsearch_window.c:863 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
 msgid "Updating Database…"
 msgstr "Oppdaterer database…"
 
-#: src/fsearch_window.c:1051
+#: src/fsearch_window.c:1077
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1053
+#: src/fsearch_window.c:1079
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
 
-#: src/listview.c:143 src/menus.ui:80
+#: src/listview.c:221 src/menus.ui:80
 msgid "Name"
 msgstr "Navn"
 
-#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
 #: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "Sti"
 
-#: src/listview.c:201 src/menus.ui:92
+#: src/listview.c:288 src/menus.ui:92
 msgid "Size"
 msgstr "Størrelse"
 
-#: src/listview.c:233 src/menus.ui:96
+#: src/listview.c:320 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Dato endret"
 
-#: src/listview.c:262 src/menus.ui:88
+#: src/listview.c:349 src/menus.ui:88
 msgid "Type"
 msgstr "Type"
 
-#: src/fsearch.c:201
+#: src/fsearch.c:191
 #, fuzzy
 msgid "Show version information"
 msgstr "Vis versjonsinfo"
 
-#: src/fsearch.c:208
+#: src/fsearch.c:198
 #, fuzzy
 msgid "Update the database"
 msgstr "Oppdater database"
 
-#: src/fsearch.c:420
+#: src/fsearch.c:410
 msgid "translator-credits"
 msgstr "Allan Nordhøy"
 
-#: src/fsearch.c:421
+#: src/fsearch.c:411
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
 
@@ -266,86 +266,90 @@ msgstr "Minimer"
 msgid "Close"
 msgstr "Lukk"
 
-#: src/preferences.ui:339
+#: src/preferences.ui:308
+msgid "Show highlighted search terms"
+msgstr ""
+
+#: src/preferences.ui:356
 msgid "Interface"
 msgstr "Grensesnitt"
 
-#: src/preferences.ui:357
+#: src/preferences.ui:374
 msgid "Limit number of results:"
 msgstr "Begrens antall resultat:"
 
-#: src/preferences.ui:385
+#: src/preferences.ui:402
 #, fuzzy
 msgid "Search in path when query contains path separators"
 msgstr "Søk i sti når spørring inneholder stiinndelere"
 
-#: src/preferences.ui:399
+#: src/preferences.ui:416
 msgid "Search as you type"
 msgstr "Søk mens du skriver"
 
-#: src/preferences.ui:413
+#: src/preferences.ui:430
 msgid "Hide results when search is empty"
 msgstr "Skjul resultatløse søkeresultater"
 
-#: src/preferences.ui:434 src/fsearch.glade:821
+#: src/preferences.ui:451 src/fsearch.glade:821
 msgid "Search"
 msgstr "Søk"
 
-#: src/preferences.ui:453
+#: src/preferences.ui:470
 #, fuzzy
 msgid "Update database on start"
 msgstr "Oppdater database ved oppstart"
 
-#: src/preferences.ui:488 src/preferences.ui:592
+#: src/preferences.ui:505 src/preferences.ui:609
 msgid "Add…"
 msgstr ""
 
-#: src/preferences.ui:504 src/preferences.ui:608
+#: src/preferences.ui:521 src/preferences.ui:625
 msgid "Remove"
 msgstr "Fjern"
 
-#: src/preferences.ui:551
+#: src/preferences.ui:568
 msgid "Follow symbolic links"
 msgstr "Følg symbolske lenker"
 
-#: src/preferences.ui:568
+#: src/preferences.ui:585
 msgid "Include"
 msgstr "Inkluder"
 
-#: src/preferences.ui:655
+#: src/preferences.ui:672
 msgid "Exclude hidden files and folders"
 msgstr "Utelat skjulte filer og mapper"
 
-#: src/preferences.ui:676 src/preferences.ui:689
+#: src/preferences.ui:693 src/preferences.ui:706
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Støtter jokertegn. Flerfoldige oppføringer må inndeles med \";\""
 
-#: src/preferences.ui:677
+#: src/preferences.ui:694
 msgid "Exclude files:"
 msgstr "Ekskluder filer:"
 
-#: src/preferences.ui:690
+#: src/preferences.ui:707
 msgid "e.g. \".git;*.tmp\""
 msgstr "f.eks. \".git;*.tmp\""
 
-#: src/preferences.ui:714
+#: src/preferences.ui:731
 msgid "Exclude"
 msgstr "Utelat"
 
-#: src/preferences.ui:737
+#: src/preferences.ui:754
 msgid "Database"
 msgstr "Database"
 
-#: src/preferences.ui:760
+#: src/preferences.ui:777
 msgid "Show warning dialogs when:"
 msgstr "Vis advarselsdialoger når:"
 
-#: src/preferences.ui:769
+#: src/preferences.ui:786
 #, fuzzy
 msgid "file / folder failed to open"
 msgstr "klarte ikke å åpne fil/mappe"
 
-#: src/preferences.ui:790
+#: src/preferences.ui:807
 msgid "Dialogs"
 msgstr "Dialogvinduer"
 

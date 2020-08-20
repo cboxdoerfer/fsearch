@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-17 21:01+0200\n"
+"POT-Creation-Date: 2020-08-20 12:20+0200\n"
 "PO-Revision-Date: 2020-08-20 18:36+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,38 +20,38 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.2.1-dev\n"
 
-#: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
+#: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, c-format
 msgid "%'d Items"
 msgstr "%'d wyniki"
 
-#: src/fsearch_window.c:627 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Nie udało się otworzyć pliku"
 
-#: src/fsearch_window.c:628 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Czy chcesz aby okno pozostało widoczne?"
 
-#: src/fsearch_window.c:834
+#: src/fsearch_window.c:860
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Ostatnia aktualizacja: %Y-%m-%d % H: %M"
 
-#: src/fsearch_window.c:848 src/overlay.ui:143
+#: src/fsearch_window.c:874 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Ładowania bazy danych…"
 
-#: src/fsearch_window.c:863 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
 #, c-format
 msgid "Updating Database…"
 msgstr "Aktualizowanie bazy danych…"
 
-#: src/fsearch_window.c:1051
+#: src/fsearch_window.c:1077
 msgid "Background tasks are active."
 msgstr "Zadania w tle są wykonywane."
 
-#: src/fsearch_window.c:1053
+#: src/fsearch_window.c:1079
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -59,40 +59,40 @@ msgstr ""
 "Zamknięcie okna nie jest możliwe w tej chwili.\n"
 "Poczekaj chwilę i spróbuj ponownie."
 
-#: src/listview.c:143 src/menus.ui:80
+#: src/listview.c:221 src/menus.ui:80
 msgid "Name"
 msgstr "Nazwa"
 
-#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
 #: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "Ścieżka"
 
-#: src/listview.c:201 src/menus.ui:92
+#: src/listview.c:288 src/menus.ui:92
 msgid "Size"
 msgstr "Rozmiar"
 
-#: src/listview.c:233 src/menus.ui:96
+#: src/listview.c:320 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Data modyfikacji"
 
-#: src/listview.c:262 src/menus.ui:88
+#: src/listview.c:349 src/menus.ui:88
 msgid "Type"
 msgstr "Typ"
 
-#: src/fsearch.c:201
+#: src/fsearch.c:191
 msgid "Show version information"
 msgstr "Pokaż informacje o wersji"
 
-#: src/fsearch.c:208
+#: src/fsearch.c:198
 msgid "Update the database"
 msgstr "Uaktualnij bazę danych"
 
-#: src/fsearch.c:420
+#: src/fsearch.c:410
 msgid "translator-credits"
 msgstr "Daniel Napora"
 
-#: src/fsearch.c:421
+#: src/fsearch.c:411
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
@@ -258,83 +258,87 @@ msgstr "Zminimalizuj"
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/preferences.ui:339
+#: src/preferences.ui:308
+msgid "Show highlighted search terms"
+msgstr ""
+
+#: src/preferences.ui:356
 msgid "Interface"
 msgstr "Interfejs"
 
-#: src/preferences.ui:357
+#: src/preferences.ui:374
 msgid "Limit number of results:"
 msgstr "Ogranicz liczbę wyników:"
 
-#: src/preferences.ui:385
+#: src/preferences.ui:402
 msgid "Search in path when query contains path separators"
 msgstr "Wyszukuj w ścieżce, gdy kwerenda zawiera separatory ścieżki"
 
-#: src/preferences.ui:399
+#: src/preferences.ui:416
 msgid "Search as you type"
 msgstr "Wyszukiwanie podczas pisania"
 
-#: src/preferences.ui:413
+#: src/preferences.ui:430
 msgid "Hide results when search is empty"
 msgstr "Ukryj wyniki gdy kwerenda jest pusta"
 
-#: src/preferences.ui:434 src/fsearch.glade:821
+#: src/preferences.ui:451 src/fsearch.glade:821
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/preferences.ui:453
+#: src/preferences.ui:470
 msgid "Update database on start"
 msgstr "Uaktualnij bazę danych przy starcie"
 
-#: src/preferences.ui:488 src/preferences.ui:592
+#: src/preferences.ui:505 src/preferences.ui:609
 msgid "Add…"
 msgstr "Dodaj…"
 
-#: src/preferences.ui:504 src/preferences.ui:608
+#: src/preferences.ui:521 src/preferences.ui:625
 msgid "Remove"
 msgstr "Usuń"
 
-#: src/preferences.ui:551
+#: src/preferences.ui:568
 msgid "Follow symbolic links"
 msgstr "Podążaj za dowiązaniami symbolicznymi"
 
-#: src/preferences.ui:568
+#: src/preferences.ui:585
 msgid "Include"
 msgstr "Dołącz"
 
-#: src/preferences.ui:655
+#: src/preferences.ui:672
 msgid "Exclude hidden files and folders"
 msgstr "Wykluczenie ukrytych plików i katalogów"
 
-#: src/preferences.ui:676 src/preferences.ui:689
+#: src/preferences.ui:693 src/preferences.ui:706
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Obsługuje symbole wieloznaczne. Wpisy muszą być oddzielone znakiem ';'"
 
-#: src/preferences.ui:677
+#: src/preferences.ui:694
 msgid "Exclude files:"
 msgstr "Wyklucz pliki:"
 
-#: src/preferences.ui:690
+#: src/preferences.ui:707
 msgid "e.g. \".git;*.tmp\""
 msgstr "np.: \".git; *.tmp\""
 
-#: src/preferences.ui:714
+#: src/preferences.ui:731
 msgid "Exclude"
 msgstr "Wyklucz"
 
-#: src/preferences.ui:737
+#: src/preferences.ui:754
 msgid "Database"
 msgstr "Baza danych"
 
-#: src/preferences.ui:760
+#: src/preferences.ui:777
 msgid "Show warning dialogs when:"
 msgstr "Pokaż ostrzeżenie gdy:"
 
-#: src/preferences.ui:769
+#: src/preferences.ui:786
 msgid "file / folder failed to open"
 msgstr "nie udało się otworzyć pliku / katalogu"
 
-#: src/preferences.ui:790
+#: src/preferences.ui:807
 msgid "Dialogs"
 msgstr "Okna dialogowe"
 
@@ -516,8 +520,8 @@ msgstr "system-search"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
-"szukanie;fsearch;pliki;katalogi;muzyka;wideo;dokumenty;szukanie;narzędzie;wsz"
-"ystko;"
+"szukanie;fsearch;pliki;katalogi;muzyka;wideo;dokumenty;szukanie;narzędzie;"
+"wszystko;"
 
 #, fuzzy
 #~| msgid "Loading Database…"

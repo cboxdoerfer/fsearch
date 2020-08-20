@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-17 21:01+0200\n"
+"POT-Creation-Date: 2020-08-20 12:20+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -19,79 +19,79 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.17-dev\n"
 
-#: src/fsearch_window.c:105 src/fsearch_window.c:380 src/fsearch_window.c:828
+#: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 個"
 
-#: src/fsearch_window.c:627 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr ""
 
-#: src/fsearch_window.c:628 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr ""
 
-#: src/fsearch_window.c:834
+#: src/fsearch_window.c:860
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "最終更新日: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:848 src/overlay.ui:143
+#: src/fsearch_window.c:874 src/overlay.ui:143
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "データベースを読み込み中…"
 
-#: src/fsearch_window.c:863 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
 #| msgid "Updating Database..."
 msgid "Updating Database…"
 msgstr "データベースをアップデート中…"
 
-#: src/fsearch_window.c:1051
+#: src/fsearch_window.c:1077
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1053
+#: src/fsearch_window.c:1079
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
 
-#: src/listview.c:143 src/menus.ui:80
+#: src/listview.c:221 src/menus.ui:80
 msgid "Name"
 msgstr "名前"
 
-#: src/listview.c:172 src/fsearch_preferences_widgets.c:224
+#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
 #: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
 msgid "Path"
 msgstr "パス"
 
-#: src/listview.c:201 src/menus.ui:92
+#: src/listview.c:288 src/menus.ui:92
 msgid "Size"
 msgstr "サイズ"
 
-#: src/listview.c:233 src/menus.ui:96
+#: src/listview.c:320 src/menus.ui:96
 msgid "Date Modified"
 msgstr "更新日時"
 
-#: src/listview.c:262 src/menus.ui:88
+#: src/listview.c:349 src/menus.ui:88
 msgid "Type"
 msgstr "タイプ"
 
-#: src/fsearch.c:201
+#: src/fsearch.c:191
 msgid "Show version information"
 msgstr ""
 
-#: src/fsearch.c:208
+#: src/fsearch.c:198
 #, fuzzy
 msgid "Update the database"
 msgstr "データベースをアップデート"
 
-#: src/fsearch.c:420
+#: src/fsearch.c:410
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:421
+#: src/fsearch.c:411
 msgid "A search utility focusing on performance and advanced features"
 msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
 
@@ -261,83 +261,87 @@ msgstr ""
 msgid "Close"
 msgstr ""
 
-#: src/preferences.ui:339
+#: src/preferences.ui:308
+msgid "Show highlighted search terms"
+msgstr ""
+
+#: src/preferences.ui:356
 msgid "Interface"
 msgstr "インターフェイス"
 
-#: src/preferences.ui:357
+#: src/preferences.ui:374
 msgid "Limit number of results:"
 msgstr "検索結果数を制限:"
 
-#: src/preferences.ui:385
+#: src/preferences.ui:402
 msgid "Search in path when query contains path separators"
 msgstr "クエリがパス区切り文字を含む場合はパスを検索"
 
-#: src/preferences.ui:399
+#: src/preferences.ui:416
 msgid "Search as you type"
 msgstr "文字入力ごとに検索"
 
-#: src/preferences.ui:413
+#: src/preferences.ui:430
 msgid "Hide results when search is empty"
 msgstr "検索結果が空の場合は結果を隠す"
 
-#: src/preferences.ui:434 src/fsearch.glade:821
+#: src/preferences.ui:451 src/fsearch.glade:821
 msgid "Search"
 msgstr "検索"
 
-#: src/preferences.ui:453
+#: src/preferences.ui:470
 msgid "Update database on start"
 msgstr "起動時にデータベースをアップデート"
 
-#: src/preferences.ui:488 src/preferences.ui:592
+#: src/preferences.ui:505 src/preferences.ui:609
 msgid "Add…"
 msgstr ""
 
-#: src/preferences.ui:504 src/preferences.ui:608
+#: src/preferences.ui:521 src/preferences.ui:625
 msgid "Remove"
 msgstr "削除"
 
-#: src/preferences.ui:551
+#: src/preferences.ui:568
 msgid "Follow symbolic links"
 msgstr "シンボリックリンクに追従"
 
-#: src/preferences.ui:568
+#: src/preferences.ui:585
 msgid "Include"
 msgstr "含む"
 
-#: src/preferences.ui:655
+#: src/preferences.ui:672
 msgid "Exclude hidden files and folders"
 msgstr "隠しファイルと隠しフォルダを除外"
 
-#: src/preferences.ui:676 src/preferences.ui:689
+#: src/preferences.ui:693 src/preferences.ui:706
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "ワイルドカードをサポート。複数のエントリーは ';' で分割します"
 
-#: src/preferences.ui:677
+#: src/preferences.ui:694
 msgid "Exclude files:"
 msgstr "除外ファイル:"
 
-#: src/preferences.ui:690
+#: src/preferences.ui:707
 msgid "e.g. \".git;*.tmp\""
 msgstr "例. \".git;*.tmp\""
 
-#: src/preferences.ui:714
+#: src/preferences.ui:731
 msgid "Exclude"
 msgstr "除外"
 
-#: src/preferences.ui:737
+#: src/preferences.ui:754
 msgid "Database"
 msgstr "データベース"
 
-#: src/preferences.ui:760
+#: src/preferences.ui:777
 msgid "Show warning dialogs when:"
 msgstr ""
 
-#: src/preferences.ui:769
+#: src/preferences.ui:786
 msgid "file / folder failed to open"
 msgstr ""
 
-#: src/preferences.ui:790
+#: src/preferences.ui:807
 msgid "Dialogs"
 msgstr ""
 
