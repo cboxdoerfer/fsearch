@@ -27,11 +27,27 @@
 
 typedef struct
 {
-    GList *regex;
+    GRegex *regex;
+
+    bool is_supported_glob;
+    bool start_with_asterisk;
+    bool end_with_asterisk;
+
+    uint32_t hl_start;
+    uint32_t hl_end;
+
+    char *query;
+    size_t query_len;
+} FsearchQueryHighlightToken;
+
+typedef struct
+{
+    GList *token;
 
     bool auto_search_in_path;
     bool search_in_path;
     bool has_separator;
+    bool match_case;
 } FsearchQueryHighlight;
 
 typedef struct
