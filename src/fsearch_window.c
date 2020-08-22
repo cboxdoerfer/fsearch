@@ -349,6 +349,17 @@ update_statusbar (FsearchApplicationWindow *win, const char *text)
 }
 
 static gboolean
+search_cancelled_cb (gpointer user_data)
+{
+    FsearchApplicationWindow *win = user_data;
+    if (!win) {
+        return FALSE;
+    }
+    win->num_searches_active--;
+    return FALSE;
+}
+
+static gboolean
 update_model_cb (gpointer user_data)
 {
     DatabaseSearchResult *result = user_data;
@@ -418,6 +429,12 @@ update_model_cb (gpointer user_data)
 }
 
 void
+fsearch_application_window_search_cancelled (void *data)
+{
+    g_idle_add (search_cancelled_cb, data);
+}
+
+void
 fsearch_application_window_update_results (void *data)
 {
     g_idle_add (update_model_cb, data);
@@ -463,6 +480,7 @@ perform_search (FsearchApplicationWindow *win)
                                          db,
                                          filter,
                                          fsearch_application_window_update_results, win,
+                                         fsearch_application_window_search_cancelled, win,
                                          max_results,
                                          config->match_case,
                                          config->enable_regex,

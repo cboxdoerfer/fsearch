@@ -31,6 +31,8 @@ fsearch_query_new (const char *query,
                    FsearchFilter filter,
                    void (*callback)(void *),
                    void *callback_data,
+                   void (*callback_cancelled)(void *),
+                   void *callback_cancelled_data,
                    uint32_t max_results,
                    bool match_case,
                    bool enable_regex,
@@ -47,6 +49,8 @@ fsearch_query_new (const char *query,
     q->filter = filter;
     q->callback = callback;
     q->callback_data = callback_data;
+    q->callback_cancelled = callback_cancelled;
+    q->callback_cancelled_data = callback_cancelled_data;
     q->max_results = max_results;
     q->match_case = match_case;
     q->enable_regex = enable_regex;

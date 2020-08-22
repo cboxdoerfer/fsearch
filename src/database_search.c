@@ -767,6 +767,7 @@ db_search_queue (DatabaseSearch *search, FsearchQuery *query)
         if (search->query_ctx->db) {
             db_unref (search->query_ctx->db);
         }
+        search->query_ctx->callback_cancelled (search->query_ctx->callback_cancelled_data);
         fsearch_query_free (search->query_ctx);
         search->query_ctx = NULL;
     }

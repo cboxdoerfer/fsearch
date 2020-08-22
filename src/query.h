@@ -66,6 +66,8 @@ typedef struct
 
     void (*callback)(void *);
     void *callback_data;
+    void (*callback_cancelled)(void *);
+    void *callback_cancelled_data;
 } FsearchQuery;
 
 FsearchQuery *
@@ -74,6 +76,8 @@ fsearch_query_new (const char *query,
                    FsearchFilter filter,
                    void (*callback)(void *),
                    void *callback_data,
+                   void (*callback_cancelled)(void *),
+                   void *callback_cancelled_data,
                    uint32_t max_results,
                    bool match_case,
                    bool enable_regex,

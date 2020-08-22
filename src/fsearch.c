@@ -175,7 +175,6 @@ fsearch_application_init (FsearchApplication *app)
         }
     }
     app->db = NULL;
-    app->search = NULL;
     app->startup_finished = false;
     g_mutex_init (&app->mutex);
 
