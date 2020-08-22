@@ -251,6 +251,7 @@ fsearch_application_window_constructed (GObject *object)
 
     G_OBJECT_CLASS (fsearch_application_window_parent_class)->constructed (object);
 
+    self->num_searches_active = 0;
     self->search = NULL;
     self->search = db_search_new (fsearch_application_get_thread_pool (FSEARCH_APPLICATION_DEFAULT));
     g_mutex_init (&self->mutex);
