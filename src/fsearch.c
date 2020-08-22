@@ -32,7 +32,6 @@
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "fsearch_limits.h"
-#include "list_model.h"
 #include "resources.h"
 #include "clipboard.h"
 #include "utils.h"
@@ -47,11 +46,8 @@ struct _FsearchApplication
 {
     GtkApplication parent;
     FsearchDatabase *db;
-    DatabaseSearch *search;
     FsearchConfig *config;
     FsearchThreadPool *pool;
-
-    ListModel *list_model;
 
     bool startup_finished;
 
