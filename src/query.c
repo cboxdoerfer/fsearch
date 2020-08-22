@@ -22,6 +22,7 @@
 #include <assert.h>
 #include <fnmatch.h>
 #include "query.h"
+#include "utf8.h"
 #include "string_utils.h"
 
 FsearchQuery *
@@ -197,6 +198,9 @@ fsearch_query_highlight_new (const char *text, bool enable_regex, bool match_cas
     }
     else {
         gchar *tmp = g_strdup (text);
+        if (!match_case) {
+            utf8lwr (tmp);
+        }
         // remove leading/trailing whitespace
         g_strstrip (tmp);
 
