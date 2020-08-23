@@ -956,6 +956,15 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
             }
         case SORT_ID_SIZE:
             {
+                if (is_dir_a != is_dir_b) {
+                    return is_dir_b - is_dir_a;
+                }
+                if (is_dir_a && is_dir_b) {
+                    uint32_t n_a = btree_node_n_children (node_a);
+                    uint32_t n_b = btree_node_n_children (node_b);
+                    return n_a - n_b;
+                }
+
                 if (node_a->size == node_b->size)
                     return 0;
 
