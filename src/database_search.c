@@ -46,7 +46,6 @@ typedef struct search_query_s {
     uint32_t (*search_func)(const char *, const char *);
     size_t query_len;
     uint32_t has_separator;
-    uint32_t is_utf8;
     //uint32_t found;
 } search_query_t;
 
@@ -393,13 +392,6 @@ search_query_new (const char *query, bool match_case, bool auto_match_case)
         match_case = true;
     }
 
-    // TODO: this might not work at all times?
-    if (utf8len (query) != new->query_len) {
-        new->is_utf8 = 1;
-    }
-    else {
-        new->is_utf8 = 0;
-    }
     if (strchr (query, '*') || strchr (query, '?')) {
         if (match_case) {
             new->search_func = search_wildcard;
@@ -413,7 +405,13 @@ search_query_new (const char *query, bool match_case, bool auto_match_case)
             new->search_func = search_normal;
         }
         else {
-            if (new->is_utf8) {
+            bool is_utf8 = false;
+            // TODO: this might not work at all times?
+            if (g_utf8_strlen (query, -1) != new->query_len) {
+                is_utf8 = true;
+            }
+
+            if (is_utf8) {
                 new->search_func = search_normal_icase_u8;
             }
             else {
