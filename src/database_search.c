@@ -41,19 +41,18 @@ struct _DatabaseSearchEntry
     uint32_t pos;
 };
 
-typedef struct search_query_s {
-    char *query;
+typedef struct search_token_s {
+    char *text;
     uint32_t (*search_func)(const char *, const char *);
-    size_t query_len;
+    size_t text_len;
     uint32_t has_separator;
-    //uint32_t found;
-} search_query_t;
+} search_token_t;
 
 typedef struct search_context_s {
     FsearchQuery *query;
     BTreeNode **results;
-    search_query_t **queries;
-    uint32_t num_queries;
+    search_token_t **token;
+    uint32_t num_token;
     uint32_t num_results;
     uint32_t start_pos;
     uint32_t end_pos;
@@ -116,8 +115,8 @@ fsearch_search_thread (gpointer user_data)
 
 static search_thread_context_t *
 search_thread_context_new (FsearchQuery *query,
-                           search_query_t **queries,
-                           uint32_t num_queries,
+                           search_token_t **token,
+                           uint32_t num_token,
                            uint32_t start_pos,
                            uint32_t end_pos)
 {
@@ -126,8 +125,8 @@ search_thread_context_new (FsearchQuery *query,
     assert (end_pos >= start_pos);
 
     ctx->query = query;
-    ctx->queries = queries;
-    ctx->num_queries = num_queries;
+    ctx->token = token;
+    ctx->num_token = num_token;
     ctx->results = calloc (end_pos - start_pos + 1, sizeof (BTreeNode *));
     assert (ctx->results != NULL);
 
@@ -165,9 +164,9 @@ search_thread (void * user_data)
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
     const uint32_t max_results = ctx->query->max_results;
-    const uint32_t num_queries = ctx->num_queries;
+    const uint32_t num_token = ctx->num_token;
     const FsearchFilter filter = ctx->query->filter;
-    search_query_t **queries = ctx->queries;
+    search_token_t **token = ctx->token;
     const uint32_t search_in_path = ctx->query->search_in_path;
     const uint32_t auto_search_in_path = ctx->query->auto_search_in_path;
     DynamicArray *entries = db_get_entries (ctx->query->db);
@@ -202,20 +201,20 @@ search_thread (void * user_data)
 
         uint32_t num_found = 0;
         while (true) {
-            if (num_found == num_queries) {
+            if (num_found == num_token) {
                 results[num_results] = node;
                 num_results++;
                 break;
             }
-            search_query_t *query = queries[num_found++];
-            if (!query) {
+            search_token_t *t = token[num_found++];
+            if (!t) {
                 break;
             }
-            char *ptr = query->query;
-            uint32_t (*search_func)(const char *, const char *) = query->search_func;
+            char *ptr = t->text;
+            uint32_t (*search_func)(const char *, const char *) = t->search_func;
 
             const char *haystack = NULL;
-            if (search_in_path || (auto_search_in_path && query->has_separator)) {
+            if (search_in_path || (auto_search_in_path && t->has_separator)) {
                 if (!haystack_path) {
                     btree_node_get_path_full (node, full_path, sizeof (full_path));
                     haystack_path = full_path;
@@ -264,11 +263,11 @@ search_regex_thread (void * user_data)
     assert (ctx != NULL);
     assert (ctx->results != NULL);
 
-    search_query_t **queries = ctx->queries;
-    search_query_t *query = queries[0];
+    search_token_t **token = ctx->token;
+    search_token_t *t = token[0];
     const char *error;
     int erroffset;
-    pcre *regex = pcre_compile (query->query,
+    pcre *regex = pcre_compile (t->text,
                                 ctx->query->match_case ? 0 : PCRE_CASELESS,
                                 &error,
                                 &erroffset,
@@ -305,7 +304,7 @@ search_regex_thread (void * user_data)
         }
 
         const char *haystack = NULL;
-        if (search_in_path || (auto_search_in_path && query->has_separator)) {
+        if (search_in_path || (auto_search_in_path && t->has_separator)) {
             btree_node_get_path_full (node, full_path, sizeof (full_path));
             haystack = full_path;
         }
@@ -365,34 +364,34 @@ search_normal (const char *haystack, const char *needle)
 }
 
 static void
-search_query_free (void * data)
+search_token_free (void * data)
 {
-    search_query_t *query = data;
-    assert (query != NULL);
+    search_token_t *token = data;
+    assert (token != NULL);
 
-    if (query->query != NULL) {
-        g_free (query->query);
-        query->query = NULL;
+    if (token->text != NULL) {
+        g_free (token->text);
+        token->text = NULL;
     }
-    g_free (query);
-    query = NULL;
+    g_free (token);
+    token = NULL;
 }
 
-static search_query_t *
-search_query_new (const char *query, bool match_case, bool auto_match_case)
+static search_token_t *
+search_token_new (const char *text, bool match_case, bool auto_match_case)
 {
-    search_query_t *new = calloc (1, sizeof (search_query_t));
+    search_token_t *new = calloc (1, sizeof (search_token_t));
     assert (new != NULL);
 
-    new->query = g_strdup (query);
-    new->query_len = strlen (query);
-    new->has_separator = strchr (query, '/') ? 1 : 0;
+    new->text = g_strdup (text);
+    new->text_len = strlen (text);
+    new->has_separator = strchr (text, '/') ? 1 : 0;
 
-    if (auto_match_case && fs_str_utf8_has_upper (query)) {
+    if (auto_match_case && fs_str_utf8_has_upper (text)) {
         match_case = true;
     }
 
-    if (strchr (query, '*') || strchr (query, '?')) {
+    if (strchr (text, '*') || strchr (text, '?')) {
         if (match_case) {
             new->search_func = search_wildcard;
         }
@@ -407,7 +406,7 @@ search_query_new (const char *query, bool match_case, bool auto_match_case)
         else {
             bool is_utf8 = false;
             // TODO: this might not work at all times?
-            if (g_utf8_strlen (query, -1) != new->query_len) {
+            if (g_utf8_strlen (text, -1) != new->text_len) {
                 is_utf8 = true;
             }
 
@@ -422,8 +421,8 @@ search_query_new (const char *query, bool match_case, bool auto_match_case)
     return new;
 }
 
-static search_query_t **
-db_search_build_queries (FsearchQuery *q)
+static search_token_t **
+db_search_build_token (FsearchQuery *q)
 {
     assert (q != NULL);
     assert (q->query != NULL);
@@ -436,30 +435,30 @@ db_search_build_queries (FsearchQuery *q)
     // check if regex characters are present
     const bool is_reg = fs_str_is_regex (q->query);
     if (is_reg && q->enable_regex) {
-        search_query_t **queries = calloc (2, sizeof (search_query_t *));
-        queries[0] = search_query_new (tmp_query_copy, q->match_case, q->auto_match_case);
-        queries[1] = NULL;
+        search_token_t **token = calloc (2, sizeof (search_token_t *));
+        token[0] = search_token_new (tmp_query_copy, q->match_case, q->auto_match_case);
+        token[1] = NULL;
         g_free (tmp_query_copy);
         tmp_query_copy = NULL;
 
-        return queries;
+        return token;
     }
-    // whitespace is regarded as AND so split query there in multiple queries
-    char **tmp_queries = g_strsplit_set (tmp_query_copy, " ", -1);
-    assert (tmp_queries != NULL);
+    // whitespace is regarded as AND so split query there in multiple token
+    char **tmp_token = g_strsplit_set (tmp_query_copy, " ", -1);
+    assert (tmp_token != NULL);
 
-    uint32_t tmp_queries_len = g_strv_length (tmp_queries);
-    search_query_t **queries = calloc (tmp_queries_len + 1, sizeof (search_query_t *));
-    for (uint32_t i = 0; i < tmp_queries_len; i++) {
-        queries[i] = search_query_new (tmp_queries[i], q->match_case, q->auto_match_case);
+    uint32_t tmp_token_len = g_strv_length (tmp_token);
+    search_token_t **token = calloc (tmp_token_len + 1, sizeof (search_token_t *));
+    for (uint32_t i = 0; i < tmp_token_len; i++) {
+        token[i] = search_token_new (tmp_token[i], q->match_case, q->auto_match_case);
     }
 
     g_free (tmp_query_copy);
     tmp_query_copy = NULL;
-    g_strfreev (tmp_queries);
-    tmp_queries = NULL;
+    g_strfreev (tmp_token);
+    tmp_token = NULL;
 
-    return queries;
+    return token;
 }
 
 static DatabaseSearchResult *
@@ -510,7 +509,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
 
-    search_query_t **queries = db_search_build_queries (q);
+    search_token_t **token = db_search_build_token (q);
 
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
     const uint32_t num_entries = db_get_num_entries (q->db);
@@ -522,9 +521,9 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
     const uint32_t max_results = q->max_results;
     const bool limit_results = max_results ? true : false;
     const bool is_reg = fs_str_is_regex (q->query);
-    uint32_t num_queries = 0;
-    while (queries[num_queries]) {
-        num_queries++;
+    uint32_t num_token = 0;
+    while (token[num_token]) {
+        num_token++;
     }
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
@@ -533,8 +532,8 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
     GList *temp = fsearch_thread_pool_get_threads (search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] = search_thread_context_new (q,
-                                                    queries,
-                                                    num_queries,
+                                                    token,
+                                                    num_token,
                                                     start_pos,
                                                     i == num_threads - 1 ? num_entries - 1 : end_pos);
 
@@ -603,12 +602,12 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
         }
     }
 
-    for (uint32_t i = 0; i < num_queries; ++i) {
-        search_query_free (queries[i]);
-        queries[i] = NULL;
+    for (uint32_t i = 0; i < num_token; ++i) {
+        search_token_free (token[i]);
+        token[i] = NULL;
     }
-    free (queries);
-    queries = NULL;
+    free (token);
+    token = NULL;
 
     DatabaseSearchResult *result_ctx = calloc (1, sizeof (DatabaseSearchResult));
     assert (result_ctx != NULL);
