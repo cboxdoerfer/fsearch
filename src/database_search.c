@@ -388,7 +388,7 @@ search_query_new (const char *query, bool match_case)
 
     new->query = g_strdup (query);
     new->query_len = strlen (query);
-    new->has_uppercase = fs_str_has_upper (query);
+    new->has_uppercase = fs_str_utf8_has_upper (query);
     new->has_separator = strchr (query, '/') ? 1 : 0;
     // TODO: this might not work at all times?
     if (utf8len (query) != new->query_len) {

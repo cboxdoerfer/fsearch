@@ -29,6 +29,9 @@ fs_str_is_empty (const char *str);
 bool
 fs_str_has_upper (const char *str);
 
+bool
+fs_str_utf8_has_upper (char *str);
+
 char *
 fs_str_copy (char *dest,
              char *end,

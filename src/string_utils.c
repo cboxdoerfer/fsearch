@@ -19,6 +19,7 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <assert.h>
+#include <glib.h>
 #include <string.h>
 #include "string_utils.h"
 
@@ -57,6 +58,23 @@ fs_str_is_regex (const char *str)
     };
 
     return (strpbrk(str, regex_chars) != NULL);
+}
+
+bool
+fs_str_utf8_has_upper (char *str)
+{
+    char *p = str;
+    if (!g_utf8_validate (p, -1, NULL)) {
+        return false;
+    }
+    while (p && *p != '\0') {
+        gunichar c = g_utf8_get_char (p);
+        if (g_unichar_isupper (c)) {
+            return true;
+        }
+        p = g_utf8_next_char (p);
+    }
+    return false;
 }
 
 bool
