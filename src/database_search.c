@@ -45,7 +45,6 @@ typedef struct search_query_s {
     char *query;
     uint32_t (*search_func)(const char *, const char *);
     size_t query_len;
-    uint32_t has_uppercase;
     uint32_t has_separator;
     uint32_t is_utf8;
     //uint32_t found;
@@ -381,15 +380,19 @@ search_query_free (void * data)
 }
 
 static search_query_t *
-search_query_new (const char *query, bool match_case)
+search_query_new (const char *query, bool match_case, bool auto_match_case)
 {
     search_query_t *new = calloc (1, sizeof (search_query_t));
     assert (new != NULL);
 
     new->query = g_strdup (query);
     new->query_len = strlen (query);
-    new->has_uppercase = fs_str_utf8_has_upper (query);
     new->has_separator = strchr (query, '/') ? 1 : 0;
+
+    if (auto_match_case && fs_str_utf8_has_upper (query)) {
+        match_case = true;
+    }
+
     // TODO: this might not work at all times?
     if (utf8len (query) != new->query_len) {
         new->is_utf8 = 1;
@@ -436,7 +439,7 @@ db_search_build_queries (FsearchQuery *q)
     const bool is_reg = fs_str_is_regex (q->query);
     if (is_reg && q->enable_regex) {
         search_query_t **queries = calloc (2, sizeof (search_query_t *));
-        queries[0] = search_query_new (tmp_query_copy, q->match_case);
+        queries[0] = search_query_new (tmp_query_copy, q->match_case, q->auto_match_case);
         queries[1] = NULL;
         g_free (tmp_query_copy);
         tmp_query_copy = NULL;
@@ -450,7 +453,7 @@ db_search_build_queries (FsearchQuery *q)
     uint32_t tmp_queries_len = g_strv_length (tmp_queries);
     search_query_t **queries = calloc (tmp_queries_len + 1, sizeof (search_query_t *));
     for (uint32_t i = 0; i < tmp_queries_len; i++) {
-        queries[i] = search_query_new (tmp_queries[i], q->match_case);
+        queries[i] = search_query_new (tmp_queries[i], q->match_case, q->auto_match_case);
     }
 
     g_free (tmp_query_copy);

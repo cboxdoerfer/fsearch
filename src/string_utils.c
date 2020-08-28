@@ -61,9 +61,9 @@ fs_str_is_regex (const char *str)
 }
 
 bool
-fs_str_utf8_has_upper (char *str)
+fs_str_utf8_has_upper (const char *str)
 {
-    char *p = str;
+    char *p = (char *)str;
     if (!g_utf8_validate (p, -1, NULL)) {
         return false;
     }

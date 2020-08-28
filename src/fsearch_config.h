@@ -33,6 +33,7 @@ struct _FsearchConfig
     bool enable_regex;
     bool match_case;
     bool auto_search_in_path;
+    bool auto_match_case;
     bool search_as_you_type;
     bool show_base_2_units;
 

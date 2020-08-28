@@ -356,6 +356,10 @@ config_load (FsearchConfig *config)
                                                           "Search",
                                                           "search_as_you_type",
                                                           true);
+        config->auto_match_case = config_load_boolean (key_file,
+                                                       "Search",
+                                                       "auto_match_case",
+                                                       true);
         config->auto_search_in_path = config_load_boolean (key_file,
                                                            "Search",
                                                            "auto_search_in_path",
@@ -428,6 +432,7 @@ config_load_default (FsearchConfig *config)
 
     // Search
     config->auto_search_in_path = true;
+    config->auto_match_case = true;
     config->search_as_you_type = true;
     config->match_case = false;
     config->enable_regex = false;
@@ -618,6 +623,7 @@ config_save (FsearchConfig *config)
     // Search
     g_key_file_set_boolean (key_file, "Search", "search_as_you_type", config->search_as_you_type);
     g_key_file_set_boolean (key_file, "Search", "auto_search_in_path", config->auto_search_in_path);
+    g_key_file_set_boolean (key_file, "Search", "auto_match_case", config->auto_match_case);
     g_key_file_set_boolean (key_file, "Search", "search_in_path", config->search_in_path);
     g_key_file_set_boolean (key_file, "Search", "enable_regex", config->enable_regex);
     g_key_file_set_boolean (key_file, "Search", "match_case", config->match_case);

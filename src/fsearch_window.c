@@ -390,6 +390,7 @@ update_model_cb (gpointer user_data)
             win->query_highlight = fsearch_query_highlight_new (text,
                                                                 config->enable_regex,
                                                                 config->match_case,
+                                                                config->auto_match_case,
                                                                 config->auto_search_in_path,
                                                                 config->search_in_path);
         }
@@ -483,6 +484,7 @@ perform_search (FsearchApplicationWindow *win)
                                          fsearch_application_window_search_cancelled, win,
                                          max_results,
                                          config->match_case,
+                                         config->auto_match_case,
                                          config->enable_regex,
                                          config->auto_search_in_path,
                                          config->search_in_path,

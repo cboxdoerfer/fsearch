@@ -229,6 +229,10 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
                                                                      "auto_search_in_path_button",
                                                                      pref.config->auto_search_in_path);
 
+    GtkToggleButton *auto_match_case_button = toggle_button_get (builder,
+                                                                 "auto_match_case_button",
+                                                                 pref.config->auto_match_case);
+
     GtkToggleButton *search_as_you_type_button = toggle_button_get (builder,
                                                                     "search_as_you_type_button",
                                                                     pref.config->search_as_you_type);
@@ -335,6 +339,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
     if (response == GTK_RESPONSE_OK) {
         pref.config->search_as_you_type = gtk_toggle_button_get_active (search_as_you_type_button);
         pref.config->auto_search_in_path = gtk_toggle_button_get_active (auto_search_in_path_button);
+        pref.config->auto_match_case = gtk_toggle_button_get_active (auto_match_case_button);
         pref.config->hide_results_on_empty_search = gtk_toggle_button_get_active (hide_results_button);
         pref.config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
         pref.config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
