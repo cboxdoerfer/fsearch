@@ -36,7 +36,7 @@ typedef struct
     uint32_t hl_start;
     uint32_t hl_end;
 
-    char *query;
+    char *text;
     size_t query_len;
 } FsearchQueryHighlightToken;
 
@@ -53,7 +53,7 @@ typedef struct
 
 typedef struct
 {
-    char *query;
+    char *text;
     FsearchDatabase *db;
     FsearchFilter filter;
 
@@ -73,7 +73,7 @@ typedef struct
 } FsearchQuery;
 
 FsearchQuery *
-fsearch_query_new (const char *query,
+fsearch_query_new (const char *text,
                    FsearchDatabase *db,
                    FsearchFilter filter,
                    void (*callback)(void *),

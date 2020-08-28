@@ -90,7 +90,7 @@ fsearch_search_thread (gpointer user_data)
             g_mutex_unlock (&search->query_mutex);
             // if query is empty string we are done here
             DatabaseSearchResult *result = NULL;
-            if (fs_str_is_empty (query->query)) {
+            if (fs_str_is_empty (query->text)) {
                 if (query->pass_on_empty_query) {
                     result = db_search_empty (query);
                 }
@@ -425,15 +425,15 @@ static search_token_t **
 db_search_build_token (FsearchQuery *q)
 {
     assert (q != NULL);
-    assert (q->query != NULL);
+    assert (q->text != NULL);
 
-    char *tmp_query_copy = strdup (q->query);
+    char *tmp_query_copy = strdup (q->text);
     assert (tmp_query_copy != NULL);
     // remove leading/trailing whitespace
     g_strstrip (tmp_query_copy);
 
     // check if regex characters are present
-    const bool is_reg = fs_str_is_regex (q->query);
+    const bool is_reg = fs_str_is_regex (q->text);
     if (is_reg && q->enable_regex) {
         search_token_t **token = calloc (2, sizeof (search_token_t *));
         token[0] = search_token_new (tmp_query_copy, q->match_case, q->auto_match_case);
@@ -520,7 +520,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 
     const uint32_t max_results = q->max_results;
     const bool limit_results = max_results ? true : false;
-    const bool is_reg = fs_str_is_regex (q->query);
+    const bool is_reg = fs_str_is_regex (q->text);
     uint32_t num_token = 0;
     while (token[num_token]) {
         num_token++;

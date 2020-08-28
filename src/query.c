@@ -26,7 +26,7 @@
 #include "string_utils.h"
 
 FsearchQuery *
-fsearch_query_new (const char *query,
+fsearch_query_new (const char *text,
                    FsearchDatabase *db,
                    FsearchFilter filter,
                    void (*callback)(void *),
@@ -43,8 +43,8 @@ fsearch_query_new (const char *query,
 {
     FsearchQuery *q = calloc (1, sizeof (FsearchQuery));
     assert (q != NULL);
-    if (query) {
-        q->query = strdup (query);
+    if (text) {
+        q->text = strdup (text);
     }
     q->db = db;
     q->filter = filter;
@@ -66,9 +66,9 @@ void
 fsearch_query_free (FsearchQuery *query)
 {
     assert (query != NULL);
-    if (query->query) {
-        free (query->query);
-        query->query = NULL;
+    if (query->text) {
+        free (query->text);
+        query->text = NULL;
     }
     free (query);
     query = NULL;
@@ -81,7 +81,7 @@ fsearch_query_highlight_match_glob (FsearchQueryHighlightToken *token, const cha
         return false;
     }
 
-    if (fnmatch (token->query, text, match_case ? 0 : FNM_CASEFOLD)) {
+    if (fnmatch (token->text, text, match_case ? 0 : FNM_CASEFOLD)) {
         return false;
     }
 
@@ -140,21 +140,21 @@ fsearch_query_highlight_match (FsearchQueryHighlight *q, const char *input)
 }
 
 static void
-fsearch_query_highlight_token_glob_init (FsearchQueryHighlightToken *token, char *query)
+fsearch_query_highlight_token_glob_init (FsearchQueryHighlightToken *token, char *text)
 {
     if (!token) {
         return;
     }
 
-    token->query = g_strdup (query);
-    token->query_len = strlen (query);
+    token->text = g_strdup (text);
+    token->query_len = strlen (text);
 
     if (token->query_len < 1) {
         return;
     }
 
     uint32_t n_asterisk = 0;
-    const char *p = query;
+    const char *p = text;
     do {
         if (*p == '*') {
             n_asterisk++;
@@ -165,8 +165,8 @@ fsearch_query_highlight_token_glob_init (FsearchQueryHighlightToken *token, char
         return;
     }
 
-    token->end_with_asterisk = query[token->query_len - 1] == '*' ? true : false;
-    token->start_with_asterisk = query[0] == '*' ? true : false;
+    token->end_with_asterisk = text[token->query_len - 1] == '*' ? true : false;
+    token->start_with_asterisk = text[0] == '*' ? true : false;
     token->is_supported_glob = true;
 }
 
@@ -200,7 +200,7 @@ fsearch_query_highlight_new (const char *text, bool enable_regex, bool match_cas
             q->match_case = has_uppercase ? true : false;
         }
         token->regex = g_regex_new (text, !q->match_case ? G_REGEX_CASELESS : 0, 0, NULL);
-        token->query = g_strdup (text);
+        token->text = g_strdup (text);
         token->query_len = strlen (text);
         q->token = g_list_append (q->token, token);
     }
@@ -257,9 +257,9 @@ fsearch_query_highlight_token_free (FsearchQueryHighlightToken *token)
         g_regex_unref (token->regex);
         token->regex = NULL;
     }
-    if (token->query) {
-        free (token->query);
-        token->query = NULL;
+    if (token->text) {
+        free (token->text);
+        token->text = NULL;
     }
     free (token);
     token = NULL;
