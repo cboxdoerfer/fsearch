@@ -429,8 +429,6 @@ db_search_build_token (FsearchQuery *q)
 
     char *tmp_query_copy = strdup (q->text);
     assert (tmp_query_copy != NULL);
-    // remove leading/trailing whitespace
-    g_strstrip (tmp_query_copy);
 
     // check if regex characters are present
     const bool is_reg = fs_str_is_regex (q->text);
@@ -443,8 +441,9 @@ db_search_build_token (FsearchQuery *q)
 
         return token;
     }
+
     // whitespace is regarded as AND so split query there in multiple token
-    char **tmp_token = g_strsplit_set (tmp_query_copy, " ", -1);
+    char **tmp_token = fs_str_split (tmp_query_copy); 
     assert (tmp_token != NULL);
 
     uint32_t tmp_token_len = g_strv_length (tmp_token);

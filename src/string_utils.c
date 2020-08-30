@@ -17,6 +17,7 @@
    */
 
 #include <stdlib.h>
+#include <stdio.h>
 #include <ctype.h>
 #include <assert.h>
 #include <glib.h>
@@ -100,5 +101,122 @@ fs_str_copy (char *dest, char *end, const char *src)
     }
     *ptr = '\0';
     return ptr;
+}
+
+static bool
+is_nul (char p)
+{
+    return p == '\0' ? true : false;
+}
+
+static char *
+consume_space (char *str, bool *eos)
+{
+    while (true) {
+        if (is_nul (*str)) {
+            *eos = true;
+            return str;
+        }
+        if (*str == ' ') {
+            str++;
+            continue;
+        }
+        *eos = false;
+        return str;
+    }
+}
+
+static char *
+consume_quotation_mark (char *str, char **dest, bool *eos)
+{
+    char *d = *dest;
+
+    while (true) {
+        if (is_nul (*str)) {
+            *eos = true;
+            *dest = d;
+            return str;
+        }
+        if (*str == '"') {
+            *eos = false;
+            *dest = d;
+            return str + 1;
+        }
+        *d = *str;
+        d++;
+        str++;
+    }
+
+    *dest = d;
+    return str;
+}
+
+static char *
+consume_escape (char *str, char **dest, bool *eos)
+{
+    char *d = *dest;
+    if (is_nul (*str)) {
+        *eos = true;
+        return str;
+    }
+
+    *d = *str;
+    d++;
+
+    *dest = d;
+    return str + 1;
+}
+
+char **
+fs_str_split (char *str)
+{
+    if (!str) {
+        return NULL;
+    }
+
+    GPtrArray *new = g_ptr_array_new ();
+    // Duplicate input string to make sure destination is large enough
+    char *dest = g_strdup (str);
+    char *p = str;
+    char *d = dest;
+    bool eos = false;
+    while (!eos) {
+        switch (*p) {
+            case '\0':
+                eos = true;
+                break;
+            case '\\':
+                p = consume_escape (p+1, &d, &eos);
+                break;
+            case '"':
+                p = consume_quotation_mark (p+1, &d, &eos);
+                break;
+            case ' ':
+                // split at space
+                *d = '\0';
+                d = dest;
+                if (strlen (dest) > 0) {
+                    g_ptr_array_add (new, g_strdup (dest));
+                }
+                p = consume_space (p+1, &eos);
+                break;
+            default:
+                *d = *p;
+                d++;
+                p++;
+                break;
+        }
+    }
+    *d = '\0';
+    if (strlen (dest) > 0) {
+        g_ptr_array_add (new, g_strdup (dest));
+    }
+
+    // make sure last element is NULL
+    g_ptr_array_add (new, NULL);
+
+    g_free (dest);
+
+    return (char **)g_ptr_array_free (new, FALSE);
 }
 

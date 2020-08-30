@@ -36,3 +36,7 @@ char *
 fs_str_copy (char *dest,
              char *end,
              const char *src);
+
+char **
+fs_str_split (char *str);
+

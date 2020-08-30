@@ -213,7 +213,7 @@ fsearch_query_highlight_new (const char *text, bool enable_regex, bool match_cas
         g_strstrip (tmp);
 
         // whitespace is regarded as AND so split query there in multiple queries
-        gchar **queries = g_strsplit_set (tmp, " ", -1);
+        gchar **queries = fs_str_split (tmp);
         guint n_queries = g_strv_length (queries);
 
         g_free (tmp);
