@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-20 12:20+0200\n"
+"POT-Creation-Date: 2020-08-28 12:29+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
@@ -19,39 +19,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.2.1-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
+#: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
 #, c-format
 msgid "%'d Items"
 msgstr "%'d éléments"
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:662 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Impossible d'ouvrir le fichier"
 
-#: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:663 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Voulez-vous garder la fenêtre ouverte ?"
 
-#: src/fsearch_window.c:860
+#: src/fsearch_window.c:881
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Dernière mise à jour : %d/%m/%Y à %H:%M"
 
-#: src/fsearch_window.c:874 src/overlay.ui:143
+#: src/fsearch_window.c:895 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Chargement de la base de données…"
 
-#: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
 #| msgid "Updating Database..."
 msgid "Updating Database…"
 msgstr "Mise à jour de la base de données…"
 
-#: src/fsearch_window.c:1077
+#: src/fsearch_window.c:1098
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1079
+#: src/fsearch_window.c:1100
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -78,19 +78,19 @@ msgstr "Date de modification"
 msgid "Type"
 msgstr "Type"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:186
 msgid "Show version information"
 msgstr "Afficher les informations sur la version"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:193
 msgid "Update the database"
 msgstr "Mettre à jour la base de données"
 
-#: src/fsearch.c:410
+#: src/fsearch.c:405
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:411
+#: src/fsearch.c:406
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Un utilitaire de recherche axé sur la performance et avec des "
@@ -289,63 +289,70 @@ msgstr "Rechercher au fur et à mesure de l'écriture"
 msgid "Hide results when search is empty"
 msgstr "Cacher les résultats lorsque la recherche est vide"
 
-#: src/preferences.ui:451 src/fsearch.glade:821
+#: src/preferences.ui:444
+#, fuzzy
+#| msgid "Search in path when query contains path separators"
+msgid "Match case when query contains at least one upper case character"
+msgstr ""
+"Rechercher dans le chemin quand la requête contient des séparateurs de chemin"
+
+#: src/preferences.ui:465 src/fsearch.glade:821
 msgid "Search"
 msgstr "Rechercher"
 
-#: src/preferences.ui:470
+#: src/preferences.ui:484
 msgid "Update database on start"
 msgstr "Mettre à jour la base de données au démarrage"
 
-#: src/preferences.ui:505 src/preferences.ui:609
+#: src/preferences.ui:519 src/preferences.ui:623
 msgid "Add…"
 msgstr ""
 
-#: src/preferences.ui:521 src/preferences.ui:625
+#: src/preferences.ui:535 src/preferences.ui:639
 msgid "Remove"
 msgstr "Supprimer"
 
-#: src/preferences.ui:568
+#: src/preferences.ui:582
 msgid "Follow symbolic links"
 msgstr "Suivre les liens symboliques"
 
-#: src/preferences.ui:585
+#: src/preferences.ui:599
 msgid "Include"
 msgstr "Inclure"
 
-#: src/preferences.ui:672
+#: src/preferences.ui:686
 msgid "Exclude hidden files and folders"
 msgstr "Exclure les fichiers et dossiers cachés"
 
-#: src/preferences.ui:693 src/preferences.ui:706
+#: src/preferences.ui:707 src/preferences.ui:720
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Les jokers sont acceptés. Séparez les entrées avec un point-virgule"
 
-#: src/preferences.ui:694
+#: src/preferences.ui:708
 msgid "Exclude files:"
 msgstr "Exclure les fichiers :"
 
-#: src/preferences.ui:707
+#: src/preferences.ui:721
 msgid "e.g. \".git;*.tmp\""
 msgstr "par ex. « .git;*.tmp »"
 
-#: src/preferences.ui:731
+#: src/preferences.ui:745
 msgid "Exclude"
 msgstr "Exclure"
 
-#: src/preferences.ui:754
+#: src/preferences.ui:768
 msgid "Database"
 msgstr "Base de données"
 
-#: src/preferences.ui:777
+#: src/preferences.ui:791
 msgid "Show warning dialogs when:"
 msgstr "Afficher un avertissement lorsque :"
 
-#: src/preferences.ui:786
+#: src/preferences.ui:800
 msgid "file / folder failed to open"
 msgstr "le fichier/dossier n'a pas pu être ouvert"
 
-#: src/preferences.ui:807
+#: src/preferences.ui:821
 msgid "Dialogs"
 msgstr "Boîtes de dialogue d'avertissement"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-20 12:20+0200\n"
+"POT-Creation-Date: 2020-08-28 12:29+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Vladimir Barinov <source.hl2@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
@@ -20,38 +20,38 @@ msgstr ""
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.2.1-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
+#: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
 #, c-format
 msgid "%'d Items"
 msgstr "%'d элемент(а/ов)"
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:662 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Невозможно открыть файл"
 
-#: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:663 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Хотите оставить окно открытым?"
 
-#: src/fsearch_window.c:860
+#: src/fsearch_window.c:881
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Последнее обновление: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:874 src/overlay.ui:143
+#: src/fsearch_window.c:895 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Загрузка базы данных…"
 
-#: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, c-format
 msgid "Updating Database…"
 msgstr "Обновление базы данных…"
 
-#: src/fsearch_window.c:1077
+#: src/fsearch_window.c:1098
 msgid "Background tasks are active."
 msgstr "Выполняются фоновые задачи."
 
-#: src/fsearch_window.c:1079
+#: src/fsearch_window.c:1100
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -80,19 +80,19 @@ msgstr "Дата изменения"
 msgid "Type"
 msgstr "Тип"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:186
 msgid "Show version information"
 msgstr "Показать информацию о версии"
 
-#: src/fsearch.c:198
+#: src/fsearch.c:193
 msgid "Update the database"
 msgstr "Обновить базу данных"
 
-#: src/fsearch.c:410
+#: src/fsearch.c:405
 msgid "translator-credits"
 msgstr "Konstantin Yablochkin @yakonstb"
 
-#: src/fsearch.c:411
+#: src/fsearch.c:406
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Инструмент поиска, нацеленный на быстродействие и продвинутые возможности"
@@ -280,64 +280,70 @@ msgstr "Искать по мере набора"
 msgid "Hide results when search is empty"
 msgstr "Спрятать результаты, когда поиск пустой"
 
-#: src/preferences.ui:451 src/fsearch.glade:821
+#: src/preferences.ui:444
+#, fuzzy
+#| msgid "Search in path when query contains path separators"
+msgid "Match case when query contains at least one upper case character"
+msgstr "Искать в пути к файлу/папке, когда запрос содержит разделители ('/')"
+
+#: src/preferences.ui:465 src/fsearch.glade:821
 msgid "Search"
 msgstr "Поиск"
 
-#: src/preferences.ui:470
+#: src/preferences.ui:484
 msgid "Update database on start"
 msgstr "Обновлять базу данных при старте"
 
-#: src/preferences.ui:505 src/preferences.ui:609
+#: src/preferences.ui:519 src/preferences.ui:623
 msgid "Add…"
 msgstr "Добавить…"
 
-#: src/preferences.ui:521 src/preferences.ui:625
+#: src/preferences.ui:535 src/preferences.ui:639
 msgid "Remove"
 msgstr "Удалить"
 
-#: src/preferences.ui:568
+#: src/preferences.ui:582
 msgid "Follow symbolic links"
 msgstr "Следовать по символьным ссылкам"
 
-#: src/preferences.ui:585
+#: src/preferences.ui:599
 msgid "Include"
 msgstr "Включить"
 
-#: src/preferences.ui:672
+#: src/preferences.ui:686
 msgid "Exclude hidden files and folders"
 msgstr "Исключить скрытые файлы и папки"
 
-#: src/preferences.ui:693 src/preferences.ui:706
+#: src/preferences.ui:707 src/preferences.ui:720
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Можно использовать шаблоны. Вхождения должны быть разделены с помощью ';'"
 
-#: src/preferences.ui:694
+#: src/preferences.ui:708
 msgid "Exclude files:"
 msgstr "Исключить файлы:"
 
-#: src/preferences.ui:707
+#: src/preferences.ui:721
 msgid "e.g. \".git;*.tmp\""
 msgstr "например, «.git;*.tmp»"
 
-#: src/preferences.ui:731
+#: src/preferences.ui:745
 msgid "Exclude"
 msgstr "Исключить"
 
-#: src/preferences.ui:754
+#: src/preferences.ui:768
 msgid "Database"
 msgstr "База данных"
 
-#: src/preferences.ui:777
+#: src/preferences.ui:791
 msgid "Show warning dialogs when:"
 msgstr "Открыть окно с предупреждением если:"
 
-#: src/preferences.ui:786
+#: src/preferences.ui:800
 msgid "file / folder failed to open"
 msgstr "файл / папку невозможно открыть"
 
-#: src/preferences.ui:807
+#: src/preferences.ui:821
 msgid "Dialogs"
 msgstr "Окна"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-20 12:20+0200\n"
+"POT-Creation-Date: 2020-08-28 12:29+0200\n"
 "PO-Revision-Date: 2020-07-30 09:54+0200\n"
 "Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: Telugu\n"
@@ -16,38 +16,38 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
+#: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
 #, c-format
 msgid "%'d Items"
 msgstr ""
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:662 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr ""
 
-#: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:663 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr ""
 
-#: src/fsearch_window.c:860
+#: src/fsearch_window.c:881
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr ""
 
-#: src/fsearch_window.c:874 src/overlay.ui:143
+#: src/fsearch_window.c:895 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr ""
 
-#: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, c-format
 msgid "Updating Database…"
 msgstr ""
 
-#: src/fsearch_window.c:1077
+#: src/fsearch_window.c:1098
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1079
+#: src/fsearch_window.c:1100
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -74,19 +74,19 @@ msgstr ""
 msgid "Type"
 msgstr ""
 
-#: src/fsearch.c:191
+#: src/fsearch.c:186
 msgid "Show version information"
 msgstr ""
 
-#: src/fsearch.c:198
+#: src/fsearch.c:193
 msgid "Update the database"
 msgstr ""
 
-#: src/fsearch.c:410
+#: src/fsearch.c:405
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:411
+#: src/fsearch.c:406
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 
@@ -270,63 +270,67 @@ msgstr ""
 msgid "Hide results when search is empty"
 msgstr ""
 
-#: src/preferences.ui:451 src/fsearch.glade:821
+#: src/preferences.ui:444
+msgid "Match case when query contains at least one upper case character"
+msgstr ""
+
+#: src/preferences.ui:465 src/fsearch.glade:821
 msgid "Search"
 msgstr ""
 
-#: src/preferences.ui:470
+#: src/preferences.ui:484
 msgid "Update database on start"
 msgstr ""
 
-#: src/preferences.ui:505 src/preferences.ui:609
+#: src/preferences.ui:519 src/preferences.ui:623
 msgid "Add…"
 msgstr ""
 
-#: src/preferences.ui:521 src/preferences.ui:625
+#: src/preferences.ui:535 src/preferences.ui:639
 msgid "Remove"
 msgstr ""
 
-#: src/preferences.ui:568
+#: src/preferences.ui:582
 msgid "Follow symbolic links"
 msgstr ""
 
-#: src/preferences.ui:585
+#: src/preferences.ui:599
 msgid "Include"
 msgstr ""
 
-#: src/preferences.ui:672
+#: src/preferences.ui:686
 msgid "Exclude hidden files and folders"
 msgstr ""
 
-#: src/preferences.ui:693 src/preferences.ui:706
+#: src/preferences.ui:707 src/preferences.ui:720
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 
-#: src/preferences.ui:694
+#: src/preferences.ui:708
 msgid "Exclude files:"
 msgstr ""
 
-#: src/preferences.ui:707
+#: src/preferences.ui:721
 msgid "e.g. \".git;*.tmp\""
 msgstr ""
 
-#: src/preferences.ui:731
+#: src/preferences.ui:745
 msgid "Exclude"
 msgstr ""
 
-#: src/preferences.ui:754
+#: src/preferences.ui:768
 msgid "Database"
 msgstr ""
 
-#: src/preferences.ui:777
+#: src/preferences.ui:791
 msgid "Show warning dialogs when:"
 msgstr ""
 
-#: src/preferences.ui:786
+#: src/preferences.ui:800
 msgid "file / folder failed to open"
 msgstr ""
 
-#: src/preferences.ui:807
+#: src/preferences.ui:821
 msgid "Dialogs"
 msgstr ""
 
