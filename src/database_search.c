@@ -449,6 +449,7 @@ db_search_build_token (FsearchQuery *q)
     uint32_t tmp_token_len = g_strv_length (tmp_token);
     search_token_t **token = calloc (tmp_token_len + 1, sizeof (search_token_t *));
     for (uint32_t i = 0; i < tmp_token_len; i++) {
+        trace ("[search] token %d: %s\n", i, tmp_token[i]);
         token[i] = search_token_new (tmp_token[i], q->match_case, q->auto_match_case);
     }
 

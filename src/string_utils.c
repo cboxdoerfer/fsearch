@@ -142,6 +142,14 @@ consume_quotation_mark (char *str, char **dest, bool *eos)
             *dest = d;
             return str + 1;
         }
+        if (*str == '\\') {
+            if (is_nul (*(str + 1))) {
+                *eos = true;
+                *dest = d;
+                return str + 1;
+            }
+            str++;
+        }
         *d = *str;
         d++;
         str++;
