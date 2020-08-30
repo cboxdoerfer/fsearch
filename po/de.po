@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-28 12:29+0200\n"
-"PO-Revision-Date: 2020-08-30 15:59+0000\n"
+"PO-Revision-Date: 2020-09-02 15:36+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2.1-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
 #, c-format
@@ -49,15 +49,15 @@ msgstr "Aktualisiere Datenbank…"
 
 #: src/fsearch_window.c:1098
 msgid "Background tasks are active."
-msgstr "Hintergrunddienste sind noch aktiv."
+msgstr "Hintergrundaufgaben sind aktiv."
 
 #: src/fsearch_window.c:1100
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
-"Das Fenster kann gerade nicht geschlossen werden.\n"
-"Bitte warten Sie einen Moment und versuchen es dann erneut."
+"Ein Schließen des Fensters ist im Moment nicht möglich.\n"
+"Bitte warten Sie einen Moment und versuchen Sie es dann erneut."
 
 #: src/listview.c:221 src/menus.ui:80
 msgid "Name"
@@ -122,7 +122,7 @@ msgstr "Verschiebe Elemente in den Papierkorb…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
 msgid "Enable"
-msgstr "Aktiviere"
+msgstr "Aktivieren"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
@@ -283,10 +283,9 @@ msgid "Hide results when search is empty"
 msgstr "Bei leerem Suchfeld nichts anzeigen"
 
 #: src/preferences.ui:444
-#, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
-msgstr "Pfad beachten, falls die Suche Pfadseparatoren enthält"
+msgstr ""
+"Groß- und Kleinschreibung beachten, falls die Suche Großbuchstaben enthält"
 
 #: src/preferences.ui:465 src/fsearch.glade:821
 msgid "Search"
