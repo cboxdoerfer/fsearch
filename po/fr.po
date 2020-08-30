@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-20 12:20+0200\n"
-"PO-Revision-Date: 2020-04-11 18:09+0000\n"
-"Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
+"PO-Revision-Date: 2020-08-30 15:59+0000\n"
+"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.0-dev\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, c-format
@@ -527,7 +527,7 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr "Recherche système"
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""

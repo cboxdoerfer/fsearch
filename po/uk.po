@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-20 12:20+0200\n"
-"PO-Revision-Date: 2020-02-21 00:32+0000\n"
-"Last-Translator: Tymofij Lytvynenko <till.svit@gmail.com>\n"
+"PO-Revision-Date: 2020-08-30 15:59+0000\n"
+"Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 3.11.1\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, c-format
@@ -27,36 +27,37 @@ msgstr "%'d об'єктів"
 
 #: src/fsearch_window.c:641 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
-msgstr ""
+msgstr "Не вдалося відкрити файл"
 
 #: src/fsearch_window.c:642 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Залишити вікно відкритим?"
 
 #: src/fsearch_window.c:860
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Останнє оновлення: %Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:874 src/overlay.ui:143
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Database…"
-msgstr "Завантаження бази даних..."
+msgstr "Завантаження бази даних…"
 
 #: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
-#, fuzzy, c-format
-#| msgid "Updating Database..."
+#, c-format
 msgid "Updating Database…"
-msgstr "Оновлення бази..."
+msgstr "Оновлення бази…"
 
 #: src/fsearch_window.c:1077
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Виконуються фонові завдання."
 
 #: src/fsearch_window.c:1079
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Закриття вікна зараз неможливе.\n"
+"Зачекайте та повторіть спробу."
 
 #: src/listview.c:221 src/menus.ui:80
 msgid "Name"
@@ -81,56 +82,49 @@ msgstr "Тип"
 
 #: src/fsearch.c:191
 msgid "Show version information"
-msgstr ""
+msgstr "Показати відомості про версію"
 
 #: src/fsearch.c:198
-#, fuzzy
 msgid "Update the database"
 msgstr "Оновити базу даних"
 
 #: src/fsearch.c:410
 msgid "translator-credits"
-msgstr ""
+msgstr "Andrij Mizyk andmizyk@gmail.com"
 
 #: src/fsearch.c:411
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Пошукова утиліта орієнтована на швидкість та розширені можливості"
 
 #: src/fsearch_window_actions.c:85
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Ви справді бажаєте видалити"
+msgstr "Ви дійсно хочете відкрити стільки (%d) файлів?"
 
 #: src/fsearch_window_actions.c:87
-#, fuzzy
 msgid "Opening Files…"
-msgstr "Відкрити файл(и)"
+msgstr "Відкриття файлів…"
 
 #: src/fsearch_window_actions.c:167
-#, fuzzy, c-format
-#| msgid "Do you really want to remove"
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Ви справді бажаєте видалити"
+msgstr "Ви дійсно хочете видалити стільки (%d) файлів?"
 
 #: src/fsearch_window_actions.c:171
-#, fuzzy
 msgid "Deleting files…"
-msgstr "Видалення файлів..."
+msgstr "Видалення файлів…"
 
 #: src/fsearch_window_actions.c:171
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "Переміщення файлів у смітник..."
+msgstr "Переміщення файлів у смітник…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
-msgstr "Дозволити регулярні вирази"
+msgstr "Включити"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Оновляти"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -178,13 +172,11 @@ msgstr "Натисніть <b>Ctrl + F</b> та почніть набирати"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
-msgstr "Це займе деякий час."
+msgstr "Це не займе багато часу."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -228,11 +220,11 @@ msgstr "Використовувати двійкову СЧ замість де
 
 #: src/preferences.ui:142
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "за допомогою комбінацій клавіш або пунктів меню"
 
 #: src/preferences.ui:157
 msgid "with double click"
-msgstr ""
+msgstr "подвійним клацанням"
 
 #: src/preferences.ui:206
 msgid ""
@@ -244,27 +236,27 @@ msgstr ""
 
 #: src/preferences.ui:239
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Відкрийте шлях подвійним клацанням у стовпці шляху"
 
 #: src/preferences.ui:252
 msgid "Single click to open"
-msgstr ""
+msgstr "Відкривати одним клацанням"
 
 #: src/preferences.ui:274
 msgid "Behaviour after successfully opening a file:"
-msgstr ""
+msgstr "Поведінка після успішного відкриття файлу:"
 
 #: src/preferences.ui:290
 msgid "Minimize"
-msgstr ""
+msgstr "Сгорнути"
 
 #: src/preferences.ui:291
 msgid "Close"
-msgstr ""
+msgstr "Закрити"
 
 #: src/preferences.ui:308
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Виділяти знайдений текст у списку"
 
 #: src/preferences.ui:356
 msgid "Interface"
@@ -296,7 +288,7 @@ msgstr "Оновлювати базу даних під час запуску"
 
 #: src/preferences.ui:505 src/preferences.ui:609
 msgid "Add…"
-msgstr ""
+msgstr "Додати…"
 
 #: src/preferences.ui:521 src/preferences.ui:625
 msgid "Remove"
@@ -336,15 +328,15 @@ msgstr "База даних"
 
 #: src/preferences.ui:777
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Показувати діалогові вікна попередження, якщо:"
 
 #: src/preferences.ui:786
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "не вдалося відкрити файл / теку"
 
 #: src/preferences.ui:807
 msgid "Dialogs"
-msgstr ""
+msgstr "Діалогові вікна"
 
 #: src/fsearch.glade:65
 msgid "Open File(s)"
@@ -367,14 +359,10 @@ msgid "Move to Trash"
 msgstr "Перенести у смітник"
 
 #: src/fsearch.glade:173
-#, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Нове вікно"
 
 #: src/fsearch.glade:188
-#, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Оновити базу даних"
 
@@ -408,11 +396,11 @@ msgstr "Відображати кнопку Пошук"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "Про програму"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Вийти"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -455,10 +443,8 @@ msgid "_Help"
 msgstr "_Довідка"
 
 #: src/fsearch.glade:781
-#, fuzzy
-#| msgid "Search"
 msgid "Search…"
-msgstr "Пошук"
+msgstr "Пошук…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
@@ -517,18 +503,19 @@ msgid "FSearch"
 msgstr "FSearch"
 
 #: data/fsearch.desktop.in.in:7
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
-msgstr "Пошукова утиліта орієнтована на швидкість та розширені можливості"
+msgstr ""
+"Програма пошуку файлів, орієнтована на швидкість та розширені можливості"
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 
 #, fuzzy
 #~ msgid "Loading Database..."

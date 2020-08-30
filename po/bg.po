@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-20 12:20+0200\n"
-"PO-Revision-Date: 2020-08-20 18:36+0000\n"
+"PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -259,7 +259,7 @@ msgstr "Затваряне"
 
 #: src/preferences.ui:308
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Показване на маркираните думи за търсене"
 
 #: src/preferences.ui:356
 msgid "Interface"
@@ -377,7 +377,7 @@ msgstr "Търсене в Пътя"
 
 #: src/fsearch.glade:236 src/fsearch.glade:704
 msgid "Match Case"
-msgstr "Точно съвпадение"
+msgstr "Случай на съвпадение"
 
 #: src/fsearch.glade:250 src/fsearch.glade:714
 msgid "Enable RegEx"
@@ -515,7 +515,7 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr "търсене в системата"
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""

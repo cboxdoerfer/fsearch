@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-20 12:20+0200\n"
-"PO-Revision-Date: 2020-07-31 18:42+0000\n"
+"PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.2.1-dev\n"
 
 #: src/fsearch_window.c:106 src/fsearch_window.c:395 src/fsearch_window.c:854
 #, c-format
@@ -43,20 +43,21 @@ msgid "Loading Database…"
 msgstr "Lade Datenbank…"
 
 #: src/fsearch_window.c:889 src/overlay.ui:213 src/fsearch.glade:1090
-#, fuzzy, c-format
-#| msgid "Updating Database..."
+#, c-format
 msgid "Updating Database…"
-msgstr "Aktualisiere Datenbank..."
+msgstr "Aktualisiere Datenbank…"
 
 #: src/fsearch_window.c:1077
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Hintergrunddienste sind noch aktiv."
 
 #: src/fsearch_window.c:1079
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Das Fenster kann gerade nicht geschlossen werden.\n"
+"Bitte warten Sie einen Moment und versuchen es dann erneut."
 
 #: src/listview.c:221 src/menus.ui:80
 msgid "Name"
@@ -120,14 +121,12 @@ msgid "Moving files to trash…"
 msgstr "Verschiebe Elemente in den Papierkorb…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
-msgstr "Aktiviere RegEx"
+msgstr "Aktiviere"
 
 #: src/fsearch_preferences_widgets.c:225
 msgid "Update"
-msgstr ""
+msgstr "Aktualisieren"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -177,13 +176,11 @@ msgstr "Drücke <b>Strg + F</b> und tippe los"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
-msgstr "Dies kann einige Zeit dauern."
+msgstr "Dies wird nicht lange dauern."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -250,10 +247,8 @@ msgid "Single click to open"
 msgstr "Einfach-Klick zum Öffnen"
 
 #: src/preferences.ui:274
-#, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
-msgstr "Verhalten nach erfolgreichem Öffnen eines Elementes"
+msgstr "Verhalten nach erfolgreichem Öffnen eines Elementes:"
 
 #: src/preferences.ui:290
 msgid "Minimize"
@@ -265,7 +260,7 @@ msgstr "Schließen"
 
 #: src/preferences.ui:308
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Suchbegriffe in der Ergebnisliste hervorheben"
 
 #: src/preferences.ui:356
 msgid "Interface"
@@ -297,7 +292,7 @@ msgstr "Datenbank beim Start aktualisieren"
 
 #: src/preferences.ui:505 src/preferences.ui:609
 msgid "Add…"
-msgstr ""
+msgstr "Hinzufügen…"
 
 #: src/preferences.ui:521 src/preferences.ui:625
 msgid "Remove"
@@ -368,14 +363,10 @@ msgid "Move to Trash"
 msgstr "In den Papierkorb verschieben"
 
 #: src/fsearch.glade:173
-#, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Neues Fenster"
 
 #: src/fsearch.glade:188
-#, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Datenbank aktualisieren"
 
@@ -409,11 +400,11 @@ msgstr "Zeige Suchbutton"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "Über"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Beenden"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -456,10 +447,8 @@ msgid "_Help"
 msgstr "_Hilfe"
 
 #: src/fsearch.glade:781
-#, fuzzy
-#| msgid "Search"
 msgid "Search…"
-msgstr "Suche"
+msgstr "Suche…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
@@ -524,7 +513,7 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:12
 msgid "system-search"
-msgstr "Systemsuche"
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:16
 msgid ""
