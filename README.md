@@ -47,12 +47,14 @@ https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
 https://github.com/cboxdoerfer/fsearch/wiki/Build-instructions
 
 ## Localization
-The localization of FSearch is managed with Weblate. 
+The localization of FSearch is managed with Weblate.
 
 https://hosted.weblate.org/projects/fsearch/
 
 If you want to contribute translations please submit them there, instead of opening pull requets on Github. Instructions can be found here: 
 https://docs.weblate.org/en/latest/user/basic.html
+
+And of course: Thank you for taking the time to translate FSearch!
 
 ## Why yet another search utility?
 Performance. On Windows I really like to use Everything Search Engine. It provides instant results as you type for all your files and lots of useful features (regex, filters, bookmarks, ...). On Linux however I couldn't find anything that's even remotely as fast and powerful.
