@@ -509,8 +509,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
 
-    search_token_t **token = db_search_build_token (q);
-
+    timer_start ();
     const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
     const uint32_t num_entries = db_get_num_entries (q->db);
     const uint32_t num_items_per_thread = num_entries / num_threads;
@@ -522,14 +521,15 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
     const bool limit_results = max_results ? true : false;
     const bool is_reg = fs_str_is_regex (q->text);
     uint32_t num_token = 0;
-    while (token[num_token]) {
-        num_token++;
-    }
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
 
-    timer_start ();
-    GList *temp = fsearch_thread_pool_get_threads (search->pool);
+    search_token_t **token = db_search_build_token (q);
+    while (token[num_token]) {
+        num_token++;
+    }
+
+    GList *threads = fsearch_thread_pool_get_threads (search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] = search_thread_context_new (q,
                                                     token,
@@ -541,21 +541,18 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
         end_pos += num_items_per_thread;
 
         fsearch_thread_pool_push_data (search->pool,
-                                       temp,
+                                       threads,
                                        is_reg && q->enable_regex ?
                                            search_regex_thread : search_thread,
                                        thread_data[i]);
-        temp = temp->next;
+        threads = threads->next;
     }
 
-    temp = fsearch_thread_pool_get_threads (search->pool);
-    while (temp) {
-        fsearch_thread_pool_wait_for_thread (search->pool, temp);
-        temp = temp->next;
+    threads = fsearch_thread_pool_get_threads (search->pool);
+    while (threads) {
+        fsearch_thread_pool_wait_for_thread (search->pool, threads);
+        threads = threads->next;
     }
-
-    trace ("[search] search finished in ");
-    timer_stop ();
 
     // get total number of entries found
     uint32_t num_results = 0;
@@ -608,6 +605,9 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
     }
     free (token);
     token = NULL;
+
+    trace ("[search] search finished in ");
+    timer_stop ();
 
     DatabaseSearchResult *result_ctx = calloc (1, sizeof (DatabaseSearchResult));
     assert (result_ctx != NULL);
