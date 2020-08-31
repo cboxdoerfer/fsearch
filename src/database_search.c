@@ -214,8 +214,6 @@ db_search_worker (void * user_data)
             if (!t) {
                 break;
             }
-            char *ptr = t->text;
-            uint32_t (*search_func)(const char *, const char *, void *) = t->search_func;
 
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && t->has_separator)) {
@@ -228,7 +226,7 @@ db_search_worker (void * user_data)
             else {
                 haystack = haystack_name;
             }
-            if (!search_func (haystack, ptr, t)) {
+            if (!t->search_func (haystack, t->text, t)) {
                 break;
             }
         }
