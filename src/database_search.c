@@ -314,9 +314,13 @@ search_token_free (void * data)
         g_free (token->text);
         token->text = NULL;
     }
+    if (token->regex_study != NULL) {
+        pcre_free_study (token->regex_study);
+        token->regex_study = NULL;
+    }
     if (token->regex != NULL) {
         pcre_free (token->regex);
-        token = NULL;
+        token->regex = NULL;
     }
     g_free (token);
     token = NULL;
