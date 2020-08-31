@@ -384,36 +384,28 @@ db_search_build_token (FsearchQuery *q)
     assert (q != NULL);
     assert (q->text != NULL);
 
-    char *tmp_query_copy = strdup (q->text);
-    assert (tmp_query_copy != NULL);
-
     // check if regex characters are present
     const bool is_reg = fs_str_is_regex (q->text);
     if (is_reg && q->enable_regex) {
         search_token_t **token = calloc (2, sizeof (search_token_t *));
-        token[0] = search_token_new (tmp_query_copy, q->match_case, q->auto_match_case, true);
+        token[0] = search_token_new (q->text, q->match_case, q->auto_match_case, true);
         token[1] = NULL;
-        g_free (tmp_query_copy);
-        tmp_query_copy = NULL;
-
         return token;
     }
 
     // whitespace is regarded as AND so split query there in multiple token
-    char **tmp_token = fs_str_split (tmp_query_copy); 
-    assert (tmp_token != NULL);
+    char **query_split = fs_str_split (q->text); 
+    assert (query_split != NULL);
 
-    uint32_t tmp_token_len = g_strv_length (tmp_token);
+    uint32_t tmp_token_len = g_strv_length (query_split);
     search_token_t **token = calloc (tmp_token_len + 1, sizeof (search_token_t *));
     for (uint32_t i = 0; i < tmp_token_len; i++) {
-        trace ("[search] token %d: %s\n", i, tmp_token[i]);
-        token[i] = search_token_new (tmp_token[i], q->match_case, q->auto_match_case, false);
+        trace ("[search] token %d: %s\n", i, query_split[i]);
+        token[i] = search_token_new (query_split[i], q->match_case, q->auto_match_case, false);
     }
 
-    g_free (tmp_query_copy);
-    tmp_query_copy = NULL;
-    g_strfreev (tmp_token);
-    tmp_token = NULL;
+    g_strfreev (query_split);
+    query_split = NULL;
 
     return token;
 }
