@@ -49,6 +49,7 @@ typedef struct search_token_s {
     uint32_t (*search_func)(const char *, const char *, void *data);
 
     pcre *regex;
+    pcre_extra *regex_study;
     int ovector[OVECCOUNT];
 } search_token_t;
 
@@ -263,7 +264,7 @@ search_regex (const char *haystack, const char *needle, void *data)
     search_token_t *t = data;
     size_t haystack_len = strlen (haystack);
     return pcre_exec (t->regex,
-                      NULL,
+                      t->regex_study,
                       haystack,
                       haystack_len,
                       0,
@@ -343,6 +344,7 @@ search_token_new (const char *text, bool match_case, bool auto_match_case, bool 
                                    &error,
                                    &erroffset,
                                    NULL);
+        new->regex_study = pcre_study (new->regex, PCRE_STUDY_JIT_COMPILE, &error);
         new->search_func = search_regex;
     }
     else if (strchr (text, '*') || strchr (text, '?')) {
