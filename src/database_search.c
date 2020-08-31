@@ -75,7 +75,7 @@ static void
 db_search_entry_free (DatabaseSearchEntry *entry);
 
 static gpointer
-fsearch_search_thread (gpointer user_data)
+db_search_thread (gpointer user_data)
 {
     DatabaseSearch *search = user_data;
 
@@ -159,7 +159,7 @@ filter_node (BTreeNode *node, FsearchFilter filter)
 }
 
 static void *
-search_thread (void * user_data)
+db_search_worker (void * user_data)
 {
     search_thread_context_t *ctx = (search_thread_context_t *)user_data;
     assert (ctx != NULL);
@@ -490,7 +490,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 
         fsearch_thread_pool_push_data (search->pool,
                                        threads,
-                                       search_thread,
+                                       db_search_worker,
                                        thread_data[i]);
         threads = threads->next;
     }
@@ -649,7 +649,7 @@ db_search_new (FsearchThreadPool *pool)
     db_search->pool = pool;
     g_mutex_init (&db_search->query_mutex);
     g_cond_init (&db_search->search_thread_start_cond);
-    db_search->search_thread = g_thread_new("fsearch_search_thread", fsearch_search_thread, db_search);
+    db_search->search_thread = g_thread_new("fsearch_search_thread", db_search_thread, db_search);
     return db_search;
 }
 
