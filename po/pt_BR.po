@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-08-28 12:29+0200\n"
-"PO-Revision-Date: 2020-08-30 15:59+0000\n"
-"Last-Translator: Henrique Coutinho Layber <henriquelayber@gmail.com>\n"
+"PO-Revision-Date: 2020-09-02 15:36+0000\n"
+"Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.2.1-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
 #, c-format
@@ -285,10 +285,10 @@ msgid "Hide results when search is empty"
 msgstr "Esconder resultados quando a pesquisa estiver vazia"
 
 #: src/preferences.ui:444
-#, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
-msgstr "Pesquisar no caminho quando a consulta contém separadores de caminho"
+msgstr ""
+"Coincidir capitalização quando a pesquisa conter pelo menos um caractere "
+"maiúsculo"
 
 #: src/preferences.ui:465 src/fsearch.glade:821
 msgid "Search"
