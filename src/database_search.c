@@ -230,7 +230,6 @@ db_search_worker (void * user_data)
                 break;
             }
         }
-
     }
     ctx->num_results = num_results;
     return NULL;
@@ -347,12 +346,7 @@ search_token_new (const char *text, bool match_case, bool auto_match_case, bool 
         new->search_func = search_regex;
     }
     else if (strchr (text, '*') || strchr (text, '?')) {
-        if (match_case) {
-            new->search_func = search_wildcard;
-        }
-        else {
-            new->search_func = search_wildcard_icase;
-        }
+        new->search_func = match_case ? search_wildcard : search_wildcard_icase;
     }
     else {
         if (match_case) {
@@ -364,13 +358,7 @@ search_token_new (const char *text, bool match_case, bool auto_match_case, bool 
             if (g_utf8_strlen (text, -1) != new->text_len) {
                 is_utf8 = true;
             }
-
-            if (is_utf8) {
-                new->search_func = search_normal_icase_u8;
-            }
-            else {
-                new->search_func = search_normal_icase;
-            }
+            new->search_func = is_utf8 ? search_normal_icase_u8 : search_normal_icase;
         }
     }
     return new;
