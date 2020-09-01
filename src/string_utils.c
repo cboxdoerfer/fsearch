@@ -39,6 +39,30 @@ fs_str_is_empty (const char *str)
     return true;
 }
 
+bool
+fs_str_is_utf8 (const char *str)
+{
+    char *down = g_utf8_strdown (str, -1);
+    char *up = g_utf8_strup (str, -1);
+
+    assert (down != NULL);
+    assert (up != NULL);
+
+    size_t str_len = strlen (str);
+    size_t up_len = strlen (up);
+    size_t down_len = strlen (down);
+
+    g_free (down);
+    g_free (up);
+    down = NULL;
+    up = NULL;
+
+    if (str_len != up_len || str_len != down_len) {
+        return true;
+    }
+    return false;
+}
+
 int
 fs_str_is_regex (const char *str)
 {

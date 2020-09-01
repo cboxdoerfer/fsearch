@@ -359,12 +359,7 @@ search_token_new (const char *text, bool match_case, bool auto_match_case, bool 
             new->search_func = search_normal;
         }
         else {
-            bool is_utf8 = false;
-            // TODO: this might not work at all times?
-            if (g_utf8_strlen (text, -1) != new->text_len) {
-                is_utf8 = true;
-            }
-            new->search_func = is_utf8 ? search_normal_icase_u8 : search_normal_icase;
+            new->search_func = fs_str_is_utf8 (text) ? search_normal_icase_u8 : search_normal_icase;
         }
     }
     return new;

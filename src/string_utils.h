@@ -40,3 +40,6 @@ fs_str_copy (char *dest,
 char **
 fs_str_split (char *str);
 
+bool
+fs_str_is_utf8 (const char *str);
+
