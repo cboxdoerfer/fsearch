@@ -1,5 +1,5 @@
 AC_INIT([FSearch],
-        m4_esyscmd([build-aux/git-version-gen .tarball-version]),
+        m4_esyscmd([build-aux/git-version-gen --fallback "0.1beta4" .tarball-version]),
         [christian.boxdoerfer@posteo.de],
         [fsearch],
         [https://cboxdoerfer.github.io/fsearch])
