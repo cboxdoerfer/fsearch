@@ -351,63 +351,33 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
         // Dialogs
         pref.config->show_dialog_failed_opening = gtk_toggle_button_get_active (show_dialog_failed_opening);
 
-        bool old_auto_search_in_path = pref.config->auto_search_in_path;
         pref.config->auto_search_in_path = gtk_toggle_button_get_active (auto_search_in_path_button);
-        if (old_auto_search_in_path != pref.config->auto_search_in_path) {
-            pref.update_search = true;
-        }
-
-        bool old_auto_match_case = pref.config->auto_match_case;
         pref.config->auto_match_case = gtk_toggle_button_get_active (auto_match_case_button);
-        if (old_auto_match_case != pref.config->auto_match_case) {
-            pref.update_search = true;
-        }
-
-        bool old_hide_results_on_empty_search = pref.config->hide_results_on_empty_search;
         pref.config->hide_results_on_empty_search = gtk_toggle_button_get_active (hide_results_button);
-        if (old_hide_results_on_empty_search != pref.config->hide_results_on_empty_search) {
-            pref.update_search = true;
-        }
-
-        bool old_limit_results = pref.config->limit_results;
         pref.config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
-        if (old_limit_results != pref.config->limit_results) {
-            pref.update_search = true;
-        }
-
-        bool old_num_results = pref.config->num_results;
         pref.config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
-        if (old_num_results != pref.config->num_results) {
+        pref.config->highlight_search_terms = gtk_toggle_button_get_active (highlight_search_terms);
+        pref.config->single_click_open = gtk_toggle_button_get_active (single_click_open_button);
+        pref.config->show_listview_icons = gtk_toggle_button_get_active (show_icons_button);
+        pref.config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);
+        pref.config->follow_symlinks = gtk_toggle_button_get_active (follow_symlinks_button);
+
+        if (config->auto_search_in_path != pref.config->auto_search_in_path
+            || config->auto_match_case != pref.config->auto_match_case
+            || config->hide_results_on_empty_search != pref.config->hide_results_on_empty_search
+            || config->limit_results != pref.config->limit_results
+            || config->num_results != pref.config->num_results) {
             pref.update_search = true;
         }
 
-        bool old_highlight_search_terms = pref.config->highlight_search_terms;
-        pref.config->highlight_search_terms = gtk_toggle_button_get_active (highlight_search_terms);
-        if (old_highlight_search_terms != pref.config->highlight_search_terms) {
+        if (config->highlight_search_terms != pref.config->highlight_search_terms
+            || config->single_click_open != pref.config->single_click_open
+            || config->show_listview_icons != pref.config->show_listview_icons) {
             pref.update_list = true;
         }
 
-        bool old_single_click_open = pref.config->single_click_open;
-        pref.config->single_click_open = gtk_toggle_button_get_active (single_click_open_button);
-        if (old_single_click_open != pref.config->single_click_open) {
-            pref.update_list = true;
-        }
-
-        bool old_show_icons = pref.config->show_listview_icons;
-        pref.config->show_listview_icons = gtk_toggle_button_get_active (show_icons_button);
-        if (old_show_icons != pref.config->show_listview_icons) {
-            pref.update_list = true;
-        }
-
-        bool old_exclude_hidden_items = pref.config->exclude_hidden_items;
-        pref.config->exclude_hidden_items = gtk_toggle_button_get_active (exclude_hidden_items_button);
-        if (old_exclude_hidden_items != pref.config->exclude_hidden_items) {
-            pref.update_db = true;
-        }
-
-        bool old_follow_symlinks = pref.config->follow_symlinks;
-        pref.config->follow_symlinks = gtk_toggle_button_get_active (follow_symlinks_button);
-        if (old_follow_symlinks != pref.config->follow_symlinks) {
+        if (config->exclude_hidden_items != pref.config->exclude_hidden_items
+            || config->follow_symlinks != pref.config->follow_symlinks) {
             pref.update_db = true;
         }
 
