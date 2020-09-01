@@ -426,11 +426,13 @@ preferences_activated (GSimpleAction *action,
     FsearchApplication *app = FSEARCH_APPLICATION (gapp);
     GList *windows = gtk_application_get_windows (GTK_APPLICATION (app));
 
-    for (; windows; windows = windows->next) {
-        GtkWindow *window = windows->data;
-        bool update_db = false;
-        bool update_list = false;
-        FsearchConfig *new = preferences_ui_launch (app->config, window, &update_db, &update_list);
+    bool update_db = false;
+    bool update_list = false;
+    bool update_search = false;
+
+    for (GList *w = windows; w; w = w->next) {
+        GtkWindow *window = w->data;
+        FsearchConfig *new = preferences_ui_launch (app->config, window, &update_db, &update_list, &update_search);
         if (new) {
             config_free (app->config);
             app->config = new;
@@ -443,6 +445,12 @@ preferences_activated (GSimpleAction *action,
         }
         break;
     }
+    for (GList *w = windows; w; w = w->next) {
+        GtkWindow *window = w->data;
+        if (update_search) {
+            fsearch_application_window_update_search (window);
+        }
+    }
 }
 
 void
@@ -454,7 +462,6 @@ fsearch_application_update_listview_config (void)
     for (; windows; windows = windows->next) {
         GtkWindow *window = windows->data;
         fsearch_application_window_update_listview_config (FSEARCH_WINDOW_WINDOW (window));
-        break;
     }
 }
 

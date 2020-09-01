@@ -151,7 +151,7 @@ toggle_button_get (GtkBuilder *builder, const char *name, bool val)
 }
 
 FsearchConfig *
-preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db, bool *update_list)
+preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db, bool *update_list, bool *update_search)
 {
     FsearchPreferences pref = {};
     pref.config = config_copy (config);
@@ -338,11 +338,6 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
 
     if (response == GTK_RESPONSE_OK) {
         pref.config->search_as_you_type = gtk_toggle_button_get_active (search_as_you_type_button);
-        pref.config->auto_search_in_path = gtk_toggle_button_get_active (auto_search_in_path_button);
-        pref.config->auto_match_case = gtk_toggle_button_get_active (auto_match_case_button);
-        pref.config->hide_results_on_empty_search = gtk_toggle_button_get_active (hide_results_button);
-        pref.config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
-        pref.config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
         pref.config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
         pref.config->restore_column_config = gtk_toggle_button_get_active (restore_column_config_button);
         pref.config->double_click_path = gtk_toggle_button_get_active (double_click_path_button);
@@ -355,6 +350,36 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
         pref.config->action_after_file_open_mouse = gtk_toggle_button_get_active (action_after_file_open_mouse);
         // Dialogs
         pref.config->show_dialog_failed_opening = gtk_toggle_button_get_active (show_dialog_failed_opening);
+
+        bool old_auto_search_in_path = pref.config->auto_search_in_path;
+        pref.config->auto_search_in_path = gtk_toggle_button_get_active (auto_search_in_path_button);
+        if (old_auto_search_in_path != pref.config->auto_search_in_path) {
+            pref.update_search = true;
+        }
+
+        bool old_auto_match_case = pref.config->auto_match_case;
+        pref.config->auto_match_case = gtk_toggle_button_get_active (auto_match_case_button);
+        if (old_auto_match_case != pref.config->auto_match_case) {
+            pref.update_search = true;
+        }
+
+        bool old_hide_results_on_empty_search = pref.config->hide_results_on_empty_search;
+        pref.config->hide_results_on_empty_search = gtk_toggle_button_get_active (hide_results_button);
+        if (old_hide_results_on_empty_search != pref.config->hide_results_on_empty_search) {
+            pref.update_search = true;
+        }
+
+        bool old_limit_results = pref.config->limit_results;
+        pref.config->limit_results = gtk_toggle_button_get_active (limit_num_results_button);
+        if (old_limit_results != pref.config->limit_results) {
+            pref.update_search = true;
+        }
+
+        bool old_num_results = pref.config->num_results;
+        pref.config->num_results = gtk_spin_button_get_value_as_int (GTK_SPIN_BUTTON (limit_num_results_spin));
+        if (old_num_results != pref.config->num_results) {
+            pref.update_search = true;
+        }
 
         bool old_highlight_search_terms = pref.config->highlight_search_terms;
         pref.config->highlight_search_terms = gtk_toggle_button_get_active (highlight_search_terms);
@@ -430,6 +455,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
 
     *update_db = pref.update_db;
     *update_list = pref.update_list;
+    *update_search = pref.update_search;
     return pref.config;
 }
 

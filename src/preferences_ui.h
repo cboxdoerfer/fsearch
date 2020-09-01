@@ -27,7 +27,8 @@ typedef struct _FsearchPreferences {
     GtkTreeModel *exclude_model;
     bool update_db;
     bool update_list;
+    bool update_search;
 } FsearchPreferences;
 
 FsearchConfig *
-preferences_ui_launch (FsearchConfig *main_config, GtkWindow *window, bool *update_db, bool *update_list);
+preferences_ui_launch (FsearchConfig *main_config, GtkWindow *window, bool *update_db, bool *update_list, bool *update_search);
