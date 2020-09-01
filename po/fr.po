@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
@@ -43,7 +43,6 @@ msgstr "Chargement de la base de données…"
 
 #: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
-#| msgid "Updating Database..."
 msgid "Updating Database…"
 msgstr "Mise à jour de la base de données…"
 
@@ -108,7 +107,6 @@ msgstr "Ouvrir le(s) fichier(s)"
 
 #: src/fsearch_window_actions.c:167
 #, fuzzy, c-format
-#| msgid "Do you really want to remove"
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Voulez-vous vraiment supprimer"
 
@@ -122,7 +120,6 @@ msgstr "Déplacement des fichiers dans la corbeille…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
 #, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
 msgstr "Activer les expressions régulières"
 
@@ -182,7 +179,6 @@ msgstr ""
 
 #: src/overlay.ui:173
 #, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
 msgstr "Ceci peut prendre un peu de temps."
 
@@ -252,7 +248,6 @@ msgstr ""
 
 #: src/preferences.ui:274
 #, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
 msgstr "Comportement suite à l'ouverture réussie d'un dossier"
 
@@ -291,7 +286,6 @@ msgstr "Cacher les résultats lorsque la recherche est vide"
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Rechercher dans le chemin quand la requête contient des séparateurs de chemin"
@@ -378,13 +372,11 @@ msgstr "Déplacer dans la corbeille"
 
 #: src/fsearch.glade:173
 #, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Nouvelle fenêtre"
 
 #: src/fsearch.glade:188
 #, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Mettre à jour la base de données"
 
@@ -466,7 +458,6 @@ msgstr "_Aide"
 
 #: src/fsearch.glade:781
 #, fuzzy
-#| msgid "Search"
 msgid "Search…"
 msgstr "Rechercher"
 
@@ -526,17 +517,17 @@ msgstr "REGEX"
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Un utilitaire de recherche axé sur la performance et avec des "
 "fonctionnalités avancées"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr "system-search"
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""

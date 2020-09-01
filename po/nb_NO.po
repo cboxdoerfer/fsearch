@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -382,13 +382,11 @@ msgstr "Flytt til papirkurv"
 
 #: src/fsearch.glade:173
 #, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Nytt vindu"
 
 #: src/fsearch.glade:188
 #, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Oppdater database"
 
@@ -472,7 +470,6 @@ msgstr "_Hjelp"
 
 #: src/fsearch.glade:781
 #, fuzzy
-#| msgid "Search"
 msgid "Search…"
 msgstr "Søk"
 
@@ -534,16 +531,16 @@ msgstr "Regulært uttrykk"
 msgid "FSearch"
 msgstr "FSøk"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 #, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr "system-search"
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "søk;fsearch;filer;mapper;musikk;video;dokumenter;finn;verktøy;alt;"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Vladimir Barinov <source.hl2@yandex.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
@@ -282,7 +282,6 @@ msgstr "Спрятать результаты, когда поиск пусто�
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr "Искать в пути к файлу/папке, когда запрос содержит разделители ('/')"
 
@@ -511,17 +510,17 @@ msgstr "РЕГ ВЫР"
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Инструмент поиска файлов, нацеленный на быстродействие и продвинутые "
 "возможности"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr "system-search"
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""

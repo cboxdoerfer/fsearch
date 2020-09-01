@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2020-08-22 12:40+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -284,7 +284,6 @@ msgstr "Ukryj wyniki gdy kwerenda jest pusta"
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr "Wyszukuj w ścieżce, gdy kwerenda zawiera separatory ścieżki"
 
@@ -512,17 +511,17 @@ msgstr "REGEX"
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
 "funkcjach"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr "system-search"
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""

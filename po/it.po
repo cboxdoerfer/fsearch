@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/fsearch/"
@@ -243,7 +243,6 @@ msgstr "Click singolo per aprire"
 
 #: src/preferences.ui:274
 #, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
 msgstr "Comportamento dopo aver aperto un file con successo"
 
@@ -281,7 +280,6 @@ msgstr "Nascondi i risultati quando la ricerca è vuota"
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr "Cerca nel percorso quando la query contiene separatori di percorso"
 
@@ -369,13 +367,11 @@ msgstr "Sposta nel cestino"
 
 #: src/fsearch.glade:173
 #, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Nuova finestra"
 
 #: src/fsearch.glade:188
 #, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Aggiorna il database"
 
@@ -457,7 +453,6 @@ msgstr "_Aiuto"
 
 #: src/fsearch.glade:781
 #, fuzzy
-#| msgid "Search"
 msgid "Search…"
 msgstr "Cerca"
 
@@ -517,17 +512,17 @@ msgstr "REGEX"
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Un'applicazione per la ricerca di file con un focus su prestazioni e "
 "funzioni avanzate"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr "system-search"
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""

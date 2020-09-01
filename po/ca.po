@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2019-10-12 12:52+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/fsearch/"
@@ -43,7 +43,6 @@ msgstr "S’està carregant la base de dades…"
 
 #: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
-#| msgid "Updating Database..."
 msgid "Updating Database…"
 msgstr "S’està actualitzant la base de dades…"
 
@@ -109,7 +108,6 @@ msgstr "Obre fitxers"
 
 #: src/fsearch_window_actions.c:167
 #, fuzzy, c-format
-#| msgid "Do you really want to remove"
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Realment voleu suprimir"
 
@@ -125,7 +123,6 @@ msgstr "S’estan enviant els fitxers a la paperera…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
 #, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
 msgstr "Activa les expressions regulars"
 
@@ -185,7 +182,6 @@ msgstr ""
 
 #: src/overlay.ui:173
 #, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
 msgstr "Això pot trigar una estona."
 
@@ -291,7 +287,6 @@ msgstr "Amaga els resultats si la cerca és buida"
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr "Cerca al camí quan la consulta inclogui separadors de camí"
 
@@ -377,13 +372,11 @@ msgstr "Envia a la paperera"
 
 #: src/fsearch.glade:173
 #, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Finestra nova"
 
 #: src/fsearch.glade:188
 #, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Actualitza la base de dades"
 
@@ -465,7 +458,6 @@ msgstr "_Ajuda"
 
 #: src/fsearch.glade:781
 #, fuzzy
-#| msgid "Search"
 msgid "Search…"
 msgstr "Cerca"
 
@@ -525,18 +517,18 @@ msgstr "EXPRESSIÓREGULAR"
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 #, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Una eina de cerca caracteritzada pel seu rendiment i les prestacions "
 "avançades"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr ""
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""

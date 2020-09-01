@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -43,7 +43,6 @@ msgstr "データベースを読み込み中…"
 
 #: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
-#| msgid "Updating Database..."
 msgid "Updating Database…"
 msgstr "データベースをアップデート中…"
 
@@ -107,7 +106,6 @@ msgstr "ファイルを開く"
 
 #: src/fsearch_window_actions.c:167
 #, fuzzy, c-format
-#| msgid "Do you really want to remove"
 msgid "Do you really want to remove %d file(s)?"
 msgstr "本当に"
 
@@ -123,7 +121,6 @@ msgstr "ゴミ箱に移動中…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
 #, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
 msgstr "正規表現を有効"
 
@@ -181,7 +178,6 @@ msgstr ""
 
 #: src/overlay.ui:173
 #, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
 msgstr "しばらくかかるかもしれません。"
 
@@ -287,7 +283,6 @@ msgstr "検索結果が空の場合は結果を隠す"
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr "クエリがパス区切り文字を含む場合はパスを検索"
 
@@ -373,13 +368,11 @@ msgstr "ゴミ箱に送る"
 
 #: src/fsearch.glade:173
 #, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "新しいウィンドウ"
 
 #: src/fsearch.glade:188
 #, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "データベースをアップデート"
 
@@ -461,7 +454,6 @@ msgstr "ヘルプ(_H)"
 
 #: src/fsearch.glade:781
 #, fuzzy
-#| msgid "Search"
 msgid "Search…"
 msgstr "検索"
 
@@ -521,16 +513,16 @@ msgstr "正規表現"
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 #, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr ""
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""

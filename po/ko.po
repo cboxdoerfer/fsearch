@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Kevin Kim <root@hamonikr.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -43,7 +43,6 @@ msgstr "데이터베이스 로딩중…"
 
 #: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
-#| msgid "Updating Database..."
 msgid "Updating Database…"
 msgstr "데이터베이스 업데이트"
 
@@ -107,7 +106,6 @@ msgstr "파일 열기"
 
 #: src/fsearch_window_actions.c:167
 #, fuzzy, c-format
-#| msgid "Do you really want to remove"
 msgid "Do you really want to remove %d file(s)?"
 msgstr "정말 삭제 하시겠습니까?"
 
@@ -123,7 +121,6 @@ msgstr "휴지통으로 이동 중…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
 #, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
 msgstr "정규표현식 가능"
 
@@ -181,7 +178,6 @@ msgstr ""
 
 #: src/overlay.ui:173
 #, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
 msgstr "작업에 시간이 걸릴 수 있습니다"
 
@@ -251,7 +247,6 @@ msgstr ""
 
 #: src/preferences.ui:274
 #, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
 msgstr "파일을 열고 나서 할 일"
 
@@ -289,7 +284,6 @@ msgstr "검색 결과가 없으면 결과 숨기기"
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr "검색어에 겅로를 포함하여 검색하는 경우 경로 검색"
 
@@ -375,13 +369,11 @@ msgstr "휴지통으로 이동"
 
 #: src/fsearch.glade:173
 #, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "새 검색창"
 
 #: src/fsearch.glade:188
 #, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "데이터베이스 업데이트"
 
@@ -463,7 +455,6 @@ msgstr "도움말(_H)"
 
 #: src/fsearch.glade:781
 #, fuzzy
-#| msgid "Search"
 msgid "Search…"
 msgstr "검색"
 
@@ -523,16 +514,16 @@ msgstr "정규표현식"
 msgid "FSearch"
 msgstr "데스크탑 검색"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 #, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr ""
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""

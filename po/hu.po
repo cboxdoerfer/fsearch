@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-08-28 12:29+0200\n"
+"POT-Creation-Date: 2020-09-01 16:56+0200\n"
 "PO-Revision-Date: 2020-07-18 03:41+0000\n"
 "Last-Translator: Doma Gergő <domag02@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/fsearch/"
@@ -43,7 +43,6 @@ msgstr "Adatbázis betöltése…"
 
 #: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
-#| msgid "Updating Database..."
 msgid "Updating Database…"
 msgstr "Adatbázis frissítése..."
 
@@ -108,7 +107,6 @@ msgstr "Fájl(ok) megnyitása"
 
 #: src/fsearch_window_actions.c:167
 #, fuzzy, c-format
-#| msgid "Do you really want to remove"
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Biztosan el akarsz távolítani"
 
@@ -122,7 +120,6 @@ msgstr "Fájlok áthelyezése a Kukába…"
 
 #: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
 #, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable"
 msgstr "Reguláris kifejezések engedélyezése"
 
@@ -182,7 +179,6 @@ msgstr ""
 
 #: src/overlay.ui:173
 #, fuzzy
-#| msgid "This may take a while."
 msgid "This won't take long."
 msgstr "Ez eltarthat egy ideig."
 
@@ -252,7 +248,6 @@ msgstr ""
 
 #: src/preferences.ui:274
 #, fuzzy
-#| msgid "Behaviour after successfully opening a file"
 msgid "Behaviour after successfully opening a file:"
 msgstr "Viselkedés a fájl sikeres megnyitása után"
 
@@ -291,7 +286,6 @@ msgstr "Eredmények elrejtése, ha a keresési mező üres"
 
 #: src/preferences.ui:444
 #, fuzzy
-#| msgid "Search in path when query contains path separators"
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Keresés az elérési útban, ha a lekérdezésben útvonal elválasztó karakter van"
@@ -379,13 +373,11 @@ msgstr "Áthelyezés a Kukába"
 
 #: src/fsearch.glade:173
 #, fuzzy
-#| msgid "New Window"
 msgid "New window"
 msgstr "Új ablak"
 
 #: src/fsearch.glade:188
 #, fuzzy
-#| msgid "Update Database"
 msgid "Update database"
 msgstr "Adatbázis frissítése"
 
@@ -467,7 +459,6 @@ msgstr "_Súgó"
 
 #: src/fsearch.glade:781
 #, fuzzy
-#| msgid "Search"
 msgid "Search…"
 msgstr "Keresés"
 
@@ -527,17 +518,17 @@ msgstr "REGULÁRIS KIFEJEZÉS"
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:7
+#: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Egy fájlkereső alkalmazás, mely a teljesítményre és a fejlett képességekre "
 "összpontosít"
 
-#: data/fsearch.desktop.in.in:12
+#: data/fsearch.desktop.in.in:7
 msgid "system-search"
 msgstr "system-search"
 
-#: data/fsearch.desktop.in.in:16
+#: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
