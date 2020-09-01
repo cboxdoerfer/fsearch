@@ -289,9 +289,11 @@ static uint32_t
 search_normal_icase_u8 (const char *haystack, const char *needle, void *data)
 {
     // TODO: make this faster
-    char *haystack_down = g_utf8_strdown (haystack, -1);
+    char *haystack_normalized = g_utf8_normalize (haystack, -1, G_NORMALIZE_DEFAULT);
+    char *haystack_down = g_utf8_strdown (haystack_normalized, -1);
     uint32_t res = strstr (haystack_down, needle) ? 1 : 0;
     g_free (haystack_down);
+    g_free (haystack_normalized);
     return res;
 }
 
@@ -341,7 +343,11 @@ search_token_new (const char *text, bool match_case, bool auto_match_case, bool 
     if (auto_match_case && fs_str_utf8_has_upper (text)) {
         match_case = true;
     }
-    new->text = match_case ? g_strdup (text) : g_utf8_strdown (text, -1);
+
+    char *normalized = g_utf8_normalize (text, -1, G_NORMALIZE_DEFAULT);
+    new->text = match_case ? g_strdup (text) : g_utf8_strdown (normalized, -1);
+    g_free (normalized);
+    normalized = NULL;
 
     if (is_regex) {
         const char *error;
