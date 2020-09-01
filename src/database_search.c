@@ -289,7 +289,10 @@ static uint32_t
 search_normal_icase_u8 (const char *haystack, const char *needle, void *data)
 {
     // TODO: make this faster
-    return utf8casestr (haystack, needle) ? 1 : 0;
+    char *haystack_down = g_utf8_strdown (haystack, -1);
+    uint32_t res = strstr (haystack_down, needle) ? 1 : 0;
+    g_free (haystack_down);
+    return res;
 }
 
 static uint32_t
@@ -332,13 +335,13 @@ search_token_new (const char *text, bool match_case, bool auto_match_case, bool 
     search_token_t *new = calloc (1, sizeof (search_token_t));
     assert (new != NULL);
 
-    new->text = g_strdup (text);
     new->text_len = strlen (text);
     new->has_separator = strchr (text, '/') ? 1 : 0;
 
     if (auto_match_case && fs_str_utf8_has_upper (text)) {
         match_case = true;
     }
+    new->text = match_case ? g_strdup (text) : g_utf8_strdown (text, -1);
 
     if (is_regex) {
         const char *error;
