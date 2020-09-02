@@ -151,39 +151,6 @@ consume_space (char *str, bool *eos)
 }
 
 static char *
-consume_quotation_mark (char *str, char **dest, bool *eos)
-{
-    char *d = *dest;
-
-    while (true) {
-        if (is_nul (*str)) {
-            *eos = true;
-            *dest = d;
-            return str;
-        }
-        if (*str == '"') {
-            *eos = false;
-            *dest = d;
-            return str + 1;
-        }
-        if (*str == '\\') {
-            if (is_nul (*(str + 1))) {
-                *eos = true;
-                *dest = d;
-                return str + 1;
-            }
-            str++;
-        }
-        *d = *str;
-        d++;
-        str++;
-    }
-
-    *dest = d;
-    return str;
-}
-
-static char *
 consume_escape (char *str, char **dest, bool *eos)
 {
     char *d = *dest;
@@ -200,42 +167,50 @@ consume_escape (char *str, char **dest, bool *eos)
 }
 
 char **
-fs_str_split (char *str)
+fs_str_split (char *src)
 {
-    if (!str) {
+    if (!src) {
         return NULL;
     }
 
     GPtrArray *new = g_ptr_array_new ();
     // Duplicate input string to make sure destination is large enough
-    char *dest = g_strdup (str);
-    char *p = str;
+    char *dest = g_strdup (src);
+    char *s = src;
     char *d = dest;
+    bool inside_quotation_marks = false;
     bool eos = false;
     while (!eos) {
-        switch (*p) {
+        switch (*s) {
             case '\0':
                 eos = true;
                 break;
             case '\\':
-                p = consume_escape (p+1, &d, &eos);
+                s = consume_escape (s+1, &d, &eos);
                 break;
             case '"':
-                p = consume_quotation_mark (p+1, &d, &eos);
+                s++;
+                inside_quotation_marks = inside_quotation_marks ? false : true;
                 break;
             case ' ':
+                if (inside_quotation_marks) {
+                    *d = *s;
+                    d++;
+                    s++;
+                    break;
+                }
                 // split at space
                 *d = '\0';
                 d = dest;
                 if (strlen (dest) > 0) {
                     g_ptr_array_add (new, g_strdup (dest));
                 }
-                p = consume_space (p+1, &eos);
+                s = consume_space (s+1, &eos);
                 break;
             default:
-                *d = *p;
+                *d = *s;
                 d++;
-                p++;
+                s++;
                 break;
         }
     }
