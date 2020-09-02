@@ -474,7 +474,7 @@ perform_search (FsearchApplicationWindow *win)
     win->num_searches_active++;
 
     const gchar *text = gtk_entry_get_text (GTK_ENTRY (win->search_entry));
-    trace ("[search] %s\n", text); 
+    trace ("[search] %s\n", text);
     FsearchFilter filter = gtk_combo_box_get_active (GTK_COMBO_BOX (win->filter_combobox));
     uint32_t max_results = config->limit_results ? config->num_results : 0;
     FsearchQuery *q = fsearch_query_new (text,
@@ -654,7 +654,7 @@ on_listview_row_activated (GtkTreeView       *tree_view,
         fsearch_window_action_after_file_open(true);
     } else {
         // open failed
-        if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse) 
+        if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse)
             && config->show_dialog_failed_opening) {
             gint response = ui_utils_run_gtk_dialog (GTK_WIDGET (self),
                                                      GTK_MESSAGE_WARNING,

@@ -111,7 +111,7 @@ listview_column_set_size (GtkTreeViewColumn *col, int32_t size)
 }
 
 static void
-listview_path_cell_data_func (GtkTreeViewColumn *col, 
+listview_path_cell_data_func (GtkTreeViewColumn *col,
                               GtkCellRenderer *cell,
                               GtkTreeModel *tree_model,
                               GtkTreeIter *iter,
@@ -154,7 +154,7 @@ listview_path_cell_data_func (GtkTreeViewColumn *col,
 }
 
 static void
-listview_name_cell_data_func (GtkTreeViewColumn *col, 
+listview_name_cell_data_func (GtkTreeViewColumn *col,
                               GtkCellRenderer *cell,
                               GtkTreeModel *tree_model,
                               GtkTreeIter *iter,

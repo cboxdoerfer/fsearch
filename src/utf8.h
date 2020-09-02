@@ -184,9 +184,9 @@ utf8_nonnull utf8_pure utf8_weak void *utf8valid(const void *str);
 utf8_nonnull utf8_weak void *
 utf8codepoint(const void *utf8_restrict str,
               utf8_int32_t *utf8_restrict out_codepoint);
-			  
+
 // Calculates the size of the next utf8 codepoint in str.
-utf8_nonnull utf8_weak size_t utf8codepointcalcsize( const void* utf8_restrict str );			  
+utf8_nonnull utf8_weak size_t utf8codepointcalcsize( const void* utf8_restrict str );
 
 // Returns the size of the given codepoint in bytes.
 utf8_weak size_t utf8codepointsize(utf8_int32_t chr);
@@ -382,7 +382,7 @@ size_t utf8cspn(const void *src, const void *reject) {
     // found a match at the end of *r, so didn't get a chance to test it
     if (0 < offset) {
         return chars;
-    } 
+    }
 
     // the current utf8 codepoint in src did not match reject, but src
     // could have been partway through a utf8 codepoint, so we need to

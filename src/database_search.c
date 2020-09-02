@@ -390,7 +390,7 @@ db_search_build_token (FsearchQuery *q)
     }
 
     // whitespace is regarded as AND so split query there in multiple token
-    char **query_split = fs_str_split (q->text); 
+    char **query_split = fs_str_split (q->text);
     assert (query_split != NULL);
 
     uint32_t tmp_token_len = g_strv_length (query_split);
