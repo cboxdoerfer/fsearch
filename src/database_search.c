@@ -454,9 +454,9 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
 
-    timer_start ();
-    const uint32_t num_threads = fsearch_thread_pool_get_num_threads (search->pool);
+    timer_start ();    
     const uint32_t num_entries = db_get_num_entries (q->db);
+    const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads (search->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     search_thread_context_t *thread_data[num_threads];
