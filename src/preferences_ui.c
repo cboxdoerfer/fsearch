@@ -187,6 +187,10 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
                                                                   "restore_win_size_button",
                                                                   pref.config->restore_window_size);
 
+    GtkToggleButton *restore_sort_order_button = toggle_button_get (builder,
+                                                                    "restore_sort_order_button",
+                                                                    pref.config->restore_sort_order);
+
     GtkToggleButton *restore_column_config_button = toggle_button_get (builder,
                                                                        "restore_column_config_button",
                                                                        pref.config->restore_column_config);
@@ -340,6 +344,7 @@ preferences_ui_launch (FsearchConfig *config, GtkWindow *window, bool *update_db
         pref.config->search_as_you_type = gtk_toggle_button_get_active (search_as_you_type_button);
         pref.config->enable_dark_theme = gtk_toggle_button_get_active (enable_dark_theme_button);
         pref.config->restore_column_config = gtk_toggle_button_get_active (restore_column_config_button);
+        pref.config->restore_sort_order = gtk_toggle_button_get_active (restore_sort_order_button);
         pref.config->double_click_path = gtk_toggle_button_get_active (double_click_path_button);
         pref.config->enable_list_tooltips = gtk_toggle_button_get_active (show_tooltips_button);
         pref.config->restore_window_size = gtk_toggle_button_get_active (restore_win_size_button);

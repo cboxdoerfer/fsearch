@@ -811,7 +811,9 @@ create_view_and_model (FsearchApplicationWindow *app)
                                  app);
         }
     }
-    list_model_sort_init (app->list_model, config->sort_by, config->sort_ascending);
+    list_model_sort_init (app->list_model,
+                          config->restore_sort_order ? config->sort_by : "Name",
+                          config->restore_sort_order ? config->sort_ascending : true);
 
     gtk_tree_view_set_activate_on_single_click (list, config->single_click_open);
 
