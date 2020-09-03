@@ -108,20 +108,6 @@ static gboolean list_model_sortable_has_default_sort_func (GtkTreeSortable *sort
 
 static GObjectClass *parent_class = NULL;  /* GObject stuff - nothing to worry about */
 
-//static void
-//reverse_results (DatabaseEntry **list, guint32 length)
-//{
-//    DatabaseEntry *temp = NULL;
-//    guint32 mid = length/2;
-//    for (guint32 i = 0; i < mid; i++) {
-//        temp = list[i];
-//        list[i] = list[length-i-1];
-//        list[i]->results_pos = i;
-//        list[length-i-1] = temp;
-//        list[length-i-1]->results_pos = length-i-1;
-//    }
-//}
-//
 static gchar *
 get_mimetype (const gchar *path)
 {
@@ -832,12 +818,7 @@ list_model_sortable_set_sort_column_id (GtkTreeSortable *sortable,
     list_model->sort_id = sort_col_id;
     list_model->sort_order  = order;
 
-    if (0 && prev_sort_id == sort_col_id && prev_order != order) {
-        //reverse_results (list_model->results, list_model->results->len);
-    }
-    else {
-        list_model_sort (list_model);
-    }
+    list_model_sort (list_model);
 
     /* emit "sort-column-changed" signal to tell any tree views
      *  that the sort column has changed (so the little arrow
