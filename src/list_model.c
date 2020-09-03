@@ -1032,6 +1032,33 @@ list_model_sort_init (ListModel *list_model, char *sort_by, bool sort_ascending)
     }
 }
 
+static void
+list_model_apply_sort (ListModel *list_model)
+{
+    /* let other objects know about the new order */
+    gint *neworder = g_new0(gint, list_model->results->len);
+
+    for (uint32_t i = 0; i < list_model->results->len; ++i) {
+        /* Note that the API reference might be wrong about
+         * this, see bug number 124790 on bugs.gnome.org.
+         * Both will work, but one will give you 'jumpy'
+         * selections after row reordering. */
+        /* neworder[(list_model->rows[i])->pos] = i; */
+        DatabaseSearchEntry *entry = g_ptr_array_index (list_model->results, i);
+        neworder[i] = db_search_entry_get_pos (entry);
+        db_search_entry_set_pos (entry, i);
+    }
+
+    GtkTreePath *path = gtk_tree_path_new();
+    gtk_tree_model_rows_reordered(GTK_TREE_MODEL(list_model), path, NULL, neworder);
+
+    gtk_tree_path_free(path);
+    path = NULL;
+
+    g_free(neworder);
+    neworder = NULL;
+}
+
 void
 list_model_sort (ListModel *list_model)
 {
@@ -1054,25 +1081,8 @@ list_model_sort (ListModel *list_model)
                                 (GCompareDataFunc) list_model_qsort_compare_func,
                                 list_model);
 
-    /* let other objects know about the new order */
-    gint *neworder = g_new0(gint, list_model->results->len);
+    list_model_apply_sort (list_model);
 
-    for (uint32_t i = 0; i < list_model->results->len; ++i) {
-        /* Note that the API reference might be wrong about
-         * this, see bug number 124790 on bugs.gnome.org.
-         * Both will work, but one will give you 'jumpy'
-         * selections after row reordering. */
-        /* neworder[(list_model->rows[i])->pos] = i; */
-        DatabaseSearchEntry *entry = g_ptr_array_index (list_model->results, i);
-        neworder[i] = db_search_entry_get_pos (entry);
-        db_search_entry_set_pos (entry, i);
-    }
-
-    GtkTreePath *path = gtk_tree_path_new();
-    gtk_tree_model_rows_reordered(GTK_TREE_MODEL(list_model), path, NULL, neworder);
-
-    gtk_tree_path_free(path);
-    g_free(neworder);
     fsearch_timer_stop (timer, "[list_model] sort finished in %.2f ms\n");
     timer = NULL;
 }
