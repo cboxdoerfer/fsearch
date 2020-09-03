@@ -1078,6 +1078,16 @@ list_model_sort (ListModel *list_model)
 }
 
 void
+list_model_update_sort (ListModel *list_model)
+{
+    if (list_model->sort_id == SORT_ID_NAME
+        && list_model->sort_order == GTK_SORT_ASCENDING) {
+        return;
+    }
+    list_model_sort (list_model);
+}
+
+void
 list_model_set_results (ListModel *list, GPtrArray *results)
 {
     list->results = results;

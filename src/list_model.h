@@ -105,6 +105,9 @@ void
 list_model_sort (ListModel *list_model);
 
 void
+list_model_update_sort (ListModel *list_model);
+
+void
 list_model_sort_init (ListModel *list_model, char *sort_by, bool sort_ascending);
 
 void

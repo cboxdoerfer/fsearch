@@ -382,7 +382,7 @@ update_model_cb (gpointer user_data)
             win->search->num_folders = result->num_folders;;
             win->search->num_files = result->num_files;
             num_results = results->len;
-            list_model_sort (win->list_model);
+            list_model_update_sort (win->list_model);
             if (win->query_highlight) {
                 fsearch_query_highlight_free (win->query_highlight);
                 win->query_highlight = NULL;
