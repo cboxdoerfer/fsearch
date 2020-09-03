@@ -29,6 +29,7 @@
 
 #include "database_search.h"
 #include "fsearch_window.h"
+#include "fsearch_timer.h"
 #include "string_utils.h"
 #include "debug.h"
 #include "utf8.h"
@@ -236,28 +237,6 @@ db_search_worker (void * user_data)
     return NULL;
 }
 
-#ifdef DEBUG
-static struct timeval tm1;
-#endif
-
-static inline void timer_start()
-{
-#ifdef DEBUG
-    gettimeofday(&tm1, NULL);
-#endif
-}
-
-static inline void timer_stop()
-{
-#ifdef DEBUG
-    struct timeval tm2;
-    gettimeofday(&tm2, NULL);
-
-    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
-    trace ("%llu ms\n", t);
-#endif
-}
-
 static uint32_t
 search_regex (const char *haystack, const char *needle, void *data)
 {
@@ -454,7 +433,7 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
 {
     assert (search != NULL);
 
-    timer_start ();    
+    GTimer *timer = fsearch_timer_start ();    
     const uint32_t num_entries = db_get_num_entries (q->db);
     const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads (search->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;
@@ -549,8 +528,8 @@ db_search (DatabaseSearch *search, FsearchQuery *q)
     free (token);
     token = NULL;
 
-    trace ("[search] search finished in ");
-    timer_stop ();
+    fsearch_timer_stop (timer, "[search] search finished in %.2f ms\n");
+    timer = NULL;
 
     DatabaseSearchResult *result_ctx = calloc (1, sizeof (DatabaseSearchResult));
     assert (result_ctx != NULL);

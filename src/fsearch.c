@@ -32,6 +32,7 @@
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "fsearch_limits.h"
+#include "fsearch_timer.h"
 #include "resources.h"
 #include "clipboard.h"
 #include "utils.h"
@@ -294,28 +295,6 @@ update_database_signal_emit_cb (gpointer user_data)
     return G_SOURCE_REMOVE;
 }
 
-#ifdef DEBUG
-static struct timeval tm1;
-#endif
-
-static inline void timer_start()
-{
-#ifdef DEBUG
-    gettimeofday(&tm1, NULL);
-#endif
-}
-
-static inline void timer_stop()
-{
-#ifdef DEBUG
-    struct timeval tm2;
-    gettimeofday(&tm2, NULL);
-
-    unsigned long long t = 1000 * (tm2.tv_sec - tm1.tv_sec) + (tm2.tv_usec - tm1.tv_usec) / 1000;
-    trace ("%llu ms\n", t);
-#endif
-}
-
 static void
 update_database_thread (bool rescan)
 {
@@ -333,7 +312,7 @@ update_database_thread (bool rescan)
         g_idle_add (load_database_signal_emit_cb, app);
     }
 
-    timer_start ();
+    GTimer *timer = fsearch_timer_start ();
 
     g_mutex_lock (&app->mutex);
     FsearchDatabase *db = db_new (app->config->locations,
@@ -350,8 +329,9 @@ update_database_thread (bool rescan)
         db_load_from_file (db, NULL, NULL);
     }
 
-    trace ("[database_update] finished in : ");
-    timer_stop ();
+    fsearch_timer_stop (timer , "[database_update] finished in %.2f ms\n");
+    timer = NULL;
+
     db_unlock (db);
 
 
