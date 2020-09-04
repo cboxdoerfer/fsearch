@@ -25,7 +25,7 @@
 typedef struct _FsearchThreadPool FsearchThreadPool;
 typedef GThreadFunc ThreadFunc;
 
-typedef enum {
+typedef enum _FsearchThreadStatus {
     THREAD_IDLE,
     THREAD_BUSY,
     THREAD_FINISHED

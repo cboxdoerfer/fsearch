@@ -276,7 +276,7 @@ fsearch_application_window_finalize (GObject *object)
     G_OBJECT_CLASS (fsearch_application_window_parent_class)->finalize (object);
 }
 
-typedef enum {
+typedef enum _FsearchOverlay {
     NO_SEARCH_RESULTS_OVERLAY,
     NO_SEARCH_QUERY_OVERLAY,
     NO_DATABASE_OVERLAY,
@@ -473,7 +473,7 @@ perform_search (FsearchApplicationWindow *win)
     return FALSE;
 }
 
-typedef struct {
+typedef struct _count_results_ctx {
     uint32_t num_folders;
     uint32_t num_files;
 } count_results_ctx;

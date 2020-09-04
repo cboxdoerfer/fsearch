@@ -35,7 +35,7 @@ enum {
     DB_SEARCH_MODE_REGEX = 1,
 };
 
-typedef struct
+typedef struct _DatabaseSearchResult
 {
     FsearchDatabase *db;
     GPtrArray *results;
