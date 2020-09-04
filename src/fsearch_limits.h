@@ -21,6 +21,6 @@
 #include <limits.h>
 
 #ifndef PATH_MAX
-#define	PATH_MAX 4096 /* max # of characters in a path name */
+#define PATH_MAX 4096 /* max # of characters in a path name */
 #endif
 

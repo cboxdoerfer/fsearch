@@ -18,21 +18,21 @@
 
 #pragma once
 
+#include "btree.h"
 #include <glib.h>
 #include <stdbool.h>
-#include "btree.h"
 
 gboolean
-build_path (gchar *dest, size_t dest_len, const gchar *path, const gchar *name);
+build_path(gchar *dest, size_t dest_len, const gchar *path, const gchar *name);
 
 bool
-node_move_to_trash (BTreeNode *node);
+node_move_to_trash(BTreeNode *node);
 
 bool
-node_delete (BTreeNode *node);
+node_delete(BTreeNode *node);
 
 bool
-launch_node (BTreeNode *node);
+launch_node(BTreeNode *node);
 
 bool
-launch_node_path (BTreeNode *node, const char *cmd);
+launch_node_path(BTreeNode *node, const char *cmd);

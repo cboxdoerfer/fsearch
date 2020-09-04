@@ -21,7 +21,7 @@
 #include <gtk/gtk.h>
 
 GdkPixbuf *
-iconstore_get_pixbuf (GFileInfo * file_info);
+iconstore_get_pixbuf(GFileInfo *file_info);
 
 void
-iconstore_clear ();
+iconstore_clear();

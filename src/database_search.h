@@ -18,13 +18,13 @@
 
 #pragma once
 
-#include <stdint.h>
 #include "array.h"
 #include "btree.h"
-#include "query.h"
 #include "database.h"
 #include "fsearch_filter.h"
 #include "fsearch_thread_pool.h"
+#include "query.h"
+#include <stdint.h>
 
 typedef struct _DatabaseSearch DatabaseSearch;
 typedef struct _DatabaseSearchEntry DatabaseSearchEntry;
@@ -35,8 +35,7 @@ enum {
     DB_SEARCH_MODE_REGEX = 1,
 };
 
-typedef struct _DatabaseSearchResult
-{
+typedef struct _DatabaseSearchResult {
     FsearchDatabase *db;
     GPtrArray *results;
     void *cb_data;
@@ -44,8 +43,7 @@ typedef struct _DatabaseSearchResult
     uint32_t num_files;
 } DatabaseSearchResult;
 
-struct _DatabaseSearch
-{
+struct _DatabaseSearch {
     GPtrArray *results;
     FsearchThreadPool *pool;
 
@@ -60,38 +58,38 @@ struct _DatabaseSearch
 };
 
 void
-db_search_free (DatabaseSearch *search);
+db_search_free(DatabaseSearch *search);
 
 DatabaseSearch *
-db_search_new (FsearchThreadPool *pool);
+db_search_new(FsearchThreadPool *pool);
 
 BTreeNode *
-db_search_entry_get_node (DatabaseSearchEntry *entry);
+db_search_entry_get_node(DatabaseSearchEntry *entry);
 
 uint32_t
-db_search_entry_get_pos (DatabaseSearchEntry *entry);
+db_search_entry_get_pos(DatabaseSearchEntry *entry);
 
 void
-db_search_entry_set_pos (DatabaseSearchEntry *entry, uint32_t pos);
+db_search_entry_set_pos(DatabaseSearchEntry *entry, uint32_t pos);
 
 void
-db_search_results_clear (DatabaseSearch *search);
+db_search_results_clear(DatabaseSearch *search);
 
 uint32_t
-db_search_get_num_results (DatabaseSearch *search);
+db_search_get_num_results(DatabaseSearch *search);
 
 uint32_t
-db_search_get_num_files (DatabaseSearch *search);
+db_search_get_num_files(DatabaseSearch *search);
 
 uint32_t
-db_search_get_num_folders (DatabaseSearch *search);
+db_search_get_num_folders(DatabaseSearch *search);
 
 GPtrArray *
-db_search_get_results (DatabaseSearch *search);
+db_search_get_results(DatabaseSearch *search);
 
 void
-db_search_remove_entry (DatabaseSearch *search, DatabaseSearchEntry *entry);
+db_search_remove_entry(DatabaseSearch *search, DatabaseSearchEntry *entry);
 
 void
-db_search_queue (DatabaseSearch *search, FsearchQuery *query);
+db_search_queue(DatabaseSearch *search, FsearchQuery *query);
 

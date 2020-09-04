@@ -18,24 +18,24 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
 #include "database.h"
 #include "database_search.h"
+#include <gtk/gtk.h>
 
 /* Some boilerplate GObject defines. 'klass' is used
  *   instead of 'class', because 'class' is a C++ keyword */
 
-#define LIST_MODEL_TYPE            (list_model_get_type ())
-#define LIST_MODEL(obj)            (G_TYPE_CHECK_INSTANCE_CAST ((obj), LIST_MODEL_TYPE, ListModel))
-#define LIST_MODEL_CLASS(klass)    (G_TYPE_CHECK_CLASS_CAST ((klass),  LIST_MODEL_TYPE, ListModelClass))
-#define IS_LIST_MODEL(obj)         (G_TYPE_CHECK_INSTANCE_TYPE ((obj), LIST_MODEL_TYPE))
-#define IS_LIST_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE ((klass),  LIST_MODEL_TYPE))
-#define LIST_MODEL_GET_CLASS(obj)  (G_TYPE_INSTANCE_GET_CLASS ((obj),  LIST_MODEL_TYPE, ListModelClass))
+#define LIST_MODEL_TYPE (list_model_get_type())
+#define LIST_MODEL(obj) (G_TYPE_CHECK_INSTANCE_CAST((obj), LIST_MODEL_TYPE, ListModel))
+#define LIST_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), LIST_MODEL_TYPE, ListModelClass))
+#define IS_LIST_MODEL(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), LIST_MODEL_TYPE))
+#define IS_LIST_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), LIST_MODEL_TYPE))
+#define LIST_MODEL_GET_CLASS(obj)                                                                  \
+    (G_TYPE_INSTANCE_GET_CLASS((obj), LIST_MODEL_TYPE, ListModelClass))
 
 /* The data columns that we export via the tree model interface */
 
-enum
-{
+enum {
     LIST_MODEL_COL_RECORD = 0,
     LIST_MODEL_COL_ICON,
     LIST_MODEL_COL_NAME,
@@ -46,8 +46,7 @@ enum
     LIST_MODEL_N_COLUMNS,
 };
 
-enum
-{
+enum {
     SORT_ID_NONE = 0,
     SORT_ID_NAME,
     SORT_ID_PATH,
@@ -55,7 +54,6 @@ enum
     SORT_ID_SIZE,
     SORT_ID_CHANGED,
 };
-
 
 typedef struct _ListModelRecord ListModelRecord;
 typedef struct _ListModel ListModel;
@@ -68,9 +66,8 @@ typedef struct _ListModelClass ListModelClass;
  *             crucial that 'parent' is the first member of the
  *             structure.                                          */
 
-struct _ListModel
-{
-    GObject parent;      /* this MUST be the first member */
+struct _ListModel {
+    GObject parent; /* this MUST be the first member */
 
     GPtrArray *results;
 
@@ -82,37 +79,34 @@ struct _ListModel
     gint sort_id;
     GtkSortType sort_order;
 
-    gint stamp;       /* Random integer to check whether an iter belongs to our model */
+    gint stamp; /* Random integer to check whether an iter belongs to our model
+                 */
 };
-
-
 
 /* ListModelClass: more boilerplate GObject stuff */
 
-struct _ListModelClass
-{
+struct _ListModelClass {
     GObjectClass parent_class;
 };
 
-
 GType
-list_model_get_type (void);
+list_model_get_type(void);
 
 ListModel *
-list_model_new (void);
+list_model_new(void);
 
 void
-list_model_sort (ListModel *list_model);
+list_model_sort(ListModel *list_model);
 
 void
-list_model_update_sort (ListModel *list_model);
+list_model_update_sort(ListModel *list_model);
 
 void
-list_model_sort_init (ListModel *list_model, char *sort_by, bool sort_ascending);
+list_model_sort_init(ListModel *list_model, char *sort_by, bool sort_ascending);
 
 void
-list_model_set_results (ListModel *list, GPtrArray *results);
+list_model_set_results(ListModel *list, GPtrArray *results);
 
 void
-list_model_remove_entry (ListModel *list, DatabaseSearch *search, DatabaseSearchEntry *entry);
+list_model_remove_entry(ListModel *list, DatabaseSearch *search, DatabaseSearchEntry *entry);
 

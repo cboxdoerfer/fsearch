@@ -18,43 +18,44 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #pragma once
 
-#include <stdbool.h>
-#include <inttypes.h>
-#include <glib.h>
-#include <gtk/gtk.h>
 #include "database.h"
 #include "fsearch_config.h"
 #include "fsearch_thread_pool.h"
 #include "glib_support.h"
+#include <glib.h>
+#include <gtk/gtk.h>
+#include <inttypes.h>
+#include <stdbool.h>
 
 G_BEGIN_DECLS
 
 #define FSEARCH_APPLICATION_TYPE (fsearch_application_get_type())
-#define FSEARCH_APPLICATION_DEFAULT (FSEARCH_APPLICATION (g_application_get_default()))
+#define FSEARCH_APPLICATION_DEFAULT (FSEARCH_APPLICATION(g_application_get_default()))
 
-G_DECLARE_FINAL_TYPE (FsearchApplication, fsearch_application, FSEARCH, APPLICATION, GtkApplication)
+G_DECLARE_FINAL_TYPE(FsearchApplication, fsearch_application, FSEARCH, APPLICATION, GtkApplication)
 
-FsearchApplication     *fsearch_application_new                  (void);
+FsearchApplication *
+fsearch_application_new(void);
 
 G_END_DECLS
 
 void
-fsearch_database_update (bool fullscan);
+fsearch_database_update(bool fullscan);
 
 FsearchDatabase *
-fsearch_application_get_db (FsearchApplication *fsearch);
+fsearch_application_get_db(FsearchApplication *fsearch);
 
 FsearchConfig *
-fsearch_application_get_config (FsearchApplication *fsearch);
+fsearch_application_get_config(FsearchApplication *fsearch);
 
 void
-fsearch_application_state_lock (FsearchApplication *fsearch);
+fsearch_application_state_lock(FsearchApplication *fsearch);
 
 void
-fsearch_application_state_unlock (FsearchApplication *fsearch);
+fsearch_application_state_unlock(FsearchApplication *fsearch);
 
 void
-fsearch_application_update_listview_config (void);
+fsearch_application_update_listview_config(void);
 
 FsearchThreadPool *
-fsearch_application_get_thread_pool (FsearchApplication *fsearch);
+fsearch_application_get_thread_pool(FsearchApplication *fsearch);

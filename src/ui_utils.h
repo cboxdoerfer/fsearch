@@ -21,8 +21,8 @@
 #include <gtk/gtk.h>
 
 gint
-ui_utils_run_gtk_dialog (GtkWidget *parent,
-                         GtkMessageType type,
-                         GtkButtonsType buttons,
-                         const gchar *primary_text,
-                         const gchar *sec_text);
+ui_utils_run_gtk_dialog(GtkWidget *parent,
+                        GtkMessageType type,
+                        GtkButtonsType buttons,
+                        const gchar *primary_text,
+                        const gchar *sec_text);

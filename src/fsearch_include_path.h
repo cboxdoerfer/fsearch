@@ -14,11 +14,12 @@ typedef struct _FsearchIncludePath {
 } FsearchIncludePath;
 
 FsearchIncludePath *
-fsearch_include_path_new (const char *path, bool search_in, bool update, uint32_t num_items, time_t last_updated);
+fsearch_include_path_new(
+    const char *path, bool search_in, bool update, uint32_t num_items, time_t last_updated);
 
 FsearchIncludePath *
-fsearch_include_path_copy (FsearchIncludePath *src);
+fsearch_include_path_copy(FsearchIncludePath *src);
 
 void
-fsearch_include_path_free (FsearchIncludePath *fs_path);
+fsearch_include_path_free(FsearchIncludePath *fs_path);
 

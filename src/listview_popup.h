@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#pragma once
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -23,4 +25,4 @@
 #include <gtk/gtk.h>
 
 void
-listview_popup_menu (GtkWidget *widget, GdkEventButton *event);
+listview_popup_menu(GtkWidget *widget, GdkEventButton *event);

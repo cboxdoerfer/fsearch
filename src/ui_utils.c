@@ -19,33 +19,27 @@
 #include "ui_utils.h"
 
 gint
-ui_utils_run_gtk_dialog (GtkWidget *parent,
-                         GtkMessageType type,
-                         GtkButtonsType buttons,
-                         const gchar *primary_text,
-                         const gchar *sec_text)
-{
+ui_utils_run_gtk_dialog(GtkWidget *parent,
+                        GtkMessageType type,
+                        GtkButtonsType buttons,
+                        const gchar *primary_text,
+                        const gchar *sec_text) {
     if (!parent || !primary_text) {
         return GTK_RESPONSE_CANCEL;
     }
 
-    GtkWidget *dialog = gtk_message_dialog_new (GTK_WINDOW (parent),
-                                                GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                type,
-                                                buttons,
-                                                primary_text, NULL);
+    GtkWidget *dialog = gtk_message_dialog_new(
+        GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT, type, buttons, primary_text, NULL);
 
     if (sec_text) {
-        gtk_message_dialog_format_secondary_text (GTK_MESSAGE_DIALOG (dialog),
-                                                  sec_text, NULL);
+        gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), sec_text, NULL);
     }
 
-    gtk_window_set_title (GTK_WINDOW (dialog), "");
+    gtk_window_set_title(GTK_WINDOW(dialog), "");
 
-    gint response = gtk_dialog_run (GTK_DIALOG (dialog));
-    gtk_widget_destroy (dialog);
+    gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+    gtk_widget_destroy(dialog);
 
     return response;
 }
-
 

@@ -10,11 +10,11 @@ typedef struct _FsearchExcludePath {
 } FsearchExcludePath;
 
 FsearchExcludePath *
-fsearch_exclude_path_new (const char *path, bool enabled);
+fsearch_exclude_path_new(const char *path, bool enabled);
 
 FsearchExcludePath *
-fsearch_exclude_path_copy (FsearchExcludePath *src);
+fsearch_exclude_path_copy(FsearchExcludePath *src);
 
 void
-fsearch_exclude_path_free (FsearchExcludePath *fs_path);
+fsearch_exclude_path_free(FsearchExcludePath *fs_path);
 

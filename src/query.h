@@ -18,15 +18,14 @@
 
 #pragma once
 
-#include <stdbool.h>
 #include <glib.h>
 #include <pango/pango.h>
+#include <stdbool.h>
 
 #include "database.h"
 #include "fsearch_filter.h"
 
-typedef struct _FsearchQueryHighlightToken
-{
+typedef struct _FsearchQueryHighlightToken {
     GRegex *regex;
 
     bool is_supported_glob;
@@ -40,8 +39,7 @@ typedef struct _FsearchQueryHighlightToken
     size_t query_len;
 } FsearchQueryHighlightToken;
 
-typedef struct _FsearchQueryHighlight
-{
+typedef struct _FsearchQueryHighlight {
     GList *token;
 
     bool auto_search_in_path;
@@ -51,8 +49,7 @@ typedef struct _FsearchQueryHighlight
     bool match_case;
 } FsearchQueryHighlight;
 
-typedef struct _FsearchQuery
-{
+typedef struct _FsearchQuery {
     char *text;
     FsearchDatabase *db;
     FsearchFilter filter;
@@ -73,35 +70,35 @@ typedef struct _FsearchQuery
 } FsearchQuery;
 
 FsearchQuery *
-fsearch_query_new (const char *text,
-                   FsearchDatabase *db,
-                   FsearchFilter filter,
-                   void (*callback)(void *),
-                   void *callback_data,
-                   void (*callback_cancelled)(void *),
-                   void *callback_cancelled_data,
-                   uint32_t max_results,
-                   bool match_case,
-                   bool auto_match_case,
-                   bool enable_regex,
-                   bool auto_search_in_path,
-                   bool search_in_path,
-                   bool pass_on_empty_query);
+fsearch_query_new(const char *text,
+                  FsearchDatabase *db,
+                  FsearchFilter filter,
+                  void (*callback)(void *),
+                  void *callback_data,
+                  void (*callback_cancelled)(void *),
+                  void *callback_cancelled_data,
+                  uint32_t max_results,
+                  bool match_case,
+                  bool auto_match_case,
+                  bool enable_regex,
+                  bool auto_search_in_path,
+                  bool search_in_path,
+                  bool pass_on_empty_query);
 
 void
-fsearch_query_free (FsearchQuery *query);
+fsearch_query_free(FsearchQuery *query);
 
 PangoAttrList *
-fsearch_query_highlight_match (FsearchQueryHighlight *q, const char *input);
+fsearch_query_highlight_match(FsearchQueryHighlight *q, const char *input);
 
 FsearchQueryHighlight *
-fsearch_query_highlight_new (const char *text,
-                              bool enable_regex,
-                              bool match_case,
-                              bool auto_match_case,
-                              bool auto_search_in_path,
-                              bool search_in_path);
+fsearch_query_highlight_new(const char *text,
+                            bool enable_regex,
+                            bool match_case,
+                            bool auto_match_case,
+                            bool auto_search_in_path,
+                            bool search_in_path);
 
 void
-fsearch_query_highlight_free (FsearchQueryHighlight *query_highlight);
+fsearch_query_highlight_free(FsearchQueryHighlight *query_highlight);
 

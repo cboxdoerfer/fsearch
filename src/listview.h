@@ -18,22 +18,23 @@
 
 #pragma once
 
-#include <gtk/gtk.h>
-#include <stdint.h>
 #include "fsearch_config.h"
 #include "fsearch_window.h"
+#include <gtk/gtk.h>
+#include <stdint.h>
 
 void
-listview_add_column (GtkTreeView *view, uint32_t col_type, int32_t size, int32_t pos, FsearchApplicationWindow *win);
+listview_add_column(
+    GtkTreeView *view, uint32_t col_type, int32_t size, int32_t pos, FsearchApplicationWindow *win);
 
 void
-listview_add_default_columns (GtkTreeView *view, FsearchApplicationWindow *win);
+listview_add_default_columns(GtkTreeView *view, FsearchApplicationWindow *win);
 
 void
-listview_remove_column_at_pos (GtkTreeView *view, int32_t pos);
+listview_remove_column_at_pos(GtkTreeView *view, int32_t pos);
 
 void
-listview_remove_column (GtkTreeView *view, uint32_t col_type);
+listview_remove_column(GtkTreeView *view, uint32_t col_type);
 
 uint32_t
-listview_column_get_pos (GtkTreeView *view, uint32_t col_type);
+listview_column_get_pos(GtkTreeView *view, uint32_t col_type);
