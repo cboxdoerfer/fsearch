@@ -857,6 +857,46 @@ list_model_sortable_has_default_sort_func (GtkTreeSortable *sortable)
 }
 
 static gint
+list_model_compare_path (BTreeNode *a, BTreeNode *b)
+{
+    if (!a || !b) {
+        return 0;
+    }
+    const int32_t a_depth = btree_node_depth (a);
+    const int32_t b_depth = btree_node_depth (b);
+    char *a_parents[a_depth + 1];
+    char *b_parents[b_depth + 1];
+    a_parents[a_depth] = NULL;
+    b_parents[b_depth] = NULL;
+
+    BTreeNode *temp = a;
+    for (int32_t i = a_depth - 1; i >= 0 && temp; i--) {
+        a_parents[i] = temp->name;
+        temp = temp->parent;
+    }
+    temp = b;
+    for (int32_t i = b_depth - 1; i >= 0 && temp; i--) {
+        b_parents[i] = temp->name;
+        temp = temp->parent;
+    }
+
+    uint32_t i = 0;
+    char *a_name = a_parents[i];
+    char *b_name = b_parents[i];
+
+    while (a_name && b_name) {
+        int res = strverscmp (a_name, b_name);
+        if (res != 0) {
+            return res;
+        }
+        i++;
+        a_name = a_parents[i];
+        b_name = b_parents[i];
+    }
+    return a_depth - b_depth;
+}
+
+static gint
 list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearchEntry *b)
 {
     BTreeNode *node_a = db_search_entry_get_node (a);
@@ -904,9 +944,7 @@ list_model_compare_records (gint sort_id, DatabaseSearchEntry *a, DatabaseSearch
                     return is_dir_b - is_dir_a;
                 }
 
-                btree_node_get_path (node_a, path_a, sizeof (path_a));
-                btree_node_get_path (node_b, path_b, sizeof (path_b));
-                return strverscmp (path_a, path_b);
+                return list_model_compare_path (node_a->parent, node_b->parent);
             }
         case SORT_ID_TYPE:
             {
