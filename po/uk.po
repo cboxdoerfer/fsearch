@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-01 16:56+0200\n"
-"PO-Revision-Date: 2020-08-30 15:59+0000\n"
+"PO-Revision-Date: 2020-09-04 13:36+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.2.1-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
 #, c-format
@@ -279,9 +279,10 @@ msgid "Hide results when search is empty"
 msgstr "Ховати результати, якщо поле пошуку порожнє"
 
 #: src/preferences.ui:444
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "Шукати по шляху, якщо запит містить роздільники"
+msgstr ""
+"Враховувати регістр, якщо запит містить принаймні один символ верхнього "
+"регістру"
 
 #: src/preferences.ui:465 src/fsearch.glade:821
 msgid "Search"
