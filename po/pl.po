@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-01 16:56+0200\n"
+"POT-Creation-Date: 2020-09-03 18:28+0200\n"
 "PO-Revision-Date: 2020-09-02 15:36+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,38 +20,38 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
+#: src/fsearch_window.c:106 src/fsearch_window.c:386 src/fsearch_window.c:855
 #, c-format
 msgid "%'d Items"
 msgstr "%'d wyniki"
 
-#: src/fsearch_window.c:662 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:640 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr "Nie udało się otworzyć pliku"
 
-#: src/fsearch_window.c:663 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:641 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr "Czy chcesz aby okno pozostało widoczne?"
 
-#: src/fsearch_window.c:881
+#: src/fsearch_window.c:861
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Ostatnia aktualizacja: %Y-%m-%d % H: %M"
 
-#: src/fsearch_window.c:895 src/overlay.ui:143
+#: src/fsearch_window.c:875 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Ładowania bazy danych…"
 
-#: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:890 src/overlay.ui:213 src/fsearch.glade:1090
 #, c-format
 msgid "Updating Database…"
 msgstr "Aktualizowanie bazy danych…"
 
-#: src/fsearch_window.c:1098
+#: src/fsearch_window.c:1078
 msgid "Background tasks are active."
 msgstr "Zadania w tle są wykonywane."
 
-#: src/fsearch_window.c:1100
+#: src/fsearch_window.c:1080
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -80,19 +80,19 @@ msgstr "Data modyfikacji"
 msgid "Type"
 msgstr "Typ"
 
-#: src/fsearch.c:186
+#: src/fsearch.c:187
 msgid "Show version information"
 msgstr "Pokaż informacje o wersji"
 
-#: src/fsearch.c:193
+#: src/fsearch.c:194
 msgid "Update the database"
 msgstr "Uaktualnij bazę danych"
 
-#: src/fsearch.c:405
+#: src/fsearch.c:385
 msgid "translator-credits"
 msgstr "Daniel Napora <napcok@maboxlinux.org>"
 
-#: src/fsearch.c:406
+#: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
@@ -262,88 +262,94 @@ msgstr "Zamknij"
 msgid "Show highlighted search terms"
 msgstr "Podświetlaj wyszukiwane na liście wyników"
 
-#: src/preferences.ui:356
+#: src/preferences.ui:322
+#, fuzzy
+#| msgid "Remember window size"
+msgid "Remember sort order"
+msgstr "Pamiętaj rozmiar okna"
+
+#: src/preferences.ui:372
 msgid "Interface"
 msgstr "Interfejs"
 
-#: src/preferences.ui:374
+#: src/preferences.ui:390
 msgid "Limit number of results:"
 msgstr "Ogranicz liczbę wyników:"
 
-#: src/preferences.ui:402
+#: src/preferences.ui:418
 msgid "Search in path when query contains path separators"
 msgstr "Wyszukuj w ścieżce, gdy kwerenda zawiera separatory ścieżki"
 
-#: src/preferences.ui:416
+#: src/preferences.ui:432
 msgid "Search as you type"
 msgstr "Wyszukiwanie podczas pisania"
 
-#: src/preferences.ui:430
+#: src/preferences.ui:446
 msgid "Hide results when search is empty"
 msgstr "Ukryj wyniki gdy kwerenda jest pusta"
 
-#: src/preferences.ui:444
+#: src/preferences.ui:460
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Rozróżniaj wielkość liter, gdy zapytanie zawiera choć jedną wielką literę"
 
-#: src/preferences.ui:465 src/fsearch.glade:821
+#: src/preferences.ui:481 src/fsearch.glade:821
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/preferences.ui:484
+#: src/preferences.ui:500
 msgid "Update database on start"
 msgstr "Uaktualnij bazę danych przy starcie"
 
-#: src/preferences.ui:519 src/preferences.ui:623
+#: src/preferences.ui:535 src/preferences.ui:639
 msgid "Add…"
 msgstr "Dodaj…"
 
-#: src/preferences.ui:535 src/preferences.ui:639
+#: src/preferences.ui:551 src/preferences.ui:655
 msgid "Remove"
 msgstr "Usuń"
 
-#: src/preferences.ui:582
+#: src/preferences.ui:598
 msgid "Follow symbolic links"
 msgstr "Podążaj za dowiązaniami symbolicznymi"
 
-#: src/preferences.ui:599
+#: src/preferences.ui:615
 msgid "Include"
 msgstr "Dołącz"
 
-#: src/preferences.ui:686
+#: src/preferences.ui:702
 msgid "Exclude hidden files and folders"
 msgstr "Wykluczenie ukrytych plików i katalogów"
 
-#: src/preferences.ui:707 src/preferences.ui:720
+#: src/preferences.ui:723 src/preferences.ui:736
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Obsługuje symbole wieloznaczne. Wpisy muszą być oddzielone znakiem ';'"
 
-#: src/preferences.ui:708
+#: src/preferences.ui:724
 msgid "Exclude files:"
 msgstr "Wyklucz pliki:"
 
-#: src/preferences.ui:721
+#: src/preferences.ui:737
 msgid "e.g. \".git;*.tmp\""
 msgstr "np.: \".git; *.tmp\""
 
-#: src/preferences.ui:745
+#: src/preferences.ui:761
 msgid "Exclude"
 msgstr "Wyklucz"
 
-#: src/preferences.ui:768
+#: src/preferences.ui:784
 msgid "Database"
 msgstr "Baza danych"
 
-#: src/preferences.ui:791
+#: src/preferences.ui:807
 msgid "Show warning dialogs when:"
 msgstr "Pokaż ostrzeżenie gdy:"
 
-#: src/preferences.ui:800
+#: src/preferences.ui:816
 msgid "file / folder failed to open"
 msgstr "nie udało się otworzyć pliku / katalogu"
 
-#: src/preferences.ui:821
+#: src/preferences.ui:837
 msgid "Dialogs"
 msgstr "Okna dialogowe"
 

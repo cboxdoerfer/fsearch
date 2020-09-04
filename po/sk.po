@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slovak (FSearch)\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-01 16:56+0200\n"
+"POT-Creation-Date: 2020-09-03 18:28+0200\n"
 "PO-Revision-Date: 2018-01-02 18:35+0000\n"
 "Last-Translator: Dávid Bolvanský <david.bolvansky@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/fsearch/"
@@ -14,38 +14,38 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Weblate 2.19-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:408 src/fsearch_window.c:875
+#: src/fsearch_window.c:106 src/fsearch_window.c:386 src/fsearch_window.c:855
 #, c-format
 msgid "%'d Items"
 msgstr "Počet položiek: %'d"
 
-#: src/fsearch_window.c:662 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:640 src/fsearch_window_actions.c:454
 msgid "Failed to open file"
 msgstr ""
 
-#: src/fsearch_window.c:663 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:641 src/fsearch_window_actions.c:455
 msgid "Do you want to keep the window open?"
 msgstr ""
 
-#: src/fsearch_window.c:881
+#: src/fsearch_window.c:861
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Naposledny aktualizované: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:895 src/overlay.ui:143
+#: src/fsearch_window.c:875 src/overlay.ui:143
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "Načítavanie databázy..."
 
-#: src/fsearch_window.c:910 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:890 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
 msgid "Updating Database…"
 msgstr "Aktualizácia databázy..."
 
-#: src/fsearch_window.c:1098
+#: src/fsearch_window.c:1078
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1100
+#: src/fsearch_window.c:1080
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -72,20 +72,20 @@ msgstr "Dátum zmeny"
 msgid "Type"
 msgstr "Typ"
 
-#: src/fsearch.c:186
+#: src/fsearch.c:187
 msgid "Show version information"
 msgstr ""
 
-#: src/fsearch.c:193
+#: src/fsearch.c:194
 #, fuzzy
 msgid "Update the database"
 msgstr "Aktualizovať databázu"
 
-#: src/fsearch.c:405
+#: src/fsearch.c:385
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:406
+#: src/fsearch.c:386
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Program na vyhľadávanie súborov zameraný na výkon a pokročilé funkcie"
 
@@ -259,92 +259,98 @@ msgstr ""
 msgid "Show highlighted search terms"
 msgstr ""
 
-#: src/preferences.ui:356
+#: src/preferences.ui:322
+#, fuzzy
+#| msgid "Remember window size"
+msgid "Remember sort order"
+msgstr "Zapamätať veľkosť okna"
+
+#: src/preferences.ui:372
 msgid "Interface"
 msgstr "Rozhranie"
 
-#: src/preferences.ui:374
+#: src/preferences.ui:390
 msgid "Limit number of results:"
 msgstr "Limit výsledkov vyhľadávania:"
 
-#: src/preferences.ui:402
+#: src/preferences.ui:418
 msgid "Search in path when query contains path separators"
 msgstr ""
 "Vyhľadávať v umiestnení, ak požiadavka na vyhľadanie obsahuje oddeľovače "
 "ciest"
 
-#: src/preferences.ui:416
+#: src/preferences.ui:432
 msgid "Search as you type"
 msgstr "Vyhľadávať počas písania"
 
-#: src/preferences.ui:430
+#: src/preferences.ui:446
 msgid "Hide results when search is empty"
 msgstr "Skryť výsledky pri prázdnej požiadavke na vyhľadanie"
 
-#: src/preferences.ui:444
+#: src/preferences.ui:460
 #, fuzzy
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Vyhľadávať v umiestnení, ak požiadavka na vyhľadanie obsahuje oddeľovače "
 "ciest"
 
-#: src/preferences.ui:465 src/fsearch.glade:821
+#: src/preferences.ui:481 src/fsearch.glade:821
 msgid "Search"
 msgstr "Vyhľadávanie"
 
-#: src/preferences.ui:484
+#: src/preferences.ui:500
 msgid "Update database on start"
 msgstr "Aktualizovať databázu pri spustení"
 
-#: src/preferences.ui:519 src/preferences.ui:623
+#: src/preferences.ui:535 src/preferences.ui:639
 msgid "Add…"
 msgstr ""
 
-#: src/preferences.ui:535 src/preferences.ui:639
+#: src/preferences.ui:551 src/preferences.ui:655
 msgid "Remove"
 msgstr "Odstrániť"
 
-#: src/preferences.ui:582
+#: src/preferences.ui:598
 msgid "Follow symbolic links"
 msgstr "Sledovať symbolické odkazy"
 
-#: src/preferences.ui:599
+#: src/preferences.ui:615
 msgid "Include"
 msgstr "Zahrnúť"
 
-#: src/preferences.ui:686
+#: src/preferences.ui:702
 msgid "Exclude hidden files and folders"
 msgstr "Vylúčiť skryté súbory a priečinky"
 
-#: src/preferences.ui:707 src/preferences.ui:720
+#: src/preferences.ui:723 src/preferences.ui:736
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Podporuje zástupné znaky. Ďalšie položky musia byť oddelené ';'"
 
-#: src/preferences.ui:708
+#: src/preferences.ui:724
 msgid "Exclude files:"
 msgstr "Vylúčiť súbory:"
 
-#: src/preferences.ui:721
+#: src/preferences.ui:737
 msgid "e.g. \".git;*.tmp\""
 msgstr "napríklad: \".git;*.tmp\""
 
-#: src/preferences.ui:745
+#: src/preferences.ui:761
 msgid "Exclude"
 msgstr "Vylúčiť"
 
-#: src/preferences.ui:768
+#: src/preferences.ui:784
 msgid "Database"
 msgstr "Databáza"
 
-#: src/preferences.ui:791
+#: src/preferences.ui:807
 msgid "Show warning dialogs when:"
 msgstr ""
 
-#: src/preferences.ui:800
+#: src/preferences.ui:816
 msgid "file / folder failed to open"
 msgstr ""
 
-#: src/preferences.ui:821
+#: src/preferences.ui:837
 msgid "Dialogs"
 msgstr ""
 
