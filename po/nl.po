@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-03 18:28+0200\n"
-"PO-Revision-Date: 2020-09-02 15:36+0000\n"
+"PO-Revision-Date: 2020-09-05 13:57+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -258,10 +258,8 @@ msgid "Show highlighted search terms"
 msgstr "Gemarkeerde zoektermen tonen"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Vensterafmetingen onthouden"
+msgstr "Sorteervolgorde onthouden"
 
 #: src/preferences.ui:372
 msgid "Interface"

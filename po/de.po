@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-03 18:28+0200\n"
-"PO-Revision-Date: 2020-09-02 15:36+0000\n"
+"PO-Revision-Date: 2020-09-05 13:57+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -263,10 +263,8 @@ msgid "Show highlighted search terms"
 msgstr "Suchbegriffe in der Ergebnisliste hervorheben"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Fenstergröße wiederherstellen"
+msgstr "Sortierreihenfolge wiederherstellen"
 
 #: src/preferences.ui:372
 msgid "Interface"
