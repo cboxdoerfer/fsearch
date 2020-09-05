@@ -28,7 +28,6 @@
 #include "fsearch_limits.h"
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
-#include "gtk_support.h"
 #include "iconstore.h"
 #include "list_model.h"
 #include "listview.h"
