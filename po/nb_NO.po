@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-08-30 15:59+0000\n"
-"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
+"PO-Revision-Date: 2020-09-09 07:36+0000\n"
+"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
 "Language: nb_NO\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2.1-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, fuzzy, c-format
@@ -124,8 +124,9 @@ msgid "Moving files to trash…"
 msgstr "Flytter filer til papirkurv…"
 
 #: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
+#, fuzzy
 msgid "Active"
-msgstr ""
+msgstr "Aktiv"
 
 #: src/fsearch_preferences_widgets.c:208
 msgid "Update"
@@ -271,10 +272,8 @@ msgid "Show highlighted search terms"
 msgstr "Vis framhevede søkeord"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Husk vindusstørrelse"
+msgstr "Husk sorteringsrekkefølge"
 
 #: src/preferences.ui:372
 msgid "Interface"
