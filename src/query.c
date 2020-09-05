@@ -19,7 +19,6 @@
 #define _GNU_SOURCE
 #include "query.h"
 #include "string_utils.h"
-#include "utf8.h"
 #include <assert.h>
 #include <fnmatch.h>
 #include <stdlib.h>
@@ -207,9 +206,6 @@ fsearch_query_highlight_new(const char *text,
     }
     else {
         gchar *tmp = g_strdup(text);
-        //        if (!match_case) {
-        //            utf8lwr (tmp);
-        //        }
         // remove leading/trailing whitespace
         g_strstrip(tmp);
 

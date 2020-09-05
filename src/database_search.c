@@ -33,7 +33,6 @@
 #include "fsearch_timer.h"
 #include "fsearch_window.h"
 #include "string_utils.h"
-#include "utf8.h"
 
 #define OVECCOUNT 3
 
