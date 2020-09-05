@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-03 18:28+0200\n"
+"POT-Creation-Date: 2020-09-05 17:41+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,110 +20,109 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.2.1-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:386 src/fsearch_window.c:855
+#: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
 msgid "%'d Items"
 msgstr "%'d elementos"
 
-#: src/fsearch_window.c:640 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:608 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "No pudo abrirse el archivo"
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:609 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "¿Desea mantener la ventana abierta?"
 
-#: src/fsearch_window.c:861
+#: src/fsearch_window.c:794
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Última actualización: %d.%m.%Y, %H:%M"
 
-#: src/fsearch_window.c:875 src/overlay.ui:143
+#: src/fsearch_window.c:807 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Cargando base de datos…"
 
-#: src/fsearch_window.c:890 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
 msgid "Updating Database…"
 msgstr "Actualizando base de datos…"
 
-#: src/fsearch_window.c:1078
+#: src/fsearch_window.c:975
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1080
+#: src/fsearch_window.c:978
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
 
-#: src/listview.c:221 src/menus.ui:80
+#: src/listview.c:186 src/menus.ui:80
 msgid "Name"
 msgstr "Nombre"
 
-#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
-#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
+#: src/listview.c:211 src/fsearch_preferences_widgets.c:205
+#: src/fsearch_preferences_widgets.c:246 src/menus.ui:84
 msgid "Path"
 msgstr "Ruta"
 
-#: src/listview.c:288 src/menus.ui:92
+#: src/listview.c:235 src/menus.ui:92
 msgid "Size"
 msgstr "Tamaño"
 
-#: src/listview.c:320 src/menus.ui:96
+#: src/listview.c:253 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Fecha de modificación"
 
-#: src/listview.c:349 src/menus.ui:88
+#: src/listview.c:270 src/menus.ui:88
 msgid "Type"
 msgstr "Tipo"
 
-#: src/fsearch.c:187
+#: src/fsearch.c:173
 msgid "Show version information"
 msgstr "Mostrar información de la versión"
 
-#: src/fsearch.c:194
+#: src/fsearch.c:180
 msgid "Update the database"
 msgstr "Actualizar base de datos"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:358
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:386
+#: src/fsearch.c:360
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Herramienta de búsqueda centrada en la velocidad y con prestaciones avanzadas"
 
-#: src/fsearch_window_actions.c:85
+#: src/fsearch_window_actions.c:78
 #, fuzzy, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "¿En verdad quiere eliminar"
 
-#: src/fsearch_window_actions.c:87
+#: src/fsearch_window_actions.c:80
 #, fuzzy
 msgid "Opening Files…"
 msgstr "Abrir archivo(s)"
 
-#: src/fsearch_window_actions.c:167
+#: src/fsearch_window_actions.c:154
 #, fuzzy, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "¿En verdad quiere eliminar"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Deleting files…"
 msgstr "Eliminando archivos…"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Moving files to trash…"
 msgstr "Enviando archivos a la papelera…"
 
-#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-msgid "Enable"
-msgstr "Activar expresiones regulares"
+#: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
+msgid "Active"
+msgstr ""
 
-#: src/fsearch_preferences_widgets.c:225
+#: src/fsearch_preferences_widgets.c:208
 msgid "Update"
 msgstr ""
 
@@ -536,6 +535,10 @@ msgid ""
 msgstr ""
 "buscar;fsearch;archivos;carpetas;música;video;documentos;encontrar;"
 "herramienta;todo;"
+
+#, fuzzy
+#~ msgid "Enable"
+#~ msgstr "Activar expresiones regulares"
 
 #, fuzzy
 #~| msgid "Loading Database…"

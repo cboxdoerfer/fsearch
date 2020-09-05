@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-03 18:28+0200\n"
+"POT-Creation-Date: 2020-09-05 17:41+0200\n"
 "PO-Revision-Date: 2020-08-30 15:59+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,109 +19,108 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.2.1-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:386 src/fsearch_window.c:855
+#: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 项"
 
-#: src/fsearch_window.c:640 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:608 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "打开文件失败"
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:609 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "是否保持窗口打开？"
 
-#: src/fsearch_window.c:861
+#: src/fsearch_window.c:794
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "最后更新: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:875 src/overlay.ui:143
+#: src/fsearch_window.c:807 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "加载数据库…"
 
-#: src/fsearch_window.c:890 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
 msgid "Updating Database…"
 msgstr "数据库更新中..."
 
-#: src/fsearch_window.c:1078
+#: src/fsearch_window.c:975
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1080
+#: src/fsearch_window.c:978
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
 
-#: src/listview.c:221 src/menus.ui:80
+#: src/listview.c:186 src/menus.ui:80
 msgid "Name"
 msgstr "名称"
 
-#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
-#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
+#: src/listview.c:211 src/fsearch_preferences_widgets.c:205
+#: src/fsearch_preferences_widgets.c:246 src/menus.ui:84
 msgid "Path"
 msgstr "路径"
 
-#: src/listview.c:288 src/menus.ui:92
+#: src/listview.c:235 src/menus.ui:92
 msgid "Size"
 msgstr "大小"
 
-#: src/listview.c:320 src/menus.ui:96
+#: src/listview.c:253 src/menus.ui:96
 msgid "Date Modified"
 msgstr "修改日期"
 
-#: src/listview.c:349 src/menus.ui:88
+#: src/listview.c:270 src/menus.ui:88
 msgid "Type"
 msgstr "类型"
 
-#: src/fsearch.c:187
+#: src/fsearch.c:173
 msgid "Show version information"
 msgstr "显示版本信息"
 
-#: src/fsearch.c:194
+#: src/fsearch.c:180
 msgid "Update the database"
 msgstr "更新数据库"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:358
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:386
+#: src/fsearch.c:360
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
-#: src/fsearch_window_actions.c:85
+#: src/fsearch_window_actions.c:78
 #, fuzzy, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "确认要删除"
 
-#: src/fsearch_window_actions.c:87
+#: src/fsearch_window_actions.c:80
 #, fuzzy
 msgid "Opening Files…"
 msgstr "打开文件"
 
-#: src/fsearch_window_actions.c:167
+#: src/fsearch_window_actions.c:154
 #, fuzzy, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "确认要删除"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Deleting files…"
 msgstr "删除文件中…"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Moving files to trash…"
 msgstr "正在移动文件到回收站…"
 
-#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-msgid "Enable"
-msgstr "启用正则"
+#: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
+msgid "Active"
+msgstr ""
 
-#: src/fsearch_preferences_widgets.c:225
+#: src/fsearch_preferences_widgets.c:208
 msgid "Update"
 msgstr ""
 
@@ -529,6 +528,10 @@ msgstr "system-search"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
+
+#, fuzzy
+#~ msgid "Enable"
+#~ msgstr "启用正则"
 
 #, fuzzy
 #~| msgid "Loading Database…"

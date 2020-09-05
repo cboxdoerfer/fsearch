@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-03 18:28+0200\n"
+"POT-Creation-Date: 2020-09-05 17:41+0200\n"
 "PO-Revision-Date: 2020-09-05 13:57+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,38 +20,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:386 src/fsearch_window.c:855
+#: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Öğe"
 
-#: src/fsearch_window.c:640 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:608 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "Dosya açılamadı"
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:609 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Pencereyi açık tutmak istiyor musunuz?"
 
-#: src/fsearch_window.c:861
+#: src/fsearch_window.c:794
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Son Güncelleme Tarihi: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:875 src/overlay.ui:143
+#: src/fsearch_window.c:807 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Veri Tabanı Yükleniyor…"
 
-#: src/fsearch_window.c:890 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
 #, c-format
 msgid "Updating Database…"
 msgstr "Veri Tabanı Güncelleniyor…"
 
-#: src/fsearch_window.c:1078
+#: src/fsearch_window.c:975
 msgid "Background tasks are active."
 msgstr "Arka plan görevleri etkin."
 
-#: src/fsearch_window.c:1080
+#: src/fsearch_window.c:978
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -59,70 +59,70 @@ msgstr ""
 "Şu anda pencereyi kapatmak mümkün değil.\n"
 "Lütfen biraz bekleyip tekrar deneyin."
 
-#: src/listview.c:221 src/menus.ui:80
+#: src/listview.c:186 src/menus.ui:80
 msgid "Name"
 msgstr "İsim"
 
-#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
-#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
+#: src/listview.c:211 src/fsearch_preferences_widgets.c:205
+#: src/fsearch_preferences_widgets.c:246 src/menus.ui:84
 msgid "Path"
 msgstr "Yol"
 
-#: src/listview.c:288 src/menus.ui:92
+#: src/listview.c:235 src/menus.ui:92
 msgid "Size"
 msgstr "Boyut"
 
-#: src/listview.c:320 src/menus.ui:96
+#: src/listview.c:253 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Düzenlenme Tarihi"
 
-#: src/listview.c:349 src/menus.ui:88
+#: src/listview.c:270 src/menus.ui:88
 msgid "Type"
 msgstr "Tür"
 
-#: src/fsearch.c:187
+#: src/fsearch.c:173
 msgid "Show version information"
 msgstr "Sürüm bilgilerini göster"
 
-#: src/fsearch.c:194
+#: src/fsearch.c:180
 msgid "Update the database"
 msgstr "Veri tabanını güncelle"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:358
 msgid "translator-credits"
 msgstr "Oğuz Ersen"
 
-#: src/fsearch.c:386
+#: src/fsearch.c:360
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
-#: src/fsearch_window_actions.c:85
+#: src/fsearch_window_actions.c:78
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "%d dosyayı gerçekten açmak istiyor musunuz?"
 
-#: src/fsearch_window_actions.c:87
+#: src/fsearch_window_actions.c:80
 msgid "Opening Files…"
 msgstr "Dosyalar Açılıyor…"
 
-#: src/fsearch_window_actions.c:167
+#: src/fsearch_window_actions.c:154
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "%d dosyayı gerçekten kaldırmak istiyor musunuz?"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Deleting files…"
 msgstr "Dosyalar siliniyor…"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Moving files to trash…"
 msgstr "Dosyalar çöp sepetine taşınıyor…"
 
-#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-msgid "Enable"
-msgstr "Etkinleştir"
+#: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
+msgid "Active"
+msgstr ""
 
-#: src/fsearch_preferences_widgets.c:225
+#: src/fsearch_preferences_widgets.c:208
 msgid "Update"
 msgstr "Güncelle"
 
@@ -528,6 +528,9 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "arama;fsearch;dosyalar;klasörler;müzik;video;belgeler;bul;araç;her şey;"
+
+#~ msgid "Enable"
+#~ msgstr "Etkinleştir"
 
 #~ msgid "Loading Database..."
 #~ msgstr "Veri Tabanı Yükleniyor..."

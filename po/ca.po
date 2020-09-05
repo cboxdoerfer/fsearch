@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-03 18:28+0200\n"
+"POT-Creation-Date: 2020-09-05 17:41+0200\n"
 "PO-Revision-Date: 2019-10-12 12:52+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/fsearch/"
@@ -19,114 +19,113 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 3.9-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:386 src/fsearch_window.c:855
+#: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
 msgid "%'d Items"
 msgstr "%'d elements"
 
-#: src/fsearch_window.c:640 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:608 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr ""
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:609 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr ""
 
-#: src/fsearch_window.c:861
+#: src/fsearch_window.c:794
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Darrera actualització: %d %m %Y, %H:%M"
 
-#: src/fsearch_window.c:875 src/overlay.ui:143
+#: src/fsearch_window.c:807 src/overlay.ui:143
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "S’està carregant la base de dades…"
 
-#: src/fsearch_window.c:890 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
 #, fuzzy, c-format
 msgid "Updating Database…"
 msgstr "S’està actualitzant la base de dades…"
 
-#: src/fsearch_window.c:1078
+#: src/fsearch_window.c:975
 msgid "Background tasks are active."
 msgstr ""
 
-#: src/fsearch_window.c:1080
+#: src/fsearch_window.c:978
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
 
-#: src/listview.c:221 src/menus.ui:80
+#: src/listview.c:186 src/menus.ui:80
 msgid "Name"
 msgstr "Nom"
 
-#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
-#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
+#: src/listview.c:211 src/fsearch_preferences_widgets.c:205
+#: src/fsearch_preferences_widgets.c:246 src/menus.ui:84
 msgid "Path"
 msgstr "Camí"
 
-#: src/listview.c:288 src/menus.ui:92
+#: src/listview.c:235 src/menus.ui:92
 msgid "Size"
 msgstr "Mida"
 
-#: src/listview.c:320 src/menus.ui:96
+#: src/listview.c:253 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Data de modificació"
 
-#: src/listview.c:349 src/menus.ui:88
+#: src/listview.c:270 src/menus.ui:88
 msgid "Type"
 msgstr "Tipus"
 
-#: src/fsearch.c:187
+#: src/fsearch.c:173
 msgid "Show version information"
 msgstr ""
 
-#: src/fsearch.c:194
+#: src/fsearch.c:180
 #, fuzzy
 msgid "Update the database"
 msgstr "Actualitza la base de dades"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:358
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:386
+#: src/fsearch.c:360
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Una eina de cerca caracteritzada pel seu rendiment i les prestacions "
 "avançades"
 
-#: src/fsearch_window_actions.c:85
+#: src/fsearch_window_actions.c:78
 #, fuzzy, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "Realment voleu suprimir"
 
-#: src/fsearch_window_actions.c:87
+#: src/fsearch_window_actions.c:80
 #, fuzzy
 msgid "Opening Files…"
 msgstr "Obre fitxers"
 
-#: src/fsearch_window_actions.c:167
+#: src/fsearch_window_actions.c:154
 #, fuzzy, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Realment voleu suprimir"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 #, fuzzy
 msgid "Deleting files…"
 msgstr "S’estan suprimint els fitxers…"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 #, fuzzy
 msgid "Moving files to trash…"
 msgstr "S’estan enviant els fitxers a la paperera…"
 
-#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-#, fuzzy
-msgid "Enable"
-msgstr "Activa les expressions regulars"
+#: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
+msgid "Active"
+msgstr ""
 
-#: src/fsearch_preferences_widgets.c:225
+#: src/fsearch_preferences_widgets.c:208
 msgid "Update"
 msgstr ""
 
@@ -538,6 +537,10 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+
+#, fuzzy
+#~ msgid "Enable"
+#~ msgstr "Activa les expressions regulars"
 
 #, fuzzy
 #~ msgid "Loading Database..."

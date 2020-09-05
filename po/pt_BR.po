@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-03 18:28+0200\n"
+"POT-Creation-Date: 2020-09-05 17:41+0200\n"
 "PO-Revision-Date: 2020-09-02 15:36+0000\n"
 "Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -24,38 +24,38 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: src/fsearch_window.c:106 src/fsearch_window.c:386 src/fsearch_window.c:855
+#: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
 msgid "%'d Items"
 msgstr "%'d itens"
 
-#: src/fsearch_window.c:640 src/fsearch_window_actions.c:454
+#: src/fsearch_window.c:608 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "Falha ao abrir arquivo"
 
-#: src/fsearch_window.c:641 src/fsearch_window_actions.c:455
+#: src/fsearch_window.c:609 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Deseja manter a janela aberta?"
 
-#: src/fsearch_window.c:861
+#: src/fsearch_window.c:794
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Última atualização: %H:%M, %d-%m-%y"
 
-#: src/fsearch_window.c:875 src/overlay.ui:143
+#: src/fsearch_window.c:807 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Carregando base de dados…"
 
-#: src/fsearch_window.c:890 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
 #, c-format
 msgid "Updating Database…"
 msgstr "Atualizando base de dados…"
 
-#: src/fsearch_window.c:1078
+#: src/fsearch_window.c:975
 msgid "Background tasks are active."
 msgstr "Tarefas em segundo plano estão ativas."
 
-#: src/fsearch_window.c:1080
+#: src/fsearch_window.c:978
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -63,70 +63,70 @@ msgstr ""
 "Não é possível fechar a janela agora.\n"
 "Por favor aguarde um momento e então tente novamente."
 
-#: src/listview.c:221 src/menus.ui:80
+#: src/listview.c:186 src/menus.ui:80
 msgid "Name"
 msgstr "Nome"
 
-#: src/listview.c:254 src/fsearch_preferences_widgets.c:224
-#: src/fsearch_preferences_widgets.c:258 src/menus.ui:84
+#: src/listview.c:211 src/fsearch_preferences_widgets.c:205
+#: src/fsearch_preferences_widgets.c:246 src/menus.ui:84
 msgid "Path"
 msgstr "Caminho"
 
-#: src/listview.c:288 src/menus.ui:92
+#: src/listview.c:235 src/menus.ui:92
 msgid "Size"
 msgstr "Tamanho"
 
-#: src/listview.c:320 src/menus.ui:96
+#: src/listview.c:253 src/menus.ui:96
 msgid "Date Modified"
 msgstr "Data de Modificação"
 
-#: src/listview.c:349 src/menus.ui:88
+#: src/listview.c:270 src/menus.ui:88
 msgid "Type"
 msgstr "Tipo"
 
-#: src/fsearch.c:187
+#: src/fsearch.c:173
 msgid "Show version information"
 msgstr "Mostrar informações da versão"
 
-#: src/fsearch.c:194
+#: src/fsearch.c:180
 msgid "Update the database"
 msgstr "Atualizar a base de dados"
 
-#: src/fsearch.c:385
+#: src/fsearch.c:358
 msgid "translator-credits"
 msgstr "Atílio Antônio"
 
-#: src/fsearch.c:386
+#: src/fsearch.c:360
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em performance e recursos avançados"
 
-#: src/fsearch_window_actions.c:85
+#: src/fsearch_window_actions.c:78
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "Deseja mesmo abrir %d arquivo(s)?"
 
-#: src/fsearch_window_actions.c:87
+#: src/fsearch_window_actions.c:80
 msgid "Opening Files…"
 msgstr "Abrindo arquivos…"
 
-#: src/fsearch_window_actions.c:167
+#: src/fsearch_window_actions.c:154
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Deseja mesmo remover %d arquivo(s)?"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Deleting files…"
 msgstr "Excluindo arquivos…"
 
-#: src/fsearch_window_actions.c:171
+#: src/fsearch_window_actions.c:160
 msgid "Moving files to trash…"
 msgstr "Movendo arquivos para a lixeira…"
 
-#: src/fsearch_preferences_widgets.c:223 src/fsearch_preferences_widgets.c:257
-msgid "Enable"
-msgstr "Ativar RegEx"
+#: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
+msgid "Active"
+msgstr ""
 
-#: src/fsearch_preferences_widgets.c:225
+#: src/fsearch_preferences_widgets.c:208
 msgid "Update"
 msgstr "Atualizar"
 
@@ -534,6 +534,9 @@ msgid ""
 msgstr ""
 "busca;fsearch;arquivos;pastas;músicas;vídeos;documentos;encontrar;ferramenta;"
 "tudo;"
+
+#~ msgid "Enable"
+#~ msgstr "Ativar RegEx"
 
 #~ msgid "Loading Database..."
 #~ msgstr "Carregando base de dados…"
