@@ -21,7 +21,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "database.h"
 #include "fsearch_config.h"
 #include "fsearch_thread_pool.h"
-#include "glib_support.h"
 #include <glib.h>
 #include <gtk/gtk.h>
 #include <inttypes.h>

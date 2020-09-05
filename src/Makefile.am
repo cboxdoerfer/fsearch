@@ -30,7 +30,6 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_include_path.h \
 			 fsearch_exclude_path.h \
 			 fsearch_preferences_widgets.h \
-			 glib_support.h \
 			 gtk_support.h \
 			 iconstore.h \
 			 list_model.h \
