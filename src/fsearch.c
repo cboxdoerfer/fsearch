@@ -391,6 +391,7 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
         config_free(app->config);
     }
     app->config = new_config;
+    config_save(app->config);
 
     if (update_db) {
         fsearch_database_update(true);
