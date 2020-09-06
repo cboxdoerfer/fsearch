@@ -372,44 +372,39 @@ static void
 preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp) {
     g_assert(FSEARCH_IS_APPLICATION(gapp));
     FsearchApplication *app = FSEARCH_APPLICATION(gapp);
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
 
     bool update_db = false;
     bool update_list = false;
     bool update_search = false;
 
-    for (GList *w = windows; w; w = w->next) {
-        GtkWindow *window = w->data;
-        FsearchConfig *new =
-            preferences_ui_launch(app->config, window, &update_db, &update_list, &update_search);
-        if (new) {
-            config_free(app->config);
-            app->config = new;
-            if (update_db) {
-                fsearch_database_update(true);
-            }
-            if (update_list) {
-                fsearch_application_update_listview_config();
-            }
-        }
-        break;
+    GtkWindow *win_active = gtk_application_get_active_window(GTK_APPLICATION(app));
+    if (!win_active) {
+        return;
     }
+    FsearchConfig *new_config =
+        preferences_ui_launch(app->config, win_active, &update_db, &update_list, &update_search);
+    if (!new_config) {
+        return;
+    }
+
+    if (app->config) {
+        config_free(app->config);
+    }
+    app->config = new_config;
+
+    if (update_db) {
+        fsearch_database_update(true);
+    }
+
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
     for (GList *w = windows; w; w = w->next) {
-        GtkWindow *window = w->data;
+        FsearchApplicationWindow *window = w->data;
         if (update_search) {
             fsearch_application_window_update_search(window);
         }
-    }
-}
-
-void
-fsearch_application_update_listview_config(void) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-
-    for (; windows; windows = windows->next) {
-        GtkWindow *window = windows->data;
-        fsearch_application_window_update_listview_config(FSEARCH_WINDOW_WINDOW(window));
+        if (update_list) {
+            fsearch_application_window_update_listview_config(window);
+        }
     }
 }
 

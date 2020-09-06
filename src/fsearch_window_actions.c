@@ -567,7 +567,7 @@ fsearch_window_action_search_in_path(GSimpleAction *action, GVariant *variant, g
         gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), FALSE);
     }
     if (search_in_path_old != config->search_in_path) {
-        g_idle_add(fsearch_application_window_update_search, self);
+        g_idle_add((GSourceFunc)fsearch_application_window_update_search, self);
     }
 }
 
@@ -586,7 +586,7 @@ fsearch_window_action_search_mode(GSimpleAction *action, GVariant *variant, gpoi
         gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), FALSE);
     }
     if (enable_regex_old != config->enable_regex) {
-        g_idle_add(fsearch_application_window_update_search, self);
+        g_idle_add((GSourceFunc)fsearch_application_window_update_search, self);
     }
 }
 
@@ -605,7 +605,7 @@ fsearch_window_action_match_case(GSimpleAction *action, GVariant *variant, gpoin
         gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), FALSE);
     }
     if (match_case_old != config->match_case) {
-        g_idle_add(fsearch_application_window_update_search, self);
+        g_idle_add((GSourceFunc)fsearch_application_window_update_search, self);
     }
 }
 

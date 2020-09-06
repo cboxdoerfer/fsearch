@@ -119,9 +119,8 @@ apply_model_to_list(FsearchApplicationWindow *self) {
 }
 
 gboolean
-fsearch_application_window_update_search(gpointer window) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(window));
-    FsearchApplicationWindow *win = window;
+fsearch_application_window_update_search(FsearchApplicationWindow *win) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
     perform_search(win);
     return FALSE;
 }
@@ -181,16 +180,14 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
 }
 
 void
-fsearch_application_window_apply_model(gpointer window) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(window));
-    FsearchApplicationWindow *win = window;
+fsearch_application_window_apply_model(FsearchApplicationWindow *win) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
     apply_model_to_list(win);
 }
 
 void
-fsearch_application_window_remove_model(gpointer window) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(window));
-    FsearchApplicationWindow *win = window;
+fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
     remove_model_from_list(win);
 }
 

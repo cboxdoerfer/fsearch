@@ -77,13 +77,13 @@ GtkWidget *
 fsearch_application_window_get_search_button(FsearchApplicationWindow *self);
 
 gboolean
-fsearch_application_window_update_search(gpointer window);
+fsearch_application_window_update_search(FsearchApplicationWindow *self);
 
 void
-fsearch_application_window_apply_model(gpointer window);
+fsearch_application_window_apply_model(FsearchApplicationWindow *self);
 
 void
-fsearch_application_window_remove_model(gpointer window);
+fsearch_application_window_remove_model(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text);
