@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-09-05 13:57+0000\n"
+"PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -120,7 +120,7 @@ msgstr "Dosyalar çöp sepetine taşınıyor…"
 
 #: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
 msgid "Active"
-msgstr ""
+msgstr "Etkin"
 
 #: src/fsearch_preferences_widgets.c:208
 msgid "Update"
