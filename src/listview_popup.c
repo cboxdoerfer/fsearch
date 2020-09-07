@@ -1,6 +1,6 @@
 /*
    FSearch - A fast file search utility
-   Copyright © 2018 Christian Boxdörfer
+   Copyright © 2020 Christian Boxdörfer
 
    This program is free software; you can redistribute it and/or modify
    it under the terms of the GNU General Public License as published by
