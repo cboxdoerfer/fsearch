@@ -361,6 +361,16 @@ db_search_build_token(FsearchQuery *q) {
 }
 
 static DatabaseSearchResult *
+db_search_result_new(GPtrArray *results, uint32_t num_folders, uint32_t num_files) {
+    DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
+    assert(result_ctx != NULL);
+    result_ctx->results = results;
+    result_ctx->num_folders = num_folders;
+    result_ctx->num_files = num_files;
+    return result_ctx;
+}
+
+static DatabaseSearchResult *
 db_search_empty(FsearchQuery *query) {
     assert(query != NULL);
     assert(query->db != NULL);
@@ -394,20 +404,17 @@ db_search_empty(FsearchQuery *query) {
         g_ptr_array_add(results, entry);
         pos++;
     }
-    DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
-    assert(result_ctx != NULL);
-    result_ctx->results = results;
-    result_ctx->num_folders = num_folders;
-    result_ctx->num_files = num_files;
-    return result_ctx;
+    return db_search_result_new(results, num_folders, num_files);
 }
 
 static DatabaseSearchResult *
 db_search(DatabaseSearch *search, FsearchQuery *q) {
     assert(search != NULL);
 
-    GTimer *timer = fsearch_timer_start();
     const uint32_t num_entries = db_get_num_entries(q->db);
+    if (num_entries == 0) {
+        return db_search_result_new(NULL, 0, 0);
+    }
     const uint32_t num_threads =
         MIN(fsearch_thread_pool_get_num_threads(search->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;
@@ -425,7 +432,11 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     while (token[num_token]) {
         num_token++;
     }
+    if (!token) {
+        return db_search_result_new(NULL, 0, 0);
+    }
 
+    GTimer *timer = fsearch_timer_start();
     GList *threads = fsearch_thread_pool_get_threads(search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] = search_thread_context_new(
@@ -499,12 +510,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     fsearch_timer_stop(timer, "[search] search finished in %.2f ms\n");
     timer = NULL;
 
-    DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
-    assert(result_ctx != NULL);
-    result_ctx->results = results;
-    result_ctx->num_folders = num_folders;
-    result_ctx->num_files = num_files;
-    return result_ctx;
+    return db_search_result_new(results, num_folders, num_files);
 }
 
 void
