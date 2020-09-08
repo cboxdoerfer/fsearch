@@ -334,7 +334,6 @@ update_model_cb(gpointer user_data) {
             list_model_set_results(win->list_model, results);
             win->search->results = results;
             win->search->num_folders = result->num_folders;
-            ;
             win->search->num_files = result->num_files;
             num_results = results->len;
             list_model_update_sort(win->list_model);
