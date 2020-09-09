@@ -67,16 +67,24 @@ run_file_chooser_dialog(GtkButton *button) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
 
     GtkWidget *window = gtk_widget_get_toplevel(GTK_WIDGET(button));
-    GtkWidget *dialog = gtk_file_chooser_dialog_new("Open File",
+
+#if !GTK_CHECK_VERSION(3, 20, 0)
+    GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select folder"),
                                                     GTK_WINDOW(window),
                                                     action,
-                                                    "_Cancel",
+                                                    _("_Cancel"),
                                                     GTK_RESPONSE_CANCEL,
-                                                    "_Open",
+                                                    _("_Select"),
                                                     GTK_RESPONSE_ACCEPT,
                                                     NULL);
 
     gint res = gtk_dialog_run(GTK_DIALOG(dialog));
+#else
+    GtkFileChooserNative *dialog = gtk_file_chooser_native_new(
+        _("Select folder"), GTK_WINDOW(window), action, _("_Cancel"), _("_Select"));
+
+    gint res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
+#endif
     char *path = NULL;
     if (res == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
@@ -85,7 +93,7 @@ run_file_chooser_dialog(GtkButton *button) {
         g_free(uri);
     }
 
-    gtk_widget_destroy(dialog);
+    g_object_unref(dialog);
     return path;
 }
 
