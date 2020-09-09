@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-09-02 15:36+0000\n"
+"PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -122,7 +122,7 @@ msgstr "Przenoszenie plików do kosza…"
 
 #: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
 msgid "Active"
-msgstr ""
+msgstr "Aktywna"
 
 #: src/fsearch_preferences_widgets.c:208
 msgid "Update"
@@ -263,10 +263,8 @@ msgid "Show highlighted search terms"
 msgstr "Podświetlaj wyszukiwane na liście wyników"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Pamiętaj rozmiar okna"
+msgstr "Pamiętaj porządek sortowania"
 
 #: src/preferences.ui:372
 msgid "Interface"
