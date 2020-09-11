@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-09-04 13:36+0000\n"
+"PO-Revision-Date: 2020-09-11 19:42+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -120,7 +120,7 @@ msgstr "Переміщення файлів у смітник…"
 
 #: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
 msgid "Active"
-msgstr ""
+msgstr "Активно"
 
 #: src/fsearch_preferences_widgets.c:208
 msgid "Update"
@@ -259,10 +259,8 @@ msgid "Show highlighted search terms"
 msgstr "Виділяти знайдений текст у списку"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Пам'ятати розмір вікна"
+msgstr "Пам'ятати порядок сортування"
 
 #: src/preferences.ui:372
 msgid "Interface"
