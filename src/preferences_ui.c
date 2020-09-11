@@ -81,7 +81,7 @@ run_file_chooser_dialog(GtkButton *button) {
     gint res = gtk_dialog_run(GTK_DIALOG(dialog));
 #else
     GtkFileChooserNative *dialog = gtk_file_chooser_native_new(
-        _("Select folder"), GTK_WINDOW(window), action, _("_Cancel"), _("_Select"));
+        _("Select folder"), GTK_WINDOW(window), action, _("_Select"), _("_Cancel"));
 
     gint res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
 #endif
