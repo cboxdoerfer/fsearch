@@ -65,8 +65,9 @@ on_listview_header_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
             GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
             GMenuModel *menu_model =
                 G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
+            GtkWidget *list = gtk_tree_view_column_get_tree_view(GTK_TREE_VIEW_COLUMN(user_data));
             GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
-            gtk_menu_attach_to_widget(GTK_MENU(menu_widget), GTK_WIDGET(widget), NULL);
+            gtk_menu_attach_to_widget(GTK_MENU(menu_widget), list, NULL);
 #if !GTK_CHECK_VERSION(3, 22, 0)
             gtk_menu_popup(
                 GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, event->button, event->time);
@@ -85,7 +86,7 @@ listview_column_add_label(GtkTreeViewColumn *col, const char *title) {
     g_signal_connect(gtk_tree_view_column_get_button(col),
                      "button-press-event",
                      G_CALLBACK(on_listview_header_clicked),
-                     NULL);
+                     col);
 }
 
 static void
