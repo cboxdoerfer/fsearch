@@ -647,17 +647,17 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
 
 static gboolean
 toggle_action_on_2button_press(GdkEventButton *event, const char *action, gpointer user_data) {
-    if (event->button == GDK_BUTTON_PRIMARY && event->type == GDK_2BUTTON_PRESS) {
-        FsearchApplicationWindow *win = user_data;
-        g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-        GActionGroup *group = G_ACTION_GROUP(win);
-        GVariant *state = g_action_group_get_action_state(group, action);
-        g_action_group_change_action_state(
-            group, action, g_variant_new_boolean(!g_variant_get_boolean(state)));
-        g_variant_unref(state);
-        return TRUE;
+    if (event->button != GDK_BUTTON_PRIMARY || event->type != GDK_2BUTTON_PRESS) {
+        return FALSE;
     }
-    return FALSE;
+    FsearchApplicationWindow *win = user_data;
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    GActionGroup *group = G_ACTION_GROUP(win);
+    GVariant *state = g_action_group_get_action_state(group, action);
+    g_action_group_change_action_state(
+        group, action, g_variant_new_boolean(!g_variant_get_boolean(state)));
+    g_variant_unref(state);
+    return TRUE;
 }
 
 static gboolean
