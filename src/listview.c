@@ -60,23 +60,20 @@ on_listview_column_width_changed(GtkTreeViewColumn *col, GParamSpec *pspec, gpoi
 
 static gboolean
 on_listview_header_clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
-    if (event->type == GDK_BUTTON_PRESS) {
-        if (event->button == 3) {
-            GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
-            GMenuModel *menu_model =
-                G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
-            GtkWidget *list = gtk_tree_view_column_get_tree_view(GTK_TREE_VIEW_COLUMN(user_data));
-            GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
-            gtk_menu_attach_to_widget(GTK_MENU(menu_widget), list, NULL);
+    if (gdk_event_triggers_context_menu((GdkEvent *)event)) {
+        GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
+        GMenuModel *menu_model =
+            G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
+        GtkWidget *list = gtk_tree_view_column_get_tree_view(GTK_TREE_VIEW_COLUMN(user_data));
+        GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
+        gtk_menu_attach_to_widget(GTK_MENU(menu_widget), list, NULL);
 #if !GTK_CHECK_VERSION(3, 22, 0)
-            gtk_menu_popup(
-                GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, event->button, event->time);
+        gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, event->button, event->time);
 #else
-            gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
+        gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif
-            g_object_unref(builder);
-            return TRUE;
-        }
+        g_object_unref(builder);
+        return TRUE;
     }
     return FALSE;
 }
