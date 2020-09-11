@@ -75,6 +75,7 @@ on_listview_header_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
             gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif
             g_object_unref(builder);
+            return TRUE;
         }
     }
     return FALSE;
