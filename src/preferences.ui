@@ -68,6 +68,7 @@
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="top_padding">4</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkBox">
@@ -315,6 +316,7 @@ since not every GTK+ theme provides a dark version.</property>
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="top_padding">4</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkBox">
@@ -451,6 +453,7 @@ since not every GTK+ theme provides a dark version.</property>
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
+                        <property name="top_padding">4</property>
                         <property name="left_padding">12</property>
                         <child>
                           <object class="GtkBox">
