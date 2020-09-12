@@ -297,7 +297,7 @@ update_database_thread(bool rescan) {
     g_mutex_unlock(&app->mutex);
     db_lock(db);
     if (rescan) {
-        db_scan(db, build_location_callback);
+        db_scan(db, app->config->show_indexing_status ? build_location_callback : NULL);
         db_save_locations(db);
     }
     else {

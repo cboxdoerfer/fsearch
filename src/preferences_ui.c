@@ -203,6 +203,9 @@ preferences_ui_launch(FsearchConfig *config,
     GtkToggleButton *action_after_file_open_mouse = toggle_button_get(
         builder, "action_after_file_open_mouse", pref.config->action_after_file_open_mouse);
 
+    GtkToggleButton *show_indexing_status = toggle_button_get(
+        builder, "show_indexing_status_button", pref.config->show_indexing_status);
+
     // Search page
     GtkToggleButton *auto_search_in_path_button =
         toggle_button_get(builder, "auto_search_in_path_button", pref.config->auto_search_in_path);
@@ -303,6 +306,7 @@ preferences_ui_launch(FsearchConfig *config,
             gtk_toggle_button_get_active(action_after_file_open_keyboard);
         pref.config->action_after_file_open_mouse =
             gtk_toggle_button_get_active(action_after_file_open_mouse);
+        pref.config->show_indexing_status = gtk_toggle_button_get_active(show_indexing_status);
         // Dialogs
         pref.config->show_dialog_failed_opening =
             gtk_toggle_button_get_active(show_dialog_failed_opening);

@@ -212,6 +212,8 @@ config_load(FsearchConfig *config) {
             config_load_boolean(key_file, "Interface", "action_after_file_open_keyboard", false);
         config->action_after_file_open_mouse =
             config_load_boolean(key_file, "Interface", "action_after_file_open_mouse", false);
+        config->show_indexing_status =
+            config_load_boolean(key_file, "Interface", "show_indexing_status", true);
 
         // Warning Dialogs
         config->show_dialog_failed_opening =
@@ -339,6 +341,7 @@ config_load_default(FsearchConfig *config) {
     config->action_after_file_open = 0;
     config->action_after_file_open_keyboard = false;
     config->action_after_file_open_mouse = false;
+    config->show_indexing_status = true;
 
     // Columns
     config->show_listview_icons = true;
@@ -472,6 +475,8 @@ config_save(FsearchConfig *config) {
                            "Interface",
                            "action_after_file_open_mouse",
                            config->action_after_file_open_mouse);
+    g_key_file_set_boolean(
+        key_file, "Interface", "show_indexing_status", config->show_indexing_status);
 
     // Warning Dialogs
     g_key_file_set_boolean(
