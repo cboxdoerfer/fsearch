@@ -93,4 +93,5 @@ fsearch_application_window_get_query_highlight(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_results(void *data);
+
 G_END_DECLS

@@ -134,10 +134,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
       </object>
     </child>
   </object>
+  <object class="GtkImage" id="image8">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">process-stop</property>
+  </object>
   <object class="GtkImage" id="image_update_database">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <property name="icon_name">view-refresh-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image_update_database1">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">process-stop-symbolic</property>
   </object>
   <object class="GtkImage" id="image_window_new">
     <property name="visible">True</property>
@@ -181,7 +191,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
               </packing>
             </child>
             <child>
-              <object class="GtkButton">
+              <object class="GtkButton" id="popover_update_db">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
@@ -193,6 +203,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkButton" id="popover_cancel_update_db">
+                <property name="visible">True</property>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="tooltip_text" translatable="yes">Cancel database update</property>
+                <property name="action_name">app.cancel_update_database</property>
+                <property name="image">image_update_database1</property>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">2</property>
               </packing>
             </child>
           </object>
@@ -501,6 +526,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <property name="image">image5</property>
                         <property name="use_stock">False</property>
                         <accelerator key="r" signal="activate" modifiers="GDK_SHIFT_MASK | GDK_CONTROL_MASK"/>
+                      </object>
+                    </child>
+                    <child>
+                      <object class="GtkImageMenuItem" id="cancel_update_database_menu_item">
+                        <property name="label" translatable="yes">Cancel Update</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="action_name">app.cancel_update_database</property>
+                        <property name="image">image8</property>
+                        <property name="use_stock">False</property>
+                        <property name="always_show_image">True</property>
                       </object>
                     </child>
                     <child>

@@ -64,6 +64,10 @@ struct _FsearchApplicationWindow {
     GtkWidget *num_folders_label;
     GtkWidget *revealer;
     GtkWidget *scrolledwindow1;
+    GtkWidget *popover_update_db;
+    GtkWidget *popover_cancel_update_db;
+    GtkWidget *update_database_menu_item;
+    GtkWidget *cancel_update_database_menu_item;
     GtkWidget *search_button;
     GtkWidget *search_entry;
     GtkWidget *search_icon;
@@ -772,6 +776,10 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
 
     hide_overlays(win);
     gtk_spinner_stop(GTK_SPINNER(win->database_spinner));
+    gtk_widget_show(win->popover_update_db);
+    gtk_widget_show(win->update_database_menu_item);
+    gtk_widget_hide(win->popover_cancel_update_db);
+    gtk_widget_hide(win->cancel_update_database_menu_item);
 
     gtk_stack_set_visible_child(GTK_STACK(win->database_stack), win->database_box2);
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
@@ -812,6 +820,10 @@ database_update_started_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
+    gtk_widget_hide(win->popover_update_db);
+    gtk_widget_show(win->popover_cancel_update_db);
+    gtk_widget_hide(win->update_database_menu_item);
+    gtk_widget_show(win->cancel_update_database_menu_item);
     gtk_stack_set_visible_child(GTK_STACK(win->database_stack), win->database_box1);
     gtk_spinner_start(GTK_SPINNER(win->database_spinner));
     gchar db_text[100] = "";
@@ -1022,6 +1034,13 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_icon);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, scrolledwindow1);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, popover_cancel_update_db);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_db);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, update_database_menu_item);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, cancel_update_database_menu_item);
 
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
@@ -1124,3 +1143,4 @@ fsearch_application_window_new(FsearchApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     return g_object_new(FSEARCH_APPLICATION_WINDOW_TYPE, "application", app, NULL);
 }
+
