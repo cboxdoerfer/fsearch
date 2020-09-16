@@ -40,8 +40,9 @@ fs_str_is_empty(const char *str) {
 
 bool
 fs_str_is_utf8(const char *str) {
-    char *down = g_utf8_strdown(str, -1);
-    char *up = g_utf8_strup(str, -1);
+    char *normalized = g_utf8_normalize(str, -1, G_NORMALIZE_DEFAULT);
+    char *down = g_utf8_strdown(normalized, -1);
+    char *up = g_utf8_strup(normalized, -1);
 
     assert(down != NULL);
     assert(up != NULL);
@@ -52,6 +53,7 @@ fs_str_is_utf8(const char *str) {
 
     g_free(down);
     g_free(up);
+    g_free(normalized);
     down = NULL;
     up = NULL;
 
