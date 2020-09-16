@@ -69,6 +69,7 @@ enum {
     WALK_BADPATTERN,
     WALK_NAMETOOLONG,
     WALK_BADIO,
+    WALK_CANCEL,
 };
 
 // Forward declarations
@@ -79,7 +80,10 @@ static FsearchDatabaseNode *
 db_location_get_for_path(FsearchDatabase *db, const char *path);
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db, const char *dname, void (*callback)(const char *));
+db_location_build_tree(FsearchDatabase *db,
+                       const char *dname,
+                       bool *cancel,
+                       void (*callback)(const char *));
 
 static FsearchDatabaseNode *
 db_location_new(void);
@@ -415,9 +419,14 @@ db_location_walk_tree_recursive(FsearchDatabase *db,
                                 FsearchDatabaseNode *location,
                                 const char *dname,
                                 GTimer *timer,
+                                bool *cancel,
                                 void (*callback)(const char *),
                                 BTreeNode *parent,
                                 int spec) {
+
+    if (*cancel == true) {
+        return WALK_CANCEL;
+    }
     int len = strlen(dname);
     if (len >= FILENAME_MAX - 1) {
         return WALK_NAMETOOLONG;
@@ -446,6 +455,12 @@ db_location_walk_tree_recursive(FsearchDatabase *db,
 
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
+        if (*cancel == true) {
+            if (dir) {
+                closedir(dir);
+            }
+            return WALK_CANCEL;
+        }
         if (!(spec & WS_DOTFILES) && dent->d_name[0] == '.') {
             // file is dotfile, skip
             continue;
@@ -474,7 +489,7 @@ db_location_walk_tree_recursive(FsearchDatabase *db,
         btree_node_prepend(parent, node);
         location->num_items++;
         if (is_dir) {
-            db_location_walk_tree_recursive(db, location, fn, timer, callback, node, spec);
+            db_location_walk_tree_recursive(db, location, fn, timer, cancel, callback, node, spec);
         }
     }
 
@@ -497,7 +512,10 @@ db_location_free(FsearchDatabaseNode *location) {
 }
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db, const char *dname, void (*callback)(const char *)) {
+db_location_build_tree(FsearchDatabase *db,
+                       const char *dname,
+                       bool *cancel,
+                       void (*callback)(const char *)) {
     const char *root_name = NULL;
     if (!strcmp(dname, "/")) {
         root_name = "";
@@ -516,7 +534,7 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, void (*callback)(
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
     uint32_t res =
-        db_location_walk_tree_recursive(db, location, dname, timer, callback, root, spec);
+        db_location_walk_tree_recursive(db, location, dname, timer, cancel, callback, root, spec);
     g_timer_destroy(timer);
     if (res == WALK_OK) {
         return location;
@@ -714,11 +732,14 @@ db_location_load(FsearchDatabase *db, const char *location_name) {
 }
 
 static bool
-db_location_add(FsearchDatabase *db, const char *location_name, void (*callback)(const char *)) {
+db_location_add(FsearchDatabase *db,
+                const char *location_name,
+                bool *cancel,
+                void (*callback)(const char *)) {
     assert(db != NULL);
     trace("[database_scan] scan location: %s\n", location_name);
 
-    FsearchDatabaseNode *location = db_location_build_tree(db, location_name, callback);
+    FsearchDatabaseNode *location = db_location_build_tree(db, location_name, cancel, callback);
 
     if (location) {
         trace("[database_scan] %s scanned with %d entries\n", location_name, location->num_items);
@@ -971,7 +992,7 @@ db_load_from_file(FsearchDatabase *db, const char *path, void (*callback)(const 
 }
 
 bool
-db_scan(FsearchDatabase *db, void (*callback)(const char *)) {
+db_scan(FsearchDatabase *db, bool *cancel, void (*callback)(const char *)) {
     assert(db != NULL);
 
     bool ret = false;
@@ -984,7 +1005,7 @@ db_scan(FsearchDatabase *db, void (*callback)(const char *)) {
         if (!fs_path->enabled) {
             continue;
         }
-        if (fs_path->update && db_location_add(db, fs_path->path, callback)) {
+        if (fs_path->update && db_location_add(db, fs_path->path, cancel, callback)) {
             ret = true;
             init_list = true;
         }
