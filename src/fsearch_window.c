@@ -823,14 +823,18 @@ static void
 database_update_started_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
 
     gtk_widget_hide(win->popover_update_db);
     gtk_widget_show(win->popover_cancel_update_db);
     gtk_widget_hide(win->update_database_menu_item);
     gtk_widget_show(win->cancel_update_database_menu_item);
 
-    gtk_widget_show(win->statusbar_scan_label);
-    gtk_widget_show(win->statusbar_scan_status_label);
+    if (config->show_indexing_status) {
+        gtk_widget_show(win->statusbar_scan_label);
+        gtk_widget_show(win->statusbar_scan_status_label);
+    }
     gtk_stack_set_visible_child(GTK_STACK(win->database_stack), win->database_box1);
     gtk_spinner_start(GTK_SPINNER(win->database_spinner));
     gchar db_text[100] = "";
