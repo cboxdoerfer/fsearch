@@ -76,6 +76,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_mode_revealer;
     GtkWidget *search_overlay;
     GtkWidget *statusbar;
+    GtkWidget *statusbar_scan_label;
+    GtkWidget *statusbar_scan_status_label;
 
     GtkTreeSelection *listview_selection;
 
@@ -780,6 +782,8 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     gtk_widget_show(win->update_database_menu_item);
     gtk_widget_hide(win->popover_cancel_update_db);
     gtk_widget_hide(win->cancel_update_database_menu_item);
+    gtk_widget_hide(win->statusbar_scan_label);
+    gtk_widget_hide(win->statusbar_scan_status_label);
 
     gtk_stack_set_visible_child(GTK_STACK(win->database_stack), win->database_box2);
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
@@ -824,6 +828,9 @@ database_update_started_cb(gpointer data, gpointer user_data) {
     gtk_widget_show(win->popover_cancel_update_db);
     gtk_widget_hide(win->update_database_menu_item);
     gtk_widget_show(win->cancel_update_database_menu_item);
+
+    gtk_widget_show(win->statusbar_scan_label);
+    gtk_widget_show(win->statusbar_scan_status_label);
     gtk_stack_set_visible_child(GTK_STACK(win->database_stack), win->database_box1);
     gtk_spinner_start(GTK_SPINNER(win->database_spinner));
     gchar db_text[100] = "";
@@ -1041,6 +1048,10 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
         widget_class, FsearchApplicationWindow, update_database_menu_item);
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, cancel_update_database_menu_item);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, statusbar_scan_label);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, statusbar_scan_status_label);
 
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
@@ -1097,7 +1108,7 @@ fsearch_application_window_get_search_entry(FsearchApplicationWindow *self) {
 
 void
 fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text) {
-    gtk_label_set_text(GTK_LABEL(self->search_label), text);
+    gtk_label_set_text(GTK_LABEL(self->statusbar_scan_status_label), text);
 }
 
 GtkWidget *
