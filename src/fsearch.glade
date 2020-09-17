@@ -1031,7 +1031,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkLabel" id="statusbar_scan_label">
                     <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">Scanning:</property>
+                    <property name="label" translatable="yes">Index:</property>
                     <property name="single_line_mode">True</property>
                     <property name="track_visited_links">False</property>
                   </object>

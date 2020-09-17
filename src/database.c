@@ -17,12 +17,14 @@
    */
 
 #define _GNU_SOURCE
+
 #include <assert.h>
 #include <ctype.h>
 #include <dirent.h>
 #include <err.h>
 #include <errno.h>
 #include <fnmatch.h>
+#include <glib/gi18n.h>
 #include <glib/gstdio.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -1015,6 +1017,9 @@ db_scan(FsearchDatabase *db, bool *cancel, void (*callback)(const char *)) {
     }
     if (ret) {
         if (init_list) {
+            if (callback) {
+                callback(_("Sorting..."));
+            }
             db_build_initial_entries_list(db);
         }
         else {
