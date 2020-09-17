@@ -139,6 +139,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <property name="can_focus">False</property>
     <property name="icon_name">process-stop</property>
   </object>
+  <object class="GtkImage" id="image9">
+    <property name="visible">True</property>
+    <property name="can_focus">False</property>
+    <property name="icon_name">process-stop-symbolic</property>
+  </object>
   <object class="GtkImage" id="image_update_database">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
@@ -965,8 +970,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <property name="can_focus">False</property>
             <property name="margin_start">3</property>
             <property name="margin_end">3</property>
-            <property name="margin_top">3</property>
-            <property name="margin_bottom">3</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkBox" id="box6">
@@ -1132,6 +1135,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <property name="expand">False</property>
                         <property name="fill">True</property>
                         <property name="position">1</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <property name="tooltip_text" translatable="yes">Cancel database update</property>
+                        <property name="action_name">app.cancel_update_database</property>
+                        <property name="image">image9</property>
+                        <property name="relief">none</property>
+                        <style>
+                          <class name="fsearch-statusbar-cancel-update-button"/>
+                        </style>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                   </object>
@@ -1339,6 +1361,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="position">6</property>
               </packing>
             </child>
+            <style>
+              <class name="fsearch-statusbar"/>
+            </style>
           </object>
           <packing>
             <property name="expand">False</property>

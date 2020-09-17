@@ -1,3 +1,13 @@
+.fsearch-statusbar-cancel-update-button {
+    padding: 0px;
+    min-height: 20px;
+    min-width: 20px;
+
+    border-radius: 0px;
+    border-bottom-width: 0px;
+    border-top-width: 0px;
+}
+
 .fsearch-statusbar-button {
     border-radius: 0px;
     border-top: none;
