@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-08-30 15:59+0000\n"
-"Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
+"PO-Revision-Date: 2020-09-22 04:39+0000\n"
+"Last-Translator: GongHeng2017 <1239137790@qq.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.2.1-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
@@ -42,19 +42,21 @@ msgid "Loading Database…"
 msgstr "加载数据库…"
 
 #: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
-#, fuzzy, c-format
+#, c-format
 msgid "Updating Database…"
-msgstr "数据库更新中..."
+msgstr "数据库更新中…"
 
 #: src/fsearch_window.c:975
 msgid "Background tasks are active."
-msgstr ""
+msgstr "后台任务处于活动状态。"
 
 #: src/fsearch_window.c:978
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"目前无法关闭窗口。\n"
+"请稍等，然后重试。"
 
 #: src/listview.c:186 src/menus.ui:80
 msgid "Name"
@@ -87,26 +89,25 @@ msgstr "更新数据库"
 
 #: src/fsearch.c:358
 msgid "translator-credits"
-msgstr ""
+msgstr "翻译人员"
 
 #: src/fsearch.c:360
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
 #: src/fsearch_window_actions.c:78
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "确认要删除"
+msgstr "确认要打开%d吗？"
 
 #: src/fsearch_window_actions.c:80
-#, fuzzy
 msgid "Opening Files…"
-msgstr "打开文件"
+msgstr "打开文件中…"
 
 #: src/fsearch_window_actions.c:154
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "确认要删除"
+msgstr "确认要删除%d吗？"
 
 #: src/fsearch_window_actions.c:160
 msgid "Deleting files…"
@@ -118,11 +119,11 @@ msgstr "正在移动文件到回收站…"
 
 #: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
 msgid "Active"
-msgstr ""
+msgstr "激活"
 
 #: src/fsearch_preferences_widgets.c:208
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -170,12 +171,11 @@ msgstr "按 <b>Ctrl + F</b> 开始输入"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
 msgid "This won't take long."
-msgstr "可能需要一些时间。"
+msgstr "不会花很长时间。"
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -235,16 +235,15 @@ msgstr ""
 
 #: src/preferences.ui:239
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "在路径列中双击打开路径"
 
 #: src/preferences.ui:252
 msgid "Single click to open"
-msgstr ""
+msgstr "单击打开"
 
 #: src/preferences.ui:274
-#, fuzzy
 msgid "Behaviour after successfully opening a file:"
-msgstr "打开文件成功后的动作"
+msgstr "打开文件成功后的动作："
 
 #: src/preferences.ui:290
 msgid "Minimize"
@@ -256,13 +255,11 @@ msgstr "关闭"
 
 #: src/preferences.ui:308
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "高亮显示搜索词"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "记住窗口大小"
+msgstr "记住排列顺序"
 
 #: src/preferences.ui:372
 msgid "Interface"
@@ -285,9 +282,8 @@ msgid "Hide results when search is empty"
 msgstr "搜索条件为空时不显示结果"
 
 #: src/preferences.ui:460
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "搜索路径(如有路径分隔符)"
+msgstr "当查询至少包含一个大写字符时，区分大小写"
 
 #: src/preferences.ui:481 src/fsearch.glade:821
 msgid "Search"
@@ -299,7 +295,7 @@ msgstr "启动时更新数据库"
 
 #: src/preferences.ui:535 src/preferences.ui:639
 msgid "Add…"
-msgstr ""
+msgstr "添加…"
 
 #: src/preferences.ui:551 src/preferences.ui:655
 msgid "Remove"
@@ -370,14 +366,12 @@ msgid "Move to Trash"
 msgstr "删除到回收站"
 
 #: src/fsearch.glade:173
-#, fuzzy
 msgid "New window"
-msgstr "新窗口"
+msgstr "新窗口打开"
 
 #: src/fsearch.glade:188
-#, fuzzy
 msgid "Update database"
-msgstr "更新数据库"
+msgstr "更新数据源"
 
 #: src/fsearch.glade:222 src/fsearch.glade:694
 msgid "Search in Path"
@@ -409,11 +403,11 @@ msgstr "显示搜索按钮"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "关于"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "退出"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -456,13 +450,12 @@ msgid "_Help"
 msgstr "_帮助"
 
 #: src/fsearch.glade:781
-#, fuzzy
 msgid "Search…"
-msgstr "搜索"
+msgstr "搜索…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
-msgstr "选择过滤器"
+msgstr "选择筛选器"
 
 #: src/fsearch.glade:799
 msgid "All"
