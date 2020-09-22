@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-08-12 07:32+0000\n"
+"PO-Revision-Date: 2020-09-22 04:39+0000\n"
 "Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
 "Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
 "translations/ber/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
@@ -30,7 +30,7 @@ msgstr ""
 
 #: src/fsearch_window.c:609 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
-msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵊⵊⵉⴷ ⴰⵙⴰⵜⵎ ⵉⵕⵥⵎ?"
+msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴰⵊⵊⴷ ⴰⵙⴰⵜⵎ ⵉⵕⵥⵎ?"
 
 #: src/fsearch_window.c:794
 msgid "Last Updated: %Y-%m-%d %H:%M"
