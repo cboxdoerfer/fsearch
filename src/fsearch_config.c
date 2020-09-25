@@ -35,7 +35,6 @@ const char *config_folder_name = "fsearch";
 void
 config_build_dir(char *path, size_t len) {
     g_assert(path != NULL);
-    g_assert(len >= 0);
 
     const gchar *xdg_conf_dir = g_get_user_config_dir();
     snprintf(path, len, "%s/%s", xdg_conf_dir, config_folder_name);
@@ -45,7 +44,6 @@ config_build_dir(char *path, size_t len) {
 static void
 config_build_path(char *path, size_t len) {
     g_assert(path != NULL);
-    g_assert(len >= 0);
 
     const gchar *xdg_conf_dir = g_get_user_config_dir();
     snprintf(path, len, "%s/%s/%s", xdg_conf_dir, config_folder_name, config_file_name);
