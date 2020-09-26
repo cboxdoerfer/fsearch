@@ -26,6 +26,7 @@
 #include <fnmatch.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
+#include <malloc.h>
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -1057,6 +1058,7 @@ db_unref(FsearchDatabase *db) {
     trace("[database_unref] dropped to: %d\n", db->ref_count);
     if (db->ref_count <= 0) {
         db_free(db);
+        malloc_trim(0);
     }
 }
 
