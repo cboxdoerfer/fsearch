@@ -170,7 +170,7 @@ listview_add_name_column(GtkTreeView *list,
         renderer = gtk_cell_renderer_pixbuf_new();
         g_object_set(G_OBJECT(renderer), "stock-size", GTK_ICON_SIZE_LARGE_TOOLBAR, NULL);
         gtk_tree_view_column_pack_start(col, renderer, FALSE);
-        gtk_tree_view_column_add_attribute(col, renderer, "pixbuf", LIST_MODEL_COL_ICON);
+        gtk_tree_view_column_add_attribute(col, renderer, "gicon", LIST_MODEL_COL_ICON);
     }
 
     renderer = gtk_cell_renderer_text_new();

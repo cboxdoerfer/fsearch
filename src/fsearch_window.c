@@ -28,7 +28,6 @@
 #include "fsearch_limits.h"
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
-#include "iconstore.h"
 #include "list_model.h"
 #include "listview.h"
 #include "listview_popup.h"
@@ -763,11 +762,6 @@ create_view_and_model(FsearchApplicationWindow *app) {
 }
 
 static void
-icon_theme_changed_cb(GtkIconTheme *icon_theme, gpointer user_data) {
-    iconstore_clear();
-}
-
-static void
 database_update_finished_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
@@ -870,9 +864,6 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
                             G_CONNECT_AFTER);
     g_signal_connect_object(
         app, "database-load-started", G_CALLBACK(database_load_started_cb), self, G_CONNECT_AFTER);
-
-    g_signal_connect(
-        gtk_icon_theme_get_default(), "changed", G_CALLBACK(icon_theme_changed_cb), self);
 
     GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/overlay.ui");
 

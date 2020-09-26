@@ -30,7 +30,6 @@
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "fsearch_timer.h"
-#include "iconstore.h"
 
 /* boring declarations of local functions */
 
@@ -259,13 +258,13 @@ static void
 list_model_init(ListModel *list_model) {
     list_model->n_columns = LIST_MODEL_N_COLUMNS;
 
-    list_model->column_types[0] = G_TYPE_POINTER;  /* LIST_MODEL_COL_RECORD    */
-    list_model->column_types[1] = GDK_TYPE_PIXBUF; /* LIST_MODEL_ICON      */
-    list_model->column_types[2] = G_TYPE_STRING;   /* LIST_MODEL_COL_NAME      */
-    list_model->column_types[3] = G_TYPE_STRING;   /* LIST_MODEL_COL_PATH */
-    list_model->column_types[4] = G_TYPE_STRING;   /* LIST_MODEL_COL_TYPE */
-    list_model->column_types[5] = G_TYPE_STRING;   /* LIST_MODEL_COL_SIZE */
-    list_model->column_types[6] = G_TYPE_STRING;   /* LIST_MODEL_COL_CHANGED */
+    list_model->column_types[0] = G_TYPE_POINTER; /* LIST_MODEL_COL_RECORD    */
+    list_model->column_types[1] = G_TYPE_ICON;    /* LIST_MODEL_ICON      */
+    list_model->column_types[2] = G_TYPE_STRING;  /* LIST_MODEL_COL_NAME      */
+    list_model->column_types[3] = G_TYPE_STRING;  /* LIST_MODEL_COL_PATH */
+    list_model->column_types[4] = G_TYPE_STRING;  /* LIST_MODEL_COL_TYPE */
+    list_model->column_types[5] = G_TYPE_STRING;  /* LIST_MODEL_COL_SIZE */
+    list_model->column_types[6] = G_TYPE_STRING;  /* LIST_MODEL_COL_CHANGED */
 
     g_assert(LIST_MODEL_N_COLUMNS == 7);
 
@@ -289,7 +288,6 @@ static void
 list_model_finalize(GObject *object) {
     ListModel *list_model = LIST_MODEL(object);
     list_model_clear(list_model);
-    iconstore_clear();
 
     /* must chain up - finalize parent */
     (*parent_class->finalize)(object);
@@ -426,7 +424,6 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
     gchar path[PATH_MAX] = "";
     gchar output[100] = "";
     gchar *mime_type = NULL;
-    GdkPixbuf *pixbuf = NULL;
     gchar *formatted_size = NULL;
     GFileInfo *file_info = NULL;
     GFile *g_file = NULL;
@@ -448,9 +445,19 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
         if (0 <= snprintf(path, sizeof(path), "%s/%s", node_path, name)) {
             g_file = g_file_new_for_path(path);
             file_info = g_file_query_info(g_file, "standard::icon", 0, NULL, NULL);
-
-            pixbuf = iconstore_get_pixbuf(file_info);
-            g_value_set_object(value, pixbuf);
+            GIcon *icon = NULL;
+            if (file_info) {
+                icon = g_file_info_get_icon(file_info);
+                if (icon) {
+                    g_value_set_object(value, icon);
+                }
+            }
+            else {
+                icon = g_icon_new_for_string("image-missing", NULL);
+                if (icon) {
+                    g_value_take_object(value, icon);
+                }
+            }
         }
         break;
 
