@@ -202,6 +202,7 @@ fsearch_application_shutdown(GApplication *app) {
 
     if (fsearch->db_thread) {
         trace("[exit] waiting for database thread to exit...\n");
+        fsearch->db_thread_cancel = true;
         g_thread_join(fsearch->db_thread);
         trace("[exit] database thread finished.\n");
     }
