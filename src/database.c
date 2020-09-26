@@ -902,6 +902,8 @@ db_free(FsearchDatabase *db) {
     g_free(db);
     db = NULL;
 
+    malloc_trim(0);
+
     trace("[database_free] freed\n");
     return;
 }
@@ -1058,7 +1060,6 @@ db_unref(FsearchDatabase *db) {
     trace("[database_unref] dropped to: %d\n", db->ref_count);
     if (db->ref_count <= 0) {
         db_free(db);
-        malloc_trim(0);
     }
 }
 
