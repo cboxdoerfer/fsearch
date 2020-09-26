@@ -605,7 +605,7 @@ void *utf8ndup(const void *src, size_t n) {
   size_t bytes = 0;
 
   // Find the end of the string or stop when n is reached
-  while ('\0' != s[bytes] && bytes < n) {
+  while (bytes < n && '\0' != s[bytes]) {
     bytes++;
   }
 
@@ -622,7 +622,7 @@ void *utf8ndup(const void *src, size_t n) {
   bytes = 0;
 
   // copy src byte-by-byte into our new utf8 string
-  while ('\0' != s[bytes] && bytes < n) {
+  while (bytes < n && '\0' != s[bytes]) {
     c[bytes] = s[bytes];
     bytes++;
   }
