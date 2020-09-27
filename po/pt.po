@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-09-23 13:41+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"PO-Revision-Date: 2020-09-28 18:41+0000\n"
+"Last-Translator: Eugenio Monforte <eugenio@tipoqueno.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
 "Language: pt\n"
@@ -261,10 +261,8 @@ msgid "Show highlighted search terms"
 msgstr "Exibir termos de pesquisa destacados"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Lembrar tamanho da janela"
+msgstr "Lembrar ordem de classificação"
 
 #: src/preferences.ui:372
 msgid "Interface"
@@ -287,9 +285,10 @@ msgid "Hide results when search is empty"
 msgstr "Esconder resultados quando a pesquisa está vazia"
 
 #: src/preferences.ui:460
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "Procurar no caminho quando a consulta contém separadores de caminho"
+msgstr ""
+"Coincidir capitalização quando a pesquisa conter pelo menos um caractere "
+"maiúsculo"
 
 #: src/preferences.ui:481 src/fsearch.glade:821
 msgid "Search"
