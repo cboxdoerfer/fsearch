@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-08-30 15:59+0000\n"
-"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
+"PO-Revision-Date: 2020-09-28 18:41+0000\n"
+"Last-Translator: Eugenio Monforte <eugenio@tipoqueno.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.2.1-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
 #, c-format
@@ -43,19 +43,21 @@ msgid "Loading Database…"
 msgstr "Cargando base de datos…"
 
 #: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
-#, fuzzy, c-format
+#, c-format
 msgid "Updating Database…"
 msgstr "Actualizando base de datos…"
 
 #: src/fsearch_window.c:975
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Las tareas en segundo plano están activas."
 
 #: src/fsearch_window.c:978
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Ahora mismo, cerrar la ventana no es posible.\n"
+"Por favor, espere un momento y luego trate nuevamente."
 
 #: src/listview.c:186 src/menus.ui:80
 msgid "Name"
@@ -88,7 +90,7 @@ msgstr "Actualizar base de datos"
 
 #: src/fsearch.c:358
 msgid "translator-credits"
-msgstr ""
+msgstr "Eugenio Monforte"
 
 #: src/fsearch.c:360
 msgid "A search utility focusing on performance and advanced features"
@@ -96,19 +98,18 @@ msgstr ""
 "Herramienta de búsqueda centrada en la velocidad y con prestaciones avanzadas"
 
 #: src/fsearch_window_actions.c:78
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "¿En verdad quiere eliminar"
+msgstr "¿En verdad quiere abrir %d archivo(s)?"
 
 #: src/fsearch_window_actions.c:80
-#, fuzzy
 msgid "Opening Files…"
-msgstr "Abrir archivo(s)"
+msgstr "Abrir archivo(s)…"
 
 #: src/fsearch_window_actions.c:154
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "¿En verdad quiere eliminar"
+msgstr "¿En verdad quiere eliminar %d archivo(s)?"
 
 #: src/fsearch_window_actions.c:160
 msgid "Deleting files…"
@@ -120,11 +121,11 @@ msgstr "Enviando archivos a la papelera…"
 
 #: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
 msgid "Active"
-msgstr ""
+msgstr "Activar"
 
 #: src/fsearch_preferences_widgets.c:208
 msgid "Update"
-msgstr ""
+msgstr "Actualizar"
 
 #: src/menus.ui:7
 msgid "_Open"
@@ -174,12 +175,11 @@ msgstr "Oprima <b>Ctrl + F</b> y comience a escribir"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
 msgid "This won't take long."
-msgstr "Esto puede demorar un rato."
+msgstr "Esto no llevará mucho tiempo."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -239,16 +239,15 @@ msgstr ""
 
 #: src/preferences.ui:239
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Abrir carpeta con doble click en la columna de la ruta"
 
 #: src/preferences.ui:252
 msgid "Single click to open"
-msgstr ""
+msgstr "Abrir con un click"
 
 #: src/preferences.ui:274
-#, fuzzy
 msgid "Behaviour after successfully opening a file:"
-msgstr "Comportamiento tras abrir un archivo con éxito"
+msgstr "Comportamiento tras abrir un archivo con éxito:"
 
 #: src/preferences.ui:290
 msgid "Minimize"
@@ -260,13 +259,11 @@ msgstr "Cerrar"
 
 #: src/preferences.ui:308
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Mostrar destacados los términos de búsqueda"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Recordar tamaño de la ventana"
+msgstr "Recuerde el orden de clasificación"
 
 #: src/preferences.ui:372
 msgid "Interface"
@@ -289,9 +286,10 @@ msgid "Hide results when search is empty"
 msgstr "Ocultar resultados cuando la búsqueda esté vacía"
 
 #: src/preferences.ui:460
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "Buscar en la ruta cuando la consulta tenga separadores de ruta"
+msgstr ""
+"Coincidir mayúsculas y minúsculas cuando la consulta contiene al menos un "
+"carácter en mayúsculas"
 
 #: src/preferences.ui:481 src/fsearch.glade:821
 msgid "Search"
@@ -303,7 +301,7 @@ msgstr "Actualizar base de datos al inicio"
 
 #: src/preferences.ui:535 src/preferences.ui:639
 msgid "Add…"
-msgstr ""
+msgstr "Agregar…"
 
 #: src/preferences.ui:551 src/preferences.ui:655
 msgid "Remove"
@@ -374,12 +372,10 @@ msgid "Move to Trash"
 msgstr "Enviar a la papelera"
 
 #: src/fsearch.glade:173
-#, fuzzy
 msgid "New window"
-msgstr "Ventana nueva"
+msgstr "Nueva ventana"
 
 #: src/fsearch.glade:188
-#, fuzzy
 msgid "Update database"
 msgstr "Actualizar base de datos"
 
@@ -413,11 +409,11 @@ msgstr "Mostrar botón de busca"
 
 #: src/fsearch.glade:367
 msgid "About"
-msgstr ""
+msgstr "Sobre"
 
 #: src/fsearch.glade:392
 msgid "Quit"
-msgstr ""
+msgstr "Salir"
 
 #: src/fsearch.glade:425
 msgid "_File"
@@ -460,9 +456,8 @@ msgid "_Help"
 msgstr "Ay_uda"
 
 #: src/fsearch.glade:781
-#, fuzzy
 msgid "Search…"
-msgstr "Buscar"
+msgstr "Buscar…"
 
 #: src/fsearch.glade:796
 msgid "Select a Filter"
