@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-05 17:41+0200\n"
-"PO-Revision-Date: 2020-09-02 15:36+0000\n"
-"Last-Translator: Atílio Antônio Dadalto <atiliodadalto@hotmail.com>\n"
+"PO-Revision-Date: 2020-09-27 12:40+0000\n"
+"Last-Translator: Marcelo dos Santos Mafra <msmafra@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -124,7 +124,7 @@ msgstr "Movendo arquivos para a lixeira…"
 
 #: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
 msgid "Active"
-msgstr ""
+msgstr "Ativar"
 
 #: src/fsearch_preferences_widgets.c:208
 msgid "Update"
@@ -265,10 +265,8 @@ msgid "Show highlighted search terms"
 msgstr "Exibir termos de busca destacados"
 
 #: src/preferences.ui:322
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Lembrar tamanho da janela"
+msgstr "Lembrar ordenação"
 
 #: src/preferences.ui:372
 msgid "Interface"
