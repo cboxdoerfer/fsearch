@@ -540,6 +540,8 @@ fsearch_application_startup(GApplication *app) {
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.focus_search", search);
     static const gchar *new_window[] = {"<control>n", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.new_window", new_window);
+    static const gchar *select_all[] = {"<control>a", NULL};
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.select_all", select_all);
     static const gchar *hide_window[] = {"Escape", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.hide_window", hide_window);
     static const gchar *show_menubar[] = {"<control>m", NULL};

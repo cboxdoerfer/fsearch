@@ -1,6 +1,131 @@
 <?xml version="1.0"?>
 <interface>
-    <requires lib="gtk+" version="3.12"/>
+    <requires lib="gtk+" version="3.18"/>
+    <menu id="fsearch_main_menu">
+        <submenu>
+            <attribute name="label" translatable="yes">_File</attribute>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">New Window</attribute>
+                    <attribute name="action">app.new_window</attribute>
+                    <attribute name="icon">window-new</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">_Open</attribute>
+                    <attribute name="action">win.open</attribute>
+                    <attribute name="icon">document-open</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Open Folder</attribute>
+                    <attribute name="action">win.open_folder</attribute>
+                    <attribute name="icon">folder-open</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                    <attribute name="id">update_database_menu_item</attribute>
+                    <attribute name="label" translatable="yes">Update Database</attribute>
+                    <attribute name="action">app.update_database</attribute>
+                    <attribute name="icon">view-refresh</attribute>
+                </item>
+                <item>
+                    <attribute name="id">cancel_update_database_menu_item</attribute>
+                    <attribute name="label" translatable="yes">Cancel Update</attribute>
+                    <attribute name="action">app.cancel_update_database</attribute>
+                    <attribute name="icon">process-stop</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">Quit</attribute>
+                    <attribute name="action">app.quit</attribute>
+                    <attribute name="icon">application-exit</attribute>
+                </item>
+            </section>
+        </submenu>
+        <submenu>
+            <attribute name="label" translatable="yes">_Edit</attribute>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">Copy</attribute>
+                    <attribute name="action">win.copy_clipboard</attribute>
+                    <attribute name="icon">edit-copy</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">Select All</attribute>
+                    <attribute name="action">win.select_all</attribute>
+                    <attribute name="icon">edit-select-all</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Deselect All</attribute>
+                    <attribute name="action">win.deselect_all</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Invert Selection</attribute>
+                    <attribute name="action">win.invert_selection</attribute>
+                </item>
+            </section>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">Preferences</attribute>
+                    <attribute name="action">app.preferences</attribute>
+                    <attribute name="icon">preferences-desktop</attribute>
+                </item>
+            </section>
+        </submenu>
+        <submenu>
+            <attribute name="label" translatable="yes">_View</attribute>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">Show Menubar</attribute>
+                    <attribute name="action">win.show_menubar</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Show Statusbar</attribute>
+                    <attribute name="action">win.show_statusbar</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Show Filter</attribute>
+                    <attribute name="action">win.show_filter</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Show Search Button</attribute>
+                    <attribute name="action">win.show_search_button</attribute>
+                </item>
+            </section>
+        </submenu>
+        <submenu>
+            <attribute name="label" translatable="yes">_Search</attribute>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">Search in Path</attribute>
+                    <attribute name="action">win.search_in_path</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Match Case</attribute>
+                    <attribute name="action">win.match_case</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Enable RegEx</attribute>
+                    <attribute name="action">win.search_mode</attribute>
+                </item>
+            </section>
+        </submenu>
+        <submenu>
+            <attribute name="label" translatable="yes">_Help</attribute>
+            <section>
+                <item>
+                    <attribute name="label" translatable="yes">About</attribute>
+                    <attribute name="action">app.about</attribute>
+                    <attribute name="icon">help-about</attribute>
+                </item>
+            </section>
+        </submenu>
+    </menu>
     <menu id="fsearch_listview_popup_menu">
         <section id="fsearch_listview_menu_open_section">
             <item>
