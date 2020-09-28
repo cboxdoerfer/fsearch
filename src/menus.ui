@@ -81,10 +81,6 @@
             <attribute name="label" translatable="yes">_View</attribute>
             <section>
                 <item>
-                    <attribute name="label" translatable="yes">Show Menubar</attribute>
-                    <attribute name="action">win.show_menubar</attribute>
-                </item>
-                <item>
                     <attribute name="label" translatable="yes">Show Statusbar</attribute>
                     <attribute name="action">win.show_statusbar</attribute>
                 </item>
