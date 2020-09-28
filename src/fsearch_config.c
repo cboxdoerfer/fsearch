@@ -279,7 +279,7 @@ config_load(FsearchConfig *config) {
 
         // Database
         config->update_database_on_launch =
-            config_load_boolean(key_file, "Database", "update_database_on_launch", false);
+            config_load_boolean(key_file, "Database", "update_database_on_launch", true);
         config->exclude_hidden_items =
             config_load_boolean(key_file, "Database", "exclude_hidden_files_and_folders", false);
         config->follow_symlinks =
@@ -372,12 +372,14 @@ config_load_default(FsearchConfig *config) {
     config->window_height = 600;
 
     // Database
-    config->update_database_on_launch = false;
+    config->update_database_on_launch = true;
     config->exclude_hidden_items = false;
     config->follow_symlinks = false;
 
     // Locations
     config->locations = NULL;
+    FsearchIncludePath *fs_path = fsearch_include_path_new(g_get_home_dir(), true, true, 0, 0);
+    config->locations = g_list_append(config->locations, fs_path);
     config->exclude_locations = NULL;
 
     return true;
