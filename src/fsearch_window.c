@@ -201,14 +201,15 @@ fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
 }
 
 void
-fsearch_application_window_set_menubar(FsearchApplicationWindow *win, bool enabled) {
-    gtk_window_set_titlebar(GTK_WINDOW(win), enabled ? NULL : win->headerbar);
+fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    gtk_window_set_titlebar(GTK_WINDOW(win), config->show_menubar ? NULL : win->headerbar);
     gtk_window_set_title(GTK_WINDOW(win), g_get_application_name());
-    gtk_widget_set_visible(win->menubar, enabled);
-    gtk_widget_set_visible(win->menu_box, enabled);
-    gtk_widget_set_visible(win->headerbar, !enabled);
+    gtk_widget_set_visible(win->menubar, config->show_menubar);
+    gtk_widget_set_visible(win->menu_box, config->show_menubar);
+    gtk_widget_set_visible(win->headerbar, !config->show_menubar);
 
-    if (enabled) {
+    if (config->show_menubar) {
         if (gtk_widget_get_parent(win->search_box) == win->headerbar_box) {
             gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
             gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
@@ -271,8 +272,7 @@ fsearch_application_window_constructed(GObject *object) {
     g_mutex_init(&self->mutex);
     fsearch_window_apply_config(self);
 
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    fsearch_application_window_set_menubar(self, config->show_menubar);
+    fsearch_apply_menubar_config(self);
 
     init_statusbar(self);
 }

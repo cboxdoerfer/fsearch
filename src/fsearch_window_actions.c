@@ -541,16 +541,6 @@ fsearch_window_action_show_statusbar(GSimpleAction *action, GVariant *variant, g
 }
 
 static void
-fsearch_window_action_show_menubar(GSimpleAction *action, GVariant *variant, gpointer user_data) {
-    FsearchApplicationWindow *self = user_data;
-    g_simple_action_set_state(action, variant);
-
-    fsearch_application_window_set_menubar(self, g_variant_get_boolean(variant));
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    config->show_menubar = g_variant_get_boolean(variant);
-}
-
-static void
 fsearch_window_action_search_in_path(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
@@ -752,7 +742,6 @@ static GActionEntry FsearchWindowActions[] = {
     //{ "update_database",     fsearch_window_action_update_database },
     // View
     {"show_statusbar", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_statusbar},
-    {"show_menubar", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_menubar},
     {"show_filter", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_filter},
     {"show_search_button",
      action_toggle_state_cb,
@@ -797,7 +786,6 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     action_set_enabled(group, "toggle_focus", TRUE);
     action_set_enabled(group, "hide_window", TRUE);
     action_set_enabled(group, "update_database", TRUE);
-    action_set_enabled(group, "show_menubar", TRUE);
     action_set_enabled(group, "show_statusbar", TRUE);
     action_set_enabled(group, "show_filter", TRUE);
     action_set_enabled(group, "show_search_button", TRUE);
@@ -808,7 +796,6 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     action_set_enabled(group, "show_modified_column", TRUE);
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    action_set_active_bool(group, "show_menubar", config->show_menubar);
     action_set_active_bool(group, "show_statusbar", config->show_statusbar);
     action_set_active_bool(group, "show_filter", config->show_filter);
     action_set_active_bool(group, "show_search_button", config->show_search_button);
