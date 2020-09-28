@@ -714,6 +714,7 @@ since not every GTK+ theme provides a dark version.</property>
                               <object class="GtkTreeView" id="include_list">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="reorderable">True</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection" id="include_list_selection"/>
                                 </child>
@@ -818,6 +819,7 @@ since not every GTK+ theme provides a dark version.</property>
                               <object class="GtkTreeView" id="exclude_list">
                                 <property name="visible">True</property>
                                 <property name="can_focus">True</property>
+                                <property name="reorderable">True</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection" id="include_list_selectio"/>
                                 </child>

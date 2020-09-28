@@ -27,6 +27,7 @@ column_text_append(GtkTreeView *view, const char *name, gboolean expand, int pos
     GtkTreeViewColumn *col =
         gtk_tree_view_column_new_with_attributes(name, renderer, "text", pos, NULL);
     gtk_tree_view_column_set_expand(col, expand);
+    gtk_tree_view_column_set_sort_column_id(col, pos);
     gtk_tree_view_append_column(view, col);
 }
 
@@ -80,6 +81,7 @@ column_toggle_append(GtkTreeView *view,
 
     GtkTreeViewColumn *col =
         gtk_tree_view_column_new_with_attributes(name, renderer, "active", pos, NULL);
+    gtk_tree_view_column_set_sort_column_id(col, pos);
     gtk_tree_view_append_column(view, col);
     g_signal_connect(renderer, "toggled", cb, user_data);
 }
