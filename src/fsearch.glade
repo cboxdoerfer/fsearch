@@ -1043,7 +1043,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           <object class="GtkBox" id="headerbar_box">
             <property name="visible">True</property>
             <property name="can_focus">False</property>
-            <property name="spacing">3</property>
+            <property name="margin_start">48</property>
+            <property name="spacing">48</property>
             <child>
               <placeholder/>
             </child>
