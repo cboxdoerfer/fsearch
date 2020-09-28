@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-05 17:41+0200\n"
+"POT-Creation-Date: 2020-09-28 20:55+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -19,39 +19,39 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: src/fsearch_window.c:104 src/fsearch_window.c:366 src/fsearch_window.c:788
+#: src/fsearch_window.c:113 src/fsearch_window.c:396 src/fsearch_window.c:817
 #, fuzzy, c-format
 msgid "%'d Items"
 msgstr "%'d elementer"
 
-#: src/fsearch_window.c:608 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:638 src/fsearch_window_actions.c:411
 #, fuzzy
 msgid "Failed to open file"
 msgstr "Klarte ikke å åpne fil"
 
-#: src/fsearch_window.c:609 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:639 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Ønsker du å beholde vinduet oppe?"
 
-#: src/fsearch_window.c:794
+#: src/fsearch_window.c:823
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Sist oppdatert: %d %m %Y %H:%M"
 
-#: src/fsearch_window.c:807 src/overlay.ui:143
+#: src/fsearch_window.c:836 src/overlay.ui:143
 #, fuzzy, c-format
 msgid "Loading Database…"
 msgstr "Laster database…"
 
-#: src/fsearch_window.c:821 src/overlay.ui:213 src/fsearch.glade:1090
+#: src/fsearch_window.c:859 src/overlay.ui:213 src/fsearch.glade:775
 #, fuzzy, c-format
 msgid "Updating Database…"
 msgstr "Oppdaterer database…"
 
-#: src/fsearch_window.c:975
+#: src/fsearch_window.c:1019
 msgid "Background tasks are active."
 msgstr "Bakgrunnsoppgaver aktive."
 
-#: src/fsearch_window.c:978
+#: src/fsearch_window.c:1022
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -59,42 +59,42 @@ msgstr ""
 "Lukking av vindu er ikke mulig nå.\n"
 "Vent et øyeblikk og prøv igjen."
 
-#: src/listview.c:186 src/menus.ui:80
+#: src/listview.c:185 src/menus.ui:201
 msgid "Name"
 msgstr "Navn"
 
-#: src/listview.c:211 src/fsearch_preferences_widgets.c:205
-#: src/fsearch_preferences_widgets.c:246 src/menus.ui:84
+#: src/listview.c:210 src/fsearch_preferences_widgets.c:207
+#: src/fsearch_preferences_widgets.c:248 src/menus.ui:205
 msgid "Path"
 msgstr "Sti"
 
-#: src/listview.c:235 src/menus.ui:92
+#: src/listview.c:234 src/menus.ui:213
 msgid "Size"
 msgstr "Størrelse"
 
-#: src/listview.c:253 src/menus.ui:96
+#: src/listview.c:252 src/menus.ui:217
 msgid "Date Modified"
 msgstr "Dato endret"
 
-#: src/listview.c:270 src/menus.ui:88
+#: src/listview.c:269 src/menus.ui:209
 msgid "Type"
 msgstr "Type"
 
-#: src/fsearch.c:173
+#: src/fsearch.c:175
 #, fuzzy
 msgid "Show version information"
 msgstr "Vis versjonsinfo"
 
-#: src/fsearch.c:180
+#: src/fsearch.c:182
 #, fuzzy
 msgid "Update the database"
 msgstr "Oppdater database"
 
-#: src/fsearch.c:358
+#: src/fsearch.c:376
 msgid "translator-credits"
 msgstr "Allan Nordhøy"
 
-#: src/fsearch.c:360
+#: src/fsearch.c:378
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
 
@@ -123,40 +123,136 @@ msgstr "Sletter filer…"
 msgid "Moving files to trash…"
 msgstr "Flytter filer til papirkurv…"
 
-#: src/fsearch_preferences_widgets.c:201 src/fsearch_preferences_widgets.c:242
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:244
 #, fuzzy
 msgid "Active"
 msgstr "Aktiv"
 
-#: src/fsearch_preferences_widgets.c:208
+#: src/fsearch_preferences_widgets.c:210
 msgid "Update"
 msgstr "Oppdater"
 
-#: src/menus.ui:7
+#: src/menus.ui:6
+msgid "_File"
+msgstr "_Fil"
+
+#: src/menus.ui:9
+msgid "New Window"
+msgstr "Nytt vindu"
+
+#: src/menus.ui:16 src/menus.ui:128
 msgid "_Open"
 msgstr "_Åpne"
 
-#: src/menus.ui:13
+#: src/menus.ui:21
+msgid "Open Folder"
+msgstr "Åpne mappe"
+
+#: src/menus.ui:29
+msgid "Update Database"
+msgstr "Oppdater database"
+
+#: src/menus.ui:35
+#, fuzzy
+#| msgid "Update"
+msgid "Cancel Update"
+msgstr "Oppdater"
+
+#: src/menus.ui:42 src/fsearch.glade:388
+msgid "Quit"
+msgstr "Avslutt"
+
+#: src/menus.ui:49
+msgid "_Edit"
+msgstr "_Rediger"
+
+#: src/menus.ui:52
+#, fuzzy
+#| msgid "_Copy"
+msgid "Copy"
+msgstr "_Kopier"
+
+#: src/menus.ui:59
+#, fuzzy
+#| msgid "Deselect All"
+msgid "Select All"
+msgstr "Fravelg alt"
+
+#: src/menus.ui:64
+msgid "Deselect All"
+msgstr "Fravelg alt"
+
+#: src/menus.ui:68
+msgid "Invert Selection"
+msgstr "Inverter utvalg"
+
+#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:338
+msgid "Preferences"
+msgstr "Innstillinger"
+
+#: src/menus.ui:81
+msgid "_View"
+msgstr "_Vis"
+
+#: src/menus.ui:84 src/fsearch.glade:285
+msgid "Show Statusbar"
+msgstr "Vis statusfelt"
+
+#: src/menus.ui:88 src/fsearch.glade:299
+msgid "Show Filter"
+msgstr "Vis filter"
+
+#: src/menus.ui:92 src/fsearch.glade:313
+msgid "Show Search Button"
+msgstr "Vis søkeknapp"
+
+#: src/menus.ui:98
+msgid "_Search"
+msgstr "_Søk"
+
+#: src/menus.ui:101 src/fsearch.glade:232
+msgid "Search in Path"
+msgstr "Søk i sti"
+
+#: src/menus.ui:105 src/fsearch.glade:246
+#, fuzzy
+msgid "Match Case"
+msgstr "Jamfør skille mellom stor og liten bokstav"
+
+#: src/menus.ui:109 src/fsearch.glade:260
+#, fuzzy
+msgid "Enable RegEx"
+msgstr "Skru på regulære uttrykk"
+
+#: src/menus.ui:115
+msgid "_Help"
+msgstr "_Hjelp"
+
+#: src/menus.ui:118 src/fsearch.glade:363
+msgid "About"
+msgstr "Om"
+
+#: src/menus.ui:134
 msgid "Open _With"
 msgstr "Åpne _med"
 
-#: src/menus.ui:27
+#: src/menus.ui:148
 msgid "_Open Folder"
 msgstr "_Åpne mappe"
 
-#: src/menus.ui:43
+#: src/menus.ui:164
 msgid "_Copy"
 msgstr "_Kopier"
 
-#: src/menus.ui:49
+#: src/menus.ui:170
 msgid "_Copy Filepath"
 msgstr "_Kopier filsti"
 
-#: src/menus.ui:56
+#: src/menus.ui:177
 msgid "Move to _Trash"
 msgstr "Flytt til _papirkurv"
 
-#: src/menus.ui:62
+#: src/menus.ui:183
 msgid "_Delete"
 msgstr "_Slett"
 
@@ -199,44 +295,11 @@ msgstr "Resultatløst"
 msgid "Try a different search"
 msgstr "Prøv et annet søk"
 
-#: src/preferences.ui:17 src/fsearch.glade:342
-msgid "Preferences"
-msgstr "Innstillinger"
-
-#: src/preferences.ui:63
+#: src/preferences.ui:81
 msgid "Enable dark theme"
 msgstr "Ifør mørk drakt"
 
-#: src/preferences.ui:76
-msgid "Show tooltips"
-msgstr "Vis verktøystips"
-
-#: src/preferences.ui:89
-msgid "Remember window size"
-msgstr "Husk vindusstørrelse"
-
-#: src/preferences.ui:102
-msgid "Remember column configuration"
-msgstr "Husk kolonneoppsett"
-
-#: src/preferences.ui:115
-msgid "Show icons in name column"
-msgstr "Vis ikoner i navnekolonne"
-
 #: src/preferences.ui:128
-#, fuzzy
-msgid "Use binary units instead of decimal units"
-msgstr "Bruk totallsenheter istedenfor titallsenheter"
-
-#: src/preferences.ui:142
-msgid "with keyboard shortcuts or menu entries"
-msgstr "med tastatursnarveier eller menyoppføringer"
-
-#: src/preferences.ui:157
-msgid "with double click"
-msgstr "med dobbeltklikk"
-
-#: src/preferences.ui:206
 #, fuzzy
 msgid ""
 "INFO: \"Enable dark theme\" might not have an effect,\n"
@@ -245,289 +308,294 @@ msgstr ""
 "INFO: \"Ifør mørk drakt\" kan være nytteløst,\n"
 "siden ikke alle GTK-drakter tilbyr en mørk versjon."
 
-#: src/preferences.ui:239
-msgid "Open path with double click in path column"
-msgstr "Åpne sti ved å dobbeltklikke i sti-kolonnen"
+#: src/preferences.ui:162
+#, fuzzy
+msgid "Enable menubar"
+msgstr "Skru på regulære uttrykk"
 
-#: src/preferences.ui:252
-msgid "Single click to open"
-msgstr "Trykk én gang for å åpne"
+#: src/preferences.ui:209
+msgid ""
+"INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
+msgstr ""
 
-#: src/preferences.ui:274
+#: src/preferences.ui:246
+#, fuzzy
+msgid "Use binary units instead of decimal units"
+msgstr "Bruk totallsenheter istedenfor titallsenheter"
+
+#: src/preferences.ui:261
+msgid "Remember window size"
+msgstr "Husk vindusstørrelse"
+
+#: src/preferences.ui:292
+msgid "with keyboard shortcuts or menu entries"
+msgstr "med tastatursnarveier eller menyoppføringer"
+
+#: src/preferences.ui:308
+msgid "with double click"
+msgstr "med dobbeltklikk"
+
+#: src/preferences.ui:338
 #, fuzzy
 msgid "Behaviour after successfully opening a file:"
 msgstr "Foretagende etter åpning av fil"
 
-#: src/preferences.ui:290
+#: src/preferences.ui:354
 msgid "Minimize"
 msgstr "Minimer"
 
-#: src/preferences.ui:291
+#: src/preferences.ui:355
 msgid "Close"
 msgstr "Lukk"
 
-#: src/preferences.ui:308
+#: src/preferences.ui:381
+msgid "General:"
+msgstr ""
+
+#: src/preferences.ui:413
 #, fuzzy
 msgid "Show highlighted search terms"
 msgstr "Vis framhevede søkeord"
 
-#: src/preferences.ui:322
+#: src/preferences.ui:428
+msgid "Show tooltips"
+msgstr "Vis verktøystips"
+
+#: src/preferences.ui:442
+msgid "Show icons in name column"
+msgstr "Vis ikoner i navnekolonne"
+
+#: src/preferences.ui:456
+msgid "Remember column configuration"
+msgstr "Husk kolonneoppsett"
+
+#: src/preferences.ui:470
 msgid "Remember sort order"
 msgstr "Husk sorteringsrekkefølge"
 
-#: src/preferences.ui:372
+#: src/preferences.ui:484
+msgid "Open path with double click in path column"
+msgstr "Åpne sti ved å dobbeltklikke i sti-kolonnen"
+
+#: src/preferences.ui:498
+msgid "Single click to open"
+msgstr "Trykk én gang for å åpne"
+
+#: src/preferences.ui:518
+msgid "Results:"
+msgstr ""
+
+#: src/preferences.ui:550
+#, fuzzy
+msgid "Show database indexing status"
+msgstr "Oppdater database ved oppstart"
+
+#: src/preferences.ui:570
+#, fuzzy
+#| msgid "Show Statusbar"
+msgid "Statusbar:"
+msgstr "Vis statusfelt"
+
+#: src/preferences.ui:588
 msgid "Interface"
 msgstr "Grensesnitt"
 
-#: src/preferences.ui:390
+#: src/preferences.ui:606
 msgid "Limit number of results:"
 msgstr "Begrens antall resultat:"
 
-#: src/preferences.ui:418
+#: src/preferences.ui:634
 #, fuzzy
 msgid "Search in path when query contains path separators"
 msgstr "Søk i sti når spørring inneholder stiinndelere"
 
-#: src/preferences.ui:432
+#: src/preferences.ui:648
 msgid "Search as you type"
 msgstr "Søk mens du skriver"
 
-#: src/preferences.ui:446
+#: src/preferences.ui:662
 msgid "Hide results when search is empty"
 msgstr "Skjul resultatløse søkeresultater"
 
-#: src/preferences.ui:460
+#: src/preferences.ui:676
 #, fuzzy
 msgid "Match case when query contains at least one upper case character"
 msgstr "Søk i sti når spørring inneholder stiinndelere"
 
-#: src/preferences.ui:481 src/fsearch.glade:821
+#: src/preferences.ui:697 src/fsearch.glade:480
 msgid "Search"
 msgstr "Søk"
 
-#: src/preferences.ui:500
+#: src/preferences.ui:716
 #, fuzzy
 msgid "Update database on start"
 msgstr "Oppdater database ved oppstart"
 
-#: src/preferences.ui:535 src/preferences.ui:639
+#: src/preferences.ui:751 src/preferences.ui:856
 msgid "Add…"
 msgstr "Legg til…"
 
-#: src/preferences.ui:551 src/preferences.ui:655
+#: src/preferences.ui:767 src/preferences.ui:872
 msgid "Remove"
 msgstr "Fjern"
 
-#: src/preferences.ui:598
+#: src/preferences.ui:815
 msgid "Follow symbolic links"
 msgstr "Følg symbolske lenker"
 
-#: src/preferences.ui:615
+#: src/preferences.ui:832
 msgid "Include"
 msgstr "Inkluder"
 
-#: src/preferences.ui:702
+#: src/preferences.ui:920
 msgid "Exclude hidden files and folders"
 msgstr "Utelat skjulte filer og mapper"
 
-#: src/preferences.ui:723 src/preferences.ui:736
+#: src/preferences.ui:941 src/preferences.ui:954
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Støtter jokertegn. Flerfoldige oppføringer må inndeles med \";\""
 
-#: src/preferences.ui:724
+#: src/preferences.ui:942
 msgid "Exclude files:"
 msgstr "Ekskluder filer:"
 
-#: src/preferences.ui:737
+#: src/preferences.ui:955
 msgid "e.g. \".git;*.tmp\""
 msgstr "f.eks. \".git;*.tmp\""
 
-#: src/preferences.ui:761
+#: src/preferences.ui:979
 msgid "Exclude"
 msgstr "Utelat"
 
-#: src/preferences.ui:784
+#: src/preferences.ui:1002
 msgid "Database"
 msgstr "Database"
 
-#: src/preferences.ui:807
+#: src/preferences.ui:1025
 msgid "Show warning dialogs when:"
 msgstr "Vis advarselsdialoger når:"
 
-#: src/preferences.ui:816
+#: src/preferences.ui:1034
 #, fuzzy
 msgid "file / folder failed to open"
 msgstr "klarte ikke å åpne fil/mappe"
 
-#: src/preferences.ui:837
+#: src/preferences.ui:1055
 msgid "Dialogs"
 msgstr "Dialogvinduer"
 
-#: src/fsearch.glade:65
+#: src/fsearch.glade:50
 msgid "Open File(s)"
 msgstr "Åpne fil(er)"
 
-#: src/fsearch.glade:75
+#: src/fsearch.glade:60
 #, fuzzy
 msgid "Open With Other Application"
 msgstr "Åpne med annet program"
 
-#: src/fsearch.glade:80
+#: src/fsearch.glade:65
 msgid "Open Containing Folder"
 msgstr "Åpner inneholdende mappe"
 
-#: src/fsearch.glade:83
+#: src/fsearch.glade:68
 msgid "Open File(s) in File Manager"
 msgstr "Åpne fil(er) i filbeandler"
 
-#: src/fsearch.glade:119
+#: src/fsearch.glade:104
 msgid "Move to Trash"
 msgstr "Flytt til papirkurv"
 
-#: src/fsearch.glade:173
+#: src/fsearch.glade:168
 #, fuzzy
 msgid "New window"
 msgstr "Nytt vindu"
 
-#: src/fsearch.glade:188
+#: src/fsearch.glade:183
 #, fuzzy
 msgid "Update database"
 msgstr "Oppdater database"
 
-#: src/fsearch.glade:222 src/fsearch.glade:694
-msgid "Search in Path"
-msgstr "Søk i sti"
-
-#: src/fsearch.glade:236 src/fsearch.glade:704
+#: src/fsearch.glade:198 src/fsearch.glade:791
 #, fuzzy
-msgid "Match Case"
-msgstr "Jamfør skille mellom stor og liten bokstav"
+msgid "Cancel database update"
+msgstr "Oppdater database ved oppstart"
 
-#: src/fsearch.glade:250 src/fsearch.glade:714
-#, fuzzy
-msgid "Enable RegEx"
-msgstr "Skru på regulære uttrykk"
-
-#: src/fsearch.glade:275 src/fsearch.glade:643
-msgid "Show Menubar"
-msgstr "Vis menyfelt"
-
-#: src/fsearch.glade:289 src/fsearch.glade:653
-msgid "Show Statusbar"
-msgstr "Vis statusfelt"
-
-#: src/fsearch.glade:303 src/fsearch.glade:662
-msgid "Show Filter"
-msgstr "Vis filter"
-
-#: src/fsearch.glade:317 src/fsearch.glade:671
-msgid "Show Search Button"
-msgstr "Vis søkeknapp"
-
-#: src/fsearch.glade:367
-msgid "About"
-msgstr "Om"
-
-#: src/fsearch.glade:392
-msgid "Quit"
-msgstr "Avslutt"
-
-#: src/fsearch.glade:425
-msgid "_File"
-msgstr "_Fil"
-
-#: src/fsearch.glade:433
-msgid "New Window"
-msgstr "Nytt vindu"
-
-#: src/fsearch.glade:462
-msgid "Open Folder"
-msgstr "Åpne mappe"
-
-#: src/fsearch.glade:497
-msgid "Update Database"
-msgstr "Oppdater database"
-
-#: src/fsearch.glade:532
-msgid "_Edit"
-msgstr "_Rediger"
-
-#: src/fsearch.glade:593
-msgid "Deselect All"
-msgstr "Fravelg alt"
-
-#: src/fsearch.glade:602
-msgid "Invert Selection"
-msgstr "Inverter utvalg"
-
-#: src/fsearch.glade:631
-msgid "_View"
-msgstr "_Vis"
-
-#: src/fsearch.glade:683
-msgid "_Search"
-msgstr "_Søk"
-
-#: src/fsearch.glade:727
-msgid "_Help"
-msgstr "_Hjelp"
-
-#: src/fsearch.glade:781
+#: src/fsearch.glade:440
 #, fuzzy
 msgid "Search…"
 msgstr "Søk"
 
-#: src/fsearch.glade:796
+#: src/fsearch.glade:455
 msgid "Select a Filter"
 msgstr "Velg et filter"
 
-#: src/fsearch.glade:799
+#: src/fsearch.glade:458
 msgid "All"
 msgstr "Alle"
 
-#: src/fsearch.glade:800
+#: src/fsearch.glade:459
 msgid "Folders"
 msgstr "Mapper"
 
-#: src/fsearch.glade:801
+#: src/fsearch.glade:460
 msgid "Files"
 msgstr "Filer"
 
-#: src/fsearch.glade:957
+#: src/fsearch.glade:590
 msgid "Number of Search Results"
 msgstr "Antall søkeresultater"
 
-#: src/fsearch.glade:958
+#: src/fsearch.glade:591
 msgid "0 Items"
 msgstr "0 elementer"
 
-#: src/fsearch.glade:1013 src/fsearch.glade:1037
+#: src/fsearch.glade:628
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch.glade:696
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected folders"
+msgstr "Antall søkeresultater"
+
+#: src/fsearch.glade:697 src/fsearch.glade:722
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:1104
+#: src/fsearch.glade:721
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected files"
+msgstr "Antall søkeresultater"
+
+#: src/fsearch.glade:808
 #, fuzzy
 msgid "page0"
 msgstr "side0"
 
-#: src/fsearch.glade:1128
+#: src/fsearch.glade:832
+msgid "Number of database items"
+msgstr ""
+
+#: src/fsearch.glade:833
 msgid "(empty)"
 msgstr "(tom)"
 
-#: src/fsearch.glade:1139
+#: src/fsearch.glade:844
 msgid "page1"
 msgstr "side1"
 
-#: src/fsearch.glade:1183
+#: src/fsearch.glade:888
 #, fuzzy
 msgid "CASE"
 msgstr "VERSAL"
 
-#: src/fsearch.glade:1235
+#: src/fsearch.glade:940
 msgid "PATH"
 msgstr "STI"
 
-#: src/fsearch.glade:1287
+#: src/fsearch.glade:992
 msgid "REGEX"
 msgstr "Regulært uttrykk"
 
@@ -548,6 +616,9 @@ msgstr "system-search"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "søk;fsearch;filer;mapper;musikk;video;dokumenter;finn;verktøy;alt;"
+
+#~ msgid "Show Menubar"
+#~ msgstr "Vis menyfelt"
 
 #, fuzzy
 #~ msgid "Enable"
