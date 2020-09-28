@@ -206,7 +206,7 @@ since not every GTK+ theme provides a dark version.</property>
                                       <object class="GtkLabel">
                                         <property name="visible">True</property>
                                         <property name="can_focus">False</property>
-                                        <property name="label" translatable="yes">INFO: Enabling/Disabling the menubar requires a restart to take effect.
+                                        <property name="label" translatable="yes">INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.
 </property>
                                       </object>
                                       <packing>
