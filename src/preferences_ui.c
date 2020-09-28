@@ -41,12 +41,7 @@ infobar_response(GtkInfoBar *info_bar, gint response_id, gpointer user_data) {
 static void
 toggle_infobar_visibility(GtkToggleButton *togglebutton, gpointer user_data) {
     GtkWidget *infobar = GTK_WIDGET(user_data);
-    if (gtk_toggle_button_get_active(togglebutton)) {
-        gtk_widget_show(infobar);
-    }
-    else {
-        gtk_widget_hide(infobar);
-    }
+    gtk_widget_show(infobar);
 }
 
 static void
