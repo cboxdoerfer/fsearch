@@ -5,7 +5,9 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 **Note: The application is still in beta stage, but will see its first release as soon as localization support has been added**
 
-![](https://i.imgur.com/LvsxlWD.png)
+![](https://user-images.githubusercontent.com/6108388/94472642-51f60a80-01cb-11eb-9b8c-e38fe2c02e43.png)
+![](https://user-images.githubusercontent.com/6108388/94472264-c54b4c80-01ca-11eb-9be1-687e8358fc26.png)
+
 
 ## Features
 - Instant (as you type) results
@@ -15,7 +17,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 - Include and exclude specific folders to be indexed
 - Ability to exclude certain files/folders from index using wildcard expressions
 - Fast sort by filename, path, size or modification time
-- Customizable interface
+- Customizable interface (e.g. switch between traditional UI with menubar and client-side decorations)
 
 ## Requirements
 - GTK+ 3.18
