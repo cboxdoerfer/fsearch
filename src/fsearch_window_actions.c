@@ -544,10 +544,8 @@ static void
 fsearch_window_action_show_menubar(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
-    GtkWidget *menubar = GTK_WIDGET(fsearch_application_window_get_menubar(self));
-    GtkWidget *app_menu = GTK_WIDGET(fsearch_application_window_get_app_menu(self));
-    gtk_widget_set_visible(menubar, g_variant_get_boolean(variant));
-    gtk_widget_set_visible(app_menu, !g_variant_get_boolean(variant));
+
+    fsearch_application_window_set_menubar(self, g_variant_get_boolean(variant));
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_menubar = g_variant_get_boolean(variant);
 }

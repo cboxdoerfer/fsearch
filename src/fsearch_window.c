@@ -55,10 +55,13 @@ struct _FsearchApplicationWindow {
     GtkWidget *empty_database_overlay;
     GtkWidget *empty_search_query_overlay;
     GtkWidget *filter_combobox;
+    GtkWidget *headerbar;
+    GtkWidget *headerbar_box;
     GtkWidget *listview;
     GtkWidget *match_case_revealer;
     GtkWidget *main_box;
     GtkWidget *menubar;
+    GtkWidget *menu_box;
     GtkWidget *no_search_results_overlay;
     GtkWidget *num_files_label;
     GtkWidget *num_folders_label;
@@ -66,6 +69,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *scrolledwindow1;
     GtkWidget *popover_update_db;
     GtkWidget *popover_cancel_update_db;
+    GtkWidget *search_box;
     GtkWidget *search_button;
     GtkWidget *search_entry;
     GtkWidget *search_icon;
@@ -196,6 +200,28 @@ fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
     remove_model_from_list(win);
 }
 
+void
+fsearch_application_window_set_menubar(FsearchApplicationWindow *win, bool enabled) {
+    gtk_widget_set_visible(win->menubar, enabled);
+    gtk_widget_set_visible(win->menu_box, enabled);
+    gtk_widget_set_visible(win->headerbar, !enabled);
+
+    if (enabled) {
+        if (gtk_widget_get_parent(win->search_box) == win->headerbar_box) {
+            gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
+            gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
+            gtk_box_reorder_child(GTK_BOX(win->menu_box), win->search_box, 0);
+        }
+    }
+    else {
+        if (gtk_widget_get_parent(win->search_box) == win->menu_box) {
+            gtk_container_remove(GTK_CONTAINER(win->menu_box), win->search_box);
+            gtk_box_pack_start(GTK_BOX(win->headerbar_box), win->search_box, TRUE, TRUE, 0);
+            gtk_box_reorder_child(GTK_BOX(win->headerbar_box), win->search_box, 0);
+        }
+    }
+}
+
 static void
 fsearch_window_apply_config(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
@@ -205,8 +231,7 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     if (config->restore_window_size) {
         gtk_window_set_default_size(GTK_WINDOW(self), config->window_width, config->window_height);
     }
-    gtk_widget_set_visible(self->menubar, config->show_menubar);
-    gtk_widget_set_visible(self->app_menu, !config->show_menubar);
+    fsearch_application_window_set_menubar(self, config->show_menubar);
     gtk_widget_set_visible(self->statusbar, config->show_statusbar);
     gtk_widget_set_visible(self->filter_combobox, config->show_filter);
     gtk_widget_set_visible(self->search_button, config->show_search_button);
@@ -1021,6 +1046,10 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, search_mode_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_combobox);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview);
@@ -1068,18 +1097,6 @@ GtkWidget *
 fsearch_application_window_get_statusbar(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
     return GTK_WIDGET(self->statusbar);
-}
-
-GtkWidget *
-fsearch_application_window_get_app_menu(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return GTK_WIDGET(self->app_menu);
-}
-
-GtkWidget *
-fsearch_application_window_get_menubar(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return GTK_WIDGET(self->menubar);
 }
 
 GtkWidget *
