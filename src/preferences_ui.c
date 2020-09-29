@@ -159,16 +159,7 @@ preferences_ui_launch(FsearchConfig *config,
                      enable_dark_theme_infobar);
 
     GtkToggleButton *show_menubar_button =
-        toggle_button_get(builder, "show_menubar_button", pref.config->show_menubar);
-
-    GtkInfoBar *show_menubar_infobar =
-        GTK_INFO_BAR(builder_get_object(builder, "show_menubar_infobar"));
-    g_signal_connect(show_menubar_infobar, "response", G_CALLBACK(infobar_response), NULL);
-
-    g_signal_connect(show_menubar_button,
-                     "toggled",
-                     G_CALLBACK(toggle_infobar_visibility),
-                     show_menubar_infobar);
+        toggle_button_get(builder, "show_menubar_button", !pref.config->show_menubar);
 
     GtkToggleButton *show_tooltips_button =
         toggle_button_get(builder, "show_tooltips_button", pref.config->enable_list_tooltips);
@@ -296,7 +287,7 @@ preferences_ui_launch(FsearchConfig *config,
     if (response == GTK_RESPONSE_OK) {
         pref.config->search_as_you_type = gtk_toggle_button_get_active(search_as_you_type_button);
         pref.config->enable_dark_theme = gtk_toggle_button_get_active(enable_dark_theme_button);
-        pref.config->show_menubar = gtk_toggle_button_get_active(show_menubar_button);
+        pref.config->show_menubar = !gtk_toggle_button_get_active(show_menubar_button);
         pref.config->restore_column_config =
             gtk_toggle_button_get_active(restore_column_config_button);
         pref.config->restore_sort_order = gtk_toggle_button_get_active(restore_sort_order_button);
