@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-28 20:55+0200\n"
-"PO-Revision-Date: 2020-09-11 19:42+0000\n"
+"PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -147,10 +147,8 @@ msgid "Update Database"
 msgstr "Оновити базу даних"
 
 #: src/menus.ui:35
-#, fuzzy
-#| msgid "Update"
 msgid "Cancel Update"
-msgstr "Оновляти"
+msgstr "Скасувати оновлення"
 
 #: src/menus.ui:42 src/fsearch.glade:388
 msgid "Quit"
@@ -161,16 +159,12 @@ msgid "_Edit"
 msgstr "_Зміни"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_Копіювати"
+msgstr "Копіювати"
 
 #: src/menus.ui:59
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Скасувати виділення"
+msgstr "Виділити все"
 
 #: src/menus.ui:64
 msgid "Deselect All"
@@ -297,15 +291,15 @@ msgstr ""
 "тому що не кожна GTK+ тема підтримує темну версію."
 
 #: src/preferences.ui:162
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable menubar"
-msgstr "Дозволити регулярні вирази"
+msgstr "Відображати панель меню"
 
 #: src/preferences.ui:209
 msgid ""
 "INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
 msgstr ""
+"ІНФОРМАЦІЯ: Увімкнення / вимкнення панелі меню набуває чинності після "
+"перезапуску FSearch.\n"
 
 #: src/preferences.ui:246
 msgid "Use binary units instead of decimal units"
@@ -337,7 +331,7 @@ msgstr "Закрити"
 
 #: src/preferences.ui:381
 msgid "General:"
-msgstr ""
+msgstr "Основне:"
 
 #: src/preferences.ui:413
 msgid "Show highlighted search terms"
@@ -369,19 +363,15 @@ msgstr "Відкривати одним клацанням"
 
 #: src/preferences.ui:518
 msgid "Results:"
-msgstr ""
+msgstr "Результати:"
 
 #: src/preferences.ui:550
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Оновлювати базу даних під час запуску"
+msgstr "Показувати стан індексування бази даних"
 
 #: src/preferences.ui:570
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Відображати рядок стану"
+msgstr "Панель статусу:"
 
 #: src/preferences.ui:588
 msgid "Interface"
@@ -498,10 +488,8 @@ msgid "Update database"
 msgstr "Оновити базу даних"
 
 #: src/fsearch.glade:198 src/fsearch.glade:791
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Оновлювати базу даних під час запуску"
+msgstr "Скасувати оновлення бази даних"
 
 #: src/fsearch.glade:440
 msgid "Search…"
@@ -533,23 +521,19 @@ msgstr "0 об'єктів"
 
 #: src/fsearch.glade:628
 msgid "Index:"
-msgstr ""
+msgstr "Індексування:"
 
 #: src/fsearch.glade:696
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Знайдені результати"
+msgstr "Кількість вибраних папок"
 
 #: src/fsearch.glade:697 src/fsearch.glade:722
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:721
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Знайдені результати"
+msgstr "Кількість вибраних файлів"
 
 #: src/fsearch.glade:808
 msgid "page0"
@@ -557,7 +541,7 @@ msgstr "сторінка0"
 
 #: src/fsearch.glade:832
 msgid "Number of database items"
-msgstr ""
+msgstr "Кількість елементів бази даних"
 
 #: src/fsearch.glade:833
 msgid "(empty)"
