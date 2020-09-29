@@ -512,10 +512,9 @@ static void
 fsearch_window_action_show_filter(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
-    GtkWidget *filter = GTK_WIDGET(fsearch_application_window_get_filter_combobox(self));
-    gtk_widget_set_visible(filter, g_variant_get_boolean(variant));
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_filter = g_variant_get_boolean(variant);
+    fsearch_window_apply_search_revealer_config(self);
 }
 
 static void
@@ -524,10 +523,9 @@ fsearch_window_action_show_search_button(GSimpleAction *action,
                                          gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
-    GtkWidget *button = GTK_WIDGET(fsearch_application_window_get_search_button(self));
-    gtk_widget_set_visible(button, g_variant_get_boolean(variant));
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_search_button = g_variant_get_boolean(variant);
+    fsearch_window_apply_search_revealer_config(self);
 }
 
 static void

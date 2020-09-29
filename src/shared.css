@@ -8,6 +8,27 @@
     border-top-width: 0px;
 }
 
+.filter_combobox box.linked button {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left-width: 0;
+}
+
+.filter_centered box.linked button {
+    border-radius: 0;
+}
+
+.search_button {
+    border-bottom-left-radius: 0;
+    border-top-left-radius: 0;
+    border-left-width: 0;
+}
+
+.search_entry_has_neighbours {
+    border-bottom-right-radius: 0;
+    border-top-right-radius: 0;
+}
+
 .fsearch-statusbar-button {
     border-radius: 0px;
     border-top: none;

@@ -55,6 +55,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *empty_database_overlay;
     GtkWidget *empty_search_query_overlay;
     GtkWidget *filter_combobox;
+    GtkWidget *filter_revealer;
     GtkWidget *headerbar;
     GtkWidget *headerbar_box;
     GtkWidget *listview;
@@ -71,6 +72,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *popover_cancel_update_db;
     GtkWidget *search_box;
     GtkWidget *search_button;
+    GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
     GtkWidget *search_icon;
     GtkWidget *search_in_path_revealer;
@@ -225,6 +227,30 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
     }
 }
 
+void
+fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->filter_combobox);
+    if (config->show_search_button && config->show_filter) {
+        gtk_style_context_add_class(filter_style, "filter_centered");
+    }
+    else {
+        gtk_style_context_remove_class(filter_style, "filter_centered");
+    }
+    GtkStyleContext *entry_style = gtk_widget_get_style_context(win->search_entry);
+    if (config->show_search_button || config->show_filter) {
+        gtk_style_context_add_class(entry_style, "search_entry_has_neighbours");
+    }
+    else {
+        gtk_style_context_remove_class(entry_style, "search_entry_has_neighbours");
+    }
+
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->filter_revealer), config->show_filter);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_button_revealer),
+                                  config->show_search_button);
+}
+
 static void
 fsearch_window_apply_config(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
@@ -234,9 +260,8 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     if (config->restore_window_size) {
         gtk_window_set_default_size(GTK_WINDOW(self), config->window_width, config->window_height);
     }
+    fsearch_window_apply_search_revealer_config(self);
     gtk_widget_set_visible(self->statusbar, config->show_statusbar);
-    gtk_widget_set_visible(self->filter_combobox, config->show_filter);
-    gtk_widget_set_visible(self->search_button, config->show_search_button);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->match_case_revealer), config->match_case);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_mode_revealer), config->enable_regex);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_in_path_revealer),
@@ -1051,12 +1076,15 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, search_mode_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, search_button_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_combobox);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview);
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, listview_selection);
@@ -1102,18 +1130,6 @@ GtkWidget *
 fsearch_application_window_get_statusbar(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
     return GTK_WIDGET(self->statusbar);
-}
-
-GtkWidget *
-fsearch_application_window_get_filter_combobox(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->filter_combobox;
-}
-
-GtkWidget *
-fsearch_application_window_get_search_button(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->search_button;
 }
 
 GtkEntry *

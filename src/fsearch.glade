@@ -449,17 +449,62 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkComboBoxText" id="filter_combobox">
+                  <object class="GtkRevealer" id="filter_revealer">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
-                    <property name="tooltip_text" translatable="yes">Select a Filter</property>
-                    <property name="active">0</property>
-                    <items>
-                      <item id="FSEARCH_FILTER_NONE" translatable="yes">All</item>
-                      <item id="FSEARCH_FILTER_FOLDERS" translatable="yes">Folders</item>
-                      <item id="FSEARCH_FILTER_FILES" translatable="yes">Files</item>
-                    </items>
-                    <signal name="changed" handler="on_filter_combobox_changed" object="FsearchApplicationWindow" swapped="no"/>
+                    <property name="transition_type">slide-right</property>
+                    <property name="reveal_child">True</property>
+                    <child>
+                      <object class="GtkComboBoxText" id="filter_combobox">
+                        <property name="name">filter_combobox</property>
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="tooltip_text" translatable="yes">Select a Filter</property>
+                        <property name="active">0</property>
+                        <items>
+                          <item id="FSEARCH_FILTER_NONE" translatable="yes">All</item>
+                          <item id="FSEARCH_FILTER_FOLDERS" translatable="yes">Folders</item>
+                          <item id="FSEARCH_FILTER_FILES" translatable="yes">Files</item>
+                        </items>
+                        <signal name="changed" handler="on_filter_combobox_changed" object="FsearchApplicationWindow" swapped="no"/>
+                        <style>
+                          <class name="filter_combobox"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkRevealer" id="search_button_revealer">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="transition_type">slide-right</property>
+                    <property name="reveal_child">True</property>
+                    <child>
+                      <object class="GtkButton" id="search_button">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="tooltip_text" translatable="yes">Search</property>
+                            <property name="icon_name">edit-find-symbolic</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="suggested-action"/>
+                          <class name="search_button"/>
+                        </style>
+                      </object>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -467,33 +512,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="position">2</property>
                   </packing>
                 </child>
-                <child>
-                  <object class="GtkButton" id="search_button">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <signal name="clicked" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Search</property>
-                        <property name="icon_name">edit-find-symbolic</property>
-                      </object>
-                    </child>
-                    <style>
-                      <class name="suggested-action"/>
-                    </style>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">3</property>
-                  </packing>
-                </child>
-                <style>
-                  <class name="linked"/>
-                </style>
               </object>
               <packing>
                 <property name="expand">False</property>

@@ -64,12 +64,6 @@ fsearch_application_window_get_search_in_path_revealer(FsearchApplicationWindow 
 GtkEntry *
 fsearch_application_window_get_search_entry(FsearchApplicationWindow *self);
 
-GtkWidget *
-fsearch_application_window_get_filter_combobox(FsearchApplicationWindow *self);
-
-GtkWidget *
-fsearch_application_window_get_search_button(FsearchApplicationWindow *self);
-
 gboolean
 fsearch_application_window_update_search(FsearchApplicationWindow *self);
 
@@ -87,4 +81,7 @@ fsearch_application_window_get_query_highlight(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_results(void *data);
+
+void
+fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win);
 G_END_DECLS
