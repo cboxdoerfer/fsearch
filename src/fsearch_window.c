@@ -226,6 +226,8 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
             gtk_box_reorder_child(GTK_BOX(win->headerbar_box), win->search_box, 0);
         }
     }
+    // ensure search entry still has focus after reordering the search_box
+    gtk_widget_grab_focus(win->search_entry);
 }
 
 void
