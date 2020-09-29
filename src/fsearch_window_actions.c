@@ -532,10 +532,9 @@ static void
 fsearch_window_action_show_statusbar(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
-    GtkWidget *revealer = GTK_WIDGET(fsearch_application_window_get_statusbar_revealer(self));
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_statusbar = g_variant_get_boolean(variant);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), config->show_statusbar);
+    fsearch_window_apply_statusbar_revealer_config(self);
 }
 
 static void

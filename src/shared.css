@@ -1,3 +1,7 @@
+headerbar {
+    border-bottom-width: 0;
+}
+
 .fsearch-statusbar-cancel-update-button {
     padding: 0px;
     min-height: 20px;
@@ -35,7 +39,11 @@
     border-bottom: none;
 }
 
-.fsearch-results-frame {
+.results_frame {
     border-left: none;
     border-right: none;
+}
+
+.results_frame_last {
+    border-bottom: none;
 }

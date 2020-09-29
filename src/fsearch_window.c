@@ -229,6 +229,20 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
 }
 
 void
+fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->scrolledwindow1);
+    if (!config->show_statusbar) {
+        gtk_style_context_add_class(filter_style, "results_frame_last");
+    }
+    else {
+        gtk_style_context_remove_class(filter_style, "results_frame_last");
+    }
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_revealer), config->show_statusbar);
+}
+
+void
 fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -262,7 +276,7 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
         gtk_window_set_default_size(GTK_WINDOW(self), config->window_width, config->window_height);
     }
     fsearch_window_apply_search_revealer_config(self);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_revealer), config->show_statusbar);
+    fsearch_window_apply_statusbar_revealer_config(self);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->match_case_revealer), config->match_case);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_mode_revealer), config->enable_regex);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_in_path_revealer),
@@ -1127,12 +1141,6 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_listview_query_tooltip);
-}
-
-GtkWidget *
-fsearch_application_window_get_statusbar_revealer(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return GTK_WIDGET(self->statusbar_revealer);
 }
 
 GtkEntry *

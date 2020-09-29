@@ -532,7 +532,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <property name="can_focus">False</property>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow1">
-                <property name="name">scrolledwindow</property>
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
                 <property name="shadow_type">in</property>
@@ -562,7 +561,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </object>
                 </child>
                 <style>
-                  <class name="fsearch-results-frame"/>
+                  <class name="results_frame"/>
                 </style>
               </object>
               <packing>
