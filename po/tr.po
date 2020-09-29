@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-28 20:55+0200\n"
-"PO-Revision-Date: 2020-09-09 07:36+0000\n"
+"PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -147,10 +147,8 @@ msgid "Update Database"
 msgstr "Veri Tabanını Güncelle"
 
 #: src/menus.ui:35
-#, fuzzy
-#| msgid "Update"
 msgid "Cancel Update"
-msgstr "Güncelle"
+msgstr "Güncellemeyi İptal Et"
 
 #: src/menus.ui:42 src/fsearch.glade:388
 msgid "Quit"
@@ -161,16 +159,12 @@ msgid "_Edit"
 msgstr "_Düzenle"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_Kopyala"
+msgstr "Kopyala"
 
 #: src/menus.ui:59
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Bütün Seçimi Kaldır"
+msgstr "Tümünü Seç"
 
 #: src/menus.ui:64
 msgid "Deselect All"
@@ -299,15 +293,15 @@ msgstr ""
 "Çünkü her GTK + teması karanlık temayı desteklemiyor."
 
 #: src/preferences.ui:162
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable menubar"
-msgstr "RegEx'i Aktifleştir"
+msgstr "Menü çubuğunu etkinleştir"
 
 #: src/preferences.ui:209
 msgid ""
 "INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
 msgstr ""
+"BİLGİ: Menü çubuğunun etkinleştirilmesi/devre dışı bırakılması FSearch "
+"yeniden başlatıldıktan sonra etkili olur.\n"
 
 #: src/preferences.ui:246
 msgid "Use binary units instead of decimal units"
@@ -339,7 +333,7 @@ msgstr "Kapat"
 
 #: src/preferences.ui:381
 msgid "General:"
-msgstr ""
+msgstr "Genel:"
 
 #: src/preferences.ui:413
 msgid "Show highlighted search terms"
@@ -371,19 +365,15 @@ msgstr "Açmak için tek tıklama"
 
 #: src/preferences.ui:518
 msgid "Results:"
-msgstr ""
+msgstr "Sonuçlar:"
 
 #: src/preferences.ui:550
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Başlangıçta veri tabanını güncelle"
+msgstr "Veri tabanı indeksleme durumunu göster"
 
 #: src/preferences.ui:570
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Durum Çubuğunu Göster"
+msgstr "Durum çubuğu:"
 
 #: src/preferences.ui:588
 msgid "Interface"
@@ -500,10 +490,8 @@ msgid "Update database"
 msgstr "Veri tabanını güncelle"
 
 #: src/fsearch.glade:198 src/fsearch.glade:791
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Başlangıçta veri tabanını güncelle"
+msgstr "Veri tabanı güncellemesini iptal et"
 
 #: src/fsearch.glade:440
 msgid "Search…"
@@ -535,23 +523,19 @@ msgstr "0 Öğe"
 
 #: src/fsearch.glade:628
 msgid "Index:"
-msgstr ""
+msgstr "İndeks:"
 
 #: src/fsearch.glade:696
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Arama Sonucunun Sayısı"
+msgstr "Seçili klasör sayısı"
 
 #: src/fsearch.glade:697 src/fsearch.glade:722
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:721
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Arama Sonucunun Sayısı"
+msgstr "Seçili dosya sayısı"
 
 #: src/fsearch.glade:808
 msgid "page0"
@@ -559,7 +543,7 @@ msgstr "sayfa0"
 
 #: src/fsearch.glade:832
 msgid "Number of database items"
-msgstr ""
+msgstr "Veri tabanı ögelerinin sayısı"
 
 #: src/fsearch.glade:833
 msgid "(empty)"
