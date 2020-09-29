@@ -6,7 +6,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 **Note: The application is still in beta stage, but will see its first release as soon as localization support has been added**
 
 ![](https://user-images.githubusercontent.com/6108388/94472642-51f60a80-01cb-11eb-9b8c-e38fe2c02e43.png)
-![](https://user-images.githubusercontent.com/6108388/94562846-2411d400-0266-11eb-8a75-065b9bf600b3.png)
+![](https://user-images.githubusercontent.com/6108388/94563066-73f09b00-0266-11eb-8cf5-817eb5233d12.png)
 
 
 ## Features
