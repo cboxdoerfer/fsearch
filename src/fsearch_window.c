@@ -80,6 +80,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_mode_revealer;
     GtkWidget *search_overlay;
     GtkWidget *statusbar;
+    GtkWidget *statusbar_revealer;
     GtkWidget *statusbar_scan_label;
     GtkWidget *statusbar_scan_status_label;
 
@@ -261,7 +262,7 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
         gtk_window_set_default_size(GTK_WINDOW(self), config->window_width, config->window_height);
     }
     fsearch_window_apply_search_revealer_config(self);
-    gtk_widget_set_visible(self->statusbar, config->show_statusbar);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_revealer), config->show_statusbar);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->match_case_revealer), config->match_case);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_mode_revealer), config->enable_regex);
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_in_path_revealer),
@@ -1069,6 +1070,8 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, app_menu);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar);
     gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, statusbar_revealer);
+    gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, search_in_path_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
     gtk_widget_class_bind_template_child(
@@ -1127,9 +1130,9 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
 }
 
 GtkWidget *
-fsearch_application_window_get_statusbar(FsearchApplicationWindow *self) {
+fsearch_application_window_get_statusbar_revealer(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return GTK_WIDGET(self->statusbar);
+    return GTK_WIDGET(self->statusbar_revealer);
 }
 
 GtkEntry *

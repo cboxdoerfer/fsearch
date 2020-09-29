@@ -50,7 +50,7 @@ void
 fsearch_application_window_update_listview_config(FsearchApplicationWindow *self);
 
 GtkWidget *
-fsearch_application_window_get_statusbar(FsearchApplicationWindow *self);
+fsearch_application_window_get_statusbar_revealer(FsearchApplicationWindow *self);
 
 GtkWidget *
 fsearch_application_window_get_search_mode_revealer(FsearchApplicationWindow *self);
