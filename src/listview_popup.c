@@ -85,7 +85,7 @@ clean_up:
 }
 
 void
-listview_popup_menu(GtkWidget *widget, GdkEventButton *event) {
+listview_popup_menu(GtkWidget *widget, GdkEvent *event) {
     GtkTreeView *view = GTK_TREE_VIEW(widget);
     GtkTreeSelection *selection = gtk_tree_view_get_selection(view);
     GtkTreeModel *model = gtk_tree_view_get_model(view);
@@ -94,15 +94,18 @@ listview_popup_menu(GtkWidget *widget, GdkEventButton *event) {
     }
 
 #pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-    int button = 0;
-    int event_time = 0;
+    guint button = 0;
+    guint32 time = 0;
 #pragma GCC diagnostic pop
 
     GtkTreeIter iter;
     gboolean iter_set = FALSE;
     GtkTreePath *path = NULL;
     if (event) {
-        if (!gtk_tree_view_get_path_at_pos(view, event->x, event->y, &path, NULL, NULL, NULL)) {
+        gdouble x_win;
+        gdouble y_win;
+        gdk_event_get_coords(event, &x_win, &y_win);
+        if (!gtk_tree_view_get_path_at_pos(view, x_win, y_win, &path, NULL, NULL, NULL)) {
             // clicked empty area
             // -> unselect everything
             gtk_tree_selection_unselect_all(selection);
@@ -118,8 +121,8 @@ listview_popup_menu(GtkWidget *widget, GdkEventButton *event) {
         iter_set = gtk_tree_model_get_iter(model, &iter, path);
         gtk_tree_path_free(path);
 
-        button = event->button;
-        event_time = event->time;
+        gdk_event_get_button(event, &button);
+        time = gdk_event_get_time(event);
     }
     else {
         // Find the first selected entry
@@ -131,7 +134,7 @@ listview_popup_menu(GtkWidget *widget, GdkEventButton *event) {
         }
 
         button = 0;
-        event_time = gtk_get_current_event_time();
+        time = gtk_get_current_event_time();
     }
 
     if (!iter_set) {
@@ -148,7 +151,7 @@ listview_popup_menu(GtkWidget *widget, GdkEventButton *event) {
 
     gtk_menu_attach_to_widget(GTK_MENU(menu_widget), GTK_WIDGET(widget), NULL);
 #if !GTK_CHECK_VERSION(3, 22, 0)
-    gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, button, event_time);
+    gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, button, time);
 #else
     gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif

@@ -551,14 +551,20 @@ on_listview_popup_menu(GtkWidget *widget, gpointer user_data) {
 }
 
 static gboolean
-on_listview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
+on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
     GActionGroup *group = G_ACTION_GROUP(win);
-    GdkModifierType modifiers;
-    modifiers = gtk_accelerator_get_default_mod_mask();
-    if ((event->state & modifiers) == (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) {
-        switch (event->keyval) {
+
+    GdkModifierType default_modifiers = gtk_accelerator_get_default_mod_mask();
+    guint keyval;
+    GdkModifierType state;
+
+    gdk_event_get_state(event, &state);
+    gdk_event_get_keyval(event, &keyval);
+
+    if ((state & default_modifiers) == (GDK_CONTROL_MASK | GDK_SHIFT_MASK)) {
+        switch (keyval) {
         case GDK_KEY_C:
             g_action_group_activate_action(group, "copy_filepath_clipboard", NULL);
             return TRUE;
@@ -566,8 +572,8 @@ on_listview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user
             return FALSE;
         }
     }
-    else if ((event->state & modifiers) == GDK_CONTROL_MASK) {
-        switch (event->keyval) {
+    else if ((state & default_modifiers) == GDK_CONTROL_MASK) {
+        switch (keyval) {
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
             g_action_group_activate_action(group, "open_folder", NULL);
@@ -579,8 +585,8 @@ on_listview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user
             return FALSE;
         }
     }
-    else if ((event->state & modifiers) == GDK_SHIFT_MASK) {
-        switch (event->keyval) {
+    else if ((state & default_modifiers) == GDK_SHIFT_MASK) {
+        switch (keyval) {
         case GDK_KEY_Delete:
             g_action_group_activate_action(group, "delete_selection", NULL);
             return TRUE;
@@ -589,7 +595,7 @@ on_listview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user
         }
     }
     else {
-        switch (event->keyval) {
+        switch (keyval) {
         case GDK_KEY_Delete:
             g_action_group_activate_action(group, "move_to_trash", NULL);
             return TRUE;
@@ -605,23 +611,25 @@ on_listview_key_press_event(GtkWidget *widget, GdkEventKey *event, gpointer user
 }
 
 static gboolean
-on_listview_button_press_event(GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
+on_listview_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     g_return_val_if_fail(user_data != NULL, FALSE);
     g_return_val_if_fail(event != NULL, FALSE);
 
-    if (G_UNLIKELY(event->window != gtk_tree_view_get_bin_window(GTK_TREE_VIEW(widget)))) {
+    GdkWindow *window = gdk_event_get_window(event);
+    if (G_UNLIKELY(window != gtk_tree_view_get_bin_window(GTK_TREE_VIEW(widget)))) {
         // clicked outside of list (e.g. column header)
         return FALSE;
     }
 
-    if (event->type == GDK_BUTTON_PRESS) {
+    GdkEventType type = gdk_event_get_event_type(event);
+    if (type == GDK_BUTTON_PRESS) {
         if (gdk_event_triggers_context_menu((GdkEvent *)event)) {
             listview_popup_menu(widget, event);
             return TRUE;
         }
     }
-    else if (event->type == GDK_2BUTTON_PRESS) {
-        if (event->window == gtk_tree_view_get_bin_window(GTK_TREE_VIEW(widget))) {
+    else if (type == GDK_2BUTTON_PRESS) {
+        if (window == gtk_tree_view_get_bin_window(GTK_TREE_VIEW(widget))) {
             // GtkTreeViewColumn *column = NULL;
             // GtkTreePath *path = NULL;
             // gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
@@ -721,8 +729,11 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
 }
 
 static gboolean
-toggle_action_on_2button_press(GdkEventButton *event, const char *action, gpointer user_data) {
-    if (event->button != GDK_BUTTON_PRIMARY || event->type != GDK_2BUTTON_PRESS) {
+toggle_action_on_2button_press(GdkEvent *event, const char *action, gpointer user_data) {
+    guint button;
+    gdk_event_get_button(event, &button);
+    GdkEventType type = gdk_event_get_event_type(event);
+    if (button != GDK_BUTTON_PRIMARY || type != GDK_2BUTTON_PRESS) {
         return FALSE;
     }
     FsearchApplicationWindow *win = user_data;
@@ -736,23 +747,17 @@ toggle_action_on_2button_press(GdkEventButton *event, const char *action, gpoint
 }
 
 static gboolean
-on_search_mode_label_button_press_event(GtkWidget *widget,
-                                        GdkEventButton *event,
-                                        gpointer user_data) {
+on_search_mode_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     return toggle_action_on_2button_press(event, "search_mode", user_data);
 }
 
 static gboolean
-on_search_in_path_label_button_press_event(GtkWidget *widget,
-                                           GdkEventButton *event,
-                                           gpointer user_data) {
+on_search_in_path_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     return toggle_action_on_2button_press(event, "search_in_path", user_data);
 }
 
 static gboolean
-on_match_case_label_button_press_event(GtkWidget *widget,
-                                       GdkEventButton *event,
-                                       gpointer user_data) {
+on_match_case_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     return toggle_action_on_2button_press(event, "match_case", user_data);
 }
 
@@ -984,7 +989,9 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
 static gboolean
 on_search_entry_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    if (event->key.keyval == GDK_KEY_Down) {
+    guint keyval;
+    gdk_event_get_keyval(event, &keyval);
+    if (keyval == GDK_KEY_Down) {
         GtkTreeIter iter = {};
         GtkTreePath *path = NULL;
 

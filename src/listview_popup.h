@@ -25,4 +25,4 @@
 #include <gtk/gtk.h>
 
 void
-listview_popup_menu(GtkWidget *widget, GdkEventButton *event);
+listview_popup_menu(GtkWidget *widget, GdkEvent *event);

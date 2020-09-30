@@ -59,8 +59,8 @@ on_listview_column_width_changed(GtkTreeViewColumn *col, GParamSpec *pspec, gpoi
 }
 
 static gboolean
-on_listview_header_clicked(GtkWidget *widget, GdkEventButton *event, gpointer user_data) {
-    if (gdk_event_triggers_context_menu((GdkEvent *)event)) {
+on_listview_header_clicked(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
+    if (gdk_event_triggers_context_menu(event)) {
         GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
         GMenuModel *menu_model =
             G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
@@ -68,7 +68,10 @@ on_listview_header_clicked(GtkWidget *widget, GdkEventButton *event, gpointer us
         GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
         gtk_menu_attach_to_widget(GTK_MENU(menu_widget), list, NULL);
 #if !GTK_CHECK_VERSION(3, 22, 0)
-        gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, event->button, event->time);
+        guint button;
+        guint32 time = gdk_event_get_time(event);
+        gdk_event_get_button(event, &button);
+        gtk_menu_popup(GTK_MENU(menu_widget), NULL, NULL, NULL, NULL, button, time);
 #else
         gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif
