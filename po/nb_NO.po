@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-28 20:55+0200\n"
-"PO-Revision-Date: 2020-09-09 07:36+0000\n"
+"PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -314,9 +314,12 @@ msgid "Enable menubar"
 msgstr "Skru på regulære uttrykk"
 
 #: src/preferences.ui:209
+#, fuzzy
 msgid ""
 "INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
 msgstr ""
+"Info: Å skru på eller av menypanelet vises kun etter at FSearch har blitt "
+"startet på ny.\n"
 
 #: src/preferences.ui:246
 #, fuzzy
@@ -350,7 +353,7 @@ msgstr "Lukk"
 
 #: src/preferences.ui:381
 msgid "General:"
-msgstr ""
+msgstr "Generelt:"
 
 #: src/preferences.ui:413
 #, fuzzy
@@ -383,7 +386,7 @@ msgstr "Trykk én gang for å åpne"
 
 #: src/preferences.ui:518
 msgid "Results:"
-msgstr ""
+msgstr "Resultater:"
 
 #: src/preferences.ui:550
 #, fuzzy
@@ -551,7 +554,7 @@ msgstr "0 elementer"
 
 #: src/fsearch.glade:628
 msgid "Index:"
-msgstr ""
+msgstr "Indeks:"
 
 #: src/fsearch.glade:696
 #, fuzzy
@@ -576,7 +579,7 @@ msgstr "side0"
 
 #: src/fsearch.glade:832
 msgid "Number of database items"
-msgstr ""
+msgstr "Antall databaseelementer"
 
 #: src/fsearch.glade:833
 msgid "(empty)"

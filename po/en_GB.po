@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-28 20:55+0200\n"
-"PO-Revision-Date: 2020-09-09 07:36+0000\n"
+"PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "fsearch/translations/en_GB/>\n"
@@ -146,10 +146,8 @@ msgid "Update Database"
 msgstr "Update Database"
 
 #: src/menus.ui:35
-#, fuzzy
-#| msgid "Update"
 msgid "Cancel Update"
-msgstr "Update"
+msgstr "Cancel Update"
 
 #: src/menus.ui:42 src/fsearch.glade:388
 msgid "Quit"
@@ -160,16 +158,12 @@ msgid "_Edit"
 msgstr "_Edit"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_Copy"
+msgstr "Copy"
 
 #: src/menus.ui:59
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Deselect All"
+msgstr "Select All"
 
 #: src/menus.ui:64
 msgid "Deselect All"
@@ -296,15 +290,14 @@ msgstr ""
 "since not every GTK+ theme provides a dark version."
 
 #: src/preferences.ui:162
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable menubar"
-msgstr "Enable RegEx"
+msgstr "Enable menubar"
 
 #: src/preferences.ui:209
 msgid ""
 "INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
 msgstr ""
+"INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
 
 #: src/preferences.ui:246
 msgid "Use binary units instead of decimal units"
@@ -336,7 +329,7 @@ msgstr "Close"
 
 #: src/preferences.ui:381
 msgid "General:"
-msgstr ""
+msgstr "General:"
 
 #: src/preferences.ui:413
 msgid "Show highlighted search terms"
@@ -368,19 +361,15 @@ msgstr "Single click to open"
 
 #: src/preferences.ui:518
 msgid "Results:"
-msgstr ""
+msgstr "Results:"
 
 #: src/preferences.ui:550
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Update database on start"
+msgstr "Show database indexing status"
 
 #: src/preferences.ui:570
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Show Statusbar"
+msgstr "Statusbar:"
 
 #: src/preferences.ui:588
 msgid "Interface"
@@ -495,10 +484,8 @@ msgid "Update database"
 msgstr "Update database"
 
 #: src/fsearch.glade:198 src/fsearch.glade:791
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Update database on start"
+msgstr "Cancel database update"
 
 #: src/fsearch.glade:440
 msgid "Search…"
@@ -530,23 +517,19 @@ msgstr "0 Items"
 
 #: src/fsearch.glade:628
 msgid "Index:"
-msgstr ""
+msgstr "Index:"
 
 #: src/fsearch.glade:696
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Number of Search Results"
+msgstr "Number of selected folders"
 
 #: src/fsearch.glade:697 src/fsearch.glade:722
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:721
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Number of Search Results"
+msgstr "Number of selected files"
 
 #: src/fsearch.glade:808
 msgid "page0"
@@ -554,7 +537,7 @@ msgstr "page0"
 
 #: src/fsearch.glade:832
 msgid "Number of database items"
-msgstr ""
+msgstr "Number of database items"
 
 #: src/fsearch.glade:833
 msgid "(empty)"
