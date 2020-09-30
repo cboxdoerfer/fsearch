@@ -210,7 +210,6 @@ Some platforms don't support dark theming and others always use dark themes by d
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
-                                            <property name="margin_left">24</property>
                                             <property name="margin_start">24</property>
                                             <property name="draw_indicator">True</property>
                                           </object>
@@ -226,7 +225,6 @@ Some platforms don't support dark theming and others always use dark themes by d
                                             <property name="visible">True</property>
                                             <property name="can_focus">True</property>
                                             <property name="receives_default">False</property>
-                                            <property name="margin_left">24</property>
                                             <property name="margin_start">24</property>
                                             <property name="draw_indicator">True</property>
                                           </object>
@@ -244,7 +242,6 @@ Some platforms don't support dark theming and others always use dark themes by d
                                   <object class="GtkBox">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="margin_left">6</property>
                                     <property name="margin_start">6</property>
                                     <property name="spacing">6</property>
                                     <child>
