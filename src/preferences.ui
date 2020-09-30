@@ -68,8 +68,8 @@
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="top_padding">4</property>
-                        <property name="left_padding">12</property>
+                        <property name="margin_start">12</property>
+                        <property name="margin_top">4</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -197,7 +197,7 @@ Some platforms don't support dark theming and others always use dark themes by d
                                   <object class="GtkAlignment">
                                     <property name="visible">True</property>
                                     <property name="can_focus">False</property>
-                                    <property name="left_padding">12</property>
+                                    <property name="margin_start">12</property>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -328,8 +328,8 @@ Some platforms don't support dark theming and others always use dark themes by d
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="top_padding">4</property>
-                        <property name="left_padding">12</property>
+                        <property name="margin_start">12</property>
+                        <property name="margin_top">4</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -465,8 +465,8 @@ Some platforms don't support dark theming and others always use dark themes by d
                       <object class="GtkAlignment">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="top_padding">4</property>
-                        <property name="left_padding">12</property>
+                        <property name="margin_start">12</property>
+                        <property name="margin_top">4</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
