@@ -501,7 +501,6 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <object class="GtkImage" id="search_icon">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="xpad">3</property>
                         <property name="icon_name">edit-find-symbolic</property>
                       </object>
                       <packing>
