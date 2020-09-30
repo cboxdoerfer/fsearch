@@ -57,6 +57,7 @@ typedef struct search_context_s {
     FsearchQuery *query;
     BTreeNode **results;
     search_token_t **token;
+    bool *terminate;
     uint32_t num_token;
     uint32_t num_results;
     uint32_t start_pos;
@@ -75,6 +76,16 @@ db_search_entry_new(BTreeNode *node, uint32_t pos);
 static void
 db_search_entry_free(DatabaseSearchEntry *entry);
 
+static void
+db_search_notify_cancelled(FsearchQuery *query) {
+    if (query->db) {
+        db_unref(query->db);
+    }
+    if (query->callback_cancelled) {
+        query->callback_cancelled(query->callback_cancelled_data);
+    }
+}
+
 static gpointer
 db_search_thread(gpointer user_data) {
     DatabaseSearch *search = user_data;
@@ -91,6 +102,7 @@ db_search_thread(gpointer user_data) {
                 break;
             }
             search->query_ctx = NULL;
+            search->search_terminate = false;
             g_mutex_unlock(&search->query_mutex);
             // if query is empty string we are done here
             DatabaseSearchResult *result = NULL;
@@ -106,19 +118,41 @@ db_search_thread(gpointer user_data) {
                 result = db_search(search, query);
             }
             g_mutex_lock(&search->query_mutex);
-            result->cb_data = query->callback_data;
-            result->db = query->db;
-            query->callback(result);
+            if (result) {
+                result->cb_data = query->callback_data;
+                result->db = query->db;
+                query->callback(result);
+            }
+            else {
+                db_search_notify_cancelled(query);
+            }
             fsearch_query_free(query);
+            query = NULL;
         }
     }
     g_mutex_unlock(&search->query_mutex);
     return NULL;
 }
 
+static void
+search_thread_context_free(search_thread_context_t *ctx) {
+    if (!ctx) {
+        return;
+    }
+    if (ctx->results) {
+        g_free(ctx->results);
+        ctx->results = NULL;
+    }
+    if (ctx) {
+        g_free(ctx);
+        ctx = NULL;
+    }
+}
+
 static search_thread_context_t *
 search_thread_context_new(FsearchQuery *query,
                           search_token_t **token,
+                          bool *terminate,
                           uint32_t num_token,
                           uint32_t start_pos,
                           uint32_t end_pos) {
@@ -129,6 +163,7 @@ search_thread_context_new(FsearchQuery *query,
     ctx->query = query;
     ctx->token = token;
     ctx->num_token = num_token;
+    ctx->terminate = terminate;
     ctx->results = calloc(end_pos - start_pos + 1, sizeof(BTreeNode *));
     assert(ctx->results != NULL);
 
@@ -179,6 +214,9 @@ db_search_worker(void *user_data) {
     uint32_t num_results = 0;
     char full_path[PATH_MAX] = "";
     for (uint32_t i = start; i <= end; i++) {
+        if (*ctx->terminate) {
+            return NULL;
+        }
         if (max_results && num_results == max_results) {
             break;
         }
@@ -289,6 +327,19 @@ search_token_free(void *data) {
     }
     g_free(token);
     token = NULL;
+}
+
+static void
+search_token_array_free(search_token_t **tokens, uint32_t num_token) {
+    if (!tokens) {
+        return;
+    }
+    for (uint32_t i = 0; i < num_token; ++i) {
+        search_token_free(tokens[i]);
+        tokens[i] = NULL;
+    }
+    free(tokens);
+    tokens = NULL;
 }
 
 static search_token_t *
@@ -439,8 +490,13 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     GTimer *timer = fsearch_timer_start();
     GList *threads = fsearch_thread_pool_get_threads(search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-        thread_data[i] = search_thread_context_new(
-            q, token, num_token, start_pos, i == num_threads - 1 ? num_entries - 1 : end_pos);
+        thread_data[i] =
+            search_thread_context_new(q,
+                                      token,
+                                      &search->search_terminate,
+                                      num_token,
+                                      start_pos,
+                                      i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
@@ -453,6 +509,17 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     while (threads) {
         fsearch_thread_pool_wait_for_thread(search->pool, threads);
         threads = threads->next;
+    }
+    if (search->search_terminate) {
+        for (uint32_t i = 0; i < num_threads; i++) {
+            search_thread_context_t *ctx = thread_data[i];
+            search_thread_context_free(ctx);
+        }
+        search_token_array_free(token, num_token);
+
+        fsearch_timer_stop(timer, "[search] search aborted after %.2f ms\n");
+        timer = NULL;
+        return NULL;
     }
 
     // get total number of entries found
@@ -490,22 +557,10 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
             g_ptr_array_add(results, entry);
             pos++;
         }
-        if (ctx->results) {
-            g_free(ctx->results);
-            ctx->results = NULL;
-        }
-        if (ctx) {
-            g_free(ctx);
-            ctx = NULL;
-        }
+        search_thread_context_free(ctx);
     }
 
-    for (uint32_t i = 0; i < num_token; ++i) {
-        search_token_free(token[i]);
-        token[i] = NULL;
-    }
-    free(token);
-    token = NULL;
+    search_token_array_free(token, num_token);
 
     fsearch_timer_stop(timer, "[search] search finished in %.2f ms\n");
     timer = NULL;
@@ -645,14 +700,12 @@ void
 db_search_queue(DatabaseSearch *search, FsearchQuery *query) {
     g_mutex_lock(&search->query_mutex);
     if (search->query_ctx) {
-        if (search->query_ctx->db) {
-            db_unref(search->query_ctx->db);
-        }
-        search->query_ctx->callback_cancelled(search->query_ctx->callback_cancelled_data);
+        db_search_notify_cancelled(search->query_ctx);
         fsearch_query_free(search->query_ctx);
         search->query_ctx = NULL;
     }
     search->query_ctx = query;
+    search->search_terminate = true;
     g_mutex_unlock(&search->query_mutex);
     g_cond_signal(&search->search_thread_start_cond);
 }

@@ -48,6 +48,7 @@ struct _DatabaseSearch {
     FsearchThreadPool *pool;
 
     GThread *search_thread;
+    bool search_terminate;
     bool search_thread_terminate;
     GMutex query_mutex;
     GCond search_thread_start_cond;
