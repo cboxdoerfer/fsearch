@@ -91,6 +91,8 @@ struct _FsearchApplicationWindow {
     FsearchQueryHighlight *query_highlight;
     int32_t num_searches_active;
 
+    guint statusbar_timeout_id;
+
     GMutex mutex;
 };
 
@@ -374,10 +376,32 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
 }
 
 static void
-update_statusbar(FsearchApplicationWindow *win, const char *text) {
+statusbar_remove_update_cb(FsearchApplicationWindow *win) {
+    if (win->statusbar_timeout_id) {
+        g_source_remove(win->statusbar_timeout_id);
+        win->statusbar_timeout_id = 0;
+    }
+}
+static void
+statusbar_update(FsearchApplicationWindow *win, const char *text) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-
+    statusbar_remove_update_cb(win);
     gtk_label_set_text(GTK_LABEL(win->search_label), text);
+}
+
+static gboolean
+statusbar_set_query_status(gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    gtk_label_set_text(GTK_LABEL(win->search_label), _("Quering…"));
+    win->statusbar_timeout_id = 0;
+    return FALSE;
+}
+
+static void
+statusbar_update_delayed(FsearchApplicationWindow *win, const char *text) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    statusbar_remove_update_cb(win);
+    win->statusbar_timeout_id = g_timeout_add(200, statusbar_set_query_status, win);
 }
 
 static gboolean
@@ -436,7 +460,7 @@ update_model_cb(gpointer user_data) {
     apply_model_to_list(win);
     gchar sb_text[100] = "";
     snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
-    update_statusbar(win, sb_text);
+    statusbar_update(win, sb_text);
 
     if (text[0] == '\0' && config->hide_results_on_empty_search) {
         show_overlay(win, NO_SEARCH_QUERY_OVERLAY);
@@ -519,6 +543,7 @@ perform_search(FsearchApplicationWindow *win) {
                                         config->search_in_path,
                                         !config->hide_results_on_empty_search);
     db_unlock(db);
+    statusbar_update_delayed(win, _("Quering…"));
     db_search_queue(win->search, q);
     fsearch_application_state_unlock(app);
     return FALSE;
@@ -841,7 +866,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
-    update_statusbar(win, "");
+    statusbar_update(win, "");
 
     fsearch_application_window_update_search(win);
 
