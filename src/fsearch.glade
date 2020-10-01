@@ -786,7 +786,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <object class="GtkRevealer" id="smart_case_revealer">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_markup" translatable="yes">Search term contains upper case characters. &lt;b&gt;Match Case&lt;/b&gt; was temporarily activated for this term.</property>
+                        <property name="tooltip_markup" translatable="yes">Search term contains upper case characters.
+&lt;b&gt;Match Case&lt;/b&gt; was temporarily activated for this term.</property>
                         <property name="transition_type">slide-left</property>
                         <property name="transition_duration">150</property>
                         <child>
@@ -839,7 +840,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <object class="GtkRevealer" id="smart_path_revealer">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="tooltip_markup" translatable="yes">Search term contains path separators. &lt;b&gt;Search in Path&lt;/b&gt; was temporarily activated for this term.</property>
+                        <property name="tooltip_markup" translatable="yes">Search term contains path separators.
+&lt;b&gt;Search in Path&lt;/b&gt; was temporarily activated for this term.</property>
                         <property name="transition_type">slide-left</property>
                         <property name="transition_duration">150</property>
                         <child>
