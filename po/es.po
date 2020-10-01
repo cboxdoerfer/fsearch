@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-28 20:55+0200\n"
-"PO-Revision-Date: 2020-09-28 18:41+0000\n"
-"Last-Translator: Eugenio Monforte <eugenio@tipoqueno.com>\n"
+"PO-Revision-Date: 2020-10-02 15:52+0000\n"
+"Last-Translator: Pavel Milanes Costa <pavelmc@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -148,10 +148,8 @@ msgid "Update Database"
 msgstr "Actualizar base de datos"
 
 #: src/menus.ui:35
-#, fuzzy
-#| msgid "Update"
 msgid "Cancel Update"
-msgstr "Actualizar"
+msgstr "Cancelar actualización"
 
 #: src/menus.ui:42 src/fsearch.glade:388
 msgid "Quit"
@@ -162,16 +160,12 @@ msgid "_Edit"
 msgstr "_Editar"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_Copiar"
+msgstr "Copiar"
 
 #: src/menus.ui:59
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Desmarcar todo"
+msgstr "Seleccionar todo"
 
 #: src/menus.ui:64
 msgid "Deselect All"
@@ -300,15 +294,15 @@ msgstr ""
 "ya que no todos los temas GTK+ incluyen una versión oscura."
 
 #: src/preferences.ui:162
-#, fuzzy
-#| msgid "Enable RegEx"
 msgid "Enable menubar"
-msgstr "Activar expresiones regulares"
+msgstr "Activar barra de menú"
 
 #: src/preferences.ui:209
 msgid ""
 "INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
 msgstr ""
+"INFO: Activar/Desactivar la barra de menú aplicará en el próximo reinicio "
+"del programa\n"
 
 #: src/preferences.ui:246
 msgid "Use binary units instead of decimal units"
@@ -340,7 +334,7 @@ msgstr "Cerrar"
 
 #: src/preferences.ui:381
 msgid "General:"
-msgstr ""
+msgstr "General:"
 
 #: src/preferences.ui:413
 msgid "Show highlighted search terms"
@@ -372,19 +366,15 @@ msgstr "Abrir con un click"
 
 #: src/preferences.ui:518
 msgid "Results:"
-msgstr ""
+msgstr "Resultados:"
 
 #: src/preferences.ui:550
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Actualizar base de datos al inicio"
+msgstr "Mostrar el estado del indexado de la base de datos"
 
 #: src/preferences.ui:570
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Mostrar barra de estado"
+msgstr "Barra de estado:"
 
 #: src/preferences.ui:588
 msgid "Interface"
@@ -501,10 +491,8 @@ msgid "Update database"
 msgstr "Actualizar base de datos"
 
 #: src/fsearch.glade:198 src/fsearch.glade:791
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Actualizar base de datos al inicio"
+msgstr "Cancelar la actualización de la base de datos"
 
 #: src/fsearch.glade:440
 msgid "Search…"
@@ -536,23 +524,19 @@ msgstr "0 elementos"
 
 #: src/fsearch.glade:628
 msgid "Index:"
-msgstr ""
+msgstr "Índice:"
 
 #: src/fsearch.glade:696
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Cantidad de resultados"
+msgstr "Cantidad de carpetas seleccionadas"
 
 #: src/fsearch.glade:697 src/fsearch.glade:722
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:721
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Cantidad de resultados"
+msgstr "Cantidad de ficheros seleccionados"
 
 #: src/fsearch.glade:808
 msgid "page0"
@@ -560,7 +544,7 @@ msgstr "Página 0"
 
 #: src/fsearch.glade:832
 msgid "Number of database items"
-msgstr ""
+msgstr "Cantidad de elementos en la base de datos"
 
 #: src/fsearch.glade:833
 msgid "(empty)"
