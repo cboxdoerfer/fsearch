@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-28 20:55+0200\n"
-"PO-Revision-Date: 2020-09-30 16:41+0000\n"
+"PO-Revision-Date: 2020-10-02 15:52+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -429,7 +429,7 @@ msgstr "Виключати приховані файли і каталоги"
 
 #: src/preferences.ui:941 src/preferences.ui:954
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "Підтримка шаблонів. Багато запитів розділяються символом ';'"
+msgstr "Підтримуються шаблони. Кілька записів мають бути розділені знаком ';'"
 
 #: src/preferences.ui:942
 msgid "Exclude files:"
