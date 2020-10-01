@@ -550,16 +550,17 @@ perform_search(FsearchApplicationWindow *win) {
     statusbar_update_delayed(win, _("Quering…"));
     db_search_queue(win->search, q);
 
+    bool reveal_smart_case = false;
+    bool reveal_smart_path = false;
     if (!fs_str_is_empty(text)) {
         bool has_separator = strchr(text, '/') ? 1 : 0;
         bool has_upper_text = fs_str_has_upper(text) ? 1 : 0;
-        gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_case_revealer),
-                                      config->auto_match_case && !config->match_case &&
-                                          has_upper_text);
-        gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_path_revealer),
-                                      config->auto_search_in_path && !config->search_in_path &&
-                                          has_separator);
+        reveal_smart_case = config->auto_match_case && !config->match_case && has_upper_text;
+        reveal_smart_path = config->auto_search_in_path && !config->search_in_path && has_separator;
     }
+
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_case_revealer), reveal_smart_case);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_path_revealer), reveal_smart_path);
 
     fsearch_application_state_unlock(app);
     return FALSE;
