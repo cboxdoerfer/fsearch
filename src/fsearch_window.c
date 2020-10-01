@@ -31,6 +31,7 @@
 #include "list_model.h"
 #include "listview.h"
 #include "listview_popup.h"
+#include "string_utils.h"
 #include "ui_utils.h"
 #include "utils.h"
 #include <glib/gi18n.h>
@@ -76,6 +77,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_entry;
     GtkWidget *search_icon;
     GtkWidget *search_in_path_revealer;
+    GtkWidget *smart_path_revealer;
+    GtkWidget *smart_case_revealer;
     GtkWidget *search_label;
     GtkWidget *search_mode_revealer;
     GtkWidget *search_overlay;
@@ -542,9 +545,22 @@ perform_search(FsearchApplicationWindow *win) {
                                         config->auto_search_in_path,
                                         config->search_in_path,
                                         !config->hide_results_on_empty_search);
+
     db_unlock(db);
     statusbar_update_delayed(win, _("Quering…"));
     db_search_queue(win->search, q);
+
+    if (!fs_str_is_empty(text)) {
+        bool has_separator = strchr(text, '/') ? 1 : 0;
+        bool has_upper_text = fs_str_has_upper(text) ? 1 : 0;
+        gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_case_revealer),
+                                      config->auto_match_case && !config->match_case &&
+                                          has_upper_text);
+        gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_path_revealer),
+                                      config->auto_search_in_path && !config->search_in_path &&
+                                          has_separator);
+    }
+
     fsearch_application_state_unlock(app);
     return FALSE;
 }
@@ -792,6 +808,7 @@ on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
     if (config->search_as_you_type) {
         perform_search(win);
     }
@@ -1119,6 +1136,10 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar);
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, statusbar_revealer);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, smart_case_revealer);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, smart_path_revealer);
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, search_in_path_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
