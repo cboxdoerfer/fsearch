@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-09-28 20:55+0200\n"
-"PO-Revision-Date: 2020-09-30 16:40+0000\n"
+"PO-Revision-Date: 2020-10-02 15:52+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -423,20 +423,21 @@ msgstr "Следовать по символьным ссылкам"
 
 #: src/preferences.ui:832
 msgid "Include"
-msgstr "Включить"
+msgstr "Включать"
 
 #: src/preferences.ui:920
 msgid "Exclude hidden files and folders"
-msgstr "Исключить скрытые файлы и папки"
+msgstr "Исключать скрытые файлы и папки"
 
 #: src/preferences.ui:941 src/preferences.ui:954
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
-"Можно использовать шаблоны. Вхождения должны быть разделены с помощью ';'"
+"Можно использовать шаблоны. Несколько записей должны быть разделены знаком "
+"';'"
 
 #: src/preferences.ui:942
 msgid "Exclude files:"
-msgstr "Исключить файлы:"
+msgstr "Исключать файлы:"
 
 #: src/preferences.ui:955
 msgid "e.g. \".git;*.tmp\""
@@ -444,7 +445,7 @@ msgstr "например, «.git;*.tmp»"
 
 #: src/preferences.ui:979
 msgid "Exclude"
-msgstr "Исключить"
+msgstr "Исключать"
 
 #: src/preferences.ui:1002
 msgid "Database"
