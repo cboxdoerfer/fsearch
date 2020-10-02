@@ -395,7 +395,7 @@ statusbar_update(FsearchApplicationWindow *win, const char *text) {
 static gboolean
 statusbar_set_query_status(gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    gtk_label_set_text(GTK_LABEL(win->search_label), _("Quering…"));
+    gtk_label_set_text(GTK_LABEL(win->search_label), _("Querying…"));
     win->statusbar_timeout_id = 0;
     return FALSE;
 }
@@ -547,7 +547,7 @@ perform_search(FsearchApplicationWindow *win) {
                                         !config->hide_results_on_empty_search);
 
     db_unlock(db);
-    statusbar_update_delayed(win, _("Quering…"));
+    statusbar_update_delayed(win, _("Querying…"));
     db_search_queue(win->search, q);
 
     bool reveal_smart_case = false;
