@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-28 20:55+0200\n"
+"POT-Creation-Date: 2020-10-02 17:56+0200\n"
 "PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
@@ -19,38 +19,42 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: src/fsearch_window.c:113 src/fsearch_window.c:396 src/fsearch_window.c:817
+#: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d items"
 
-#: src/fsearch_window.c:638 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:398 src/fsearch_window.c:550
+msgid "Quering…"
+msgstr ""
+
+#: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "Kan bestand niet openen"
 
-#: src/fsearch_window.c:639 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:731 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Wil je het venster openhouden?"
 
-#: src/fsearch_window.c:823
+#: src/fsearch_window.c:913
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Laatst bijgewerkt: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:836 src/overlay.ui:143
+#: src/fsearch_window.c:926 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Bezig met laden van databank…"
 
-#: src/fsearch_window.c:859 src/overlay.ui:213 src/fsearch.glade:775
+#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
 #, c-format
 msgid "Updating Database…"
 msgstr "Bezig met bijwerken van databank…"
 
-#: src/fsearch_window.c:1019
+#: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "Achtergrondtaken zijn actief."
 
-#: src/fsearch_window.c:1022
+#: src/fsearch_window.c:1114
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -58,24 +62,28 @@ msgstr ""
 "Het venster kan momenteel niet worden gesloten.\n"
 "Wacht even en probeer het dan opnieuw."
 
-#: src/listview.c:185 src/menus.ui:201
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/listview.c:188 src/menus.ui:201
 msgid "Name"
 msgstr "Naam"
 
-#: src/listview.c:210 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:248 src/menus.ui:205
+#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
+#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
 msgid "Path"
 msgstr "Pad"
 
-#: src/listview.c:234 src/menus.ui:213
+#: src/listview.c:237 src/menus.ui:213
 msgid "Size"
 msgstr "Grootte"
 
-#: src/listview.c:252 src/menus.ui:217
+#: src/listview.c:255 src/menus.ui:217
 msgid "Date Modified"
 msgstr "Aangepast op"
 
-#: src/listview.c:269 src/menus.ui:209
+#: src/listview.c:272 src/menus.ui:209
 msgid "Type"
 msgstr "Type"
 
@@ -117,7 +125,7 @@ msgstr "Bezig met verwijderen…"
 msgid "Moving files to trash…"
 msgstr "Bezig met verplaatsen naar prullenbak…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:244
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
 msgstr "Actief"
 
@@ -149,7 +157,7 @@ msgstr "Databank bijwerken"
 msgid "Cancel Update"
 msgstr "Update afbreken"
 
-#: src/menus.ui:42 src/fsearch.glade:388
+#: src/menus.ui:42 src/fsearch.glade:293
 msgid "Quit"
 msgstr "Afsluiten"
 
@@ -173,7 +181,7 @@ msgstr "Niets selecteren"
 msgid "Invert Selection"
 msgstr "Selectie omkeren"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:338
+#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
 msgid "Preferences"
 msgstr "Voorkeuren"
 
@@ -181,15 +189,15 @@ msgstr "Voorkeuren"
 msgid "_View"
 msgstr "Bee_ld"
 
-#: src/menus.ui:84 src/fsearch.glade:285
+#: src/menus.ui:84 src/fsearch.glade:190
 msgid "Show Statusbar"
 msgstr "Statusbalk tonen"
 
-#: src/menus.ui:88 src/fsearch.glade:299
+#: src/menus.ui:88 src/fsearch.glade:204
 msgid "Show Filter"
 msgstr "Filter tonen"
 
-#: src/menus.ui:92 src/fsearch.glade:313
+#: src/menus.ui:92 src/fsearch.glade:218
 msgid "Show Search Button"
 msgstr "Zoekknop tonen"
 
@@ -197,15 +205,15 @@ msgstr "Zoekknop tonen"
 msgid "_Search"
 msgstr "_Zoeken"
 
-#: src/menus.ui:101 src/fsearch.glade:232
+#: src/menus.ui:101 src/fsearch.glade:137
 msgid "Search in Path"
 msgstr "Pad doorzoeken"
 
-#: src/menus.ui:105 src/fsearch.glade:246
+#: src/menus.ui:105 src/fsearch.glade:151
 msgid "Match Case"
 msgstr "Hoofdlettergevoelig"
 
-#: src/menus.ui:109 src/fsearch.glade:260
+#: src/menus.ui:109 src/fsearch.glade:165
 msgid "Enable RegEx"
 msgstr "Reguliere expressies gebruiken"
 
@@ -213,7 +221,7 @@ msgstr "Reguliere expressies gebruiken"
 msgid "_Help"
 msgstr "_Hulp"
 
-#: src/menus.ui:118 src/fsearch.glade:363
+#: src/menus.ui:118 src/fsearch.glade:268
 msgid "About"
 msgstr "Over"
 
@@ -283,282 +291,268 @@ msgstr "Donker thema gebruiken"
 
 #: src/preferences.ui:128
 msgid ""
-"INFO: \"Enable dark theme\" might not have an effect,\n"
-"since not every GTK+ theme provides a dark version."
+"<b>Enable dark theme</b> might not have an effect.\n"
+"Some platforms don't support dark theming and others always use dark themes "
+"by default."
 msgstr ""
-"INFORMATIE: 'Donker thema gebruiken' kan soms geen effect hebben\n"
-"omdat niet elk GTK+-thema een donkere variant heeft."
 
-#: src/preferences.ui:162
-msgid "Enable menubar"
-msgstr "Menubalk tonen"
+#: src/preferences.ui:163
+msgid "Enable client-side decorations (requires restart)"
+msgstr ""
 
-#: src/preferences.ui:209
-msgid ""
-"INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
-msgstr "Let op: herstart FSearch om de menubalk te tonen of verbergen.\n"
-
-#: src/preferences.ui:246
+#: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
 msgstr "Binaire eenheden gebruiken i.p.v. decimale"
 
-#: src/preferences.ui:261
-msgid "Remember window size"
-msgstr "Vensterafmetingen onthouden"
-
-#: src/preferences.ui:292
+#: src/preferences.ui:209
 msgid "with keyboard shortcuts or menu entries"
 msgstr "met sneltoetsen of via het menu"
 
-#: src/preferences.ui:308
+#: src/preferences.ui:224
 msgid "with double click"
 msgstr "middels dubbelklikken"
 
-#: src/preferences.ui:338
+#: src/preferences.ui:252
 msgid "Behaviour after successfully opening a file:"
 msgstr "Wat te doen na het openen van een bestand:"
 
-#: src/preferences.ui:354
+#: src/preferences.ui:268
 msgid "Minimize"
 msgstr "Minimaliseren"
 
-#: src/preferences.ui:355
+#: src/preferences.ui:269
 msgid "Close"
 msgstr "Sluiten"
 
-#: src/preferences.ui:381
+#: src/preferences.ui:289
+msgid "Remember window size"
+msgstr "Vensterafmetingen onthouden"
+
+#: src/preferences.ui:309
 msgid "General:"
 msgstr "Algemeen:"
 
-#: src/preferences.ui:413
+#: src/preferences.ui:341
 msgid "Show highlighted search terms"
 msgstr "Gemarkeerde zoektermen tonen"
 
-#: src/preferences.ui:428
+#: src/preferences.ui:356
 msgid "Show tooltips"
 msgstr "Hulpballonnen tonen"
 
-#: src/preferences.ui:442
+#: src/preferences.ui:370
 msgid "Show icons in name column"
 msgstr "Pictogrammen tonen in naamkolom"
 
-#: src/preferences.ui:456
+#: src/preferences.ui:384
 msgid "Remember column configuration"
 msgstr "Kolomindeling onthouden"
 
-#: src/preferences.ui:470
+#: src/preferences.ui:398
 msgid "Remember sort order"
 msgstr "Sorteervolgorde onthouden"
 
-#: src/preferences.ui:484
+#: src/preferences.ui:412
 msgid "Open path with double click in path column"
 msgstr "Pad openen door te dubbelklikken in de padkolom"
 
-#: src/preferences.ui:498
+#: src/preferences.ui:426
 msgid "Single click to open"
 msgstr "Eénmaal klikken om te openen"
 
-#: src/preferences.ui:518
+#: src/preferences.ui:446
 msgid "Results:"
 msgstr "Resultaten:"
 
-#: src/preferences.ui:550
+#: src/preferences.ui:478
 msgid "Show database indexing status"
 msgstr "Databankbijwerkstatus tonen"
 
-#: src/preferences.ui:570
+#: src/preferences.ui:498
 msgid "Statusbar:"
 msgstr "Statusbalk:"
 
-#: src/preferences.ui:588
+#: src/preferences.ui:516
 msgid "Interface"
 msgstr "Uiterlijk"
 
-#: src/preferences.ui:606
+#: src/preferences.ui:534
 msgid "Limit number of results:"
 msgstr "Aantal zoekresultaten beperken:"
 
-#: src/preferences.ui:634
+#: src/preferences.ui:562
 msgid "Search in path when query contains path separators"
 msgstr "Pad doorzoeken als de zoekopdracht padscheidingsteken bevat"
 
-#: src/preferences.ui:648
+#: src/preferences.ui:576
 msgid "Search as you type"
 msgstr "Zoeken terwijl je typt"
 
-#: src/preferences.ui:662
+#: src/preferences.ui:590
 msgid "Hide results when search is empty"
 msgstr "Resultaten verbergen als de zoekopdracht blanco is"
 
-#: src/preferences.ui:676
+#: src/preferences.ui:604
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Lettergrootte moet overeenkomen als de zoekopdracht minstens één hoofdletter "
 "bevat"
 
-#: src/preferences.ui:697 src/fsearch.glade:480
+#: src/preferences.ui:625 src/fsearch.glade:403
 msgid "Search"
 msgstr "Zoeken"
 
-#: src/preferences.ui:716
+#: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Databank bijwerken na opstarten"
 
-#: src/preferences.ui:751 src/preferences.ui:856
+#: src/preferences.ui:679 src/preferences.ui:784
 msgid "Add…"
 msgstr "Toevoegen…"
 
-#: src/preferences.ui:767 src/preferences.ui:872
+#: src/preferences.ui:695 src/preferences.ui:800
 msgid "Remove"
 msgstr "Verwijderen"
 
-#: src/preferences.ui:815
+#: src/preferences.ui:743
 msgid "Follow symbolic links"
 msgstr "Symbolische koppelingen volgen"
 
-#: src/preferences.ui:832
+#: src/preferences.ui:760
 msgid "Include"
 msgstr "Opnemen"
 
-#: src/preferences.ui:920
+#: src/preferences.ui:848
 msgid "Exclude hidden files and folders"
 msgstr "Verborgen bestanden en mappen uitsluiten"
 
-#: src/preferences.ui:941 src/preferences.ui:954
+#: src/preferences.ui:869 src/preferences.ui:882
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Jokertekens worden ondersteund. Meerdere items moeten worden gescheiden door "
 "';'"
 
-#: src/preferences.ui:942
+#: src/preferences.ui:870
 msgid "Exclude files:"
 msgstr "Bestanden uitsluiten:"
 
-#: src/preferences.ui:955
+#: src/preferences.ui:883
 msgid "e.g. \".git;*.tmp\""
 msgstr "bijv. \".git;*.tmp\""
 
-#: src/preferences.ui:979
+#: src/preferences.ui:907
 msgid "Exclude"
 msgstr "Uitsluiten"
 
-#: src/preferences.ui:1002
+#: src/preferences.ui:930
 msgid "Database"
 msgstr "Databank"
 
-#: src/preferences.ui:1025
+#: src/preferences.ui:953
 msgid "Show warning dialogs when:"
 msgstr "Waarschuwingen tonen als:"
 
-#: src/preferences.ui:1034
+#: src/preferences.ui:962
 msgid "file / folder failed to open"
 msgstr "bestand/map niet kan worden geopend"
 
-#: src/preferences.ui:1055
+#: src/preferences.ui:983
 msgid "Dialogs"
 msgstr "Vensters"
 
-#: src/fsearch.glade:50
-msgid "Open File(s)"
-msgstr "Bestand(en) openen"
-
-#: src/fsearch.glade:60
-msgid "Open With Other Application"
-msgstr "Openen met andere toepassing"
-
-#: src/fsearch.glade:65
-msgid "Open Containing Folder"
-msgstr "Bijbehorende map openen"
-
-#: src/fsearch.glade:68
-msgid "Open File(s) in File Manager"
-msgstr "Bestand(en) openen in bestandsbeheerder"
-
-#: src/fsearch.glade:104
-msgid "Move to Trash"
-msgstr "Verplaatsen naar prullenbak"
-
-#: src/fsearch.glade:168
+#: src/fsearch.glade:73
 msgid "New window"
 msgstr "Nieuw venster"
 
-#: src/fsearch.glade:183
+#: src/fsearch.glade:88
 msgid "Update database"
 msgstr "Databank bijwerken"
 
-#: src/fsearch.glade:198 src/fsearch.glade:791
+#: src/fsearch.glade:103 src/fsearch.glade:717
 msgid "Cancel database update"
 msgstr "Databankbijwerking afbreken"
 
-#: src/fsearch.glade:440
+#: src/fsearch.glade:345
 msgid "Search…"
 msgstr "Zoeken…"
 
-#: src/fsearch.glade:455
+#: src/fsearch.glade:367
 msgid "Select a Filter"
 msgstr "Selecteer een filter"
 
-#: src/fsearch.glade:458
+#: src/fsearch.glade:370
 msgid "All"
 msgstr "Alles"
 
-#: src/fsearch.glade:459
+#: src/fsearch.glade:371
 msgid "Folders"
 msgstr "Mappen"
 
-#: src/fsearch.glade:460
+#: src/fsearch.glade:372
 msgid "Files"
 msgstr "Bestanden"
 
-#: src/fsearch.glade:590
+#: src/fsearch.glade:516
 msgid "Number of Search Results"
 msgstr "Aantal zoekresultaten"
 
-#: src/fsearch.glade:591
+#: src/fsearch.glade:517
 msgid "0 Items"
 msgstr "0 items"
 
-#: src/fsearch.glade:628
+#: src/fsearch.glade:554
 msgid "Index:"
 msgstr "Index:"
 
-#: src/fsearch.glade:696
+#: src/fsearch.glade:622
 msgid "Number of selected folders"
 msgstr "Aantal geselecteerde mappen"
 
-#: src/fsearch.glade:697 src/fsearch.glade:722
+#: src/fsearch.glade:623 src/fsearch.glade:648
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:721
+#: src/fsearch.glade:647
 msgid "Number of selected files"
 msgstr "Aantal geselecteerde bestanden"
 
-#: src/fsearch.glade:808
+#: src/fsearch.glade:734
 msgid "page0"
 msgstr "pagina0"
 
-#: src/fsearch.glade:832
+#: src/fsearch.glade:758
 msgid "Number of database items"
 msgstr "Aantal databankitems"
 
-#: src/fsearch.glade:833
+#: src/fsearch.glade:759
 msgid "(empty)"
 msgstr "(leeg)"
 
-#: src/fsearch.glade:844
+#: src/fsearch.glade:770
 msgid "page1"
 msgstr "pagina1"
 
-#: src/fsearch.glade:888
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
 msgstr "HOOFDLETTERS"
 
-#: src/fsearch.glade:940
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
 msgid "PATH"
 msgstr "PAD"
 
-#: src/fsearch.glade:992
+#: src/fsearch.glade:1033
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -580,6 +574,36 @@ msgid ""
 msgstr ""
 "zoeken;fsearch;bestanden;mappen;muziek;video;documenten;vinden;hulpmiddel;"
 "alles;"
+
+#~ msgid ""
+#~ "INFO: \"Enable dark theme\" might not have an effect,\n"
+#~ "since not every GTK+ theme provides a dark version."
+#~ msgstr ""
+#~ "INFORMATIE: 'Donker thema gebruiken' kan soms geen effect hebben\n"
+#~ "omdat niet elk GTK+-thema een donkere variant heeft."
+
+#~ msgid "Enable menubar"
+#~ msgstr "Menubalk tonen"
+
+#~ msgid ""
+#~ "INFO: Enabling/Disabling the menubar takes effect after restarting "
+#~ "FSearch.\n"
+#~ msgstr "Let op: herstart FSearch om de menubalk te tonen of verbergen.\n"
+
+#~ msgid "Open File(s)"
+#~ msgstr "Bestand(en) openen"
+
+#~ msgid "Open With Other Application"
+#~ msgstr "Openen met andere toepassing"
+
+#~ msgid "Open Containing Folder"
+#~ msgstr "Bijbehorende map openen"
+
+#~ msgid "Open File(s) in File Manager"
+#~ msgstr "Bestand(en) openen in bestandsbeheerder"
+
+#~ msgid "Move to Trash"
+#~ msgstr "Verplaatsen naar prullenbak"
 
 #~ msgid "Show Menubar"
 #~ msgstr "Menubalk tonen"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-09-28 20:55+0200\n"
+"POT-Creation-Date: 2020-10-02 17:56+0200\n"
 "PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,38 +20,42 @@ msgstr ""
 "|| n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: src/fsearch_window.c:113 src/fsearch_window.c:396 src/fsearch_window.c:817
+#: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d wyniki"
 
-#: src/fsearch_window.c:638 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:398 src/fsearch_window.c:550
+msgid "Quering…"
+msgstr ""
+
+#: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "Nie udało się otworzyć pliku"
 
-#: src/fsearch_window.c:639 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:731 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Czy chcesz aby okno pozostało widoczne?"
 
-#: src/fsearch_window.c:823
+#: src/fsearch_window.c:913
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Ostatnia aktualizacja: %Y-%m-%d % H: %M"
 
-#: src/fsearch_window.c:836 src/overlay.ui:143
+#: src/fsearch_window.c:926 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Ładowania bazy danych…"
 
-#: src/fsearch_window.c:859 src/overlay.ui:213 src/fsearch.glade:775
+#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
 #, c-format
 msgid "Updating Database…"
 msgstr "Aktualizowanie bazy danych…"
 
-#: src/fsearch_window.c:1019
+#: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "Zadania w tle są wykonywane."
 
-#: src/fsearch_window.c:1022
+#: src/fsearch_window.c:1114
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -59,24 +63,28 @@ msgstr ""
 "Zamknięcie okna nie jest możliwe w tej chwili.\n"
 "Poczekaj chwilę i spróbuj ponownie."
 
-#: src/listview.c:185 src/menus.ui:201
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/listview.c:188 src/menus.ui:201
 msgid "Name"
 msgstr "Nazwa"
 
-#: src/listview.c:210 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:248 src/menus.ui:205
+#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
+#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
 msgid "Path"
 msgstr "Ścieżka"
 
-#: src/listview.c:234 src/menus.ui:213
+#: src/listview.c:237 src/menus.ui:213
 msgid "Size"
 msgstr "Rozmiar"
 
-#: src/listview.c:252 src/menus.ui:217
+#: src/listview.c:255 src/menus.ui:217
 msgid "Date Modified"
 msgstr "Data modyfikacji"
 
-#: src/listview.c:269 src/menus.ui:209
+#: src/listview.c:272 src/menus.ui:209
 msgid "Type"
 msgstr "Typ"
 
@@ -120,7 +128,7 @@ msgstr "Usuwanie plików…"
 msgid "Moving files to trash…"
 msgstr "Przenoszenie plików do kosza…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:244
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
 msgstr "Aktywna"
 
@@ -152,7 +160,7 @@ msgstr "Uaktualnij bazę danych"
 msgid "Cancel Update"
 msgstr "Przerwij Aktualizację"
 
-#: src/menus.ui:42 src/fsearch.glade:388
+#: src/menus.ui:42 src/fsearch.glade:293
 msgid "Quit"
 msgstr "Zakończ"
 
@@ -176,7 +184,7 @@ msgstr "Odznacz wszystko"
 msgid "Invert Selection"
 msgstr "Odwróć zaznaczenie"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:338
+#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
 msgid "Preferences"
 msgstr "Preferencje"
 
@@ -184,15 +192,15 @@ msgstr "Preferencje"
 msgid "_View"
 msgstr "_Widok"
 
-#: src/menus.ui:84 src/fsearch.glade:285
+#: src/menus.ui:84 src/fsearch.glade:190
 msgid "Show Statusbar"
 msgstr "Pokaż pasek stanu"
 
-#: src/menus.ui:88 src/fsearch.glade:299
+#: src/menus.ui:88 src/fsearch.glade:204
 msgid "Show Filter"
 msgstr "Pokaż filtr"
 
-#: src/menus.ui:92 src/fsearch.glade:313
+#: src/menus.ui:92 src/fsearch.glade:218
 msgid "Show Search Button"
 msgstr "Pokaż przycisk Szukaj"
 
@@ -200,15 +208,15 @@ msgstr "Pokaż przycisk Szukaj"
 msgid "_Search"
 msgstr "_Szukaj"
 
-#: src/menus.ui:101 src/fsearch.glade:232
+#: src/menus.ui:101 src/fsearch.glade:137
 msgid "Search in Path"
 msgstr "Szukaj w ścieżce"
 
-#: src/menus.ui:105 src/fsearch.glade:246
+#: src/menus.ui:105 src/fsearch.glade:151
 msgid "Match Case"
 msgstr "Uwzględniaj wielkość liter"
 
-#: src/menus.ui:109 src/fsearch.glade:260
+#: src/menus.ui:109 src/fsearch.glade:165
 msgid "Enable RegEx"
 msgstr "Wyrażenia regularne"
 
@@ -216,7 +224,7 @@ msgstr "Wyrażenia regularne"
 msgid "_Help"
 msgstr "_Pomoc"
 
-#: src/menus.ui:118 src/fsearch.glade:363
+#: src/menus.ui:118 src/fsearch.glade:268
 msgid "About"
 msgstr "O programie"
 
@@ -288,279 +296,265 @@ msgstr "Włącz ciemny motyw"
 
 #: src/preferences.ui:128
 msgid ""
-"INFO: \"Enable dark theme\" might not have an effect,\n"
-"since not every GTK+ theme provides a dark version."
+"<b>Enable dark theme</b> might not have an effect.\n"
+"Some platforms don't support dark theming and others always use dark themes "
+"by default."
 msgstr ""
-"INFO: \"Włącz ciemny motyw\" może nie przynieść efektu,\n"
-"ponieważ nie każdy temat GTK + udostępnia wersję ciemną."
 
-#: src/preferences.ui:162
-msgid "Enable menubar"
-msgstr "Pokaż pasek menu"
+#: src/preferences.ui:163
+msgid "Enable client-side decorations (requires restart)"
+msgstr ""
 
-#: src/preferences.ui:209
-msgid ""
-"INFO: Enabling/Disabling the menubar takes effect after restarting FSearch.\n"
-msgstr "INFO: Włączenie/Wyłączenie paska menu wymaga restartu FSearch.\n"
-
-#: src/preferences.ui:246
+#: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
 msgstr "Użyj jednostek binarnych zamiast jednostek dziesiętnych"
 
-#: src/preferences.ui:261
-msgid "Remember window size"
-msgstr "Pamiętaj rozmiar okna"
-
-#: src/preferences.ui:292
+#: src/preferences.ui:209
 msgid "with keyboard shortcuts or menu entries"
 msgstr "za pomocą skrótu klawiszowego lub z menu"
 
-#: src/preferences.ui:308
+#: src/preferences.ui:224
 msgid "with double click"
 msgstr "za pomocą podwójnego kliknięcia"
 
-#: src/preferences.ui:338
+#: src/preferences.ui:252
 msgid "Behaviour after successfully opening a file:"
 msgstr "Zachowanie po udanym otwarciu pliku:"
 
-#: src/preferences.ui:354
+#: src/preferences.ui:268
 msgid "Minimize"
 msgstr "Zminimalizuj"
 
-#: src/preferences.ui:355
+#: src/preferences.ui:269
 msgid "Close"
 msgstr "Zamknij"
 
-#: src/preferences.ui:381
+#: src/preferences.ui:289
+msgid "Remember window size"
+msgstr "Pamiętaj rozmiar okna"
+
+#: src/preferences.ui:309
 msgid "General:"
 msgstr "Ogólne:"
 
-#: src/preferences.ui:413
+#: src/preferences.ui:341
 msgid "Show highlighted search terms"
 msgstr "Podświetlaj wyszukiwane na liście wyników"
 
-#: src/preferences.ui:428
+#: src/preferences.ui:356
 msgid "Show tooltips"
 msgstr "Wyświetlaj podpowiedzi"
 
-#: src/preferences.ui:442
+#: src/preferences.ui:370
 msgid "Show icons in name column"
 msgstr "Pokaż ikony w kolumnie Nazwa"
 
-#: src/preferences.ui:456
+#: src/preferences.ui:384
 msgid "Remember column configuration"
 msgstr "Pamiętaj konfigurację kolumn"
 
-#: src/preferences.ui:470
+#: src/preferences.ui:398
 msgid "Remember sort order"
 msgstr "Pamiętaj porządek sortowania"
 
-#: src/preferences.ui:484
+#: src/preferences.ui:412
 msgid "Open path with double click in path column"
 msgstr "Otwórz ścieżkę przez dwuklik w kolumnie ścieżka"
 
-#: src/preferences.ui:498
+#: src/preferences.ui:426
 msgid "Single click to open"
 msgstr "Pojedyncze kliknięcie otwiera"
 
-#: src/preferences.ui:518
+#: src/preferences.ui:446
 msgid "Results:"
 msgstr "Lista wyników:"
 
-#: src/preferences.ui:550
+#: src/preferences.ui:478
 msgid "Show database indexing status"
 msgstr "Pokaż status indeksowania bazy danych"
 
-#: src/preferences.ui:570
+#: src/preferences.ui:498
 msgid "Statusbar:"
 msgstr "Pasek stanu:"
 
-#: src/preferences.ui:588
+#: src/preferences.ui:516
 msgid "Interface"
 msgstr "Interfejs"
 
-#: src/preferences.ui:606
+#: src/preferences.ui:534
 msgid "Limit number of results:"
 msgstr "Ogranicz liczbę wyników:"
 
-#: src/preferences.ui:634
+#: src/preferences.ui:562
 msgid "Search in path when query contains path separators"
 msgstr "Wyszukuj w ścieżce, gdy kwerenda zawiera separatory ścieżki"
 
-#: src/preferences.ui:648
+#: src/preferences.ui:576
 msgid "Search as you type"
 msgstr "Wyszukiwanie podczas pisania"
 
-#: src/preferences.ui:662
+#: src/preferences.ui:590
 msgid "Hide results when search is empty"
 msgstr "Ukryj wyniki gdy kwerenda jest pusta"
 
-#: src/preferences.ui:676
+#: src/preferences.ui:604
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Rozróżniaj wielkość liter, gdy zapytanie zawiera choć jedną wielką literę"
 
-#: src/preferences.ui:697 src/fsearch.glade:480
+#: src/preferences.ui:625 src/fsearch.glade:403
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/preferences.ui:716
+#: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Uaktualnij bazę danych przy starcie"
 
-#: src/preferences.ui:751 src/preferences.ui:856
+#: src/preferences.ui:679 src/preferences.ui:784
 msgid "Add…"
 msgstr "Dodaj…"
 
-#: src/preferences.ui:767 src/preferences.ui:872
+#: src/preferences.ui:695 src/preferences.ui:800
 msgid "Remove"
 msgstr "Usuń"
 
-#: src/preferences.ui:815
+#: src/preferences.ui:743
 msgid "Follow symbolic links"
 msgstr "Podążaj za dowiązaniami symbolicznymi"
 
-#: src/preferences.ui:832
+#: src/preferences.ui:760
 msgid "Include"
 msgstr "Dołącz"
 
-#: src/preferences.ui:920
+#: src/preferences.ui:848
 msgid "Exclude hidden files and folders"
 msgstr "Wykluczenie ukrytych plików i katalogów"
 
-#: src/preferences.ui:941 src/preferences.ui:954
+#: src/preferences.ui:869 src/preferences.ui:882
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Obsługuje symbole wieloznaczne. Wpisy muszą być oddzielone znakiem ';'"
 
-#: src/preferences.ui:942
+#: src/preferences.ui:870
 msgid "Exclude files:"
 msgstr "Wyklucz pliki:"
 
-#: src/preferences.ui:955
+#: src/preferences.ui:883
 msgid "e.g. \".git;*.tmp\""
 msgstr "np.: \".git; *.tmp\""
 
-#: src/preferences.ui:979
+#: src/preferences.ui:907
 msgid "Exclude"
 msgstr "Wyklucz"
 
-#: src/preferences.ui:1002
+#: src/preferences.ui:930
 msgid "Database"
 msgstr "Baza danych"
 
-#: src/preferences.ui:1025
+#: src/preferences.ui:953
 msgid "Show warning dialogs when:"
 msgstr "Pokaż ostrzeżenie gdy:"
 
-#: src/preferences.ui:1034
+#: src/preferences.ui:962
 msgid "file / folder failed to open"
 msgstr "nie udało się otworzyć pliku / katalogu"
 
-#: src/preferences.ui:1055
+#: src/preferences.ui:983
 msgid "Dialogs"
 msgstr "Okna dialogowe"
 
-#: src/fsearch.glade:50
-msgid "Open File(s)"
-msgstr "Otwórz plik(i)"
-
-#: src/fsearch.glade:60
-msgid "Open With Other Application"
-msgstr "Otwórz za pomocą innej aplikacji"
-
-#: src/fsearch.glade:65
-msgid "Open Containing Folder"
-msgstr "Otwórz katalog"
-
-#: src/fsearch.glade:68
-msgid "Open File(s) in File Manager"
-msgstr "Otwórz pliki w Menedżerze plików"
-
-#: src/fsearch.glade:104
-msgid "Move to Trash"
-msgstr "Usuń"
-
-#: src/fsearch.glade:168
+#: src/fsearch.glade:73
 msgid "New window"
 msgstr "Nowe okno"
 
-#: src/fsearch.glade:183
+#: src/fsearch.glade:88
 msgid "Update database"
 msgstr "Uaktualnij bazę danych"
 
-#: src/fsearch.glade:198 src/fsearch.glade:791
+#: src/fsearch.glade:103 src/fsearch.glade:717
 msgid "Cancel database update"
 msgstr "Anuluj aktualizację bazy danych"
 
-#: src/fsearch.glade:440
+#: src/fsearch.glade:345
 msgid "Search…"
 msgstr "Szukaj…"
 
-#: src/fsearch.glade:455
+#: src/fsearch.glade:367
 msgid "Select a Filter"
 msgstr "Wybierz filtr"
 
-#: src/fsearch.glade:458
+#: src/fsearch.glade:370
 msgid "All"
 msgstr "Wszystkie"
 
-#: src/fsearch.glade:459
+#: src/fsearch.glade:371
 msgid "Folders"
 msgstr "Katalogi"
 
-#: src/fsearch.glade:460
+#: src/fsearch.glade:372
 msgid "Files"
 msgstr "Pliki"
 
-#: src/fsearch.glade:590
+#: src/fsearch.glade:516
 msgid "Number of Search Results"
 msgstr "Liczba wyników wyszukiwania"
 
-#: src/fsearch.glade:591
+#: src/fsearch.glade:517
 msgid "0 Items"
 msgstr "0 wyników"
 
-#: src/fsearch.glade:628
+#: src/fsearch.glade:554
 msgid "Index:"
 msgstr "Indeksowanie:"
 
-#: src/fsearch.glade:696
+#: src/fsearch.glade:622
 msgid "Number of selected folders"
 msgstr "Ilość zaznaczonych katalogów"
 
-#: src/fsearch.glade:697 src/fsearch.glade:722
+#: src/fsearch.glade:623 src/fsearch.glade:648
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:721
+#: src/fsearch.glade:647
 msgid "Number of selected files"
 msgstr "Ilość zaznaczonych plików"
 
-#: src/fsearch.glade:808
+#: src/fsearch.glade:734
 msgid "page0"
 msgstr "page0"
 
-#: src/fsearch.glade:832
+#: src/fsearch.glade:758
 msgid "Number of database items"
 msgstr "Ilość plików w bazie danych"
 
-#: src/fsearch.glade:833
+#: src/fsearch.glade:759
 msgid "(empty)"
 msgstr "(puste)"
 
-#: src/fsearch.glade:844
+#: src/fsearch.glade:770
 msgid "page1"
 msgstr "page1"
 
-#: src/fsearch.glade:888
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
 msgstr "CASE"
 
-#: src/fsearch.glade:940
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
 msgid "PATH"
 msgstr "ŚCIEŻKA"
 
-#: src/fsearch.glade:992
+#: src/fsearch.glade:1033
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -584,6 +578,36 @@ msgid ""
 msgstr ""
 "szukanie;fsearch;pliki;katalogi;muzyka;wideo;dokumenty;szukanie;narzędzie;"
 "wszystko;"
+
+#~ msgid ""
+#~ "INFO: \"Enable dark theme\" might not have an effect,\n"
+#~ "since not every GTK+ theme provides a dark version."
+#~ msgstr ""
+#~ "INFO: \"Włącz ciemny motyw\" może nie przynieść efektu,\n"
+#~ "ponieważ nie każdy temat GTK + udostępnia wersję ciemną."
+
+#~ msgid "Enable menubar"
+#~ msgstr "Pokaż pasek menu"
+
+#~ msgid ""
+#~ "INFO: Enabling/Disabling the menubar takes effect after restarting "
+#~ "FSearch.\n"
+#~ msgstr "INFO: Włączenie/Wyłączenie paska menu wymaga restartu FSearch.\n"
+
+#~ msgid "Open File(s)"
+#~ msgstr "Otwórz plik(i)"
+
+#~ msgid "Open With Other Application"
+#~ msgstr "Otwórz za pomocą innej aplikacji"
+
+#~ msgid "Open Containing Folder"
+#~ msgstr "Otwórz katalog"
+
+#~ msgid "Open File(s) in File Manager"
+#~ msgstr "Otwórz pliki w Menedżerze plików"
+
+#~ msgid "Move to Trash"
+#~ msgstr "Usuń"
 
 #~ msgid "Show Menubar"
 #~ msgstr "Pokaż pasek menu"
