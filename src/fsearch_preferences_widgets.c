@@ -232,13 +232,15 @@ pref_include_treeview_init(GtkTreeView *view, FsearchPreferences *pref) {
         pref->include_model, "row-changed", G_CALLBACK(on_include_model_modified), (gpointer)pref);
     g_signal_connect(
         pref->include_model, "row-deleted", G_CALLBACK(on_include_model_modified), (gpointer)pref);
+
+    // Workaround for GTK bug: https://gitlab.gnome.org/GNOME/gtk/-/issues/3084
+    g_signal_connect(view, "realize", G_CALLBACK(gtk_tree_view_columns_autosize), NULL);
 }
 
 void
 pref_exclude_treeview_init(GtkTreeView *view, FsearchPreferences *pref) {
     GtkListStore *store = gtk_list_store_new(NUM_EXCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(store));
-
     column_toggle_append(view,
                          GTK_TREE_MODEL(store),
                          _("Active"),
@@ -265,4 +267,7 @@ pref_exclude_treeview_init(GtkTreeView *view, FsearchPreferences *pref) {
         pref->exclude_model, "row-changed", G_CALLBACK(on_exclude_model_modified), pref);
     g_signal_connect(
         pref->exclude_model, "row-deleted", G_CALLBACK(on_exclude_model_modified), pref);
+
+    // Workaround for GTK bug: https://gitlab.gnome.org/GNOME/gtk/-/issues/3084
+    g_signal_connect(view, "realize", G_CALLBACK(gtk_tree_view_columns_autosize), NULL);
 }
