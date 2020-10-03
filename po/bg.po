@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -19,13 +19,195 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr "Показване на информация за версията"
+
+#: src/fsearch.c:182
+msgid "Update the database"
+msgstr "Обновяване на базата с данни"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr "cybercop (cybercop_montana@abv.bg)"
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr ""
+"Инструмент за търсене, фокусиран върху висока производителност и разширени "
+"възможности"
+
+#: src/fsearch.glade:73
+msgid "New window"
+msgstr "Нов прозорец"
+
+#: src/fsearch.glade:88
+msgid "Update database"
+msgstr "Обновяване на базата с данни"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+#, fuzzy
+#| msgid "Update database on start"
+msgid "Cancel database update"
+msgstr "Обновяване на базата с данни при стартиране"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "Търсене в Пътя"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "Случай на съвпадение"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "Включване на регулярни изрази"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "Показване на лентата на състоянието"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "Показване на филтър"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "Показване на бутон за търсене"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "Предпочитания"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr "Относно"
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr "Изход"
+
+#: src/fsearch.glade:345
+msgid "Search…"
+msgstr "Търсене…"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "Избор на Филтър"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "Всички"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "Папки"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "Файлове"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "Търсене"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "Брой на резултатите от търсенето"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 елемента"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch.glade:622
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected folders"
+msgstr "Брой на резултатите от търсенето"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected files"
+msgstr "Брой на резултатите от търсенето"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, c-format
+msgid "Updating Database…"
+msgstr "Обновяване на Базата с данни…"
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr "страница0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr ""
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(празно)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "страница1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "Папка"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "Път"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "Регулярен израз"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr "Активно"
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "Път"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr "Обновяване"
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d елемента"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -45,11 +227,6 @@ msgstr "Последно обновяване: %Y-%m-%d %H:%M"
 msgid "Loading Database…"
 msgstr "Зареждане на базата с данни…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, c-format
-msgid "Updating Database…"
-msgstr "Обновяване на Базата с данни…"
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "Задачите във фонов режим са активни."
@@ -61,49 +238,6 @@ msgid ""
 msgstr ""
 "Затварянето на прозореца не е възможно точно сега.\n"
 "Моля, изчакайте малко и опитайте отново."
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr ""
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "Име"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "Път"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "Размер"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "Дата на промяна"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "Тип"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr "Показване на информация за версията"
-
-#: src/fsearch.c:182
-msgid "Update the database"
-msgstr "Обновяване на базата с данни"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr "cybercop (cybercop_montana@abv.bg)"
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr ""
-"Инструмент за търсене, фокусиран върху висока производителност и разширени "
-"възможности"
 
 #: src/fsearch_window_actions.c:78
 #, c-format
@@ -127,13 +261,21 @@ msgstr "Изтриване на файловете…"
 msgid "Moving files to trash…"
 msgstr "Преместване на файловете в кошчето…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr "Активно"
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "Име"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr "Обновяване"
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "Размер"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "Дата на промяна"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "Тип"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -161,10 +303,6 @@ msgstr "Обновяване на базата с данни"
 msgid "Cancel Update"
 msgstr "Обновяване"
 
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
-msgstr "Изход"
-
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_Редактиране"
@@ -189,49 +327,17 @@ msgstr "Премахване на цялата селекция"
 msgid "Invert Selection"
 msgstr "Обръщане на селекцията"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "Предпочитания"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "_Преглед"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "Показване на лентата на състоянието"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "Показване на филтър"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "Показване на бутон за търсене"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_Търсене"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "Търсене в Пътя"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "Случай на съвпадение"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "Включване на регулярни изрази"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "_Помощ"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr "Относно"
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -410,10 +516,6 @@ msgstr "Скриване на резултатите, когато заявка�
 msgid "Match case when query contains at least one upper case character"
 msgstr "Случай на съвпадение, когато заявката съдържа поне една главна буква"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "Търсене"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Обновяване на базата с данни при стартиране"
@@ -472,107 +574,23 @@ msgstr "файлът / папката не могат да бъдат отвор
 msgid "Dialogs"
 msgstr "Диалози"
 
-#: src/fsearch.glade:73
-msgid "New window"
-msgstr "Нов прозорец"
-
-#: src/fsearch.glade:88
-msgid "Update database"
-msgstr "Обновяване на базата с данни"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Update database on start"
-msgid "Cancel database update"
-msgstr "Обновяване на базата с данни при стартиране"
-
-#: src/fsearch.glade:345
-msgid "Search…"
-msgstr "Търсене…"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "Избор на Филтър"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Всички"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Папки"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Файлове"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "Брой на резултатите от търсенето"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 елемента"
-
-#: src/fsearch.glade:554
-msgid "Index:"
-msgstr ""
-
-#: src/fsearch.glade:622
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected folders"
-msgstr "Брой на резултатите от търсенето"
+#| msgid "Update"
+msgid "_Cancel"
+msgstr "Обновяване"
 
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected files"
-msgstr "Брой на резултатите от търсенето"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr "страница0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr ""
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(празно)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "страница1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "Папка"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "Път"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "Регулярен израз"
+#| msgid "Deselect All"
+msgid "_Select"
+msgstr "Премахване на цялата селекция"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -19,13 +19,202 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:175
+#, fuzzy
+msgid "Show version information"
+msgstr "Vis versjonsinfo"
+
+#: src/fsearch.c:182
+#, fuzzy
+msgid "Update the database"
+msgstr "Oppdater database"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr "Allan Nordhøy"
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
+
+#: src/fsearch.glade:73
+#, fuzzy
+msgid "New window"
+msgstr "Nytt vindu"
+
+#: src/fsearch.glade:88
+#, fuzzy
+msgid "Update database"
+msgstr "Oppdater database"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+#, fuzzy
+msgid "Cancel database update"
+msgstr "Oppdater database ved oppstart"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "Søk i sti"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+#, fuzzy
+msgid "Match Case"
+msgstr "Jamfør skille mellom stor og liten bokstav"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+#, fuzzy
+msgid "Enable RegEx"
+msgstr "Skru på regulære uttrykk"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "Vis statusfelt"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "Vis filter"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "Vis søkeknapp"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "Innstillinger"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr "Om"
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr "Avslutt"
+
+#: src/fsearch.glade:345
+#, fuzzy
+msgid "Search…"
+msgstr "Søk"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "Velg et filter"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "Alle"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "Mapper"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "Filer"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "Søk"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "Antall søkeresultater"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 elementer"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr "Indeks:"
+
+#: src/fsearch.glade:622
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected folders"
+msgstr "Antall søkeresultater"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected files"
+msgstr "Antall søkeresultater"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, fuzzy, c-format
+msgid "Updating Database…"
+msgstr "Oppdaterer database…"
+
+#: src/fsearch.glade:734
+#, fuzzy
+msgid "page0"
+msgstr "side0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr "Antall databaseelementer"
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(tom)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "side1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+#, fuzzy
+msgid "CASE"
+msgstr "VERSAL"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "STI"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "Regulært uttrykk"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+#, fuzzy
+msgid "Active"
+msgstr "Aktiv"
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "Sti"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr "Oppdater"
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, fuzzy, c-format
 msgid "%'d Items"
 msgstr "%'d elementer"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -46,11 +235,6 @@ msgstr "Sist oppdatert: %d %m %Y %H:%M"
 msgid "Loading Database…"
 msgstr "Laster database…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, fuzzy, c-format
-msgid "Updating Database…"
-msgstr "Oppdaterer database…"
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "Bakgrunnsoppgaver aktive."
@@ -62,49 +246,6 @@ msgid ""
 msgstr ""
 "Lukking av vindu er ikke mulig nå.\n"
 "Vent et øyeblikk og prøv igjen."
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr ""
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "Navn"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "Sti"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "Størrelse"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "Dato endret"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "Type"
-
-#: src/fsearch.c:175
-#, fuzzy
-msgid "Show version information"
-msgstr "Vis versjonsinfo"
-
-#: src/fsearch.c:182
-#, fuzzy
-msgid "Update the database"
-msgstr "Oppdater database"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr "Allan Nordhøy"
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
 
 #: src/fsearch_window_actions.c:78
 #, fuzzy, c-format
@@ -131,14 +272,21 @@ msgstr "Sletter filer…"
 msgid "Moving files to trash…"
 msgstr "Flytter filer til papirkurv…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-#, fuzzy
-msgid "Active"
-msgstr "Aktiv"
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "Navn"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr "Oppdater"
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "Størrelse"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "Dato endret"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "Type"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -166,10 +314,6 @@ msgstr "Oppdater database"
 msgid "Cancel Update"
 msgstr "Oppdater"
 
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
-msgstr "Avslutt"
-
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_Rediger"
@@ -194,51 +338,17 @@ msgstr "Fravelg alt"
 msgid "Invert Selection"
 msgstr "Inverter utvalg"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "Innstillinger"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "_Vis"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "Vis statusfelt"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "Vis filter"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "Vis søkeknapp"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_Søk"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "Søk i sti"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-#, fuzzy
-msgid "Match Case"
-msgstr "Jamfør skille mellom stor og liten bokstav"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-#, fuzzy
-msgid "Enable RegEx"
-msgstr "Skru på regulære uttrykk"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "_Hjelp"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr "Om"
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -422,10 +532,6 @@ msgstr "Skjul resultatløse søkeresultater"
 msgid "Match case when query contains at least one upper case character"
 msgstr "Søk i sti når spørring inneholder stiinndelere"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "Søk"
-
 #: src/preferences.ui:644
 #, fuzzy
 msgid "Update database on start"
@@ -484,111 +590,23 @@ msgstr "klarte ikke å åpne fil/mappe"
 msgid "Dialogs"
 msgstr "Dialogvinduer"
 
-#: src/fsearch.glade:73
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
 #, fuzzy
-msgid "New window"
-msgstr "Nytt vindu"
-
-#: src/fsearch.glade:88
-#, fuzzy
-msgid "Update database"
-msgstr "Oppdater database"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
-#, fuzzy
-msgid "Cancel database update"
-msgstr "Oppdater database ved oppstart"
-
-#: src/fsearch.glade:345
-#, fuzzy
-msgid "Search…"
-msgstr "Søk"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "Velg et filter"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Alle"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Mapper"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Filer"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "Antall søkeresultater"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 elementer"
-
-#: src/fsearch.glade:554
-msgid "Index:"
-msgstr "Indeks:"
-
-#: src/fsearch.glade:622
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected folders"
-msgstr "Antall søkeresultater"
+#| msgid "Update"
+msgid "_Cancel"
+msgstr "Oppdater"
 
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected files"
-msgstr "Antall søkeresultater"
-
-#: src/fsearch.glade:734
-#, fuzzy
-msgid "page0"
-msgstr "side0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr "Antall databaseelementer"
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(tom)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "side1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-#, fuzzy
-msgid "CASE"
-msgstr "VERSAL"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "STI"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "Regulært uttrykk"
+#| msgid "Deselect All"
+msgid "_Select"
+msgstr "Fravelg alt"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

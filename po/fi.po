@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2020-04-20 02:11+0000\n"
 "Last-Translator: Jeannette L <j.lavoie@net-c.ca>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
@@ -19,13 +19,196 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.0.2-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr "Näytä versiotiedot"
+
+#: src/fsearch.c:182
+msgid "Update the database"
+msgstr "Päivitä tietokanta"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr ""
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
+
+#: src/fsearch.glade:73
+#, fuzzy
+msgid "New window"
+msgstr "Uusi ikkuna"
+
+#: src/fsearch.glade:88
+#, fuzzy
+msgid "Update database"
+msgstr "Päivitä tietokanta"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+#, fuzzy
+#| msgid "Update database on start"
+msgid "Cancel database update"
+msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "Etsi polusta"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "Sama kirjainkoko"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "Käytä säännöllisiä lausekkeita"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "Näytä tilapalkki"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "Näytä suodatin"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "Näytä Etsi-painike"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "Asetukset"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr ""
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr ""
+
+#: src/fsearch.glade:345
+#, fuzzy
+msgid "Search…"
+msgstr "Etsi"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "Valitse suodatin"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "Kaikki"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "Kansiot"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "Tiedostot"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "Etsi"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "Hakutulosten lukumäärä"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 kohdetta"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch.glade:622
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected folders"
+msgstr "Hakutulosten lukumäärä"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected files"
+msgstr "Hakutulosten lukumäärä"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, fuzzy, c-format
+msgid "Updating Database…"
+msgstr "Päivitetään tietokantaa..."
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr "sivu0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr ""
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(tyhjä)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "sivu1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "KIRJAINKOKO"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "POLKU"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "SÄÄNNÖLLINEN LAUSEKE"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "Polku"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr ""
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d kohdetta"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -45,11 +228,6 @@ msgstr "Viimeksi päivitetty: %d.%m.%Y %H:%M"
 msgid "Loading Database…"
 msgstr "Ladataan tietokanta…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, fuzzy, c-format
-msgid "Updating Database…"
-msgstr "Päivitetään tietokantaa..."
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr ""
@@ -59,47 +237,6 @@ msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr ""
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "Nimi"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "Polku"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "Koko"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "Muokattu"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "Tyyppi"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr "Näytä versiotiedot"
-
-#: src/fsearch.c:182
-msgid "Update the database"
-msgstr "Päivitä tietokanta"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr ""
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 
 #: src/fsearch_window_actions.c:78
 #, fuzzy, c-format
@@ -124,13 +261,21 @@ msgstr "Poistetaan tiedostoja…"
 msgid "Moving files to trash…"
 msgstr "Siirretään tiedostoja roskakoriin…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr ""
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "Nimi"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr ""
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "Koko"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "Muokattu"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "Tyyppi"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -154,10 +299,6 @@ msgstr "Päivitä tietokanta"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
-
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
 msgstr ""
 
 #: src/menus.ui:49
@@ -184,49 +325,17 @@ msgstr "Poista kaikkien valinta"
 msgid "Invert Selection"
 msgstr "Käänteinen valinta"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "Asetukset"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "_Näytä"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "Näytä tilapalkki"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "Näytä suodatin"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "Näytä Etsi-painike"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_Etsi"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "Etsi polusta"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "Sama kirjainkoko"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "Käytä säännöllisiä lausekkeita"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "_Ohje"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr ""
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -407,10 +516,6 @@ msgstr "Piilota tulokset, kun haku on tyhjä"
 msgid "Match case when query contains at least one upper case character"
 msgstr "Etsi polusta, kun haku sisältää polkuerottimia"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "Etsi"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
@@ -468,110 +573,21 @@ msgstr ""
 msgid "Dialogs"
 msgstr ""
 
-#: src/fsearch.glade:73
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
 #, fuzzy
-msgid "New window"
-msgstr "Uusi ikkuna"
-
-#: src/fsearch.glade:88
-#, fuzzy
-msgid "Update database"
-msgstr "Päivitä tietokanta"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
-#, fuzzy
-#| msgid "Update database on start"
-msgid "Cancel database update"
-msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
-
-#: src/fsearch.glade:345
-#, fuzzy
-msgid "Search…"
-msgstr "Etsi"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "Valitse suodatin"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Kaikki"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Kansiot"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Tiedostot"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "Hakutulosten lukumäärä"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 kohdetta"
-
-#: src/fsearch.glade:554
-msgid "Index:"
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
+msgid "_Cancel"
 msgstr ""
 
-#: src/fsearch.glade:622
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected folders"
-msgstr "Hakutulosten lukumäärä"
-
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
-#, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected files"
-msgstr "Hakutulosten lukumäärä"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr "sivu0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr ""
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(tyhjä)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "sivu1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "KIRJAINKOKO"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "POLKU"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "SÄÄNNÖLLINEN LAUSEKE"
+#| msgid "Deselect All"
+msgid "_Select"
+msgstr "Poista kaikkien valinta"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

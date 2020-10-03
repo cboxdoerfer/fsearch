@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2020-10-03 20:41+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
@@ -19,13 +19,193 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr "Bezig met sorteren..."
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr "Versie-informatie tonen"
+
+#: src/fsearch.c:182
+msgid "Update the database"
+msgstr "Databank bijwerken"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr "Heimen Stoffels"
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
+
+#: src/fsearch.glade:73
+msgid "New window"
+msgstr "Nieuw venster"
+
+#: src/fsearch.glade:88
+msgid "Update database"
+msgstr "Databank bijwerken"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+msgid "Cancel database update"
+msgstr "Databankbijwerking afbreken"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "Pad doorzoeken"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "Hoofdlettergevoelig"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "Reguliere expressies gebruiken"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "Statusbalk tonen"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "Filter tonen"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "Zoekknop tonen"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "Voorkeuren"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr "Over"
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr "Afsluiten"
+
+#: src/fsearch.glade:345
+msgid "Search…"
+msgstr "Zoeken…"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "Selecteer een filter"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "Alles"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "Mappen"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "Bestanden"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "Zoeken"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "Aantal zoekresultaten"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 items"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr "Index:"
+
+#: src/fsearch.glade:622
+msgid "Number of selected folders"
+msgstr "Aantal geselecteerde mappen"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+msgid "Number of selected files"
+msgstr "Aantal geselecteerde bestanden"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, c-format
+msgid "Updating Database…"
+msgstr "Bezig met bijwerken van databank…"
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr "pagina0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr "Aantal databankitems"
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(leeg)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "pagina1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+"De zoekterm bevat hoofdletters.\n"
+"De optie <b>Hoofdlettergevoelig</b> is ingeschakeld."
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "HOOFDLETTERS"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+"De zoekterm bevat padscheidingstekens.\n"
+"De optie <b>Pad doorzoeken</b> is ingeschakeld."
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "PAD"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "REGEX"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr "Actief"
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "Pad"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr "Bijwerken"
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d items"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+#, fuzzy
+#| msgid "Quering…"
+msgid "Querying…"
 msgstr "Bezig met zoeken…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -45,11 +225,6 @@ msgstr "Laatst bijgewerkt: %Y-%m-%d %H:%M"
 msgid "Loading Database…"
 msgstr "Bezig met laden van databank…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, c-format
-msgid "Updating Database…"
-msgstr "Bezig met bijwerken van databank…"
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "Achtergrondtaken zijn actief."
@@ -61,47 +236,6 @@ msgid ""
 msgstr ""
 "Het venster kan momenteel niet worden gesloten.\n"
 "Wacht even en probeer het dan opnieuw."
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr "Bezig met sorteren..."
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "Naam"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "Pad"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "Grootte"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "Aangepast op"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "Type"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr "Versie-informatie tonen"
-
-#: src/fsearch.c:182
-msgid "Update the database"
-msgstr "Databank bijwerken"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr "Heimen Stoffels"
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
 
 #: src/fsearch_window_actions.c:78
 #, c-format
@@ -125,13 +259,21 @@ msgstr "Bezig met verwijderen…"
 msgid "Moving files to trash…"
 msgstr "Bezig met verplaatsen naar prullenbak…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr "Actief"
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "Naam"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr "Bijwerken"
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "Grootte"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "Aangepast op"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "Type"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -157,10 +299,6 @@ msgstr "Databank bijwerken"
 msgid "Cancel Update"
 msgstr "Update afbreken"
 
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
-msgstr "Afsluiten"
-
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "B_ewerken"
@@ -181,49 +319,17 @@ msgstr "Niets selecteren"
 msgid "Invert Selection"
 msgstr "Selectie omkeren"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "Voorkeuren"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "Bee_ld"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "Statusbalk tonen"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "Filter tonen"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "Zoekknop tonen"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_Zoeken"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "Pad doorzoeken"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "Hoofdlettergevoelig"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "Reguliere expressies gebruiken"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "_Hulp"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr "Over"
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -401,10 +507,6 @@ msgstr ""
 "Lettergrootte moet overeenkomen als de zoekopdracht minstens één hoofdletter "
 "bevat"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "Zoeken"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Databank bijwerken na opstarten"
@@ -463,105 +565,23 @@ msgstr "bestand/map niet kan worden geopend"
 msgid "Dialogs"
 msgstr "Vensters"
 
-#: src/fsearch.glade:73
-msgid "New window"
-msgstr "Nieuw venster"
-
-#: src/fsearch.glade:88
-msgid "Update database"
-msgstr "Databank bijwerken"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
-msgid "Cancel database update"
-msgstr "Databankbijwerking afbreken"
-
-#: src/fsearch.glade:345
-msgid "Search…"
-msgstr "Zoeken…"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "Selecteer een filter"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Alles"
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Cancel Update"
+msgid "_Cancel"
+msgstr "Update afbreken"
 
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Mappen"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Bestanden"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "Aantal zoekresultaten"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 items"
-
-#: src/fsearch.glade:554
-msgid "Index:"
-msgstr "Index:"
-
-#: src/fsearch.glade:622
-msgid "Number of selected folders"
-msgstr "Aantal geselecteerde mappen"
-
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
-msgid "Number of selected files"
-msgstr "Aantal geselecteerde bestanden"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr "pagina0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr "Aantal databankitems"
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(leeg)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "pagina1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-"De zoekterm bevat hoofdletters.\n"
-"De optie <b>Hoofdlettergevoelig</b> is ingeschakeld."
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "HOOFDLETTERS"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-"De zoekterm bevat padscheidingstekens.\n"
-"De optie <b>Pad doorzoeken</b> is ingeschakeld."
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "PAD"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "REGEX"
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Select All"
+msgid "_Select"
+msgstr "Alles selecteren"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

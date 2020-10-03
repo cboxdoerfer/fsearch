@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2020-10-03 20:41+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,13 +20,195 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr "Sıralanıyor..."
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr "Sürüm bilgilerini göster"
+
+#: src/fsearch.c:182
+msgid "Update the database"
+msgstr "Veri tabanını güncelle"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr "Oğuz Ersen"
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
+
+#: src/fsearch.glade:73
+msgid "New window"
+msgstr "Yeni pencere"
+
+#: src/fsearch.glade:88
+msgid "Update database"
+msgstr "Veri tabanını güncelle"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+msgid "Cancel database update"
+msgstr "Veri tabanı güncellemesini iptal et"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "Dosya Yolunda Ara"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "Büyük/Küçük Harfe Duyarlı"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "RegEx'i Aktifleştir"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "Durum Çubuğunu Göster"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "Filtreyi Göster"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "Arama Bununu Göster"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "Tercihler"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr "Hakkında"
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr "Çık"
+
+#: src/fsearch.glade:345
+msgid "Search…"
+msgstr "Ara…"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "Bir Filtre Seç"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "Hepsi"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "Klasörler"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "Dosyalar"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "Ara"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "Arama Sonucunun Sayısı"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 Öğe"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr "İndeks:"
+
+#: src/fsearch.glade:622
+msgid "Number of selected folders"
+msgstr "Seçili klasör sayısı"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+msgid "Number of selected files"
+msgstr "Seçili dosya sayısı"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, c-format
+msgid "Updating Database…"
+msgstr "Veri Tabanı Güncelleniyor…"
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr "sayfa0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr "Veri tabanı ögelerinin sayısı"
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(boş)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "sayfa1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+"Arama terimi büyük harf karakterleri içeriyor.\n"
+"<b>Büyük/Küçük Harfe Duyarlı</b> seçeneği bu terim için geçici olarak "
+"etkinleştirildi."
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "DURUM"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+"Arama terimi yol ayırıcıları içeriyor.\n"
+"<b>Dosya Yolunda Ara</b> seçeneği bu terim için geçici olarak "
+"etkinleştirildi."
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "YOL"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "REGEX"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr "Etkin"
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "Yol"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr "Güncelle"
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Öğe"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+#, fuzzy
+#| msgid "Quering…"
+msgid "Querying…"
 msgstr "Sorgulanıyor…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -46,11 +228,6 @@ msgstr "Son Güncelleme Tarihi: %Y-%m-%d %H:%M"
 msgid "Loading Database…"
 msgstr "Veri Tabanı Yükleniyor…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, c-format
-msgid "Updating Database…"
-msgstr "Veri Tabanı Güncelleniyor…"
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "Arka plan görevleri etkin."
@@ -62,47 +239,6 @@ msgid ""
 msgstr ""
 "Şu anda pencereyi kapatmak mümkün değil.\n"
 "Lütfen biraz bekleyip tekrar deneyin."
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr "Sıralanıyor..."
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "İsim"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "Yol"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "Boyut"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "Düzenlenme Tarihi"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "Tür"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr "Sürüm bilgilerini göster"
-
-#: src/fsearch.c:182
-msgid "Update the database"
-msgstr "Veri tabanını güncelle"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr "Oğuz Ersen"
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
 #: src/fsearch_window_actions.c:78
 #, c-format
@@ -126,13 +262,21 @@ msgstr "Dosyalar siliniyor…"
 msgid "Moving files to trash…"
 msgstr "Dosyalar çöp sepetine taşınıyor…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr "Etkin"
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "İsim"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr "Güncelle"
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "Boyut"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "Düzenlenme Tarihi"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "Tür"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -158,10 +302,6 @@ msgstr "Veri Tabanını Güncelle"
 msgid "Cancel Update"
 msgstr "Güncellemeyi İptal Et"
 
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
-msgstr "Çık"
-
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_Düzenle"
@@ -182,49 +322,17 @@ msgstr "Bütün Seçimi Kaldır"
 msgid "Invert Selection"
 msgstr "Seçimini Tersine Çevir"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "Tercihler"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "_Görüntüle"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "Durum Çubuğunu Göster"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "Filtreyi Göster"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "Arama Bununu Göster"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_Ara"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "Dosya Yolunda Ara"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "Büyük/Küçük Harfe Duyarlı"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "RegEx'i Aktifleştir"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "_Yardım"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr "Hakkında"
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -404,10 +512,6 @@ msgstr ""
 "Sorgu en az bir büyük harf karakteri içerdiğinde küçük/büyük harf durumunu "
 "eşleştir"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "Ara"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Başlangıçta veri tabanını güncelle"
@@ -464,107 +568,23 @@ msgstr "dosya / klasör açılamadı"
 msgid "Dialogs"
 msgstr "İletişim kutuları"
 
-#: src/fsearch.glade:73
-msgid "New window"
-msgstr "Yeni pencere"
-
-#: src/fsearch.glade:88
-msgid "Update database"
-msgstr "Veri tabanını güncelle"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
-msgid "Cancel database update"
-msgstr "Veri tabanı güncellemesini iptal et"
-
-#: src/fsearch.glade:345
-msgid "Search…"
-msgstr "Ara…"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "Bir Filtre Seç"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Hepsi"
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Cancel Update"
+msgid "_Cancel"
+msgstr "Güncellemeyi İptal Et"
 
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Klasörler"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Dosyalar"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "Arama Sonucunun Sayısı"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 Öğe"
-
-#: src/fsearch.glade:554
-msgid "Index:"
-msgstr "İndeks:"
-
-#: src/fsearch.glade:622
-msgid "Number of selected folders"
-msgstr "Seçili klasör sayısı"
-
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
-msgid "Number of selected files"
-msgstr "Seçili dosya sayısı"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr "sayfa0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr "Veri tabanı ögelerinin sayısı"
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(boş)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "sayfa1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-"Arama terimi büyük harf karakterleri içeriyor.\n"
-"<b>Büyük/Küçük Harfe Duyarlı</b> seçeneği bu terim için geçici olarak "
-"etkinleştirildi."
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "DURUM"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-"Arama terimi yol ayırıcıları içeriyor.\n"
-"<b>Dosya Yolunda Ara</b> seçeneği bu terim için geçici olarak "
-"etkinleştirildi."
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "YOL"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "REGEX"
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Select All"
+msgid "_Select"
+msgstr "Tümünü Seç"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slovak (FSearch)\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2018-01-02 18:35+0000\n"
 "Last-Translator: Dávid Bolvanský <david.bolvansky@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/fsearch/"
@@ -14,13 +14,197 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n==1) ? 0 : (n>=2 && n<=4) ? 1 : 2;\n"
 "X-Generator: Weblate 2.19-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr ""
+
+#: src/fsearch.c:182
+#, fuzzy
+msgid "Update the database"
+msgstr "Aktualizovať databázu"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr ""
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr "Program na vyhľadávanie súborov zameraný na výkon a pokročilé funkcie"
+
+#: src/fsearch.glade:73
+#, fuzzy
+msgid "New window"
+msgstr "Nové okno"
+
+#: src/fsearch.glade:88
+#, fuzzy
+msgid "Update database"
+msgstr "Aktualizovať databázu"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+#, fuzzy
+#| msgid "Update database on start"
+msgid "Cancel database update"
+msgstr "Aktualizovať databázu pri spustení"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "Vyhľadať v umiestnení"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "Rozlišovať veľké a malé písmená"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "Povoliť regulárne výrazy"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "Zobraziť stavový riadok"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "Zobraziť filter"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "Zobraziť tlačidlo vyhľadávania"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "Nastavenia"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr ""
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr ""
+
+#: src/fsearch.glade:345
+#, fuzzy
+msgid "Search…"
+msgstr "Vyhľadávanie"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "Vybrať filter"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "Všetky"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "Priečinky"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "Súbory"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "Vyhľadávanie"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "Počet výsledkov vyhľadávania"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 položiek"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch.glade:622
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected folders"
+msgstr "Počet výsledkov vyhľadávania"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected files"
+msgstr "Počet výsledkov vyhľadávania"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, fuzzy, c-format
+msgid "Updating Database…"
+msgstr "Aktualizácia databázy..."
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr ""
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr ""
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(prázdne)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr ""
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "VEĽKÉ A MALÉ PÍSMENÁ"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "UMIESTNENIE"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "REGULÁRNE VÝRAZY"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "Umiestnenie"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr ""
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "Počet položiek: %'d"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -40,11 +224,6 @@ msgstr "Naposledny aktualizované: %Y-%m-%d %H:%M"
 msgid "Loading Database…"
 msgstr "Načítavanie databázy..."
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, fuzzy, c-format
-msgid "Updating Database…"
-msgstr "Aktualizácia databázy..."
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr ""
@@ -54,48 +233,6 @@ msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr ""
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "Názov"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "Umiestnenie"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "Veľkosť"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "Dátum zmeny"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "Typ"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr ""
-
-#: src/fsearch.c:182
-#, fuzzy
-msgid "Update the database"
-msgstr "Aktualizovať databázu"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr ""
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr "Program na vyhľadávanie súborov zameraný na výkon a pokročilé funkcie"
 
 #: src/fsearch_window_actions.c:78
 #, fuzzy, c-format
@@ -122,13 +259,21 @@ msgstr "Vymazávanie súborov..."
 msgid "Moving files to trash…"
 msgstr "Presúvanie súborov do koša..."
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr ""
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "Názov"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr ""
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "Veľkosť"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "Dátum zmeny"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "Typ"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -152,10 +297,6 @@ msgstr "Aktualizovať databázu"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
-
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
 msgstr ""
 
 #: src/menus.ui:49
@@ -182,49 +323,17 @@ msgstr "Zrušiť výber všetkých"
 msgid "Invert Selection"
 msgstr "Obrátiť výber"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "Nastavenia"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "_Zobraziť"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "Zobraziť stavový riadok"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "Zobraziť filter"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "Zobraziť tlačidlo vyhľadávania"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_Hľadať"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "Vyhľadať v umiestnení"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "Rozlišovať veľké a malé písmená"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "Povoliť regulárne výrazy"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "_Pomocnik"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr ""
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -411,10 +520,6 @@ msgstr ""
 "Vyhľadávať v umiestnení, ak požiadavka na vyhľadanie obsahuje oddeľovače "
 "ciest"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "Vyhľadávanie"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Aktualizovať databázu pri spustení"
@@ -471,110 +576,21 @@ msgstr ""
 msgid "Dialogs"
 msgstr ""
 
-#: src/fsearch.glade:73
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
 #, fuzzy
-msgid "New window"
-msgstr "Nové okno"
-
-#: src/fsearch.glade:88
-#, fuzzy
-msgid "Update database"
-msgstr "Aktualizovať databázu"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
-#, fuzzy
-#| msgid "Update database on start"
-msgid "Cancel database update"
-msgstr "Aktualizovať databázu pri spustení"
-
-#: src/fsearch.glade:345
-#, fuzzy
-msgid "Search…"
-msgstr "Vyhľadávanie"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "Vybrať filter"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Všetky"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Priečinky"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Súbory"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "Počet výsledkov vyhľadávania"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 položiek"
-
-#: src/fsearch.glade:554
-msgid "Index:"
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
+msgid "_Cancel"
 msgstr ""
 
-#: src/fsearch.glade:622
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected folders"
-msgstr "Počet výsledkov vyhľadávania"
-
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
-#, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected files"
-msgstr "Počet výsledkov vyhľadávania"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr ""
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr ""
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(prázdne)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr ""
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "VEĽKÉ A MALÉ PÍSMENÁ"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "UMIESTNENIE"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "REGULÁRNE VÝRAZY"
+#| msgid "Deselect All"
+msgid "_Select"
+msgstr "Zrušiť výber všetkých"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

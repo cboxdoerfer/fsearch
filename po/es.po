@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2020-10-02 15:52+0000\n"
 "Last-Translator: Pavel Milanes Costa <pavelmc@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,13 +20,188 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr "Mostrar información de la versión"
+
+#: src/fsearch.c:182
+msgid "Update the database"
+msgstr "Actualizar base de datos"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr "Eugenio Monforte"
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr ""
+"Herramienta de búsqueda centrada en la velocidad y con prestaciones avanzadas"
+
+#: src/fsearch.glade:73
+msgid "New window"
+msgstr "Nueva ventana"
+
+#: src/fsearch.glade:88
+msgid "Update database"
+msgstr "Actualizar base de datos"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+msgid "Cancel database update"
+msgstr "Cancelar la actualización de la base de datos"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "Buscar en la ruta"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "Distinguir mayúsculas y minúsculas"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "Activar expresiones regulares"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "Mostrar barra de estado"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "Mostrar filtro"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "Mostrar botón de busca"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "Preferencias"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr "Sobre"
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr "Salir"
+
+#: src/fsearch.glade:345
+msgid "Search…"
+msgstr "Buscar…"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "Seleccione un filtro"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "Todo"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "Carpetas"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "Archivos"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "Buscar"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "Cantidad de resultados"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 elementos"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr "Índice:"
+
+#: src/fsearch.glade:622
+msgid "Number of selected folders"
+msgstr "Cantidad de carpetas seleccionadas"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+msgid "Number of selected files"
+msgstr "Cantidad de ficheros seleccionados"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, c-format
+msgid "Updating Database…"
+msgstr "Actualizando base de datos…"
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr "Página 0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr "Cantidad de elementos en la base de datos"
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(vacío)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "Página 1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "MAYÚSCULAS"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "RUTA"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "EXPRESIONES REGULARES"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr "Activar"
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "Ruta"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr "Actualizar"
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d elementos"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -46,11 +221,6 @@ msgstr "Última actualización: %d.%m.%Y, %H:%M"
 msgid "Loading Database…"
 msgstr "Cargando base de datos…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, c-format
-msgid "Updating Database…"
-msgstr "Actualizando base de datos…"
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "Las tareas en segundo plano están activas."
@@ -62,48 +232,6 @@ msgid ""
 msgstr ""
 "Ahora mismo, cerrar la ventana no es posible.\n"
 "Por favor, espere un momento y luego trate nuevamente."
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr ""
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "Nombre"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "Ruta"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "Tamaño"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "Fecha de modificación"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "Tipo"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr "Mostrar información de la versión"
-
-#: src/fsearch.c:182
-msgid "Update the database"
-msgstr "Actualizar base de datos"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr "Eugenio Monforte"
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr ""
-"Herramienta de búsqueda centrada en la velocidad y con prestaciones avanzadas"
 
 #: src/fsearch_window_actions.c:78
 #, c-format
@@ -127,13 +255,21 @@ msgstr "Eliminando archivos…"
 msgid "Moving files to trash…"
 msgstr "Enviando archivos a la papelera…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr "Activar"
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "Nombre"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr "Actualizar"
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "Tamaño"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "Fecha de modificación"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "Tipo"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -159,10 +295,6 @@ msgstr "Actualizar base de datos"
 msgid "Cancel Update"
 msgstr "Cancelar actualización"
 
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
-msgstr "Salir"
-
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_Editar"
@@ -183,49 +315,17 @@ msgstr "Desmarcar todo"
 msgid "Invert Selection"
 msgstr "Invertir selección"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "Preferencias"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "_Ver"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "Mostrar barra de estado"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "Mostrar filtro"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "Mostrar botón de busca"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_Buscar"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "Buscar en la ruta"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "Distinguir mayúsculas y minúsculas"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "Activar expresiones regulares"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "Ay_uda"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr "Sobre"
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -402,10 +502,6 @@ msgstr ""
 "Coincidir mayúsculas y minúsculas cuando la consulta contiene al menos un "
 "carácter en mayúsculas"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "Buscar"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "Actualizar base de datos al inicio"
@@ -462,101 +558,23 @@ msgstr "No se pudo abrir archivo / carpeta"
 msgid "Dialogs"
 msgstr "Diálogos"
 
-#: src/fsearch.glade:73
-msgid "New window"
-msgstr "Nueva ventana"
-
-#: src/fsearch.glade:88
-msgid "Update database"
-msgstr "Actualizar base de datos"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
-msgid "Cancel database update"
-msgstr "Cancelar la actualización de la base de datos"
-
-#: src/fsearch.glade:345
-msgid "Search…"
-msgstr "Buscar…"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "Seleccione un filtro"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Todo"
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Cancel Update"
+msgid "_Cancel"
+msgstr "Cancelar actualización"
 
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Carpetas"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Archivos"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "Cantidad de resultados"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 elementos"
-
-#: src/fsearch.glade:554
-msgid "Index:"
-msgstr "Índice:"
-
-#: src/fsearch.glade:622
-msgid "Number of selected folders"
-msgstr "Cantidad de carpetas seleccionadas"
-
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
-msgid "Number of selected files"
-msgstr "Cantidad de ficheros seleccionados"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr "Página 0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr "Cantidad de elementos en la base de datos"
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(vacío)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "Página 1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "MAYÚSCULAS"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "RUTA"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "EXPRESIONES REGULARES"
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
+#, fuzzy
+#| msgid "Select All"
+msgid "_Select"
+msgstr "Seleccionar todo"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

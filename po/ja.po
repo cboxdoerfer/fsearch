@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -19,13 +19,197 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.17-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr ""
+
+#: src/fsearch.c:182
+#, fuzzy
+msgid "Update the database"
+msgstr "データベースをアップデート"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr ""
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
+
+#: src/fsearch.glade:73
+#, fuzzy
+msgid "New window"
+msgstr "新しいウィンドウ"
+
+#: src/fsearch.glade:88
+#, fuzzy
+msgid "Update database"
+msgstr "データベースをアップデート"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+#, fuzzy
+#| msgid "Update database on start"
+msgid "Cancel database update"
+msgstr "起動時にデータベースをアップデート"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "パスを検索"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "大文字小文字を区別"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "正規表現を有効"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "ステータスバーを表示"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "フィルターを表示"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "検索ボタンを表示"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "設定"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr ""
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr ""
+
+#: src/fsearch.glade:345
+#, fuzzy
+msgid "Search…"
+msgstr "検索"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "フィルターを選択"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "すべて"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "フォルダ"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "ファイル"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "検索"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "検索ヒット数"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 個"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch.glade:622
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected folders"
+msgstr "検索ヒット数"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected files"
+msgstr "検索ヒット数"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, fuzzy, c-format
+msgid "Updating Database…"
+msgstr "データベースをアップデート中…"
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr "ページ0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr ""
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(空)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "ページ1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "大文字小文字"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "パス"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "正規表現"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "パス"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr ""
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 個"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -45,11 +229,6 @@ msgstr "最終更新日: %Y-%m-%d %H:%M"
 msgid "Loading Database…"
 msgstr "データベースを読み込み中…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, fuzzy, c-format
-msgid "Updating Database…"
-msgstr "データベースをアップデート中…"
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr ""
@@ -59,48 +238,6 @@ msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr ""
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "名前"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "パス"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "サイズ"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "更新日時"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "タイプ"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr ""
-
-#: src/fsearch.c:182
-#, fuzzy
-msgid "Update the database"
-msgstr "データベースをアップデート"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr ""
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
 
 #: src/fsearch_window_actions.c:78
 #, fuzzy, c-format
@@ -127,13 +264,21 @@ msgstr "ファイルを削除中…"
 msgid "Moving files to trash…"
 msgstr "ゴミ箱に移動中…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr ""
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "名前"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr ""
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "サイズ"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "更新日時"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "タイプ"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -157,10 +302,6 @@ msgstr "データベースをアップデート"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
-
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
 msgstr ""
 
 #: src/menus.ui:49
@@ -187,49 +328,17 @@ msgstr "すべての選択を解除"
 msgid "Invert Selection"
 msgstr "選択を反転"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "設定"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "表示(_V)"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "ステータスバーを表示"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "フィルターを表示"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "検索ボタンを表示"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "検索(_S)"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "パスを検索"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "大文字小文字を区別"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "正規表現を有効"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "ヘルプ(_H)"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr ""
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -410,10 +519,6 @@ msgstr "検索結果が空の場合は結果を隠す"
 msgid "Match case when query contains at least one upper case character"
 msgstr "クエリがパス区切り文字を含む場合はパスを検索"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "検索"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "起動時にデータベースをアップデート"
@@ -470,110 +575,21 @@ msgstr ""
 msgid "Dialogs"
 msgstr ""
 
-#: src/fsearch.glade:73
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
 #, fuzzy
-msgid "New window"
-msgstr "新しいウィンドウ"
-
-#: src/fsearch.glade:88
-#, fuzzy
-msgid "Update database"
-msgstr "データベースをアップデート"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
-#, fuzzy
-#| msgid "Update database on start"
-msgid "Cancel database update"
-msgstr "起動時にデータベースをアップデート"
-
-#: src/fsearch.glade:345
-#, fuzzy
-msgid "Search…"
-msgstr "検索"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "フィルターを選択"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "すべて"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "フォルダ"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "ファイル"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "検索ヒット数"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 個"
-
-#: src/fsearch.glade:554
-msgid "Index:"
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
+msgid "_Cancel"
 msgstr ""
 
-#: src/fsearch.glade:622
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected folders"
-msgstr "検索ヒット数"
-
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
-#, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected files"
-msgstr "検索ヒット数"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr "ページ0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr ""
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(空)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "ページ1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "大文字小文字"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "パス"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "正規表現"
+#| msgid "Deselect All"
+msgid "_Select"
+msgstr "すべての選択を解除"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

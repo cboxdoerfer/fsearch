@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-02 17:56+0200\n"
+"POT-Creation-Date: 2020-10-03 16:56+0200\n"
 "PO-Revision-Date: 2020-09-22 04:39+0000\n"
 "Last-Translator: GongHeng2017 <1239137790@qq.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,13 +19,193 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:175
+msgid "Show version information"
+msgstr "显示版本信息"
+
+#: src/fsearch.c:182
+msgid "Update the database"
+msgstr "更新数据库"
+
+#: src/fsearch.c:376
+msgid "translator-credits"
+msgstr "翻译人员"
+
+#: src/fsearch.c:378
+msgid "A search utility focusing on performance and advanced features"
+msgstr "注重性能和高级功能的搜索工具"
+
+#: src/fsearch.glade:73
+msgid "New window"
+msgstr "新窗口打开"
+
+#: src/fsearch.glade:88
+msgid "Update database"
+msgstr "更新数据源"
+
+#: src/fsearch.glade:103 src/fsearch.glade:717
+#, fuzzy
+#| msgid "Update database on start"
+msgid "Cancel database update"
+msgstr "启动时更新数据库"
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr "搜索路径"
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr "区分大小写"
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr "启用正则"
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr "显示状态栏"
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr "筛选设置"
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr "显示搜索按钮"
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr "选项"
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr "关于"
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr "退出"
+
+#: src/fsearch.glade:345
+msgid "Search…"
+msgstr "搜索…"
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr "选择筛选器"
+
+#: src/fsearch.glade:370
+msgid "All"
+msgstr "所有"
+
+#: src/fsearch.glade:371
+msgid "Folders"
+msgstr "文件夹"
+
+#: src/fsearch.glade:372
+msgid "Files"
+msgstr "文件"
+
+#: src/fsearch.glade:403 src/preferences.ui:625
+msgid "Search"
+msgstr "搜索"
+
+#: src/fsearch.glade:516
+msgid "Number of Search Results"
+msgstr "搜索到的数量"
+
+#: src/fsearch.glade:517
+msgid "0 Items"
+msgstr "0 项"
+
+#: src/fsearch.glade:554
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch.glade:622
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected folders"
+msgstr "搜索到的数量"
+
+#: src/fsearch.glade:623 src/fsearch.glade:648
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch.glade:647
+#, fuzzy
+#| msgid "Number of Search Results"
+msgid "Number of selected files"
+msgstr "搜索到的数量"
+
+#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#, c-format
+msgid "Updating Database…"
+msgstr "数据库更新中…"
+
+#: src/fsearch.glade:734
+msgid "page0"
+msgstr "页0"
+
+#: src/fsearch.glade:758
+msgid "Number of database items"
+msgstr ""
+
+#: src/fsearch.glade:759
+msgid "(empty)"
+msgstr "(空)"
+
+#: src/fsearch.glade:770
+msgid "page1"
+msgstr "页1"
+
+#: src/fsearch.glade:789
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:820 src/fsearch.glade:873
+msgid "CASE"
+msgstr "实例"
+
+#: src/fsearch.glade:896
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:927 src/fsearch.glade:980
+msgid "PATH"
+msgstr "路径"
+
+#: src/fsearch.glade:1033
+msgid "REGEX"
+msgstr "正则表达式"
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr "激活"
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr "路径"
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr "更新"
+
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 项"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-msgid "Quering…"
+msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
@@ -45,11 +225,6 @@ msgstr "最后更新: %Y-%m-%d %H:%M"
 msgid "Loading Database…"
 msgstr "加载数据库…"
 
-#: src/fsearch_window.c:949 src/overlay.ui:213 src/fsearch.glade:701
-#, c-format
-msgid "Updating Database…"
-msgstr "数据库更新中…"
-
 #: src/fsearch_window.c:1111
 msgid "Background tasks are active."
 msgstr "后台任务处于活动状态。"
@@ -61,47 +236,6 @@ msgid ""
 msgstr ""
 "目前无法关闭窗口。\n"
 "请稍等，然后重试。"
-
-#: src/database.c:1024
-msgid "Sorting..."
-msgstr ""
-
-#: src/listview.c:188 src/menus.ui:201
-msgid "Name"
-msgstr "名称"
-
-#: src/listview.c:213 src/fsearch_preferences_widgets.c:207
-#: src/fsearch_preferences_widgets.c:250 src/menus.ui:205
-msgid "Path"
-msgstr "路径"
-
-#: src/listview.c:237 src/menus.ui:213
-msgid "Size"
-msgstr "大小"
-
-#: src/listview.c:255 src/menus.ui:217
-msgid "Date Modified"
-msgstr "修改日期"
-
-#: src/listview.c:272 src/menus.ui:209
-msgid "Type"
-msgstr "类型"
-
-#: src/fsearch.c:175
-msgid "Show version information"
-msgstr "显示版本信息"
-
-#: src/fsearch.c:182
-msgid "Update the database"
-msgstr "更新数据库"
-
-#: src/fsearch.c:376
-msgid "translator-credits"
-msgstr "翻译人员"
-
-#: src/fsearch.c:378
-msgid "A search utility focusing on performance and advanced features"
-msgstr "注重性能和高级功能的搜索工具"
 
 #: src/fsearch_window_actions.c:78
 #, c-format
@@ -125,13 +259,21 @@ msgstr "删除文件中…"
 msgid "Moving files to trash…"
 msgstr "正在移动文件到回收站…"
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
-msgid "Active"
-msgstr "激活"
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr "名称"
 
-#: src/fsearch_preferences_widgets.c:210
-msgid "Update"
-msgstr "更新"
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr "大小"
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr "修改日期"
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr "类型"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -159,10 +301,6 @@ msgstr "更新数据库"
 msgid "Cancel Update"
 msgstr "更新"
 
-#: src/menus.ui:42 src/fsearch.glade:293
-msgid "Quit"
-msgstr "退出"
-
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_编辑"
@@ -187,49 +325,17 @@ msgstr "取消所有选择"
 msgid "Invert Selection"
 msgstr "反选"
 
-#: src/menus.ui:74 src/preferences.ui:17 src/fsearch.glade:243
-msgid "Preferences"
-msgstr "选项"
-
 #: src/menus.ui:81
 msgid "_View"
 msgstr "_视图"
-
-#: src/menus.ui:84 src/fsearch.glade:190
-msgid "Show Statusbar"
-msgstr "显示状态栏"
-
-#: src/menus.ui:88 src/fsearch.glade:204
-msgid "Show Filter"
-msgstr "筛选设置"
-
-#: src/menus.ui:92 src/fsearch.glade:218
-msgid "Show Search Button"
-msgstr "显示搜索按钮"
 
 #: src/menus.ui:98
 msgid "_Search"
 msgstr "_搜索"
 
-#: src/menus.ui:101 src/fsearch.glade:137
-msgid "Search in Path"
-msgstr "搜索路径"
-
-#: src/menus.ui:105 src/fsearch.glade:151
-msgid "Match Case"
-msgstr "区分大小写"
-
-#: src/menus.ui:109 src/fsearch.glade:165
-msgid "Enable RegEx"
-msgstr "启用正则"
-
 #: src/menus.ui:115
 msgid "_Help"
 msgstr "_帮助"
-
-#: src/menus.ui:118 src/fsearch.glade:268
-msgid "About"
-msgstr "关于"
 
 #: src/menus.ui:134
 msgid "Open _With"
@@ -406,10 +512,6 @@ msgstr "搜索条件为空时不显示结果"
 msgid "Match case when query contains at least one upper case character"
 msgstr "当查询至少包含一个大写字符时，区分大小写"
 
-#: src/preferences.ui:625 src/fsearch.glade:403
-msgid "Search"
-msgstr "搜索"
-
 #: src/preferences.ui:644
 msgid "Update database on start"
 msgstr "启动时更新数据库"
@@ -466,107 +568,23 @@ msgstr "文件或目录打开失败"
 msgid "Dialogs"
 msgstr "对话框"
 
-#: src/fsearch.glade:73
-msgid "New window"
-msgstr "新窗口打开"
-
-#: src/fsearch.glade:88
-msgid "Update database"
-msgstr "更新数据源"
-
-#: src/fsearch.glade:103 src/fsearch.glade:717
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Update database on start"
-msgid "Cancel database update"
-msgstr "启动时更新数据库"
-
-#: src/fsearch.glade:345
-msgid "Search…"
-msgstr "搜索…"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
+#| msgid "Select a Filter"
+msgid "Select folder"
 msgstr "选择筛选器"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "所有"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "文件夹"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "文件"
-
-#: src/fsearch.glade:516
-msgid "Number of Search Results"
-msgstr "搜索到的数量"
-
-#: src/fsearch.glade:517
-msgid "0 Items"
-msgstr "0 项"
-
-#: src/fsearch.glade:554
-msgid "Index:"
-msgstr ""
-
-#: src/fsearch.glade:622
+#: src/preferences_ui.c:70 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected folders"
-msgstr "搜索到的数量"
+#| msgid "Update"
+msgid "_Cancel"
+msgstr "更新"
 
-#: src/fsearch.glade:623 src/fsearch.glade:648
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:647
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
 #, fuzzy
-#| msgid "Number of Search Results"
-msgid "Number of selected files"
-msgstr "搜索到的数量"
-
-#: src/fsearch.glade:734
-msgid "page0"
-msgstr "页0"
-
-#: src/fsearch.glade:758
-msgid "Number of database items"
-msgstr ""
-
-#: src/fsearch.glade:759
-msgid "(empty)"
-msgstr "(空)"
-
-#: src/fsearch.glade:770
-msgid "page1"
-msgstr "页1"
-
-#: src/fsearch.glade:789
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:820 src/fsearch.glade:873
-msgid "CASE"
-msgstr "实例"
-
-#: src/fsearch.glade:896
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-
-#: src/fsearch.glade:927 src/fsearch.glade:980
-msgid "PATH"
-msgstr "路径"
-
-#: src/fsearch.glade:1033
-msgid "REGEX"
-msgstr "正则表达式"
+#| msgid "Deselect All"
+msgid "_Select"
+msgstr "取消所有选择"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
