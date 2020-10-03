@@ -1,11 +1,12 @@
-src/fsearch_window.c
 src/database.c
-src/listview.c
 src/fsearch.c
-src/fsearch_window_actions.c
+src/fsearch.glade
 src/fsearch_preferences_widgets.c
+src/fsearch_window.c
+src/fsearch_window_actions.c
+src/listview.c
 src/menus.ui
 src/overlay.ui
 src/preferences.ui
-src/fsearch.glade
+src/preferences_ui.c
 data/fsearch.desktop.in.in
