@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-02 17:56+0200\n"
-"PO-Revision-Date: 2020-09-30 16:41+0000\n"
+"PO-Revision-Date: 2020-10-03 20:41+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "fsearch/translations/en_GB/>\n"
@@ -26,7 +26,7 @@ msgstr "%'d Items"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
 msgid "Quering…"
-msgstr ""
+msgstr "Quering…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
@@ -64,7 +64,7 @@ msgstr ""
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Sorting..."
 
 #: src/listview.c:188 src/menus.ui:201
 msgid "Name"
@@ -295,10 +295,13 @@ msgid ""
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
+"<b>Enable dark theme</b> might not have an effect.\n"
+"Some platforms don't support dark theming and others always use dark themes "
+"by default."
 
 #: src/preferences.ui:163
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Enable client-side decorations (requires restart)"
 
 #: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
@@ -533,6 +536,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
 
 #: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
@@ -543,6 +548,8 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
 
 #: src/fsearch.glade:927 src/fsearch.glade:980
 msgid "PATH"

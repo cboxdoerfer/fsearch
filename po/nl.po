@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-02 17:56+0200\n"
-"PO-Revision-Date: 2020-09-30 16:41+0000\n"
+"PO-Revision-Date: 2020-10-03 20:41+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -26,7 +26,7 @@ msgstr "%'d items"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
 msgid "Quering…"
-msgstr ""
+msgstr "Bezig met zoeken…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
@@ -64,7 +64,7 @@ msgstr ""
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Bezig met sorteren..."
 
 #: src/listview.c:188 src/menus.ui:201
 msgid "Name"
@@ -295,10 +295,13 @@ msgid ""
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
+"<b>Donker thema inschakelen</b> werkt niet overal.\n"
+"Sommige systemen hebben geen ondersteuning voor donkere thema's en anderen "
+"hebben het standaard."
 
 #: src/preferences.ui:163
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Decoraties aan clientzijde gebruiken (herstart vereist)"
 
 #: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
@@ -537,6 +540,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"De zoekterm bevat hoofdletters.\n"
+"De optie <b>Hoofdlettergevoelig</b> is ingeschakeld."
 
 #: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
@@ -547,6 +552,8 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"De zoekterm bevat padscheidingstekens.\n"
+"De optie <b>Pad doorzoeken</b> is ingeschakeld."
 
 #: src/fsearch.glade:927 src/fsearch.glade:980
 msgid "PATH"

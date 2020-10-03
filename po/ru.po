@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-02 17:56+0200\n"
-"PO-Revision-Date: 2020-10-02 15:52+0000\n"
+"PO-Revision-Date: 2020-10-03 20:41+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -27,7 +27,7 @@ msgstr "%'d элемент(а/ов)"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
 msgid "Quering…"
-msgstr ""
+msgstr "Идёт запрос…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
@@ -65,7 +65,7 @@ msgstr ""
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Сортировка..."
 
 #: src/listview.c:188 src/menus.ui:201
 msgid "Name"
@@ -298,10 +298,13 @@ msgid ""
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
+"<b>Включение тёмной темы</b> может не дать эффекта.\n"
+"Некоторые платформы не поддерживают тёмную тему, а другие всегда используют "
+"тёмные темы по умолчанию."
 
 #: src/preferences.ui:163
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Включить декорирование окна со стороны клиента (требуется перезапуск)"
 
 #: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
@@ -540,6 +543,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Поисковый запрос содержит символы верхнего регистра.\n"
+"<b>Учёт регистра</b> был временно активирован для этого запроса."
 
 #: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
@@ -550,6 +555,8 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Поисковый запрос содержит разделители путей.\n"
+"<b>Поиск в пути к файлу/папке</b> был временно активирован для этого запроса."
 
 #: src/fsearch.glade:927 src/fsearch.glade:980
 msgid "PATH"

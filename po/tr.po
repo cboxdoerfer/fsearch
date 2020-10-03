@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-02 17:56+0200\n"
-"PO-Revision-Date: 2020-09-30 16:41+0000\n"
+"PO-Revision-Date: 2020-10-03 20:41+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -27,7 +27,7 @@ msgstr "%'d Öğe"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
 msgid "Quering…"
-msgstr ""
+msgstr "Sorgulanıyor…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
@@ -65,7 +65,7 @@ msgstr ""
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Sıralanıyor..."
 
 #: src/listview.c:188 src/menus.ui:201
 msgid "Name"
@@ -212,7 +212,7 @@ msgstr "Dosya Yolunda Ara"
 
 #: src/menus.ui:105 src/fsearch.glade:151
 msgid "Match Case"
-msgstr "Büyük Küçük Harfe Duyarlı"
+msgstr "Büyük/Küçük Harfe Duyarlı"
 
 #: src/menus.ui:109 src/fsearch.glade:165
 msgid "Enable RegEx"
@@ -290,7 +290,7 @@ msgstr "Farklı bir arama deneyiniz"
 
 #: src/preferences.ui:81
 msgid "Enable dark theme"
-msgstr "Karanlık Temayı Aktifleştir"
+msgstr "Karanlık temayı etkinleştir"
 
 #: src/preferences.ui:128
 msgid ""
@@ -298,10 +298,13 @@ msgid ""
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
+"<b>Karanlık temayı etkinleştir</b> seçeneği bir etkiye sahip olmayabilir.\n"
+"Bazı platformlar karanlık temayı desteklemez ve diğerleri her zaman "
+"öntanımlı olarak karanlık temalar kullanır."
 
 #: src/preferences.ui:163
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "İstemci tarafı süslemelerini etkinleştir (yeniden başlatma gerektirir)"
 
 #: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
@@ -385,7 +388,7 @@ msgstr "Sonuç sayısının sınırı:"
 
 #: src/preferences.ui:562
 msgid "Search in path when query contains path separators"
-msgstr "Sorgu dosya yolu içerdiği zaman dosya yollarında arama yap"
+msgstr "Sorgu, yol ayırıcıları içerdiği zaman dosya yollarında arama yap"
 
 #: src/preferences.ui:576
 msgid "Search as you type"
@@ -538,6 +541,9 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Arama terimi büyük harf karakterleri içeriyor.\n"
+"<b>Büyük/Küçük Harfe Duyarlı</b> seçeneği bu terim için geçici olarak "
+"etkinleştirildi."
 
 #: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
@@ -548,6 +554,9 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Arama terimi yol ayırıcıları içeriyor.\n"
+"<b>Dosya Yolunda Ara</b> seçeneği bu terim için geçici olarak "
+"etkinleştirildi."
 
 #: src/fsearch.glade:927 src/fsearch.glade:980
 msgid "PATH"
