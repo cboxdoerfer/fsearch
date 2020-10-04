@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-03 16:56+0200\n"
-"PO-Revision-Date: 2020-07-04 15:41+0000\n"
+"PO-Revision-Date: 2020-10-05 18:26+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/lt/>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.3-dev\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Rikiuojama..."
 
 #: src/fsearch.c:175
 msgid "Show version information"
@@ -34,7 +34,7 @@ msgstr "Atnaujinti duomenų bazę"
 
 #: src/fsearch.c:376
 msgid "translator-credits"
-msgstr ""
+msgstr "Moo"
 
 #: src/fsearch.c:378
 msgid "A search utility focusing on performance and advanced features"
@@ -42,20 +42,16 @@ msgstr ""
 "Paieškos programa, kuri susitelkia ties našumu ir išplėstinėmis ypatybėmis"
 
 #: src/fsearch.glade:73
-#, fuzzy
 msgid "New window"
 msgstr "Naujas langas"
 
 #: src/fsearch.glade:88
-#, fuzzy
 msgid "Update database"
 msgstr "Atnaujinti duomenų bazę"
 
 #: src/fsearch.glade:103 src/fsearch.glade:717
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Paleidus programą, atnaujinti duomenų bazę"
+msgstr "Atsisakyti duomenų bazės atnaujinimo"
 
 #: src/fsearch.glade:137 src/menus.ui:101
 msgid "Search in Path"
@@ -87,16 +83,15 @@ msgstr "Nuostatos"
 
 #: src/fsearch.glade:268 src/menus.ui:118
 msgid "About"
-msgstr ""
+msgstr "Apie"
 
 #: src/fsearch.glade:293 src/menus.ui:42
 msgid "Quit"
-msgstr ""
+msgstr "Išeiti"
 
 #: src/fsearch.glade:345
-#, fuzzy
 msgid "Search…"
-msgstr "Ieškoti"
+msgstr "Ieškoti…"
 
 #: src/fsearch.glade:367
 msgid "Select a Filter"
@@ -147,9 +142,9 @@ msgid "Number of selected files"
 msgstr "Paieškos rezultatų skaičius"
 
 #: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
-#, fuzzy, c-format
+#, c-format
 msgid "Updating Database…"
-msgstr "Atnaujinama duomenų bazė..."
+msgstr "Atnaujinama duomenų bazė…"
 
 #: src/fsearch.glade:734
 msgid "page0"
@@ -157,7 +152,7 @@ msgstr "puslapis0"
 
 #: src/fsearch.glade:758
 msgid "Number of database items"
-msgstr ""
+msgstr "Duomenų bazės elementų skaičius"
 
 #: src/fsearch.glade:759
 msgid "(empty)"
@@ -202,7 +197,7 @@ msgstr "Kelias"
 
 #: src/fsearch_preferences_widgets.c:210
 msgid "Update"
-msgstr ""
+msgstr "Atnaujinti"
 
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
@@ -211,7 +206,7 @@ msgstr "%'d elementų"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
 msgid "Querying…"
-msgstr ""
+msgstr "Užklausiama…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
