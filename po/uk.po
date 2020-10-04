@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-03 16:56+0200\n"
-"PO-Revision-Date: 2020-10-03 20:41+0000\n"
+"PO-Revision-Date: 2020-10-05 18:26+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -204,8 +204,6 @@ msgid "%'d Items"
 msgstr "%'d об'єктів"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-#, fuzzy
-#| msgid "Quering…"
 msgid "Querying…"
 msgstr "Йде запит…"
 
@@ -566,22 +564,16 @@ msgid "Dialogs"
 msgstr "Діалогові вікна"
 
 #: src/preferences_ui.c:67 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Обрати фільтр"
+msgstr "Виберіть папку"
 
 #: src/preferences_ui.c:70 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Cancel Update"
 msgid "_Cancel"
-msgstr "Скасувати оновлення"
+msgstr "_Скасувати"
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select All"
 msgid "_Select"
-msgstr "Виділити все"
+msgstr "_Вибрати"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
