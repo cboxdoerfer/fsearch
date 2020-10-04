@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-03 16:56+0200\n"
-"PO-Revision-Date: 2020-10-03 20:41+0000\n"
+"PO-Revision-Date: 2020-10-05 18:26+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -206,8 +206,6 @@ msgid "%'d Items"
 msgstr "%'d Öğe"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
-#, fuzzy
-#| msgid "Quering…"
 msgid "Querying…"
 msgstr "Sorgulanıyor…"
 
@@ -569,22 +567,16 @@ msgid "Dialogs"
 msgstr "İletişim kutuları"
 
 #: src/preferences_ui.c:67 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Bir Filtre Seç"
+msgstr "Klasör seç"
 
 #: src/preferences_ui.c:70 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Cancel Update"
 msgid "_Cancel"
-msgstr "Güncellemeyi İptal Et"
+msgstr "_İptal"
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select All"
 msgid "_Select"
-msgstr "Tümünü Seç"
+msgstr "_Seç"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
