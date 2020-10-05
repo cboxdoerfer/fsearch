@@ -142,8 +142,8 @@ preferences_ui_launch(FsearchConfig *config,
     GtkWidget *dialog = GTK_WIDGET(gtk_builder_get_object(builder, "FsearchPreferencesWindow"));
     gtk_window_set_transient_for(GTK_WINDOW(dialog), window);
 
-    gtk_dialog_add_button(GTK_DIALOG(dialog), "_Cancel", GTK_RESPONSE_CANCEL);
-    gtk_dialog_add_button(GTK_DIALOG(dialog), "_OK", GTK_RESPONSE_OK);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_button(GTK_DIALOG(dialog), _("_OK"), GTK_RESPONSE_OK);
 
     // Interface page
     GtkToggleButton *enable_dark_theme_button =
