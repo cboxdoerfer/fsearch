@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-03 16:56+0200\n"
+"POT-Creation-Date: 2020-10-05 21:29+0200\n"
 "PO-Revision-Date: 2020-07-30 09:57+0200\n"
 "Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: Arabic\n"
@@ -551,12 +551,16 @@ msgstr ""
 msgid "Select folder"
 msgstr ""
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
 msgid "_Cancel"
 msgstr ""
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
 msgid "_Select"
+msgstr ""
+
+#: src/preferences_ui.c:146
+msgid "_OK"
 msgstr ""
 
 #: data/fsearch.desktop.in.in:5

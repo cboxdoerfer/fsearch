@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-03 16:56+0200\n"
+"POT-Creation-Date: 2020-10-05 21:29+0200\n"
 "PO-Revision-Date: 2020-09-30 16:41+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -596,7 +596,7 @@ msgstr "Dialogvinduer"
 msgid "Select folder"
 msgstr "Velg et filter"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
 #, fuzzy
 #| msgid "Update"
 msgid "_Cancel"
@@ -607,6 +607,10 @@ msgstr "Oppdater"
 #| msgid "Deselect All"
 msgid "_Select"
 msgstr "Fravelg alt"
+
+#: src/preferences_ui.c:146
+msgid "_OK"
+msgstr ""
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

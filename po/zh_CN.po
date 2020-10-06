@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-03 16:56+0200\n"
+"POT-Creation-Date: 2020-10-05 21:29+0200\n"
 "PO-Revision-Date: 2020-09-22 04:39+0000\n"
 "Last-Translator: GongHeng2017 <1239137790@qq.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -574,7 +574,7 @@ msgstr "对话框"
 msgid "Select folder"
 msgstr "选择筛选器"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
 #, fuzzy
 #| msgid "Update"
 msgid "_Cancel"
@@ -585,6 +585,10 @@ msgstr "更新"
 #| msgid "Deselect All"
 msgid "_Select"
 msgstr "取消所有选择"
+
+#: src/preferences_ui.c:146
+msgid "_OK"
+msgstr ""
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

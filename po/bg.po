@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-03 16:56+0200\n"
+"POT-Creation-Date: 2020-10-05 21:29+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -580,7 +580,7 @@ msgstr "Диалози"
 msgid "Select folder"
 msgstr "Избор на Филтър"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
 #, fuzzy
 #| msgid "Update"
 msgid "_Cancel"
@@ -591,6 +591,10 @@ msgstr "Обновяване"
 #| msgid "Deselect All"
 msgid "_Select"
 msgstr "Премахване на цялата селекция"
+
+#: src/preferences_ui.c:146
+msgid "_OK"
+msgstr ""
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-03 16:56+0200\n"
+"POT-Creation-Date: 2020-10-05 21:29+0200\n"
 "PO-Revision-Date: 2020-09-22 04:39+0000\n"
 "Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
 "Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
@@ -565,7 +565,7 @@ msgstr ""
 msgid "Select folder"
 msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
 #, fuzzy
 msgid "_Cancel"
 msgstr "ⴰⵙⵜⵔⴰⵔ"
@@ -575,6 +575,10 @@ msgstr "ⴰⵙⵜⵔⴰⵔ"
 #| msgid "Select a Filter"
 msgid "_Select"
 msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
+
+#: src/preferences_ui.c:146
+msgid "_OK"
+msgstr ""
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"

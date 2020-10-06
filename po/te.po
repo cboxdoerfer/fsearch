@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-03 16:56+0200\n"
+"POT-Creation-Date: 2020-10-05 21:29+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: akash rao <akash.rao.ind@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/fsearch/"
@@ -576,7 +576,7 @@ msgstr "సూచనలు"
 msgid "Select folder"
 msgstr "వడపోతని ఎంచుకొనుము"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
 #, fuzzy
 #| msgid "Update"
 msgid "_Cancel"
@@ -587,6 +587,10 @@ msgstr "అప్డేట్"
 #| msgid "Deselect All"
 msgid "_Select"
 msgstr "అన్ని ఎంపికలూ తీసివేయుము"
+
+#: src/preferences_ui.c:146
+msgid "_OK"
+msgstr ""
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
