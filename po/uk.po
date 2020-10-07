@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-05 21:29+0200\n"
-"PO-Revision-Date: 2020-10-05 18:26+0000\n"
+"PO-Revision-Date: 2020-10-07 13:25+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -577,7 +577,7 @@ msgstr "_Вибрати"
 
 #: src/preferences_ui.c:146
 msgid "_OK"
-msgstr ""
+msgstr "_Прийняти"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
