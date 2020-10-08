@@ -48,8 +48,10 @@ fs_str_is_utf8(const char *str) {
     assert(up != NULL);
 
     size_t str_len = strlen(str);
-    size_t up_len = strlen(up);
-    size_t down_len = strlen(down);
+    size_t up_str_len = strlen(up);
+    size_t down_str_len = strlen(down);
+    size_t up_len = g_utf8_strlen(up, -1);
+    size_t down_len = g_utf8_strlen(down, -1);
 
     g_free(down);
     g_free(up);
@@ -57,7 +59,8 @@ fs_str_is_utf8(const char *str) {
     down = NULL;
     up = NULL;
 
-    if (str_len != up_len || str_len != down_len) {
+    if (str_len != up_len || str_len != down_len || up_str_len != up_len ||
+        down_str_len != down_len) {
         return true;
     }
     return false;
