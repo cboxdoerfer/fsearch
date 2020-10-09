@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-05 21:29+0200\n"
-"PO-Revision-Date: 2020-09-09 07:36+0000\n"
+"PO-Revision-Date: 2020-10-10 18:26+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -21,7 +21,7 @@ msgstr ""
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Сортиране..."
 
 #: src/fsearch.c:175
 msgid "Show version information"
@@ -50,10 +50,8 @@ msgid "Update database"
 msgstr "Обновяване на базата с данни"
 
 #: src/fsearch.glade:103 src/fsearch.glade:717
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Обновяване на базата с данни при стартиране"
+msgstr "Отказ от обновяването на базата"
 
 #: src/fsearch.glade:137 src/menus.ui:101
 msgid "Search in Path"
@@ -125,23 +123,19 @@ msgstr "0 елемента"
 
 #: src/fsearch.glade:554
 msgid "Index:"
-msgstr ""
+msgstr "Индекс:"
 
 #: src/fsearch.glade:622
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Брой на резултатите от търсенето"
+msgstr "Брой на избраните папки"
 
 #: src/fsearch.glade:623 src/fsearch.glade:648
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:647
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Брой на резултатите от търсенето"
+msgstr "Брой на избраните файлове"
 
 #: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
 #, c-format
@@ -154,7 +148,7 @@ msgstr "страница0"
 
 #: src/fsearch.glade:758
 msgid "Number of database items"
-msgstr ""
+msgstr "Брой на елементите в базата с данни"
 
 #: src/fsearch.glade:759
 msgid "(empty)"
@@ -169,6 +163,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Думата за търсене съдържа главни букви.\n"
+"<b>Точно съвпадение</b> е временно активирано за този израз."
 
 #: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
@@ -179,6 +175,8 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Търсеният израз съдържа разделители.\n"
+"<b>Търсене в пътя</b> е временно активирано за този израз."
 
 #: src/fsearch.glade:927 src/fsearch.glade:980
 msgid "PATH"
@@ -208,7 +206,7 @@ msgstr "%'d елемента"
 
 #: src/fsearch_window.c:398 src/fsearch_window.c:550
 msgid "Querying…"
-msgstr ""
+msgstr "Запитване…"
 
 #: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
@@ -298,26 +296,20 @@ msgid "Update Database"
 msgstr "Обновяване на базата с данни"
 
 #: src/menus.ui:35
-#, fuzzy
-#| msgid "Update"
 msgid "Cancel Update"
-msgstr "Обновяване"
+msgstr "Отказ от обновяване"
 
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_Редактиране"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_Копиране"
+msgstr "Копиране"
 
 #: src/menus.ui:59
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Премахване на цялата селекция"
+msgstr "Избор на всички"
 
 #: src/menus.ui:64
 msgid "Deselect All"
@@ -411,10 +403,13 @@ msgid ""
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
+"<b>Включване на тъмната тема</b> може би няма да има ефект.\n"
+"Някои платформи не поддържат тъмни теми, а други използват тъмни теми по "
+"подразбиране."
 
 #: src/preferences.ui:163
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Активиране на декорации от страна на клиента (изисква рестартиране)"
 
 #: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
@@ -446,7 +441,7 @@ msgstr "Запомняне на размера на прозореца"
 
 #: src/preferences.ui:309
 msgid "General:"
-msgstr ""
+msgstr "Общи:"
 
 #: src/preferences.ui:341
 msgid "Show highlighted search terms"
@@ -478,19 +473,15 @@ msgstr "Отваряне с едно кликване"
 
 #: src/preferences.ui:446
 msgid "Results:"
-msgstr ""
+msgstr "Резултати:"
 
 #: src/preferences.ui:478
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Обновяване на базата с данни при стартиране"
+msgstr "Показване на статуса на индексиране на базата с данни"
 
 #: src/preferences.ui:498
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Показване на лентата на състоянието"
+msgstr "Лента на състоянието:"
 
 #: src/preferences.ui:516
 msgid "Interface"
@@ -575,26 +566,20 @@ msgid "Dialogs"
 msgstr "Диалози"
 
 #: src/preferences_ui.c:67 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Избор на Филтър"
+msgstr "Избор на папка"
 
 #: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
-#, fuzzy
-#| msgid "Update"
 msgid "_Cancel"
-msgstr "Обновяване"
+msgstr "_Отказ"
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Deselect All"
 msgid "_Select"
-msgstr "Премахване на цялата селекция"
+msgstr "_Избор"
 
 #: src/preferences_ui.c:146
 msgid "_OK"
-msgstr ""
+msgstr "_ОК"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
