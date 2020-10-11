@@ -94,6 +94,9 @@ clipboard_get_data(GtkClipboard *clipboard,
             }
         }
     }
+    if (info == NAUTILUS_WORKAROUND) {
+        g_string_append_c(list, '\n');
+    }
 
     gtk_selection_data_set(selection_data,
                            gtk_selection_data_get_target(selection_data),
