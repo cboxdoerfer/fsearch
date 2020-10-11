@@ -23,9 +23,10 @@
 static GdkDragAction clipboard_action = GDK_ACTION_DEFAULT;
 static GList *clipboard_file_list = NULL;
 
-enum { URI_LIST = 1, GNOME_COPIED_FILES, N_CLIPBOARD_TARGETS };
+enum { URI_LIST = 1, NAUTILUS_WORKAROUND, GNOME_COPIED_FILES, N_CLIPBOARD_TARGETS };
 
 static GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST},
+                                   {"text/plain;charset=utf-8", 0, NAUTILUS_WORKAROUND},
                                    {"x-special/gnome-copied-files", 0, GNOME_COPIED_FILES}};
 
 static void
@@ -59,6 +60,12 @@ clipboard_get_data(GtkClipboard *clipboard,
     else if (info == URI_LIST) {
         use_uri = TRUE;
     }
+    else if (info == NAUTILUS_WORKAROUND) {
+        g_string_append(list, "x-special/nautilus-clipboard\n");
+        const gchar *action = clipboard_action == GDK_ACTION_MOVE ? "cut\n" : "copy\n";
+        g_string_append(list, action);
+        use_uri = TRUE;
+    }
     else {
         goto out;
     }
@@ -79,8 +86,11 @@ clipboard_get_data(GtkClipboard *clipboard,
             if (info == GNOME_COPIED_FILES) {
                 g_string_append_c(list, '\n');
             }
-            else {
+            else if (info == URI_LIST) {
                 g_string_append(list, "\r\n");
+            }
+            else {
+                g_string_append_c(list, '\n');
             }
         }
     }
