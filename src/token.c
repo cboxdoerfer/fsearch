@@ -128,9 +128,9 @@ fsearch_tokens_new(FsearchQuery *q) {
 
     // check if regex characters are present
     const bool is_reg = fs_str_is_regex(q->text);
-    if (is_reg && q->enable_regex) {
+    if (is_reg && q->flags.enable_regex) {
         FsearchToken **token = calloc(2, sizeof(FsearchToken *));
-        token[0] = fsearch_token_new(q->text, q->match_case, q->auto_match_case, true);
+        token[0] = fsearch_token_new(q->text, q->flags.match_case, q->flags.auto_match_case, true);
         token[1] = NULL;
         return token;
     }
@@ -143,7 +143,8 @@ fsearch_tokens_new(FsearchQuery *q) {
     FsearchToken **token = calloc(tmp_token_len + 1, sizeof(FsearchToken *));
     for (uint32_t i = 0; i < tmp_token_len; i++) {
         trace("[search] token %d: %s\n", i, query_split[i]);
-        token[i] = fsearch_token_new(query_split[i], q->match_case, q->auto_match_case, false);
+        token[i] =
+            fsearch_token_new(query_split[i], q->flags.match_case, q->flags.auto_match_case, false);
     }
 
     g_strfreev(query_split);

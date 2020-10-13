@@ -187,8 +187,8 @@ db_search_worker(void *user_data) {
     const uint32_t num_token = ctx->num_token;
     const FsearchFilter filter = ctx->query->filter;
     FsearchToken **token = ctx->token;
-    const uint32_t search_in_path = ctx->query->search_in_path;
-    const uint32_t auto_search_in_path = ctx->query->auto_search_in_path;
+    const uint32_t search_in_path = ctx->query->flags.search_in_path;
+    const uint32_t auto_search_in_path = ctx->query->flags.auto_search_in_path;
     DynamicArray *entries = db_get_entries(ctx->query->db);
     BTreeNode **results = ctx->results;
 

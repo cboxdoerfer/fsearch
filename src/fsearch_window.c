@@ -444,12 +444,12 @@ update_model_cb(gpointer user_data) {
                 fsearch_query_highlight_free(win->query_highlight);
                 win->query_highlight = NULL;
             }
-            win->query_highlight = fsearch_query_highlight_new(text,
-                                                               config->enable_regex,
-                                                               config->match_case,
-                                                               config->auto_match_case,
-                                                               config->auto_search_in_path,
-                                                               config->search_in_path);
+            FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
+                                       .match_case = config->match_case,
+                                       .auto_match_case = config->auto_match_case,
+                                       .search_in_path = config->search_in_path,
+                                       .auto_search_in_path = config->auto_search_in_path};
+            win->query_highlight = fsearch_query_highlight_new(text, flags);
         }
         else {
             list_model_set_results(win->list_model, NULL);
@@ -531,6 +531,13 @@ perform_search(FsearchApplicationWindow *win) {
     trace("[search] %s\n", text);
     FsearchFilter filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     uint32_t max_results = config->limit_results ? config->num_results : 0;
+
+    FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
+                               .match_case = config->match_case,
+                               .auto_match_case = config->auto_match_case,
+                               .search_in_path = config->search_in_path,
+                               .auto_search_in_path = config->auto_search_in_path};
+
     FsearchQuery *q = fsearch_query_new(text,
                                         db,
                                         filter,
@@ -539,11 +546,7 @@ perform_search(FsearchApplicationWindow *win) {
                                         fsearch_application_window_search_cancelled,
                                         win,
                                         max_results,
-                                        config->match_case,
-                                        config->auto_match_case,
-                                        config->enable_regex,
-                                        config->auto_search_in_path,
-                                        config->search_in_path,
+                                        flags,
                                         !config->hide_results_on_empty_search);
 
     db_unlock(db);

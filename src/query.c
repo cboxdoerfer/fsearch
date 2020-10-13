@@ -33,11 +33,7 @@ fsearch_query_new(const char *text,
                   void (*callback_cancelled)(void *),
                   void *callback_cancelled_data,
                   uint32_t max_results,
-                  bool match_case,
-                  bool auto_match_case,
-                  bool enable_regex,
-                  bool auto_search_in_path,
-                  bool search_in_path,
+                  FsearchQueryFlags flags,
                   bool pass_on_empty_query) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     assert(q != NULL);
@@ -51,11 +47,7 @@ fsearch_query_new(const char *text,
     q->callback_cancelled = callback_cancelled;
     q->callback_cancelled_data = callback_cancelled_data;
     q->max_results = max_results;
-    q->match_case = match_case;
-    q->enable_regex = enable_regex;
-    q->auto_search_in_path = auto_search_in_path;
-    q->auto_match_case = auto_match_case;
-    q->search_in_path = search_in_path;
+    q->flags = flags;
     q->pass_on_empty_query = pass_on_empty_query;
     return q;
 }
@@ -110,7 +102,7 @@ fsearch_query_highlight_match(FsearchQueryHighlight *q, const char *input) {
         l = l->next;
 
         if (token->is_supported_glob &&
-            fsearch_query_highlight_match_glob(token, input, q->match_case)) {
+            fsearch_query_highlight_match_glob(token, input, q->flags.match_case)) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
             pa->start_index = token->hl_start;
             pa->end_index = token->hl_end;
@@ -173,12 +165,7 @@ fsearch_query_highlight_token_new() {
 }
 
 FsearchQueryHighlight *
-fsearch_query_highlight_new(const char *text,
-                            bool enable_regex,
-                            bool match_case,
-                            bool auto_match_case,
-                            bool auto_search_in_path,
-                            bool search_in_path) {
+fsearch_query_highlight_new(const char *text, FsearchQueryFlags flags) {
     if (!text) {
         return NULL;
     }
@@ -186,20 +173,20 @@ fsearch_query_highlight_new(const char *text,
     FsearchQueryHighlight *q = calloc(1, sizeof(FsearchQueryHighlight));
     assert(q != NULL);
 
-    q->auto_search_in_path = auto_search_in_path;
-    q->auto_match_case = auto_match_case;
-    q->search_in_path = search_in_path;
+    q->flags.auto_search_in_path = flags.auto_search_in_path;
+    q->flags.auto_match_case = flags.auto_match_case;
+    q->flags.search_in_path = flags.search_in_path;
 
     q->has_separator = strchr(text, '/') ? 1 : 0;
 
-    if (fs_str_is_regex(text) && enable_regex) {
+    if (fs_str_is_regex(text) && flags.enable_regex) {
         FsearchQueryHighlightToken *token = fsearch_query_highlight_token_new();
 
         bool has_uppercase = fs_str_utf8_has_upper(text);
-        if (!match_case && auto_match_case) {
-            q->match_case = has_uppercase ? true : false;
+        if (!flags.match_case && flags.auto_match_case) {
+            q->flags.match_case = has_uppercase ? true : false;
         }
-        token->regex = g_regex_new(text, !q->match_case ? G_REGEX_CASELESS : 0, 0, NULL);
+        token->regex = g_regex_new(text, !q->flags.match_case ? G_REGEX_CASELESS : 0, 0, NULL);
         token->text = g_strdup(text);
         token->query_len = strlen(text);
         q->token = g_list_append(q->token, token);
@@ -225,7 +212,7 @@ fsearch_query_highlight_new(const char *text,
 
             bool has_uppercase = fs_str_utf8_has_upper(query_escaped);
             bool query_match_case = false;
-            if (!match_case && auto_match_case) {
+            if (!flags.match_case && flags.auto_match_case) {
                 query_match_case = has_uppercase ? true : false;
             }
             token->regex =

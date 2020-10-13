@@ -117,7 +117,7 @@ listview_path_cell_data_func(GtkTreeViewColumn *col,
     }
 
     char path[PATH_MAX] = "";
-    if ((q->has_separator && q->auto_search_in_path) || q->search_in_path) {
+    if ((q->has_separator && q->flags.auto_search_in_path) || q->flags.search_in_path) {
         btree_node_get_path(node, path, sizeof(path));
     }
     else {
