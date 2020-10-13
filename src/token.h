@@ -7,7 +7,8 @@
 
 #define OVECCOUNT 3
 
-typedef struct {
+typedef struct FsearchToken {
+
     char *text;
     size_t text_len;
 

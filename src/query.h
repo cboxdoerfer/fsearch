@@ -25,7 +25,7 @@
 #include "database.h"
 #include "fsearch_filter.h"
 
-typedef struct _FsearchQueryHighlightToken {
+typedef struct FsearchQueryHighlightToken {
     GRegex *regex;
 
     bool is_supported_glob;
@@ -39,7 +39,7 @@ typedef struct _FsearchQueryHighlightToken {
     size_t query_len;
 } FsearchQueryHighlightToken;
 
-typedef struct _FsearchQueryHighlight {
+typedef struct FsearchQueryHighlight {
     GList *token;
 
     bool auto_search_in_path;
@@ -49,7 +49,7 @@ typedef struct _FsearchQueryHighlight {
     bool match_case;
 } FsearchQueryHighlight;
 
-typedef struct _FsearchQuery {
+typedef struct FsearchQuery {
     char *text;
     FsearchDatabase *db;
     FsearchFilter filter;
