@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-05 21:29+0200\n"
-"PO-Revision-Date: 2020-10-02 15:52+0000\n"
+"PO-Revision-Date: 2020-10-15 18:26+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -486,10 +486,8 @@ msgid "Show database indexing status"
 msgstr "Atualizar base de dados ao iniciar"
 
 #: src/preferences.ui:498
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Mostrar Barra de Estado"
+msgstr "Barra de Estado:"
 
 #: src/preferences.ui:516
 msgid "Interface"
