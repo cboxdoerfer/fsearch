@@ -1,6 +1,7 @@
 src/database.c
 src/fsearch.c
 src/fsearch.glade
+src/fsearch_filter.c
 src/fsearch_preferences_widgets.c
 src/fsearch_window.c
 src/fsearch_window_actions.c
