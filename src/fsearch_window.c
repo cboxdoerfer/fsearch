@@ -289,6 +289,15 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_in_path_revealer),
                                   config->search_in_path);
 
+    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(self->filter_combobox));
+    for (GList *f = fsearch_application_get_filters(app); f != NULL; f = f->next) {
+        FsearchFilter *filter = f->data;
+        if (filter && filter->name) {
+            gtk_combo_box_text_append(
+                GTK_COMBO_BOX_TEXT(self->filter_combobox), NULL, filter->name);
+        }
+        gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), 0);
+    }
     FsearchDatabase *db = fsearch_application_get_db(app);
     if (!db) {
         gtk_widget_show(self->empty_database_overlay);
@@ -529,7 +538,6 @@ perform_search(FsearchApplicationWindow *win) {
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
     trace("[search] %s\n", text);
-    FsearchFilter filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     uint32_t max_results = config->limit_results ? config->num_results : 0;
 
     FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
@@ -538,6 +546,9 @@ perform_search(FsearchApplicationWindow *win) {
                                .search_in_path = config->search_in_path,
                                .auto_search_in_path = config->auto_search_in_path};
 
+    uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
+    GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
+    FsearchFilter *filter = filter_element->data;
     FsearchQuery *q = fsearch_query_new(text,
                                         db,
                                         filter,

@@ -36,7 +36,7 @@ char *
 fs_str_copy(char *dest, char *end, const char *src);
 
 char **
-fs_str_split(char *str);
+fs_str_split(const char *str);
 
 bool
 fs_str_is_utf8(const char *str);

@@ -149,7 +149,7 @@ consume_escape(char *str, char **dest, bool *eos) {
 }
 
 char **
-fs_str_split(char *src) {
+fs_str_split(const char *src) {
     if (!src) {
         return NULL;
     }
@@ -157,7 +157,7 @@ fs_str_split(char *src) {
     GPtrArray *new = g_ptr_array_new();
     // Duplicate input string to make sure destination is large enough
     char *dest = g_strdup(src);
-    char *s = src;
+    char *s = dest;
     char *d = dest;
     bool inside_quotation_marks = false;
     bool eos = false;

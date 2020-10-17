@@ -44,6 +44,9 @@ fsearch_database_update(bool fullscan);
 FsearchDatabase *
 fsearch_application_get_db(FsearchApplication *fsearch);
 
+GList *
+fsearch_application_get_filters(FsearchApplication *fsearch);
+
 FsearchConfig *
 fsearch_application_get_config(FsearchApplication *fsearch);
 

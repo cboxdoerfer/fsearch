@@ -43,9 +43,7 @@ struct _DatabaseSearchEntry {
 typedef struct search_context_s {
     FsearchQuery *query;
     BTreeNode **results;
-    FsearchToken **token;
     bool *terminate;
-    uint32_t num_token;
     uint32_t num_results;
     uint32_t start_pos;
     uint32_t end_pos;
@@ -138,9 +136,7 @@ search_thread_context_free(search_thread_context_t *ctx) {
 
 static search_thread_context_t *
 search_thread_context_new(FsearchQuery *query,
-                          FsearchToken **token,
                           bool *terminate,
-                          uint32_t num_token,
                           uint32_t start_pos,
                           uint32_t end_pos) {
     search_thread_context_t *ctx = calloc(1, sizeof(search_thread_context_t));
@@ -148,8 +144,6 @@ search_thread_context_new(FsearchQuery *query,
     assert(end_pos >= start_pos);
 
     ctx->query = query;
-    ctx->token = token;
-    ctx->num_token = num_token;
     ctx->terminate = terminate;
     ctx->results = calloc(end_pos - start_pos + 1, sizeof(BTreeNode *));
     assert(ctx->results != NULL);
@@ -161,18 +155,38 @@ search_thread_context_new(FsearchQuery *query,
 }
 
 static inline bool
-filter_node(BTreeNode *node, FsearchFilter filter) {
-    if (filter == FSEARCH_FILTER_NONE) {
+filter_node(BTreeNode *node, FsearchQuery *query, const char *haystack) {
+    if (!query->filter) {
+        return true;
+    }
+    if (query->filter->type == FSEARCH_FILTER_NONE && query->filter->query == NULL) {
         return true;
     }
     bool is_dir = node->is_dir;
-    if (filter == FSEARCH_FILTER_FILES && !is_dir) {
-        return true;
+    if (query->filter->type == FSEARCH_FILTER_FILES && is_dir) {
+        return false;
     }
-    if (filter == FSEARCH_FILTER_FOLDERS && is_dir) {
-        return true;
+    if (query->filter->type == FSEARCH_FILTER_FOLDERS && !is_dir) {
+        return false;
     }
-    return false;
+    if (query->filter_token) {
+        uint32_t num_found = 0;
+        while (true) {
+            if (num_found == query->num_filter_token) {
+                return true;
+            }
+            FsearchToken *t = query->filter_token[num_found++];
+            if (!t) {
+                return false;
+            }
+
+            if (!t->search_func(haystack, t->text, t)) {
+                return false;
+            }
+        }
+        return false;
+    }
+    return true;
 }
 
 static void *
@@ -181,15 +195,15 @@ db_search_worker(void *user_data) {
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
+    FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
-    const uint32_t max_results = ctx->query->max_results;
-    const uint32_t num_token = ctx->num_token;
-    const FsearchFilter filter = ctx->query->filter;
-    FsearchToken **token = ctx->token;
-    const uint32_t search_in_path = ctx->query->flags.search_in_path;
-    const uint32_t auto_search_in_path = ctx->query->flags.auto_search_in_path;
-    DynamicArray *entries = db_get_entries(ctx->query->db);
+    const uint32_t max_results = query->max_results;
+    const uint32_t num_token = query->num_token;
+    FsearchToken **token = query->token;
+    const uint32_t search_in_path = query->flags.search_in_path;
+    const uint32_t auto_search_in_path = query->flags.auto_search_in_path;
+    DynamicArray *entries = db_get_entries(query->db);
     BTreeNode **results = ctx->results;
 
     if (!entries) {
@@ -211,15 +225,16 @@ db_search_worker(void *user_data) {
         if (!node) {
             continue;
         }
-        if (!filter_node(node, filter)) {
-            continue;
-        }
-
         const char *haystack_path = NULL;
         const char *haystack_name = node->name;
-        if (search_in_path) {
+        if (search_in_path || query->filter->search_in_path) {
             btree_node_get_path_full(node, full_path, sizeof(full_path));
             haystack_path = full_path;
+        }
+
+        if (!filter_node(
+                node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
+            continue;
         }
 
         uint32_t num_found = 0;
@@ -279,13 +294,22 @@ db_search_empty(FsearchQuery *query) {
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
     uint32_t pos = 0;
+
+    char full_path[PATH_MAX] = "";
     for (uint32_t i = 0; pos < num_results && i < num_entries; ++i) {
         BTreeNode *node = darray_get_item(entries, i);
         if (!node) {
             continue;
         }
 
-        if (!filter_node(node, query->filter)) {
+        const char *haystack_path = NULL;
+        const char *haystack_name = node->name;
+        if (query->filter->search_in_path) {
+            btree_node_get_path_full(node, full_path, sizeof(full_path));
+            haystack_path = full_path;
+        }
+        if (!filter_node(
+                node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
             continue;
         }
         if (node->is_dir) {
@@ -318,15 +342,10 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
 
     const uint32_t max_results = q->max_results;
     const bool limit_results = max_results ? true : false;
-    uint32_t num_token = 0;
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
 
-    FsearchToken **token = fsearch_tokens_new(q);
-    while (token[num_token]) {
-        num_token++;
-    }
-    if (!token) {
+    if (!q->token) {
         return db_search_result_new(NULL, 0, 0);
     }
 
@@ -335,9 +354,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] =
             search_thread_context_new(q,
-                                      token,
                                       &search->search_terminate,
-                                      num_token,
                                       start_pos,
                                       i == num_threads - 1 ? num_entries - 1 : end_pos);
 
@@ -358,8 +375,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
             search_thread_context_t *ctx = thread_data[i];
             search_thread_context_free(ctx);
         }
-        fsearch_tokens_free(token, num_token);
-
         fsearch_timer_stop(timer, "[search] search aborted after %.2f ms\n");
         timer = NULL;
         return NULL;
@@ -402,8 +417,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
         }
         search_thread_context_free(ctx);
     }
-
-    fsearch_tokens_free(token, num_token);
 
     fsearch_timer_stop(timer, "[search] search finished in %.2f ms\n");
     timer = NULL;

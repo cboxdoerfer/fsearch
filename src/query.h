@@ -24,6 +24,7 @@
 
 #include "database.h"
 #include "fsearch_filter.h"
+#include "token.h"
 
 typedef struct FsearchQueryFlags {
     bool match_case;
@@ -57,7 +58,13 @@ typedef struct FsearchQueryHighlight {
 typedef struct FsearchQuery {
     char *text;
     FsearchDatabase *db;
-    FsearchFilter filter;
+    FsearchFilter *filter;
+
+    FsearchToken **token;
+    uint32_t num_token;
+
+    FsearchToken **filter_token;
+    uint32_t num_filter_token;
 
     uint32_t max_results;
 
@@ -73,7 +80,7 @@ typedef struct FsearchQuery {
 FsearchQuery *
 fsearch_query_new(const char *text,
                   FsearchDatabase *db,
-                  FsearchFilter filter,
+                  FsearchFilter *filter,
                   void (*callback)(void *),
                   void *callback_data,
                   void (*callback_cancelled)(void *),

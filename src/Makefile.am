@@ -55,6 +55,7 @@ fsearch_SOURCES = main.c \
 		  ui_utils.c \
 		  fsearch_thread_pool.c \
 		  fsearch_timer.c \
+		  fsearch_filter.c \
 		  fsearch_include_path.c \
 		  fsearch_exclude_path.c \
 		  fsearch_preferences_widgets.c \

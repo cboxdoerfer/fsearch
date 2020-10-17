@@ -1,9 +1,9 @@
 
 #pragma once
 
-#include "query.h"
-
 #include <pcre.h>
+#include <stdbool.h>
+#include <stdint.h>
 
 #define OVECCOUNT 3
 
@@ -21,8 +21,8 @@ typedef struct FsearchToken {
 } FsearchToken;
 
 FsearchToken **
-fsearch_tokens_new(FsearchQuery *q);
+fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool auto_match_case);
 
 void
-fsearch_tokens_free(FsearchToken **tokens, uint32_t num_token);
+fsearch_tokens_free(FsearchToken **tokens);
 

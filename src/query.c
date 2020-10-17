@@ -27,7 +27,7 @@
 FsearchQuery *
 fsearch_query_new(const char *text,
                   FsearchDatabase *db,
-                  FsearchFilter filter,
+                  FsearchFilter *filter,
                   void (*callback)(void *),
                   void *callback_data,
                   void (*callback_cancelled)(void *),
@@ -40,6 +40,23 @@ fsearch_query_new(const char *text,
     if (text) {
         q->text = strdup(text);
     }
+
+    q->token =
+        fsearch_tokens_new(text, flags.match_case, flags.enable_regex, flags.auto_match_case);
+    q->num_token = 0;
+    for (uint32_t i = 0; q->token[i] != NULL; i++) {
+        q->num_token++;
+    }
+
+    if (filter && filter->query) {
+        q->filter_token =
+            fsearch_tokens_new(filter->query, filter->match_case, filter->enable_regex, false);
+        q->num_filter_token = 0;
+        for (uint32_t i = 0; q->filter_token[i] != NULL; i++) {
+            q->num_filter_token++;
+        }
+    }
+
     q->db = db;
     q->filter = filter;
     q->callback = callback;
@@ -58,6 +75,10 @@ fsearch_query_free(FsearchQuery *query) {
     if (query->text) {
         free(query->text);
         query->text = NULL;
+    }
+    if (query->token) {
+        fsearch_tokens_free(query->token);
+        query->token = NULL;
     }
     free(query);
     query = NULL;

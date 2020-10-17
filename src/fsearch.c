@@ -49,6 +49,8 @@ struct _FsearchApplication {
     FsearchConfig *config;
     FsearchThreadPool *pool;
 
+    GList *filters;
+
     bool startup_finished;
 
     bool db_thread_cancel;
@@ -71,6 +73,12 @@ fsearch_action_enable(const char *action_name);
 
 static void
 fsearch_action_disable(const char *action_name);
+
+GList *
+fsearch_application_get_filters(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->filters;
+}
 
 FsearchDatabase *
 fsearch_application_get_db(FsearchApplication *fsearch) {
@@ -165,6 +173,7 @@ fsearch_application_init(FsearchApplication *app) {
     }
     app->db = NULL;
     app->startup_finished = false;
+    app->filters = fsearch_filter_get_default();
     g_mutex_init(&app->mutex);
 
     g_application_add_main_option(G_APPLICATION(app),
@@ -210,6 +219,11 @@ fsearch_application_shutdown(GApplication *app) {
     if (fsearch->db) {
         db_unref(fsearch->db);
     }
+    if (fsearch->filters) {
+        g_list_free_full(fsearch->filters, (GDestroyNotify)fsearch_filter_free);
+        fsearch->filters = NULL;
+    }
+
     if (fsearch->pool) {
         fsearch_thread_pool_free(fsearch->pool);
     }

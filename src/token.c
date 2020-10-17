@@ -5,6 +5,8 @@
 #include "string_utils.h"
 #include <assert.h>
 #include <fnmatch.h>
+#include <glib.h>
+#include <string.h>
 
 static uint32_t
 fsearch_search_func_regex(const char *haystack, const char *needle, void *data) {
@@ -69,11 +71,11 @@ fsearch_token_free(void *data) {
 }
 
 void
-fsearch_tokens_free(FsearchToken **tokens, uint32_t num_token) {
+fsearch_tokens_free(FsearchToken **tokens) {
     if (!tokens) {
         return;
     }
-    for (uint32_t i = 0; i < num_token; ++i) {
+    for (uint32_t i = 0; tokens[i] != NULL; ++i) {
         fsearch_token_free(tokens[i]);
         tokens[i] = NULL;
     }
@@ -122,29 +124,25 @@ fsearch_token_new(const char *text, bool match_case, bool auto_match_case, bool 
 }
 
 FsearchToken **
-fsearch_tokens_new(FsearchQuery *q) {
-    assert(q != NULL);
-    assert(q->text != NULL);
-
+fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool auto_match_case) {
     // check if regex characters are present
-    const bool is_reg = fs_str_is_regex(q->text);
-    if (is_reg && q->flags.enable_regex) {
+    const bool is_reg = fs_str_is_regex(query);
+    if (is_reg && enable_regex) {
         FsearchToken **token = calloc(2, sizeof(FsearchToken *));
-        token[0] = fsearch_token_new(q->text, q->flags.match_case, q->flags.auto_match_case, true);
+        token[0] = fsearch_token_new(query, match_case, auto_match_case, true);
         token[1] = NULL;
         return token;
     }
 
     // whitespace is regarded as AND so split query there in multiple token
-    char **query_split = fs_str_split(q->text);
+    char **query_split = fs_str_split(query);
     assert(query_split != NULL);
 
     uint32_t tmp_token_len = g_strv_length(query_split);
     FsearchToken **token = calloc(tmp_token_len + 1, sizeof(FsearchToken *));
     for (uint32_t i = 0; i < tmp_token_len; i++) {
         trace("[search] token %d: %s\n", i, query_split[i]);
-        token[i] =
-            fsearch_token_new(query_split[i], q->flags.match_case, q->flags.auto_match_case, false);
+        token[i] = fsearch_token_new(query_split[i], match_case, auto_match_case, false);
     }
 
     g_strfreev(query_split);

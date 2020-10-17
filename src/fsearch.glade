@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.36.0 
+<!-- Generated with glade 3.38.1 
 
 FSearch - 
 Copyright (C) Christian Boxdörfer
@@ -26,52 +26,52 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <!-- interface-copyright Christian Boxd\303\266rfer -->
   <object class="GtkImage" id="image9">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">process-stop-symbolic</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">process-stop-symbolic</property>
   </object>
   <object class="GtkImage" id="image_update_database">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">view-refresh-symbolic</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">view-refresh-symbolic</property>
   </object>
   <object class="GtkImage" id="image_update_database1">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">process-stop-symbolic</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">process-stop-symbolic</property>
   </object>
   <object class="GtkImage" id="image_window_new">
     <property name="visible">True</property>
-    <property name="can_focus">False</property>
-    <property name="icon_name">window-new-symbolic</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">window-new-symbolic</property>
   </object>
   <object class="GtkPopover" id="popover1">
-    <property name="can_focus">False</property>
+    <property name="can-focus">False</property>
     <child>
       <object class="GtkBox">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="margin_start">6</property>
-        <property name="margin_end">6</property>
-        <property name="margin_top">6</property>
-        <property name="margin_bottom">6</property>
+        <property name="can-focus">False</property>
+        <property name="margin-start">6</property>
+        <property name="margin-end">6</property>
+        <property name="margin-top">6</property>
+        <property name="margin-bottom">6</property>
         <property name="orientation">vertical</property>
         <child>
           <object class="GtkBox">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_start">3</property>
-            <property name="margin_end">3</property>
-            <property name="margin_top">3</property>
-            <property name="margin_bottom">3</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">3</property>
+            <property name="margin-end">3</property>
+            <property name="margin-top">3</property>
+            <property name="margin-bottom">3</property>
             <property name="spacing">6</property>
             <property name="homogeneous">True</property>
             <child>
               <object class="GtkButton">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">New window</property>
-                <property name="action_name">app.new_window</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">New window</property>
+                <property name="action-name">app.new_window</property>
                 <property name="image">image_window_new</property>
               </object>
               <packing>
@@ -83,10 +83,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <child>
               <object class="GtkButton" id="popover_update_db">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Update database</property>
-                <property name="action_name">app.update_database</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Update database</property>
+                <property name="action-name">app.update_database</property>
                 <property name="image">image_update_database</property>
               </object>
               <packing>
@@ -98,10 +98,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <child>
               <object class="GtkButton" id="popover_cancel_update_db">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="receives_default">True</property>
-                <property name="tooltip_text" translatable="yes">Cancel database update</property>
-                <property name="action_name">app.cancel_update_database</property>
+                <property name="can-focus">True</property>
+                <property name="receives-default">True</property>
+                <property name="tooltip-text" translatable="yes">Cancel database update</property>
+                <property name="action-name">app.cancel_update_database</property>
                 <property name="image">image_update_database1</property>
               </object>
               <packing>
@@ -120,7 +120,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -131,9 +131,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">win.search_in_path</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">win.search_in_path</property>
             <property name="text" translatable="yes">Search in Path</property>
           </object>
           <packing>
@@ -145,9 +145,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">win.match_case</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">win.match_case</property>
             <property name="text" translatable="yes">Match Case</property>
           </object>
           <packing>
@@ -159,9 +159,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">win.search_mode</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">win.search_mode</property>
             <property name="text" translatable="yes">Enable RegEx</property>
           </object>
           <packing>
@@ -173,7 +173,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -184,9 +184,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">win.show_statusbar</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">win.show_statusbar</property>
             <property name="text" translatable="yes">Show Statusbar</property>
           </object>
           <packing>
@@ -198,9 +198,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">win.show_filter</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">win.show_filter</property>
             <property name="text" translatable="yes">Show Filter</property>
           </object>
           <packing>
@@ -212,9 +212,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">win.show_search_button</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">win.show_search_button</property>
             <property name="text" translatable="yes">Show Search Button</property>
           </object>
           <packing>
@@ -226,7 +226,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -237,9 +237,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">app.preferences</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">app.preferences</property>
             <property name="text" translatable="yes">Preferences</property>
           </object>
           <packing>
@@ -251,7 +251,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -262,9 +262,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">app.about</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">app.about</property>
             <property name="text" translatable="yes">About</property>
           </object>
           <packing>
@@ -276,7 +276,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkSeparator">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
           </object>
           <packing>
             <property name="expand">False</property>
@@ -287,9 +287,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkModelButton">
             <property name="visible">True</property>
-            <property name="can_focus">True</property>
-            <property name="receives_default">True</property>
-            <property name="action_name">app.quit</property>
+            <property name="can-focus">True</property>
+            <property name="receives-default">True</property>
+            <property name="action-name">app.quit</property>
             <property name="text" translatable="yes">Quit</property>
           </object>
           <packing>
@@ -303,15 +303,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   </object>
   <template class="FsearchApplicationWindow" parent="GtkApplicationWindow">
     <property name="name">application_window</property>
-    <property name="can_focus">False</property>
-    <property name="default_width">800</property>
-    <property name="default_height">600</property>
-    <property name="icon_name">system-search</property>
+    <property name="can-focus">False</property>
+    <property name="default-width">800</property>
+    <property name="default-height">600</property>
+    <property name="icon-name">system-search</property>
     <signal name="delete-event" handler="on_fsearch_window_delete_event" swapped="no"/>
     <child>
       <object class="GtkBox" id="main_box">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
+        <property name="can-focus">False</property>
         <property name="orientation">vertical</property>
         <child>
           <placeholder/>
@@ -319,30 +319,30 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkBox" id="menu_box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_start">3</property>
-            <property name="margin_end">3</property>
-            <property name="margin_top">3</property>
-            <property name="margin_bottom">3</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">3</property>
+            <property name="margin-end">3</property>
+            <property name="margin-top">3</property>
+            <property name="margin-bottom">3</property>
             <child>
               <object class="GtkBox" id="search_box">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
+                <property name="can-focus">False</property>
                 <property name="hexpand">True</property>
                 <child>
                   <object class="GtkSearchEntry" id="search_entry">
                     <property name="name">search_entry</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="can_default">True</property>
-                    <property name="has_default">True</property>
-                    <property name="receives_default">True</property>
-                    <property name="activates_default">True</property>
-                    <property name="secondary_icon_name">edit-clear-symbolic</property>
-                    <property name="primary_icon_activatable">False</property>
-                    <property name="primary_icon_sensitive">False</property>
-                    <property name="secondary_icon_sensitive">False</property>
-                    <property name="placeholder_text" translatable="yes">Search…</property>
+                    <property name="can-focus">True</property>
+                    <property name="can-default">True</property>
+                    <property name="has-default">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="activates-default">True</property>
+                    <property name="secondary-icon-name">edit-clear-symbolic</property>
+                    <property name="primary-icon-activatable">False</property>
+                    <property name="primary-icon-sensitive">False</property>
+                    <property name="secondary-icon-sensitive">False</property>
+                    <property name="placeholder-text" translatable="yes">Search…</property>
                     <signal name="activate" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
                     <signal name="changed" handler="on_search_entry_changed" object="FsearchApplicationWindow" swapped="no"/>
                     <signal name="key-press-event" handler="on_search_entry_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
@@ -356,21 +356,16 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkRevealer" id="filter_revealer">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="transition_type">slide-right</property>
-                    <property name="reveal_child">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="transition-type">slide-right</property>
+                    <property name="reveal-child">True</property>
                     <child>
                       <object class="GtkComboBoxText" id="filter_combobox">
                         <property name="name">filter_combobox</property>
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Select a Filter</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Select a Filter</property>
                         <property name="active">0</property>
-                        <items>
-                          <item id="FSEARCH_FILTER_NONE" translatable="yes">All</item>
-                          <item id="FSEARCH_FILTER_FOLDERS" translatable="yes">Folders</item>
-                          <item id="FSEARCH_FILTER_FILES" translatable="yes">Files</item>
-                        </items>
                         <signal name="changed" handler="on_filter_combobox_changed" object="FsearchApplicationWindow" swapped="no"/>
                         <style>
                           <class name="filter_combobox"/>
@@ -387,21 +382,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkRevealer" id="search_button_revealer">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="transition_type">slide-right</property>
-                    <property name="reveal_child">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="transition-type">slide-right</property>
+                    <property name="reveal-child">True</property>
                     <child>
                       <object class="GtkButton" id="search_button">
                         <property name="visible">True</property>
-                        <property name="can_focus">True</property>
-                        <property name="receives_default">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
                         <signal name="clicked" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
                         <child>
                           <object class="GtkImage">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="tooltip_text" translatable="yes">Search</property>
-                            <property name="icon_name">edit-find-symbolic</property>
+                            <property name="can-focus">False</property>
+                            <property name="tooltip-text" translatable="yes">Search</property>
+                            <property name="icon-name">edit-find-symbolic</property>
                           </object>
                         </child>
                         <style>
@@ -434,23 +429,23 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkOverlay" id="search_overlay">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
+            <property name="can-focus">False</property>
             <child>
               <object class="GtkScrolledWindow" id="scrolledwindow1">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="shadow_type">in</property>
+                <property name="can-focus">True</property>
+                <property name="shadow-type">in</property>
                 <child>
                   <object class="GtkTreeView" id="listview">
                     <property name="name">search_results_view</property>
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="has_tooltip">True</property>
-                    <property name="search_column">0</property>
-                    <property name="fixed_height_mode">True</property>
-                    <property name="show_expanders">False</property>
-                    <property name="rubber_banding">True</property>
-                    <property name="enable_grid_lines">vertical</property>
+                    <property name="can-focus">True</property>
+                    <property name="has-tooltip">True</property>
+                    <property name="search-column">0</property>
+                    <property name="fixed-height-mode">True</property>
+                    <property name="show-expanders">False</property>
+                    <property name="rubber-banding">True</property>
+                    <property name="enable-grid-lines">vertical</property>
                     <signal name="button-press-event" handler="on_listview_button_press_event" swapped="no"/>
                     <signal name="key-press-event" handler="on_listview_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
                     <signal name="popup-menu" handler="on_listview_popup_menu" swapped="no"/>
@@ -482,26 +477,26 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
         <child>
           <object class="GtkRevealer" id="statusbar_revealer">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="transition_type">slide-up</property>
-            <property name="reveal_child">True</property>
+            <property name="can-focus">False</property>
+            <property name="transition-type">slide-up</property>
+            <property name="reveal-child">True</property>
             <child>
               <object class="GtkBox" id="statusbar">
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <property name="margin_start">3</property>
-                <property name="margin_end">3</property>
+                <property name="can-focus">False</property>
+                <property name="margin-start">3</property>
+                <property name="margin-end">3</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkBox" id="box6">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage" id="search_icon">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="icon_name">edit-find-symbolic</property>
+                        <property name="can-focus">False</property>
+                        <property name="icon-name">edit-find-symbolic</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -512,12 +507,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkLabel" id="search_label">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_text" translatable="yes">Number of Search Results</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Number of Search Results</property>
                         <property name="label" translatable="yes">0 Items</property>
                         <property name="ellipsize">end</property>
-                        <property name="single_line_mode">True</property>
-                        <property name="track_visited_links">False</property>
+                        <property name="single-line-mode">True</property>
+                        <property name="track-visited-links">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -535,12 +530,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkBox" id="box2">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSeparator" id="selection_separator1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -550,10 +545,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     </child>
                     <child>
                       <object class="GtkLabel" id="statusbar_scan_label">
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Index:</property>
-                        <property name="single_line_mode">True</property>
-                        <property name="track_visited_links">False</property>
+                        <property name="single-line-mode">True</property>
+                        <property name="track-visited-links">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -563,10 +558,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     </child>
                     <child>
                       <object class="GtkLabel" id="statusbar_scan_status_label">
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="ellipsize">middle</property>
-                        <property name="single_line_mode">True</property>
-                        <property name="track_visited_links">False</property>
+                        <property name="single-line-mode">True</property>
+                        <property name="track-visited-links">False</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -584,18 +579,18 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkRevealer" id="revealer">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="transition_type">crossfade</property>
-                    <property name="reveal_child">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="transition-type">crossfade</property>
+                    <property name="reveal-child">True</property>
                     <child>
                       <object class="GtkBox" id="box3">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkSeparator" id="selection_separator">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -606,8 +601,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <child>
                           <object class="GtkImage" id="image2">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">folder-symbolic</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">folder-symbolic</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -618,8 +613,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <child>
                           <object class="GtkLabel" id="num_folders_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="tooltip_text" translatable="yes">Number of selected folders</property>
+                            <property name="can-focus">False</property>
+                            <property name="tooltip-text" translatable="yes">Number of selected folders</property>
                             <property name="label" translatable="yes">0/0</property>
                           </object>
                           <packing>
@@ -631,8 +626,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <child>
                           <object class="GtkImage" id="image4">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">text-x-generic-symbolic</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">text-x-generic-symbolic</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -643,8 +638,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <child>
                           <object class="GtkLabel" id="num_files_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="tooltip_text" translatable="yes">Number of selected files</property>
+                            <property name="can-focus">False</property>
+                            <property name="tooltip-text" translatable="yes">Number of selected files</property>
                             <property name="label" translatable="yes">0/0</property>
                           </object>
                           <packing>
@@ -665,7 +660,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkSeparator" id="database_separator">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -676,17 +671,17 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkStack" id="database_stack">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="transition_type">crossfade</property>
+                    <property name="can-focus">False</property>
+                    <property name="transition-type">crossfade</property>
                     <child>
                       <object class="GtkBox" id="database_box1">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkSpinner" id="database_spinner">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -697,11 +692,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <child>
                           <object class="GtkLabel" id="database_label1">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
+                            <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Updating Database…</property>
                             <property name="ellipsize">end</property>
-                            <property name="max_width_chars">30</property>
-                            <property name="track_visited_links">False</property>
+                            <property name="max-width-chars">30</property>
+                            <property name="track-visited-links">False</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -712,10 +707,10 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <child>
                           <object class="GtkButton">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="tooltip_text" translatable="yes">Cancel database update</property>
-                            <property name="action_name">app.cancel_update_database</property>
+                            <property name="can-focus">True</property>
+                            <property name="receives-default">True</property>
+                            <property name="tooltip-text" translatable="yes">Cancel database update</property>
+                            <property name="action-name">app.cancel_update_database</property>
                             <property name="image">image9</property>
                             <property name="relief">none</property>
                             <style>
@@ -737,13 +732,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkBox" id="database_box2">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
+                        <property name="can-focus">False</property>
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkImage" id="database_icon">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="icon_name">system-file-manager-symbolic</property>
+                            <property name="can-focus">False</property>
+                            <property name="icon-name">system-file-manager-symbolic</property>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -754,8 +749,8 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <child>
                           <object class="GtkLabel" id="database_label">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="tooltip_text" translatable="yes">Number of database items</property>
+                            <property name="can-focus">False</property>
+                            <property name="tooltip-text" translatable="yes">Number of database items</property>
                             <property name="label" translatable="yes">(empty)</property>
                           </object>
                           <packing>
@@ -781,25 +776,25 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <child>
                   <object class="GtkBox" id="search_status_box">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can-focus">False</property>
                     <child>
                       <object class="GtkRevealer" id="smart_case_revealer">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_markup" translatable="yes">Search term contains upper case characters.
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-markup" translatable="yes">Search term contains upper case characters.
 &lt;b&gt;Match Case&lt;/b&gt; was temporarily activated for this term.</property>
-                        <property name="transition_type">slide-left</property>
-                        <property name="transition_duration">150</property>
+                        <property name="transition-type">slide-left</property>
+                        <property name="transition-duration">150</property>
                         <child>
                           <object class="GtkBox" id="smart_case_box">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_end">6</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-end">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkSeparator" id="smart_case_separator">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -810,12 +805,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             <child>
                               <object class="GtkEventBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <child>
                                   <object class="GtkLabel" id="smart_case_label">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                                     <property name="label" translatable="yes">CASE</property>
                                   </object>
@@ -839,20 +834,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkRevealer" id="match_case_revealer">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="transition_type">slide-left</property>
-                        <property name="transition_duration">150</property>
-                        <property name="reveal_child">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="transition-type">slide-left</property>
+                        <property name="transition-duration">150</property>
+                        <property name="reveal-child">True</property>
                         <child>
                           <object class="GtkBox" id="match_case_box">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_end">6</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-end">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkSeparator" id="match_case_separator">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -863,12 +858,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             <child>
                               <object class="GtkEventBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <signal name="button-press-event" handler="on_match_case_label_button_press_event" object="FsearchApplicationWindow" swapped="no"/>
                                 <child>
                                   <object class="GtkLabel" id="match_case_label">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                                     <property name="label" translatable="yes">CASE</property>
                                   </object>
@@ -892,21 +887,21 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkRevealer" id="smart_path_revealer">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="tooltip_markup" translatable="yes">Search term contains path separators.
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-markup" translatable="yes">Search term contains path separators.
 &lt;b&gt;Search in Path&lt;/b&gt; was temporarily activated for this term.</property>
-                        <property name="transition_type">slide-left</property>
-                        <property name="transition_duration">150</property>
+                        <property name="transition-type">slide-left</property>
+                        <property name="transition-duration">150</property>
                         <child>
                           <object class="GtkBox" id="smart_path_box">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_end">6</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-end">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkSeparator" id="smart_path_separator">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -917,12 +912,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             <child>
                               <object class="GtkEventBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <child>
                                   <object class="GtkLabel" id="smart_path_label">
                                     <property name="visible">True</property>
                                     <property name="sensitive">False</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                                     <property name="label" translatable="yes">PATH</property>
                                   </object>
@@ -946,20 +941,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkRevealer" id="search_in_path_revealer">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="transition_type">slide-left</property>
-                        <property name="transition_duration">150</property>
-                        <property name="reveal_child">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="transition-type">slide-left</property>
+                        <property name="transition-duration">150</property>
+                        <property name="reveal-child">True</property>
                         <child>
                           <object class="GtkBox" id="search_in_path_box">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_end">6</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-end">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkSeparator" id="search_in_path_separator">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -970,12 +965,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             <child>
                               <object class="GtkEventBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <signal name="button-press-event" handler="on_search_in_path_label_button_press_event" object="FsearchApplicationWindow" swapped="no"/>
                                 <child>
                                   <object class="GtkLabel" id="search_in_path_label">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                                     <property name="label" translatable="yes">PATH</property>
                                   </object>
@@ -999,20 +994,20 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <child>
                       <object class="GtkRevealer" id="search_mode_revealer">
                         <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="transition_type">slide-left</property>
-                        <property name="transition_duration">150</property>
-                        <property name="reveal_child">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="transition-type">slide-left</property>
+                        <property name="transition-duration">150</property>
+                        <property name="reveal-child">True</property>
                         <child>
                           <object class="GtkBox" id="search_mode_box">
                             <property name="visible">True</property>
-                            <property name="can_focus">False</property>
-                            <property name="margin_end">6</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-end">6</property>
                             <property name="spacing">6</property>
                             <child>
                               <object class="GtkSeparator" id="search_mode_separator">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1023,12 +1018,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                             <child>
                               <object class="GtkEventBox">
                                 <property name="visible">True</property>
-                                <property name="can_focus">False</property>
+                                <property name="can-focus">False</property>
                                 <signal name="button-press-event" handler="on_search_mode_label_button_press_event" object="FsearchApplicationWindow" swapped="no"/>
                                 <child>
                                   <object class="GtkLabel" id="search_mode_label">
                                     <property name="visible">True</property>
-                                    <property name="can_focus">False</property>
+                                    <property name="can-focus">False</property>
                                     <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                                     <property name="label" translatable="yes">REGEX</property>
                                   </object>
@@ -1073,13 +1068,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
     <child type="titlebar">
       <object class="GtkHeaderBar" id="headerbar">
         <property name="visible">True</property>
-        <property name="can_focus">False</property>
-        <property name="show_close_button">True</property>
+        <property name="can-focus">False</property>
+        <property name="show-close-button">True</property>
         <child type="title">
           <object class="GtkBox" id="headerbar_box">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="margin_start">48</property>
+            <property name="can-focus">False</property>
+            <property name="margin-start">48</property>
             <property name="spacing">48</property>
             <child>
               <placeholder/>
@@ -1087,15 +1082,15 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <child>
               <object class="GtkMenuButton" id="app_menu">
                 <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="focus_on_click">False</property>
-                <property name="receives_default">True</property>
+                <property name="can-focus">True</property>
+                <property name="focus-on-click">False</property>
+                <property name="receives-default">True</property>
                 <property name="popover">popover1</property>
                 <child>
                   <object class="GtkImage" id="image7">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">open-menu-symbolic</property>
+                    <property name="can-focus">False</property>
+                    <property name="icon-name">open-menu-symbolic</property>
                   </object>
                 </child>
               </object>
