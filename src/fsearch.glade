@@ -881,7 +881,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">2</property>
+                        <property name="position">1</property>
                       </packing>
                     </child>
                     <child>
@@ -935,7 +935,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">3</property>
+                        <property name="position">2</property>
                       </packing>
                     </child>
                     <child>
@@ -988,7 +988,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
-                        <property name="position">4</property>
+                        <property name="position">3</property>
                       </packing>
                     </child>
                     <child>
@@ -1041,6 +1041,58 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       <packing>
                         <property name="expand">False</property>
                         <property name="fill">True</property>
+                        <property name="position">4</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkRevealer" id="search_filter_revealer">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="transition-type">slide-left</property>
+                        <property name="transition-duration">150</property>
+                        <property name="reveal-child">True</property>
+                        <child>
+                          <object class="GtkBox" id="search_filter_box">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-end">6</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkSeparator" id="search_filter_separator">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkEventBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <signal name="button-press-event" handler="on_search_filter_label_button_press_event" object="FsearchApplicationWindow" swapped="no"/>
+                                <child>
+                                  <object class="GtkLabel" id="search_filter_label">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
                         <property name="position">5</property>
                       </packing>
                     </child>
@@ -1048,7 +1100,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">5</property>
+                    <property name="position">8</property>
                   </packing>
                 </child>
                 <style>

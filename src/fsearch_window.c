@@ -80,6 +80,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *smart_path_revealer;
     GtkWidget *smart_case_revealer;
     GtkWidget *search_label;
+    GtkWidget *search_filter_revealer;
+    GtkWidget *search_filter_label;
     GtkWidget *search_mode_revealer;
     GtkWidget *search_overlay;
     GtkWidget *statusbar;
@@ -803,6 +805,20 @@ toggle_action_on_2button_press(GdkEvent *event, const char *action, gpointer use
 }
 
 static gboolean
+on_search_filter_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
+    guint button;
+    gdk_event_get_button(event, &button);
+    GdkEventType type = gdk_event_get_event_type(event);
+    if (button != GDK_BUTTON_PRIMARY || type != GDK_2BUTTON_PRESS) {
+        return FALSE;
+    }
+    FsearchApplicationWindow *win = user_data;
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    gtk_combo_box_set_active(GTK_COMBO_BOX(win->filter_combobox), 0);
+    return TRUE;
+}
+
+static gboolean
 on_search_mode_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     return toggle_action_on_2button_press(event, "search_mode", user_data);
 }
@@ -1040,6 +1056,17 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
+    int active = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
+    const char *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
+    gtk_label_set_text(GTK_LABEL(win->search_filter_label), text);
+
+    if (active == 0) {
+        gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_filter_revealer), FALSE);
+    }
+    else {
+        gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_filter_revealer), TRUE);
+    }
+
     perform_search(win);
 }
 
@@ -1162,6 +1189,10 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
         widget_class, FsearchApplicationWindow, match_case_revealer);
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, search_mode_revealer);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, search_filter_revealer);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, search_filter_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button);
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, search_button_revealer);
@@ -1207,6 +1238,8 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_callback(widget_class,
                                             on_search_in_path_label_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_mode_label_button_press_event);
+    gtk_widget_class_bind_template_callback(widget_class,
+                                            on_search_filter_label_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
