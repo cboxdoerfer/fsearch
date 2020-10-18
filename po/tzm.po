@@ -1,0 +1,601 @@
+# Language tzm translations for fsearch package.
+# Copyright (C) 2020 Christian Boxdörfer
+# This file is distributed under the same license as the fsearch package.
+# Christian <christian.boxdoerfer@posteo.de>, 2020.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: fsearch 0.1beta4.409-8e25-dirty\n"
+"Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
+"POT-Creation-Date: 2020-10-17 16:42+0200\n"
+"PO-Revision-Date: 2020-10-18 11:41+0200\n"
+"Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
+"Language-Team: Language tzm\n"
+"Language: tzm\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: src/database.c:1024
+msgid "Sorting..."
+msgstr ""
+
+#: src/fsearch.c:184
+msgid "Show version information"
+msgstr ""
+
+#: src/fsearch.c:191
+msgid "Update the database"
+msgstr ""
+
+#: src/fsearch.c:390
+msgid "translator-credits"
+msgstr ""
+
+#: src/fsearch.c:392
+msgid "A search utility focusing on performance and advanced features"
+msgstr ""
+
+#: src/fsearch.glade:73
+msgid "New window"
+msgstr ""
+
+#: src/fsearch.glade:88
+msgid "Update database"
+msgstr ""
+
+#: src/fsearch.glade:103 src/fsearch.glade:712
+msgid "Cancel database update"
+msgstr ""
+
+#: src/fsearch.glade:137 src/menus.ui:101
+msgid "Search in Path"
+msgstr ""
+
+#: src/fsearch.glade:151 src/menus.ui:105
+msgid "Match Case"
+msgstr ""
+
+#: src/fsearch.glade:165 src/menus.ui:109
+msgid "Enable RegEx"
+msgstr ""
+
+#: src/fsearch.glade:190 src/menus.ui:84
+msgid "Show Statusbar"
+msgstr ""
+
+#: src/fsearch.glade:204 src/menus.ui:88
+msgid "Show Filter"
+msgstr ""
+
+#: src/fsearch.glade:218 src/menus.ui:92
+msgid "Show Search Button"
+msgstr ""
+
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+msgid "Preferences"
+msgstr ""
+
+#: src/fsearch.glade:268 src/menus.ui:118
+msgid "About"
+msgstr ""
+
+#: src/fsearch.glade:293 src/menus.ui:42
+msgid "Quit"
+msgstr ""
+
+#: src/fsearch.glade:345
+msgid "Search…"
+msgstr ""
+
+#: src/fsearch.glade:367
+msgid "Select a Filter"
+msgstr ""
+
+#: src/fsearch.glade:398 src/preferences.ui:625
+msgid "Search"
+msgstr ""
+
+#: src/fsearch.glade:511
+msgid "Number of Search Results"
+msgstr ""
+
+#: src/fsearch.glade:512
+msgid "0 Items"
+msgstr ""
+
+#: src/fsearch.glade:549
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch.glade:617
+msgid "Number of selected folders"
+msgstr ""
+
+#: src/fsearch.glade:618 src/fsearch.glade:643
+msgid "0/0"
+msgstr ""
+
+#: src/fsearch.glade:642
+msgid "Number of selected files"
+msgstr ""
+
+#: src/fsearch.glade:696 src/fsearch_window.c:963 src/overlay.ui:213
+#, c-format
+msgid "Updating Database…"
+msgstr ""
+
+#: src/fsearch.glade:729
+msgid "page0"
+msgstr ""
+
+#: src/fsearch.glade:753
+msgid "Number of database items"
+msgstr ""
+
+#: src/fsearch.glade:754
+msgid "(empty)"
+msgstr ""
+
+#: src/fsearch.glade:765
+msgid "page1"
+msgstr ""
+
+#: src/fsearch.glade:784
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:815 src/fsearch.glade:868
+msgid "CASE"
+msgstr ""
+
+#: src/fsearch.glade:891
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+
+#: src/fsearch.glade:922 src/fsearch.glade:975
+msgid "PATH"
+msgstr ""
+
+#: src/fsearch.glade:1028
+msgid "REGEX"
+msgstr ""
+
+#: src/fsearch_filter.c:80
+msgid "All"
+msgstr ""
+
+#: src/fsearch_filter.c:83
+msgid "Folders"
+msgstr ""
+
+#: src/fsearch_filter.c:85
+msgid "Files"
+msgstr ""
+
+#: src/fsearch_filter.c:88
+msgid "Archives"
+msgstr ""
+
+#: src/fsearch_filter.c:91
+msgid "Audio"
+msgstr ""
+
+#: src/fsearch_filter.c:95
+msgid "Documents"
+msgstr ""
+
+#: src/fsearch_filter.c:98
+msgid "Pictures"
+msgstr ""
+
+#: src/fsearch_filter.c:101
+msgid "Videos"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+msgid "Active"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
+#: src/listview.c:213 src/menus.ui:205
+msgid "Path"
+msgstr ""
+
+#: src/fsearch_preferences_widgets.c:210
+msgid "Update"
+msgstr ""
+
+#: src/fsearch_window.c:121 src/fsearch_window.c:474 src/fsearch_window.c:921
+#, c-format
+msgid "%'d Items"
+msgstr ""
+
+#: src/fsearch_window.c:407 src/fsearch_window.c:564
+msgid "Querying…"
+msgstr ""
+
+#: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
+msgid "Failed to open file"
+msgstr ""
+
+#: src/fsearch_window.c:745 src/fsearch_window_actions.c:412
+msgid "Do you want to keep the window open?"
+msgstr ""
+
+#: src/fsearch_window.c:927
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr ""
+
+#: src/fsearch_window.c:940 src/overlay.ui:143
+#, c-format
+msgid "Loading Database…"
+msgstr ""
+
+#: src/fsearch_window.c:1125
+msgid "Background tasks are active."
+msgstr ""
+
+#: src/fsearch_window.c:1128
+msgid ""
+"Closing the window isn't possible right now.\n"
+"Please wait a moment and then try again."
+msgstr ""
+
+#: src/fsearch_window_actions.c:78
+#, c-format
+msgid "Do you really want to open %d file(s)?"
+msgstr ""
+
+#: src/fsearch_window_actions.c:80
+msgid "Opening Files…"
+msgstr ""
+
+#: src/fsearch_window_actions.c:154
+#, c-format
+msgid "Do you really want to remove %d file(s)?"
+msgstr ""
+
+#: src/fsearch_window_actions.c:160
+msgid "Deleting files…"
+msgstr ""
+
+#: src/fsearch_window_actions.c:160
+msgid "Moving files to trash…"
+msgstr ""
+
+#: src/listview.c:188 src/menus.ui:201
+msgid "Name"
+msgstr ""
+
+#: src/listview.c:237 src/menus.ui:213
+msgid "Size"
+msgstr ""
+
+#: src/listview.c:255 src/menus.ui:217
+msgid "Date Modified"
+msgstr ""
+
+#: src/listview.c:272 src/menus.ui:209
+msgid "Type"
+msgstr ""
+
+#: src/menus.ui:6
+msgid "_File"
+msgstr ""
+
+#: src/menus.ui:9
+msgid "New Window"
+msgstr ""
+
+#: src/menus.ui:16 src/menus.ui:128
+msgid "_Open"
+msgstr ""
+
+#: src/menus.ui:21
+msgid "Open Folder"
+msgstr ""
+
+#: src/menus.ui:29
+msgid "Update Database"
+msgstr ""
+
+#: src/menus.ui:35
+msgid "Cancel Update"
+msgstr ""
+
+#: src/menus.ui:49
+msgid "_Edit"
+msgstr ""
+
+#: src/menus.ui:52
+msgid "Copy"
+msgstr ""
+
+#: src/menus.ui:59
+msgid "Select All"
+msgstr ""
+
+#: src/menus.ui:64
+msgid "Deselect All"
+msgstr ""
+
+#: src/menus.ui:68
+msgid "Invert Selection"
+msgstr ""
+
+#: src/menus.ui:81
+msgid "_View"
+msgstr ""
+
+#: src/menus.ui:98
+msgid "_Search"
+msgstr ""
+
+#: src/menus.ui:115
+msgid "_Help"
+msgstr ""
+
+#: src/menus.ui:134
+msgid "Open _With"
+msgstr ""
+
+#: src/menus.ui:148
+msgid "_Open Folder"
+msgstr ""
+
+#: src/menus.ui:164
+msgid "_Copy"
+msgstr ""
+
+#: src/menus.ui:170
+msgid "_Copy Filepath"
+msgstr ""
+
+#: src/menus.ui:177
+msgid "Move to _Trash"
+msgstr ""
+
+#: src/menus.ui:183
+msgid "_Delete"
+msgstr ""
+
+#: src/overlay.ui:31
+msgid "Empty Database"
+msgstr ""
+
+#: src/overlay.ui:46
+msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+msgstr ""
+
+#: src/overlay.ui:87
+msgid "Empty Query"
+msgstr ""
+
+#: src/overlay.ui:102
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr ""
+
+#: src/overlay.ui:158 src/overlay.ui:228
+msgid "…"
+msgstr ""
+
+#: src/overlay.ui:173
+msgid "This won't take long."
+msgstr ""
+
+#: src/overlay.ui:243
+msgid "This may take a while."
+msgstr ""
+
+#: src/overlay.ui:283
+msgid "No Results Found"
+msgstr ""
+
+#: src/overlay.ui:298
+msgid "Try a different search"
+msgstr ""
+
+#: src/preferences.ui:81
+msgid "Enable dark theme"
+msgstr ""
+
+#: src/preferences.ui:128
+msgid ""
+"<b>Enable dark theme</b> might not have an effect.\n"
+"Some platforms don't support dark theming and others always use dark themes "
+"by default."
+msgstr ""
+
+#: src/preferences.ui:163
+msgid "Enable client-side decorations (requires restart)"
+msgstr ""
+
+#: src/preferences.ui:177
+msgid "Use binary units instead of decimal units"
+msgstr ""
+
+#: src/preferences.ui:209
+msgid "with keyboard shortcuts or menu entries"
+msgstr ""
+
+#: src/preferences.ui:224
+msgid "with double click"
+msgstr ""
+
+#: src/preferences.ui:252
+msgid "Behaviour after successfully opening a file:"
+msgstr ""
+
+#: src/preferences.ui:268
+msgid "Minimize"
+msgstr ""
+
+#: src/preferences.ui:269
+msgid "Close"
+msgstr ""
+
+#: src/preferences.ui:289
+msgid "Remember window size"
+msgstr ""
+
+#: src/preferences.ui:309
+msgid "General:"
+msgstr ""
+
+#: src/preferences.ui:341
+msgid "Show highlighted search terms"
+msgstr ""
+
+#: src/preferences.ui:356
+msgid "Show tooltips"
+msgstr ""
+
+#: src/preferences.ui:370
+msgid "Show icons in name column"
+msgstr ""
+
+#: src/preferences.ui:384
+msgid "Remember column configuration"
+msgstr ""
+
+#: src/preferences.ui:398
+msgid "Remember sort order"
+msgstr ""
+
+#: src/preferences.ui:412
+msgid "Open path with double click in path column"
+msgstr ""
+
+#: src/preferences.ui:426
+msgid "Single click to open"
+msgstr ""
+
+#: src/preferences.ui:446
+msgid "Results:"
+msgstr ""
+
+#: src/preferences.ui:478
+msgid "Show database indexing status"
+msgstr ""
+
+#: src/preferences.ui:498
+msgid "Statusbar:"
+msgstr ""
+
+#: src/preferences.ui:516
+msgid "Interface"
+msgstr ""
+
+#: src/preferences.ui:534
+msgid "Limit number of results:"
+msgstr ""
+
+#: src/preferences.ui:562
+msgid "Search in path when query contains path separators"
+msgstr ""
+
+#: src/preferences.ui:576
+msgid "Search as you type"
+msgstr ""
+
+#: src/preferences.ui:590
+msgid "Hide results when search is empty"
+msgstr ""
+
+#: src/preferences.ui:604
+msgid "Match case when query contains at least one upper case character"
+msgstr ""
+
+#: src/preferences.ui:644
+msgid "Update database on start"
+msgstr ""
+
+#: src/preferences.ui:679 src/preferences.ui:784
+msgid "Add…"
+msgstr ""
+
+#: src/preferences.ui:695 src/preferences.ui:800
+msgid "Remove"
+msgstr ""
+
+#: src/preferences.ui:743
+msgid "Follow symbolic links"
+msgstr ""
+
+#: src/preferences.ui:760
+msgid "Include"
+msgstr ""
+
+#: src/preferences.ui:848
+msgid "Exclude hidden files and folders"
+msgstr ""
+
+#: src/preferences.ui:869 src/preferences.ui:882
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr ""
+
+#: src/preferences.ui:870
+msgid "Exclude files:"
+msgstr ""
+
+#: src/preferences.ui:883
+msgid "e.g. \".git;*.tmp\""
+msgstr ""
+
+#: src/preferences.ui:907
+msgid "Exclude"
+msgstr ""
+
+#: src/preferences.ui:930
+msgid "Database"
+msgstr ""
+
+#: src/preferences.ui:953
+msgid "Show warning dialogs when:"
+msgstr ""
+
+#: src/preferences.ui:962
+msgid "file / folder failed to open"
+msgstr ""
+
+#: src/preferences.ui:983
+msgid "Dialogs"
+msgstr ""
+
+#: src/preferences_ui.c:67 src/preferences_ui.c:79
+msgid "Select folder"
+msgstr ""
+
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
+msgid "_Cancel"
+msgstr ""
+
+#: src/preferences_ui.c:72 src/preferences_ui.c:79
+msgid "_Select"
+msgstr ""
+
+#: src/preferences_ui.c:146
+msgid "_OK"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:5
+msgid "FSearch"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:6
+msgid "A file search application focusing on performance and advanced features"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:7
+msgid "system-search"
+msgstr ""
+
+#: data/fsearch.desktop.in.in:11
+msgid ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+msgstr ""
