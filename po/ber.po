@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-05 21:29+0200\n"
-"PO-Revision-Date: 2020-09-22 04:39+0000\n"
+"PO-Revision-Date: 2020-10-19 00:26+0000\n"
 "Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
 "Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
 "translations/ber/>\n"
@@ -17,19 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.3.1-dev\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "ⴰⴼⵔⴰⵏ..."
 
 #: src/fsearch.c:175
 msgid "Show version information"
-msgstr ""
+msgstr "ⵙⵎⴰⵍ ⵓⵎⵍⴰⵏ ⵏ ⵜⵍⵇⵇⵉⵎⵜ"
 
 #: src/fsearch.c:182
 msgid "Update the database"
-msgstr ""
+msgstr "ⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/fsearch.c:376
 msgid "translator-credits"
@@ -40,18 +40,16 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 
 #: src/fsearch.glade:73
-#, fuzzy
 msgid "New window"
 msgstr "ⵜⴰⵣⵏⵓⵜ ⵜⴰⵎⴰⵢⵏⵓⵜ"
 
 #: src/fsearch.glade:88
-#, fuzzy
 msgid "Update database"
-msgstr "ⵓⴽⵜⵓⵔ ⵏ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ…"
+msgstr "ⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/fsearch.glade:103 src/fsearch.glade:717
 msgid "Cancel database update"
-msgstr ""
+msgstr "ⵙⵔ ⴰⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/fsearch.glade:137 src/menus.ui:101
 msgid "Search in Path"
@@ -71,11 +69,11 @@ msgstr ""
 
 #: src/fsearch.glade:204 src/menus.ui:88
 msgid "Show Filter"
-msgstr ""
+msgstr "ⵙⴽⵏ ⴰⵙⵜⴰⵢ"
 
 #: src/fsearch.glade:218 src/menus.ui:92
 msgid "Show Search Button"
-msgstr ""
+msgstr "ⵙⵎⴰⵍ ⴰⴱⴰⵡ ⵏ ⵓⵔⵣⵣⵓ"
 
 #: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
 msgid "Preferences"
@@ -83,16 +81,15 @@ msgstr ""
 
 #: src/fsearch.glade:268 src/menus.ui:118
 msgid "About"
-msgstr ""
+msgstr "ⵖⴼ"
 
 #: src/fsearch.glade:293 src/menus.ui:42
 msgid "Quit"
-msgstr ""
+msgstr "ⴼⴼⵖ"
 
 #: src/fsearch.glade:345
-#, fuzzy
 msgid "Search…"
-msgstr "ⵔⵣⵓ"
+msgstr "ⵔⵣⵓ…"
 
 #: src/fsearch.glade:367
 msgid "Select a Filter"
@@ -104,7 +101,7 @@ msgstr "ⵎⴰⵕⵕⴰ"
 
 #: src/fsearch.glade:371
 msgid "Folders"
-msgstr ""
+msgstr "ⵉⵙⴷⴰⵡⵏ"
 
 #: src/fsearch.glade:372
 msgid "Files"
@@ -167,7 +164,7 @@ msgstr ""
 
 #: src/fsearch.glade:820 src/fsearch.glade:873
 msgid "CASE"
-msgstr ""
+msgstr "ⴰⵎⴷⵢⴰ"
 
 #: src/fsearch.glade:896
 msgid ""
@@ -193,9 +190,8 @@ msgid "Path"
 msgstr "ⴰⴱⵔⵉⴷ"
 
 #: src/fsearch_preferences_widgets.c:210
-#, fuzzy
 msgid "Update"
-msgstr "ⴰⵙⵜⵔⴰⵔ"
+msgstr "ⵙⴷⵖⵉ"
 
 #: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
 #, c-format
@@ -289,28 +285,23 @@ msgstr "ⵕⵥⵎ ⴰⵙⴷⴰⵡ"
 
 #: src/menus.ui:29
 msgid "Update Database"
-msgstr ""
+msgstr "ⵙⴷⵖⵉ ⵜⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/menus.ui:35
-#, fuzzy
 msgid "Cancel Update"
-msgstr "ⴰⵙⵜⵔⴰⵔ"
+msgstr "ⵙⵔ ⴰⵙⴷⵖⵉ"
 
 #: src/menus.ui:49
 msgid "_Edit"
-msgstr ""
+msgstr "_ⵙⵏⴼⵍ"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_ⵙⵙⵏⵖⵍ"
+msgstr "ⵙⵙⵏⵖⵍ"
 
 #: src/menus.ui:59
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select All"
-msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
+msgstr "ⵙⵜⵉ ⵎⴰⵕⵕⴰ"
 
 #: src/menus.ui:64
 msgid "Deselect All"
@@ -374,7 +365,7 @@ msgstr "ⴰⴷⵔ ⵅ <b>Ctrl + F</b> ⴷ ⵜⴰⵡⵍⴷ ⵜⵜⴰⵔⵉⴷ"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
 msgid "This won't take long."
@@ -390,7 +381,7 @@ msgstr ""
 
 #: src/overlay.ui:298
 msgid "Try a different search"
-msgstr ""
+msgstr "ⴰⵔⵎ ⵢⴰⵏ ⵓⵔⵣⵣⵓ ⵢⴰⴹⵏ"
 
 #: src/preferences.ui:81
 msgid "Enable dark theme"
@@ -417,7 +408,7 @@ msgstr ""
 
 #: src/preferences.ui:224
 msgid "with double click"
-msgstr ""
+msgstr "ⵙ ⵙⵉⵏ ⵏ ⵡⴰⴷⴷⴰⵔⵏ"
 
 #: src/preferences.ui:252
 msgid "Behaviour after successfully opening a file:"
@@ -437,7 +428,7 @@ msgstr ""
 
 #: src/preferences.ui:309
 msgid "General:"
-msgstr ""
+msgstr "ⴰⵎⴰⵜⴰⵢ:"
 
 #: src/preferences.ui:341
 msgid "Show highlighted search terms"
@@ -469,7 +460,7 @@ msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
 #: src/preferences.ui:446
 msgid "Results:"
-msgstr ""
+msgstr "ⵜⵉⵢⵓⴼⴰ:"
 
 #: src/preferences.ui:478
 msgid "Show database indexing status"
@@ -481,7 +472,7 @@ msgstr ""
 
 #: src/preferences.ui:516
 msgid "Interface"
-msgstr ""
+msgstr "ⴰⵏⴳⵔⵓⴷⵎ"
 
 #: src/preferences.ui:534
 msgid "Limit number of results:"
@@ -493,7 +484,7 @@ msgstr ""
 
 #: src/preferences.ui:576
 msgid "Search as you type"
-msgstr ""
+msgstr "ⵔⵣⵓ ⴰⴷⴷⴰⵢ ⵜⵜⴰⵔⴰⴷ"
 
 #: src/preferences.ui:590
 msgid "Hide results when search is empty"
@@ -509,7 +500,7 @@ msgstr ""
 
 #: src/preferences.ui:679 src/preferences.ui:784
 msgid "Add…"
-msgstr ""
+msgstr "ⵔⵏⵓ…"
 
 #: src/preferences.ui:695 src/preferences.ui:800
 msgid "Remove"
@@ -521,7 +512,7 @@ msgstr ""
 
 #: src/preferences.ui:760
 msgid "Include"
-msgstr ""
+msgstr "ⵙⵓⵎⵓ"
 
 #: src/preferences.ui:848
 msgid "Exclude hidden files and folders"
@@ -545,7 +536,7 @@ msgstr ""
 
 #: src/preferences.ui:930
 msgid "Database"
-msgstr ""
+msgstr "ⵜⴰⵙⵉⵍⴰ ⵏ ⵉⵙⴼⴽⴰ"
 
 #: src/preferences.ui:953
 msgid "Show warning dialogs when:"
@@ -557,28 +548,23 @@ msgstr ""
 
 #: src/preferences.ui:983
 msgid "Dialogs"
-msgstr ""
+msgstr "ⵉⵎⵙⴰⵡⴰⵍⵏ"
 
 #: src/preferences_ui.c:67 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
+msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⴷⴰⵡ"
 
 #: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
-#, fuzzy
 msgid "_Cancel"
-msgstr "ⴰⵙⵜⵔⴰⵔ"
+msgstr "_ⵙⵔ"
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "_Select"
-msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
+msgstr "_ⵙⵜⵢ"
 
 #: src/preferences_ui.c:146
 msgid "_OK"
-msgstr ""
+msgstr "_ⵡⴰⵅⵅⴰ"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
@@ -590,12 +576,12 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:7
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+msgstr "ⴰⵔⵣⵣⵓ;fsearch;ⵉⴼⵓⵢⵍⴰ;ⵉⵙⴷⴰⵡⵏ;ⴰⵥⴰⵡⴰⵏ;ⴰⴼⵉⴷⵢⵓ;ⵜⵉⵏⵜⴰⵎⵉⵏ;ⴰⴼ;ⵉⵎⵉⵙ;ⵎⴰⵕⵕⴰ;"
 
 #, fuzzy
 #~| msgid "Enable"
