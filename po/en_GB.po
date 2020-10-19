@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-17 16:42+0200\n"
-"PO-Revision-Date: 2020-10-03 20:41+0000\n"
+"PO-Revision-Date: 2020-10-20 16:26+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
 "fsearch/translations/en_GB/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.3.1\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
@@ -186,23 +186,23 @@ msgstr "Files"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr ""
+msgstr "Archives"
 
 #: src/fsearch_filter.c:91
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: src/fsearch_filter.c:95
 msgid "Documents"
-msgstr ""
+msgstr "Documents"
 
 #: src/fsearch_filter.c:98
 msgid "Pictures"
-msgstr ""
+msgstr "Pictures"
 
 #: src/fsearch_filter.c:101
 msgid "Videos"
-msgstr ""
+msgstr "Videos"
 
 #: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
@@ -223,10 +223,8 @@ msgid "%'d Items"
 msgstr "%'d Items"
 
 #: src/fsearch_window.c:407 src/fsearch_window.c:564
-#, fuzzy
-#| msgid "Quering…"
 msgid "Querying…"
-msgstr "Quering…"
+msgstr "Querying…"
 
 #: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
@@ -582,26 +580,20 @@ msgid "Dialogs"
 msgstr "Dialogs"
 
 #: src/preferences_ui.c:67 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Select a Filter"
+msgstr "Select folder"
 
 #: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
-#, fuzzy
-#| msgid "Cancel Update"
 msgid "_Cancel"
-msgstr "Cancel Update"
+msgstr "_Cancel"
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select All"
 msgid "_Select"
-msgstr "Select All"
+msgstr "_Select"
 
 #: src/preferences_ui.c:146
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
