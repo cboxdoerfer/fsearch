@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-05 21:29+0200\n"
+"POT-Creation-Date: 2020-10-17 16:42+0200\n"
 "PO-Revision-Date: 2020-10-08 09:26+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -24,19 +24,19 @@ msgstr ""
 msgid "Sorting..."
 msgstr "Sortowanie..."
 
-#: src/fsearch.c:175
+#: src/fsearch.c:184
 msgid "Show version information"
 msgstr "Pokaż informacje o wersji"
 
-#: src/fsearch.c:182
+#: src/fsearch.c:191
 msgid "Update the database"
 msgstr "Uaktualnij bazę danych"
 
-#: src/fsearch.c:376
+#: src/fsearch.c:390
 msgid "translator-credits"
 msgstr "Daniel Napora <napcok@maboxlinux.org>"
 
-#: src/fsearch.c:378
+#: src/fsearch.c:392
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Narzędzie wyszukiwania, koncentrujące się na wydajności i zaawansowanych "
@@ -50,7 +50,7 @@ msgstr "Nowe okno"
 msgid "Update database"
 msgstr "Uaktualnij bazę danych"
 
-#: src/fsearch.glade:103 src/fsearch.glade:717
+#: src/fsearch.glade:103 src/fsearch.glade:712
 msgid "Cancel database update"
 msgstr "Anuluj aktualizację bazy danych"
 
@@ -98,68 +98,56 @@ msgstr "Szukaj…"
 msgid "Select a Filter"
 msgstr "Wybierz filtr"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "Wszystkie"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "Katalogi"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "Pliki"
-
-#: src/fsearch.glade:403 src/preferences.ui:625
+#: src/fsearch.glade:398 src/preferences.ui:625
 msgid "Search"
 msgstr "Szukaj"
 
-#: src/fsearch.glade:516
+#: src/fsearch.glade:511
 msgid "Number of Search Results"
 msgstr "Liczba wyników wyszukiwania"
 
-#: src/fsearch.glade:517
+#: src/fsearch.glade:512
 msgid "0 Items"
 msgstr "0 wyników"
 
-#: src/fsearch.glade:554
+#: src/fsearch.glade:549
 msgid "Index:"
 msgstr "Indeksowanie:"
 
-#: src/fsearch.glade:622
+#: src/fsearch.glade:617
 msgid "Number of selected folders"
 msgstr "Ilość zaznaczonych katalogów"
 
-#: src/fsearch.glade:623 src/fsearch.glade:648
+#: src/fsearch.glade:618 src/fsearch.glade:643
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:647
+#: src/fsearch.glade:642
 msgid "Number of selected files"
 msgstr "Ilość zaznaczonych plików"
 
-#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#: src/fsearch.glade:696 src/fsearch_window.c:963 src/overlay.ui:213
 #, c-format
 msgid "Updating Database…"
 msgstr "Aktualizowanie bazy danych…"
 
-#: src/fsearch.glade:734
+#: src/fsearch.glade:729
 msgid "page0"
 msgstr "page0"
 
-#: src/fsearch.glade:758
+#: src/fsearch.glade:753
 msgid "Number of database items"
 msgstr "Ilość plików w bazie danych"
 
-#: src/fsearch.glade:759
+#: src/fsearch.glade:754
 msgid "(empty)"
 msgstr "(puste)"
 
-#: src/fsearch.glade:770
+#: src/fsearch.glade:765
 msgid "page1"
 msgstr "page1"
 
-#: src/fsearch.glade:789
+#: src/fsearch.glade:784
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -167,11 +155,11 @@ msgstr ""
 "Wyszukiwany ciąg zawiera duże litery.\n"
 "<b>Dopasowane wielkości liter</b> zostało tymczasowo aktywowane."
 
-#: src/fsearch.glade:820 src/fsearch.glade:873
+#: src/fsearch.glade:815 src/fsearch.glade:868
 msgid "CASE"
 msgstr "CASE"
 
-#: src/fsearch.glade:896
+#: src/fsearch.glade:891
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -179,13 +167,45 @@ msgstr ""
 "Wyszukiwany ciąg zawiera separatory ścieżki.\n"
 "<b>Wyszukiwanie w ścieżce</b> zostało tymczasowo aktywowane."
 
-#: src/fsearch.glade:927 src/fsearch.glade:980
+#: src/fsearch.glade:922 src/fsearch.glade:975
 msgid "PATH"
 msgstr "ŚCIEŻKA"
 
-#: src/fsearch.glade:1033
+#: src/fsearch.glade:1028
 msgid "REGEX"
 msgstr "REGEX"
+
+#: src/fsearch_filter.c:80
+msgid "All"
+msgstr "Wszystkie"
+
+#: src/fsearch_filter.c:83
+msgid "Folders"
+msgstr "Katalogi"
+
+#: src/fsearch_filter.c:85
+msgid "Files"
+msgstr "Pliki"
+
+#: src/fsearch_filter.c:88
+msgid "Archives"
+msgstr ""
+
+#: src/fsearch_filter.c:91
+msgid "Audio"
+msgstr ""
+
+#: src/fsearch_filter.c:95
+msgid "Documents"
+msgstr ""
+
+#: src/fsearch_filter.c:98
+msgid "Pictures"
+msgstr ""
+
+#: src/fsearch_filter.c:101
+msgid "Videos"
+msgstr ""
 
 #: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
@@ -200,37 +220,37 @@ msgstr "Ścieżka"
 msgid "Update"
 msgstr "Aktualizacja"
 
-#: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
+#: src/fsearch_window.c:121 src/fsearch_window.c:474 src/fsearch_window.c:921
 #, c-format
 msgid "%'d Items"
 msgstr "%'d wyniki"
 
-#: src/fsearch_window.c:398 src/fsearch_window.c:550
+#: src/fsearch_window.c:407 src/fsearch_window.c:564
 msgid "Querying…"
 msgstr "Odpytywanie…"
 
-#: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "Nie udało się otworzyć pliku"
 
-#: src/fsearch_window.c:731 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:745 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Czy chcesz aby okno pozostało widoczne?"
 
-#: src/fsearch_window.c:913
+#: src/fsearch_window.c:927
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Ostatnia aktualizacja: %Y-%m-%d % H: %M"
 
-#: src/fsearch_window.c:926 src/overlay.ui:143
+#: src/fsearch_window.c:940 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Ładowania bazy danych…"
 
-#: src/fsearch_window.c:1111
+#: src/fsearch_window.c:1125
 msgid "Background tasks are active."
 msgstr "Zadania w tle są wykonywane."
 
-#: src/fsearch_window.c:1114
+#: src/fsearch_window.c:1128
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-05 21:29+0200\n"
+"POT-Creation-Date: 2020-10-17 16:42+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: akash rao <akash.rao.ind@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/fsearch/"
@@ -23,21 +23,21 @@ msgstr ""
 msgid "Sorting..."
 msgstr ""
 
-#: src/fsearch.c:175
+#: src/fsearch.c:184
 msgid "Show version information"
 msgstr "వర్షన్ సమాచారము చూపించుము"
 
-#: src/fsearch.c:182
+#: src/fsearch.c:191
 msgid "Update the database"
 msgstr "డేటాబేస్ ని ఆధునికీకరణ చేయుము"
 
-#: src/fsearch.c:376
+#: src/fsearch.c:390
 msgid "translator-credits"
 msgstr ""
 "మీ సేవలు కొనియాడుటకు ఈ వాక్యం కలదు. అనువాదకులలో ఒకరిగా మీరు గుర్తింపు పొందదలచిన యెడల, మీ పేరుని "
 "అనువాదిత వాక్యములో చేర్చండి. వేరువేరు పేర్ల నడుమ కొత్త లైను సంజ్ఞ ఉండవలెను."
 
-#: src/fsearch.c:378
+#: src/fsearch.c:392
 msgid "A search utility focusing on performance and advanced features"
 msgstr "పనిచేయు తత్వము మరియు ఆధునిక ఫీచర్ లు గల అన్వేషణా పనిముట్టు"
 
@@ -49,7 +49,7 @@ msgstr "కొత్త కిటికీ"
 msgid "Update database"
 msgstr "డేటాబేస్ ని అప్డేట్ చేయుము"
 
-#: src/fsearch.glade:103 src/fsearch.glade:717
+#: src/fsearch.glade:103 src/fsearch.glade:712
 #, fuzzy
 #| msgid "Update database on start"
 msgid "Cancel database update"
@@ -99,94 +99,114 @@ msgstr "వెతుకు…"
 msgid "Select a Filter"
 msgstr "వడపోతని ఎంచుకొనుము"
 
-#: src/fsearch.glade:370
-msgid "All"
-msgstr "అన్నీ"
-
-#: src/fsearch.glade:371
-msgid "Folders"
-msgstr "ఫోల్డరులు"
-
-#: src/fsearch.glade:372
-msgid "Files"
-msgstr "ఫైల్ లు"
-
-#: src/fsearch.glade:403 src/preferences.ui:625
+#: src/fsearch.glade:398 src/preferences.ui:625
 msgid "Search"
 msgstr "వెతుకులాట"
 
-#: src/fsearch.glade:516
+#: src/fsearch.glade:511
 msgid "Number of Search Results"
 msgstr "వెతుకులాట ఫలితాల సంఖ్య"
 
-#: src/fsearch.glade:517
+#: src/fsearch.glade:512
 msgid "0 Items"
 msgstr "0 వస్తువులు"
 
-#: src/fsearch.glade:554
+#: src/fsearch.glade:549
 msgid "Index:"
 msgstr ""
 
-#: src/fsearch.glade:622
+#: src/fsearch.glade:617
 #, fuzzy
 #| msgid "Number of Search Results"
 msgid "Number of selected folders"
 msgstr "వెతుకులాట ఫలితాల సంఖ్య"
 
-#: src/fsearch.glade:623 src/fsearch.glade:648
+#: src/fsearch.glade:618 src/fsearch.glade:643
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:647
+#: src/fsearch.glade:642
 #, fuzzy
 #| msgid "Number of Search Results"
 msgid "Number of selected files"
 msgstr "వెతుకులాట ఫలితాల సంఖ్య"
 
-#: src/fsearch.glade:701 src/fsearch_window.c:949 src/overlay.ui:213
+#: src/fsearch.glade:696 src/fsearch_window.c:963 src/overlay.ui:213
 #, c-format
 msgid "Updating Database…"
 msgstr "డేటాబేస్ ని అప్డేట్ చేస్తున్నాము…"
 
-#: src/fsearch.glade:734
+#: src/fsearch.glade:729
 msgid "page0"
 msgstr "పేజీ0"
 
-#: src/fsearch.glade:758
+#: src/fsearch.glade:753
 msgid "Number of database items"
 msgstr ""
 
-#: src/fsearch.glade:759
+#: src/fsearch.glade:754
 msgid "(empty)"
 msgstr "(ఖాళీ)"
 
-#: src/fsearch.glade:770
+#: src/fsearch.glade:765
 msgid "page1"
 msgstr "పేజీ1"
 
-#: src/fsearch.glade:789
+#: src/fsearch.glade:784
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch.glade:820 src/fsearch.glade:873
+#: src/fsearch.glade:815 src/fsearch.glade:868
 msgid "CASE"
 msgstr "పెద్ద లేక చిన్న అక్షరం"
 
-#: src/fsearch.glade:896
+#: src/fsearch.glade:891
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch.glade:927 src/fsearch.glade:980
+#: src/fsearch.glade:922 src/fsearch.glade:975
 msgid "PATH"
 msgstr "దారి"
 
-#: src/fsearch.glade:1033
+#: src/fsearch.glade:1028
 msgid "REGEX"
 msgstr "రెజ్ ఎక్స్"
+
+#: src/fsearch_filter.c:80
+msgid "All"
+msgstr "అన్నీ"
+
+#: src/fsearch_filter.c:83
+msgid "Folders"
+msgstr "ఫోల్డరులు"
+
+#: src/fsearch_filter.c:85
+msgid "Files"
+msgstr "ఫైల్ లు"
+
+#: src/fsearch_filter.c:88
+msgid "Archives"
+msgstr ""
+
+#: src/fsearch_filter.c:91
+msgid "Audio"
+msgstr ""
+
+#: src/fsearch_filter.c:95
+msgid "Documents"
+msgstr ""
+
+#: src/fsearch_filter.c:98
+msgid "Pictures"
+msgstr ""
+
+#: src/fsearch_filter.c:101
+msgid "Videos"
+msgstr ""
 
 #: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
@@ -201,37 +221,37 @@ msgstr "పథము"
 msgid "Update"
 msgstr "అప్డేట్"
 
-#: src/fsearch_window.c:121 src/fsearch_window.c:465 src/fsearch_window.c:907
+#: src/fsearch_window.c:121 src/fsearch_window.c:474 src/fsearch_window.c:921
 #, c-format
 msgid "%'d Items"
 msgstr "%'d విషయములు"
 
-#: src/fsearch_window.c:398 src/fsearch_window.c:550
+#: src/fsearch_window.c:407 src/fsearch_window.c:564
 msgid "Querying…"
 msgstr ""
 
-#: src/fsearch_window.c:730 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "ఫైల్ తెరవలేకపోయాము"
 
-#: src/fsearch_window.c:731 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:745 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "మీరు కిటికీలని తెరిచే ఉంచదలిచారా?"
 
-#: src/fsearch_window.c:913
+#: src/fsearch_window.c:927
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "అఖరుసారి అప్డేట్ చేసినపుడు: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:926 src/overlay.ui:143
+#: src/fsearch_window.c:940 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"
 
-#: src/fsearch_window.c:1111
+#: src/fsearch_window.c:1125
 msgid "Background tasks are active."
 msgstr "వెనక జరిగే పనులు చేతనముగా ఉన్నవి."
 
-#: src/fsearch_window.c:1114
+#: src/fsearch_window.c:1128
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
