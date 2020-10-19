@@ -54,8 +54,8 @@ static const char *document_filter =
     "SLDX|THMX|TXT|VSD|WPD|WPS|WRI|XLAM|XLS|XLSB|XLSM|XLSX|XLTM|XLTX|XML)$";
 static const char *audio_filter =
     "\\.(aac|ac3|aif|aifc|aiff|au|cda|dts|fla|flac|it|m1a|m2a|m3u|m4a|mid|midi|mka|mod|mp2|mp3|mpa|"
-    "ogg|ra|rmi|spc|rmi|snd|umx|voc|wav|wma|xm|AAC|AC3|AIF|AIFC|AIFF|AU|CDA|DTS|FLA|FLAC|IT|M1A|"
-    "M2A|M3U|M4A|MID|MIDI|MKA|MOD|MP2|MP3|MPA|OGG|RA|RMI|SPC|RMI|SND|UMX|VOC|WAV|WMA|XM)$";
+    "ogg|opus|ra|rmi|spc|rmi|snd|umx|voc|wav|wma|xm|AAC|AC3|AIF|AIFC|AIFF|AU|CDA|DTS|FLA|FLAC|IT|"
+    "M1A|M2A|M3U|M4A|MID|MIDI|MKA|MOD|MP2|MP3|MPA|OGG|OPUS|RA|RMI|SPC|RMI|SND|UMX|VOC|WAV|WMA|XM)$";
 static const char *image_filter =
     "\\.(ani|bmp|gif|ico|jpe|jpeg|jpg|pcx|png|psd|tga|tif|tiff|webp|wmf|ANI|BMP|GIF|ICO|JPE|JPEG|"
     "JPG|PCX|PNG|PSD|TGA|TIF|TIFF|WEBP|WMF)$";
