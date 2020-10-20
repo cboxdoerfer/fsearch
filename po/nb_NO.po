@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-17 16:42+0200\n"
-"PO-Revision-Date: 2020-10-08 09:26+0000\n"
+"PO-Revision-Date: 2020-10-20 16:26+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.3.1\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Sorterer…"
 
 #: src/fsearch.c:184
 #, fuzzy
@@ -61,9 +61,8 @@ msgid "Search in Path"
 msgstr "Søk i sti"
 
 #: src/fsearch.glade:151 src/menus.ui:105
-#, fuzzy
 msgid "Match Case"
-msgstr "Jamfør skille mellom stor og liten bokstav"
+msgstr "Skill mellom store og små bokstaver"
 
 #: src/fsearch.glade:165 src/menus.ui:109
 #, fuzzy
@@ -120,20 +119,16 @@ msgid "Index:"
 msgstr "Indeks:"
 
 #: src/fsearch.glade:617
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Antall søkeresultater"
+msgstr "Antall valgte mapper"
 
 #: src/fsearch.glade:618 src/fsearch.glade:643
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:642
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Antall søkeresultater"
+msgstr "Antall valgte filer"
 
 #: src/fsearch.glade:696 src/fsearch_window.c:963 src/overlay.ui:213
 #, fuzzy, c-format
@@ -162,6 +157,9 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Søket inneholder store bokstaver.\n"
+"<b>Skill mellom store og små bokstaver</b> ble midlertidig påslått for dette "
+"søket."
 
 #: src/fsearch.glade:815 src/fsearch.glade:868
 #, fuzzy
@@ -169,10 +167,13 @@ msgid "CASE"
 msgstr "VERSAL"
 
 #: src/fsearch.glade:891
+#, fuzzy
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Søket inneholder stiinndelere.\n"
+"<b>Søk i sti</b> ble midlertidig påslått for dette søket."
 
 #: src/fsearch.glade:922 src/fsearch.glade:975
 msgid "PATH"
@@ -196,23 +197,23 @@ msgstr "Filer"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr ""
+msgstr "Arkiver"
 
 #: src/fsearch_filter.c:91
 msgid "Audio"
-msgstr ""
+msgstr "Lyd"
 
 #: src/fsearch_filter.c:95
 msgid "Documents"
-msgstr ""
+msgstr "Dokumenter"
 
 #: src/fsearch_filter.c:98
 msgid "Pictures"
-msgstr ""
+msgstr "Bilder"
 
 #: src/fsearch_filter.c:101
 msgid "Videos"
-msgstr ""
+msgstr "Video"
 
 #: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 #, fuzzy
@@ -235,7 +236,7 @@ msgstr "%'d elementer"
 
 #: src/fsearch_window.c:407 src/fsearch_window.c:564
 msgid "Querying…"
-msgstr ""
+msgstr "Utfører spørring…"
 
 #: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
 #, fuzzy
@@ -329,20 +330,16 @@ msgid "Update Database"
 msgstr "Oppdater database"
 
 #: src/menus.ui:35
-#, fuzzy
-#| msgid "Update"
 msgid "Cancel Update"
-msgstr "Oppdater"
+msgstr "Avbryt oppdatering"
 
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_Rediger"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_Kopier"
+msgstr "Kopier"
 
 #: src/menus.ui:59
 #, fuzzy
@@ -443,10 +440,14 @@ msgid ""
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
+"<b>Skru på mørk drakt</b> trenger ikke å ha noen effekt.\n"
+"Noen plattformer støtter ikke ikledelse av mørk drakt, og andre bruker mørke "
+"drakter som forvalg."
 
 #: src/preferences.ui:163
+#, fuzzy
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Skru på dekorasjoner på klientsiden (omstart kreves)"
 
 #: src/preferences.ui:177
 #, fuzzy
@@ -521,10 +522,8 @@ msgid "Show database indexing status"
 msgstr "Oppdater database ved oppstart"
 
 #: src/preferences.ui:498
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Vis statusfelt"
+msgstr "Statusfelt:"
 
 #: src/preferences.ui:516
 msgid "Interface"
@@ -611,22 +610,16 @@ msgid "Dialogs"
 msgstr "Dialogvinduer"
 
 #: src/preferences_ui.c:67 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Velg et filter"
+msgstr "Velg mappe"
 
 #: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
-#, fuzzy
-#| msgid "Update"
 msgid "_Cancel"
-msgstr "Oppdater"
+msgstr "_Oppdater"
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Deselect All"
 msgid "_Select"
-msgstr "Fravelg alt"
+msgstr "_Velg"
 
 #: src/preferences_ui.c:146
 msgid "_OK"

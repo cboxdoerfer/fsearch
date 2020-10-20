@@ -8,29 +8,32 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.409-8e25-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-17 16:42+0200\n"
-"PO-Revision-Date: 2020-10-18 11:41+0200\n"
-"Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
-"Language-Team: Language tzm\n"
+"PO-Revision-Date: 2020-10-20 16:26+0000\n"
+"Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
+"Language-Team: Central Atlas Tamazight <https://hosted.weblate.org/projects/"
+"fsearch/translations/tzm/>\n"
 "Language: tzm\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n >= 2 && (n < 11 || n > 99);\n"
+"X-Generator: Weblate 4.3.1\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Afran..."
 
 #: src/fsearch.c:184
 msgid "Show version information"
-msgstr ""
+msgstr "Semal umalen n tleqqimt"
 
 #: src/fsearch.c:191
 msgid "Update the database"
-msgstr ""
+msgstr "Sedɣi tisila n isefka"
 
 #: src/fsearch.c:390
 msgid "translator-credits"
-msgstr ""
+msgstr "Ubuεli ḥakim"
 
 #: src/fsearch.c:392
 msgid "A search utility focusing on performance and advanced features"
@@ -42,15 +45,15 @@ msgstr ""
 
 #: src/fsearch.glade:88
 msgid "Update database"
-msgstr ""
+msgstr "Sedɣi tisila n isefka"
 
 #: src/fsearch.glade:103 src/fsearch.glade:712
 msgid "Cancel database update"
-msgstr ""
+msgstr "Ser asedɣi tisila n isefka"
 
 #: src/fsearch.glade:137 src/menus.ui:101
 msgid "Search in Path"
-msgstr ""
+msgstr "Rzu g uɣaras"
 
 #: src/fsearch.glade:151 src/menus.ui:105
 msgid "Match Case"
@@ -66,7 +69,7 @@ msgstr ""
 
 #: src/fsearch.glade:204 src/menus.ui:88
 msgid "Show Filter"
-msgstr ""
+msgstr "Semal tastayt"
 
 #: src/fsearch.glade:218 src/menus.ui:92
 msgid "Show Search Button"
@@ -78,19 +81,19 @@ msgstr ""
 
 #: src/fsearch.glade:268 src/menus.ui:118
 msgid "About"
-msgstr ""
+msgstr "Γef"
 
 #: src/fsearch.glade:293 src/menus.ui:42
 msgid "Quit"
-msgstr ""
+msgstr "Ffeɣ"
 
 #: src/fsearch.glade:345
 msgid "Search…"
-msgstr ""
+msgstr "Rzu…"
 
 #: src/fsearch.glade:367
 msgid "Select a Filter"
-msgstr ""
+msgstr "Dɣer kra n usettay"
 
 #: src/fsearch.glade:398 src/preferences.ui:625
 msgid "Search"
@@ -102,7 +105,7 @@ msgstr ""
 
 #: src/fsearch.glade:512
 msgid "0 Items"
-msgstr ""
+msgstr "0 iferdas"
 
 #: src/fsearch.glade:549
 msgid "Index:"
@@ -114,7 +117,7 @@ msgstr ""
 
 #: src/fsearch.glade:618 src/fsearch.glade:643
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: src/fsearch.glade:642
 msgid "Number of selected files"
@@ -127,7 +130,7 @@ msgstr ""
 
 #: src/fsearch.glade:729
 msgid "page0"
-msgstr ""
+msgstr "Tasna0"
 
 #: src/fsearch.glade:753
 msgid "Number of database items"
@@ -139,7 +142,7 @@ msgstr ""
 
 #: src/fsearch.glade:765
 msgid "page1"
-msgstr ""
+msgstr "Tasna1"
 
 #: src/fsearch.glade:784
 msgid ""
