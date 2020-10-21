@@ -41,6 +41,9 @@ fs_str_is_empty(const char *str) {
 bool
 fs_str_is_utf8(const char *str) {
     char *normalized = g_utf8_normalize(str, -1, G_NORMALIZE_DEFAULT);
+    if (normalized == NULL) {
+        return false;
+    }
     char *down = g_utf8_strdown(normalized, -1);
     char *up = g_utf8_strup(normalized, -1);
 
