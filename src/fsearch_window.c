@@ -62,7 +62,6 @@ struct _FsearchApplicationWindow {
     GtkWidget *listview;
     GtkWidget *match_case_revealer;
     GtkWidget *main_box;
-    GtkWidget *menubar;
     GtkWidget *menu_box;
     GtkWidget *no_search_results_overlay;
     GtkWidget *num_files_label;
@@ -213,7 +212,6 @@ fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
 void
 fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    gtk_widget_set_visible(win->menubar, config->show_menubar);
     gtk_widget_set_visible(win->menu_box, config->show_menubar);
     gtk_widget_set_visible(win->headerbar, !config->show_menubar);
 
@@ -1004,13 +1002,6 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
         app, "database-load-started", G_CALLBACK(database_load_started_cb), self, G_CONNECT_AFTER);
 
     GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/overlay.ui");
-    GtkBuilder *menu_builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
-    GMenuModel *menu_model =
-        G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
-    self->menubar = gtk_menu_bar_new_from_model(menu_model);
-    gtk_widget_show(self->menubar);
-    gtk_box_pack_start(GTK_BOX(self->main_box), self->menubar, FALSE, FALSE, 0);
-    gtk_box_reorder_child(GTK_BOX(self->main_box), self->menubar, 0);
 
     // Overlay when no search results are found
     self->no_search_results_overlay =
@@ -1041,7 +1032,6 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
         GTK_WIDGET(gtk_builder_get_object(builder, "database_loading_label"));
 
     g_object_unref(builder);
-    g_object_unref(menu_builder);
 }
 
 static void

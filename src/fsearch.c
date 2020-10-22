@@ -546,6 +546,13 @@ fsearch_application_startup(GApplication *app) {
                  fsearch->config->enable_dark_theme,
                  NULL);
 
+    if (fsearch->config->show_menubar) {
+        GtkBuilder *menu_builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
+        GMenuModel *menu_model =
+            G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
+        gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
+        g_object_unref(menu_builder);
+    }
     g_action_map_add_action_entries(G_ACTION_MAP(app), app_entries, G_N_ELEMENTS(app_entries), app);
 
     static const gchar *toggle_focus[] = {"Tab", NULL};
