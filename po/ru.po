@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-17 16:42+0200\n"
-"PO-Revision-Date: 2020-10-07 13:25+0000\n"
+"PO-Revision-Date: 2020-10-22 20:26+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.3.1\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
@@ -188,23 +188,23 @@ msgstr "Файлы"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr ""
+msgstr "Архивы"
 
 #: src/fsearch_filter.c:91
 msgid "Audio"
-msgstr ""
+msgstr "Аудио"
 
 #: src/fsearch_filter.c:95
 msgid "Documents"
-msgstr ""
+msgstr "Документы"
 
 #: src/fsearch_filter.c:98
 msgid "Pictures"
-msgstr ""
+msgstr "Изображения"
 
 #: src/fsearch_filter.c:101
 msgid "Videos"
-msgstr ""
+msgstr "Видео"
 
 #: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
@@ -405,12 +405,13 @@ msgid "This may take a while."
 msgstr "Это может занять некоторое время."
 
 #: src/overlay.ui:283
+#, fuzzy
 msgid "No Results Found"
-msgstr "Результаты не найдены"
+msgstr "Результатов не найдено."
 
 #: src/overlay.ui:298
 msgid "Try a different search"
-msgstr "Попробовать другой поиск"
+msgstr "Попробуйте другой запрос"
 
 #: src/preferences.ui:81
 msgid "Enable dark theme"
