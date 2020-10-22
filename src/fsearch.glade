@@ -325,99 +325,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <property name="margin-top">3</property>
             <property name="margin-bottom">3</property>
             <child>
-              <object class="GtkBox" id="search_box">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="hexpand">True</property>
-                <child>
-                  <object class="GtkSearchEntry" id="search_entry">
-                    <property name="name">search_entry</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="can-default">True</property>
-                    <property name="has-default">True</property>
-                    <property name="receives-default">True</property>
-                    <property name="activates-default">True</property>
-                    <property name="secondary-icon-name">edit-clear-symbolic</property>
-                    <property name="primary-icon-activatable">False</property>
-                    <property name="primary-icon-sensitive">False</property>
-                    <property name="secondary-icon-sensitive">False</property>
-                    <property name="placeholder-text" translatable="yes">Search…</property>
-                    <signal name="activate" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
-                    <signal name="changed" handler="on_search_entry_changed" object="FsearchApplicationWindow" swapped="no"/>
-                    <signal name="key-press-event" handler="on_search_entry_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
-                  </object>
-                  <packing>
-                    <property name="expand">True</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRevealer" id="filter_revealer">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="transition-type">slide-right</property>
-                    <property name="reveal-child">True</property>
-                    <child>
-                      <object class="GtkComboBoxText" id="filter_combobox">
-                        <property name="name">filter_combobox</property>
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="tooltip-text" translatable="yes">Select a Filter</property>
-                        <property name="active">0</property>
-                        <signal name="changed" handler="on_filter_combobox_changed" object="FsearchApplicationWindow" swapped="no"/>
-                        <style>
-                          <class name="filter_combobox"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkRevealer" id="search_button_revealer">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="transition-type">slide-right</property>
-                    <property name="reveal-child">True</property>
-                    <child>
-                      <object class="GtkButton" id="search_button">
-                        <property name="visible">True</property>
-                        <property name="can-focus">True</property>
-                        <property name="receives-default">True</property>
-                        <signal name="clicked" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
-                        <child>
-                          <object class="GtkImage">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="tooltip-text" translatable="yes">Search</property>
-                            <property name="icon-name">edit-find-symbolic</property>
-                          </object>
-                        </child>
-                        <style>
-                          <class name="suggested-action"/>
-                          <class name="search_button"/>
-                        </style>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">2</property>
-                  </packing>
-                </child>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
-              </packing>
+              <placeholder/>
             </child>
           </object>
           <packing>
@@ -1129,7 +1037,99 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <property name="margin-start">48</property>
             <property name="spacing">48</property>
             <child>
-              <placeholder/>
+              <object class="GtkBox" id="search_box">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="hexpand">True</property>
+                <child>
+                  <object class="GtkSearchEntry" id="search_entry">
+                    <property name="name">search_entry</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="can-default">True</property>
+                    <property name="has-default">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="activates-default">True</property>
+                    <property name="secondary-icon-name">edit-clear-symbolic</property>
+                    <property name="primary-icon-activatable">False</property>
+                    <property name="primary-icon-sensitive">False</property>
+                    <property name="secondary-icon-sensitive">False</property>
+                    <property name="placeholder-text" translatable="yes">Search…</property>
+                    <signal name="activate" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
+                    <signal name="changed" handler="on_search_entry_changed" object="FsearchApplicationWindow" swapped="no"/>
+                    <signal name="key-press-event" handler="on_search_entry_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
+                  </object>
+                  <packing>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkRevealer" id="filter_revealer">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="transition-type">slide-right</property>
+                    <property name="reveal-child">True</property>
+                    <child>
+                      <object class="GtkComboBoxText" id="filter_combobox">
+                        <property name="name">filter_combobox</property>
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="tooltip-text" translatable="yes">Select a Filter</property>
+                        <property name="active">0</property>
+                        <signal name="changed" handler="on_filter_combobox_changed" object="FsearchApplicationWindow" swapped="no"/>
+                        <style>
+                          <class name="filter_combobox"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkRevealer" id="search_button_revealer">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="transition-type">slide-right</property>
+                    <property name="reveal-child">True</property>
+                    <child>
+                      <object class="GtkButton" id="search_button">
+                        <property name="visible">True</property>
+                        <property name="can-focus">True</property>
+                        <property name="receives-default">True</property>
+                        <signal name="clicked" handler="on_search_entry_activate" object="FsearchApplicationWindow" swapped="no"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="tooltip-text" translatable="yes">Search</property>
+                            <property name="icon-name">edit-find-symbolic</property>
+                          </object>
+                        </child>
+                        <style>
+                          <class name="suggested-action"/>
+                          <class name="search_button"/>
+                        </style>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="expand">False</property>
+                <property name="fill">True</property>
+                <property name="position">0</property>
+              </packing>
             </child>
             <child>
               <object class="GtkMenuButton" id="app_menu">

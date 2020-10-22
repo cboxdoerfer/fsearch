@@ -217,11 +217,11 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
     gtk_widget_set_visible(win->menu_box, config->show_menubar);
     gtk_widget_set_visible(win->headerbar, !config->show_menubar);
 
-    if (!config->show_menubar) {
+    if (config->show_menubar) {
         g_object_ref(G_OBJECT(win->search_box));
-        gtk_container_remove(GTK_CONTAINER(win->menu_box), win->search_box);
-        gtk_box_pack_start(GTK_BOX(win->headerbar_box), win->search_box, TRUE, TRUE, 0);
-        gtk_box_reorder_child(GTK_BOX(win->headerbar_box), win->search_box, 0);
+        gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
+        gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
+        gtk_box_reorder_child(GTK_BOX(win->menu_box), win->search_box, 0);
         g_object_unref(G_OBJECT(win->search_box));
     }
     // ensure search entry still has focus after reordering the search_box
