@@ -33,7 +33,7 @@ fsearch_search_func_normal_icase_u8(const char *haystack, const char *needle, vo
     // TODO: make this faster
     char *haystack_normalized = g_utf8_normalize(haystack, -1, G_NORMALIZE_DEFAULT);
     if (haystack_normalized == NULL) {
-        trace("[search] failed to normalize haystack: %s\n", haystack);
+        trace("[search] file has invalid encoding: %s\n", haystack);
         return 0;
     }
     char *haystack_down = g_utf8_strdown(haystack_normalized, -1);
