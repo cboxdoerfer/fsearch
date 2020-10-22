@@ -462,12 +462,12 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
         break;
 
     case LIST_MODEL_COL_NAME:
-        g_value_set_static_string(value, name);
+        g_value_take_string(value, g_filename_display_name(name));
         break;
 
     case LIST_MODEL_COL_PATH:
         btree_node_get_path(node, node_path, sizeof(node_path));
-        g_value_set_static_string(value, node_path);
+        g_value_take_string(value, g_filename_display_name(node_path));
         break;
 
     case LIST_MODEL_COL_SIZE:

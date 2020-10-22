@@ -1132,9 +1132,14 @@ on_listview_query_tooltip(GtkWidget *widget,
         if (node) {
             char path_name[PATH_MAX] = "";
             btree_node_get_path_full(node, path_name, sizeof(path_name));
-            gtk_tree_view_set_tooltip_row(GTK_TREE_VIEW(widget), tooltip, path);
-            gtk_tooltip_set_text(tooltip, path_name);
-            ret_val = TRUE;
+            char *display_name = g_filename_display_name(path_name);
+            if (display_name) {
+                gtk_tree_view_set_tooltip_row(GTK_TREE_VIEW(widget), tooltip, path);
+                gtk_tooltip_set_text(tooltip, display_name);
+                g_free(display_name);
+                display_name = NULL;
+                ret_val = TRUE;
+            }
         }
     }
     gtk_tree_path_free(path);
