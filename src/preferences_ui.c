@@ -251,9 +251,6 @@ preferences_ui_launch(FsearchConfig *config,
     GtkTreeSelection *sel = gtk_tree_view_get_selection(include_list);
     g_signal_connect(sel, "changed", G_CALLBACK(on_list_selection_changed), include_remove_button);
 
-    GtkToggleButton *follow_symlinks_button =
-        toggle_button_get(builder, "follow_symlinks_button", pref.config->follow_symlinks);
-
     // Exclude model
     // pref.exclude_model = create_exclude_tree_model (&pref,
     // pref.config->exclude_locations);
@@ -319,7 +316,6 @@ preferences_ui_launch(FsearchConfig *config,
         pref.config->show_listview_icons = gtk_toggle_button_get_active(show_icons_button);
         pref.config->exclude_hidden_items =
             gtk_toggle_button_get_active(exclude_hidden_items_button);
-        pref.config->follow_symlinks = gtk_toggle_button_get_active(follow_symlinks_button);
 
         if (config->auto_search_in_path != pref.config->auto_search_in_path ||
             config->auto_match_case != pref.config->auto_match_case ||
@@ -335,8 +331,7 @@ preferences_ui_launch(FsearchConfig *config,
             pref.update_list = true;
         }
 
-        if (config->exclude_hidden_items != pref.config->exclude_hidden_items ||
-            config->follow_symlinks != pref.config->follow_symlinks) {
+        if (config->exclude_hidden_items != pref.config->exclude_hidden_items) {
             pref.update_db = true;
         }
 

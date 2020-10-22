@@ -694,7 +694,7 @@ Some platforms don't support dark theming and others always use dark themes by d
                     <property name="can-focus">True</property>
                     <property name="tab-pos">left</property>
                     <child>
-                      <!-- n-columns=2 n-rows=2 -->
+                      <!-- n-columns=2 n-rows=1 -->
                       <object class="GtkGrid">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
@@ -772,19 +772,6 @@ Some platforms don't support dark theming and others always use dark themes by d
                           <packing>
                             <property name="left-attach">0</property>
                             <property name="top-attach">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkCheckButton" id="follow_symlinks_button">
-                            <property name="label" translatable="yes">Follow symbolic links</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">False</property>
-                            <property name="draw-indicator">True</property>
-                          </object>
-                          <packing>
-                            <property name="left-attach">0</property>
-                            <property name="top-attach">1</property>
-                            <property name="width">2</property>
                           </packing>
                         </child>
                       </object>
