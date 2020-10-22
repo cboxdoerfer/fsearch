@@ -213,28 +213,21 @@ fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
 void
 fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    gtk_window_set_titlebar(GTK_WINDOW(win), config->show_menubar ? NULL : win->headerbar);
-    gtk_window_set_title(GTK_WINDOW(win), g_get_application_name());
     gtk_widget_set_visible(win->menubar, config->show_menubar);
     gtk_widget_set_visible(win->menu_box, config->show_menubar);
     gtk_widget_set_visible(win->headerbar, !config->show_menubar);
 
-    if (config->show_menubar) {
-        if (gtk_widget_get_parent(win->search_box) == win->headerbar_box) {
-            gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
-            gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
-            gtk_box_reorder_child(GTK_BOX(win->menu_box), win->search_box, 0);
-        }
-    }
-    else {
-        if (gtk_widget_get_parent(win->search_box) == win->menu_box) {
-            gtk_container_remove(GTK_CONTAINER(win->menu_box), win->search_box);
-            gtk_box_pack_start(GTK_BOX(win->headerbar_box), win->search_box, TRUE, TRUE, 0);
-            gtk_box_reorder_child(GTK_BOX(win->headerbar_box), win->search_box, 0);
-        }
+    if (!config->show_menubar) {
+        g_object_ref(G_OBJECT(win->search_box));
+        gtk_container_remove(GTK_CONTAINER(win->menu_box), win->search_box);
+        gtk_box_pack_start(GTK_BOX(win->headerbar_box), win->search_box, TRUE, TRUE, 0);
+        gtk_box_reorder_child(GTK_BOX(win->headerbar_box), win->search_box, 0);
+        g_object_unref(G_OBJECT(win->search_box));
     }
     // ensure search entry still has focus after reordering the search_box
     gtk_widget_grab_focus(win->search_entry);
+    gtk_window_set_titlebar(GTK_WINDOW(win), config->show_menubar ? NULL : win->headerbar);
+    gtk_window_set_title(GTK_WINDOW(win), g_get_application_name());
 }
 
 void
