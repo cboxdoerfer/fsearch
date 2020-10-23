@@ -213,7 +213,7 @@ void
 fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     gtk_widget_set_visible(win->menu_box, config->show_menubar);
-    gtk_widget_set_visible(win->headerbar, !config->show_menubar);
+    gtk_widget_set_visible(win->app_menu, !config->show_menubar);
 
     if (config->show_menubar) {
         gtk_window_set_titlebar(GTK_WINDOW(win), NULL);
@@ -224,6 +224,10 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
         gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
         gtk_box_reorder_child(GTK_BOX(win->menu_box), win->search_box, 0);
         g_object_unref(G_OBJECT(win->search_box));
+    }
+    else {
+        GtkStyleContext *list_style = gtk_widget_get_style_context(win->scrolledwindow1);
+        gtk_style_context_add_class(list_style, "results_frame_csd_mode");
     }
     // ensure search entry still has focus after reordering the search_box
     gtk_widget_grab_focus(win->search_entry);

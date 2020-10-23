@@ -1,7 +1,3 @@
-headerbar {
-    border-bottom-width: 0;
-}
-
 .fsearch-statusbar-cancel-update-button {
     padding: 0px;
     min-height: 20px;
@@ -46,4 +42,8 @@ headerbar {
 
 .results_frame_last {
     border-bottom: none;
+}
+
+.results_frame_csd_mode {
+    border-top: none;
 }
