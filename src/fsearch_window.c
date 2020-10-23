@@ -216,6 +216,9 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
     gtk_widget_set_visible(win->headerbar, !config->show_menubar);
 
     if (config->show_menubar) {
+        gtk_window_set_titlebar(GTK_WINDOW(win), NULL);
+        gtk_window_set_title(GTK_WINDOW(win), g_get_application_name());
+
         g_object_ref(G_OBJECT(win->search_box));
         gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
         gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
@@ -224,8 +227,6 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
     }
     // ensure search entry still has focus after reordering the search_box
     gtk_widget_grab_focus(win->search_entry);
-    gtk_window_set_titlebar(GTK_WINDOW(win), config->show_menubar ? NULL : win->headerbar);
-    gtk_window_set_title(GTK_WINDOW(win), g_get_application_name());
 }
 
 void
