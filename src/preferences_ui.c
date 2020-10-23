@@ -130,6 +130,17 @@ toggle_button_get(GtkBuilder *builder, const char *name, bool val) {
     return button;
 }
 
+static void
+action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
+    int active = gtk_combo_box_get_active(widget);
+    if (active != ACTION_AFTER_OPEN_NOTHING) {
+        gtk_widget_set_sensitive(GTK_WIDGET(user_data), TRUE);
+    }
+    else {
+        gtk_widget_set_sensitive(GTK_WIDGET(user_data), FALSE);
+    }
+}
+
 FsearchConfig *
 preferences_ui_launch(FsearchConfig *config,
                       GtkWindow *window,
@@ -188,9 +199,23 @@ preferences_ui_launch(FsearchConfig *config,
     GtkToggleButton *show_base_2_units =
         toggle_button_get(builder, "show_base_2_units", pref.config->show_base_2_units);
 
+    GtkBox *action_after_file_open_box =
+        GTK_BOX(builder_get_object(builder, "action_after_file_open_box"));
     GtkComboBox *action_after_file_open =
         GTK_COMBO_BOX(builder_get_object(builder, "action_after_file_open"));
     gtk_combo_box_set_active(action_after_file_open, pref.config->action_after_file_open);
+
+    g_signal_connect(action_after_file_open,
+                     "changed",
+                     G_CALLBACK(action_after_file_open_changed),
+                     action_after_file_open_box);
+
+    if (pref.config->action_after_file_open != ACTION_AFTER_OPEN_NOTHING) {
+        gtk_widget_set_sensitive(GTK_WIDGET(action_after_file_open_box), TRUE);
+    }
+    else {
+        gtk_widget_set_sensitive(GTK_WIDGET(action_after_file_open_box), FALSE);
+    }
 
     GtkToggleButton *action_after_file_open_keyboard = toggle_button_get(
         builder, "action_after_file_open_keyboard", pref.config->action_after_file_open_keyboard);

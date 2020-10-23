@@ -205,8 +205,9 @@ Some platforms don't support dark theming and others always use dark themes by d
                                     <property name="bottom-padding">6</property>
                                     <property name="right-padding">6</property>
                                     <child>
-                                      <object class="GtkBox">
+                                      <object class="GtkBox" id="action_after_file_open_box">
                                         <property name="visible">True</property>
+                                        <property name="sensitive">False</property>
                                         <property name="can-focus">False</property>
                                         <property name="orientation">vertical</property>
                                         <property name="spacing">2</property>
@@ -271,6 +272,7 @@ Some platforms don't support dark theming and others always use dark themes by d
                                         <property name="hexpand">True</property>
                                         <property name="active">0</property>
                                         <items>
+                                          <item id="FSEARCH_AFTER_FILE_OPEN_NOTHING" translatable="yes">Nothing</item>
                                           <item id="FSEARCH_AFTER_FILE_OPEN_MINIMIZE" translatable="yes">Minimize</item>
                                           <item id="FSEARCH_AFTER_FILE_OPEN_CLOSE" translatable="yes">Close</item>
                                         </items>

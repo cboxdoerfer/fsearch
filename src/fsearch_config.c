@@ -204,8 +204,8 @@ config_load(FsearchConfig *config) {
             config_load_boolean(key_file, "Interface", "show_search_button", true);
         config->show_base_2_units =
             config_load_boolean(key_file, "Interface", "show_base_2_units", false);
-        config->action_after_file_open =
-            config_load_integer(key_file, "Interface", "action_after_file_open", 0);
+        config->action_after_file_open = config_load_integer(
+            key_file, "Interface", "action_after_file_open", ACTION_AFTER_OPEN_NOTHING);
         config->action_after_file_open_keyboard =
             config_load_boolean(key_file, "Interface", "action_after_file_open_keyboard", false);
         config->action_after_file_open_mouse =
@@ -336,7 +336,7 @@ config_load_default(FsearchConfig *config) {
     config->show_filter = true;
     config->show_search_button = true;
     config->show_base_2_units = false;
-    config->action_after_file_open = 0;
+    config->action_after_file_open = ACTION_AFTER_OPEN_NOTHING;
     config->action_after_file_open_keyboard = false;
     config->action_after_file_open_mouse = false;
     config->show_indexing_status = true;

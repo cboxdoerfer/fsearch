@@ -24,6 +24,13 @@
 
 typedef struct _FsearchConfig FsearchConfig;
 
+typedef enum FsearchConfigActionAfterOpen {
+    ACTION_AFTER_OPEN_NOTHING = 0,
+    ACTION_AFTER_OPEN_MINIMIZE,
+    ACTION_AFTER_OPEN_CLOSE,
+    N_ACTIONS_AFTER_OPEN,
+} FsearchConfigActionAfterOpen;
+
 struct _FsearchConfig {
     // Search
     bool limit_results;
@@ -52,7 +59,7 @@ struct _FsearchConfig {
     bool restore_column_config;
     bool restore_sort_order;
     bool double_click_path;
-    uint32_t action_after_file_open;
+    FsearchConfigActionAfterOpen action_after_file_open;
     bool action_after_file_open_keyboard;
     bool action_after_file_open_mouse;
     bool show_indexing_status;
