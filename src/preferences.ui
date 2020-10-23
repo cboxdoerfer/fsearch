@@ -49,7 +49,7 @@
             <property name="visible">True</property>
             <property name="can-focus">True</property>
             <child>
-              <!-- n-columns=3 n-rows=3 -->
+              <!-- n-columns=1 n-rows=3 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -71,6 +71,8 @@
                         <property name="can-focus">False</property>
                         <property name="margin-start">12</property>
                         <property name="margin-top">4</property>
+                        <property name="bottom-padding">6</property>
+                        <property name="right-padding">6</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -199,6 +201,9 @@ Some platforms don't support dark theming and others always use dark themes by d
                                     <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="margin-start">12</property>
+                                    <property name="top-padding">6</property>
+                                    <property name="bottom-padding">6</property>
+                                    <property name="right-padding">6</property>
                                     <child>
                                       <object class="GtkBox">
                                         <property name="visible">True</property>
@@ -331,6 +336,8 @@ Some platforms don't support dark theming and others always use dark themes by d
                         <property name="can-focus">False</property>
                         <property name="margin-start">12</property>
                         <property name="margin-top">4</property>
+                        <property name="bottom-padding">6</property>
+                        <property name="right-padding">6</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -468,6 +475,8 @@ Some platforms don't support dark theming and others always use dark themes by d
                         <property name="can-focus">False</property>
                         <property name="margin-start">12</property>
                         <property name="margin-top">4</property>
+                        <property name="bottom-padding">6</property>
+                        <property name="right-padding">6</property>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
@@ -508,24 +517,6 @@ Some platforms don't support dark theming and others always use dark themes by d
                     <property name="top-attach">2</property>
                   </packing>
                 </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
               </object>
             </child>
             <child type="tab">
@@ -539,7 +530,7 @@ Some platforms don't support dark theming and others always use dark themes by d
               </packing>
             </child>
             <child>
-              <!-- n-columns=3 n-rows=5 -->
+              <!-- n-columns=2 n-rows=5 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -632,21 +623,6 @@ Some platforms don't support dark theming and others always use dark themes by d
                     <property name="top-attach">1</property>
                     <property name="width">2</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
               <packing>
@@ -959,7 +935,7 @@ Some platforms don't support dark theming and others always use dark themes by d
               </packing>
             </child>
             <child>
-              <!-- n-columns=3 n-rows=3 -->
+              <!-- n-columns=1 n-rows=2 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -995,27 +971,6 @@ Some platforms don't support dark theming and others always use dark themes by d
                     <property name="left-attach">0</property>
                     <property name="top-attach">1</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
               <packing>
