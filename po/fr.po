@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-17 16:42+0200\n"
-"PO-Revision-Date: 2020-08-30 15:59+0000\n"
-"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
+"PO-Revision-Date: 2020-10-24 09:26+0000\n"
+"Last-Translator: Pierre-Louis Kabaradjian <pierre.louis.kaba@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.2.1-dev\n"
+"X-Generator: Weblate 4.3.1\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
-msgstr ""
+msgstr "Tri en cours..."
 
 #: src/fsearch.c:184
 msgid "Show version information"
@@ -32,8 +32,11 @@ msgid "Update the database"
 msgstr "Mettre à jour la base de données"
 
 #: src/fsearch.c:390
+#, fuzzy
 msgid "translator-credits"
 msgstr ""
+"Traducteurs: \n"
+"Pierre-Louis K."
 
 #: src/fsearch.c:392
 msgid "A search utility focusing on performance and advanced features"
@@ -42,20 +45,16 @@ msgstr ""
 "fonctionnalités avancées"
 
 #: src/fsearch.glade:73
-#, fuzzy
 msgid "New window"
 msgstr "Nouvelle fenêtre"
 
 #: src/fsearch.glade:88
-#, fuzzy
 msgid "Update database"
 msgstr "Mettre à jour la base de données"
 
 #: src/fsearch.glade:103 src/fsearch.glade:712
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Mettre à jour la base de données au démarrage"
+msgstr "Annuler la mise à jour de la base de données"
 
 #: src/fsearch.glade:137 src/menus.ui:101
 msgid "Search in Path"
@@ -87,16 +86,15 @@ msgstr "Préférences"
 
 #: src/fsearch.glade:268 src/menus.ui:118
 msgid "About"
-msgstr ""
+msgstr "À propos"
 
 #: src/fsearch.glade:293 src/menus.ui:42
 msgid "Quit"
-msgstr ""
+msgstr "Quitter"
 
 #: src/fsearch.glade:345
-#, fuzzy
 msgid "Search…"
-msgstr "Rechercher"
+msgstr "Rechercher…"
 
 #: src/fsearch.glade:367
 msgid "Select a Filter"
@@ -116,36 +114,32 @@ msgstr "0 éléments"
 
 #: src/fsearch.glade:549
 msgid "Index:"
-msgstr ""
+msgstr "Index :"
 
 #: src/fsearch.glade:617
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Nombre de résultats de recherche"
+msgstr "Nombre de dossiers sélectionnés"
 
 #: src/fsearch.glade:618 src/fsearch.glade:643
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:642
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Nombre de résultats de recherche"
+msgstr "Nombre de fichiers sélectionnés"
 
 #: src/fsearch.glade:696 src/fsearch_window.c:963 src/overlay.ui:213
-#, fuzzy, c-format
+#, c-format
 msgid "Updating Database…"
 msgstr "Mise à jour de la base de données…"
 
 #: src/fsearch.glade:729
 msgid "page0"
-msgstr "Page 0"
+msgstr "page0"
 
 #: src/fsearch.glade:753
 msgid "Number of database items"
-msgstr ""
+msgstr "Nombre d'éléments dans la base de données"
 
 #: src/fsearch.glade:754
 msgid "(empty)"
@@ -153,13 +147,15 @@ msgstr "(vide)"
 
 #: src/fsearch.glade:765
 msgid "page1"
-msgstr "Page 2"
+msgstr "page1"
 
 #: src/fsearch.glade:784
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Un terme de la recherche contient des lettres majuscules.\n"
+"<b>Respecter la casse</b> a été temporariement activé pour ce terme."
 
 #: src/fsearch.glade:815 src/fsearch.glade:868
 msgid "CASE"
@@ -170,6 +166,8 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Le terme de recherche contient un séparateur de chemin.\n"
+"<b>Rechercher dans le chemin</b> a été temporairement activé pour ce terme."
 
 #: src/fsearch.glade:922 src/fsearch.glade:975
 msgid "PATH"
@@ -193,27 +191,27 @@ msgstr "Fichiers"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr ""
+msgstr "Archives"
 
 #: src/fsearch_filter.c:91
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: src/fsearch_filter.c:95
 msgid "Documents"
-msgstr ""
+msgstr "Documents"
 
 #: src/fsearch_filter.c:98
 msgid "Pictures"
-msgstr ""
+msgstr "Images"
 
 #: src/fsearch_filter.c:101
 msgid "Videos"
-msgstr ""
+msgstr "Vidéos"
 
 #: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
-msgstr ""
+msgstr "Actif"
 
 #: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
 #: src/listview.c:213 src/menus.ui:205
@@ -222,7 +220,7 @@ msgstr "Chemin"
 
 #: src/fsearch_preferences_widgets.c:210
 msgid "Update"
-msgstr ""
+msgstr "Mettre à jour"
 
 #: src/fsearch_window.c:121 src/fsearch_window.c:474 src/fsearch_window.c:921
 #, c-format
@@ -231,7 +229,7 @@ msgstr "%'d éléments"
 
 #: src/fsearch_window.c:407 src/fsearch_window.c:564
 msgid "Querying…"
-msgstr ""
+msgstr "Requête en cours…"
 
 #: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
@@ -252,28 +250,29 @@ msgstr "Chargement de la base de données…"
 
 #: src/fsearch_window.c:1125
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Des tâches d'arrière-plan sont actives."
 
 #: src/fsearch_window.c:1128
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Fermer la fenêtre n'est pas possible pour le moment.\n"
+"Veuillez patienter un instant puis réessayer."
 
 #: src/fsearch_window_actions.c:78
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Voulez-vous vraiment supprimer"
+msgstr "Voulez-vous vraiment ourvrir %d fichier(s) ?"
 
 #: src/fsearch_window_actions.c:80
-#, fuzzy
 msgid "Opening Files…"
-msgstr "Ouvrir le(s) fichier(s)"
+msgstr "Ouverture des fichiers…"
 
 #: src/fsearch_window_actions.c:154
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Voulez-vous vraiment supprimer"
+msgstr "Voulez-vous vraiment supprimer %d fichier(s) ?"
 
 #: src/fsearch_window_actions.c:160
 msgid "Deleting files…"
@@ -321,23 +320,19 @@ msgstr "Mettre à jour la base de données"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "Annuler la mise à jour"
 
 #: src/menus.ui:49
 msgid "_Edit"
 msgstr "_Modifier"
 
 #: src/menus.ui:52
-#, fuzzy
-#| msgid "_Copy"
 msgid "Copy"
-msgstr "_Copier"
+msgstr "Copier"
 
 #: src/menus.ui:59
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Tout désélectionner"
+msgstr "Tout sélectionner"
 
 #: src/menus.ui:64
 msgid "Deselect All"
@@ -403,12 +398,11 @@ msgstr "Appuyez sur <b>Ctrl + F</b> et commencez à écrire"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
 msgid "This won't take long."
-msgstr "Ceci peut prendre un peu de temps."
+msgstr "Cela ne sera pas long."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -432,10 +426,13 @@ msgid ""
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
+"<b>Activer le thème sombre</b> pourrait ne pas avoir d'effet.\n"
+"Certaines plateformes ne prennent pas en charge les thèmes sombres et "
+"d'autres les utilisent toujours par défaut."
 
 #: src/preferences.ui:163
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Activer les décorations coté client (requiert le redémarrage)"
 
 #: src/preferences.ui:177
 msgid "Use binary units instead of decimal units"
@@ -450,9 +447,8 @@ msgid "with double click"
 msgstr "avec un double clic"
 
 #: src/preferences.ui:252
-#, fuzzy
 msgid "Behaviour after successfully opening a file:"
-msgstr "Comportement suite à l'ouverture réussie d'un dossier"
+msgstr "Comportement à l'ouverture réussie d'un dossier :"
 
 #: src/preferences.ui:268
 msgid "Minimize"
@@ -468,11 +464,11 @@ msgstr "Se souvenir de la taille de la fenêtre"
 
 #: src/preferences.ui:309
 msgid "General:"
-msgstr ""
+msgstr "Général :"
 
 #: src/preferences.ui:341
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Mettre en évidence les termes de recherche"
 
 #: src/preferences.ui:356
 msgid "Show tooltips"
@@ -487,34 +483,28 @@ msgid "Remember column configuration"
 msgstr "Se souvenir de la configuration des colonnes"
 
 #: src/preferences.ui:398
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Se souvenir de la taille de la fenêtre"
+msgstr "Se souvenir de l'ordre de tri"
 
 #: src/preferences.ui:412
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Ouvrir le chemin en double cliquant dans la colonne du chemin"
 
 #: src/preferences.ui:426
 msgid "Single click to open"
-msgstr ""
+msgstr "Simple clique pour ouvrir"
 
 #: src/preferences.ui:446
 msgid "Results:"
-msgstr ""
+msgstr "Résultats :"
 
 #: src/preferences.ui:478
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Mettre à jour la base de données au démarrage"
+msgstr "Afficher le status d'indexation de la base de données"
 
 #: src/preferences.ui:498
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Afficher la barre d'état"
+msgstr "Barre d'état :"
 
 #: src/preferences.ui:516
 msgid "Interface"
@@ -538,10 +528,8 @@ msgid "Hide results when search is empty"
 msgstr "Cacher les résultats lorsque la recherche est vide"
 
 #: src/preferences.ui:604
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr ""
-"Rechercher dans le chemin quand la requête contient des séparateurs de chemin"
+msgstr "Respecter la casse quand la requête contient des majuscules"
 
 #: src/preferences.ui:644
 msgid "Update database on start"
@@ -549,7 +537,7 @@ msgstr "Mettre à jour la base de données au démarrage"
 
 #: src/preferences.ui:679 src/preferences.ui:784
 msgid "Add…"
-msgstr ""
+msgstr "Ajouter…"
 
 #: src/preferences.ui:695 src/preferences.ui:800
 msgid "Remove"
@@ -600,24 +588,20 @@ msgid "Dialogs"
 msgstr "Boîtes de dialogue d'avertissement"
 
 #: src/preferences_ui.c:67 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Sélectionner un filtre"
+msgstr "Sélectionnez un dossier"
 
 #: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
 msgid "_Cancel"
-msgstr ""
+msgstr "_Annuler"
 
 #: src/preferences_ui.c:72 src/preferences_ui.c:79
-#, fuzzy
-#| msgid "Deselect All"
 msgid "_Select"
-msgstr "Tout désélectionner"
+msgstr "_Sélectionner"
 
 #: src/preferences_ui.c:146
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
