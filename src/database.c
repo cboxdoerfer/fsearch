@@ -534,7 +534,7 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
         return location;
     }
 
-    trace("[database_scan] walk error: %d", res);
+    trace("[database_scan] walk error: %d\n", res);
     db_location_free(location);
     return NULL;
 }
