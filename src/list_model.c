@@ -85,14 +85,10 @@ static gboolean
 list_model_iter_parent(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *child);
 
 static gboolean
-list_model_sortable_get_sort_column_id(GtkTreeSortable *sortable,
-                                       gint *sort_col_id,
-                                       GtkSortType *order);
+list_model_sortable_get_sort_column_id(GtkTreeSortable *sortable, gint *sort_col_id, GtkSortType *order);
 
 static void
-list_model_sortable_set_sort_column_id(GtkTreeSortable *sortable,
-                                       gint sort_col_id,
-                                       GtkSortType order);
+list_model_sortable_set_sort_column_id(GtkTreeSortable *sortable, gint sort_col_id, GtkSortType order);
 
 static void
 list_model_sortable_set_sort_func(GtkTreeSortable *sortable,
@@ -176,19 +172,17 @@ list_model_get_type(void) {
                                                   0, /* n_preallocs */
                                                   (GInstanceInitFunc)list_model_init,
                                                   NULL};
-        static const GInterfaceInfo tree_model_info = {
-            (GInterfaceInitFunc)list_model_tree_model_init, NULL, NULL};
-        static const GInterfaceInfo tree_model_sortable_info = {
-            (GInterfaceInitFunc)list_model_model_sortable_init, NULL, NULL};
+        static const GInterfaceInfo tree_model_info = {(GInterfaceInitFunc)list_model_tree_model_init, NULL, NULL};
+        static const GInterfaceInfo tree_model_sortable_info = {(GInterfaceInitFunc)list_model_model_sortable_init,
+                                                                NULL,
+                                                                NULL};
 
         /* First register the new derived type with the GObject type system */
-        list_model_type =
-            g_type_register_static(G_TYPE_OBJECT, "ListModel", &list_model_info, (GTypeFlags)0);
+        list_model_type = g_type_register_static(G_TYPE_OBJECT, "ListModel", &list_model_info, (GTypeFlags)0);
 
         /* Now register our GtkTreeModel interface with the type system */
         g_type_add_interface_static(list_model_type, GTK_TYPE_TREE_MODEL, &tree_model_info);
-        g_type_add_interface_static(
-            list_model_type, GTK_TYPE_TREE_SORTABLE, &tree_model_sortable_info);
+        g_type_add_interface_static(list_model_type, GTK_TYPE_TREE_SORTABLE, &tree_model_sortable_info);
     }
 
     return list_model_type;
@@ -647,10 +641,7 @@ list_model_iter_n_children(GtkTreeModel *tree_model, GtkTreeIter *iter) {
  *****************************************************************************/
 
 static gboolean
-list_model_iter_nth_child(GtkTreeModel *tree_model,
-                          GtkTreeIter *iter,
-                          GtkTreeIter *parent,
-                          gint n) {
+list_model_iter_nth_child(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIter *parent, gint n) {
     g_return_val_if_fail(IS_LIST_MODEL(tree_model), FALSE);
 
     /* a list has only top-level rows */
@@ -727,9 +718,7 @@ list_model_new(void) {
  *****************************************************************************/
 
 static gboolean
-list_model_sortable_get_sort_column_id(GtkTreeSortable *sortable,
-                                       gint *sort_col_id,
-                                       GtkSortType *order) {
+list_model_sortable_get_sort_column_id(GtkTreeSortable *sortable, gint *sort_col_id, GtkSortType *order) {
     ListModel *list_model;
 
     g_return_val_if_fail(sortable != NULL, FALSE);
@@ -747,9 +736,7 @@ list_model_sortable_get_sort_column_id(GtkTreeSortable *sortable,
 }
 
 static void
-list_model_sortable_set_sort_column_id(GtkTreeSortable *sortable,
-                                       gint sort_col_id,
-                                       GtkSortType order) {
+list_model_sortable_set_sort_column_id(GtkTreeSortable *sortable, gint sort_col_id, GtkSortType order) {
     ListModel *list_model;
 
     g_return_if_fail(sortable != NULL);
@@ -939,9 +926,7 @@ list_model_compare_records(gint sort_id, DatabaseSearchEntry *a, DatabaseSearchE
 }
 
 static gint
-list_model_qsort_compare_func(DatabaseSearchEntry **a,
-                              DatabaseSearchEntry **b,
-                              ListModel *list_model) {
+list_model_qsort_compare_func(DatabaseSearchEntry **a, DatabaseSearchEntry **b, ListModel *list_model) {
     g_assert((a) && (b) && (list_model));
 
     gint ret = list_model_compare_records(list_model->sort_id, *a, *b);
@@ -1027,8 +1012,7 @@ list_model_sort(ListModel *list_model) {
     trace("[list_model] sort started\n");
     GTimer *timer = fsearch_timer_start();
     /* resort */
-    g_ptr_array_sort_with_data(
-        list_model->results, (GCompareDataFunc)list_model_qsort_compare_func, list_model);
+    g_ptr_array_sort_with_data(list_model->results, (GCompareDataFunc)list_model_qsort_compare_func, list_model);
 
     list_model_apply_sort(list_model);
 

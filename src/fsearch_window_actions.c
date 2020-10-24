@@ -64,8 +64,7 @@ confirm_action(GtkWidget *parent, const char *title, const char *question, int l
         return true;
     }
 
-    gint response =
-        ui_utils_run_gtk_dialog(parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, title, question);
+    gint response = ui_utils_run_gtk_dialog(parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, title, question);
     if (response == GTK_RESPONSE_YES) {
         return true;
     }
@@ -133,10 +132,7 @@ delete_file(DatabaseSearchEntry *entry, bool delete) {
 }
 
 static void
-fsearch_delete_selection(GSimpleAction *action,
-                         GVariant *variant,
-                         bool delete,
-                         gpointer user_data) {
+fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection(self);
     if (!selection) {
@@ -149,16 +145,12 @@ fsearch_delete_selection(GSimpleAction *action,
 
     if (delete || num_selected_rows > 20) {
         char error_msg[PATH_MAX] = "";
-        snprintf(error_msg,
-                 sizeof(error_msg),
-                 _("Do you really want to remove %d file(s)?"),
-                 num_selected_rows);
-        gint response =
-            ui_utils_run_gtk_dialog(GTK_WIDGET(self),
-                                    GTK_MESSAGE_WARNING,
-                                    GTK_BUTTONS_OK_CANCEL,
-                                    delete ? _("Deleting files…") : _("Moving files to trash…"),
-                                    error_msg);
+        snprintf(error_msg, sizeof(error_msg), _("Do you really want to remove %d file(s)?"), num_selected_rows);
+        gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
+                                                GTK_MESSAGE_WARNING,
+                                                GTK_BUTTONS_OK_CANCEL,
+                                                delete ? _("Deleting files…") : _("Moving files to trash…"),
+                                                error_msg);
         if (response != GTK_RESPONSE_OK) {
             goto save_fail;
         }
@@ -204,9 +196,7 @@ static void
 fsearch_window_action_cut(GSimpleAction *action, GVariant *variant, gpointer user_data) {}
 
 static void
-fsearch_window_action_invert_selection(GSimpleAction *action,
-                                       GVariant *variant,
-                                       gpointer user_data) {
+fsearch_window_action_invert_selection(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     // TODO: can be very slow. Find a way how to optimize that.
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection(self);
@@ -325,8 +315,7 @@ fsearch_window_action_after_file_open(bool action_mouse) {
             g_application_quit(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
         }
         else if (config->action_after_file_open == ACTION_AFTER_OPEN_MINIMIZE) {
-            gtk_window_iconify(
-                gtk_application_get_active_window(GTK_APPLICATION(FSEARCH_APPLICATION_DEFAULT)));
+            gtk_window_iconify(gtk_application_get_active_window(GTK_APPLICATION(FSEARCH_APPLICATION_DEFAULT)));
         }
     }
 }
@@ -384,8 +373,7 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-fsearch_window_action_open_generic(FsearchApplicationWindow *win,
-                                   GtkTreeSelectionForeachFunc open_func) {
+fsearch_window_action_open_generic(FsearchApplicationWindow *win, GtkTreeSelectionForeachFunc open_func) {
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection(win);
     if (!selection) {
         return;
@@ -447,9 +435,7 @@ fsearch_window_action_open_folder(GSimpleAction *action, GVariant *variant, gpoi
 }
 
 static void
-fsearch_window_action_open_with_response_cb(GtkDialog *dialog,
-                                            gint response_id,
-                                            gpointer user_data) {
+fsearch_window_action_open_with_response_cb(GtkDialog *dialog, gint response_id, gpointer user_data) {
     if (response_id != GTK_RESPONSE_OK) {
         gtk_widget_destroy(GTK_WIDGET(dialog));
         return;
@@ -464,9 +450,7 @@ fsearch_window_action_open_with_response_cb(GtkDialog *dialog,
     g_object_unref(app_info);
 }
 static void
-fsearch_window_action_open_with_other(GSimpleAction *action,
-                                      GVariant *variant,
-                                      gpointer user_data) {
+fsearch_window_action_open_with_other(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
     const char *content_type = g_variant_get_string(variant, NULL);
@@ -474,15 +458,14 @@ fsearch_window_action_open_with_other(GSimpleAction *action,
         content_type = "";
     }
 
-    GtkWidget *app_chooser_dlg = gtk_app_chooser_dialog_new_for_content_type(
-        GTK_WINDOW(self), GTK_DIALOG_MODAL, content_type);
+    GtkWidget *app_chooser_dlg =
+        gtk_app_chooser_dialog_new_for_content_type(GTK_WINDOW(self), GTK_DIALOG_MODAL, content_type);
     gtk_widget_show(app_chooser_dlg);
 
     GtkWidget *widget = gtk_app_chooser_dialog_get_widget(GTK_APP_CHOOSER_DIALOG(app_chooser_dlg));
     g_object_set(widget, "show-fallback", TRUE, "show-other", TRUE, NULL);
 
-    g_signal_connect(
-        app_chooser_dlg, "response", G_CALLBACK(fsearch_window_action_open_with_response_cb), self);
+    g_signal_connect(app_chooser_dlg, "response", G_CALLBACK(fsearch_window_action_open_with_response_cb), self);
 }
 
 static void
@@ -518,9 +501,7 @@ fsearch_window_action_show_filter(GSimpleAction *action, GVariant *variant, gpoi
 }
 
 static void
-fsearch_window_action_show_search_button(GSimpleAction *action,
-                                         GVariant *variant,
-                                         gpointer user_data) {
+fsearch_window_action_show_search_button(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -580,9 +561,7 @@ fsearch_window_action_match_case(GSimpleAction *action, GVariant *variant, gpoin
 }
 
 static void
-fsearch_window_action_show_name_column(GSimpleAction *action,
-                                       GVariant *variant,
-                                       gpointer user_data) {
+fsearch_window_action_show_name_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
@@ -599,9 +578,7 @@ fsearch_window_action_show_name_column(GSimpleAction *action,
 }
 
 static void
-fsearch_window_action_show_path_column(GSimpleAction *action,
-                                       GVariant *variant,
-                                       gpointer user_data) {
+fsearch_window_action_show_path_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
@@ -617,9 +594,7 @@ fsearch_window_action_show_path_column(GSimpleAction *action,
 }
 
 static void
-fsearch_window_action_show_type_column(GSimpleAction *action,
-                                       GVariant *variant,
-                                       gpointer user_data) {
+fsearch_window_action_show_type_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
@@ -635,9 +610,7 @@ fsearch_window_action_show_type_column(GSimpleAction *action,
 }
 
 static void
-fsearch_window_action_show_size_column(GSimpleAction *action,
-                                       GVariant *variant,
-                                       gpointer user_data) {
+fsearch_window_action_show_size_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
@@ -653,9 +626,7 @@ fsearch_window_action_show_size_column(GSimpleAction *action,
 }
 
 static void
-fsearch_window_action_show_modified_column(GSimpleAction *action,
-                                           GVariant *variant,
-                                           gpointer user_data) {
+fsearch_window_action_show_modified_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
@@ -696,40 +667,16 @@ static GActionEntry FsearchWindowActions[] = {
     {"focus_search", fsearch_window_action_focus_search},
     {"hide_window", fsearch_window_action_hide_window},
     // Column popup
-    {"show_name_column",
-     action_toggle_state_cb,
-     NULL,
-     "true",
-     fsearch_window_action_show_name_column},
-    {"show_path_column",
-     action_toggle_state_cb,
-     NULL,
-     "true",
-     fsearch_window_action_show_path_column},
-    {"show_type_column",
-     action_toggle_state_cb,
-     NULL,
-     "true",
-     fsearch_window_action_show_type_column},
-    {"show_size_column",
-     action_toggle_state_cb,
-     NULL,
-     "true",
-     fsearch_window_action_show_size_column},
-    {"show_modified_column",
-     action_toggle_state_cb,
-     NULL,
-     "true",
-     fsearch_window_action_show_modified_column},
+    {"show_name_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_name_column},
+    {"show_path_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_path_column},
+    {"show_type_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_type_column},
+    {"show_size_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_size_column},
+    {"show_modified_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_modified_column},
     //{ "update_database",     fsearch_window_action_update_database },
     // View
     {"show_statusbar", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_statusbar},
     {"show_filter", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_filter},
-    {"show_search_button",
-     action_toggle_state_cb,
-     NULL,
-     "true",
-     fsearch_window_action_show_search_button},
+    {"show_search_button", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_search_button},
     // Search
     {"search_in_path", action_toggle_state_cb, NULL, "true", fsearch_window_action_search_in_path},
     {"search_mode", action_toggle_state_cb, NULL, "true", fsearch_window_action_search_mode},
@@ -793,8 +740,7 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
 
 void
 fsearch_window_actions_init(FsearchApplicationWindow *self) {
-    g_action_map_add_action_entries(
-        G_ACTION_MAP(self), FsearchWindowActions, G_N_ELEMENTS(FsearchWindowActions), self);
+    g_action_map_add_action_entries(G_ACTION_MAP(self), FsearchWindowActions, G_N_ELEMENTS(FsearchWindowActions), self);
 
     fsearch_window_actions_update(self);
 }

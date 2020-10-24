@@ -83,10 +83,7 @@ static FsearchDatabaseNode *
 db_location_get_for_path(FsearchDatabase *db, const char *path);
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db,
-                       const char *dname,
-                       bool *cancel,
-                       void (*callback)(const char *));
+db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*callback)(const char *));
 
 static FsearchDatabaseNode *
 db_location_new(void);
@@ -236,9 +233,7 @@ db_location_load_from_file(const char *fname) {
         prev = btree_node_prepend(prev, new);
         num_items_read++;
     }
-    trace("[database_load] finished with %d of %d items successfully read\n",
-          num_items_read,
-          num_items);
+    trace("[database_load] finished with %d of %d items successfully read\n", num_items_read, num_items);
 
     FsearchDatabaseNode *location = db_location_new();
     location->num_items = num_items_read;
@@ -515,10 +510,7 @@ db_location_free(FsearchDatabaseNode *location) {
 }
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db,
-                       const char *dname,
-                       bool *cancel,
-                       void (*callback)(const char *)) {
+db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*callback)(const char *)) {
     const char *root_name = NULL;
     if (!strcmp(dname, "/")) {
         root_name = "";
@@ -536,8 +528,7 @@ db_location_build_tree(FsearchDatabase *db,
     }
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
-    uint32_t res =
-        db_location_walk_tree_recursive(db, location, dname, timer, cancel, callback, root, spec);
+    uint32_t res = db_location_walk_tree_recursive(db, location, dname, timer, cancel, callback, root, spec);
     g_timer_destroy(timer);
     if (res == WALK_OK) {
         return location;
@@ -660,10 +651,7 @@ db_location_delete(FsearchDatabaseNode *location, const char *location_name) {
     location_build_path(database_path, sizeof(database_path), location_name);
 
     gchar database_file_path[PATH_MAX] = "";
-    assert(
-        0 <=
-        snprintf(
-            database_file_path, sizeof(database_file_path), "%s/%s", database_path, "database.db"));
+    assert(0 <= snprintf(database_file_path, sizeof(database_file_path), "%s/%s", database_path, "database.db"));
 
     g_remove(database_file_path);
     g_remove(database_path);
@@ -735,10 +723,7 @@ db_location_load(FsearchDatabase *db, const char *location_name) {
 }
 
 static bool
-db_location_add(FsearchDatabase *db,
-                const char *location_name,
-                bool *cancel,
-                void (*callback)(const char *)) {
+db_location_add(FsearchDatabase *db, const char *location_name, bool *cancel, void (*callback)(const char *)) {
     assert(db != NULL);
     trace("[database_scan] scan location: %s\n", location_name);
 

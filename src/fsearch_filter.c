@@ -76,29 +76,21 @@ static const char *archive_filter =
 GList *
 fsearch_filter_get_default() {
     GList *filters = NULL;
-    filters = g_list_append(
-        filters, fsearch_filter_new(FSEARCH_FILTER_NONE, _("All"), NULL, false, false, false));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FOLDERS, _("Folders"), NULL, false, false, false));
-    filters = g_list_append(
-        filters, fsearch_filter_new(FSEARCH_FILTER_FILES, _("Files"), NULL, false, false, false));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Archives"), archive_filter, true, true, false));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Audio"), audio_filter, true, true, false));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(
-            FSEARCH_FILTER_FILES, _("Documents"), document_filter, true, true, false));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Pictures"), image_filter, true, true, false));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Videos"), video_filter, true, true, false));
+    filters = g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_NONE, _("All"), NULL, false, false, false));
+    filters =
+        g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_FOLDERS, _("Folders"), NULL, false, false, false));
+    filters = g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_FILES, _("Files"), NULL, false, false, false));
+    filters = g_list_append(filters,
+                            fsearch_filter_new(FSEARCH_FILTER_FILES, _("Archives"), archive_filter, true, true, false));
+    filters =
+        g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_FILES, _("Audio"), audio_filter, true, true, false));
+    filters =
+        g_list_append(filters,
+                      fsearch_filter_new(FSEARCH_FILTER_FILES, _("Documents"), document_filter, true, true, false));
+    filters = g_list_append(filters,
+                            fsearch_filter_new(FSEARCH_FILTER_FILES, _("Pictures"), image_filter, true, true, false));
+    filters =
+        g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_FILES, _("Videos"), video_filter, true, true, false));
 
     return filters;
 }

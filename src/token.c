@@ -12,10 +12,7 @@ static uint32_t
 fsearch_search_func_regex(const char *haystack, const char *needle, void *data) {
     FsearchToken *t = data;
     size_t haystack_len = strlen(haystack);
-    return pcre_exec(
-               t->regex, t->regex_study, haystack, haystack_len, 0, 0, t->ovector, OVECCOUNT) >= 0
-               ? 1
-               : 0;
+    return pcre_exec(t->regex, t->regex_study, haystack, haystack_len, 0, 0, t->ovector, OVECCOUNT) >= 0 ? 1 : 0;
 }
 
 static uint32_t
@@ -112,16 +109,15 @@ fsearch_token_new(const char *text, bool match_case, bool auto_match_case, bool 
         new->search_func = fsearch_search_func_regex;
     }
     else if (strchr(text, '*') || strchr(text, '?')) {
-        new->search_func =
-            match_case ? fsearch_search_func_wildcard : fsearch_search_func_wildcard_icase;
+        new->search_func = match_case ? fsearch_search_func_wildcard : fsearch_search_func_wildcard_icase;
     }
     else {
         if (match_case) {
             new->search_func = fsearch_search_func_normal;
         }
         else {
-            new->search_func = fs_str_is_utf8(text) ? fsearch_search_func_normal_icase_u8
-                                                    : fsearch_search_func_normal_icase;
+            new->search_func =
+                fs_str_is_utf8(text) ? fsearch_search_func_normal_icase_u8 : fsearch_search_func_normal_icase;
         }
     }
     return new;

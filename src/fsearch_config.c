@@ -77,10 +77,7 @@ config_load_handle_error(GError *error) {
 }
 
 static uint32_t
-config_load_integer(GKeyFile *key_file,
-                    const char *group_name,
-                    const char *key,
-                    uint32_t default_value) {
+config_load_integer(GKeyFile *key_file, const char *group_name, const char *key, uint32_t default_value) {
     GError *error = NULL;
     uint32_t result = g_key_file_get_integer(key_file, group_name, key, &error);
     if (error != NULL) {
@@ -91,10 +88,7 @@ config_load_integer(GKeyFile *key_file,
 }
 
 static bool
-config_load_boolean(GKeyFile *key_file,
-                    const char *group_name,
-                    const char *key,
-                    bool default_value) {
+config_load_boolean(GKeyFile *key_file, const char *group_name, const char *key, bool default_value) {
     GError *error = NULL;
     bool result = g_key_file_get_boolean(key_file, group_name, key, &error);
     if (error != NULL) {
@@ -105,10 +99,7 @@ config_load_boolean(GKeyFile *key_file,
 }
 
 static char *
-config_load_string(GKeyFile *key_file,
-                   const char *group_name,
-                   const char *key,
-                   const char *default_value) {
+config_load_string(GKeyFile *key_file, const char *group_name, const char *key, const char *default_value) {
     GError *error = NULL;
     char *result = g_key_file_get_string(key_file, group_name, key, &error);
     if (error != NULL) {
@@ -134,8 +125,7 @@ config_load_include_locations(GKeyFile *key_file, GList *locations, const char *
 
         pos++;
         if (path) {
-            FsearchIncludePath *fs_path =
-                fsearch_include_path_new(path, enabled, update, num_items, 0);
+            FsearchIncludePath *fs_path = fsearch_include_path_new(path, enabled, update, num_items, 0);
             locations = g_list_append(locations, fs_path);
         }
         else {
@@ -183,92 +173,68 @@ config_load(FsearchConfig *config) {
     if (g_key_file_load_from_file(key_file, config_path, G_KEY_FILE_NONE, &error)) {
         trace("[config] loading...\n");
         // Interface
-        config->highlight_search_terms =
-            config_load_boolean(key_file, "Interface", "highlight_search_terms", true);
-        config->single_click_open =
-            config_load_boolean(key_file, "Interface", "single_click_open", false);
-        config->restore_sort_order =
-            config_load_boolean(key_file, "Interface", "restore_sort_order", true);
+        config->highlight_search_terms = config_load_boolean(key_file, "Interface", "highlight_search_terms", true);
+        config->single_click_open = config_load_boolean(key_file, "Interface", "single_click_open", false);
+        config->restore_sort_order = config_load_boolean(key_file, "Interface", "restore_sort_order", true);
         config->restore_column_config =
             config_load_boolean(key_file, "Interface", "restore_column_configuration", false);
-        config->double_click_path =
-            config_load_boolean(key_file, "Interface", "double_click_path", false);
-        config->enable_list_tooltips =
-            config_load_boolean(key_file, "Interface", "enable_list_tooltips", true);
-        config->enable_dark_theme =
-            config_load_boolean(key_file, "Interface", "enable_dark_theme", false);
+        config->double_click_path = config_load_boolean(key_file, "Interface", "double_click_path", false);
+        config->enable_list_tooltips = config_load_boolean(key_file, "Interface", "enable_list_tooltips", true);
+        config->enable_dark_theme = config_load_boolean(key_file, "Interface", "enable_dark_theme", false);
         config->show_menubar = config_load_boolean(key_file, "Interface", "show_menubar", true);
         config->show_statusbar = config_load_boolean(key_file, "Interface", "show_statusbar", true);
         config->show_filter = config_load_boolean(key_file, "Interface", "show_filter", true);
-        config->show_search_button =
-            config_load_boolean(key_file, "Interface", "show_search_button", true);
-        config->show_base_2_units =
-            config_load_boolean(key_file, "Interface", "show_base_2_units", false);
-        config->action_after_file_open = config_load_integer(
-            key_file, "Interface", "action_after_file_open", ACTION_AFTER_OPEN_NOTHING);
+        config->show_search_button = config_load_boolean(key_file, "Interface", "show_search_button", true);
+        config->show_base_2_units = config_load_boolean(key_file, "Interface", "show_base_2_units", false);
+        config->action_after_file_open =
+            config_load_integer(key_file, "Interface", "action_after_file_open", ACTION_AFTER_OPEN_NOTHING);
         config->action_after_file_open_keyboard =
             config_load_boolean(key_file, "Interface", "action_after_file_open_keyboard", false);
         config->action_after_file_open_mouse =
             config_load_boolean(key_file, "Interface", "action_after_file_open_mouse", false);
-        config->show_indexing_status =
-            config_load_boolean(key_file, "Interface", "show_indexing_status", true);
+        config->show_indexing_status = config_load_boolean(key_file, "Interface", "show_indexing_status", true);
 
         // Warning Dialogs
         config->show_dialog_failed_opening =
             config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
 
         // Applications
-        config->folder_open_cmd =
-            config_load_string(key_file, "Applications", "folder_open_cmd", NULL);
+        config->folder_open_cmd = config_load_string(key_file, "Applications", "folder_open_cmd", NULL);
 
         // Window
-        config->restore_window_size =
-            config_load_boolean(key_file, "Interface", "restore_window_size", false);
+        config->restore_window_size = config_load_boolean(key_file, "Interface", "restore_window_size", false);
         config->window_width = config_load_integer(key_file, "Interface", "window_width", 800);
         config->window_height = config_load_integer(key_file, "Interface", "window_height", 600);
 
         // Columns
-        config->show_listview_icons =
-            config_load_boolean(key_file, "Interface", "show_listview_icons", true);
-        config->show_path_column =
-            config_load_boolean(key_file, "Interface", "show_path_column", true);
-        config->show_type_column =
-            config_load_boolean(key_file, "Interface", "show_type_column", true);
-        config->show_size_column =
-            config_load_boolean(key_file, "Interface", "show_size_column", true);
-        config->show_modified_column =
-            config_load_boolean(key_file, "Interface", "show_modified_column", true);
+        config->show_listview_icons = config_load_boolean(key_file, "Interface", "show_listview_icons", true);
+        config->show_path_column = config_load_boolean(key_file, "Interface", "show_path_column", true);
+        config->show_type_column = config_load_boolean(key_file, "Interface", "show_type_column", true);
+        config->show_size_column = config_load_boolean(key_file, "Interface", "show_size_column", true);
+        config->show_modified_column = config_load_boolean(key_file, "Interface", "show_modified_column", true);
 
         // Column Sort
         config->sort_ascending = config_load_boolean(key_file, "Interface", "sort_ascending", true);
         config->sort_by = config_load_string(key_file, "Interface", "sort_by", "Name");
 
         // Column Size
-        config->name_column_width =
-            config_load_integer(key_file, "Interface", "name_column_width", 250);
-        config->path_column_width =
-            config_load_integer(key_file, "Interface", "path_column_width", 250);
-        config->type_column_width =
-            config_load_integer(key_file, "Interface", "type_column_width", 100);
-        config->size_column_width =
-            config_load_integer(key_file, "Interface", "size_column_width", 75);
-        config->modified_column_width =
-            config_load_integer(key_file, "Interface", "modified_column_width", 75);
+        config->name_column_width = config_load_integer(key_file, "Interface", "name_column_width", 250);
+        config->path_column_width = config_load_integer(key_file, "Interface", "path_column_width", 250);
+        config->type_column_width = config_load_integer(key_file, "Interface", "type_column_width", 100);
+        config->size_column_width = config_load_integer(key_file, "Interface", "size_column_width", 75);
+        config->modified_column_width = config_load_integer(key_file, "Interface", "modified_column_width", 75);
 
         // Column position
         config->name_column_pos = config_load_integer(key_file, "Interface", "name_column_pos", 0);
         config->path_column_pos = config_load_integer(key_file, "Interface", "path_column_pos", 1);
         config->type_column_pos = config_load_integer(key_file, "Interface", "type_column_pos", 2);
         config->size_column_pos = config_load_integer(key_file, "Interface", "size_column_pos", 3);
-        config->modified_column_pos =
-            config_load_integer(key_file, "Interface", "modified_column_pos", 4);
+        config->modified_column_pos = config_load_integer(key_file, "Interface", "modified_column_pos", 4);
 
         // Search
-        config->search_as_you_type =
-            config_load_boolean(key_file, "Search", "search_as_you_type", true);
+        config->search_as_you_type = config_load_boolean(key_file, "Search", "search_as_you_type", true);
         config->auto_match_case = config_load_boolean(key_file, "Search", "auto_match_case", true);
-        config->auto_search_in_path =
-            config_load_boolean(key_file, "Search", "auto_search_in_path", true);
+        config->auto_search_in_path = config_load_boolean(key_file, "Search", "auto_search_in_path", true);
         config->match_case = config_load_boolean(key_file, "Search", "match_case", false);
         config->enable_regex = config_load_boolean(key_file, "Search", "enable_regex", false);
         config->search_in_path = config_load_boolean(key_file, "Search", "search_in_path", false);
@@ -282,8 +248,7 @@ config_load(FsearchConfig *config) {
             config_load_boolean(key_file, "Database", "update_database_on_launch", true);
         config->exclude_hidden_items =
             config_load_boolean(key_file, "Database", "exclude_hidden_files_and_folders", false);
-        config->follow_symlinks =
-            config_load_boolean(key_file, "Database", "follow_symbolic_links", false);
+        config->follow_symlinks = config_load_boolean(key_file, "Database", "follow_symbolic_links", false);
 
         char *exclude_files_str = config_load_string(key_file, "Database", "exclude_files", NULL);
         if (exclude_files_str) {
@@ -451,51 +416,39 @@ config_save(FsearchConfig *config) {
     trace("[config] saving...\n");
     // Interface
     g_key_file_set_boolean(key_file, "Interface", "single_click_open", config->single_click_open);
-    g_key_file_set_boolean(
-        key_file, "Interface", "highlight_search_terms", config->highlight_search_terms);
-    g_key_file_set_boolean(
-        key_file, "Interface", "restore_column_configuration", config->restore_column_config);
+    g_key_file_set_boolean(key_file, "Interface", "highlight_search_terms", config->highlight_search_terms);
+    g_key_file_set_boolean(key_file, "Interface", "restore_column_configuration", config->restore_column_config);
     g_key_file_set_boolean(key_file, "Interface", "restore_sort_order", config->restore_sort_order);
     g_key_file_set_boolean(key_file, "Interface", "double_click_path", config->double_click_path);
-    g_key_file_set_boolean(
-        key_file, "Interface", "enable_list_tooltips", config->enable_list_tooltips);
+    g_key_file_set_boolean(key_file, "Interface", "enable_list_tooltips", config->enable_list_tooltips);
     g_key_file_set_boolean(key_file, "Interface", "enable_dark_theme", config->enable_dark_theme);
     g_key_file_set_boolean(key_file, "Interface", "show_menubar", config->show_menubar);
     g_key_file_set_boolean(key_file, "Interface", "show_statusbar", config->show_statusbar);
     g_key_file_set_boolean(key_file, "Interface", "show_filter", config->show_filter);
     g_key_file_set_boolean(key_file, "Interface", "show_search_button", config->show_search_button);
     g_key_file_set_boolean(key_file, "Interface", "show_base_2_units", config->show_base_2_units);
-    g_key_file_set_integer(
-        key_file, "Interface", "action_after_file_open", config->action_after_file_open);
+    g_key_file_set_integer(key_file, "Interface", "action_after_file_open", config->action_after_file_open);
     g_key_file_set_boolean(key_file,
                            "Interface",
                            "action_after_file_open_keyboard",
                            config->action_after_file_open_keyboard);
-    g_key_file_set_boolean(key_file,
-                           "Interface",
-                           "action_after_file_open_mouse",
-                           config->action_after_file_open_mouse);
-    g_key_file_set_boolean(
-        key_file, "Interface", "show_indexing_status", config->show_indexing_status);
+    g_key_file_set_boolean(key_file, "Interface", "action_after_file_open_mouse", config->action_after_file_open_mouse);
+    g_key_file_set_boolean(key_file, "Interface", "show_indexing_status", config->show_indexing_status);
 
     // Warning Dialogs
-    g_key_file_set_boolean(
-        key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);
+    g_key_file_set_boolean(key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);
 
     // Window
-    g_key_file_set_boolean(
-        key_file, "Interface", "restore_window_size", config->restore_window_size);
+    g_key_file_set_boolean(key_file, "Interface", "restore_window_size", config->restore_window_size);
     g_key_file_set_integer(key_file, "Interface", "window_width", config->window_width);
     g_key_file_set_integer(key_file, "Interface", "window_height", config->window_height);
 
     // Columns visibility
-    g_key_file_set_boolean(
-        key_file, "Interface", "show_listview_icons", config->show_listview_icons);
+    g_key_file_set_boolean(key_file, "Interface", "show_listview_icons", config->show_listview_icons);
     g_key_file_set_boolean(key_file, "Interface", "show_path_column", config->show_path_column);
     g_key_file_set_boolean(key_file, "Interface", "show_type_column", config->show_type_column);
     g_key_file_set_boolean(key_file, "Interface", "show_size_column", config->show_size_column);
-    g_key_file_set_boolean(
-        key_file, "Interface", "show_modified_column", config->show_modified_column);
+    g_key_file_set_boolean(key_file, "Interface", "show_modified_column", config->show_modified_column);
 
     g_key_file_set_boolean(key_file, "Interface", "sort_ascending", config->sort_ascending);
     if (config->sort_by) {
@@ -507,16 +460,14 @@ config_save(FsearchConfig *config) {
     g_key_file_set_integer(key_file, "Interface", "path_column_width", config->path_column_width);
     g_key_file_set_integer(key_file, "Interface", "type_column_width", config->type_column_width);
     g_key_file_set_integer(key_file, "Interface", "size_column_width", config->size_column_width);
-    g_key_file_set_integer(
-        key_file, "Interface", "modified_column_width", config->modified_column_width);
+    g_key_file_set_integer(key_file, "Interface", "modified_column_width", config->modified_column_width);
 
     // Column position
     g_key_file_set_integer(key_file, "Interface", "name_column_pos", config->name_column_pos);
     g_key_file_set_integer(key_file, "Interface", "path_column_pos", config->path_column_pos);
     g_key_file_set_integer(key_file, "Interface", "type_column_pos", config->type_column_pos);
     g_key_file_set_integer(key_file, "Interface", "size_column_pos", config->size_column_pos);
-    g_key_file_set_integer(
-        key_file, "Interface", "modified_column_pos", config->modified_column_pos);
+    g_key_file_set_integer(key_file, "Interface", "modified_column_pos", config->modified_column_pos);
 
     // Applications
     if (config->folder_open_cmd) {
@@ -530,16 +481,13 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Search", "search_in_path", config->search_in_path);
     g_key_file_set_boolean(key_file, "Search", "enable_regex", config->enable_regex);
     g_key_file_set_boolean(key_file, "Search", "match_case", config->match_case);
-    g_key_file_set_boolean(
-        key_file, "Search", "hide_results_on_empty_search", config->hide_results_on_empty_search);
+    g_key_file_set_boolean(key_file, "Search", "hide_results_on_empty_search", config->hide_results_on_empty_search);
     g_key_file_set_boolean(key_file, "Search", "limit_results", config->limit_results);
     g_key_file_set_integer(key_file, "Search", "num_results", config->num_results);
 
     // Database
-    g_key_file_set_boolean(
-        key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
-    g_key_file_set_boolean(
-        key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
+    g_key_file_set_boolean(key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
+    g_key_file_set_boolean(key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
     g_key_file_set_boolean(key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
 
     config_save_include_locations(key_file, config->locations, "location");
@@ -586,8 +534,7 @@ config_copy(FsearchConfig *config) {
         copy->sort_by = g_strdup(config->sort_by);
     }
     if (config->locations) {
-        copy->locations =
-            g_list_copy_deep(config->locations, (GCopyFunc)fsearch_include_path_copy, NULL);
+        copy->locations = g_list_copy_deep(config->locations, (GCopyFunc)fsearch_include_path_copy, NULL);
     }
     if (config->exclude_locations) {
         copy->exclude_locations =

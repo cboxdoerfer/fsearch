@@ -62,8 +62,7 @@ static gboolean
 on_listview_header_clicked(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     if (gdk_event_triggers_context_menu(event)) {
         GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
-        GMenuModel *menu_model =
-            G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
+        GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
         GtkWidget *list = gtk_tree_view_column_get_tree_view(GTK_TREE_VIEW_COLUMN(user_data));
         GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
         gtk_menu_attach_to_widget(GTK_MENU(menu_widget), list, NULL);
@@ -99,11 +98,8 @@ listview_column_set_size(GtkTreeViewColumn *col, int32_t size) {
 }
 
 static void
-listview_path_cell_data_func(GtkTreeViewColumn *col,
-                             GtkCellRenderer *cell,
-                             GtkTreeModel *tree_model,
-                             GtkTreeIter *iter,
-                             gpointer data) {
+listview_path_cell_data_func(
+    GtkTreeViewColumn *col, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)data;
     FsearchQueryHighlight *q = fsearch_application_window_get_query_highlight(win);
     if (!q) {
@@ -135,11 +131,8 @@ listview_path_cell_data_func(GtkTreeViewColumn *col,
 }
 
 static void
-listview_name_cell_data_func(GtkTreeViewColumn *col,
-                             GtkCellRenderer *cell,
-                             GtkTreeModel *tree_model,
-                             GtkTreeIter *iter,
-                             gpointer data) {
+listview_name_cell_data_func(
+    GtkTreeViewColumn *col, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)data;
     FsearchQueryHighlight *q = fsearch_application_window_get_query_highlight(win);
     if (!q) {
@@ -162,10 +155,7 @@ listview_name_cell_data_func(GtkTreeViewColumn *col,
 }
 
 static void
-listview_add_name_column(GtkTreeView *list,
-                         int32_t size,
-                         int32_t pos,
-                         FsearchApplicationWindow *win) {
+listview_add_name_column(GtkTreeView *list, int32_t size, int32_t pos, FsearchApplicationWindow *win) {
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
     GtkCellRenderer *renderer = NULL;
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -188,18 +178,18 @@ listview_add_name_column(GtkTreeView *list,
     listview_column_add_label(col, _("Name"));
 
     if (config->highlight_search_terms) {
-        gtk_tree_view_column_set_cell_data_func(
-            col, renderer, (GtkTreeCellDataFunc)listview_name_cell_data_func, win, NULL);
+        gtk_tree_view_column_set_cell_data_func(col,
+                                                renderer,
+                                                (GtkTreeCellDataFunc)listview_name_cell_data_func,
+                                                win,
+                                                NULL);
     }
 
     g_signal_connect(col, "notify::width", G_CALLBACK(on_listview_column_width_changed), NULL);
 }
 
 static void
-listview_add_path_column(GtkTreeView *list,
-                         int32_t size,
-                         int32_t pos,
-                         FsearchApplicationWindow *win) {
+listview_add_path_column(GtkTreeView *list, int32_t size, int32_t pos, FsearchApplicationWindow *win) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
     g_object_set(G_OBJECT(renderer), "ellipsize", PANGO_ELLIPSIZE_END, NULL);
     g_object_set(G_OBJECT(renderer), "foreground", "grey", NULL);
@@ -214,8 +204,11 @@ listview_add_path_column(GtkTreeView *list,
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (config->highlight_search_terms) {
-        gtk_tree_view_column_set_cell_data_func(
-            col, renderer, (GtkTreeCellDataFunc)listview_path_cell_data_func, win, NULL);
+        gtk_tree_view_column_set_cell_data_func(col,
+                                                renderer,
+                                                (GtkTreeCellDataFunc)listview_path_cell_data_func,
+                                                win,
+                                                NULL);
     }
 
     g_signal_connect(col, "notify::width", G_CALLBACK(on_listview_column_width_changed), NULL);
@@ -275,11 +268,7 @@ listview_add_type_column(GtkTreeView *list, int32_t size, int32_t pos) {
 }
 
 void
-listview_add_column(GtkTreeView *list,
-                    uint32_t col_type,
-                    int32_t size,
-                    int32_t pos,
-                    FsearchApplicationWindow *win) {
+listview_add_column(GtkTreeView *list, uint32_t col_type, int32_t size, int32_t pos, FsearchApplicationWindow *win) {
     switch (col_type) {
     case LIST_MODEL_COL_ICON:
     case LIST_MODEL_COL_NAME:

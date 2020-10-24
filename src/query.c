@@ -41,16 +41,14 @@ fsearch_query_new(const char *text,
         q->text = strdup(text);
     }
 
-    q->token =
-        fsearch_tokens_new(text, flags.match_case, flags.enable_regex, flags.auto_match_case);
+    q->token = fsearch_tokens_new(text, flags.match_case, flags.enable_regex, flags.auto_match_case);
     q->num_token = 0;
     for (uint32_t i = 0; q->token[i] != NULL; i++) {
         q->num_token++;
     }
 
     if (filter && filter->query) {
-        q->filter_token =
-            fsearch_tokens_new(filter->query, filter->match_case, filter->enable_regex, false);
+        q->filter_token = fsearch_tokens_new(filter->query, filter->match_case, filter->enable_regex, false);
         q->num_filter_token = 0;
         for (uint32_t i = 0; q->filter_token[i] != NULL; i++) {
             q->num_filter_token++;
@@ -85,9 +83,7 @@ fsearch_query_free(FsearchQuery *query) {
 }
 
 static bool
-fsearch_query_highlight_match_glob(FsearchQueryHighlightToken *token,
-                                   const char *text,
-                                   bool match_case) {
+fsearch_query_highlight_match_glob(FsearchQueryHighlightToken *token, const char *text, bool match_case) {
     if (!token->end_with_asterisk && !token->start_with_asterisk) {
         return false;
     }
@@ -122,8 +118,7 @@ fsearch_query_highlight_match(FsearchQueryHighlight *q, const char *input) {
         }
         l = l->next;
 
-        if (token->is_supported_glob &&
-            fsearch_query_highlight_match_glob(token, input, q->flags.match_case)) {
+        if (token->is_supported_glob && fsearch_query_highlight_match_glob(token, input, q->flags.match_case)) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
             pa->start_index = token->hl_start;
             pa->end_index = token->hl_end;
@@ -236,8 +231,7 @@ fsearch_query_highlight_new(const char *text, FsearchQueryFlags flags) {
             if (!flags.match_case && flags.auto_match_case) {
                 query_match_case = has_uppercase ? true : false;
             }
-            token->regex =
-                g_regex_new(query_escaped, !query_match_case ? G_REGEX_CASELESS : 0, 0, NULL);
+            token->regex = g_regex_new(query_escaped, !query_match_case ? G_REGEX_CASELESS : 0, 0, NULL);
             g_free(query_escaped);
             query_escaped = NULL;
 

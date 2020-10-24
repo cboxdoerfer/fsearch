@@ -30,8 +30,7 @@
 #define LIST_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_CAST((klass), LIST_MODEL_TYPE, ListModelClass))
 #define IS_LIST_MODEL(obj) (G_TYPE_CHECK_INSTANCE_TYPE((obj), LIST_MODEL_TYPE))
 #define IS_LIST_MODEL_CLASS(klass) (G_TYPE_CHECK_CLASS_TYPE((klass), LIST_MODEL_TYPE))
-#define LIST_MODEL_GET_CLASS(obj)                                                                  \
-    (G_TYPE_INSTANCE_GET_CLASS((obj), LIST_MODEL_TYPE, ListModelClass))
+#define LIST_MODEL_GET_CLASS(obj) (G_TYPE_INSTANCE_GET_CLASS((obj), LIST_MODEL_TYPE, ListModelClass))
 
 /* The data columns that we export via the tree model interface */
 

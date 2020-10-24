@@ -135,10 +135,7 @@ search_thread_context_free(search_thread_context_t *ctx) {
 }
 
 static search_thread_context_t *
-search_thread_context_new(FsearchQuery *query,
-                          bool *terminate,
-                          uint32_t start_pos,
-                          uint32_t end_pos) {
+search_thread_context_new(FsearchQuery *query, bool *terminate, uint32_t start_pos, uint32_t end_pos) {
     search_thread_context_t *ctx = calloc(1, sizeof(search_thread_context_t));
     assert(ctx != NULL);
     assert(end_pos >= start_pos);
@@ -232,8 +229,7 @@ db_search_worker(void *user_data) {
             haystack_path = full_path;
         }
 
-        if (!filter_node(
-                node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
+        if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
             continue;
         }
 
@@ -308,8 +304,7 @@ db_search_empty(FsearchQuery *query) {
             btree_node_get_path_full(node, full_path, sizeof(full_path));
             haystack_path = full_path;
         }
-        if (!filter_node(
-                node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
+        if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
             continue;
         }
         if (node->is_dir) {
@@ -333,8 +328,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     if (num_entries == 0) {
         return db_search_result_new(NULL, 0, 0);
     }
-    const uint32_t num_threads =
-        MIN(fsearch_thread_pool_get_num_threads(search->pool), num_entries);
+    const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(search->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     search_thread_context_t *thread_data[num_threads];
@@ -352,11 +346,10 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     GTimer *timer = fsearch_timer_start();
     GList *threads = fsearch_thread_pool_get_threads(search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-        thread_data[i] =
-            search_thread_context_new(q,
-                                      &search->search_terminate,
-                                      start_pos,
-                                      i == num_threads - 1 ? num_entries - 1 : end_pos);
+        thread_data[i] = search_thread_context_new(q,
+                                                   &search->search_terminate,
+                                                   start_pos,
+                                                   i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;

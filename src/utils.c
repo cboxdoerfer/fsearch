@@ -138,8 +138,7 @@ open_with_cmd(BTreeNode *node, const char *cmd) {
     if (!g_spawn_command_line_async(cmd_res, &error)) {
 
         fprintf(stderr, "open: error: %s\n", error->message);
-        ui_utils_run_gtk_dialog(
-            NULL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "Error while opening file:", error->message);
+        ui_utils_run_gtk_dialog(NULL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "Error while opening file:", error->message);
         g_error_free(error);
         result = false;
     }
@@ -169,8 +168,7 @@ open_uri(const char *uri) {
     if (!g_spawn_async(NULL, (gchar **)argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error)) {
 
         fprintf(stderr, "xdg-open: error: %s\n", error->message);
-        ui_utils_run_gtk_dialog(
-            NULL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "Error while opening file:", error->message);
+        ui_utils_run_gtk_dialog(NULL, GTK_MESSAGE_ERROR, GTK_BUTTONS_OK, "Error while opening file:", error->message);
         g_error_free(error);
 
         return false;

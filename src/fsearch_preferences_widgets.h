@@ -11,10 +11,7 @@ GList *
 pref_exclude_treeview_data_get(GtkTreeView *view);
 
 void
-pref_treeview_row_remove(GtkTreeModel *model,
-                         GtkTreePath *path,
-                         GtkTreeIter *iter,
-                         gpointer userdata);
+pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer userdata);
 
 void
 pref_include_treeview_row_add(FsearchPreferences *pref, const char *path);

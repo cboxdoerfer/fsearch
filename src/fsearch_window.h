@@ -28,11 +28,7 @@ G_BEGIN_DECLS
 
 #define FSEARCH_APPLICATION_WINDOW_TYPE (fsearch_application_window_get_type())
 
-G_DECLARE_FINAL_TYPE(FsearchApplicationWindow,
-                     fsearch_application_window,
-                     FSEARCH_WINDOW,
-                     WINDOW,
-                     GtkApplicationWindow)
+G_DECLARE_FINAL_TYPE(FsearchApplicationWindow, fsearch_application_window, FSEARCH_WINDOW, WINDOW, GtkApplicationWindow)
 
 FsearchApplicationWindow *
 fsearch_application_window_new(FsearchApplication *app);

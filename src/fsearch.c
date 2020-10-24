@@ -116,8 +116,7 @@ update_db_cb(gpointer user_data) {
     for (; windows; windows = windows->next) {
         GtkWindow *window = windows->data;
         if (FSEARCH_WINDOW_IS_WINDOW(window)) {
-            fsearch_application_window_update_database_label((FsearchApplicationWindow *)window,
-                                                             text);
+            fsearch_application_window_update_database_label((FsearchApplicationWindow *)window, text);
         }
     }
 
@@ -324,9 +323,7 @@ update_database_thread(bool rescan) {
     g_mutex_unlock(&app->mutex);
     db_lock(db);
     if (rescan) {
-        db_scan(db,
-                &app->db_thread_cancel,
-                app->config->show_indexing_status ? build_location_callback : NULL);
+        db_scan(db, &app->db_thread_cancel, app->config->show_indexing_status ? build_location_callback : NULL);
         if (!app->db_thread_cancel) {
             db_save_locations(db);
         }
@@ -497,8 +494,7 @@ new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
 
 static void
 fsearch_action_enable(const char *action_name) {
-    GAction *action =
-        g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
+    GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
 
     if (action) {
         trace("[application] enable action: %s\n", action_name);
@@ -508,8 +504,7 @@ fsearch_action_enable(const char *action_name) {
 
 static void
 fsearch_action_disable(const char *action_name) {
-    GAction *action =
-        g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
+    GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
 
     if (action) {
         trace("[application] disable action: %s\n", action_name);
@@ -527,13 +522,12 @@ fsearch_application_state_unlock(FsearchApplication *fsearch) {
     g_mutex_unlock(&fsearch->mutex);
 }
 
-static GActionEntry app_entries[] = {
-    {"new_window", new_window_activated, NULL, NULL, NULL},
-    {"about", about_activated, NULL, NULL, NULL},
-    {"update_database", update_database_activated, NULL, NULL, NULL},
-    {"cancel_update_database", cancel_update_database_activated, NULL, NULL, NULL},
-    {"preferences", preferences_activated, NULL, NULL, NULL},
-    {"quit", quit_activated, NULL, NULL, NULL}};
+static GActionEntry app_entries[] = {{"new_window", new_window_activated, NULL, NULL, NULL},
+                                     {"about", about_activated, NULL, NULL, NULL},
+                                     {"update_database", update_database_activated, NULL, NULL, NULL},
+                                     {"cancel_update_database", cancel_update_database_activated, NULL, NULL, NULL},
+                                     {"preferences", preferences_activated, NULL, NULL, NULL},
+                                     {"quit", quit_activated, NULL, NULL, NULL}};
 
 static void
 fsearch_application_startup(GApplication *app) {
@@ -548,8 +542,7 @@ fsearch_application_startup(GApplication *app) {
 
     if (fsearch->config->show_menubar) {
         GtkBuilder *menu_builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
-        GMenuModel *menu_model =
-            G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
+        GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
         g_object_unref(menu_builder);
     }
@@ -570,11 +563,9 @@ fsearch_application_startup(GApplication *app) {
     static const gchar *search_mode[] = {"<control>r", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.search_mode", search_mode);
     static const gchar *search_in_path[] = {"<control>u", NULL};
-    gtk_application_set_accels_for_action(
-        GTK_APPLICATION(app), "win.search_in_path", search_in_path);
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.search_in_path", search_in_path);
     static const gchar *update_database[] = {"<control><shift>r", NULL};
-    gtk_application_set_accels_for_action(
-        GTK_APPLICATION(app), "app.update_database", update_database);
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.update_database", update_database);
     static const gchar *preferences[] = {"<control>p", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.preferences", preferences);
     static const gchar *quit[] = {"<control>q", NULL};
@@ -593,8 +584,8 @@ fsearch_application_activate(GApplication *app) {
         window = windows->data;
 
         if (FSEARCH_WINDOW_IS_WINDOW(window)) {
-            GtkWidget *entry = GTK_WIDGET(
-                fsearch_application_window_get_search_entry((FsearchApplicationWindow *)window));
+            GtkWidget *entry =
+                GTK_WIDGET(fsearch_application_window_get_search_entry((FsearchApplicationWindow *)window));
             if (entry) {
                 gtk_widget_grab_focus(entry);
             }

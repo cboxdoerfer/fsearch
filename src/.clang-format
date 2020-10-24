@@ -2,10 +2,11 @@ BasedOnStyle: LLVM
 
 Language: Cpp
 IndentWidth: 4
-ColumnLimit: 100
+ColumnLimit: 120
 AlwaysBreakAfterReturnType: All
-AllowAllArgumentsOnNextLine: true
-AllowAllParametersOfDeclarationOnNextLine: true
+AlignAfterOpenBracket: Align
+AllowAllArgumentsOnNextLine: false
+AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: false
 BinPackArguments: false
 BinPackParameters: false

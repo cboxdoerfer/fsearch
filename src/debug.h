@@ -21,7 +21,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <stdio.h>
 
 #ifdef DEBUG
-#define trace(...)                                                                                 \
+#define trace(...)                                                                                                     \
     { printf(__VA_ARGS__); }
 #else
 #define trace(fmt, ...)

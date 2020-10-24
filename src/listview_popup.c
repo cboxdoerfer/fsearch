@@ -50,8 +50,7 @@ fill_open_with_menu(GtkTreeView *view, GtkBuilder *builder, GtkTreeIter *iter) {
 
     app_list = g_app_info_get_all_for_type(content_type);
 
-    GMenu *menu_mime =
-        G_MENU(gtk_builder_get_object(builder, "fsearch_listview_menu_open_with_mime_section"));
+    GMenu *menu_mime = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_menu_open_with_mime_section"));
 
     for (GList *list_iter = app_list; list_iter; list_iter = list_iter->next) {
         GAppInfo *app_info = list_iter->data;

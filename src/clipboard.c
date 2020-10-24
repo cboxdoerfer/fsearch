@@ -41,10 +41,7 @@ clipboard_clean_data(GtkClipboard *clipboard, gpointer user_data) {
 }
 
 static void
-clipboard_get_data(GtkClipboard *clipboard,
-                   GtkSelectionData *selection_data,
-                   guint info,
-                   gpointer user_data) {
+clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, gpointer user_data) {
     if (!clipboard_file_list) {
         return;
     }
@@ -111,8 +108,7 @@ out:
 void
 clipboard_copy_file_list(GList *file_list, guint32 copy) {
     GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-    gtk_clipboard_set_with_data(
-        clip, targets, G_N_ELEMENTS(targets), clipboard_get_data, clipboard_clean_data, NULL);
+    gtk_clipboard_set_with_data(clip, targets, G_N_ELEMENTS(targets), clipboard_get_data, clipboard_clean_data, NULL);
 
     clipboard_file_list = file_list;
     clipboard_action = copy ? GDK_ACTION_COPY : GDK_ACTION_MOVE;

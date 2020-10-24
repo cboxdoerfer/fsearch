@@ -24,8 +24,7 @@
 #include <stdint.h>
 
 void
-listview_add_column(
-    GtkTreeView *view, uint32_t col_type, int32_t size, int32_t pos, FsearchApplicationWindow *win);
+listview_add_column(GtkTreeView *view, uint32_t col_type, int32_t size, int32_t pos, FsearchApplicationWindow *win);
 
 void
 listview_add_default_columns(GtkTreeView *view, FsearchApplicationWindow *win);

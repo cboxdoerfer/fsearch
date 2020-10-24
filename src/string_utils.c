@@ -62,8 +62,7 @@ fs_str_is_utf8(const char *str) {
     down = NULL;
     up = NULL;
 
-    if (str_len != up_len || str_len != down_len || up_str_len != up_len ||
-        down_str_len != down_len) {
+    if (str_len != up_len || str_len != down_len || up_str_len != up_len || down_str_len != down_len) {
         return true;
     }
     return false;
