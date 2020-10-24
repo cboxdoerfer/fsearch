@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-17 16:42+0200\n"
+"POT-Creation-Date: 2020-10-23 13:56+0200\n"
 "PO-Revision-Date: 2020-10-22 20:26+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
@@ -49,7 +49,7 @@ msgstr "Новое окно"
 msgid "Update database"
 msgstr "Обновить базу данных"
 
-#: src/fsearch.glade:103 src/fsearch.glade:712
+#: src/fsearch.glade:103 src/fsearch.glade:617
 msgid "Cancel database update"
 msgstr "Отменить обновление базы данных"
 
@@ -89,64 +89,52 @@ msgstr "О программе"
 msgid "Quit"
 msgstr "Выйти"
 
-#: src/fsearch.glade:345
-msgid "Search…"
-msgstr "Поиск…"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
-msgstr "Выбрать фильтр"
-
-#: src/fsearch.glade:398 src/preferences.ui:625
-msgid "Search"
-msgstr "Поиск"
-
-#: src/fsearch.glade:511
+#: src/fsearch.glade:416
 msgid "Number of Search Results"
 msgstr "Количество результатов поиска"
 
-#: src/fsearch.glade:512
+#: src/fsearch.glade:417
 msgid "0 Items"
 msgstr "0 элементов"
 
-#: src/fsearch.glade:549
+#: src/fsearch.glade:454
 msgid "Index:"
 msgstr "Индексирование:"
 
-#: src/fsearch.glade:617
+#: src/fsearch.glade:522
 msgid "Number of selected folders"
 msgstr "Количество выбранных папок"
 
-#: src/fsearch.glade:618 src/fsearch.glade:643
+#: src/fsearch.glade:523 src/fsearch.glade:548
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:642
+#: src/fsearch.glade:547
 msgid "Number of selected files"
 msgstr "Количество выбранных файлов"
 
-#: src/fsearch.glade:696 src/fsearch_window.c:963 src/overlay.ui:213
+#: src/fsearch.glade:601 src/fsearch_window.c:975 src/overlay.ui:213
 #, c-format
 msgid "Updating Database…"
 msgstr "Обновление базы данных…"
 
-#: src/fsearch.glade:729
+#: src/fsearch.glade:634
 msgid "page0"
 msgstr "страница0"
 
-#: src/fsearch.glade:753
+#: src/fsearch.glade:658
 msgid "Number of database items"
 msgstr "Количество элементов базы данных"
 
-#: src/fsearch.glade:754
+#: src/fsearch.glade:659
 msgid "(empty)"
 msgstr "(пусто)"
 
-#: src/fsearch.glade:765
+#: src/fsearch.glade:670
 msgid "page1"
 msgstr "страница1"
 
-#: src/fsearch.glade:784
+#: src/fsearch.glade:689
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -154,11 +142,11 @@ msgstr ""
 "Поисковый запрос содержит символы верхнего регистра.\n"
 "<b>Учёт регистра</b> был временно активирован для этого запроса."
 
-#: src/fsearch.glade:815 src/fsearch.glade:868
+#: src/fsearch.glade:720 src/fsearch.glade:773
 msgid "CASE"
 msgstr "РЕГИСТР"
 
-#: src/fsearch.glade:891
+#: src/fsearch.glade:796
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -166,13 +154,25 @@ msgstr ""
 "Поисковый запрос содержит разделители путей.\n"
 "<b>Поиск в пути к файлу/папке</b> был временно активирован для этого запроса."
 
-#: src/fsearch.glade:922 src/fsearch.glade:975
+#: src/fsearch.glade:827 src/fsearch.glade:880
 msgid "PATH"
 msgstr "ПУТЬ"
 
-#: src/fsearch.glade:1028
+#: src/fsearch.glade:933
 msgid "REGEX"
 msgstr "РЕГ ВЫР"
+
+#: src/fsearch.glade:1053
+msgid "Search…"
+msgstr "Поиск…"
+
+#: src/fsearch.glade:1075
+msgid "Select a Filter"
+msgstr "Выбрать фильтр"
+
+#: src/fsearch.glade:1106 src/preferences.ui:638
+msgid "Search"
+msgstr "Поиск"
 
 #: src/fsearch_filter.c:80
 msgid "All"
@@ -219,37 +219,37 @@ msgstr "Путь"
 msgid "Update"
 msgstr "Обновлять"
 
-#: src/fsearch_window.c:121 src/fsearch_window.c:474 src/fsearch_window.c:921
+#: src/fsearch_window.c:122 src/fsearch_window.c:472 src/fsearch_window.c:933
 #, c-format
 msgid "%'d Items"
 msgstr "%'d элемент(а/ов)"
 
-#: src/fsearch_window.c:407 src/fsearch_window.c:564
+#: src/fsearch_window.c:405 src/fsearch_window.c:562
 msgid "Querying…"
 msgstr "Идёт запрос…"
 
-#: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:742 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "Невозможно открыть файл"
 
-#: src/fsearch_window.c:745 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:743 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Хотите оставить окно открытым?"
 
-#: src/fsearch_window.c:927
+#: src/fsearch_window.c:939
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Последнее обновление: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:940 src/overlay.ui:143
+#: src/fsearch_window.c:952 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Загрузка базы данных…"
 
-#: src/fsearch_window.c:1125
+#: src/fsearch_window.c:1145
 msgid "Background tasks are active."
 msgstr "Выполняются фоновые задачи."
 
-#: src/fsearch_window.c:1128
+#: src/fsearch_window.c:1148
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -413,11 +413,11 @@ msgstr "Результатов не найдено."
 msgid "Try a different search"
 msgstr "Попробуйте другой запрос"
 
-#: src/preferences.ui:81
+#: src/preferences.ui:84
 msgid "Enable dark theme"
 msgstr "Включить тёмную тему"
 
-#: src/preferences.ui:128
+#: src/preferences.ui:131
 msgid ""
 "<b>Enable dark theme</b> might not have an effect.\n"
 "Some platforms don't support dark theming and others always use dark themes "
@@ -427,163 +427,163 @@ msgstr ""
 "Некоторые платформы не поддерживают тёмную тему, а другие всегда используют "
 "тёмные темы по умолчанию."
 
-#: src/preferences.ui:163
+#: src/preferences.ui:166
 msgid "Enable client-side decorations (requires restart)"
 msgstr "Включить декорирование окна со стороны клиента (требуется перезапуск)"
 
-#: src/preferences.ui:177
+#: src/preferences.ui:180
 msgid "Use binary units instead of decimal units"
 msgstr "Использовать двоичные единицы вместо десятичных"
 
-#: src/preferences.ui:209
+#: src/preferences.ui:216
 msgid "with keyboard shortcuts or menu entries"
 msgstr "с помощью горячих клавиш или пунктов меню"
 
-#: src/preferences.ui:224
+#: src/preferences.ui:231
 msgid "with double click"
 msgstr "с помощью двойного щелчка мышью"
 
-#: src/preferences.ui:252
+#: src/preferences.ui:259
 msgid "Behaviour after successfully opening a file:"
 msgstr "Поведение после успешного открытия файла:"
 
-#: src/preferences.ui:268
+#: src/preferences.ui:275
+msgid "Nothing"
+msgstr ""
+
+#: src/preferences.ui:276
 msgid "Minimize"
 msgstr "Свернуть"
 
-#: src/preferences.ui:269
+#: src/preferences.ui:277
 msgid "Close"
 msgstr "Закрыть"
 
-#: src/preferences.ui:289
+#: src/preferences.ui:297
 msgid "Remember window size"
 msgstr "Запоминать размер окна"
 
-#: src/preferences.ui:309
+#: src/preferences.ui:317
 msgid "General:"
 msgstr "Основное:"
 
-#: src/preferences.ui:341
+#: src/preferences.ui:351
 msgid "Show highlighted search terms"
 msgstr "Выделять найденный текст в списке"
 
-#: src/preferences.ui:356
+#: src/preferences.ui:366
 msgid "Show tooltips"
 msgstr "Показывать подсказки"
 
-#: src/preferences.ui:370
+#: src/preferences.ui:380
 msgid "Show icons in name column"
 msgstr "Показывать иконки в колонке «имя»"
 
-#: src/preferences.ui:384
+#: src/preferences.ui:394
 msgid "Remember column configuration"
 msgstr "Запоминать конфигурацию колонок"
 
-#: src/preferences.ui:398
+#: src/preferences.ui:408
 msgid "Remember sort order"
 msgstr "Запоминать порядок сортировки"
 
-#: src/preferences.ui:412
+#: src/preferences.ui:422
 msgid "Open path with double click in path column"
 msgstr "Открыть путь щёлкнув дважды по колонке пути"
 
-#: src/preferences.ui:426
+#: src/preferences.ui:436
 msgid "Single click to open"
 msgstr "Открывать одним щелчком мыши"
 
-#: src/preferences.ui:446
+#: src/preferences.ui:456
 msgid "Results:"
 msgstr "Результаты:"
 
-#: src/preferences.ui:478
+#: src/preferences.ui:490
 msgid "Show database indexing status"
 msgstr "Показывать состояние индексирования базы данных"
 
-#: src/preferences.ui:498
+#: src/preferences.ui:510
 msgid "Statusbar:"
 msgstr "Строка состояния:"
 
-#: src/preferences.ui:516
+#: src/preferences.ui:528
 msgid "Interface"
 msgstr "Интерфейс"
 
-#: src/preferences.ui:534
+#: src/preferences.ui:547
 msgid "Limit number of results:"
 msgstr "Ограничить количество результатов:"
 
-#: src/preferences.ui:562
+#: src/preferences.ui:575
 msgid "Search in path when query contains path separators"
 msgstr "Искать в пути к файлу/папке, когда запрос содержит разделители ('/')"
 
-#: src/preferences.ui:576
+#: src/preferences.ui:589
 msgid "Search as you type"
 msgstr "Искать по мере набора"
 
-#: src/preferences.ui:590
+#: src/preferences.ui:603
 msgid "Hide results when search is empty"
 msgstr "Спрятать результаты, когда поиск пустой"
 
-#: src/preferences.ui:604
+#: src/preferences.ui:617
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Учитывать регистр, когда запрос содержит хотя бы один символ верхнего "
 "регистра"
 
-#: src/preferences.ui:644
+#: src/preferences.ui:657
 msgid "Update database on start"
 msgstr "Обновлять базу данных при старте"
 
-#: src/preferences.ui:679 src/preferences.ui:784
+#: src/preferences.ui:693 src/preferences.ui:786
 msgid "Add…"
 msgstr "Добавить…"
 
-#: src/preferences.ui:695 src/preferences.ui:800
+#: src/preferences.ui:709 src/preferences.ui:802
 msgid "Remove"
 msgstr "Удалить"
 
-#: src/preferences.ui:743
-msgid "Follow symbolic links"
-msgstr "Следовать по символьным ссылкам"
-
-#: src/preferences.ui:760
+#: src/preferences.ui:761
 msgid "Include"
 msgstr "Включать"
 
-#: src/preferences.ui:848
+#: src/preferences.ui:850
 msgid "Exclude hidden files and folders"
 msgstr "Исключать скрытые файлы и папки"
 
-#: src/preferences.ui:869 src/preferences.ui:882
+#: src/preferences.ui:871 src/preferences.ui:884
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Можно использовать шаблоны. Несколько записей должны быть разделены знаком "
 "';'"
 
-#: src/preferences.ui:870
+#: src/preferences.ui:872
 msgid "Exclude files:"
 msgstr "Исключать файлы:"
 
-#: src/preferences.ui:883
+#: src/preferences.ui:885
 msgid "e.g. \".git;*.tmp\""
 msgstr "например, «.git;*.tmp»"
 
-#: src/preferences.ui:907
+#: src/preferences.ui:909
 msgid "Exclude"
 msgstr "Исключать"
 
-#: src/preferences.ui:930
+#: src/preferences.ui:932
 msgid "Database"
 msgstr "База данных"
 
-#: src/preferences.ui:953
+#: src/preferences.ui:956
 msgid "Show warning dialogs when:"
 msgstr "Открыть окно с предупреждением если:"
 
-#: src/preferences.ui:962
+#: src/preferences.ui:965
 msgid "file / folder failed to open"
 msgstr "файл / папку невозможно открыть"
 
-#: src/preferences.ui:983
+#: src/preferences.ui:986
 msgid "Dialogs"
 msgstr "Окна"
 
@@ -591,7 +591,7 @@ msgstr "Окна"
 msgid "Select folder"
 msgstr "Выберите папку"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:156
 msgid "_Cancel"
 msgstr "_Отмена"
 
@@ -599,7 +599,7 @@ msgstr "_Отмена"
 msgid "_Select"
 msgstr "_Выбрать"
 
-#: src/preferences_ui.c:146
+#: src/preferences_ui.c:157
 msgid "_OK"
 msgstr "_Принять"
 
@@ -622,6 +622,9 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+
+#~ msgid "Follow symbolic links"
+#~ msgstr "Следовать по символьным ссылкам"
 
 #~ msgid ""
 #~ "INFO: \"Enable dark theme\" might not have an effect,\n"

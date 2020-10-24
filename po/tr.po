@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-17 16:42+0200\n"
+"POT-Creation-Date: 2020-10-23 13:56+0200\n"
 "PO-Revision-Date: 2020-10-20 16:26+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -48,7 +48,7 @@ msgstr "Yeni pencere"
 msgid "Update database"
 msgstr "Veri tabanını güncelle"
 
-#: src/fsearch.glade:103 src/fsearch.glade:712
+#: src/fsearch.glade:103 src/fsearch.glade:617
 msgid "Cancel database update"
 msgstr "Veri tabanı güncellemesini iptal et"
 
@@ -88,64 +88,52 @@ msgstr "Hakkında"
 msgid "Quit"
 msgstr "Çık"
 
-#: src/fsearch.glade:345
-msgid "Search…"
-msgstr "Ara…"
-
-#: src/fsearch.glade:367
-msgid "Select a Filter"
-msgstr "Bir Filtre Seç"
-
-#: src/fsearch.glade:398 src/preferences.ui:625
-msgid "Search"
-msgstr "Ara"
-
-#: src/fsearch.glade:511
+#: src/fsearch.glade:416
 msgid "Number of Search Results"
 msgstr "Arama Sonucunun Sayısı"
 
-#: src/fsearch.glade:512
+#: src/fsearch.glade:417
 msgid "0 Items"
 msgstr "0 Öğe"
 
-#: src/fsearch.glade:549
+#: src/fsearch.glade:454
 msgid "Index:"
 msgstr "İndeks:"
 
-#: src/fsearch.glade:617
+#: src/fsearch.glade:522
 msgid "Number of selected folders"
 msgstr "Seçili klasör sayısı"
 
-#: src/fsearch.glade:618 src/fsearch.glade:643
+#: src/fsearch.glade:523 src/fsearch.glade:548
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:642
+#: src/fsearch.glade:547
 msgid "Number of selected files"
 msgstr "Seçili dosya sayısı"
 
-#: src/fsearch.glade:696 src/fsearch_window.c:963 src/overlay.ui:213
+#: src/fsearch.glade:601 src/fsearch_window.c:975 src/overlay.ui:213
 #, c-format
 msgid "Updating Database…"
 msgstr "Veri Tabanı Güncelleniyor…"
 
-#: src/fsearch.glade:729
+#: src/fsearch.glade:634
 msgid "page0"
 msgstr "sayfa0"
 
-#: src/fsearch.glade:753
+#: src/fsearch.glade:658
 msgid "Number of database items"
 msgstr "Veri tabanı ögelerinin sayısı"
 
-#: src/fsearch.glade:754
+#: src/fsearch.glade:659
 msgid "(empty)"
 msgstr "(boş)"
 
-#: src/fsearch.glade:765
+#: src/fsearch.glade:670
 msgid "page1"
 msgstr "sayfa1"
 
-#: src/fsearch.glade:784
+#: src/fsearch.glade:689
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -154,11 +142,11 @@ msgstr ""
 "<b>Büyük/Küçük Harfe Duyarlı</b> seçeneği bu terim için geçici olarak "
 "etkinleştirildi."
 
-#: src/fsearch.glade:815 src/fsearch.glade:868
+#: src/fsearch.glade:720 src/fsearch.glade:773
 msgid "CASE"
 msgstr "DURUM"
 
-#: src/fsearch.glade:891
+#: src/fsearch.glade:796
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -167,13 +155,25 @@ msgstr ""
 "<b>Dosya Yolunda Ara</b> seçeneği bu terim için geçici olarak "
 "etkinleştirildi."
 
-#: src/fsearch.glade:922 src/fsearch.glade:975
+#: src/fsearch.glade:827 src/fsearch.glade:880
 msgid "PATH"
 msgstr "YOL"
 
-#: src/fsearch.glade:1028
+#: src/fsearch.glade:933
 msgid "REGEX"
 msgstr "REGEX"
+
+#: src/fsearch.glade:1053
+msgid "Search…"
+msgstr "Ara…"
+
+#: src/fsearch.glade:1075
+msgid "Select a Filter"
+msgstr "Bir Filtre Seç"
+
+#: src/fsearch.glade:1106 src/preferences.ui:638
+msgid "Search"
+msgstr "Ara"
 
 #: src/fsearch_filter.c:80
 msgid "All"
@@ -220,37 +220,37 @@ msgstr "Yol"
 msgid "Update"
 msgstr "Güncelle"
 
-#: src/fsearch_window.c:121 src/fsearch_window.c:474 src/fsearch_window.c:921
+#: src/fsearch_window.c:122 src/fsearch_window.c:472 src/fsearch_window.c:933
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Öğe"
 
-#: src/fsearch_window.c:407 src/fsearch_window.c:564
+#: src/fsearch_window.c:405 src/fsearch_window.c:562
 msgid "Querying…"
 msgstr "Sorgulanıyor…"
 
-#: src/fsearch_window.c:744 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:742 src/fsearch_window_actions.c:411
 msgid "Failed to open file"
 msgstr "Dosya açılamadı"
 
-#: src/fsearch_window.c:745 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:743 src/fsearch_window_actions.c:412
 msgid "Do you want to keep the window open?"
 msgstr "Pencereyi açık tutmak istiyor musunuz?"
 
-#: src/fsearch_window.c:927
+#: src/fsearch_window.c:939
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Son Güncelleme Tarihi: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:940 src/overlay.ui:143
+#: src/fsearch_window.c:952 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Veri Tabanı Yükleniyor…"
 
-#: src/fsearch_window.c:1125
+#: src/fsearch_window.c:1145
 msgid "Background tasks are active."
 msgstr "Arka plan görevleri etkin."
 
-#: src/fsearch_window.c:1128
+#: src/fsearch_window.c:1148
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -414,11 +414,11 @@ msgstr "Hiç bir sonuç bulunamadı"
 msgid "Try a different search"
 msgstr "Farklı bir arama deneyiniz"
 
-#: src/preferences.ui:81
+#: src/preferences.ui:84
 msgid "Enable dark theme"
 msgstr "Karanlık temayı etkinleştir"
 
-#: src/preferences.ui:128
+#: src/preferences.ui:131
 msgid ""
 "<b>Enable dark theme</b> might not have an effect.\n"
 "Some platforms don't support dark theming and others always use dark themes "
@@ -428,161 +428,161 @@ msgstr ""
 "Bazı platformlar karanlık temayı desteklemez ve diğerleri her zaman "
 "öntanımlı olarak karanlık temalar kullanır."
 
-#: src/preferences.ui:163
+#: src/preferences.ui:166
 msgid "Enable client-side decorations (requires restart)"
 msgstr "İstemci tarafı süslemelerini etkinleştir (yeniden başlatma gerektirir)"
 
-#: src/preferences.ui:177
+#: src/preferences.ui:180
 msgid "Use binary units instead of decimal units"
 msgstr "Ondalık birimler yerine ikili birimleri kullanın"
 
-#: src/preferences.ui:209
+#: src/preferences.ui:216
 msgid "with keyboard shortcuts or menu entries"
 msgstr "klavye kısayolları veya menü girdileri ile"
 
-#: src/preferences.ui:224
+#: src/preferences.ui:231
 msgid "with double click"
 msgstr "çift tıklama ile"
 
-#: src/preferences.ui:252
+#: src/preferences.ui:259
 msgid "Behaviour after successfully opening a file:"
 msgstr "Bir dosyayı başarıyla açtıktan sonraki davranış:"
 
-#: src/preferences.ui:268
+#: src/preferences.ui:275
+msgid "Nothing"
+msgstr ""
+
+#: src/preferences.ui:276
 msgid "Minimize"
 msgstr "Küçült"
 
-#: src/preferences.ui:269
+#: src/preferences.ui:277
 msgid "Close"
 msgstr "Kapat"
 
-#: src/preferences.ui:289
+#: src/preferences.ui:297
 msgid "Remember window size"
 msgstr "Ekran Boyutunu Hatırla"
 
-#: src/preferences.ui:309
+#: src/preferences.ui:317
 msgid "General:"
 msgstr "Genel:"
 
-#: src/preferences.ui:341
+#: src/preferences.ui:351
 msgid "Show highlighted search terms"
 msgstr "Vurgulanan arama terimlerini göster"
 
-#: src/preferences.ui:356
+#: src/preferences.ui:366
 msgid "Show tooltips"
 msgstr "İpuçlarını Göster"
 
-#: src/preferences.ui:370
+#: src/preferences.ui:380
 msgid "Show icons in name column"
 msgstr "İsim Kolonunda İkonları Göster"
 
-#: src/preferences.ui:384
+#: src/preferences.ui:394
 msgid "Remember column configuration"
 msgstr "Kolon Yapısını Hatırla"
 
-#: src/preferences.ui:398
+#: src/preferences.ui:408
 msgid "Remember sort order"
 msgstr "Sıralama düzenini hatırla"
 
-#: src/preferences.ui:412
+#: src/preferences.ui:422
 msgid "Open path with double click in path column"
 msgstr "Yol sütununda çift tıklama ile yolu aç"
 
-#: src/preferences.ui:426
+#: src/preferences.ui:436
 msgid "Single click to open"
 msgstr "Açmak için tek tıklama"
 
-#: src/preferences.ui:446
+#: src/preferences.ui:456
 msgid "Results:"
 msgstr "Sonuçlar:"
 
-#: src/preferences.ui:478
+#: src/preferences.ui:490
 msgid "Show database indexing status"
 msgstr "Veri tabanı indeksleme durumunu göster"
 
-#: src/preferences.ui:498
+#: src/preferences.ui:510
 msgid "Statusbar:"
 msgstr "Durum çubuğu:"
 
-#: src/preferences.ui:516
+#: src/preferences.ui:528
 msgid "Interface"
 msgstr "Arayüz"
 
-#: src/preferences.ui:534
+#: src/preferences.ui:547
 msgid "Limit number of results:"
 msgstr "Sonuç sayısının sınırı:"
 
-#: src/preferences.ui:562
+#: src/preferences.ui:575
 msgid "Search in path when query contains path separators"
 msgstr "Sorgu, yol ayırıcıları içerdiği zaman dosya yollarında arama yap"
 
-#: src/preferences.ui:576
+#: src/preferences.ui:589
 msgid "Search as you type"
 msgstr "Yazarken ara"
 
-#: src/preferences.ui:590
+#: src/preferences.ui:603
 msgid "Hide results when search is empty"
 msgstr "Eğer sonuç boşsa sonuçları gizle"
 
-#: src/preferences.ui:604
+#: src/preferences.ui:617
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Sorgu en az bir büyük harf karakteri içerdiğinde küçük/büyük harf durumunu "
 "eşleştir"
 
-#: src/preferences.ui:644
+#: src/preferences.ui:657
 msgid "Update database on start"
 msgstr "Başlangıçta veri tabanını güncelle"
 
-#: src/preferences.ui:679 src/preferences.ui:784
+#: src/preferences.ui:693 src/preferences.ui:786
 msgid "Add…"
 msgstr "Ekle…"
 
-#: src/preferences.ui:695 src/preferences.ui:800
+#: src/preferences.ui:709 src/preferences.ui:802
 msgid "Remove"
 msgstr "Sil"
 
-#: src/preferences.ui:743
-msgid "Follow symbolic links"
-msgstr "Sembolik Linkleri Takip Et"
-
-#: src/preferences.ui:760
+#: src/preferences.ui:761
 msgid "Include"
 msgstr "Aktar"
 
-#: src/preferences.ui:848
+#: src/preferences.ui:850
 msgid "Exclude hidden files and folders"
 msgstr "Gizli dosya ve klasörleri hariç tut"
 
-#: src/preferences.ui:869 src/preferences.ui:882
+#: src/preferences.ui:871 src/preferences.ui:884
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Joker karakterleri destekler. Çoklu girdiler ';' ile ayrılmalıdır"
 
-#: src/preferences.ui:870
+#: src/preferences.ui:872
 msgid "Exclude files:"
 msgstr "Hariç tutulan dosyalar:"
 
-#: src/preferences.ui:883
+#: src/preferences.ui:885
 msgid "e.g. \".git;*.tmp\""
 msgstr "örn: \".git,*.tmp\""
 
-#: src/preferences.ui:907
+#: src/preferences.ui:909
 msgid "Exclude"
 msgstr "Hariç Tut"
 
-#: src/preferences.ui:930
+#: src/preferences.ui:932
 msgid "Database"
 msgstr "Veri tabanı"
 
-#: src/preferences.ui:953
+#: src/preferences.ui:956
 msgid "Show warning dialogs when:"
 msgstr "Şu durumlarda uyarı iletişim kutularını göster:"
 
-#: src/preferences.ui:962
+#: src/preferences.ui:965
 msgid "file / folder failed to open"
 msgstr "dosya / klasör açılamadı"
 
-#: src/preferences.ui:983
+#: src/preferences.ui:986
 msgid "Dialogs"
 msgstr "İletişim kutuları"
 
@@ -590,7 +590,7 @@ msgstr "İletişim kutuları"
 msgid "Select folder"
 msgstr "Klasör seç"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:145
+#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:156
 msgid "_Cancel"
 msgstr "_İptal"
 
@@ -598,7 +598,7 @@ msgstr "_İptal"
 msgid "_Select"
 msgstr "_Seç"
 
-#: src/preferences_ui.c:146
+#: src/preferences_ui.c:157
 msgid "_OK"
 msgstr "_Tamam"
 
@@ -620,6 +620,9 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "arama;fsearch;dosyalar;klasörler;müzik;video;belgeler;bul;araç;her şey;"
+
+#~ msgid "Follow symbolic links"
+#~ msgstr "Sembolik Linkleri Takip Et"
 
 #~ msgid ""
 #~ "INFO: \"Enable dark theme\" might not have an effect,\n"
