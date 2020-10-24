@@ -66,8 +66,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *no_search_results_overlay;
     GtkWidget *num_files_label;
     GtkWidget *num_folders_label;
-    GtkWidget *revealer;
-    GtkWidget *scrolledwindow1;
+    GtkWidget *statusbar_selection_revealer;
+    GtkWidget *listview_scrolled_window;
     GtkWidget *popover_update_db;
     GtkWidget *popover_cancel_update_db;
     GtkWidget *search_box;
@@ -226,7 +226,7 @@ fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
         g_object_unref(G_OBJECT(win->search_box));
     }
     else {
-        GtkStyleContext *list_style = gtk_widget_get_style_context(win->scrolledwindow1);
+        GtkStyleContext *list_style = gtk_widget_get_style_context(win->listview_scrolled_window);
         gtk_style_context_add_class(list_style, "results_frame_csd_mode");
     }
     // ensure search entry still has focus after reordering the search_box
@@ -237,7 +237,7 @@ void
 fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
-    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->scrolledwindow1);
+    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->listview_scrolled_window);
     if (!config->show_statusbar) {
         gtk_style_context_add_class(filter_style, "results_frame_last");
     }
@@ -762,7 +762,7 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
         num_files = db_search_get_num_files(self->search);
     }
     if (!num_folders && !num_files) {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(self->revealer), FALSE);
+        gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
         return;
     }
 
@@ -770,10 +770,10 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
     gtk_tree_selection_selected_foreach(sel, (GtkTreeSelectionForeachFunc)count_results_cb, &ctx);
 
     if (!ctx.num_folders && !ctx.num_files) {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(self->revealer), FALSE);
+        gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
     }
     else {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(self->revealer), TRUE);
+        gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), TRUE);
         char text[100] = "";
         snprintf(text, sizeof(text), "%d/%d", ctx.num_folders, num_folders);
         gtk_label_set_text(GTK_LABEL(self->num_folders_label), text);
@@ -1210,8 +1210,10 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_label1);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_icon);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, scrolledwindow1);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, statusbar_selection_revealer);
+    gtk_widget_class_bind_template_child(
+        widget_class, FsearchApplicationWindow, listview_scrolled_window);
     gtk_widget_class_bind_template_child(
         widget_class, FsearchApplicationWindow, popover_cancel_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_db);
