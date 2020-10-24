@@ -31,20 +31,6 @@
 enum { COLUMN_NAME, NUM_COLUMNS };
 
 static void
-infobar_response(GtkInfoBar *info_bar, gint response_id, gpointer user_data) {
-    if (response_id == GTK_RESPONSE_CLOSE) {
-        gtk_widget_hide(GTK_WIDGET(info_bar));
-        return;
-    }
-}
-
-static void
-toggle_infobar_visibility(GtkToggleButton *togglebutton, gpointer user_data) {
-    GtkWidget *infobar = GTK_WIDGET(user_data);
-    gtk_widget_show(infobar);
-}
-
-static void
 limit_num_results_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
     GtkWidget *spin = GTK_WIDGET(user_data);
     gtk_widget_set_sensitive(spin, gtk_toggle_button_get_active(togglebutton));
@@ -159,15 +145,6 @@ preferences_ui_launch(FsearchConfig *config,
     // Interface page
     GtkToggleButton *enable_dark_theme_button =
         toggle_button_get(builder, "enable_dark_theme_button", pref.config->enable_dark_theme);
-
-    GtkInfoBar *enable_dark_theme_infobar =
-        GTK_INFO_BAR(builder_get_object(builder, "enable_dark_theme_infobar"));
-    g_signal_connect(enable_dark_theme_infobar, "response", G_CALLBACK(infobar_response), NULL);
-
-    g_signal_connect(enable_dark_theme_button,
-                     "toggled",
-                     G_CALLBACK(toggle_infobar_visibility),
-                     enable_dark_theme_infobar);
 
     GtkToggleButton *show_menubar_button =
         toggle_button_get(builder, "show_menubar_button", !pref.config->show_menubar);
