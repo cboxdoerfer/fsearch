@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-23 13:56+0200\n"
-"PO-Revision-Date: 2020-10-20 16:26+0000\n"
+"PO-Revision-Date: 2020-10-26 10:26+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
@@ -450,7 +450,7 @@ msgstr "Zachowanie po udanym otwarciu pliku:"
 
 #: src/preferences.ui:275
 msgid "Nothing"
-msgstr ""
+msgstr "Nie rób nic"
 
 #: src/preferences.ui:276
 msgid "Minimize"
