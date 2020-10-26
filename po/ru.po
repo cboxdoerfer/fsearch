@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-25 18:11+0100\n"
-"PO-Revision-Date: 2020-10-22 20:26+0000\n"
+"PO-Revision-Date: 2020-10-27 15:26+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1009
 msgid "Sorting..."
@@ -405,9 +405,8 @@ msgid "This may take a while."
 msgstr "Это может занять некоторое время."
 
 #: src/overlay.ui:283
-#, fuzzy
 msgid "No Results Found"
-msgstr "Результатов не найдено."
+msgstr "Результатов не найдено"
 
 #: src/overlay.ui:298
 msgid "Try a different search"
@@ -453,7 +452,7 @@ msgstr "Поведение после успешного открытия фай
 
 #: src/preferences.ui:244
 msgid "Nothing"
-msgstr ""
+msgstr "Ничего не делать"
 
 #: src/preferences.ui:245
 msgid "Minimize"
@@ -516,10 +515,8 @@ msgid "file / folder failed to open"
 msgstr "файл / папку невозможно открыть"
 
 #: src/preferences.ui:546
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Окна"
+msgstr "Окна:"
 
 #: src/preferences.ui:571
 msgid "Interface"
@@ -553,11 +550,11 @@ msgstr "Обновлять базу данных при старте"
 
 #: src/preferences.ui:775
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Добавить путь в базу"
 
 #: src/preferences.ui:792 src/preferences.ui:912
 msgid "Remove selected path"
-msgstr ""
+msgstr "Убрать выбранный путь"
 
 #: src/preferences.ui:824
 msgid "Include"
@@ -565,7 +562,7 @@ msgstr "Включать"
 
 #: src/preferences.ui:895
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Добавить путь для исключения из базы"
 
 #: src/preferences.ui:951 src/preferences.ui:964
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
