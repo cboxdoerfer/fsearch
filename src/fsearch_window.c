@@ -1070,8 +1070,12 @@ on_search_entry_activate(GtkButton *widget, gpointer user_data) {
 }
 
 static gboolean
-on_listview_query_tooltip(
-    GtkWidget *widget, gint x, gint y, gboolean keyboard_mode, GtkTooltip *tooltip, gpointer user_data) {
+on_listview_query_tooltip(GtkWidget *widget,
+                          gint x,
+                          gint y,
+                          gboolean keyboard_mode,
+                          GtkTooltip *tooltip,
+                          gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     if (!config->enable_list_tooltips) {
@@ -1138,62 +1142,62 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     object_class->constructed = fsearch_application_window_constructed;
     object_class->finalize = fsearch_application_window_finalize;
     gtk_widget_class_set_template_from_resource(widget_class, "/org/fsearch/fsearch/fsearch.glade");
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_overlay);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, app_menu);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_case_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_path_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_in_path_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, match_case_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_mode_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_combobox);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_selection);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, num_folders_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, num_files_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_spinner);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_icon);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_stack);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_box1);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_box2);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_icon);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_label1);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_icon);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_spinner);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, database_stack);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_combobox);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_selection);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, match_case_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, num_files_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, num_folders_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_cancel_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_db);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_icon);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_in_path_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_mode_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_overlay);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_case_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_path_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_status_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_revealer);
 
+    gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_listview_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_listview_key_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_listview_popup_menu);
-    gtk_widget_class_bind_template_callback(widget_class, on_listview_selection_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_listview_query_tooltip);
     gtk_widget_class_bind_template_callback(widget_class, on_listview_row_activated);
+    gtk_widget_class_bind_template_callback(widget_class, on_listview_selection_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_match_case_label_button_press_event);
+    gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
+    gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
+    gtk_widget_class_bind_template_callback(widget_class, on_search_filter_label_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_in_path_label_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_mode_label_button_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_search_filter_label_button_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
-    gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
-    gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_listview_query_tooltip);
 }
 
 GtkEntry *
