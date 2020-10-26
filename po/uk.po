@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-25 18:11+0100\n"
-"PO-Revision-Date: 2020-10-22 20:26+0000\n"
+"PO-Revision-Date: 2020-10-27 15:26+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1009
 msgid "Sorting..."
@@ -451,7 +451,7 @@ msgstr "Поведінка після успішного відкриття фа
 
 #: src/preferences.ui:244
 msgid "Nothing"
-msgstr ""
+msgstr "Нічого не робити"
 
 #: src/preferences.ui:245
 msgid "Minimize"
@@ -514,10 +514,8 @@ msgid "file / folder failed to open"
 msgstr "не вдалося відкрити файл / теку"
 
 #: src/preferences.ui:546
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Діалогові вікна"
+msgstr "Вікна:"
 
 #: src/preferences.ui:571
 msgid "Interface"
@@ -551,11 +549,11 @@ msgstr "Оновлювати базу даних під час запуску"
 
 #: src/preferences.ui:775
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Додати шлях для включення в базу"
 
 #: src/preferences.ui:792 src/preferences.ui:912
 msgid "Remove selected path"
-msgstr ""
+msgstr "Вилучити вибраний шлях"
 
 #: src/preferences.ui:824
 msgid "Include"
@@ -563,7 +561,7 @@ msgstr "Включати"
 
 #: src/preferences.ui:895
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Додати шлях, який потрібно виключити з бази"
 
 #: src/preferences.ui:951 src/preferences.ui:964
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
