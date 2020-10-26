@@ -398,7 +398,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="can-focus">False</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkImage" id="search_icon">
+                      <object class="GtkImage" id="statusbar_search_icon">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="icon-name">edit-find-symbolic</property>
@@ -410,7 +410,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkLabel" id="search_label">
+                      <object class="GtkLabel" id="statusbar_search_label">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Number of Search Results</property>
@@ -438,7 +438,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="can-focus">False</property>
                     <property name="spacing">6</property>
                     <child>
-                      <object class="GtkSeparator" id="selection_separator1">
+                      <object class="GtkSeparator" id="statusbar_scan_seperator">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
@@ -488,12 +488,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="transition-type">crossfade</property>
                     <property name="reveal-child">True</property>
                     <child>
-                      <object class="GtkBox" id="box3">
+                      <object class="GtkBox" id="statusbar_selection_box">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkSeparator" id="selection_separator">
+                          <object class="GtkSeparator" id="statusbar_selection_separator">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                           </object>
@@ -504,7 +504,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkImage" id="image2">
+                          <object class="GtkImage" id="statusbar_selection_folder_image">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="icon-name">folder-symbolic</property>
@@ -516,7 +516,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="num_folders_label">
+                          <object class="GtkLabel" id="statusbar_selection_num_folders_label">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="tooltip-text" translatable="yes">Number of selected folders</property>
@@ -529,7 +529,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkImage" id="image4">
+                          <object class="GtkImage" id="statusbar_selection_file_image">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="icon-name">text-x-generic-symbolic</property>
@@ -541,7 +541,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkLabel" id="num_files_label">
+                          <object class="GtkLabel" id="statusbar_selection_num_files_label">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="tooltip-text" translatable="yes">Number of selected files</property>
@@ -563,9 +563,126 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkSeparator" id="database_separator">
+                  <object class="GtkBox" id="statusbar_database_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkSeparator" id="statusbar_database_separator">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkStack" id="statusbar_database_stack">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="transition-type">crossfade</property>
+                        <child>
+                          <object class="GtkBox" id="statusbar_database_updating_box">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkSpinner" id="statusbar_database_updating_spinner">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="statusbar_database_updating_label">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="label" translatable="yes">Updating Database…</property>
+                                <property name="ellipsize">end</property>
+                                <property name="max-width-chars">30</property>
+                                <property name="track-visited-links">False</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="statusbar_database_updating_cancel_button">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="tooltip-text" translatable="yes">Cancel database update</property>
+                                <property name="action-name">app.cancel_update_database</property>
+                                <property name="image">image9</property>
+                                <property name="relief">none</property>
+                                <style>
+                                  <class name="fsearch-statusbar-cancel-update-button"/>
+                                </style>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">2</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">page0</property>
+                            <property name="title" translatable="yes">page0</property>
+                          </packing>
+                        </child>
+                        <child>
+                          <object class="GtkBox" id="statusbar_database_status_box">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="spacing">6</property>
+                            <child>
+                              <object class="GtkImage" id="statusbar_database_status_image">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="icon-name">system-file-manager-symbolic</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkLabel" id="statusbar_database_status_label">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="tooltip-text" translatable="yes">Number of database items</property>
+                                <property name="label" translatable="yes">(empty)</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="name">page1</property>
+                            <property name="title" translatable="yes">page1</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -574,112 +691,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkStack" id="database_stack">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="transition-type">crossfade</property>
-                    <child>
-                      <object class="GtkBox" id="database_box1">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkSpinner" id="database_spinner">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="database_label1">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="label" translatable="yes">Updating Database…</property>
-                            <property name="ellipsize">end</property>
-                            <property name="max-width-chars">30</property>
-                            <property name="track-visited-links">False</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkButton">
-                            <property name="visible">True</property>
-                            <property name="can-focus">True</property>
-                            <property name="receives-default">True</property>
-                            <property name="tooltip-text" translatable="yes">Cancel database update</property>
-                            <property name="action-name">app.cancel_update_database</property>
-                            <property name="image">image9</property>
-                            <property name="relief">none</property>
-                            <style>
-                              <class name="fsearch-statusbar-cancel-update-button"/>
-                            </style>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">2</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="name">page0</property>
-                        <property name="title" translatable="yes">page0</property>
-                      </packing>
-                    </child>
-                    <child>
-                      <object class="GtkBox" id="database_box2">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="spacing">6</property>
-                        <child>
-                          <object class="GtkImage" id="database_icon">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="icon-name">system-file-manager-symbolic</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                        <child>
-                          <object class="GtkLabel" id="database_label">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="tooltip-text" translatable="yes">Number of database items</property>
-                            <property name="label" translatable="yes">(empty)</property>
-                          </object>
-                          <packing>
-                            <property name="expand">False</property>
-                            <property name="fill">True</property>
-                            <property name="position">1</property>
-                          </packing>
-                        </child>
-                      </object>
-                      <packing>
-                        <property name="name">page1</property>
-                        <property name="title" translatable="yes">page1</property>
-                        <property name="position">1</property>
-                      </packing>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkBox" id="search_status_box">
+                  <object class="GtkBox" id="statusbar_search_flags_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
@@ -1005,7 +1017,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <packing>
                     <property name="expand">False</property>
                     <property name="fill">True</property>
-                    <property name="position">8</property>
+                    <property name="position">7</property>
                   </packing>
                 </child>
                 <style>
