@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-23 13:56+0200\n"
+"POT-Creation-Date: 2020-10-25 18:11+0100\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: akash rao <akash.rao.ind@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/fsearch/"
@@ -19,25 +19,25 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: src/database.c:1024
+#: src/database.c:1009
 msgid "Sorting..."
 msgstr ""
 
-#: src/fsearch.c:184
+#: src/fsearch.c:183
 msgid "Show version information"
 msgstr "వర్షన్ సమాచారము చూపించుము"
 
-#: src/fsearch.c:191
+#: src/fsearch.c:190
 msgid "Update the database"
 msgstr "డేటాబేస్ ని ఆధునికీకరణ చేయుము"
 
-#: src/fsearch.c:390
+#: src/fsearch.c:387
 msgid "translator-credits"
 msgstr ""
 "మీ సేవలు కొనియాడుటకు ఈ వాక్యం కలదు. అనువాదకులలో ఒకరిగా మీరు గుర్తింపు పొందదలచిన యెడల, మీ పేరుని "
 "అనువాదిత వాక్యములో చేర్చండి. వేరువేరు పేర్ల నడుమ కొత్త లైను సంజ్ఞ ఉండవలెను."
 
-#: src/fsearch.c:392
+#: src/fsearch.c:389
 msgid "A search utility focusing on performance and advanced features"
 msgstr "పనిచేయు తత్వము మరియు ఆధునిక ఫీచర్ లు గల అన్వేషణా పనిముట్టు"
 
@@ -79,7 +79,7 @@ msgstr "వడపోతని చూపుము"
 msgid "Show Search Button"
 msgstr "వెతుకు బటన్ ని చూపుము"
 
-#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:17
+#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:37
 msgid "Preferences"
 msgstr "ఇష్టాలు"
 
@@ -119,7 +119,7 @@ msgstr "0/0"
 msgid "Number of selected files"
 msgstr "వెతుకులాట ఫలితాల సంఖ్య"
 
-#: src/fsearch.glade:601 src/fsearch_window.c:975 src/overlay.ui:213
+#: src/fsearch.glade:601 src/fsearch_window.c:960 src/overlay.ui:213
 #, c-format
 msgid "Updating Database…"
 msgstr "డేటాబేస్ ని అప్డేట్ చేస్తున్నాము…"
@@ -172,86 +172,86 @@ msgstr "వెతుకు…"
 msgid "Select a Filter"
 msgstr "వడపోతని ఎంచుకొనుము"
 
-#: src/fsearch.glade:1106 src/preferences.ui:638
+#: src/fsearch.glade:1106 src/preferences.ui:681
 msgid "Search"
 msgstr "వెతుకులాట"
 
-#: src/fsearch_filter.c:80
+#: src/fsearch_filter.c:79
 msgid "All"
 msgstr "అన్నీ"
 
-#: src/fsearch_filter.c:83
+#: src/fsearch_filter.c:81
 msgid "Folders"
 msgstr "ఫోల్డరులు"
 
-#: src/fsearch_filter.c:85
+#: src/fsearch_filter.c:82
 msgid "Files"
 msgstr "ఫైల్ లు"
 
-#: src/fsearch_filter.c:88
+#: src/fsearch_filter.c:84
 msgid "Archives"
 msgstr ""
 
-#: src/fsearch_filter.c:91
+#: src/fsearch_filter.c:86
 msgid "Audio"
 msgstr ""
 
-#: src/fsearch_filter.c:95
+#: src/fsearch_filter.c:89
 msgid "Documents"
 msgstr ""
 
-#: src/fsearch_filter.c:98
+#: src/fsearch_filter.c:91
 msgid "Pictures"
 msgstr ""
 
-#: src/fsearch_filter.c:101
+#: src/fsearch_filter.c:93
 msgid "Videos"
 msgstr ""
 
-#: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
+#: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
 msgid "Active"
 msgstr "పనిచేస్తోంది"
 
-#: src/fsearch_preferences_widgets.c:207 src/fsearch_preferences_widgets.c:250
-#: src/listview.c:213 src/menus.ui:205
+#: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
+#: src/listview.c:203 src/menus.ui:205
 msgid "Path"
 msgstr "పథము"
 
-#: src/fsearch_preferences_widgets.c:210
+#: src/fsearch_preferences_widgets.c:200
 msgid "Update"
 msgstr "అప్డేట్"
 
-#: src/fsearch_window.c:122 src/fsearch_window.c:472 src/fsearch_window.c:933
+#: src/fsearch_window.c:122 src/fsearch_window.c:468 src/fsearch_window.c:918
 #, c-format
 msgid "%'d Items"
 msgstr "%'d విషయములు"
 
-#: src/fsearch_window.c:405 src/fsearch_window.c:562
+#: src/fsearch_window.c:401 src/fsearch_window.c:558
 msgid "Querying…"
 msgstr ""
 
-#: src/fsearch_window.c:742 src/fsearch_window_actions.c:411
+#: src/fsearch_window.c:734 src/fsearch_window_actions.c:399
 msgid "Failed to open file"
 msgstr "ఫైల్ తెరవలేకపోయాము"
 
-#: src/fsearch_window.c:743 src/fsearch_window_actions.c:412
+#: src/fsearch_window.c:735 src/fsearch_window_actions.c:400
 msgid "Do you want to keep the window open?"
 msgstr "మీరు కిటికీలని తెరిచే ఉంచదలిచారా?"
 
-#: src/fsearch_window.c:939
+#: src/fsearch_window.c:924
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "అఖరుసారి అప్డేట్ చేసినపుడు: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:952 src/overlay.ui:143
+#: src/fsearch_window.c:937 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"
 
-#: src/fsearch_window.c:1145
+#: src/fsearch_window.c:1118
 msgid "Background tasks are active."
 msgstr "వెనక జరిగే పనులు చేతనముగా ఉన్నవి."
 
-#: src/fsearch_window.c:1148
+#: src/fsearch_window.c:1120
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -259,41 +259,41 @@ msgstr ""
 "ఇప్పుడు కిటికీ మూసివేయలేము.\n"
 "కొద్దిసేపు ఆగి ప్రయత్నించుము."
 
-#: src/fsearch_window_actions.c:78
+#: src/fsearch_window_actions.c:77
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "మీరు నిజంగా %d ఫైల్ (ల) ని తెరవాలని అనుకుంటున్నారా?"
 
-#: src/fsearch_window_actions.c:80
+#: src/fsearch_window_actions.c:79
 msgid "Opening Files…"
 msgstr "ఫైల్ లని తెరుస్తున్నాము…"
 
-#: src/fsearch_window_actions.c:154
+#: src/fsearch_window_actions.c:148
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "మీరు నిజంగా %d ఫైల్ (ల) ని తీసివేయాలని అనుకుంటున్నారా?"
 
-#: src/fsearch_window_actions.c:160
+#: src/fsearch_window_actions.c:152
 msgid "Deleting files…"
 msgstr "ఫైల్ లని తీసివేస్తున్నాము…"
 
-#: src/fsearch_window_actions.c:160
+#: src/fsearch_window_actions.c:152
 msgid "Moving files to trash…"
 msgstr "ఫైల్ లని చెత్తబుట్టలో వేస్తున్నాము…"
 
-#: src/listview.c:188 src/menus.ui:201
+#: src/listview.c:178 src/menus.ui:201
 msgid "Name"
 msgstr "పేరు"
 
-#: src/listview.c:237 src/menus.ui:213
+#: src/listview.c:230 src/menus.ui:213
 msgid "Size"
 msgstr "పరిమాణము"
 
-#: src/listview.c:255 src/menus.ui:217
+#: src/listview.c:248 src/menus.ui:217
 msgid "Date Modified"
 msgstr "మార్చిన తేదీ"
 
-#: src/listview.c:272 src/menus.ui:209
+#: src/listview.c:265 src/menus.ui:209
 msgid "Type"
 msgstr "రకము"
 
@@ -419,196 +419,202 @@ msgstr "ఫలితాలు లేవు"
 msgid "Try a different search"
 msgstr "ఇంకొక వెతుకులాటని ప్రయత్నించుము"
 
-#: src/preferences.ui:84
+#: src/preferences.ui:105
 msgid "Enable dark theme"
 msgstr "చీకటి థీం ని చైతన్య పరచండి"
 
-#: src/preferences.ui:131
+#: src/preferences.ui:109
 msgid ""
 "<b>Enable dark theme</b> might not have an effect.\n"
 "Some platforms don't support dark theming and others always use dark themes "
 "by default."
 msgstr ""
 
-#: src/preferences.ui:166
+#: src/preferences.ui:121
 msgid "Enable client-side decorations (requires restart)"
 msgstr ""
 
-#: src/preferences.ui:180
+#: src/preferences.ui:135
 msgid "Use binary units instead of decimal units"
 msgstr "డెసిమల్ యూనిట్ ల బదులుగా బైనరీ యూనిట్ లని ఉపయోగించుము"
 
-#: src/preferences.ui:216
-msgid "with keyboard shortcuts or menu entries"
-msgstr "కీబోర్డు షార్టుకట్ లు లేక మెన్యూ లోని విషయము ల తో"
-
-#: src/preferences.ui:231
-msgid "with double click"
-msgstr "డబుల్ క్లిక్ తో"
-
-#: src/preferences.ui:259
-msgid "Behaviour after successfully opening a file:"
-msgstr "ఫైల్ ని విజయవంతముగా తెరిచిన పిమ్మట ప్రవర్తన:"
-
-#: src/preferences.ui:275
-msgid "Nothing"
-msgstr ""
-
-#: src/preferences.ui:276
-msgid "Minimize"
-msgstr "చిన్నదిగా చేయుము"
-
-#: src/preferences.ui:277
-msgid "Close"
-msgstr "మూయుము"
-
-#: src/preferences.ui:297
+#: src/preferences.ui:150
 msgid "Remember window size"
 msgstr "కిటికీ కొలతలని గుర్తు పెట్టుకొనుము"
 
-#: src/preferences.ui:317
+#: src/preferences.ui:185
+msgid "with keyboard shortcuts or menu entries"
+msgstr "కీబోర్డు షార్టుకట్ లు లేక మెన్యూ లోని విషయము ల తో"
+
+#: src/preferences.ui:200
+msgid "with double click"
+msgstr "డబుల్ క్లిక్ తో"
+
+#: src/preferences.ui:228
+msgid "Behaviour after successfully opening a file:"
+msgstr "ఫైల్ ని విజయవంతముగా తెరిచిన పిమ్మట ప్రవర్తన:"
+
+#: src/preferences.ui:244
+msgid "Nothing"
+msgstr ""
+
+#: src/preferences.ui:245
+msgid "Minimize"
+msgstr "చిన్నదిగా చేయుము"
+
+#: src/preferences.ui:246
+msgid "Close"
+msgstr "మూయుము"
+
+#: src/preferences.ui:272
 msgid "General:"
 msgstr ""
 
-#: src/preferences.ui:351
+#: src/preferences.ui:307
 msgid "Show highlighted search terms"
 msgstr "కాంతివంతముగా చేసిన వెతికే టర్మ్ లని చూపించుము"
 
-#: src/preferences.ui:366
+#: src/preferences.ui:322
 msgid "Show tooltips"
 msgstr "పనిముట్టు సలహాలని చూపించుము"
 
-#: src/preferences.ui:380
+#: src/preferences.ui:336
 msgid "Show icons in name column"
 msgstr "పేరు అను నిలువు వరస లో ఐకాన్ లని చూపించుము"
 
-#: src/preferences.ui:394
+#: src/preferences.ui:350
 msgid "Remember column configuration"
 msgstr "నిలువు వరస కాంఫిగరేషన్ ని గుర్తు పెట్టుకొనుము"
 
-#: src/preferences.ui:408
+#: src/preferences.ui:364
 msgid "Remember sort order"
 msgstr "వరుసలో పేర్చు క్రమమును గుర్తు పెట్టుకొనుము"
 
-#: src/preferences.ui:422
+#: src/preferences.ui:378
 msgid "Open path with double click in path column"
 msgstr "దారి యొక్క నిలువు వరస లో డబుల్ క్లిక్ చేసి దారి ని తెరువుము"
 
-#: src/preferences.ui:436
+#: src/preferences.ui:392
 msgid "Single click to open"
 msgstr "ఒక క్లిక్ చేసి తెరువుము"
 
-#: src/preferences.ui:456
+#: src/preferences.ui:412
 msgid "Results:"
 msgstr ""
 
-#: src/preferences.ui:490
+#: src/preferences.ui:453
 #, fuzzy
 #| msgid "Update database on start"
 msgid "Show database indexing status"
 msgstr "ఆరంభములో డేటాబేస్ ని ఆధునికీకరించుము"
 
-#: src/preferences.ui:510
+#: src/preferences.ui:473
 #, fuzzy
 #| msgid "Show Statusbar"
 msgid "Statusbar:"
 msgstr "స్టాటస్ బార్ ని చూపుము"
 
-#: src/preferences.ui:528
-msgid "Interface"
-msgstr "ఇంటర్ఫేస్"
-
-#: src/preferences.ui:547
-msgid "Limit number of results:"
-msgstr "ఫలితముల సంఖ్యని నియంత్రించుము:"
-
-#: src/preferences.ui:575
-msgid "Search in path when query contains path separators"
-msgstr "ప్రశ్నలో దారులను విడదీయు సూచికలు ఉన్నపుడు దారిలో వెతుకుము"
-
-#: src/preferences.ui:589
-msgid "Search as you type"
-msgstr "టైపు చేస్తూ వెతకండి"
-
-#: src/preferences.ui:603
-msgid "Hide results when search is empty"
-msgstr "వెతుకులాట ఖాళీగా ఉన్నపుడు ఫలితాలను మరుగు పరచుము"
-
-#: src/preferences.ui:617
-msgid "Match case when query contains at least one upper case character"
-msgstr "ప్రశ్నలో కనీసం ఒక్క పెద్ద అక్షరమైననూ ఉన్నయెడల మిగతా అన్నీ అందులోకి మార్చుము"
-
-#: src/preferences.ui:657
-msgid "Update database on start"
-msgstr "ఆరంభములో డేటాబేస్ ని ఆధునికీకరించుము"
-
-#: src/preferences.ui:693 src/preferences.ui:786
-msgid "Add…"
-msgstr "కలుపుము…"
-
-#: src/preferences.ui:709 src/preferences.ui:802
-msgid "Remove"
-msgstr "తీసివేయుము"
-
-#: src/preferences.ui:761
-msgid "Include"
-msgstr "చేర్చుము"
-
-#: src/preferences.ui:850
-msgid "Exclude hidden files and folders"
-msgstr "కనపడని ఫైల్ లనీ ఫోల్డర్ లనీ చేర్చకుము"
-
-#: src/preferences.ui:871 src/preferences.ui:884
-msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "వైల్డుకార్డు లని సపోర్ట్ చేస్తుంది. చాలా విషయాలని ';' తో విడదీయండి"
-
-#: src/preferences.ui:872
-msgid "Exclude files:"
-msgstr "ఈ ఫైల్ లని చేర్చకుము:"
-
-#: src/preferences.ui:885
-msgid "e.g. \".git;*.tmp\""
-msgstr "ఉదా. \".git;*.tmp\""
-
-#: src/preferences.ui:909
-msgid "Exclude"
-msgstr "చేర్చకుము"
-
-#: src/preferences.ui:932
-msgid "Database"
-msgstr "డేటాబేస్"
-
-#: src/preferences.ui:956
+#: src/preferences.ui:514
 msgid "Show warning dialogs when:"
 msgstr "ఇలాంటి చోట వార్నింగ్ సూచనలు చూపుము:"
 
-#: src/preferences.ui:965
+#: src/preferences.ui:524
 msgid "file / folder failed to open"
 msgstr "ఫైల్ / ఫోల్డరు ని తెరవలేకున్నాము"
 
-#: src/preferences.ui:986
-msgid "Dialogs"
+#: src/preferences.ui:546
+#, fuzzy
+#| msgid "Dialogs"
+msgid "Dialogs:"
 msgstr "సూచనలు"
 
-#: src/preferences_ui.c:67 src/preferences_ui.c:79
+#: src/preferences.ui:571
+msgid "Interface"
+msgstr "ఇంటర్ఫేస్"
+
+#: src/preferences.ui:590
+msgid "Limit number of results:"
+msgstr "ఫలితముల సంఖ్యని నియంత్రించుము:"
+
+#: src/preferences.ui:618
+msgid "Search in path when query contains path separators"
+msgstr "ప్రశ్నలో దారులను విడదీయు సూచికలు ఉన్నపుడు దారిలో వెతుకుము"
+
+#: src/preferences.ui:632
+msgid "Search as you type"
+msgstr "టైపు చేస్తూ వెతకండి"
+
+#: src/preferences.ui:646
+msgid "Hide results when search is empty"
+msgstr "వెతుకులాట ఖాళీగా ఉన్నపుడు ఫలితాలను మరుగు పరచుము"
+
+#: src/preferences.ui:660
+msgid "Match case when query contains at least one upper case character"
+msgstr "ప్రశ్నలో కనీసం ఒక్క పెద్ద అక్షరమైననూ ఉన్నయెడల మిగతా అన్నీ అందులోకి మార్చుము"
+
+#: src/preferences.ui:700
+msgid "Update database on start"
+msgstr "ఆరంభములో డేటాబేస్ ని ఆధునికీకరించుము"
+
+#: src/preferences.ui:775
+msgid "Add path to be included in database"
+msgstr ""
+
+#: src/preferences.ui:792 src/preferences.ui:912
+msgid "Remove selected path"
+msgstr ""
+
+#: src/preferences.ui:824
+msgid "Include"
+msgstr "చేర్చుము"
+
+#: src/preferences.ui:895
+msgid "Add path to be excluded from database"
+msgstr ""
+
+#: src/preferences.ui:951 src/preferences.ui:964
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr "వైల్డుకార్డు లని సపోర్ట్ చేస్తుంది. చాలా విషయాలని ';' తో విడదీయండి"
+
+#: src/preferences.ui:952
+msgid "Exclude files:"
+msgstr "ఈ ఫైల్ లని చేర్చకుము:"
+
+#: src/preferences.ui:965
+msgid "e.g. \".git;*.tmp\""
+msgstr "ఉదా. \".git;*.tmp\""
+
+#: src/preferences.ui:982
+msgid "Exclude hidden files and folders"
+msgstr "కనపడని ఫైల్ లనీ ఫోల్డర్ లనీ చేర్చకుము"
+
+#: src/preferences.ui:1003
+msgid "Exclude"
+msgstr "చేర్చకుము"
+
+#: src/preferences.ui:1026
+msgid "Database"
+msgstr "డేటాబేస్"
+
+#: src/preferences_ui.c:53 src/preferences_ui.c:65
 #, fuzzy
 #| msgid "Select a Filter"
 msgid "Select folder"
 msgstr "వడపోతని ఎంచుకొనుము"
 
-#: src/preferences_ui.c:70 src/preferences_ui.c:79 src/preferences_ui.c:156
+#: src/preferences_ui.c:56 src/preferences_ui.c:65 src/preferences_ui.c:139
 #, fuzzy
 #| msgid "Update"
 msgid "_Cancel"
 msgstr "అప్డేట్"
 
-#: src/preferences_ui.c:72 src/preferences_ui.c:79
+#: src/preferences_ui.c:58 src/preferences_ui.c:65
 #, fuzzy
 #| msgid "Deselect All"
 msgid "_Select"
 msgstr "అన్ని ఎంపికలూ తీసివేయుము"
 
-#: src/preferences_ui.c:157
+#: src/preferences_ui.c:140
 msgid "_OK"
 msgstr ""
 
@@ -628,6 +634,12 @@ msgstr "సిస్టం-సర్చ్"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "సర్చ్;ఎఫ్ సర్చ్; ఫైల్ లు;ఫోల్డరు లు;సంగీతం;వీడియో;డాక్యుమెంట్లు;కనుగొను;పనిముట్టు;సమస్తమూ;"
+
+#~ msgid "Add…"
+#~ msgstr "కలుపుము…"
+
+#~ msgid "Remove"
+#~ msgstr "తీసివేయుము"
 
 #~ msgid "Follow symbolic links"
 #~ msgstr "సంజ్ఞాపూరిత లింకులలోకి వెళ్ళుము"
