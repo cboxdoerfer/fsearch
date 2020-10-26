@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-25 18:11+0100\n"
-"PO-Revision-Date: 2020-10-26 10:26+0000\n"
+"PO-Revision-Date: 2020-10-27 15:26+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -512,10 +512,8 @@ msgid "file / folder failed to open"
 msgstr "bestand/map niet kan worden geopend"
 
 #: src/preferences.ui:546
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Vensters"
+msgstr "Vensters:"
 
 #: src/preferences.ui:571
 msgid "Interface"
@@ -549,11 +547,11 @@ msgstr "Databank bijwerken na opstarten"
 
 #: src/preferences.ui:775
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Voeg het op te nemen pad toe"
 
 #: src/preferences.ui:792 src/preferences.ui:912
 msgid "Remove selected path"
-msgstr ""
+msgstr "Geselecteerd pad verwijderen"
 
 #: src/preferences.ui:824
 msgid "Include"
@@ -561,7 +559,7 @@ msgstr "Opnemen"
 
 #: src/preferences.ui:895
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Voeg het uit te sluiten pad toe"
 
 #: src/preferences.ui:951 src/preferences.ui:964
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
