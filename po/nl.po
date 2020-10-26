@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-23 13:56+0200\n"
-"PO-Revision-Date: 2020-10-20 16:26+0000\n"
+"PO-Revision-Date: 2020-10-26 10:26+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
@@ -445,7 +445,7 @@ msgstr "Wat te doen na het openen van een bestand:"
 
 #: src/preferences.ui:275
 msgid "Nothing"
-msgstr ""
+msgstr "Niets"
 
 #: src/preferences.ui:276
 msgid "Minimize"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-23 13:56+0200\n"
-"PO-Revision-Date: 2020-10-10 18:26+0000\n"
+"PO-Revision-Date: 2020-10-26 10:26+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1024
 msgid "Sorting..."
@@ -188,23 +188,23 @@ msgstr "Файлове"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr ""
+msgstr "Архиви"
 
 #: src/fsearch_filter.c:91
 msgid "Audio"
-msgstr ""
+msgstr "Аудио"
 
 #: src/fsearch_filter.c:95
 msgid "Documents"
-msgstr ""
+msgstr "Документи"
 
 #: src/fsearch_filter.c:98
 msgid "Pictures"
-msgstr ""
+msgstr "Снимки"
 
 #: src/fsearch_filter.c:101
 msgid "Videos"
-msgstr ""
+msgstr "Видео"
 
 #: src/fsearch_preferences_widgets.c:203 src/fsearch_preferences_widgets.c:246
 msgid "Active"
@@ -449,7 +449,7 @@ msgstr "Поведение след успешно отваряне на фай�
 
 #: src/preferences.ui:275
 msgid "Nothing"
-msgstr ""
+msgstr "Нищо"
 
 #: src/preferences.ui:276
 msgid "Minimize"
