@@ -1093,7 +1093,7 @@ This resembles a more traditonal UI layout and takes a little bit more space.</p
 This settings controls how file sizes are displayed.
 
 	• &lt;b&gt;Binary units:&lt;/b&gt; This refers to binary IEC prefixes &lt;i&gt;(e.g. 1 KiB = 1024 bytes)&lt;/i&gt;
-	• &lt;b&gt;Decimal  units:&lt;/b&gt; This refers to decimal SI prefixes &lt;i&gt;(e.g. 1 KB = 1000 bytes)&lt;/i&gt;</property>
+	• &lt;b&gt;Decimal  units:&lt;/b&gt; This refers to decimal SI prefixes &lt;i&gt;(e.g. 1 kB = 1000 bytes)&lt;/i&gt;</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                   </object>
