@@ -122,7 +122,7 @@ static gboolean
 help_reset(gpointer user_data) {
     gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(help_description));
     help_reset_timeout_id = 0;
-    return FALSE;
+    return G_SOURCE_REMOVE;
 }
 
 static gboolean
