@@ -118,10 +118,11 @@ on_help_update(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     return FALSE;
 }
 
-static void
+static gboolean
 help_reset(gpointer user_data) {
     gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(help_description));
     help_reset_timeout_id = 0;
+    return FALSE;
 }
 
 static gboolean
