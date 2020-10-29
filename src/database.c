@@ -475,12 +475,12 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
             continue;
         }
 
-        if (directory_is_excluded(path->str, walk_context->db->excludes)) {
+        const bool is_dir = S_ISDIR(st.st_mode);
+        if (is_dir && directory_is_excluded(path->str, walk_context->db->excludes)) {
             trace("[database_scan] excluded directory: %s\n", path->str);
             continue;
         }
 
-        const bool is_dir = S_ISDIR(st.st_mode);
         BTreeNode *node = btree_node_new(dent->d_name, st.st_mtime, st.st_size, 0, is_dir);
         btree_node_prepend(parent, node);
         walk_context->db_node->num_items++;
