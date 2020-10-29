@@ -127,7 +127,7 @@ help_reset(gpointer user_data) {
 
 static gboolean
 on_help_reset(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    help_reset_timeout_id = g_timeout_add(200, G_SOURCE_FUNC(help_reset), NULL);
+    help_reset_timeout_id = g_timeout_add(200, help_reset, NULL);
     return FALSE;
 }
 
