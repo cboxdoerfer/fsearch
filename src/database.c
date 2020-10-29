@@ -469,7 +469,7 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
         }
 
         // create full path of file/folder
-        g_string_erase(path, path_len, -1);
+        g_string_truncate(path, path_len);
         g_string_append(path, dent->d_name);
 
         struct stat st;
@@ -630,20 +630,20 @@ db_location_get_for_path(FsearchDatabase *db, const char *path) {
     return NULL;
 }
 
-static bool
-db_location_remove(FsearchDatabase *db, const char *path) {
-    assert(db != NULL);
-    assert(path != NULL);
-
-    FsearchDatabaseNode *location = db_location_get_for_path(db, path);
-    if (location) {
-        db->locations = g_list_remove(db->locations, location);
-        db_location_free(location);
-        db_sort(db);
-    }
-
-    return true;
-}
+// static bool
+// db_location_remove(FsearchDatabase *db, const char *path) {
+//    assert(db != NULL);
+//    assert(path != NULL);
+//
+//    FsearchDatabaseNode *location = db_location_get_for_path(db, path);
+//    if (location) {
+//        db->locations = g_list_remove(db->locations, location);
+//        db_location_free(location);
+//        db_sort(db);
+//    }
+//
+//    return true;
+//}
 
 static void
 location_build_path(char *path, size_t path_len, const char *location_name) {
@@ -664,20 +664,20 @@ location_build_path(char *path, size_t path_len, const char *location_name) {
     return;
 }
 
-static void
-db_location_delete(FsearchDatabaseNode *location, const char *location_name) {
-    assert(location != NULL);
-    assert(location_name != NULL);
-
-    gchar database_path[PATH_MAX] = "";
-    location_build_path(database_path, sizeof(database_path), location_name);
-
-    gchar database_file_path[PATH_MAX] = "";
-    assert(0 <= snprintf(database_file_path, sizeof(database_file_path), "%s/%s", database_path, "database.db"));
-
-    g_remove(database_file_path);
-    g_remove(database_path);
-}
+// static void
+// db_location_delete(FsearchDatabaseNode *location, const char *location_name) {
+//    assert(location != NULL);
+//    assert(location_name != NULL);
+//
+//    gchar database_path[PATH_MAX] = "";
+//    location_build_path(database_path, sizeof(database_path), location_name);
+//
+//    gchar database_file_path[PATH_MAX] = "";
+//    assert(0 <= snprintf(database_file_path, sizeof(database_file_path), "%s/%s", database_path, "database.db"));
+//
+//    g_remove(database_file_path);
+//    g_remove(database_path);
+//}
 
 static bool
 db_save_location(FsearchDatabase *db, const char *location_name) {
@@ -825,11 +825,11 @@ db_update_entries_list(FsearchDatabase *db) {
     trace("[database_update_list] updated list\n");
 }
 
-static BTreeNode *
-db_location_get_entries(FsearchDatabaseNode *location) {
-    assert(location != NULL);
-    return location->entries;
-}
+// static BTreeNode *
+// db_location_get_entries(FsearchDatabaseNode *location) {
+//    assert(location != NULL);
+//    return location->entries;
+//}
 
 FsearchDatabase *
 db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden) {
