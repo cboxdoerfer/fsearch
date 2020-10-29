@@ -443,10 +443,9 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, const char *d
     if (!(dir = opendir(dname))) {
         return WALK_BADIO;
     }
-    gulong duration = 0;
-    g_timer_elapsed(walk_context->timer, &duration);
 
-    if (duration > 100000) {
+    double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
+    if (elapsed_seconds > 0.1) {
         if (walk_context->callback) {
             walk_context->callback(dname);
         }
