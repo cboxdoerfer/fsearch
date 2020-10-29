@@ -42,9 +42,6 @@
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
 
-//#define WS_FOLLOWLINK	(1 << 1)	/* follow symlinks */
-#define WS_DOTFILES (1 << 2) /* per unix convention, .file is hidden */
-
 struct _FsearchDatabase {
     GList *locations;
     GList *searches;
@@ -420,7 +417,7 @@ typedef struct DatabaseWalkContext {
     GTimer *timer;
     bool *cancel;
     void (*callback)(const char *);
-    int spec;
+    bool exclude_hidden;
 } DatabaseWalkContext;
 
 static int
@@ -457,7 +454,7 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
             }
             return WALK_CANCEL;
         }
-        if (!(walk_context->spec & WS_DOTFILES) && dent->d_name[0] == '.') {
+        if (walk_context->exclude_hidden && dent->d_name[0] == '.') {
             // file is dotfile, skip
             continue;
         }
@@ -523,11 +520,6 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
     FsearchDatabaseNode *location = db_location_new();
     location->entries = root;
 
-    int spec = 0;
-    if (!db->exclude_hidden) {
-        spec |= WS_DOTFILES;
-    }
-
     GTimer *timer = g_timer_new();
     GString *path = NULL;
     if (!strcmp(dname, "/")) {
@@ -545,7 +537,7 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
         .timer = timer,
         .cancel = cancel,
         .callback = callback,
-        .spec = spec,
+        .exclude_hidden = db->exclude_hidden,
     };
 
     uint32_t res = db_location_walk_tree_recursive(&walk_context, root);
