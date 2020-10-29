@@ -415,6 +415,7 @@ directory_is_excluded(const char *name, GList *excludes) {
 typedef struct DatabaseWalkContext {
     FsearchDatabase *db;
     FsearchDatabaseNode *db_node;
+    GString *path;
     GTimer *timer;
     bool *cancel;
     void (*callback)(const char *);
@@ -422,32 +423,27 @@ typedef struct DatabaseWalkContext {
 } DatabaseWalkContext;
 
 static int
-db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, const char *dname, BTreeNode *parent) {
+db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *parent) {
 
     if (*walk_context->cancel == true) {
         return WALK_CANCEL;
     }
-    int len = strlen(dname);
-    if (len >= FILENAME_MAX - 1) {
-        return WALK_NAMETOOLONG;
-    }
 
-    char fn[FILENAME_MAX] = "";
-    strcpy(fn, dname);
-    if (strcmp(dname, "/")) {
-        // TODO: use a more performant fix to handle root directory
-        fn[len++] = '/';
-    }
+    GString *path = walk_context->path;
+    g_string_append_c(path, '/');
+
+    // remember end of parent path
+    gsize path_len = path->len;
 
     DIR *dir = NULL;
-    if (!(dir = opendir(dname))) {
+    if (!(dir = opendir(path->str))) {
         return WALK_BADIO;
     }
 
     double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
     if (elapsed_seconds > 0.1) {
         if (walk_context->callback) {
-            walk_context->callback(dname);
+            walk_context->callback(path->str);
         }
         g_timer_start(walk_context->timer);
     }
@@ -471,15 +467,18 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, const char *d
             continue;
         }
 
+        // create full path of file/folder
+        g_string_erase(path, path_len, -1);
+        g_string_append(path, dent->d_name);
+
         struct stat st;
-        strncpy(fn + len, dent->d_name, FILENAME_MAX - len);
-        if (lstat(fn, &st) == -1) {
+        if (lstat(path->str, &st) == -1) {
             // warn("Can't stat %s", fn);
             continue;
         }
 
-        if (directory_is_excluded(fn, walk_context->db->excludes)) {
-            trace("[database_scan] excluded directory: %s\n", fn);
+        if (directory_is_excluded(path->str, walk_context->db->excludes)) {
+            trace("[database_scan] excluded directory: %s\n", path->str);
             continue;
         }
 
@@ -488,7 +487,7 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, const char *d
         btree_node_prepend(parent, node);
         walk_context->db_node->num_items++;
         if (is_dir) {
-            db_location_walk_tree_recursive(walk_context, fn, node);
+            db_location_walk_tree_recursive(walk_context, node);
         }
     }
 
@@ -527,17 +526,30 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
     if (!db->exclude_hidden) {
         spec |= WS_DOTFILES;
     }
+
     GTimer *timer = g_timer_new();
+    GString *path = NULL;
+    if (!strcmp(dname, "/")) {
+        path = g_string_new(NULL);
+    }
+    else {
+        path = g_string_new(dname);
+    }
+
     g_timer_start(timer);
     DatabaseWalkContext walk_context = {
         .db = db,
         .db_node = location,
+        .path = path,
         .timer = timer,
         .cancel = cancel,
         .callback = callback,
         .spec = spec,
     };
-    uint32_t res = db_location_walk_tree_recursive(&walk_context, dname, root);
+
+    uint32_t res = db_location_walk_tree_recursive(&walk_context, root);
+
+    g_string_free(path, TRUE);
     g_timer_destroy(timer);
     if (res == WALK_OK) {
         return location;
