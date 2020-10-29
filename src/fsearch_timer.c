@@ -14,9 +14,8 @@ void
 fsearch_timer_elapsed(GTimer *t, const char *format) {
 #ifdef DEBUG
     gulong microseconds;
-    g_timer_elapsed(t, &microseconds);
-    double milliseconds = (double)microseconds / 1000.0;
-    trace(format, milliseconds);
+    double seconds = g_timer_elapsed(t, &microseconds);
+    trace(format, seconds * 1000);
 #endif
 }
 
