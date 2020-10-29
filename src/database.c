@@ -412,17 +412,19 @@ directory_is_excluded(const char *name, GList *excludes) {
     return false;
 }
 
-static int
-db_location_walk_tree_recursive(FsearchDatabase *db,
-                                FsearchDatabaseNode *location,
-                                const char *dname,
-                                GTimer *timer,
-                                bool *cancel,
-                                void (*callback)(const char *),
-                                BTreeNode *parent,
-                                int spec) {
+typedef struct DatabaseWalkContext {
+    FsearchDatabase *db;
+    FsearchDatabaseNode *db_node;
+    GTimer *timer;
+    bool *cancel;
+    void (*callback)(const char *);
+    int spec;
+} DatabaseWalkContext;
 
-    if (*cancel == true) {
+static int
+db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, const char *dname, BTreeNode *parent) {
+
+    if (*walk_context->cancel == true) {
         return WALK_CANCEL;
     }
     int len = strlen(dname);
@@ -442,31 +444,31 @@ db_location_walk_tree_recursive(FsearchDatabase *db,
         return WALK_BADIO;
     }
     gulong duration = 0;
-    g_timer_elapsed(timer, &duration);
+    g_timer_elapsed(walk_context->timer, &duration);
 
     if (duration > 100000) {
-        if (callback) {
-            callback(dname);
+        if (walk_context->callback) {
+            walk_context->callback(dname);
         }
-        g_timer_reset(timer);
+        g_timer_start(walk_context->timer);
     }
 
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
-        if (*cancel == true) {
+        if (*walk_context->cancel == true) {
             if (dir) {
                 closedir(dir);
             }
             return WALK_CANCEL;
         }
-        if (!(spec & WS_DOTFILES) && dent->d_name[0] == '.') {
+        if (!(walk_context->spec & WS_DOTFILES) && dent->d_name[0] == '.') {
             // file is dotfile, skip
             continue;
         }
         if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "..")) {
             continue;
         }
-        if (file_is_excluded(dent->d_name, db->exclude_files)) {
+        if (file_is_excluded(dent->d_name, walk_context->db->exclude_files)) {
             continue;
         }
 
@@ -477,7 +479,7 @@ db_location_walk_tree_recursive(FsearchDatabase *db,
             continue;
         }
 
-        if (directory_is_excluded(fn, db->excludes)) {
+        if (directory_is_excluded(fn, walk_context->db->excludes)) {
             trace("[database_scan] excluded directory: %s\n", fn);
             continue;
         }
@@ -485,9 +487,9 @@ db_location_walk_tree_recursive(FsearchDatabase *db,
         const bool is_dir = S_ISDIR(st.st_mode);
         BTreeNode *node = btree_node_new(dent->d_name, st.st_mtime, st.st_size, 0, is_dir);
         btree_node_prepend(parent, node);
-        location->num_items++;
+        walk_context->db_node->num_items++;
         if (is_dir) {
-            db_location_walk_tree_recursive(db, location, fn, timer, cancel, callback, node, spec);
+            db_location_walk_tree_recursive(walk_context, fn, node);
         }
     }
 
@@ -528,7 +530,15 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
     }
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
-    uint32_t res = db_location_walk_tree_recursive(db, location, dname, timer, cancel, callback, root, spec);
+    DatabaseWalkContext walk_context = {
+        .db = db,
+        .db_node = location,
+        .timer = timer,
+        .cancel = cancel,
+        .callback = callback,
+        .spec = spec,
+    };
+    uint32_t res = db_location_walk_tree_recursive(&walk_context, dname, root);
     g_timer_destroy(timer);
     if (res == WALK_OK) {
         return location;
