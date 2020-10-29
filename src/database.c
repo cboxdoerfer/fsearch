@@ -264,10 +264,10 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
     }
     g_mkdir_with_parents(path, 0700);
 
-    gchar tempfile[PATH_MAX] = "";
-    snprintf(tempfile, sizeof(tempfile), "%s/database.db", path);
+    GString *db_path = g_string_new(path);
+    g_string_append(db_path, "/database.db");
 
-    FILE *fp = fopen(tempfile, "w+b");
+    FILE *fp = fopen(db_path->str, "w+b");
     if (!fp) {
         return false;
     }
@@ -381,7 +381,8 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
 save_fail:
 
     fclose(fp);
-    unlink(tempfile);
+    unlink(db_path->str);
+    g_string_free(db_path, TRUE);
     return false;
 }
 
