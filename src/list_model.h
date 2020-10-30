@@ -65,6 +65,9 @@ typedef struct _ListModelClass ListModelClass;
  *             crucial that 'parent' is the first member of the
  *             structure.                                          */
 
+typedef struct ListModelCachedValue {
+} ListModelCachedValue;
+
 struct _ListModel {
     GObject parent; /* this MUST be the first member */
 
@@ -74,6 +77,11 @@ struct _ListModel {
     /*   speed things up a bit in our get_value implementation    */
     gint n_columns;
     GType column_types[LIST_MODEL_N_COLUMNS];
+
+    // Cached values for more efficient get_value calls
+    BTreeNode *node_cached;
+    GString *node_path;
+    GString *parent_path;
 
     gint sort_id;
     GtkSortType sort_order;
