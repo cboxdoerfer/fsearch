@@ -18,6 +18,7 @@
 
 #include "clipboard.h"
 #include <gtk/gtk.h>
+#include <stdbool.h>
 #include <string.h>
 
 static GdkDragAction clipboard_action = GDK_ACTION_DEFAULT;
@@ -106,7 +107,7 @@ out:
 }
 
 void
-clipboard_copy_file_list(GList *file_list, guint32 copy) {
+clipboard_copy_file_list(GList *file_list, bool copy) {
     GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
     gtk_clipboard_set_with_data(clip, targets, G_N_ELEMENTS(targets), clipboard_get_data, clipboard_clean_data, NULL);
 

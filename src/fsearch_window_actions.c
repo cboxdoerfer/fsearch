@@ -193,9 +193,6 @@ fsearch_window_action_delete(GSimpleAction *action, GVariant *variant, gpointer 
 }
 
 static void
-fsearch_window_action_cut(GSimpleAction *action, GVariant *variant, gpointer user_data) {}
-
-static void
 fsearch_window_action_invert_selection(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     // TODO: can be very slow. Find a way how to optimize that.
     FsearchApplicationWindow *self = user_data;
@@ -248,7 +245,7 @@ fsearch_window_action_select_all(GSimpleAction *action, GVariant *variant, gpoin
 }
 
 static void
-fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+fsearch_window_action_cut_or_copy(GSimpleAction *action, GVariant *variant, bool copy, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection(self);
     if (!selection) {
@@ -257,7 +254,17 @@ fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer us
     GList *file_list = NULL;
     gtk_tree_selection_selected_foreach(selection, copy_file, &file_list);
     file_list = g_list_reverse(file_list);
-    clipboard_copy_file_list(file_list, 1);
+    clipboard_copy_file_list(file_list, copy);
+}
+
+static void
+fsearch_window_action_cut(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    fsearch_window_action_cut_or_copy(action, variant, false, user_data);
+}
+
+static void
+fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    fsearch_window_action_cut_or_copy(action, variant, true, user_data);
 }
 
 static void

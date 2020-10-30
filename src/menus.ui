@@ -49,9 +49,14 @@
             <attribute name="label" translatable="yes">_Edit</attribute>
             <section>
                 <item>
-                    <attribute name="label" translatable="yes">Copy</attribute>
+                    <attribute name="label" translatable="yes">_Copy</attribute>
                     <attribute name="action">win.copy_clipboard</attribute>
                     <attribute name="icon">edit-copy</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Cu_t</attribute>
+                    <attribute name="action">win.cut_clipboard</attribute>
+                    <attribute name="icon">edit-cut</attribute>
                 </item>
             </section>
             <section>
@@ -170,6 +175,12 @@
                 <attribute name="label" translatable="yes">_Copy Filepath</attribute>
                 <attribute name="action">win.copy_filepath_clipboard</attribute>
                 <attribute name="accel">&lt;shift&gt;&lt;control&gt;c</attribute>
+            </item>
+            <item>
+                <attribute name="label" translatable="yes">Cu_t</attribute>
+                <attribute name="action">win.cut_clipboard</attribute>
+                <attribute name="accel">&lt;control&gt;x</attribute>
+                <attribute name="icon">edit-cut</attribute>
             </item>
         </section>
         <section id="fsearch_listview_menu_delete_section">

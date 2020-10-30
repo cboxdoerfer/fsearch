@@ -622,6 +622,7 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
         }
     }
     else if ((state & default_modifiers) == GDK_CONTROL_MASK) {
+        printf("ctrl...\n");
         switch (keyval) {
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
@@ -629,6 +630,9 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
             return TRUE;
         case GDK_KEY_c:
             g_action_group_activate_action(group, "copy_clipboard", NULL);
+            return TRUE;
+        case GDK_KEY_x:
+            g_action_group_activate_action(group, "cut_clipboard", NULL);
             return TRUE;
         default:
             return FALSE;

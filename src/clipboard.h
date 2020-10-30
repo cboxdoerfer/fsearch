@@ -19,9 +19,10 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include <glib.h>
+#include <stdbool.h>
 
 void
-clipboard_copy_file_list(GList *file_list, guint32 copy);
+clipboard_copy_file_list(GList *file_list, bool copy);
 
 void
 clipboard_copy_filepath_list(GList *file_list);
