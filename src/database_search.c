@@ -281,7 +281,7 @@ db_search_empty(FsearchQuery *query) {
     assert(query->db != NULL);
 
     const uint32_t num_entries = db_get_num_entries(query->db);
-    const uint32_t num_results = MIN(query->max_results, num_entries);
+    const uint32_t num_results = query->max_results == 0 ? num_entries : MIN(query->max_results, num_entries);
     GPtrArray *results = g_ptr_array_sized_new(num_results);
     g_ptr_array_set_free_func(results, (GDestroyNotify)db_search_entry_free);
 
