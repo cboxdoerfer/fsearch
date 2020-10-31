@@ -114,13 +114,17 @@ on_help_update(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
         g_source_remove(help_reset_timeout_id);
         help_reset_timeout_id = 0;
     }
-    gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(user_data));
+    if (help_stack != NULL) {
+        gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(user_data));
+    }
     return FALSE;
 }
 
 static gboolean
 help_reset(gpointer user_data) {
-    gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(help_description));
+    if (help_stack != NULL) {
+        gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(help_description));
+    }
     help_reset_timeout_id = 0;
     return G_SOURCE_REMOVE;
 }
@@ -428,6 +432,8 @@ preferences_ui_launch(FsearchConfig *config,
         g_source_remove(help_reset_timeout_id);
         help_reset_timeout_id = 0;
     }
+    help_stack = NULL;
+
     g_object_unref(builder);
     gtk_widget_destroy(dialog);
 
