@@ -98,8 +98,11 @@ listview_column_set_size(GtkTreeViewColumn *col, int32_t size) {
 }
 
 static void
-listview_path_cell_data_func(
-    GtkTreeViewColumn *col, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data) {
+listview_path_cell_data_func(GtkTreeViewColumn *col,
+                             GtkCellRenderer *cell,
+                             GtkTreeModel *tree_model,
+                             GtkTreeIter *iter,
+                             gpointer data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)data;
     FsearchQueryHighlight *q = fsearch_application_window_get_query_highlight(win);
     if (!q) {
@@ -131,8 +134,11 @@ listview_path_cell_data_func(
 }
 
 static void
-listview_name_cell_data_func(
-    GtkTreeViewColumn *col, GtkCellRenderer *cell, GtkTreeModel *tree_model, GtkTreeIter *iter, gpointer data) {
+listview_name_cell_data_func(GtkTreeViewColumn *col,
+                             GtkCellRenderer *cell,
+                             GtkTreeModel *tree_model,
+                             GtkTreeIter *iter,
+                             gpointer data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)data;
     FsearchQueryHighlight *q = fsearch_application_window_get_query_highlight(win);
     if (!q) {
