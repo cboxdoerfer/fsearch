@@ -240,6 +240,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <property name="can-focus">True</property>
             <property name="receives-default">True</property>
             <property name="action-name">app.preferences</property>
+            <property name="action-target">uint32 0</property>
             <property name="text" translatable="yes">Preferences</property>
           </object>
           <packing>

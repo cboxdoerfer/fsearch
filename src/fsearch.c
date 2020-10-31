@@ -402,6 +402,7 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
     g_assert(FSEARCH_IS_APPLICATION(gapp));
     FsearchApplication *app = FSEARCH_APPLICATION(gapp);
 
+    FsearchPreferencesPage page = g_variant_get_uint32(parameter);
     bool update_db = false;
     bool update_list = false;
     bool update_search = false;
@@ -411,7 +412,7 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
         return;
     }
     FsearchConfig *new_config =
-        preferences_ui_launch(app->config, win_active, &update_db, &update_list, &update_search);
+        preferences_ui_launch(app->config, win_active, page, &update_db, &update_list, &update_search);
     if (!new_config) {
         return;
     }
@@ -526,7 +527,7 @@ static GActionEntry app_entries[] = {{"new_window", new_window_activated, NULL, 
                                      {"about", about_activated, NULL, NULL, NULL},
                                      {"update_database", update_database_activated, NULL, NULL, NULL},
                                      {"cancel_update_database", cancel_update_database_activated, NULL, NULL, NULL},
-                                     {"preferences", preferences_activated, NULL, NULL, NULL},
+                                     {"preferences", preferences_activated, "u", NULL, NULL},
                                      {"quit", quit_activated, NULL, NULL, NULL}};
 
 static void
@@ -567,7 +568,7 @@ fsearch_application_startup(GApplication *app) {
     static const gchar *update_database[] = {"<control><shift>r", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.update_database", update_database);
     static const gchar *preferences[] = {"<control>p", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.preferences", preferences);
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.preferences(uint32 0)", preferences);
     static const gchar *quit[] = {"<control>q", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", quit);
     FSEARCH_APPLICATION(app)->pool = fsearch_thread_pool_init();

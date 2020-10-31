@@ -21,6 +21,14 @@
 #include "fsearch_config.h"
 #include <gtk/gtk.h>
 
+typedef enum FsearchPreferencesPage {
+    PREF_PAGE_GENERAL = 0,
+    PREF_PAGE_SEARCH,
+    PREF_PAGE_DATABASE,
+    N_PREF_PAGES,
+
+} FsearchPreferencesPage;
+
 typedef struct _FsearchPreferences {
     FsearchConfig *config;
     GtkTreeModel *include_model;
@@ -33,6 +41,7 @@ typedef struct _FsearchPreferences {
 FsearchConfig *
 preferences_ui_launch(FsearchConfig *main_config,
                       GtkWindow *window,
+                      FsearchPreferencesPage page,
                       bool *update_db,
                       bool *update_list,
                       bool *update_search);

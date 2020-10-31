@@ -78,6 +78,7 @@
                 <item>
                     <attribute name="label" translatable="yes">Preferences</attribute>
                     <attribute name="action">app.preferences</attribute>
+                    <attribute name='target' type='u'>0</attribute>
                     <attribute name="icon">preferences-desktop</attribute>
                 </item>
             </section>

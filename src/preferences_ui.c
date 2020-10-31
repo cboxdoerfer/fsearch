@@ -167,6 +167,7 @@ action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
 FsearchConfig *
 preferences_ui_launch(FsearchConfig *config,
                       GtkWindow *window,
+                      FsearchPreferencesPage page,
                       bool *update_db,
                       bool *update_list,
                       bool *update_search) {
@@ -178,6 +179,9 @@ preferences_ui_launch(FsearchConfig *config,
 
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
     gtk_dialog_add_button(GTK_DIALOG(dialog), _("_OK"), GTK_RESPONSE_OK);
+
+    GtkWidget *main_notebook = GTK_WIDGET(gtk_builder_get_object(builder, "pref_main_notebook"));
+    gtk_notebook_set_current_page(GTK_NOTEBOOK(main_notebook), page);
 
     help_stack = GTK_WIDGET(gtk_builder_get_object(builder, "help_stack"));
     help_description = GTK_WIDGET(gtk_builder_get_object(builder, "help_help"));
