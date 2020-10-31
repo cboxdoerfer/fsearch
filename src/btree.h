@@ -76,8 +76,10 @@ btree_node_has_children(BTreeNode *node);
 
 void
 btree_node_children_foreach(BTreeNode *node, void (*func)(BTreeNode *, void *), void *data);
+
 void
 btree_node_traverse(BTreeNode *node, bool (*func)(BTreeNode *, void *), void *data);
+
 bool
 btree_node_get_path(BTreeNode *node, char *path, size_t path_len);
 
