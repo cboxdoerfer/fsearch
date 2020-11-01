@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-10-26 10:26+0000\n"
+"PO-Revision-Date: 2020-11-02 14:26+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -330,7 +330,7 @@ msgstr "_Kopiuj"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "Wy_tnij"
 
 #: src/menus.ui:64
 msgid "Select All"
@@ -507,10 +507,8 @@ msgid "file / folder failed to open"
 msgstr "nie udało się otworzyć pliku / katalogu"
 
 #: src/preferences.ui:544
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Okna dialogowe"
+msgstr "Okna dialogowe:"
 
 #: src/preferences.ui:569
 msgid "Interface"
