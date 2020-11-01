@@ -471,10 +471,12 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
             g_object_unref(g_file);
             g_file = NULL;
         }
-        else {
+
+        if (!icon) {
             icon = g_icon_new_for_string("image-missing", NULL);
             if (icon) {
                 g_value_take_object(value, icon);
+                icon = NULL;
             }
         }
     } break;
