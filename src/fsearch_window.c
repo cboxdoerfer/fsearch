@@ -622,7 +622,6 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
         }
     }
     else if ((state & default_modifiers) == GDK_CONTROL_MASK) {
-        printf("ctrl...\n");
         switch (keyval) {
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:

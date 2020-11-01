@@ -456,21 +456,20 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
         break;
 
     case LIST_MODEL_COL_ICON: {
-        GFile *g_file = g_file_new_for_path(node_path->str);
-        if (!g_file) {
-            break;
-        }
-        GFileInfo *file_info = g_file_query_info(g_file, "standard::icon", 0, NULL, NULL);
-        if (!file_info) {
-            g_object_unref(g_file);
-            break;
-        }
         GIcon *icon = NULL;
-        if (file_info) {
-            icon = g_file_info_get_icon(file_info);
-            if (icon) {
-                g_value_set_object(value, icon);
+        GFile *g_file = g_file_new_for_path(node_path->str);
+        if (g_file) {
+            GFileInfo *file_info = g_file_query_info(g_file, "standard::icon", 0, NULL, NULL);
+            if (file_info) {
+                icon = g_file_info_get_icon(file_info);
+                if (icon) {
+                    g_value_set_object(value, icon);
+                }
+                g_object_unref(file_info);
+                file_info = NULL;
             }
+            g_object_unref(g_file);
+            g_file = NULL;
         }
         else {
             icon = g_icon_new_for_string("image-missing", NULL);
@@ -478,10 +477,6 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
                 g_value_take_object(value, icon);
             }
         }
-        g_object_unref(g_file);
-        g_file = NULL;
-        g_object_unref(file_info);
-        file_info = NULL;
     } break;
 
     case LIST_MODEL_COL_NAME:
