@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.409-8e25-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-25 18:11+0100\n"
-"PO-Revision-Date: 2020-10-20 16:26+0000\n"
+"PO-Revision-Date: 2020-11-01 10:26+0000\n"
 "Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
 "Language-Team: Central Atlas Tamazight <https://hosted.weblate.org/projects/"
 "fsearch/translations/tzm/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n >= 2 && (n < 11 || n > 99);\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1009
 msgid "Sorting..."
@@ -41,7 +41,7 @@ msgstr ""
 
 #: src/fsearch.glade:73
 msgid "New window"
-msgstr ""
+msgstr "Asatm amaynu"
 
 #: src/fsearch.glade:88
 msgid "Update database"

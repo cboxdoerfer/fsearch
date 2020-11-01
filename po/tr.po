@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-25 18:11+0100\n"
-"PO-Revision-Date: 2020-10-20 16:26+0000\n"
+"PO-Revision-Date: 2020-11-01 10:26+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1009
 msgid "Sorting..."
@@ -454,7 +454,7 @@ msgstr "Bir dosyayı başarıyla açtıktan sonraki davranış:"
 
 #: src/preferences.ui:244
 msgid "Nothing"
-msgstr ""
+msgstr "Hiçbiri"
 
 #: src/preferences.ui:245
 msgid "Minimize"
@@ -517,10 +517,8 @@ msgid "file / folder failed to open"
 msgstr "dosya / klasör açılamadı"
 
 #: src/preferences.ui:546
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "İletişim kutuları"
+msgstr "İletişim kutuları:"
 
 #: src/preferences.ui:571
 msgid "Interface"
@@ -554,11 +552,11 @@ msgstr "Başlangıçta veri tabanını güncelle"
 
 #: src/preferences.ui:775
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Veri tabanına dahil edilecek yolu ekle"
 
 #: src/preferences.ui:792 src/preferences.ui:912
 msgid "Remove selected path"
-msgstr ""
+msgstr "Seçili yolu kaldır"
 
 #: src/preferences.ui:824
 msgid "Include"
@@ -566,7 +564,7 @@ msgstr "Aktar"
 
 #: src/preferences.ui:895
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Veri tabanının dışında bırakılacak yolu ekle"
 
 #: src/preferences.ui:951 src/preferences.ui:964
 msgid "Supports wildcards. Multiple entries must be separated by ';'"

@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-25 18:11+0100\n"
-"PO-Revision-Date: 2020-10-22 20:26+0000\n"
+"PO-Revision-Date: 2020-11-01 10:26+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1009
 msgid "Sorting..."
@@ -227,7 +227,7 @@ msgstr "%'d elementos"
 
 #: src/fsearch_window.c:401 src/fsearch_window.c:558
 msgid "Querying…"
-msgstr ""
+msgstr "Consultando…"
 
 #: src/fsearch_window.c:734 src/fsearch_window_actions.c:399
 msgid "Failed to open file"
@@ -454,7 +454,7 @@ msgstr "Comportamiento tras abrir un archivo con éxito:"
 
 #: src/preferences.ui:244
 msgid "Nothing"
-msgstr ""
+msgstr "Nada"
 
 #: src/preferences.ui:245
 msgid "Minimize"
@@ -554,11 +554,11 @@ msgstr "Actualizar base de datos al inicio"
 
 #: src/preferences.ui:775
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Agregar ruta para ser incluido en la base de datos"
 
 #: src/preferences.ui:792 src/preferences.ui:912
 msgid "Remove selected path"
-msgstr ""
+msgstr "Eliminar la ruta seleccionada"
 
 #: src/preferences.ui:824
 msgid "Include"
@@ -566,7 +566,7 @@ msgstr "Incluir"
 
 #: src/preferences.ui:895
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Agregar ruta para ser excluida de la base de datos"
 
 #: src/preferences.ui:951 src/preferences.ui:964
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
