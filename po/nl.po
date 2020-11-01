@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-25 18:11+0100\n"
+"POT-Creation-Date: 2020-10-30 12:42+0100\n"
 "PO-Revision-Date: 2020-10-27 15:26+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
@@ -19,7 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3.2-dev\n"
 
-#: src/database.c:1009
+#: src/database.c:1023
 msgid "Sorting..."
 msgstr "Bezig met sorteren..."
 
@@ -47,39 +47,39 @@ msgstr "Nieuw venster"
 msgid "Update database"
 msgstr "Databank bijwerken"
 
-#: src/fsearch.glade:103 src/fsearch.glade:617
+#: src/fsearch.glade:103 src/fsearch.glade:622
 msgid "Cancel database update"
 msgstr "Databankbijwerking afbreken"
 
-#: src/fsearch.glade:137 src/menus.ui:101
+#: src/fsearch.glade:137 src/menus.ui:106
 msgid "Search in Path"
 msgstr "Pad doorzoeken"
 
-#: src/fsearch.glade:151 src/menus.ui:105
+#: src/fsearch.glade:151 src/menus.ui:110
 msgid "Match Case"
 msgstr "Hoofdlettergevoelig"
 
-#: src/fsearch.glade:165 src/menus.ui:109
+#: src/fsearch.glade:165 src/menus.ui:114
 msgid "Enable RegEx"
 msgstr "Reguliere expressies gebruiken"
 
-#: src/fsearch.glade:190 src/menus.ui:84
+#: src/fsearch.glade:190 src/menus.ui:89
 msgid "Show Statusbar"
 msgstr "Statusbalk tonen"
 
-#: src/fsearch.glade:204 src/menus.ui:88
+#: src/fsearch.glade:204 src/menus.ui:93
 msgid "Show Filter"
 msgstr "Filter tonen"
 
-#: src/fsearch.glade:218 src/menus.ui:92
+#: src/fsearch.glade:218 src/menus.ui:97
 msgid "Show Search Button"
 msgstr "Zoekknop tonen"
 
-#: src/fsearch.glade:243 src/menus.ui:74 src/preferences.ui:37
+#: src/fsearch.glade:243 src/menus.ui:79 src/preferences.ui:37
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: src/fsearch.glade:268 src/menus.ui:118
+#: src/fsearch.glade:268 src/menus.ui:123
 msgid "About"
 msgstr "Over"
 
@@ -111,28 +111,28 @@ msgstr "0/0"
 msgid "Number of selected files"
 msgstr "Aantal geselecteerde bestanden"
 
-#: src/fsearch.glade:601 src/fsearch_window.c:960 src/overlay.ui:213
+#: src/fsearch.glade:606 src/fsearch_window.c:959 src/overlay.ui:213
 #, c-format
 msgid "Updating Database…"
 msgstr "Bezig met bijwerken van databank…"
 
-#: src/fsearch.glade:634
+#: src/fsearch.glade:639 src/preferences.ui:1065
 msgid "page0"
 msgstr "pagina0"
 
-#: src/fsearch.glade:658
+#: src/fsearch.glade:663
 msgid "Number of database items"
 msgstr "Aantal databankitems"
 
-#: src/fsearch.glade:659
+#: src/fsearch.glade:664
 msgid "(empty)"
 msgstr "(leeg)"
 
-#: src/fsearch.glade:670
+#: src/fsearch.glade:675 src/preferences.ui:1083
 msgid "page1"
 msgstr "pagina1"
 
-#: src/fsearch.glade:689
+#: src/fsearch.glade:701
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -140,11 +140,11 @@ msgstr ""
 "De zoekterm bevat hoofdletters.\n"
 "De optie <b>Hoofdlettergevoelig</b> is ingeschakeld."
 
-#: src/fsearch.glade:720 src/fsearch.glade:773
+#: src/fsearch.glade:732 src/fsearch.glade:785
 msgid "CASE"
 msgstr "HOOFDLETTERS"
 
-#: src/fsearch.glade:796
+#: src/fsearch.glade:808
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -152,23 +152,23 @@ msgstr ""
 "De zoekterm bevat padscheidingstekens.\n"
 "De optie <b>Pad doorzoeken</b> is ingeschakeld."
 
-#: src/fsearch.glade:827 src/fsearch.glade:880
+#: src/fsearch.glade:839 src/fsearch.glade:892
 msgid "PATH"
 msgstr "PAD"
 
-#: src/fsearch.glade:933
+#: src/fsearch.glade:945
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch.glade:1053
+#: src/fsearch.glade:1065
 msgid "Search…"
 msgstr "Zoeken…"
 
-#: src/fsearch.glade:1075
+#: src/fsearch.glade:1087
 msgid "Select a Filter"
 msgstr "Selecteer een filter"
 
-#: src/fsearch.glade:1106 src/preferences.ui:681
+#: src/fsearch.glade:1118 src/preferences.ui:679
 msgid "Search"
 msgstr "Zoeken"
 
@@ -209,7 +209,7 @@ msgid "Active"
 msgstr "Actief"
 
 #: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
-#: src/listview.c:203 src/menus.ui:205
+#: src/listview.c:203 src/menus.ui:216
 msgid "Path"
 msgstr "Pad"
 
@@ -217,37 +217,37 @@ msgstr "Pad"
 msgid "Update"
 msgstr "Bijwerken"
 
-#: src/fsearch_window.c:122 src/fsearch_window.c:468 src/fsearch_window.c:918
+#: src/fsearch_window.c:121 src/fsearch_window.c:467 src/fsearch_window.c:917
 #, c-format
 msgid "%'d Items"
 msgstr "%'d items"
 
-#: src/fsearch_window.c:401 src/fsearch_window.c:558
+#: src/fsearch_window.c:400 src/fsearch_window.c:557
 msgid "Querying…"
 msgstr "Bezig met zoeken…"
 
-#: src/fsearch_window.c:734 src/fsearch_window_actions.c:399
+#: src/fsearch_window.c:733 src/fsearch_window_actions.c:406
 msgid "Failed to open file"
 msgstr "Kan bestand niet openen"
 
-#: src/fsearch_window.c:735 src/fsearch_window_actions.c:400
+#: src/fsearch_window.c:734 src/fsearch_window_actions.c:407
 msgid "Do you want to keep the window open?"
 msgstr "Wil je het venster openhouden?"
 
-#: src/fsearch_window.c:924
+#: src/fsearch_window.c:923
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Laatst bijgewerkt: %Y-%m-%d %H:%M"
 
-#: src/fsearch_window.c:937 src/overlay.ui:143
+#: src/fsearch_window.c:936 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
 msgstr "Bezig met laden van databank…"
 
-#: src/fsearch_window.c:1118
+#: src/fsearch_window.c:1121
 msgid "Background tasks are active."
 msgstr "Achtergrondtaken zijn actief."
 
-#: src/fsearch_window.c:1120
+#: src/fsearch_window.c:1123
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -277,19 +277,19 @@ msgstr "Bezig met verwijderen…"
 msgid "Moving files to trash…"
 msgstr "Bezig met verplaatsen naar prullenbak…"
 
-#: src/listview.c:178 src/menus.ui:201
+#: src/listview.c:178 src/menus.ui:212
 msgid "Name"
 msgstr "Naam"
 
-#: src/listview.c:230 src/menus.ui:213
+#: src/listview.c:230 src/menus.ui:224
 msgid "Size"
 msgstr "Grootte"
 
-#: src/listview.c:248 src/menus.ui:217
+#: src/listview.c:248 src/menus.ui:228
 msgid "Date Modified"
 msgstr "Aangepast op"
 
-#: src/listview.c:265 src/menus.ui:209
+#: src/listview.c:265 src/menus.ui:220
 msgid "Type"
 msgstr "Type"
 
@@ -301,7 +301,7 @@ msgstr "_Bestand"
 msgid "New Window"
 msgstr "Nieuw venster"
 
-#: src/menus.ui:16 src/menus.ui:128
+#: src/menus.ui:16 src/menus.ui:133
 msgid "_Open"
 msgstr "_Openen"
 
@@ -321,55 +321,55 @@ msgstr "Update afbreken"
 msgid "_Edit"
 msgstr "B_ewerken"
 
-#: src/menus.ui:52
-msgid "Copy"
-msgstr "Kopiëren"
-
-#: src/menus.ui:59
-msgid "Select All"
-msgstr "Alles selecteren"
-
-#: src/menus.ui:64
-msgid "Deselect All"
-msgstr "Niets selecteren"
-
-#: src/menus.ui:68
-msgid "Invert Selection"
-msgstr "Selectie omkeren"
-
-#: src/menus.ui:81
-msgid "_View"
-msgstr "Bee_ld"
-
-#: src/menus.ui:98
-msgid "_Search"
-msgstr "_Zoeken"
-
-#: src/menus.ui:115
-msgid "_Help"
-msgstr "_Hulp"
-
-#: src/menus.ui:134
-msgid "Open _With"
-msgstr "Openen _met"
-
-#: src/menus.ui:148
-msgid "_Open Folder"
-msgstr "Map _openen"
-
-#: src/menus.ui:164
+#: src/menus.ui:52 src/menus.ui:169
 msgid "_Copy"
 msgstr "_Kopiëren"
 
-#: src/menus.ui:170
+#: src/menus.ui:57 src/menus.ui:180
+msgid "Cu_t"
+msgstr ""
+
+#: src/menus.ui:64
+msgid "Select All"
+msgstr "Alles selecteren"
+
+#: src/menus.ui:69
+msgid "Deselect All"
+msgstr "Niets selecteren"
+
+#: src/menus.ui:73
+msgid "Invert Selection"
+msgstr "Selectie omkeren"
+
+#: src/menus.ui:86
+msgid "_View"
+msgstr "Bee_ld"
+
+#: src/menus.ui:103
+msgid "_Search"
+msgstr "_Zoeken"
+
+#: src/menus.ui:120
+msgid "_Help"
+msgstr "_Hulp"
+
+#: src/menus.ui:139
+msgid "Open _With"
+msgstr "Openen _met"
+
+#: src/menus.ui:153
+msgid "_Open Folder"
+msgstr "Map _openen"
+
+#: src/menus.ui:175
 msgid "_Copy Filepath"
 msgstr "Bestandspad _kopiëren"
 
-#: src/menus.ui:177
+#: src/menus.ui:188
 msgid "Move to _Trash"
 msgstr "Verplaatsen naar _prullenbak"
 
-#: src/menus.ui:183
+#: src/menus.ui:194
 msgid "_Delete"
 msgstr "_Verwijderen"
 
@@ -413,193 +413,641 @@ msgstr "Probeer een andere zoekopdracht"
 msgid "Enable dark theme"
 msgstr "Donker thema gebruiken"
 
-#: src/preferences.ui:109
-msgid ""
-"<b>Enable dark theme</b> might not have an effect.\n"
-"Some platforms don't support dark theming and others always use dark themes "
-"by default."
-msgstr ""
-"<b>Donker thema inschakelen</b> werkt niet overal.\n"
-"Sommige systemen hebben geen ondersteuning voor donkere thema's en anderen "
-"hebben het standaard."
-
-#: src/preferences.ui:121
+#: src/preferences.ui:119
 msgid "Enable client-side decorations (requires restart)"
 msgstr "Decoraties aan clientzijde gebruiken (herstart vereist)"
 
-#: src/preferences.ui:135
+#: src/preferences.ui:133
 msgid "Use binary units instead of decimal units"
 msgstr "Binaire eenheden gebruiken i.p.v. decimale"
 
-#: src/preferences.ui:150
+#: src/preferences.ui:148
 msgid "Remember window size"
 msgstr "Vensterafmetingen onthouden"
 
-#: src/preferences.ui:185
+#: src/preferences.ui:183
 msgid "with keyboard shortcuts or menu entries"
 msgstr "met sneltoetsen of via het menu"
 
-#: src/preferences.ui:200
+#: src/preferences.ui:198
 msgid "with double click"
 msgstr "middels dubbelklikken"
 
-#: src/preferences.ui:228
+#: src/preferences.ui:226
 msgid "Behaviour after successfully opening a file:"
 msgstr "Wat te doen na het openen van een bestand:"
 
-#: src/preferences.ui:244
+#: src/preferences.ui:242
 msgid "Nothing"
 msgstr "Niets"
 
-#: src/preferences.ui:245
+#: src/preferences.ui:243
 msgid "Minimize"
 msgstr "Minimaliseren"
 
-#: src/preferences.ui:246
+#: src/preferences.ui:244
 msgid "Close"
 msgstr "Sluiten"
 
-#: src/preferences.ui:272
+#: src/preferences.ui:270
 msgid "General:"
 msgstr "Algemeen:"
 
-#: src/preferences.ui:307
+#: src/preferences.ui:305
 msgid "Show highlighted search terms"
 msgstr "Gemarkeerde zoektermen tonen"
 
-#: src/preferences.ui:322
+#: src/preferences.ui:320
 msgid "Show tooltips"
 msgstr "Hulpballonnen tonen"
 
-#: src/preferences.ui:336
+#: src/preferences.ui:334
 msgid "Show icons in name column"
 msgstr "Pictogrammen tonen in naamkolom"
 
-#: src/preferences.ui:350
+#: src/preferences.ui:348
 msgid "Remember column configuration"
 msgstr "Kolomindeling onthouden"
 
-#: src/preferences.ui:364
+#: src/preferences.ui:362
 msgid "Remember sort order"
 msgstr "Sorteervolgorde onthouden"
 
-#: src/preferences.ui:378
+#: src/preferences.ui:376
 msgid "Open path with double click in path column"
 msgstr "Pad openen door te dubbelklikken in de padkolom"
 
-#: src/preferences.ui:392
+#: src/preferences.ui:390
 msgid "Single click to open"
 msgstr "Eénmaal klikken om te openen"
 
-#: src/preferences.ui:412
+#: src/preferences.ui:410
 msgid "Results:"
 msgstr "Resultaten:"
 
-#: src/preferences.ui:453
+#: src/preferences.ui:451
 msgid "Show database indexing status"
 msgstr "Databankbijwerkstatus tonen"
 
-#: src/preferences.ui:473
+#: src/preferences.ui:471
 msgid "Statusbar:"
 msgstr "Statusbalk:"
 
-#: src/preferences.ui:514
+#: src/preferences.ui:512
 msgid "Show warning dialogs when:"
 msgstr "Waarschuwingen tonen als:"
 
-#: src/preferences.ui:524
+#: src/preferences.ui:522
 msgid "file / folder failed to open"
 msgstr "bestand/map niet kan worden geopend"
 
-#: src/preferences.ui:546
+#: src/preferences.ui:544
 msgid "Dialogs:"
 msgstr "Vensters:"
 
-#: src/preferences.ui:571
+#: src/preferences.ui:569
 msgid "Interface"
 msgstr "Uiterlijk"
 
-#: src/preferences.ui:590
+#: src/preferences.ui:588
 msgid "Limit number of results:"
 msgstr "Aantal zoekresultaten beperken:"
 
-#: src/preferences.ui:618
+#: src/preferences.ui:616
 msgid "Search in path when query contains path separators"
 msgstr "Pad doorzoeken als de zoekopdracht padscheidingsteken bevat"
 
-#: src/preferences.ui:632
+#: src/preferences.ui:630
 msgid "Search as you type"
 msgstr "Zoeken terwijl je typt"
 
-#: src/preferences.ui:646
+#: src/preferences.ui:644
 msgid "Hide results when search is empty"
 msgstr "Resultaten verbergen als de zoekopdracht blanco is"
 
-#: src/preferences.ui:660
+#: src/preferences.ui:658
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Lettergrootte moet overeenkomen als de zoekopdracht minstens één hoofdletter "
 "bevat"
 
-#: src/preferences.ui:700
+#: src/preferences.ui:698
 msgid "Update database on start"
 msgstr "Databank bijwerken na opstarten"
 
-#: src/preferences.ui:775
+#: src/preferences.ui:773
 msgid "Add path to be included in database"
 msgstr "Voeg het op te nemen pad toe"
 
-#: src/preferences.ui:792 src/preferences.ui:912
+#: src/preferences.ui:790 src/preferences.ui:910
 msgid "Remove selected path"
 msgstr "Geselecteerd pad verwijderen"
 
-#: src/preferences.ui:824
+#: src/preferences.ui:822
 msgid "Include"
 msgstr "Opnemen"
 
-#: src/preferences.ui:895
+#: src/preferences.ui:893
 msgid "Add path to be excluded from database"
 msgstr "Voeg het uit te sluiten pad toe"
 
-#: src/preferences.ui:951 src/preferences.ui:964
+#: src/preferences.ui:949 src/preferences.ui:962
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Jokertekens worden ondersteund. Meerdere items moeten worden gescheiden door "
 "';'"
 
-#: src/preferences.ui:952
+#: src/preferences.ui:950
 msgid "Exclude files:"
 msgstr "Bestanden uitsluiten:"
 
-#: src/preferences.ui:965
+#: src/preferences.ui:963
 msgid "e.g. \".git;*.tmp\""
 msgstr "bijv. \".git;*.tmp\""
 
-#: src/preferences.ui:982
+#: src/preferences.ui:980
 msgid "Exclude hidden files and folders"
 msgstr "Verborgen bestanden en mappen uitsluiten"
 
-#: src/preferences.ui:1003
+#: src/preferences.ui:1001
 msgid "Exclude"
 msgstr "Uitsluiten"
 
-#: src/preferences.ui:1026
+#: src/preferences.ui:1024
 msgid "Database"
 msgstr "Databank"
 
-#: src/preferences_ui.c:53 src/preferences_ui.c:65
+#: src/preferences.ui:1055
+msgid ""
+"<b>Enable dark theme:</b>\n"
+"\n"
+"If enabled, the system theme is asked to use a darker styling for the "
+"application <i>(i.e. dark UI elements on bright text)</i>.\n"
+"\n"
+"Note that not all system themes provide such a darker variant, therefore "
+"enabling this setting might not have an effect."
+msgstr ""
+
+#: src/preferences.ui:1072
+msgid ""
+"<b>Enable client-side decorations:</b>\n"
+"\n"
+"If enabled, the search entry and main menu are displayed in the window title "
+"bar.\n"
+"\n"
+"If disabled, the main menu is displayed as a menu bar with the search entry "
+"below it.\n"
+"This resembles a more traditonal UI layout and takes a little bit more space."
+msgstr ""
+
+#: src/preferences.ui:1091
+msgid ""
+"<b>Use binary units instead of decimal units:</b>\n"
+"\n"
+"This settings controls how file sizes are displayed.\n"
+"\n"
+"\t• <b>Binary units:</b> This refers to binary IEC prefixes <i>(e.g. 1 KiB = "
+"1024 bytes)</i>\n"
+"\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
+"= 1000 bytes)</i>"
+msgstr ""
+
+#: src/preferences.ui:1102
+#, fuzzy
+#| msgid "page0"
+msgid "page2"
+msgstr "pagina0"
+
+#: src/preferences.ui:1110
+msgid ""
+"<b>Remember window size:</b>\n"
+"\n"
+"If enabled, the window size from the previous session will be restored when "
+"you open an FSearch window.\n"
+"\n"
+"Note that some window managers ignore this request and force the window to "
+"have a different size."
+msgstr ""
+
+#: src/preferences.ui:1120
+#, fuzzy
+#| msgid "page0"
+msgid "page3"
+msgstr "pagina0"
+
+#: src/preferences.ui:1128
+msgid ""
+"<b>Behaviour after successfully opening a file:</b>\n"
+"\n"
+"When a file/folder was succesfully opened one of the following actions can "
+"be performed:\n"
+"\n"
+"\t• <b>Nothing:</b> Nothing happens.\n"
+"\t• <b>Minimize:</b> The currently selected FSearch window becomes "
+"minimized. \n"
+"\t\tNote that not all systems allow windows to be minimized.\n"
+"\t• <b>Close:</b> Quit FSearch.\n"
+"\n"
+"You can configure if those actions should be triggered when the file was "
+"opened with\n"
+"\n"
+"\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
+"\t• <b>mouse click</b>"
+msgstr ""
+
+#: src/preferences.ui:1146
+#, fuzzy
+#| msgid "page0"
+msgid "page4"
+msgstr "pagina0"
+
+#: src/preferences.ui:1154
+msgid ""
+"<b>Show highlighted search terms:</b>\n"
+"\n"
+"If enabled, the search terms will be highlighted in the results view. For "
+"example when you search for \"foo\" all appearances of <i>foo</i> in file/"
+"folder names will be highlighted with bold characters:\n"
+"\n"
+"\t\t<b>foo</b>bar.txt\n"
+"\t\tfile.<b>foo</b>\n"
+"\n"
+"This also works for regular expressions and wildcard expressions starting or "
+"ending with an asterisk. "
+msgstr ""
+
+#: src/preferences.ui:1167
+#, fuzzy
+#| msgid "page0"
+msgid "page5"
+msgstr "pagina0"
+
+#: src/preferences.ui:1175
+msgid ""
+"<b>Show tooltips:</b>\n"
+"\n"
+"If enabled, the results view will show the full path of the focused file/"
+"folder in a small tooltip window."
+msgstr ""
+
+#: src/preferences.ui:1183
+#, fuzzy
+#| msgid "page0"
+msgid "page6"
+msgstr "pagina0"
+
+#: src/preferences.ui:1191
+msgid ""
+"<b>Show icons in name column:</b>\n"
+"\n"
+"If enabled, file/folder icons will be shown in the name column."
+msgstr ""
+
+#: src/preferences.ui:1199
+#, fuzzy
+#| msgid "page0"
+msgid "page7"
+msgstr "pagina0"
+
+#: src/preferences.ui:1207
+msgid ""
+"<b>Remember column configuration:</b>\n"
+"\n"
+"If enabled, the column configuration of the results view from the previous "
+"session will be restored when you open an FSearch window. This includes the "
+"size and visibility of all columns."
+msgstr ""
+
+#: src/preferences.ui:1215
+#, fuzzy
+#| msgid "page0"
+msgid "page8"
+msgstr "pagina0"
+
+#: src/preferences.ui:1223
+msgid ""
+"<b>Remember sort order:</b>\n"
+"\n"
+"If enabled, the sort order of the results view from the previous session "
+"will be restored when you open an FSearch window."
+msgstr ""
+
+#: src/preferences.ui:1231
+#, fuzzy
+#| msgid "page0"
+msgid "page9"
+msgstr "pagina0"
+
+#: src/preferences.ui:1239
+msgid ""
+"<b>Open path with double click in path column:</b>\n"
+"\n"
+"If enabled, double clicking in the path column will open the selected path."
+msgstr ""
+
+#: src/preferences.ui:1247
+#, fuzzy
+#| msgid "page1"
+msgid "page10"
+msgstr "pagina1"
+
+#: src/preferences.ui:1255
+msgid ""
+"<b>Single click to open:</b>\n"
+"\n"
+"If enabled, a single click will open the selected file/folder. If you only "
+"want to select a file/folder while this setting is active, you need to a "
+"hold <i>Ctrl</i> at the same time while clicking the file/folder."
+msgstr ""
+
+#: src/preferences.ui:1263
+#, fuzzy
+#| msgid "page1"
+msgid "page11"
+msgstr "pagina1"
+
+#: src/preferences.ui:1271
+msgid ""
+"<b>Show database indexing status:</b>\n"
+"\n"
+"If enabled, the path that is currently being indexed is displayed in the "
+"statusbar."
+msgstr ""
+
+#: src/preferences.ui:1279
+#, fuzzy
+#| msgid "page1"
+msgid "page12"
+msgstr "pagina1"
+
+#: src/preferences.ui:1287
+msgid ""
+"<b>Show warning dialogs:</b>\n"
+"\n"
+"If enabled, a warning dialog is displayed when:\n"
+"\n"
+"\t•  a file or folder failed to open\n"
+msgstr ""
+
+#: src/preferences.ui:1298
+#, fuzzy
+#| msgid "page1"
+msgid "page13"
+msgstr "pagina1"
+
+#: src/preferences.ui:1306
+msgid ""
+"<b>Search in path when query contains path separators:</b>\n"
+"\n"
+"If enabled, search terms containing path separators (i.e. \"/\") will be "
+"automatically matched against the full path of a file or folder."
+msgstr ""
+
+#: src/preferences.ui:1314
+#, fuzzy
+#| msgid "page1"
+msgid "page14"
+msgstr "pagina1"
+
+#: src/preferences.ui:1322
+msgid ""
+"<b>Match case when query contains at least one upper case character:</b>\n"
+"\n"
+"If enabled, search terms containing at least one upper case character will "
+"trigger a case-sensitive search. This means a search term like <i>Foo</i> "
+"will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
+msgstr ""
+
+#: src/preferences.ui:1330
+#, fuzzy
+#| msgid "page1"
+msgid "page15"
+msgstr "pagina1"
+
+#: src/preferences.ui:1338
+msgid ""
+"<b>Hide results when search is empty:</b>\n"
+"\n"
+"If enabled, no search results are displayed when the search entry is empty.\n"
+"\n"
+"If disabled, all files and folders will be displayed when the search entry "
+"is empty."
+msgstr ""
+
+#: src/preferences.ui:1348
+#, fuzzy
+#| msgid "page1"
+msgid "page16"
+msgstr "pagina1"
+
+#: src/preferences.ui:1356
+msgid ""
+"<b>Search as you type:</b>\n"
+"\n"
+"If enabled, the search is automatically updated with every keystroke.\n"
+"\n"
+"If disabled, the search is only updated when you hit <i>Enter</i> or press "
+"the search button. "
+msgstr ""
+
+#: src/preferences.ui:1366
+#, fuzzy
+#| msgid "page1"
+msgid "page17"
+msgstr "pagina1"
+
+#: src/preferences.ui:1374
+msgid ""
+"<b>Limit number of results:</b>\n"
+"\n"
+"If enabled, the number of search results will be limited to the specified "
+"number.\n"
+"\n"
+"Displaying lots of results has a significant performance impact, especially "
+"when the list isn't sorted by name. This will be improved in future versions."
+msgstr ""
+
+#: src/preferences.ui:1384
+#, fuzzy
+#| msgid "page1"
+msgid "page18"
+msgstr "pagina1"
+
+#: src/preferences.ui:1392
+msgid ""
+"<b>Update database on start:</b>\n"
+"\n"
+"If enabled, the database will be updated automatically in the background "
+"when you start FSearch."
+msgstr ""
+
+#: src/preferences.ui:1400
+#, fuzzy
+#| msgid "page1"
+msgid "page19"
+msgstr "pagina1"
+
+#: src/preferences.ui:1408
+msgid ""
+"<b>Included folders:</b>\n"
+"\n"
+"This list contains all folders you want to include in the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the path will included in the database to be "
+"searched in.\n"
+"\t• <b>Path:</b> The full path to be included.\n"
+"\t• <b>Update:</b> This setting is useful if you want to exclude certain "
+"paths from being\n"
+"\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
+"often)</i>"
+msgstr ""
+
+#: src/preferences.ui:1421
+#, fuzzy
+#| msgid "page0"
+msgid "page20"
+msgstr "pagina0"
+
+#: src/preferences.ui:1429
+msgid ""
+"<b>Add folder to database:</b>\n"
+"\n"
+"This button opens a dialog where you can select a folder you want to include "
+"in the database for searching."
+msgstr ""
+
+#: src/preferences.ui:1437
+#, fuzzy
+#| msgid "page1"
+msgid "page21"
+msgstr "pagina1"
+
+#: src/preferences.ui:1445
+msgid ""
+"<b>Remove selected row:</b>\n"
+"\n"
+"This removes the selected folder from the list of included folders."
+msgstr ""
+
+#: src/preferences.ui:1453
+#, fuzzy
+#| msgid "page0"
+msgid "page22"
+msgstr "pagina0"
+
+#: src/preferences.ui:1461
+msgid ""
+"<b>Excluded folders:</b>\n"
+"\n"
+"This list contains all folders you want to exclude from the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
+"\t\t and can't be searched in.\n"
+"\t• <b>Path:</b> The full path to be excluded."
+msgstr ""
+
+#: src/preferences.ui:1473
+#, fuzzy
+#| msgid "page0"
+msgid "page23"
+msgstr "pagina0"
+
+#: src/preferences.ui:1481
+msgid ""
+"<b>Exclude folder from database:</b>\n"
+"\n"
+"This button opens a dialog where you can select a folder you want to exclude "
+"from the database."
+msgstr ""
+
+#: src/preferences.ui:1489
+#, fuzzy
+#| msgid "page0"
+msgid "page24"
+msgstr "pagina0"
+
+#: src/preferences.ui:1497
+msgid ""
+"<b>Remove selected row:</b>\n"
+"\n"
+"This removes the selected folder from the list of excluded folders."
+msgstr ""
+
+#: src/preferences.ui:1505
+#, fuzzy
+#| msgid "page0"
+msgid "page25"
+msgstr "pagina0"
+
+#: src/preferences.ui:1513
+msgid ""
+"<b>Exclude files and folders from database:</b>\n"
+"\n"
+"This is a semi-colon separated list of files (or folders) you want to "
+"exclude from the database. For example <i>.git;.cache;*.swp</i> will exclude "
+"all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
+"end with <i>.swp</i>."
+msgstr ""
+
+#: src/preferences.ui:1521
+#, fuzzy
+#| msgid "page0"
+msgid "page26"
+msgstr "pagina0"
+
+#: src/preferences.ui:1529
+msgid ""
+"<b>Exclude hidden files and folders:</b>\n"
+"\n"
+"If enabled, hidden files and folders will be excluded from the database "
+"<i>(i.e. all files or folders which start with a dot character)</i>."
+msgstr ""
+
+#: src/preferences.ui:1537
+#, fuzzy
+#| msgid "page0"
+msgid "page27"
+msgstr "pagina0"
+
+#: src/preferences.ui:1545
+msgid "Focus a setting to get a detailed description of what it does."
+msgstr ""
+
+#: src/preferences.ui:1549
+#, fuzzy
+#| msgid "page0"
+msgid "page28"
+msgstr "pagina0"
+
+#: src/preferences.ui:1557
+msgid "label"
+msgstr ""
+
+#: src/preferences.ui:1561
+#, fuzzy
+#| msgid "page0"
+msgid "page29"
+msgstr "pagina0"
+
+#: src/preferences.ui:1571
+#, fuzzy
+#| msgid "_Help"
+msgid "Help"
+msgstr "_Hulp"
+
+#: src/preferences_ui.c:57 src/preferences_ui.c:69
 msgid "Select folder"
 msgstr "Kies een map"
 
-#: src/preferences_ui.c:56 src/preferences_ui.c:65 src/preferences_ui.c:139
+#: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:175
 msgid "_Cancel"
 msgstr "_Annuleren"
 
-#: src/preferences_ui.c:58 src/preferences_ui.c:65
+#: src/preferences_ui.c:62 src/preferences_ui.c:69
 msgid "_Select"
 msgstr "_Selecteren"
 
-#: src/preferences_ui.c:140
+#: src/preferences_ui.c:176
 msgid "_OK"
 msgstr "_Oké"
 
@@ -621,6 +1069,18 @@ msgid ""
 msgstr ""
 "zoeken;fsearch;bestanden;mappen;muziek;video;documenten;vinden;hulpmiddel;"
 "alles;"
+
+#~ msgid "Copy"
+#~ msgstr "Kopiëren"
+
+#~ msgid ""
+#~ "<b>Enable dark theme</b> might not have an effect.\n"
+#~ "Some platforms don't support dark theming and others always use dark "
+#~ "themes by default."
+#~ msgstr ""
+#~ "<b>Donker thema inschakelen</b> werkt niet overal.\n"
+#~ "Sommige systemen hebben geen ondersteuning voor donkere thema's en "
+#~ "anderen hebben het standaard."
 
 #~ msgid "Add…"
 #~ msgstr "Toevoegen…"
