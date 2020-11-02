@@ -713,42 +713,52 @@
                     <property name="can-focus">True</property>
                     <property name="tab-pos">left</property>
                     <child>
-                      <object class="GtkFrame">
+                      <object class="GtkBox">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
                         <property name="margin-top">6</property>
                         <property name="margin-bottom">6</property>
-                        <property name="label-xalign">0</property>
-                        <property name="shadow-type">in</property>
+                        <property name="orientation">vertical</property>
+                        <child>
+                          <object class="GtkScrolledWindow">
+                            <property name="width-request">500</property>
+                            <property name="height-request">250</property>
+                            <property name="visible">True</property>
+                            <property name="can-focus">True</property>
+                            <property name="hexpand">True</property>
+                            <property name="vexpand">True</property>
+                            <property name="shadow-type">in</property>
+                            <child>
+                              <object class="GtkTreeView" id="include_list">
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="reorderable">True</property>
+                                <child internal-child="selection">
+                                  <object class="GtkTreeSelection"/>
+                                </child>
+                              </object>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
                         <child>
                           <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="orientation">vertical</property>
                             <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="width-request">500</property>
-                                <property name="height-request">250</property>
+                              <object class="GtkButton" id="include_add_button">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
-                                <property name="hexpand">True</property>
-                                <property name="vexpand">True</property>
-                                <property name="shadow-type">in</property>
-                                <child>
-                                  <object class="GtkTreeView" id="include_list">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="reorderable">True</property>
-                                    <child internal-child="selection">
-                                      <object class="GtkTreeSelection"/>
-                                    </child>
-                                  </object>
-                                </child>
-                                <style>
-                                  <class name="database_list"/>
-                                </style>
+                                <property name="receives-default">True</property>
+                                <property name="tooltip-text" translatable="yes">Add path to be included in database</property>
+                                <property name="image">image1</property>
+                                <property name="always-show-image">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -757,50 +767,14 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkBox">
+                              <object class="GtkButton" id="include_remove_button">
                                 <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="margin-start">3</property>
-                                <property name="margin-end">3</property>
-                                <property name="margin-top">3</property>
-                                <property name="margin-bottom">3</property>
-                                <property name="spacing">6</property>
-                                <child>
-                                  <object class="GtkButton" id="include_add_button">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Add path to be included in database</property>
-                                    <property name="image">image1</property>
-                                    <property name="relief">none</property>
-                                    <property name="always-show-image">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="include_remove_button">
-                                    <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Remove selected path</property>
-                                    <property name="image">image2</property>
-                                    <property name="relief">none</property>
-                                    <property name="always-show-image">True</property>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <style>
-                                  <class name="toolbar"/>
-                                </style>
+                                <property name="sensitive">False</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="tooltip-text" translatable="yes">Remove selected path</property>
+                                <property name="image">image2</property>
+                                <property name="always-show-image">True</property>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -808,10 +782,15 @@
                                 <property name="position">1</property>
                               </packing>
                             </child>
+                            <style>
+                              <class name="inline-toolbar"/>
+                            </style>
                           </object>
-                        </child>
-                        <child type="label_item">
-                          <placeholder/>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
                         </child>
                       </object>
                     </child>
@@ -836,39 +815,48 @@
                         <property name="orientation">vertical</property>
                         <property name="spacing">6</property>
                         <child>
-                          <object class="GtkFrame">
+                          <object class="GtkBox">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
-                            <property name="label-xalign">0</property>
-                            <property name="label-yalign">0</property>
-                            <property name="shadow-type">in</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="width-request">500</property>
+                                <property name="height-request">250</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="hexpand">True</property>
+                                <property name="vexpand">True</property>
+                                <property name="shadow-type">in</property>
+                                <child>
+                                  <object class="GtkTreeView" id="exclude_list">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="reorderable">True</property>
+                                    <child internal-child="selection">
+                                      <object class="GtkTreeSelection"/>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
                             <child>
                               <object class="GtkBox">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
-                                <property name="orientation">vertical</property>
                                 <child>
-                                  <object class="GtkScrolledWindow">
-                                    <property name="width-request">500</property>
-                                    <property name="height-request">250</property>
+                                  <object class="GtkButton" id="exclude_add_button">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
-                                    <property name="hexpand">True</property>
-                                    <property name="vexpand">True</property>
-                                    <property name="shadow-type">in</property>
-                                    <child>
-                                      <object class="GtkTreeView" id="exclude_list">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">True</property>
-                                        <property name="reorderable">True</property>
-                                        <child internal-child="selection">
-                                          <object class="GtkTreeSelection"/>
-                                        </child>
-                                      </object>
-                                    </child>
-                                    <style>
-                                      <class name="database_list"/>
-                                    </style>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Add path to be excluded from database</property>
+                                    <property name="image">image3</property>
+                                    <property name="always-show-image">True</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -877,47 +865,14 @@
                                   </packing>
                                 </child>
                                 <child>
-                                  <object class="GtkBox">
+                                  <object class="GtkButton" id="exclude_remove_button">
                                     <property name="visible">True</property>
-                                    <property name="can-focus">False</property>
-                                    <property name="margin-start">3</property>
-                                    <property name="margin-end">3</property>
-                                    <property name="margin-top">3</property>
-                                    <property name="margin-bottom">3</property>
-                                    <property name="spacing">6</property>
-                                    <child>
-                                      <object class="GtkButton" id="exclude_add_button">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">True</property>
-                                        <property name="receives-default">True</property>
-                                        <property name="tooltip-text" translatable="yes">Add path to be excluded from database</property>
-                                        <property name="image">image3</property>
-                                        <property name="relief">none</property>
-                                        <property name="always-show-image">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                      </packing>
-                                    </child>
-                                    <child>
-                                      <object class="GtkButton" id="exclude_remove_button">
-                                        <property name="visible">True</property>
-                                        <property name="sensitive">False</property>
-                                        <property name="can-focus">True</property>
-                                        <property name="receives-default">True</property>
-                                        <property name="tooltip-text" translatable="yes">Remove selected path</property>
-                                        <property name="image">image4</property>
-                                        <property name="relief">none</property>
-                                        <property name="always-show-image">True</property>
-                                      </object>
-                                      <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                      </packing>
-                                    </child>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Remove selected path</property>
+                                    <property name="image">image4</property>
+                                    <property name="always-show-image">True</property>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -925,10 +880,15 @@
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
+                                <style>
+                                  <class name="inline-toolbar"/>
+                                </style>
                               </object>
-                            </child>
-                            <child type="label_item">
-                              <placeholder/>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
                             </child>
                           </object>
                           <packing>
