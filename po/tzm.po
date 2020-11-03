@@ -8,10 +8,10 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.409-8e25-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-01 10:26+0000\n"
+"PO-Revision-Date: 2020-11-04 21:26+0000\n"
 "Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
-"Language-Team: Central Atlas Tamazight <https://hosted.weblate.org/projects/"
-"fsearch/translations/tzm/>\n"
+"Language-Team: Tamazight (Central Atlas) <https://hosted.weblate.org/"
+"projects/fsearch/translations/tzm/>\n"
 "Language: tzm\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -25,11 +25,11 @@ msgstr "Afran..."
 
 #: src/fsearch.c:183
 msgid "Show version information"
-msgstr "Semal umalen n tleqqimt"
+msgstr "Ssemal umalen n tleqqimt"
 
 #: src/fsearch.c:190
 msgid "Update the database"
-msgstr "Sedɣi tisila n isefka"
+msgstr "Sesdɣi tisila n isefka"
 
 #: src/fsearch.c:387
 msgid "translator-credits"
@@ -45,11 +45,11 @@ msgstr "Asatm amaynu"
 
 #: src/fsearch.glade:88
 msgid "Update database"
-msgstr "Sedɣi tisila n isefka"
+msgstr "Ssedɣi tisila n isefka"
 
 #: src/fsearch.glade:103 src/fsearch.glade:622
 msgid "Cancel database update"
-msgstr "Ser asedɣi tisila n isefka"
+msgstr "Sser asedɣi tisila n isefka"
 
 #: src/fsearch.glade:137 src/menus.ui:106
 msgid "Search in Path"
@@ -69,11 +69,11 @@ msgstr ""
 
 #: src/fsearch.glade:204 src/menus.ui:93
 msgid "Show Filter"
-msgstr "Semal tastayt"
+msgstr "Ssemal tastayt"
 
 #: src/fsearch.glade:218 src/menus.ui:97
 msgid "Show Search Button"
-msgstr ""
+msgstr "Ssemal abra n urezzu"
 
 #: src/fsearch.glade:243 src/menus.ui:79 src/preferences.ui:37
 msgid "Preferences"
@@ -81,7 +81,7 @@ msgstr ""
 
 #: src/fsearch.glade:268 src/menus.ui:123
 msgid "About"
-msgstr "Γef"
+msgstr "Ɣef"
 
 #: src/fsearch.glade:293 src/menus.ui:42
 msgid "Quit"
@@ -114,7 +114,7 @@ msgstr ""
 #: src/fsearch.glade:606 src/fsearch_window.c:959 src/overlay.ui:213
 #, c-format
 msgid "Updating Database…"
-msgstr ""
+msgstr "asedɣi n tsila n isefka…"
 
 #: src/fsearch.glade:639 src/preferences.ui:1065
 msgid "page0"
@@ -126,7 +126,7 @@ msgstr ""
 
 #: src/fsearch.glade:664
 msgid "(empty)"
-msgstr ""
+msgstr "(ixwa)"
 
 #: src/fsearch.glade:675 src/preferences.ui:1083
 msgid "page1"
@@ -150,7 +150,7 @@ msgstr ""
 
 #: src/fsearch.glade:839 src/fsearch.glade:892
 msgid "PATH"
-msgstr ""
+msgstr "ABRID"
 
 #: src/fsearch.glade:945
 msgid "REGEX"
@@ -166,19 +166,19 @@ msgstr "Dɣer kra n usettay"
 
 #: src/fsearch.glade:1118 src/preferences.ui:679
 msgid "Search"
-msgstr ""
+msgstr "Rzu"
 
 #: src/fsearch_filter.c:79
 msgid "All"
-msgstr ""
+msgstr "Maṛṛa"
 
 #: src/fsearch_filter.c:81
 msgid "Folders"
-msgstr ""
+msgstr "Isdawen"
 
 #: src/fsearch_filter.c:82
 msgid "Files"
-msgstr ""
+msgstr "Ifuyla"
 
 #: src/fsearch_filter.c:84
 msgid "Archives"
@@ -186,19 +186,19 @@ msgstr ""
 
 #: src/fsearch_filter.c:86
 msgid "Audio"
-msgstr ""
+msgstr "Imesli"
 
 #: src/fsearch_filter.c:89
 msgid "Documents"
-msgstr ""
+msgstr "Inatamn"
 
 #: src/fsearch_filter.c:91
 msgid "Pictures"
-msgstr ""
+msgstr "Tiwlafin"
 
 #: src/fsearch_filter.c:93
 msgid "Videos"
-msgstr ""
+msgstr "Ividyuten"
 
 #: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
 msgid "Active"
@@ -207,16 +207,16 @@ msgstr ""
 #: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
 #: src/listview.c:203 src/menus.ui:216
 msgid "Path"
-msgstr ""
+msgstr "Aɣaras"
 
 #: src/fsearch_preferences_widgets.c:200
 msgid "Update"
-msgstr ""
+msgstr "Ssedɣi"
 
 #: src/fsearch_window.c:121 src/fsearch_window.c:467 src/fsearch_window.c:917
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d Iferdas"
 
 #: src/fsearch_window.c:400 src/fsearch_window.c:557
 msgid "Querying…"
@@ -228,16 +228,16 @@ msgstr ""
 
 #: src/fsearch_window.c:734 src/fsearch_window_actions.c:407
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Is texsed ad tajjed asatm iṛẓem?"
 
 #: src/fsearch_window.c:923
 msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr ""
+msgstr "Tasedɣit Tameggarut: %Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:936 src/overlay.ui:143
 #, c-format
 msgid "Loading Database…"
-msgstr ""
+msgstr "Azdam n tsila n isefka…"
 
 #: src/fsearch_window.c:1121
 msgid "Background tasks are active."
@@ -252,20 +252,20 @@ msgstr ""
 #: src/fsearch_window_actions.c:77
 #, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr ""
+msgstr "Is nit texsed ad teṛẓemed %d ifuyla?"
 
 #: src/fsearch_window_actions.c:79
 msgid "Opening Files…"
-msgstr ""
+msgstr "Aṛeẓẓum Ifuyla…"
 
 #: src/fsearch_window_actions.c:148
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr ""
+msgstr "Is nit texsed ad tekkesed %d ifuyla?"
 
 #: src/fsearch_window_actions.c:152
 msgid "Deleting files…"
-msgstr ""
+msgstr "Tukkesa n ifuyla…"
 
 #: src/fsearch_window_actions.c:152
 msgid "Moving files to trash…"
@@ -273,11 +273,11 @@ msgstr ""
 
 #: src/listview.c:178 src/menus.ui:212
 msgid "Name"
-msgstr ""
+msgstr "Isem"
 
 #: src/listview.c:230 src/menus.ui:224
 msgid "Size"
-msgstr ""
+msgstr "Tiɣzi"
 
 #: src/listview.c:248 src/menus.ui:228
 msgid "Date Modified"
@@ -285,51 +285,51 @@ msgstr ""
 
 #: src/listview.c:265 src/menus.ui:220
 msgid "Type"
-msgstr ""
+msgstr "Anaw"
 
 #: src/menus.ui:6
 msgid "_File"
-msgstr ""
+msgstr "A_faylu"
 
 #: src/menus.ui:9
 msgid "New Window"
-msgstr ""
+msgstr "Asatm Amaynu"
 
 #: src/menus.ui:16 src/menus.ui:133
 msgid "_Open"
-msgstr ""
+msgstr "_Ṛẓem"
 
 #: src/menus.ui:21
 msgid "Open Folder"
-msgstr ""
+msgstr "Ṛẓem Asdaw"
 
 #: src/menus.ui:29
 msgid "Update Database"
-msgstr ""
+msgstr "ssedɣi tisila n isefka"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "Sser Asedɣi"
 
 #: src/menus.ui:49
 msgid "_Edit"
-msgstr ""
+msgstr "_Ssenfel"
 
 #: src/menus.ui:52 src/menus.ui:169
 msgid "_Copy"
-msgstr ""
+msgstr "_Ssenɣel"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "_Bbi"
 
 #: src/menus.ui:64
 msgid "Select All"
-msgstr ""
+msgstr "Stey Maṛṛa"
 
 #: src/menus.ui:69
 msgid "Deselect All"
-msgstr ""
+msgstr "Kkes astay maṛṛa"
 
 #: src/menus.ui:73
 msgid "Invert Selection"
@@ -337,27 +337,27 @@ msgstr ""
 
 #: src/menus.ui:86
 msgid "_View"
-msgstr ""
+msgstr "Ẓe_ṛ"
 
 #: src/menus.ui:103
 msgid "_Search"
-msgstr ""
+msgstr "_Arezzu"
 
 #: src/menus.ui:120
 msgid "_Help"
-msgstr ""
+msgstr "_Tiwisi"
 
 #: src/menus.ui:139
 msgid "Open _With"
-msgstr ""
+msgstr "Ṛẓem _s"
 
 #: src/menus.ui:153
 msgid "_Open Folder"
-msgstr ""
+msgstr "Ṛ_ẓem Asdaw"
 
 #: src/menus.ui:175
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "Ssen_ɣel abrid n usdaw"
 
 #: src/menus.ui:188
 msgid "Move to _Trash"
@@ -365,7 +365,7 @@ msgstr ""
 
 #: src/menus.ui:194
 msgid "_Delete"
-msgstr ""
+msgstr "_Kkes"
 
 #: src/overlay.ui:31
 msgid "Empty Database"
@@ -381,11 +381,11 @@ msgstr ""
 
 #: src/overlay.ui:102
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Adr <b>Ctrl + F</b> i usenti n tirra"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
 msgid "This won't take long."
@@ -425,7 +425,7 @@ msgstr ""
 
 #: src/preferences.ui:198
 msgid "with double click"
-msgstr ""
+msgstr "s sin iklikn"
 
 #: src/preferences.ui:226
 msgid "Behaviour after successfully opening a file:"
@@ -433,19 +433,19 @@ msgstr ""
 
 #: src/preferences.ui:242
 msgid "Nothing"
-msgstr ""
+msgstr "Walu"
 
 #: src/preferences.ui:243
 msgid "Minimize"
-msgstr ""
+msgstr "Ssemẓi"
 
 #: src/preferences.ui:244
 msgid "Close"
-msgstr ""
+msgstr "Rgel"
 
 #: src/preferences.ui:270
 msgid "General:"
-msgstr ""
+msgstr "Anatam:"
 
 #: src/preferences.ui:305
 msgid "Show highlighted search terms"
@@ -473,11 +473,11 @@ msgstr ""
 
 #: src/preferences.ui:390
 msgid "Single click to open"
-msgstr ""
+msgstr "Yan ukliki i uṛeẓẓum"
 
 #: src/preferences.ui:410
 msgid "Results:"
-msgstr ""
+msgstr "Tiyufa:"
 
 #: src/preferences.ui:451
 msgid "Show database indexing status"
@@ -501,7 +501,7 @@ msgstr ""
 
 #: src/preferences.ui:569
 msgid "Interface"
-msgstr ""
+msgstr "Anegrudm"
 
 #: src/preferences.ui:588
 msgid "Limit number of results:"
@@ -513,7 +513,7 @@ msgstr ""
 
 #: src/preferences.ui:630
 msgid "Search as you type"
-msgstr ""
+msgstr "Rzu adday ttarad"
 
 #: src/preferences.ui:644
 msgid "Hide results when search is empty"
@@ -525,7 +525,7 @@ msgstr ""
 
 #: src/preferences.ui:698
 msgid "Update database on start"
-msgstr ""
+msgstr "Ssedɣi tisila n isefka akd usenti"
 
 #: src/preferences.ui:773
 msgid "Add path to be included in database"
@@ -553,7 +553,7 @@ msgstr ""
 
 #: src/preferences.ui:963
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "am \".git;*.tmp\""
 
 #: src/preferences.ui:980
 msgid "Exclude hidden files and folders"
@@ -565,7 +565,7 @@ msgstr ""
 
 #: src/preferences.ui:1024
 msgid "Database"
-msgstr ""
+msgstr "tisila n isefka"
 
 #: src/preferences.ui:1055
 msgid ""
@@ -603,10 +603,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1102
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "Tasna0"
+msgstr "Tasna2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -620,10 +618,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1120
-#, fuzzy
-#| msgid "page0"
 msgid "page3"
-msgstr "Tasna0"
+msgstr "Tasna3"
 
 #: src/preferences.ui:1128
 msgid ""
@@ -646,10 +642,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1146
-#, fuzzy
-#| msgid "page0"
 msgid "page4"
-msgstr "Tasna0"
+msgstr "Tasna4"
 
 #: src/preferences.ui:1154
 msgid ""
@@ -667,10 +661,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1167
-#, fuzzy
-#| msgid "page0"
 msgid "page5"
-msgstr "Tasna0"
+msgstr "Tasna5"
 
 #: src/preferences.ui:1175
 msgid ""
@@ -681,10 +673,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1183
-#, fuzzy
-#| msgid "page0"
 msgid "page6"
-msgstr "Tasna0"
+msgstr "Tasna6"
 
 #: src/preferences.ui:1191
 msgid ""
@@ -694,10 +684,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1199
-#, fuzzy
-#| msgid "page0"
 msgid "page7"
-msgstr "Tasna0"
+msgstr "Tasna7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -709,10 +697,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1215
-#, fuzzy
-#| msgid "page0"
 msgid "page8"
-msgstr "Tasna0"
+msgstr "Tasna8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -723,10 +709,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1231
-#, fuzzy
-#| msgid "page0"
 msgid "page9"
-msgstr "Tasna0"
+msgstr "Tasna9"
 
 #: src/preferences.ui:1239
 msgid ""
@@ -736,10 +720,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1247
-#, fuzzy
-#| msgid "page1"
 msgid "page10"
-msgstr "Tasna1"
+msgstr "Tasna10"
 
 #: src/preferences.ui:1255
 msgid ""
@@ -751,10 +733,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1263
-#, fuzzy
-#| msgid "page1"
 msgid "page11"
-msgstr "Tasna1"
+msgstr "Tasna11"
 
 #: src/preferences.ui:1271
 msgid ""
@@ -765,10 +745,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1279
-#, fuzzy
-#| msgid "page1"
 msgid "page12"
-msgstr "Tasna1"
+msgstr "Tasna12"
 
 #: src/preferences.ui:1287
 msgid ""
@@ -780,10 +758,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1298
-#, fuzzy
-#| msgid "page1"
 msgid "page13"
-msgstr "Tasna1"
+msgstr "Tasna13"
 
 #: src/preferences.ui:1306
 msgid ""
@@ -794,10 +770,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1314
-#, fuzzy
-#| msgid "page1"
 msgid "page14"
-msgstr "Tasna1"
+msgstr "Tasna14"
 
 #: src/preferences.ui:1322
 msgid ""
@@ -809,10 +783,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1330
-#, fuzzy
-#| msgid "page1"
 msgid "page15"
-msgstr "Tasna1"
+msgstr "Tasna15"
 
 #: src/preferences.ui:1338
 msgid ""
@@ -825,10 +797,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1348
-#, fuzzy
-#| msgid "page1"
 msgid "page16"
-msgstr "Tasna1"
+msgstr "Tasna16"
 
 #: src/preferences.ui:1356
 msgid ""
@@ -841,10 +811,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1366
-#, fuzzy
-#| msgid "page1"
 msgid "page17"
-msgstr "Tasna1"
+msgstr "Tasna17"
 
 #: src/preferences.ui:1374
 msgid ""
@@ -858,10 +826,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1384
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "Tasna1"
+msgstr "Tasna18"
 
 #: src/preferences.ui:1392
 msgid ""
@@ -872,10 +838,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1400
-#, fuzzy
-#| msgid "page1"
 msgid "page19"
-msgstr "Tasna1"
+msgstr "Tasna19"
 
 #: src/preferences.ui:1408
 msgid ""
@@ -893,10 +857,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1421
-#, fuzzy
-#| msgid "page0"
 msgid "page20"
-msgstr "Tasna0"
+msgstr "Tasna20"
 
 #: src/preferences.ui:1429
 msgid ""
@@ -907,10 +869,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1437
-#, fuzzy
-#| msgid "page1"
 msgid "page21"
-msgstr "Tasna1"
+msgstr "Tasna21"
 
 #: src/preferences.ui:1445
 msgid ""
@@ -920,10 +880,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1453
-#, fuzzy
-#| msgid "page0"
 msgid "page22"
-msgstr "Tasna0"
+msgstr "Tasna22"
 
 #: src/preferences.ui:1461
 msgid ""
@@ -937,10 +895,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1473
-#, fuzzy
-#| msgid "page0"
 msgid "page23"
-msgstr "Tasna0"
+msgstr "Tasna23"
 
 #: src/preferences.ui:1481
 msgid ""
@@ -951,10 +907,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1489
-#, fuzzy
-#| msgid "page0"
 msgid "page24"
-msgstr "Tasna0"
+msgstr "Tasna24"
 
 #: src/preferences.ui:1497
 msgid ""
@@ -964,10 +918,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1505
-#, fuzzy
-#| msgid "page0"
 msgid "page25"
-msgstr "Tasna0"
+msgstr "Tasna25"
 
 #: src/preferences.ui:1513
 msgid ""
@@ -980,10 +932,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1521
-#, fuzzy
-#| msgid "page0"
 msgid "page26"
-msgstr "Tasna0"
+msgstr "Tasna26"
 
 #: src/preferences.ui:1529
 msgid ""
@@ -994,54 +944,48 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1537
-#, fuzzy
-#| msgid "page0"
 msgid "page27"
-msgstr "Tasna0"
+msgstr "Tasna27"
 
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 
 #: src/preferences.ui:1549
-#, fuzzy
-#| msgid "page0"
 msgid "page28"
-msgstr "Tasna0"
+msgstr "Tasna28"
 
 #: src/preferences.ui:1557
 msgid "label"
 msgstr ""
 
 #: src/preferences.ui:1561
-#, fuzzy
-#| msgid "page0"
 msgid "page29"
-msgstr "Tasna0"
+msgstr "Tasna29"
 
 #: src/preferences.ui:1571
 msgid "Help"
-msgstr ""
+msgstr "Tiwisi"
 
 #: src/preferences_ui.c:57 src/preferences_ui.c:69
 msgid "Select folder"
-msgstr ""
+msgstr "Stey Asdaw"
 
 #: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:175
 msgid "_Cancel"
-msgstr ""
+msgstr "_Sser"
 
 #: src/preferences_ui.c:62 src/preferences_ui.c:69
 msgid "_Select"
-msgstr ""
+msgstr "S_tey"
 
 #: src/preferences_ui.c:176
 msgid "_OK"
-msgstr ""
+msgstr "_WAX"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
@@ -1049,9 +993,9 @@ msgstr ""
 
 #: data/fsearch.desktop.in.in:7
 msgid "system-search"
-msgstr ""
+msgstr "Arezzu-unegraw"
 
 #: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+msgstr "rzu;fsearch;ifuyla;isdawen;aẓawan;avidyu;inatamen;af;imis;maṛṛa;"
