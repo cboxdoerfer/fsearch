@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-09-22 04:39+0000\n"
-"Last-Translator: GongHeng2017 <1239137790@qq.com>\n"
+"PO-Revision-Date: 2020-11-04 21:26+0000\n"
+"Last-Translator: liquidhelium <liquidhelium@163.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.3.2-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
-msgstr ""
+msgstr "排序中..."
 
 #: src/fsearch.c:183
 msgid "Show version information"
@@ -48,10 +48,8 @@ msgid "Update database"
 msgstr "更新数据源"
 
 #: src/fsearch.glade:103 src/fsearch.glade:622
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "启动时更新数据库"
+msgstr "取消更新数据库"
 
 #: src/fsearch.glade:137 src/menus.ui:106
 msgid "Search in Path"
@@ -105,7 +103,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "搜索到的数量"
+msgstr "选择文件夹的数量"
 
 #: src/fsearch.glade:523 src/fsearch.glade:548
 msgid "0/0"
@@ -188,23 +186,23 @@ msgstr "文件"
 
 #: src/fsearch_filter.c:84
 msgid "Archives"
-msgstr ""
+msgstr "归档文件"
 
 #: src/fsearch_filter.c:86
 msgid "Audio"
-msgstr ""
+msgstr "音频"
 
 #: src/fsearch_filter.c:89
 msgid "Documents"
-msgstr ""
+msgstr "文档"
 
 #: src/fsearch_filter.c:91
 msgid "Pictures"
-msgstr ""
+msgstr "图片"
 
 #: src/fsearch_filter.c:93
 msgid "Videos"
-msgstr ""
+msgstr "视频"
 
 #: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
 msgid "Active"
@@ -226,7 +224,7 @@ msgstr "%'d 项"
 
 #: src/fsearch_window.c:400 src/fsearch_window.c:557
 msgid "Querying…"
-msgstr ""
+msgstr "查询中…"
 
 #: src/fsearch_window.c:733 src/fsearch_window_actions.c:406
 msgid "Failed to open file"
@@ -316,10 +314,8 @@ msgid "Update Database"
 msgstr "更新数据库"
 
 #: src/menus.ui:35
-#, fuzzy
-#| msgid "Update"
 msgid "Cancel Update"
-msgstr "更新"
+msgstr "取消更新"
 
 #: src/menus.ui:49
 msgid "_Edit"
@@ -334,10 +330,8 @@ msgid "Cu_t"
 msgstr ""
 
 #: src/menus.ui:64
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "取消所有选择"
+msgstr "选择所有"
 
 #: src/menus.ui:69
 msgid "Deselect All"
@@ -421,7 +415,7 @@ msgstr "启用暗色主题"
 
 #: src/preferences.ui:119
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "启用客户端装饰（需要重启）"
 
 #: src/preferences.ui:133
 msgid "Use binary units instead of decimal units"
@@ -445,7 +439,7 @@ msgstr "打开文件成功后的动作："
 
 #: src/preferences.ui:242
 msgid "Nothing"
-msgstr ""
+msgstr "无"
 
 #: src/preferences.ui:243
 msgid "Minimize"
@@ -498,10 +492,8 @@ msgid "Show database indexing status"
 msgstr "启动时更新数据库"
 
 #: src/preferences.ui:471
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "显示状态栏"
+msgstr "状态栏："
 
 #: src/preferences.ui:512
 msgid "Show warning dialogs when:"
@@ -515,7 +507,7 @@ msgstr "文件或目录打开失败"
 #, fuzzy
 #| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "对话框"
+msgstr "对话框："
 
 #: src/preferences.ui:569
 msgid "Interface"
