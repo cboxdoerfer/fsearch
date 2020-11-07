@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-01 10:26+0000\n"
+"PO-Revision-Date: 2020-11-10 00:28+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -330,7 +330,7 @@ msgstr "_Kopyala"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "Ke_s"
 
 #: src/menus.ui:64
 msgid "Select All"
@@ -416,7 +416,7 @@ msgstr "Farklı bir arama deneyiniz"
 
 #: src/preferences.ui:105
 msgid "Enable dark theme"
-msgstr "Karanlık temayı etkinleştir"
+msgstr "Koyu temayı etkinleştir"
 
 #: src/preferences.ui:119
 msgid "Enable client-side decorations (requires restart)"
@@ -590,6 +590,14 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Koyu temayı etkinleştir:</b>\n"
+"\n"
+"Etkinleştirilirse, sistem temasından uygulama için daha koyu bir tarz "
+"kullanması istenir <i>(örn. açık renkli metin üzerinde koyu kullanıcı "
+"arayüzü ögeleri)</i>.\n"
+"\n"
+"Tüm sistem temalarının böyle koyu bir çeşit sağlamadığını, bu nedenle bu "
+"ayarın etkinleştirilmesinin bir etkisi olmayabileceğini unutmayın."
 
 #: src/preferences.ui:1072
 msgid ""
@@ -616,10 +624,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1102
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "sayfa0"
+msgstr "sayfa2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -633,10 +639,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1120
-#, fuzzy
-#| msgid "page0"
 msgid "page3"
-msgstr "sayfa0"
+msgstr "sayfa3"
 
 #: src/preferences.ui:1128
 msgid ""
@@ -659,10 +663,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1146
-#, fuzzy
-#| msgid "page0"
 msgid "page4"
-msgstr "sayfa0"
+msgstr "sayfa4"
 
 #: src/preferences.ui:1154
 msgid ""
@@ -680,10 +682,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1167
-#, fuzzy
-#| msgid "page0"
 msgid "page5"
-msgstr "sayfa0"
+msgstr "sayfa5"
 
 #: src/preferences.ui:1175
 msgid ""
@@ -694,10 +694,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1183
-#, fuzzy
-#| msgid "page0"
 msgid "page6"
-msgstr "sayfa0"
+msgstr "sayfa6"
 
 #: src/preferences.ui:1191
 msgid ""
@@ -707,10 +705,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1199
-#, fuzzy
-#| msgid "page0"
 msgid "page7"
-msgstr "sayfa0"
+msgstr "sayfa7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -722,10 +718,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1215
-#, fuzzy
-#| msgid "page0"
 msgid "page8"
-msgstr "sayfa0"
+msgstr "sayfa8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -736,10 +730,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1231
-#, fuzzy
-#| msgid "page0"
 msgid "page9"
-msgstr "sayfa0"
+msgstr "sayfa9"
 
 #: src/preferences.ui:1239
 msgid ""
@@ -749,10 +741,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1247
-#, fuzzy
-#| msgid "page1"
 msgid "page10"
-msgstr "sayfa1"
+msgstr "sayfa10"
 
 #: src/preferences.ui:1255
 msgid ""
@@ -764,10 +754,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1263
-#, fuzzy
-#| msgid "page1"
 msgid "page11"
-msgstr "sayfa1"
+msgstr "sayfa11"
 
 #: src/preferences.ui:1271
 msgid ""
@@ -778,10 +766,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1279
-#, fuzzy
-#| msgid "page1"
 msgid "page12"
-msgstr "sayfa1"
+msgstr "sayfa12"
 
 #: src/preferences.ui:1287
 msgid ""
@@ -793,10 +779,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1298
-#, fuzzy
-#| msgid "page1"
 msgid "page13"
-msgstr "sayfa1"
+msgstr "sayfa13"
 
 #: src/preferences.ui:1306
 msgid ""
@@ -807,10 +791,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1314
-#, fuzzy
-#| msgid "page1"
 msgid "page14"
-msgstr "sayfa1"
+msgstr "sayfa14"
 
 #: src/preferences.ui:1322
 msgid ""
@@ -822,10 +804,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1330
-#, fuzzy
-#| msgid "page1"
 msgid "page15"
-msgstr "sayfa1"
+msgstr "sayfa15"
 
 #: src/preferences.ui:1338
 msgid ""
@@ -838,10 +818,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1348
-#, fuzzy
-#| msgid "page1"
 msgid "page16"
-msgstr "sayfa1"
+msgstr "sayfa16"
 
 #: src/preferences.ui:1356
 msgid ""
@@ -854,10 +832,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1366
-#, fuzzy
-#| msgid "page1"
 msgid "page17"
-msgstr "sayfa1"
+msgstr "sayfa17"
 
 #: src/preferences.ui:1374
 msgid ""
@@ -871,10 +847,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1384
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "sayfa1"
+msgstr "sayfa18"
 
 #: src/preferences.ui:1392
 msgid ""
@@ -885,10 +859,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1400
-#, fuzzy
-#| msgid "page1"
 msgid "page19"
-msgstr "sayfa1"
+msgstr "sayfa19"
 
 #: src/preferences.ui:1408
 msgid ""
@@ -906,10 +878,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1421
-#, fuzzy
-#| msgid "page0"
 msgid "page20"
-msgstr "sayfa0"
+msgstr "sayfa20"
 
 #: src/preferences.ui:1429
 msgid ""
@@ -920,10 +890,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1437
-#, fuzzy
-#| msgid "page1"
 msgid "page21"
-msgstr "sayfa1"
+msgstr "sayfa21"
 
 #: src/preferences.ui:1445
 msgid ""
@@ -933,10 +901,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1453
-#, fuzzy
-#| msgid "page0"
 msgid "page22"
-msgstr "sayfa0"
+msgstr "sayfa22"
 
 #: src/preferences.ui:1461
 msgid ""
@@ -950,10 +916,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1473
-#, fuzzy
-#| msgid "page0"
 msgid "page23"
-msgstr "sayfa0"
+msgstr "sayfa23"
 
 #: src/preferences.ui:1481
 msgid ""
@@ -964,10 +928,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1489
-#, fuzzy
-#| msgid "page0"
 msgid "page24"
-msgstr "sayfa0"
+msgstr "sayfa24"
 
 #: src/preferences.ui:1497
 msgid ""
@@ -977,10 +939,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1505
-#, fuzzy
-#| msgid "page0"
 msgid "page25"
-msgstr "sayfa0"
+msgstr "sayfa25"
 
 #: src/preferences.ui:1513
 msgid ""
@@ -993,10 +953,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1521
-#, fuzzy
-#| msgid "page0"
 msgid "page26"
-msgstr "sayfa0"
+msgstr "sayfa26"
 
 #: src/preferences.ui:1529
 msgid ""
@@ -1007,36 +965,28 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1537
-#, fuzzy
-#| msgid "page0"
 msgid "page27"
-msgstr "sayfa0"
+msgstr "sayfa27"
 
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 
 #: src/preferences.ui:1549
-#, fuzzy
-#| msgid "page0"
 msgid "page28"
-msgstr "sayfa0"
+msgstr "sayfa28"
 
 #: src/preferences.ui:1557
 msgid "label"
 msgstr ""
 
 #: src/preferences.ui:1561
-#, fuzzy
-#| msgid "page0"
 msgid "page29"
-msgstr "sayfa0"
+msgstr "sayfa29"
 
 #: src/preferences.ui:1571
-#, fuzzy
-#| msgid "_Help"
 msgid "Help"
-msgstr "_Yardım"
+msgstr "Yardım"
 
 #: src/preferences_ui.c:57 src/preferences_ui.c:69
 msgid "Select folder"
