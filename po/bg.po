@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-10-26 10:26+0000\n"
+"PO-Revision-Date: 2020-11-10 00:28+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -329,7 +329,7 @@ msgstr "_Копиране"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "_Отрязване"
 
 #: src/menus.ui:64
 msgid "Select All"
@@ -506,10 +506,8 @@ msgid "file / folder failed to open"
 msgstr "файлът / папката не могат да бъдат отворени"
 
 #: src/preferences.ui:544
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Диалози"
+msgstr "Диалози:"
 
 #: src/preferences.ui:569
 msgid "Interface"
@@ -541,11 +539,11 @@ msgstr "Обновяване на базата с данни при старти
 
 #: src/preferences.ui:773
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Добавянето на пътя ще бъде включено в базата с данни"
 
 #: src/preferences.ui:790 src/preferences.ui:910
 msgid "Remove selected path"
-msgstr ""
+msgstr "Премахване на избраният път"
 
 #: src/preferences.ui:822
 msgid "Include"
@@ -553,7 +551,7 @@ msgstr "Включване"
 
 #: src/preferences.ui:893
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Добавянето на пътя ще бъде изключено от базата с данни"
 
 #: src/preferences.ui:949 src/preferences.ui:962
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -591,6 +589,13 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Активиране на тъмна тема:</b>\n"
+"\n"
+"Ако е включено, системната тема ще задава тъмен стил на приложенията <i>(т.е "
+"тъмен интерфейс и светъл текст)</i>.\n"
+"\n"
+"Имайте предвид, че не всички системни теми имат тъмен вариант, така, че "
+"включването на тази настройка може да няма ефект."
 
 #: src/preferences.ui:1072
 msgid ""
@@ -603,6 +608,15 @@ msgid ""
 "below it.\n"
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
+"<b>Активиране на клиентска декорация:</b>\n"
+"\n"
+"Ако е включено, полето за търсене и основното меню ще бъдат показвани в "
+"заглавието на прозореца.\n"
+"\n"
+"Ако е включено, основното меню е показано, като лента с менюта с полето за "
+"търсене под него.\n"
+"Това е по-традиционно оформление на потребителския интерфейс и отнема малко "
+"повече място."
 
 #: src/preferences.ui:1091
 msgid ""
