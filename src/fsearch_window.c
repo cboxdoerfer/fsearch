@@ -860,7 +860,7 @@ create_view_and_model(FsearchApplicationWindow *app) {
     GtkTreeView *list = GTK_TREE_VIEW(app->listview);
 
     if (!config->restore_column_config) {
-        listview_add_default_columns(list, app);
+        listview_add_default_columns(list, config, app);
     }
     else {
         listview_add_column(list, LIST_MODEL_COL_NAME, config->name_column_width, config->name_column_pos, app);

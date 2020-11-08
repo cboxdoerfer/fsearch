@@ -298,12 +298,21 @@ listview_add_column(GtkTreeView *list, uint32_t col_type, int32_t size, int32_t 
 }
 
 void
-listview_add_default_columns(GtkTreeView *view, FsearchApplicationWindow *win) {
-    listview_add_column(view, LIST_MODEL_COL_NAME, 250, 0, win);
-    listview_add_column(view, LIST_MODEL_COL_PATH, 250, 1, win);
-    listview_add_column(view, LIST_MODEL_COL_TYPE, 100, 2, NULL);
-    listview_add_column(view, LIST_MODEL_COL_SIZE, 75, 3, NULL);
-    listview_add_column(view, LIST_MODEL_COL_CHANGED, 125, 4, NULL);
+listview_add_default_columns(GtkTreeView *view, FsearchConfig *config, FsearchApplicationWindow *win) {
+    int col_pos = 0;
+    listview_add_column(view, LIST_MODEL_COL_NAME, 250, col_pos++, win);
+    if (config->show_path_column) {
+        listview_add_column(view, LIST_MODEL_COL_PATH, 250, col_pos++, win);
+    }
+    if (config->show_type_column) {
+        listview_add_column(view, LIST_MODEL_COL_TYPE, 100, col_pos++, NULL);
+    }
+    if (config->show_size_column) {
+        listview_add_column(view, LIST_MODEL_COL_SIZE, 75, col_pos++, NULL);
+    }
+    if (config->show_modified_column) {
+        listview_add_column(view, LIST_MODEL_COL_CHANGED, 125, col_pos++, NULL);
+    }
 }
 
 void
