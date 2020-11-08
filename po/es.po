@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-01 10:26+0000\n"
+"PO-Revision-Date: 2020-11-10 00:28+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
@@ -18,11 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
-msgstr ""
+msgstr "Ordenando..."
 
 #: src/fsearch.c:183
 msgid "Show version information"
@@ -330,7 +330,7 @@ msgstr "_Copiar"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "Cor_tar"
 
 #: src/menus.ui:64
 msgid "Select All"
@@ -480,11 +480,11 @@ msgstr "Recuerde el orden de clasificación"
 
 #: src/preferences.ui:376
 msgid "Open path with double click in path column"
-msgstr "Abrir carpeta con doble click en la columna de la ruta"
+msgstr "Abrir ruta con doble clic en la columna de la ruta"
 
 #: src/preferences.ui:390
 msgid "Single click to open"
-msgstr "Abrir con un click"
+msgstr "Abrir con un clic"
 
 #: src/preferences.ui:410
 msgid "Results:"
@@ -507,10 +507,8 @@ msgid "file / folder failed to open"
 msgstr "No se pudo abrir archivo / carpeta"
 
 #: src/preferences.ui:544
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Diálogos"
+msgstr "Diálogos:"
 
 #: src/preferences.ui:569
 msgid "Interface"
@@ -592,6 +590,14 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Habilitar tema oscuro:</b>\n"
+"\n"
+"Si está habilitado, se pide al tema del sistema que utilice un estilo más "
+"oscuro para la aplicación <i>(es decir, elementos de interfaz de usuario "
+"oscuros en texto brillante)</i>.\n"
+"\n"
+"Tenga en cuenta que no todos los temas del sistema proporcionan una variante "
+"más oscura, por lo que habilitar esta configuración podría no tener efecto."
 
 #: src/preferences.ui:1072
 msgid ""
@@ -604,6 +610,15 @@ msgid ""
 "below it.\n"
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
+"<b>Habilitar Client Side Decorations:</b>\n"
+"\n"
+"Si está activada, la entrada de búsqueda y el menú principal se muestran en "
+"la barra de título de la ventana.\n"
+"\n"
+"Si está desactivado, el menú principal se muestra como una barra de menús "
+"con la entrada de búsqueda debajo de él.\n"
+"Esto se asemeja a un diseño de interfaz de usuario más traditonal y toma un "
+"poco más de espacio."
 
 #: src/preferences.ui:1091
 msgid ""
@@ -616,12 +631,18 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Utilicar unidades binarias en lugar de unidades decimales:</b>\n"
+"\n"
+"Esta configuración controla cómo se muestran los tamaños de archivo.\n"
+"\n"
+"\t• <b>Unidades binarias:</b> Esto se refiere a los prefijos binarios <i>(p. "
+"ej. 1 KiB = 1024 bytes)</i>\n"
+"\t• <b>Unidades decimales:</b> Esto se refiere a los prefijos del SI <i>(p. "
+"ej. 1 kB = 1000 bytes)</i>"
 
 #: src/preferences.ui:1102
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "Página 0"
+msgstr "Página 2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -633,12 +654,17 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Recuerdar el tamaño de la ventana:</b>\n"
+"\n"
+"Si está habilitado, el tamaño de la ventana de la sesión anterior se "
+"restaurará al abrir una ventana de FSearch.\n"
+"\n"
+"Tenga en cuenta que algunos administradores de ventanas ignoran esta "
+"solicitud y fuerzan la ventana a tener un tamaño diferente."
 
 #: src/preferences.ui:1120
-#, fuzzy
-#| msgid "page0"
 msgid "page3"
-msgstr "Página 0"
+msgstr "Página 3"
 
 #: src/preferences.ui:1128
 msgid ""
@@ -659,12 +685,27 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>Comportamiento después de abrir correctamente un archivo:</b>\n"
+"\n"
+"Cuando se abre correctamente un archivo/carpeta, se puede realizar una de "
+"las siguientes acciones:\n"
+"\n"
+"\t• <b>Nada:</b> No sucede nada.\n"
+"\t• <b>Minimizar:</b> La ventana de FSearch actualmente seleccionada se "
+"minimiza.\n"
+"\t\tTenga en cuenta que no todos los sistemas permiten minimizar las "
+"ventanas.\n"
+"\t• <b>Cerrar:</b> Salir de FSearch.\n"
+"\n"
+"Puede configurar si esas acciones deben activarse cuando se abrie el archivo "
+"con\n"
+"\n"
+"\t• <b>atajos de teclado o entradas de menú</b> y/o\n"
+"\t• <b>clic del ratón</b>"
 
 #: src/preferences.ui:1146
-#, fuzzy
-#| msgid "page0"
 msgid "page4"
-msgstr "Página 0"
+msgstr "Página 4"
 
 #: src/preferences.ui:1154
 msgid ""
@@ -680,12 +721,22 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
+"<b>Mostrar términos de búsqueda resaltados:</b>\n"
+"\n"
+"Si está habilitado, los términos de búsqueda se resaltarán en la vista de "
+"resultados. Por ejemplo, al buscar \"fu\" todas las apariciones de <i>fu</i> "
+"en los nombres de archivos/carpetas se resaltarán con caracteres en negrita:"
+"\n"
+"\n"
+"\t\t<b>fu</b>lano.txt\n"
+"\t\tarchivo.<b>fu</b>\n"
+"\n"
+"Esto también funciona para expresiones regulares y expresiones comodín que "
+"comienzan o terminan con un asterisco. "
 
 #: src/preferences.ui:1167
-#, fuzzy
-#| msgid "page0"
 msgid "page5"
-msgstr "Página 0"
+msgstr "Página 5"
 
 #: src/preferences.ui:1175
 msgid ""
@@ -694,12 +745,15 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b>Mostrar descripciones emergentes:</b>\n"
+"\n"
+"Si está habilitada, la vista de resultados mostrará la ruta de acceso "
+"completa del archivo/carpeta enfocado en una pequeña ventana de información "
+"emergente."
 
 #: src/preferences.ui:1183
-#, fuzzy
-#| msgid "page0"
 msgid "page6"
-msgstr "Página 0"
+msgstr "Página 6"
 
 #: src/preferences.ui:1191
 msgid ""
@@ -707,12 +761,14 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Mostrar iconos en la columna Nombre:</b>\n"
+"\n"
+"Si está habilitado, los iconos de archivos/carpetas se mostrarán en la "
+"columna Nombre."
 
 #: src/preferences.ui:1199
-#, fuzzy
-#| msgid "page0"
 msgid "page7"
-msgstr "Página 0"
+msgstr "Página 7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -722,12 +778,15 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>Recordar configuración de columnas:</b>\n"
+"\n"
+"Si está habilitada, la configuración de columnas de la vista de resultados "
+"de la sesión anterior se restaurará al abrir una ventana de FSearch. Esto "
+"incluye el tamaño y la visibilidad de todas las columnas."
 
 #: src/preferences.ui:1215
-#, fuzzy
-#| msgid "page0"
 msgid "page8"
-msgstr "Página 0"
+msgstr "Página 8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -736,12 +795,14 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Recuerdar el ordenamiento:</b>\n"
+"\n"
+"Si está habilitada, el ordenamiento de la vista de resultados de la sesión "
+"anterior se restaurará cuando abra una nueva ventanda de Fsearch."
 
 #: src/preferences.ui:1231
-#, fuzzy
-#| msgid "page0"
 msgid "page9"
-msgstr "Página 0"
+msgstr "Página 9"
 
 #: src/preferences.ui:1239
 msgid ""
@@ -749,12 +810,14 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>Abrir ruta con doble clic en la columna de la ruta:</b>\n"
+"\n"
+"Si está habilitado, al hacer doble clic en la columna de ruta se abrirá la "
+"ruta seleccionada."
 
 #: src/preferences.ui:1247
-#, fuzzy
-#| msgid "page1"
 msgid "page10"
-msgstr "Página 1"
+msgstr "Página 10"
 
 #: src/preferences.ui:1255
 msgid ""
@@ -764,12 +827,16 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to a "
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>Abrir con un click:</b>\n"
+"\n"
+"Si está habilitado, un solo clic abrirá el archivo/carpeta seleccionado. Si "
+"solo desea seleccionar un archivo/carpeta mientras esta configuración está "
+"activa, debe mantener presionada la tecla <i>Ctrl</i> al mismo tiempo "
+"mientras hace clic en el archivo/carpeta."
 
 #: src/preferences.ui:1263
-#, fuzzy
-#| msgid "page1"
 msgid "page11"
-msgstr "Página 1"
+msgstr "Página 11"
 
 #: src/preferences.ui:1271
 msgid ""
@@ -778,12 +845,14 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>Mostrar el estado del indexado de la base de datos:</b>\n"
+"\n"
+"Si está habilitada, la ruta de acceso que se está indizando actualmente se "
+"muestra en la barra de estado."
 
 #: src/preferences.ui:1279
-#, fuzzy
-#| msgid "page1"
 msgid "page12"
-msgstr "Página 1"
+msgstr "Página 12"
 
 #: src/preferences.ui:1287
 msgid ""
@@ -793,12 +862,15 @@ msgid ""
 "\n"
 "\t•  a file or folder failed to open\n"
 msgstr ""
+"<b>Mostrar advertencias:</b>\n"
+"\n"
+"Si está habilitado, se mostrará un cuadro de diálogo de advertencia cuando:\n"
+"\n"
+"\t•  un archivo o carpeta no se pudo abrir\n"
 
 #: src/preferences.ui:1298
-#, fuzzy
-#| msgid "page1"
 msgid "page13"
-msgstr "Página 1"
+msgstr "Página 13"
 
 #: src/preferences.ui:1306
 msgid ""
@@ -807,12 +879,15 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
+"<b>Buscar en la ruta cuando la consulta tenga separadores de ruta:</b>\n"
+"\n"
+"Si está habilitado, los términos de búsqueda que contienen separadores de "
+"ruta (p. ej. \"/\") se compararán automáticamente con la ruta completa de un "
+"archivo o carpeta."
 
 #: src/preferences.ui:1314
-#, fuzzy
-#| msgid "page1"
 msgid "page14"
-msgstr "Página 1"
+msgstr "Página 14"
 
 #: src/preferences.ui:1322
 msgid ""
@@ -822,12 +897,17 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
+"<b>Coincidir mayúsculas y minúsculas cuando la consulta contiene al menos un "
+"carácter en mayúsculas:</b>\n"
+"\n"
+"Si está habilitado, los términos de búsqueda que contengan al menos un "
+"carácter en mayúsculas provocará una búsqueda sensible a mayúsculas y "
+"minúsculas. Esto significa que un término de búsqueda como <i>Fu</i> "
+"coincidirá con <i>Fulano.txt</i> pero no <i>fulano.txt</i>."
 
 #: src/preferences.ui:1330
-#, fuzzy
-#| msgid "page1"
 msgid "page15"
-msgstr "Página 1"
+msgstr "Página 15"
 
 #: src/preferences.ui:1338
 msgid ""
@@ -838,12 +918,17 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
+"<b>Ocultar resultados cuando la búsqueda esté vacía:</b>\n"
+"\n"
+"Si está habilitado, no se muestra ningún resultado de búsqueda cuando la "
+"entrada de búsqueda esté vacía.\n"
+"\n"
+"Si está deshabilitada, todos los archivos y carpetas se mostrarán cuando la "
+"entrada de búsqueda esté vacía."
 
 #: src/preferences.ui:1348
-#, fuzzy
-#| msgid "page1"
 msgid "page16"
-msgstr "Página 1"
+msgstr "Página 16"
 
 #: src/preferences.ui:1356
 msgid ""
@@ -854,12 +939,17 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>Buscar mientras escribe:</b>\n"
+"\n"
+"Si está habilitado, la búsqueda se actualiza automáticamente con cada "
+"pulsación de tecla.\n"
+"\n"
+"Si está deshabilitada, la búsqueda solo se actualiza cuando presiona <i> "
+"Enter </i> o presiona el botón de búsqueda. "
 
 #: src/preferences.ui:1366
-#, fuzzy
-#| msgid "page1"
 msgid "page17"
-msgstr "Página 1"
+msgstr "Página 17"
 
 #: src/preferences.ui:1374
 msgid ""
@@ -871,12 +961,18 @@ msgid ""
 "Displaying lots of results has a significant performance impact, especially "
 "when the list isn't sorted by name. This will be improved in future versions."
 msgstr ""
+"<b>Limitar cantidad de resultados a:</b>\n"
+"\n"
+"Si está habilitado, el número de resultados de búsqueda se limitará al "
+"número especificado.\n"
+"\n"
+"Mostrar muchos resultados tiene un impacto significativo en el rendimiento, "
+"especialmente cuando la lista no está ordenada por nombre. Esto se mejorará "
+"en futuras versiones."
 
 #: src/preferences.ui:1384
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "Página 1"
+msgstr "Página 18"
 
 #: src/preferences.ui:1392
 msgid ""
@@ -885,12 +981,14 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>Actualizar base de datos al inicio:</b>\n"
+"\n"
+"Si está habilitada, la base de datos se actualizará automáticamente en "
+"segundo plano al iniciar FSearch."
 
 #: src/preferences.ui:1400
-#, fuzzy
-#| msgid "page1"
 msgid "page19"
-msgstr "Página 1"
+msgstr "Página 19"
 
 #: src/preferences.ui:1408
 msgid ""
@@ -906,12 +1004,22 @@ msgid ""
 "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
 "often)</i>"
 msgstr ""
+"<b>Carpetas incluidas:</b>\n"
+"\n"
+"Esta lista contiene todas las carpetas que desea incluir en la base de datos."
+"\n"
+"\n"
+"\t• <b>Activo:</b> Si está habilitada, la ruta de acceso se incluirá en la "
+"base de datos en la que se buscará.\n"
+"\t• <b>Ruta:</b> La ruta completa que se incluirá.\n"
+"\t• <b>Actualizar:</b> Esta configuración es útil si desea excluir ciertas "
+"rutas de acceso de \n"
+"\t\t\tla actualización <i>(p. ej. una ruta a una unidad USB lenta que no "
+"cambia a menudo)</i>"
 
 #: src/preferences.ui:1421
-#, fuzzy
-#| msgid "page0"
 msgid "page20"
-msgstr "Página 0"
+msgstr "Página 20"
 
 #: src/preferences.ui:1429
 msgid ""
@@ -920,12 +1028,14 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>Añadir carpeta a la base de datos:</b>\n"
+"\n"
+"Este botón abre un cuadro de diálogo donde puede seleccionar la carpeta que "
+"desea incluir en la base de datos para realizar búsquedas."
 
 #: src/preferences.ui:1437
-#, fuzzy
-#| msgid "page1"
 msgid "page21"
-msgstr "Página 1"
+msgstr "Página 21"
 
 #: src/preferences.ui:1445
 msgid ""
@@ -933,12 +1043,13 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>Eliminar la fila seleccionada:</b>\n"
+"\n"
+"Esto elimina la carpeta seleccionada de la lista de carpetas incluidas."
 
 #: src/preferences.ui:1453
-#, fuzzy
-#| msgid "page0"
 msgid "page22"
-msgstr "Página 0"
+msgstr "Página 22"
 
 #: src/preferences.ui:1461
 msgid ""
@@ -950,12 +1061,19 @@ msgid ""
 "\t\t and can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
+"<b>Carpetas excluidas:</b>\n"
+"\n"
+"Esta lista contiene todas las carpetas que desea excluir de la base de datos."
+"\n"
+"\n"
+"\t• <b>Activo:</b> Si está habilitada, la ruta de acceso se excluirá de la "
+"base de datos\n"
+"\t\t y no se podrá buscar en ella.\n"
+"\t• <b>Ruta:</b> La ruta completa para ser excluida."
 
 #: src/preferences.ui:1473
-#, fuzzy
-#| msgid "page0"
 msgid "page23"
-msgstr "Página 0"
+msgstr "Página 23"
 
 #: src/preferences.ui:1481
 msgid ""
@@ -964,12 +1082,14 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to exclude "
 "from the database."
 msgstr ""
+"<b>Excluir carpeta de la base de datos:</b>\n"
+"\n"
+"Este botón abre un cuadro de diálogo donde puede seleccionar una carpeta que "
+"desea excluir de la base de datos."
 
 #: src/preferences.ui:1489
-#, fuzzy
-#| msgid "page0"
 msgid "page24"
-msgstr "Página 0"
+msgstr "Página 24"
 
 #: src/preferences.ui:1497
 msgid ""
@@ -977,12 +1097,13 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
+"<b>Eliminar la fila seleccionada:</b>\n"
+"\n"
+"Esto elimina la carpeta seleccionada de la lista de carpetas excluidas."
 
 #: src/preferences.ui:1505
-#, fuzzy
-#| msgid "page0"
 msgid "page25"
-msgstr "Página 0"
+msgstr "Página 25"
 
 #: src/preferences.ui:1513
 msgid ""
@@ -993,12 +1114,16 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
+"<b>Excluir archivos y carpetas de la base de datos:</b>\n"
+"\n"
+"Se trata de una lista separada por punto y coma de los archivos (o carpetas) "
+"que desea excluir de la base de datos. Por ejemplo <i>.git;.cache;*.swp</i> "
+"excluirá todos los archivos o carpetas que se llaman <i>.git</i> o <i>."
+"cache</i> o terminan con <i>.swp</i>."
 
 #: src/preferences.ui:1521
-#, fuzzy
-#| msgid "page0"
 msgid "page26"
-msgstr "Página 0"
+msgstr "Página 26"
 
 #: src/preferences.ui:1529
 msgid ""
@@ -1007,38 +1132,37 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
+"<b>Excluir archivos y carpetas ocultos:</b>\n"
+"\n"
+"Si está habilitado, los archivos y carpetas ocultos se excluirán de la base "
+"de datos. <i>(es decir, todos los archivos o carpetas que comienzan con un "
+"carácter de punto).</i>."
 
 #: src/preferences.ui:1537
-#, fuzzy
-#| msgid "page0"
 msgid "page27"
-msgstr "Página 0"
+msgstr "Página 27"
 
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
+"Enfoque una configuración para obtener una descripción detallada de lo que "
+"hace."
 
 #: src/preferences.ui:1549
-#, fuzzy
-#| msgid "page0"
 msgid "page28"
-msgstr "Página 0"
+msgstr "Página 28"
 
 #: src/preferences.ui:1557
 msgid "label"
-msgstr ""
+msgstr "etiqueta"
 
 #: src/preferences.ui:1561
-#, fuzzy
-#| msgid "page0"
 msgid "page29"
-msgstr "Página 0"
+msgstr "Página 29"
 
 #: src/preferences.ui:1571
-#, fuzzy
-#| msgid "_Help"
 msgid "Help"
-msgstr "Ay_uda"
+msgstr "Ayuda"
 
 #: src/preferences_ui.c:57 src/preferences_ui.c:69
 msgid "Select folder"
