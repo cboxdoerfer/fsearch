@@ -19,8 +19,11 @@
 #include "ui_utils.h"
 
 gint
-ui_utils_run_gtk_dialog(
-    GtkWidget *parent, GtkMessageType type, GtkButtonsType buttons, const gchar *primary_text, const gchar *sec_text) {
+ui_utils_run_gtk_dialog(GtkWidget *parent,
+                        GtkMessageType type,
+                        GtkButtonsType buttons,
+                        const gchar *primary_text,
+                        const gchar *sec_text) {
     if (!parent || !primary_text) {
         return GTK_RESPONSE_CANCEL;
     }
