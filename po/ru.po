@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-10-27 15:26+0000\n"
+"PO-Revision-Date: 2020-11-14 16:28+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3.2-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -328,8 +328,9 @@ msgid "_Copy"
 msgstr "_Копировать"
 
 #: src/menus.ui:57 src/menus.ui:180
+#, fuzzy
 msgid "Cu_t"
-msgstr ""
+msgstr "Вырезать"
 
 #: src/menus.ui:64
 msgid "Select All"
@@ -590,6 +591,14 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Включить темную тему:</b>\n"
+"\n"
+"Если включено, системной теме будет указано использовать более темный стиль "
+"для приложения <i>(т.е. яркий цвет текста на тёмных элементах "
+"интерфейса)</i>.\n"
+"\n"
+"Обратите внимание, что не все системные темы предоставляют такой более "
+"темный вариант, поэтому включение этого параметра может не иметь эффекта."
 
 #: src/preferences.ui:1072
 msgid ""
@@ -602,6 +611,15 @@ msgid ""
 "below it.\n"
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
+"<b>Использовать заголовок окна от приложения:</b>\n"
+"\n"
+"Если включено, строка поиска и главное меню будут отображаться в самом "
+"заголовке окна.\n"
+"\n"
+"Если этот параметр отключен, главное меню отображается в виде строки меню с "
+"поисковой записью под ней.\n"
+"Это напоминает более традиционный макет пользовательского интерфейса и "
+"занимает немного больше места."
 
 #: src/preferences.ui:1091
 msgid ""
@@ -614,12 +632,20 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Исползьовать двоичные единицы вместо десятичных:</b>\n"
+"\n"
+"Этот параметр определяет способ отображения размеров файлов.\n"
+"\n"
+"• <b>Двоичные единицы:</b> Имеются ввиду двоичные приставки стандарта IEC "
+"<i>(например, 1 КиБ = 1024 байта)</i>\n"
+"• <b>Десятичные единицы:</b> Имеются ввиду десятичные приставки в системе СИ "
+"<i>(например, 1 кБ = 1000 байт)</i>"
 
 #: src/preferences.ui:1102
 #, fuzzy
 #| msgid "page0"
 msgid "page2"
-msgstr "страница0"
+msgstr "страница2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -636,7 +662,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page3"
-msgstr "страница0"
+msgstr "страница3"
 
 #: src/preferences.ui:1128
 msgid ""
@@ -662,7 +688,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page4"
-msgstr "страница0"
+msgstr "страница4"
 
 #: src/preferences.ui:1154
 msgid ""
@@ -683,7 +709,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page5"
-msgstr "страница0"
+msgstr "страница5"
 
 #: src/preferences.ui:1175
 msgid ""
@@ -697,7 +723,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page6"
-msgstr "страница0"
+msgstr "страница6"
 
 #: src/preferences.ui:1191
 msgid ""
@@ -710,7 +736,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page7"
-msgstr "страница0"
+msgstr "страница7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -725,7 +751,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page8"
-msgstr "страница0"
+msgstr "страница8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -739,7 +765,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page9"
-msgstr "страница0"
+msgstr "страница9"
 
 #: src/preferences.ui:1239
 msgid ""
@@ -752,7 +778,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page10"
-msgstr "страница1"
+msgstr "страница10"
 
 #: src/preferences.ui:1255
 msgid ""
@@ -767,7 +793,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page11"
-msgstr "страница1"
+msgstr "страница11"
 
 #: src/preferences.ui:1271
 msgid ""
@@ -781,7 +807,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page12"
-msgstr "страница1"
+msgstr "страница12"
 
 #: src/preferences.ui:1287
 msgid ""
@@ -796,7 +822,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page13"
-msgstr "страница1"
+msgstr "страница13"
 
 #: src/preferences.ui:1306
 msgid ""
@@ -810,7 +836,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page14"
-msgstr "страница1"
+msgstr "страница14"
 
 #: src/preferences.ui:1322
 msgid ""
@@ -825,7 +851,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page15"
-msgstr "страница1"
+msgstr "страница15"
 
 #: src/preferences.ui:1338
 msgid ""
@@ -841,7 +867,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page16"
-msgstr "страница1"
+msgstr "страница16"
 
 #: src/preferences.ui:1356
 msgid ""
@@ -857,7 +883,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page17"
-msgstr "страница1"
+msgstr "страница17"
 
 #: src/preferences.ui:1374
 msgid ""
@@ -874,7 +900,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page18"
-msgstr "страница1"
+msgstr "страница18"
 
 #: src/preferences.ui:1392
 msgid ""
@@ -888,7 +914,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page19"
-msgstr "страница1"
+msgstr "страница19"
 
 #: src/preferences.ui:1408
 msgid ""
@@ -909,7 +935,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page20"
-msgstr "страница0"
+msgstr "страница20"
 
 #: src/preferences.ui:1429
 msgid ""
@@ -923,7 +949,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page1"
 msgid "page21"
-msgstr "страница1"
+msgstr "страница21"
 
 #: src/preferences.ui:1445
 msgid ""
@@ -936,7 +962,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page22"
-msgstr "страница0"
+msgstr "страница22"
 
 #: src/preferences.ui:1461
 msgid ""
@@ -953,7 +979,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page23"
-msgstr "страница0"
+msgstr "страница23"
 
 #: src/preferences.ui:1481
 msgid ""
@@ -967,7 +993,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page24"
-msgstr "страница0"
+msgstr "страница24"
 
 #: src/preferences.ui:1497
 msgid ""
@@ -980,7 +1006,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page25"
-msgstr "страница0"
+msgstr "страница25"
 
 #: src/preferences.ui:1513
 msgid ""
@@ -996,7 +1022,7 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page26"
-msgstr "страница0"
+msgstr "страница26"
 
 #: src/preferences.ui:1529
 msgid ""
@@ -1010,17 +1036,17 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page27"
-msgstr "страница0"
+msgstr "страница27"
 
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr ""
+msgstr "Наведите мышью на настройку для получения подробностей."
 
 #: src/preferences.ui:1549
 #, fuzzy
 #| msgid "page0"
 msgid "page28"
-msgstr "страница0"
+msgstr "страница28"
 
 #: src/preferences.ui:1557
 msgid "label"
@@ -1030,13 +1056,11 @@ msgstr ""
 #, fuzzy
 #| msgid "page0"
 msgid "page29"
-msgstr "страница0"
+msgstr "страница29"
 
 #: src/preferences.ui:1571
-#, fuzzy
-#| msgid "_Help"
 msgid "Help"
-msgstr "_Справка"
+msgstr "Справка"
 
 #: src/preferences_ui.c:57 src/preferences_ui.c:69
 msgid "Select folder"
