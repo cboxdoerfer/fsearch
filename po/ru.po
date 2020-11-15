@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-14 16:28+0000\n"
+"PO-Revision-Date: 2020-11-17 00:28+0000\n"
 "Last-Translator: Yuriy Balyuk <veksho@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -328,9 +328,8 @@ msgid "_Copy"
 msgstr "_Копировать"
 
 #: src/menus.ui:57 src/menus.ui:180
-#, fuzzy
 msgid "Cu_t"
-msgstr "Вырезать"
+msgstr "_Вырезать"
 
 #: src/menus.ui:64
 msgid "Select All"
@@ -632,7 +631,7 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
-"<b>Исползьовать двоичные единицы вместо десятичных:</b>\n"
+"<b>Использовать двоичные единицы вместо десятичных:</b>\n"
 "\n"
 "Этот параметр определяет способ отображения размеров файлов.\n"
 "\n"
