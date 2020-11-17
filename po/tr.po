@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-10 00:28+0000\n"
+"PO-Revision-Date: 2020-11-18 04:28+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -424,7 +424,7 @@ msgstr "İstemci tarafı süslemelerini etkinleştir (yeniden başlatma gerektir
 
 #: src/preferences.ui:133
 msgid "Use binary units instead of decimal units"
-msgstr "Ondalık birimler yerine ikili birimleri kullanın"
+msgstr "Onluk birimler yerine ikilik birimler kullan"
 
 #: src/preferences.ui:148
 msgid "Remember window size"
@@ -468,11 +468,11 @@ msgstr "İpuçlarını Göster"
 
 #: src/preferences.ui:334
 msgid "Show icons in name column"
-msgstr "İsim Kolonunda İkonları Göster"
+msgstr "Ad sütununda simgeleri göster"
 
 #: src/preferences.ui:348
 msgid "Remember column configuration"
-msgstr "Kolon Yapısını Hatırla"
+msgstr "Sütun yapılandırmasını hatırla"
 
 #: src/preferences.ui:362
 msgid "Remember sort order"
@@ -500,7 +500,7 @@ msgstr "Durum çubuğu:"
 
 #: src/preferences.ui:512
 msgid "Show warning dialogs when:"
-msgstr "Şu durumlarda uyarı iletişim kutularını göster:"
+msgstr "Uyarı pencerelerini göster:"
 
 #: src/preferences.ui:522
 msgid "file / folder failed to open"
@@ -516,11 +516,11 @@ msgstr "Arayüz"
 
 #: src/preferences.ui:588
 msgid "Limit number of results:"
-msgstr "Sonuç sayısının sınırı:"
+msgstr "Sonuç sayısını sınırla:"
 
 #: src/preferences.ui:616
 msgid "Search in path when query contains path separators"
-msgstr "Sorgu, yol ayırıcıları içerdiği zaman dosya yollarında arama yap"
+msgstr "Sorgu yol ayırıcıları içerdiğinde yolda ara"
 
 #: src/preferences.ui:630
 msgid "Search as you type"
@@ -528,7 +528,7 @@ msgstr "Yazarken ara"
 
 #: src/preferences.ui:644
 msgid "Hide results when search is empty"
-msgstr "Eğer sonuç boşsa sonuçları gizle"
+msgstr "Arama boş olduğunda sonuçları gizle"
 
 #: src/preferences.ui:658
 msgid "Match case when query contains at least one upper case character"
@@ -562,7 +562,7 @@ msgstr "Joker karakterleri destekler. Çoklu girdiler ';' ile ayrılmalıdır"
 
 #: src/preferences.ui:950
 msgid "Exclude files:"
-msgstr "Hariç tutulan dosyalar:"
+msgstr "Dosyaları dışarıda bırak:"
 
 #: src/preferences.ui:963
 msgid "e.g. \".git;*.tmp\""
@@ -570,11 +570,11 @@ msgstr "örn: \".git,*.tmp\""
 
 #: src/preferences.ui:980
 msgid "Exclude hidden files and folders"
-msgstr "Gizli dosya ve klasörleri hariç tut"
+msgstr "Gizli dosya ve klasörleri dışarıda bırak"
 
 #: src/preferences.ui:1001
 msgid "Exclude"
-msgstr "Hariç Tut"
+msgstr "Dışarıda bırak"
 
 #: src/preferences.ui:1024
 msgid "Database"
@@ -610,6 +610,15 @@ msgid ""
 "below it.\n"
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
+"<b>İstemci tarafı süslemelerini etkinleştir:</b>\n"
+"\n"
+"Etkinleştirilirse, arama girdisi ve ana menü pencerenin başlık çubuğunda "
+"görüntülenir.\n"
+"\n"
+"Devre dışı bırakılırsa ana menü, altında arama girdisi bulunan bir menü "
+"çubuğu olarak görüntülenir.\n"
+"Bu, daha geleneksel bir kullanıcı arayüzü düzenine benzer ve biraz daha "
+"fazla yer kaplar."
 
 #: src/preferences.ui:1091
 msgid ""
@@ -622,6 +631,14 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Onluk birimler yerine ikilik birimler kullan:</b>\n"
+"\n"
+"Bu ayar, dosya boyutlarının nasıl görüntüleneceğini denetler.\n"
+"\n"
+"\t• <b>İkilik birimler:</b> Bu, ikilik IEC ön ekleri anlamına gelir <i>(örn. "
+"1 KiB = 1024 bayt)</i>\n"
+"\t• <b>Onluk birimler:</b> Bu, onluk SI ön ekleri anlamına gelir <i>(örn. 1 "
+"kB = 1000 bayt)</i>"
 
 #: src/preferences.ui:1102
 msgid "page2"
@@ -637,6 +654,13 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Pencere boyutunu hatırla:</b>\n"
+"\n"
+"Etkinleştirilirse, bir FSearch penceresi açtığınızda önceki oturumun pencere "
+"boyutu geri yüklenecektir.\n"
+"\n"
+"Bazı pencere yöneticilerinin bu isteği yok saydığını ve pencereyi farklı bir "
+"boyuta sahip olmaya zorladığını unutmayın."
 
 #: src/preferences.ui:1120
 msgid "page3"
@@ -661,6 +685,21 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>Bir dosyayı başarıyla açtıktan sonraki davranış:</b>\n"
+"\n"
+"Bir dosya/klasör başarıyla açıldığında, aşağıdaki eylemlerden biri "
+"gerçekleştirilebilir:\n"
+"\n"
+"\t• <b>Hiçbiri:</b> Hiçbir şey olmaz.\n"
+"\t• <b>Küçült:</b> Seçili olan FSearch penceresi küçültülür. \n"
+"\t\tTüm sistemlerin pencerelerin küçültülmesine izin vermediğini unutmayın.\n"
+"\t• <b>Kapat:</b> FSearch'ten çık.\n"
+"\n"
+"Dosya aşağıdaki yollarla açıldığında bu eylemlerin tetiklenip "
+"tetiklenmeyeceğini yapılandırabilirsiniz:\n"
+"\n"
+"\t• <b>klavye kısayolları veya menü girdileri</b> ve/veya\n"
+"\t• <b>fareyle tıklama</b>"
 
 #: src/preferences.ui:1146
 msgid "page4"
@@ -680,6 +719,17 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
+"<b>Vurgulanan arama terimlerini göster:</b>\n"
+"\n"
+"Etkinleştirilirse, arama terimleri sonuçlar görünümünde vurgulanacaktır. "
+"Örneğin \"foo\" için arama yaptığınızda, dosya/klasör adlarında <i>foo</i> "
+"teriminin tüm görünümleri kalın karakterlerle vurgulanacaktır:\n"
+"\n"
+"\t\t<b>foo</b>bar.txt\n"
+"\t\tfile.<b>foo</b>\n"
+"\n"
+"Bu, yıldız işaretiyle başlayan veya biten düzenli ifadeler ve joker karakter "
+"ifadeleri için de işe yarar. "
 
 #: src/preferences.ui:1167
 msgid "page5"
@@ -692,6 +742,10 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b>İpuçlarını göster:</b>\n"
+"\n"
+"Etkinleştirilirse, sonuçlar görünümü odaklanan dosyanın/klasörün tam yolunu "
+"küçük bir ipucu penceresinde gösterecektir."
 
 #: src/preferences.ui:1183
 msgid "page6"
@@ -703,6 +757,9 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Ad sütununda simgeleri göster:</b>\n"
+"\n"
+"Etkinleştirilirse, dosya/klasör simgeleri ad sütununda gösterilecektir."
 
 #: src/preferences.ui:1199
 msgid "page7"
@@ -716,6 +773,11 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>Sütun yapılandırmasını hatırla:</b>\n"
+"\n"
+"Etkinleştirilirse, bir FSearch penceresi açtığınızda önceki oturumun sonuç "
+"görünümünün sütun yapılandırması geri yüklenecektir. Bu, tüm sütunların "
+"boyutunu ve görünürlüğünü içerir."
 
 #: src/preferences.ui:1215
 msgid "page8"
@@ -728,6 +790,10 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Sıralama düzenini hatırla:</b>\n"
+"\n"
+"Etkinleştirilirse, bir FSearch penceresi açtığınızda önceki oturumun "
+"sonuçlar görünümünün sıralama düzeni geri yüklenecektir."
 
 #: src/preferences.ui:1231
 msgid "page9"
@@ -739,6 +805,9 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>Yol sütununda çift tıklama ile yolu aç:</b>\n"
+"\n"
+"Etkinleştirilirse, yol sütununa çift tıklamak seçili yolu açacaktır."
 
 #: src/preferences.ui:1247
 msgid "page10"
@@ -752,6 +821,11 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to a "
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>Açmak için tek tıklama:</b>\n"
+"\n"
+"Etkinleştirilirse, tek bir tıklama seçilen dosya/klasörü açacaktır. Bu ayar "
+"etkinken yalnızca bir dosya/klasör seçmek istiyorsanız, <i>Ctrl</i> tuşuna "
+"basılı tutarak dosyaya/klasöre tıklamanız gerekir."
 
 #: src/preferences.ui:1263
 msgid "page11"
@@ -764,6 +838,9 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>Veri tabanı indeksleme durumunu göster:</b>\n"
+"\n"
+"Etkinleştirilirse, indekslenmekte olan yol durum çubuğunda görüntülenir."
 
 #: src/preferences.ui:1279
 msgid "page12"
@@ -777,6 +854,11 @@ msgid ""
 "\n"
 "\t•  a file or folder failed to open\n"
 msgstr ""
+"<b>Uyarı pencerelerini göster:</b>\n"
+"\n"
+"Etkinleştirilirse, aşağıdaki durumlarda bir uyarı penceresi görüntülenir:\n"
+"\n"
+"\t•  bir dosya veya klasör açılamadığında\n"
 
 #: src/preferences.ui:1298
 msgid "page13"
@@ -789,6 +871,10 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
+"<b>Sorgu yol ayırıcıları içerdiğinde yolda ara:</b>\n"
+"\n"
+"Etkinleştirilirse, yol ayırıcıları (yani \"/\") içeren arama terimleri, bir "
+"dosya veya klasörün tam yoluyla otomatik olarak eşleştirilecektir."
 
 #: src/preferences.ui:1314
 msgid "page14"
@@ -802,6 +888,13 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
+"<b>Sorgu en az bir büyük harf karakteri içerdiğinde küçük/büyük harf "
+"durumunu eşleştir:</b>\n"
+"\n"
+"Etkinleştirilirse, en az bir büyük harf karakteri içeren arama terimleri, "
+"büyük/küçük harfe duyarlı bir aramayı tetikleyecektir. Bu, <i>Foo</i> gibi "
+"bir arama teriminin <i>FooBar.txt</i> ile eşleşeceği ancak <i>foobar.txt</i> "
+"ile eşleşmeyeceği anlamına gelir."
 
 #: src/preferences.ui:1330
 msgid "page15"
@@ -816,6 +909,13 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
+"<b>Arama boş olduğunda sonuçları gizle:</b>\n"
+"\n"
+"Etkinleştirilirse, arama girdisi boş olduğunda hiçbir arama sonucu "
+"görüntülenmez.\n"
+"\n"
+"Devre dışı bırakılırsa, arama girdisi boş olduğunda tüm dosyalar ve "
+"klasörler görüntülenecektir."
 
 #: src/preferences.ui:1348
 msgid "page16"
@@ -830,6 +930,12 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>Yazarken ara:</b>\n"
+"\n"
+"Etkinleştirilirse, arama her tuşa basıldığında otomatik olarak güncellenir.\n"
+"\n"
+"Devre dışı bırakılırsa, arama yalnızca <i>Enter</i> tuşuna veya ara "
+"düğmesine bastığınızda güncellenir. "
 
 #: src/preferences.ui:1366
 msgid "page17"
@@ -845,6 +951,12 @@ msgid ""
 "Displaying lots of results has a significant performance impact, especially "
 "when the list isn't sorted by name. This will be improved in future versions."
 msgstr ""
+"<b>Sonuç sayısını sınırla:</b>\n"
+"\n"
+"Etkinleştirilirse, arama sonuçları belirtilen sayıyla sınırlandırılacaktır.\n"
+"\n"
+"Çok sayıda sonucun görüntülenmesi, özellikle liste ada göre sıralanmadığında "
+"performansı önemli derecede etkiler. Bu, sonraki sürümlerde iyileştirilecek."
 
 #: src/preferences.ui:1384
 msgid "page18"
@@ -857,6 +969,10 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>Başlangıçta veri tabanını güncelle:</b>\n"
+"\n"
+"Etkinleştirilirse, FSearch başlatıldığında veri tabanı arka planda otomatik "
+"olarak güncellenecektir."
 
 #: src/preferences.ui:1400
 msgid "page19"
@@ -876,6 +992,17 @@ msgid ""
 "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
 "often)</i>"
 msgstr ""
+"<b>Dahil edilen klasörler:</b>\n"
+"\n"
+"Bu liste, veri tabanına dahil etmek istediğiniz tüm klasörleri içerir.\n"
+"\n"
+"\t• <b>Etkin:</b> Etkinleştirilirse, yol aramak için veri tabanına dahil "
+"edilecektir.\n"
+"\t• <b>Yol:</b> Dahil edilecek tam yol.\n"
+"\t• <b>Güncelle:</b> Bu ayar, belirli yolları güncellemenin dışında bırakmak "
+"istiyorsanız\n"
+"\t\t\tyararlıdır <i>(örn. fazla değişmeyen yavaş bir USB sürücüsünün "
+"yolu)</i>"
 
 #: src/preferences.ui:1421
 msgid "page20"
@@ -888,6 +1015,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>Veri tabanına klasör ekle:</b>\n"
+"\n"
+"Bu düğme, aramak için veri tabanına dahil etmek istediğiniz bir klasörü "
+"seçebileceğiniz bir iletişim kutusu açar."
 
 #: src/preferences.ui:1437
 msgid "page21"
@@ -899,6 +1030,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>Seçili satırı kaldır:</b>\n"
+"\n"
+"Bu, seçilen klasörü dahil edilen klasörler listesinden kaldırır."
 
 #: src/preferences.ui:1453
 msgid "page22"
@@ -914,6 +1048,14 @@ msgid ""
 "\t\t and can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
+"<b>Dışarıda bırakılan klasörler:</b>\n"
+"\n"
+"Bu liste, veri tabanının dışında bırakmak istediğiniz tüm klasörleri içerir."
+"\n"
+"\n"
+"\t• <b>Etkin:</b> Etkinleştirilirse, yol veri tabanının dışında bırakılacak\n"
+"\t\t ve aranamayacaktır.\n"
+"\t• <b>Yol:</b> Dışarıda bırakılacak tam yol."
 
 #: src/preferences.ui:1473
 msgid "page23"
@@ -926,6 +1068,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to exclude "
 "from the database."
 msgstr ""
+"<b>Klasörü veri tabanının dışında bırak:</b>\n"
+"\n"
+"Bu düğme, veri tabanının dışında bırakmak istediğiniz bir klasörü "
+"seçebileceğiniz bir iletişim kutusu açar."
 
 #: src/preferences.ui:1489
 msgid "page24"
@@ -937,6 +1083,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
+"<b>Seçili satırı kaldır:</b>\n"
+"\n"
+"Bu, seçilen klasörü dışarıda bırakılan klasörler listesinden kaldırır."
 
 #: src/preferences.ui:1505
 msgid "page25"
@@ -951,6 +1100,12 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
+"<b>Dosyaları ve klasörleri veri tabanının dışında bırak:</b>\n"
+"\n"
+"Bu, veri tabanının dışında bırakmak istediğiniz dosyaların (veya klasörlerin)"
+" noktalı virgülle ayrılmış bir listesidir. Örneğin <i>.git;.cache;*.swp</i>, "
+"<i>.git</i> veya <i>.cache</i> adına sahip ya da <i>.swp</i> ile biten tüm "
+"dosya veya klasörleri dışarıda bırakacaktır."
 
 #: src/preferences.ui:1521
 msgid "page26"
@@ -963,6 +1118,11 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
+"<b>Gizli dosya ve klasörleri dışarıda bırak:</b>\n"
+"\n"
+"Etkinleştirilirse, gizli dosyalar ve klasörler, <i>(yani, nokta karakteriyle "
+"başlayan tüm dosyalar veya klasörler)</i>, veri tabanının dışında "
+"bırakılacaktır."
 
 #: src/preferences.ui:1537
 msgid "page27"
@@ -971,6 +1131,7 @@ msgstr "sayfa27"
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
+"Ne yaptığına dair ayrıntılı bir açıklama görmek için bir ayara odaklanın."
 
 #: src/preferences.ui:1549
 msgid "page28"
@@ -978,7 +1139,7 @@ msgstr "sayfa28"
 
 #: src/preferences.ui:1557
 msgid "label"
-msgstr ""
+msgstr "etiket"
 
 #: src/preferences.ui:1561
 msgid "page29"
