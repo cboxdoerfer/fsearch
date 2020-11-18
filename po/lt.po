@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-10-05 18:26+0000\n"
+"PO-Revision-Date: 2020-11-20 06:24+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/lt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -188,23 +188,23 @@ msgstr "Failai"
 
 #: src/fsearch_filter.c:84
 msgid "Archives"
-msgstr ""
+msgstr "Archyvai"
 
 #: src/fsearch_filter.c:86
 msgid "Audio"
-msgstr ""
+msgstr "Garso įrašai"
 
 #: src/fsearch_filter.c:89
 msgid "Documents"
-msgstr ""
+msgstr "Dokumentai"
 
 #: src/fsearch_filter.c:91
 msgid "Pictures"
-msgstr ""
+msgstr "Paveikslai"
 
 #: src/fsearch_filter.c:93
 msgid "Videos"
-msgstr ""
+msgstr "Vaizdo įrašai"
 
 #: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
 msgid "Active"
@@ -254,6 +254,8 @@ msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Šiuo metu neįmanoma užverti lango.\n"
+"Palaukite minutėlę ir bandykite dar kartą."
 
 #: src/fsearch_window_actions.c:77
 #, fuzzy, c-format
@@ -316,7 +318,7 @@ msgstr "Atnaujinti duomenų bazę"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "Atsisakyti atnaujinimo"
 
 #: src/menus.ui:49
 msgid "_Edit"
@@ -328,7 +330,7 @@ msgstr "_Kopijuoti"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "Iškirp_ti"
 
 #: src/menus.ui:64
 #, fuzzy
@@ -396,12 +398,11 @@ msgstr "Paspauskite <b>Ctrl + F</b> ir pradėkite rašyti"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
 msgid "This won't take long."
-msgstr "Tai gali šiek tiek užtrukti."
+msgstr "Tai ilgai neužtruks."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -440,13 +441,12 @@ msgid "with double click"
 msgstr ""
 
 #: src/preferences.ui:226
-#, fuzzy
 msgid "Behaviour after successfully opening a file:"
-msgstr "Elgsena, sėkmingai atvėrus failą"
+msgstr "Elgsena, sėkmingai atvėrus failą:"
 
 #: src/preferences.ui:242
 msgid "Nothing"
-msgstr ""
+msgstr "Nieko"
 
 #: src/preferences.ui:243
 msgid "Minimize"
@@ -458,7 +458,7 @@ msgstr "Užverti"
 
 #: src/preferences.ui:270
 msgid "General:"
-msgstr ""
+msgstr "Bendra:"
 
 #: src/preferences.ui:305
 msgid "Show highlighted search terms"
@@ -477,10 +477,8 @@ msgid "Remember column configuration"
 msgstr "Prisiminti stulpelių konfigūraciją"
 
 #: src/preferences.ui:362
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Prisiminti lango dydį"
+msgstr "Prisiminti rikiavimo tvarką"
 
 #: src/preferences.ui:376
 msgid "Open path with double click in path column"
@@ -488,11 +486,11 @@ msgstr ""
 
 #: src/preferences.ui:390
 msgid "Single click to open"
-msgstr ""
+msgstr "Atverti vienkarčiu spustelėjimu"
 
 #: src/preferences.ui:410
 msgid "Results:"
-msgstr ""
+msgstr "Rezultatai:"
 
 #: src/preferences.ui:451
 #, fuzzy
