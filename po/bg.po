@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-10 00:28+0000\n"
+"PO-Revision-Date: 2020-11-30 16:29+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -629,12 +629,18 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Използване на бинарни единици, вместо десетични:</b>(напр.\n"
+"\n"
+"Тази настройка определя, как да бъде показан файловият размер.\n"
+" \n"
+"  <b>Бинарни единици:</b> Това се отнася до двоични IEC префикси <i>(напр. 1 "
+"KiB = 1024 bytes)</i>\n"
+"  <b>Десетични единици:</b> Това се отнася до десетичните SI префикси <i>("
+"напр. 1 kB = 1000 bytes)</i>"
 
 #: src/preferences.ui:1102
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "страница0"
+msgstr "страница2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -646,12 +652,17 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Запомняне на размера на прозореца:</b>\n"
+"\n"
+"Ако е активирано, размерът на прозореца от предишната сесия ще бъде "
+"възстановен, когато отворите прозорец на FSearch.\n"
+"\n"
+"Имайте предвид, че някои мениджъри на прозорци пренебрегват тази заявка и "
+"принуждават прозореца да има различен размер."
 
 #: src/preferences.ui:1120
-#, fuzzy
-#| msgid "page0"
 msgid "page3"
-msgstr "страница0"
+msgstr "страница3"
 
 #: src/preferences.ui:1128
 msgid ""
