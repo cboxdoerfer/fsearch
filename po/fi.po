@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-04-20 02:11+0000\n"
-"Last-Translator: Jeannette L <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2020-12-09 21:29+0000\n"
+"Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
 "translations/fi/>\n"
 "Language: fi\n"
@@ -17,11 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.0.2-dev\n"
+"X-Generator: Weblate 4.4-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
-msgstr ""
+msgstr "Lajitellaan…"
 
 #: src/fsearch.c:183
 msgid "Show version information"
@@ -40,20 +40,16 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 
 #: src/fsearch.glade:73
-#, fuzzy
 msgid "New window"
 msgstr "Uusi ikkuna"
 
 #: src/fsearch.glade:88
-#, fuzzy
 msgid "Update database"
 msgstr "Päivitä tietokanta"
 
 #: src/fsearch.glade:103 src/fsearch.glade:622
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
+msgstr "Peruuta tietokannan päivitys"
 
 #: src/fsearch.glade:137 src/menus.ui:106
 msgid "Search in Path"
@@ -85,11 +81,11 @@ msgstr "Asetukset"
 
 #: src/fsearch.glade:268 src/menus.ui:123
 msgid "About"
-msgstr ""
+msgstr "Tietoja"
 
 #: src/fsearch.glade:293 src/menus.ui:42
 msgid "Quit"
-msgstr ""
+msgstr "Sulje"
 
 #: src/fsearch.glade:416
 msgid "Number of Search Results"
@@ -101,28 +97,24 @@ msgstr "0 kohdetta"
 
 #: src/fsearch.glade:454
 msgid "Index:"
-msgstr ""
+msgstr "Indeksi:"
 
 #: src/fsearch.glade:522
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Hakutulosten lukumäärä"
+msgstr "Valittujen kansioiden määrä"
 
 #: src/fsearch.glade:523 src/fsearch.glade:548
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:547
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Hakutulosten lukumäärä"
+msgstr "Valittujen tiedostojen määrä"
 
 #: src/fsearch.glade:606 src/fsearch_window.c:959 src/overlay.ui:213
-#, fuzzy, c-format
+#, c-format
 msgid "Updating Database…"
-msgstr "Päivitetään tietokantaa..."
+msgstr "Päivitetään tietokantaa…"
 
 #: src/fsearch.glade:639 src/preferences.ui:1065
 msgid "page0"
@@ -130,7 +122,7 @@ msgstr "sivu0"
 
 #: src/fsearch.glade:663
 msgid "Number of database items"
-msgstr ""
+msgstr "Tietokantakohteiden määrä"
 
 #: src/fsearch.glade:664
 msgid "(empty)"
@@ -145,6 +137,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Hakusana sisältää isoja kirjaimia.\n"
+"<b>Sama kirjainkoko</b> aktivoitiin väliaikaisesti tälle hakusanalle."
 
 #: src/fsearch.glade:732 src/fsearch.glade:785
 msgid "CASE"
@@ -155,6 +149,8 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Hakusana sisältää polkuerottimia\n"
+"<b>Etsi polusta</b> aktivoitiin väliaikaisesti tälle hakusanalle."
 
 #: src/fsearch.glade:839 src/fsearch.glade:892
 msgid "PATH"
@@ -165,9 +161,8 @@ msgid "REGEX"
 msgstr "SÄÄNNÖLLINEN LAUSEKE"
 
 #: src/fsearch.glade:1065
-#, fuzzy
 msgid "Search…"
-msgstr "Etsi"
+msgstr "Etsi…"
 
 #: src/fsearch.glade:1087
 msgid "Select a Filter"
@@ -191,27 +186,27 @@ msgstr "Tiedostot"
 
 #: src/fsearch_filter.c:84
 msgid "Archives"
-msgstr ""
+msgstr "Arkistot"
 
 #: src/fsearch_filter.c:86
 msgid "Audio"
-msgstr ""
+msgstr "Ääni"
 
 #: src/fsearch_filter.c:89
 msgid "Documents"
-msgstr ""
+msgstr "Asiakirjat"
 
 #: src/fsearch_filter.c:91
 msgid "Pictures"
-msgstr ""
+msgstr "Kuvat"
 
 #: src/fsearch_filter.c:93
 msgid "Videos"
-msgstr ""
+msgstr "Videot"
 
 #: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
 msgid "Active"
-msgstr ""
+msgstr "Aktiivinen"
 
 #: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
 #: src/listview.c:203 src/menus.ui:216
@@ -220,7 +215,7 @@ msgstr "Polku"
 
 #: src/fsearch_preferences_widgets.c:200
 msgid "Update"
-msgstr ""
+msgstr "Päivitä"
 
 #: src/fsearch_window.c:121 src/fsearch_window.c:467 src/fsearch_window.c:917
 #, c-format
@@ -229,7 +224,7 @@ msgstr "%'d kohdetta"
 
 #: src/fsearch_window.c:400 src/fsearch_window.c:557
 msgid "Querying…"
-msgstr ""
+msgstr "Kysellään…"
 
 #: src/fsearch_window.c:733 src/fsearch_window_actions.c:406
 msgid "Failed to open file"
@@ -237,7 +232,7 @@ msgstr "Tiedoston avaaminen epäonnistui"
 
 #: src/fsearch_window.c:734 src/fsearch_window_actions.c:407
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Haluatko pitää ikkunan auki?"
 
 #: src/fsearch_window.c:923
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -250,28 +245,29 @@ msgstr "Ladataan tietokanta…"
 
 #: src/fsearch_window.c:1121
 msgid "Background tasks are active."
-msgstr ""
+msgstr "Taustatehtävät ovat aktiivisia."
 
 #: src/fsearch_window.c:1123
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
 msgstr ""
+"Ikkunan sulkeminen ei ole mahdollista juuri nyt.\n"
+"Odota hetki ja yritä uudelleen."
 
 #: src/fsearch_window_actions.c:77
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Haluatko todella poistaa"
+msgstr "Haluatko todella avata %d tiedosto(n/a)?"
 
 #: src/fsearch_window_actions.c:79
-#, fuzzy
 msgid "Opening Files…"
-msgstr "Avaa tiedosto(t)"
+msgstr "Avataan tiedosto(ja)…"
 
 #: src/fsearch_window_actions.c:148
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Haluatko todella poistaa"
+msgstr "Haluatko todella poistaa %d tiedosto(n/a)?"
 
 #: src/fsearch_window_actions.c:152
 msgid "Deleting files…"
@@ -319,7 +315,7 @@ msgstr "Päivitä tietokanta"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "Peruuta päivitys"
 
 #: src/menus.ui:49
 msgid "_Edit"
@@ -331,13 +327,11 @@ msgstr "_Kopioi"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "Leik_kaa"
 
 #: src/menus.ui:64
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Poista kaikkien valinta"
+msgstr "Valitse kaikki"
 
 #: src/menus.ui:69
 msgid "Deselect All"
@@ -397,12 +391,11 @@ msgstr "Paina <b>Ctrl + F</b> ja aloita kirjoittaminen"
 
 #: src/overlay.ui:158 src/overlay.ui:228
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
 msgid "This won't take long."
-msgstr "Tämä voi kestää jonkin aikaa."
+msgstr "Tämä ei kestä kauan."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -423,6 +416,7 @@ msgstr "Käytä tummaa teemaa"
 #: src/preferences.ui:119
 msgid "Enable client-side decorations (requires restart)"
 msgstr ""
+"Ota asiakaspuolen koristeet (CSD) käyttöön (vaatii uudelleenkäynnistyksen)"
 
 #: src/preferences.ui:133
 msgid "Use binary units instead of decimal units"
@@ -434,19 +428,19 @@ msgstr "Muista ikkunan koko"
 
 #: src/preferences.ui:183
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "pikanäppäimillä tai valikkomerkinnöillä"
 
 #: src/preferences.ui:198
 msgid "with double click"
-msgstr ""
+msgstr "kaksoisnapsauttamalla"
 
 #: src/preferences.ui:226
 msgid "Behaviour after successfully opening a file:"
-msgstr ""
+msgstr "Käyttäytyminen tiedoston avaamisen jälkeen:"
 
 #: src/preferences.ui:242
 msgid "Nothing"
-msgstr ""
+msgstr "Ei mitään"
 
 #: src/preferences.ui:243
 msgid "Minimize"
@@ -458,11 +452,11 @@ msgstr "Sulje"
 
 #: src/preferences.ui:270
 msgid "General:"
-msgstr ""
+msgstr "Yleiset:"
 
 #: src/preferences.ui:305
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Näytä korostut hakusanat"
 
 #: src/preferences.ui:320
 msgid "Show tooltips"
@@ -477,46 +471,40 @@ msgid "Remember column configuration"
 msgstr "Muista sarakemääritykset"
 
 #: src/preferences.ui:362
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Muista ikkunan koko"
+msgstr "Muista lajittelujärjestys"
 
 #: src/preferences.ui:376
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Avaa polku kaksoisnapsauttamalla polkusaraketta"
 
 #: src/preferences.ui:390
 msgid "Single click to open"
-msgstr ""
+msgstr "Avaa yhdellä napsautuksella"
 
 #: src/preferences.ui:410
 msgid "Results:"
-msgstr ""
+msgstr "Tulokset:"
 
 #: src/preferences.ui:451
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
+msgstr "Näytä tietokannan indeksoinnin tila"
 
 #: src/preferences.ui:471
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Näytä tilapalkki"
+msgstr "Tilapalkki:"
 
 #: src/preferences.ui:512
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Näytä varoitusikkunat kun:"
 
 #: src/preferences.ui:522
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "tiedoston / kansion avaaminen epäonnistuu"
 
 #: src/preferences.ui:544
 msgid "Dialogs:"
-msgstr ""
+msgstr "Valintaikkunat:"
 
 #: src/preferences.ui:569
 msgid "Interface"
@@ -539,9 +527,8 @@ msgid "Hide results when search is empty"
 msgstr "Piilota tulokset, kun haku on tyhjä"
 
 #: src/preferences.ui:658
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "Etsi polusta, kun haku sisältää polkuerottimia"
+msgstr "Sama kirjainkoko, kun kysely sisältää vähintään yhden ison kirjaimen"
 
 #: src/preferences.ui:698
 msgid "Update database on start"
@@ -549,11 +536,11 @@ msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
 
 #: src/preferences.ui:773
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Lisää tietokantaan sisällytettävä polku"
 
 #: src/preferences.ui:790 src/preferences.ui:910
 msgid "Remove selected path"
-msgstr ""
+msgstr "Poista valittu polku"
 
 #: src/preferences.ui:822
 msgid "Include"
@@ -561,7 +548,7 @@ msgstr "Sisällytä"
 
 #: src/preferences.ui:893
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Lisää tietokannasta poissuljettava polku"
 
 #: src/preferences.ui:949 src/preferences.ui:962
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -624,10 +611,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1102
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "sivu0"
+msgstr "sivu2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -641,10 +626,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1120
-#, fuzzy
-#| msgid "page0"
 msgid "page3"
-msgstr "sivu0"
+msgstr "sivu3"
 
 #: src/preferences.ui:1128
 msgid ""
@@ -667,10 +650,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1146
-#, fuzzy
-#| msgid "page0"
 msgid "page4"
-msgstr "sivu0"
+msgstr "sivu4"
 
 #: src/preferences.ui:1154
 msgid ""
@@ -688,10 +669,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1167
-#, fuzzy
-#| msgid "page0"
 msgid "page5"
-msgstr "sivu0"
+msgstr "sivu5"
 
 #: src/preferences.ui:1175
 msgid ""
@@ -702,10 +681,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1183
-#, fuzzy
-#| msgid "page0"
 msgid "page6"
-msgstr "sivu0"
+msgstr "sivu6"
 
 #: src/preferences.ui:1191
 msgid ""
@@ -715,10 +692,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1199
-#, fuzzy
-#| msgid "page0"
 msgid "page7"
-msgstr "sivu0"
+msgstr "sivu7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -730,10 +705,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1215
-#, fuzzy
-#| msgid "page0"
 msgid "page8"
-msgstr "sivu0"
+msgstr "sivu8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -744,10 +717,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1231
-#, fuzzy
-#| msgid "page0"
 msgid "page9"
-msgstr "sivu0"
+msgstr "sivu9"
 
 #: src/preferences.ui:1239
 msgid ""
@@ -757,10 +728,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1247
-#, fuzzy
-#| msgid "page1"
 msgid "page10"
-msgstr "sivu1"
+msgstr "sivu10"
 
 #: src/preferences.ui:1255
 msgid ""
@@ -772,10 +741,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1263
-#, fuzzy
-#| msgid "page1"
 msgid "page11"
-msgstr "sivu1"
+msgstr "sivu11"
 
 #: src/preferences.ui:1271
 msgid ""
@@ -786,10 +753,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1279
-#, fuzzy
-#| msgid "page1"
 msgid "page12"
-msgstr "sivu1"
+msgstr "sivu12"
 
 #: src/preferences.ui:1287
 msgid ""
@@ -801,10 +766,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1298
-#, fuzzy
-#| msgid "page1"
 msgid "page13"
-msgstr "sivu1"
+msgstr "sivu13"
 
 #: src/preferences.ui:1306
 msgid ""
@@ -815,10 +778,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1314
-#, fuzzy
-#| msgid "page1"
 msgid "page14"
-msgstr "sivu1"
+msgstr "sivu14"
 
 #: src/preferences.ui:1322
 msgid ""
@@ -830,10 +791,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1330
-#, fuzzy
-#| msgid "page1"
 msgid "page15"
-msgstr "sivu1"
+msgstr "sivu15"
 
 #: src/preferences.ui:1338
 msgid ""
@@ -846,10 +805,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1348
-#, fuzzy
-#| msgid "page1"
 msgid "page16"
-msgstr "sivu1"
+msgstr "sivu16"
 
 #: src/preferences.ui:1356
 msgid ""
@@ -862,10 +819,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1366
-#, fuzzy
-#| msgid "page1"
 msgid "page17"
-msgstr "sivu1"
+msgstr "sivu17"
 
 #: src/preferences.ui:1374
 msgid ""
@@ -879,10 +834,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1384
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "sivu1"
+msgstr "sivu18"
 
 #: src/preferences.ui:1392
 msgid ""
@@ -893,10 +846,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1400
-#, fuzzy
-#| msgid "page1"
 msgid "page19"
-msgstr "sivu1"
+msgstr "sivu19"
 
 #: src/preferences.ui:1408
 msgid ""
@@ -914,10 +865,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1421
-#, fuzzy
-#| msgid "page0"
 msgid "page20"
-msgstr "sivu0"
+msgstr "sivu20"
 
 #: src/preferences.ui:1429
 msgid ""
@@ -928,10 +877,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1437
-#, fuzzy
-#| msgid "page1"
 msgid "page21"
-msgstr "sivu1"
+msgstr "sivu21"
 
 #: src/preferences.ui:1445
 msgid ""
@@ -941,10 +888,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1453
-#, fuzzy
-#| msgid "page0"
 msgid "page22"
-msgstr "sivu0"
+msgstr "sivu22"
 
 #: src/preferences.ui:1461
 msgid ""
@@ -958,10 +903,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1473
-#, fuzzy
-#| msgid "page0"
 msgid "page23"
-msgstr "sivu0"
+msgstr "sivu23"
 
 #: src/preferences.ui:1481
 msgid ""
@@ -972,10 +915,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1489
-#, fuzzy
-#| msgid "page0"
 msgid "page24"
-msgstr "sivu0"
+msgstr "sivu24"
 
 #: src/preferences.ui:1497
 msgid ""
@@ -985,10 +926,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1505
-#, fuzzy
-#| msgid "page0"
 msgid "page25"
-msgstr "sivu0"
+msgstr "sivu25"
 
 #: src/preferences.ui:1513
 msgid ""
@@ -1001,10 +940,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1521
-#, fuzzy
-#| msgid "page0"
 msgid "page26"
-msgstr "sivu0"
+msgstr "sivu26"
 
 #: src/preferences.ui:1529
 msgid ""
@@ -1015,69 +952,57 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1537
-#, fuzzy
-#| msgid "page0"
 msgid "page27"
-msgstr "sivu0"
+msgstr "sivu27"
 
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
+"Kohdista asetukseen saadaksesi yksityiskohtaisen kuvauksen sen toiminnasta."
 
 #: src/preferences.ui:1549
-#, fuzzy
-#| msgid "page0"
 msgid "page28"
-msgstr "sivu0"
+msgstr "sivu28"
 
 #: src/preferences.ui:1557
 msgid "label"
 msgstr ""
 
 #: src/preferences.ui:1561
-#, fuzzy
-#| msgid "page0"
 msgid "page29"
-msgstr "sivu0"
+msgstr "sivu29"
 
 #: src/preferences.ui:1571
-#, fuzzy
-#| msgid "_Help"
 msgid "Help"
-msgstr "_Ohje"
+msgstr "Ohje"
 
 #: src/preferences_ui.c:57 src/preferences_ui.c:69
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Valitse suodatin"
+msgstr "Valitse kansio"
 
 #: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:175
 msgid "_Cancel"
-msgstr ""
+msgstr "_Peruuttaa"
 
 #: src/preferences_ui.c:62 src/preferences_ui.c:69
-#, fuzzy
-#| msgid "Deselect All"
 msgid "_Select"
-msgstr "Poista kaikkien valinta"
+msgstr "_Valitse"
 
 #: src/preferences_ui.c:176
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
 msgstr "FSearch"
 
 #: data/fsearch.desktop.in.in:6
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 
 #: data/fsearch.desktop.in.in:7
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:11
 msgid ""
