@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-12-07 09:29+0000\n"
+"PO-Revision-Date: 2021-01-08 08:32+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.4.1-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -756,12 +756,14 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Показване на икони в имената на колоните:</b>\n"
+"\n"
+"Ако е активирано в имената на колоните ще бъдат показвани икони на "
+"файл/папка."
 
 #: src/preferences.ui:1199
-#, fuzzy
-#| msgid "page0"
 msgid "page7"
-msgstr "страница0"
+msgstr "страница7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -771,12 +773,15 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>Заполни конфигурацията на колоните:</b>\n"
+"\n"
+"Ако е активирано, конфигурацията на колоните на изгледа с резултатите от "
+"предходната сесия ще бъде възстановена, когато отново отворите прозореца на "
+"FSearch. Това включва размера и видомостта на всички колони."
 
 #: src/preferences.ui:1215
-#, fuzzy
-#| msgid "page0"
 msgid "page8"
-msgstr "страница0"
+msgstr "страница8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -785,12 +790,14 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Запомни реда на сортиране:</b>\n"
+"\n"
+"Ако е активирано, редът на сортиране на изгледа с резултати от предишната "
+"сесия ще бъде възстановен, когато отворите прозореца на FSearch."
 
 #: src/preferences.ui:1231
-#, fuzzy
-#| msgid "page0"
 msgid "page9"
-msgstr "страница0"
+msgstr "страница9"
 
 #: src/preferences.ui:1239
 msgid ""
