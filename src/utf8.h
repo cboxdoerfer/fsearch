@@ -149,7 +149,7 @@ utf8_nonnull utf8_weak void *utf8ncpy(void *utf8_restrict dst,
 // Returns a new string if successful, 0 otherwise
 utf8_nonnull utf8_weak void *utf8ndup(const void *src, size_t n);
 
-// Locates the first occurence in the utf8 string str of any byte in the
+// Locates the first occurrence in the utf8 string str of any byte in the
 // utf8 string accept, or 0 if no match was found.
 utf8_nonnull utf8_pure utf8_weak void *utf8pbrk(const void *str,
                                                 const void *accept);
