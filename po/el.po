@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-14 16:28+0000\n"
-"Last-Translator: Mihail Donatos Karagkiaouris <mihaildonatos50@gmail.com>\n"
+"PO-Revision-Date: 2021-02-09 22:50+0000\n"
+"Last-Translator: Michalis <michalisntovas@yahoo.gr>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
 "translations/el/>\n"
 "Language: el\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.5-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -1019,7 +1019,7 @@ msgstr "Επιλογή φακέλου"
 
 #: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:175
 msgid "_Cancel"
-msgstr "_Ακύρωση"
+msgstr "_Άκυρο"
 
 #: src/preferences_ui.c:62 src/preferences_ui.c:69
 msgid "_Select"
