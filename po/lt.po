@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-11-20 06:24+0000\n"
+"PO-Revision-Date: 2021-02-09 22:50+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/lt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.5-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -102,20 +102,16 @@ msgid "Index:"
 msgstr ""
 
 #: src/fsearch.glade:522
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Paieškos rezultatų skaičius"
+msgstr "Pasirinktų aplankų skaičius"
 
 #: src/fsearch.glade:523 src/fsearch.glade:548
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:547
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Paieškos rezultatų skaičius"
+msgstr "Pasirinktų failų skaičius"
 
 #: src/fsearch.glade:606 src/fsearch_window.c:959 src/overlay.ui:213
 #, c-format
@@ -258,19 +254,18 @@ msgstr ""
 "Palaukite minutėlę ir bandykite dar kartą."
 
 #: src/fsearch_window_actions.c:77
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Ar tikrai norite pašalinti"
+msgstr "Ar tikrai norite atverti %d failą(-us)?"
 
 #: src/fsearch_window_actions.c:79
-#, fuzzy
 msgid "Opening Files…"
-msgstr "Atverti failą(-us)"
+msgstr "Atveriami failai…"
 
 #: src/fsearch_window_actions.c:148
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Ar tikrai norite pašalinti"
+msgstr "Ar tikrai norite pašalinti %d failą(-us)?"
 
 #: src/fsearch_window_actions.c:152
 msgid "Deleting files…"
@@ -333,10 +328,8 @@ msgid "Cu_t"
 msgstr "Iškirp_ti"
 
 #: src/menus.ui:64
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Nuimti žymėjimą nuo visų"
+msgstr "Žymėti viską"
 
 #: src/menus.ui:69
 msgid "Deselect All"
@@ -434,11 +427,11 @@ msgstr "Prisiminti lango dydį"
 
 #: src/preferences.ui:183
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "naudojant sparčiuosius klavišus ar meniu įrašus"
 
 #: src/preferences.ui:198
 msgid "with double click"
-msgstr ""
+msgstr "naudojant dvikartį spustelėjimą"
 
 #: src/preferences.ui:226
 msgid "Behaviour after successfully opening a file:"
@@ -493,16 +486,12 @@ msgid "Results:"
 msgstr "Rezultatai:"
 
 #: src/preferences.ui:451
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Paleidus programą, atnaujinti duomenų bazę"
+msgstr "Rodyti duomenų bazės indeksavimo būseną"
 
 #: src/preferences.ui:471
-#, fuzzy
-#| msgid "Show Statusbar"
 msgid "Statusbar:"
-msgstr "Rodyti būsenos juostą"
+msgstr "Būsenos juosta:"
 
 #: src/preferences.ui:512
 msgid "Show warning dialogs when:"
@@ -513,10 +502,8 @@ msgid "file / folder failed to open"
 msgstr ""
 
 #: src/preferences.ui:544
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Dialogai"
+msgstr "Dialogai:"
 
 #: src/preferences.ui:569
 msgid "Interface"
@@ -625,10 +612,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1102
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "puslapis0"
+msgstr "puslapis2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -642,10 +627,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1120
-#, fuzzy
-#| msgid "page0"
 msgid "page3"
-msgstr "puslapis0"
+msgstr "puslapis3"
 
 #: src/preferences.ui:1128
 msgid ""
@@ -668,10 +651,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1146
-#, fuzzy
-#| msgid "page0"
 msgid "page4"
-msgstr "puslapis0"
+msgstr "puslapis4"
 
 #: src/preferences.ui:1154
 msgid ""
@@ -689,10 +670,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1167
-#, fuzzy
-#| msgid "page0"
 msgid "page5"
-msgstr "puslapis0"
+msgstr "puslapis5"
 
 #: src/preferences.ui:1175
 msgid ""
@@ -703,10 +682,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1183
-#, fuzzy
-#| msgid "page0"
 msgid "page6"
-msgstr "puslapis0"
+msgstr "puslapis6"
 
 #: src/preferences.ui:1191
 msgid ""
@@ -716,10 +693,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1199
-#, fuzzy
-#| msgid "page0"
 msgid "page7"
-msgstr "puslapis0"
+msgstr "puslapis7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -731,10 +706,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1215
-#, fuzzy
-#| msgid "page0"
 msgid "page8"
-msgstr "puslapis0"
+msgstr "puslapis8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -745,10 +718,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1231
-#, fuzzy
-#| msgid "page0"
 msgid "page9"
-msgstr "puslapis0"
+msgstr "puslapis9"
 
 #: src/preferences.ui:1239
 msgid ""
@@ -758,10 +729,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1247
-#, fuzzy
-#| msgid "page1"
 msgid "page10"
-msgstr "puslapis1"
+msgstr "puslapis10"
 
 #: src/preferences.ui:1255
 msgid ""
@@ -773,10 +742,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1263
-#, fuzzy
-#| msgid "page1"
 msgid "page11"
-msgstr "puslapis1"
+msgstr "puslapis11"
 
 #: src/preferences.ui:1271
 msgid ""
@@ -787,10 +754,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1279
-#, fuzzy
-#| msgid "page1"
 msgid "page12"
-msgstr "puslapis1"
+msgstr "puslapis12"
 
 #: src/preferences.ui:1287
 msgid ""
@@ -802,10 +767,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1298
-#, fuzzy
-#| msgid "page1"
 msgid "page13"
-msgstr "puslapis1"
+msgstr "puslapis13"
 
 #: src/preferences.ui:1306
 msgid ""
@@ -816,10 +779,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1314
-#, fuzzy
-#| msgid "page1"
 msgid "page14"
-msgstr "puslapis1"
+msgstr "puslapis14"
 
 #: src/preferences.ui:1322
 msgid ""
@@ -831,10 +792,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1330
-#, fuzzy
-#| msgid "page1"
 msgid "page15"
-msgstr "puslapis1"
+msgstr "puslapis15"
 
 #: src/preferences.ui:1338
 msgid ""
@@ -847,10 +806,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1348
-#, fuzzy
-#| msgid "page1"
 msgid "page16"
-msgstr "puslapis1"
+msgstr "puslapis16"
 
 #: src/preferences.ui:1356
 msgid ""
@@ -863,10 +820,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1366
-#, fuzzy
-#| msgid "page1"
 msgid "page17"
-msgstr "puslapis1"
+msgstr "puslapis17"
 
 #: src/preferences.ui:1374
 msgid ""
@@ -880,10 +835,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1384
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "puslapis1"
+msgstr "puslapis18"
 
 #: src/preferences.ui:1392
 msgid ""
@@ -894,10 +847,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1400
-#, fuzzy
-#| msgid "page1"
 msgid "page19"
-msgstr "puslapis1"
+msgstr "puslapis19"
 
 #: src/preferences.ui:1408
 msgid ""
@@ -915,10 +866,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1421
-#, fuzzy
-#| msgid "page0"
 msgid "page20"
-msgstr "puslapis0"
+msgstr "puslapis20"
 
 #: src/preferences.ui:1429
 msgid ""
@@ -929,10 +878,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1437
-#, fuzzy
-#| msgid "page1"
 msgid "page21"
-msgstr "puslapis1"
+msgstr "puslapis21"
 
 #: src/preferences.ui:1445
 msgid ""
@@ -942,10 +889,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1453
-#, fuzzy
-#| msgid "page0"
 msgid "page22"
-msgstr "puslapis0"
+msgstr "puslapis22"
 
 #: src/preferences.ui:1461
 msgid ""
@@ -959,10 +904,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1473
-#, fuzzy
-#| msgid "page0"
 msgid "page23"
-msgstr "puslapis0"
+msgstr "puslapis23"
 
 #: src/preferences.ui:1481
 msgid ""
@@ -973,10 +916,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1489
-#, fuzzy
-#| msgid "page0"
 msgid "page24"
-msgstr "puslapis0"
+msgstr "puslapis24"
 
 #: src/preferences.ui:1497
 msgid ""
@@ -986,10 +927,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1505
-#, fuzzy
-#| msgid "page0"
 msgid "page25"
-msgstr "puslapis0"
+msgstr "puslapis25"
 
 #: src/preferences.ui:1513
 msgid ""
@@ -1002,10 +941,8 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1521
-#, fuzzy
-#| msgid "page0"
 msgid "page26"
-msgstr "puslapis0"
+msgstr "puslapis26"
 
 #: src/preferences.ui:1529
 msgid ""
@@ -1016,46 +953,36 @@ msgid ""
 msgstr ""
 
 #: src/preferences.ui:1537
-#, fuzzy
-#| msgid "page0"
 msgid "page27"
-msgstr "puslapis0"
+msgstr "puslapis27"
 
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 
 #: src/preferences.ui:1549
-#, fuzzy
-#| msgid "page0"
 msgid "page28"
-msgstr "puslapis0"
+msgstr "puslapis28"
 
 #: src/preferences.ui:1557
 msgid "label"
-msgstr ""
+msgstr "etiketė"
 
 #: src/preferences.ui:1561
-#, fuzzy
-#| msgid "page0"
 msgid "page29"
-msgstr "puslapis0"
+msgstr "puslapis29"
 
 #: src/preferences.ui:1571
-#, fuzzy
-#| msgid "_Help"
 msgid "Help"
-msgstr "Ž_inynas"
+msgstr "Žinynas"
 
 #: src/preferences_ui.c:57 src/preferences_ui.c:69
-#, fuzzy
-#| msgid "Select a Filter"
 msgid "Select folder"
-msgstr "Pasirinkti filtrą"
+msgstr "Pasirinkti aplanką"
 
 #: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:175
 msgid "_Cancel"
-msgstr ""
+msgstr "_Atsisakyti"
 
 #: src/preferences_ui.c:62 src/preferences_ui.c:69
 #, fuzzy
@@ -1065,7 +992,7 @@ msgstr "Nuimti žymėjimą nuo visų"
 
 #: src/preferences_ui.c:176
 msgid "_OK"
-msgstr ""
+msgstr "_Gerai"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
