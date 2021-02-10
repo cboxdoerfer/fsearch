@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2017-09-27 19:46+0000\n"
-"Last-Translator: Shigenobu Nishikawa <shishi526@gmail.com>\n"
+"PO-Revision-Date: 2021-02-11 04:50+0000\n"
+"Last-Translator: gnuhead-chieb <stevenxx132@tuta.io>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
 "Language: ja\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 2.17-dev\n"
+"X-Generator: Weblate 4.5-dev\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
-msgstr ""
+msgstr "ソート中..."
 
 #: src/fsearch.c:183
 msgid "Show version information"
-msgstr ""
+msgstr "バージョン情報を表示"
 
 #: src/fsearch.c:190
 #, fuzzy
@@ -86,11 +86,11 @@ msgstr "設定"
 
 #: src/fsearch.glade:268 src/menus.ui:123
 msgid "About"
-msgstr ""
+msgstr "このソフトウェアについて"
 
 #: src/fsearch.glade:293 src/menus.ui:42
 msgid "Quit"
-msgstr ""
+msgstr "終了"
 
 #: src/fsearch.glade:416
 msgid "Number of Search Results"
@@ -102,7 +102,7 @@ msgstr "0 個"
 
 #: src/fsearch.glade:454
 msgid "Index:"
-msgstr ""
+msgstr "インデックス:"
 
 #: src/fsearch.glade:522
 #, fuzzy
@@ -131,7 +131,7 @@ msgstr "ページ0"
 
 #: src/fsearch.glade:663
 msgid "Number of database items"
-msgstr ""
+msgstr "データベースに登録されたアイテム数"
 
 #: src/fsearch.glade:664
 msgid "(empty)"
@@ -146,6 +146,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"検索文字列に大文字が含まれています。\n"
+"<b>大文字/小文字を区別</b>は一時的に有効です。"
 
 #: src/fsearch.glade:732 src/fsearch.glade:785
 msgid "CASE"
@@ -192,27 +194,27 @@ msgstr "ファイル"
 
 #: src/fsearch_filter.c:84
 msgid "Archives"
-msgstr ""
+msgstr "圧縮ファイル"
 
 #: src/fsearch_filter.c:86
 msgid "Audio"
-msgstr ""
+msgstr "オーディオ"
 
 #: src/fsearch_filter.c:89
 msgid "Documents"
-msgstr ""
+msgstr "ドキュメント"
 
 #: src/fsearch_filter.c:91
 msgid "Pictures"
-msgstr ""
+msgstr "画像ファイル"
 
 #: src/fsearch_filter.c:93
 msgid "Videos"
-msgstr ""
+msgstr "動画ファイル"
 
 #: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
 msgid "Active"
-msgstr ""
+msgstr "有効"
 
 #: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
 #: src/listview.c:203 src/menus.ui:216
@@ -221,7 +223,7 @@ msgstr "パス"
 
 #: src/fsearch_preferences_widgets.c:200
 msgid "Update"
-msgstr ""
+msgstr "更新"
 
 #: src/fsearch_window.c:121 src/fsearch_window.c:467 src/fsearch_window.c:917
 #, c-format
@@ -230,11 +232,11 @@ msgstr "%'d 個"
 
 #: src/fsearch_window.c:400 src/fsearch_window.c:557
 msgid "Querying…"
-msgstr ""
+msgstr "表示中…"
 
 #: src/fsearch_window.c:733 src/fsearch_window_actions.c:406
 msgid "Failed to open file"
-msgstr ""
+msgstr "ファイルを開けませんでした"
 
 #: src/fsearch_window.c:734 src/fsearch_window_actions.c:407
 msgid "Do you want to keep the window open?"
@@ -322,7 +324,7 @@ msgstr "データベースをアップデート"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "アップデートを中断"
 
 #: src/menus.ui:49
 msgid "_Edit"
@@ -337,10 +339,8 @@ msgid "Cu_t"
 msgstr ""
 
 #: src/menus.ui:64
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "すべての選択を解除"
+msgstr "すべて選択"
 
 #: src/menus.ui:69
 msgid "Deselect All"
@@ -461,11 +461,11 @@ msgstr ""
 
 #: src/preferences.ui:270
 msgid "General:"
-msgstr ""
+msgstr "一般:"
 
 #: src/preferences.ui:305
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "検索文字列を強調表示"
 
 #: src/preferences.ui:320
 msgid "Show tooltips"
@@ -480,10 +480,8 @@ msgid "Remember column configuration"
 msgstr "カラム設定を記憶"
 
 #: src/preferences.ui:362
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "ウィンドウサイズを記憶"
+msgstr "並び替え順を記憶"
 
 #: src/preferences.ui:376
 msgid "Open path with double click in path column"
@@ -495,7 +493,7 @@ msgstr ""
 
 #: src/preferences.ui:410
 msgid "Results:"
-msgstr ""
+msgstr "結果:"
 
 #: src/preferences.ui:451
 #, fuzzy
@@ -688,6 +686,15 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
+"<b>検索文字列を強調表示:</b>\n"
+"\n"
+"有効にした場合、検索結果内で検索した文字列を強調表示します。例えば「foo」と検索した場合ファイル/フォルダ名の<i>foo</i>を含む部分が太字で強調"
+"表示されます。\n"
+"\n"
+"\t\t<b>foo</b>bar.txt\n"
+"\t\tfile.<b>foo</b>\n"
+"\n"
+"正規表現とワイルドカードでも動作します。 "
 
 #: src/preferences.ui:1167
 #, fuzzy
@@ -744,6 +751,9 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>並び替え順を記憶</b>\n"
+"\n"
+"有効にした場合、以前のセッションで使用した並び順が記憶されます。"
 
 #: src/preferences.ui:1231
 #, fuzzy
