@@ -88,7 +88,7 @@ db_location_new(void);
 static void
 db_list_add_location(FsearchDatabase *db, FsearchDatabaseNode *location);
 
-// Implemenation
+// Implementation
 
 const char *data_folder_name = "fsearch";
 
