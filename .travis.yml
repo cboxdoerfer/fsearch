@@ -1,15 +1,14 @@
 language: c
+compiler: gcc
 sudo: required
-
-services:
-    - docker
-
+dist: xenial
+cache:
+  - apt
 before_install:
-    - docker pull ubuntu:xenial
-    - docker run -d --name fsearch_env ubuntu:xenial tail -f /dev/null
-    - docker ps -a
-    - docker exec fsearch_env bash -c "apt-get -y update && apt-get -y upgrade && apt-get -y install git build-essential automake autoconf libtool pkg-config autopoint autoconf-archive libpcre3-dev libglib2.0-dev libgtk-3-dev libxml2-utils"
-    - docker exec fsearch_env bash -c "mkdir /build && cd /build && git clone https://github.com/cboxdoerfer/fsearch.git"
-
+  - sudo apt-get -qq update
+  - sudo apt-get install -y automake autoconf libtool pkg-config intltool autoconf-archive libpcre3 libpcre3-dev libglib2.0-dev libgtk-3-dev libxml2-utils
 script:
-    - docker exec fsearch_env bash -c "cd /build/fsearch && ./autogen.sh && ./configure && make && make distcheck"
+  - cd ~/build/cboxdoerfer/fsearch
+  - ./autogen.sh
+  - ./configure
+  - make
