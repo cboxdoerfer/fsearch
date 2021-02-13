@@ -8,7 +8,6 @@ before_install:
   - sudo apt-get -qq update
   - sudo apt-get install -y automake autoconf libtool pkg-config intltool autoconf-archive libpcre3 libpcre3-dev libglib2.0-dev libgtk-3-dev libxml2-utils
 script:
-  - cd ~/build/cboxdoerfer/fsearch
   - ./autogen.sh
   - ./configure
   - make
