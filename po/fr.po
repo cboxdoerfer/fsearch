@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2020-10-24 09:26+0000\n"
-"Last-Translator: Pierre-Louis Kabaradjian <pierre.louis.kaba@gmail.com>\n"
+"PO-Revision-Date: 2021-02-21 08:50+0000\n"
+"Last-Translator: roxfr <roxfr@outlook.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.3.1\n"
+"X-Generator: Weblate 4.5\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -25,24 +25,21 @@ msgstr "Tri en cours..."
 
 #: src/fsearch.c:183
 msgid "Show version information"
-msgstr "Afficher les informations sur la version"
+msgstr "Afficher les informations de version"
 
 #: src/fsearch.c:190
 msgid "Update the database"
 msgstr "Mettre à jour la base de données"
 
 #: src/fsearch.c:387
-#, fuzzy
 msgid "translator-credits"
-msgstr ""
-"Traducteurs: \n"
-"Pierre-Louis K."
+msgstr "Traducteurs : Pierre-Louis K., Roxfr"
 
 #: src/fsearch.c:389
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
-"Un utilitaire de recherche axé sur la performance et avec des "
-"fonctionnalités avancées"
+"Un utilitaire de recherche axé sur la performance et les fonctionnalités "
+"avancées"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -332,7 +329,7 @@ msgstr "_Copier"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "Cou_per"
 
 #: src/menus.ui:64
 msgid "Select All"
@@ -352,7 +349,7 @@ msgstr "_Affichage"
 
 #: src/menus.ui:103
 msgid "_Search"
-msgstr "_Recherche"
+msgstr "_Rechercher"
 
 #: src/menus.ui:120
 msgid "_Help"
@@ -446,7 +443,7 @@ msgstr "Comportement à l'ouverture réussie d'un dossier :"
 
 #: src/preferences.ui:242
 msgid "Nothing"
-msgstr ""
+msgstr "Rien"
 
 #: src/preferences.ui:243
 msgid "Minimize"
@@ -509,10 +506,8 @@ msgid "file / folder failed to open"
 msgstr "le fichier/dossier n'a pas pu être ouvert"
 
 #: src/preferences.ui:544
-#, fuzzy
-#| msgid "Dialogs"
 msgid "Dialogs:"
-msgstr "Boîtes de dialogue d'avertissement"
+msgstr "Dialogues :"
 
 #: src/preferences.ui:569
 msgid "Interface"
@@ -545,11 +540,11 @@ msgstr "Mettre à jour la base de données au démarrage"
 
 #: src/preferences.ui:773
 msgid "Add path to be included in database"
-msgstr ""
+msgstr "Ajouter le chemin à inclure dans la base de données"
 
 #: src/preferences.ui:790 src/preferences.ui:910
 msgid "Remove selected path"
-msgstr ""
+msgstr "Supprimer le chemin sélectionné"
 
 #: src/preferences.ui:822
 msgid "Include"
@@ -557,7 +552,7 @@ msgstr "Inclure"
 
 #: src/preferences.ui:893
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Ajouter le chemin à exclure de la base de données"
 
 #: src/preferences.ui:949 src/preferences.ui:962
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -593,6 +588,15 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Activer le thème sombre :</b>\n"
+"\n"
+"S'il est activé, le thème système est invité à utiliser un style plus sombre "
+"pour l'application <i>(c'est-à-dire des éléments d'interface utilisateur "
+"sombres sur du texte clair)</i>.\n"
+"\n"
+"Notez que tous les thèmes système ne fournissent pas une variante aussi "
+"sombre, par conséquent, l'activation de ce paramètre peut ne pas avoir "
+"d'effet."
 
 #: src/preferences.ui:1072
 msgid ""
@@ -605,6 +609,15 @@ msgid ""
 "below it.\n"
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
+"<b>Activer les décorations côté client :</b>\n"
+"\n"
+"S'il est activé, l'entrée de recherche et le menu principal s'affichent dans "
+"la barre de titre de la fenêtre.\n"
+"\n"
+"S'il est désactivé, le menu principal s'affiche sous la forme d'une barre de "
+"menus avec l'entrée de recherche en dessous.\n"
+"Cela ressemble à une disposition d'interface utilisateur plus traditionnelle "
+"et prend un peu plus d'espace."
 
 #: src/preferences.ui:1091
 msgid ""
@@ -617,12 +630,19 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Utiliser des unités binaires au lieu des unités décimales :</b>\n"
+"\n"
+"Ce paramètre contrôle la manière dont les tailles de fichier sont affichées."
+"\n"
+"\n"
+"\t• <b>Unités binaires :</b> Cela fait référence aux préfixes binaires IEC "
+"<i>(par exemple 1 Kio = 1024 octets)</i>\n"
+"\t• <b>Unités décimales :</b> Cela fait référence aux préfixes décimaux SI "
+"<i>(par exemple 1 ko = 1000 octets)</i>"
 
 #: src/preferences.ui:1102
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "page0"
+msgstr "page2"
 
 #: src/preferences.ui:1110
 msgid ""
@@ -634,12 +654,17 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Se rappeler de la taille de la fenêtre :</b>\n"
+"\n"
+"Si cette option est activée, la taille de la fenêtre de la session "
+"précédente sera restaurée lorsque vous ouvrez une fenêtre FSearch.\n"
+"\n"
+"Notez que certains gestionnaires de fenêtres ignorent cette demande et "
+"forcent la fenêtre à avoir une taille différente."
 
 #: src/preferences.ui:1120
-#, fuzzy
-#| msgid "page0"
 msgid "page3"
-msgstr "page0"
+msgstr "page3"
 
 #: src/preferences.ui:1128
 msgid ""
@@ -660,12 +685,27 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>Comportement après l'ouverture réussie d'un fichier :</b>\n"
+"\n"
+"Lorsqu'un fichier/dossier a été ouvert avec succès, l'une des actions "
+"suivantes peut être effectuée :\n"
+"\n"
+"\t• <b>Rien :</b> Rien ne se passe.\n"
+"\t• <b>Réduire :</b> La fenêtre FSearch actuellement sélectionnée est "
+"réduite.\n"
+"\t\tNotez que tous les systèmes ne permettent pas de minimiser les fenêtres."
+"\n"
+"\t• <b>Fermer :</b> Quitter FSearch.\n"
+"\n"
+"Vous pouvez configurer si ces actions doivent être déclenchées lorsque le "
+"fichier a été ouvert avec\n"
+"\n"
+"\t• <b>le raccourcis clavier ou les entrées de menu</b> et/ou\n"
+"\t• <b>un clic de souris</b>"
 
 #: src/preferences.ui:1146
-#, fuzzy
-#| msgid "page0"
 msgid "page4"
-msgstr "page0"
+msgstr "page4"
 
 #: src/preferences.ui:1154
 msgid ""
@@ -681,12 +721,22 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
+"<b>Afficher les termes de recherche en surbrillance :</b>\n"
+"\n"
+"Si activé, les termes de recherche seront mis en surbrillance dans la vue "
+"des résultats. Par exemple, lorsque vous recherchez \"toto\", toutes les "
+"apparences de <i>toto</i> dans les noms de fichier/dossier seront mises en "
+"évidence avec des caractères gras :\n"
+"\n"
+"\t\t<b>toto</b> bar.txt\n"
+"\t\tfichier. <b>toto</b>\n"
+"\n"
+"Cela fonctionne également pour les expressions régulières et les expressions "
+"génériques commençant ou se terminant par un astérisque. "
 
 #: src/preferences.ui:1167
-#, fuzzy
-#| msgid "page0"
 msgid "page5"
-msgstr "page0"
+msgstr "page5"
 
 #: src/preferences.ui:1175
 msgid ""
@@ -695,12 +745,14 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b>Afficher les info-bulles :</b>\n"
+"\n"
+"Si cette option est activée, la vue des résultats affichera le chemin "
+"complet du fichier/dossier sélectionné dans une petite fenêtre d'info-bulle."
 
 #: src/preferences.ui:1183
-#, fuzzy
-#| msgid "page0"
 msgid "page6"
-msgstr "page0"
+msgstr "page6"
 
 #: src/preferences.ui:1191
 msgid ""
@@ -708,12 +760,14 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Afficher les icônes dans la colonne de nom :</b>\n"
+"\n"
+"Si activé, les icônes de fichier/dossier seront affichées dans la colonne de "
+"nom."
 
 #: src/preferences.ui:1199
-#, fuzzy
-#| msgid "page0"
 msgid "page7"
-msgstr "page0"
+msgstr "page7"
 
 #: src/preferences.ui:1207
 msgid ""
@@ -723,12 +777,16 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>Se souvenir de la configuration de la colonne :</b>\n"
+"\n"
+"Si cette option est activée, la configuration de la colonne de la vue des "
+"résultats de la session précédente sera restaurée lorsque vous ouvrez une "
+"fenêtre FSearch. Cela inclut la taille et la visibilité de toutes les "
+"colonnes."
 
 #: src/preferences.ui:1215
-#, fuzzy
-#| msgid "page0"
 msgid "page8"
-msgstr "page0"
+msgstr "page8"
 
 #: src/preferences.ui:1223
 msgid ""
@@ -737,12 +795,14 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Ne pas oublier l'ordre de tri :</b>\n"
+"\n"
+"Si activé, l'ordre de tri de la vue des résultats de la session précédente "
+"sera restauré lorsque vous ouvrez une fenêtre FSearch."
 
 #: src/preferences.ui:1231
-#, fuzzy
-#| msgid "page0"
 msgid "page9"
-msgstr "page0"
+msgstr "page9"
 
 #: src/preferences.ui:1239
 msgid ""
@@ -750,12 +810,14 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>Ouvrir le chemin avec un double clic dans la colonne du chemin :</b>\n"
+"\n"
+"Si activé, un double-clic dans la colonne du chemin ouvrira le chemin "
+"sélectionné."
 
 #: src/preferences.ui:1247
-#, fuzzy
-#| msgid "page1"
 msgid "page10"
-msgstr "page1"
+msgstr "page10"
 
 #: src/preferences.ui:1255
 msgid ""
@@ -765,12 +827,16 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to a "
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>Un seul clic pour ouvrir :</b>\n"
+"\n"
+"Si activé, un simple clic ouvrira le fichier/dossier sélectionné. Si vous "
+"souhaitez uniquement sélectionner un fichier/dossier pendant que ce "
+"paramètre est actif, vous devez maintenir <i>Ctrl</i> en même temps tout en "
+"cliquant sur le fichier/dossier."
 
 #: src/preferences.ui:1263
-#, fuzzy
-#| msgid "page1"
 msgid "page11"
-msgstr "page1"
+msgstr "page11"
 
 #: src/preferences.ui:1271
 msgid ""
@@ -779,12 +845,14 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>Afficher l'état de l'indexation de la base de données :</b>\n"
+"\n"
+"S'il est activé, le chemin en cours d'indexation s'affiche dans la barre "
+"d'état."
 
 #: src/preferences.ui:1279
-#, fuzzy
-#| msgid "page1"
 msgid "page12"
-msgstr "page1"
+msgstr "page12"
 
 #: src/preferences.ui:1287
 msgid ""
@@ -794,12 +862,15 @@ msgid ""
 "\n"
 "\t•  a file or folder failed to open\n"
 msgstr ""
+"<b>Afficher les boîtes de dialogue d'avertissement :</b>\n"
+"\n"
+"S'il est activé, une boîte de dialogue d'avertissement s'affiche lorsque :\n"
+"\n"
+"\t• un fichier ou un dossier n'a pas pu s'ouvrir\n"
 
 #: src/preferences.ui:1298
-#, fuzzy
-#| msgid "page1"
 msgid "page13"
-msgstr "page1"
+msgstr "page13"
 
 #: src/preferences.ui:1306
 msgid ""
@@ -808,12 +879,16 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
+"<b>Rechercher dans le chemin lorsque la requête contient des séparateurs de "
+"chemin :</b>\n"
+"\n"
+"Si cette option est activée, les termes de recherche contenant des "
+"séparateurs de chemin (c'est-à-dire \"/\") seront automatiquement comparés "
+"au chemin complet d'un fichier ou d'un dossier."
 
 #: src/preferences.ui:1314
-#, fuzzy
-#| msgid "page1"
 msgid "page14"
-msgstr "page1"
+msgstr "page14"
 
 #: src/preferences.ui:1322
 msgid ""
@@ -823,12 +898,17 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
+"<b>Faire correspondre la casse lorsque la requête contient au moins un "
+"caractère majuscule :</b>\n"
+"\n"
+"Si activé, les termes de recherche contenant au moins un caractère majuscule "
+"déclencheront une recherche sensible à la casse. Cela signifie qu'un terme "
+"de recherche comme <i>Toto</i> correspondra à <i>TotoBar.txt</i> mais pas à "
+"<i>totobar.txt</i>."
 
 #: src/preferences.ui:1330
-#, fuzzy
-#| msgid "page1"
 msgid "page15"
-msgstr "page1"
+msgstr "page15"
 
 #: src/preferences.ui:1338
 msgid ""
@@ -839,12 +919,17 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
+"<b>Masquer les résultats lorsque la recherche est vide :</b>\n"
+"\n"
+"S'il est activé, aucun résultat de recherche n'est affiché lorsque l'entrée "
+"de recherche est vide.\n"
+"\n"
+"Si elle est désactivée, tous les fichiers et dossiers seront affichés "
+"lorsque l'entrée de recherche est vide."
 
 #: src/preferences.ui:1348
-#, fuzzy
-#| msgid "page1"
 msgid "page16"
-msgstr "page1"
+msgstr "page16"
 
 #: src/preferences.ui:1356
 msgid ""
@@ -855,12 +940,17 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>Recherche en cours de saisie :</b>\n"
+"\n"
+"Si cette option est activée, la recherche est automatiquement mise à jour à "
+"chaque frappe.\n"
+"\n"
+"Si elle est désactivée, la recherche n'est mise à jour que lorsque vous "
+"appuyez sur <i>Entrée</i> ou sur le bouton de recherche. "
 
 #: src/preferences.ui:1366
-#, fuzzy
-#| msgid "page1"
 msgid "page17"
-msgstr "page1"
+msgstr "page17"
 
 #: src/preferences.ui:1374
 msgid ""
@@ -872,12 +962,18 @@ msgid ""
 "Displaying lots of results has a significant performance impact, especially "
 "when the list isn't sorted by name. This will be improved in future versions."
 msgstr ""
+"<b>Nombre limité de résultats :</b>\n"
+"\n"
+"S'il est activé, le nombre de résultats de recherche sera limité au nombre "
+"spécifié.\n"
+"\n"
+"L'affichage de nombreux résultats a un impact significatif sur les "
+"performances, en particulier lorsque la liste n'est pas triée par nom. Cela "
+"sera amélioré dans les versions futures."
 
 #: src/preferences.ui:1384
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "page1"
+msgstr "page18"
 
 #: src/preferences.ui:1392
 msgid ""
@@ -886,12 +982,14 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>Mettre à jour la base de données au démarrage :</b>\n"
+"\n"
+"Si cette option est activée, la base de données sera mise à jour "
+"automatiquement en arrière-plan lorsque vous démarrez FSearch."
 
 #: src/preferences.ui:1400
-#, fuzzy
-#| msgid "page1"
 msgid "page19"
-msgstr "page1"
+msgstr "page19"
 
 #: src/preferences.ui:1408
 msgid ""
@@ -907,12 +1005,22 @@ msgid ""
 "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
 "often)</i>"
 msgstr ""
+"<b>Inclure les dossiers :</b>\n"
+"\n"
+"Cette liste contient tous les dossiers que vous souhaitez inclure dans la "
+"base de données.\n"
+"\n"
+"\t• <b>Actif :</b> Si activé, le chemin sera inclus dans la base de données "
+"à rechercher.\n"
+"\t• <b>Chemin :</b> Le chemin complet à inclure.\n"
+"\t• <b>Mise à jour :</b> Ce paramètre est utile si vous souhaitez exclure "
+"certains chemins de\n"
+"\t\t\tmis à jour <i>(par exemple, un chemin vers une clé USB lente qui ne "
+"change pas souvent)</i>"
 
 #: src/preferences.ui:1421
-#, fuzzy
-#| msgid "page0"
 msgid "page20"
-msgstr "page0"
+msgstr "page20"
 
 #: src/preferences.ui:1429
 msgid ""
@@ -921,12 +1029,15 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>Ajouter un dossier à la base de données :</b>\n"
+"\n"
+"Ce bouton ouvre une boîte de dialogue dans laquelle vous pouvez sélectionner "
+"un dossier que vous souhaitez inclure dans la base de données pour la "
+"recherche."
 
 #: src/preferences.ui:1437
-#, fuzzy
-#| msgid "page1"
 msgid "page21"
-msgstr "page1"
+msgstr "page21"
 
 #: src/preferences.ui:1445
 msgid ""
@@ -934,12 +1045,13 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>Supprimer la ligne sélectionnée :</b>\n"
+"\n"
+"Cela supprime le dossier sélectionné de la liste des dossiers inclus."
 
 #: src/preferences.ui:1453
-#, fuzzy
-#| msgid "page0"
 msgid "page22"
-msgstr "page0"
+msgstr "page22"
 
 #: src/preferences.ui:1461
 msgid ""
@@ -951,12 +1063,18 @@ msgid ""
 "\t\t and can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
+"<b>Dossiers exclus :</b>\n"
+"\n"
+"Cette liste contient tous les dossiers que vous souhaitez exclure de la base "
+"de données.\n"
+"\n"
+"\t• <b>Actif :</b> Si activé, le chemin sera exclu de la base de données\n"
+"\t\tet ne peut pas être recherché.\n"
+"\t• <b>Chemin :</b> Le chemin complet à exclure."
 
 #: src/preferences.ui:1473
-#, fuzzy
-#| msgid "page0"
 msgid "page23"
-msgstr "page0"
+msgstr "page23"
 
 #: src/preferences.ui:1481
 msgid ""
@@ -965,12 +1083,14 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to exclude "
 "from the database."
 msgstr ""
+"<b>Exclure le dossier de la base de données :</b>\n"
+"\n"
+"Ce bouton ouvre une boîte de dialogue dans laquelle vous pouvez sélectionner "
+"un dossier que vous souhaitez exclure de la base de données."
 
 #: src/preferences.ui:1489
-#, fuzzy
-#| msgid "page0"
 msgid "page24"
-msgstr "page0"
+msgstr "page24"
 
 #: src/preferences.ui:1497
 msgid ""
@@ -978,12 +1098,13 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
+"<b>Supprimer la ligne sélectionnée :</b>\n"
+"\n"
+"Cela supprime le dossier sélectionné de la liste des dossiers exclus."
 
 #: src/preferences.ui:1505
-#, fuzzy
-#| msgid "page0"
 msgid "page25"
-msgstr "page0"
+msgstr "page25"
 
 #: src/preferences.ui:1513
 msgid ""
@@ -994,12 +1115,16 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
+"<b>Exclure des fichiers et des dossiers de la base de données :</b>\n"
+"\n"
+"Il s'agit d'une liste de fichiers (ou de dossiers) séparés par des points-"
+"virgules que vous souhaitez exclure de la base de données. Par exemple, <i>."
+"git;.cache;*.swp</i> exclura tous les fichiers ou dossiers appelés <i>.git</"
+"i> ou <i>.cache</i> ou se terminant par <i>.swp</i>."
 
 #: src/preferences.ui:1521
-#, fuzzy
-#| msgid "page0"
 msgid "page26"
-msgstr "page0"
+msgstr "page26"
 
 #: src/preferences.ui:1529
 msgid ""
@@ -1008,38 +1133,37 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
+"<b>Exclure les fichiers et dossiers cachés :</b>\n"
+"\n"
+"Si cette option est activée, les fichiers et dossiers cachés seront exclus "
+"de la base de données <i>(c'est-à-dire tous les fichiers ou dossiers "
+"commençant par un point)</i>."
 
 #: src/preferences.ui:1537
-#, fuzzy
-#| msgid "page0"
 msgid "page27"
-msgstr "page0"
+msgstr "page27"
 
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
+"Se concentrer sur un paramètre pour obtenir une description détaillée de ce "
+"qu'il fait."
 
 #: src/preferences.ui:1549
-#, fuzzy
-#| msgid "page0"
 msgid "page28"
-msgstr "page0"
+msgstr "page28"
 
 #: src/preferences.ui:1557
 msgid "label"
-msgstr ""
+msgstr "Étiquette"
 
 #: src/preferences.ui:1561
-#, fuzzy
-#| msgid "page0"
 msgid "page29"
-msgstr "page0"
+msgstr "page29"
 
 #: src/preferences.ui:1571
-#, fuzzy
-#| msgid "_Help"
 msgid "Help"
-msgstr "_Aide"
+msgstr "Aide"
 
 #: src/preferences_ui.c:57 src/preferences_ui.c:69
 msgid "Select folder"
@@ -1075,8 +1199,8 @@ msgstr "system-search"
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
-"recherche;fsearch;fichiers;dossiers;musique;vidéos;documents;trouver;outil;"
-"everything;"
+"rechercher;fsearch;fichiers;dossiers;musique;vidéos;documents;trouver;outil;t"
+"out;"
 
 #~ msgid "Copy"
 #~ msgstr "Copier"
