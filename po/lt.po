@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2021-02-09 22:50+0000\n"
-"Last-Translator: Moo <hazap@hotmail.com>\n"
+"PO-Revision-Date: 2021-02-22 11:50+0000\n"
+"Last-Translator: Kornelijus Tvarijanavičius <kornelitvari@protonmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/lt/>\n"
 "Language: lt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
-"X-Generator: Weblate 4.5-dev\n"
+"X-Generator: Weblate 4.5\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -99,7 +99,7 @@ msgstr "0 elementų"
 
 #: src/fsearch.glade:454
 msgid "Index:"
-msgstr ""
+msgstr "Indeksas:"
 
 #: src/fsearch.glade:522
 msgid "Number of selected folders"
@@ -204,7 +204,7 @@ msgstr "Vaizdo įrašai"
 
 #: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
 msgid "Active"
-msgstr ""
+msgstr "Aktyvus"
 
 #: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
 #: src/listview.c:203 src/menus.ui:216
@@ -499,7 +499,7 @@ msgstr "Rodyti įspėjimo dialogus, kai:"
 
 #: src/preferences.ui:522
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "nepavyko atverti failo/aplanko"
 
 #: src/preferences.ui:544
 msgid "Dialogs:"
