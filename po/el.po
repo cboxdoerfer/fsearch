@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2020-10-30 12:42+0100\n"
-"PO-Revision-Date: 2021-02-09 22:50+0000\n"
+"PO-Revision-Date: 2021-02-23 14:50+0000\n"
 "Last-Translator: Michalis <michalisntovas@yahoo.gr>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
 "translations/el/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5-dev\n"
+"X-Generator: Weblate 4.5\n"
 
 #: src/database.c:1023
 msgid "Sorting..."
@@ -28,9 +28,8 @@ msgid "Show version information"
 msgstr "Εμφάνιση πληροφοριών έκδοσης"
 
 #: src/fsearch.c:190
-#, fuzzy
 msgid "Update the database"
-msgstr "Ενημέρωση βάσης δεδομένων"
+msgstr "Ενημέρωση της βάσης δεδομένων"
 
 #: src/fsearch.c:387
 msgid "translator-credits"
@@ -43,20 +42,16 @@ msgstr ""
 "χαρακτηριστικά"
 
 #: src/fsearch.glade:73
-#, fuzzy
 msgid "New window"
 msgstr "Νέο παράθυρο"
 
 #: src/fsearch.glade:88
-#, fuzzy
 msgid "Update database"
 msgstr "Ενημέρωση βάσης δεδομένων"
 
 #: src/fsearch.glade:103 src/fsearch.glade:622
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Cancel database update"
-msgstr "Ενημέρωση της βάσης δεδομένων κατά την εκκίνηση"
+msgstr "Ακύρωση ενημέρωσης βάσης δεδομένων"
 
 #: src/fsearch.glade:137 src/menus.ui:106
 msgid "Search in Path"
@@ -104,37 +99,32 @@ msgstr "0 Αντικείμενα"
 
 #: src/fsearch.glade:454
 msgid "Index:"
-msgstr ""
+msgstr "Ευρετήριο:"
 
 #: src/fsearch.glade:522
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected folders"
-msgstr "Αριθμός αποτελεσμάτων αναζήτησης"
+msgstr "Αριθμός επιλεγμένων φακέλων"
 
 #: src/fsearch.glade:523 src/fsearch.glade:548
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:547
-#, fuzzy
-#| msgid "Number of Search Results"
 msgid "Number of selected files"
-msgstr "Αριθμός αποτελεσμάτων αναζήτησης"
+msgstr "Αριθμός επιλεγμένων αρχείων"
 
 #: src/fsearch.glade:606 src/fsearch_window.c:959 src/overlay.ui:213
-#, fuzzy, c-format
+#, c-format
 msgid "Updating Database…"
-msgstr "Η βάση δεδομένων ενημερώνεται..."
+msgstr "Ενημέρωση βάσης δεδομένων…"
 
 #: src/fsearch.glade:639 src/preferences.ui:1065
 msgid "page0"
 msgstr "σελίδα0"
 
 #: src/fsearch.glade:663
-#, fuzzy
 msgid "Number of database items"
-msgstr "Αριθμός αντικειμένων από την βάση δεδομένων"
+msgstr "Αριθμός στοιχείων βάσης δεδομένων"
 
 #: src/fsearch.glade:664
 msgid "(empty)"
@@ -145,28 +135,25 @@ msgid "page1"
 msgstr "σελίδα1"
 
 #: src/fsearch.glade:701
-#, fuzzy
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 "Ο όρος αναζήτησης περιέχει κεφαλαίους χαρακτήρες.\n"
-"Το <b>Ταίριασμα πεζών/κεφαλαίων</b> έχει προσωρινά απενεργοποιηθεί για αυτόν "
-"τον όρο."
+"Το <b>Ταίριασμα πεζών/κεφαλαίων</b> ενεργοποιήθηκε προσωρινά για αυτόν τον "
+"όρο."
 
 #: src/fsearch.glade:732 src/fsearch.glade:785
 msgid "CASE"
 msgstr "ΠΕΖΑ-ΚΕΦΑΛΑΙΑ"
 
 #: src/fsearch.glade:808
-#, fuzzy
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "Ο όρος αναζήτησης περιέχει διαχωριστικά διαδρομής.\n"
-"Η <b>Αναζήτηση σε Διαδρομή</b> έχει προσωρινά απενεργοποιηθεί για αυτόν τον "
-"όρο."
+"Η <b>Αναζήτηση σε Διαδρομή</b> ενεργοποιήθηκε προσωρινά για αυτόν τον όρο."
 
 #: src/fsearch.glade:839 src/fsearch.glade:892
 msgid "PATH"
@@ -221,7 +208,6 @@ msgid "Videos"
 msgstr "Βίντεο"
 
 #: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
-#, fuzzy
 msgid "Active"
 msgstr "Ενεργό"
 
@@ -248,7 +234,6 @@ msgid "Failed to open file"
 msgstr "Αποτυχία ανοίγματος αρχείου"
 
 #: src/fsearch_window.c:734 src/fsearch_window_actions.c:407
-#, fuzzy
 msgid "Do you want to keep the window open?"
 msgstr "Θέλετε να κρατήσετε το παράθυρο ανοιχτό;"
 
@@ -257,17 +242,15 @@ msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Τελευταία ενημέρωση: %Y-%m-%d %H:%M"
 
 #: src/fsearch_window.c:936 src/overlay.ui:143
-#, fuzzy, c-format
+#, c-format
 msgid "Loading Database…"
-msgstr "Φόρτωση βάσης δεδομένων..."
+msgstr "Φόρτωση βάσης δεδομένων…"
 
 #: src/fsearch_window.c:1121
-#, fuzzy
 msgid "Background tasks are active."
-msgstr "Παρασκήνιες εργασίες είναι ενεργές."
+msgstr "Οι εργασίες παρασκηνίου είναι ενεργές."
 
 #: src/fsearch_window.c:1123
-#, fuzzy
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -290,14 +273,12 @@ msgid "Do you really want to remove %d file(s)?"
 msgstr "Θέλετε πραγματικά να αφαιρέσετε %d αρχείο(α);"
 
 #: src/fsearch_window_actions.c:152
-#, fuzzy
 msgid "Deleting files…"
-msgstr "Διαγραφή αρχείων..."
+msgstr "Διαγραφή αρχείων…"
 
 #: src/fsearch_window_actions.c:152
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "Μετακίνηση των αρχείων στα απορρίματα..."
+msgstr "Μετακίνηση αρχείων στον κάδο απορριμμάτων…"
 
 #: src/listview.c:178 src/menus.ui:212
 msgid "Name"
@@ -349,13 +330,11 @@ msgstr "_Αντιγραφή"
 
 #: src/menus.ui:57 src/menus.ui:180
 msgid "Cu_t"
-msgstr ""
+msgstr "Α_ποκοπή"
 
 #: src/menus.ui:64
-#, fuzzy
-#| msgid "Deselect All"
 msgid "Select All"
-msgstr "Αποεπιλογή όλων"
+msgstr "Επιλογή όλων"
 
 #: src/menus.ui:69
 msgid "Deselect All"
@@ -420,9 +399,8 @@ msgid "…"
 msgstr "…"
 
 #: src/overlay.ui:173
-#, fuzzy
 msgid "This won't take long."
-msgstr "Αυτό μπορεί να πάρει λίγο χρόνο."
+msgstr "Αυτό δεν θα πάρει πολύ χρόνο."
 
 #: src/overlay.ui:243
 msgid "This may take a while."
@@ -446,7 +424,7 @@ msgstr ""
 
 #: src/preferences.ui:133
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Χρήση δυαδικών μονάδων αντί δεκαδικών μονάδων"
 
 #: src/preferences.ui:148
 msgid "Remember window size"
@@ -454,16 +432,15 @@ msgstr "Απομνημόνευση μεγέθους παραθύρου"
 
 #: src/preferences.ui:183
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "με συντομεύσεις πληκτρολογίου ή καταχωρήσεις μενού"
 
 #: src/preferences.ui:198
 msgid "with double click"
 msgstr "με διπλό κλικ"
 
 #: src/preferences.ui:226
-#, fuzzy
 msgid "Behaviour after successfully opening a file:"
-msgstr "Δράση μετά από το επιτυχή άνοιγμα ενός αρχείου:"
+msgstr "Συμπεριφορά μετά το επιτυχές άνοιγμα ενός αρχείου:"
 
 #: src/preferences.ui:242
 msgid "Nothing"
@@ -482,7 +459,6 @@ msgid "General:"
 msgstr "Γενικά:"
 
 #: src/preferences.ui:305
-#, fuzzy
 msgid "Show highlighted search terms"
 msgstr "Εμφάνιση επισημασμένων όρων αναζήτησης"
 
@@ -499,15 +475,12 @@ msgid "Remember column configuration"
 msgstr "Απομνημόνευση διαμόρφωσης στηλών"
 
 #: src/preferences.ui:362
-#, fuzzy
-#| msgid "Remember window size"
 msgid "Remember sort order"
-msgstr "Απομνημόνευση μεγέθους παραθύρου"
+msgstr "Απομνημόνευση σειράς ταξινόμηση"
 
 #: src/preferences.ui:376
-#, fuzzy
 msgid "Open path with double click in path column"
-msgstr "Άνοιγμα τοποθεσίας αρχείου με διπλό κλικ στην στήλη διαδρομής"
+msgstr "Άνοιγμα διαδρομής με διπλό κλικ στη στήλη διαδρομής"
 
 #: src/preferences.ui:390
 msgid "Single click to open"
@@ -518,23 +491,20 @@ msgid "Results:"
 msgstr "Αποτελέσματα:"
 
 #: src/preferences.ui:451
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Show database indexing status"
-msgstr "Ενημέρωση της βάσης δεδομένων κατά την εκκίνηση"
+msgstr "Εμφάνιση κατάστασης ευρετηρίου βάσης δεδομένων"
 
 #: src/preferences.ui:471
 msgid "Statusbar:"
 msgstr "Γραμμή κατάστασης:"
 
 #: src/preferences.ui:512
-#, fuzzy
 msgid "Show warning dialogs when:"
 msgstr "Εμφάνιση προειδοποιητικών διαλόγων όταν:"
 
 #: src/preferences.ui:522
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "Το άνοιγμα του αρχείου / φακέλου απέτυχε"
 
 #: src/preferences.ui:544
 msgid "Dialogs:"
@@ -561,18 +531,18 @@ msgid "Hide results when search is empty"
 msgstr "Απόκρυψη αποτελεσμάτων όταν η αναζήτηση είναι κενή"
 
 #: src/preferences.ui:658
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "Αναζήτηση στη διαδρομή όταν το ερώτημα περιέχει διαχωριστές διαδρομής"
+msgstr ""
+"Ταίριασμα πεζών-κεφαλαίων όταν το ερώτημα περιέχει τουλάχιστον έναν κεφαλαίο "
+"χαρακτήρα"
 
 #: src/preferences.ui:698
 msgid "Update database on start"
 msgstr "Ενημέρωση της βάσης δεδομένων κατά την εκκίνηση"
 
 #: src/preferences.ui:773
-#, fuzzy
 msgid "Add path to be included in database"
-msgstr "Προσθήκη διαδρομής που θα περιλαμβάνεται στην βάση δεδομένων"
+msgstr "Προσθήκη διαδρομής που θα συμπεριληφθεί στη βάση δεδομένων"
 
 #: src/preferences.ui:790 src/preferences.ui:910
 msgid "Remove selected path"
@@ -583,9 +553,8 @@ msgid "Include"
 msgstr "Συμπερίλαβε"
 
 #: src/preferences.ui:893
-#, fuzzy
 msgid "Add path to be excluded from database"
-msgstr "Προσθήκη διαδρομής που θα εξαιρείτε απ'την βάση δεδομένων"
+msgstr "Προσθήκη διαδρομής που θα εξαιρείτε από τη βάση δεδομένων"
 
 #: src/preferences.ui:949 src/preferences.ui:962
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -622,6 +591,15 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b> Ενεργοποίηση σκοτεινού θέματος: </b>\n"
+"\n"
+"Εάν είναι ενεργοποιημένο, ζητείται από το θέμα του συστήματος να "
+"χρησιμοποιήσει ένα πιο σκούρο στυλ για την εφαρμογή <i> (δηλ. Σκοτεινά "
+"στοιχεία διεπαφής χρήστη σε φωτεινό κείμενο) </i>.\n"
+"\n"
+"Λάβετε υπόψη ότι δεν παρέχουν όλα τα θέματα συστήματος μια πιο σκοτεινή "
+"παραλλαγή, επομένως η ενεργοποίηση αυτής της ρύθμισης ενδέχεται να μην έχει "
+"αποτέλεσμα."
 
 #: src/preferences.ui:1072
 msgid ""
@@ -646,6 +624,14 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b> Χρήση δυαδικών μονάδων αντί δεκαδικών μονάδων:</b>\n"
+"\n"
+"Αυτές οι ρυθμίσεις ελέγχουν τον τρόπο εμφάνισης του μεγέθους αρχείων.\n"
+"\n"
+"\t• <b>Δυαδικές μονάδες:</b> Αυτό αναφέρεται σε δυαδικά προθέματα IEC <i>("
+"π.χ. 1 KiB = 1024 byte)</i>\n"
+"\t• <b>Δεκαδικές μονάδες:</b> Αυτό αναφέρεται σε δεκαδικά προθέματα SI <i>("
+"π.χ. 1 kB = 1000 byte)</i>"
 
 #: src/preferences.ui:1102
 msgid "page2"
@@ -788,6 +774,10 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b> Εμφάνιση κατάστασης ευρετηρίου βάσης δεδομένων:</b>\n"
+"\n"
+"Εάν είναι ενεργοποιημένη, η διαδρομή που βρίσκεται αυτήν τη στιγμή στο "
+"ευρετήριο εμφανίζεται στη γραμμή κατάστασης."
 
 #: src/preferences.ui:1279
 msgid "page12"
@@ -801,6 +791,11 @@ msgid ""
 "\n"
 "\t•  a file or folder failed to open\n"
 msgstr ""
+"<b> Εμφάνιση παραθύρων προειδοποίησης:</b>\n"
+"\n"
+"Εάν είναι ενεργοποιημένο, εμφανίζεται ένα παράθυρο προειδοποίησης όταν:\n"
+"\n"
+"\t• ένα αρχείο ή φάκελος απέτυχε να ανοίξει\n"
 
 #: src/preferences.ui:1298
 msgid "page13"
@@ -995,13 +990,13 @@ msgstr "σελίδα27"
 #: src/preferences.ui:1545
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
+"Εστιάστε σε μια ρύθμιση για να λάβετε μια λεπτομερή περιγραφή του τι κάνει."
 
 #: src/preferences.ui:1549
 msgid "page28"
 msgstr "σελίδα28"
 
 #: src/preferences.ui:1557
-#, fuzzy
 msgid "label"
 msgstr "ετικέτα"
 
@@ -1034,15 +1029,14 @@ msgid "FSearch"
 msgstr "FSearch"
 
 #: data/fsearch.desktop.in.in:6
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
-"Μια εφαρμογή αναζήτησης που δίνει έμφαση στις επιδόσεις και τα προηγμένα "
-"χαρακτηριστικά"
+"Μια εφαρμογή αναζήτησης αρχείων που επικεντρώνεται στις επιδόσεις και τις "
+"προηγμένες δυνατότητες"
 
 #: data/fsearch.desktop.in.in:7
 msgid "system-search"
-msgstr ""
+msgstr "system-search"
 
 #: data/fsearch.desktop.in.in:11
 msgid ""
