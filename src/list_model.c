@@ -498,7 +498,7 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
             else {
                 snprintf(output, sizeof(output), "%d Items", num_children);
             }
-            g_value_set_static_string(value, output);
+            g_value_take_string(value, strdup(output));
         }
         else {
             FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -523,7 +523,7 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
                  sizeof(output),
                  "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
                  localtime(&mtime));
-        g_value_set_static_string(value, output);
+        g_value_take_string(value, strdup(output));
         break;
     }
 }
