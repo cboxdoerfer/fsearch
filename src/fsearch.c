@@ -462,16 +462,14 @@ fsearch_database_update(bool scan) {
     if (scan) {
         ctx->rescan = true;
         ctx->callback_started = database_scan_started_cb;
-        ctx->callback_started_data = app;
-        ctx->callback_finished = database_update_finished_cb;
     }
     else {
         ctx->callback_started = database_load_started_cb;
-        ctx->callback_started_data = app;
-        ctx->callback_finished = database_update_finished_cb;
     }
+    ctx->callback_started_data = app;
+    ctx->callback_finished = database_update_finished_cb;
+
     g_thread_pool_push(app->db_pool, ctx, NULL);
-    return;
 }
 
 static void
