@@ -61,11 +61,11 @@ struct _FsearchApplication {
 
 typedef struct {
     bool rescan;
-    void (*callback_started)(void *);
-    void *callback_started_data;
-    void (*callback_finished)(void *);
-    void (*callback_cancelled)(void *);
-    void *callback_cancelled_data;
+    void (*started_cb)(void *);
+    void *started_cb_data;
+    void (*finished_cb)(void *);
+    void (*cancelled_cb)(void *);
+    void *cancelled_cb_data;
 } DatabaseUpdateContext;
 
 enum { DATABASE_SCAN_STARTED, DATABASE_UPDATE_FINISHED, DATABASE_LOAD_STARTED, NUM_SIGNALS };
@@ -358,14 +358,14 @@ database_pool_func(gpointer data, gpointer user_data) {
         return;
     }
 
-    if (ctx->callback_started) {
-        ctx->callback_started(ctx->callback_started_data);
+    if (ctx->started_cb) {
+        ctx->started_cb(ctx->started_cb_data);
     }
 
     FsearchDatabase *db = database_update(app, ctx->rescan);
 
-    if (ctx->callback_finished) {
-        ctx->callback_finished(db);
+    if (ctx->finished_cb) {
+        ctx->finished_cb(db);
     }
 
     g_free(ctx);
@@ -461,13 +461,13 @@ fsearch_database_update(bool scan) {
 
     if (scan) {
         ctx->rescan = true;
-        ctx->callback_started = database_scan_started_cb;
+        ctx->started_cb = database_scan_started_cb;
     }
     else {
-        ctx->callback_started = database_load_started_cb;
+        ctx->started_cb = database_load_started_cb;
     }
-    ctx->callback_started_data = app;
-    ctx->callback_finished = database_update_finished_cb;
+    ctx->started_cb_data = app;
+    ctx->finished_cb = database_update_finished_cb;
 
     g_thread_pool_push(app->db_pool, ctx, NULL);
 }
