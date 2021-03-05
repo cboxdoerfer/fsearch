@@ -64,19 +64,18 @@ typedef struct {
     void (*callback_started)(void *);
     void *callback_started_data;
     void (*callback_finished)(void *);
-    void *callback_finished_data;
     void (*callback_cancelled)(void *);
     void *callback_cancelled_data;
 } DatabaseUpdateContext;
 
-enum { DATABASE_UPDATE_STARTED, DATABASE_UPDATE_FINISHED, DATABASE_LOAD_STARTED, NUM_SIGNALS };
+enum { DATABASE_SCAN_STARTED, DATABASE_UPDATE_FINISHED, DATABASE_LOAD_STARTED, NUM_SIGNALS };
 
 static guint signals[NUM_SIGNALS];
 
 G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
 static FsearchDatabase *
-db_update_func(FsearchApplication *app, bool rescan);
+database_update(FsearchApplication *app, bool rescan);
 
 static void
 fsearch_action_enable(const char *action_name);
@@ -114,7 +113,7 @@ fsearch_application_get_config(FsearchApplication *fsearch) {
 }
 
 static gboolean
-update_db_cb(gpointer user_data) {
+database_scan_status_notify(gpointer user_data) {
     char *text = user_data;
     if (!text) {
         return FALSE;
@@ -137,9 +136,9 @@ update_db_cb(gpointer user_data) {
 }
 
 static void
-build_location_callback(const char *text) {
+database_scan_status_cb(const char *text) {
     if (text) {
-        g_idle_add(update_db_cb, g_strdup(text));
+        g_idle_add(database_scan_status_notify, g_strdup(text));
     }
 }
 
@@ -160,7 +159,7 @@ fsearch_options_handler(GApplication *gapp, GVariantDict *options, gpointer data
         FsearchApplication *fsearch = FSEARCH_APPLICATION(gapp);
         fsearch->config->update_database_on_launch = true;
 
-        FsearchDatabase *db = db_update_func(fsearch, true);
+        FsearchDatabase *db = database_update(fsearch, true);
         if (db) {
             db_unref(db);
         }
@@ -225,6 +224,7 @@ fsearch_application_shutdown(GApplication *app) {
         trace("[exit] waiting for database thread to exit...\n");
         fsearch->db_thread_cancel = true;
         g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
+        fsearch->db_pool = FALSE;
         trace("[exit] database thread finished.\n");
     }
     if (fsearch->db) {
@@ -247,7 +247,7 @@ fsearch_application_finalize(GObject *object) {
 }
 
 static void
-prepare_windows_for_db_update(FsearchApplication *app) {
+fsearch_prepare_windows_for_db_update(FsearchApplication *app) {
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
 
     for (; windows; windows = windows->next) {
@@ -261,12 +261,12 @@ prepare_windows_for_db_update(FsearchApplication *app) {
 }
 
 static gboolean
-updated_database_notify(gpointer user_data) {
+database_update_finished_notify(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     g_mutex_lock(&self->mutex);
     FsearchDatabase *db = user_data;
     if (!self->db_thread_cancel) {
-        prepare_windows_for_db_update(self);
+        fsearch_prepare_windows_for_db_update(self);
         if (self->db) {
             db_unref(self->db);
         }
@@ -294,36 +294,36 @@ updated_database_notify(gpointer user_data) {
 }
 
 static void
-updated_database_cb(gpointer user_data) {
-    g_idle_add(updated_database_notify, user_data);
+database_update_finished_cb(gpointer user_data) {
+    g_idle_add(database_update_finished_notify, user_data);
 }
 
 static gboolean
-load_database_notify(gpointer user_data) {
+database_load_started_notify(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     g_signal_emit(self, signals[DATABASE_LOAD_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
 static gboolean
-update_database_notify(gpointer user_data) {
+database_scan_started_notify(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
-    g_signal_emit(self, signals[DATABASE_UPDATE_STARTED], 0);
+    g_signal_emit(self, signals[DATABASE_SCAN_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
 static void
-load_database_cb(gpointer user_data) {
-    g_idle_add(load_database_notify, user_data);
+database_load_started_cb(gpointer user_data) {
+    g_idle_add(database_load_started_notify, user_data);
 }
 
 static void
-update_database_cb(gpointer user_data) {
-    g_idle_add(update_database_notify, user_data);
+database_scan_started_cb(gpointer user_data) {
+    g_idle_add(database_scan_started_notify, user_data);
 }
 
 static FsearchDatabase *
-db_update_func(FsearchApplication *app, bool rescan) {
+database_update(FsearchApplication *app, bool rescan) {
     GTimer *timer = fsearch_timer_start();
 
     g_mutex_lock(&app->mutex);
@@ -334,7 +334,7 @@ db_update_func(FsearchApplication *app, bool rescan) {
     g_mutex_unlock(&app->mutex);
     db_lock(db);
     if (rescan) {
-        db_scan(db, &app->db_thread_cancel, app->config->show_indexing_status ? build_location_callback : NULL);
+        db_scan(db, &app->db_thread_cancel, app->config->show_indexing_status ? database_scan_status_cb : NULL);
         if (!app->db_thread_cancel) {
             db_save_locations(db);
         }
@@ -351,7 +351,7 @@ db_update_func(FsearchApplication *app, bool rescan) {
 }
 
 static void
-db_pool_func(gpointer data, gpointer user_data) {
+database_pool_func(gpointer data, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION(user_data);
     DatabaseUpdateContext *ctx = data;
     if (!ctx) {
@@ -362,7 +362,7 @@ db_pool_func(gpointer data, gpointer user_data) {
         ctx->callback_started(ctx->callback_started_data);
     }
 
-    FsearchDatabase *db = db_update_func(app, ctx->rescan);
+    FsearchDatabase *db = database_update(app, ctx->rescan);
 
     if (ctx->callback_finished) {
         ctx->callback_finished(db);
@@ -461,14 +461,14 @@ fsearch_database_update(bool scan) {
 
     if (scan) {
         ctx->rescan = true;
-        ctx->callback_started = update_database_cb;
+        ctx->callback_started = database_scan_started_cb;
         ctx->callback_started_data = app;
-        ctx->callback_finished = updated_database_cb;
+        ctx->callback_finished = database_update_finished_cb;
     }
     else {
-        ctx->callback_started = load_database_cb;
+        ctx->callback_started = database_load_started_cb;
         ctx->callback_started_data = app;
-        ctx->callback_finished = updated_database_cb;
+        ctx->callback_finished = database_update_finished_cb;
     }
     g_thread_pool_push(app->db_pool, ctx, NULL);
     return;
@@ -571,7 +571,7 @@ fsearch_application_startup(GApplication *app) {
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", quit);
 
     FSEARCH_APPLICATION(app)->pool = fsearch_thread_pool_init();
-    FSEARCH_APPLICATION(app)->db_pool = g_thread_pool_new(db_pool_func, app, 1, TRUE, NULL);
+    FSEARCH_APPLICATION(app)->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
 }
 
 static void
@@ -615,15 +615,15 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
     g_app_class->startup = fsearch_application_startup;
     g_app_class->shutdown = fsearch_application_shutdown;
 
-    signals[DATABASE_UPDATE_STARTED] = g_signal_new("database-update-started",
-                                                    G_TYPE_FROM_CLASS(klass),
-                                                    G_SIGNAL_RUN_LAST,
-                                                    0,
-                                                    NULL,
-                                                    NULL,
-                                                    NULL,
-                                                    G_TYPE_NONE,
-                                                    0);
+    signals[DATABASE_SCAN_STARTED] = g_signal_new("database-scan-started",
+                                                  G_TYPE_FROM_CLASS(klass),
+                                                  G_SIGNAL_RUN_LAST,
+                                                  0,
+                                                  NULL,
+                                                  NULL,
+                                                  NULL,
+                                                  G_TYPE_NONE,
+                                                  0);
 
     signals[DATABASE_UPDATE_FINISHED] = g_signal_new("database-update-finished",
                                                      G_TYPE_FROM_CLASS(klass),

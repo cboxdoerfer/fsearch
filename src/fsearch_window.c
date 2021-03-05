@@ -943,7 +943,7 @@ database_load_started_cb(gpointer data, gpointer user_data) {
 }
 
 static void
-database_update_started_cb(gpointer data, gpointer user_data) {
+database_scan_started_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -980,11 +980,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     create_view_and_model(self);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    g_signal_connect_object(app,
-                            "database-update-started",
-                            G_CALLBACK(database_update_started_cb),
-                            self,
-                            G_CONNECT_AFTER);
+    g_signal_connect_object(app, "database-scan-started", G_CALLBACK(database_scan_started_cb), self, G_CONNECT_AFTER);
     g_signal_connect_object(app,
                             "database-update-finished",
                             G_CALLBACK(database_update_finished_cb),
