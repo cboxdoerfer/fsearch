@@ -49,15 +49,25 @@ struct _FsearchApplication {
     FsearchConfig *config;
     FsearchThreadPool *pool;
 
+    GThreadPool *db_pool;
     GList *filters;
 
     bool startup_finished;
 
     bool db_thread_cancel;
     int num_database_update_active;
-    GThread *db_thread;
     GMutex mutex;
 };
+
+typedef struct {
+    bool rescan;
+    void (*callback_started)(void *);
+    void *callback_started_data;
+    void (*callback_finished)(void *);
+    void *callback_finished_data;
+    void (*callback_cancelled)(void *);
+    void *callback_cancelled_data;
+} DatabaseUpdateContext;
 
 enum { DATABASE_UPDATE_STARTED, DATABASE_UPDATE_FINISHED, DATABASE_LOAD_STARTED, NUM_SIGNALS };
 
@@ -65,8 +75,8 @@ static guint signals[NUM_SIGNALS];
 
 G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
-static gpointer
-scan_database(gpointer user_data);
+static FsearchDatabase *
+db_update_func(FsearchApplication *app, bool rescan);
 
 static void
 fsearch_action_enable(const char *action_name);
@@ -150,9 +160,9 @@ fsearch_options_handler(GApplication *gapp, GVariantDict *options, gpointer data
         FsearchApplication *fsearch = FSEARCH_APPLICATION(gapp);
         fsearch->config->update_database_on_launch = true;
 
-        scan_database(fsearch);
-        if (fsearch->db) {
-            db_unref(fsearch->db);
+        FsearchDatabase *db = db_update_func(fsearch, true);
+        if (db) {
+            db_unref(db);
         }
 
         printf("done!\n");
@@ -208,13 +218,15 @@ fsearch_application_shutdown(GApplication *app) {
         }
     }
 
-    if (fsearch->db_thread) {
+    if (fsearch->pool) {
+        fsearch_thread_pool_free(fsearch->pool);
+    }
+    if (fsearch->db_pool) {
         trace("[exit] waiting for database thread to exit...\n");
         fsearch->db_thread_cancel = true;
-        g_thread_join(fsearch->db_thread);
+        g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
         trace("[exit] database thread finished.\n");
     }
-
     if (fsearch->db) {
         db_unref(fsearch->db);
     }
@@ -223,9 +235,6 @@ fsearch_application_shutdown(GApplication *app) {
         fsearch->filters = NULL;
     }
 
-    if (fsearch->pool) {
-        fsearch_thread_pool_free(fsearch->pool);
-    }
     config_save(fsearch->config);
     config_free(fsearch->config);
     g_mutex_clear(&fsearch->mutex);
@@ -252,7 +261,7 @@ prepare_windows_for_db_update(FsearchApplication *app) {
 }
 
 static gboolean
-updated_database_cb(gpointer user_data) {
+updated_database_notify(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     g_mutex_lock(&self->mutex);
     FsearchDatabase *db = user_data;
@@ -284,35 +293,37 @@ updated_database_cb(gpointer user_data) {
     return G_SOURCE_REMOVE;
 }
 
+static void
+updated_database_cb(gpointer user_data) {
+    g_idle_add(updated_database_notify, user_data);
+}
+
 static gboolean
-load_database_cb(gpointer user_data) {
+load_database_notify(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     g_signal_emit(self, signals[DATABASE_LOAD_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
 static gboolean
-update_database_cb(gpointer user_data) {
+update_database_notify(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     g_signal_emit(self, signals[DATABASE_UPDATE_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
 static void
-update_database_thread(bool rescan) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+load_database_cb(gpointer user_data) {
+    g_idle_add(load_database_notify, user_data);
+}
 
-    if (app->startup_finished) {
-        return;
-    }
+static void
+update_database_cb(gpointer user_data) {
+    g_idle_add(update_database_notify, user_data);
+}
 
-    if (rescan) {
-        g_idle_add(update_database_cb, app);
-    }
-    else {
-        g_idle_add(load_database_cb, app);
-    }
-
+static FsearchDatabase *
+db_update_func(FsearchApplication *app, bool rescan) {
     GTimer *timer = fsearch_timer_start();
 
     g_mutex_lock(&app->mutex);
@@ -331,36 +342,34 @@ update_database_thread(bool rescan) {
     else {
         db_load_from_file(db, NULL, NULL);
     }
+    db_unlock(db);
 
     fsearch_timer_stop(timer, "[database_update] finished in %.2f ms\n");
     timer = NULL;
 
-    db_unlock(db);
-
-    g_idle_add(updated_database_cb, db);
-    app->db_thread = NULL;
+    return db;
 }
 
-static gpointer
-load_database(gpointer user_data) {
+static void
+db_pool_func(gpointer data, gpointer user_data) {
+    FsearchApplication *app = FSEARCH_APPLICATION(user_data);
+    DatabaseUpdateContext *ctx = data;
+    if (!ctx) {
+        return;
+    }
 
-    g_assert(user_data != NULL);
-    g_assert(FSEARCH_IS_APPLICATION(user_data));
+    if (ctx->callback_started) {
+        ctx->callback_started(ctx->callback_started_data);
+    }
 
-    update_database_thread(false);
+    FsearchDatabase *db = db_update_func(app, ctx->rescan);
 
-    return NULL;
-}
+    if (ctx->callback_finished) {
+        ctx->callback_finished(db);
+    }
 
-static gpointer
-scan_database(gpointer user_data) {
-
-    g_assert(user_data != NULL);
-    g_assert(FSEARCH_IS_APPLICATION(user_data));
-
-    update_database_thread(true);
-
-    return NULL;
+    g_free(ctx);
+    ctx = NULL;
 }
 
 static void
@@ -440,39 +449,28 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
 }
 
 void
-fsearch_load_database(void) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    if (app->config->locations) {
-        fsearch_action_disable("update_database");
-        if (app->db_thread) {
-            app->db_thread_cancel = true;
-            g_thread_join(app->db_thread);
-        }
-        fsearch_action_enable("cancel_update_database");
-        app->db_thread_cancel = false;
-        app->num_database_update_active++;
-        app->db_thread = g_thread_new("fsearch_db_load_thread", load_database, app);
-    }
-    return;
-}
-
-void
 fsearch_database_update(bool scan) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     fsearch_action_disable("update_database");
-    if (app->db_thread) {
-        app->db_thread_cancel = true;
-        g_thread_join(app->db_thread);
-    }
     fsearch_action_enable("cancel_update_database");
     app->db_thread_cancel = false;
     app->num_database_update_active++;
+
+    DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
+    g_assert(ctx != NULL);
+
     if (scan) {
-        app->db_thread = g_thread_new("fsearch_db_update_thread", scan_database, app);
+        ctx->rescan = true;
+        ctx->callback_started = update_database_cb;
+        ctx->callback_started_data = app;
+        ctx->callback_finished = updated_database_cb;
     }
     else {
-        app->db_thread = g_thread_new("fsearch_db_load_thread", load_database, app);
+        ctx->callback_started = load_database_cb;
+        ctx->callback_started_data = app;
+        ctx->callback_finished = updated_database_cb;
     }
+    g_thread_pool_push(app->db_pool, ctx, NULL);
     return;
 }
 
@@ -571,7 +569,9 @@ fsearch_application_startup(GApplication *app) {
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.preferences(uint32 0)", preferences);
     static const gchar *quit[] = {"<control>q", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", quit);
+
     FSEARCH_APPLICATION(app)->pool = fsearch_thread_pool_init();
+    FSEARCH_APPLICATION(app)->db_pool = g_thread_pool_new(db_pool_func, app, 1, TRUE, NULL);
 }
 
 static void
