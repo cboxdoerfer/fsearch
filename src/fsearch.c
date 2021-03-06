@@ -588,7 +588,8 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
     }
 
     g_application_activate(G_APPLICATION(self));
-    return 0;
+
+    return G_APPLICATION_CLASS(fsearch_application_parent_class)->command_line(app, cmdline);
 }
 
 void
