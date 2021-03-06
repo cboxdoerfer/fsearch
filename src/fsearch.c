@@ -52,7 +52,7 @@ struct _FsearchApplication {
     GThreadPool *db_pool;
     GList *filters;
 
-    bool startup_finished;
+    bool activated;
 
     bool db_thread_cancel;
     int num_database_update_active;
@@ -142,66 +142,6 @@ database_scan_status_cb(const char *text) {
     }
 }
 
-static gint
-fsearch_options_handler(GApplication *gapp, GVariantDict *options, gpointer data) {
-    gboolean version = FALSE, updatedb = FALSE;
-    g_variant_dict_lookup(options, "version", "b", &version);
-    g_variant_dict_lookup(options, "updatedb", "b", &updatedb);
-
-    if (version) {
-        g_printf(PACKAGE_NAME " " VERSION "\n");
-    }
-
-    if (updatedb) {
-        g_printf("Updating database... ");
-        fflush(stdout);
-
-        FsearchApplication *fsearch = FSEARCH_APPLICATION(gapp);
-        fsearch->config->update_database_on_launch = true;
-
-        FsearchDatabase *db = database_update(fsearch, true);
-        if (db) {
-            db_unref(db);
-        }
-
-        printf("done!\n");
-    }
-
-    return (version || updatedb) ? 0 : -1;
-}
-
-static void
-fsearch_application_init(FsearchApplication *app) {
-    config_make_dir();
-    db_make_data_dir();
-    app->config = calloc(1, sizeof(FsearchConfig));
-    if (!config_load(app->config)) {
-        if (!config_load_default(app->config)) {
-        }
-    }
-    app->db = NULL;
-    app->startup_finished = false;
-    app->filters = fsearch_filter_get_default();
-    g_mutex_init(&app->mutex);
-
-    g_application_add_main_option(G_APPLICATION(app),
-                                  "version",
-                                  '\0',
-                                  G_OPTION_FLAG_NONE,
-                                  G_OPTION_ARG_NONE,
-                                  _("Show version information"),
-                                  NULL);
-    g_application_add_main_option(G_APPLICATION(app),
-                                  "updatedb",
-                                  'u',
-                                  G_OPTION_FLAG_NONE,
-                                  G_OPTION_ARG_NONE,
-                                  _("Update the database"),
-                                  NULL);
-
-    g_signal_connect(app, "handle-local-options", G_CALLBACK(fsearch_options_handler), app);
-}
-
 static void
 fsearch_application_shutdown(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
@@ -222,7 +162,11 @@ fsearch_application_shutdown(GApplication *app) {
     }
     if (fsearch->db_pool) {
         trace("[exit] waiting for database thread to exit...\n");
-        fsearch->db_thread_cancel = true;
+        if (fsearch->activated) {
+            // only ask thread to cancel work when the application was activated
+            // this allows fsearch --update-database to finish its work
+            fsearch->db_thread_cancel = true;
+        }
         g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
         fsearch->db_pool = FALSE;
         trace("[exit] database thread finished.\n");
@@ -519,19 +463,24 @@ fsearch_application_state_unlock(FsearchApplication *fsearch) {
     g_mutex_unlock(&fsearch->mutex);
 }
 
-static GActionEntry app_entries[] = {{"new_window", new_window_activated, NULL, NULL, NULL},
-                                     {"about", about_activated, NULL, NULL, NULL},
-                                     {"update_database", update_database_activated, NULL, NULL, NULL},
-                                     {"cancel_update_database", cancel_update_database_activated, NULL, NULL, NULL},
-                                     {"preferences", preferences_activated, "u", NULL, NULL},
-                                     {"quit", quit_activated, NULL, NULL, NULL}};
-
 static void
 fsearch_application_startup(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     G_APPLICATION_CLASS(fsearch_application_parent_class)->startup(app);
 
     FsearchApplication *fsearch = FSEARCH_APPLICATION(app);
+
+    g_mutex_init(&fsearch->mutex);
+    config_make_dir();
+    db_make_data_dir();
+    fsearch->config = calloc(1, sizeof(FsearchConfig));
+    if (!config_load(fsearch->config)) {
+        if (!config_load_default(fsearch->config)) {
+        }
+    }
+    fsearch->db = NULL;
+    fsearch->filters = fsearch_filter_get_default();
+
     g_object_set(gtk_settings_get_default(),
                  "gtk-application-prefer-dark-theme",
                  fsearch->config->enable_dark_theme,
@@ -543,7 +492,6 @@ fsearch_application_startup(GApplication *app) {
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
         g_object_unref(menu_builder);
     }
-    g_action_map_add_action_entries(G_ACTION_MAP(app), app_entries, G_N_ELEMENTS(app_entries), app);
 
     static const gchar *toggle_focus[] = {"Tab", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.toggle_focus", toggle_focus);
@@ -568,8 +516,20 @@ fsearch_application_startup(GApplication *app) {
     static const gchar *quit[] = {"<control>q", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", quit);
 
-    FSEARCH_APPLICATION(app)->pool = fsearch_thread_pool_init();
-    FSEARCH_APPLICATION(app)->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
+    fsearch->pool = fsearch_thread_pool_init();
+    fsearch->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
+}
+
+static GActionEntry app_entries[] = {{"new_window", new_window_activated, NULL, NULL, NULL},
+                                     {"about", about_activated, NULL, NULL, NULL},
+                                     {"update_database", update_database_activated, NULL, NULL, NULL},
+                                     {"cancel_update_database", cancel_update_database_activated, NULL, NULL, NULL},
+                                     {"preferences", preferences_activated, "u", NULL, NULL},
+                                     {"quit", quit_activated, NULL, NULL, NULL}};
+
+static void
+fsearch_application_init(FsearchApplication *app) {
+    g_action_map_add_action_entries(G_ACTION_MAP(app), app_entries, G_N_ELEMENTS(app_entries), app);
 }
 
 static void
@@ -595,11 +555,47 @@ fsearch_application_activate(GApplication *app) {
     window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
     gtk_window_present(window);
     FsearchApplication *fapp = FSEARCH_APPLICATION(app);
+    fapp->activated = true;
     fapp->db_thread_cancel = false;
     fsearch_database_update(false);
     if (fapp->config->update_database_on_launch) {
         fsearch_database_update(true);
     }
+}
+
+static gint
+fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmdline) {
+    FsearchApplication *self = FSEARCH_APPLICATION(app);
+    g_assert(FSEARCH_IS_APPLICATION(self));
+    g_assert(G_IS_APPLICATION_COMMAND_LINE(cmdline));
+
+    GVariantDict *dict = g_application_command_line_get_options_dict(cmdline);
+
+    if (g_variant_dict_contains(dict, "version")) {
+        g_application_command_line_print(cmdline, "FSearch " PACKAGE_VERSION "\n");
+        g_application_command_line_set_exit_status(cmdline, 0);
+        return 0;
+    }
+
+    if (g_variant_dict_contains(dict, "update-database")) {
+        g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
+        return 0;
+    }
+
+    g_application_activate(G_APPLICATION(self));
+    return 0;
+}
+
+void
+fsearch_application_add_option_entries(FsearchApplication *self) {
+    static const GOptionEntry main_entries[] = {
+        {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update database")},
+        {"version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version information and exit")},
+        {NULL}};
+
+    g_assert(FSEARCH_IS_APPLICATION(self));
+
+    g_application_add_main_option_entries(G_APPLICATION(self), main_entries);
 }
 
 static void
@@ -612,6 +608,7 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
     g_app_class->activate = fsearch_application_activate;
     g_app_class->startup = fsearch_application_startup;
     g_app_class->shutdown = fsearch_application_shutdown;
+    g_app_class->command_line = fsearch_application_command_line;
 
     signals[DATABASE_SCAN_STARTED] = g_signal_new("database-scan-started",
                                                   G_TYPE_FROM_CLASS(klass),
@@ -645,11 +642,13 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
 
 FsearchApplication *
 fsearch_application_new(void) {
-    return g_object_new(FSEARCH_APPLICATION_TYPE,
-                        "application-id",
-                        "org.fsearch.fsearch",
-                        "flags",
-                        G_APPLICATION_FLAGS_NONE,
-                        NULL);
+    FsearchApplication *self = g_object_new(FSEARCH_APPLICATION_TYPE,
+                                            "application-id",
+                                            "org.fsearch.fsearch",
+                                            "flags",
+                                            G_APPLICATION_HANDLES_COMMAND_LINE,
+                                            NULL);
+    fsearch_application_add_option_entries(self);
+    return self;
 }
 
