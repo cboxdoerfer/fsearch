@@ -577,6 +577,11 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
         return 0;
     }
 
+    if (g_variant_dict_contains(dict, "preferences")) {
+        g_action_group_activate_action(G_ACTION_GROUP(self), "preferences", g_variant_new_uint32(0));
+        return 0;
+    }
+
     if (g_variant_dict_contains(dict, "update-database")) {
         g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
         return 0;
@@ -589,6 +594,7 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
 void
 fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
+        {"preferences", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Show the application preferences")},
         {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update database")},
         {"version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version information and exit")},
         {NULL}};
