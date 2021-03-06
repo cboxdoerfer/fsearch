@@ -600,7 +600,7 @@ void
 fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
         {"preferences", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Show the application preferences")},
-        {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update database")},
+        {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update the database and exit")},
         {"version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version information and exit")},
         {NULL}};
 
