@@ -571,12 +571,6 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
 
     GVariantDict *dict = g_application_command_line_get_options_dict(cmdline);
 
-    if (g_variant_dict_contains(dict, "version")) {
-        g_application_command_line_print(cmdline, "FSearch " PACKAGE_VERSION "\n");
-        g_application_command_line_set_exit_status(cmdline, 0);
-        return 0;
-    }
-
     if (g_variant_dict_contains(dict, "preferences")) {
         g_action_group_activate_action(G_ACTION_GROUP(self), "preferences", g_variant_new_uint32(0));
         return 0;
@@ -590,6 +584,16 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
     g_application_activate(G_APPLICATION(self));
 
     return G_APPLICATION_CLASS(fsearch_application_parent_class)->command_line(app, cmdline);
+}
+
+static gint
+fsearch_application_handle_local_options(GApplication *application, GVariantDict *options) {
+    if (g_variant_dict_contains(options, "version")) {
+        g_print("FSearch %s\n", PACKAGE_VERSION);
+        return 0;
+    }
+
+    return -1;
 }
 
 void
@@ -616,6 +620,7 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
     g_app_class->startup = fsearch_application_startup;
     g_app_class->shutdown = fsearch_application_shutdown;
     g_app_class->command_line = fsearch_application_command_line;
+    g_app_class->handle_local_options = fsearch_application_handle_local_options;
 
     signals[DATABASE_SCAN_STARTED] = g_signal_new("database-scan-started",
                                                   G_TYPE_FROM_CLASS(klass),
