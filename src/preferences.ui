@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.1 -->
+<!-- Generated with glade 3.38.2 -->
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="adjustment1">
@@ -1022,7 +1022,7 @@ Note that not all system themes provide such a darker variant, therefore enablin
                   </object>
                   <packing>
                     <property name="name">page0</property>
-                    <property name="title" translatable="yes">page0</property>
+                    <property name="title">page0</property>
                   </packing>
                 </child>
                 <child>
@@ -1040,7 +1040,7 @@ This resembles a more traditonal UI layout and takes a little bit more space.</p
                   </object>
                   <packing>
                     <property name="name">page1</property>
-                    <property name="title" translatable="yes">page1</property>
+                    <property name="title">page1</property>
                     <property name="position">1</property>
                   </packing>
                 </child>
@@ -1059,7 +1059,7 @@ This settings controls how file sizes are displayed.
                   </object>
                   <packing>
                     <property name="name">page2</property>
-                    <property name="title" translatable="yes">page2</property>
+                    <property name="title">page2</property>
                     <property name="position">2</property>
                   </packing>
                 </child>
@@ -1077,7 +1077,7 @@ Note that some window managers ignore this request and force the window to have 
                   </object>
                   <packing>
                     <property name="name">page3</property>
-                    <property name="title" translatable="yes">page3</property>
+                    <property name="title">page3</property>
                     <property name="position">3</property>
                   </packing>
                 </child>
@@ -1101,7 +1101,7 @@ You can configure if those actions should be triggered when the file was opened 
                   </object>
                   <packing>
                     <property name="name">page4</property>
-                    <property name="title" translatable="yes">page4</property>
+                    <property name="title">page4</property>
                     <property name="position">4</property>
                   </packing>
                 </child>
@@ -1122,7 +1122,7 @@ This also works for regular expressions and wildcard expressions starting or end
                   </object>
                   <packing>
                     <property name="name">page5</property>
-                    <property name="title" translatable="yes">page5</property>
+                    <property name="title">page5</property>
                     <property name="position">5</property>
                   </packing>
                 </child>
@@ -1138,7 +1138,7 @@ If enabled, the results view will show the full path of the focused file/folder 
                   </object>
                   <packing>
                     <property name="name">page6</property>
-                    <property name="title" translatable="yes">page6</property>
+                    <property name="title">page6</property>
                     <property name="position">6</property>
                   </packing>
                 </child>
@@ -1154,7 +1154,7 @@ If enabled, file/folder icons will be shown in the name column.</property>
                   </object>
                   <packing>
                     <property name="name">page7</property>
-                    <property name="title" translatable="yes">page7</property>
+                    <property name="title">page7</property>
                     <property name="position">7</property>
                   </packing>
                 </child>
@@ -1170,7 +1170,7 @@ If enabled, the column configuration of the results view from the previous sessi
                   </object>
                   <packing>
                     <property name="name">page8</property>
-                    <property name="title" translatable="yes">page8</property>
+                    <property name="title">page8</property>
                     <property name="position">8</property>
                   </packing>
                 </child>
@@ -1186,7 +1186,7 @@ If enabled, the sort order of the results view from the previous session will be
                   </object>
                   <packing>
                     <property name="name">page9</property>
-                    <property name="title" translatable="yes">page9</property>
+                    <property name="title">page9</property>
                     <property name="position">9</property>
                   </packing>
                 </child>
@@ -1202,7 +1202,7 @@ If enabled, double clicking in the path column will open the selected path.</pro
                   </object>
                   <packing>
                     <property name="name">page10</property>
-                    <property name="title" translatable="yes">page10</property>
+                    <property name="title">page10</property>
                     <property name="position">10</property>
                   </packing>
                 </child>
@@ -1218,7 +1218,7 @@ If enabled, a single click will open the selected file/folder. If you only want 
                   </object>
                   <packing>
                     <property name="name">page11</property>
-                    <property name="title" translatable="yes">page11</property>
+                    <property name="title">page11</property>
                     <property name="position">11</property>
                   </packing>
                 </child>
@@ -1234,7 +1234,7 @@ If enabled, the path that is currently being indexed is displayed in the statusb
                   </object>
                   <packing>
                     <property name="name">page12</property>
-                    <property name="title" translatable="yes">page12</property>
+                    <property name="title">page12</property>
                     <property name="position">12</property>
                   </packing>
                 </child>
@@ -1253,7 +1253,7 @@ If enabled, a warning dialog is displayed when:
                   </object>
                   <packing>
                     <property name="name">page13</property>
-                    <property name="title" translatable="yes">page13</property>
+                    <property name="title">page13</property>
                     <property name="position">13</property>
                   </packing>
                 </child>
@@ -1269,7 +1269,7 @@ If enabled, search terms containing path separators (i.e. "/") will be automatic
                   </object>
                   <packing>
                     <property name="name">page14</property>
-                    <property name="title" translatable="yes">page14</property>
+                    <property name="title">page14</property>
                     <property name="position">14</property>
                   </packing>
                 </child>
@@ -1285,7 +1285,7 @@ If enabled, search terms containing at least one upper case character will trigg
                   </object>
                   <packing>
                     <property name="name">page15</property>
-                    <property name="title" translatable="yes">page15</property>
+                    <property name="title">page15</property>
                     <property name="position">15</property>
                   </packing>
                 </child>
@@ -1303,7 +1303,7 @@ If disabled, all files and folders will be displayed when the search entry is em
                   </object>
                   <packing>
                     <property name="name">page16</property>
-                    <property name="title" translatable="yes">page16</property>
+                    <property name="title">page16</property>
                     <property name="position">16</property>
                   </packing>
                 </child>
@@ -1321,7 +1321,7 @@ If disabled, the search is only updated when you hit &lt;i&gt;Enter&lt;/i&gt; or
                   </object>
                   <packing>
                     <property name="name">page17</property>
-                    <property name="title" translatable="yes">page17</property>
+                    <property name="title">page17</property>
                     <property name="position">17</property>
                   </packing>
                 </child>
@@ -1339,7 +1339,7 @@ Displaying lots of results has a significant performance impact, especially when
                   </object>
                   <packing>
                     <property name="name">page18</property>
-                    <property name="title" translatable="yes">page18</property>
+                    <property name="title">page18</property>
                     <property name="position">18</property>
                   </packing>
                 </child>
@@ -1355,7 +1355,7 @@ If enabled, the database will be updated automatically in the background when yo
                   </object>
                   <packing>
                     <property name="name">page19</property>
-                    <property name="title" translatable="yes">page19</property>
+                    <property name="title">page19</property>
                     <property name="position">19</property>
                   </packing>
                 </child>
@@ -1376,7 +1376,7 @@ This list contains all folders you want to include in the database.
                   </object>
                   <packing>
                     <property name="name">page20</property>
-                    <property name="title" translatable="yes">page20</property>
+                    <property name="title">page20</property>
                     <property name="position">20</property>
                   </packing>
                 </child>
@@ -1392,7 +1392,7 @@ This button opens a dialog where you can select a folder you want to include in 
                   </object>
                   <packing>
                     <property name="name">page21</property>
-                    <property name="title" translatable="yes">page21</property>
+                    <property name="title">page21</property>
                     <property name="position">21</property>
                   </packing>
                 </child>
@@ -1408,7 +1408,7 @@ This removes the selected folder from the list of included folders.</property>
                   </object>
                   <packing>
                     <property name="name">page22</property>
-                    <property name="title" translatable="yes">page22</property>
+                    <property name="title">page22</property>
                     <property name="position">22</property>
                   </packing>
                 </child>
@@ -1428,7 +1428,7 @@ This list contains all folders you want to exclude from the database.
                   </object>
                   <packing>
                     <property name="name">page23</property>
-                    <property name="title" translatable="yes">page23</property>
+                    <property name="title">page23</property>
                     <property name="position">23</property>
                   </packing>
                 </child>
@@ -1444,7 +1444,7 @@ This button opens a dialog where you can select a folder you want to exclude fro
                   </object>
                   <packing>
                     <property name="name">page24</property>
-                    <property name="title" translatable="yes">page24</property>
+                    <property name="title">page24</property>
                     <property name="position">24</property>
                   </packing>
                 </child>
@@ -1460,7 +1460,7 @@ This removes the selected folder from the list of excluded folders.</property>
                   </object>
                   <packing>
                     <property name="name">page25</property>
-                    <property name="title" translatable="yes">page25</property>
+                    <property name="title">page25</property>
                     <property name="position">25</property>
                   </packing>
                 </child>
@@ -1476,7 +1476,7 @@ This is a semi-colon separated list of files (or folders) you want to exclude fr
                   </object>
                   <packing>
                     <property name="name">page26</property>
-                    <property name="title" translatable="yes">page26</property>
+                    <property name="title">page26</property>
                     <property name="position">26</property>
                   </packing>
                 </child>
@@ -1492,7 +1492,7 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                   </object>
                   <packing>
                     <property name="name">page27</property>
-                    <property name="title" translatable="yes">page27</property>
+                    <property name="title">page27</property>
                     <property name="position">27</property>
                   </packing>
                 </child>
@@ -1504,7 +1504,7 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                   </object>
                   <packing>
                     <property name="name">page28</property>
-                    <property name="title" translatable="yes">page28</property>
+                    <property name="title">page28</property>
                     <property name="position">28</property>
                   </packing>
                 </child>
@@ -1516,7 +1516,7 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                   </object>
                   <packing>
                     <property name="name">page29</property>
-                    <property name="title" translatable="yes">page29</property>
+                    <property name="title">page29</property>
                     <property name="position">29</property>
                   </packing>
                 </child>
