@@ -413,6 +413,14 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GtkTreeSelecti
 }
 
 static void
+fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+
+    gtk_widget_destroy(GTK_WIDGET(self));
+}
+
+static void
 fsearch_window_action_open(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     fsearch_window_action_open_generic(self, open_cb);
@@ -662,6 +670,7 @@ static GActionEntry FsearchWindowActions[] = {
     {"open_with", fsearch_window_action_open_with, "s"},
     {"open_with_other", fsearch_window_action_open_with_other, "s"},
     {"open_folder", fsearch_window_action_open_folder},
+    {"close_window", fsearch_window_action_close_window},
     {"copy_clipboard", fsearch_window_action_copy},
     {"copy_filepath_clipboard", fsearch_window_action_copy_filepath},
     {"cut_clipboard", fsearch_window_action_cut},
@@ -706,6 +715,7 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     GActionGroup *group = G_ACTION_GROUP(self);
 
     gint num_rows_selected = gtk_tree_selection_count_selected_rows(selection);
+    action_set_enabled(group, "close_window", TRUE);
     action_set_enabled(group, "select_all", num_rows);
     action_set_enabled(group, "deselect_all", num_rows_selected);
     action_set_enabled(group, "invert_selection", num_rows_selected);

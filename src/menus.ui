@@ -39,6 +39,11 @@
             </section>
             <section>
                 <item>
+                    <attribute name="label" translatable="yes">Close Window</attribute>
+                    <attribute name="action">win.close_window</attribute>
+                    <attribute name="icon">window-close</attribute>
+                </item>
+                <item>
                     <attribute name="label" translatable="yes">Quit</attribute>
                     <attribute name="action">app.quit</attribute>
                     <attribute name="icon">application-exit</attribute>

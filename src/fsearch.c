@@ -529,6 +529,8 @@ fsearch_application_startup(GApplication *app) {
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.update_database", update_database);
     static const gchar *preferences[] = {"<control>p", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.preferences(uint32 0)", preferences);
+    static const gchar *close_window[] = {"<control>w", NULL};
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.close_window", close_window);
     static const gchar *quit[] = {"<control>q", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", quit);
 
