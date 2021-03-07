@@ -38,6 +38,16 @@ fsearch_application_new(void);
 
 G_END_DECLS
 
+typedef enum {
+    FSEARCH_DATABASE_STATE_SCANNING,
+    FSEARCH_DATABASE_STATE_LOADING,
+    FSEARCH_DATABASE_STATE_IDLE,
+    NUM_FSEARCH_DATABASE_STATES
+} FsearchDatabaseState;
+
+FsearchDatabaseState
+fsearch_application_get_db_state(FsearchApplication *fsearch);
+
 void
 fsearch_database_update(bool fullscan);
 

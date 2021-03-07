@@ -54,6 +54,8 @@ struct _FsearchApplication {
 
     bool activated;
 
+    FsearchDatabaseState db_state;
+
     bool db_thread_cancel;
     int num_database_update_active;
     GMutex mutex;
@@ -87,6 +89,12 @@ GList *
 fsearch_application_get_filters(FsearchApplication *fsearch) {
     g_assert(FSEARCH_IS_APPLICATION(fsearch));
     return fsearch->filters;
+}
+
+FsearchDatabaseState
+fsearch_application_get_db_state(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->db_state;
 }
 
 FsearchDatabase *
@@ -239,6 +247,8 @@ database_update_finished_notify(gpointer user_data) {
 
 static void
 database_update_finished_cb(gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
+    self->db_state = FSEARCH_DATABASE_STATE_IDLE;
     g_idle_add(database_update_finished_notify, user_data);
 }
 
@@ -258,12 +268,16 @@ database_scan_started_notify(gpointer user_data) {
 
 static void
 database_load_started_cb(gpointer user_data) {
-    g_idle_add(database_load_started_notify, user_data);
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    self->db_state = FSEARCH_DATABASE_STATE_LOADING;
+    g_idle_add(database_load_started_notify, self);
 }
 
 static void
 database_scan_started_cb(gpointer user_data) {
-    g_idle_add(database_scan_started_notify, user_data);
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    self->db_state = FSEARCH_DATABASE_STATE_SCANNING;
+    g_idle_add(database_scan_started_notify, self);
 }
 
 static FsearchDatabase *
@@ -479,6 +493,7 @@ fsearch_application_startup(GApplication *app) {
         }
     }
     fsearch->db = NULL;
+    fsearch->db_state = FSEARCH_DATABASE_STATE_IDLE;
     fsearch->filters = fsearch_filter_get_default();
 
     g_object_set(gtk_settings_get_default(),
