@@ -53,6 +53,7 @@ struct _FsearchApplication {
     GList *filters;
 
     bool activated;
+    bool new_window;
 
     FsearchDatabaseState db_state;
 
@@ -551,24 +552,28 @@ static void
 fsearch_application_activate(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
 
-    GtkWindow *window = NULL;
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
+    FsearchApplication *self = FSEARCH_APPLICATION(app);
 
-    for (; windows; windows = windows->next) {
-        window = windows->data;
+    if (!self->new_window) {
+        // If there's already a window make it visible
+        GtkWindow *window = NULL;
+        GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
 
-        if (FSEARCH_WINDOW_IS_WINDOW(window)) {
-            GtkWidget *entry =
-                GTK_WIDGET(fsearch_application_window_get_search_entry((FsearchApplicationWindow *)window));
-            if (entry) {
-                gtk_widget_grab_focus(entry);
+        for (; windows; windows = windows->next) {
+            window = windows->data;
+
+            if (FSEARCH_WINDOW_IS_WINDOW(window)) {
+                GtkWidget *entry =
+                    GTK_WIDGET(fsearch_application_window_get_search_entry((FsearchApplicationWindow *)window));
+                if (entry) {
+                    gtk_widget_grab_focus(entry);
+                }
+                gtk_window_present(window);
+                return;
             }
-            gtk_window_present(window);
-            return;
         }
     }
 
-    FsearchApplication *self = FSEARCH_APPLICATION(app);
     g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", NULL);
 
     if (!self->activated) {
@@ -590,6 +595,10 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
 
     GVariantDict *dict = g_application_command_line_get_options_dict(cmdline);
 
+    if (g_variant_dict_contains(dict, "new-window")) {
+        self->new_window = true;
+    }
+
     if (g_variant_dict_contains(dict, "preferences")) {
         g_action_group_activate_action(G_ACTION_GROUP(self), "preferences", g_variant_new_uint32(0));
         return 0;
@@ -601,6 +610,7 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
     }
 
     g_application_activate(G_APPLICATION(self));
+    self->new_window = false;
 
     return G_APPLICATION_CLASS(fsearch_application_parent_class)->command_line(app, cmdline);
 }
@@ -618,6 +628,7 @@ fsearch_application_handle_local_options(GApplication *application, GVariantDict
 void
 fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
+        {"new-window", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Open a new application window")},
         {"preferences", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Show the application preferences")},
         {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update the database and exit")},
         {"version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version information and exit")},
