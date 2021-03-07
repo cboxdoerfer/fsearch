@@ -569,12 +569,16 @@ fsearch_application_activate(GApplication *app) {
     }
     window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
     gtk_window_present(window);
+
     FsearchApplication *fapp = FSEARCH_APPLICATION(app);
-    fapp->activated = true;
-    fapp->db_thread_cancel = false;
-    fsearch_database_update(false);
-    if (fapp->config->update_database_on_launch) {
-        fsearch_database_update(true);
+    if (!fapp->activated) {
+        // first full application start
+        fapp->activated = true;
+        fapp->db_thread_cancel = false;
+        fsearch_database_update(false);
+        if (fapp->config->update_database_on_launch) {
+            fsearch_database_update(true);
+        }
     }
 }
 
