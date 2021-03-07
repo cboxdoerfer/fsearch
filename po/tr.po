@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-30 12:42+0100\n"
+"POT-Creation-Date: 2021-03-07 16:31+0100\n"
 "PO-Revision-Date: 2020-11-18 04:28+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -24,21 +24,32 @@ msgstr ""
 msgid "Sorting..."
 msgstr "Sıralanıyor..."
 
-#: src/fsearch.c:183
-msgid "Show version information"
-msgstr "Sürüm bilgilerini göster"
-
-#: src/fsearch.c:190
-msgid "Update the database"
-msgstr "Veri tabanını güncelle"
-
-#: src/fsearch.c:387
+#: src/fsearch.c:355
 msgid "translator-credits"
 msgstr "Oğuz Ersen"
 
-#: src/fsearch.c:389
+#: src/fsearch.c:357
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
+
+#: src/fsearch.c:633
+#, fuzzy
+msgid "Open a new application window"
+msgstr "Başka Bir Uygulama İle Aç"
+
+#: src/fsearch.c:634
+msgid "Show the application preferences"
+msgstr ""
+
+#: src/fsearch.c:635
+#, fuzzy
+msgid "Update the database and exit"
+msgstr "Veri tabanını güncelle"
+
+#: src/fsearch.c:636
+#, fuzzy
+msgid "Print version information and exit"
+msgstr "Sürüm bilgilerini göster"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -48,92 +59,92 @@ msgstr "Yeni pencere"
 msgid "Update database"
 msgstr "Veri tabanını güncelle"
 
-#: src/fsearch.glade:103 src/fsearch.glade:622
+#: src/fsearch.glade:103 src/fsearch.glade:623
 msgid "Cancel database update"
 msgstr "Veri tabanı güncellemesini iptal et"
 
-#: src/fsearch.glade:137 src/menus.ui:106
+#: src/fsearch.glade:137 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Dosya Yolunda Ara"
 
-#: src/fsearch.glade:151 src/menus.ui:110
+#: src/fsearch.glade:151 src/menus.ui:116
 msgid "Match Case"
 msgstr "Büyük/Küçük Harfe Duyarlı"
 
-#: src/fsearch.glade:165 src/menus.ui:114
+#: src/fsearch.glade:165 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "RegEx'i Aktifleştir"
 
-#: src/fsearch.glade:190 src/menus.ui:89
+#: src/fsearch.glade:190 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Durum Çubuğunu Göster"
 
-#: src/fsearch.glade:204 src/menus.ui:93
+#: src/fsearch.glade:204 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Filtreyi Göster"
 
-#: src/fsearch.glade:218 src/menus.ui:97
+#: src/fsearch.glade:218 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Arama Bununu Göster"
 
-#: src/fsearch.glade:243 src/menus.ui:79 src/preferences.ui:37
+#: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:37
 msgid "Preferences"
 msgstr "Tercihler"
 
-#: src/fsearch.glade:268 src/menus.ui:123
+#: src/fsearch.glade:269 src/menus.ui:129
 msgid "About"
 msgstr "Hakkında"
 
-#: src/fsearch.glade:293 src/menus.ui:42
+#: src/fsearch.glade:294 src/menus.ui:47
 msgid "Quit"
 msgstr "Çık"
 
-#: src/fsearch.glade:416
+#: src/fsearch.glade:417
 msgid "Number of Search Results"
 msgstr "Arama Sonucunun Sayısı"
 
-#: src/fsearch.glade:417
+#: src/fsearch.glade:418
 msgid "0 Items"
 msgstr "0 Öğe"
 
-#: src/fsearch.glade:454
+#: src/fsearch.glade:455
 msgid "Index:"
 msgstr "İndeks:"
 
-#: src/fsearch.glade:522
+#: src/fsearch.glade:523
 msgid "Number of selected folders"
 msgstr "Seçili klasör sayısı"
 
-#: src/fsearch.glade:523 src/fsearch.glade:548
+#: src/fsearch.glade:524 src/fsearch.glade:549
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:547
+#: src/fsearch.glade:548
 msgid "Number of selected files"
 msgstr "Seçili dosya sayısı"
 
-#: src/fsearch.glade:606 src/fsearch_window.c:959 src/overlay.ui:213
+#: src/fsearch.glade:607 src/fsearch_window.c:142 src/overlay.ui:102
 #, c-format
 msgid "Updating Database…"
 msgstr "Veri Tabanı Güncelleniyor…"
 
-#: src/fsearch.glade:639 src/preferences.ui:1065
+#: src/fsearch.glade:640
 msgid "page0"
 msgstr "sayfa0"
 
-#: src/fsearch.glade:663
+#: src/fsearch.glade:664
 msgid "Number of database items"
 msgstr "Veri tabanı ögelerinin sayısı"
 
-#: src/fsearch.glade:664
+#: src/fsearch.glade:665
 msgid "(empty)"
 msgstr "(boş)"
 
-#: src/fsearch.glade:675 src/preferences.ui:1083
+#: src/fsearch.glade:676
 msgid "page1"
 msgstr "sayfa1"
 
-#: src/fsearch.glade:701
+#: src/fsearch.glade:702
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -142,11 +153,11 @@ msgstr ""
 "<b>Büyük/Küçük Harfe Duyarlı</b> seçeneği bu terim için geçici olarak "
 "etkinleştirildi."
 
-#: src/fsearch.glade:732 src/fsearch.glade:785
+#: src/fsearch.glade:733 src/fsearch.glade:786
 msgid "CASE"
 msgstr "DURUM"
 
-#: src/fsearch.glade:808
+#: src/fsearch.glade:809
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -155,23 +166,23 @@ msgstr ""
 "<b>Dosya Yolunda Ara</b> seçeneği bu terim için geçici olarak "
 "etkinleştirildi."
 
-#: src/fsearch.glade:839 src/fsearch.glade:892
+#: src/fsearch.glade:840 src/fsearch.glade:893
 msgid "PATH"
 msgstr "YOL"
 
-#: src/fsearch.glade:945
+#: src/fsearch.glade:946
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch.glade:1065
+#: src/fsearch.glade:1066
 msgid "Search…"
 msgstr "Ara…"
 
-#: src/fsearch.glade:1087
+#: src/fsearch.glade:1088
 msgid "Select a Filter"
 msgstr "Bir Filtre Seç"
 
-#: src/fsearch.glade:1118 src/preferences.ui:679
+#: src/fsearch.glade:1119 src/preferences.ui:679
 msgid "Search"
 msgstr "Ara"
 
@@ -212,7 +223,7 @@ msgid "Active"
 msgstr "Etkin"
 
 #: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
-#: src/listview.c:203 src/menus.ui:216
+#: src/listview.c:209 src/menus.ui:222
 msgid "Path"
 msgstr "Yol"
 
@@ -220,37 +231,37 @@ msgstr "Yol"
 msgid "Update"
 msgstr "Güncelle"
 
-#: src/fsearch_window.c:121 src/fsearch_window.c:467 src/fsearch_window.c:917
-#, c-format
-msgid "%'d Items"
-msgstr "%'d Öğe"
-
-#: src/fsearch_window.c:400 src/fsearch_window.c:557
-msgid "Querying…"
-msgstr "Sorgulanıyor…"
-
-#: src/fsearch_window.c:733 src/fsearch_window_actions.c:406
-msgid "Failed to open file"
-msgstr "Dosya açılamadı"
-
-#: src/fsearch_window.c:734 src/fsearch_window_actions.c:407
-msgid "Do you want to keep the window open?"
-msgstr "Pencereyi açık tutmak istiyor musunuz?"
-
-#: src/fsearch_window.c:923
-msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Son Güncelleme Tarihi: %Y-%m-%d %H:%M"
-
-#: src/fsearch_window.c:936 src/overlay.ui:143
+#: src/fsearch_window.c:121 src/overlay.ui:32
 #, c-format
 msgid "Loading Database…"
 msgstr "Veri Tabanı Yükleniyor…"
 
-#: src/fsearch_window.c:1121
+#: src/fsearch_window.c:162 src/fsearch_window.c:515 src/fsearch_window.c:968
+#, c-format
+msgid "%'d Items"
+msgstr "%'d Öğe"
+
+#: src/fsearch_window.c:448 src/fsearch_window.c:605
+msgid "Querying…"
+msgstr "Sorgulanıyor…"
+
+#: src/fsearch_window.c:784 src/fsearch_window_actions.c:406
+msgid "Failed to open file"
+msgstr "Dosya açılamadı"
+
+#: src/fsearch_window.c:785 src/fsearch_window_actions.c:407
+msgid "Do you want to keep the window open?"
+msgstr "Pencereyi açık tutmak istiyor musunuz?"
+
+#: src/fsearch_window.c:974
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr "Son Güncelleme Tarihi: %Y-%m-%d %H:%M"
+
+#: src/fsearch_window.c:1149
 msgid "Background tasks are active."
 msgstr "Arka plan görevleri etkin."
 
-#: src/fsearch_window.c:1123
+#: src/fsearch_window.c:1151
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -280,19 +291,19 @@ msgstr "Dosyalar siliniyor…"
 msgid "Moving files to trash…"
 msgstr "Dosyalar çöp sepetine taşınıyor…"
 
-#: src/listview.c:178 src/menus.ui:212
+#: src/listview.c:184 src/menus.ui:218
 msgid "Name"
 msgstr "İsim"
 
-#: src/listview.c:230 src/menus.ui:224
+#: src/listview.c:236 src/menus.ui:230
 msgid "Size"
 msgstr "Boyut"
 
-#: src/listview.c:248 src/menus.ui:228
+#: src/listview.c:254 src/menus.ui:234
 msgid "Date Modified"
 msgstr "Düzenlenme Tarihi"
 
-#: src/listview.c:265 src/menus.ui:220
+#: src/listview.c:271 src/menus.ui:226
 msgid "Type"
 msgstr "Tür"
 
@@ -304,7 +315,7 @@ msgstr "_Dosya"
 msgid "New Window"
 msgstr "Yeni Pencere"
 
-#: src/menus.ui:16 src/menus.ui:133
+#: src/menus.ui:16 src/menus.ui:139
 msgid "_Open"
 msgstr "_Aç"
 
@@ -320,97 +331,101 @@ msgstr "Veri Tabanını Güncelle"
 msgid "Cancel Update"
 msgstr "Güncellemeyi İptal Et"
 
-#: src/menus.ui:49
+#: src/menus.ui:42
+#, fuzzy
+msgid "Close Window"
+msgstr "Yeni Pencere"
+
+#: src/menus.ui:54
 msgid "_Edit"
 msgstr "_Düzenle"
 
-#: src/menus.ui:52 src/menus.ui:169
+#: src/menus.ui:57 src/menus.ui:175
 msgid "_Copy"
 msgstr "_Kopyala"
 
-#: src/menus.ui:57 src/menus.ui:180
+#: src/menus.ui:62 src/menus.ui:186
 msgid "Cu_t"
 msgstr "Ke_s"
 
-#: src/menus.ui:64
+#: src/menus.ui:69
 msgid "Select All"
 msgstr "Tümünü Seç"
 
-#: src/menus.ui:69
+#: src/menus.ui:74
 msgid "Deselect All"
 msgstr "Bütün Seçimi Kaldır"
 
-#: src/menus.ui:73
+#: src/menus.ui:78
 msgid "Invert Selection"
 msgstr "Seçimini Tersine Çevir"
 
-#: src/menus.ui:86
+#: src/menus.ui:92
 msgid "_View"
 msgstr "_Görüntüle"
 
-#: src/menus.ui:103
+#: src/menus.ui:109
 msgid "_Search"
 msgstr "_Ara"
 
-#: src/menus.ui:120
+#: src/menus.ui:126
 msgid "_Help"
 msgstr "_Yardım"
 
-#: src/menus.ui:139
+#: src/menus.ui:145
 msgid "Open _With"
 msgstr "İle_Aç"
 
-#: src/menus.ui:153
+#: src/menus.ui:159
 msgid "_Open Folder"
 msgstr "_Klasörü Aç"
 
-#: src/menus.ui:175
+#: src/menus.ui:181
 msgid "_Copy Filepath"
 msgstr "_Dosya Yolunu Kopyala"
 
-#: src/menus.ui:188
+#: src/menus.ui:194
 msgid "Move to _Trash"
 msgstr "_Çöp Sepetine Taşı"
 
-#: src/menus.ui:194
+#: src/menus.ui:200
 msgid "_Delete"
 msgstr "Sil"
 
-#: src/overlay.ui:31
-msgid "Empty Database"
-msgstr "Boş Veri Tabanı"
-
-#: src/overlay.ui:46
-msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr ""
-"<b>Düzenle → Tercihler → Veri Tabanı</b> seçeneğine gidin ve birkaç konum "
-"ekleyin"
-
-#: src/overlay.ui:87
-msgid "Empty Query"
-msgstr "Boş Sorgu"
-
-#: src/overlay.ui:102
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
-
-#: src/overlay.ui:158 src/overlay.ui:228
+#: src/overlay.ui:46 src/overlay.ui:116
 msgid "…"
 msgstr "…"
 
-#: src/overlay.ui:173
+#: src/overlay.ui:61
 msgid "This won't take long."
 msgstr "Bu uzun sürmeyecek."
 
-#: src/overlay.ui:243
+#: src/overlay.ui:131
 msgid "This may take a while."
 msgstr "Bu biraz zaman alacak."
 
-#: src/overlay.ui:283
+#: src/overlay.ui:172
+msgid "Empty Query"
+msgstr "Boş Sorgu"
+
+#: src/overlay.ui:187
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
+
+#: src/overlay.ui:234
+msgid "Empty Database"
+msgstr "Boş Veri Tabanı"
+
+#: src/overlay.ui:250
+#, fuzzy
+msgid "Add folders"
+msgstr "Klasörler"
+
+#: src/overlay.ui:292
 msgid "No Results Found"
 msgstr "Hiç bir sonuç bulunamadı"
 
-#: src/overlay.ui:298
+#: src/overlay.ui:307
 msgid "Try a different search"
 msgstr "Farklı bir arama deneyiniz"
 
@@ -540,47 +555,47 @@ msgstr ""
 msgid "Update database on start"
 msgstr "Başlangıçta veri tabanını güncelle"
 
-#: src/preferences.ui:773
+#: src/preferences.ui:759
 msgid "Add path to be included in database"
 msgstr "Veri tabanına dahil edilecek yolu ekle"
 
-#: src/preferences.ui:790 src/preferences.ui:910
+#: src/preferences.ui:775 src/preferences.ui:873
 msgid "Remove selected path"
 msgstr "Seçili yolu kaldır"
 
-#: src/preferences.ui:822
+#: src/preferences.ui:801
 msgid "Include"
 msgstr "Aktar"
 
-#: src/preferences.ui:893
+#: src/preferences.ui:857
 msgid "Add path to be excluded from database"
 msgstr "Veri tabanının dışında bırakılacak yolu ekle"
 
-#: src/preferences.ui:949 src/preferences.ui:962
+#: src/preferences.ui:909 src/preferences.ui:922
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Joker karakterleri destekler. Çoklu girdiler ';' ile ayrılmalıdır"
 
-#: src/preferences.ui:950
+#: src/preferences.ui:910
 msgid "Exclude files:"
 msgstr "Dosyaları dışarıda bırak:"
 
-#: src/preferences.ui:963
+#: src/preferences.ui:923
 msgid "e.g. \".git;*.tmp\""
 msgstr "örn: \".git,*.tmp\""
 
-#: src/preferences.ui:980
+#: src/preferences.ui:940
 msgid "Exclude hidden files and folders"
 msgstr "Gizli dosya ve klasörleri dışarıda bırak"
 
-#: src/preferences.ui:1001
+#: src/preferences.ui:961
 msgid "Exclude"
 msgstr "Dışarıda bırak"
 
-#: src/preferences.ui:1024
+#: src/preferences.ui:984
 msgid "Database"
 msgstr "Veri tabanı"
 
-#: src/preferences.ui:1055
+#: src/preferences.ui:1015
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -599,7 +614,7 @@ msgstr ""
 "Tüm sistem temalarının böyle koyu bir çeşit sağlamadığını, bu nedenle bu "
 "ayarın etkinleştirilmesinin bir etkisi olmayabileceğini unutmayın."
 
-#: src/preferences.ui:1072
+#: src/preferences.ui:1032
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -620,7 +635,7 @@ msgstr ""
 "Bu, daha geleneksel bir kullanıcı arayüzü düzenine benzer ve biraz daha "
 "fazla yer kaplar."
 
-#: src/preferences.ui:1091
+#: src/preferences.ui:1051
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -640,11 +655,7 @@ msgstr ""
 "\t• <b>Onluk birimler:</b> Bu, onluk SI ön ekleri anlamına gelir <i>(örn. 1 "
 "kB = 1000 bayt)</i>"
 
-#: src/preferences.ui:1102
-msgid "page2"
-msgstr "sayfa2"
-
-#: src/preferences.ui:1110
+#: src/preferences.ui:1070
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -662,17 +673,13 @@ msgstr ""
 "Bazı pencere yöneticilerinin bu isteği yok saydığını ve pencereyi farklı bir "
 "boyuta sahip olmaya zorladığını unutmayın."
 
-#: src/preferences.ui:1120
-msgid "page3"
-msgstr "sayfa3"
-
-#: src/preferences.ui:1128
+#: src/preferences.ui:1088
+#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
 "When a file/folder was succesfully opened one of the following actions can "
 "be performed:\n"
-"\n"
 "\t• <b>Nothing:</b> Nothing happens.\n"
 "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
 "minimized. \n"
@@ -681,7 +688,6 @@ msgid ""
 "\n"
 "You can configure if those actions should be triggered when the file was "
 "opened with\n"
-"\n"
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
@@ -701,11 +707,7 @@ msgstr ""
 "\t• <b>klavye kısayolları veya menü girdileri</b> ve/veya\n"
 "\t• <b>fareyle tıklama</b>"
 
-#: src/preferences.ui:1146
-msgid "page4"
-msgstr "sayfa4"
-
-#: src/preferences.ui:1154
+#: src/preferences.ui:1112
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -731,11 +733,7 @@ msgstr ""
 "Bu, yıldız işaretiyle başlayan veya biten düzenli ifadeler ve joker karakter "
 "ifadeleri için de işe yarar. "
 
-#: src/preferences.ui:1167
-msgid "page5"
-msgstr "sayfa5"
-
-#: src/preferences.ui:1175
+#: src/preferences.ui:1133
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -747,11 +745,7 @@ msgstr ""
 "Etkinleştirilirse, sonuçlar görünümü odaklanan dosyanın/klasörün tam yolunu "
 "küçük bir ipucu penceresinde gösterecektir."
 
-#: src/preferences.ui:1183
-msgid "page6"
-msgstr "sayfa6"
-
-#: src/preferences.ui:1191
+#: src/preferences.ui:1149
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
@@ -761,11 +755,7 @@ msgstr ""
 "\n"
 "Etkinleştirilirse, dosya/klasör simgeleri ad sütununda gösterilecektir."
 
-#: src/preferences.ui:1199
-msgid "page7"
-msgstr "sayfa7"
-
-#: src/preferences.ui:1207
+#: src/preferences.ui:1165
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -779,11 +769,7 @@ msgstr ""
 "görünümünün sütun yapılandırması geri yüklenecektir. Bu, tüm sütunların "
 "boyutunu ve görünürlüğünü içerir."
 
-#: src/preferences.ui:1215
-msgid "page8"
-msgstr "sayfa8"
-
-#: src/preferences.ui:1223
+#: src/preferences.ui:1181
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -795,11 +781,7 @@ msgstr ""
 "Etkinleştirilirse, bir FSearch penceresi açtığınızda önceki oturumun "
 "sonuçlar görünümünün sıralama düzeni geri yüklenecektir."
 
-#: src/preferences.ui:1231
-msgid "page9"
-msgstr "sayfa9"
-
-#: src/preferences.ui:1239
+#: src/preferences.ui:1197
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -809,11 +791,7 @@ msgstr ""
 "\n"
 "Etkinleştirilirse, yol sütununa çift tıklamak seçili yolu açacaktır."
 
-#: src/preferences.ui:1247
-msgid "page10"
-msgstr "sayfa10"
-
-#: src/preferences.ui:1255
+#: src/preferences.ui:1213
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -827,11 +805,7 @@ msgstr ""
 "etkinken yalnızca bir dosya/klasör seçmek istiyorsanız, <i>Ctrl</i> tuşuna "
 "basılı tutarak dosyaya/klasöre tıklamanız gerekir."
 
-#: src/preferences.ui:1263
-msgid "page11"
-msgstr "sayfa11"
-
-#: src/preferences.ui:1271
+#: src/preferences.ui:1229
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -842,11 +816,7 @@ msgstr ""
 "\n"
 "Etkinleştirilirse, indekslenmekte olan yol durum çubuğunda görüntülenir."
 
-#: src/preferences.ui:1279
-msgid "page12"
-msgstr "sayfa12"
-
-#: src/preferences.ui:1287
+#: src/preferences.ui:1245
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -860,11 +830,7 @@ msgstr ""
 "\n"
 "\t•  bir dosya veya klasör açılamadığında\n"
 
-#: src/preferences.ui:1298
-msgid "page13"
-msgstr "sayfa13"
-
-#: src/preferences.ui:1306
+#: src/preferences.ui:1264
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -876,11 +842,7 @@ msgstr ""
 "Etkinleştirilirse, yol ayırıcıları (yani \"/\") içeren arama terimleri, bir "
 "dosya veya klasörün tam yoluyla otomatik olarak eşleştirilecektir."
 
-#: src/preferences.ui:1314
-msgid "page14"
-msgstr "sayfa14"
-
-#: src/preferences.ui:1322
+#: src/preferences.ui:1280
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -896,11 +858,7 @@ msgstr ""
 "bir arama teriminin <i>FooBar.txt</i> ile eşleşeceği ancak <i>foobar.txt</i> "
 "ile eşleşmeyeceği anlamına gelir."
 
-#: src/preferences.ui:1330
-msgid "page15"
-msgstr "sayfa15"
-
-#: src/preferences.ui:1338
+#: src/preferences.ui:1296
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -917,11 +875,7 @@ msgstr ""
 "Devre dışı bırakılırsa, arama girdisi boş olduğunda tüm dosyalar ve "
 "klasörler görüntülenecektir."
 
-#: src/preferences.ui:1348
-msgid "page16"
-msgstr "sayfa16"
-
-#: src/preferences.ui:1356
+#: src/preferences.ui:1314
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -937,11 +891,7 @@ msgstr ""
 "Devre dışı bırakılırsa, arama yalnızca <i>Enter</i> tuşuna veya ara "
 "düğmesine bastığınızda güncellenir. "
 
-#: src/preferences.ui:1366
-msgid "page17"
-msgstr "sayfa17"
-
-#: src/preferences.ui:1374
+#: src/preferences.ui:1332
 msgid ""
 "<b>Limit number of results:</b>\n"
 "\n"
@@ -958,11 +908,7 @@ msgstr ""
 "Çok sayıda sonucun görüntülenmesi, özellikle liste ada göre sıralanmadığında "
 "performansı önemli derecede etkiler. Bu, sonraki sürümlerde iyileştirilecek."
 
-#: src/preferences.ui:1384
-msgid "page18"
-msgstr "sayfa18"
-
-#: src/preferences.ui:1392
+#: src/preferences.ui:1350
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -974,11 +920,7 @@ msgstr ""
 "Etkinleştirilirse, FSearch başlatıldığında veri tabanı arka planda otomatik "
 "olarak güncellenecektir."
 
-#: src/preferences.ui:1400
-msgid "page19"
-msgstr "sayfa19"
-
-#: src/preferences.ui:1408
+#: src/preferences.ui:1366
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1001,14 +943,10 @@ msgstr ""
 "\t• <b>Yol:</b> Dahil edilecek tam yol.\n"
 "\t• <b>Güncelle:</b> Bu ayar, belirli yolları güncellemenin dışında bırakmak "
 "istiyorsanız\n"
-"\t\t\tyararlıdır <i>(örn. fazla değişmeyen yavaş bir USB sürücüsünün "
-"yolu)</i>"
+"\t\t\tyararlıdır <i>(örn. fazla değişmeyen yavaş bir USB sürücüsünün yolu)</"
+"i>"
 
-#: src/preferences.ui:1421
-msgid "page20"
-msgstr "sayfa20"
-
-#: src/preferences.ui:1429
+#: src/preferences.ui:1387
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -1020,11 +958,7 @@ msgstr ""
 "Bu düğme, aramak için veri tabanına dahil etmek istediğiniz bir klasörü "
 "seçebileceğiniz bir iletişim kutusu açar."
 
-#: src/preferences.ui:1437
-msgid "page21"
-msgstr "sayfa21"
-
-#: src/preferences.ui:1445
+#: src/preferences.ui:1403
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1034,11 +968,7 @@ msgstr ""
 "\n"
 "Bu, seçilen klasörü dahil edilen klasörler listesinden kaldırır."
 
-#: src/preferences.ui:1453
-msgid "page22"
-msgstr "sayfa22"
-
-#: src/preferences.ui:1461
+#: src/preferences.ui:1419
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -1050,18 +980,14 @@ msgid ""
 msgstr ""
 "<b>Dışarıda bırakılan klasörler:</b>\n"
 "\n"
-"Bu liste, veri tabanının dışında bırakmak istediğiniz tüm klasörleri içerir."
-"\n"
+"Bu liste, veri tabanının dışında bırakmak istediğiniz tüm klasörleri "
+"içerir.\n"
 "\n"
 "\t• <b>Etkin:</b> Etkinleştirilirse, yol veri tabanının dışında bırakılacak\n"
 "\t\t ve aranamayacaktır.\n"
 "\t• <b>Yol:</b> Dışarıda bırakılacak tam yol."
 
-#: src/preferences.ui:1473
-msgid "page23"
-msgstr "sayfa23"
-
-#: src/preferences.ui:1481
+#: src/preferences.ui:1439
 msgid ""
 "<b>Exclude folder from database:</b>\n"
 "\n"
@@ -1073,11 +999,7 @@ msgstr ""
 "Bu düğme, veri tabanının dışında bırakmak istediğiniz bir klasörü "
 "seçebileceğiniz bir iletişim kutusu açar."
 
-#: src/preferences.ui:1489
-msgid "page24"
-msgstr "sayfa24"
-
-#: src/preferences.ui:1497
+#: src/preferences.ui:1455
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1087,11 +1009,7 @@ msgstr ""
 "\n"
 "Bu, seçilen klasörü dışarıda bırakılan klasörler listesinden kaldırır."
 
-#: src/preferences.ui:1505
-msgid "page25"
-msgstr "sayfa25"
-
-#: src/preferences.ui:1513
+#: src/preferences.ui:1471
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1102,16 +1020,12 @@ msgid ""
 msgstr ""
 "<b>Dosyaları ve klasörleri veri tabanının dışında bırak:</b>\n"
 "\n"
-"Bu, veri tabanının dışında bırakmak istediğiniz dosyaların (veya klasörlerin)"
-" noktalı virgülle ayrılmış bir listesidir. Örneğin <i>.git;.cache;*.swp</i>, "
-"<i>.git</i> veya <i>.cache</i> adına sahip ya da <i>.swp</i> ile biten tüm "
-"dosya veya klasörleri dışarıda bırakacaktır."
+"Bu, veri tabanının dışında bırakmak istediğiniz dosyaların (veya "
+"klasörlerin) noktalı virgülle ayrılmış bir listesidir. Örneğin <i>.git;."
+"cache;*.swp</i>, <i>.git</i> veya <i>.cache</i> adına sahip ya da <i>.swp</"
+"i> ile biten tüm dosya veya klasörleri dışarıda bırakacaktır."
 
-#: src/preferences.ui:1521
-msgid "page26"
-msgstr "sayfa26"
-
-#: src/preferences.ui:1529
+#: src/preferences.ui:1487
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1124,28 +1038,16 @@ msgstr ""
 "başlayan tüm dosyalar veya klasörler)</i>, veri tabanının dışında "
 "bırakılacaktır."
 
-#: src/preferences.ui:1537
-msgid "page27"
-msgstr "sayfa27"
-
-#: src/preferences.ui:1545
+#: src/preferences.ui:1503
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 "Ne yaptığına dair ayrıntılı bir açıklama görmek için bir ayara odaklanın."
 
-#: src/preferences.ui:1549
-msgid "page28"
-msgstr "sayfa28"
-
-#: src/preferences.ui:1557
+#: src/preferences.ui:1515
 msgid "label"
 msgstr "etiket"
 
-#: src/preferences.ui:1561
-msgid "page29"
-msgstr "sayfa29"
-
-#: src/preferences.ui:1571
+#: src/preferences.ui:1529
 msgid "Help"
 msgstr "Yardım"
 
@@ -1153,7 +1055,7 @@ msgstr "Yardım"
 msgid "Select folder"
 msgstr "Klasör seç"
 
-#: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:175
+#: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:190
 msgid "_Cancel"
 msgstr "_İptal"
 
@@ -1161,7 +1063,7 @@ msgstr "_İptal"
 msgid "_Select"
 msgstr "_Seç"
 
-#: src/preferences_ui.c:176
+#: src/preferences_ui.c:191
 msgid "_OK"
 msgstr "_Tamam"
 
@@ -1174,15 +1076,103 @@ msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Performans ve gelişmiş özelliklere odaklanan bir dosya arama uygulaması"
 
-#: data/fsearch.desktop.in.in:7
-msgid "system-search"
-msgstr "system-search"
-
 #: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "arama;fsearch;dosyalar;klasörler;müzik;video;belgeler;bul;araç;her şey;"
+
+#~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+#~ msgstr ""
+#~ "<b>Düzenle → Tercihler → Veri Tabanı</b> seçeneğine gidin ve birkaç konum "
+#~ "ekleyin"
+
+#~ msgid "page2"
+#~ msgstr "sayfa2"
+
+#~ msgid "page3"
+#~ msgstr "sayfa3"
+
+#~ msgid "page4"
+#~ msgstr "sayfa4"
+
+#~ msgid "page5"
+#~ msgstr "sayfa5"
+
+#~ msgid "page6"
+#~ msgstr "sayfa6"
+
+#~ msgid "page7"
+#~ msgstr "sayfa7"
+
+#~ msgid "page8"
+#~ msgstr "sayfa8"
+
+#~ msgid "page9"
+#~ msgstr "sayfa9"
+
+#~ msgid "page10"
+#~ msgstr "sayfa10"
+
+#~ msgid "page11"
+#~ msgstr "sayfa11"
+
+#~ msgid "page12"
+#~ msgstr "sayfa12"
+
+#~ msgid "page13"
+#~ msgstr "sayfa13"
+
+#~ msgid "page14"
+#~ msgstr "sayfa14"
+
+#~ msgid "page15"
+#~ msgstr "sayfa15"
+
+#~ msgid "page16"
+#~ msgstr "sayfa16"
+
+#~ msgid "page17"
+#~ msgstr "sayfa17"
+
+#~ msgid "page18"
+#~ msgstr "sayfa18"
+
+#~ msgid "page19"
+#~ msgstr "sayfa19"
+
+#~ msgid "page20"
+#~ msgstr "sayfa20"
+
+#~ msgid "page21"
+#~ msgstr "sayfa21"
+
+#~ msgid "page22"
+#~ msgstr "sayfa22"
+
+#~ msgid "page23"
+#~ msgstr "sayfa23"
+
+#~ msgid "page24"
+#~ msgstr "sayfa24"
+
+#~ msgid "page25"
+#~ msgstr "sayfa25"
+
+#~ msgid "page26"
+#~ msgstr "sayfa26"
+
+#~ msgid "page27"
+#~ msgstr "sayfa27"
+
+#~ msgid "page28"
+#~ msgstr "sayfa28"
+
+#~ msgid "page29"
+#~ msgstr "sayfa29"
+
+#~ msgid "system-search"
+#~ msgstr "system-search"
 
 #~ msgid "Copy"
 #~ msgstr "Kopyala"
@@ -1225,9 +1215,6 @@ msgstr ""
 
 #~ msgid "Open File(s)"
 #~ msgstr "Dosya Aç"
-
-#~ msgid "Open With Other Application"
-#~ msgstr "Başka Bir Uygulama İle Aç"
 
 #~ msgid "Open Containing Folder"
 #~ msgstr "Dosyayı İçeren Klasörü Aç"

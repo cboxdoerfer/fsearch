@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2020-10-30 12:42+0100\n"
+"POT-Creation-Date: 2021-03-07 16:31+0100\n"
 "PO-Revision-Date: 2020-11-04 21:26+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
@@ -23,21 +23,32 @@ msgstr ""
 msgid "Sorting..."
 msgstr "Bezig met sorteren..."
 
-#: src/fsearch.c:183
-msgid "Show version information"
-msgstr "Versie-informatie tonen"
-
-#: src/fsearch.c:190
-msgid "Update the database"
-msgstr "Databank bijwerken"
-
-#: src/fsearch.c:387
+#: src/fsearch.c:355
 msgid "translator-credits"
 msgstr "Heimen Stoffels"
 
-#: src/fsearch.c:389
+#: src/fsearch.c:357
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
+
+#: src/fsearch.c:633
+#, fuzzy
+msgid "Open a new application window"
+msgstr "Openen met andere toepassing"
+
+#: src/fsearch.c:634
+msgid "Show the application preferences"
+msgstr ""
+
+#: src/fsearch.c:635
+#, fuzzy
+msgid "Update the database and exit"
+msgstr "Databank bijwerken"
+
+#: src/fsearch.c:636
+#, fuzzy
+msgid "Print version information and exit"
+msgstr "Versie-informatie tonen"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -47,92 +58,92 @@ msgstr "Nieuw venster"
 msgid "Update database"
 msgstr "Databank bijwerken"
 
-#: src/fsearch.glade:103 src/fsearch.glade:622
+#: src/fsearch.glade:103 src/fsearch.glade:623
 msgid "Cancel database update"
 msgstr "Databank bijwerken afbreken"
 
-#: src/fsearch.glade:137 src/menus.ui:106
+#: src/fsearch.glade:137 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Pad doorzoeken"
 
-#: src/fsearch.glade:151 src/menus.ui:110
+#: src/fsearch.glade:151 src/menus.ui:116
 msgid "Match Case"
 msgstr "Hoofdlettergevoelig"
 
-#: src/fsearch.glade:165 src/menus.ui:114
+#: src/fsearch.glade:165 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Reguliere expressies gebruiken"
 
-#: src/fsearch.glade:190 src/menus.ui:89
+#: src/fsearch.glade:190 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Statusbalk tonen"
 
-#: src/fsearch.glade:204 src/menus.ui:93
+#: src/fsearch.glade:204 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Filter tonen"
 
-#: src/fsearch.glade:218 src/menus.ui:97
+#: src/fsearch.glade:218 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Zoekknop tonen"
 
-#: src/fsearch.glade:243 src/menus.ui:79 src/preferences.ui:37
+#: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:37
 msgid "Preferences"
 msgstr "Voorkeuren"
 
-#: src/fsearch.glade:268 src/menus.ui:123
+#: src/fsearch.glade:269 src/menus.ui:129
 msgid "About"
 msgstr "Over"
 
-#: src/fsearch.glade:293 src/menus.ui:42
+#: src/fsearch.glade:294 src/menus.ui:47
 msgid "Quit"
 msgstr "Afsluiten"
 
-#: src/fsearch.glade:416
+#: src/fsearch.glade:417
 msgid "Number of Search Results"
 msgstr "Aantal zoekresultaten"
 
-#: src/fsearch.glade:417
+#: src/fsearch.glade:418
 msgid "0 Items"
 msgstr "0 items"
 
-#: src/fsearch.glade:454
+#: src/fsearch.glade:455
 msgid "Index:"
 msgstr "Index:"
 
-#: src/fsearch.glade:522
+#: src/fsearch.glade:523
 msgid "Number of selected folders"
 msgstr "Aantal geselecteerde mappen"
 
-#: src/fsearch.glade:523 src/fsearch.glade:548
+#: src/fsearch.glade:524 src/fsearch.glade:549
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:547
+#: src/fsearch.glade:548
 msgid "Number of selected files"
 msgstr "Aantal geselecteerde bestanden"
 
-#: src/fsearch.glade:606 src/fsearch_window.c:959 src/overlay.ui:213
+#: src/fsearch.glade:607 src/fsearch_window.c:142 src/overlay.ui:102
 #, c-format
 msgid "Updating Database…"
 msgstr "Bezig met bijwerken van databank…"
 
-#: src/fsearch.glade:639 src/preferences.ui:1065
+#: src/fsearch.glade:640
 msgid "page0"
 msgstr "pagina0"
 
-#: src/fsearch.glade:663
+#: src/fsearch.glade:664
 msgid "Number of database items"
 msgstr "Aantal databankitems"
 
-#: src/fsearch.glade:664
+#: src/fsearch.glade:665
 msgid "(empty)"
 msgstr "(leeg)"
 
-#: src/fsearch.glade:675 src/preferences.ui:1083
+#: src/fsearch.glade:676
 msgid "page1"
 msgstr "pagina1"
 
-#: src/fsearch.glade:701
+#: src/fsearch.glade:702
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -140,11 +151,11 @@ msgstr ""
 "De zoekterm bevat hoofdletters.\n"
 "De optie <b>Hoofdlettergevoelig</b> is ingeschakeld."
 
-#: src/fsearch.glade:732 src/fsearch.glade:785
+#: src/fsearch.glade:733 src/fsearch.glade:786
 msgid "CASE"
 msgstr "HOOFDLETTERS"
 
-#: src/fsearch.glade:808
+#: src/fsearch.glade:809
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -152,23 +163,23 @@ msgstr ""
 "De zoekterm bevat padscheidingstekens.\n"
 "De optie <b>Pad doorzoeken</b> is ingeschakeld."
 
-#: src/fsearch.glade:839 src/fsearch.glade:892
+#: src/fsearch.glade:840 src/fsearch.glade:893
 msgid "PATH"
 msgstr "PAD"
 
-#: src/fsearch.glade:945
+#: src/fsearch.glade:946
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch.glade:1065
+#: src/fsearch.glade:1066
 msgid "Search…"
 msgstr "Zoeken…"
 
-#: src/fsearch.glade:1087
+#: src/fsearch.glade:1088
 msgid "Select a Filter"
 msgstr "Selecteer een filter"
 
-#: src/fsearch.glade:1118 src/preferences.ui:679
+#: src/fsearch.glade:1119 src/preferences.ui:679
 msgid "Search"
 msgstr "Zoeken"
 
@@ -209,7 +220,7 @@ msgid "Active"
 msgstr "Actief"
 
 #: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
-#: src/listview.c:203 src/menus.ui:216
+#: src/listview.c:209 src/menus.ui:222
 msgid "Path"
 msgstr "Pad"
 
@@ -217,37 +228,37 @@ msgstr "Pad"
 msgid "Update"
 msgstr "Bijwerken"
 
-#: src/fsearch_window.c:121 src/fsearch_window.c:467 src/fsearch_window.c:917
-#, c-format
-msgid "%'d Items"
-msgstr "%'d items"
-
-#: src/fsearch_window.c:400 src/fsearch_window.c:557
-msgid "Querying…"
-msgstr "Bezig met zoeken…"
-
-#: src/fsearch_window.c:733 src/fsearch_window_actions.c:406
-msgid "Failed to open file"
-msgstr "Kan bestand niet openen"
-
-#: src/fsearch_window.c:734 src/fsearch_window_actions.c:407
-msgid "Do you want to keep the window open?"
-msgstr "Wil je het venster openhouden?"
-
-#: src/fsearch_window.c:923
-msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Laatst bijgewerkt: %Y-%m-%d %H:%M"
-
-#: src/fsearch_window.c:936 src/overlay.ui:143
+#: src/fsearch_window.c:121 src/overlay.ui:32
 #, c-format
 msgid "Loading Database…"
 msgstr "Bezig met laden van databank…"
 
-#: src/fsearch_window.c:1121
+#: src/fsearch_window.c:162 src/fsearch_window.c:515 src/fsearch_window.c:968
+#, c-format
+msgid "%'d Items"
+msgstr "%'d items"
+
+#: src/fsearch_window.c:448 src/fsearch_window.c:605
+msgid "Querying…"
+msgstr "Bezig met zoeken…"
+
+#: src/fsearch_window.c:784 src/fsearch_window_actions.c:406
+msgid "Failed to open file"
+msgstr "Kan bestand niet openen"
+
+#: src/fsearch_window.c:785 src/fsearch_window_actions.c:407
+msgid "Do you want to keep the window open?"
+msgstr "Wil je het venster openhouden?"
+
+#: src/fsearch_window.c:974
+msgid "Last Updated: %Y-%m-%d %H:%M"
+msgstr "Laatst bijgewerkt: %Y-%m-%d %H:%M"
+
+#: src/fsearch_window.c:1149
 msgid "Background tasks are active."
 msgstr "Achtergrondtaken zijn actief."
 
-#: src/fsearch_window.c:1123
+#: src/fsearch_window.c:1151
 msgid ""
 "Closing the window isn't possible right now.\n"
 "Please wait a moment and then try again."
@@ -277,19 +288,19 @@ msgstr "Bezig met verwijderen…"
 msgid "Moving files to trash…"
 msgstr "Bezig met verplaatsen naar prullenbak…"
 
-#: src/listview.c:178 src/menus.ui:212
+#: src/listview.c:184 src/menus.ui:218
 msgid "Name"
 msgstr "Naam"
 
-#: src/listview.c:230 src/menus.ui:224
+#: src/listview.c:236 src/menus.ui:230
 msgid "Size"
 msgstr "Grootte"
 
-#: src/listview.c:248 src/menus.ui:228
+#: src/listview.c:254 src/menus.ui:234
 msgid "Date Modified"
 msgstr "Aangepast op"
 
-#: src/listview.c:265 src/menus.ui:220
+#: src/listview.c:271 src/menus.ui:226
 msgid "Type"
 msgstr "Type"
 
@@ -301,7 +312,7 @@ msgstr "_Bestand"
 msgid "New Window"
 msgstr "Nieuw venster"
 
-#: src/menus.ui:16 src/menus.ui:133
+#: src/menus.ui:16 src/menus.ui:139
 msgid "_Open"
 msgstr "_Openen"
 
@@ -317,95 +328,101 @@ msgstr "Databank bijwerken"
 msgid "Cancel Update"
 msgstr "Update afbreken"
 
-#: src/menus.ui:49
+#: src/menus.ui:42
+#, fuzzy
+msgid "Close Window"
+msgstr "Nieuw venster"
+
+#: src/menus.ui:54
 msgid "_Edit"
 msgstr "B_ewerken"
 
-#: src/menus.ui:52 src/menus.ui:169
+#: src/menus.ui:57 src/menus.ui:175
 msgid "_Copy"
 msgstr "_Kopiëren"
 
-#: src/menus.ui:57 src/menus.ui:180
+#: src/menus.ui:62 src/menus.ui:186
 msgid "Cu_t"
 msgstr "Kni_ppen"
 
-#: src/menus.ui:64
+#: src/menus.ui:69
 msgid "Select All"
 msgstr "Alles selecteren"
 
-#: src/menus.ui:69
+#: src/menus.ui:74
 msgid "Deselect All"
 msgstr "Niets selecteren"
 
-#: src/menus.ui:73
+#: src/menus.ui:78
 msgid "Invert Selection"
 msgstr "Selectie omkeren"
 
-#: src/menus.ui:86
+#: src/menus.ui:92
 msgid "_View"
 msgstr "Bee_ld"
 
-#: src/menus.ui:103
+#: src/menus.ui:109
 msgid "_Search"
 msgstr "_Zoeken"
 
-#: src/menus.ui:120
+#: src/menus.ui:126
 msgid "_Help"
 msgstr "_Hulp"
 
-#: src/menus.ui:139
+#: src/menus.ui:145
 msgid "Open _With"
 msgstr "Openen _met"
 
-#: src/menus.ui:153
+#: src/menus.ui:159
 msgid "_Open Folder"
 msgstr "Map _openen"
 
-#: src/menus.ui:175
+#: src/menus.ui:181
 msgid "_Copy Filepath"
 msgstr "Bestandspad _kopiëren"
 
-#: src/menus.ui:188
+#: src/menus.ui:194
 msgid "Move to _Trash"
 msgstr "Verplaatsen naar _prullenbak"
 
-#: src/menus.ui:194
+#: src/menus.ui:200
 msgid "_Delete"
 msgstr "_Verwijderen"
 
-#: src/overlay.ui:31
-msgid "Empty Database"
-msgstr "Lege databank"
-
-#: src/overlay.ui:46
-msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
-msgstr "Ga naar <b>Bewerken → Voorkeuren → Databank</b> en voeg locaties toe"
-
-#: src/overlay.ui:87
-msgid "Empty Query"
-msgstr "Blanco zoekopdracht"
-
-#: src/overlay.ui:102
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "Druk op <b>Ctrl + F</b> en begin met typen"
-
-#: src/overlay.ui:158 src/overlay.ui:228
+#: src/overlay.ui:46 src/overlay.ui:116
 msgid "…"
 msgstr "…"
 
-#: src/overlay.ui:173
+#: src/overlay.ui:61
 msgid "This won't take long."
 msgstr "Dit kan even duren."
 
-#: src/overlay.ui:243
+#: src/overlay.ui:131
 msgid "This may take a while."
 msgstr "Dit kan even duren."
 
-#: src/overlay.ui:283
+#: src/overlay.ui:172
+msgid "Empty Query"
+msgstr "Blanco zoekopdracht"
+
+#: src/overlay.ui:187
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "Druk op <b>Ctrl + F</b> en begin met typen"
+
+#: src/overlay.ui:234
+msgid "Empty Database"
+msgstr "Lege databank"
+
+#: src/overlay.ui:250
+#, fuzzy
+msgid "Add folders"
+msgstr "Mappen"
+
+#: src/overlay.ui:292
 msgid "No Results Found"
 msgstr "Geen resultaten gevonden"
 
-#: src/overlay.ui:298
+#: src/overlay.ui:307
 msgid "Try a different search"
 msgstr "Probeer een andere zoekopdracht"
 
@@ -535,49 +552,49 @@ msgstr ""
 msgid "Update database on start"
 msgstr "Databank bijwerken na opstarten"
 
-#: src/preferences.ui:773
+#: src/preferences.ui:759
 msgid "Add path to be included in database"
 msgstr "Voeg het op te nemen pad toe"
 
-#: src/preferences.ui:790 src/preferences.ui:910
+#: src/preferences.ui:775 src/preferences.ui:873
 msgid "Remove selected path"
 msgstr "Geselecteerd pad verwijderen"
 
-#: src/preferences.ui:822
+#: src/preferences.ui:801
 msgid "Include"
 msgstr "Opnemen"
 
-#: src/preferences.ui:893
+#: src/preferences.ui:857
 msgid "Add path to be excluded from database"
 msgstr "Voeg het uit te sluiten pad toe"
 
-#: src/preferences.ui:949 src/preferences.ui:962
+#: src/preferences.ui:909 src/preferences.ui:922
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Jokertekens worden ondersteund. Meerdere items moeten worden gescheiden door "
 "';'"
 
-#: src/preferences.ui:950
+#: src/preferences.ui:910
 msgid "Exclude files:"
 msgstr "Bestanden uitsluiten:"
 
-#: src/preferences.ui:963
+#: src/preferences.ui:923
 msgid "e.g. \".git;*.tmp\""
 msgstr "bijv. \".git;*.tmp\""
 
-#: src/preferences.ui:980
+#: src/preferences.ui:940
 msgid "Exclude hidden files and folders"
 msgstr "Verborgen bestanden en mappen uitsluiten"
 
-#: src/preferences.ui:1001
+#: src/preferences.ui:961
 msgid "Exclude"
 msgstr "Uitsluiten"
 
-#: src/preferences.ui:1024
+#: src/preferences.ui:984
 msgid "Database"
 msgstr "Databank"
 
-#: src/preferences.ui:1055
+#: src/preferences.ui:1015
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -595,7 +612,7 @@ msgstr ""
 "Let op: niet alle systeemthema's bieden een donkere variant, dus deze "
 "instelling kan ook géén effect hebben."
 
-#: src/preferences.ui:1072
+#: src/preferences.ui:1032
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -610,13 +627,13 @@ msgstr ""
 "\n"
 "Schakel in om het zoekvak en hoofdmenu op de titelbalk te tonen.\n"
 "\n"
-"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak daaronder."
-"\n"
+"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak "
+"daaronder.\n"
 "\n"
 "Dit laatste zorgt voor een traditionelere vormgeving, maar neem iets meer "
 "ruimte in beslag."
 
-#: src/preferences.ui:1091
+#: src/preferences.ui:1051
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -637,11 +654,7 @@ msgstr ""
 "\t• <b>Decimale eenheden:</b> dit verwijst naar decimale SI-voorvoegsels "
 "<i>(voorbeeld: 1 kB = 1000 bytes)</i>"
 
-#: src/preferences.ui:1102
-msgid "page2"
-msgstr "pagina2"
-
-#: src/preferences.ui:1110
+#: src/preferences.ui:1070
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -659,17 +672,13 @@ msgstr ""
 "Let op: sommige vensterbeheerders negeren dit verzoek en dwingen hun eigen "
 "afmetingen af."
 
-#: src/preferences.ui:1120
-msgid "page3"
-msgstr "pagina3"
-
-#: src/preferences.ui:1128
+#: src/preferences.ui:1088
+#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
 "When a file/folder was succesfully opened one of the following actions can "
 "be performed:\n"
-"\n"
 "\t• <b>Nothing:</b> Nothing happens.\n"
 "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
 "minimized. \n"
@@ -678,7 +687,6 @@ msgid ""
 "\n"
 "You can configure if those actions should be triggered when the file was "
 "opened with\n"
-"\n"
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
@@ -689,8 +697,8 @@ msgstr ""
 "\n"
 "\t• <b>Niets:</b> er wordt geen actie ondernomen.\n"
 "\t• <b>Minimaliseren:</b> minimaliseer het huidige FSearch-venster. \n"
-"\t\tLet op: op sommige systemen kunnen vensters niet worden geminimaliseerd."
-"\n"
+"\t\tLet op: op sommige systemen kunnen vensters niet worden "
+"geminimaliseerd.\n"
 "\t• <b>Sluiten:</b> sluit FSearch af.\n"
 "\n"
 "Je kunt aangeven of deze acties moeten worden uitgevoerd als het bestand "
@@ -699,11 +707,7 @@ msgstr ""
 "\t• <b>sneltoetsen of menu-items</b> en/of\n"
 "\t• <b>muisklik</b>"
 
-#: src/preferences.ui:1146
-msgid "page4"
-msgstr "pagina4"
-
-#: src/preferences.ui:1154
+#: src/preferences.ui:1112
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -729,11 +733,7 @@ msgstr ""
 "Dit werkt tevens voor reguliere uitdrukkingen en jokertekens die beginnen "
 "met of eindigen op een sterretje. "
 
-#: src/preferences.ui:1167
-msgid "page5"
-msgstr "pagina5"
-
-#: src/preferences.ui:1175
+#: src/preferences.ui:1133
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -745,11 +745,7 @@ msgstr ""
 "Schakel in om het volledige pad naar een geselecteerd(e) bestand/map in het "
 "resultatenvenster te tonen in een kleine hulpballon."
 
-#: src/preferences.ui:1183
-msgid "page6"
-msgstr "pagina6"
-
-#: src/preferences.ui:1191
+#: src/preferences.ui:1149
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
@@ -759,11 +755,7 @@ msgstr ""
 "\n"
 "Schakel in om pictogrammen te tonen in de naamkolom."
 
-#: src/preferences.ui:1199
-msgid "page7"
-msgstr "pagina7"
-
-#: src/preferences.ui:1207
+#: src/preferences.ui:1165
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -777,11 +769,7 @@ msgstr ""
 "basis van de indeling van de vorige sessie. Dit omvat de grootte en "
 "zichtbaarheid van alle kolommen."
 
-#: src/preferences.ui:1215
-msgid "page8"
-msgstr "pagina8"
-
-#: src/preferences.ui:1223
+#: src/preferences.ui:1181
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -793,11 +781,7 @@ msgstr ""
 "Schakel in om de sorteervolgorde van het resultatenvenster te onthouden op "
 "basis van de volgorde van de vorige sessie."
 
-#: src/preferences.ui:1231
-msgid "page9"
-msgstr "pagina9"
-
-#: src/preferences.ui:1239
+#: src/preferences.ui:1197
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -808,11 +792,7 @@ msgstr ""
 "Schakel in om het geselecteerde pad te openen door te dubbelklikken in de "
 "padkolom."
 
-#: src/preferences.ui:1247
-msgid "page10"
-msgstr "pagina10"
-
-#: src/preferences.ui:1255
+#: src/preferences.ui:1213
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -825,11 +805,7 @@ msgstr ""
 "Schakel in om de geselecteerde map of het geselecteerde bestand te openen "
 "met één muisklik. Selecteren kan dan door <i>Ctrl</i>-klik te gebruiken."
 
-#: src/preferences.ui:1263
-msgid "page11"
-msgstr "pagina11"
-
-#: src/preferences.ui:1271
+#: src/preferences.ui:1229
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -841,11 +817,7 @@ msgstr ""
 "Schakel in om op de statusbalk aan te geven welk pad momenteel wordt "
 "geïndexeerd."
 
-#: src/preferences.ui:1279
-msgid "page12"
-msgstr "pagina12"
-
-#: src/preferences.ui:1287
+#: src/preferences.ui:1245
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -859,11 +831,7 @@ msgstr ""
 "\n"
 "\t•  een bestand of map niet kan worden geopend\n"
 
-#: src/preferences.ui:1298
-msgid "page13"
-msgstr "pagina13"
-
-#: src/preferences.ui:1306
+#: src/preferences.ui:1264
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -875,11 +843,7 @@ msgstr ""
 "Schakel in om zoektermen met padscheidingstekens (bijv. '/') automatisch "
 "overeen te laten komen met het volledige pad van een bestand of map."
 
-#: src/preferences.ui:1314
-msgid "page14"
-msgstr "pagina14"
-
-#: src/preferences.ui:1322
+#: src/preferences.ui:1280
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -895,11 +859,7 @@ msgstr ""
 "<i>Iets</i> overeenkomen met <i>IetsBar.txt</i> maar niet met <i>ietsbar."
 "txt</i>."
 
-#: src/preferences.ui:1330
-msgid "page15"
-msgstr "pagina15"
-
-#: src/preferences.ui:1338
+#: src/preferences.ui:1296
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -915,11 +875,7 @@ msgstr ""
 "Schakel uit om alle bestanden en mappen te tonen als de zoekopdracht blanco "
 "is."
 
-#: src/preferences.ui:1348
-msgid "page16"
-msgstr "pagina16"
-
-#: src/preferences.ui:1356
+#: src/preferences.ui:1314
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -935,11 +891,7 @@ msgstr ""
 "Schakel uit om alleen te zoeken zodra je op <i>Enter</i> of de zoekknop "
 "drukt. "
 
-#: src/preferences.ui:1366
-msgid "page17"
-msgstr "pagina17"
-
-#: src/preferences.ui:1374
+#: src/preferences.ui:1332
 msgid ""
 "<b>Limit number of results:</b>\n"
 "\n"
@@ -956,11 +908,7 @@ msgstr ""
 "Hoe meer resultaten je toont, hoe slechter de prestaties worden, vooral als "
 "de lijst ongesorteerd is. Dit wordt in toekomstige versies verbeterd."
 
-#: src/preferences.ui:1384
-msgid "page18"
-msgstr "pagina18"
-
-#: src/preferences.ui:1392
+#: src/preferences.ui:1350
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -972,11 +920,7 @@ msgstr ""
 "Schakel in om de databank automatisch bij te werken op de achtergrond zodra "
 "je FSearch opent."
 
-#: src/preferences.ui:1400
-msgid "page19"
-msgstr "pagina19"
-
-#: src/preferences.ui:1408
+#: src/preferences.ui:1366
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1001,11 +945,7 @@ msgstr ""
 "\t\t\tbij het bijwerken <i>(bijv. als het pad op een langzame usb-schijf "
 "staat)</i>"
 
-#: src/preferences.ui:1421
-msgid "page20"
-msgstr "pagina20"
-
-#: src/preferences.ui:1429
+#: src/preferences.ui:1387
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -1017,11 +957,7 @@ msgstr ""
 "Met deze knop open je een venster waar je een map kunt kiezen die je wilt "
 "toevoegen aan de databank."
 
-#: src/preferences.ui:1437
-msgid "page21"
-msgstr "pagina21"
-
-#: src/preferences.ui:1445
+#: src/preferences.ui:1403
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1031,11 +967,7 @@ msgstr ""
 "\n"
 "Hiermee verwijder je de geselecteerde map van de lijst met opgenomen mappen."
 
-#: src/preferences.ui:1453
-msgid "page22"
-msgstr "pagina22"
-
-#: src/preferences.ui:1461
+#: src/preferences.ui:1419
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -1053,11 +985,7 @@ msgstr ""
 "doorzoeken.\n"
 "\t• <b>Pad:</b> het volledige uit te sluiten pad."
 
-#: src/preferences.ui:1473
-msgid "page23"
-msgstr "pagina23"
-
-#: src/preferences.ui:1481
+#: src/preferences.ui:1439
 msgid ""
 "<b>Exclude folder from database:</b>\n"
 "\n"
@@ -1069,11 +997,7 @@ msgstr ""
 "Met deze knop open je een venster waar je een map kunt kiezen die je wilt "
 "uitsluiten."
 
-#: src/preferences.ui:1489
-msgid "page24"
-msgstr "pagina24"
-
-#: src/preferences.ui:1497
+#: src/preferences.ui:1455
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1084,11 +1008,7 @@ msgstr ""
 "Hiermee verwijder je de geselecteerde map van de lijst met uitgesloten "
 "mappen."
 
-#: src/preferences.ui:1505
-msgid "page25"
-msgstr "pagina25"
-
-#: src/preferences.ui:1513
+#: src/preferences.ui:1471
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1104,11 +1024,7 @@ msgstr ""
 "bestanden of mappen uit de <i>.git</i> of <i>.cache</i> heten of eindigen op "
 "<i>.swp</i>."
 
-#: src/preferences.ui:1521
-msgid "page26"
-msgstr "pagina26"
-
-#: src/preferences.ui:1529
+#: src/preferences.ui:1487
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1120,27 +1036,15 @@ msgstr ""
 "Schakel in om verborgen bestanden en mappen niet op te nemen in de databank "
 "<i>(dit zijn alle bestanden en mappen die beginnen met een punt)</i>."
 
-#: src/preferences.ui:1537
-msgid "page27"
-msgstr "pagina27"
-
-#: src/preferences.ui:1545
+#: src/preferences.ui:1503
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr "Plaats de cursor boven een instelling om een hulpballon te tonen."
 
-#: src/preferences.ui:1549
-msgid "page28"
-msgstr "pagina28"
-
-#: src/preferences.ui:1557
+#: src/preferences.ui:1515
 msgid "label"
 msgstr "label"
 
-#: src/preferences.ui:1561
-msgid "page29"
-msgstr "pagina29"
-
-#: src/preferences.ui:1571
+#: src/preferences.ui:1529
 msgid "Help"
 msgstr "Hulp"
 
@@ -1148,7 +1052,7 @@ msgstr "Hulp"
 msgid "Select folder"
 msgstr "Kies een map"
 
-#: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:175
+#: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:190
 msgid "_Cancel"
 msgstr "_Annuleren"
 
@@ -1156,7 +1060,7 @@ msgstr "_Annuleren"
 msgid "_Select"
 msgstr "_Selecteren"
 
-#: src/preferences_ui.c:176
+#: src/preferences_ui.c:191
 msgid "_OK"
 msgstr "_Oké"
 
@@ -1168,16 +1072,103 @@ msgstr "FSearch"
 msgid "A file search application focusing on performance and advanced features"
 msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
 
-#: data/fsearch.desktop.in.in:7
-msgid "system-search"
-msgstr "system-search"
-
 #: data/fsearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "zoeken;fsearch;bestanden;mappen;muziek;video;documenten;vinden;hulpmiddel;"
 "alles;"
+
+#~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
+#~ msgstr ""
+#~ "Ga naar <b>Bewerken → Voorkeuren → Databank</b> en voeg locaties toe"
+
+#~ msgid "page2"
+#~ msgstr "pagina2"
+
+#~ msgid "page3"
+#~ msgstr "pagina3"
+
+#~ msgid "page4"
+#~ msgstr "pagina4"
+
+#~ msgid "page5"
+#~ msgstr "pagina5"
+
+#~ msgid "page6"
+#~ msgstr "pagina6"
+
+#~ msgid "page7"
+#~ msgstr "pagina7"
+
+#~ msgid "page8"
+#~ msgstr "pagina8"
+
+#~ msgid "page9"
+#~ msgstr "pagina9"
+
+#~ msgid "page10"
+#~ msgstr "pagina10"
+
+#~ msgid "page11"
+#~ msgstr "pagina11"
+
+#~ msgid "page12"
+#~ msgstr "pagina12"
+
+#~ msgid "page13"
+#~ msgstr "pagina13"
+
+#~ msgid "page14"
+#~ msgstr "pagina14"
+
+#~ msgid "page15"
+#~ msgstr "pagina15"
+
+#~ msgid "page16"
+#~ msgstr "pagina16"
+
+#~ msgid "page17"
+#~ msgstr "pagina17"
+
+#~ msgid "page18"
+#~ msgstr "pagina18"
+
+#~ msgid "page19"
+#~ msgstr "pagina19"
+
+#~ msgid "page20"
+#~ msgstr "pagina20"
+
+#~ msgid "page21"
+#~ msgstr "pagina21"
+
+#~ msgid "page22"
+#~ msgstr "pagina22"
+
+#~ msgid "page23"
+#~ msgstr "pagina23"
+
+#~ msgid "page24"
+#~ msgstr "pagina24"
+
+#~ msgid "page25"
+#~ msgstr "pagina25"
+
+#~ msgid "page26"
+#~ msgstr "pagina26"
+
+#~ msgid "page27"
+#~ msgstr "pagina27"
+
+#~ msgid "page28"
+#~ msgstr "pagina28"
+
+#~ msgid "page29"
+#~ msgstr "pagina29"
+
+#~ msgid "system-search"
+#~ msgstr "system-search"
 
 #~ msgid "Copy"
 #~ msgstr "Kopiëren"
@@ -1217,9 +1208,6 @@ msgstr ""
 
 #~ msgid "Open File(s)"
 #~ msgstr "Bestand(en) openen"
-
-#~ msgid "Open With Other Application"
-#~ msgstr "Openen met andere toepassing"
 
 #~ msgid "Open Containing Folder"
 #~ msgstr "Bijbehorende map openen"
