@@ -567,16 +567,16 @@ fsearch_application_activate(GApplication *app) {
             return;
         }
     }
-    window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
-    gtk_window_present(window);
 
-    FsearchApplication *fapp = FSEARCH_APPLICATION(app);
-    if (!fapp->activated) {
+    FsearchApplication *self = FSEARCH_APPLICATION(app);
+    g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", NULL);
+
+    if (!self->activated) {
         // first full application start
-        fapp->activated = true;
-        fapp->db_thread_cancel = false;
+        self->activated = true;
+        self->db_thread_cancel = false;
         fsearch_database_update(false);
-        if (fapp->config->update_database_on_launch) {
+        if (self->config->update_database_on_launch) {
             fsearch_database_update(true);
         }
     }
