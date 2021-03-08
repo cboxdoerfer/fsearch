@@ -97,6 +97,10 @@ struct _FsearchConfig {
 
     // database
     bool update_database_on_launch;
+    bool update_database_every;
+    uint32_t update_database_every_hours;
+    uint32_t update_database_every_minutes;
+
     bool exclude_hidden_items;
     bool follow_symlinks;
 

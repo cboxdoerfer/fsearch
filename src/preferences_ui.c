@@ -35,9 +35,31 @@ static GtkWidget *help_stack = NULL;
 static GtkWidget *help_description = NULL;
 
 static void
-limit_num_results_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+on_toggle_set_sensitive(GtkToggleButton *togglebutton, gpointer user_data) {
     GtkWidget *spin = GTK_WIDGET(user_data);
     gtk_widget_set_sensitive(spin, gtk_toggle_button_get_active(togglebutton));
+}
+
+static void
+on_auto_update_minutes_spin_button_changed(GtkSpinButton *spin_button, gpointer user_data) {
+    GtkSpinButton *hours_spin = GTK_SPIN_BUTTON(user_data);
+    double minutes = gtk_spin_button_get_value(spin_button);
+    double hours = gtk_spin_button_get_value(hours_spin);
+
+    if (hours == 0 && minutes == 0) {
+        gtk_spin_button_set_value(spin_button, 1.0);
+    }
+}
+
+static void
+on_auto_update_hours_spin_button_changed(GtkSpinButton *spin_button, gpointer user_data) {
+    GtkSpinButton *minutes_spin = GTK_SPIN_BUTTON(user_data);
+    double hours = gtk_spin_button_get_value(spin_button);
+    double minutes = gtk_spin_button_get_value(minutes_spin);
+
+    if (hours == 0 && minutes == 0) {
+        gtk_spin_button_set_value(minutes_spin, 1.0);
+    }
 }
 
 static void
@@ -299,16 +321,41 @@ preferences_ui_launch(FsearchConfig *config,
         builder_init_widget(builder, "limit_num_results_spin", "help_limit_num_results");
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(limit_num_results_spin), (double)pref.config->num_results);
     gtk_widget_set_sensitive(limit_num_results_spin, pref.config->limit_results);
-    g_signal_connect(limit_num_results_button,
-                     "toggled",
-                     G_CALLBACK(limit_num_results_toggled),
-                     limit_num_results_spin);
+    g_signal_connect(limit_num_results_button, "toggled", G_CALLBACK(on_toggle_set_sensitive), limit_num_results_spin);
 
     // Database page
     GtkToggleButton *update_db_at_start_button = toggle_button_get(builder,
                                                                    "update_db_at_start_button",
                                                                    "help_update_database_on_start",
                                                                    pref.config->update_database_on_launch);
+
+    GtkToggleButton *auto_update_checkbox = toggle_button_get(builder,
+                                                              "auto_update_checkbox",
+                                                              "help_update_database_every",
+                                                              pref.config->update_database_every);
+
+    GtkBox *auto_update_box = GTK_BOX(builder_init_widget(builder, "auto_update_box", "help_update_database_every"));
+    gtk_widget_set_sensitive(GTK_WIDGET(auto_update_box), pref.config->update_database_every);
+    g_signal_connect(auto_update_checkbox, "toggled", G_CALLBACK(on_toggle_set_sensitive), auto_update_box);
+
+    GtkWidget *auto_update_hours_spin_button =
+        builder_init_widget(builder, "auto_update_hours_spin_button", "help_update_database_every");
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(auto_update_hours_spin_button),
+                              (double)pref.config->update_database_every_hours);
+
+    GtkWidget *auto_update_minutes_spin_button =
+        builder_init_widget(builder, "auto_update_minutes_spin_button", "help_update_database_every");
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(auto_update_minutes_spin_button),
+                              (double)pref.config->update_database_every_minutes);
+
+    g_signal_connect(GTK_SPIN_BUTTON(auto_update_hours_spin_button),
+                     "value-changed",
+                     G_CALLBACK(on_auto_update_hours_spin_button_changed),
+                     auto_update_minutes_spin_button);
+    g_signal_connect(GTK_SPIN_BUTTON(auto_update_minutes_spin_button),
+                     "value-changed",
+                     G_CALLBACK(on_auto_update_minutes_spin_button_changed),
+                     auto_update_hours_spin_button);
 
     // Dialog page
     GtkToggleButton *show_dialog_failed_opening = toggle_button_get(builder,
@@ -371,6 +418,11 @@ preferences_ui_launch(FsearchConfig *config,
         pref.config->enable_list_tooltips = gtk_toggle_button_get_active(show_tooltips_button);
         pref.config->restore_window_size = gtk_toggle_button_get_active(restore_win_size_button);
         pref.config->update_database_on_launch = gtk_toggle_button_get_active(update_db_at_start_button);
+        pref.config->update_database_every = gtk_toggle_button_get_active(auto_update_checkbox);
+        pref.config->update_database_every_hours =
+            gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(auto_update_hours_spin_button));
+        pref.config->update_database_every_minutes =
+            gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(auto_update_minutes_spin_button));
         pref.config->show_base_2_units = gtk_toggle_button_get_active(show_base_2_units);
         pref.config->action_after_file_open = gtk_combo_box_get_active(action_after_file_open);
         pref.config->action_after_file_open_keyboard = gtk_toggle_button_get_active(action_after_file_open_keyboard);

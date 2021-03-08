@@ -56,6 +56,7 @@ struct _FsearchApplication {
     bool new_window;
 
     FsearchDatabaseState db_state;
+    guint db_timeout_id;
 
     bool db_thread_cancel;
     int num_database_update_active;
@@ -85,6 +86,32 @@ fsearch_action_enable(const char *action_name);
 
 static void
 fsearch_action_disable(const char *action_name);
+
+gboolean
+db_auto_update_cb(gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    trace("[database] scheduled update started\n");
+    g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
+    return G_SOURCE_CONTINUE;
+}
+
+static void
+fsearch_application_db_auto_update(FsearchApplication *fsearch) {
+    if (fsearch->db_timeout_id != 0) {
+        g_source_remove(fsearch->db_timeout_id);
+        fsearch->db_timeout_id = 0;
+    }
+    if (fsearch->config->update_database_every) {
+        guint seconds =
+            fsearch->config->update_database_every_hours * 3600 + fsearch->config->update_database_every_minutes * 60;
+        if (seconds < 60) {
+            seconds = 60;
+        }
+
+        trace("[database] update every %d seconds\n", seconds);
+        fsearch->db_timeout_id = g_timeout_add_seconds(seconds, db_auto_update_cb, fsearch);
+    }
+}
 
 GList *
 fsearch_application_get_filters(FsearchApplication *fsearch) {
@@ -391,6 +418,8 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
     app->config = new_config;
     config_save(app->config);
 
+    fsearch_application_db_auto_update(app);
+
     if (update_db) {
         fsearch_database_update(true);
     }
@@ -577,6 +606,8 @@ fsearch_application_activate(GApplication *app) {
     }
 
     g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", NULL);
+
+    fsearch_application_db_auto_update(self);
 
     if (!self->activated) {
         // first full application start

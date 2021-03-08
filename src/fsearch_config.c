@@ -246,6 +246,11 @@ config_load(FsearchConfig *config) {
         // Database
         config->update_database_on_launch =
             config_load_boolean(key_file, "Database", "update_database_on_launch", true);
+        config->update_database_every = config_load_boolean(key_file, "Database", "update_database_every", false);
+        config->update_database_every_hours =
+            config_load_integer(key_file, "Database", "update_database_every_hours", 0);
+        config->update_database_every_minutes =
+            config_load_integer(key_file, "Database", "update_database_every_minutes", 15);
         config->exclude_hidden_items =
             config_load_boolean(key_file, "Database", "exclude_hidden_files_and_folders", false);
         config->follow_symlinks = config_load_boolean(key_file, "Database", "follow_symbolic_links", false);
@@ -338,6 +343,9 @@ config_load_default(FsearchConfig *config) {
 
     // Database
     config->update_database_on_launch = true;
+    config->update_database_every = false;
+    config->update_database_every_hours = 0;
+    config->update_database_every_minutes = 15;
     config->exclude_hidden_items = false;
     config->follow_symlinks = false;
 
@@ -487,6 +495,12 @@ config_save(FsearchConfig *config) {
 
     // Database
     g_key_file_set_boolean(key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
+    g_key_file_set_boolean(key_file, "Database", "update_database_every", config->update_database_every);
+    g_key_file_set_integer(key_file, "Database", "update_database_every_hours", config->update_database_every_hours);
+    g_key_file_set_integer(key_file,
+                           "Database",
+                           "update_database_every_minutes",
+                           config->update_database_every_minutes);
     g_key_file_set_boolean(key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
     g_key_file_set_boolean(key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
 
