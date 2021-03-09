@@ -511,8 +511,14 @@ update_model_cb(gpointer user_data) {
     }
 
     apply_model_to_list(win);
+
     gchar sb_text[100] = "";
-    snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
+    if (config->limit_results && num_results == config->num_results) {
+        snprintf(sb_text, sizeof(sb_text), _("≥%'d Items"), num_results);
+    }
+    else {
+        snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
+    }
     statusbar_update(win, sb_text);
 
     if (text[0] == '\0' && config->hide_results_on_empty_search) {
