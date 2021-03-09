@@ -455,6 +455,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <property name="label" translatable="yes">Index:</property>
                         <property name="single-line-mode">True</property>
                         <property name="track-visited-links">False</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -469,6 +472,9 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                         <property name="single-line-mode">True</property>
                         <property name="track-visited-links">False</property>
                         <property name="xalign">0</property>
+                        <style>
+                          <class name="dim-label"/>
+                        </style>
                       </object>
                       <packing>
                         <property name="expand">False</property>
