@@ -69,8 +69,12 @@ on_column_include_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer
 }
 
 static void
-column_toggle_append(
-    GtkTreeView *view, GtkTreeModel *model, const char *name, int id, GCallback cb, gpointer user_data) {
+column_toggle_append(GtkTreeView *view,
+                     GtkTreeModel *model,
+                     const char *name,
+                     int id,
+                     GCallback cb,
+                     gpointer user_data) {
     GtkCellRenderer *renderer = gtk_cell_renderer_toggle_new();
     g_object_set(renderer, "xalign", 0.0, NULL);
 
