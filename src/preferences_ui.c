@@ -247,6 +247,8 @@ action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
 
 static void
 preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferences *pref, FsearchPreferencesPage page) {
+    FsearchConfig *new_config = pref->config;
+
     ui->builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/preferences.ui");
     ui->dialog = GTK_WIDGET(gtk_builder_get_object(ui->builder, "FsearchPreferencesWindow"));
     gtk_window_set_transient_for(GTK_WINDOW(ui->dialog), ui->window);
@@ -262,64 +264,60 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferences *pref, F
 
     // Interface page
     ui->enable_dark_theme_button =
-        toggle_button_get(ui->builder, "enable_dark_theme_button", "help_dark_theme", pref->config->enable_dark_theme);
+        toggle_button_get(ui->builder, "enable_dark_theme_button", "help_dark_theme", new_config->enable_dark_theme);
 
     ui->show_menubar_button =
-        toggle_button_get(ui->builder, "show_menubar_button", "help_csd", !pref->config->show_menubar);
+        toggle_button_get(ui->builder, "show_menubar_button", "help_csd", !new_config->show_menubar);
 
-    ui->show_tooltips_button = toggle_button_get(ui->builder,
-                                                 "show_tooltips_button",
-                                                 "help_show_tooltips",
-                                                 pref->config->enable_list_tooltips);
+    ui->show_tooltips_button =
+        toggle_button_get(ui->builder, "show_tooltips_button", "help_show_tooltips", new_config->enable_list_tooltips);
 
-    ui->restore_win_size_button = toggle_button_get(ui->builder,
-                                                    "restore_win_size_button",
-                                                    "help_window_size",
-                                                    pref->config->restore_window_size);
+    ui->restore_win_size_button =
+        toggle_button_get(ui->builder, "restore_win_size_button", "help_window_size", new_config->restore_window_size);
 
     ui->restore_sort_order_button = toggle_button_get(ui->builder,
                                                       "restore_sort_order_button",
                                                       "help_restore_sort_order",
-                                                      pref->config->restore_sort_order);
+                                                      new_config->restore_sort_order);
 
     ui->restore_column_config_button = toggle_button_get(ui->builder,
                                                          "restore_column_config_button",
                                                          "help_restore_column_config",
-                                                         pref->config->restore_column_config);
+                                                         new_config->restore_column_config);
 
     ui->double_click_path_button = toggle_button_get(ui->builder,
                                                      "double_click_path_button",
                                                      "help_double_click_path",
-                                                     pref->config->double_click_path);
+                                                     new_config->double_click_path);
 
     ui->single_click_open_button = toggle_button_get(ui->builder,
                                                      "single_click_open_button",
                                                      "help_single_click_open",
-                                                     pref->config->single_click_open);
+                                                     new_config->single_click_open);
 
     ui->show_icons_button =
-        toggle_button_get(ui->builder, "show_icons_button", "help_show_icons", pref->config->show_listview_icons);
+        toggle_button_get(ui->builder, "show_icons_button", "help_show_icons", new_config->show_listview_icons);
 
     ui->highlight_search_terms = toggle_button_get(ui->builder,
                                                    "highlight_search_terms",
                                                    "help_highlight_search_terms",
-                                                   pref->config->highlight_search_terms);
+                                                   new_config->highlight_search_terms);
 
     ui->show_base_2_units =
-        toggle_button_get(ui->builder, "show_base_2_units", "help_units", pref->config->show_base_2_units);
+        toggle_button_get(ui->builder, "show_base_2_units", "help_units", new_config->show_base_2_units);
 
     ui->action_after_file_open_box =
         GTK_BOX(builder_init_widget(ui->builder, "action_after_file_open_box", "help_action_after_open"));
     ui->action_after_file_open =
         GTK_COMBO_BOX(builder_init_widget(ui->builder, "action_after_file_open", "help_action_after_open"));
-    gtk_combo_box_set_active(ui->action_after_file_open, pref->config->action_after_file_open);
+    gtk_combo_box_set_active(ui->action_after_file_open, new_config->action_after_file_open);
 
     g_signal_connect(ui->action_after_file_open,
                      "changed",
                      G_CALLBACK(action_after_file_open_changed),
                      ui->action_after_file_open_box);
 
-    if (pref->config->action_after_file_open != ACTION_AFTER_OPEN_NOTHING) {
+    if (new_config->action_after_file_open != ACTION_AFTER_OPEN_NOTHING) {
         gtk_widget_set_sensitive(GTK_WIDGET(ui->action_after_file_open_box), TRUE);
     }
     else {
@@ -329,45 +327,41 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferences *pref, F
     ui->action_after_file_open_keyboard = toggle_button_get(ui->builder,
                                                             "action_after_file_open_keyboard",
                                                             "help_action_after_open",
-                                                            pref->config->action_after_file_open_keyboard);
+                                                            new_config->action_after_file_open_keyboard);
 
     ui->action_after_file_open_mouse = toggle_button_get(ui->builder,
                                                          "action_after_file_open_mouse",
                                                          "help_action_after_open",
-                                                         pref->config->action_after_file_open_mouse);
+                                                         new_config->action_after_file_open_mouse);
 
     ui->show_indexing_status = toggle_button_get(ui->builder,
                                                  "show_indexing_status_button",
                                                  "help_show_indexing_status",
-                                                 pref->config->show_indexing_status);
+                                                 new_config->show_indexing_status);
 
     // Search page
-    ui->auto_search_in_path_button = toggle_button_get(ui->builder,
-                                                       "auto_search_in_path_button",
-                                                       "help_auto_path",
-                                                       pref->config->auto_search_in_path);
+    ui->auto_search_in_path_button =
+        toggle_button_get(ui->builder, "auto_search_in_path_button", "help_auto_path", new_config->auto_search_in_path);
 
     ui->auto_match_case_button =
-        toggle_button_get(ui->builder, "auto_match_case_button", "help_auto_case", pref->config->auto_match_case);
+        toggle_button_get(ui->builder, "auto_match_case_button", "help_auto_case", new_config->auto_match_case);
 
     ui->search_as_you_type_button = toggle_button_get(ui->builder,
                                                       "search_as_you_type_button",
                                                       "help_search_as_you_type",
-                                                      pref->config->search_as_you_type);
+                                                      new_config->search_as_you_type);
 
     ui->hide_results_button = toggle_button_get(ui->builder,
                                                 "hide_results_button",
                                                 "help_hide_results",
-                                                pref->config->hide_results_on_empty_search);
+                                                new_config->hide_results_on_empty_search);
 
-    ui->limit_num_results_button = toggle_button_get(ui->builder,
-                                                     "limit_num_results_button",
-                                                     "help_limit_num_results",
-                                                     pref->config->limit_results);
+    ui->limit_num_results_button =
+        toggle_button_get(ui->builder, "limit_num_results_button", "help_limit_num_results", new_config->limit_results);
 
     ui->limit_num_results_spin = builder_init_widget(ui->builder, "limit_num_results_spin", "help_limit_num_results");
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->limit_num_results_spin), (double)pref->config->num_results);
-    gtk_widget_set_sensitive(ui->limit_num_results_spin, pref->config->limit_results);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->limit_num_results_spin), (double)new_config->num_results);
+    gtk_widget_set_sensitive(ui->limit_num_results_spin, new_config->limit_results);
     g_signal_connect(ui->limit_num_results_button,
                      "toggled",
                      G_CALLBACK(on_toggle_set_sensitive),
@@ -377,26 +371,26 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferences *pref, F
     ui->update_db_at_start_button = toggle_button_get(ui->builder,
                                                       "update_db_at_start_button",
                                                       "help_update_database_on_start",
-                                                      pref->config->update_database_on_launch);
+                                                      new_config->update_database_on_launch);
 
     ui->auto_update_checkbox = toggle_button_get(ui->builder,
                                                  "auto_update_checkbox",
                                                  "help_update_database_every",
-                                                 pref->config->update_database_every);
+                                                 new_config->update_database_every);
 
     ui->auto_update_box = GTK_BOX(builder_init_widget(ui->builder, "auto_update_box", "help_update_database_every"));
-    gtk_widget_set_sensitive(GTK_WIDGET(ui->auto_update_box), pref->config->update_database_every);
+    gtk_widget_set_sensitive(GTK_WIDGET(ui->auto_update_box), new_config->update_database_every);
     g_signal_connect(ui->auto_update_checkbox, "toggled", G_CALLBACK(on_toggle_set_sensitive), ui->auto_update_box);
 
     ui->auto_update_hours_spin_button =
         builder_init_widget(ui->builder, "auto_update_hours_spin_button", "help_update_database_every");
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button),
-                              (double)pref->config->update_database_every_hours);
+                              (double)new_config->update_database_every_hours);
 
     ui->auto_update_minutes_spin_button =
         builder_init_widget(ui->builder, "auto_update_minutes_spin_button", "help_update_database_every");
     gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->auto_update_minutes_spin_button),
-                              (double)pref->config->update_database_every_minutes);
+                              (double)new_config->update_database_every_minutes);
 
     g_signal_connect(GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button),
                      "value-changed",
@@ -411,7 +405,7 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferences *pref, F
     ui->show_dialog_failed_opening = toggle_button_get(ui->builder,
                                                        "show_dialog_failed_opening",
                                                        "help_warn_failed_open",
-                                                       pref->config->show_dialog_failed_opening);
+                                                       new_config->show_dialog_failed_opening);
 
     // Include page
     ui->include_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "include_list", "help_include_list"));
@@ -445,70 +439,71 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferences *pref, F
     ui->exclude_hidden_items_button = toggle_button_get(ui->builder,
                                                         "exclude_hidden_items_button",
                                                         "help_exclude_hidden",
-                                                        pref->config->exclude_hidden_items);
+                                                        new_config->exclude_hidden_items);
 
     ui->exclude_files_entry = GTK_ENTRY(builder_init_widget(ui->builder, "exclude_files_entry", "help_exclude_files"));
     ui->exclude_files_str = NULL;
-    if (pref->config->exclude_files) {
-        ui->exclude_files_str = g_strjoinv(";", pref->config->exclude_files);
+    if (new_config->exclude_files) {
+        ui->exclude_files_str = g_strjoinv(";", new_config->exclude_files);
         gtk_entry_set_text(ui->exclude_files_entry, ui->exclude_files_str);
     }
 }
 
 static void
-preferences_ui_run(FsearchPreferencesInterface *ui, FsearchPreferences *pref, FsearchConfig *config) {
+preferences_ui_run(FsearchPreferencesInterface *ui, FsearchPreferences *pref, FsearchConfig *old_config) {
     gint response = gtk_dialog_run(GTK_DIALOG(ui->dialog));
     if (response != GTK_RESPONSE_OK) {
         config_free(pref->config);
         pref->config = NULL;
         return;
     }
-    pref->config->search_as_you_type = gtk_toggle_button_get_active(ui->search_as_you_type_button);
-    pref->config->enable_dark_theme = gtk_toggle_button_get_active(ui->enable_dark_theme_button);
-    pref->config->show_menubar = !gtk_toggle_button_get_active(ui->show_menubar_button);
-    pref->config->restore_column_config = gtk_toggle_button_get_active(ui->restore_column_config_button);
-    pref->config->restore_sort_order = gtk_toggle_button_get_active(ui->restore_sort_order_button);
-    pref->config->double_click_path = gtk_toggle_button_get_active(ui->double_click_path_button);
-    pref->config->enable_list_tooltips = gtk_toggle_button_get_active(ui->show_tooltips_button);
-    pref->config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
-    pref->config->update_database_on_launch = gtk_toggle_button_get_active(ui->update_db_at_start_button);
-    pref->config->update_database_every = gtk_toggle_button_get_active(ui->auto_update_checkbox);
-    pref->config->update_database_every_hours =
+    FsearchConfig *new_config = pref->config;
+    new_config->search_as_you_type = gtk_toggle_button_get_active(ui->search_as_you_type_button);
+    new_config->enable_dark_theme = gtk_toggle_button_get_active(ui->enable_dark_theme_button);
+    new_config->show_menubar = !gtk_toggle_button_get_active(ui->show_menubar_button);
+    new_config->restore_column_config = gtk_toggle_button_get_active(ui->restore_column_config_button);
+    new_config->restore_sort_order = gtk_toggle_button_get_active(ui->restore_sort_order_button);
+    new_config->double_click_path = gtk_toggle_button_get_active(ui->double_click_path_button);
+    new_config->enable_list_tooltips = gtk_toggle_button_get_active(ui->show_tooltips_button);
+    new_config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
+    new_config->update_database_on_launch = gtk_toggle_button_get_active(ui->update_db_at_start_button);
+    new_config->update_database_every = gtk_toggle_button_get_active(ui->auto_update_checkbox);
+    new_config->update_database_every_hours =
         gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button));
-    pref->config->update_database_every_minutes =
+    new_config->update_database_every_minutes =
         gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_minutes_spin_button));
-    pref->config->show_base_2_units = gtk_toggle_button_get_active(ui->show_base_2_units);
-    pref->config->action_after_file_open = gtk_combo_box_get_active(ui->action_after_file_open);
-    pref->config->action_after_file_open_keyboard = gtk_toggle_button_get_active(ui->action_after_file_open_keyboard);
-    pref->config->action_after_file_open_mouse = gtk_toggle_button_get_active(ui->action_after_file_open_mouse);
-    pref->config->show_indexing_status = gtk_toggle_button_get_active(ui->show_indexing_status);
+    new_config->show_base_2_units = gtk_toggle_button_get_active(ui->show_base_2_units);
+    new_config->action_after_file_open = gtk_combo_box_get_active(ui->action_after_file_open);
+    new_config->action_after_file_open_keyboard = gtk_toggle_button_get_active(ui->action_after_file_open_keyboard);
+    new_config->action_after_file_open_mouse = gtk_toggle_button_get_active(ui->action_after_file_open_mouse);
+    new_config->show_indexing_status = gtk_toggle_button_get_active(ui->show_indexing_status);
     // Dialogs
-    pref->config->show_dialog_failed_opening = gtk_toggle_button_get_active(ui->show_dialog_failed_opening);
+    new_config->show_dialog_failed_opening = gtk_toggle_button_get_active(ui->show_dialog_failed_opening);
 
-    pref->config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
-    pref->config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
-    pref->config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
-    pref->config->limit_results = gtk_toggle_button_get_active(ui->limit_num_results_button);
-    pref->config->num_results = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->limit_num_results_spin));
-    pref->config->highlight_search_terms = gtk_toggle_button_get_active(ui->highlight_search_terms);
-    pref->config->single_click_open = gtk_toggle_button_get_active(ui->single_click_open_button);
-    pref->config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
-    pref->config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
+    new_config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
+    new_config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
+    new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
+    new_config->limit_results = gtk_toggle_button_get_active(ui->limit_num_results_button);
+    new_config->num_results = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->limit_num_results_spin));
+    new_config->highlight_search_terms = gtk_toggle_button_get_active(ui->highlight_search_terms);
+    new_config->single_click_open = gtk_toggle_button_get_active(ui->single_click_open_button);
+    new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
+    new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
 
-    if (config->auto_search_in_path != pref->config->auto_search_in_path ||
-        config->auto_match_case != pref->config->auto_match_case ||
-        config->hide_results_on_empty_search != pref->config->hide_results_on_empty_search ||
-        config->limit_results != pref->config->limit_results || config->num_results != pref->config->num_results) {
+    if (old_config->auto_search_in_path != new_config->auto_search_in_path ||
+        old_config->auto_match_case != new_config->auto_match_case ||
+        old_config->hide_results_on_empty_search != new_config->hide_results_on_empty_search ||
+        old_config->limit_results != new_config->limit_results || old_config->num_results != new_config->num_results) {
         pref->update_search = true;
     }
 
-    if (config->highlight_search_terms != pref->config->highlight_search_terms ||
-        config->single_click_open != pref->config->single_click_open ||
-        config->show_listview_icons != pref->config->show_listview_icons) {
+    if (old_config->highlight_search_terms != new_config->highlight_search_terms ||
+        old_config->single_click_open != new_config->single_click_open ||
+        old_config->show_listview_icons != new_config->show_listview_icons) {
         pref->update_list = true;
     }
 
-    if (config->exclude_hidden_items != pref->config->exclude_hidden_items) {
+    if (old_config->exclude_hidden_items != new_config->exclude_hidden_items) {
         pref->update_db = true;
     }
 
@@ -517,28 +512,25 @@ preferences_ui_run(FsearchPreferencesInterface *ui, FsearchPreferences *pref, Fs
         pref->update_db = true;
     }
 
-    g_object_set(gtk_settings_get_default(),
-                 "gtk-application-prefer-dark-theme",
-                 pref->config->enable_dark_theme,
-                 NULL);
+    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
 
     if (pref->update_db) {
-        if (pref->config->exclude_files) {
-            g_strfreev(pref->config->exclude_files);
-            pref->config->exclude_files = NULL;
+        if (new_config->exclude_files) {
+            g_strfreev(new_config->exclude_files);
+            new_config->exclude_files = NULL;
         }
-        pref->config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
+        new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
     }
 
-    if (pref->config->locations) {
-        g_list_free_full(pref->config->locations, (GDestroyNotify)fsearch_include_path_free);
+    if (new_config->locations) {
+        g_list_free_full(new_config->locations, (GDestroyNotify)fsearch_include_path_free);
     }
-    pref->config->locations = pref_include_treeview_data_get(ui->include_list);
+    new_config->locations = pref_include_treeview_data_get(ui->include_list);
 
-    if (pref->config->exclude_locations) {
-        g_list_free_full(pref->config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
+    if (new_config->exclude_locations) {
+        g_list_free_full(new_config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
     }
-    pref->config->exclude_locations = pref_exclude_treeview_data_get(ui->exclude_list);
+    new_config->exclude_locations = pref_exclude_treeview_data_get(ui->exclude_list);
 }
 
 static void
