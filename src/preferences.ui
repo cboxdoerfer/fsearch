@@ -72,7 +72,7 @@
           <packing>
             <property name="expand">False</property>
             <property name="fill">False</property>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
         <child>
@@ -1106,6 +1106,7 @@
           <object class="GtkExpander" id="help_expander">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="resize-toplevel">True</property>
             <child>
               <object class="GtkStack" id="help_stack">
                 <property name="visible">True</property>

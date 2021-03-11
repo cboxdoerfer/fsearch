@@ -185,16 +185,6 @@ action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
         gtk_widget_set_sensitive(GTK_WIDGET(user_data), FALSE);
     }
 }
-void
-on_help_expander_activate(GtkExpander *expander, gpointer user_data) {
-    GtkWindow *win = GTK_WINDOW(user_data);
-    if (!win) {
-        return;
-    }
-    // this obeys geometry constraints, so by requesting width/height of 1
-    // the window actually get resized to its preferred size
-    gtk_window_resize(win, 1, 1);
-}
 
 FsearchConfig *
 preferences_ui_launch(FsearchConfig *config,
@@ -217,8 +207,6 @@ preferences_ui_launch(FsearchConfig *config,
 
     help_stack = GTK_WIDGET(gtk_builder_get_object(builder, "help_stack"));
     help_description = GTK_WIDGET(gtk_builder_get_object(builder, "help_help"));
-    GtkWidget *help_expander = GTK_WIDGET(gtk_builder_get_object(builder, "help_expander"));
-    g_signal_connect(help_expander, "activate", G_CALLBACK(on_help_expander_activate), dialog);
 
     // Interface page
     GtkToggleButton *enable_dark_theme_button =
