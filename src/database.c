@@ -80,7 +80,7 @@ static FsearchDatabaseNode *
 db_location_get_for_path(FsearchDatabase *db, const char *path);
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*callback)(const char *));
+db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *));
 
 static FsearchDatabaseNode *
 db_location_new(void);
@@ -416,7 +416,7 @@ typedef struct DatabaseWalkContext {
     GString *path;
     GTimer *timer;
     bool *cancel;
-    void (*callback)(const char *);
+    void (*status_cb)(const char *);
     bool exclude_hidden;
 } DatabaseWalkContext;
 
@@ -440,8 +440,8 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
 
     double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
     if (elapsed_seconds > 0.1) {
-        if (walk_context->callback) {
-            walk_context->callback(path->str);
+        if (walk_context->status_cb) {
+            walk_context->status_cb(path->str);
         }
         g_timer_start(walk_context->timer);
     }
@@ -508,7 +508,7 @@ db_location_free(FsearchDatabaseNode *location) {
 }
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*callback)(const char *)) {
+db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *)) {
     const char *root_name = NULL;
     if (!strcmp(dname, "/")) {
         root_name = "";
@@ -536,7 +536,7 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
         .path = path,
         .timer = timer,
         .cancel = cancel,
-        .callback = callback,
+        .status_cb = status_cb,
         .exclude_hidden = db->exclude_hidden,
     };
 
@@ -737,11 +737,11 @@ db_location_load(FsearchDatabase *db, const char *location_name) {
 }
 
 static bool
-db_location_add(FsearchDatabase *db, const char *location_name, bool *cancel, void (*callback)(const char *)) {
+db_location_add(FsearchDatabase *db, const char *location_name, bool *cancel, void (*status_cb)(const char *)) {
     assert(db != NULL);
     trace("[database_scan] scan location: %s\n", location_name);
 
-    FsearchDatabaseNode *location = db_location_build_tree(db, location_name, cancel, callback);
+    FsearchDatabaseNode *location = db_location_build_tree(db, location_name, cancel, status_cb);
 
     if (location) {
         trace("[database_scan] %s scanned with %d entries\n", location_name, location->num_items);
@@ -781,7 +781,7 @@ db_locations_get_num_entries(FsearchDatabase *db) {
 }
 
 static void
-db_build_initial_entries_list(FsearchDatabase *db) {
+db_build_initial_entries_list(FsearchDatabase *db, void (*status_cb)(const char *)) {
     assert(db != NULL);
     assert(db->num_entries >= 0);
 
@@ -790,10 +790,16 @@ db_build_initial_entries_list(FsearchDatabase *db) {
     trace("[database_build_list] create list for %d entries\n", num_entries);
     db->entries = darray_new(num_entries);
 
+    if (status_cb) {
+        status_cb(_("Building lookup list…"));
+    }
     GList *locations = db->locations;
     temp_index = 0;
     for (GList *l = locations; l != NULL; l = l->next) {
         db_list_add_location(db, l->data);
+    }
+    if (status_cb) {
+        status_cb(_("Sorting…"));
     }
     db_sort(db);
     db_update_sort_index(db);
@@ -978,7 +984,7 @@ sort_by_name(const void *a, const void *b) {
 //}
 
 bool
-db_load_from_file(FsearchDatabase *db, const char *path, void (*callback)(const char *)) {
+db_load_from_file(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
     assert(db != NULL);
 
     bool ret = false;
@@ -996,7 +1002,7 @@ db_load_from_file(FsearchDatabase *db, const char *path, void (*callback)(const 
 }
 
 bool
-db_scan(FsearchDatabase *db, bool *cancel, void (*callback)(const char *)) {
+db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *)) {
     assert(db != NULL);
 
     bool ret = false;
@@ -1009,7 +1015,7 @@ db_scan(FsearchDatabase *db, bool *cancel, void (*callback)(const char *)) {
         if (!fs_path->enabled) {
             continue;
         }
-        if (fs_path->update && db_location_add(db, fs_path->path, cancel, callback)) {
+        if (fs_path->update && db_location_add(db, fs_path->path, cancel, status_cb)) {
             ret = true;
             init_list = true;
         }
@@ -1019,10 +1025,7 @@ db_scan(FsearchDatabase *db, bool *cancel, void (*callback)(const char *)) {
     }
     if (ret) {
         if (init_list) {
-            if (callback) {
-                callback(_("Sorting..."));
-            }
-            db_build_initial_entries_list(db);
+            db_build_initial_entries_list(db, status_cb);
         }
         else {
             db_update_entries_list(db);

@@ -35,10 +35,10 @@ void
 db_build_data_dir(char *path, size_t len);
 
 bool
-db_load_from_file(FsearchDatabase *db, const char *path, void (*callback)(const char *));
+db_load_from_file(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
 
 bool
-db_scan(FsearchDatabase *db, bool *cancel, void (*callback)(const char *));
+db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *));
 
 void
 db_ref(FsearchDatabase *db);
