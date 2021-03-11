@@ -1621,17 +1621,19 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Periodically update database at a specific time interval:&lt;/b&gt;
 
-If enabled, the database will be updated periodically with the given time interval.</property>
+If enabled and as long as FSearch is running, the database will be updated periodically with the given time interval.
+
+If you want to update the database in the background, even when FSearch is not running, you should use tools like cron or systemd timers to periodically trigger the update with:
+
+&lt;i&gt;&lt;tt&gt;fsearch --update-database&lt;/tt&gt;&lt;/i&gt;</property>
                     <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
                   </object>
                   <packing>
                     <property name="name">page29</property>
                     <property name="title">page29</property>
                     <property name="position">29</property>
                   </packing>
-                </child>
-                <child>
-                  <placeholder/>
                 </child>
               </object>
             </child>
