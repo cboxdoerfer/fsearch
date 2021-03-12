@@ -95,8 +95,6 @@ struct _FsearchApplicationWindow {
     int32_t num_searches_active;
 
     guint statusbar_timeout_id;
-
-    GMutex mutex;
 };
 
 typedef enum _FsearchOverlay {
@@ -361,7 +359,6 @@ fsearch_application_window_constructed(GObject *object) {
     self->num_searches_active = 0;
     self->search = NULL;
     self->search = db_search_new(fsearch_application_get_thread_pool(app));
-    g_mutex_init(&self->mutex);
     fsearch_window_apply_config(self);
 
     fsearch_apply_menubar_config(self);
@@ -391,7 +388,6 @@ fsearch_application_window_finalize(GObject *object) {
         db_search_free(self->search);
         self->search = NULL;
     }
-    g_mutex_clear(&self->mutex);
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
 }
