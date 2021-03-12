@@ -133,8 +133,48 @@ on_remove_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_tree_selection_selected_foreach(sel, pref_treeview_row_remove, NULL);
 }
 
-static char *
-run_file_chooser_dialog(GtkButton *button) {
+typedef struct {
+    GtkTreeModel *model;
+    void (*add_path_cb)(GtkTreeModel *, const char *);
+} FsearchPreferencesFileChooserContext;
+
+#if !GTK_CHECK_VERSION(3, 20, 0)
+static void
+on_file_chooser_dialog_response(GtkFileChooserDialog *dialog, GtkResponseType response, gpointer user_data) {
+#else
+static void
+on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType response, gpointer user_data) {
+#endif
+    FsearchPreferencesFileChooserContext *ctx = user_data;
+    char *path = NULL;
+    if (response == GTK_RESPONSE_ACCEPT) {
+        GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
+        char *uri = gtk_file_chooser_get_uri(chooser);
+        path = g_filename_from_uri(uri, NULL, NULL);
+        g_free(uri);
+        uri = NULL;
+
+        if (path) {
+            if (ctx->add_path_cb) {
+                ctx->add_path_cb(ctx->model, path);
+            }
+            g_free(path);
+            path = NULL;
+        }
+    }
+
+#if !GTK_CHECK_VERSION(3, 20, 0)
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+#else
+    g_object_unref(dialog);
+#endif
+
+    g_slice_free(FsearchPreferencesFileChooserContext, ctx);
+    ctx = NULL;
+}
+
+static void
+run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext *ctx) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
 
     GtkWidget *window = gtk_widget_get_toplevel(GTK_WIDGET(button));
@@ -149,43 +189,37 @@ run_file_chooser_dialog(GtkButton *button) {
                                                     GTK_RESPONSE_ACCEPT,
                                                     NULL);
 
-    GtkResponseType res = gtk_dialog_run(GTK_DIALOG(dialog));
+    g_signal_connect(dialog, "response", G_CALLBACK(on_file_chooser_dialog_response), ctx);
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(window));
+    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+    gtk_widget_show(dialog);
 #else
     GtkFileChooserNative *dialog =
         gtk_file_chooser_native_new(_("Select folder"), GTK_WINDOW(window), action, _("_Select"), _("_Cancel"));
 
-    GtkResponseType res = gtk_native_dialog_run(GTK_NATIVE_DIALOG(dialog));
+    g_signal_connect(dialog, "response", G_CALLBACK(on_file_chooser_native_dialog_response), ctx);
+    gtk_native_dialog_set_transient_for(GTK_NATIVE_DIALOG(dialog), GTK_WINDOW(window));
+    gtk_native_dialog_set_modal(GTK_NATIVE_DIALOG(dialog), true);
+    gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
 #endif
-    char *path = NULL;
-    if (res == GTK_RESPONSE_ACCEPT) {
-        GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-        char *uri = gtk_file_chooser_get_uri(chooser);
-        path = g_filename_from_uri(uri, NULL, NULL);
-        g_free(uri);
-    }
-
-    g_object_unref(dialog);
-    return path;
 }
 
 static void
 on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
     GtkTreeModel *model = user_data;
-    char *path = run_file_chooser_dialog(button);
-    if (!path) {
-        return;
-    }
-    pref_exclude_treeview_row_add(model, path);
+    FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
+    ctx->model = model;
+    ctx->add_path_cb = pref_exclude_treeview_row_add;
+    run_file_chooser_dialog(button, ctx);
 }
 
 static void
 on_include_add_button_clicked(GtkButton *button, gpointer user_data) {
     GtkTreeModel *model = user_data;
-    char *path = run_file_chooser_dialog(button);
-    if (!path) {
-        return;
-    }
-    pref_include_treeview_row_add(model, path);
+    FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
+    ctx->model = model;
+    ctx->add_path_cb = pref_include_treeview_row_add;
+    run_file_chooser_dialog(button, ctx);
 }
 
 static void
