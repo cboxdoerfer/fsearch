@@ -14,13 +14,14 @@ void
 pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer userdata);
 
 void
-pref_include_treeview_row_add(FsearchPreferencesState *pref, const char *path);
+pref_include_treeview_row_add(GtkTreeModel *model, const char *path);
 
 void
-pref_exclude_treeview_row_add(FsearchPreferencesState *pref, const char *path);
+pref_exclude_treeview_row_add(GtkTreeModel *model, const char *path);
 
-void
-pref_include_treeview_init(GtkTreeView *view, FsearchPreferencesState *pref);
+GtkTreeModel *
+pref_include_treeview_init(GtkTreeView *view, GList *locations);
 
-void
-pref_exclude_treeview_init(GtkTreeView *view, FsearchPreferencesState *pref);
+GtkTreeModel *
+pref_exclude_treeview_init(GtkTreeView *view, GList *locations);
+

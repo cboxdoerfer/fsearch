@@ -73,12 +73,14 @@ typedef struct {
 
     // Include page
     GtkTreeView *include_list;
+    GtkTreeModel *include_model;
     GtkWidget *include_add_button;
     GtkWidget *include_remove_button;
     GtkTreeSelection *sel;
 
     // Exclude model
     GtkTreeView *exclude_list;
+    GtkTreeModel *exclude_model;
     GtkWidget *exclude_add_button;
     GtkWidget *exclude_remove_button;
     GtkTreeSelection *exclude_selection;
@@ -165,22 +167,22 @@ run_file_chooser_dialog(GtkButton *button) {
 
 static void
 on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
-    FsearchPreferencesState *pref = user_data;
+    GtkTreeModel *model = user_data;
     char *path = run_file_chooser_dialog(button);
     if (!path) {
         return;
     }
-    pref_exclude_treeview_row_add(pref, path);
+    pref_exclude_treeview_row_add(model, path);
 }
 
 static void
 on_include_add_button_clicked(GtkButton *button, gpointer user_data) {
-    FsearchPreferencesState *pref = user_data;
+    GtkTreeModel *model = user_data;
     char *path = run_file_chooser_dialog(button);
     if (!path) {
         return;
     }
-    pref_include_treeview_row_add(pref, path);
+    pref_include_treeview_row_add(model, path);
 }
 
 static void
@@ -246,9 +248,7 @@ action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
 }
 
 static void
-preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesState *pref, FsearchPreferencesPage page) {
-    FsearchConfig *new_config = pref->config;
-
+preferences_ui_init(FsearchPreferencesInterface *ui, FsearchConfig *new_config, FsearchPreferencesPage page) {
     ui->builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/preferences.ui");
     ui->dialog = GTK_WIDGET(gtk_builder_get_object(ui->builder, "FsearchPreferencesWindow"));
     gtk_window_set_transient_for(GTK_WINDOW(ui->dialog), ui->window);
@@ -409,10 +409,10 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesState *pr
 
     // Include page
     ui->include_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "include_list", "help_include_list"));
-    pref_include_treeview_init(ui->include_list, pref);
+    ui->include_model = pref_include_treeview_init(ui->include_list, new_config->locations);
 
     ui->include_add_button = builder_init_widget(ui->builder, "include_add_button", "help_include_add");
-    g_signal_connect(ui->include_add_button, "clicked", G_CALLBACK(on_include_add_button_clicked), pref);
+    g_signal_connect(ui->include_add_button, "clicked", G_CALLBACK(on_include_add_button_clicked), ui->include_model);
 
     ui->include_remove_button = builder_init_widget(ui->builder, "include_remove_button", "help_include_remove");
     g_signal_connect(ui->include_remove_button, "clicked", G_CALLBACK(on_remove_button_clicked), ui->include_list);
@@ -422,10 +422,10 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesState *pr
 
     // Exclude model
     ui->exclude_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "exclude_list", "help_exclude_list"));
-    pref_exclude_treeview_init(ui->exclude_list, pref);
+    ui->exclude_model = pref_exclude_treeview_init(ui->exclude_list, new_config->exclude_locations);
 
     ui->exclude_add_button = builder_init_widget(ui->builder, "exclude_add_button", "help_exclude_add");
-    g_signal_connect(ui->exclude_add_button, "clicked", G_CALLBACK(on_exclude_add_button_clicked), pref);
+    g_signal_connect(ui->exclude_add_button, "clicked", G_CALLBACK(on_exclude_add_button_clicked), ui->exclude_model);
 
     ui->exclude_remove_button = builder_init_widget(ui->builder, "exclude_remove_button", "help_exclude_remove");
     g_signal_connect(ui->exclude_remove_button, "clicked", G_CALLBACK(on_remove_button_clicked), ui->exclude_list);
@@ -449,49 +449,14 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesState *pr
     }
 }
 
-static bool
-preferences_ui_list_config_changed(FsearchConfig *old_config, FsearchConfig *new_config) {
-    if (old_config->highlight_search_terms != new_config->highlight_search_terms ||
-        old_config->single_click_open != new_config->single_click_open ||
-        old_config->show_listview_icons != new_config->show_listview_icons) {
-        return true;
-    }
-    return false;
-}
-
-static bool
-preferences_ui_database_config_changed(FsearchConfig *old_config,
-                                       FsearchConfig *new_config,
-                                       FsearchPreferencesInterface *ui) {
-
-    if (old_config->exclude_hidden_items != new_config->exclude_hidden_items ||
-        (ui->exclude_files_str && strcmp(ui->exclude_files_str, gtk_entry_get_text(ui->exclude_files_entry))) ||
-        (!ui->exclude_files_str && strlen(gtk_entry_get_text(ui->exclude_files_entry)) > 0)) {
-        return true;
-    }
-    return false;
-}
-
-static bool
-preferences_ui_search_config_changed(FsearchConfig *old_config, FsearchConfig *new_config) {
-    if (old_config->auto_search_in_path != new_config->auto_search_in_path ||
-        old_config->auto_match_case != new_config->auto_match_case ||
-        old_config->hide_results_on_empty_search != new_config->hide_results_on_empty_search ||
-        old_config->limit_results != new_config->limit_results || old_config->num_results != new_config->num_results) {
-        return true;
-    }
-    return false;
-}
-
-static void
-preferences_ui_run(FsearchPreferencesInterface *ui, FsearchPreferencesState *pref, FsearchConfig *old_config) {
+static FsearchConfig *
+preferences_ui_run(FsearchPreferencesInterface *ui, FsearchConfig *new_config) {
     GtkResponseType response = gtk_dialog_run(GTK_DIALOG(ui->dialog));
     if (response != GTK_RESPONSE_OK) {
-        config_free(pref->config);
-        pref->config = NULL;
-        return;
+        config_free(new_config);
+        return NULL;
     }
-    FsearchConfig *new_config = pref->config;
+
     new_config->search_as_you_type = gtk_toggle_button_get_active(ui->search_as_you_type_button);
     new_config->enable_dark_theme = gtk_toggle_button_get_active(ui->enable_dark_theme_button);
     new_config->show_menubar = !gtk_toggle_button_get_active(ui->show_menubar_button);
@@ -513,7 +478,6 @@ preferences_ui_run(FsearchPreferencesInterface *ui, FsearchPreferencesState *pre
     new_config->show_indexing_status = gtk_toggle_button_get_active(ui->show_indexing_status);
     // Dialogs
     new_config->show_dialog_failed_opening = gtk_toggle_button_get_active(ui->show_dialog_failed_opening);
-
     new_config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
     new_config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
     new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
@@ -524,19 +488,11 @@ preferences_ui_run(FsearchPreferencesInterface *ui, FsearchPreferencesState *pre
     new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
     new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
 
-    pref->update_search = pref->update_search || preferences_ui_search_config_changed(old_config, new_config);
-    pref->update_list = pref->update_list || preferences_ui_list_config_changed(old_config, new_config);
-    pref->update_db = pref->update_db || preferences_ui_database_config_changed(old_config, new_config, ui);
-
-    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
-
-    if (pref->update_db) {
-        if (new_config->exclude_files) {
-            g_strfreev(new_config->exclude_files);
-            new_config->exclude_files = NULL;
-        }
-        new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
+    if (new_config->exclude_files) {
+        g_strfreev(new_config->exclude_files);
+        new_config->exclude_files = NULL;
     }
+    new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
 
     if (new_config->locations) {
         g_list_free_full(new_config->locations, (GDestroyNotify)fsearch_include_path_free);
@@ -547,6 +503,8 @@ preferences_ui_run(FsearchPreferencesInterface *ui, FsearchPreferencesState *pre
         g_list_free_full(new_config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
     }
     new_config->exclude_locations = pref_exclude_treeview_data_get(ui->exclude_list);
+
+    return new_config;
 }
 
 static void
@@ -570,23 +528,18 @@ FsearchConfig *
 preferences_ui_launch(FsearchConfig *config,
                       GtkWindow *window,
                       FsearchPreferencesPage page,
-                      bool *update_db,
-                      bool *update_list,
-                      bool *update_search) {
-    FsearchPreferencesState pref = {};
-    FsearchPreferencesInterface ui = {};
-    pref.config = config_copy(config);
-    ui.window = window;
+                      void (*finsihed_cb)(FsearchConfig *)) {
+    FsearchPreferencesInterface *ui = calloc(1, sizeof(FsearchPreferencesInterface));
+    ui->window = window;
 
-    preferences_ui_init(&ui, &pref, page);
+    preferences_ui_init(ui, config, page);
 
-    preferences_ui_run(&ui, &pref, config);
+    FsearchConfig *new_config = preferences_ui_run(ui, config);
 
-    preferences_ui_cleanup(&ui);
+    preferences_ui_cleanup(ui);
+    free(ui);
+    ui = NULL;
 
-    *update_db = pref.update_db;
-    *update_list = pref.update_list;
-    *update_search = pref.update_search;
-    return pref.config;
+    return new_config;
 }
 

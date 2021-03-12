@@ -29,19 +29,8 @@ typedef enum FsearchPreferencesPage {
 
 } FsearchPreferencesPage;
 
-typedef struct _FsearchPreferencesState {
-    FsearchConfig *config;
-    GtkTreeModel *include_model;
-    GtkTreeModel *exclude_model;
-    bool update_db;
-    bool update_list;
-    bool update_search;
-} FsearchPreferencesState;
-
 FsearchConfig *
-preferences_ui_launch(FsearchConfig *main_config,
+preferences_ui_launch(FsearchConfig *config,
                       GtkWindow *window,
                       FsearchPreferencesPage page,
-                      bool *update_db,
-                      bool *update_list,
-                      bool *update_search);
+                      void (*finsihed_cb)(FsearchConfig *));
