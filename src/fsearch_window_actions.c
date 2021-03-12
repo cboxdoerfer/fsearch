@@ -380,6 +380,13 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
+on_failed_to_open_file_response(GtkDialog *dialig, GtkResponseType response, gpointer user_data) {
+    if (response != GTK_RESPONSE_YES) {
+        fsearch_window_action_after_file_open(false);
+    }
+}
+
+static void
 fsearch_window_action_open_generic(FsearchApplicationWindow *win, GtkTreeSelectionForeachFunc open_func) {
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection(win);
     if (!selection) {
@@ -400,14 +407,13 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GtkTreeSelecti
         // open failed
         FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
         if (config->show_dialog_failed_opening) {
-            gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(win),
-                                                    GTK_MESSAGE_WARNING,
-                                                    GTK_BUTTONS_YES_NO,
-                                                    _("Failed to open file"),
-                                                    _("Do you want to keep the window open?"));
-            if (response != GTK_RESPONSE_YES) {
-                fsearch_window_action_after_file_open(false);
-            }
+            ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
+                                          GTK_MESSAGE_WARNING,
+                                          GTK_BUTTONS_YES_NO,
+                                          _("Failed to open file"),
+                                          _("Do you want to keep the window open?"),
+                                          G_CALLBACK(on_failed_to_open_file_response),
+                                          NULL);
         }
     }
 }

@@ -761,7 +761,16 @@ on_listview_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user
 }
 
 static void
+on_file_open_failed_response(GtkDialog *dialog, GtkResponseType response, gpointer user_data) {
+    if (response != GTK_RESPONSE_YES) {
+        fsearch_window_action_after_file_open(false);
+    }
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+static void
 on_listview_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
+    printf("activated\n");
     FsearchApplicationWindow *self = user_data;
     GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
     GtkTreeIter iter;
@@ -789,14 +798,13 @@ on_listview_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeView
         // open failed
         if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse)
             && config->show_dialog_failed_opening) {
-            gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
-                                                    GTK_MESSAGE_WARNING,
-                                                    GTK_BUTTONS_YES_NO,
-                                                    _("Failed to open file"),
-                                                    _("Do you want to keep the window open?"));
-            if (response != GTK_RESPONSE_YES) {
-                fsearch_window_action_after_file_open(false);
-            }
+            ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                          GTK_MESSAGE_WARNING,
+                                          GTK_BUTTONS_YES_NO,
+                                          _("Failed to open file"),
+                                          _("Do you want to keep the window open?"),
+                                          G_CALLBACK(on_file_open_failed_response),
+                                          NULL);
         }
     }
 }

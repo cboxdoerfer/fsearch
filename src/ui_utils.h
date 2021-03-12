@@ -20,6 +20,15 @@
 
 #include <gtk/gtk.h>
 
+void
+ui_utils_run_gtk_dialog_async(GtkWidget *parent,
+                              GtkMessageType type,
+                              GtkButtonsType buttons,
+                              const gchar *primary_text,
+                              const gchar *sec_text,
+                              GCallback response_cb,
+                              gpointer response_cb_data);
+
 gint
 ui_utils_run_gtk_dialog(GtkWidget *parent,
                         GtkMessageType type,

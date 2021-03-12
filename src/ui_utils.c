@@ -18,6 +18,32 @@
 
 #include "ui_utils.h"
 
+void
+ui_utils_run_gtk_dialog_async(GtkWidget *parent,
+                              GtkMessageType type,
+                              GtkButtonsType buttons,
+                              const gchar *primary_text,
+                              const gchar *sec_text,
+                              GCallback response_cb,
+                              gpointer response_cb_data) {
+    if (!primary_text) {
+        return;
+    }
+
+    GtkWidget *dialog =
+        gtk_message_dialog_new(GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT, type, buttons, primary_text, NULL);
+
+    if (sec_text) {
+        gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), sec_text, NULL);
+    }
+
+    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
+    gtk_window_set_title(GTK_WINDOW(dialog), "");
+
+    g_signal_connect(dialog, "response", G_CALLBACK(response_cb), response_cb_data);
+    gtk_widget_show(dialog);
+}
+
 gint
 ui_utils_run_gtk_dialog(GtkWidget *parent,
                         GtkMessageType type,
