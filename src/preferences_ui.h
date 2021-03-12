@@ -29,14 +29,14 @@ typedef enum FsearchPreferencesPage {
 
 } FsearchPreferencesPage;
 
-typedef struct _FsearchPreferences {
+typedef struct _FsearchPreferencesState {
     FsearchConfig *config;
     GtkTreeModel *include_model;
     GtkTreeModel *exclude_model;
     bool update_db;
     bool update_list;
     bool update_search;
-} FsearchPreferences;
+} FsearchPreferencesState;
 
 FsearchConfig *
 preferences_ui_launch(FsearchConfig *main_config,

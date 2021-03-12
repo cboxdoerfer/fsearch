@@ -11,13 +11,13 @@ enum { COL_EXCLUDE_ENABLE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
 
 static void
 on_exclude_model_modified(GtkTreeModel *model, GtkTreePath *path, gpointer user_data) {
-    FsearchPreferences *pref = user_data;
+    FsearchPreferencesState *pref = user_data;
     pref->update_db = true;
 }
 
 static void
 on_include_model_modified(GtkTreeModel *model, GtkTreePath *path, gpointer user_data) {
-    FsearchPreferences *pref = user_data;
+    FsearchPreferencesState *pref = user_data;
     pref->update_db = true;
 }
 
@@ -49,21 +49,21 @@ on_column_toggled(gchar *path_str, GtkTreeModel *model, int col) {
 
 static void
 on_column_exclude_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
-    FsearchPreferences *pref = data;
+    FsearchPreferencesState *pref = data;
     on_column_toggled(path_str, pref->exclude_model, COL_EXCLUDE_ENABLE);
     pref->update_db = true;
 }
 
 static void
 on_column_include_enable_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
-    FsearchPreferences *pref = data;
+    FsearchPreferencesState *pref = data;
     on_column_toggled(path_str, pref->include_model, COL_INCLUDE_ENABLE);
     pref->update_db = true;
 }
 
 static void
 on_column_include_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
-    FsearchPreferences *pref = data;
+    FsearchPreferencesState *pref = data;
     on_column_toggled(path_str, pref->include_model, COL_INCLUDE_UPDATE);
     pref->update_db = true;
 }
@@ -154,7 +154,7 @@ pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *it
 }
 
 void
-pref_include_treeview_row_add(FsearchPreferences *pref, const char *path) {
+pref_include_treeview_row_add(FsearchPreferencesState *pref, const char *path) {
     FsearchIncludePath *fs_path = fsearch_include_path_new(path, true, true, 0, 0);
 
     GtkTreeIter iter;
@@ -172,7 +172,7 @@ pref_include_treeview_row_add(FsearchPreferences *pref, const char *path) {
 }
 
 void
-pref_exclude_treeview_row_add(FsearchPreferences *pref, const char *path) {
+pref_exclude_treeview_row_add(FsearchPreferencesState *pref, const char *path) {
     FsearchExcludePath *fs_path = fsearch_exclude_path_new(path, true);
 
     GtkTreeIter iter;
@@ -188,7 +188,7 @@ pref_exclude_treeview_row_add(FsearchPreferences *pref, const char *path) {
 }
 
 void
-pref_include_treeview_init(GtkTreeView *view, FsearchPreferences *pref) {
+pref_include_treeview_init(GtkTreeView *view, FsearchPreferencesState *pref) {
     GtkListStore *store = gtk_list_store_new(NUM_INCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(store));
 
@@ -230,7 +230,7 @@ pref_include_treeview_init(GtkTreeView *view, FsearchPreferences *pref) {
 }
 
 void
-pref_exclude_treeview_init(GtkTreeView *view, FsearchPreferences *pref) {
+pref_exclude_treeview_init(GtkTreeView *view, FsearchPreferencesState *pref) {
     GtkListStore *store = gtk_list_store_new(NUM_EXCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(store));
     column_toggle_append(view,
