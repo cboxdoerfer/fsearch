@@ -529,9 +529,98 @@ config_save(FsearchConfig *config) {
     return result;
 }
 
-bool
-config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
+static bool
+config_excludes_compare(void *e1, void *e2) {
+    if (!e1 || !e2) {
+        return false;
+    }
+    FsearchExcludePath *path1 = e1;
+    FsearchExcludePath *path2 = e2;
+
+    if (path1->enabled != path2->enabled) {
+        return false;
+    }
+    if (g_strcmp0(path1->path, path2->path) != 0) {
+        return false;
+    }
     return true;
+}
+
+static bool
+config_includes_compare(void *i1, void *i2) {
+    if (!i1 || !i2) {
+        return false;
+    }
+    FsearchIncludePath *path1 = i1;
+    FsearchIncludePath *path2 = i2;
+
+    if (path1->enabled != path2->enabled) {
+        return false;
+    }
+    if (path1->update != path2->update) {
+        return false;
+    }
+    if (g_strcmp0(path1->path, path2->path) != 0) {
+        return false;
+    }
+    return true;
+}
+
+static bool
+config_list_compare(GList *l1, GList *l2, bool (*cmp_func)(void *, void *)) {
+    if (!l1 || !l2) {
+        return false;
+    }
+    uint32_t len1 = g_list_length(l1);
+    uint32_t len2 = g_list_length(l2);
+    if (len1 != len2) {
+        return false;
+    }
+    for (int i = 0; i < len1; i++) {
+        void *data1 = g_list_nth_data(l1, i);
+        void *data2 = g_list_nth_data(l2, i);
+        if (!data1 || !data2 || !cmp_func(data1, data2)) {
+            return false;
+        }
+    }
+    return true;
+}
+
+FsearchConfigCompareResult
+config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
+    FsearchConfigCompareResult result = {};
+
+    if (c1->hide_results_on_empty_search != c2->hide_results_on_empty_search || c1->limit_results != c2->limit_results
+        || c1->auto_search_in_path != c2->auto_search_in_path || c1->auto_match_case != c2->auto_match_case
+        || c1->search_as_you_type != c2->search_as_you_type || c1->search_in_path != c2->search_in_path
+        || c1->enable_regex != c2->enable_regex || c1->match_case != c2->match_case
+        || c1->num_results != c2->num_results) {
+        result.search_config_changed = true;
+    }
+    if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons
+        || c1->single_click_open != c2->single_click_open) {
+        result.listview_config_changed = true;
+    }
+
+    bool exclude_files_changed = false;
+    if (c1->exclude_files && c2->exclude_files
+        && !g_strv_equal((const gchar *const *)c1->exclude_files, (const gchar *const *)c2->exclude_files)) {
+        exclude_files_changed = true;
+    }
+    else if ((c1->exclude_files && !c2->exclude_files) || (!c1->exclude_files && c2->exclude_files)) {
+        exclude_files_changed = true;
+    }
+
+    bool include_locations_changed = !config_list_compare(c1->locations, c2->locations, config_includes_compare);
+    bool exclude_locations_changed =
+        !config_list_compare(c1->exclude_locations, c2->exclude_locations, config_excludes_compare);
+
+    if (c1->exclude_hidden_items != c2->exclude_hidden_items || exclude_files_changed || exclude_locations_changed
+        || include_locations_changed) {
+        result.database_config_changed = true;
+    }
+
+    return result;
 }
 
 FsearchConfig *

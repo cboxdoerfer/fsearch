@@ -399,7 +399,13 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
     }
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+
+    FsearchConfigCompareResult config_diff = {.database_config_changed = true,
+                                              .listview_config_changed = true,
+                                              .search_config_changed = true};
+
     if (app->config) {
+        config_diff = config_cmp(app->config, new_config);
         config_free(app->config);
     }
     app->config = new_config;
@@ -408,20 +414,20 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
     g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
     fsearch_application_db_auto_update(app);
 
-    // if (update_db) {
-    //    fsearch_database_update(true);
-    //}
+    if (config_diff.database_config_changed) {
+        fsearch_database_update(true);
+    }
 
-    // GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-    // for (GList *w = windows; w; w = w->next) {
-    //    FsearchApplicationWindow *window = w->data;
-    //    if (update_search) {
-    //        fsearch_application_window_update_search(window);
-    //    }
-    //    if (update_list) {
-    //        fsearch_application_window_update_listview_config(window);
-    //    }
-    //}
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
+    for (GList *w = windows; w; w = w->next) {
+        FsearchApplicationWindow *window = w->data;
+        if (config_diff.search_config_changed) {
+            fsearch_application_window_update_search(window);
+        }
+        if (config_diff.listview_config_changed) {
+            fsearch_application_window_update_listview_config(window);
+        }
+    }
 }
 
 static void
@@ -436,8 +442,7 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
         return;
     }
     FsearchConfig *copy_config = config_copy(app->config);
-    FsearchConfig *new_config = preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
-    on_preferences_ui_finished(new_config);
+    preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
 }
 
 void

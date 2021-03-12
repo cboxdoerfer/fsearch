@@ -29,7 +29,7 @@ typedef enum FsearchPreferencesPage {
 
 } FsearchPreferencesPage;
 
-FsearchConfig *
+void
 preferences_ui_launch(FsearchConfig *config,
                       GtkWindow *window,
                       FsearchPreferencesPage page,

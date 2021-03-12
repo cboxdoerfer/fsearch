@@ -29,6 +29,9 @@
 #include <string.h>
 
 typedef struct {
+    FsearchConfig *new_config;
+    void (*finished_cb)(FsearchConfig *);
+
     GtkWindow *window;
     GtkBuilder *builder;
     GtkWidget *dialog;
@@ -248,13 +251,106 @@ action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
 }
 
 static void
-preferences_ui_init(FsearchPreferencesInterface *ui, FsearchConfig *new_config, FsearchPreferencesPage page) {
+preferences_ui_get_state(FsearchPreferencesInterface *ui) {
+    FsearchConfig *new_config = ui->new_config;
+    new_config->search_as_you_type = gtk_toggle_button_get_active(ui->search_as_you_type_button);
+    new_config->enable_dark_theme = gtk_toggle_button_get_active(ui->enable_dark_theme_button);
+    new_config->show_menubar = !gtk_toggle_button_get_active(ui->show_menubar_button);
+    new_config->restore_column_config = gtk_toggle_button_get_active(ui->restore_column_config_button);
+    new_config->restore_sort_order = gtk_toggle_button_get_active(ui->restore_sort_order_button);
+    new_config->double_click_path = gtk_toggle_button_get_active(ui->double_click_path_button);
+    new_config->enable_list_tooltips = gtk_toggle_button_get_active(ui->show_tooltips_button);
+    new_config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
+    new_config->update_database_on_launch = gtk_toggle_button_get_active(ui->update_db_at_start_button);
+    new_config->update_database_every = gtk_toggle_button_get_active(ui->auto_update_checkbox);
+    new_config->update_database_every_hours =
+        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button));
+    new_config->update_database_every_minutes =
+        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_minutes_spin_button));
+    new_config->show_base_2_units = gtk_toggle_button_get_active(ui->show_base_2_units);
+    new_config->action_after_file_open = gtk_combo_box_get_active(ui->action_after_file_open);
+    new_config->action_after_file_open_keyboard = gtk_toggle_button_get_active(ui->action_after_file_open_keyboard);
+    new_config->action_after_file_open_mouse = gtk_toggle_button_get_active(ui->action_after_file_open_mouse);
+    new_config->show_indexing_status = gtk_toggle_button_get_active(ui->show_indexing_status);
+    // Dialogs
+    new_config->show_dialog_failed_opening = gtk_toggle_button_get_active(ui->show_dialog_failed_opening);
+    new_config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
+    new_config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
+    new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
+    new_config->limit_results = gtk_toggle_button_get_active(ui->limit_num_results_button);
+    new_config->num_results = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->limit_num_results_spin));
+    new_config->highlight_search_terms = gtk_toggle_button_get_active(ui->highlight_search_terms);
+    new_config->single_click_open = gtk_toggle_button_get_active(ui->single_click_open_button);
+    new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
+    new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
+
+    if (new_config->exclude_files) {
+        g_strfreev(new_config->exclude_files);
+        new_config->exclude_files = NULL;
+    }
+    new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
+
+    if (new_config->locations) {
+        g_list_free_full(new_config->locations, (GDestroyNotify)fsearch_include_path_free);
+    }
+    new_config->locations = pref_include_treeview_data_get(ui->include_list);
+
+    if (new_config->exclude_locations) {
+        g_list_free_full(new_config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
+    }
+    new_config->exclude_locations = pref_exclude_treeview_data_get(ui->exclude_list);
+}
+
+static void
+preferences_ui_cleanup(FsearchPreferencesInterface *ui) {
+    if (ui->exclude_files_str) {
+        free(ui->exclude_files_str);
+        ui->exclude_files_str = NULL;
+    }
+
+    if (help_reset_timeout_id != 0) {
+        g_source_remove(help_reset_timeout_id);
+        help_reset_timeout_id = 0;
+    }
+    help_stack = NULL;
+
+    g_object_unref(ui->builder);
+    gtk_widget_destroy(ui->dialog);
+
+    free(ui);
+    ui = NULL;
+}
+
+static void
+on_preferences_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+
+    if (response != GTK_RESPONSE_OK) {
+        config_free(ui->new_config);
+        ui->new_config = NULL;
+    }
+    else {
+        preferences_ui_get_state(ui);
+    }
+
+    if (ui->finished_cb) {
+        ui->finished_cb(ui->new_config);
+    }
+
+    preferences_ui_cleanup(ui);
+}
+
+static void
+preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page) {
+    FsearchConfig *new_config = ui->new_config;
+
     ui->builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/preferences.ui");
+
     ui->dialog = GTK_WIDGET(gtk_builder_get_object(ui->builder, "FsearchPreferencesWindow"));
     gtk_window_set_transient_for(GTK_WINDOW(ui->dialog), ui->window);
-
     gtk_dialog_add_button(GTK_DIALOG(ui->dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
     gtk_dialog_add_button(GTK_DIALOG(ui->dialog), _("_OK"), GTK_RESPONSE_OK);
+    g_signal_connect(ui->dialog, "response", G_CALLBACK(on_preferences_ui_response), ui);
 
     ui->main_notebook = GTK_WIDGET(gtk_builder_get_object(ui->builder, "pref_main_notebook"));
     gtk_notebook_set_current_page(GTK_NOTEBOOK(ui->main_notebook), page);
@@ -449,97 +545,18 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchConfig *new_config, 
     }
 }
 
-static FsearchConfig *
-preferences_ui_run(FsearchPreferencesInterface *ui, FsearchConfig *new_config) {
-    GtkResponseType response = gtk_dialog_run(GTK_DIALOG(ui->dialog));
-    if (response != GTK_RESPONSE_OK) {
-        config_free(new_config);
-        return NULL;
-    }
-
-    new_config->search_as_you_type = gtk_toggle_button_get_active(ui->search_as_you_type_button);
-    new_config->enable_dark_theme = gtk_toggle_button_get_active(ui->enable_dark_theme_button);
-    new_config->show_menubar = !gtk_toggle_button_get_active(ui->show_menubar_button);
-    new_config->restore_column_config = gtk_toggle_button_get_active(ui->restore_column_config_button);
-    new_config->restore_sort_order = gtk_toggle_button_get_active(ui->restore_sort_order_button);
-    new_config->double_click_path = gtk_toggle_button_get_active(ui->double_click_path_button);
-    new_config->enable_list_tooltips = gtk_toggle_button_get_active(ui->show_tooltips_button);
-    new_config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
-    new_config->update_database_on_launch = gtk_toggle_button_get_active(ui->update_db_at_start_button);
-    new_config->update_database_every = gtk_toggle_button_get_active(ui->auto_update_checkbox);
-    new_config->update_database_every_hours =
-        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button));
-    new_config->update_database_every_minutes =
-        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_minutes_spin_button));
-    new_config->show_base_2_units = gtk_toggle_button_get_active(ui->show_base_2_units);
-    new_config->action_after_file_open = gtk_combo_box_get_active(ui->action_after_file_open);
-    new_config->action_after_file_open_keyboard = gtk_toggle_button_get_active(ui->action_after_file_open_keyboard);
-    new_config->action_after_file_open_mouse = gtk_toggle_button_get_active(ui->action_after_file_open_mouse);
-    new_config->show_indexing_status = gtk_toggle_button_get_active(ui->show_indexing_status);
-    // Dialogs
-    new_config->show_dialog_failed_opening = gtk_toggle_button_get_active(ui->show_dialog_failed_opening);
-    new_config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
-    new_config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
-    new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
-    new_config->limit_results = gtk_toggle_button_get_active(ui->limit_num_results_button);
-    new_config->num_results = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->limit_num_results_spin));
-    new_config->highlight_search_terms = gtk_toggle_button_get_active(ui->highlight_search_terms);
-    new_config->single_click_open = gtk_toggle_button_get_active(ui->single_click_open_button);
-    new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
-    new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
-
-    if (new_config->exclude_files) {
-        g_strfreev(new_config->exclude_files);
-        new_config->exclude_files = NULL;
-    }
-    new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
-
-    if (new_config->locations) {
-        g_list_free_full(new_config->locations, (GDestroyNotify)fsearch_include_path_free);
-    }
-    new_config->locations = pref_include_treeview_data_get(ui->include_list);
-
-    if (new_config->exclude_locations) {
-        g_list_free_full(new_config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
-    }
-    new_config->exclude_locations = pref_exclude_treeview_data_get(ui->exclude_list);
-
-    return new_config;
-}
-
-static void
-preferences_ui_cleanup(FsearchPreferencesInterface *ui) {
-    if (ui->exclude_files_str) {
-        free(ui->exclude_files_str);
-        ui->exclude_files_str = NULL;
-    }
-
-    if (help_reset_timeout_id != 0) {
-        g_source_remove(help_reset_timeout_id);
-        help_reset_timeout_id = 0;
-    }
-    help_stack = NULL;
-
-    g_object_unref(ui->builder);
-    gtk_widget_destroy(ui->dialog);
-}
-
-FsearchConfig *
+void
 preferences_ui_launch(FsearchConfig *config,
                       GtkWindow *window,
                       FsearchPreferencesPage page,
                       void (*finsihed_cb)(FsearchConfig *)) {
     FsearchPreferencesInterface *ui = calloc(1, sizeof(FsearchPreferencesInterface));
+    ui->new_config = config;
+    ui->finished_cb = finsihed_cb;
     ui->window = window;
 
-    preferences_ui_init(ui, config, page);
+    preferences_ui_init(ui, page);
 
-    FsearchConfig *new_config = preferences_ui_run(ui, config);
-
-    preferences_ui_cleanup(ui);
-    free(ui);
-    ui = NULL;
-
-    return new_config;
+    gtk_widget_show(ui->dialog);
 }
 

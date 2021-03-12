@@ -5,11 +5,13 @@ IndentWidth: 4
 ColumnLimit: 120
 AlwaysBreakAfterReturnType: All
 AlignAfterOpenBracket: Align
+AlignOperands: AlignAfterOperator
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
 AllowShortIfStatementsOnASingleLine: false
 BinPackArguments: false
 BinPackParameters: false
+BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeElse: true

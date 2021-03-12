@@ -31,6 +31,12 @@ typedef enum FsearchConfigActionAfterOpen {
     N_ACTIONS_AFTER_OPEN,
 } FsearchConfigActionAfterOpen;
 
+typedef struct {
+    bool database_config_changed;
+    bool listview_config_changed;
+    bool search_config_changed;
+} FsearchConfigCompareResult;
+
 struct _FsearchConfig {
     // Search
     bool limit_results;
@@ -42,6 +48,8 @@ struct _FsearchConfig {
     bool auto_match_case;
     bool search_as_you_type;
     bool show_base_2_units;
+
+    uint32_t num_results;
 
     // Applications
     char *folder_open_cmd;
@@ -104,8 +112,6 @@ struct _FsearchConfig {
     bool exclude_hidden_items;
     bool follow_symlinks;
 
-    uint32_t num_results;
-
     GList *locations;
     GList *exclude_locations;
     char **exclude_files;
@@ -126,7 +132,7 @@ config_save(FsearchConfig *config);
 void
 config_build_dir(char *path, size_t len);
 
-bool
+FsearchConfigCompareResult
 config_cmp(FsearchConfig *c1, FsearchConfig *c2);
 
 FsearchConfig *
