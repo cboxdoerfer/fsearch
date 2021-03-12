@@ -38,8 +38,6 @@
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
-    DatabaseSearch *search;
-    DatabaseSearchResult *search_result;
 
     GtkWidget *app_menu;
     GtkWidget *statusbar_database_updating_box;
@@ -91,8 +89,10 @@ struct _FsearchApplicationWindow {
 
     ListModel *list_model;
 
+    DatabaseSearch *search;
     FsearchQueryHighlight *query_highlight;
-    int32_t num_searches_active;
+
+    bool closing;
 
     guint statusbar_timeout_id;
 };
@@ -182,6 +182,12 @@ fsearch_application_window_update_search(FsearchApplicationWindow *win) {
 }
 
 void
+fsearch_application_window_prepare_close(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    self->closing = true;
+}
+
+void
 fsearch_application_window_prepare_shutdown(gpointer self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
     FsearchApplicationWindow *win = self;
@@ -198,10 +204,6 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
     GtkSortType order = GTK_SORT_ASCENDING;
     gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(win->list_model), &sort_column_id, &order);
 
-    if (win->query_highlight) {
-        fsearch_query_highlight_free(win->query_highlight);
-        win->query_highlight = NULL;
-    }
     if (config->sort_by) {
         g_free(config->sort_by);
         config->sort_by = NULL;
@@ -356,7 +358,6 @@ fsearch_application_window_constructed(GObject *object) {
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
 
-    self->num_searches_active = 0;
     self->search = NULL;
     self->search = db_search_new(fsearch_application_get_thread_pool(app));
     fsearch_window_apply_config(self);
@@ -384,6 +385,10 @@ fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
 
+    if (self->query_highlight) {
+        fsearch_query_highlight_free(self->query_highlight);
+        self->query_highlight = NULL;
+    }
     if (self->search) {
         db_search_free(self->search);
         self->search = NULL;
@@ -459,7 +464,7 @@ search_cancelled_cb(gpointer user_data) {
     if (!win) {
         return G_SOURCE_REMOVE;
     }
-    win->num_searches_active--;
+    g_object_unref(win);
     return G_SOURCE_REMOVE;
 }
 
@@ -471,61 +476,64 @@ update_model_cb(gpointer user_data) {
     FsearchConfig *config = fsearch_application_get_config(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
 
-    win->num_searches_active--;
-    remove_model_from_list(win);
-    db_search_results_clear(win->search);
+    if (!win->closing) {
+        remove_model_from_list(win);
+        db_search_results_clear(win->search);
 
-    const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-    uint32_t num_results = 0;
-    if (db == result->db) {
-        GPtrArray *results = result->results;
-        if (results && results->len > 0) {
-            list_model_set_results(win->list_model, results);
-            win->search->results = results;
-            win->search->num_folders = result->num_folders;
-            win->search->num_files = result->num_files;
-            num_results = results->len;
-            list_model_update_sort(win->list_model);
-            if (win->query_highlight) {
-                fsearch_query_highlight_free(win->query_highlight);
-                win->query_highlight = NULL;
+        const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+        uint32_t num_results = 0;
+        if (db == result->db) {
+            GPtrArray *results = result->results;
+            if (results && results->len > 0) {
+                list_model_set_results(win->list_model, results);
+                win->search->results = results;
+                win->search->num_folders = result->num_folders;
+                win->search->num_files = result->num_files;
+                num_results = results->len;
+                list_model_update_sort(win->list_model);
+                if (win->query_highlight) {
+                    fsearch_query_highlight_free(win->query_highlight);
+                    win->query_highlight = NULL;
+                }
+                FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
+                                           .match_case = config->match_case,
+                                           .auto_match_case = config->auto_match_case,
+                                           .search_in_path = config->search_in_path,
+                                           .auto_search_in_path = config->auto_search_in_path};
+                win->query_highlight = fsearch_query_highlight_new(text, flags);
             }
-            FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
-                                       .match_case = config->match_case,
-                                       .auto_match_case = config->auto_match_case,
-                                       .search_in_path = config->search_in_path,
-                                       .auto_search_in_path = config->auto_search_in_path};
-            win->query_highlight = fsearch_query_highlight_new(text, flags);
+            else {
+                list_model_set_results(win->list_model, NULL);
+                win->search->results = NULL;
+                win->search->num_folders = 0;
+                win->search->num_files = 0;
+                num_results = 0;
+            }
+        }
+
+        apply_model_to_list(win);
+
+        gchar sb_text[100] = "";
+        if (config->limit_results && num_results == config->num_results) {
+            snprintf(sb_text, sizeof(sb_text), _("≥%'d Items"), num_results);
         }
         else {
-            list_model_set_results(win->list_model, NULL);
-            win->search->results = NULL;
-            win->search->num_folders = 0;
-            win->search->num_files = 0;
-            num_results = 0;
+            snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
+        }
+        statusbar_update(win, sb_text);
+
+        if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
+            show_overlay(win, NO_SEARCH_QUERY_OVERLAY);
+        }
+        else if (num_results == 0) {
+            show_overlay(win, NO_SEARCH_RESULTS_OVERLAY);
+        }
+        else {
+            hide_overlays(win);
         }
     }
 
-    apply_model_to_list(win);
-
-    gchar sb_text[100] = "";
-    if (config->limit_results && num_results == config->num_results) {
-        snprintf(sb_text, sizeof(sb_text), _("≥%'d Items"), num_results);
-    }
-    else {
-        snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
-    }
-    statusbar_update(win, sb_text);
-
-    if (text[0] == '\0' && config->hide_results_on_empty_search) {
-        show_overlay(win, NO_SEARCH_QUERY_OVERLAY);
-    }
-    else if (num_results == 0) {
-        show_overlay(win, NO_SEARCH_RESULTS_OVERLAY);
-    }
-    else {
-        hide_overlays(win);
-    }
+    g_object_unref(win);
 
     if (db) {
         db_unref(db);
@@ -535,6 +543,7 @@ update_model_cb(gpointer user_data) {
     }
     free(result);
     result = NULL;
+
     return G_SOURCE_REMOVE;
 }
 
@@ -577,7 +586,7 @@ perform_search(FsearchApplicationWindow *win) {
         return FALSE;
     }
 
-    win->num_searches_active++;
+    g_object_ref(win);
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
     trace("[search] %s\n", text);
@@ -1143,21 +1152,6 @@ on_listview_query_tooltip(GtkWidget *widget,
 static gboolean
 on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(widget);
-    if (win->num_searches_active > 0) {
-        GtkWidget *dialog = gtk_message_dialog_new(GTK_WINDOW(win),
-                                                   GTK_DIALOG_DESTROY_WITH_PARENT,
-                                                   GTK_MESSAGE_INFO,
-                                                   GTK_BUTTONS_OK,
-                                                   _("Background tasks are active."));
-        gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog),
-                                                 _("Closing the window isn't possible right now.\nPlease wait a "
-                                                   "moment and then try again."));
-        gtk_dialog_run(GTK_DIALOG(dialog));
-        gtk_widget_destroy(dialog);
-
-        trace("[window] search is pending, window close blocked\n");
-        return TRUE;
-    }
     fsearch_application_window_prepare_shutdown(win);
     gtk_widget_destroy(widget);
     return TRUE;

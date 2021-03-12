@@ -316,8 +316,8 @@ void
 fsearch_window_action_after_file_open(bool action_mouse) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    if ((config->action_after_file_open_keyboard && !action_mouse) ||
-        (config->action_after_file_open_mouse && action_mouse)) {
+    if ((config->action_after_file_open_keyboard && !action_mouse)
+        || (config->action_after_file_open_mouse && action_mouse)) {
         if (config->action_after_file_open == ACTION_AFTER_OPEN_CLOSE) {
             g_application_quit(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
         }
@@ -417,6 +417,8 @@ fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpo
     FsearchApplicationWindow *self = user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
 
+    fsearch_application_window_prepare_shutdown(self);
+    fsearch_application_window_prepare_close(self);
     gtk_widget_destroy(GTK_WIDGET(self));
 }
 
