@@ -47,13 +47,11 @@ struct _DatabaseSearch {
     GPtrArray *results;
     FsearchThreadPool *pool;
 
+    GAsyncQueue *search_queue;
     GThread *search_thread;
     bool search_terminate;
     bool search_thread_terminate;
-    GMutex query_mutex;
-    GCond search_thread_start_cond;
 
-    FsearchQuery *query_ctx;
     uint32_t num_folders;
     uint32_t num_files;
 };

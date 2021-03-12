@@ -75,47 +75,40 @@ static gpointer
 db_search_thread(gpointer user_data) {
     DatabaseSearch *search = user_data;
 
-    g_mutex_lock(&search->query_mutex);
     while (true) {
-        g_cond_wait(&search->search_thread_start_cond, &search->query_mutex);
         if (search->search_thread_terminate) {
             break;
         }
-        while (search->query_ctx) {
-            FsearchQuery *query = search->query_ctx;
-            if (!query) {
-                break;
-            }
-            search->query_ctx = NULL;
-            search->search_terminate = false;
-            g_mutex_unlock(&search->query_mutex);
-            // if query is empty string we are done here
-            DatabaseSearchResult *result = NULL;
-            if (fs_str_is_empty(query->text)) {
-                if (query->pass_on_empty_query) {
-                    result = db_search_empty(query);
-                }
-                else {
-                    result = calloc(1, sizeof(DatabaseSearchResult));
-                }
-            }
-            else {
-                result = db_search(search, query);
-            }
-            g_mutex_lock(&search->query_mutex);
-            if (result) {
-                result->cb_data = query->callback_data;
-                result->db = query->db;
-                query->callback(result);
-            }
-            else {
-                db_search_notify_cancelled(query);
-            }
-            fsearch_query_free(query);
-            query = NULL;
+
+        FsearchQuery *query = g_async_queue_timeout_pop(search->search_queue, 500000);
+        if (!query) {
+            continue;
         }
+        search->search_terminate = false;
+        // if query is empty string we are done here
+        DatabaseSearchResult *result = NULL;
+        if (fs_str_is_empty(query->text)) {
+            if (query->pass_on_empty_query) {
+                result = db_search_empty(query);
+            }
+            else {
+                result = calloc(1, sizeof(DatabaseSearchResult));
+            }
+        }
+        else {
+            result = db_search(search, query);
+        }
+        if (result) {
+            result->cb_data = query->callback_data;
+            result->db = query->db;
+            query->callback(result);
+        }
+        else {
+            db_search_notify_cancelled(query);
+        }
+        fsearch_query_free(query);
+        query = NULL;
     }
-    g_mutex_unlock(&search->query_mutex);
     return NULL;
 }
 
@@ -431,23 +424,28 @@ db_search_results_clear(DatabaseSearch *search) {
     return;
 }
 
+static void
+db_search_clear_queue(GAsyncQueue *queue) {
+    while (true) {
+        // clear all queued queries
+        FsearchQuery *queued_query = g_async_queue_try_pop(queue);
+        if (!queued_query) {
+            break;
+        }
+        db_search_notify_cancelled(queued_query);
+        fsearch_query_free(queued_query);
+        queued_query = NULL;
+    }
+}
+
 void
 db_search_free(DatabaseSearch *search) {
     assert(search != NULL);
 
-    db_search_results_clear(search);
-    g_mutex_lock(&search->query_mutex);
-    if (search->query_ctx) {
-        fsearch_query_free(search->query_ctx);
-        search->query_ctx = NULL;
-    }
-    g_mutex_unlock(&search->query_mutex);
-
+    db_search_clear_queue(search->search_queue);
     search->search_thread_terminate = true;
-    g_cond_signal(&search->search_thread_start_cond);
     g_thread_join(search->search_thread);
-    g_mutex_clear(&search->query_mutex);
-    g_cond_clear(&search->search_thread_start_cond);
+    db_search_results_clear(search);
     g_free(search);
     search = NULL;
     return;
@@ -492,8 +490,7 @@ db_search_new(FsearchThreadPool *pool) {
     assert(db_search != NULL);
 
     db_search->pool = pool;
-    g_mutex_init(&db_search->query_mutex);
-    g_cond_init(&db_search->search_thread_start_cond);
+    db_search->search_queue = g_async_queue_new();
     db_search->search_thread = g_thread_new("fsearch_search_thread", db_search_thread, db_search);
     return db_search;
 }
@@ -547,15 +544,9 @@ db_search_get_results(DatabaseSearch *search) {
 
 void
 db_search_queue(DatabaseSearch *search, FsearchQuery *query) {
-    g_mutex_lock(&search->query_mutex);
-    if (search->query_ctx) {
-        db_search_notify_cancelled(search->query_ctx);
-        fsearch_query_free(search->query_ctx);
-        search->query_ctx = NULL;
-    }
-    search->query_ctx = query;
+
+    db_search_clear_queue(search->search_queue);
     search->search_terminate = true;
-    g_mutex_unlock(&search->query_mutex);
-    g_cond_signal(&search->search_thread_start_cond);
+    g_async_queue_push(search->search_queue, query);
 }
 
