@@ -447,7 +447,7 @@ statusbar_set_query_status(gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
     gtk_label_set_text(GTK_LABEL(win->statusbar_search_label), _("Querying…"));
     win->statusbar_timeout_id = 0;
-    return FALSE;
+    return G_SOURCE_REMOVE;
 }
 
 static void
@@ -461,10 +461,10 @@ static gboolean
 search_cancelled_cb(gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
     if (!win) {
-        return FALSE;
+        return G_SOURCE_REMOVE;
     }
     win->num_searches_active--;
-    return FALSE;
+    return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -539,7 +539,7 @@ update_model_cb(gpointer user_data) {
     }
     free(result);
     result = NULL;
-    return FALSE;
+    return G_SOURCE_REMOVE;
 }
 
 void
@@ -782,8 +782,8 @@ on_listview_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeView
     }
     else {
         // open failed
-        if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse) &&
-            config->show_dialog_failed_opening) {
+        if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse)
+            && config->show_dialog_failed_opening) {
             gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                     GTK_MESSAGE_WARNING,
                                                     GTK_BUTTONS_YES_NO,
