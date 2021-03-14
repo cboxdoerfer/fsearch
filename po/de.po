@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-03-07 16:31+0100\n"
+"POT-Creation-Date: 2021-03-14 16:52+0100\n"
 "PO-Revision-Date: 2021-03-07 15:13+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
@@ -20,35 +20,41 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.5.1\n"
 
-#: src/database.c:1023
-msgid "Sorting..."
+#: src/database.c:794
+msgid "Building lookup list…"
+msgstr ""
+
+#: src/database.c:802
+#, fuzzy
+#| msgid "Sorting..."
+msgid "Sorting…"
 msgstr "Sortiere..."
 
-#: src/fsearch.c:355
+#: src/fsearch.c:382
 msgid "translator-credits"
 msgstr "Christian Boxdörfer"
 
-#: src/fsearch.c:357
+#: src/fsearch.c:384
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Eine Dateisuche, das sich auf Leistung und erweiterten Funktionen "
 "konzentriert"
 
-#: src/fsearch.c:633
+#: src/fsearch.c:673
 #, fuzzy
 msgid "Open a new application window"
 msgstr "Mit anderer Anwendung öffnen"
 
-#: src/fsearch.c:634
+#: src/fsearch.c:674
 msgid "Show the application preferences"
 msgstr ""
 
-#: src/fsearch.c:635
+#: src/fsearch.c:675
 #, fuzzy
 msgid "Update the database and exit"
 msgstr "Aktualisiere die Datenbank"
 
-#: src/fsearch.c:636
+#: src/fsearch.c:676
 #, fuzzy
 msgid "Print version information and exit"
 msgstr "Versionsinformationen anzeigen"
@@ -61,7 +67,7 @@ msgstr "Neues Fenster"
 msgid "Update database"
 msgstr "Datenbank aktualisieren"
 
-#: src/fsearch.glade:103 src/fsearch.glade:623
+#: src/fsearch.glade:103 src/fsearch.glade:630
 msgid "Cancel database update"
 msgstr "Aktualisierung abbrechen"
 
@@ -89,7 +95,7 @@ msgstr "Zeige Filter"
 msgid "Show Search Button"
 msgstr "Zeige Suchbutton"
 
-#: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:37
+#: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:48
 msgid "Preferences"
 msgstr "Einstellungen"
 
@@ -113,40 +119,40 @@ msgstr "0 Einträge"
 msgid "Index:"
 msgstr "Indexierung:"
 
-#: src/fsearch.glade:523
+#: src/fsearch.glade:530
 msgid "Number of selected folders"
 msgstr "Anzahl der ausgewählten Ordner"
 
-#: src/fsearch.glade:524 src/fsearch.glade:549
+#: src/fsearch.glade:531 src/fsearch.glade:556
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch.glade:548
+#: src/fsearch.glade:555
 msgid "Number of selected files"
 msgstr "Anzahl der ausgewählten Dateien"
 
-#: src/fsearch.glade:607 src/fsearch_window.c:142 src/overlay.ui:102
+#: src/fsearch.glade:614 src/fsearch_window.c:140 src/overlay.ui:102
 #, c-format
 msgid "Updating Database…"
 msgstr "Aktualisiere Datenbank…"
 
-#: src/fsearch.glade:640
+#: src/fsearch.glade:647
 msgid "page0"
 msgstr "page0"
 
-#: src/fsearch.glade:664
+#: src/fsearch.glade:671
 msgid "Number of database items"
 msgstr "Anzahl der Datenbankeinträge"
 
-#: src/fsearch.glade:665
+#: src/fsearch.glade:672
 msgid "(empty)"
 msgstr "(leer)"
 
-#: src/fsearch.glade:676
+#: src/fsearch.glade:683
 msgid "page1"
 msgstr "page1"
 
-#: src/fsearch.glade:702
+#: src/fsearch.glade:709
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -154,11 +160,11 @@ msgstr ""
 "Suche enthält Großbuchstaben.\n"
 "<b>GROẞ-/Klein</b> wurde automatisch für diese Abfrage aktiviert."
 
-#: src/fsearch.glade:733 src/fsearch.glade:786
+#: src/fsearch.glade:740 src/fsearch.glade:793
 msgid "CASE"
 msgstr "GROẞ-/Klein"
 
-#: src/fsearch.glade:809
+#: src/fsearch.glade:816
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -166,23 +172,23 @@ msgstr ""
 "Suche enthält Pfadseparatoren.\n"
 "<b>Suche in Pfad</b> wurde automatisch für diese Abfrage aktiviert."
 
-#: src/fsearch.glade:840 src/fsearch.glade:893
+#: src/fsearch.glade:847 src/fsearch.glade:900
 msgid "PATH"
 msgstr "PFAD"
 
-#: src/fsearch.glade:946
+#: src/fsearch.glade:953
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch.glade:1066
+#: src/fsearch.glade:1073
 msgid "Search…"
 msgstr "Suche…"
 
-#: src/fsearch.glade:1088
+#: src/fsearch.glade:1095
 msgid "Select a Filter"
 msgstr "Wähle einen Filter"
 
-#: src/fsearch.glade:1119 src/preferences.ui:679
+#: src/fsearch.glade:1126 src/preferences.ui:690
 msgid "Search"
 msgstr "Suche"
 
@@ -218,56 +224,50 @@ msgstr "Bilder"
 msgid "Videos"
 msgstr "Videos"
 
-#: src/fsearch_preferences_widgets.c:193 src/fsearch_preferences_widgets.c:234
+#: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
 msgid "Active"
 msgstr "Aktiv"
 
-#: src/fsearch_preferences_widgets.c:197 src/fsearch_preferences_widgets.c:238
+#: src/fsearch_preferences_widgets.c:184 src/fsearch_preferences_widgets.c:223
 #: src/listview.c:209 src/menus.ui:222
 msgid "Path"
 msgstr "Pfad"
 
-#: src/fsearch_preferences_widgets.c:200
+#: src/fsearch_preferences_widgets.c:187
 msgid "Update"
 msgstr "Aktualisieren"
 
-#: src/fsearch_window.c:121 src/overlay.ui:32
+#: src/fsearch_window.c:119 src/overlay.ui:32
 #, c-format
 msgid "Loading Database…"
 msgstr "Lade Datenbank…"
 
-#: src/fsearch_window.c:162 src/fsearch_window.c:515 src/fsearch_window.c:968
+#: src/fsearch_window.c:160 src/fsearch_window.c:521 src/fsearch_window.c:987
 #, c-format
 msgid "%'d Items"
 msgstr "%'d Einträge"
 
-#: src/fsearch_window.c:448 src/fsearch_window.c:605
+#: src/fsearch_window.c:449 src/fsearch_window.c:616
 msgid "Querying…"
 msgstr "Suche…"
 
-#: src/fsearch_window.c:784 src/fsearch_window_actions.c:406
+#: src/fsearch_window.c:518
+#, fuzzy, c-format
+#| msgid "%'d Items"
+msgid "≥%'d Items"
+msgstr "%'d Einträge"
+
+#: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
 msgstr "Datei konnte nicht geöffnet werden"
 
-#: src/fsearch_window.c:785 src/fsearch_window_actions.c:407
+#: src/fsearch_window.c:805 src/fsearch_window_actions.c:414
 msgid "Do you want to keep the window open?"
 msgstr "Möchten Sie das Fenster offen lassen?"
 
-#: src/fsearch_window.c:974
+#: src/fsearch_window.c:993
 msgid "Last Updated: %Y-%m-%d %H:%M"
 msgstr "Zuletzt aktualisiert: %Y-%m-%d %H:%M"
-
-#: src/fsearch_window.c:1149
-msgid "Background tasks are active."
-msgstr "Hintergrundaufgaben sind aktiv."
-
-#: src/fsearch_window.c:1151
-msgid ""
-"Closing the window isn't possible right now.\n"
-"Please wait a moment and then try again."
-msgstr ""
-"Ein Schließen des Fensters ist im Moment nicht möglich.\n"
-"Bitte warten Sie einen Moment und versuchen Sie es dann erneut."
 
 #: src/fsearch_window_actions.c:77
 #, c-format
@@ -429,172 +429,194 @@ msgstr "Keine Ergebnisse gefunden"
 msgid "Try a different search"
 msgstr "Versuche eine andere Suche"
 
-#: src/preferences.ui:105
+#: src/preferences.ui:116
 msgid "Enable dark theme"
 msgstr "Aktiviere dunkles Thema"
 
-#: src/preferences.ui:119
+#: src/preferences.ui:130
 msgid "Enable client-side decorations (requires restart)"
 msgstr "Aktiviere kombinierte Titel-/Menüleiste (benötigt Neustart)"
 
-#: src/preferences.ui:133
+#: src/preferences.ui:144
 msgid "Use binary units instead of decimal units"
 msgstr "SI Dezimalpräfixe anstatt IEC Binärpräfixe verwenden"
 
-#: src/preferences.ui:148
+#: src/preferences.ui:159
 msgid "Remember window size"
 msgstr "Fenstergröße wiederherstellen"
 
-#: src/preferences.ui:183
+#: src/preferences.ui:194
 msgid "with keyboard shortcuts or menu entries"
 msgstr "mit Tastaturkürzeln oder Menüeinträgen"
 
-#: src/preferences.ui:198
+#: src/preferences.ui:209
 msgid "with double click"
 msgstr "mit einem Doppelklick"
 
-#: src/preferences.ui:226
+#: src/preferences.ui:237
 msgid "Behaviour after successfully opening a file:"
 msgstr "Verhalten nach erfolgreichem Öffnen eines Elementes:"
 
-#: src/preferences.ui:242
+#: src/preferences.ui:253
 msgid "Nothing"
 msgstr "Nichts"
 
-#: src/preferences.ui:243
+#: src/preferences.ui:254
 msgid "Minimize"
 msgstr "Minimieren"
 
-#: src/preferences.ui:244
+#: src/preferences.ui:255
 msgid "Close"
 msgstr "Schließen"
 
-#: src/preferences.ui:270
+#: src/preferences.ui:281
 msgid "General:"
 msgstr "Allgemein:"
 
-#: src/preferences.ui:305
+#: src/preferences.ui:316
 msgid "Show highlighted search terms"
 msgstr "Suchbegriffe in der Ergebnisliste hervorheben"
 
-#: src/preferences.ui:320
+#: src/preferences.ui:331
 msgid "Show tooltips"
 msgstr "Tooltips anzeigen"
 
-#: src/preferences.ui:334
+#: src/preferences.ui:345
 msgid "Show icons in name column"
 msgstr "Symbole in der Namensspalte anzeigen"
 
-#: src/preferences.ui:348
+#: src/preferences.ui:359
 msgid "Remember column configuration"
 msgstr "Spaltenkonfiguration wiederherstellen"
 
-#: src/preferences.ui:362
+#: src/preferences.ui:373
 msgid "Remember sort order"
 msgstr "Sortierreihenfolge wiederherstellen"
 
-#: src/preferences.ui:376
+#: src/preferences.ui:387
 msgid "Open path with double click in path column"
 msgstr "Öffne Ordner mit Doppelklick in Pfad-Spalte"
 
-#: src/preferences.ui:390
+#: src/preferences.ui:401
 msgid "Single click to open"
 msgstr "Einfach-Klick zum Öffnen"
 
-#: src/preferences.ui:410
+#: src/preferences.ui:421
 msgid "Results:"
 msgstr "Ergebnisse:"
 
-#: src/preferences.ui:451
+#: src/preferences.ui:462
 msgid "Show database indexing status"
 msgstr "Status der Indexierung anzeigen"
 
-#: src/preferences.ui:471
+#: src/preferences.ui:482
 msgid "Statusbar:"
 msgstr "Statusleiste:"
 
-#: src/preferences.ui:512
+#: src/preferences.ui:523
 msgid "Show warning dialogs when:"
 msgstr "Zeige Warndialoge an, wenn:"
 
-#: src/preferences.ui:522
+#: src/preferences.ui:533
 msgid "file / folder failed to open"
 msgstr "Datei / Verzeichnis konnte nicht geöffnet werden"
 
-#: src/preferences.ui:544
+#: src/preferences.ui:555
 msgid "Dialogs:"
 msgstr "Dialoge:"
 
-#: src/preferences.ui:569
+#: src/preferences.ui:580
 msgid "Interface"
 msgstr "Bedienoberfläche"
 
-#: src/preferences.ui:588
+#: src/preferences.ui:599
 msgid "Limit number of results:"
 msgstr "Anzahl der Ergebnisse beschränken:"
 
-#: src/preferences.ui:616
+#: src/preferences.ui:627
 msgid "Search in path when query contains path separators"
 msgstr "Pfad beachten, falls die Suche Pfadseparatoren enthält"
 
-#: src/preferences.ui:630
+#: src/preferences.ui:641
 msgid "Search as you type"
 msgstr "Suche beim Tippen starten"
 
-#: src/preferences.ui:644
+#: src/preferences.ui:655
 msgid "Hide results when search is empty"
 msgstr "Bei leerem Suchfeld nichts anzeigen"
 
-#: src/preferences.ui:658
+#: src/preferences.ui:669
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Groß- und Kleinschreibung beachten, falls die Suche Großbuchstaben enthält"
 
-#: src/preferences.ui:698
+#: src/preferences.ui:709
 msgid "Update database on start"
 msgstr "Datenbank beim Start aktualisieren"
 
-#: src/preferences.ui:759
+#: src/preferences.ui:727
+#, fuzzy
+#| msgid "Update"
+msgid "Update every"
+msgstr "Aktualisieren"
+
+#: src/preferences.ui:748
+msgid "0"
+msgstr ""
+
+#: src/preferences.ui:765
+msgid "hour(s) and"
+msgstr ""
+
+#: src/preferences.ui:777
+msgid "30"
+msgstr ""
+
+#: src/preferences.ui:795
+msgid "minute(s)"
+msgstr ""
+
+#: src/preferences.ui:866
 msgid "Add path to be included in database"
 msgstr "Pfad zur Datenbank hinzufügen"
 
-#: src/preferences.ui:775 src/preferences.ui:873
+#: src/preferences.ui:882 src/preferences.ui:980
 msgid "Remove selected path"
 msgstr "entfere den gewählten Pfad"
 
-#: src/preferences.ui:801
+#: src/preferences.ui:908
 msgid "Include"
 msgstr "Einschließen"
 
-#: src/preferences.ui:857
+#: src/preferences.ui:964
 msgid "Add path to be excluded from database"
 msgstr "Pfad aus der Datenbank ausschließen"
 
-#: src/preferences.ui:909 src/preferences.ui:922
+#: src/preferences.ui:1016 src/preferences.ui:1029
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "Unterstützt Wildcards. Einträge müssen mit ';' getrennt werden"
 
-#: src/preferences.ui:910
+#: src/preferences.ui:1017
 msgid "Exclude files:"
 msgstr "Dateien ausschließen:"
 
-#: src/preferences.ui:923
+#: src/preferences.ui:1030
 msgid "e.g. \".git;*.tmp\""
 msgstr "z. B. \".git;*.tmp\""
 
-#: src/preferences.ui:940
+#: src/preferences.ui:1047
 msgid "Exclude hidden files and folders"
 msgstr "Versteckte Dateien und Ordner ausschließen"
 
-#: src/preferences.ui:961
+#: src/preferences.ui:1068
 msgid "Exclude"
 msgstr "Ausschließen"
 
-#: src/preferences.ui:984
+#: src/preferences.ui:1091
 msgid "Database"
 msgstr "Datenbank"
 
-#: src/preferences.ui:1015
+#: src/preferences.ui:1123
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -612,7 +634,7 @@ msgstr ""
 "Nicht alle System-Themen stellen eine solche dunklere Variante zur "
 "Verfügung, deshalb wird diese Option eventuell keinen Effekt haben."
 
-#: src/preferences.ui:1032
+#: src/preferences.ui:1140
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -633,7 +655,7 @@ msgstr ""
 "Dies ähnelt einem traditionellen UI Layout und verbraucht ein wenig mehr "
 "Platz."
 
-#: src/preferences.ui:1051
+#: src/preferences.ui:1159
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -653,7 +675,7 @@ msgstr ""
 "\t• <b>Dezimale Einheiten:</b> Dies bezieht sich auf dezimale SI Präfixe "
 "<i>(z.B. 1kB = 1000 Bytes)</i>"
 
-#: src/preferences.ui:1070
+#: src/preferences.ui:1178
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -671,7 +693,7 @@ msgstr ""
 "Beachten Sie, dass einige Fenstermanager diese Anforderung ignorieren und "
 "eine andere Fenstergröße erzwingen."
 
-#: src/preferences.ui:1088
+#: src/preferences.ui:1196
 #, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
@@ -706,7 +728,7 @@ msgstr ""
 "\t• <b>Tastenkombination oder Menüeintrag</b> und/oder\n"
 "\t• <b>Mausklick</b>"
 
-#: src/preferences.ui:1112
+#: src/preferences.ui:1220
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -732,7 +754,7 @@ msgstr ""
 "Dies funktioniert ebenfalls bei regulären Ausdrücken und Platzhaltern, die "
 "mit einem Stern beginnen oder enden. "
 
-#: src/preferences.ui:1133
+#: src/preferences.ui:1241
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -744,7 +766,7 @@ msgstr ""
 "Falls aktiviert, wird im Ergebnisfenster der vollständige Pfad der Datei / "
 "des Ordners unter dem Mauszeiger als Tooltip angezeigt."
 
-#: src/preferences.ui:1149
+#: src/preferences.ui:1257
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
@@ -754,7 +776,7 @@ msgstr ""
 "\n"
 "Falls aktiviert, werden Datei/Ordner -Symbole in der Namensspalte angezeigt."
 
-#: src/preferences.ui:1165
+#: src/preferences.ui:1273
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -768,7 +790,7 @@ msgstr ""
 "hergestellt wenn ein neues FSearch-Fenster geöffnet wird. Dies beinhaltet "
 "Größe und Sichtbarkeit aller Spalten."
 
-#: src/preferences.ui:1181
+#: src/preferences.ui:1289
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -780,7 +802,7 @@ msgstr ""
 "Falls aktiviert, wird die Sortierreihenfolge der vorherigen Sitzung "
 "wiederhergestellt, wenn ein neues FSearch-Fenster geöffnet wird."
 
-#: src/preferences.ui:1197
+#: src/preferences.ui:1305
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -791,7 +813,7 @@ msgstr ""
 "Falls aktiviert, öffnet ein Doppelklick auf die Pfad-Spalte den ausgewählten "
 "Pfad."
 
-#: src/preferences.ui:1213
+#: src/preferences.ui:1321
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -806,7 +828,7 @@ msgstr ""
 "diese Einstellung aktiv ist, muss <i>Ctrl</i> während des Klickens gedrückt "
 "gehalten werden."
 
-#: src/preferences.ui:1229
+#: src/preferences.ui:1337
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -818,7 +840,7 @@ msgstr ""
 "Falls aktiviert, wird in der Statuszeile angezeigt welcher Pfad gerade "
 "indiziert wird."
 
-#: src/preferences.ui:1245
+#: src/preferences.ui:1353
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -832,7 +854,7 @@ msgstr ""
 "\n"
 "\t• eine Datei oder ein Ordner nicht geöffnet werden kann\n"
 
-#: src/preferences.ui:1264
+#: src/preferences.ui:1372
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -845,7 +867,7 @@ msgstr ""
 "enthalten, automatisch der komplette Pfad der Datei oder des Ordners "
 "durchsucht."
 
-#: src/preferences.ui:1280
+#: src/preferences.ui:1388
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -861,7 +883,7 @@ msgstr ""
 "Suchbegriff wie <i>Foo</i> findet <i>FooBar.txt</i> aber nicht <i>foobar."
 "txt</i>."
 
-#: src/preferences.ui:1296
+#: src/preferences.ui:1404
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -877,7 +899,7 @@ msgstr ""
 "Falls deaktiviert, werden alle Dateien und Ordner angezeigt, wenn das "
 "Suchfeld leer ist."
 
-#: src/preferences.ui:1314
+#: src/preferences.ui:1422
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -893,7 +915,7 @@ msgstr ""
 "Falls deaktiviert, wird die Suche erst gestartet wenn <i>Return</i> gedrückt "
 "oder der Suchknopf angeklickt wird. "
 
-#: src/preferences.ui:1332
+#: src/preferences.ui:1440
 msgid ""
 "<b>Limit number of results:</b>\n"
 "\n"
@@ -912,7 +934,7 @@ msgstr ""
 "Geschwindigkeit, vor allem wenn die Liste nicht nach Namen sortiert ist. "
 "Dies wird in zukünftigen Versionen verbessert werden."
 
-#: src/preferences.ui:1350
+#: src/preferences.ui:1458
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -924,7 +946,7 @@ msgstr ""
 "Falls aktiviert, wird die Datenbank nach dem Start von FSearch automatisch "
 "im Hintergrund aktualisiert."
 
-#: src/preferences.ui:1366
+#: src/preferences.ui:1474
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -951,7 +973,7 @@ msgstr ""
 "\t\tsollen <i>(beispielsweise der Pfad zu einem langsamen USB Laufwerk, "
 "dessen Inhalt sich selten ändert).</i>"
 
-#: src/preferences.ui:1387
+#: src/preferences.ui:1495
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -962,7 +984,7 @@ msgstr ""
 "\n"
 "Öffnet einen Dialog, um einen Ordner zur Suchdatenbank hinzuzufügen."
 
-#: src/preferences.ui:1403
+#: src/preferences.ui:1511
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -973,7 +995,7 @@ msgstr ""
 "Entfernt den ausgewählten Ordner aus der Liste der Ordner, die in der "
 "Datenbank enthalten sind."
 
-#: src/preferences.ui:1419
+#: src/preferences.ui:1527
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -991,7 +1013,7 @@ msgstr ""
 "\t\taufgenommen und kann nicht durchsucht werden.\n"
 "\t• <b>Pfad:</b> Der vollständige Pfad der ausgenommen werden soll."
 
-#: src/preferences.ui:1439
+#: src/preferences.ui:1547
 msgid ""
 "<b>Exclude folder from database:</b>\n"
 "\n"
@@ -1002,7 +1024,7 @@ msgstr ""
 "\n"
 "Öffnet einen Dialog, um Ordner von der Datenbank auszuschliessen."
 
-#: src/preferences.ui:1455
+#: src/preferences.ui:1563
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1012,7 +1034,7 @@ msgstr ""
 "\n"
 "Entfernt den ausgewählten Ordner aus der Liste der ausgeschlossenen Ordner."
 
-#: src/preferences.ui:1471
+#: src/preferences.ui:1579
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1028,7 +1050,7 @@ msgstr ""
 "swp</i> alle Dateien oder Ordner namens <i>.git</i> oder <i>.cache</i> "
 "ausschliessen, oder solche die auf <i>.swp</i> enden."
 
-#: src/preferences.ui:1487
+#: src/preferences.ui:1595
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1041,33 +1063,43 @@ msgstr ""
 "ausgeschlossen <i>(d.h. alle Dateien und Ordner deren Namen mit einem Punkt "
 "\".\" beginnen)</i>."
 
-#: src/preferences.ui:1503
+#: src/preferences.ui:1611
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 "Positionieren Sie den Mauszeiger über einer Einstellung, um eine "
 "detaillierte Beschreibung zu erhalten."
 
-#: src/preferences.ui:1515
-msgid "label"
-msgstr "Bezeichnung"
+#: src/preferences.ui:1623
+msgid ""
+"<b>Periodically update database at a specific time interval:</b>\n"
+"\n"
+"If enabled and as long as FSearch is running, the database will be updated "
+"periodically with the given time interval.\n"
+"\n"
+"If you want to update the database in the background, even when FSearch is "
+"not running, you should use tools like cron or systemd timers to "
+"periodically trigger the update with:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
+msgstr ""
 
-#: src/preferences.ui:1529
+#: src/preferences.ui:1645
 msgid "Help"
 msgstr "Hilfe"
 
-#: src/preferences_ui.c:57 src/preferences_ui.c:69
+#: src/preferences_ui.c:183 src/preferences_ui.c:198
 msgid "Select folder"
 msgstr "Ordner auswählen"
 
-#: src/preferences_ui.c:60 src/preferences_ui.c:69 src/preferences_ui.c:190
+#: src/preferences_ui.c:186 src/preferences_ui.c:198 src/preferences_ui.c:385
 msgid "_Cancel"
 msgstr "_Abbrechen"
 
-#: src/preferences_ui.c:62 src/preferences_ui.c:69
+#: src/preferences_ui.c:188 src/preferences_ui.c:198
 msgid "_Select"
 msgstr "_Auswählen"
 
-#: src/preferences_ui.c:191
+#: src/preferences_ui.c:386
 msgid "_OK"
 msgstr "_OK"
 
@@ -1086,6 +1118,19 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "suchen;fsearch;Dateien;Ordner;Musik;Video;Dokumente;finden;Werkzeug;alles;"
+
+#~ msgid "Background tasks are active."
+#~ msgstr "Hintergrundaufgaben sind aktiv."
+
+#~ msgid ""
+#~ "Closing the window isn't possible right now.\n"
+#~ "Please wait a moment and then try again."
+#~ msgstr ""
+#~ "Ein Schließen des Fensters ist im Moment nicht möglich.\n"
+#~ "Bitte warten Sie einen Moment und versuchen Sie es dann erneut."
+
+#~ msgid "label"
+#~ msgstr "Bezeichnung"
 
 #~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 #~ msgstr ""
