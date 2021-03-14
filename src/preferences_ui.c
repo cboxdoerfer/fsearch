@@ -51,6 +51,7 @@ typedef struct {
     GtkToggleButton *highlight_search_terms;
     GtkToggleButton *show_base_2_units;
     GtkBox *action_after_file_open_box;
+    GtkFrame *action_after_file_open_frame;
     GtkComboBox *action_after_file_open;
     GtkToggleButton *action_after_file_open_keyboard;
     GtkToggleButton *action_after_file_open_mouse;
@@ -68,6 +69,7 @@ typedef struct {
     GtkToggleButton *update_db_at_start_button;
     GtkToggleButton *auto_update_checkbox;
     GtkBox *auto_update_box;
+    GtkBox *auto_update_spin_box;
     GtkWidget *auto_update_hours_spin_button;
     GtkWidget *auto_update_minutes_spin_button;
 
@@ -96,6 +98,7 @@ enum { COLUMN_NAME, NUM_COLUMNS };
 
 guint help_reset_timeout_id = 0;
 static GtkWidget *help_stack = NULL;
+static GtkWidget *help_expander = NULL;
 static GtkWidget *help_description = NULL;
 
 static void
@@ -229,18 +232,6 @@ on_list_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
 }
 
 static gboolean
-on_help_update(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    if (help_reset_timeout_id != 0) {
-        g_source_remove(help_reset_timeout_id);
-        help_reset_timeout_id = 0;
-    }
-    if (help_stack != NULL) {
-        gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(user_data));
-    }
-    return FALSE;
-}
-
-static gboolean
 help_reset(gpointer user_data) {
     if (help_stack != NULL) {
         gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(help_description));
@@ -251,7 +242,26 @@ help_reset(gpointer user_data) {
 
 static gboolean
 on_help_reset(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
+    if (help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(help_expander))) {
+        return FALSE;
+    }
     help_reset_timeout_id = g_timeout_add(200, help_reset, NULL);
+    return FALSE;
+}
+
+static gboolean
+on_help_show(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip *tooltip, gpointer user_data) {
+    if (help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(help_expander))) {
+        return FALSE;
+    }
+
+    if (help_reset_timeout_id != 0) {
+        g_source_remove(help_reset_timeout_id);
+        help_reset_timeout_id = 0;
+    }
+    if (help_stack != NULL) {
+        gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(user_data));
+    }
     return FALSE;
 }
 
@@ -259,9 +269,8 @@ static GtkWidget *
 builder_init_widget(GtkBuilder *builder, const char *name, const char *help) {
     GtkWidget *widget = GTK_WIDGET(gtk_builder_get_object(builder, name));
     GtkWidget *help_widget = GTK_WIDGET(gtk_builder_get_object(builder, help));
-    g_signal_connect(widget, "enter-notify-event", G_CALLBACK(on_help_update), help_widget);
+    g_signal_connect(widget, "query-tooltip", G_CALLBACK(on_help_show), help_widget);
     g_signal_connect(widget, "leave-notify-event", G_CALLBACK(on_help_reset), NULL);
-    g_signal_connect(widget, "focus-in-event", G_CALLBACK(on_help_update), help_widget);
     g_signal_connect(widget, "focus-out-event", G_CALLBACK(on_help_reset), NULL);
     return widget;
 }
@@ -347,6 +356,7 @@ preferences_ui_cleanup(FsearchPreferencesInterface *ui) {
         help_reset_timeout_id = 0;
     }
     help_stack = NULL;
+    help_expander = NULL;
 
     g_object_unref(ui->builder);
     gtk_widget_destroy(ui->dialog);
@@ -391,6 +401,7 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
 
     help_stack = GTK_WIDGET(gtk_builder_get_object(ui->builder, "help_stack"));
     help_description = GTK_WIDGET(gtk_builder_get_object(ui->builder, "help_help"));
+    help_expander = GTK_WIDGET(gtk_builder_get_object(ui->builder, "help_expander"));
 
     // Interface page
     ui->enable_dark_theme_button =
@@ -436,8 +447,9 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     ui->show_base_2_units =
         toggle_button_get(ui->builder, "show_base_2_units", "help_units", new_config->show_base_2_units);
 
-    ui->action_after_file_open_box =
-        GTK_BOX(builder_init_widget(ui->builder, "action_after_file_open_box", "help_action_after_open"));
+    ui->action_after_file_open_frame =
+        GTK_FRAME(builder_init_widget(ui->builder, "action_after_file_open_frame", "help_action_after_open"));
+    ui->action_after_file_open_box = GTK_BOX(gtk_builder_get_object(ui->builder, "action_after_file_open_box"));
     ui->action_after_file_open =
         GTK_COMBO_BOX(builder_init_widget(ui->builder, "action_after_file_open", "help_action_after_open"));
     gtk_combo_box_set_active(ui->action_after_file_open, new_config->action_after_file_open);
@@ -509,8 +521,12 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                  new_config->update_database_every);
 
     ui->auto_update_box = GTK_BOX(builder_init_widget(ui->builder, "auto_update_box", "help_update_database_every"));
-    gtk_widget_set_sensitive(GTK_WIDGET(ui->auto_update_box), new_config->update_database_every);
-    g_signal_connect(ui->auto_update_checkbox, "toggled", G_CALLBACK(on_toggle_set_sensitive), ui->auto_update_box);
+    ui->auto_update_spin_box = GTK_BOX(gtk_builder_get_object(ui->builder, "auto_update_spin_box"));
+    gtk_widget_set_sensitive(GTK_WIDGET(ui->auto_update_spin_box), new_config->update_database_every);
+    g_signal_connect(ui->auto_update_checkbox,
+                     "toggled",
+                     G_CALLBACK(on_toggle_set_sensitive),
+                     ui->auto_update_spin_box);
 
     ui->auto_update_hours_spin_button =
         builder_init_widget(ui->builder, "auto_update_hours_spin_button", "help_update_database_every");

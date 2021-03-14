@@ -79,6 +79,7 @@
           <object class="GtkNotebook" id="pref_main_notebook">
             <property name="visible">True</property>
             <property name="can-focus">True</property>
+            <property name="has-tooltip">True</property>
             <child>
               <!-- n-columns=2 n-rows=2 -->
               <object class="GtkGrid">
@@ -117,6 +118,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -131,6 +133,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -145,6 +148,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="valign">end</property>
                                 <property name="draw-indicator">True</property>
                               </object>
@@ -160,6 +164,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -169,9 +174,10 @@
                               </packing>
                             </child>
                             <child>
-                              <object class="GtkFrame">
+                              <object class="GtkFrame" id="action_after_file_open_frame">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="label-xalign">0</property>
                                 <property name="shadow-type">none</property>
                                 <child>
@@ -317,6 +323,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="valign">end</property>
                                 <property name="draw-indicator">True</property>
                               </object>
@@ -332,6 +339,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -346,6 +354,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -360,6 +369,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -374,6 +384,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -388,6 +399,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -402,6 +414,7 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
                               </object>
                               <packing>
@@ -463,6 +476,7 @@
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
+                                    <property name="has-tooltip">True</property>
                                     <property name="draw-indicator">True</property>
                                   </object>
                                   <packing>
@@ -534,6 +548,7 @@
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
+                                    <property name="has-tooltip">True</property>
                                     <property name="margin-left">24</property>
                                     <property name="margin-start">24</property>
                                     <property name="draw-indicator">True</property>
@@ -600,6 +615,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
+                    <property name="has-tooltip">True</property>
                     <property name="halign">end</property>
                     <property name="draw-indicator">True</property>
                   </object>
@@ -612,6 +628,7 @@
                   <object class="GtkSpinButton" id="limit_num_results_spin">
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
+                    <property name="has-tooltip">True</property>
                     <property name="halign">start</property>
                     <property name="hexpand">True</property>
                     <property name="input-purpose">digits</property>
@@ -628,6 +645,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
+                    <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
                   </object>
                   <packing>
@@ -642,6 +660,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
+                    <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
                   </object>
                   <packing>
@@ -656,6 +675,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
+                    <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
                   </object>
                   <packing>
@@ -670,6 +690,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
+                    <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
                   </object>
                   <packing>
@@ -710,6 +731,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
+                    <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
                   </object>
                   <packing>
@@ -719,15 +741,17 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
+                  <object class="GtkBox" id="auto_update_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
+                    <property name="has-tooltip">True</property>
                     <child>
                       <object class="GtkCheckButton" id="auto_update_checkbox">
                         <property name="label" translatable="yes">Update every</property>
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">False</property>
+                        <property name="has-tooltip">True</property>
                         <property name="draw-indicator">True</property>
                       </object>
                       <packing>
@@ -737,7 +761,7 @@
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkBox" id="auto_update_box">
+                      <object class="GtkBox" id="auto_update_spin_box">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="spacing">6</property>
@@ -841,6 +865,7 @@
                               <object class="GtkTreeView" id="include_list">
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
+                                <property name="has-tooltip">True</property>
                                 <property name="reorderable">True</property>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
@@ -939,6 +964,7 @@
                                   <object class="GtkTreeView" id="exclude_list">
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
+                                    <property name="has-tooltip">True</property>
                                     <property name="reorderable">True</property>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection"/>
@@ -1005,7 +1031,7 @@
                           </packing>
                         </child>
                         <child>
-                          <object class="GtkBox">
+                          <object class="GtkBox" id="exclude_files_box">
                             <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="spacing">4</property>
@@ -1048,6 +1074,7 @@
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">False</property>
+                            <property name="has-tooltip">True</property>
                             <property name="draw-indicator">True</property>
                           </object>
                           <packing>
