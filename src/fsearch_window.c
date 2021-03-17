@@ -485,6 +485,12 @@ update_model_cb(gpointer user_data) {
     FsearchDatabase *db = fsearch_application_get_db(app);
 
     remove_model_from_list(win);
+
+    if (win->query_highlight) {
+        fsearch_query_highlight_free(win->query_highlight);
+        win->query_highlight = NULL;
+    }
+
     if (win->result) {
         db_search_result_free(win->result);
         win->result = NULL;
@@ -500,10 +506,6 @@ update_model_cb(gpointer user_data) {
                 list_model_set_results(win->list_model, entries);
                 num_results = entries->len;
                 list_model_update_sort(win->list_model);
-                if (win->query_highlight) {
-                    fsearch_query_highlight_free(win->query_highlight);
-                    win->query_highlight = NULL;
-                }
                 FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
                                            .match_case = config->match_case,
                                            .auto_match_case = config->auto_match_case,
