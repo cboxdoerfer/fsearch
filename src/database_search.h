@@ -39,6 +39,8 @@ typedef struct _DatabaseSearchResult {
     void *cb_data;
     uint32_t num_folders;
     uint32_t num_files;
+
+    FsearchQuery *query;
 } DatabaseSearchResult;
 
 struct _DatabaseSearch {

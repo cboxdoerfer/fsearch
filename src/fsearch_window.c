@@ -387,6 +387,10 @@ fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
 
+    if (self->result) {
+        db_search_result_free(self->result);
+        self->result = NULL;
+    }
     if (self->query_highlight) {
         fsearch_query_highlight_free(self->query_highlight);
         self->query_highlight = NULL;
@@ -475,15 +479,10 @@ typedef struct {
     FsearchApplicationWindow *win;
 } FsearchQueryContext;
 
-static gboolean
-update_model_cb(gpointer user_data) {
-    DatabaseSearchResult *search_result = user_data;
-    FsearchQueryContext *ctx = search_result->cb_data;
-    FsearchApplicationWindow *win = ctx->win;
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-    FsearchDatabase *db = fsearch_application_get_db(app);
-
+static void
+fsearch_window_apply_search_result(FsearchApplicationWindow *win,
+                                   DatabaseSearchResult *search_result,
+                                   FsearchQueryContext *query_ctx) {
     remove_model_from_list(win);
 
     if (win->query_highlight) {
@@ -497,60 +496,71 @@ update_model_cb(gpointer user_data) {
     }
     win->result = search_result;
 
+    const gchar *text = search_result->query->text;
+    uint32_t num_results = 0;
+
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchDatabase *db = fsearch_application_get_db(app);
+    if (db == query_ctx->db) {
+        GPtrArray *entries = search_result->entries;
+        if (entries && entries->len > 0) {
+            list_model_set_results(win->list_model, entries);
+            num_results = entries->len;
+            list_model_update_sort(win->list_model);
+            win->query_highlight = fsearch_query_highlight_new(text, search_result->query->flags);
+        }
+        else {
+            list_model_set_results(win->list_model, NULL);
+            num_results = 0;
+        }
+    }
+
+    db_unref(db);
+    db = NULL;
+
+    apply_model_to_list(win);
+
+    FsearchConfig *config = fsearch_application_get_config(app);
+
+    gchar sb_text[100] = "";
+    if (config->limit_results && num_results == config->num_results) {
+        snprintf(sb_text, sizeof(sb_text), _("≥%'d Items"), num_results);
+    }
+    else {
+        snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
+    }
+    statusbar_update(win, sb_text);
+
+    if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
+        show_overlay(win, NO_SEARCH_QUERY_OVERLAY);
+    }
+    else if (num_results == 0) {
+        show_overlay(win, NO_SEARCH_RESULTS_OVERLAY);
+    }
+    else {
+        hide_overlays(win);
+    }
+}
+
+static gboolean
+fsearch_window_search_successful_cb(gpointer user_data) {
+    DatabaseSearchResult *search_result = user_data;
+    FsearchQueryContext *query_ctx = search_result->cb_data;
+    FsearchApplicationWindow *win = query_ctx->win;
+
     if (!win->closing) {
-        const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-        uint32_t num_results = 0;
-        if (db == ctx->db) {
-            GPtrArray *entries = search_result->entries;
-            if (entries && entries->len > 0) {
-                list_model_set_results(win->list_model, entries);
-                num_results = entries->len;
-                list_model_update_sort(win->list_model);
-                FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
-                                           .match_case = config->match_case,
-                                           .auto_match_case = config->auto_match_case,
-                                           .search_in_path = config->search_in_path,
-                                           .auto_search_in_path = config->auto_search_in_path};
-                win->query_highlight = fsearch_query_highlight_new(text, flags);
-            }
-            else {
-                list_model_set_results(win->list_model, NULL);
-                num_results = 0;
-            }
-        }
-
-        apply_model_to_list(win);
-
-        gchar sb_text[100] = "";
-        if (config->limit_results && num_results == config->num_results) {
-            snprintf(sb_text, sizeof(sb_text), _("≥%'d Items"), num_results);
-        }
-        else {
-            snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
-        }
-        statusbar_update(win, sb_text);
-
-        if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
-            show_overlay(win, NO_SEARCH_QUERY_OVERLAY);
-        }
-        else if (num_results == 0) {
-            show_overlay(win, NO_SEARCH_RESULTS_OVERLAY);
-        }
-        else {
-            hide_overlays(win);
-        }
+        // if they window is about to be destroyed we don't want to update its widgets
+        // they might already be gone anyway
+        fsearch_window_apply_search_result(win, search_result, query_ctx);
     }
 
     g_object_unref(win);
 
-    if (db) {
-        db_unref(db);
+    if (query_ctx->db) {
+        db_unref(query_ctx->db);
     }
-    if (ctx->db) {
-        db_unref(ctx->db);
-    }
-    free(ctx);
-    ctx = NULL;
+    free(query_ctx);
+    query_ctx = NULL;
 
     return G_SOURCE_REMOVE;
 }
@@ -558,19 +568,22 @@ update_model_cb(gpointer user_data) {
 void
 fsearch_application_window_search_cancelled(void *data) {
     FsearchQueryContext *ctx = data;
-    if (ctx) {
-        g_idle_add(search_cancelled_cb, ctx->win);
-        if (ctx->db) {
-            db_unref(ctx->db);
-            ctx->db = NULL;
-        }
-        free(ctx);
+    if (!ctx) {
+        return;
     }
+
+    g_idle_add(search_cancelled_cb, ctx->win);
+
+    if (ctx->db) {
+        db_unref(ctx->db);
+        ctx->db = NULL;
+    }
+    free(ctx);
 }
 
 void
 fsearch_application_window_update_results(void *data) {
-    g_idle_add(update_model_cb, data);
+    g_idle_add(fsearch_window_search_successful_cb, data);
 }
 
 static gboolean

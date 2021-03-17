@@ -63,10 +63,15 @@ static void
 db_search_entry_free(DatabaseSearchEntry *entry);
 
 static void
-db_search_notify_cancelled(FsearchQuery *query) {
+db_search_cancelled(FsearchQuery *query) {
+    if (!query) {
+        return;
+    }
     if (query->callback_cancelled) {
         query->callback_cancelled(query->callback_cancelled_data);
     }
+    fsearch_query_free(query);
+    query = NULL;
 }
 
 static gpointer
@@ -98,13 +103,12 @@ db_search_thread(gpointer user_data) {
         }
         if (result) {
             result->cb_data = query->callback_data;
+            result->query = query;
             query->callback(result);
         }
         else {
-            db_search_notify_cancelled(query);
+            db_search_cancelled(query);
         }
-        fsearch_query_free(query);
-        query = NULL;
     }
     return NULL;
 }
@@ -415,9 +419,7 @@ db_search_clear_queue(GAsyncQueue *queue) {
         if (!queued_query) {
             break;
         }
-        db_search_notify_cancelled(queued_query);
-        fsearch_query_free(queued_query);
-        queued_query = NULL;
+        db_search_cancelled(queued_query);
     }
 }
 
@@ -431,6 +433,11 @@ db_search_result_free(DatabaseSearchResult *result) {
         g_ptr_array_free(result->entries, TRUE);
         result->entries = NULL;
     }
+    if (result->query) {
+        fsearch_query_free(result->query);
+        result->query = NULL;
+    }
+
     result->num_files = 0;
     result->num_folders = 0;
 
