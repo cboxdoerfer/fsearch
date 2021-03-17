@@ -35,23 +35,19 @@ enum {
 };
 
 typedef struct _DatabaseSearchResult {
-    GPtrArray *results;
+    GPtrArray *entries;
     void *cb_data;
     uint32_t num_folders;
     uint32_t num_files;
 } DatabaseSearchResult;
 
 struct _DatabaseSearch {
-    GPtrArray *results;
     FsearchThreadPool *pool;
 
     GAsyncQueue *search_queue;
     GThread *search_thread;
     bool search_terminate;
     bool search_thread_terminate;
-
-    uint32_t num_folders;
-    uint32_t num_files;
 };
 
 void
@@ -70,22 +66,7 @@ void
 db_search_entry_set_pos(DatabaseSearchEntry *entry, uint32_t pos);
 
 void
-db_search_results_clear(DatabaseSearch *search);
-
-uint32_t
-db_search_get_num_results(DatabaseSearch *search);
-
-uint32_t
-db_search_get_num_files(DatabaseSearch *search);
-
-uint32_t
-db_search_get_num_folders(DatabaseSearch *search);
-
-GPtrArray *
-db_search_get_results(DatabaseSearch *search);
-
-void
-db_search_remove_entry(DatabaseSearch *search, DatabaseSearchEntry *entry);
+db_search_result_free(DatabaseSearchResult *result);
 
 void
 db_search_queue(DatabaseSearch *search, FsearchQuery *query);

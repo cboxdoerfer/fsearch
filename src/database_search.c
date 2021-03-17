@@ -256,10 +256,10 @@ db_search_worker(void *user_data) {
 }
 
 static DatabaseSearchResult *
-db_search_result_new(GPtrArray *results, uint32_t num_folders, uint32_t num_files) {
+db_search_result_new(GPtrArray *entries, uint32_t num_folders, uint32_t num_files) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
     assert(result_ctx != NULL);
-    result_ctx->results = results;
+    result_ctx->entries = entries;
     result_ctx->num_folders = num_folders;
     result_ctx->num_files = num_files;
     return result_ctx;
@@ -407,20 +407,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     return db_search_result_new(results, num_folders, num_files);
 }
 
-void
-db_search_results_clear(DatabaseSearch *search) {
-    assert(search != NULL);
-
-    // free entries
-    if (search->results) {
-        g_ptr_array_free(search->results, TRUE);
-        search->results = NULL;
-    }
-    search->num_folders = 0;
-    search->num_files = 0;
-    return;
-}
-
 static void
 db_search_clear_queue(GAsyncQueue *queue) {
     while (true) {
@@ -436,13 +422,29 @@ db_search_clear_queue(GAsyncQueue *queue) {
 }
 
 void
+db_search_result_free(DatabaseSearchResult *result) {
+    if (!result) {
+        return;
+    }
+
+    if (result->entries) {
+        g_ptr_array_free(result->entries, TRUE);
+        result->entries = NULL;
+    }
+    result->num_files = 0;
+    result->num_folders = 0;
+
+    free(result);
+    result = NULL;
+}
+
+void
 db_search_free(DatabaseSearch *search) {
     assert(search != NULL);
 
     db_search_clear_queue(search->search_queue);
     search->search_thread_terminate = true;
     g_thread_join(search->search_thread);
-    db_search_results_clear(search);
     g_free(search);
     search = NULL;
     return;
@@ -490,53 +492,6 @@ db_search_new(FsearchThreadPool *pool) {
     db_search->search_queue = g_async_queue_new();
     db_search->search_thread = g_thread_new("fsearch_search_thread", db_search_thread, db_search);
     return db_search;
-}
-
-uint32_t
-db_search_get_num_results(DatabaseSearch *search) {
-    assert(search != NULL);
-    return search->results->len;
-}
-
-uint32_t
-db_search_get_num_files(DatabaseSearch *search) {
-    assert(search != NULL);
-    return search->num_files;
-}
-
-uint32_t
-db_search_get_num_folders(DatabaseSearch *search) {
-    assert(search != NULL);
-    return search->num_folders;
-}
-
-static void
-update_index(DatabaseSearch *search) {
-    assert(search != NULL);
-
-    for (uint32_t i = 0; i < search->results->len; ++i) {
-        DatabaseSearchEntry *entry = g_ptr_array_index(search->results, i);
-        entry->pos = i;
-    }
-}
-
-void
-db_search_remove_entry(DatabaseSearch *search, DatabaseSearchEntry *entry) {
-    if (search == NULL) {
-        return;
-    }
-    if (entry == NULL) {
-        return;
-    }
-
-    g_ptr_array_remove(search->results, (void *)entry);
-    update_index(search);
-}
-
-GPtrArray *
-db_search_get_results(DatabaseSearch *search) {
-    assert(search != NULL);
-    return search->results;
 }
 
 void

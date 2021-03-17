@@ -90,6 +90,8 @@ struct _FsearchApplicationWindow {
     ListModel *list_model;
 
     DatabaseSearch *search;
+    DatabaseSearchResult *result;
+
     FsearchQueryHighlight *query_highlight;
 
     bool closing;
@@ -475,27 +477,28 @@ typedef struct {
 
 static gboolean
 update_model_cb(gpointer user_data) {
-    DatabaseSearchResult *result = user_data;
-    FsearchQueryContext *ctx = result->cb_data;
+    DatabaseSearchResult *search_result = user_data;
+    FsearchQueryContext *ctx = search_result->cb_data;
     FsearchApplicationWindow *win = ctx->win;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
 
-    if (!win->closing) {
-        remove_model_from_list(win);
-        db_search_results_clear(win->search);
+    remove_model_from_list(win);
+    if (win->result) {
+        db_search_result_free(win->result);
+        win->result = NULL;
+    }
+    win->result = search_result;
 
+    if (!win->closing) {
         const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
         uint32_t num_results = 0;
         if (db == ctx->db) {
-            GPtrArray *results = result->results;
-            if (results && results->len > 0) {
-                list_model_set_results(win->list_model, results);
-                win->search->results = results;
-                win->search->num_folders = result->num_folders;
-                win->search->num_files = result->num_files;
-                num_results = results->len;
+            GPtrArray *entries = search_result->entries;
+            if (entries && entries->len > 0) {
+                list_model_set_results(win->list_model, entries);
+                num_results = entries->len;
                 list_model_update_sort(win->list_model);
                 if (win->query_highlight) {
                     fsearch_query_highlight_free(win->query_highlight);
@@ -510,9 +513,6 @@ update_model_cb(gpointer user_data) {
             }
             else {
                 list_model_set_results(win->list_model, NULL);
-                win->search->results = NULL;
-                win->search->num_folders = 0;
-                win->search->num_files = 0;
                 num_results = 0;
             }
         }
@@ -549,9 +549,6 @@ update_model_cb(gpointer user_data) {
     }
     free(ctx);
     ctx = NULL;
-
-    free(result);
-    result = NULL;
 
     return G_SOURCE_REMOVE;
 }
@@ -840,9 +837,9 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
-    if (self->search) {
-        num_folders = db_search_get_num_folders(self->search);
-        num_files = db_search_get_num_files(self->search);
+    if (self->result) {
+        num_folders = self->result->num_folders;
+        num_files = self->result->num_files;
     }
     if (!num_folders && !num_files) {
         gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
