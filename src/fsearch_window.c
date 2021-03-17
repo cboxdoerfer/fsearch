@@ -468,10 +468,16 @@ search_cancelled_cb(gpointer user_data) {
     return G_SOURCE_REMOVE;
 }
 
+typedef struct {
+    FsearchDatabase *db;
+    FsearchApplicationWindow *win;
+} FsearchQueryContext;
+
 static gboolean
 update_model_cb(gpointer user_data) {
     DatabaseSearchResult *result = user_data;
-    FsearchApplicationWindow *win = result->cb_data;
+    FsearchQueryContext *ctx = result->cb_data;
+    FsearchApplicationWindow *win = ctx->win;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
@@ -482,7 +488,7 @@ update_model_cb(gpointer user_data) {
 
         const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
         uint32_t num_results = 0;
-        if (db == result->db) {
+        if (db == ctx->db) {
             GPtrArray *results = result->results;
             if (results && results->len > 0) {
                 list_model_set_results(win->list_model, results);
@@ -538,9 +544,12 @@ update_model_cb(gpointer user_data) {
     if (db) {
         db_unref(db);
     }
-    if (result->db) {
-        db_unref(result->db);
+    if (ctx->db) {
+        db_unref(ctx->db);
     }
+    free(ctx);
+    ctx = NULL;
+
     free(result);
     result = NULL;
 
@@ -549,7 +558,15 @@ update_model_cb(gpointer user_data) {
 
 void
 fsearch_application_window_search_cancelled(void *data) {
-    g_idle_add(search_cancelled_cb, data);
+    FsearchQueryContext *ctx = data;
+    if (ctx) {
+        g_idle_add(search_cancelled_cb, ctx->win);
+        if (ctx->db) {
+            db_unref(ctx->db);
+            ctx->db = NULL;
+        }
+        free(ctx);
+    }
 }
 
 void
@@ -601,13 +618,18 @@ perform_search(FsearchApplicationWindow *win) {
     uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
     FsearchFilter *filter = filter_element->data;
+
+    FsearchQueryContext *ctx = calloc(1, sizeof(FsearchQueryContext));
+    ctx->win = win;
+    ctx->db = db;
+
     FsearchQuery *q = fsearch_query_new(text,
-                                        db,
+                                        db_get_entries(db),
                                         filter,
                                         fsearch_application_window_update_results,
-                                        win,
+                                        ctx,
                                         fsearch_application_window_search_cancelled,
-                                        win,
+                                        ctx,
                                         max_results,
                                         flags,
                                         !config->hide_results_on_empty_search);

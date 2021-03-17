@@ -20,7 +20,6 @@
 
 #include "array.h"
 #include "btree.h"
-#include "database.h"
 #include "fsearch_filter.h"
 #include "fsearch_thread_pool.h"
 #include "query.h"
@@ -36,7 +35,6 @@ enum {
 };
 
 typedef struct _DatabaseSearchResult {
-    FsearchDatabase *db;
     GPtrArray *results;
     void *cb_data;
     uint32_t num_folders;

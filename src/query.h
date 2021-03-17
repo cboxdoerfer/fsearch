@@ -22,7 +22,7 @@
 #include <pango/pango.h>
 #include <stdbool.h>
 
-#include "database.h"
+#include "array.h"
 #include "fsearch_filter.h"
 #include "token.h"
 
@@ -57,7 +57,8 @@ typedef struct FsearchQueryHighlight {
 
 typedef struct FsearchQuery {
     char *text;
-    FsearchDatabase *db;
+    DynamicArray *entries;
+
     FsearchFilter *filter;
 
     FsearchToken **token;
@@ -79,7 +80,7 @@ typedef struct FsearchQuery {
 
 FsearchQuery *
 fsearch_query_new(const char *text,
-                  FsearchDatabase *db,
+                  DynamicArray *array,
                   FsearchFilter *filter,
                   void (*callback)(void *),
                   void *callback_data,

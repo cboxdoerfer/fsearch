@@ -26,7 +26,7 @@
 
 FsearchQuery *
 fsearch_query_new(const char *text,
-                  FsearchDatabase *db,
+                  DynamicArray *entries,
                   FsearchFilter *filter,
                   void (*callback)(void *),
                   void *callback_data,
@@ -40,6 +40,8 @@ fsearch_query_new(const char *text,
     if (text) {
         q->text = strdup(text);
     }
+
+    q->entries = entries;
 
     q->token = fsearch_tokens_new(text, flags.match_case, flags.enable_regex, flags.auto_match_case);
     q->num_token = 0;
@@ -55,7 +57,6 @@ fsearch_query_new(const char *text,
         }
     }
 
-    q->db = db;
     q->filter = filter;
     q->callback = callback;
     q->callback_data = callback_data;

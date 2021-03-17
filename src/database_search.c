@@ -16,6 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#include "array.h"
 #define _GNU_SOURCE
 #include "database_search.h"
 
@@ -63,9 +64,6 @@ db_search_entry_free(DatabaseSearchEntry *entry);
 
 static void
 db_search_notify_cancelled(FsearchQuery *query) {
-    if (query->db) {
-        db_unref(query->db);
-    }
     if (query->callback_cancelled) {
         query->callback_cancelled(query->callback_cancelled_data);
     }
@@ -100,7 +98,6 @@ db_search_thread(gpointer user_data) {
         }
         if (result) {
             result->cb_data = query->callback_data;
-            result->db = query->db;
             query->callback(result);
         }
         else {
@@ -193,7 +190,7 @@ db_search_worker(void *user_data) {
     FsearchToken **token = query->token;
     const uint32_t search_in_path = query->flags.search_in_path;
     const uint32_t auto_search_in_path = query->flags.auto_search_in_path;
-    DynamicArray *entries = db_get_entries(query->db);
+    DynamicArray *entries = query->entries;
     BTreeNode **results = ctx->results;
 
     if (!entries) {
@@ -271,14 +268,14 @@ db_search_result_new(GPtrArray *results, uint32_t num_folders, uint32_t num_file
 static DatabaseSearchResult *
 db_search_empty(FsearchQuery *query) {
     assert(query != NULL);
-    assert(query->db != NULL);
+    assert(query->entries != NULL);
 
-    const uint32_t num_entries = db_get_num_entries(query->db);
+    const uint32_t num_entries = darray_get_num_items(query->entries);
     const uint32_t num_results = query->max_results == 0 ? num_entries : MIN(query->max_results, num_entries);
     GPtrArray *results = g_ptr_array_sized_new(num_results);
     g_ptr_array_set_free_func(results, (GDestroyNotify)db_search_entry_free);
 
-    DynamicArray *entries = db_get_entries(query->db);
+    DynamicArray *entries = query->entries;
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
@@ -317,7 +314,7 @@ static DatabaseSearchResult *
 db_search(DatabaseSearch *search, FsearchQuery *q) {
     assert(search != NULL);
 
-    const uint32_t num_entries = db_get_num_entries(q->db);
+    const uint32_t num_entries = darray_get_num_items(q->entries);
     if (num_entries == 0) {
         return db_search_result_new(NULL, 0, 0);
     }
