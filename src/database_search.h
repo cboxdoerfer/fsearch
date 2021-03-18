@@ -26,7 +26,6 @@
 #include <stdint.h>
 
 typedef struct _DatabaseSearch DatabaseSearch;
-typedef struct _DatabaseSearchEntry DatabaseSearchEntry;
 
 // search modes
 enum {
@@ -34,8 +33,13 @@ enum {
     DB_SEARCH_MODE_REGEX = 1,
 };
 
+typedef struct _DatabaseSearchEntry {
+    BTreeNode *node;
+    uint32_t pos;
+} DatabaseSearchEntry;
+
 typedef struct _DatabaseSearchResult {
-    GPtrArray *entries;
+    GArray *entries;
     void *cb_data;
     uint32_t num_folders;
     uint32_t num_files;

@@ -71,7 +71,7 @@ typedef struct ListModelCachedValue {
 struct _ListModel {
     GObject parent; /* this MUST be the first member */
 
-    GPtrArray *results;
+    GArray *results;
 
     /* These two fields are not absolutely necessary, but they    */
     /*   speed things up a bit in our get_value implementation    */
@@ -112,7 +112,7 @@ void
 list_model_sort_init(ListModel *list_model, char *sort_by, bool sort_ascending);
 
 void
-list_model_set_results(ListModel *list, GPtrArray *results);
+list_model_set_results(ListModel *list, GArray *results);
 
 void
 list_model_remove_entry(ListModel *list, DatabaseSearch *search, DatabaseSearchEntry *entry);

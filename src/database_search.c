@@ -36,11 +36,6 @@
 #include "string_utils.h"
 #include "token.h"
 
-struct _DatabaseSearchEntry {
-    BTreeNode *node;
-    uint32_t pos;
-};
-
 typedef struct search_context_s {
     FsearchQuery *query;
     BTreeNode **results;
@@ -260,7 +255,7 @@ db_search_worker(void *user_data) {
 }
 
 static DatabaseSearchResult *
-db_search_result_new(GPtrArray *entries, uint32_t num_folders, uint32_t num_files) {
+db_search_result_new(GArray *entries, uint32_t num_folders, uint32_t num_files) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
     assert(result_ctx != NULL);
     result_ctx->entries = entries;
@@ -276,8 +271,7 @@ db_search_empty(FsearchQuery *query) {
 
     const uint32_t num_entries = darray_get_num_items(query->entries);
     const uint32_t num_results = query->max_results == 0 ? num_entries : MIN(query->max_results, num_entries);
-    GPtrArray *results = g_ptr_array_sized_new(num_results);
-    g_ptr_array_set_free_func(results, (GDestroyNotify)db_search_entry_free);
+    GArray *results = g_array_sized_new(TRUE, TRUE, sizeof(DatabaseSearchEntry), num_results);
 
     DynamicArray *entries = query->entries;
 
@@ -307,8 +301,10 @@ db_search_empty(FsearchQuery *query) {
         else {
             num_files++;
         }
-        DatabaseSearchEntry *entry = db_search_entry_new(node, pos);
-        g_ptr_array_add(results, entry);
+
+        DatabaseSearchEntry entry = {.node = node, .pos = pos};
+        g_array_append_val(results, entry);
+
         pos++;
     }
     return db_search_result_new(results, num_folders, num_files);
@@ -373,8 +369,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
         num_results += thread_data[i]->num_results;
     }
 
-    GPtrArray *results = g_ptr_array_sized_new(MIN(num_results, max_results));
-    g_ptr_array_set_free_func(results, (GDestroyNotify)db_search_entry_free);
+    GArray *results = g_array_sized_new(TRUE, TRUE, sizeof(DatabaseSearchEntry), MIN(num_results, max_results));
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
@@ -398,8 +393,10 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
             else {
                 num_files++;
             }
-            DatabaseSearchEntry *entry = db_search_entry_new(node, pos);
-            g_ptr_array_add(results, entry);
+
+            DatabaseSearchEntry entry = {.node = node, .pos = pos};
+            g_array_append_val(results, entry);
+
             pos++;
         }
         search_thread_context_free(ctx);
@@ -430,7 +427,7 @@ db_search_result_free(DatabaseSearchResult *result) {
     }
 
     if (result->entries) {
-        g_ptr_array_free(result->entries, TRUE);
+        g_array_free(result->entries, TRUE);
         result->entries = NULL;
     }
     if (result->query) {

@@ -502,7 +502,7 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win,
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchDatabase *db = fsearch_application_get_db(app);
     if (db == query_ctx->db) {
-        GPtrArray *entries = search_result->entries;
+        GArray *entries = search_result->entries;
         if (entries && entries->len > 0) {
             list_model_set_results(win->list_model, entries);
             num_results = entries->len;

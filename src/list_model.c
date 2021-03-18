@@ -142,7 +142,7 @@ get_file_type(DatabaseSearchEntry *entry, const gchar *path) {
 static void
 list_model_clear(ListModel *list_model) {
     if (list_model->results) {
-        g_ptr_array_free(list_model->results, TRUE);
+        g_array_free(list_model->results, TRUE);
         list_model->results = NULL;
     }
     if (list_model->node_path) {
@@ -372,7 +372,7 @@ list_model_get_iter(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *pa
     if (!list_model->results || n >= list_model->results->len || n < 0)
         return FALSE;
 
-    DatabaseSearchEntry *entry = g_ptr_array_index(list_model->results, n);
+    DatabaseSearchEntry *entry = &g_array_index(list_model->results, DatabaseSearchEntry, n);
 
     g_assert(entry != NULL);
     g_assert(db_search_entry_get_pos(entry) == n);
@@ -550,7 +550,7 @@ list_model_iter_next(GtkTreeModel *tree_model, GtkTreeIter *iter) {
     if (new_results_pos >= list_model->results->len)
         return FALSE;
 
-    DatabaseSearchEntry *nextrecord = g_ptr_array_index(list_model->results, new_results_pos);
+    DatabaseSearchEntry *nextrecord = &g_array_index(list_model->results, DatabaseSearchEntry, new_results_pos);
 
     g_assert(nextrecord != NULL);
     g_assert(db_search_entry_get_pos(nextrecord) == new_results_pos);
@@ -593,7 +593,7 @@ list_model_iter_children(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIte
 
     /* Set iter to first item in list */
     iter->stamp = list_model->stamp;
-    iter->user_data = g_ptr_array_index(list_model->results, 0);
+    iter->user_data = &g_array_index(list_model->results, DatabaseSearchEntry, 0);
 
     return TRUE;
 }
@@ -662,7 +662,7 @@ list_model_iter_nth_child(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIt
     if (n >= list_model->results->len)
         return FALSE;
 
-    DatabaseSearchEntry *record = g_ptr_array_index(list_model->results, n);
+    DatabaseSearchEntry *record = &g_array_index(list_model->results, DatabaseSearchEntry, n);
 
     g_assert(record != NULL);
     g_assert(db_search_entry_get_pos(record) == n);
@@ -934,10 +934,10 @@ list_model_compare_records(gint sort_id, DatabaseSearchEntry *a, DatabaseSearchE
 }
 
 static gint
-list_model_qsort_compare_func(DatabaseSearchEntry **a, DatabaseSearchEntry **b, ListModel *list_model) {
+list_model_qsort_compare_func(DatabaseSearchEntry *a, DatabaseSearchEntry *b, ListModel *list_model) {
     g_assert((a) && (b) && (list_model));
 
-    gint ret = list_model_compare_records(list_model->sort_id, *a, *b);
+    gint ret = list_model_compare_records(list_model->sort_id, a, b);
 
     /* Swap -1 and 1 if sort order is reverse */
     if (ret != 0 && list_model->sort_order == GTK_SORT_DESCENDING)
@@ -988,7 +988,7 @@ list_model_apply_sort(ListModel *list_model) {
          * Both will work, but one will give you 'jumpy'
          * selections after row reordering. */
         /* neworder[(list_model->rows[i])->pos] = i; */
-        DatabaseSearchEntry *entry = g_ptr_array_index(list_model->results, i);
+        DatabaseSearchEntry *entry = &g_array_index(list_model->results, DatabaseSearchEntry, i);
         neworder[i] = db_search_entry_get_pos(entry);
         db_search_entry_set_pos(entry, i);
     }
@@ -1020,7 +1020,7 @@ list_model_sort(ListModel *list_model) {
     trace("[list_model] sort started\n");
     GTimer *timer = fsearch_timer_start();
     /* resort */
-    g_ptr_array_sort_with_data(list_model->results, (GCompareDataFunc)list_model_qsort_compare_func, list_model);
+    g_array_sort_with_data(list_model->results, (GCompareDataFunc)list_model_qsort_compare_func, list_model);
 
     list_model_apply_sort(list_model);
 
@@ -1037,7 +1037,7 @@ list_model_update_sort(ListModel *list_model) {
 }
 
 void
-list_model_set_results(ListModel *list, GPtrArray *results) {
+list_model_set_results(ListModel *list, GArray *results) {
     list->node_cached = NULL;
     list->results = results;
 }
