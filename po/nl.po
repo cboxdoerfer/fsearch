@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2020-11-04 21:26+0000\n"
+"PO-Revision-Date: 2021-03-21 18:29+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,17 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.2-dev\n"
+"X-Generator: Weblate 4.5.2-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Bezig met samenstellen van opzoeklijst…"
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "Bezig met sorteren..."
+msgstr "Bezig met sorteren…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -38,23 +36,20 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Openen met andere toepassing"
+msgstr "Nieuw toepassingsvenster openen"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Toepassingsvoorkeuren openen"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Databank bijwerken"
+msgstr "Databank bijwerken en afsluiten"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Versie-informatie tonen"
+msgstr "Versie-informatie tonen en afsluiten"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -249,10 +244,9 @@ msgid "Querying…"
 msgstr "Bezig met zoeken…"
 
 #: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "≥%'d Items"
-msgstr "%'d items"
+msgstr ">%'d items"
 
 #: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
@@ -329,9 +323,8 @@ msgid "Cancel Update"
 msgstr "Update afbreken"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Nieuw venster"
+msgstr "Venster sluiten"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -414,9 +407,8 @@ msgid "Empty Database"
 msgstr "Lege databank"
 
 #: src/overlay.ui:250
-#, fuzzy
 msgid "Add folders"
-msgstr "Mappen"
+msgstr "Mappen toevoegen"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
@@ -553,26 +545,24 @@ msgid "Update database on start"
 msgstr "Databank bijwerken na opstarten"
 
 #: src/preferences.ui:727
-#, fuzzy
-#| msgid "Update"
 msgid "Update every"
-msgstr "Bijwerken"
+msgstr "Bijwerken, elke"
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "uur en"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "minute(n)"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
@@ -649,8 +639,7 @@ msgstr ""
 "\n"
 "Schakel in om het zoekvak en hoofdmenu op de titelbalk te tonen.\n"
 "\n"
-"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak "
-"daaronder.\n"
+"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak daaronder."
 "\n"
 "Dit laatste zorgt voor een traditionelere vormgeving, maar neem iets meer "
 "ruimte in beslag."
@@ -695,7 +684,6 @@ msgstr ""
 "afmetingen af."
 
 #: src/preferences.ui:1196
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -719,8 +707,8 @@ msgstr ""
 "\n"
 "\t• <b>Niets:</b> er wordt geen actie ondernomen.\n"
 "\t• <b>Minimaliseren:</b> minimaliseer het huidige FSearch-venster. \n"
-"\t\tLet op: op sommige systemen kunnen vensters niet worden "
-"geminimaliseerd.\n"
+"\t\tLet op: op sommige systemen kunnen vensters niet worden geminimaliseerd."
+"\n"
 "\t• <b>Sluiten:</b> sluit FSearch af.\n"
 "\n"
 "Je kunt aangeven of deze acties moeten worden uitgevoerd als het bestand "
@@ -1075,6 +1063,16 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>Periodically update database at a specific time interval:</b>\n"
+"\n"
+"If enabled and as long as FSearch is running, the database will be updated "
+"periodically with the given time interval.\n"
+"\n"
+"If you want to update the database in the background, even when FSearch is "
+"not running, you should use tools like cron or systemd timers to "
+"periodically trigger the update with:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/preferences.ui:1645
 msgid "Help"
