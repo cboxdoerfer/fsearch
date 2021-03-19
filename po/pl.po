@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2020-11-04 21:26+0000\n"
+"PO-Revision-Date: 2021-03-21 18:29+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,17 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.3.2-dev\n"
+"X-Generator: Weblate 4.5.2-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Budowanie listy wyszukiwania…"
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "Sortowanie..."
+msgstr "Sortowanie…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -41,23 +39,20 @@ msgstr ""
 "funkcjach"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Otwórz za pomocą innej aplikacji"
+msgstr "Otwórz nowe okno aplikacji"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Pokaż ustawienia aplikacji"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Uaktualnij bazę danych"
+msgstr "Uaktualnij bazę danych i wyjdź"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Pokaż informacje o wersji"
+msgstr "Pokaż informacje o wersji i wyjdź"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -252,10 +247,9 @@ msgid "Querying…"
 msgstr "Odpytywanie…"
 
 #: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "≥%'d Items"
-msgstr "%'d wyniki"
+msgstr "≥%'d wyniki"
 
 #: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
@@ -332,9 +326,8 @@ msgid "Cancel Update"
 msgstr "Przerwij Aktualizację"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Nowe okno"
+msgstr "Zamknij okno"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -417,9 +410,8 @@ msgid "Empty Database"
 msgstr "Pusta baza danych"
 
 #: src/overlay.ui:250
-#, fuzzy
 msgid "Add folders"
-msgstr "Katalogi"
+msgstr "Dodaj katalogi"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
@@ -555,26 +547,24 @@ msgid "Update database on start"
 msgstr "Uaktualnij bazę danych przy starcie"
 
 #: src/preferences.ui:727
-#, fuzzy
-#| msgid "Update"
 msgid "Update every"
-msgstr "Aktualizacja"
+msgstr "Aktualizuj co"
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "godzin"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "minut(y)"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
@@ -695,7 +685,6 @@ msgstr ""
 "okno miało inny rozmiar."
 
 #: src/preferences.ui:1196
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1086,6 +1075,16 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>Cyklicznie uaktualniaj bazę danych w określonym odstępie czasu:</b>\n"
+"\n"
+"Jeśli zaznaczone oraz FSearch jest uruchomiony, baza danych będzie "
+"cyklicznie aktualizowana w podamym odstępie czasowym.\n"
+"\n"
+"Jeśli chcesz aktualizować bazę danych w tle, nawet gdy FSearch nie jest "
+"uruchomiony, możesz użyć narzędzi takich jak cron lub timery systemd aby "
+"cyklicznie aktualizować bazę danych za pomocą komendy:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/preferences.ui:1645
 msgid "Help"
