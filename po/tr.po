@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2020-11-18 04:28+0000\n"
+"PO-Revision-Date: 2021-03-21 18:29+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,17 +18,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.5.2-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Arama listesi oluşturuluyor…"
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "Sıralanıyor..."
+msgstr "Sıralanıyor…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -39,23 +37,20 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Başka Bir Uygulama İle Aç"
+msgstr "Yeni bir uygulama penceresi aç"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Uygulama tercihlerini göster"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Veri tabanını güncelle"
+msgstr "Veri tabanını güncelle ve çık"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Sürüm bilgilerini göster"
+msgstr "Sürüm bilgilerini yazdır ve çık"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -111,7 +106,7 @@ msgstr "Arama Sonucunun Sayısı"
 
 #: src/fsearch.glade:418
 msgid "0 Items"
-msgstr "0 Öğe"
+msgstr "0 Öge"
 
 #: src/fsearch.glade:455
 msgid "Index:"
@@ -245,17 +240,16 @@ msgstr "Veri Tabanı Yükleniyor…"
 #: src/fsearch_window.c:160 src/fsearch_window.c:521 src/fsearch_window.c:987
 #, c-format
 msgid "%'d Items"
-msgstr "%'d Öğe"
+msgstr "%'d Öge"
 
 #: src/fsearch_window.c:449 src/fsearch_window.c:616
 msgid "Querying…"
 msgstr "Sorgulanıyor…"
 
 #: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "≥%'d Items"
-msgstr "%'d Öğe"
+msgstr "≥%'d Öge"
 
 #: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
@@ -332,9 +326,8 @@ msgid "Cancel Update"
 msgstr "Güncellemeyi İptal Et"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Yeni Pencere"
+msgstr "Pencereyi Kapat"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -417,9 +410,8 @@ msgid "Empty Database"
 msgstr "Boş Veri Tabanı"
 
 #: src/overlay.ui:250
-#, fuzzy
 msgid "Add folders"
-msgstr "Klasörler"
+msgstr "Klasörler ekle"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
@@ -556,26 +548,24 @@ msgid "Update database on start"
 msgstr "Başlangıçta veri tabanını güncelle"
 
 #: src/preferences.ui:727
-#, fuzzy
-#| msgid "Update"
 msgid "Update every"
-msgstr "Güncelle"
+msgstr "Güncelleme aralığı"
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "saat ve"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "dakika"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
@@ -696,7 +686,6 @@ msgstr ""
 "boyuta sahip olmaya zorladığını unutmayın."
 
 #: src/preferences.ui:1196
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -717,7 +706,6 @@ msgstr ""
 "\n"
 "Bir dosya/klasör başarıyla açıldığında, aşağıdaki eylemlerden biri "
 "gerçekleştirilebilir:\n"
-"\n"
 "\t• <b>Hiçbiri:</b> Hiçbir şey olmaz.\n"
 "\t• <b>Küçült:</b> Seçili olan FSearch penceresi küçültülür. \n"
 "\t\tTüm sistemlerin pencerelerin küçültülmesine izin vermediğini unutmayın.\n"
@@ -725,7 +713,6 @@ msgstr ""
 "\n"
 "Dosya aşağıdaki yollarla açıldığında bu eylemlerin tetiklenip "
 "tetiklenmeyeceğini yapılandırabilirsiniz:\n"
-"\n"
 "\t• <b>klavye kısayolları veya menü girdileri</b> ve/veya\n"
 "\t• <b>fareyle tıklama</b>"
 
@@ -1078,6 +1065,16 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>Veri tabanını belirli bir zaman aralığında düzenli olarak güncelle:</b>\n"
+"\n"
+"Etkinleştirildiğinde ve FSearch çalıştığı sürece, veri tabanı belirtilen "
+"zaman aralığında düzenli olarak güncellenecektir.\n"
+"\n"
+"Veri tabanını FSearch çalışmıyorken bile arka planda güncellemek "
+"istiyorsanız, güncellemeyi düzenli olarak tetiklemek için cron veya systemd "
+"zamanlayıcıları gibi araçlar kullanmalısınız:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/preferences.ui:1645
 msgid "Help"
