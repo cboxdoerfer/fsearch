@@ -388,7 +388,7 @@ static void
 preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page) {
     FsearchConfig *new_config = ui->new_config;
 
-    ui->builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/preferences.ui");
+    ui->builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/preferences.ui");
 
     ui->dialog = GTK_WIDGET(gtk_builder_get_object(ui->builder, "FsearchPreferencesWindow"));
     gtk_window_set_transient_for(GTK_WINDOW(ui->dialog), ui->window);

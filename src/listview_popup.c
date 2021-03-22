@@ -140,7 +140,7 @@ listview_popup_menu(GtkWidget *widget, GdkEvent *event) {
         return;
     }
 
-    GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
+    GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
     fill_open_with_menu(GTK_TREE_VIEW(widget), builder, &iter);
 

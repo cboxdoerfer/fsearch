@@ -3,7 +3,7 @@ project('fsearch', 'c',
     meson_version: '>= 0.50.0',
     default_options: ['c_std=c11'],
     )
-app_id = 'io.github.cboxdoerfer.Fsearch'
+app_id = 'io.github.cboxdoerfer.FSearch'
 
 cc = meson.get_compiler('c')
 

@@ -1071,7 +1071,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
 
     fsearch_window_actions_init(self);
     GtkCssProvider *provider = gtk_css_provider_new();
-    gtk_css_provider_load_from_resource(provider, "/org/fsearch/fsearch/shared.css");
+    gtk_css_provider_load_from_resource(provider, "/io/github/cboxdoerfer/fsearch/ui/shared.css");
     gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
                                               GTK_STYLE_PROVIDER(provider),
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
@@ -1088,7 +1088,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
                             G_CONNECT_AFTER);
     g_signal_connect_object(app, "database-load-started", G_CALLBACK(database_load_started_cb), self, G_CONNECT_AFTER);
 
-    GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/overlay.ui");
+    GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/overlay.ui");
 
     // Overlay when no search results are found
     self->no_search_results_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "no_search_results"));
@@ -1224,7 +1224,7 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
 
     object_class->constructed = fsearch_application_window_constructed;
     object_class->finalize = fsearch_application_window_finalize;
-    gtk_widget_class_set_template_from_resource(widget_class, "/org/fsearch/fsearch/fsearch.glade");
+    gtk_widget_class_set_template_from_resource(widget_class, "/io/github/cboxdoerfer/fsearch/ui/fsearch.glade");
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, app_menu);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_status_box);

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
-  <gresource prefix="/org/fsearch/fsearch">
+    <gresource prefix="/io/github/cboxdoerfer/fsearch/ui">
     <file compressed="true">fsearch.glade</file>
     <file compressed="true">shared.css</file>
     <file compressed="true">menus.ui</file>

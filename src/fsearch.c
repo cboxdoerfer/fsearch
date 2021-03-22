@@ -72,9 +72,9 @@ typedef struct {
     void *cancelled_cb_data;
 } DatabaseUpdateContext;
 
-static const char *fsearch_bus_name = "org.fsearch.fsearch";
-static const char *fsearch_db_worker_bus_name = "org.fsearch.database_worker";
-static const char *fsearch_object_path = "/org/fsearch/fsearch";
+static const char *fsearch_bus_name = "io.github.cboxdoerfer.FSearch";
+static const char *fsearch_db_worker_bus_name = "io.github.cboxdoerfer.FSearchDatabaseWorker";
+static const char *fsearch_object_path = "/io/github/cboxdoerfer/FSearch";
 
 enum { DATABASE_SCAN_STARTED, DATABASE_UPDATE_FINISHED, DATABASE_LOAD_STARTED, NUM_SIGNALS };
 
@@ -545,7 +545,7 @@ fsearch_application_startup(GApplication *app) {
                  NULL);
 
     if (fsearch->config->show_menubar) {
-        GtkBuilder *menu_builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
+        GtkBuilder *menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
         g_object_unref(menu_builder);

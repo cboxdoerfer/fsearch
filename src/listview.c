@@ -61,7 +61,7 @@ on_listview_column_width_changed(GtkTreeViewColumn *col, GParamSpec *pspec, gpoi
 static gboolean
 on_listview_header_clicked(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     if (gdk_event_triggers_context_menu(event)) {
-        GtkBuilder *builder = gtk_builder_new_from_resource("/org/fsearch/fsearch/menus.ui");
+        GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
         GtkWidget *list = gtk_tree_view_column_get_tree_view(GTK_TREE_VIEW_COLUMN(user_data));
         GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_model));
