@@ -52,7 +52,6 @@ struct _FsearchApplication {
     GThreadPool *db_pool;
     GList *filters;
 
-    bool activated;
     bool new_window;
 
     FsearchDatabaseState db_state;
@@ -202,11 +201,7 @@ fsearch_application_shutdown(GApplication *app) {
     }
     if (fsearch->db_pool) {
         trace("[exit] waiting for database thread to exit...\n");
-        if (fsearch->activated) {
-            // only ask thread to cancel work when the application was activated
-            // this allows fsearch --update-database to finish its work
-            fsearch->db_thread_cancel = true;
-        }
+        fsearch->db_thread_cancel = true;
         g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
         fsearch->db_pool = FALSE;
         trace("[exit] database thread finished.\n");
@@ -622,14 +617,10 @@ fsearch_application_activate(GApplication *app) {
 
     fsearch_application_db_auto_update(self);
 
-    if (!self->activated) {
-        // first full application start
-        self->activated = true;
-        self->db_thread_cancel = false;
-        fsearch_database_update(false);
-        if (self->config->update_database_on_launch) {
-            fsearch_database_update(true);
-        }
+    self->db_thread_cancel = false;
+    fsearch_database_update(false);
+    if (self->config->update_database_on_launch) {
+        fsearch_database_update(true);
     }
 }
 
