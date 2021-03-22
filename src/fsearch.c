@@ -72,6 +72,10 @@ typedef struct {
     void *cancelled_cb_data;
 } DatabaseUpdateContext;
 
+static const char *fsearch_bus_name = "org.fsearch.fsearch";
+static const char *fsearch_db_worker_bus_name = "org.fsearch.database_worker";
+static const char *fsearch_object_path = "/org/fsearch/fsearch";
+
 enum { DATABASE_SCAN_STARTED, DATABASE_UPDATE_FINISHED, DATABASE_LOAD_STARTED, NUM_SIGNALS };
 
 static guint signals[NUM_SIGNALS];
@@ -657,8 +661,143 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
     return G_APPLICATION_CLASS(fsearch_application_parent_class)->command_line(app, cmdline);
 }
 
+typedef struct {
+    GMainLoop *loop;
+    bool update_called_on_primary;
+} FsearchApplicationDatabaseWorker;
+
+static void
+on_action_group_changed(GDBusConnection *connection,
+                        const gchar *sender_name,
+                        const gchar *object_path,
+                        const gchar *interface_name,
+                        const gchar *signal_name,
+                        GVariant *parameters,
+                        gpointer user_data) {
+    return;
+}
+
+static void
+on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_data) {
+    FsearchApplicationDatabaseWorker *worker_ctx = user_data;
+
+    GDBusActionGroup *dbus_group = g_dbus_action_group_get(connection, fsearch_bus_name, fsearch_object_path);
+
+    guint signal_id = g_dbus_connection_signal_subscribe(connection,
+                                                         fsearch_bus_name,
+                                                         "org.gtk.Actions",
+                                                         "Changed",
+                                                         fsearch_object_path,
+                                                         NULL,
+                                                         G_DBUS_SIGNAL_FLAGS_NONE,
+                                                         on_action_group_changed,
+                                                         NULL,
+                                                         NULL);
+
+    GVariant *reply = g_dbus_connection_call_sync(connection,
+                                                  fsearch_bus_name,
+                                                  fsearch_object_path,
+                                                  "org.gtk.Actions",
+                                                  "DescribeAll",
+                                                  NULL,
+                                                  G_VARIANT_TYPE("(a{s(bgav)})"),
+                                                  G_DBUS_CALL_FLAGS_NO_AUTO_START,
+                                                  -1,
+                                                  NULL,
+                                                  NULL);
+    g_dbus_connection_signal_unsubscribe(connection, signal_id);
+
+    if (dbus_group && reply) {
+        trace("[database] trigger update in primary instance\n");
+        g_action_group_activate_action(G_ACTION_GROUP(dbus_group), "update_database", NULL);
+        g_object_unref(dbus_group);
+
+        worker_ctx->update_called_on_primary = true;
+    }
+    if (worker_ctx && worker_ctx->loop) {
+        g_main_loop_quit(worker_ctx->loop);
+    }
+}
+
+static void
+on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data) {
+    FsearchApplicationDatabaseWorker *worker_ctx = user_data;
+    if (worker_ctx && worker_ctx->loop) {
+        g_main_loop_quit(worker_ctx->loop);
+    }
+}
+
+static int
+local_database_update() {
+    GTimer *timer = fsearch_timer_start();
+
+    FsearchConfig *config = config = calloc(1, sizeof(FsearchConfig));
+    if (!config_load(config)) {
+        if (!config_load_default(config)) {
+            g_printerr("[database_update] failed to load config\n");
+            return 1;
+        }
+    }
+    FsearchDatabase *db =
+        db_new(config->locations, config->exclude_locations, config->exclude_files, config->exclude_hidden_items);
+    if (!db) {
+        g_printerr("[database_update] failed allocate database\n");
+        config_free(config);
+        config = NULL;
+        return 1;
+    }
+
+    db_lock(db);
+    int res = !db_scan(db, NULL, NULL);
+    db_unlock(db);
+    db_unref(db);
+
+    config_free(config);
+    config = NULL;
+
+    if (res == 0) {
+        fsearch_timer_stop(timer, "[database_update] finished in %.2f ms\n");
+        timer = NULL;
+    }
+    else {
+        fsearch_timer_stop(timer, "[database_update] failed after %.2f ms\n");
+        timer = NULL;
+    }
+    return res;
+}
+
+static int
+fsearch_application_local_database_update() {
+    // First detect if the another instance of fsearch is already registered
+    // If yes, trigger update there, so the UI is aware of the update and can display its progress
+    FsearchApplicationDatabaseWorker worker_ctx = {};
+    worker_ctx.loop = g_main_loop_new(NULL, FALSE);
+    guint owner_id = g_bus_own_name(G_BUS_TYPE_SESSION,
+                                    fsearch_db_worker_bus_name,
+                                    G_BUS_NAME_OWNER_FLAGS_DO_NOT_QUEUE,
+                                    NULL,
+                                    on_name_acquired,
+                                    on_name_lost,
+                                    &worker_ctx,
+                                    NULL);
+    g_main_loop_run(worker_ctx.loop);
+    g_bus_unown_name(owner_id);
+
+    if (worker_ctx.update_called_on_primary) {
+        // triggered update in primary instance, we're done here
+        return 0;
+    }
+    else {
+        // no primary instance found, perform update
+        return local_database_update();
+    }
+}
+
 static gint
 fsearch_application_handle_local_options(GApplication *application, GVariantDict *options) {
+    if (g_variant_dict_contains(options, "update-database")) {
+        return fsearch_application_local_database_update();
+    }
     if (g_variant_dict_contains(options, "version")) {
         g_print("FSearch %s\n", PACKAGE_VERSION);
         return 0;
@@ -728,7 +867,7 @@ FsearchApplication *
 fsearch_application_new(void) {
     FsearchApplication *self = g_object_new(FSEARCH_APPLICATION_TYPE,
                                             "application-id",
-                                            "org.fsearch.fsearch",
+                                            fsearch_bus_name,
                                             "flags",
                                             G_APPLICATION_HANDLES_COMMAND_LINE,
                                             NULL);

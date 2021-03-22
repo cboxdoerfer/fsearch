@@ -423,7 +423,7 @@ typedef struct DatabaseWalkContext {
 static int
 db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *parent) {
 
-    if (*walk_context->cancel == true) {
+    if (walk_context->cancel && *walk_context->cancel == true) {
         return WALK_CANCEL;
     }
 
@@ -448,7 +448,7 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
 
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
-        if (*walk_context->cancel == true) {
+        if (walk_context->cancel && *walk_context->cancel == true) {
             if (dir) {
                 closedir(dir);
             }
