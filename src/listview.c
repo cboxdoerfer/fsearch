@@ -161,6 +161,14 @@ listview_name_cell_data_func(GtkTreeViewColumn *col,
 }
 
 static void
+listview_cell_renderer_set_dimmed(GtkWidget *widget, GtkCellRenderer *renderer) {
+    GtkStyleContext *style = gtk_widget_get_style_context(widget);
+    GdkRGBA color = {};
+    gtk_style_context_get_color(style, GTK_STATE_FLAG_INSENSITIVE, &color);
+    g_object_set(G_OBJECT(renderer), "foreground-rgba", &color, NULL);
+}
+
+static void
 listview_add_name_column(GtkTreeView *list, int32_t size, int32_t pos, FsearchApplicationWindow *win) {
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
     GtkCellRenderer *renderer = NULL;
@@ -197,8 +205,9 @@ listview_add_name_column(GtkTreeView *list, int32_t size, int32_t pos, FsearchAp
 static void
 listview_add_path_column(GtkTreeView *list, int32_t size, int32_t pos, FsearchApplicationWindow *win) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
+    listview_cell_renderer_set_dimmed(GTK_WIDGET(list), renderer);
     g_object_set(G_OBJECT(renderer), "ellipsize", PANGO_ELLIPSIZE_END, NULL);
-    g_object_set(G_OBJECT(renderer), "foreground", "grey", NULL);
 
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
     gtk_tree_view_column_pack_start(col, renderer, TRUE);
@@ -223,8 +232,9 @@ listview_add_path_column(GtkTreeView *list, int32_t size, int32_t pos, FsearchAp
 static void
 listview_add_size_column(GtkTreeView *list, int32_t size, int32_t pos) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
+    listview_cell_renderer_set_dimmed(GTK_WIDGET(list), renderer);
     g_object_set(G_OBJECT(renderer), "ellipsize", PANGO_ELLIPSIZE_END, "xalign", 1.0, NULL);
-    g_object_set(G_OBJECT(renderer), "foreground", "grey", NULL);
 
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
     gtk_tree_view_column_pack_start(col, renderer, TRUE);
@@ -241,8 +251,9 @@ listview_add_size_column(GtkTreeView *list, int32_t size, int32_t pos) {
 static void
 listview_add_modified_column(GtkTreeView *list, int32_t size, int32_t pos) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
+    listview_cell_renderer_set_dimmed(GTK_WIDGET(list), renderer);
     g_object_set(G_OBJECT(renderer), "ellipsize", PANGO_ELLIPSIZE_END, "xalign", 1.0, NULL);
-    g_object_set(G_OBJECT(renderer), "foreground", "grey", NULL);
 
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
     gtk_tree_view_column_pack_start(col, renderer, TRUE);
@@ -259,8 +270,9 @@ listview_add_modified_column(GtkTreeView *list, int32_t size, int32_t pos) {
 static void
 listview_add_type_column(GtkTreeView *list, int32_t size, int32_t pos) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+
+    listview_cell_renderer_set_dimmed(GTK_WIDGET(list), renderer);
     g_object_set(G_OBJECT(renderer), "ellipsize", PANGO_ELLIPSIZE_END, NULL);
-    g_object_set(G_OBJECT(renderer), "foreground", "grey", NULL);
 
     GtkTreeViewColumn *col = gtk_tree_view_column_new();
     gtk_tree_view_column_pack_start(col, renderer, TRUE);
