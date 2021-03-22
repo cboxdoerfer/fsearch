@@ -877,6 +877,24 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
     }
 }
 
+void
+fsearch_window_listview_block_selection_changed(FsearchApplicationWindow *self, gboolean block) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    if (block) {
+        g_signal_handlers_block_by_func(self->listview_selection, on_listview_selection_changed, self);
+    }
+    else {
+        g_signal_handlers_unblock_by_func(self->listview_selection, on_listview_selection_changed, self);
+    }
+}
+
+void
+fsearch_window_listview_selection_changed(FsearchApplicationWindow *self) {
+
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    on_listview_selection_changed(self->listview_selection, self);
+}
+
 static gboolean
 toggle_action_on_2button_press(GdkEvent *event, const char *action, gpointer user_data) {
     guint button;

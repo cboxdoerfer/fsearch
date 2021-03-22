@@ -208,6 +208,7 @@ fsearch_window_action_invert_selection(GSimpleAction *action, GVariant *variant,
     if (!model) {
         return;
     }
+    fsearch_window_listview_block_selection_changed(self, TRUE);
     gtk_tree_selection_select_all(selection);
 
     GList *temp = selected_rows;
@@ -219,6 +220,8 @@ fsearch_window_action_invert_selection(GSimpleAction *action, GVariant *variant,
         }
         temp = temp->next;
     }
+    fsearch_window_listview_block_selection_changed(self, FALSE);
+    fsearch_window_listview_selection_changed(self);
     g_list_free_full(selected_rows, (GDestroyNotify)gtk_tree_path_free);
 }
 

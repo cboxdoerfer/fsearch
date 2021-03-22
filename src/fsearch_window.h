@@ -46,6 +46,12 @@ GtkTreeSelection *
 fsearch_application_window_get_listview_selection(FsearchApplicationWindow *self);
 
 void
+fsearch_window_listview_block_selection_changed(FsearchApplicationWindow *self, gboolean block);
+
+void
+fsearch_window_listview_selection_changed(FsearchApplicationWindow *self);
+
+void
 fsearch_application_window_update_listview_config(FsearchApplicationWindow *self);
 
 void
