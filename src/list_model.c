@@ -17,7 +17,6 @@
    */
 
 #define _GNU_SOURCE
-#include "list_model.h"
 #include <ctype.h>
 #include <glib/gstdio.h>
 #include <stdlib.h>
@@ -30,6 +29,7 @@
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "fsearch_timer.h"
+#include "list_model.h"
 
 /* boring declarations of local functions */
 
@@ -369,8 +369,9 @@ list_model_get_iter(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreePath *pa
 
     const gint n = indices[0]; /* the n-th top level row */
 
-    if (!list_model->results || n >= list_model->results->len || n < 0)
+    if (!list_model->results || n >= list_model->results->len || n < 0) {
         return FALSE;
+    }
 
     DatabaseSearchEntry *entry = &g_array_index(list_model->results, DatabaseSearchEntry, n);
 
@@ -423,8 +424,9 @@ list_model_get_value(GtkTreeModel *tree_model, GtkTreeIter *iter, gint column, G
 
     ListModel *list_model = LIST_MODEL(tree_model);
 
-    if (db_search_entry_get_pos(record) >= list_model->results->len)
+    if (db_search_entry_get_pos(record) >= list_model->results->len) {
         g_return_if_reached();
+    }
 
     char output[100] = "";
 
@@ -539,16 +541,18 @@ static gboolean
 list_model_iter_next(GtkTreeModel *tree_model, GtkTreeIter *iter) {
     g_return_val_if_fail(IS_LIST_MODEL(tree_model), FALSE);
 
-    if (iter == NULL || iter->user_data == NULL)
+    if (iter == NULL || iter->user_data == NULL) {
         return FALSE;
+    }
 
     ListModel *list_model = LIST_MODEL(tree_model);
     DatabaseSearchEntry *record = (DatabaseSearchEntry *)iter->user_data;
 
     const uint32_t new_results_pos = db_search_entry_get_pos(record) + 1;
     /* Is this the last record in the list? */
-    if (new_results_pos >= list_model->results->len)
+    if (new_results_pos >= list_model->results->len) {
         return FALSE;
+    }
 
     DatabaseSearchEntry *nextrecord = &g_array_index(list_model->results, DatabaseSearchEntry, new_results_pos);
 
@@ -577,8 +581,9 @@ list_model_iter_children(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIte
     g_return_val_if_fail(parent == NULL || parent->user_data != NULL, FALSE);
 
     /* this is a list, nodes have no children */
-    if (parent)
+    if (parent) {
         return FALSE;
+    }
 
     /* parent == NULL is a special case; we need to return the first top-level
      * row */
@@ -588,8 +593,9 @@ list_model_iter_children(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIte
     ListModel *list_model = LIST_MODEL(tree_model);
 
     /* No rows => no first row */
-    if (list_model->results->len == 0)
+    if (list_model->results->len == 0) {
         return FALSE;
+    }
 
     /* Set iter to first item in list */
     iter->stamp = list_model->stamp;
@@ -631,8 +637,9 @@ list_model_iter_n_children(GtkTreeModel *tree_model, GtkTreeIter *iter) {
     ListModel *list_model = LIST_MODEL(tree_model);
 
     /* special case: if iter == NULL, return number of top-level rows */
-    if (!iter && list_model->results)
+    if (!iter && list_model->results) {
         return list_model->results->len;
+    }
 
     return 0; /* otherwise, this is easy again for a list */
 }
@@ -653,14 +660,16 @@ list_model_iter_nth_child(GtkTreeModel *tree_model, GtkTreeIter *iter, GtkTreeIt
     g_return_val_if_fail(IS_LIST_MODEL(tree_model), FALSE);
 
     /* a list has only top-level rows */
-    if (parent)
+    if (parent) {
         return FALSE;
+    }
 
     /* special case: if parent == NULL, set iter to n-th top-level row */
 
     ListModel *list_model = LIST_MODEL(tree_model);
-    if (n >= list_model->results->len)
+    if (n >= list_model->results->len) {
         return FALSE;
+    }
 
     DatabaseSearchEntry *record = &g_array_index(list_model->results, DatabaseSearchEntry, n);
 
@@ -734,11 +743,13 @@ list_model_sortable_get_sort_column_id(GtkTreeSortable *sortable, gint *sort_col
 
     list_model = LIST_MODEL(sortable);
 
-    if (sort_col_id)
+    if (sort_col_id) {
         *sort_col_id = list_model->sort_id;
+    }
 
-    if (order)
+    if (order) {
         *order = list_model->sort_order;
+    }
 
     return TRUE;
 }
@@ -915,14 +926,16 @@ list_model_compare_records(gint sort_id, DatabaseSearchEntry *a, DatabaseSearchE
             return n_a - n_b;
         }
 
-        if (node_a->size == node_b->size)
+        if (node_a->size == node_b->size) {
             return 0;
+        }
 
         return (node_a->size > node_b->size) ? 1 : -1;
     }
     case SORT_ID_CHANGED: {
-        if (node_a->mtime == node_b->mtime)
+        if (node_a->mtime == node_b->mtime) {
             return 0;
+        }
 
         return (node_a->mtime > node_b->mtime) ? 1 : -1;
     }
@@ -940,8 +953,9 @@ list_model_qsort_compare_func(DatabaseSearchEntry *a, DatabaseSearchEntry *b, Li
     gint ret = list_model_compare_records(list_model->sort_id, a, b);
 
     /* Swap -1 and 1 if sort order is reverse */
-    if (ret != 0 && list_model->sort_order == GTK_SORT_DESCENDING)
+    if (ret != 0 && list_model->sort_order == GTK_SORT_DESCENDING) {
         ret = (ret < 0) ? 1 : -1;
+    }
 
     return ret;
 }
