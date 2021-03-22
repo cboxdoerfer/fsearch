@@ -52,12 +52,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q);
 static DatabaseSearchResult *
 db_search_empty(FsearchQuery *query);
 
-DatabaseSearchEntry *
-db_search_entry_new(BTreeNode *node, uint32_t pos);
-
-static void
-db_search_entry_free(DatabaseSearchEntry *entry);
-
 static void
 db_search_cancelled(FsearchQuery *query) {
     if (!query) {
@@ -468,24 +462,6 @@ db_search_entry_get_pos(DatabaseSearchEntry *entry) {
 void
 db_search_entry_set_pos(DatabaseSearchEntry *entry, uint32_t pos) {
     entry->pos = pos;
-}
-
-static void
-db_search_entry_free(DatabaseSearchEntry *entry) {
-    if (entry) {
-        g_free(entry);
-        entry = NULL;
-    }
-}
-
-DatabaseSearchEntry *
-db_search_entry_new(BTreeNode *node, uint32_t pos) {
-    DatabaseSearchEntry *entry = calloc(1, sizeof(DatabaseSearchEntry));
-    assert(entry != NULL);
-
-    entry->node = node;
-    entry->pos = pos;
-    return entry;
 }
 
 DatabaseSearch *
