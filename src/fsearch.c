@@ -774,7 +774,7 @@ fsearch_application_local_database_update() {
     worker_ctx.loop = g_main_loop_new(NULL, FALSE);
     guint owner_id = g_bus_own_name(G_BUS_TYPE_SESSION,
                                     fsearch_db_worker_bus_name,
-                                    G_BUS_NAME_OWNER_FLAGS_DO_NOT_QUEUE,
+                                    G_BUS_NAME_OWNER_FLAGS_NONE,
                                     NULL,
                                     on_name_acquired,
                                     on_name_lost,
