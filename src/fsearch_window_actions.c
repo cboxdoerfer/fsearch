@@ -194,7 +194,6 @@ fsearch_window_action_delete(GSimpleAction *action, GVariant *variant, gpointer 
 
 static void
 fsearch_window_action_invert_selection(GSimpleAction *action, GVariant *variant, gpointer user_data) {
-    // TODO: can be very slow. Find a way how to optimize that.
     FsearchApplicationWindow *self = user_data;
     GtkTreeSelection *selection = fsearch_application_window_get_listview_selection(self);
     if (!selection) {
