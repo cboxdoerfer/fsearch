@@ -16,7 +16,6 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "array.h"
 #define _GNU_SOURCE
 #include "database_search.h"
 
@@ -30,7 +29,9 @@
 #include <sys/time.h>
 #include <unistd.h>
 
+#include "array.h"
 #include "debug.h"
+#include "fsearch_limits.h"
 #include "fsearch_timer.h"
 #include "fsearch_window.h"
 #include "string_utils.h"
