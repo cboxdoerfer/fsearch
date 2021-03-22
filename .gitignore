@@ -1,5 +1,6 @@
 # Build files
 Makefile.in
+/build
 /Makefile
 /data/Makefile
 /data/fsearch.desktop
@@ -46,9 +47,13 @@ src/*.ui~
 *.includes
 
 # VIM files
+.vim
 *.swp
 compile_commands.json
 *.ycm_extra_conf*
+
+#idea
+.idea
 
 # Object files
 *.o
@@ -97,7 +102,7 @@ config.sub
 m4/
 po/Makevars.template
 po/POTFILES
-po/Rules-quot
+po/Rules-quot*
 po/boldquot.sed
 po/en@boldquot.header
 po/en@quot.header
