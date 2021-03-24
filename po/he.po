@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2020-11-20 06:24+0000\n"
+"PO-Revision-Date: 2021-03-24 17:29+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.5.2-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
@@ -511,7 +511,7 @@ msgstr ""
 
 #: src/preferences.ui:533
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "פתיחת הקובץ / תיקייה נכשלה"
 
 #: src/preferences.ui:555
 msgid "Dialogs:"
@@ -519,11 +519,11 @@ msgstr ""
 
 #: src/preferences.ui:580
 msgid "Interface"
-msgstr ""
+msgstr "מנשק"
 
 #: src/preferences.ui:599
 msgid "Limit number of results:"
-msgstr ""
+msgstr "הגבלת מספר התוצאות:"
 
 #: src/preferences.ui:627
 msgid "Search in path when query contains path separators"
@@ -531,11 +531,11 @@ msgstr ""
 
 #: src/preferences.ui:641
 msgid "Search as you type"
-msgstr ""
+msgstr "חיפוש בזמן הקלדה"
 
 #: src/preferences.ui:655
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "הסתרת התוצאות כאשר החיפוש ריק"
 
 #: src/preferences.ui:669
 msgid "Match case when query contains at least one upper case character"

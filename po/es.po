@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-01-12 09:20+0000\n"
-"Last-Translator: badlop <badlop@process-one.net>\n"
+"PO-Revision-Date: 2021-03-24 17:29+0000\n"
+"Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -18,17 +18,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4.1-dev\n"
+"X-Generator: Weblate 4.5.2-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Creando lista de búsqueda…"
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "Ordenando..."
+msgstr "Ordenando…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -40,23 +38,20 @@ msgstr ""
 "Herramienta de búsqueda centrada en la velocidad y con prestaciones avanzadas"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Abrir con otra aplicación"
+msgstr "Abrir una nueva ventana del programa"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Mostrar las configuraciones de la aplicación"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Actualizar base de datos"
+msgstr "Actualizar base de datos y salir"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Mostrar información de la versión"
+msgstr "Mostrar información de la versión y salir"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -252,10 +247,9 @@ msgid "Querying…"
 msgstr "Consultando…"
 
 #: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "≥%'d Items"
-msgstr "%'d elementos"
+msgstr "≥%'d elementos"
 
 #: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
@@ -332,9 +326,8 @@ msgid "Cancel Update"
 msgstr "Cancelar actualización"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Ventana nueva"
+msgstr "Cerrar ventana"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -417,9 +410,8 @@ msgid "Empty Database"
 msgstr "Base de datos vacía"
 
 #: src/overlay.ui:250
-#, fuzzy
 msgid "Add folders"
-msgstr "Carpetas"
+msgstr "Agregar carpetas"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
@@ -556,26 +548,24 @@ msgid "Update database on start"
 msgstr "Actualizar base de datos al inicio"
 
 #: src/preferences.ui:727
-#, fuzzy
-#| msgid "Update"
 msgid "Update every"
-msgstr "Actualizar"
+msgstr "Actualizar cada"
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "hora(s) y"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "minuto(s)"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
@@ -696,7 +686,6 @@ msgstr ""
 "solicitud y fuerzan la ventana a tener un tamaño diferente."
 
 #: src/preferences.ui:1196
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -717,7 +706,6 @@ msgstr ""
 "\n"
 "Cuando se abre correctamente un archivo/carpeta, se puede realizar una de "
 "las siguientes acciones:\n"
-"\n"
 "\t• <b>Nada:</b> No sucede nada.\n"
 "\t• <b>Minimizar:</b> La ventana de FSearch actualmente seleccionada se "
 "minimiza.\n"
@@ -725,9 +713,8 @@ msgstr ""
 "ventanas.\n"
 "\t• <b>Cerrar:</b> Salir de FSearch.\n"
 "\n"
-"Puede configurar si esas acciones deben activarse cuando se abrie el archivo "
+"Puede configurar si esas acciones deben activarse cuando se abre el archivo "
 "con\n"
-"\n"
 "\t• <b>atajos de teclado o entradas de menú</b> y/o\n"
 "\t• <b>clic del ratón</b>"
 
@@ -1093,6 +1080,17 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>Actualizar periódicamente la base de datos en un intervalo de tiempo "
+"específico:</b>\n"
+"\n"
+"Si está habilitado y mientras FSearch esté en ejecución, la base de datos se "
+"actualizará periódicamente con el intervalo de tiempo dado.\n"
+"\n"
+"Si desea actualizar la base de datos en segundo plano, incluso cuando "
+"FSearch no está ejecución, debe usar herramientas como cron o Systemd timer "
+"para activar periódicamente la actualización con:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/preferences.ui:1645
 msgid "Help"
