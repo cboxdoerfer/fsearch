@@ -34,8 +34,7 @@ static void
 clipboard_clean_data(GtkClipboard *clipboard, gpointer user_data) {
     /* g_debug("clean clipboard!\n"); */
     if (clipboard_file_list) {
-        g_list_foreach(clipboard_file_list, (GFunc)g_free, NULL);
-        g_list_free(clipboard_file_list);
+        g_list_free_full(clipboard_file_list, (GDestroyNotify)g_free);
         clipboard_file_list = NULL;
     }
     clipboard_action = GDK_ACTION_DEFAULT;

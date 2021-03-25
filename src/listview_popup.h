@@ -22,7 +22,9 @@
 #include <config.h>
 #endif
 
+#include "btree.h"
 #include <gtk/gtk.h>
 
 void
-listview_popup_menu(GtkWidget *widget, GdkEvent *event);
+listview_popup_menu(GtkWidget *widget, BTreeNode *node);
+

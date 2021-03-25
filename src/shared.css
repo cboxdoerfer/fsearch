@@ -47,3 +47,11 @@
 .results_frame_csd_mode {
     border-top: none;
 }
+
+.results_frame treeview button {
+	border-radius: 0;
+	border-top: 0;
+}
+.results_frame treeview button:first-child {
+	border-left: 0;
+}

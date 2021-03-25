@@ -26,12 +26,11 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_window.h \
 			 fsearch_window_actions.h \
 			 fsearch_limits.h \
+			 fsearch_list_view.h \
 			 fsearch_filter.h \
 			 fsearch_include_path.h \
 			 fsearch_exclude_path.h \
 			 fsearch_preferences_widgets.h \
-			 list_model.h \
-			 listview.h \
 			 listview_popup.h \
 			 preferences_ui.h \
 			 query.h \
@@ -49,20 +48,19 @@ fsearch_SOURCES = main.c \
 		  fsearch_config.c \
 		  database.c \
 		  database_search.c \
-		  list_model.c \
 		  preferences_ui.c \
 		  resources.c \
 		  ui_utils.c \
 		  fsearch_thread_pool.c \
 		  fsearch_timer.c \
 		  fsearch_filter.c \
+		  fsearch_list_view.c \
 		  fsearch_include_path.c \
 		  fsearch_exclude_path.c \
 		  fsearch_preferences_widgets.c \
 		  array.c \
 		  string_utils.c \
 		  btree.c \
-		  listview.c \
 		  listview_popup.c \
 		  query.c \
 		  token.c \

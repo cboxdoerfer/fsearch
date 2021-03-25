@@ -250,7 +250,7 @@ db_search_worker(void *user_data) {
 }
 
 static DatabaseSearchResult *
-db_search_result_new(GArray *entries, uint32_t num_folders, uint32_t num_files) {
+db_search_result_new(DynamicArray *entries, uint32_t num_folders, uint32_t num_files) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
     assert(result_ctx != NULL);
     result_ctx->entries = entries;
@@ -266,7 +266,7 @@ db_search_empty(FsearchQuery *query) {
 
     const uint32_t num_entries = darray_get_num_items(query->entries);
     const uint32_t num_results = query->max_results == 0 ? num_entries : MIN(query->max_results, num_entries);
-    GArray *results = g_array_sized_new(TRUE, TRUE, sizeof(DatabaseSearchEntry), num_results);
+    DynamicArray *results = darray_new(num_results);
 
     DynamicArray *entries = query->entries;
 
@@ -274,33 +274,39 @@ db_search_empty(FsearchQuery *query) {
     uint32_t num_files = 0;
     uint32_t pos = 0;
 
-    char full_path[PATH_MAX] = "";
-    for (uint32_t i = 0; pos < num_results && i < num_entries; ++i) {
-        BTreeNode *node = darray_get_item(entries, i);
-        if (!node) {
-            continue;
-        }
+    if (!query->filter || query->filter->type == FSEARCH_FILTER_NONE) {
+        void **data = darray_get_data(entries, NULL);
+        darray_add_items(results, data, num_entries);
+        printf("no filter\n");
+    }
+    else {
+        char full_path[PATH_MAX] = "";
+        for (uint32_t i = 0; pos < num_results && i < num_entries; ++i) {
+            BTreeNode *node = darray_get_item(entries, i);
+            if (!node) {
+                continue;
+            }
 
-        const char *haystack_path = NULL;
-        const char *haystack_name = node->name;
-        if (query->filter->search_in_path) {
-            btree_node_get_path_full(node, full_path, sizeof(full_path));
-            haystack_path = full_path;
-        }
-        if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
-            continue;
-        }
-        if (node->is_dir) {
-            num_folders++;
-        }
-        else {
-            num_files++;
-        }
+            const char *haystack_path = NULL;
+            const char *haystack_name = node->name;
+            if (query->filter->search_in_path) {
+                btree_node_get_path_full(node, full_path, sizeof(full_path));
+                haystack_path = full_path;
+            }
+            if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
+                continue;
+            }
+            if (node->is_dir) {
+                num_folders++;
+            }
+            else {
+                num_files++;
+            }
 
-        DatabaseSearchEntry entry = {.node = node, .pos = pos};
-        g_array_append_val(results, entry);
+            darray_set_item(results, node, pos);
 
-        pos++;
+            pos++;
+        }
     }
     return db_search_result_new(results, num_folders, num_files);
 }
@@ -364,7 +370,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
         num_results += thread_data[i]->num_results;
     }
 
-    GArray *results = g_array_sized_new(TRUE, TRUE, sizeof(DatabaseSearchEntry), MIN(num_results, max_results));
+    DynamicArray *results = darray_new(num_results);
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
@@ -375,25 +381,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
         if (!ctx) {
             break;
         }
-        for (uint32_t j = 0; j < ctx->num_results; ++j) {
-            if (limit_results) {
-                if (pos >= max_results) {
-                    break;
-                }
-            }
-            BTreeNode *node = ctx->results[j];
-            if (node->is_dir) {
-                num_folders++;
-            }
-            else {
-                num_files++;
-            }
-
-            DatabaseSearchEntry entry = {.node = node, .pos = pos};
-            g_array_append_val(results, entry);
-
-            pos++;
-        }
+        darray_add_items(results, (void **)ctx->results, ctx->num_results);
         search_thread_context_free(ctx);
     }
 
@@ -422,7 +410,7 @@ db_search_result_free(DatabaseSearchResult *result) {
     }
 
     if (result->entries) {
-        g_array_free(result->entries, TRUE);
+        darray_free(result->entries);
         result->entries = NULL;
     }
     if (result->query) {

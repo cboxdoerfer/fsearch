@@ -39,7 +39,7 @@ typedef struct _DatabaseSearchEntry {
 } DatabaseSearchEntry;
 
 typedef struct _DatabaseSearchResult {
-    GArray *entries;
+    DynamicArray *entries;
     void *cb_data;
     uint32_t num_folders;
     uint32_t num_files;

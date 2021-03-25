@@ -16,9 +16,11 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define _GNU_SOURCE
 #include "utils.h"
 #include "debug.h"
 #include "fsearch_limits.h"
+#include "fsearch_list_view.h"
 #include "ui_utils.h"
 #include <gio/gio.h>
 #include <stdbool.h>
@@ -255,5 +257,232 @@ launch_node_path(BTreeNode *node, const char *cmd) {
         }
     }
     return false;
+}
+
+gchar *
+get_mimetype(const gchar *path) {
+    if (!path) {
+        return NULL;
+    }
+    gchar *content_type = g_content_type_guess(path, NULL, 1, NULL);
+    if (content_type) {
+        gchar *mimetype = g_content_type_get_description(content_type);
+        g_free(content_type);
+        content_type = NULL;
+        return mimetype;
+    }
+    return NULL;
+}
+
+gchar *
+get_file_type(BTreeNode *node, const gchar *path) {
+    gchar *type = NULL;
+    if (node->is_dir) {
+        type = g_strdup("Folder");
+    }
+    else {
+        type = get_mimetype(path);
+    }
+    if (type == NULL) {
+        type = g_strdup("Unknown Type");
+    }
+    return type;
+}
+
+GIcon *
+get_gicon_for_path(const char *path) {
+    GFile *g_file = g_file_new_for_path(path);
+    if (!g_file) {
+        return g_themed_icon_new("edit-delete");
+    }
+
+    GFileInfo *file_info = g_file_query_info(g_file, "standard::icon", 0, NULL, NULL);
+    if (!file_info) {
+        g_object_unref(g_file);
+        g_file = NULL;
+        return g_themed_icon_new("edit-delete");
+    }
+
+    GIcon *icon = g_file_info_get_icon(file_info);
+    g_object_ref(icon);
+
+    g_object_unref(file_info);
+    file_info = NULL;
+
+    g_object_unref(g_file);
+    g_file = NULL;
+
+    return icon;
+}
+
+cairo_surface_t *
+get_icon_surface(GdkWindow *win, const char *path, int icon_size, int scale_factor) {
+    GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
+    if (!icon_theme) {
+        return NULL;
+    }
+
+    cairo_surface_t *icon_surface = NULL;
+    GIcon *icon = get_gicon_for_path(path);
+    const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
+    if (!names) {
+        g_object_unref(icon);
+        return NULL;
+    }
+
+    GtkIconInfo *icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
+                                                                  (const char **)names,
+                                                                  icon_size,
+                                                                  scale_factor,
+                                                                  GTK_ICON_LOOKUP_FORCE_SIZE);
+    if (!icon_info) {
+        return NULL;
+    }
+
+    GdkPixbuf *pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
+    if (pixbuf) {
+        icon_surface = gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
+        g_object_unref(pixbuf);
+    }
+    g_object_unref(icon);
+    g_object_unref(icon_info);
+
+    return icon_surface;
+}
+
+int
+get_icon_size_for_height(int height) {
+    if (height < 24) {
+        return 16;
+    }
+    if (height < 32) {
+        return 24;
+    }
+    if (height < 48) {
+        return 32;
+    }
+    return 48;
+}
+
+static int
+compare_path(BTreeNode *a, BTreeNode *b) {
+    if (!a || !b) {
+        return 0;
+    }
+    const int32_t a_depth = btree_node_depth(a);
+    const int32_t b_depth = btree_node_depth(b);
+    char *a_parents[a_depth + 1];
+    char *b_parents[b_depth + 1];
+    a_parents[a_depth] = NULL;
+    b_parents[b_depth] = NULL;
+
+    BTreeNode *temp = a;
+    for (int32_t i = a_depth - 1; i >= 0 && temp; i--) {
+        a_parents[i] = temp->name;
+        temp = temp->parent;
+    }
+    temp = b;
+    for (int32_t i = b_depth - 1; i >= 0 && temp; i--) {
+        b_parents[i] = temp->name;
+        temp = temp->parent;
+    }
+
+    uint32_t i = 0;
+    char *a_name = a_parents[i];
+    char *b_name = b_parents[i];
+
+    while (a_name && b_name) {
+        int res = strverscmp(a_name, b_name);
+        if (res != 0) {
+            return res;
+        }
+        i++;
+        a_name = a_parents[i];
+        b_name = b_parents[i];
+    }
+    return a_depth - b_depth;
+}
+
+int
+compare_nodes(FsearchListViewColumnType sort_order, BTreeNode *node_a, BTreeNode *node_b) {
+    const bool is_dir_a = node_a->is_dir;
+    const bool is_dir_b = node_b->is_dir;
+
+    const gchar *name_a = node_a->name;
+    const gchar *name_b = node_b->name;
+
+    gchar *type_a = NULL;
+    gchar *type_b = NULL;
+
+    gchar path_a[PATH_MAX] = "";
+    gchar path_b[PATH_MAX] = "";
+
+    gint return_val = 0;
+
+    switch (sort_order) {
+    case FSEARCH_LIST_VIEW_COLUMN_NAME: {
+        return node_a->pos - node_b->pos;
+    }
+    case FSEARCH_LIST_VIEW_COLUMN_PATH: {
+        if (is_dir_a != is_dir_b) {
+            return is_dir_b - is_dir_a;
+        }
+
+        return compare_path(node_a->parent, node_b->parent);
+    }
+    case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
+        if (is_dir_a != is_dir_b) {
+            return is_dir_b - is_dir_a;
+        }
+        if (is_dir_a && is_dir_b) {
+            return 0;
+        }
+
+        btree_node_get_path_full(node_a, path_a, sizeof(path_a));
+        type_a = get_file_type(node_a, path_a);
+        btree_node_get_path_full(node_b, path_b, sizeof(path_b));
+        type_b = get_file_type(node_b, path_b);
+
+        if (type_a && type_b) {
+            return_val = strverscmp(type_a, type_b);
+        }
+        if (type_a) {
+            g_free(type_a);
+            type_a = NULL;
+        }
+        if (type_b) {
+            g_free(type_b);
+            type_b = NULL;
+        }
+        return return_val;
+    }
+    case FSEARCH_LIST_VIEW_COLUMN_SIZE: {
+        if (is_dir_a != is_dir_b) {
+            return is_dir_b - is_dir_a;
+        }
+        if (is_dir_a && is_dir_b) {
+            uint32_t n_a = btree_node_n_children(node_a);
+            uint32_t n_b = btree_node_n_children(node_b);
+            return n_a - n_b;
+        }
+
+        if (node_a->size == node_b->size) {
+            return 0;
+        }
+
+        return (node_a->size > node_b->size) ? 1 : -1;
+    }
+    case FSEARCH_LIST_VIEW_COLUMN_CHANGED: {
+        if (node_a->mtime == node_b->mtime) {
+            return 0;
+        }
+
+        return (node_a->mtime > node_b->mtime) ? 1 : -1;
+    }
+    default:
+        return 0;
+    }
+
+    g_return_val_if_reached(0);
 }
 

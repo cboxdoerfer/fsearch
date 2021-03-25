@@ -22,6 +22,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <gtk/gtk.h>
 
 #include "fsearch.h"
+#include "fsearch_list_view.h"
 #include "query.h"
 
 G_BEGIN_DECLS
@@ -39,7 +40,7 @@ fsearch_application_window_prepare_close(FsearchApplicationWindow *self);
 void
 fsearch_application_window_prepare_shutdown(gpointer self);
 
-GtkTreeView *
+FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self);
 
 GtkTreeSelection *
@@ -86,6 +87,9 @@ fsearch_application_window_get_query_highlight(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_results(void *data);
+
+uint32_t
+fsearch_application_window_get_num_results(FsearchApplicationWindow *self);
 
 void
 fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win);

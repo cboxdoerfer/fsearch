@@ -338,32 +338,13 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
             <property name="can-focus">False</property>
             <child>
               <object class="GtkScrolledWindow" id="listview_scrolled_window">
+                <property name="width-request">-1</property>
+                <property name="height-request">-1</property>
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="shadow-type">in</property>
                 <child>
-                  <object class="GtkTreeView" id="listview">
-                    <property name="name">search_results_view</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="has-tooltip">True</property>
-                    <property name="search-column">0</property>
-                    <property name="fixed-height-mode">True</property>
-                    <property name="show-expanders">False</property>
-                    <property name="rubber-banding">True</property>
-                    <property name="enable-grid-lines">vertical</property>
-                    <signal name="button-press-event" handler="on_listview_button_press_event" swapped="no"/>
-                    <signal name="key-press-event" handler="on_listview_key_press_event" object="FsearchApplicationWindow" swapped="no"/>
-                    <signal name="popup-menu" handler="on_listview_popup_menu" swapped="no"/>
-                    <signal name="query-tooltip" handler="on_listview_query_tooltip" object="FsearchApplicationWindow" swapped="no"/>
-                    <signal name="row-activated" handler="on_listview_row_activated" swapped="no"/>
-                    <child internal-child="selection">
-                      <object class="GtkTreeSelection" id="listview_selection">
-                        <property name="mode">multiple</property>
-                        <signal name="changed" handler="on_listview_selection_changed" object="FsearchApplicationWindow" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
+                  <placeholder/>
                 </child>
                 <style>
                   <class name="results_frame"/>

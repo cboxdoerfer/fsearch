@@ -26,15 +26,16 @@
 #include "debug.h"
 #include "fsearch_config.h"
 #include "fsearch_limits.h"
+#include "fsearch_list_view.h"
+#include "fsearch_timer.h"
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
-#include "list_model.h"
-#include "listview.h"
 #include "listview_popup.h"
 #include "string_utils.h"
 #include "ui_utils.h"
 #include "utils.h"
 #include <glib/gi18n.h>
+#include <math.h>
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
@@ -57,6 +58,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *headerbar;
     GtkWidget *headerbar_box;
     GtkWidget *listview;
+    GtkWidget *new_listview;
     GtkWidget *match_case_revealer;
     GtkWidget *main_box;
     GtkWidget *menu_box;
@@ -87,11 +89,10 @@ struct _FsearchApplicationWindow {
 
     GtkTreeSelection *listview_selection;
 
-    ListModel *list_model;
-
     DatabaseSearch *search;
     DatabaseSearchResult *result;
 
+    FsearchListViewColumnType sort_order;
     FsearchQueryHighlight *query_highlight;
 
     bool closing;
@@ -112,6 +113,20 @@ perform_search(FsearchApplicationWindow *win);
 
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
+
+static void *
+fsearch_list_view_get_node_for_row(int row_idx, GtkSortType sort_type, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    if (!win || !win->result || !win->result->entries || !darray_get_num_items(win->result->entries)
+        || darray_get_num_items(win->result->entries) <= row_idx) {
+        return NULL;
+    }
+
+    if (sort_type == GTK_SORT_DESCENDING) {
+        row_idx = darray_get_num_items(win->result->entries) - row_idx - 1;
+    }
+    return darray_get_item(win->result->entries, row_idx);
+}
 
 static void
 database_load_started(FsearchApplicationWindow *win) {
@@ -166,14 +181,20 @@ init_statusbar(FsearchApplicationWindow *self) {
 static void
 remove_model_from_list(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    g_object_ref(self->list_model); /* destroy store automatically with view */
-    gtk_tree_view_set_model(GTK_TREE_VIEW(self->listview), NULL);
+    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->new_listview), 0);
 }
 
 static void
 apply_model_to_list(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    gtk_tree_view_set_model(GTK_TREE_VIEW(self->listview), GTK_TREE_MODEL(self->list_model));
+    if (self->result && self->result->entries) {
+        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->new_listview),
+                                       darray_get_num_items(self->result->entries));
+    }
+    else {
+        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->new_listview), 0);
+    }
+    fsearch_window_actions_update(self);
 }
 
 gboolean
@@ -202,40 +223,40 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
     config->window_width = width;
     config->window_height = height;
 
-    gint sort_column_id = 0;
-    GtkSortType order = GTK_SORT_ASCENDING;
-    gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(win->list_model), &sort_column_id, &order);
+    // gint sort_column_id = 0;
+    // GtkSortType order = GTK_SORT_ASCENDING;
+    // gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(win->list_model), &sort_column_id, &order);
 
-    if (config->sort_by) {
-        g_free(config->sort_by);
-        config->sort_by = NULL;
-    }
+    // if (config->sort_by) {
+    //    g_free(config->sort_by);
+    //    config->sort_by = NULL;
+    //}
 
-    if (sort_column_id == SORT_ID_NAME) {
-        config->sort_by = g_strdup("Name");
-    }
-    else if (sort_column_id == SORT_ID_PATH) {
-        config->sort_by = g_strdup("Path");
-    }
-    else if (sort_column_id == SORT_ID_TYPE) {
-        config->sort_by = g_strdup("Type");
-    }
-    else if (sort_column_id == SORT_ID_SIZE) {
-        config->sort_by = g_strdup("Size");
-    }
-    else if (sort_column_id == SORT_ID_CHANGED) {
-        config->sort_by = g_strdup("Date Modified");
-    }
-    else {
-        config->sort_by = g_strdup("Name");
-    }
+    // if (sort_column_id == SORT_ID_NAME) {
+    //    config->sort_by = g_strdup("Name");
+    //}
+    // else if (sort_column_id == SORT_ID_PATH) {
+    //    config->sort_by = g_strdup("Path");
+    //}
+    // else if (sort_column_id == SORT_ID_TYPE) {
+    //    config->sort_by = g_strdup("Type");
+    //}
+    // else if (sort_column_id == SORT_ID_SIZE) {
+    //    config->sort_by = g_strdup("Size");
+    //}
+    // else if (sort_column_id == SORT_ID_CHANGED) {
+    //    config->sort_by = g_strdup("Date Modified");
+    //}
+    // else {
+    //    config->sort_by = g_strdup("Name");
+    //}
 
-    if (order == GTK_SORT_ASCENDING) {
-        config->sort_ascending = true;
-    }
-    else {
-        config->sort_ascending = false;
-    }
+    // if (order == GTK_SORT_ASCENDING) {
+    //    config->sort_ascending = true;
+    //}
+    // else {
+    //    config->sort_ascending = false;
+    //}
 }
 
 void
@@ -502,15 +523,12 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win,
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchDatabase *db = fsearch_application_get_db(app);
     if (db == query_ctx->db) {
-        GArray *entries = search_result->entries;
-        if (entries && entries->len > 0) {
-            list_model_set_results(win->list_model, entries);
-            num_results = entries->len;
-            list_model_update_sort(win->list_model);
+        DynamicArray *entries = search_result->entries;
+        if (entries && darray_get_num_items(entries) > 0) {
+            num_results = darray_get_num_items(entries);
             win->query_highlight = fsearch_query_highlight_new(text, search_result->query->flags);
         }
         else {
-            list_model_set_results(win->list_model, NULL);
             num_results = 0;
         }
     }
@@ -584,6 +602,14 @@ fsearch_application_window_search_cancelled(void *data) {
 void
 fsearch_application_window_update_results(void *data) {
     g_idle_add(fsearch_window_search_successful_cb, data);
+}
+
+uint32_t
+fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
+    if (self->result && self->result->entries) {
+        return darray_get_num_items(self->result->entries);
+    }
+    return 0;
 }
 
 static gboolean
@@ -672,11 +698,9 @@ typedef struct _count_results_ctx {
 } count_results_ctx;
 
 static void
-count_results_cb(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer data) {
-    count_results_ctx *ctx = (count_results_ctx *)data;
-    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
-    if (entry) {
-        BTreeNode *node = db_search_entry_get_node(entry);
+count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
+    if (value) {
+        BTreeNode *node = value;
         if (node->is_dir) {
             ctx->num_folders++;
         }
@@ -687,8 +711,9 @@ count_results_cb(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpoi
 }
 
 static gboolean
-on_listview_popup_menu(GtkWidget *widget, gpointer user_data) {
-    listview_popup_menu(widget, NULL);
+on_fsearch_list_view_popup(FsearchListView *view, int row_idx, GtkSortType sort_type, gpointer user_data) {
+    BTreeNode *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, user_data);
+    listview_popup_menu(user_data, node);
     return TRUE;
 }
 
@@ -755,45 +780,6 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
     return FALSE;
 }
 
-static gboolean
-on_listview_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    g_return_val_if_fail(user_data != NULL, FALSE);
-    g_return_val_if_fail(event != NULL, FALSE);
-
-    GdkWindow *window = gdk_event_get_window(event);
-    if (G_UNLIKELY(window != gtk_tree_view_get_bin_window(GTK_TREE_VIEW(widget)))) {
-        // clicked outside of list (e.g. column header)
-        return FALSE;
-    }
-
-    GdkEventType type = gdk_event_get_event_type(event);
-    if (type == GDK_BUTTON_PRESS) {
-        if (gdk_event_triggers_context_menu((GdkEvent *)event)) {
-            listview_popup_menu(widget, event);
-            return TRUE;
-        }
-    }
-    else if (type == GDK_2BUTTON_PRESS) {
-        if (window == gtk_tree_view_get_bin_window(GTK_TREE_VIEW(widget))) {
-            // GtkTreeViewColumn *column = NULL;
-            // GtkTreePath *path = NULL;
-            // gtk_tree_view_get_path_at_pos (GTK_TREE_VIEW (widget),
-            //                               event->x,
-            //                               event->y,
-            //                               &path,
-            //                               &column,
-            //                               NULL,
-            //                               NULL);
-            // if (path) {
-            //    gtk_tree_path_free(path);
-            //}
-            return TRUE;
-        }
-    }
-
-    return FALSE;
-}
-
 static void
 on_file_open_failed_response(GtkDialog *dialog, GtkResponseType response, gpointer user_data) {
     if (response != GTK_RESPONSE_YES) {
@@ -803,26 +789,22 @@ on_file_open_failed_response(GtkDialog *dialog, GtkResponseType response, gpoint
 }
 
 static void
-on_listview_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
-    printf("activated\n");
+on_fsearch_list_view_row_activated(FsearchListView *view,
+                                   FsearchListViewColumnType col,
+                                   int row_idx,
+                                   GtkSortType sort_type,
+                                   gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    GtkTreeModel *model = gtk_tree_view_get_model(tree_view);
-    GtkTreeIter iter;
-    if (!gtk_tree_model_get_iter(model, &iter, path)) {
-        return;
-    }
-    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter.user_data;
-    if (!entry) {
-        return;
-    }
-
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     int launch_folder = false;
-    if (config->double_click_path && gtk_tree_view_column_get_sort_column_id(column) + 1 == LIST_MODEL_COL_PATH) {
+    if (config->double_click_path && col == FSEARCH_LIST_VIEW_COLUMN_PATH) {
         launch_folder = true;
     }
 
-    BTreeNode *node = db_search_entry_get_node(entry);
+    BTreeNode *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, self);
+    if (!node) {
+        return;
+    }
 
     if (!launch_folder ? launch_node(node) : launch_node_path(node, config->folder_open_cmd)) {
         // open succeeded
@@ -844,8 +826,8 @@ on_listview_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeView
 }
 
 static void
-on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
-    FsearchApplicationWindow *self = (FsearchApplicationWindow *)user_data;
+on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
 
     fsearch_window_actions_update(self);
@@ -862,7 +844,7 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
     }
 
     count_results_ctx ctx = {0, 0};
-    gtk_tree_selection_selected_foreach(sel, (GtkTreeSelectionForeachFunc)count_results_cb, &ctx);
+    fsearch_list_view_selection_for_each(view, (GHFunc)count_results_cb, &ctx);
 
     if (!ctx.num_folders && !ctx.num_files) {
         gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
@@ -880,19 +862,19 @@ on_listview_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
 void
 fsearch_window_listview_block_selection_changed(FsearchApplicationWindow *self, gboolean block) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    if (block) {
-        g_signal_handlers_block_by_func(self->listview_selection, on_listview_selection_changed, self);
-    }
-    else {
-        g_signal_handlers_unblock_by_func(self->listview_selection, on_listview_selection_changed, self);
-    }
+    // if (block) {
+    //    g_signal_handlers_block_by_func(self->listview_selection, on_listview_selection_changed, self);
+    //}
+    // else {
+    //    g_signal_handlers_unblock_by_func(self->listview_selection, on_listview_selection_changed, self);
+    //}
 }
 
 void
 fsearch_window_listview_selection_changed(FsearchApplicationWindow *self) {
 
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    on_listview_selection_changed(self->listview_selection, self);
+    // on_listview_selection_changed(self->listview_selection, self);
 }
 
 static gboolean
@@ -959,14 +941,279 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *app)
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    GtkTreeView *list = GTK_TREE_VIEW(app->listview);
+    // GtkTreeView *list = GTK_TREE_VIEW(app->listview);
 
-    listview_remove_column(list, LIST_MODEL_COL_NAME);
-    listview_add_column(list, LIST_MODEL_COL_NAME, config->name_column_width, config->name_column_pos, app);
-    listview_remove_column(list, LIST_MODEL_COL_PATH);
-    listview_add_column(list, LIST_MODEL_COL_PATH, config->path_column_width, config->path_column_pos, app);
+    // listview_remove_column(list, LIST_MODEL_COL_NAME);
+    // listview_add_column(list, LIST_MODEL_COL_NAME, config->name_column_width, config->name_column_pos, app);
+    // listview_remove_column(list, LIST_MODEL_COL_PATH);
+    // listview_add_column(list, LIST_MODEL_COL_PATH, config->path_column_width, config->path_column_pos, app);
 
-    gtk_tree_view_set_activate_on_single_click(list, config->single_click_open);
+    // gtk_tree_view_set_activate_on_single_click(list, config->single_click_open);
+}
+
+typedef struct {
+    char *display_name;
+    PangoAttrList *name_attr;
+    PangoAttrList *path_attr;
+
+    cairo_surface_t *icon_surface;
+
+    GString *path;
+    GString *full_path;
+    char *size;
+    char *type;
+    char time[100];
+} DrawRowContext;
+
+static void
+draw_row_ctx_init(BTreeNode *node,
+                  FsearchApplicationWindow *win,
+                  GdkWindow *bin_window,
+                  int icon_size,
+                  DrawRowContext *ctx) {
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
+    ctx->display_name = g_filename_display_name(node->name);
+    ctx->name_attr = fsearch_query_highlight_match(win->query_highlight, node->name);
+
+    char path_raw[PATH_MAX] = "";
+    btree_node_get_path(node, path_raw, sizeof(path_raw));
+
+    ctx->path = g_string_new(path_raw);
+    ctx->path_attr = fsearch_query_highlight_match(win->query_highlight, path_raw);
+
+    ctx->full_path = g_string_new_len(ctx->path->str, ctx->path->len);
+    g_string_append_c(ctx->full_path, '/');
+    g_string_append(ctx->full_path, node->name);
+
+    ctx->type = get_file_type(node, ctx->full_path->str);
+
+    ctx->icon_surface =
+        config->show_listview_icons
+            ? get_icon_surface(bin_window, ctx->full_path->str, icon_size, gtk_widget_get_scale_factor(GTK_WIDGET(win)))
+            : NULL;
+
+    if (!node->is_dir) {
+        FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+        if (config->show_base_2_units) {
+            ctx->size = g_format_size_full(node->size, G_FORMAT_SIZE_IEC_UNITS);
+        }
+        else {
+            ctx->size = g_format_size_full(node->size, G_FORMAT_SIZE_DEFAULT);
+        }
+    }
+    else {
+        char buffer[100] = "";
+        uint32_t num_children = btree_node_n_children(node);
+        if (num_children == 1) {
+            snprintf(buffer, sizeof(buffer), "%d Item", num_children);
+        }
+        else {
+            snprintf(buffer, sizeof(buffer), "%d Items", num_children);
+        }
+        ctx->size = g_strdup(buffer);
+    }
+
+    strftime(ctx->time,
+             100,
+             "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+             localtime(&node->mtime));
+}
+
+static void
+draw_row_ctx_free(DrawRowContext *ctx) {
+    if (ctx->display_name) {
+        g_free(ctx->display_name);
+        ctx->display_name = NULL;
+    }
+    if (ctx->type) {
+        g_free(ctx->type);
+        ctx->type = NULL;
+    }
+    if (ctx->size) {
+        g_free(ctx->size);
+        ctx->size = NULL;
+    }
+    if (ctx->path_attr) {
+        pango_attr_list_unref(ctx->path_attr);
+        ctx->path_attr = NULL;
+    }
+    if (ctx->name_attr) {
+        pango_attr_list_unref(ctx->name_attr);
+        ctx->name_attr = NULL;
+    }
+    if (ctx->path) {
+        g_string_free(ctx->path, TRUE);
+        ctx->path = NULL;
+    }
+    if (ctx->full_path) {
+        g_string_free(ctx->full_path, TRUE);
+        ctx->full_path = NULL;
+    }
+    if (ctx->icon_surface) {
+        cairo_surface_destroy(ctx->icon_surface);
+        ctx->icon_surface = NULL;
+    }
+}
+
+static void
+fsearch_list_view_draw_row(cairo_t *cr,
+                           GdkWindow *bin_window,
+                           PangoLayout *layout,
+                           GtkStyleContext *context,
+                           GList *columns,
+                           cairo_rectangle_int_t *rect,
+                           GtkSortType sort_type,
+                           uint32_t row,
+                           gboolean row_selected,
+                           gboolean row_focused,
+                           gpointer user_data) {
+    if (!columns) {
+        return;
+    }
+
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    BTreeNode *node = fsearch_list_view_get_node_for_row(row, sort_type, win);
+    if (!node) {
+        return;
+    }
+    if (!node->name) {
+        return;
+    }
+
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    DrawRowContext ctx = {};
+
+    int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
+
+    draw_row_ctx_init(node, win, bin_window, icon_size, &ctx);
+
+    GtkStateFlags flags = gtk_style_context_get_state(context);
+    if (row_selected) {
+        flags |= GTK_STATE_FLAG_SELECTED;
+    }
+    if (row_focused) {
+        flags |= GTK_STATE_FLAG_FOCUSED;
+    }
+
+    gtk_style_context_save(context);
+    gtk_style_context_set_state(context, flags);
+
+    uint32_t x = rect->x;
+    gtk_render_background(context, cr, x, rect->y, rect->width, rect->height);
+
+    for (GList *col = columns; col != NULL; col = col->next) {
+        FsearchListViewColumn *column = col->data;
+        cairo_save(cr);
+        cairo_rectangle(cr, x, rect->y, column->effective_width, rect->height);
+        cairo_clip(cr);
+        int dx = 0;
+        pango_layout_set_attributes(layout, NULL);
+        switch (column->type) {
+        case FSEARCH_LIST_VIEW_COLUMN_NAME: {
+            if (config->show_listview_icons && ctx.icon_surface) {
+                gtk_render_icon_surface(context,
+                                        cr,
+                                        ctx.icon_surface,
+                                        x + ROW_PADDING_X,
+                                        rect->y + floor((rect->height - icon_size) / 2.0));
+                dx += icon_size + 2 * ROW_PADDING_X;
+            }
+            pango_layout_set_attributes(layout, ctx.name_attr);
+            pango_layout_set_text(layout, ctx.display_name, -1);
+        } break;
+        case FSEARCH_LIST_VIEW_COLUMN_PATH:
+            pango_layout_set_attributes(layout, ctx.path_attr);
+            pango_layout_set_text(layout, ctx.path->str, ctx.path->len);
+            break;
+        case FSEARCH_LIST_VIEW_COLUMN_SIZE:
+            pango_layout_set_text(layout, ctx.size, -1);
+            break;
+        case FSEARCH_LIST_VIEW_COLUMN_TYPE:
+            pango_layout_set_text(layout, ctx.type, -1);
+            break;
+        case FSEARCH_LIST_VIEW_COLUMN_CHANGED:
+            pango_layout_set_text(layout, ctx.time, -1);
+            break;
+        default:
+            pango_layout_set_text(layout, "Unkown column", -1);
+        }
+
+        pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dx) * PANGO_SCALE);
+        pango_layout_set_alignment(layout, column->alignment);
+        pango_layout_set_ellipsize(layout, column->ellipsize_mode);
+        gtk_render_layout(context, cr, x + ROW_PADDING_X + dx, rect->y + ROW_PADDING_Y, layout);
+        x += column->effective_width;
+        cairo_restore(cr);
+    }
+    gtk_style_context_restore(context);
+
+    draw_row_ctx_free(&ctx);
+}
+
+static gint
+compare_func(BTreeNode **a, BTreeNode **b, FsearchApplicationWindow *win) {
+    return compare_nodes(win->sort_order, *a, *b);
+}
+
+void
+fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    win->sort_order = sort_order;
+
+    GTimer *timer = fsearch_timer_start();
+    trace("[sort] started: %d\n", sort_order);
+    darray_sort_with_data(win->result->entries, (DynamicArrayCompareDataFunc)compare_func, win);
+    fsearch_timer_stop(timer, "[sort] finished in %2.fms\n");
+}
+
+static void
+add_columns(FsearchListView *view, FsearchConfig *config) {
+    bool restore = config->restore_column_config;
+    FsearchListViewColumn *name_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_NAME,
+                                                                   "Name",
+                                                                   PANGO_ALIGN_LEFT,
+                                                                   PANGO_ELLIPSIZE_END,
+                                                                   TRUE,
+                                                                   restore ? config->name_column_width : 250);
+    FsearchListViewColumn *path_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_PATH,
+                                                                   "Path",
+                                                                   PANGO_ALIGN_LEFT,
+                                                                   PANGO_ELLIPSIZE_END,
+                                                                   FALSE,
+                                                                   restore ? config->path_column_width : 250);
+    FsearchListViewColumn *size_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_SIZE,
+                                                                   "Size",
+                                                                   PANGO_ALIGN_RIGHT,
+                                                                   PANGO_ELLIPSIZE_END,
+                                                                   FALSE,
+                                                                   restore ? config->size_column_width : 75);
+    FsearchListViewColumn *type_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_TYPE,
+                                                                   "Type",
+                                                                   PANGO_ALIGN_LEFT,
+                                                                   PANGO_ELLIPSIZE_END,
+                                                                   FALSE,
+                                                                   restore ? config->type_column_width : 100);
+    FsearchListViewColumn *changed_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_CHANGED,
+                                                                      "Modified Time",
+                                                                      PANGO_ALIGN_RIGHT,
+                                                                      PANGO_ELLIPSIZE_END,
+                                                                      FALSE,
+                                                                      restore ? config->modified_column_width : 125);
+
+    fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), name_col);
+    if (config->show_path_column) {
+        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), path_col);
+    }
+    if (config->show_type_column) {
+        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), type_col);
+    }
+    if (config->show_size_column) {
+        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), size_col);
+    }
+    if (config->show_modified_column) {
+        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
+    }
 }
 
 static void
@@ -975,40 +1222,72 @@ create_view_and_model(FsearchApplicationWindow *app) {
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    app->list_model = list_model_new();
-    GtkTreeView *list = GTK_TREE_VIEW(app->listview);
+    GtkAdjustment *hadj = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(app->listview_scrolled_window));
+    GtkAdjustment *vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(app->listview_scrolled_window));
+    app->new_listview = GTK_WIDGET(fsearch_list_view_new(hadj, vadj));
+    gtk_container_add(GTK_CONTAINER(app->listview_scrolled_window), GTK_WIDGET(app->new_listview));
 
-    if (!config->restore_column_config) {
-        listview_add_default_columns(list, config, app);
-    }
-    else {
-        listview_add_column(list, LIST_MODEL_COL_NAME, config->name_column_width, config->name_column_pos, app);
+    gtk_widget_show(app->new_listview);
+    fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_list_view_draw_row, app);
+    fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_list_view_get_node_for_row, app);
+    fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_results_sort_func, app);
 
-        if (config->show_path_column) {
-            listview_add_column(list, LIST_MODEL_COL_PATH, config->path_column_width, config->path_column_pos, app);
-        }
-        if (config->show_type_column) {
-            listview_add_column(list, LIST_MODEL_COL_TYPE, config->type_column_width, config->type_column_pos, app);
-        }
-        if (config->show_size_column) {
-            listview_add_column(list, LIST_MODEL_COL_SIZE, config->size_column_width, config->size_column_pos, app);
-        }
-        if (config->show_modified_column) {
-            listview_add_column(list,
-                                LIST_MODEL_COL_CHANGED,
-                                config->modified_column_width,
-                                config->modified_column_pos,
-                                app);
-        }
-    }
-    list_model_sort_init(app->list_model,
-                         config->restore_sort_order ? config->sort_by : "Name",
-                         config->restore_sort_order ? config->sort_ascending : true);
+    add_columns(FSEARCH_LIST_VIEW(app->new_listview), config);
 
-    gtk_tree_view_set_activate_on_single_click(list, config->single_click_open);
+    g_signal_connect_object(app->new_listview,
+                            "row-popup",
+                            G_CALLBACK(on_fsearch_list_view_popup),
+                            app,
+                            G_CONNECT_AFTER);
+    g_signal_connect_object(app->new_listview,
+                            "selection-changed",
+                            G_CALLBACK(on_fsearch_list_view_selection_changed),
+                            app,
+                            G_CONNECT_AFTER);
+    g_signal_connect_object(app->new_listview,
+                            "row-activated",
+                            G_CALLBACK(on_fsearch_list_view_row_activated),
+                            app,
+                            G_CONNECT_AFTER);
 
-    gtk_tree_view_set_model(list, GTK_TREE_MODEL(app->list_model));
-    g_object_unref(app->list_model); /* destroy store automatically with view */
+    // app->list_model = list_model_new();
+    // GtkTreeView *list = GTK_TREE_VIEW(app->listview);
+
+    // if (!config->restore_column_config) {
+    //    listview_add_default_columns(list, config, app);
+    //}
+    // else {
+    //    listview_add_column(list, LIST_MODEL_COL_NAME, config->name_column_width, config->name_column_pos,
+    //    app);
+
+    //    if (config->show_path_column) {
+    //        listview_add_column(list, LIST_MODEL_COL_PATH, config->path_column_width, config->path_column_pos,
+    //        app);
+    //    }
+    //    if (config->show_type_column) {
+    //        listview_add_column(list, LIST_MODEL_COL_TYPE, config->type_column_width, config->type_column_pos,
+    //        app);
+    //    }
+    //    if (config->show_size_column) {
+    //        listview_add_column(list, LIST_MODEL_COL_SIZE, config->size_column_width, config->size_column_pos,
+    //        app);
+    //    }
+    //    if (config->show_modified_column) {
+    //        listview_add_column(list,
+    //                            LIST_MODEL_COL_CHANGED,
+    //                            config->modified_column_width,
+    //                            config->modified_column_pos,
+    //                            app);
+    //    }
+    //}
+    // list_model_sort_init(app->list_model,
+    //                     config->restore_sort_order ? config->sort_by : "Name",
+    //                     config->restore_sort_order ? config->sort_ascending : true);
+
+    // gtk_tree_view_set_activate_on_single_click(list, config->single_click_open);
+
+    // gtk_tree_view_set_model(list, GTK_TREE_MODEL(app->list_model));
+    // g_object_unref(app->list_model); /* destroy store automatically with view */
 }
 
 static void
@@ -1018,6 +1297,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
 
     statusbar_update(win, "");
 
+    fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->new_listview));
     fsearch_application_window_update_search(win);
 
     hide_overlays(win);
@@ -1140,20 +1420,9 @@ on_search_entry_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer use
     guint keyval;
     gdk_event_get_keyval(event, &keyval);
     if (keyval == GDK_KEY_Down) {
-        GtkTreeIter iter = {};
-        GtkTreePath *path = NULL;
-
-        gtk_tree_view_get_cursor(GTK_TREE_VIEW(win->listview), &path, NULL);
-        if (!path) {
-            gtk_tree_model_get_iter_first(GTK_TREE_MODEL(win->list_model), &iter);
-            path = gtk_tree_model_get_path(GTK_TREE_MODEL(win->list_model), &iter);
-        }
-
-        if (path) {
-            gtk_widget_grab_focus(win->listview);
-            gtk_tree_view_set_cursor(GTK_TREE_VIEW(win->listview), path, NULL, FALSE);
-            gtk_tree_path_free(path);
-        }
+        gint cursor_idx = fsearch_list_view_get_cursor(FSEARCH_LIST_VIEW(win->new_listview));
+        gtk_widget_grab_focus(win->new_listview);
+        fsearch_list_view_set_cursor(FSEARCH_LIST_VIEW(win->new_listview), cursor_idx);
         return TRUE;
     }
     return FALSE;
@@ -1236,9 +1505,9 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview);
+    // gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_selection);
+    // gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_selection);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, match_case_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
@@ -1267,12 +1536,8 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
 
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_listview_button_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_listview_key_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_listview_popup_menu);
+    // gtk_widget_class_bind_template_callback(widget_class, on_listview_key_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_listview_query_tooltip);
-    gtk_widget_class_bind_template_callback(widget_class, on_listview_row_activated);
-    gtk_widget_class_bind_template_callback(widget_class, on_listview_selection_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_match_case_label_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
@@ -1311,10 +1576,10 @@ fsearch_application_window_get_search_mode_revealer(FsearchApplicationWindow *se
     return self->search_mode_revealer;
 }
 
-GtkTreeView *
+FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return GTK_TREE_VIEW(self->listview);
+    return FSEARCH_LIST_VIEW(self->new_listview);
 }
 
 GtkTreeSelection *

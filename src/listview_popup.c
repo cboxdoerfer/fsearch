@@ -26,14 +26,7 @@
 #include "listview_popup.h"
 
 static void
-fill_open_with_menu(GtkTreeView *view, GtkBuilder *builder, GtkTreeIter *iter) {
-    DatabaseSearchEntry *entry = (DatabaseSearchEntry *)iter->user_data;
-    if (!entry) {
-        return;
-    }
-
-    BTreeNode *node = db_search_entry_get_node(entry);
-
+fill_open_with_menu(GtkBuilder *builder, BTreeNode *node) {
     GList *app_list = NULL;
     char *content_type = NULL;
 
@@ -84,65 +77,10 @@ clean_up:
 }
 
 void
-listview_popup_menu(GtkWidget *widget, GdkEvent *event) {
-    GtkTreeView *view = GTK_TREE_VIEW(widget);
-    GtkTreeSelection *selection = gtk_tree_view_get_selection(view);
-    GtkTreeModel *model = gtk_tree_view_get_model(view);
-    if (!model) {
-        return;
-    }
-
-#pragma GCC diagnostic ignored "-Wunused-but-set-variable"
-    guint button = 0;
-    guint32 time = 0;
-#pragma GCC diagnostic pop
-
-    GtkTreeIter iter;
-    gboolean iter_set = FALSE;
-    GtkTreePath *path = NULL;
-    if (event) {
-        gdouble x_win;
-        gdouble y_win;
-        gdk_event_get_coords(event, &x_win, &y_win);
-        if (!gtk_tree_view_get_path_at_pos(view, x_win, y_win, &path, NULL, NULL, NULL)) {
-            // clicked empty area
-            // -> unselect everything
-            gtk_tree_selection_unselect_all(selection);
-            return;
-        }
-        if (!gtk_tree_selection_path_is_selected(selection, path)) {
-            // clicked on an unselected item
-            // -> unselected everything else
-            // -> select that single item
-            gtk_tree_selection_unselect_all(selection);
-            gtk_tree_selection_select_path(selection, path);
-        }
-        iter_set = gtk_tree_model_get_iter(model, &iter, path);
-        gtk_tree_path_free(path);
-
-        gdk_event_get_button(event, &button);
-        time = gdk_event_get_time(event);
-    }
-    else {
-        // Find the first selected entry
-        GList *selected_rows = gtk_tree_selection_get_selected_rows(selection, NULL);
-        if (selected_rows) {
-            GtkTreePath *selected_path = selected_rows->data;
-            iter_set = gtk_tree_model_get_iter(model, &iter, selected_path);
-            g_list_free_full(selected_rows, (GDestroyNotify)gtk_tree_path_free);
-        }
-
-        button = 0;
-        time = gtk_get_current_event_time();
-    }
-
-    if (!iter_set) {
-        return;
-    }
-
+listview_popup_menu(GtkWidget *widget, BTreeNode *node) {
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
-    fill_open_with_menu(GTK_TREE_VIEW(widget), builder, &iter);
+    fill_open_with_menu(builder, node);
 
     GMenu *menu_root = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_popup_menu"));
     GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_root));

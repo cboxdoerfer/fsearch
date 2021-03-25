@@ -18,10 +18,24 @@
 
 #pragma once
 
+#include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
 
 typedef struct _DynamicArray DynamicArray;
+
+typedef int32_t (*DynamicArrayCompareFunc)(void *a, void *b);
+typedef int32_t (*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);
+
+bool
+darray_binary_search_with_data(DynamicArray *array,
+                               void *item,
+                               DynamicArrayCompareDataFunc comp_func,
+                               void *data,
+                               uint32_t *matched_index);
+
+void
+darray_sort_with_data(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data);
 
 void
 darray_sort(DynamicArray *array, int (*comp_func)(const void *, const void *));
@@ -35,8 +49,31 @@ darray_get_num_items(DynamicArray *array);
 void *
 darray_get_item(DynamicArray *array, uint32_t idx);
 
+void **
+darray_get_data(DynamicArray *array, size_t *num_items);
+
+void *
+darray_get_item_next(DynamicArray *array,
+                     void *item,
+                     DynamicArrayCompareDataFunc compare_func,
+                     void *data,
+                     uint32_t *next_idx);
+
+bool
+darray_get_item_idx(DynamicArray *array,
+                    void *item,
+                    DynamicArrayCompareDataFunc compare_func,
+                    void *data,
+                    uint32_t *index);
+
 void
 darray_remove_item(DynamicArray *array, uint32_t idx);
+
+void
+darray_add_items(DynamicArray *array, void **items, uint32_t num_items);
+
+void
+darray_add_item(DynamicArray *array, void *data);
 
 void
 darray_set_item(DynamicArray *array, void *data, uint32_t idx);

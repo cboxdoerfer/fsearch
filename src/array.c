@@ -18,6 +18,7 @@
 
 #include "array.h"
 #include <assert.h>
+#include <glib.h>
 #include <string.h>
 #include <sys/param.h>
 
@@ -84,6 +85,43 @@ darray_expand(DynamicArray *array, size_t min) {
     memset(array->data + old_max_items, 0, expand_rate + 1);
 }
 
+void **
+darray_get_data(DynamicArray *array, size_t *num_items) {
+    assert(array != NULL);
+    assert(array->data != NULL);
+    if (num_items) {
+        *num_items = array->num_items;
+    }
+    return array->data;
+}
+
+void
+darray_add_items(DynamicArray *array, void **items, uint32_t num_items) {
+    assert(array != NULL);
+    assert(array->data != NULL);
+    assert(items != NULL);
+
+    if (array->num_items + num_items > array->max_items) {
+        darray_expand(array, array->num_items + num_items);
+    }
+
+    memcpy(array->data + array->num_items, items, num_items * sizeof(void *));
+    array->num_items += num_items;
+}
+
+void
+darray_add_item(DynamicArray *array, void *data) {
+    assert(array != NULL);
+    assert(array->data != NULL);
+    assert(data != NULL);
+
+    if (array->num_items >= array->max_items) {
+        darray_expand(array, array->num_items + 1);
+    }
+
+    array->data[array->num_items++] = data;
+}
+
 void
 darray_set_item(DynamicArray *array, void *data, uint32_t idx) {
     assert(array != NULL);
@@ -112,12 +150,59 @@ darray_remove_item(DynamicArray *array, uint32_t idx) {
     array->num_items--;
 }
 
+bool
+darray_get_item_idx(DynamicArray *array,
+                    void *item,
+                    DynamicArrayCompareDataFunc compare_func,
+                    void *data,
+                    uint32_t *index) {
+    assert(array != NULL);
+    assert(item != NULL);
+    assert(index != NULL);
+
+    bool found = false;
+    if (compare_func) {
+        found = darray_binary_search_with_data(array, item, compare_func, data, index);
+    }
+    else {
+        for (uint32_t i = 0; i < array->num_items; i++) {
+            if (item == array->data[i]) {
+                found = true;
+                *index = i;
+                break;
+            }
+        }
+    }
+    return found;
+}
+
+void *
+darray_get_item_next(DynamicArray *array,
+                     void *item,
+                     DynamicArrayCompareDataFunc compare_func,
+                     void *data,
+                     uint32_t *next_idx) {
+    assert(array != NULL);
+    assert(item != NULL);
+    uint32_t index = 0;
+    if (!darray_get_item_idx(array, item, compare_func, data, &index)) {
+        return NULL;
+    }
+    if (index >= array->num_items - 1) {
+        return NULL;
+    }
+    if (next_idx) {
+        *next_idx = index + 1;
+    }
+    return array->data[index + 1];
+}
+
 void *
 darray_get_item(DynamicArray *array, uint32_t idx) {
     assert(array != NULL);
     assert(array->data != NULL);
 
-    if (idx >= array->max_items) {
+    if (idx >= array->num_items) {
         return NULL;
     }
 
@@ -141,6 +226,11 @@ darray_get_size(DynamicArray *array) {
 }
 
 void
+darray_sort_with_data(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
+    g_qsort_with_data(array->data, array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, data);
+}
+
+void
 darray_sort(DynamicArray *array, int (*comp_func)(const void *, const void *)) {
     assert(array != NULL);
     assert(array->data != NULL);
@@ -148,3 +238,50 @@ darray_sort(DynamicArray *array, int (*comp_func)(const void *, const void *)) {
 
     qsort(array->data, array->num_items, sizeof(void *), comp_func);
 }
+
+bool
+darray_binary_search_with_data(DynamicArray *array,
+                               void *item,
+                               DynamicArrayCompareDataFunc comp_func,
+                               void *data,
+                               uint32_t *matched_index) {
+
+    assert(array != NULL);
+    assert(array->data != NULL);
+    assert(comp_func != NULL);
+
+    if (array->num_items <= 0) {
+        return false;
+    }
+
+    bool result = false;
+
+    uint32_t left = 0;
+    uint32_t middle = 0;
+    uint32_t right = array->num_items - 1;
+
+    while (left <= right) {
+        middle = left + (right - left) / 2;
+
+        int32_t match = comp_func(array->data[middle], item, data);
+        if (match == 0) {
+            result = true;
+            break;
+        }
+        else if (match < 0) {
+            left = middle + 1;
+        }
+        else if (middle > 0) {
+            right = middle - 1;
+        }
+        else {
+            break;
+        }
+    }
+
+    if (result && matched_index != NULL)
+        *matched_index = middle;
+
+    return result;
+}
+
