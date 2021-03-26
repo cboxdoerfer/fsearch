@@ -740,6 +740,7 @@ local_database_update() {
 
     db_lock(db);
     int res = !db_scan(db, NULL, NULL);
+    db_save_locations(db);
     db_unlock(db);
     db_unref(db);
 
