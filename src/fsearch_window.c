@@ -604,7 +604,7 @@ perform_search(FsearchApplicationWindow *win) {
 
     fsearch_application_state_lock(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
-    if (!db) {
+    if (!db || !db_get_entries(db)) {
         fsearch_application_state_unlock(app);
         return FALSE;
     }
