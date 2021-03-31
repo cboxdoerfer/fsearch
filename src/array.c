@@ -338,6 +338,10 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
 void
 darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
 
+    if (array->num_items <= 100000) {
+        return darray_sort(array, comp_func);
+    }
+
     gint num_proc = g_get_num_processors();
     gint num_items_per_thread = array->num_items / num_proc;
     GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_proc, FALSE, NULL);
