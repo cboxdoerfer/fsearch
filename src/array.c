@@ -17,8 +17,10 @@
    */
 
 #include "array.h"
+#include "debug.h"
 #include <assert.h>
 #include <glib.h>
+#include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -70,8 +72,8 @@ typedef struct {
 void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
-    // qsort_with_data(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareDataFunc)ctx->comp_func, NULL);
-    qsort(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareFunc)ctx->comp_func);
+    g_qsort_with_data(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareDataFunc)ctx->comp_func, NULL);
+    // qsort(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareFunc)ctx->comp_func);
 }
 
 void
@@ -300,8 +302,9 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
     }
     int num_threads = merge_me->len / 2;
 
+    trace("[sort] merge with %d thread(s)\n", num_threads);
+
     GArray *merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
-    printf("merge with %d threads\n", num_threads);
     GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, num_threads, FALSE, NULL);
 
     for (int i = 0; i < num_threads; ++i) {
@@ -335,24 +338,36 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
     return darray_merge_sorted(merged_data, comp_func);
 }
 
+static int
+darray_get_ideal_thread_count() {
+    // int num_processors = 1;
+    int num_processors = g_get_num_processors();
+
+    int e = floor(log2(num_processors));
+    int num_threads = pow(2, e);
+    return num_threads;
+}
+
 void
 darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
 
-    if (array->num_items <= 100000) {
+    const int num_threads = darray_get_ideal_thread_count();
+    if (array->num_items <= 100000 || num_threads < 2) {
         return darray_sort(array, comp_func);
     }
 
-    gint num_proc = g_get_num_processors();
-    gint num_items_per_thread = array->num_items / num_proc;
-    GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_proc, FALSE, NULL);
+    trace("[sort] sorting with %d threads\n", num_threads);
 
-    GArray *sort_ctx_array = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_proc);
+    int num_items_per_thread = array->num_items / num_threads;
+    GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_threads, FALSE, NULL);
 
-    gint start = 0;
-    for (int i = 0; i < num_proc; ++i) {
+    GArray *sort_ctx_array = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
+
+    int start = 0;
+    for (int i = 0; i < num_threads; ++i) {
         DynamicArraySortContext sort_ctx;
         sort_ctx.dest = darray_new_from_data(array->data + start,
-                                             i == num_proc - 1 ? array->num_items - start : num_items_per_thread);
+                                             i == num_threads - 1 ? array->num_items - start : num_items_per_thread);
         sort_ctx.comp_func = comp_func;
         start += num_items_per_thread;
         g_array_insert_val(sort_ctx_array, i, sort_ctx);
@@ -363,7 +378,6 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
     GArray *result = darray_merge_sorted(sort_ctx_array, comp_func);
 
     if (result) {
-        printf("result with len %d.\n", result->len);
         free(array->data);
         DynamicArraySortContext *c = &g_array_index(result, DynamicArraySortContext, 0);
         array->data = c->dest->data;
@@ -379,7 +393,7 @@ darray_sort(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
     assert(array->data != NULL);
     assert(comp_func != NULL);
 
-    qsort(array->data, array->num_items, sizeof(void *), (GCompareFunc)comp_func);
+    g_qsort_with_data(array->data, array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, NULL);
 }
 
 bool

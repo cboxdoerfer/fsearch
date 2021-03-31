@@ -366,6 +366,9 @@ get_icon_size_for_height(int height) {
 
 int
 compare_path(BTreeNode **a_node, BTreeNode **b_node) {
+    if ((*a_node)->is_dir != (*b_node)->is_dir) {
+        return (*b_node)->is_dir - (*a_node)->is_dir;
+    }
     BTreeNode *a = (*a_node)->parent;
     BTreeNode *b = (*b_node)->parent;
     if (!a) {
@@ -373,9 +376,6 @@ compare_path(BTreeNode **a_node, BTreeNode **b_node) {
     }
     if (!b) {
         return 1;
-    }
-    if (a->is_dir != b->is_dir) {
-        return b->is_dir - a->is_dir;
     }
     const int32_t a_depth = btree_node_depth(a);
     const int32_t b_depth = btree_node_depth(b);
