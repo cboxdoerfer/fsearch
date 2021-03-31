@@ -41,6 +41,7 @@
 #include "fsearch.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
+#include "utils.h"
 
 struct _FsearchDatabase {
     GList *locations;
