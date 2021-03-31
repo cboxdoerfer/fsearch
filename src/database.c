@@ -957,7 +957,7 @@ sort_by_name(const void *a, const void *b) {
     const bool is_dir_a = node_a->is_dir;
     const bool is_dir_b = node_b->is_dir;
     if (is_dir_a != is_dir_b) {
-        return is_dir_a ? -1 : 1;
+        return is_dir_b - is_dir_a;
     }
 
     return strverscmp(node_a->name, node_b->name);
