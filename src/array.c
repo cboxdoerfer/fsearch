@@ -19,6 +19,8 @@
 #include "array.h"
 #include <assert.h>
 #include <glib.h>
+#include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <sys/param.h>
 
@@ -54,6 +56,64 @@ darray_free(DynamicArray *array) {
     }
     free(array);
     array = NULL;
+}
+
+typedef struct {
+    DynamicArray *m1;
+    DynamicArray *m2;
+    DynamicArray *dest;
+    gpointer user_data;
+    DynamicArrayCompareFunc comp_func;
+
+} DynamicArraySortContext;
+
+void
+sort_thread(gpointer data, gpointer user_data) {
+    DynamicArraySortContext *ctx = data;
+    // qsort_with_data(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareDataFunc)ctx->comp_func, NULL);
+    qsort(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareFunc)ctx->comp_func);
+}
+
+void
+merge_thread(gpointer data, gpointer user_data) {
+    DynamicArraySortContext *ctx = data;
+    int i = 0;
+    int j = 0;
+    while (true) {
+        void *d1 = darray_get_item(ctx->m1, i);
+        void *d2 = darray_get_item(ctx->m2, j);
+
+        if (d1 && d2) {
+            int res = ctx->comp_func(&d1, &d2);
+            if (res < 0) {
+                darray_add_item(ctx->dest, d1);
+                i++;
+            }
+            else if (res > 0) {
+                darray_add_item(ctx->dest, d2);
+                j++;
+            }
+            else {
+                darray_add_item(ctx->dest, d1);
+                darray_add_item(ctx->dest, d2);
+                i++;
+                j++;
+            }
+        }
+        else {
+            if (d1) {
+                darray_add_item(ctx->dest, d1);
+                i++;
+            }
+            else if (d2) {
+                darray_add_item(ctx->dest, d2);
+                j++;
+            }
+            else {
+                return;
+            }
+        }
+    }
 }
 
 DynamicArray *
@@ -225,18 +285,97 @@ darray_get_size(DynamicArray *array) {
     return array->max_items;
 }
 
-void
-darray_sort_with_data(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
-    g_qsort_with_data(array->data, array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, data);
+static DynamicArray *
+darray_new_from_data(void **data, uint32_t num_items) {
+    DynamicArray *array = darray_new(num_items);
+    darray_add_items(array, data, num_items);
+    return array;
+}
+
+static GArray *
+darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
+
+    if (merge_me->len == 1) {
+        return merge_me;
+    }
+    int num_threads = merge_me->len / 2;
+
+    GArray *merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
+    printf("merge with %d threads\n", num_threads);
+    GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, num_threads, FALSE, NULL);
+
+    for (int i = 0; i < num_threads; ++i) {
+        DynamicArraySortContext *c1 = &g_array_index(merge_me, DynamicArraySortContext, 2 * i);
+        DynamicArraySortContext *c2 = &g_array_index(merge_me, DynamicArraySortContext, 2 * i + 1);
+        DynamicArray *i1 = c1->dest;
+        DynamicArray *i2 = c2->dest;
+
+        DynamicArraySortContext merge_ctx = {};
+        merge_ctx.m1 = i1;
+        merge_ctx.m2 = i2;
+        merge_ctx.comp_func = comp_func;
+        merge_ctx.dest = darray_new(i1->num_items + i2->num_items);
+
+        g_array_insert_val(merged_data, i, merge_ctx);
+
+        g_thread_pool_push(merge_pool, &g_array_index(merged_data, DynamicArraySortContext, i), NULL);
+    }
+
+    g_thread_pool_free(merge_pool, FALSE, TRUE);
+
+    for (int i = 0; i < merge_me->len; i++) {
+        DynamicArraySortContext *c = &g_array_index(merge_me, DynamicArraySortContext, i);
+        if (c && c->dest) {
+            darray_free(c->dest);
+        }
+    }
+    g_array_free(merge_me, TRUE);
+    merge_me = NULL;
+
+    return darray_merge_sorted(merged_data, comp_func);
 }
 
 void
-darray_sort(DynamicArray *array, int (*comp_func)(const void *, const void *)) {
+darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
+
+    gint num_proc = g_get_num_processors();
+    gint num_items_per_thread = array->num_items / num_proc;
+    GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_proc, FALSE, NULL);
+
+    GArray *sort_ctx_array = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_proc);
+
+    gint start = 0;
+    for (int i = 0; i < num_proc; ++i) {
+        DynamicArraySortContext sort_ctx;
+        sort_ctx.dest = darray_new_from_data(array->data + start,
+                                             i == num_proc - 1 ? array->num_items - start : num_items_per_thread);
+        sort_ctx.comp_func = comp_func;
+        start += num_items_per_thread;
+        g_array_insert_val(sort_ctx_array, i, sort_ctx);
+        g_thread_pool_push(sort_pool, &g_array_index(sort_ctx_array, DynamicArraySortContext, i), NULL);
+    }
+    g_thread_pool_free(sort_pool, FALSE, TRUE);
+
+    GArray *result = darray_merge_sorted(sort_ctx_array, comp_func);
+
+    if (result) {
+        printf("result with len %d.\n", result->len);
+        free(array->data);
+        DynamicArraySortContext *c = &g_array_index(result, DynamicArraySortContext, 0);
+        array->data = c->dest->data;
+        c->dest->data = NULL;
+        free(c->dest);
+        g_array_free(result, TRUE);
+    }
+}
+
+void
+darray_sort(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
     assert(array != NULL);
     assert(array->data != NULL);
     assert(comp_func != NULL);
 
-    qsort(array->data, array->num_items, sizeof(void *), comp_func);
+    qsort(array->data, array->num_items, sizeof(void *), (GCompareFunc)comp_func);
 }
 
 bool

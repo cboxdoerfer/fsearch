@@ -35,10 +35,10 @@ darray_binary_search_with_data(DynamicArray *array,
                                uint32_t *matched_index);
 
 void
-darray_sort_with_data(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data);
+darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_func);
 
 void
-darray_sort(DynamicArray *array, int (*comp_func)(const void *, const void *));
+darray_sort(DynamicArray *array, DynamicArrayCompareFunc comp_func);
 
 uint32_t
 darray_get_size(DynamicArray *array);

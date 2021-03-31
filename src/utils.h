@@ -56,3 +56,18 @@ get_icon_size_for_height(int height);
 int
 compare_nodes(FsearchListViewColumnType sort_order, BTreeNode *node_a, BTreeNode *node_b);
 
+int
+compare_name(BTreeNode **a, BTreeNode **b);
+
+int
+compare_size(BTreeNode **a, BTreeNode **b);
+
+int
+compare_path(BTreeNode **a, BTreeNode **b);
+
+int
+compare_changed(BTreeNode **a, BTreeNode **b);
+
+int
+compare_type(BTreeNode **a, BTreeNode **b);
+

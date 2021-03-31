@@ -29,6 +29,7 @@
 #include "fsearch_config.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
+#include "fsearch_timer.h"
 #include "fsearch_window_actions.h"
 #include "ui_utils.h"
 #include "utils.h"

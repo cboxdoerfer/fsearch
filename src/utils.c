@@ -364,10 +364,15 @@ get_icon_size_for_height(int height) {
     return 48;
 }
 
-static int
-compare_path(BTreeNode *a, BTreeNode *b) {
+int
+compare_path(BTreeNode **a_node, BTreeNode **b_node) {
+    BTreeNode *a = *a_node;
+    BTreeNode *b = *b_node;
     if (!a || !b) {
         return 0;
+    }
+    if (a->is_dir != b->is_dir) {
+        return b->is_dir - a->is_dir;
     }
     const int32_t a_depth = btree_node_depth(a);
     const int32_t b_depth = btree_node_depth(b);
@@ -404,12 +409,56 @@ compare_path(BTreeNode *a, BTreeNode *b) {
 }
 
 int
-compare_nodes(FsearchListViewColumnType sort_order, BTreeNode *node_a, BTreeNode *node_b) {
-    const bool is_dir_a = node_a->is_dir;
-    const bool is_dir_b = node_b->is_dir;
+compare_name(BTreeNode **a_node, BTreeNode **b_node) {
+    BTreeNode *a = *a_node;
+    BTreeNode *b = *b_node;
+    return a->pos - b->pos;
+}
 
-    const gchar *name_a = node_a->name;
-    const gchar *name_b = node_b->name;
+int
+compare_size(BTreeNode **a_node, BTreeNode **b_node) {
+    BTreeNode *a = *a_node;
+    BTreeNode *b = *b_node;
+    bool is_dir_a = a->is_dir;
+    bool is_dir_b = b->is_dir;
+    if (is_dir_a != is_dir_b) {
+        return is_dir_b - is_dir_a;
+    }
+    if (is_dir_a && is_dir_b) {
+        uint32_t n_a = btree_node_n_children(a);
+        uint32_t n_b = btree_node_n_children(b);
+        return n_a - n_b;
+    }
+
+    if (a->size == b->size) {
+        return 0;
+    }
+
+    return (a->size > b->size) ? 1 : -1;
+}
+
+int
+compare_changed(BTreeNode **a_node, BTreeNode **b_node) {
+    BTreeNode *a = *a_node;
+    BTreeNode *b = *b_node;
+    if (a->is_dir != b->is_dir) {
+        return b->is_dir - a->is_dir;
+    }
+    return a->mtime - b->mtime;
+}
+
+int
+compare_type(BTreeNode **a_node, BTreeNode **b_node) {
+    BTreeNode *a = *a_node;
+    BTreeNode *b = *b_node;
+    bool is_dir_a = a->is_dir;
+    bool is_dir_b = b->is_dir;
+    if (is_dir_a != is_dir_b) {
+        return is_dir_b - is_dir_a;
+    }
+    if (is_dir_a && is_dir_b) {
+        return 0;
+    }
 
     gchar *type_a = NULL;
     gchar *type_b = NULL;
@@ -417,7 +466,40 @@ compare_nodes(FsearchListViewColumnType sort_order, BTreeNode *node_a, BTreeNode
     gchar path_a[PATH_MAX] = "";
     gchar path_b[PATH_MAX] = "";
 
+    btree_node_get_path_full(a, path_a, sizeof(path_a));
+    type_a = get_file_type(a, path_a);
+    btree_node_get_path_full(b, path_b, sizeof(path_b));
+    type_b = get_file_type(b, path_b);
+
     gint return_val = 0;
+    if (type_a && type_b) {
+        return_val = strverscmp(type_a, type_b);
+    }
+    if (type_a) {
+        g_free(type_a);
+        type_a = NULL;
+    }
+    if (type_b) {
+        g_free(type_b);
+        type_b = NULL;
+    }
+    return return_val;
+}
+
+int
+compare_nodes(FsearchListViewColumnType sort_order, BTreeNode *node_a, BTreeNode *node_b) {
+    const bool is_dir_a = node_a->is_dir;
+    const bool is_dir_b = node_b->is_dir;
+
+    const gchar *name_a = node_a->name;
+    const gchar *name_b = node_b->name;
+
+    gint return_val = 0;
+    gchar *type_a = NULL;
+    gchar *type_b = NULL;
+
+    gchar path_a[PATH_MAX] = "";
+    gchar path_b[PATH_MAX] = "";
 
     switch (sort_order) {
     case FSEARCH_LIST_VIEW_COLUMN_NAME: {
@@ -428,7 +510,7 @@ compare_nodes(FsearchListViewColumnType sort_order, BTreeNode *node_a, BTreeNode
             return is_dir_b - is_dir_a;
         }
 
-        return compare_path(node_a->parent, node_b->parent);
+        return compare_path(&node_a->parent, &node_b->parent);
     }
     case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
         if (is_dir_a != is_dir_b) {

@@ -1163,7 +1163,28 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
 
     GTimer *timer = fsearch_timer_start();
     trace("[sort] started: %d\n", sort_order);
-    darray_sort_with_data(win->result->entries, (DynamicArrayCompareDataFunc)compare_func, win);
+    GCompareFunc func = NULL;
+    switch (sort_order) {
+    case FSEARCH_LIST_VIEW_COLUMN_NAME:
+        func = (GCompareFunc)compare_name;
+        break;
+    case FSEARCH_LIST_VIEW_COLUMN_PATH:
+        func = (GCompareFunc)compare_path;
+        break;
+    case FSEARCH_LIST_VIEW_COLUMN_SIZE:
+        func = (GCompareFunc)compare_size;
+        break;
+    case FSEARCH_LIST_VIEW_COLUMN_TYPE:
+        func = (GCompareFunc)compare_type;
+        break;
+    case FSEARCH_LIST_VIEW_COLUMN_CHANGED:
+        func = (GCompareFunc)compare_changed;
+        break;
+    default:
+        func = (GCompareFunc)compare_name;
+    }
+    darray_sort_multi_threaded(win->result->entries, (DynamicArrayCompareFunc)func);
+    // darray_sort(win->result->entries, (DynamicArrayCompareFunc)func);
     fsearch_timer_stop(timer, "[sort] finished in %2.fms\n");
 }
 
@@ -1195,7 +1216,7 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
                                                                    FALSE,
                                                                    restore ? config->type_column_width : 100);
     FsearchListViewColumn *changed_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_CHANGED,
-                                                                      "Modified Time",
+                                                                      "Date Modified",
                                                                       PANGO_ALIGN_RIGHT,
                                                                       PANGO_ELLIPSIZE_END,
                                                                       FALSE,
