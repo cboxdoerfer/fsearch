@@ -39,7 +39,6 @@ typedef struct {
 
 struct _FsearchConfig {
     // Search
-    bool limit_results;
     bool hide_results_on_empty_search;
     bool search_in_path;
     bool enable_regex;
@@ -48,8 +47,6 @@ struct _FsearchConfig {
     bool auto_match_case;
     bool search_as_you_type;
     bool show_base_2_units;
-
-    uint32_t num_results;
 
     // Applications
     char *folder_open_cmd;

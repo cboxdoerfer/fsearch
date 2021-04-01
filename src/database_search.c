@@ -181,7 +181,6 @@ db_search_worker(void *user_data) {
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
-    const uint32_t max_results = query->max_results;
     const uint32_t num_token = query->num_token;
     FsearchToken **token = query->token;
     const uint32_t search_in_path = query->flags.search_in_path;
@@ -205,9 +204,6 @@ db_search_worker(void *user_data) {
     for (uint32_t i = start; i <= end; i++) {
         if (*ctx->terminate) {
             return NULL;
-        }
-        if (max_results && num_results == max_results) {
-            break;
         }
         BTreeNode *node = darray_get_item(entries, i);
         if (!node) {
@@ -278,8 +274,7 @@ db_search_empty(FsearchQuery *query) {
     assert(query->entries != NULL);
 
     const uint32_t num_entries = darray_get_num_items(query->entries);
-    const uint32_t num_results = query->max_results == 0 ? num_entries : MIN(query->max_results, num_entries);
-    DynamicArray *results = darray_new(num_results);
+    DynamicArray *results = darray_new(num_entries);
 
     DynamicArray *entries = query->entries;
 
@@ -296,7 +291,7 @@ db_search_empty(FsearchQuery *query) {
     }
     else {
         GString *path_string = g_string_sized_new(PATH_MAX);
-        for (uint32_t i = 0; pos < num_results && i < num_entries; ++i) {
+        for (uint32_t i = 0; i < num_entries; ++i) {
             BTreeNode *node = darray_get_item(entries, i);
             if (!node) {
                 continue;
@@ -336,8 +331,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     search_thread_context_t *thread_data[num_threads];
     memset(thread_data, 0, num_threads * sizeof(search_thread_context_t *));
 
-    const uint32_t max_results = q->max_results;
-    const bool limit_results = max_results ? true : false;
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
 

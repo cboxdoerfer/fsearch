@@ -62,8 +62,6 @@ typedef struct {
     GtkToggleButton *auto_match_case_button;
     GtkToggleButton *search_as_you_type_button;
     GtkToggleButton *hide_results_button;
-    GtkToggleButton *limit_num_results_button;
-    GtkWidget *limit_num_results_spin;
 
     // Database page
     GtkToggleButton *update_db_at_start_button;
@@ -320,8 +318,6 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
     new_config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
     new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
-    new_config->limit_results = gtk_toggle_button_get_active(ui->limit_num_results_button);
-    new_config->num_results = gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->limit_num_results_spin));
     new_config->highlight_search_terms = gtk_toggle_button_get_active(ui->highlight_search_terms);
     new_config->single_click_open = gtk_toggle_button_get_active(ui->single_click_open_button);
     new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
@@ -497,17 +493,6 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                 "hide_results_button",
                                                 "help_hide_results",
                                                 new_config->hide_results_on_empty_search);
-
-    ui->limit_num_results_button =
-        toggle_button_get(ui->builder, "limit_num_results_button", "help_limit_num_results", new_config->limit_results);
-
-    ui->limit_num_results_spin = builder_init_widget(ui->builder, "limit_num_results_spin", "help_limit_num_results");
-    gtk_spin_button_set_value(GTK_SPIN_BUTTON(ui->limit_num_results_spin), (double)new_config->num_results);
-    gtk_widget_set_sensitive(ui->limit_num_results_spin, new_config->limit_results);
-    g_signal_connect(ui->limit_num_results_button,
-                     "toggled",
-                     G_CALLBACK(on_toggle_set_sensitive),
-                     ui->limit_num_results_spin);
 
     // Database page
     ui->update_db_at_start_button = toggle_button_get(ui->builder,

@@ -240,8 +240,6 @@ config_load(FsearchConfig *config) {
         config->search_in_path = config_load_boolean(key_file, "Search", "search_in_path", false);
         config->hide_results_on_empty_search =
             config_load_boolean(key_file, "Search", "hide_results_on_empty_search", true);
-        config->limit_results = config_load_boolean(key_file, "Search", "limit_results", false);
-        config->num_results = config_load_integer(key_file, "Search", "num_results", 1000);
 
         // Database
         config->update_database_on_launch =
@@ -290,8 +288,6 @@ config_load_default(FsearchConfig *config) {
     config->enable_regex = false;
     config->search_in_path = false;
     config->hide_results_on_empty_search = true;
-    config->limit_results = true;
-    config->num_results = 1000;
 
     // Interface
     config->single_click_open = false;
@@ -490,8 +486,6 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Search", "enable_regex", config->enable_regex);
     g_key_file_set_boolean(key_file, "Search", "match_case", config->match_case);
     g_key_file_set_boolean(key_file, "Search", "hide_results_on_empty_search", config->hide_results_on_empty_search);
-    g_key_file_set_boolean(key_file, "Search", "limit_results", config->limit_results);
-    g_key_file_set_integer(key_file, "Search", "num_results", config->num_results);
 
     // Database
     g_key_file_set_boolean(key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
@@ -609,11 +603,10 @@ FsearchConfigCompareResult
 config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
     FsearchConfigCompareResult result = {};
 
-    if (c1->hide_results_on_empty_search != c2->hide_results_on_empty_search || c1->limit_results != c2->limit_results
+    if (c1->hide_results_on_empty_search != c2->hide_results_on_empty_search
         || c1->auto_search_in_path != c2->auto_search_in_path || c1->auto_match_case != c2->auto_match_case
         || c1->search_as_you_type != c2->search_as_you_type || c1->search_in_path != c2->search_in_path
-        || c1->enable_regex != c2->enable_regex || c1->match_case != c2->match_case
-        || c1->num_results != c2->num_results) {
+        || c1->enable_regex != c2->enable_regex || c1->match_case != c2->match_case) {
         result.search_config_changed = true;
     }
     if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons

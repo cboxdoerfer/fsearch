@@ -69,8 +69,6 @@ typedef struct FsearchQuery {
     FsearchToken **filter_token;
     uint32_t num_filter_token;
 
-    uint32_t max_results;
-
     bool pass_on_empty_query;
     FsearchQueryFlags flags;
 
@@ -90,7 +88,6 @@ fsearch_query_new(const char *text,
                   void *callback_data,
                   void (*callback_cancelled)(void *),
                   void *callback_cancelled_data,
-                  uint32_t max_results,
                   FsearchQueryFlags flags,
                   bool pass_on_empty_query);
 

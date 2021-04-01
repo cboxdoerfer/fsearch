@@ -32,11 +32,6 @@
     <property name="can-focus">False</property>
     <property name="icon-name">list-remove-symbolic</property>
   </object>
-  <object class="GtkAdjustment" id="limit_num_results_adjustment">
-    <property name="upper">1000000</property>
-    <property name="step-increment">1</property>
-    <property name="page-increment">10</property>
-  </object>
   <object class="GtkAdjustment" id="minute_adjustment">
     <property name="upper">59</property>
     <property name="value">30</property>
@@ -599,7 +594,7 @@
               </packing>
             </child>
             <child>
-              <!-- n-columns=2 n-rows=5 -->
+              <!-- n-columns=2 n-rows=4 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -609,36 +604,6 @@
                 <property name="margin-bottom">6</property>
                 <property name="row-spacing">2</property>
                 <property name="column-spacing">6</property>
-                <child>
-                  <object class="GtkCheckButton" id="limit_num_results_button">
-                    <property name="label" translatable="yes">Limit number of results:</property>
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="receives-default">False</property>
-                    <property name="has-tooltip">True</property>
-                    <property name="halign">end</property>
-                    <property name="draw-indicator">True</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">4</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkSpinButton" id="limit_num_results_spin">
-                    <property name="visible">True</property>
-                    <property name="can-focus">True</property>
-                    <property name="has-tooltip">True</property>
-                    <property name="halign">start</property>
-                    <property name="hexpand">True</property>
-                    <property name="input-purpose">digits</property>
-                    <property name="adjustment">limit_num_results_adjustment</property>
-                  </object>
-                  <packing>
-                    <property name="left-attach">1</property>
-                    <property name="top-attach">4</property>
-                  </packing>
-                </child>
                 <child>
                   <object class="GtkCheckButton" id="auto_search_in_path_button">
                     <property name="label" translatable="yes">Search in path when query contains path separators</property>
@@ -1461,22 +1426,7 @@ If disabled, the search is only updated when you hit &lt;i&gt;Enter&lt;/i&gt; or
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="help_limit_num_results">
-                    <property name="visible">True</property>
-                    <property name="can-focus">False</property>
-                    <property name="label" translatable="yes">&lt;b&gt;Limit number of results:&lt;/b&gt;
-
-If enabled, the number of search results will be limited to the specified number.
-
-Displaying lots of results has a significant performance impact, especially when the list isn't sorted by name. This will be improved in future versions.</property>
-                    <property name="use-markup">True</property>
-                    <property name="wrap">True</property>
-                  </object>
-                  <packing>
-                    <property name="name">page18</property>
-                    <property name="title">page18</property>
-                    <property name="position">18</property>
-                  </packing>
+                  <placeholder/>
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_update_database_on_start">

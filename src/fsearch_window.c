@@ -541,12 +541,7 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win,
     FsearchConfig *config = fsearch_application_get_config(app);
 
     gchar sb_text[100] = "";
-    if (config->limit_results && num_results == config->num_results) {
-        snprintf(sb_text, sizeof(sb_text), _("≥%'d Items"), num_results);
-    }
-    else {
-        snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
-    }
+    snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
     statusbar_update(win, sb_text);
 
     if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
@@ -645,7 +640,6 @@ perform_search(FsearchApplicationWindow *win) {
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
     trace("[search] %s\n", text);
-    uint32_t max_results = config->limit_results ? config->num_results : 0;
 
     FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
                                .match_case = config->match_case,
@@ -670,7 +664,6 @@ perform_search(FsearchApplicationWindow *win) {
                                         ctx,
                                         fsearch_application_window_search_cancelled,
                                         ctx,
-                                        max_results,
                                         flags,
                                         !config->hide_results_on_empty_search);
 

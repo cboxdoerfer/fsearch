@@ -34,7 +34,6 @@ fsearch_query_new(const char *text,
                   void *callback_data,
                   void (*callback_cancelled)(void *),
                   void *callback_cancelled_data,
-                  uint32_t max_results,
                   FsearchQueryFlags flags,
                   bool pass_on_empty_query) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
@@ -67,7 +66,6 @@ fsearch_query_new(const char *text,
     q->callback_data = callback_data;
     q->callback_cancelled = callback_cancelled;
     q->callback_cancelled_data = callback_cancelled_data;
-    q->max_results = max_results;
     q->flags = flags;
     q->pass_on_empty_query = pass_on_empty_query;
     return q;
