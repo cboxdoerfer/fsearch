@@ -289,6 +289,21 @@ btree_node_get_path(BTreeNode *node, char *path, size_t path_len) {
     return btree_node_build_path(node->parent, path, path_len);
 }
 
+static void
+fill_string(BTreeNode *node, GString *str) {
+    if (node->parent) {
+        fill_string(node->parent, str);
+    }
+    g_string_append_c(str, '/');
+    g_string_append(str, node->name);
+}
+
+void
+btree_node_fill_path_string_full(BTreeNode *node, GString *str) {
+    g_string_truncate(str, 0);
+    fill_string(node, str);
+}
+
 bool
 btree_node_get_path_full(BTreeNode *node, char *path, size_t path_len) {
     if (!node) {

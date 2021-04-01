@@ -194,7 +194,10 @@ db_search_worker(void *user_data) {
     }
 
     uint32_t num_results = 0;
-    char full_path[PATH_MAX] = "";
+
+    bool path_set = false;
+
+    GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
         if (*ctx->terminate) {
             return NULL;
@@ -206,14 +209,13 @@ db_search_worker(void *user_data) {
         if (!node) {
             continue;
         }
-        const char *haystack_path = NULL;
         const char *haystack_name = node->name;
         if (search_in_path || query->filter->search_in_path) {
-            btree_node_get_path_full(node, full_path, sizeof(full_path));
-            haystack_path = full_path;
+            btree_node_fill_path_string_full(node, path_string);
+            path_set = true;
         }
 
-        if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
+        if (!filter_node(node, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
             continue;
         }
 
@@ -231,11 +233,11 @@ db_search_worker(void *user_data) {
 
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && t->has_separator)) {
-                if (!haystack_path) {
-                    btree_node_get_path_full(node, full_path, sizeof(full_path));
-                    haystack_path = full_path;
+                if (!path_set) {
+                    btree_node_fill_path_string_full(node, path_string);
+                    path_set = true;
                 }
-                haystack = haystack_path;
+                haystack = path_string->str;
             }
             else {
                 haystack = haystack_name;
@@ -245,6 +247,8 @@ db_search_worker(void *user_data) {
             }
         }
     }
+    g_string_free(path_string, TRUE);
+    path_string = NULL;
     ctx->num_results = num_results;
     return NULL;
 }
@@ -280,7 +284,7 @@ db_search_empty(FsearchQuery *query) {
         printf("no filter\n");
     }
     else {
-        char full_path[PATH_MAX] = "";
+        GString *path_string = g_string_sized_new(PATH_MAX);
         for (uint32_t i = 0; pos < num_results && i < num_entries; ++i) {
             BTreeNode *node = darray_get_item(entries, i);
             if (!node) {
@@ -290,8 +294,8 @@ db_search_empty(FsearchQuery *query) {
             const char *haystack_path = NULL;
             const char *haystack_name = node->name;
             if (query->filter->search_in_path) {
-                btree_node_get_path_full(node, full_path, sizeof(full_path));
-                haystack_path = full_path;
+                btree_node_fill_path_string_full(node, path_string);
+                haystack_path = path_string->str;
             }
             if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
                 continue;
@@ -307,6 +311,8 @@ db_search_empty(FsearchQuery *query) {
 
             pos++;
         }
+        g_string_free(path_string, TRUE);
+        path_string = NULL;
     }
     return db_search_result_new(results, num_folders, num_files);
 }

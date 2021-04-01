@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <glib.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <sys/types.h>
@@ -85,3 +86,7 @@ btree_node_get_path(BTreeNode *node, char *path, size_t path_len);
 
 bool
 btree_node_get_path_full(BTreeNode *node, char *path, size_t path_len);
+
+void
+btree_node_fill_path_string_full(BTreeNode *node, GString *str);
+
