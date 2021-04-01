@@ -42,6 +42,8 @@ typedef struct search_context_s {
     BTreeNode **results;
     bool *terminate;
     uint32_t num_results;
+    uint32_t num_folders;
+    uint32_t num_files;
     uint32_t start_pos;
     uint32_t end_pos;
 } search_thread_context_t;
@@ -194,6 +196,8 @@ db_search_worker(void *user_data) {
     }
 
     uint32_t num_results = 0;
+    uint32_t num_files = 0;
+    uint32_t num_folders = 0;
 
     bool path_set = false;
 
@@ -224,6 +228,7 @@ db_search_worker(void *user_data) {
             if (num_found == num_token) {
                 results[num_results] = node;
                 num_results++;
+                node->is_dir ? num_folders++ : num_files++;
                 break;
             }
             FsearchToken *t = token[num_found++];
@@ -249,7 +254,11 @@ db_search_worker(void *user_data) {
     }
     g_string_free(path_string, TRUE);
     path_string = NULL;
+
     ctx->num_results = num_results;
+    ctx->num_folders = num_folders;
+    ctx->num_files = num_files;
+
     return NULL;
 }
 
@@ -281,7 +290,6 @@ db_search_empty(FsearchQuery *query) {
     if (!query->filter || query->filter->type == FSEARCH_FILTER_NONE) {
         void **data = darray_get_data(entries, NULL);
         darray_add_items(results, data, num_entries);
-        printf("no filter\n");
     }
     else {
         GString *path_string = g_string_sized_new(PATH_MAX);
@@ -300,16 +308,10 @@ db_search_empty(FsearchQuery *query) {
             if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
                 continue;
             }
-            if (node->is_dir) {
-                num_folders++;
-            }
-            else {
-                num_files++;
-            }
 
-            darray_set_item(results, node, pos);
+            node->is_dir ? num_folders++ : num_files++;
 
-            pos++;
+            darray_set_item(results, node, pos++);
         }
         g_string_free(path_string, TRUE);
         path_string = NULL;
@@ -381,13 +383,17 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
 
-    uint32_t pos = 0;
     for (uint32_t i = 0; i < num_threads; i++) {
         search_thread_context_t *ctx = thread_data[i];
         if (!ctx) {
             break;
         }
+
+        num_folders += ctx->num_folders;
+        num_files += ctx->num_files;
+
         darray_add_items(results, (void **)ctx->results, ctx->num_results);
+
         search_thread_context_free(ctx);
     }
 
