@@ -51,6 +51,8 @@ struct _FsearchDatabase {
     char **exclude_files;
     DynamicArray *entries;
     uint32_t num_entries;
+    uint32_t num_folders;
+    uint32_t num_files;
 
     bool exclude_hidden;
     time_t timestamp;
@@ -63,6 +65,8 @@ struct _FsearchDatabaseNode {
     // B+ tree of entry nodes
     BTreeNode *entries;
     uint32_t num_items;
+    uint32_t num_folders;
+    uint32_t num_files;
 };
 
 enum {
@@ -161,6 +165,9 @@ db_location_load_from_file(const char *fname) {
         goto load_fail;
     }
 
+    uint32_t num_folders = 0;
+    uint32_t num_files = 0;
+
     uint32_t num_items_read = 0;
     BTreeNode *prev = NULL;
     while (true) {
@@ -222,19 +229,23 @@ db_location_load_from_file(const char *fname) {
 
         int is_root = !strcmp(name, "/");
         BTreeNode *new = btree_node_new(is_root ? "" : name, mtime, size, pos, is_dir);
+
+        is_dir ? num_folders++ : num_files++;
+        num_items_read++;
+
         if (!prev) {
-            num_items_read++;
             prev = new;
             root = new;
             continue;
         }
         prev = btree_node_prepend(prev, new);
-        num_items_read++;
     }
     trace("[database_load] finished with %d of %d items successfully read\n", num_items_read, num_items);
 
     FsearchDatabaseNode *location = db_location_new();
     location->num_items = num_items_read;
+    location->num_folders = num_folders;
+    location->num_files = num_files;
     location->entries = root;
 
     fclose(fp);
@@ -486,7 +497,11 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
         btree_node_prepend(parent, node);
         walk_context->db_node->num_items++;
         if (is_dir) {
+            walk_context->db_node->num_folders++;
             db_location_walk_tree_recursive(walk_context, node);
+        }
+        else {
+            walk_context->db_node->num_files++;
         }
     }
 
@@ -564,6 +579,7 @@ static bool
 db_list_insert_node(BTreeNode *node, void *data) {
     FsearchDatabase *db = data;
     darray_set_item(db->entries, node, node->pos);
+    node->is_dir ? db->num_folders++ : db->num_files++;
     db->num_entries++;
     return true;
 }
@@ -579,6 +595,7 @@ static bool
 db_list_add_node(BTreeNode *node, void *data) {
     FsearchDatabase *db = data;
     darray_set_item(db->entries, node, temp_index++);
+    node->is_dir ? db->num_folders++ : db->num_files++;
     db->num_entries++;
     return true;
 }
@@ -730,6 +747,8 @@ db_location_load(FsearchDatabase *db, const char *location_name) {
         location->num_items = btree_node_n_nodes(location->entries);
         db->locations = g_list_append(db->locations, location);
         db->num_entries += location->num_items;
+        db->num_folders += location->num_folders;
+        db->num_files += location->num_files;
         db_update_timestamp(db);
         return true;
     }
@@ -748,6 +767,8 @@ db_location_add(FsearchDatabase *db, const char *location_name, bool *cancel, vo
         trace("[database_scan] %s scanned with %d entries\n", location_name, location->num_items);
         db->locations = g_list_append(db->locations, location);
         db->num_entries += location->num_items;
+        db->num_folders += location->num_folders;
+        db->num_files += location->num_files;
         db_update_timestamp(db);
         return true;
     }
@@ -858,6 +879,8 @@ db_entries_clear(FsearchDatabase *db) {
         db->entries = NULL;
     }
     db->num_entries = 0;
+    db->num_folders = 0;
+    db->num_files = 0;
 }
 
 static void
@@ -918,6 +941,18 @@ time_t
 db_get_timestamp(FsearchDatabase *db) {
     assert(db != NULL);
     return db->timestamp;
+}
+
+uint32_t
+db_get_num_files(FsearchDatabase *db) {
+    assert(db != NULL);
+    return db->num_files;
+}
+
+uint32_t
+db_get_num_folders(FsearchDatabase *db) {
+    assert(db != NULL);
+    return db->num_folders;
 }
 
 uint32_t

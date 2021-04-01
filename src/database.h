@@ -56,6 +56,12 @@ time_t
 db_get_timestamp(FsearchDatabase *db);
 
 uint32_t
+db_get_num_files(FsearchDatabase *db);
+
+uint32_t
+db_get_num_folders(FsearchDatabase *db);
+
+uint32_t
 db_get_num_entries(FsearchDatabase *db);
 
 void

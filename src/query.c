@@ -27,6 +27,8 @@
 FsearchQuery *
 fsearch_query_new(const char *text,
                   DynamicArray *entries,
+                  uint32_t num_folders,
+                  uint32_t num_files,
                   FsearchFilter *filter,
                   void (*callback)(void *),
                   void *callback_data,
@@ -56,6 +58,9 @@ fsearch_query_new(const char *text,
             q->num_filter_token++;
         }
     }
+
+    q->num_folders = num_folders;
+    q->num_files = num_files;
 
     q->filter = filter;
     q->callback = callback;

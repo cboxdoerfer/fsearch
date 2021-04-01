@@ -663,6 +663,8 @@ perform_search(FsearchApplicationWindow *win) {
 
     FsearchQuery *q = fsearch_query_new(text,
                                         db_get_entries(db),
+                                        db_get_num_folders(db),
+                                        db_get_num_files(db),
                                         filter,
                                         fsearch_application_window_update_results,
                                         ctx,

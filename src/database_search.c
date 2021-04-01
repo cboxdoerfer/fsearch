@@ -285,11 +285,14 @@ db_search_empty(FsearchQuery *query) {
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
+
     uint32_t pos = 0;
 
     if (!query->filter || query->filter->type == FSEARCH_FILTER_NONE) {
         void **data = darray_get_data(entries, NULL);
         darray_add_items(results, data, num_entries);
+        num_folders = query->num_folders;
+        num_files = query->num_files;
     }
     else {
         GString *path_string = g_string_sized_new(PATH_MAX);
