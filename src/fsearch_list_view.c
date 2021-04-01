@@ -501,6 +501,11 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         gtk_widget_grab_focus(GTK_WIDGET(view));
     }
 
+    if (y < view->header_height) {
+        gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_DENIED);
+        return;
+    }
+
     int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
     if (row_idx < 0) {
         fsearch_list_view_selection_clear(view);
