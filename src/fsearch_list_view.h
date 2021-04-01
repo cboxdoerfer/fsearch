@@ -1,6 +1,7 @@
 #pragma once
 
 #include <gtk/gtk.h>
+#include <stdint.h>
 
 #define ROW_PADDING_Y 4
 #define ROW_PADDING_X 3

@@ -3,6 +3,8 @@
 #include "pango/pango-attributes.h"
 #include "pango/pango-layout.h"
 #include <math.h>
+#include <stdlib.h>
+#include <string.h>
 
 #define TEXT_HEIGHT_FALLBACK 20
 #define ROW_HEIGHT_DEFAULT 30
@@ -1241,7 +1243,9 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
                                                             G_TYPE_INT,
                                                             GTK_TYPE_SORT_TYPE);
 
+#if GTK_CHECK_VERSION(3, 20, 0)
     gtk_widget_class_set_css_name(widget_class, "treeview");
+#endif
 }
 
 static void
