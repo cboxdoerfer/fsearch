@@ -969,13 +969,17 @@ draw_row_ctx_init(BTreeNode *node,
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     ctx->display_name = g_filename_display_name(node->name);
-    ctx->name_attr = fsearch_query_highlight_match(win->query_highlight, node->name);
+    ctx->name_attr = win->query_highlight ? fsearch_query_highlight_match(win->query_highlight, node->name) : NULL;
 
     char path_raw[PATH_MAX] = "";
     btree_node_get_path(node, path_raw, sizeof(path_raw));
 
     ctx->path = g_string_new(path_raw);
-    ctx->path_attr = fsearch_query_highlight_match(win->query_highlight, path_raw);
+    if (win->query_highlight
+        && ((win->query_highlight->has_separator && win->query_highlight->flags.auto_search_in_path)
+            || win->query_highlight->flags.search_in_path)) {
+        ctx->path_attr = fsearch_query_highlight_match(win->query_highlight, path_raw);
+    }
 
     ctx->full_path = g_string_new_len(ctx->path->str, ctx->path->len);
     g_string_append_c(ctx->full_path, '/');
