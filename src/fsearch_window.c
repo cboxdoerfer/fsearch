@@ -213,7 +213,7 @@ fsearch_application_window_prepare_close(FsearchApplicationWindow *self) {
 void
 fsearch_application_window_prepare_shutdown(gpointer self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    FsearchApplicationWindow *win = self;
+    // FsearchApplicationWindow *win = self;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
 
@@ -934,7 +934,7 @@ void
 fsearch_application_window_update_listview_config(FsearchApplicationWindow *app) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(app));
 
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    // FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     // GtkTreeView *list = GTK_TREE_VIEW(app->listview);
 
@@ -1150,11 +1150,6 @@ fsearch_list_view_draw_row(cairo_t *cr,
     draw_row_ctx_free(&ctx);
 }
 
-static gint
-compare_func(BTreeNode **a, BTreeNode **b, FsearchApplicationWindow *win) {
-    return compare_nodes(win->sort_order, *a, *b);
-}
-
 void
 fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
@@ -1269,6 +1264,7 @@ create_view_and_model(FsearchApplicationWindow *app) {
                             G_CALLBACK(on_fsearch_list_view_row_activated),
                             app,
                             G_CONNECT_AFTER);
+    g_signal_connect(app->new_listview, "key-press-event", G_CALLBACK(on_listview_key_press_event), app);
 
     // app->list_model = list_model_new();
     // GtkTreeView *list = GTK_TREE_VIEW(app->listview);
@@ -1556,7 +1552,6 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
 
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
-    // gtk_widget_class_bind_template_callback(widget_class, on_listview_key_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_listview_query_tooltip);
     gtk_widget_class_bind_template_callback(widget_class, on_match_case_label_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);

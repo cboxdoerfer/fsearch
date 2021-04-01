@@ -1076,7 +1076,7 @@ db_sort(FsearchDatabase *db) {
     assert(db->entries != NULL);
 
     trace("[database] sorting...\n");
-    darray_sort(db->entries, sort_by_name);
+    darray_sort(db->entries, (DynamicArrayCompareFunc)sort_by_name);
     trace("[database] sorted\n");
 }
 
