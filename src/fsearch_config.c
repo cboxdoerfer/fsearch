@@ -534,6 +534,9 @@ config_save(FsearchConfig *config) {
 
 static bool
 config_excludes_compare(void *e1, void *e2) {
+    if (!e1 && !e2) {
+        return true;
+    }
     if (!e1 || !e2) {
         return false;
     }
@@ -551,6 +554,9 @@ config_excludes_compare(void *e1, void *e2) {
 
 static bool
 config_includes_compare(void *i1, void *i2) {
+    if (!i1 && !i2) {
+        return true;
+    }
     if (!i1 || !i2) {
         return false;
     }
@@ -571,6 +577,9 @@ config_includes_compare(void *i1, void *i2) {
 
 static bool
 config_list_compare(GList *l1, GList *l2, bool (*cmp_func)(void *, void *)) {
+    if (!l1 && !l2) {
+        return true;
+    }
     if (!l1 || !l2) {
         return false;
     }
