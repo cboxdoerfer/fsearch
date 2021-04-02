@@ -376,7 +376,6 @@
                             <child>
                               <object class="GtkCheckButton" id="restore_sort_order_button">
                                 <property name="label" translatable="yes">Remember sort order</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -1426,9 +1425,6 @@ If disabled, the search is only updated when you hit &lt;i&gt;Enter&lt;/i&gt; or
                   </packing>
                 </child>
                 <child>
-                  <placeholder/>
-                </child>
-                <child>
                   <object class="GtkLabel" id="help_update_database_on_start">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -1441,7 +1437,7 @@ If enabled, the database will be updated automatically in the background when yo
                   <packing>
                     <property name="name">page19</property>
                     <property name="title">page19</property>
-                    <property name="position">19</property>
+                    <property name="position">18</property>
                   </packing>
                 </child>
                 <child>
@@ -1462,7 +1458,7 @@ This list contains all folders you want to include in the database.
                   <packing>
                     <property name="name">page20</property>
                     <property name="title">page20</property>
-                    <property name="position">20</property>
+                    <property name="position">19</property>
                   </packing>
                 </child>
                 <child>
@@ -1478,7 +1474,7 @@ This button opens a dialog where you can select a folder you want to include in 
                   <packing>
                     <property name="name">page21</property>
                     <property name="title">page21</property>
-                    <property name="position">21</property>
+                    <property name="position">20</property>
                   </packing>
                 </child>
                 <child>
@@ -1494,7 +1490,7 @@ This removes the selected folder from the list of included folders.</property>
                   <packing>
                     <property name="name">page22</property>
                     <property name="title">page22</property>
-                    <property name="position">22</property>
+                    <property name="position">21</property>
                   </packing>
                 </child>
                 <child>
@@ -1514,7 +1510,7 @@ This list contains all folders you want to exclude from the database.
                   <packing>
                     <property name="name">page23</property>
                     <property name="title">page23</property>
-                    <property name="position">23</property>
+                    <property name="position">22</property>
                   </packing>
                 </child>
                 <child>
@@ -1530,7 +1526,7 @@ This button opens a dialog where you can select a folder you want to exclude fro
                   <packing>
                     <property name="name">page24</property>
                     <property name="title">page24</property>
-                    <property name="position">24</property>
+                    <property name="position">23</property>
                   </packing>
                 </child>
                 <child>
@@ -1546,7 +1542,7 @@ This removes the selected folder from the list of excluded folders.</property>
                   <packing>
                     <property name="name">page25</property>
                     <property name="title">page25</property>
-                    <property name="position">25</property>
+                    <property name="position">24</property>
                   </packing>
                 </child>
                 <child>
@@ -1562,7 +1558,7 @@ This is a semi-colon separated list of files (or folders) you want to exclude fr
                   <packing>
                     <property name="name">page26</property>
                     <property name="title">page26</property>
-                    <property name="position">26</property>
+                    <property name="position">25</property>
                   </packing>
                 </child>
                 <child>
@@ -1578,7 +1574,7 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                   <packing>
                     <property name="name">page27</property>
                     <property name="title">page27</property>
-                    <property name="position">27</property>
+                    <property name="position">26</property>
                   </packing>
                 </child>
                 <child>
@@ -1590,7 +1586,7 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                   <packing>
                     <property name="name">page28</property>
                     <property name="title">page28</property>
-                    <property name="position">28</property>
+                    <property name="position">27</property>
                   </packing>
                 </child>
                 <child>
@@ -1610,7 +1606,7 @@ If you want to update the database in the background, even when FSearch is not r
                   <packing>
                     <property name="name">page29</property>
                     <property name="title">page29</property>
-                    <property name="position">29</property>
+                    <property name="position">28</property>
                   </packing>
                 </child>
               </object>
