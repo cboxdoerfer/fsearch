@@ -48,6 +48,7 @@ typedef struct {
     gint width;
     gint effective_width;
     gboolean expand;
+    gboolean visible;
     PangoAlignment alignment;
     PangoEllipsizeMode ellipsize_mode;
 
@@ -59,11 +60,15 @@ fsearch_list_view_column_new(FsearchListViewColumnType type,
                              char *name,
                              PangoAlignment alignment,
                              PangoEllipsizeMode ellipsize_mode,
+                             gboolean visibile,
                              gboolean expand,
                              uint32_t width);
 
 FsearchListView *
 fsearch_list_view_new();
+
+void
+fsearch_list_view_column_set_visible(FsearchListView *view, FsearchListViewColumn *col, gboolean visible);
 
 void
 fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *col);

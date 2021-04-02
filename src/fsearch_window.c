@@ -1103,6 +1103,9 @@ fsearch_list_view_draw_row(cairo_t *cr,
 
     for (GList *col = columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
+        if (!column->visible) {
+            continue;
+        }
         cairo_save(cr);
         cairo_rectangle(cr, x, rect->y, column->effective_width, rect->height);
         cairo_clip(cr);
@@ -1190,45 +1193,42 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    TRUE,
+                                                                   TRUE,
                                                                    restore ? config->name_column_width : 250);
     FsearchListViewColumn *path_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_PATH,
                                                                    "Path",
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
+                                                                   restore ? config->show_path_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->path_column_width : 250);
     FsearchListViewColumn *size_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_SIZE,
                                                                    "Size",
                                                                    PANGO_ALIGN_RIGHT,
                                                                    PANGO_ELLIPSIZE_END,
+                                                                   restore ? config->show_size_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->size_column_width : 75);
     FsearchListViewColumn *type_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_TYPE,
                                                                    "Type",
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
+                                                                   restore ? config->show_type_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->type_column_width : 100);
     FsearchListViewColumn *changed_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_CHANGED,
                                                                       "Date Modified",
                                                                       PANGO_ALIGN_RIGHT,
                                                                       PANGO_ELLIPSIZE_END,
+                                                                      restore ? config->show_modified_column : TRUE,
                                                                       FALSE,
                                                                       restore ? config->modified_column_width : 125);
 
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), name_col);
-    if (config->show_path_column) {
-        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), path_col);
-    }
-    if (config->show_type_column) {
-        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), type_col);
-    }
-    if (config->show_size_column) {
-        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), size_col);
-    }
-    if (config->show_modified_column) {
-        fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
-    }
+    fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), path_col);
+    fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), type_col);
+    fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), size_col);
+    fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
 }
 
 static void

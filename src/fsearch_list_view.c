@@ -88,6 +88,9 @@ fsearch_list_view_get_columns_effective_width(FsearchListView *view) {
     int width = 0;
     for (GList *col = view->columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
+        if (!column->visible) {
+            continue;
+        }
         width += column->effective_width;
     }
     return width;
@@ -98,6 +101,9 @@ fsearch_list_view_get_columns_width(FsearchListView *view) {
     int width = 0;
     for (GList *col = view->columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
+        if (!column->visible) {
+            continue;
+        }
         width += column->width;
     }
     return width;
@@ -185,6 +191,9 @@ fsearch_list_view_get_col_for_x_canvas(FsearchListView *view, int x_canvas) {
 
     for (GList *c = view->columns; c != NULL; c = c->next) {
         FsearchListViewColumn *col = c->data;
+        if (!col->visible) {
+            continue;
+        }
         width += col->effective_width;
         if (x_canvas < width) {
             return col->type;
@@ -311,6 +320,9 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
             if (!col->next) {
                 break;
             }
+            if (!column->visible) {
+                continue;
+            }
             line_x += column->effective_width;
             gtk_render_line(context, cr, line_x, view_rect.y, line_x, view_rect.height);
         }
@@ -324,6 +336,9 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
         gtk_style_context_remove_class(context, GTK_STYLE_CLASS_CELL);
         for (GList *col = view->columns; col != NULL; col = col->next) {
             FsearchListViewColumn *column = col->data;
+            if (!column->visible) {
+                continue;
+            }
             gtk_container_propagate_draw(GTK_CONTAINER(view), column->button, cr);
         }
         gtk_style_context_restore(context);
@@ -643,6 +658,9 @@ fsearch_list_view_header_drag_gesture_begin(GtkGestureDrag *gesture,
         if (window != column->window) {
             continue;
         }
+        if (!column->visible) {
+            continue;
+        }
 
         view->col_resize_mode = TRUE;
 
@@ -897,6 +915,9 @@ fsearch_list_view_num_expanding_columns(FsearchListView *view) {
     int num_expanding = 0;
     for (GList *col = view->columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
+        if (!column->visible) {
+            continue;
+        }
         if (column->expand) {
             num_expanding++;
         }
@@ -923,6 +944,9 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
 
     for (GList *col = view->columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
+        if (!column->visible) {
+            continue;
+        }
         GdkRectangle header_button_rect;
         header_button_rect.x = x;
         header_button_rect.y = 0;
@@ -1322,7 +1346,9 @@ fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *co
     }
 
     view->columns = g_list_remove(view->columns, col);
-    view->min_list_width -= col->width;
+    if (col->visible) {
+        view->min_list_width -= col->width;
+    }
 
     if (gtk_widget_get_realized(GTK_WIDGET(view))) {
         fsearch_list_view_unrealize_column(view, col);
@@ -1340,6 +1366,29 @@ fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *co
 
     free(col);
     col = NULL;
+}
+
+void
+fsearch_list_view_column_set_visible(FsearchListView *view, FsearchListViewColumn *col, gboolean visible) {
+    if (!view || !col) {
+        return;
+    }
+    if (view != col->view) {
+        return;
+    }
+    if (col->visible == visible) {
+        return;
+    }
+    if (col->visible) {
+        gtk_widget_hide(col->button);
+        view->min_list_width -= col->width;
+    }
+    else {
+        gtk_widget_show(col->button);
+        view->min_list_width += col->width;
+    }
+    col->visible = visible;
+    gtk_widget_queue_resize(GTK_WIDGET(view));
 }
 
 static void
@@ -1427,13 +1476,15 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
     col->view = view;
 
     view->columns = g_list_append(view->columns, col);
-    view->min_list_width += col->width;
+    if (col->visible) {
+        view->min_list_width += col->width;
+    }
 
     g_signal_connect(G_OBJECT(col->button), "clicked", G_CALLBACK(on_fsearch_list_view_header_button_clicked), col);
-    // g_signal_connect(G_OBJECT(col->button),
-    //                 "button-press-event",
-    //                 G_CALLBACK(on_fsearch_list_view_header_button_pressed),
-    //                 col);
+    g_signal_connect(G_OBJECT(col->button),
+                     "button-press-event",
+                     G_CALLBACK(on_fsearch_list_view_header_button_pressed),
+                     col);
 
     gtk_widget_set_parent(col->button, GTK_WIDGET(view));
     gtk_widget_set_parent_window(col->button, view->header_window);
@@ -1584,6 +1635,7 @@ fsearch_list_view_column_new(FsearchListViewColumnType type,
                              char *name,
                              PangoAlignment alignment,
                              PangoEllipsizeMode ellipsize_mode,
+                             gboolean visible,
                              gboolean expand,
                              uint32_t width) {
     FsearchListViewColumn *col = calloc(1, sizeof(FsearchListViewColumn));
@@ -1610,6 +1662,7 @@ fsearch_list_view_column_new(FsearchListViewColumnType type,
     col->ellipsize_mode = ellipsize_mode;
     col->width = width;
     col->expand = expand;
+    col->visible = visible;
 
     return col;
 }

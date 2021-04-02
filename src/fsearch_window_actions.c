@@ -523,40 +523,16 @@ fsearch_window_action_match_case(GSimpleAction *action, GVariant *variant, gpoin
 }
 
 static void
-fsearch_window_action_show_name_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
-    FsearchApplicationWindow *self = user_data;
-    g_simple_action_set_state(action, variant);
-    gboolean value = g_variant_get_boolean(variant);
-    FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    if (value == FALSE) {
-        FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_NAME);
-        if (col) {
-            fsearch_list_view_remove_column(list, col);
-        }
-    }
-    else {
-        // listview_add_column(list, LIST_MODEL_COL_NAME, 250, 0, self);
-    }
-    // FsearchConfig *config = fsearch_application_get_config
-    // (FSEARCH_APPLICATION_DEFAULT); config->show_name_column =
-    // g_variant_get_boolean (variant);
-}
-
-static void
 fsearch_window_action_show_path_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    if (value == FALSE) {
-        FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_PATH);
-        if (col) {
-            fsearch_list_view_remove_column(list, col);
-        }
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_PATH);
+    if (!col) {
+        return;
     }
-    else {
-        // listview_add_column(list, LIST_MODEL_COL_PATH, 250, 1, self);
-    }
+    fsearch_list_view_column_set_visible(list, col, value);
+    g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_path_column = g_variant_get_boolean(variant);
 }
@@ -567,15 +543,12 @@ fsearch_window_action_show_type_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    if (value == FALSE) {
-        FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_TYPE);
-        if (col) {
-            fsearch_list_view_remove_column(list, col);
-        }
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_TYPE);
+    if (!col) {
+        return;
     }
-    else {
-        // listview_add_column(list, LIST_MODEL_COL_TYPE, 100, 2, self);
-    }
+    fsearch_list_view_column_set_visible(list, col, value);
+    g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_type_column = g_variant_get_boolean(variant);
 }
@@ -586,15 +559,12 @@ fsearch_window_action_show_size_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    if (value == FALSE) {
-        FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_SIZE);
-        if (col) {
-            fsearch_list_view_remove_column(list, col);
-        }
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_SIZE);
+    if (!col) {
+        return;
     }
-    else {
-        // listview_add_column(list, LIST_MODEL_COL_SIZE, 75, 3, self);
-    }
+    fsearch_list_view_column_set_visible(list, col, value);
+    g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_size_column = g_variant_get_boolean(variant);
 }
@@ -605,16 +575,12 @@ fsearch_window_action_show_modified_column(GSimpleAction *action, GVariant *vari
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    if (value == FALSE) {
-        FsearchListViewColumn *col =
-            fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_CHANGED);
-        if (col) {
-            fsearch_list_view_remove_column(list, col);
-        }
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_CHANGED);
+    if (!col) {
+        return;
     }
-    else {
-        // listview_add_column(list, LIST_MODEL_COL_CHANGED, 75, 4, self);
-    }
+    fsearch_list_view_column_set_visible(list, col, value);
+    g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_modified_column = g_variant_get_boolean(variant);
 }
@@ -646,7 +612,6 @@ static GActionEntry FsearchWindowActions[] = {
     {"focus_search", fsearch_window_action_focus_search},
     {"hide_window", fsearch_window_action_hide_window},
     // Column popup
-    {"show_name_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_name_column},
     {"show_path_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_path_column},
     {"show_type_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_type_column},
     {"show_size_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_size_column},

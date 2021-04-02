@@ -207,11 +207,20 @@ config_load(FsearchConfig *config) {
         config->window_height = config_load_integer(key_file, "Interface", "window_height", 600);
 
         // Columns
-        config->show_listview_icons = config_load_boolean(key_file, "Interface", "show_listview_icons", true);
-        config->show_path_column = config_load_boolean(key_file, "Interface", "show_path_column", true);
-        config->show_type_column = config_load_boolean(key_file, "Interface", "show_type_column", true);
-        config->show_size_column = config_load_boolean(key_file, "Interface", "show_size_column", true);
-        config->show_modified_column = config_load_boolean(key_file, "Interface", "show_modified_column", true);
+        if (config->restore_column_config) {
+            config->show_listview_icons = config_load_boolean(key_file, "Interface", "show_listview_icons", true);
+            config->show_path_column = config_load_boolean(key_file, "Interface", "show_path_column", true);
+            config->show_type_column = config_load_boolean(key_file, "Interface", "show_type_column", true);
+            config->show_size_column = config_load_boolean(key_file, "Interface", "show_size_column", true);
+            config->show_modified_column = config_load_boolean(key_file, "Interface", "show_modified_column", true);
+        }
+        else {
+            config->show_listview_icons = true;
+            config->show_path_column = true;
+            config->show_type_column = true;
+            config->show_size_column = true;
+            config->show_modified_column = true;
+        }
 
         // Column Sort
         config->sort_ascending = config_load_boolean(key_file, "Interface", "sort_ascending", true);
