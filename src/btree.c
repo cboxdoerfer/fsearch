@@ -91,6 +91,14 @@ btree_node_unlink(BTreeNode *node) {
 }
 
 void
+btree_node_clear(BTreeNode *node) {
+    if (node && node->name) {
+        free(node->name);
+        node->name = NULL;
+    }
+}
+
+void
 btree_node_free(BTreeNode *node) {
     if (!node) {
         return;

@@ -41,7 +41,10 @@
 #include "fsearch.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
+#include "memory_pool.h"
 #include "utils.h"
+
+#define BTREE_NODE_POOL_BLOCK_ELEMENTS 10000
 
 struct _FsearchDatabase {
     GList *locations;
@@ -64,6 +67,7 @@ struct _FsearchDatabase {
 struct _FsearchDatabaseNode {
     // B+ tree of entry nodes
     BTreeNode *entries;
+    FsearchMemoryPool *pool;
     uint32_t num_items;
     uint32_t num_folders;
     uint32_t num_files;
@@ -89,6 +93,9 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
 
 static FsearchDatabaseNode *
 db_location_new(void);
+
+static void
+db_location_free(FsearchDatabaseNode *location);
 
 static void
 db_list_add_location(FsearchDatabase *db, FsearchDatabaseNode *location);
@@ -130,6 +137,7 @@ db_location_load_from_file(const char *fname) {
     }
 
     BTreeNode *root = NULL;
+    FsearchDatabaseNode *location = db_location_new();
 
     char magic[4];
     if (fread(magic, 1, 4, fp) != 4) {
@@ -228,7 +236,12 @@ db_location_load_from_file(const char *fname) {
         }
 
         int is_root = !strcmp(name, "/");
-        BTreeNode *new = btree_node_new(is_root ? "" : name, mtime, size, pos, is_dir);
+        BTreeNode *new = fsearch_memory_pool_malloc(location->pool);
+        new->name = is_root ? strdup("/") : strdup(name);
+        new->mtime = mtime;
+        new->size = size;
+        new->is_dir = is_dir;
+        new->pos = pos;
 
         is_dir ? num_folders++ : num_files++;
         num_items_read++;
@@ -242,7 +255,6 @@ db_location_load_from_file(const char *fname) {
     }
     trace("[database_load] finished with %d of %d items successfully read\n", num_items_read, num_items);
 
-    FsearchDatabaseNode *location = db_location_new();
     location->num_items = num_items_read;
     location->num_folders = num_folders;
     location->num_files = num_files;
@@ -257,9 +269,7 @@ load_fail:
     if (fp) {
         fclose(fp);
     }
-    if (root) {
-        btree_node_free(root);
-    }
+    db_location_free(location);
     return NULL;
 }
 
@@ -493,7 +503,13 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
             continue;
         }
 
-        BTreeNode *node = btree_node_new(dent->d_name, st.st_mtime, st.st_size, 0, is_dir);
+        BTreeNode *node = fsearch_memory_pool_malloc(walk_context->db_node->pool);
+        node->name = strdup(dent->d_name);
+        node->mtime = st.st_mtime;
+        node->size = st.st_size;
+        node->is_dir = is_dir;
+        node->pos = 0;
+
         btree_node_prepend(parent, node);
         walk_context->db_node->num_items++;
         if (is_dir) {
@@ -515,9 +531,9 @@ static void
 db_location_free(FsearchDatabaseNode *location) {
     assert(location != NULL);
 
-    if (location->entries) {
-        btree_node_free(location->entries);
-        location->entries = NULL;
+    if (location->pool) {
+        fsearch_memory_pool_free(location->pool);
+        location->pool = NULL;
     }
     g_free(location);
     location = NULL;
@@ -532,8 +548,14 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
     else {
         root_name = dname;
     }
-    BTreeNode *root = btree_node_new(root_name, 0, 0, 0, true);
     FsearchDatabaseNode *location = db_location_new();
+    BTreeNode *root = fsearch_memory_pool_malloc(location->pool);
+    root->name = strdup(root_name);
+    root->mtime = 0;
+    root->size = 0;
+    root->is_dir = true;
+    root->pos = 0;
+
     location->entries = root;
 
     GTimer *timer = g_timer_new();
@@ -572,6 +594,8 @@ db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, voi
 static FsearchDatabaseNode *
 db_location_new(void) {
     FsearchDatabaseNode *location = g_new0(FsearchDatabaseNode, 1);
+    location->pool =
+        fsearch_memory_pool_new(BTREE_NODE_POOL_BLOCK_ELEMENTS, sizeof(BTreeNode), (GDestroyNotify)btree_node_clear);
     return location;
 }
 

@@ -32,6 +32,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_exclude_path.h \
 			 fsearch_preferences_widgets.h \
 			 listview_popup.h \
+			 memory_pool.h \
 			 preferences_ui.h \
 			 query.h \
 			 string_utils.h \
@@ -58,6 +59,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_include_path.c \
 		  fsearch_exclude_path.c \
 		  fsearch_preferences_widgets.c \
+		  memory_pool.c \
 		  array.c \
 		  string_utils.c \
 		  btree.c \

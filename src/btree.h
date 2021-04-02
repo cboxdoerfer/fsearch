@@ -46,6 +46,9 @@ void
 btree_node_free(BTreeNode *node);
 
 void
+btree_node_clear(BTreeNode *node);
+
+void
 btree_node_unlink(BTreeNode *node);
 
 BTreeNode *

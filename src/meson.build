@@ -17,6 +17,7 @@ fsearch_sources = [
     'fsearch_window_actions.c',
     'listview_popup.c',
     'main.c',
+    'memory_pool.c',
     'preferences_ui.c',
     'query.c',
     'string_utils.c',
