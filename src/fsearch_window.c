@@ -934,16 +934,8 @@ void
 fsearch_application_window_update_listview_config(FsearchApplicationWindow *app) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(app));
 
-    // FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-
-    // GtkTreeView *list = GTK_TREE_VIEW(app->listview);
-
-    // listview_remove_column(list, LIST_MODEL_COL_NAME);
-    // listview_add_column(list, LIST_MODEL_COL_NAME, config->name_column_width, config->name_column_pos, app);
-    // listview_remove_column(list, LIST_MODEL_COL_PATH);
-    // listview_add_column(list, LIST_MODEL_COL_PATH, config->path_column_width, config->path_column_pos, app);
-
-    // gtk_tree_view_set_activate_on_single_click(list, config->single_click_open);
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->new_listview), config->single_click_open);
 }
 
 typedef struct {
@@ -1246,6 +1238,7 @@ create_view_and_model(FsearchApplicationWindow *app) {
     fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_list_view_draw_row, app);
     fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_list_view_get_node_for_row, app);
     fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_results_sort_func, app);
+    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->new_listview), config->single_click_open);
 
     add_columns(FSEARCH_LIST_VIEW(app->new_listview), config);
 

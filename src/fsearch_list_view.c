@@ -34,6 +34,8 @@ struct _FsearchListView {
     GHashTable *selection;
     uint32_t num_selected;
 
+    gboolean single_click_activate;
+
     gint focused_idx;
 
     gint last_clicked_idx;
@@ -557,11 +559,15 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                 view->last_clicked_idx = row_idx;
                 fsearch_list_view_selection_clear_silent(view);
                 fsearch_list_view_selection_toggle_silent(view, row_data);
+                if (view->single_click_activate) {
+                    FsearchListViewColumnType col = fsearch_list_view_get_col_for_x_view(view, x);
+                    g_signal_emit(view, signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED], 0, col, row_idx, view->sort_type);
+                }
             }
             fsearch_list_view_selection_changed(view);
         }
 
-        if (n_press == 2) {
+        if (n_press == 2 && !view->single_click_activate) {
             FsearchListViewColumnType col = fsearch_list_view_get_col_for_x_view(view, x);
             g_signal_emit(view, signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED], 0, col, row_idx, view->sort_type);
         }
@@ -1628,6 +1634,14 @@ fsearch_list_view_set_sort_type(FsearchListView *view, GtkSortType sort_type) {
 GtkSortType
 fsearch_list_view_get_sort_type(FsearchListView *view) {
     return view->sort_type;
+}
+
+void
+fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean value) {
+    if (!view) {
+        return;
+    }
+    view->single_click_activate = value;
 }
 
 FsearchListViewColumn *
