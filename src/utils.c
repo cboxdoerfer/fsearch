@@ -17,12 +17,14 @@
    */
 
 #define _GNU_SOURCE
+
 #include "utils.h"
 #include "debug.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "ui_utils.h"
 #include <gio/gio.h>
+#include <glib/gi18n.h>
 #include <stdbool.h>
 #include <stdio.h>
 
@@ -278,13 +280,13 @@ gchar *
 get_file_type(BTreeNode *node, const gchar *path) {
     gchar *type = NULL;
     if (node->is_dir) {
-        type = g_strdup("Folder");
+        type = g_strdup(_("Folder"));
     }
     else {
         type = get_mimetype(path);
     }
     if (type == NULL) {
-        type = g_strdup("Unknown Type");
+        type = g_strdup(_("Unknown Type"));
     }
     return type;
 }
@@ -362,6 +364,29 @@ get_icon_size_for_height(int height) {
         return 32;
     }
     return 48;
+}
+
+char *
+get_size_formatted(BTreeNode *node, bool show_base_2_units) {
+    if (!node->is_dir) {
+        if (show_base_2_units) {
+            return g_format_size_full(node->size, G_FORMAT_SIZE_IEC_UNITS);
+        }
+        else {
+            return g_format_size_full(node->size, G_FORMAT_SIZE_DEFAULT);
+        }
+    }
+    else {
+        char buffer[100] = "";
+        uint32_t num_children = btree_node_n_children(node);
+        if (num_children == 1) {
+            snprintf(buffer, sizeof(buffer), _("%d Item"), num_children);
+        }
+        else {
+            snprintf(buffer, sizeof(buffer), _("%d Items"), num_children);
+        }
+        return g_strdup(buffer);
+    }
 }
 
 int

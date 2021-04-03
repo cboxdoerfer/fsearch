@@ -15,22 +15,6 @@ typedef enum {
     NUM_FSEARCH_LIST_VIEW_COLUMNS,
 } FsearchListViewColumnType;
 
-typedef void (*FsearchListViewDrawRowFunc)(cairo_t *cr,
-                                           GdkWindow *bin_window,
-                                           PangoLayout *layout,
-                                           GtkStyleContext *context,
-                                           GList *columns,
-                                           cairo_rectangle_int_t *rect,
-                                           GtkSortType sort_type,
-                                           uint32_t row,
-                                           gboolean row_selected,
-                                           gboolean row_focused,
-                                           gpointer user_data);
-
-typedef void *(*FsearchListViewRowDataFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
-
-typedef void (*FsearchListViewSortFunc)(FsearchListViewColumnType type, gpointer user_data);
-
 G_BEGIN_DECLS
 
 #define FSEARCH_TYPE_LIST_VIEW (fsearch_list_view_get_type())
@@ -54,6 +38,29 @@ typedef struct {
 
     GdkWindow *window;
 } FsearchListViewColumn;
+
+typedef char *(*FsearchListViewQueryTooltipFunc)(PangoLayout *layout,
+                                                 GtkSortType sort_type,
+                                                 uint32_t row_height,
+                                                 uint32_t row,
+                                                 FsearchListViewColumn *col,
+                                                 gpointer user_data);
+
+typedef void (*FsearchListViewDrawRowFunc)(cairo_t *cr,
+                                           GdkWindow *bin_window,
+                                           PangoLayout *layout,
+                                           GtkStyleContext *context,
+                                           GList *columns,
+                                           cairo_rectangle_int_t *rect,
+                                           GtkSortType sort_type,
+                                           uint32_t row,
+                                           gboolean row_selected,
+                                           gboolean row_focused,
+                                           gpointer user_data);
+
+typedef void *(*FsearchListViewRowDataFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
+
+typedef void (*FsearchListViewSortFunc)(FsearchListViewColumnType type, gpointer user_data);
 
 FsearchListViewColumn *
 fsearch_list_view_column_new(FsearchListViewColumnType type,
@@ -110,6 +117,9 @@ void
 fsearch_list_view_set_cursor(FsearchListView *view, int row_idx);
 
 void
+fsearch_list_view_set_show_tooltips(FsearchListView *view, gboolean value);
+
+void
 fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean value);
 
 void
@@ -124,10 +134,13 @@ fsearch_list_view_set_sort_func(FsearchListView *view, FsearchListViewSortFunc f
 void
 fsearch_list_view_set_row_data_func(FsearchListView *view,
                                     FsearchListViewRowDataFunc func,
-                                    gpointer row_data_func_data);
+
+                                    gpointer func_data);
+void
+fsearch_list_view_set_query_tooltip_func(FsearchListView *view,
+                                         FsearchListViewQueryTooltipFunc func,
+                                         gpointer func_data);
 
 void
-fsearch_list_view_set_draw_row_func(FsearchListView *view,
-                                    FsearchListViewDrawRowFunc func,
-                                    gpointer draw_row_func_data);
+fsearch_list_view_set_draw_row_func(FsearchListView *view, FsearchListViewDrawRowFunc func, gpointer func_data);
 

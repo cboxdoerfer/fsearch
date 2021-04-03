@@ -53,6 +53,9 @@ get_icon_surface(GdkWindow *win, const char *path, int icon_size, int scale_fact
 int
 get_icon_size_for_height(int height);
 
+char *
+get_size_formatted(BTreeNode *node, bool show_base_2_units);
+
 int
 compare_name(BTreeNode **a, BTreeNode **b);
 
