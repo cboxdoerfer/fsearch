@@ -58,7 +58,6 @@ struct _FsearchApplicationWindow {
     GtkWidget *headerbar;
     GtkWidget *headerbar_box;
     GtkWidget *listview;
-    GtkWidget *new_listview;
     GtkWidget *match_case_revealer;
     GtkWidget *main_box;
     GtkWidget *menu_box;
@@ -86,8 +85,6 @@ struct _FsearchApplicationWindow {
     GtkWidget *statusbar_revealer;
     GtkWidget *statusbar_scan_label;
     GtkWidget *statusbar_scan_status_label;
-
-    GtkTreeSelection *listview_selection;
 
     DatabaseSearch *search;
     DatabaseSearchResult *result;
@@ -181,18 +178,17 @@ init_statusbar(FsearchApplicationWindow *self) {
 static void
 remove_model_from_list(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->new_listview), 0);
+    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0);
 }
 
 static void
 apply_model_to_list(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
     if (self->result && self->result->entries) {
-        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->new_listview),
-                                       darray_get_num_items(self->result->entries));
+        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), darray_get_num_items(self->result->entries));
     }
     else {
-        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->new_listview), 0);
+        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0);
     }
     fsearch_window_actions_update(self);
 }
@@ -854,24 +850,6 @@ on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data
     }
 }
 
-void
-fsearch_window_listview_block_selection_changed(FsearchApplicationWindow *self, gboolean block) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    // if (block) {
-    //    g_signal_handlers_block_by_func(self->listview_selection, on_listview_selection_changed, self);
-    //}
-    // else {
-    //    g_signal_handlers_unblock_by_func(self->listview_selection, on_listview_selection_changed, self);
-    //}
-}
-
-void
-fsearch_window_listview_selection_changed(FsearchApplicationWindow *self) {
-
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    // on_listview_selection_changed(self->listview_selection, self);
-}
-
 static gboolean
 toggle_action_on_2button_press(GdkEvent *event, const char *action, gpointer user_data) {
     guint button;
@@ -935,7 +913,7 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *app)
     g_assert(FSEARCH_WINDOW_IS_WINDOW(app));
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->new_listview), config->single_click_open);
+    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
 }
 
 typedef struct {
@@ -1231,72 +1209,29 @@ create_view_and_model(FsearchApplicationWindow *app) {
 
     GtkAdjustment *hadj = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(app->listview_scrolled_window));
     GtkAdjustment *vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(app->listview_scrolled_window));
-    app->new_listview = GTK_WIDGET(fsearch_list_view_new(hadj, vadj));
-    gtk_container_add(GTK_CONTAINER(app->listview_scrolled_window), GTK_WIDGET(app->new_listview));
+    app->listview = GTK_WIDGET(fsearch_list_view_new(hadj, vadj));
+    gtk_container_add(GTK_CONTAINER(app->listview_scrolled_window), GTK_WIDGET(app->listview));
 
-    gtk_widget_show(app->new_listview);
-    fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_list_view_draw_row, app);
-    fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_list_view_get_node_for_row, app);
-    fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->new_listview), fsearch_results_sort_func, app);
-    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->new_listview), config->single_click_open);
+    gtk_widget_show(app->listview);
+    fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_draw_row, app);
+    fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_get_node_for_row, app);
+    fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->listview), fsearch_results_sort_func, app);
+    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
 
-    add_columns(FSEARCH_LIST_VIEW(app->new_listview), config);
+    add_columns(FSEARCH_LIST_VIEW(app->listview), config);
 
-    g_signal_connect_object(app->new_listview,
-                            "row-popup",
-                            G_CALLBACK(on_fsearch_list_view_popup),
-                            app,
-                            G_CONNECT_AFTER);
-    g_signal_connect_object(app->new_listview,
+    g_signal_connect_object(app->listview, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), app, G_CONNECT_AFTER);
+    g_signal_connect_object(app->listview,
                             "selection-changed",
                             G_CALLBACK(on_fsearch_list_view_selection_changed),
                             app,
                             G_CONNECT_AFTER);
-    g_signal_connect_object(app->new_listview,
+    g_signal_connect_object(app->listview,
                             "row-activated",
                             G_CALLBACK(on_fsearch_list_view_row_activated),
                             app,
                             G_CONNECT_AFTER);
-    g_signal_connect(app->new_listview, "key-press-event", G_CALLBACK(on_listview_key_press_event), app);
-
-    // app->list_model = list_model_new();
-    // GtkTreeView *list = GTK_TREE_VIEW(app->listview);
-
-    // if (!config->restore_column_config) {
-    //    listview_add_default_columns(list, config, app);
-    //}
-    // else {
-    //    listview_add_column(list, LIST_MODEL_COL_NAME, config->name_column_width, config->name_column_pos,
-    //    app);
-
-    //    if (config->show_path_column) {
-    //        listview_add_column(list, LIST_MODEL_COL_PATH, config->path_column_width, config->path_column_pos,
-    //        app);
-    //    }
-    //    if (config->show_type_column) {
-    //        listview_add_column(list, LIST_MODEL_COL_TYPE, config->type_column_width, config->type_column_pos,
-    //        app);
-    //    }
-    //    if (config->show_size_column) {
-    //        listview_add_column(list, LIST_MODEL_COL_SIZE, config->size_column_width, config->size_column_pos,
-    //        app);
-    //    }
-    //    if (config->show_modified_column) {
-    //        listview_add_column(list,
-    //                            LIST_MODEL_COL_CHANGED,
-    //                            config->modified_column_width,
-    //                            config->modified_column_pos,
-    //                            app);
-    //    }
-    //}
-    // list_model_sort_init(app->list_model,
-    //                     config->restore_sort_order ? config->sort_by : "Name",
-    //                     config->restore_sort_order ? config->sort_ascending : true);
-
-    // gtk_tree_view_set_activate_on_single_click(list, config->single_click_open);
-
-    // gtk_tree_view_set_model(list, GTK_TREE_MODEL(app->list_model));
-    // g_object_unref(app->list_model); /* destroy store automatically with view */
+    g_signal_connect(app->listview, "key-press-event", G_CALLBACK(on_listview_key_press_event), app);
 }
 
 static void
@@ -1306,7 +1241,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
 
     statusbar_update(win, "");
 
-    fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->new_listview));
+    fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->listview));
     fsearch_application_window_update_search(win);
 
     hide_overlays(win);
@@ -1429,9 +1364,9 @@ on_search_entry_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer use
     guint keyval;
     gdk_event_get_keyval(event, &keyval);
     if (keyval == GDK_KEY_Down) {
-        gint cursor_idx = fsearch_list_view_get_cursor(FSEARCH_LIST_VIEW(win->new_listview));
-        gtk_widget_grab_focus(win->new_listview);
-        fsearch_list_view_set_cursor(FSEARCH_LIST_VIEW(win->new_listview), cursor_idx);
+        gint cursor_idx = fsearch_list_view_get_cursor(FSEARCH_LIST_VIEW(win->listview));
+        gtk_widget_grab_focus(win->listview);
+        fsearch_list_view_set_cursor(FSEARCH_LIST_VIEW(win->listview), cursor_idx);
         return TRUE;
     }
     return FALSE;
@@ -1514,9 +1449,7 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
-    // gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
-    // gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_selection);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, match_case_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
@@ -1587,13 +1520,7 @@ fsearch_application_window_get_search_mode_revealer(FsearchApplicationWindow *se
 FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return FSEARCH_LIST_VIEW(self->new_listview);
-}
-
-GtkTreeSelection *
-fsearch_application_window_get_listview_selection(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->listview_selection;
+    return FSEARCH_LIST_VIEW(self->listview);
 }
 
 FsearchQueryHighlight *

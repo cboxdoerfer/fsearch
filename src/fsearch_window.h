@@ -43,9 +43,6 @@ fsearch_application_window_prepare_shutdown(gpointer self);
 FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self);
 
-GtkTreeSelection *
-fsearch_application_window_get_listview_selection(FsearchApplicationWindow *self);
-
 void
 fsearch_window_listview_block_selection_changed(FsearchApplicationWindow *self, gboolean block);
 
