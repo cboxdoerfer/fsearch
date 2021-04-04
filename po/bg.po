@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-01-08 08:32+0000\n"
+"PO-Revision-Date: 2021-04-06 10:26+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,17 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4.1-dev\n"
+"X-Generator: Weblate 4.6-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Изграждане на списък за търсене …"
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "Сортиране..."
+msgstr "Сортиране…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -40,23 +38,20 @@ msgstr ""
 "възможности"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Отваряне с друга програма"
+msgstr "Отваряне на нов прозорец на приложението"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Покажи настройките на програмата"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Обновяване на базата с данни"
+msgstr "Обновяване на базата с данни и изход"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Показване на информация за версията"
+msgstr "Показване на информация за версията и изход"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -251,10 +246,9 @@ msgid "Querying…"
 msgstr "Запитване…"
 
 #: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "≥%'d Items"
-msgstr "%'d елемента"
+msgstr "≥%'d елемента"
 
 #: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
@@ -331,9 +325,8 @@ msgid "Cancel Update"
 msgstr "Отказ от обновяване"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Нов прозорец"
+msgstr "Затваряне на прозореца"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -416,9 +409,8 @@ msgid "Empty Database"
 msgstr "Базата с данни е празна"
 
 #: src/overlay.ui:250
-#, fuzzy
 msgid "Add folders"
-msgstr "Папки"
+msgstr "Добавяне на папки"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
@@ -553,26 +545,24 @@ msgid "Update database on start"
 msgstr "Обновяване на базата с данни при стартиране"
 
 #: src/preferences.ui:727
-#, fuzzy
-#| msgid "Update"
 msgid "Update every"
-msgstr "Обновяване"
+msgstr "Обновяване на всички"
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "час (а) и"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "минута (и)"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
@@ -694,7 +684,6 @@ msgstr ""
 "принуждават прозореца да има различен размер."
 
 #: src/preferences.ui:1196
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -717,14 +706,14 @@ msgstr ""
 "следните действия:\n"
 "\n"
 "\t• <b>Нищо:</b> Нищо не се случва.\n"
-"\t• <b>Минимизиране:</b> текущо избраният прозорец на FSearch ще бъде "
+"\t• <b>Минимизиране:</b> Текущо избраният прозорец на FSearch ще бъде "
 "минимизиран. \n"
-"      Nапомняме, че не всички системи позволяват минимизиране на прозорец.\n"
+"          Напомняме, че не всички системи позволяват минимизиране на "
+"прозорец.\n"
 "\t• <b>Затваряне:</b> Изход от FSearch.\n"
 "\n"
 "Можете да конфигурирате дали тези действия при отваряне на файла да се "
 "задействат с\n"
-"\n"
 "\t• <b>клаваишна комбинация или елементите от менюто</b> и/или\n"
 "\t• <b>кликване с мишката</b>"
 
@@ -748,8 +737,8 @@ msgstr ""
 "резултати. Например, когато търсите \"foo\", всички намерени <i> foo </i> в "
 "имената на файлове / папки ще бъдат маркирани с удебелени символи:\n"
 "\n"
-"  <b>foo</b>bar.txt\n"
-"  file.<b>foo</b>\n"
+"   <b>foo</b>bar.txt\n"
+"   file.<b>foo</b>\n"
 "\n"
 "Това също е приложимо за регулярни изрази и изрази със заместващи символи, "
 "започващи или завършващи със звездичка. "
@@ -809,6 +798,10 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>Отваряне на пътя при двойно кликване в колоната с пътя:</b>\n"
+"\n"
+"Ако е активирано, при двойно кликване в колоната с пътя ще бъде отворен "
+"избраният път."
 
 #: src/preferences.ui:1321
 msgid ""
@@ -818,6 +811,12 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to a "
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>Единично кликване за отваряне:</b>\n"
+"\n"
+"Ако е активирано, при еднократно кликване ще бъде отворен избраният файл/"
+"папка. Ако само искате да маркирате избраният файл/папка, докато тази "
+"настройка е активна, вие трябва да задържите <i>Ctrl</i> по времето, когато "
+"кликвате върху файла/папката."
 
 #: src/preferences.ui:1337
 msgid ""
@@ -826,6 +825,10 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>Показване на състоянието на индексиране на базата данни: </b>\n"
+"\n"
+"Ако е активирано, пътят, който в момента се индексира, се показва в лентата "
+"на състоянието."
 
 #: src/preferences.ui:1353
 msgid ""
@@ -835,6 +838,11 @@ msgid ""
 "\n"
 "\t•  a file or folder failed to open\n"
 msgstr ""
+"<b>Показване на диалог за предупреждение:</b>\n"
+"\n"
+"Ако е активирано ще се покаже диалог за предупреждение, когато:\n"
+"\n"
+" файл или папка не могат да бъдат отворени\n"
 
 #: src/preferences.ui:1372
 msgid ""
@@ -843,6 +851,10 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
+"<b>Търсене в пътя, когато заявката съдържа разделители на пътища:</b>\n"
+"\n"
+"Ако е активирано, думите за търсене, съдържащи разделители на пътища (т.е. \""
+"/\"), ще бъдат автоматично съпоставени с пълния път на файл или папка."
 
 #: src/preferences.ui:1388
 msgid ""
@@ -852,6 +864,13 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
+"<b>Съвпадение на регистър, когато заявката съдържа поне един главен знак:</b>"
+"\n"
+"\n"
+"Ако е активирана, думите за търсене, съдържащи поне един главен регистър, ще "
+"задействат търсене, чувствително на малки и големи букви. Това означава, че "
+"термин за търсене като <i> Foo </i> ще съответства на <i> FooBar.txt </i>, "
+"но не и <i> foobar.txt </i>."
 
 #: src/preferences.ui:1404
 msgid ""
@@ -862,6 +881,13 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
+"<b>Скриване на съдържанието, когато няма резултати от търсенето:</b>\n"
+"\n"
+"Ако е активирано, нищо няма да се показва, когато няма резултати от "
+"търсенето.\n"
+"\n"
+"Ако е изключено, ще се показват всички файлове и папки, когато няма "
+"резултати от търсенето."
 
 #: src/preferences.ui:1422
 msgid ""
@@ -872,6 +898,13 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>Търсене по време на въвеждане:</b>\n"
+"\n"
+"Ако е активирано, резултатите от търсенето ще бъдат автоматично обновявани "
+"след натискането на всеки клавиш.\n"
+"\n"
+"Ако е изключено, търсенето ще бъде обновено само след натискане на <i>Enter</"
+"i> или на бутона за търсене. "
 
 #: src/preferences.ui:1440
 msgid ""
@@ -883,6 +916,13 @@ msgid ""
 "Displaying lots of results has a significant performance impact, especially "
 "when the list isn't sorted by name. This will be improved in future versions."
 msgstr ""
+"<b>Ограничаване на броят на резултатите:</b>\n"
+"\n"
+"Ако е активирано, броят на резултатите ще бъде ограничен до зададения брой.\n"
+"\n"
+"Показването на много резултати има значително въздействие върху "
+"производителността, особено когато списъкът не е сортиран по име. Това ще "
+"бъде подобрено в бъдещи версии."
 
 #: src/preferences.ui:1458
 msgid ""
@@ -891,6 +931,10 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>Обновяване на базата с данни при стартиране</b>\n"
+"\n"
+"Ако е активирано, базата с данни ще бъде обновена във фонов режим, когато "
+"стартирате FSearch."
 
 #: src/preferences.ui:1474
 msgid ""
@@ -906,6 +950,18 @@ msgid ""
 "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
 "often)</i>"
 msgstr ""
+"<b>Включени папки</b>\n"
+"\n"
+"Този списък съдържа всички папки, които искате да включите в базата с данни "
+"за търсене.\n"
+"\n"
+"  • <b>Активно:</b> Ако е активирано, пътят ще бъде включен в базата с данни "
+"за търсене.\n"
+"  • <b>Път:</b> Ще бъде включен пълният път.\n"
+"  • <b>Обновяване:</b> Тази настройка се използва, ако искате да изключите "
+"някой от съществуващите пътища\n"
+"      при обновяване <i>(напр. път към бавно USB устройство, което не се "
+"променя често)</i>"
 
 #: src/preferences.ui:1495
 msgid ""
@@ -914,6 +970,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>Добавяне на папка към базата с данни:</b>\n"
+"\n"
+"Този бутон ще отвори диалог, където ще можете да изберете папка, която да "
+"бъде включена в базата с данни за търсене."
 
 #: src/preferences.ui:1511
 msgid ""
@@ -921,6 +981,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>Премахване на избраният ред:</b>\n"
+"\n"
+"Това премахва избраната папка от списъка с включените папки."
 
 #: src/preferences.ui:1527
 msgid ""
@@ -932,6 +995,15 @@ msgid ""
 "\t\t and can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
+"<b>Изключени папки:</b>\n"
+"\n"
+"Този списък съдържа всички папки, които искате да изключите от базата с "
+"данни за търсене.\n"
+"\n"
+"  • <b>Активно:</b> Ако е активирано, пътят ще бъде изключен от базата с "
+"данни\n"
+"   и не може да се извърши търсене в него.\n"
+"  • <b>Път:</b> Пълният път ще бъде изключен."
 
 #: src/preferences.ui:1547
 msgid ""
@@ -940,6 +1012,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to exclude "
 "from the database."
 msgstr ""
+"<b>Изключване на папка от базата с данни:</b>\n"
+"\n"
+"Този бутон отваря диалог, където ще можете да изберете папка, която да "
+"изключите от базата с данни."
 
 #: src/preferences.ui:1563
 msgid ""
@@ -947,6 +1023,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
+"<b>Премахване на избраният ред:</b>\n"
+"\n"
+"Това премахва избраната папка от списъка с изключените папки."
 
 #: src/preferences.ui:1579
 msgid ""
@@ -957,6 +1036,12 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
+"<b>Изключване на файлове и папки от базата с данни:</b>\n"
+"\n"
+"Това е списък с файлове (или папки), разделени с двоеточие, които искате да "
+"изключите от базата данни. Например <i> .git; .cache; *. Swp </i> ще изключи "
+"всички файлове или папки, които се наричат <i> .git </i> или <i> .cache </i> "
+"или завършват с <i> .swp </i>."
 
 #: src/preferences.ui:1595
 msgid ""
@@ -965,10 +1050,16 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
+"<b>Изключване на скритите файлове и папки:</b>\n"
+"\n"
+"Ако е активирано, скритите файлове и папки ще бъдат изключени от базата с "
+"данни <i>(т.е. всички файлове или папки, които започват с точка)</i>."
 
 #: src/preferences.ui:1611
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
+"Фокусирайте настройката, за да получите подробно описание на това, което "
+"прави."
 
 #: src/preferences.ui:1623
 msgid ""
@@ -983,11 +1074,20 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>Периодично обновяване на базата с данни в посочен времеви интервал:</b>\n"
+"\n"
+"Ако е активирано и FSearch работи продължително време, базата с данни ще "
+"бъде обновява периодично в зададеният времеви интервал.\n"
+"\n"
+"Ако искате да актуализирате базата данни във фонов режим, дори когато "
+"FSearch не работи, трябва да използвате инструменти като cron или systemd "
+"таймери, за да задействате периодично актуализацията с:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/preferences.ui:1645
-#, fuzzy
 msgid "Help"
-msgstr "_Помощ"
+msgstr "Помощ"
 
 #: src/preferences_ui.c:183 src/preferences_ui.c:198
 msgid "Select folder"
