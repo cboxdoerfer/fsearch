@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-03-31 22:26+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2021-04-06 10:26+0000\n"
+"Last-Translator: melusine <melusine@mailbox.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -332,9 +332,8 @@ msgid "Cancel Update"
 msgstr "Aktualisierung abbrechen"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Neues Fenster"
+msgstr "Fenster schließen"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -417,9 +416,8 @@ msgid "Empty Database"
 msgstr "Leere Datenbank"
 
 #: src/overlay.ui:250
-#, fuzzy
 msgid "Add folders"
-msgstr "Ordner"
+msgstr "Ordner hinzufügen"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
@@ -566,7 +564,7 @@ msgstr ""
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "Stunde(n) und"
 
 #: src/preferences.ui:777
 msgid "30"
@@ -574,7 +572,7 @@ msgstr ""
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "Minute(n)"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
