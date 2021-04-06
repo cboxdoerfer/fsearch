@@ -54,6 +54,16 @@ db_search(DatabaseSearch *search, FsearchQuery *q);
 static DatabaseSearchResult *
 db_search_empty(FsearchQuery *query);
 
+static DatabaseSearchResult *
+db_search_result_new(DynamicArray *entries, uint32_t num_folders, uint32_t num_files) {
+    DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
+    assert(result_ctx != NULL);
+    result_ctx->entries = entries;
+    result_ctx->num_folders = num_folders;
+    result_ctx->num_files = num_files;
+    return result_ctx;
+}
+
 static void
 db_search_cancelled(FsearchQuery *query) {
     if (!query) {
@@ -80,15 +90,15 @@ db_search_thread(gpointer user_data) {
             continue;
         }
         search->search_terminate = false;
-        // if query is empty string we are done here
+
+        const bool empty_query = fs_str_is_empty(query->text);
+
         DatabaseSearchResult *result = NULL;
-        if (fs_str_is_empty(query->text)) {
-            if (query->pass_on_empty_query) {
-                result = db_search_empty(query);
-            }
-            else {
-                result = calloc(1, sizeof(DatabaseSearchResult));
-            }
+        if (empty_query && !query->pass_on_empty_query) {
+            result = db_search_result_new(NULL, 0, 0);
+        }
+        else if (empty_query && (!query->filter || query->filter->type == FSEARCH_FILTER_NONE)) {
+            result = db_search_empty(query);
         }
         else {
             result = db_search(search, query);
@@ -259,62 +269,19 @@ db_search_worker(void *user_data) {
 }
 
 static DatabaseSearchResult *
-db_search_result_new(DynamicArray *entries, uint32_t num_folders, uint32_t num_files) {
-    DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
-    assert(result_ctx != NULL);
-    result_ctx->entries = entries;
-    result_ctx->num_folders = num_folders;
-    result_ctx->num_files = num_files;
-    return result_ctx;
-}
-
-static DatabaseSearchResult *
 db_search_empty(FsearchQuery *query) {
     assert(query != NULL);
     assert(query->entries != NULL);
 
+    DynamicArray *entries = query->entries;
     const uint32_t num_entries = darray_get_num_items(query->entries);
+
     DynamicArray *results = darray_new(num_entries);
 
-    DynamicArray *entries = query->entries;
+    void **data = darray_get_data(entries, NULL);
+    darray_add_items(results, data, num_entries);
 
-    uint32_t num_folders = 0;
-    uint32_t num_files = 0;
-
-    uint32_t pos = 0;
-
-    if (!query->filter || query->filter->type == FSEARCH_FILTER_NONE) {
-        void **data = darray_get_data(entries, NULL);
-        darray_add_items(results, data, num_entries);
-        num_folders = query->num_folders;
-        num_files = query->num_files;
-    }
-    else {
-        GString *path_string = g_string_sized_new(PATH_MAX);
-        for (uint32_t i = 0; i < num_entries; ++i) {
-            BTreeNode *node = darray_get_item(entries, i);
-            if (!node) {
-                continue;
-            }
-
-            const char *haystack_path = NULL;
-            const char *haystack_name = node->name;
-            if (query->filter->search_in_path) {
-                btree_node_fill_path_string_full(node, path_string);
-                haystack_path = path_string->str;
-            }
-            if (!filter_node(node, query, query->filter->search_in_path ? haystack_path : haystack_name)) {
-                continue;
-            }
-
-            node->is_dir ? num_folders++ : num_files++;
-
-            darray_set_item(results, node, pos++);
-        }
-        g_string_free(path_string, TRUE);
-        path_string = NULL;
-    }
-    return db_search_result_new(results, num_folders, num_files);
+    return db_search_result_new(results, query->num_folders, query->num_files);
 }
 
 static DatabaseSearchResult *
