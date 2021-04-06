@@ -91,6 +91,7 @@ struct _FsearchApplicationWindow {
 
     FsearchListViewColumnType sort_order;
     FsearchQueryHighlight *query_highlight;
+    uint32_t query_id;
 
     bool closing;
 
@@ -634,8 +635,10 @@ perform_search(FsearchApplicationWindow *win) {
 
     g_object_ref(win);
 
+    uint32_t win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
+
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-    trace("[search] %s\n", text);
+    trace("[search] search %d.%d started with query '%s'\n", win_id, win->query_id, text);
 
     FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
                                .match_case = config->match_case,
@@ -661,6 +664,8 @@ perform_search(FsearchApplicationWindow *win) {
                                         fsearch_application_window_search_cancelled,
                                         ctx,
                                         flags,
+                                        win->query_id++,
+                                        win_id,
                                         !config->hide_results_on_empty_search);
 
     db_unlock(db);

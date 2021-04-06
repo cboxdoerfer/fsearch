@@ -93,6 +93,7 @@ db_search_thread(gpointer user_data) {
 
         const bool empty_query = fs_str_is_empty(query->text);
 
+        GTimer *timer = fsearch_timer_start();
         DatabaseSearchResult *result = NULL;
         if (empty_query && !query->pass_on_empty_query) {
             result = db_search_result_new(NULL, 0, 0);
@@ -104,13 +105,20 @@ db_search_thread(gpointer user_data) {
             result = db_search(search, query);
         }
         if (result) {
+            const double seconds = g_timer_elapsed(timer, NULL);
+            trace("[search] search %d.%d finished in %.2f ms\n", query->window_id, query->id, seconds * 1000);
+
             result->cb_data = query->callback_data;
             result->query = query;
             query->callback(result);
         }
         else {
+            trace("[search] search %d.%d cancelled\n", query->window_id, query->id);
             db_search_cancelled(query);
         }
+        g_timer_stop(timer);
+        g_timer_destroy(timer);
+        timer = NULL;
     }
     return NULL;
 }
@@ -305,7 +313,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
         return db_search_result_new(NULL, 0, 0);
     }
 
-    GTimer *timer = fsearch_timer_start();
     GList *threads = fsearch_thread_pool_get_threads(search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] = search_thread_context_new(q,
@@ -330,8 +337,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
             search_thread_context_t *ctx = thread_data[i];
             search_thread_context_free(ctx);
         }
-        fsearch_timer_stop(timer, "[search] search aborted after %.2f ms\n");
-        timer = NULL;
         return NULL;
     }
 
@@ -359,9 +364,6 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
 
         search_thread_context_free(ctx);
     }
-
-    fsearch_timer_stop(timer, "[search] search finished in %.2f ms\n");
-    timer = NULL;
 
     return db_search_result_new(results, num_folders, num_files);
 }

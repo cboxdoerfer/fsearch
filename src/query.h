@@ -72,6 +72,9 @@ typedef struct FsearchQuery {
     bool pass_on_empty_query;
     FsearchQueryFlags flags;
 
+    uint32_t id;
+    uint32_t window_id;
+
     void (*callback)(void *);
     void *callback_data;
     void (*callback_cancelled)(void *);
@@ -89,6 +92,8 @@ fsearch_query_new(const char *text,
                   void (*callback_cancelled)(void *),
                   void *callback_cancelled_data,
                   FsearchQueryFlags flags,
+                  uint32_t id,
+                  uint32_t window_id,
                   bool pass_on_empty_query);
 
 void

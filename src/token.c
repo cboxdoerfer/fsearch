@@ -141,7 +141,7 @@ fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool a
     uint32_t tmp_token_len = g_strv_length(query_split);
     FsearchToken **token = calloc(tmp_token_len + 1, sizeof(FsearchToken *));
     for (uint32_t i = 0; i < tmp_token_len; i++) {
-        trace("[search] token %d: %s\n", i, query_split[i]);
+        // trace("[search] token %d: %s\n", i, query_split[i]);
         token[i] = fsearch_token_new(query_split[i], match_case, auto_match_case, false);
     }
 
