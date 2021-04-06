@@ -1110,7 +1110,7 @@ db_ref(FsearchDatabase *db) {
     db_lock(db);
     db->ref_count++;
     db_unlock(db);
-    trace("[database_ref] increased to: %d\n", db->ref_count);
+    // trace("[database_ref] increased to: %d\n", db->ref_count);
 }
 
 void
@@ -1119,7 +1119,7 @@ db_unref(FsearchDatabase *db) {
     db_lock(db);
     db->ref_count--;
     db_unlock(db);
-    trace("[database_unref] dropped to: %d\n", db->ref_count);
+    // trace("[database_unref] dropped to: %d\n", db->ref_count);
     if (db->ref_count <= 0) {
         db_free(db);
     }
