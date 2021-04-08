@@ -1186,6 +1186,9 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
     win->sort_order = sort_order;
 
     GTimer *timer = fsearch_timer_start();
+
+    bool parallel_sort = true;
+
     trace("[sort] started: %d\n", sort_order);
     GCompareFunc func = NULL;
     switch (sort_order) {
@@ -1199,6 +1202,7 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
         func = (GCompareFunc)compare_size;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_TYPE:
+        parallel_sort = false;
         func = (GCompareFunc)compare_type;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_CHANGED:
@@ -1207,8 +1211,14 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
     default:
         func = (GCompareFunc)compare_name;
     }
-    darray_sort_multi_threaded(win->result->entries, (DynamicArrayCompareFunc)func);
-    // darray_sort(win->result->entries, (DynamicArrayCompareFunc)func);
+
+    if (parallel_sort) {
+        darray_sort_multi_threaded(win->result->entries, (DynamicArrayCompareFunc)func);
+    }
+    else {
+        darray_sort(win->result->entries, (DynamicArrayCompareFunc)func);
+    }
+
     fsearch_timer_stop(timer, "[sort] finished in %2.fms\n");
 }
 
