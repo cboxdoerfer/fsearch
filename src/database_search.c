@@ -414,21 +414,6 @@ db_search_free(DatabaseSearch *search) {
     return;
 }
 
-BTreeNode *
-db_search_entry_get_node(DatabaseSearchEntry *entry) {
-    return entry->node;
-}
-
-uint32_t
-db_search_entry_get_pos(DatabaseSearchEntry *entry) {
-    return entry->pos;
-}
-
-void
-db_search_entry_set_pos(DatabaseSearchEntry *entry, uint32_t pos) {
-    entry->pos = pos;
-}
-
 DatabaseSearch *
 db_search_new(FsearchThreadPool *pool) {
     DatabaseSearch *db_search = calloc(1, sizeof(DatabaseSearch));

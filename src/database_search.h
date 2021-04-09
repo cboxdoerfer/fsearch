@@ -33,11 +33,6 @@ enum {
     DB_SEARCH_MODE_REGEX = 1,
 };
 
-typedef struct _DatabaseSearchEntry {
-    BTreeNode *node;
-    uint32_t pos;
-} DatabaseSearchEntry;
-
 typedef struct _DatabaseSearchResult {
     DynamicArray *entries;
     void *cb_data;
@@ -61,15 +56,6 @@ db_search_free(DatabaseSearch *search);
 
 DatabaseSearch *
 db_search_new(FsearchThreadPool *pool);
-
-BTreeNode *
-db_search_entry_get_node(DatabaseSearchEntry *entry);
-
-uint32_t
-db_search_entry_get_pos(DatabaseSearchEntry *entry);
-
-void
-db_search_entry_set_pos(DatabaseSearchEntry *entry, uint32_t pos);
 
 void
 db_search_result_free(DatabaseSearchResult *result);

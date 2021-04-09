@@ -192,13 +192,8 @@ open_uri(const char *uri) {
     return true;
 }
 
-bool
-node_remove(BTreeNode *node, bool delete) {
-    char path[PATH_MAX] = "";
-    bool res = btree_node_get_path_full(node, path, sizeof(path));
-    if (!res) {
-        return false;
-    }
+static bool
+file_remove_or_trash(const char *path, bool delete) {
     GFile *file = g_file_new_for_path(path);
     if (!file) {
         return false;
@@ -227,13 +222,13 @@ node_remove(BTreeNode *node, bool delete) {
 }
 
 bool
-node_delete(BTreeNode *node) {
-    return node_remove(node, true);
+file_remove(const char *path) {
+    return file_remove_or_trash(path, true);
 }
 
 bool
-node_move_to_trash(BTreeNode *node) {
-    return node_remove(node, false);
+file_trash(const char *path) {
+    return file_remove_or_trash(path, false);
 }
 
 bool

@@ -80,7 +80,7 @@ confirm_file_open_action(GtkWidget *parent, int num_files) {
 }
 
 static void
-copy_file(gpointer key, gpointer value, gpointer user_data) {
+prepend_path(gpointer key, gpointer value, gpointer user_data) {
     if (!value) {
         return;
     }
@@ -95,17 +95,12 @@ copy_file(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static bool
-delete_file(DatabaseSearchEntry *entry, bool delete) {
-    if (!entry) {
+delete_file(const char *path, bool delete) {
+    if (!path) {
         return false;
     }
 
-    BTreeNode *node = db_search_entry_get_node(entry);
-    if (!node) {
-        return false;
-    }
-
-    if ((delete &&node_delete(node)) || (!delete &&node_move_to_trash(node))) {
+    if ((delete &&file_remove(path)) || (!delete &&file_trash(path))) {
         return true;
     }
     return false;
@@ -121,7 +116,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
 
     guint num_selected_rows = fsearch_list_view_get_num_selected(view);
     GList *file_list = NULL;
-    fsearch_list_view_selection_for_each(view, copy_file, &file_list);
+    fsearch_list_view_selection_for_each(view, prepend_path, &file_list);
 
     if (delete || num_selected_rows > 20) {
         char error_msg[PATH_MAX] = "";
@@ -199,7 +194,7 @@ fsearch_window_action_cut_or_copy(GSimpleAction *action, GVariant *variant, bool
         return;
     }
     GList *file_list = NULL;
-    fsearch_list_view_selection_for_each(view, copy_file, &file_list);
+    fsearch_list_view_selection_for_each(view, prepend_path, &file_list);
     file_list = g_list_reverse(file_list);
     clipboard_copy_file_list(file_list, copy);
 }
@@ -222,7 +217,7 @@ fsearch_window_action_copy_filepath(GSimpleAction *action, GVariant *variant, gp
         return;
     }
     GList *file_list = NULL;
-    fsearch_list_view_selection_for_each(view, copy_file, &file_list);
+    fsearch_list_view_selection_for_each(view, prepend_path, &file_list);
     file_list = g_list_reverse(file_list);
     clipboard_copy_filepath_list(file_list);
 }

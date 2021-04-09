@@ -27,10 +27,10 @@ gboolean
 build_path(gchar *dest, size_t dest_len, const gchar *path, const gchar *name);
 
 bool
-node_move_to_trash(BTreeNode *node);
+file_trash(const char *path);
 
 bool
-node_delete(BTreeNode *node);
+file_remove(const char *path);
 
 bool
 launch_node(BTreeNode *node);
