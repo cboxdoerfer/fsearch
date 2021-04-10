@@ -23,9 +23,6 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
-gboolean
-build_path(gchar *dest, size_t dest_len, const gchar *path, const gchar *name);
-
 bool
 file_trash(const char *path);
 

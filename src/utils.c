@@ -28,36 +28,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-gboolean
-build_path(gchar *dest, size_t dest_len, const gchar *path, const gchar *name) {
-    if (!dest || !path || !name || dest_len <= 0) {
-        return FALSE;
-    }
-
-    gint32 res = snprintf(dest, dest_len, "%s/%s", path, name);
-    if (res < 0) {
-        return FALSE;
-    }
-    else {
-        return TRUE;
-    }
-}
-
-gboolean
-build_path_uri(gchar *dest, size_t dest_len, const gchar *path, const gchar *name) {
-    if (!dest || !path || !name || dest_len <= 0) {
-        return FALSE;
-    }
-
-    gint32 res = snprintf(dest, dest_len, "file://%s/%s", path, name);
-    if (res < 0) {
-        return FALSE;
-    }
-    else {
-        return TRUE;
-    }
-}
-
 static gboolean
 keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
     gchar *match = g_match_info_fetch(info, 0);
