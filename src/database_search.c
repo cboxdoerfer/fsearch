@@ -229,7 +229,8 @@ db_search_worker(void *user_data) {
         }
         const char *haystack_name = node->name;
         if (search_in_path || query->filter->search_in_path) {
-            btree_node_fill_path_string_full(node, path_string);
+            g_string_truncate(path_string, 0);
+            btree_node_append_path(node, path_string);
             path_set = true;
         }
 
@@ -253,7 +254,8 @@ db_search_worker(void *user_data) {
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && t->has_separator)) {
                 if (!path_set) {
-                    btree_node_fill_path_string_full(node, path_string);
+                    g_string_truncate(path_string, 0);
+                    btree_node_append_path(node, path_string);
                     path_set = true;
                 }
                 haystack = path_string->str;

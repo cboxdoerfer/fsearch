@@ -91,5 +91,5 @@ bool
 btree_node_init_parent_path(BTreeNode *node, char *path, size_t path_len);
 
 void
-btree_node_fill_path_string_full(BTreeNode *node, GString *str);
+btree_node_append_path(BTreeNode *node, GString *str);
 

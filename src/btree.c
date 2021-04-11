@@ -307,8 +307,7 @@ fill_string(BTreeNode *node, GString *str) {
 }
 
 void
-btree_node_fill_path_string_full(BTreeNode *node, GString *str) {
-    g_string_truncate(str, 0);
+btree_node_append_path(BTreeNode *node, GString *str) {
     fill_string(node, str);
 }
 
