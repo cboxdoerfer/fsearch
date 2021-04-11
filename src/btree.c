@@ -289,7 +289,7 @@ btree_node_build_path(BTreeNode *node, char *path, size_t path_len) {
 }
 
 bool
-btree_node_get_path(BTreeNode *node, char *path, size_t path_len) {
+btree_node_init_path(BTreeNode *node, char *path, size_t path_len) {
     if (!node) {
         // empty node
         return false;
@@ -313,10 +313,11 @@ btree_node_fill_path_string_full(BTreeNode *node, GString *str) {
 }
 
 bool
-btree_node_get_path_full(BTreeNode *node, char *path, size_t path_len) {
+btree_node_init_parent_path(BTreeNode *node, char *path, size_t path_len) {
     if (!node) {
         // empty node
         return false;
     }
     return btree_node_build_path(node, path, path_len);
 }
+

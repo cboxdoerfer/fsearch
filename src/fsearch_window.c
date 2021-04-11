@@ -948,7 +948,7 @@ draw_row_ctx_init(BTreeNode *node,
     ctx->name_attr = win->query_highlight ? fsearch_query_highlight_match(win->query_highlight, node->name) : NULL;
 
     char path_raw[PATH_MAX] = "";
-    btree_node_get_path(node, path_raw, sizeof(path_raw));
+    btree_node_init_path(node, path_raw, sizeof(path_raw));
 
     ctx->path = g_string_new(path_raw);
     if (win->query_highlight
@@ -1036,13 +1036,13 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         break;
     case FSEARCH_LIST_VIEW_COLUMN_PATH: {
         char path_raw[PATH_MAX] = "";
-        btree_node_get_path(node, path_raw, sizeof(path_raw));
+        btree_node_init_path(node, path_raw, sizeof(path_raw));
         text = g_filename_display_name(path_raw);
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
         char path_raw[PATH_MAX] = "";
-        btree_node_get_path_full(node, path_raw, sizeof(path_raw));
+        btree_node_init_parent_path(node, path_raw, sizeof(path_raw));
         text = get_file_type(node, path_raw);
         break;
     }

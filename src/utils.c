@@ -50,11 +50,11 @@ build_folder_open_cmd(BTreeNode *node, const char *cmd) {
     }
 
     char path[PATH_MAX] = "";
-    if (!btree_node_get_path(node, path, sizeof(path))) {
+    if (!btree_node_init_path(node, path, sizeof(path))) {
         return NULL;
     }
     char path_full[PATH_MAX] = "";
-    if (!btree_node_get_path_full(node, path_full, sizeof(path_full))) {
+    if (!btree_node_init_parent_path(node, path_full, sizeof(path_full))) {
         return NULL;
     }
     char *path_quoted = g_shell_quote(path);
@@ -204,7 +204,7 @@ file_trash(const char *path) {
 bool
 launch_node(BTreeNode *node) {
     char path[PATH_MAX] = "";
-    bool res = btree_node_get_path_full(node, path, sizeof(path));
+    bool res = btree_node_init_parent_path(node, path, sizeof(path));
     if (res) {
         return open_uri(path);
     }
@@ -218,7 +218,7 @@ launch_node_path(BTreeNode *node, const char *cmd) {
     }
     else {
         char path[PATH_MAX] = "";
-        bool res = btree_node_get_path(node, path, sizeof(path));
+        bool res = btree_node_init_path(node, path, sizeof(path));
         if (res) {
             return open_uri(path);
         }
@@ -459,9 +459,9 @@ compare_type(BTreeNode **a_node, BTreeNode **b_node) {
     gchar path_a[PATH_MAX] = "";
     gchar path_b[PATH_MAX] = "";
 
-    btree_node_get_path_full(a, path_a, sizeof(path_a));
+    btree_node_init_parent_path(a, path_a, sizeof(path_a));
     type_a = get_file_type(a, path_a);
-    btree_node_get_path_full(b, path_b, sizeof(path_b));
+    btree_node_init_parent_path(b, path_b, sizeof(path_b));
     type_b = get_file_type(b, path_b);
 
     gint return_val = 0;

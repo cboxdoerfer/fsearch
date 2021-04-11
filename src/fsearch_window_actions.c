@@ -88,7 +88,7 @@ prepend_path(gpointer key, gpointer value, gpointer user_data) {
     GList **file_list = (GList **)user_data;
     BTreeNode *node = value;
     char path_str[PATH_MAX] = "";
-    bool res = btree_node_get_path_full(node, path_str, sizeof(path_str));
+    bool res = btree_node_init_parent_path(node, path_str, sizeof(path_str));
     if (res) {
         *file_list = g_list_prepend(*file_list, g_strdup(path_str));
     }
@@ -243,7 +243,7 @@ open_with_cb(gpointer key, gpointer value, gpointer data) {
     BTreeNode *node = value;
 
     char path_name[PATH_MAX] = "";
-    btree_node_get_path_full(node, path_name, sizeof(path_name));
+    btree_node_init_parent_path(node, path_name, sizeof(path_name));
     GList **list = data;
     *list = g_list_append(*list, g_file_new_for_path(path_name));
 }
