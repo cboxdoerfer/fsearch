@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-03-24 17:29+0000\n"
+"PO-Revision-Date: 2021-04-15 08:26+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,15 +17,13 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.6-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "רשימת החיפוש נבנית…"
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
 msgstr "מתבצע מיון…"
 
@@ -39,21 +37,19 @@ msgstr "כלי חיפוש ממוקד ביצועים ותכונות מתקדמו�
 
 #: src/fsearch.c:673
 msgid "Open a new application window"
-msgstr ""
+msgstr "פתיחת חלון יישום חדש"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "הצגת העדפות היישום"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "עדכון מסד הנתונים"
+msgstr "עדכון מסד הנתונים ויציאה"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "הצגת מידע על הגרסה"
+msgstr "הצגת מידע על הגרסה ויציאה"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -153,6 +149,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"ביטוי החיפוש מכיל אותיות גדולות.\n"
+"<b>התאמת רישיות</b> הופעלה זמנית עבור הביטוי הזה."
 
 #: src/fsearch.glade:740 src/fsearch.glade:793
 msgid "CASE"
