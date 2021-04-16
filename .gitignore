@@ -1,6 +1,7 @@
 # Build files
 Makefile.in
 /build
+/builddir
 /Makefile
 /data/Makefile
 /data/fsearch.desktop
@@ -39,6 +40,9 @@ src/fsearch
 src/tags
 src/fsearch.glade~
 src/*.ui~
+
+# VS Code
+*.vscode
 
 # QtCreator Files
 *.config
