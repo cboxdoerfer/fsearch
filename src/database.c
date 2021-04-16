@@ -228,7 +228,7 @@ db_location_load_from_file(const char *fname) {
             goto load_fail;
         }
 
-        // read mtime
+        // read sort position
         uint32_t pos = 0;
         if (fread(&pos, 1, 4, fp) != 4) {
             trace("[database_read_file] failed to read sort position\n");
@@ -330,25 +330,25 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
             if (fwrite(name, 1, len, fp) != len) {
                 goto save_fail;
             }
-            // write node name
+            // write is_dir
             uint8_t is_dir = node->is_dir;
             if (fwrite(&is_dir, 1, 1, fp) != 1) {
                 goto save_fail;
             }
 
-            // write node name
+            // write node size
             uint64_t size = node->size;
             if (fwrite(&size, 1, 8, fp) != 8) {
                 goto save_fail;
             }
 
-            // write node name
+            // write node modification time
             uint64_t mtime = node->mtime;
             if (fwrite(&mtime, 1, 8, fp) != 8) {
                 goto save_fail;
             }
 
-            // write node name
+            // write node sort position
             uint32_t pos = node->pos;
             if (fwrite(&pos, 1, 4, fp) != 4) {
                 goto save_fail;
