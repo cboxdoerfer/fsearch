@@ -321,7 +321,7 @@ database_update(FsearchApplication *app, bool rescan) {
     if (rescan) {
         db_scan(db, &app->db_thread_cancel, app->config->show_indexing_status ? database_scan_status_cb : NULL);
         if (!app->db_thread_cancel) {
-            db_save_locations(db);
+            db_save(db);
         }
     }
     else {
@@ -740,7 +740,7 @@ local_database_update() {
 
     db_lock(db);
     int res = !db_scan(db, NULL, NULL);
-    db_save_locations(db);
+    db_save(db);
     db_unlock(db);
     db_unref(db);
 
@@ -866,4 +866,3 @@ fsearch_application_new(void) {
     fsearch_application_add_option_entries(self);
     return self;
 }
-

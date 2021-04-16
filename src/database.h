@@ -50,7 +50,7 @@ FsearchDatabase *
 db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden);
 
 bool
-db_save_locations(FsearchDatabase *db);
+db_save(FsearchDatabase *db);
 
 time_t
 db_get_timestamp(FsearchDatabase *db);
@@ -78,4 +78,3 @@ db_get_entries(FsearchDatabase *db);
 
 void
 db_sort(FsearchDatabase *db);
-

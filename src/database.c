@@ -732,7 +732,7 @@ db_save_location(FsearchDatabase *db, const char *location_name) {
 }
 
 bool
-db_save_locations(FsearchDatabase *db) {
+db_save(FsearchDatabase *db) {
     assert(db != NULL);
 
     // db_update_sort_index (db);
