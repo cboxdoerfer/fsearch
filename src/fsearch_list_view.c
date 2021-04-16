@@ -1111,8 +1111,6 @@ static void
 fsearch_list_view_grab_focus(GtkWidget *widget) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
-    fsearch_list_view_set_cursor(view, view->focused_idx);
-
     GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->grab_focus(widget);
 }
 
@@ -1563,6 +1561,9 @@ fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows) {
     view->list_height = num_rows * view->row_height;
     fsearch_list_view_selection_clear(view);
     fsearch_list_view_reset_sort_indicator(view);
+
+    gtk_adjustment_set_value(view->vadjustment, 0);
+
     view->sort_order = FSEARCH_LIST_VIEW_COLUMN_NAME;
     view->sort_type = GTK_SORT_ASCENDING;
 
@@ -1748,4 +1749,3 @@ fsearch_list_view_column_new(FsearchListViewColumnType type,
 
     return col;
 }
-
