@@ -1023,26 +1023,6 @@ sort_by_name(const void *a, const void *b) {
     return strverscmp(node_a->name, node_b->name);
 }
 
-// static int
-// sort_by_path (const void *a, const void *b)
-//{
-//    BTreeNode *node_a = *(BTreeNode **)a;
-//    BTreeNode *node_b = *(BTreeNode **)b;
-//
-//    const bool is_dir_a = node_a->is_dir;
-//    const bool is_dir_b = node_b->is_dir;
-//    if (is_dir_a != is_dir_b) {
-//        return is_dir_a ? -1 : 1;
-//    }
-//
-//    char path_a[PATH_MAX] = "";
-//    char path_b[PATH_MAX] = "";
-//    btree_node_get_path (node_a, path_a, sizeof (path_a));
-//    btree_node_get_path (node_b, path_b, sizeof (path_b));
-//
-//    return strverscmp (path_a, path_b);
-//}
-
 bool
 db_load_from_file(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
     assert(db != NULL);
