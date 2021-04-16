@@ -1124,4 +1124,3 @@ db_unref(FsearchDatabase *db) {
         db_free(db);
     }
 }
-

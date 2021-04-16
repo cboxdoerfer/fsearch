@@ -93,3 +93,6 @@ btree_node_init_parent_path(BTreeNode *node, char *path, size_t path_len);
 void
 btree_node_append_path(BTreeNode *node, GString *str);
 
+char *
+btree_node_get_path(BTreeNode *node);
+

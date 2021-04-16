@@ -87,10 +87,9 @@ prepend_path(gpointer key, gpointer value, gpointer user_data) {
 
     GList **file_list = (GList **)user_data;
     BTreeNode *node = value;
-    char path_str[PATH_MAX] = "";
-    bool res = btree_node_init_parent_path(node, path_str, sizeof(path_str));
-    if (res) {
-        *file_list = g_list_prepend(*file_list, g_strdup(path_str));
+    char *path = btree_node_get_path(node);
+    if (path) {
+        *file_list = g_list_prepend(*file_list, g_strdup(path));
     }
 }
 

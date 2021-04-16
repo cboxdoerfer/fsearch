@@ -298,9 +298,9 @@ btree_node_init_path(BTreeNode *node, char *path, size_t path_len) {
 }
 
 static void
-fill_string(BTreeNode *node, GString *str) {
+build_path_recursively(BTreeNode *node, GString *str) {
     if (node->parent) {
-        fill_string(node->parent, str);
+        build_path_recursively(node->parent, str);
     }
     g_string_append_c(str, '/');
     g_string_append(str, node->name);
@@ -308,7 +308,14 @@ fill_string(BTreeNode *node, GString *str) {
 
 void
 btree_node_append_path(BTreeNode *node, GString *str) {
-    fill_string(node, str);
+    build_path_recursively(node, str);
+}
+
+char *
+btree_node_get_path(BTreeNode *node) {
+    GString *path = g_string_new(NULL);
+    build_path_recursively(node, path);
+    return g_string_free(path, FALSE);
 }
 
 bool
@@ -319,4 +326,3 @@ btree_node_init_parent_path(BTreeNode *node, char *path, size_t path_len) {
     }
     return btree_node_build_path(node, path, path_len);
 }
-
