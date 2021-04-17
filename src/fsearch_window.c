@@ -94,7 +94,6 @@ typedef enum {
     NO_SEARCH_RESULTS_OVERLAY,
     NO_SEARCH_QUERY_OVERLAY,
     NO_DATABASE_OVERLAY,
-    DATABASE_UPDATING_OVERLAY,
     DATABASE_LOADING_OVERLAY,
 } FsearchOverlay;
 
@@ -1147,7 +1146,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
             pango_layout_set_text(layout, ctx.time, -1);
             break;
         default:
-            pango_layout_set_text(layout, "Unkown column", -1);
+            pango_layout_set_text(layout, "Unknown column", -1);
         }
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dx) * PANGO_SCALE);
