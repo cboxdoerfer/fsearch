@@ -141,11 +141,6 @@ btree_node_prepend(BTreeNode *parent, BTreeNode *node) {
     return node;
 }
 
-void
-btree_node_remove(BTreeNode *node) {
-    btree_node_free(node);
-}
-
 BTreeNode *
 btree_node_get_root(BTreeNode *node) {
     assert(node);

@@ -57,9 +57,6 @@ btree_node_append(BTreeNode *parent, BTreeNode *node);
 BTreeNode *
 btree_node_prepend(BTreeNode *parent, BTreeNode *node);
 
-void
-btree_node_remove(BTreeNode *node);
-
 BTreeNode *
 btree_node_get_root(BTreeNode *node);
 
