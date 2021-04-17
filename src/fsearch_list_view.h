@@ -117,9 +117,6 @@ void
 fsearch_list_view_set_cursor(FsearchListView *view, int row_idx);
 
 void
-fsearch_list_view_set_show_tooltips(FsearchListView *view, gboolean value);
-
-void
 fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean value);
 
 void

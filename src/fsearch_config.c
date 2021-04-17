@@ -628,7 +628,7 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
         result.search_config_changed = true;
     }
     if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons
-        || c1->single_click_open != c2->single_click_open) {
+        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips) {
         result.listview_config_changed = true;
     }
 

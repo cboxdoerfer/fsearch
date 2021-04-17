@@ -36,8 +36,6 @@ struct _FsearchListView {
 
     gboolean single_click_activate;
 
-    gboolean show_tooltips;
-
     gint focused_idx;
 
     gint last_clicked_idx;
@@ -1695,14 +1693,6 @@ fsearch_list_view_set_sort_type(FsearchListView *view, GtkSortType sort_type) {
 GtkSortType
 fsearch_list_view_get_sort_type(FsearchListView *view) {
     return view->sort_type;
-}
-
-void
-fsearch_list_view_set_show_tooltips(FsearchListView *view, gboolean value) {
-    if (!view) {
-        return;
-    }
-    view->show_tooltips = value;
 }
 
 void
