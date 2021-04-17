@@ -71,16 +71,10 @@ gboolean
 fsearch_application_window_update_search(FsearchApplicationWindow *self);
 
 void
-fsearch_application_window_apply_model(FsearchApplicationWindow *self);
-
-void
 fsearch_application_window_remove_model(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text);
-
-FsearchQueryHighlight *
-fsearch_application_window_get_query_highlight(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_results(void *data);

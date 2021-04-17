@@ -90,7 +90,7 @@ struct _FsearchApplicationWindow {
     guint statusbar_timeout_id;
 };
 
-typedef enum _FsearchOverlay {
+typedef enum {
     NO_SEARCH_RESULTS_OVERLAY,
     NO_SEARCH_QUERY_OVERLAY,
     NO_DATABASE_OVERLAY,
@@ -98,7 +98,7 @@ typedef enum _FsearchOverlay {
     DATABASE_LOADING_OVERLAY,
 } FsearchOverlay;
 
-static gboolean
+static void
 perform_search(FsearchApplicationWindow *win);
 
 static void
@@ -249,12 +249,6 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
 }
 
 void
-fsearch_application_window_apply_model(FsearchApplicationWindow *win) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-    apply_model_to_list(win);
-}
-
-void
 fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
     remove_model_from_list(win);
@@ -385,8 +379,6 @@ fsearch_application_window_constructed(GObject *object) {
     case FSEARCH_DATABASE_STATE_SCANNING:
         database_scan_started(self);
         break;
-    case FSEARCH_DATABASE_STATE_IDLE:
-        break;
     default:
         break;
     }
@@ -436,11 +428,11 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
     case NO_SEARCH_QUERY_OVERLAY:
         gtk_widget_show(win->empty_search_query_overlay);
         break;
-    case DATABASE_UPDATING_OVERLAY:
-        gtk_widget_show(win->database_updating_overlay);
-        break;
     case DATABASE_LOADING_OVERLAY:
         gtk_widget_show(win->database_loading_overlay);
+        break;
+    default:
+        trace("window: overlay %d unknown\n", overlay);
         break;
     }
 }
@@ -477,10 +469,9 @@ statusbar_update_delayed(FsearchApplicationWindow *win, const char *text) {
 static gboolean
 search_cancelled_cb(gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    if (!win) {
-        return G_SOURCE_REMOVE;
+    if (win) {
+        g_object_unref(win);
     }
-    g_object_unref(win);
     return G_SOURCE_REMOVE;
 }
 
@@ -596,7 +587,7 @@ fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
     return 0;
 }
 
-static gboolean
+static void
 perform_search(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
@@ -604,25 +595,25 @@ perform_search(FsearchApplicationWindow *win) {
     FsearchConfig *config = fsearch_application_get_config(app);
     if (!win->search) {
         trace("[search] not set\n");
-        return FALSE;
+        return;
     }
 
     if (!config->locations) {
         show_overlay(win, NO_DATABASE_OVERLAY);
-        return FALSE;
+        return;
     }
 
     fsearch_application_state_lock(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
     if (!db || !db_get_entries(db)) {
         fsearch_application_state_unlock(app);
-        return FALSE;
+        return;
     }
     if (!db_try_lock(db)) {
         trace("[search] database locked\n");
         db_unref(db);
         fsearch_application_state_unlock(app);
-        return FALSE;
+        return;
     }
 
     g_object_ref(win);
@@ -677,10 +668,9 @@ perform_search(FsearchApplicationWindow *win) {
     gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_path_revealer), reveal_smart_path);
 
     fsearch_application_state_unlock(app);
-    return FALSE;
 }
 
-typedef struct _count_results_ctx {
+typedef struct {
     uint32_t num_folders;
     uint32_t num_files;
 } count_results_ctx;
@@ -1531,14 +1521,6 @@ FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
     return FSEARCH_LIST_VIEW(self->listview);
-}
-
-FsearchQueryHighlight *
-fsearch_application_window_get_query_highlight(FsearchApplicationWindow *self) {
-    if (self->query_highlight) {
-        return self->query_highlight;
-    }
-    return NULL;
 }
 
 FsearchApplicationWindow *
