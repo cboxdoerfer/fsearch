@@ -45,21 +45,17 @@ struct _FsearchApplicationWindow {
     GtkWidget *statusbar_database_status_box;
     GtkWidget *statusbar_database_updating_label;
     GtkWidget *statusbar_database_status_label;
-    GtkWidget *database_loading_label;
     GtkWidget *database_loading_overlay;
     GtkWidget *statusbar_database_updating_spinner;
     GtkWidget *statusbar_database_stack;
-    GtkWidget *database_updating_label;
     GtkWidget *database_updating_overlay;
     GtkWidget *empty_database_overlay;
     GtkWidget *empty_search_query_overlay;
     GtkWidget *filter_combobox;
     GtkWidget *filter_revealer;
-    GtkWidget *headerbar;
     GtkWidget *headerbar_box;
     GtkWidget *listview;
     GtkWidget *match_case_revealer;
-    GtkWidget *main_box;
     GtkWidget *menu_box;
     GtkWidget *no_search_results_overlay;
     GtkWidget *statusbar_selection_num_files_label;
@@ -69,10 +65,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *popover_update_db;
     GtkWidget *popover_cancel_update_db;
     GtkWidget *search_box;
-    GtkWidget *search_button;
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
-    GtkWidget *statusbar_search_icon;
     GtkWidget *search_in_path_revealer;
     GtkWidget *smart_path_revealer;
     GtkWidget *smart_case_revealer;
@@ -81,7 +75,6 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_filter_label;
     GtkWidget *search_mode_revealer;
     GtkWidget *search_overlay;
-    GtkWidget *statusbar;
     GtkWidget *statusbar_revealer;
     GtkWidget *statusbar_scan_label;
     GtkWidget *statusbar_scan_status_label;
@@ -89,7 +82,6 @@ struct _FsearchApplicationWindow {
     DatabaseSearch *search;
     DatabaseSearchResult *result;
 
-    FsearchListViewColumnType sort_order;
     FsearchQueryHighlight *query_highlight;
     uint32_t query_id;
 
@@ -1183,7 +1175,6 @@ fsearch_list_view_draw_row(cairo_t *cr,
 void
 fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    win->sort_order = sort_order;
 
     GTimer *timer = fsearch_timer_start();
 
@@ -1398,12 +1389,10 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     // Overlay when database is updating
     self->database_updating_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "database_updating"));
     gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->database_updating_overlay);
-    self->database_updating_label = GTK_WIDGET(gtk_builder_get_object(builder, "database_updating_label"));
 
     // Overlay when database is loading
     self->database_loading_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "database_loading"));
     gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->database_loading_overlay);
-    self->database_loading_label = GTK_WIDGET(gtk_builder_get_object(builder, "database_loading_label"));
 
     g_object_unref(builder);
 }
@@ -1474,10 +1463,8 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_stack);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_combobox);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, match_case_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_num_files_label);
@@ -1485,19 +1472,16 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_cancel_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_icon);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_in_path_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_mode_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_overlay);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_case_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_path_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_status_label);
