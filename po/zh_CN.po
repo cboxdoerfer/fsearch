@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-04-12 06:53+0000\n"
-"Last-Translator: bbaa <bbaa_bbaa@qq.com>\n"
+"PO-Revision-Date: 2021-04-18 07:27+0000\n"
+"Last-Translator: thinksung <thinksung@sina.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -27,7 +27,7 @@ msgstr "构建查找列表…"
 #, fuzzy
 #| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "排序中..."
+msgstr "排序中…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -38,23 +38,20 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "使用其他程序打开"
+msgstr "开启新窗口"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "显示首选项"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "更新数据库"
+msgstr "更新数据库并退出"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "显示版本信息"
+msgstr "显示版本信息并退出"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -114,21 +111,19 @@ msgstr "0 项"
 
 #: src/fsearch.glade:455
 msgid "Index:"
-msgstr "索引:"
+msgstr "索引"
 
 #: src/fsearch.glade:530
-#, fuzzy
 msgid "Number of selected folders"
-msgstr "选择文件夹的数量"
+msgstr "已择文件夹的数量"
 
 #: src/fsearch.glade:531 src/fsearch.glade:556
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch.glade:555
-#, fuzzy
 msgid "Number of selected files"
-msgstr "搜索到的数量"
+msgstr "选定的文件数量"
 
 #: src/fsearch.glade:614 src/fsearch_window.c:140 src/overlay.ui:102
 #, c-format
@@ -137,7 +132,7 @@ msgstr "数据库更新中…"
 
 #: src/fsearch.glade:647
 msgid "page0"
-msgstr "页0"
+msgstr "第0页"
 
 #: src/fsearch.glade:671
 msgid "Number of database items"
