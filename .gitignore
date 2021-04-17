@@ -116,3 +116,8 @@ po/remove-potcdate.sed
 po/remove-potcdate.sin
 po/stamp-po 
 po/stamp-it 
+/.idea_save/modules.xml
+/.idea_save/fsearch.iml
+/.idea_save/misc.xml
+/.idea_save/vcs.xml
+/.idea_save/.gitignore
