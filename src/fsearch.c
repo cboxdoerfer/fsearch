@@ -249,14 +249,7 @@ database_update_finished_notify(gpointer user_data) {
         if (self->db) {
             db_unref(self->db);
         }
-        if (db) {
-            db_lock(db);
-            self->db = db;
-            db_unlock(db);
-        }
-        else {
-            self->db = NULL;
-        }
+        self->db = db;
     }
     else if (db) {
         db_unref(db);
