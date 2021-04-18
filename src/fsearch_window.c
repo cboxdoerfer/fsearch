@@ -1173,7 +1173,7 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
     GCompareFunc func = NULL;
     switch (sort_order) {
     case FSEARCH_LIST_VIEW_COLUMN_NAME:
-        func = (GCompareFunc)compare_name;
+        func = (GCompareFunc)compare_pos;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_PATH:
         func = (GCompareFunc)compare_path;
@@ -1189,7 +1189,7 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
         func = (GCompareFunc)compare_changed;
         break;
     default:
-        func = (GCompareFunc)compare_name;
+        func = (GCompareFunc)compare_pos;
     }
 
     if (parallel_sort) {

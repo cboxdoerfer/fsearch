@@ -63,6 +63,9 @@ int
 compare_name(BTreeNode **a, BTreeNode **b);
 
 int
+compare_pos(BTreeNode **a_node, BTreeNode **b_node);
+
+int
 compare_size(BTreeNode **a, BTreeNode **b);
 
 int

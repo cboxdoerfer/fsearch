@@ -69,6 +69,3 @@ db_try_lock(FsearchDatabase *db);
 
 DynamicArray *
 db_get_entries(FsearchDatabase *db);
-
-void
-db_sort(FsearchDatabase *db);

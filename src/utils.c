@@ -419,7 +419,21 @@ compare_path(BTreeNode **a_node, BTreeNode **b_node) {
 }
 
 int
-compare_name(BTreeNode **a_node, BTreeNode **b_node) {
+compare_name(BTreeNode **a, BTreeNode **b) {
+    BTreeNode *node_a = *a;
+    BTreeNode *node_b = *b;
+
+    const bool is_dir_a = node_a->is_dir;
+    const bool is_dir_b = node_b->is_dir;
+    if (is_dir_a != is_dir_b) {
+        return is_dir_b - is_dir_a;
+    }
+
+    return strverscmp(node_a->name, node_b->name);
+}
+
+int
+compare_pos(BTreeNode **a_node, BTreeNode **b_node) {
     BTreeNode *a = *a_node;
     BTreeNode *b = *b_node;
     return a->pos - b->pos;

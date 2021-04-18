@@ -103,6 +103,16 @@ db_list_add_location(FsearchDatabase *db, FsearchDatabaseNode *location);
 // Implementation
 
 static void
+db_sort(FsearchDatabase *db) {
+    assert(db != NULL);
+    assert(db->entries != NULL);
+
+    trace("[database] sorting...\n");
+    darray_sort(db->entries, (DynamicArrayCompareFunc)compare_name);
+    trace("[database] sorted\n");
+}
+
+static void
 db_update_timestamp(FsearchDatabase *db) {
     assert(db != NULL);
     db->timestamp = time(NULL);
@@ -971,20 +981,6 @@ db_get_entries(FsearchDatabase *db) {
     return db->entries;
 }
 
-static int
-sort_by_name(const void *a, const void *b) {
-    BTreeNode *node_a = *(BTreeNode **)a;
-    BTreeNode *node_b = *(BTreeNode **)b;
-
-    const bool is_dir_a = node_a->is_dir;
-    const bool is_dir_b = node_b->is_dir;
-    if (is_dir_a != is_dir_b) {
-        return is_dir_b - is_dir_a;
-    }
-
-    return strverscmp(node_a->name, node_b->name);
-}
-
 bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
     assert(db != NULL);
@@ -1047,16 +1043,6 @@ db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *)) {
         }
     }
     return ret;
-}
-
-void
-db_sort(FsearchDatabase *db) {
-    assert(db != NULL);
-    assert(db->entries != NULL);
-
-    trace("[database] sorting...\n");
-    darray_sort(db->entries, (DynamicArrayCompareFunc)sort_by_name);
-    trace("[database] sorted\n");
 }
 
 void
