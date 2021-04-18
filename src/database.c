@@ -77,8 +77,6 @@ typedef struct _FsearchDatabaseNode FsearchDatabaseNode;
 
 enum {
     WALK_OK = 0,
-    WALK_BADPATTERN,
-    WALK_NAMETOOLONG,
     WALK_BADIO,
     WALK_CANCEL,
 };
@@ -464,9 +462,7 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
         if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
-            if (dir) {
-                closedir(dir);
-            }
+            closedir(dir);
             return WALK_CANCEL;
         }
         if (walk_context->exclude_hidden && dent->d_name[0] == '.') {
