@@ -89,7 +89,7 @@ static FsearchDatabaseNode *
 db_location_get_for_path(FsearchDatabase *db, const char *path);
 
 static FsearchDatabaseNode *
-db_location_scan(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *));
+db_location_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *));
 
 static FsearchDatabaseNode *
 db_location_new(void);
@@ -428,7 +428,7 @@ typedef struct DatabaseWalkContext {
     FsearchDatabaseNode *db_node;
     GString *path;
     GTimer *timer;
-    bool *cancel;
+    GCancellable *cancellable;
     void (*status_cb)(const char *);
     bool exclude_hidden;
 } DatabaseWalkContext;
@@ -436,7 +436,7 @@ typedef struct DatabaseWalkContext {
 static int
 db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *parent) {
 
-    if (walk_context->cancel && *walk_context->cancel == true) {
+    if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
         return WALK_CANCEL;
     }
 
@@ -461,7 +461,7 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
 
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
-        if (walk_context->cancel && *walk_context->cancel == true) {
+        if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
             if (dir) {
                 closedir(dir);
             }
@@ -531,7 +531,7 @@ db_location_free(FsearchDatabaseNode *location) {
 }
 
 static FsearchDatabaseNode *
-db_location_scan(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *)) {
+db_location_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
     const char *root_name = NULL;
     if (!strcmp(dname, "/")) {
         root_name = "";
@@ -564,7 +564,7 @@ db_location_scan(FsearchDatabase *db, const char *dname, bool *cancel, void (*st
         .db_node = location,
         .path = path,
         .timer = timer,
-        .cancel = cancel,
+        .cancellable = cancellable,
         .status_cb = status_cb,
         .exclude_hidden = db->exclude_hidden,
     };
@@ -1004,7 +1004,7 @@ db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) 
 }
 
 bool
-db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *)) {
+db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *)) {
     assert(db != NULL);
 
     bool ret = false;
@@ -1019,7 +1019,7 @@ db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *)) {
         }
         FsearchDatabaseNode *location = NULL;
         if (fs_path->update) {
-            location = db_location_scan(db, fs_path->path, cancel, status_cb);
+            location = db_location_scan(db, fs_path->path, cancellable, status_cb);
         }
 
         if (location != NULL) {

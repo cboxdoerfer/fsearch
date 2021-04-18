@@ -57,7 +57,7 @@ struct _FsearchApplication {
     FsearchDatabaseState db_state;
     guint db_timeout_id;
 
-    bool db_thread_cancel;
+    GCancellable *db_thread_cancellable;
     int num_database_update_active;
     GMutex mutex;
 };
@@ -201,7 +201,7 @@ fsearch_application_shutdown(GApplication *app) {
     }
     if (fsearch->db_pool) {
         trace("[exit] waiting for database thread to exit...\n");
-        fsearch->db_thread_cancel = true;
+        g_cancellable_cancel(fsearch->db_thread_cancellable);
         g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
         fsearch->db_pool = FALSE;
         trace("[exit] database thread finished.\n");
@@ -209,6 +209,12 @@ fsearch_application_shutdown(GApplication *app) {
     if (fsearch->db) {
         db_unref(fsearch->db);
     }
+
+    if (fsearch->db_thread_cancellable) {
+        g_object_unref(fsearch->db_thread_cancellable);
+        fsearch->db_thread_cancellable = NULL;
+    }
+
     if (fsearch->filters) {
         g_list_free_full(fsearch->filters, (GDestroyNotify)fsearch_filter_free);
         fsearch->filters = NULL;
@@ -244,7 +250,7 @@ database_update_finished_notify(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     g_mutex_lock(&self->mutex);
     FsearchDatabase *db = user_data;
-    if (!self->db_thread_cancel) {
+    if (!g_cancellable_is_cancelled(self->db_thread_cancellable)) {
         fsearch_prepare_windows_for_db_update(self);
         if (self->db) {
             db_unref(self->db);
@@ -254,7 +260,7 @@ database_update_finished_notify(gpointer user_data) {
     else if (db) {
         db_unref(db);
     }
-    self->db_thread_cancel = false;
+    g_cancellable_reset(self->db_thread_cancellable);
     self->num_database_update_active--;
     if (self->num_database_update_active == 0) {
         fsearch_action_enable("update_database");
@@ -312,8 +318,8 @@ database_update(FsearchApplication *app, bool rescan) {
     g_mutex_unlock(&app->mutex);
     db_lock(db);
     if (rescan) {
-        db_scan(db, &app->db_thread_cancel, app->config->show_indexing_status ? database_scan_status_cb : NULL);
-        if (!app->db_thread_cancel) {
+        db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_scan_status_cb : NULL);
+        if (!g_cancellable_is_cancelled(app->db_thread_cancellable)) {
             db_save(db);
         }
     }
@@ -442,7 +448,8 @@ fsearch_database_update(bool scan) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     fsearch_action_disable("update_database");
     fsearch_action_enable("cancel_update_database");
-    app->db_thread_cancel = false;
+
+    g_cancellable_reset(app->db_thread_cancellable);
     app->num_database_update_active++;
 
     DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
@@ -464,7 +471,7 @@ fsearch_database_update(bool scan) {
 static void
 cancel_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    app->db_thread_cancel = true;
+    g_cancellable_cancel(app->db_thread_cancellable);
 }
 
 static void
@@ -522,6 +529,7 @@ fsearch_application_startup(GApplication *app) {
     init_data_dir_path(data_dir, sizeof(data_dir));
     create_dir(data_dir);
 
+    fsearch->db_thread_cancellable = g_cancellable_new();
     fsearch->config = calloc(1, sizeof(FsearchConfig));
     if (!config_load(fsearch->config)) {
         if (!config_load_default(fsearch->config)) {
@@ -614,7 +622,7 @@ fsearch_application_activate(GApplication *app) {
 
     fsearch_application_db_auto_update(self);
 
-    self->db_thread_cancel = false;
+    g_cancellable_reset(self->db_thread_cancellable);
     fsearch_database_update(false);
     if (self->config->update_database_on_launch) {
         fsearch_database_update(true);

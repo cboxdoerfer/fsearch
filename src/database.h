@@ -20,6 +20,7 @@
 
 #include "array.h"
 #include "btree.h"
+#include <gio/gio.h>
 #include <glib.h>
 #include <stdbool.h>
 #include <stdint.h>
@@ -32,7 +33,7 @@ bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
 
 bool
-db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *));
+db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *));
 
 void
 db_ref(FsearchDatabase *db);
