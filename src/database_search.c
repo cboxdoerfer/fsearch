@@ -60,9 +60,6 @@ db_search_result_new(DynamicArray *entries, uint32_t num_folders, uint32_t num_f
 
 static void
 db_search_cancelled(FsearchQuery *query) {
-    if (!query) {
-        return;
-    }
     if (query->callback_cancelled) {
         query->callback_cancelled(query->callback_cancelled_data);
     }
@@ -126,10 +123,9 @@ search_thread_context_free(search_thread_context_t *ctx) {
         g_free(ctx->results);
         ctx->results = NULL;
     }
-    if (ctx) {
-        g_free(ctx);
-        ctx = NULL;
-    }
+
+    g_free(ctx);
+    ctx = NULL;
 }
 
 static search_thread_context_t *
