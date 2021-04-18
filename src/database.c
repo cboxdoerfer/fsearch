@@ -604,12 +604,10 @@ db_traverse_tree_insert(BTreeNode *node, void *data) {
     btree_node_traverse(node, db_list_insert_node, data);
 }
 
-static uint32_t temp_index = 0;
-
 static bool
 db_list_add_node(BTreeNode *node, void *data) {
     FsearchDatabase *db = data;
-    darray_set_item(db->entries, node, temp_index++);
+    darray_add_item(db->entries, node);
     node->is_dir ? db->num_folders++ : db->num_files++;
     db->num_entries++;
     return true;
@@ -812,7 +810,6 @@ db_build_list(FsearchDatabase *db, void (*status_cb)(const char *)) {
         status_cb(_("Building lookup list…"));
     }
     GList *locations = db->locations;
-    temp_index = 0;
     for (GList *l = locations; l != NULL; l = l->next) {
         db_list_add_location(db, l->data);
     }
