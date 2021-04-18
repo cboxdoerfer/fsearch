@@ -26,6 +26,8 @@
 #include <string.h>
 #include <sys/param.h>
 
+#define MAX_SORT_THREADS 8
+
 struct _DynamicArray {
     // number of items in array
     uint32_t num_items;
@@ -345,7 +347,7 @@ darray_get_ideal_thread_count() {
 
     int e = floor(log2(num_processors));
     int num_threads = pow(2, e);
-    return num_threads;
+    return MAX(num_threads, MAX_SORT_THREADS);
 }
 
 void
