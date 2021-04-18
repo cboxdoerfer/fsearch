@@ -23,6 +23,8 @@
 #include "fsearch_filter.h"
 #include "fsearch_thread_pool.h"
 #include "query.h"
+
+#include <gio/gio.h>
 #include <stdint.h>
 
 typedef struct _DatabaseSearch DatabaseSearch;
@@ -47,8 +49,8 @@ struct _DatabaseSearch {
 
     GAsyncQueue *search_queue;
     GThread *search_thread;
-    bool search_terminate;
-    bool search_thread_terminate;
+    GCancellable *search_cancellable;
+    GCancellable *search_thread_cancellable;
 };
 
 void

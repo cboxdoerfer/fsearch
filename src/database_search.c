@@ -40,7 +40,7 @@
 typedef struct search_context_s {
     FsearchQuery *query;
     BTreeNode **results;
-    bool *terminate;
+    GCancellable *cancellable;
     uint32_t num_results;
     uint32_t num_folders;
     uint32_t num_files;
@@ -81,7 +81,7 @@ db_search_thread(gpointer user_data) {
     DatabaseSearch *search = user_data;
 
     while (true) {
-        if (search->search_thread_terminate) {
+        if (g_cancellable_is_cancelled(search->search_thread_cancellable)) {
             break;
         }
 
@@ -89,7 +89,7 @@ db_search_thread(gpointer user_data) {
         if (!query) {
             continue;
         }
-        search->search_terminate = false;
+        g_cancellable_reset(search->search_cancellable);
 
         const bool empty_query = fs_str_is_empty(query->text);
 
@@ -139,13 +139,13 @@ search_thread_context_free(search_thread_context_t *ctx) {
 }
 
 static search_thread_context_t *
-search_thread_context_new(FsearchQuery *query, bool *terminate, uint32_t start_pos, uint32_t end_pos) {
+search_thread_context_new(FsearchQuery *query, GCancellable *cancellable, uint32_t start_pos, uint32_t end_pos) {
     search_thread_context_t *ctx = calloc(1, sizeof(search_thread_context_t));
     assert(ctx != NULL);
     assert(end_pos >= start_pos);
 
     ctx->query = query;
-    ctx->terminate = terminate;
+    ctx->cancellable = cancellable;
     ctx->results = calloc(end_pos - start_pos + 1, sizeof(BTreeNode *));
     assert(ctx->results != NULL);
 
@@ -220,7 +220,7 @@ db_search_worker(void *user_data) {
 
     GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
-        if (*ctx->terminate) {
+        if (g_cancellable_is_cancelled(ctx->cancellable)) {
             return NULL;
         }
         BTreeNode *node = darray_get_item(entries, i);
@@ -318,7 +318,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
     GList *threads = fsearch_thread_pool_get_threads(search->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] = search_thread_context_new(q,
-                                                   &search->search_terminate,
+                                                   search->search_cancellable,
                                                    start_pos,
                                                    i == num_threads - 1 ? num_entries - 1 : end_pos);
 
@@ -334,7 +334,7 @@ db_search(DatabaseSearch *search, FsearchQuery *q) {
         fsearch_thread_pool_wait_for_thread(search->pool, threads);
         threads = threads->next;
     }
-    if (search->search_terminate) {
+    if (g_cancellable_is_cancelled(search->search_cancellable)) {
         for (uint32_t i = 0; i < num_threads; i++) {
             search_thread_context_t *ctx = thread_data[i];
             search_thread_context_free(ctx);
@@ -409,8 +409,20 @@ db_search_free(DatabaseSearch *search) {
     assert(search != NULL);
 
     db_search_clear_queue(search->search_queue);
-    search->search_thread_terminate = true;
+
+    g_cancellable_cancel(search->search_thread_cancellable);
     g_thread_join(search->search_thread);
+    search->search_thread = NULL;
+
+    g_async_queue_unref(search->search_queue);
+    search->search_queue = NULL;
+
+    g_object_unref(search->search_cancellable);
+    search->search_cancellable = NULL;
+
+    g_object_unref(search->search_thread_cancellable);
+    search->search_thread_cancellable = NULL;
+
     g_free(search);
     search = NULL;
     return;
@@ -423,7 +435,9 @@ db_search_new(FsearchThreadPool *pool) {
 
     db_search->pool = pool;
     db_search->search_queue = g_async_queue_new();
+    db_search->search_cancellable = g_cancellable_new();
     db_search->search_thread = g_thread_new("fsearch_search_thread", db_search_thread, db_search);
+    db_search->search_thread_cancellable = g_cancellable_new();
     return db_search;
 }
 
@@ -431,7 +445,7 @@ void
 db_search_queue(DatabaseSearch *search, FsearchQuery *query) {
 
     db_search_clear_queue(search->search_queue);
-    search->search_terminate = true;
+    g_cancellable_cancel(search->search_cancellable);
     g_async_queue_push(search->search_queue, query);
 }
 
