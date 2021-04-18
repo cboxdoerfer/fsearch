@@ -29,7 +29,7 @@ typedef struct _FsearchDatabase FsearchDatabase;
 typedef struct _FsearchDatabaseNode FsearchDatabaseNode;
 
 bool
-db_load_from_file(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
+db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
 
 bool
 db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *));

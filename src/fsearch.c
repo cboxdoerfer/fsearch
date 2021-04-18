@@ -325,7 +325,7 @@ database_update(FsearchApplication *app, bool rescan) {
         }
     }
     else {
-        db_load_from_file(db, NULL, NULL);
+        db_load(db, NULL, NULL);
     }
     db_unlock(db);
 

@@ -1005,7 +1005,7 @@ sort_by_name(const void *a, const void *b) {
 }
 
 bool
-db_load_from_file(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
+db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
     assert(db != NULL);
 
     bool ret = false;
