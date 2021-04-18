@@ -808,7 +808,7 @@ db_locations_get_num_entries(FsearchDatabase *db) {
 }
 
 static void
-db_build_initial_entries_list(FsearchDatabase *db, void (*status_cb)(const char *)) {
+db_build_list(FsearchDatabase *db, void (*status_cb)(const char *)) {
     assert(db != NULL);
     assert(db->num_entries >= 0);
 
@@ -834,7 +834,7 @@ db_build_initial_entries_list(FsearchDatabase *db, void (*status_cb)(const char 
 }
 
 static void
-db_update_entries_list(FsearchDatabase *db) {
+db_update_list(FsearchDatabase *db) {
     assert(db != NULL);
     assert(db->num_entries >= 0);
 
@@ -1017,7 +1017,7 @@ db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) 
         ret = db_location_load(db, fs_path->path) ? true : ret;
     }
     if (ret) {
-        db_update_entries_list(db);
+        db_update_list(db);
     }
     return ret;
 }
@@ -1046,10 +1046,10 @@ db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *)) {
     }
     if (ret) {
         if (init_list) {
-            db_build_initial_entries_list(db, status_cb);
+            db_build_list(db, status_cb);
         }
         else {
-            db_update_entries_list(db);
+            db_update_list(db);
         }
     }
     return ret;
