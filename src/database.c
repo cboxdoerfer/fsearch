@@ -89,7 +89,7 @@ static FsearchDatabaseNode *
 db_location_get_for_path(FsearchDatabase *db, const char *path);
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *));
+db_location_scan(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *));
 
 static FsearchDatabaseNode *
 db_location_new(void);
@@ -521,7 +521,7 @@ db_location_free(FsearchDatabaseNode *location) {
 }
 
 static FsearchDatabaseNode *
-db_location_build_tree(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *)) {
+db_location_scan(FsearchDatabase *db, const char *dname, bool *cancel, void (*status_cb)(const char *)) {
     const char *root_name = NULL;
     if (!strcmp(dname, "/")) {
         root_name = "";
@@ -738,48 +738,29 @@ db_location_get_path(const char *location_name) {
     return g_strdup(database_fname);
 }
 
-static bool
+static FsearchDatabaseNode *
 db_location_load(FsearchDatabase *db, const char *location_name) {
     gchar *load_path = db_location_get_path(location_name);
     if (!load_path) {
-        return false;
+        return NULL;
     }
     FsearchDatabaseNode *location = db_location_load_from_file(load_path);
     g_free(load_path);
     load_path = NULL;
 
-    if (location) {
-        location->num_items = btree_node_n_nodes(location->entries);
-        db->locations = g_list_append(db->locations, location);
-        db->num_entries += location->num_items;
-        db->num_folders += location->num_folders;
-        db->num_files += location->num_files;
-        db_update_timestamp(db);
-        return true;
-    }
-    db_update_timestamp(db);
-    return false;
+    return location;
 }
 
-static bool
-db_location_add(FsearchDatabase *db, const char *location_name, bool *cancel, void (*status_cb)(const char *)) {
+static void
+db_location_add(FsearchDatabase *db, FsearchDatabaseNode *location) {
     assert(db != NULL);
-    trace("[database_scan] scan location: %s\n", location_name);
+    assert(location != NULL);
 
-    FsearchDatabaseNode *location = db_location_build_tree(db, location_name, cancel, status_cb);
-
-    if (location) {
-        trace("[database_scan] %s scanned with %d entries\n", location_name, location->num_items);
-        db->locations = g_list_append(db->locations, location);
-        db->num_entries += location->num_items;
-        db->num_folders += location->num_folders;
-        db->num_files += location->num_files;
-        db_update_timestamp(db);
-        return true;
-    }
-
+    db->locations = g_list_append(db->locations, location);
+    db->num_entries += location->num_items;
+    db->num_folders += location->num_folders;
+    db->num_files += location->num_files;
     db_update_timestamp(db);
-    return false;
 }
 
 static void
@@ -1014,7 +995,11 @@ db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) 
         if (!fs_path->enabled) {
             continue;
         }
-        ret = db_location_load(db, fs_path->path) ? true : ret;
+        FsearchDatabaseNode *location = db_location_load(db, fs_path->path);
+        if (location) {
+            db_location_add(db, location);
+            ret = true;
+        }
     }
     if (ret) {
         db_update_list(db);
@@ -1036,11 +1021,20 @@ db_scan(FsearchDatabase *db, bool *cancel, void (*status_cb)(const char *)) {
         if (!fs_path->enabled) {
             continue;
         }
-        if (fs_path->update && db_location_add(db, fs_path->path, cancel, status_cb)) {
-            ret = true;
+        FsearchDatabaseNode *location = NULL;
+        if (fs_path->update) {
+            location = db_location_scan(db, fs_path->path, cancel, status_cb);
+        }
+
+        if (location != NULL) {
             init_list = true;
         }
-        else if (db_location_load(db, fs_path->path)) {
+        else {
+            location = db_location_load(db, fs_path->path);
+        }
+
+        if (location != NULL) {
+            db_location_add(db, location);
             ret = true;
         }
     }
