@@ -25,7 +25,6 @@
 #include <errno.h>
 #include <fnmatch.h>
 #include <glib/gi18n.h>
-#include <glib/gstdio.h>
 #include <malloc.h>
 #include <stdbool.h>
 #include <stdio.h>
@@ -38,7 +37,6 @@
 
 #include "database.h"
 #include "debug.h"
-#include "fsearch.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
 #include "memory_pool.h"
@@ -48,7 +46,6 @@
 
 struct _FsearchDatabase {
     GList *locations;
-    GList *searches;
     GList *includes;
     GList *excludes;
     char **exclude_files;
@@ -722,7 +719,6 @@ bool
 db_save(FsearchDatabase *db) {
     assert(db != NULL);
 
-    // db_update_sort_index (db);
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
         FsearchDatabaseNode *location = (FsearchDatabaseNode *)l->data;

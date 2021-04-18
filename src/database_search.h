@@ -29,12 +29,6 @@
 
 typedef struct _DatabaseSearch DatabaseSearch;
 
-// search modes
-enum {
-    DB_SEARCH_MODE_NORMAL = 0,
-    DB_SEARCH_MODE_REGEX = 1,
-};
-
 typedef struct _DatabaseSearchResult {
     DynamicArray *entries;
     void *cb_data;
