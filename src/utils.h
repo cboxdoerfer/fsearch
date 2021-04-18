@@ -23,6 +23,12 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
+void
+init_data_dir_path(char *path, size_t len);
+
+bool
+create_dir(const char *path);
+
 bool
 file_trash(const char *path);
 

@@ -28,6 +28,23 @@
 #include <stdbool.h>
 #include <stdio.h>
 
+const char *data_folder_name = "fsearch";
+
+void
+init_data_dir_path(char *path, size_t len) {
+    g_assert(path != NULL);
+    g_assert(len >= 0);
+
+    const gchar *xdg_data_dir = g_get_user_data_dir();
+    snprintf(path, len, "%s/%s", xdg_data_dir, data_folder_name);
+    return;
+}
+
+bool
+create_dir(const char *path) {
+    return !g_mkdir_with_parents(path, 0700);
+}
+
 static gboolean
 keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
     gchar *match = g_match_info_fetch(info, 0);

@@ -102,25 +102,6 @@ db_list_add_location(FsearchDatabase *db, FsearchDatabaseNode *location);
 
 // Implementation
 
-const char *data_folder_name = "fsearch";
-
-void
-db_build_data_dir(char *path, size_t len) {
-    g_assert(path != NULL);
-    g_assert(len >= 0);
-
-    const gchar *xdg_data_dir = g_get_user_data_dir();
-    snprintf(path, len, "%s/%s", xdg_data_dir, data_folder_name);
-    return;
-}
-
-bool
-db_make_data_dir(void) {
-    gchar data_dir[PATH_MAX] = "";
-    db_build_data_dir(data_dir, sizeof(data_dir));
-    return !g_mkdir_with_parents(data_dir, 0700);
-}
-
 static void
 db_update_timestamp(FsearchDatabase *db) {
     assert(db != NULL);
@@ -691,7 +672,7 @@ location_build_path(char *path, size_t path_len, const char *location_name) {
     assert(path_checksum != NULL);
 
     gchar data_dir[PATH_MAX] = "";
-    db_build_data_dir(data_dir, sizeof(data_dir));
+    init_data_dir_path(data_dir, sizeof(data_dir));
 
     assert(0 <= snprintf(path, path_len, "%s/database/%s", data_dir, path_checksum));
     g_free(path_checksum);

@@ -524,7 +524,11 @@ fsearch_application_startup(GApplication *app) {
 
     g_mutex_init(&fsearch->mutex);
     config_make_dir();
-    db_make_data_dir();
+
+    char data_dir[PATH_MAX] = "";
+    init_data_dir_path(data_dir, sizeof(data_dir));
+    create_dir(data_dir);
+
     fsearch->config = calloc(1, sizeof(FsearchConfig));
     if (!config_load(fsearch->config)) {
         if (!config_load_default(fsearch->config)) {

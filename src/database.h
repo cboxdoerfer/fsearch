@@ -29,12 +29,6 @@ typedef struct _FsearchDatabase FsearchDatabase;
 typedef struct _FsearchDatabaseNode FsearchDatabaseNode;
 
 bool
-db_make_data_dir(void);
-
-void
-db_build_data_dir(char *path, size_t len);
-
-bool
 db_load_from_file(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
 
 bool
