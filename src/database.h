@@ -27,8 +27,6 @@
 
 typedef struct _FsearchDatabase FsearchDatabase;
 
-typedef struct _FsearchDatabaseNode FsearchDatabaseNode;
-
 bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
 

@@ -73,6 +73,8 @@ struct _FsearchDatabaseNode {
     uint32_t num_files;
 };
 
+typedef struct _FsearchDatabaseNode FsearchDatabaseNode;
+
 enum {
     WALK_OK = 0,
     WALK_BADPATTERN,
