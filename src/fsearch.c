@@ -729,7 +729,7 @@ local_database_update() {
     FsearchDatabase *db =
         db_new(config->locations, config->exclude_locations, config->exclude_files, config->exclude_hidden_items);
     if (!db) {
-        g_printerr("[database_update] failed allocate database\n");
+        g_printerr("[database_update] failed to allocate database\n");
         config_free(config);
         config = NULL;
         return 1;
