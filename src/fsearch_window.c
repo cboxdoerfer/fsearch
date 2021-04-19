@@ -1089,10 +1089,10 @@ fsearch_list_view_draw_row(cairo_t *cr,
     }
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
+    const int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
+
     DrawRowContext ctx = {};
-
-    int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
-
     draw_row_ctx_init(node, win, bin_window, icon_size, &ctx);
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
@@ -1106,9 +1106,11 @@ fsearch_list_view_draw_row(cairo_t *cr,
     gtk_style_context_save(context);
     gtk_style_context_set_state(context, flags);
 
-    uint32_t x = rect->x;
-    gtk_render_background(context, cr, x, rect->y, rect->width, rect->height);
+    // Render row background
+    gtk_render_background(context, cr, rect->x, rect->y, rect->width, rect->height);
 
+    // Render row foreground
+    uint32_t x = rect->x;
     for (GList *col = columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
         if (!column->visible) {
