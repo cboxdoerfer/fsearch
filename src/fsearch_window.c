@@ -1395,12 +1395,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     const char *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
     gtk_label_set_text(GTK_LABEL(win->search_filter_label), text);
 
-    if (active == 0) {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_filter_revealer), FALSE);
-    }
-    else {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_filter_revealer), TRUE);
-    }
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_filter_revealer), active);
 
     perform_search(win);
 }
