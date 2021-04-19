@@ -1074,6 +1074,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
                            uint32_t row,
                            gboolean row_selected,
                            gboolean row_focused,
+                           gboolean right_to_left_text,
                            gpointer user_data) {
     if (!columns) {
         return;
@@ -1120,16 +1121,25 @@ fsearch_list_view_draw_row(cairo_t *cr,
         cairo_rectangle(cr, x, rect->y, column->effective_width, rect->height);
         cairo_clip(cr);
         int dx = 0;
+        int dw = 0;
         pango_layout_set_attributes(layout, NULL);
         switch (column->type) {
         case FSEARCH_LIST_VIEW_COLUMN_NAME: {
             if (config->show_listview_icons && ctx.icon_surface) {
+                int x_icon = x;
+                if (right_to_left_text) {
+                    x_icon += column->effective_width - icon_size - ROW_PADDING_X;
+                }
+                else {
+                    x_icon += ROW_PADDING_X;
+                    dx += icon_size + 2 * ROW_PADDING_X;
+                }
+                dw += icon_size + 2 * ROW_PADDING_X;
                 gtk_render_icon_surface(context,
                                         cr,
                                         ctx.icon_surface,
-                                        x + ROW_PADDING_X,
+                                        x_icon,
                                         rect->y + floor((rect->height - icon_size) / 2.0));
-                dx += icon_size + 2 * ROW_PADDING_X;
             }
             pango_layout_set_attributes(layout, ctx.name_attr);
             pango_layout_set_text(layout, ctx.display_name, -1);
@@ -1151,7 +1161,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
             pango_layout_set_text(layout, "Unknown column", -1);
         }
 
-        pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dx) * PANGO_SCALE);
+        pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);
         pango_layout_set_alignment(layout, column->alignment);
         pango_layout_set_ellipsize(layout, column->ellipsize_mode);
         gtk_render_layout(context, cr, x + ROW_PADDING_X + dx, rect->y + ROW_PADDING_Y, layout);

@@ -56,6 +56,7 @@ typedef void (*FsearchListViewDrawRowFunc)(cairo_t *cr,
                                            uint32_t row,
                                            gboolean row_selected,
                                            gboolean row_focused,
+                                           gboolean right_to_left_text,
                                            gpointer user_data);
 
 typedef void *(*FsearchListViewRowDataFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);

@@ -13,6 +13,7 @@ struct _FsearchListView {
     GtkContainer parent_instance;
 
     GList *columns;
+    GList *columns_reversed;
 
     GdkWindow *bin_window;
     GdkWindow *header_window;
@@ -87,6 +88,17 @@ G_DEFINE_TYPE_WITH_CODE(FsearchListView,
                         fsearch_list_view,
                         GTK_TYPE_CONTAINER,
                         G_IMPLEMENT_INTERFACE(GTK_TYPE_SCROLLABLE, fsearch_list_view_scrollable_init))
+
+static gboolean
+fsearch_list_view_is_text_dir_rtl(FsearchListView *view) {
+    return gtk_widget_get_direction(GTK_WIDGET(view)) == GTK_TEXT_DIR_RTL ? TRUE : FALSE;
+}
+
+static GList *
+fsearch_list_view_get_columns_for_text_direction(FsearchListView *view) {
+    const gboolean right_to_left_text = fsearch_list_view_is_text_dir_rtl(view);
+    return right_to_left_text ? view->columns_reversed : view->columns;
+}
 
 static int
 fsearch_list_view_get_columns_effective_width(FsearchListView *view) {
@@ -194,7 +206,16 @@ static FsearchListViewColumn *
 fsearch_list_view_get_col_for_x_canvas(FsearchListView *view, int x_canvas) {
     int width = 0;
 
-    for (GList *c = view->columns; c != NULL; c = c->next) {
+    GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
+    if (fsearch_list_view_is_text_dir_rtl(view)) {
+        width += MAX(0, gdk_window_get_width(view->bin_window) - fsearch_list_view_get_columns_effective_width(view));
+    }
+
+    if (width > x_canvas) {
+        return NULL;
+    }
+
+    for (GList *c = columns; c != NULL; c = c->next) {
         FsearchListViewColumn *col = c->data;
         if (!col->visible) {
             continue;
@@ -251,21 +272,27 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
     view_rect.width = gtk_widget_get_allocated_width(widget);
     view_rect.height = gtk_widget_get_allocated_height(widget) - view->header_height;
 
+    const int columns_width = fsearch_list_view_get_columns_effective_width(view);
     cairo_rectangle_int_t canvas_rect;
     canvas_rect.x = -gtk_adjustment_get_value(view->hadjustment);
     canvas_rect.y = -gtk_adjustment_get_value(view->vadjustment);
     canvas_rect.width = gdk_window_get_width(view->bin_window);
     canvas_rect.height = gdk_window_get_height(view->bin_window);
 
-    double y_offset = canvas_rect.y % view->row_height + view->header_height;
-    int first_visible_row = floor(-canvas_rect.y / (double)view->row_height);
-    int num_rows_in_view = view_rect.height / view->row_height + 1;
+    const int x_rtl_offset = canvas_rect.width - columns_width;
+    if (fsearch_list_view_is_text_dir_rtl(view)) {
+        canvas_rect.x += x_rtl_offset;
+    }
+
+    const double y_offset = canvas_rect.y % view->row_height + view->header_height;
+    const int first_visible_row = floor(-canvas_rect.y / (double)view->row_height);
+    const int num_rows_in_view = view_rect.height / view->row_height + 1;
 
     cairo_save(cr);
     gdk_cairo_rectangle(cr, &view_rect);
     cairo_clip(cr);
 
-    int columns_width = fsearch_list_view_get_columns_effective_width(view);
+    GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
 
     for (int i = 0; i < num_rows_in_view; i++) {
         if (first_visible_row + i >= view->num_rows) {
@@ -287,12 +314,13 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
                                 view->bin_window,
                                 layout,
                                 context,
-                                view->columns,
+                                columns,
                                 &row_rect,
                                 view->sort_type,
                                 row_idx,
                                 fsearch_list_view_is_selected_for_idx(view, row_idx),
                                 view->last_clicked_idx == row_idx ? TRUE : FALSE,
+                                fsearch_list_view_is_text_dir_rtl(view),
                                 view->draw_row_func_data);
             cairo_restore(cr);
         }
@@ -319,7 +347,7 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
         gtk_style_context_add_class(context, GTK_STYLE_CLASS_SEPARATOR);
 
         uint32_t line_x = canvas_rect.x;
-        for (GList *col = view->columns; col != NULL; col = col->next) {
+        for (GList *col = columns; col != NULL; col = col->next) {
             FsearchListViewColumn *column = col->data;
 
             if (!col->next) {
@@ -339,7 +367,7 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
     if (gtk_cairo_should_draw_window(cr, view->header_window)) {
         gtk_style_context_save(context);
         gtk_style_context_remove_class(context, GTK_STYLE_CLASS_CELL);
-        for (GList *col = view->columns; col != NULL; col = col->next) {
+        for (GList *col = columns; col != NULL; col = col->next) {
             FsearchListViewColumn *column = col->data;
             if (!column->visible) {
                 continue;
@@ -646,10 +674,18 @@ fsearch_list_view_header_drag_gesture_update(GtkGestureDrag *gesture,
 
     gdouble start_x, start_y;
     gtk_gesture_drag_get_start_point(gesture, &start_x, &start_y);
-    gdouble x = start_x + offset_x;
 
+    gdouble x = start_x;
+    if (fsearch_list_view_is_text_dir_rtl(view)) {
+        x -= offset_x;
+    }
+    else {
+        x += offset_x;
+    }
+
+    GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
     if (view->col_resize_mode) {
-        GList *c = g_list_nth(view->columns, view->drag_column_pos);
+        GList *c = g_list_nth(columns, view->drag_column_pos);
         if (!c) {
             return;
         }
@@ -671,7 +707,9 @@ fsearch_list_view_header_drag_gesture_begin(GtkGestureDrag *gesture,
     GdkWindow *window = event->any.window;
 
     gint col_pos = 0;
-    for (GList *col = view->columns; col; col = col->next, col_pos++) {
+    GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
+
+    for (GList *col = columns; col; col = col->next, col_pos++) {
         FsearchListViewColumn *column = col->data;
         if (window != column->window) {
             continue;
@@ -982,7 +1020,7 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     gtk_widget_set_allocation(widget, allocation);
 
-    int columns_width = fsearch_list_view_get_columns_width(view);
+    int columns_width = fsearch_list_view_get_columns_effective_width(view);
     int view_width = gtk_widget_get_allocated_width(widget);
     int num_expanding = fsearch_list_view_num_expanding_columns(view);
 
@@ -990,11 +1028,15 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
     if (num_expanding > 0 && view_width > columns_width) {
         x_extra_space = floor((view_width - columns_width) / (double)num_expanding);
     }
-    int x = 0;
+
+    const gboolean text_dir_rtl = fsearch_list_view_is_text_dir_rtl(view);
+    const int x_offset = MAX(text_dir_rtl ? view_width - columns_width : 0, 0);
+    int x = x_offset;
 
     view->min_list_width = 0;
 
-    for (GList *col = view->columns; col != NULL; col = col->next) {
+    GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
+    for (GList *col = columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
         if (!column->visible) {
             continue;
@@ -1015,7 +1057,11 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
 
         gtk_widget_size_allocate(column->button, &header_button_rect);
         if (gtk_widget_get_realized(column->button)) {
-            gdk_window_move_resize(column->window, x - 6 / 2, header_button_rect.y, 6, header_button_rect.height);
+            int x_win = x - 6 / 2;
+            if (fsearch_list_view_is_text_dir_rtl(view)) {
+                x_win -= header_button_rect.width;
+            }
+            gdk_window_move_resize(column->window, x_win, header_button_rect.y, 6, header_button_rect.height);
         }
     }
 
@@ -1078,6 +1124,7 @@ fsearch_list_view_container_remove(GtkContainer *container, GtkWidget *widget) {
     for (GList *col = view->columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
         if (column->button == widget) {
+            view->columns_reversed = g_list_remove(view->columns_reversed, column);
             gtk_widget_unparent(widget);
             return;
         }
@@ -1169,7 +1216,12 @@ fsearch_list_view_realize_column(FsearchListView *view, FsearchListViewColumn *c
 
     GtkAllocation allocation;
     gtk_widget_get_allocation(col->button, &allocation);
-    attrs.x = allocation.width - 6 / 2;
+    if (fsearch_list_view_is_text_dir_rtl(view)) {
+        attrs.x = (-6 / 2);
+    }
+    else {
+        attrs.x = allocation.width - 6 / 2;
+    }
 
     col->window = gdk_window_new(view->header_window, &attrs, attrs_mask);
     gtk_widget_register_window(GTK_WIDGET(view), col->window);
@@ -1396,6 +1448,7 @@ fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *co
         return;
     }
 
+    view->columns_reversed = g_list_remove(view->columns_reversed, col);
     view->columns = g_list_remove(view->columns, col);
     if (col->visible) {
         view->min_list_width -= col->width;
@@ -1510,7 +1563,8 @@ fsearch_list_view_get_first_column_for_type(FsearchListView *view, FsearchListVi
         return NULL;
     }
 
-    for (GList *col = view->columns; col != NULL; col = col->next) {
+    GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
+    for (GList *col = columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
         if (column->type == type) {
             return column;
@@ -1527,6 +1581,7 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
     col->view = view;
 
     view->columns = g_list_append(view->columns, col);
+    view->columns_reversed = g_list_prepend(view->columns_reversed, col);
     if (col->visible) {
         view->min_list_width += col->width;
     }
