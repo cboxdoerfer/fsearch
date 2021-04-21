@@ -8,6 +8,7 @@
 
 #define TEXT_HEIGHT_FALLBACK 20
 #define ROW_HEIGHT_DEFAULT 30
+#define COLUMN_RESIZE_AREA_WIDTH 6
 
 struct _FsearchListView {
     GtkContainer parent_instance;
@@ -1057,11 +1058,15 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
 
         gtk_widget_size_allocate(column->button, &header_button_rect);
         if (gtk_widget_get_realized(column->button)) {
-            int x_win = x - 6 / 2;
+            int x_win = x - COLUMN_RESIZE_AREA_WIDTH / 2;
             if (fsearch_list_view_is_text_dir_rtl(view)) {
                 x_win -= header_button_rect.width;
             }
-            gdk_window_move_resize(column->window, x_win, header_button_rect.y, 6, header_button_rect.height);
+            gdk_window_move_resize(column->window,
+                                   x_win,
+                                   header_button_rect.y,
+                                   COLUMN_RESIZE_AREA_WIDTH,
+                                   header_button_rect.height);
         }
     }
 
@@ -1211,16 +1216,16 @@ fsearch_list_view_realize_column(FsearchListView *view, FsearchListViewColumn *c
     GdkDisplay *display = gdk_window_get_display(view->header_window);
     attrs.cursor = gdk_cursor_new_from_name(display, "col-resize");
     attrs.y = 0;
-    attrs.width = 6;
+    attrs.width = COLUMN_RESIZE_AREA_WIDTH;
     attrs.height = view->header_height;
 
     GtkAllocation allocation;
     gtk_widget_get_allocation(col->button, &allocation);
     if (fsearch_list_view_is_text_dir_rtl(view)) {
-        attrs.x = (-6 / 2);
+        attrs.x = (-COLUMN_RESIZE_AREA_WIDTH / 2);
     }
     else {
-        attrs.x = allocation.width - 6 / 2;
+        attrs.x = allocation.width - COLUMN_RESIZE_AREA_WIDTH / 2;
     }
 
     col->window = gdk_window_new(view->header_window, &attrs, attrs_mask);
