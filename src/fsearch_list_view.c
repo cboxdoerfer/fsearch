@@ -1093,6 +1093,10 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
 
     fsearch_list_view_set_hadjustment_value(view);
     fsearch_list_view_set_vadjustment_value(view);
+    if (fsearch_list_view_is_text_dir_rtl(view)) {
+        const gdouble hadj_new_upper = gtk_adjustment_get_upper(view->hadjustment);
+        gtk_adjustment_set_value(view->hadjustment, hadj_new_upper);
+    }
 }
 
 static void
