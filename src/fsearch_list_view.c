@@ -49,6 +49,9 @@ struct _FsearchListView {
     gint x_bin_drag_offset;
     gint y_bin_drag_offset;
 
+    gint rubberband_start_idx;
+    gint rubberband_end_idx;
+
     GHashTable *selection;
     uint32_t num_selected;
 
@@ -736,6 +739,10 @@ fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
         view->rubberband_state = RUBBERBAND_SELECT_INACTIVE;
         view->x_bin_drag_started = -1;
         view->y_bin_drag_started = -1;
+        view->x_bin_drag_offset = -1;
+        view->y_bin_drag_offset = -1;
+        view->rubberband_start_idx = -1;
+        view->rubberband_end_idx = -1;
         gtk_widget_queue_draw(GTK_WIDGET(view));
     }
 }
@@ -759,8 +766,21 @@ fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
     fsearch_list_view_get_rubberband_points(view, &x1, &y1, &x2, &y2);
     int row_idx_1 = MAX(0, fsearch_list_view_get_row_idx_for_y_canvas(view, y1));
     int row_idx_2 = MAX(0, fsearch_list_view_get_row_idx_for_y_canvas(view, y2));
-    fsearch_list_view_selection_clear_silent(view);
-    fsearch_list_view_select_range_silent(view, row_idx_1, row_idx_2);
+
+    if (row_idx_1 > row_idx_2) {
+        int tmp_idx = row_idx_1;
+        row_idx_1 = row_idx_2;
+        row_idx_2 = tmp_idx;
+    }
+
+    if (row_idx_1 != view->rubberband_start_idx || row_idx_2 != view->rubberband_end_idx) {
+        view->rubberband_start_idx = row_idx_1;
+        view->rubberband_end_idx = row_idx_2;
+        fsearch_list_view_selection_clear_silent(view);
+        fsearch_list_view_select_range_silent(view, row_idx_1, row_idx_2);
+        fsearch_list_view_selection_changed(view);
+        return;
+    }
     gtk_widget_queue_draw(GTK_WIDGET(view));
 }
 
