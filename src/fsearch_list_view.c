@@ -392,7 +392,7 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
                 continue;
             }
             line_x += column->effective_width;
-            gtk_render_line(context, cr, line_x, view_rect.y, line_x, view_rect.height);
+            gtk_render_line(context, cr, line_x, view_rect.y, line_x, view_rect.y + view_rect.height);
         }
         gtk_style_context_restore(context);
     }
