@@ -41,43 +41,44 @@ struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
 
     GtkWidget *app_menu;
-    GtkWidget *statusbar_database_updating_box;
-    GtkWidget *statusbar_database_status_box;
-    GtkWidget *statusbar_database_updating_label;
-    GtkWidget *statusbar_database_status_label;
-    GtkWidget *database_loading_overlay;
-    GtkWidget *statusbar_database_updating_spinner;
-    GtkWidget *statusbar_database_stack;
-    GtkWidget *database_updating_overlay;
-    GtkWidget *empty_database_overlay;
-    GtkWidget *empty_search_query_overlay;
     GtkWidget *filter_combobox;
     GtkWidget *filter_revealer;
     GtkWidget *headerbar_box;
     GtkWidget *listview;
+    GtkWidget *listview_scrolled_window;
     GtkWidget *match_case_revealer;
     GtkWidget *menu_box;
-    GtkWidget *no_search_results_overlay;
-    GtkWidget *statusbar_selection_num_files_label;
-    GtkWidget *statusbar_selection_num_folders_label;
-    GtkWidget *statusbar_selection_revealer;
-    GtkWidget *listview_scrolled_window;
-    GtkWidget *popover_update_db;
+    GtkWidget *overlay_database_empty;
+    GtkWidget *overlay_database_loading;
+    GtkWidget *overlay_database_updating;
+    GtkWidget *overlay_query_empty;
+    GtkWidget *overlay_results_empty;
+    GtkWidget *overlay_results_sorting;
     GtkWidget *popover_cancel_update_db;
+    GtkWidget *popover_update_db;
     GtkWidget *search_box;
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
-    GtkWidget *search_in_path_revealer;
-    GtkWidget *smart_path_revealer;
-    GtkWidget *smart_case_revealer;
-    GtkWidget *statusbar_search_label;
-    GtkWidget *search_filter_revealer;
     GtkWidget *search_filter_label;
+    GtkWidget *search_filter_revealer;
+    GtkWidget *search_in_path_revealer;
     GtkWidget *search_mode_revealer;
     GtkWidget *search_overlay;
+    GtkWidget *smart_case_revealer;
+    GtkWidget *smart_path_revealer;
+    GtkWidget *statusbar_database_stack;
+    GtkWidget *statusbar_database_status_box;
+    GtkWidget *statusbar_database_status_label;
+    GtkWidget *statusbar_database_updating_box;
+    GtkWidget *statusbar_database_updating_label;
+    GtkWidget *statusbar_database_updating_spinner;
     GtkWidget *statusbar_revealer;
     GtkWidget *statusbar_scan_label;
     GtkWidget *statusbar_scan_status_label;
+    GtkWidget *statusbar_search_label;
+    GtkWidget *statusbar_selection_num_files_label;
+    GtkWidget *statusbar_selection_num_folders_label;
+    GtkWidget *statusbar_selection_revealer;
 
     DatabaseSearch *search;
     DatabaseSearchResult *result;
@@ -91,10 +92,12 @@ struct _FsearchApplicationWindow {
 };
 
 typedef enum {
-    NO_SEARCH_RESULTS_OVERLAY,
-    NO_SEARCH_QUERY_OVERLAY,
-    NO_DATABASE_OVERLAY,
-    DATABASE_LOADING_OVERLAY,
+    OVERLAY_DATABASE_EMPTY,
+    OVERLAY_DATABASE_LOADING,
+    OVERLAY_QUERY_EMPTY,
+    OVERLAY_RESULTS_EMPTY,
+    OVERLAY_RESULTS_SORTING,
+    NUM_OVERLAYS,
 } FsearchOverlay;
 
 static void
@@ -125,7 +128,7 @@ database_load_started(FsearchApplicationWindow *win) {
     snprintf(db_text, sizeof(db_text), _("Loading Database…"));
     gtk_label_set_text(GTK_LABEL(win->statusbar_database_updating_label), db_text);
 
-    show_overlay(win, DATABASE_LOADING_OVERLAY);
+    show_overlay(win, OVERLAY_DATABASE_LOADING);
 }
 
 static void
@@ -339,14 +342,14 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     }
     FsearchDatabase *db = fsearch_application_get_db(app);
     if (!db) {
-        gtk_widget_show(self->empty_database_overlay);
+        gtk_widget_show(self->overlay_database_empty);
         return;
     }
 
     uint32_t num_items = db_get_num_entries(db);
 
     if (!config->locations || num_items == 0) {
-        gtk_widget_show(self->empty_database_overlay);
+        gtk_widget_show(self->overlay_database_empty);
     }
 
     db_unref(db);
@@ -406,11 +409,12 @@ fsearch_application_window_finalize(GObject *object) {
 
 static void
 hide_overlays(FsearchApplicationWindow *win) {
-    gtk_widget_hide(win->no_search_results_overlay);
-    gtk_widget_hide(win->empty_database_overlay);
-    gtk_widget_hide(win->empty_search_query_overlay);
-    gtk_widget_hide(win->database_updating_overlay);
-    gtk_widget_hide(win->database_loading_overlay);
+    gtk_widget_hide(win->overlay_database_empty);
+    gtk_widget_hide(win->overlay_database_loading);
+    gtk_widget_hide(win->overlay_database_updating);
+    gtk_widget_hide(win->overlay_query_empty);
+    gtk_widget_hide(win->overlay_results_empty);
+    gtk_widget_hide(win->overlay_results_sorting);
 }
 
 static void
@@ -418,17 +422,20 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
     hide_overlays(win);
 
     switch (overlay) {
-    case NO_SEARCH_RESULTS_OVERLAY:
-        gtk_widget_show(win->no_search_results_overlay);
+    case OVERLAY_RESULTS_EMPTY:
+        gtk_widget_show(win->overlay_results_empty);
         break;
-    case NO_DATABASE_OVERLAY:
-        gtk_widget_show(win->empty_database_overlay);
+    case OVERLAY_RESULTS_SORTING:
+        gtk_widget_show(win->overlay_results_sorting);
         break;
-    case NO_SEARCH_QUERY_OVERLAY:
-        gtk_widget_show(win->empty_search_query_overlay);
+    case OVERLAY_DATABASE_EMPTY:
+        gtk_widget_show(win->overlay_database_empty);
         break;
-    case DATABASE_LOADING_OVERLAY:
-        gtk_widget_show(win->database_loading_overlay);
+    case OVERLAY_QUERY_EMPTY:
+        gtk_widget_show(win->overlay_query_empty);
+        break;
+    case OVERLAY_DATABASE_LOADING:
+        gtk_widget_show(win->overlay_database_loading);
         break;
     default:
         trace("window: overlay %d unknown\n", overlay);
@@ -524,10 +531,10 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win,
     statusbar_update(win, sb_text);
 
     if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
-        show_overlay(win, NO_SEARCH_QUERY_OVERLAY);
+        show_overlay(win, OVERLAY_QUERY_EMPTY);
     }
     else if (num_results == 0) {
-        show_overlay(win, NO_SEARCH_RESULTS_OVERLAY);
+        show_overlay(win, OVERLAY_RESULTS_EMPTY);
     }
     else {
         hide_overlays(win);
@@ -598,7 +605,7 @@ perform_search(FsearchApplicationWindow *win) {
     }
 
     if (!config->locations) {
-        show_overlay(win, NO_DATABASE_OVERLAY);
+        show_overlay(win, OVERLAY_DATABASE_EMPTY);
         return;
     }
 
@@ -1179,6 +1186,8 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
 
     GTimer *timer = fsearch_timer_start();
 
+    show_overlay(win, OVERLAY_RESULTS_SORTING);
+
     bool parallel_sort = true;
 
     trace("[sort] started: %d\n", sort_order);
@@ -1211,6 +1220,7 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
         darray_sort(win->result->entries, (DynamicArrayCompareFunc)func);
     }
 
+    hide_overlays(win);
     fsearch_timer_stop(timer, "[sort] finished in %2.fms\n");
 }
 
@@ -1317,7 +1327,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     uint32_t num_items = db_get_num_entries(db);
 
     if (!db || num_items == 0) {
-        show_overlay(win, NO_DATABASE_OVERLAY);
+        show_overlay(win, OVERLAY_DATABASE_EMPTY);
     }
 
     gchar db_text[100] = "";
@@ -1376,24 +1386,28 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/overlay.ui");
 
     // Overlay when no search results are found
-    self->no_search_results_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "no_search_results"));
-    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->no_search_results_overlay);
+    self->overlay_results_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_empty"));
+    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->overlay_results_empty);
 
     // Overlay when database is empty
-    self->empty_database_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "empty_database"));
-    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->empty_database_overlay);
+    self->overlay_database_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_empty"));
+    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->overlay_database_empty);
 
     // Overlay when search query is empty
-    self->empty_search_query_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "empty_search_query"));
-    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->empty_search_query_overlay);
+    self->overlay_query_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_query_empty"));
+    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->overlay_query_empty);
 
     // Overlay when database is updating
-    self->database_updating_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "database_updating"));
-    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->database_updating_overlay);
+    self->overlay_database_updating = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_updating"));
+    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->overlay_database_updating);
 
     // Overlay when database is loading
-    self->database_loading_overlay = GTK_WIDGET(gtk_builder_get_object(builder, "database_loading"));
-    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->database_loading_overlay);
+    self->overlay_database_loading = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_loading"));
+    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->overlay_database_loading);
+
+    // Overlay when results are being sorted
+    self->overlay_results_sorting = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_sorting"));
+    gtk_overlay_add_overlay(GTK_OVERLAY(self->search_overlay), self->overlay_results_sorting);
 
     g_object_unref(builder);
 }
