@@ -17,20 +17,21 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 array.h \
 			 btree.h \
 			 clipboard.h \
-			 fsearch_config.h \
 			 database.h \
 			 database_search.h \
 			 debug.h \
+			 fsearch_config.h \
+			 fsearch_exclude_path.h \
+			 fsearch_filter.h \
+			 fsearch_include_path.h \
+			 fsearch_limits.h \
+			 fsearch_list_view.h \
+			 fsearch_preferences_widgets.h \
+			 fsearch_task.h \
 			 fsearch_thread_pool.h \
 			 fsearch_timer.h \
 			 fsearch_window.h \
 			 fsearch_window_actions.h \
-			 fsearch_limits.h \
-			 fsearch_list_view.h \
-			 fsearch_filter.h \
-			 fsearch_include_path.h \
-			 fsearch_exclude_path.h \
-			 fsearch_preferences_widgets.h \
 			 listview_popup.h \
 			 memory_pool.h \
 			 preferences_ui.h \
@@ -42,30 +43,31 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 utils.h
 
 fsearch_SOURCES = main.c \
-		  fsearch.c \
-		  fsearch_window.c \
-		  fsearch_window_actions.c \
+		  array.c \
+		  btree.c \
 		  clipboard.c \
-		  fsearch_config.c \
 		  database.c \
 		  database_search.c \
-		  preferences_ui.c \
-		  resources.c \
-		  ui_utils.c \
+		  fsearch.c \
+		  fsearch_config.c \
+		  fsearch_exclude_path.c \
+		  fsearch_filter.c \
+		  fsearch_include_path.c \
+		  fsearch_list_view.c \
+		  fsearch_preferences_widgets.c \
+		  fsearch_task.c \
 		  fsearch_thread_pool.c \
 		  fsearch_timer.c \
-		  fsearch_filter.c \
-		  fsearch_list_view.c \
-		  fsearch_include_path.c \
-		  fsearch_exclude_path.c \
-		  fsearch_preferences_widgets.c \
-		  memory_pool.c \
-		  array.c \
-		  string_utils.c \
-		  btree.c \
+		  fsearch_window.c \
+		  fsearch_window_actions.c \
 		  listview_popup.c \
+		  memory_pool.c \
+		  preferences_ui.c \
 		  query.c \
+		  resources.c \
+		  string_utils.c \
 		  token.c \
+		  ui_utils.c \
 		  utils.c \
 		  $(fsearch_NOINST_H_FILES)
 

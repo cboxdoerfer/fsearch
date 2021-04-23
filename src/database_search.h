@@ -38,15 +38,6 @@ typedef struct _DatabaseSearchResult {
     FsearchQuery *query;
 } DatabaseSearchResult;
 
-struct _DatabaseSearch {
-    FsearchThreadPool *pool;
-
-    GAsyncQueue *search_queue;
-    GThread *search_thread;
-    GCancellable *search_cancellable;
-    GCancellable *search_thread_cancellable;
-};
-
 void
 db_search_free(DatabaseSearch *search);
 

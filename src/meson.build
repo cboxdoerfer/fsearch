@@ -11,6 +11,7 @@ fsearch_sources = [
     'fsearch_include_path.c',
     'fsearch_list_view.c',
     'fsearch_preferences_widgets.c',
+    'fsearch_task.c',
     'fsearch_thread_pool.c',
     'fsearch_timer.c',
     'fsearch_window.c',
