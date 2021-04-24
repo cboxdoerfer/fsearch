@@ -24,6 +24,7 @@
 
 #include "array.h"
 #include "fsearch_filter.h"
+#include "fsearch_thread_pool.h"
 #include "token.h"
 
 typedef struct FsearchQueryFlags {
@@ -61,6 +62,8 @@ typedef struct FsearchQuery {
     uint32_t num_folders;
     uint32_t num_files;
 
+    FsearchThreadPool *pool;
+
     FsearchFilter *filter;
 
     FsearchToken **token;
@@ -87,6 +90,7 @@ fsearch_query_new(const char *text,
                   uint32_t num_folders,
                   uint32_t num_files,
                   FsearchFilter *filter,
+                  FsearchThreadPool *pool,
                   void (*callback)(void *),
                   void *callback_data,
                   void (*callback_cancelled)(void *),

@@ -33,9 +33,7 @@
 #include "token.h"
 
 struct _DatabaseSearch {
-    FsearchThreadPool *pool;
-
-    FsearchTask *task;
+    FsearchTaskQueue *queue;
 };
 
 typedef struct search_context_s {
@@ -50,7 +48,7 @@ typedef struct search_context_s {
 } search_thread_context_t;
 
 static DatabaseSearchResult *
-db_search(FsearchThreadPool *pool, FsearchQuery *q, GCancellable *cancellable);
+db_search(FsearchQuery *q, GCancellable *cancellable);
 
 static DatabaseSearchResult *
 db_search_empty(FsearchQuery *query);
@@ -67,6 +65,7 @@ db_search_result_new(DynamicArray *entries, uint32_t num_folders, uint32_t num_f
 
 static void
 db_search_cancelled(FsearchQuery *query) {
+    trace("[search] search %d.%d cancelled\n", query->window_id, query->id);
     if (query->callback_cancelled) {
         query->callback_cancelled(query->callback_cancelled_data);
     }
@@ -75,14 +74,22 @@ db_search_cancelled(FsearchQuery *query) {
 }
 
 static void
-db_search_task_cancelled(gpointer data, gpointer user_data, GCancellable *cancellable) {
-    db_search_cancelled(user_data);
+db_search_task_cancelled(FsearchTask *task, gpointer data) {
+    db_search_cancelled(data);
+
+    fsearch_task_free(task);
+    task = NULL;
 }
 
 static void
-db_search_task(gpointer data, gpointer user_data, GCancellable *cancellable) {
-    FsearchThreadPool *pool = data;
-    FsearchQuery *query = user_data;
+db_search_task_finished(FsearchTask *task, gpointer result, gpointer data) {
+    fsearch_task_free(task);
+    task = NULL;
+}
+
+static gpointer
+db_search_task(gpointer data, GCancellable *cancellable) {
+    FsearchQuery *query = data;
 
     const bool empty_query = fs_str_is_empty(query->text);
 
@@ -95,7 +102,7 @@ db_search_task(gpointer data, gpointer user_data, GCancellable *cancellable) {
         result = db_search_empty(query);
     }
     else {
-        result = db_search(pool, query, cancellable);
+        result = db_search(query, cancellable);
     }
     if (result) {
         const double seconds = g_timer_elapsed(timer, NULL);
@@ -106,12 +113,13 @@ db_search_task(gpointer data, gpointer user_data, GCancellable *cancellable) {
         query->callback(result);
     }
     else {
-        trace("[search] search %d.%d cancelled\n", query->window_id, query->id);
         db_search_cancelled(query);
     }
     g_timer_stop(timer);
     g_timer_destroy(timer);
     timer = NULL;
+
+    return result;
 }
 
 static void
@@ -285,12 +293,12 @@ db_search_empty(FsearchQuery *query) {
 }
 
 static DatabaseSearchResult *
-db_search(FsearchThreadPool *pool, FsearchQuery *q, GCancellable *cancellable) {
+db_search(FsearchQuery *q, GCancellable *cancellable) {
     const uint32_t num_entries = darray_get_num_items(q->entries);
     if (num_entries == 0) {
         return db_search_result_new(NULL, 0, 0);
     }
-    const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(pool), num_entries);
+    const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(q->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     search_thread_context_t *thread_data[num_threads];
@@ -303,20 +311,20 @@ db_search(FsearchThreadPool *pool, FsearchQuery *q, GCancellable *cancellable) {
         return db_search_result_new(NULL, 0, 0);
     }
 
-    GList *threads = fsearch_thread_pool_get_threads(pool);
+    GList *threads = fsearch_thread_pool_get_threads(q->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] = search_thread_context_new(q, cancellable, start_pos, i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
 
-        fsearch_thread_pool_push_data(pool, threads, db_search_worker, thread_data[i]);
+        fsearch_thread_pool_push_data(q->pool, threads, db_search_worker, thread_data[i]);
         threads = threads->next;
     }
 
-    threads = fsearch_thread_pool_get_threads(pool);
+    threads = fsearch_thread_pool_get_threads(q->pool);
     while (threads) {
-        fsearch_thread_pool_wait_for_thread(pool, threads);
+        fsearch_thread_pool_wait_for_thread(q->pool, threads);
         threads = threads->next;
     }
     if (g_cancellable_is_cancelled(cancellable)) {
@@ -378,28 +386,7 @@ db_search_result_free(DatabaseSearchResult *result) {
 }
 
 void
-db_search_free(DatabaseSearch *search) {
-    assert(search != NULL);
-
-    fsearch_task_free(search->task);
-    search->task = NULL;
-
-    g_free(search);
-    search = NULL;
-    return;
-}
-
-DatabaseSearch *
-db_search_new(FsearchThreadPool *pool) {
-    DatabaseSearch *db_search = calloc(1, sizeof(DatabaseSearch));
-    assert(db_search != NULL);
-
-    db_search->pool = pool;
-    db_search->task = fsearch_task_new("fsearch_search_thread", db_search_task, db_search_task_cancelled, pool);
-    return db_search;
-}
-
-void
-db_search_queue(DatabaseSearch *search, FsearchQuery *query) {
-    fsearch_task_queue(search->task, query);
+db_search_queue(FsearchTaskQueue *queue, FsearchQuery *query) {
+    FsearchTask *task = fsearch_task_new(0, db_search_task, db_search_task_finished, db_search_task_cancelled, query);
+    fsearch_task_queue(queue, task, FSEARCH_TASK_CLEAR_ALL);
 }

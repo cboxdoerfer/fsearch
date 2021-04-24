@@ -30,6 +30,7 @@ fsearch_query_new(const char *text,
                   uint32_t num_folders,
                   uint32_t num_files,
                   FsearchFilter *filter,
+                  FsearchThreadPool *pool,
                   void (*callback)(void *),
                   void *callback_data,
                   void (*callback_cancelled)(void *),
@@ -45,6 +46,8 @@ fsearch_query_new(const char *text,
     }
 
     q->entries = entries;
+
+    q->pool = pool;
 
     q->token = fsearch_tokens_new(text, flags.match_case, flags.enable_regex, flags.auto_match_case);
     q->num_token = 0;

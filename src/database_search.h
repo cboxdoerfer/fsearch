@@ -21,13 +21,11 @@
 #include "array.h"
 #include "btree.h"
 #include "fsearch_filter.h"
-#include "fsearch_thread_pool.h"
+#include "fsearch_task.h"
 #include "query.h"
 
 #include <gio/gio.h>
 #include <stdint.h>
-
-typedef struct _DatabaseSearch DatabaseSearch;
 
 typedef struct _DatabaseSearchResult {
     DynamicArray *entries;
@@ -39,14 +37,7 @@ typedef struct _DatabaseSearchResult {
 } DatabaseSearchResult;
 
 void
-db_search_free(DatabaseSearch *search);
-
-DatabaseSearch *
-db_search_new(FsearchThreadPool *pool);
-
-void
 db_search_result_free(DatabaseSearchResult *result);
 
 void
-db_search_queue(DatabaseSearch *search, FsearchQuery *query);
-
+db_search_queue(FsearchTaskQueue *queue, FsearchQuery *query);

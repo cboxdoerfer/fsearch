@@ -3,96 +3,166 @@
 #include <assert.h>
 #include <stdbool.h>
 
-struct _FsearchTask {
-    GAsyncQueue *task_queue;
-    GThread *task_thread;
-    GCancellable *task_cancellable;
-    GCancellable *task_thread_cancellable;
+struct _FsearchTaskQueue {
+    GAsyncQueue *queue;
+    GThread *queue_thread;
+    GCancellable *queue_thread_cancellable;
+    FsearchTask *current_task;
+    GMutex current_task_lock;
+};
 
+struct _FsearchTask {
+    int id;
+    GCancellable *task_cancellable;
     FsearchTaskFunc task_func;
-    FsearchTaskFunc task_cancelled_func;
+    FsearchTaskFinishedFunc task_finished_func;
+    FsearchTaskCancelledFunc task_cancelled_func;
     gpointer data;
 };
 
 static gpointer
-fsearch_task_thread(FsearchTask *task) {
+fsearch_task_queue_thread(FsearchTaskQueue *queue) {
     while (true) {
-        if (g_cancellable_is_cancelled(task->task_thread_cancellable)) {
+        if (g_cancellable_is_cancelled(queue->queue_thread_cancellable)) {
             break;
         }
 
-        gpointer user_data = g_async_queue_timeout_pop(task->task_queue, 500000);
-        if (!user_data) {
+        FsearchTask *task = g_async_queue_timeout_pop(queue->queue, 500000);
+        if (!task) {
             continue;
         }
+        g_mutex_lock(&queue->current_task_lock);
+        queue->current_task = task;
+        g_mutex_unlock(&queue->current_task_lock);
+
         g_cancellable_reset(task->task_cancellable);
-        task->task_func(task->data, user_data, task->task_cancellable);
+        gpointer result = task->task_func(task->data, task->task_cancellable);
+
+        g_mutex_lock(&queue->current_task_lock);
+        queue->current_task = NULL;
+        g_mutex_unlock(&queue->current_task_lock);
+
+        g_cancellable_reset(task->task_cancellable);
+        task->task_finished_func(task, result, task->data);
     }
     return NULL;
 }
 
+void
+fsearch_task_queue_cancel_current(FsearchTaskQueue *queue) {
+    g_mutex_lock(&queue->current_task_lock);
+    if (queue->current_task) {
+        g_cancellable_cancel(queue->current_task->task_cancellable);
+    }
+    g_mutex_unlock(&queue->current_task_lock);
+}
+
 static void
-fsearch_task_queue_clear(FsearchTask *task) {
+fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy clear_policy, int id) {
+    if (clear_policy == FSEARCH_TASK_CLEAR_NONE) {
+        return;
+    }
+
+    g_async_queue_lock(queue->queue);
     while (true) {
         // clear all queued tasks
-        gpointer user_data = g_async_queue_try_pop(task->task_queue);
-        if (!user_data) {
+        FsearchTask *task = g_async_queue_try_pop_unlocked(queue->queue);
+        if (!task) {
             break;
         }
+        if (clear_policy == FSEARCH_TASK_CLEAR_SAME_ID && task->id != id) {
+            g_async_queue_push_front_unlocked(queue->queue, task);
+            continue;
+        }
+
         if (task->task_cancelled_func) {
-            task->task_cancelled_func(task->data, user_data, NULL);
+            task->task_cancelled_func(task, task->data);
         }
     }
+    g_async_queue_unlock(queue->queue);
 }
 
 void
-fsearch_task_free(FsearchTask *task) {
-    assert(task != NULL);
+fsearch_task_queue_free(FsearchTaskQueue *queue) {
+    assert(queue != NULL);
 
-    fsearch_task_queue_clear(task);
+    fsearch_task_queue_clear(queue, FSEARCH_TASK_CLEAR_ALL, -1);
 
-    g_cancellable_cancel(task->task_thread_cancellable);
-    g_thread_join(task->task_thread);
-    task->task_thread = NULL;
+    g_mutex_lock(&queue->current_task_lock);
+    if (queue->current_task) {
+        g_cancellable_cancel(queue->current_task->task_cancellable);
+    }
+    g_mutex_unlock(&queue->current_task_lock);
 
-    g_async_queue_unref(task->task_queue);
-    task->task_queue = NULL;
+    g_mutex_clear(&queue->current_task_lock);
 
-    g_object_unref(task->task_cancellable);
-    task->task_cancellable = NULL;
+    g_cancellable_cancel(queue->queue_thread_cancellable);
+    g_thread_join(queue->queue_thread);
+    queue->queue_thread = NULL;
 
-    g_object_unref(task->task_thread_cancellable);
-    task->task_thread_cancellable = NULL;
+    g_async_queue_unref(queue->queue);
+    queue->queue = NULL;
 
-    g_free(task);
-    task = NULL;
+    g_object_unref(queue->queue_thread_cancellable);
+    queue->queue_thread_cancellable = NULL;
+
+    g_free(queue);
+    queue = NULL;
 
     return;
 }
 
-FsearchTask *
-fsearch_task_new(const char *thread_name,
-                 FsearchTaskFunc task_func,
-                 FsearchTaskFunc task_cancelled_func,
-                 gpointer data) {
-    FsearchTask *task = calloc(1, sizeof(FsearchTask));
-    assert(task != NULL);
+FsearchTaskQueue *
+fsearch_task_queue_new(const char *name) {
+    FsearchTaskQueue *queue = calloc(1, sizeof(FsearchTaskQueue));
+    assert(queue != NULL);
 
-    task->task_func = task_func;
-    task->task_cancelled_func = task_cancelled_func;
-    task->data = data;
+    queue->queue = g_async_queue_new();
+    queue->queue_thread_cancellable = g_cancellable_new();
+    queue->queue_thread = g_thread_new(name, (GThreadFunc)fsearch_task_queue_thread, queue);
 
-    task->task_queue = g_async_queue_new();
-    task->task_cancellable = g_cancellable_new();
-    task->task_thread_cancellable = g_cancellable_new();
-    task->task_thread = g_thread_new(thread_name, (GThreadFunc)fsearch_task_thread, task);
+    g_mutex_init(&queue->current_task_lock);
 
-    return task;
+    return queue;
 }
 
 void
-fsearch_task_queue(FsearchTask *task, gpointer user_data) {
-    fsearch_task_queue_clear(task);
-    g_cancellable_cancel(task->task_cancellable);
-    g_async_queue_push(task->task_queue, user_data);
+fsearch_task_queue(FsearchTaskQueue *queue, FsearchTask *task, FsearchTaskQueueClearPolicy clear_policy) {
+    if (clear_policy != FSEARCH_TASK_CLEAR_NONE) {
+        fsearch_task_queue_clear(queue, clear_policy, task->id);
+        g_mutex_lock(&queue->current_task_lock);
+        if (queue->current_task) {
+            if (clear_policy != FSEARCH_TASK_CLEAR_SAME_ID || queue->current_task->id == task->id) {
+                g_cancellable_cancel(queue->current_task->task_cancellable);
+            }
+        }
+        g_mutex_unlock(&queue->current_task_lock);
+    }
+    g_async_queue_push(queue->queue, task);
+}
+
+void
+fsearch_task_free(FsearchTask *task) {
+    g_object_unref(task->task_cancellable);
+    task->task_cancellable = NULL;
+
+    free(task);
+    task = NULL;
+}
+
+FsearchTask *
+fsearch_task_new(int id,
+                 FsearchTaskFunc task_func,
+                 FsearchTaskFinishedFunc task_finished_func,
+                 FsearchTaskCancelledFunc task_cancelled_func,
+                 gpointer data) {
+    FsearchTask *task = calloc(1, sizeof(FsearchTask));
+    task->task_cancellable = g_cancellable_new();
+    task->task_func = task_func;
+    task->task_finished_func = task_finished_func;
+    task->task_cancelled_func = task_cancelled_func;
+    task->data = data;
+    task->id = id;
+
+    return task;
 }
