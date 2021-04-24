@@ -115,6 +115,32 @@ db_update_timestamp(FsearchDatabase *db) {
     db->timestamp = time(NULL);
 }
 
+typedef enum {
+    DB_FILE_READ_SUCCESS,
+    DB_FILE_READ_ERROR,
+    DB_FILE_WRITE_SUCCESS,
+    DB_FILE_WRITE_ERROR,
+    NUM_DB_FILE_RESULTS,
+} DatabaseFileReadWriteResult;
+
+static DatabaseFileReadWriteResult
+db_file_read_string(FILE *fp, char *dest, size_t dest_size, int16_t *string_len) {
+    uint16_t str_len = 0;
+    if (fread(&str_len, 1, 2, fp) != 2) {
+        trace("[database_read_file] failed to read string length\n");
+        return DB_FILE_READ_ERROR;
+    }
+
+    if (str_len > 0 && dest_size >= str_len + 1) {
+        if (fread(dest, 1, str_len, fp) != name_len) {
+            trace("[database_read_file] failed to read name\n");
+            goto load_fail;
+        }
+    }
+
+    name[name_len] = '\0';
+}
+
 static FsearchDatabaseNode *
 db_location_load_from_file(const char *fname) {
     assert(fname != NULL);
