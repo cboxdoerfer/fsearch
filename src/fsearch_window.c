@@ -1469,13 +1469,6 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     gtk_widget_init_template(GTK_WIDGET(self));
 
     fsearch_window_actions_init(self);
-    GtkCssProvider *provider = gtk_css_provider_new();
-    gtk_css_provider_load_from_resource(provider, "/io/github/cboxdoerfer/fsearch/ui/shared.css");
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
-                                              GTK_STYLE_PROVIDER(provider),
-                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    g_object_unref(provider);
-
     create_view_and_model(self);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;

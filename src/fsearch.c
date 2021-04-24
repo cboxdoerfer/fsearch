@@ -539,6 +539,13 @@ fsearch_application_startup(GApplication *app) {
     fsearch->db_state = FSEARCH_DATABASE_STATE_IDLE;
     fsearch->filters = fsearch_filter_get_default();
 
+    GtkCssProvider *provider = gtk_css_provider_new();
+    gtk_css_provider_load_from_resource(provider, "/io/github/cboxdoerfer/fsearch/ui/shared.css");
+    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
+                                              GTK_STYLE_PROVIDER(provider),
+                                              GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
+    g_object_unref(provider);
+
     g_object_set(gtk_settings_get_default(),
                  "gtk-application-prefer-dark-theme",
                  fsearch->config->enable_dark_theme,
