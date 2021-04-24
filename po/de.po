@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
 "PO-Revision-Date: 2021-04-24 00:31+0000\n"
-"Last-Translator: melusine <melusine@mailbox.org>\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -548,11 +548,11 @@ msgstr "Datenbank beim Start aktualisieren"
 
 #: src/preferences.ui:727
 msgid "Update every"
-msgstr "Aktualisiere alle"
+msgstr "Aktualisieren alle"
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
@@ -560,7 +560,7 @@ msgstr "Stunde(n) und"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
