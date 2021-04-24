@@ -10,7 +10,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
 "PO-Revision-Date: 2021-04-24 00:30+0000\n"
-"Last-Translator: melusine <melusine@mailbox.org>\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -22,13 +22,11 @@ msgstr ""
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Nachschlageliste erstellen …"
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "Sortiere..."
+msgstr "Sortiere …"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -41,23 +39,20 @@ msgstr ""
 "konzentriert"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Mit anderer Anwendung öffnen"
+msgstr "Ein neues Anwendungsfenster öffnen"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Anwendungseinstellungen anzeigen"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Aktualisiere die Datenbank"
+msgstr "Datenbank aktualisieren und beenden"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Versionsinformationen anzeigen"
+msgstr "Versionsinformationen anzeigen und beenden"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -252,10 +247,9 @@ msgid "Querying…"
 msgstr "Suche…"
 
 #: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "≥%'d Items"
-msgstr "%'d Einträge"
+msgstr "≥%'d Einträge"
 
 #: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
