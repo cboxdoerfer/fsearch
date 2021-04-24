@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-04-06 10:26+0000\n"
+"PO-Revision-Date: 2021-04-24 00:30+0000\n"
 "Last-Translator: melusine <melusine@mailbox.org>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.6-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
@@ -553,10 +553,8 @@ msgid "Update database on start"
 msgstr "Datenbank beim Start aktualisieren"
 
 #: src/preferences.ui:727
-#, fuzzy
-#| msgid "Update"
 msgid "Update every"
-msgstr "Aktualisieren"
+msgstr "Aktualisiere alle"
 
 #: src/preferences.ui:748
 msgid "0"
