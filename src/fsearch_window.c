@@ -568,24 +568,8 @@ statusbar_update_delayed(FsearchApplicationWindow *win, const char *text) {
     win->statusbar_timeout_id = g_timeout_add(200, statusbar_set_query_status, win);
 }
 
-static gboolean
-search_cancelled_cb(gpointer user_data) {
-    FsearchApplicationWindow *win = user_data;
-    if (win) {
-        g_object_unref(win);
-    }
-    return G_SOURCE_REMOVE;
-}
-
-typedef struct {
-    FsearchDatabase *db;
-    FsearchApplicationWindow *win;
-} FsearchQueryContext;
-
 static void
-fsearch_window_apply_search_result(FsearchApplicationWindow *win,
-                                   DatabaseSearchResult *search_result,
-                                   FsearchQueryContext *query_ctx) {
+fsearch_window_apply_search_result(FsearchApplicationWindow *win, DatabaseSearchResult *search_result) {
     fsearch_window_listview_set_empty(win);
 
     if (win->query_highlight) {
@@ -602,24 +586,18 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win,
     const gchar *text = search_result->query->text;
     uint32_t num_results = 0;
 
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchDatabase *db = fsearch_application_get_db(app);
-    if (db == query_ctx->db) {
-        DynamicArray *entries = search_result->entries;
-        if (entries && darray_get_num_items(entries) > 0) {
-            num_results = darray_get_num_items(entries);
-            win->query_highlight = fsearch_query_highlight_new(text, search_result->query->flags);
-        }
-        else {
-            num_results = 0;
-        }
+    DynamicArray *entries = search_result->entries;
+    if (entries && darray_get_num_items(entries) > 0) {
+        num_results = darray_get_num_items(entries);
+        win->query_highlight = fsearch_query_highlight_new(text, search_result->query->flags);
     }
-
-    db_unref(db);
-    db = NULL;
+    else {
+        num_results = 0;
+    }
 
     fsearch_window_apply_results(win);
 
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
 
     gchar sb_text[100] = "";
@@ -638,47 +616,53 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win,
 }
 
 static gboolean
-fsearch_window_search_successful_cb(gpointer user_data) {
+fsearch_window_search_apply_result(gpointer user_data) {
     DatabaseSearchResult *search_result = user_data;
-    FsearchQueryContext *query_ctx = search_result->cb_data;
-    FsearchApplicationWindow *win = query_ctx->win;
+    FsearchQuery *query = search_result->query;
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchApplicationWindow *win =
+        FSEARCH_WINDOW_WINDOW(gtk_application_get_window_by_id(GTK_APPLICATION(app), query->window_id));
 
-    if (!win->closing) {
+    FsearchDatabase *queried_db = query->data;
+    FsearchDatabase *active_db = fsearch_application_get_db(app);
+
+    if (win && !win->closing && queried_db && active_db && queried_db == active_db) {
         // if they window is about to be destroyed we don't want to update its widgets
         // they might already be gone anyway
-        fsearch_window_apply_search_result(win, search_result, query_ctx);
+        fsearch_window_apply_search_result(win, search_result);
+    }
+    else {
+        db_search_result_free(search_result);
+        search_result = NULL;
     }
 
-    g_object_unref(win);
-
-    if (query_ctx->db) {
-        db_unref(query_ctx->db);
+    if (active_db) {
+        db_unref(active_db);
+        active_db = NULL;
     }
-    free(query_ctx);
-    query_ctx = NULL;
+
+    if (queried_db) {
+        db_unref(queried_db);
+        queried_db = NULL;
+    }
 
     return G_SOURCE_REMOVE;
 }
 
-void
-fsearch_application_window_search_cancelled(void *data) {
-    FsearchQueryContext *ctx = data;
-    if (!ctx) {
-        return;
+gboolean
+fsearch_window_search_cancelled(gpointer data) {
+    FsearchQuery *query = data;
+    FsearchDatabase *db = query->data;
+
+    if (db) {
+        db_unref(db);
+        db = NULL;
     }
 
-    g_idle_add(search_cancelled_cb, ctx->win);
+    fsearch_query_free(query);
+    query = NULL;
 
-    if (ctx->db) {
-        db_unref(ctx->db);
-        ctx->db = NULL;
-    }
-    free(ctx);
-}
-
-void
-fsearch_application_window_update_results(void *data) {
-    g_idle_add(fsearch_window_search_successful_cb, data);
+    return G_SOURCE_REMOVE;
 }
 
 uint32_t
@@ -687,6 +671,29 @@ fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
         return darray_get_num_items(self->result->entries);
     }
     return 0;
+}
+
+static void
+fsearch_window_search_task_cancelled(FsearchTask *task, gpointer data) {
+    if (data) {
+        g_idle_add(fsearch_window_search_cancelled, data);
+    }
+
+    fsearch_task_free(task);
+    task = NULL;
+}
+
+static void
+fsearch_window_search_task_finished(FsearchTask *task, gpointer result, gpointer data) {
+    if (result) {
+        g_idle_add(fsearch_window_search_apply_result, result);
+    }
+    else if (data) {
+        g_idle_add(fsearch_window_search_cancelled, data);
+    }
+
+    fsearch_task_free(task);
+    task = NULL;
 }
 
 static void
@@ -719,8 +726,6 @@ perform_search(FsearchApplicationWindow *win) {
         return;
     }
 
-    g_object_ref(win);
-
     uint32_t win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
@@ -736,28 +741,21 @@ perform_search(FsearchApplicationWindow *win) {
     GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
     FsearchFilter *filter = filter_element->data;
 
-    FsearchQueryContext *ctx = calloc(1, sizeof(FsearchQueryContext));
-    ctx->win = win;
-    ctx->db = db;
-
     FsearchQuery *q = fsearch_query_new(text,
                                         db_get_entries(db),
                                         db_get_num_folders(db),
                                         db_get_num_files(db),
                                         filter,
                                         fsearch_application_get_thread_pool(app),
-                                        fsearch_application_window_update_results,
-                                        ctx,
-                                        fsearch_application_window_search_cancelled,
-                                        ctx,
                                         flags,
                                         win->query_id++,
                                         win_id,
-                                        !config->hide_results_on_empty_search);
+                                        !config->hide_results_on_empty_search,
+                                        db);
 
     db_unlock(db);
     statusbar_update_delayed(win, _("Querying…"));
-    db_search_queue(win->task_queue, q);
+    db_search_queue(win->task_queue, q, fsearch_window_search_task_finished, fsearch_window_search_task_cancelled);
 
     bool reveal_smart_case = false;
     bool reveal_smart_path = false;

@@ -78,10 +78,7 @@ typedef struct FsearchQuery {
     uint32_t id;
     uint32_t window_id;
 
-    void (*callback)(void *);
-    void *callback_data;
-    void (*callback_cancelled)(void *);
-    void *callback_cancelled_data;
+    gpointer data;
 } FsearchQuery;
 
 FsearchQuery *
@@ -91,14 +88,11 @@ fsearch_query_new(const char *text,
                   uint32_t num_files,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
-                  void (*callback)(void *),
-                  void *callback_data,
-                  void (*callback_cancelled)(void *),
-                  void *callback_cancelled_data,
                   FsearchQueryFlags flags,
                   uint32_t id,
                   uint32_t window_id,
-                  bool pass_on_empty_query);
+                  bool pass_on_empty_query,
+                  gpointer data);
 
 void
 fsearch_query_free(FsearchQuery *query);

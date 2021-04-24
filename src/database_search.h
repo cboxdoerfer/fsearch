@@ -29,7 +29,6 @@
 
 typedef struct _DatabaseSearchResult {
     DynamicArray *entries;
-    void *cb_data;
     uint32_t num_folders;
     uint32_t num_files;
 
@@ -40,4 +39,7 @@ void
 db_search_result_free(DatabaseSearchResult *result);
 
 void
-db_search_queue(FsearchTaskQueue *queue, FsearchQuery *query);
+db_search_queue(FsearchTaskQueue *queue,
+                FsearchQuery *query,
+                FsearchTaskFinishedFunc finished_func,
+                FsearchTaskCancelledFunc cancelled_func);

@@ -31,14 +31,11 @@ fsearch_query_new(const char *text,
                   uint32_t num_files,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
-                  void (*callback)(void *),
-                  void *callback_data,
-                  void (*callback_cancelled)(void *),
-                  void *callback_cancelled_data,
                   FsearchQueryFlags flags,
                   uint32_t id,
                   uint32_t window_id,
-                  bool pass_on_empty_query) {
+                  bool pass_on_empty_query,
+                  gpointer data) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     assert(q != NULL);
     if (text) {
@@ -67,14 +64,11 @@ fsearch_query_new(const char *text,
     q->num_files = num_files;
 
     q->filter = filter;
-    q->callback = callback;
-    q->callback_data = callback_data;
-    q->callback_cancelled = callback_cancelled;
-    q->callback_cancelled_data = callback_cancelled_data;
     q->flags = flags;
     q->pass_on_empty_query = pass_on_empty_query;
     q->id = id;
     q->window_id = window_id;
+    q->data = data;
     return q;
 }
 
