@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-04-24 00:32+0000\n"
-"Last-Translator: melusine <melusine@mailbox.org>\n"
+"PO-Revision-Date: 2021-04-25 01:32+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -35,8 +35,7 @@ msgstr "Christian Boxdörfer"
 #: src/fsearch.c:384
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
-"Eine Dateisuche, das sich auf Leistung und erweiterten Funktionen "
-"konzentriert"
+"Eine Dateisuche mit Schwerpunkt Leistung und erweitertem Funktionsumfang"
 
 #: src/fsearch.c:673
 msgid "Open a new application window"
@@ -88,7 +87,7 @@ msgstr "Zeige Filter"
 
 #: src/fsearch.glade:218 src/menus.ui:103
 msgid "Show Search Button"
-msgstr "Zeige Suchbutton"
+msgstr "Suchschaltfläche anzeigen"
 
 #: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:48
 msgid "Preferences"
@@ -129,7 +128,7 @@ msgstr "Anzahl der ausgewählten Dateien"
 #: src/fsearch.glade:614 src/fsearch_window.c:140 src/overlay.ui:102
 #, c-format
 msgid "Updating Database…"
-msgstr "Aktualisiere Datenbank…"
+msgstr "Aktualisiere Datenbank …"
 
 #: src/fsearch.glade:647
 msgid "page0"
@@ -270,7 +269,7 @@ msgstr "Möchten Sie wirklich %d Datei(en) öffnen?"
 
 #: src/fsearch_window_actions.c:79
 msgid "Opening Files…"
-msgstr "Öffne Datei(en)…"
+msgstr "Öffne Datei(en) …"
 
 #: src/fsearch_window_actions.c:148
 #, c-format
@@ -279,11 +278,11 @@ msgstr "Möchten Sie wirklich %d Datei(en) löschen?"
 
 #: src/fsearch_window_actions.c:152
 msgid "Deleting files…"
-msgstr "Lösche Elemente…"
+msgstr "Lösche Elemente …"
 
 #: src/fsearch_window_actions.c:152
 msgid "Moving files to trash…"
-msgstr "Verschiebe Elemente in den Papierkorb…"
+msgstr "Verschiebe Elemente in den Papierkorb …"
 
 #: src/listview.c:184 src/menus.ui:218
 msgid "Name"
@@ -660,10 +659,10 @@ msgstr ""
 "\n"
 "Diese Option kontrolliert wie Dateigrößen angezeigt werden.\n"
 "\n"
-"\t• <b>Binäre Einheiten:</b> Dies bezieht sich auf binäre IEC Präfixe <i>(z."
-"B. 1 KiB = 1024 Bytes)</i>\n"
-"\t• <b>Dezimale Einheiten:</b> Dies bezieht sich auf dezimale SI Präfixe "
-"<i>(z.B. 1kB = 1000 Bytes)</i>"
+"\t• <b>Binäre Einheiten:</b> Dies bezieht sich auf binäre IEC Präfixe <i>("
+"z.B. 1 KiB = 1024 Bytes)</i>\n"
+"\t• <b>Dezimale Einheiten:</b> Dies bezieht sich auf dezimale SI Präfixe <i>("
+"z.B. 1 kB = 1000 Bytes)</i>"
 
 #: src/preferences.ui:1178
 msgid ""
@@ -1046,9 +1045,9 @@ msgid ""
 msgstr ""
 "<b>Versteckte Dateien und Ordner ausschließen:</b>\n"
 "\n"
-"Wenn aktiviert werden versteckte Dateien und Ordner aus der Datenbank "
+"Falls aktiviert, werden versteckte Dateien und Ordner aus der Datenbank "
 "ausgeschlossen <i>(d.h. alle Dateien und Ordner deren Namen mit einem Punkt "
-"\".\" beginnen)</i>."
+". beginnt)</i>."
 
 #: src/preferences.ui:1611
 msgid "Focus a setting to get a detailed description of what it does."
@@ -1069,7 +1068,7 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
-"<b>Periodisches aktualisieren der Datenbank in einem bestimmten "
+"<b>Periodisches Aktualisieren der Datenbank in einem bestimmten "
 "Zeitintervall:</b>\n"
 "\n"
 "Wenn aktiviert und solange FSearch läuft wird die Datenbank periodisch im "
