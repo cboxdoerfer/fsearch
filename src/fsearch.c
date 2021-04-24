@@ -483,6 +483,7 @@ static void
 new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     GtkWindow *window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
     gtk_window_present(window);
+    fsearch_application_window_update_search(FSEARCH_WINDOW_WINDOW(window));
 }
 
 static void

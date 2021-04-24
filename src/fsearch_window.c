@@ -700,6 +700,12 @@ static void
 perform_search(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
+    const uint32_t win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
+    if (win_id <= 0) {
+        // window isn't attached to the application yet, so searching won't have any effect
+        return;
+    }
+
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     if (!win->task_queue) {
@@ -725,8 +731,6 @@ perform_search(FsearchApplicationWindow *win) {
         fsearch_application_state_unlock(app);
         return;
     }
-
-    uint32_t win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
     trace("[search] search %d.%d started with query '%s'\n", win_id, win->query_id, text);
@@ -1560,6 +1564,7 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
 
     object_class->constructed = fsearch_application_window_constructed;
     object_class->finalize = fsearch_application_window_finalize;
+
     gtk_widget_class_set_template_from_resource(widget_class, "/io/github/cboxdoerfer/fsearch/ui/fsearch.glade");
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, app_menu);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_box);
