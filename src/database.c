@@ -128,7 +128,7 @@ db_location_load_from_file(const char *fname) {
     FsearchDatabaseNode *location = db_location_new();
 
     char magic[4];
-    if (fread(magic, 1, 4, fp) != 4) {
+    if (fread(magic, 4, 1, fp) != 1) {
         trace("[database_read_file] failed to read magic\n");
         goto load_fail;
     }
@@ -157,7 +157,7 @@ db_location_load_from_file(const char *fname) {
     trace("[database_read_file] database version=%d.%d\n", majorver, minorver);
 
     uint32_t num_items = 0;
-    if (fread(&num_items, 1, 4, fp) != 4) {
+    if (fread(&num_items, 4, 1, fp) != 1) {
         goto load_fail;
     }
 
@@ -168,7 +168,7 @@ db_location_load_from_file(const char *fname) {
     BTreeNode *prev = NULL;
     while (true) {
         uint16_t name_len = 0;
-        if (fread(&name_len, 1, 2, fp) != 2) {
+        if (fread(&name_len, 2, 1, fp) != 1) {
             trace("[database_read_file] failed to read name length\n");
             goto load_fail;
         }
@@ -189,7 +189,7 @@ db_location_load_from_file(const char *fname) {
 
         // read name
         char name[name_len + 1];
-        if (fread(&name, 1, name_len, fp) != name_len) {
+        if (fread(&name, name_len, 1, fp) != 1) {
             trace("[database_read_file] failed to read name\n");
             goto load_fail;
         }
@@ -204,21 +204,21 @@ db_location_load_from_file(const char *fname) {
 
         // read size
         uint64_t size = 0;
-        if (fread(&size, 1, 8, fp) != 8) {
+        if (fread(&size, 8, 1, fp) != 1) {
             trace("[database_read_file] failed to read size\n");
             goto load_fail;
         }
 
         // read mtime
         uint64_t mtime = 0;
-        if (fread(&mtime, 1, 8, fp) != 8) {
+        if (fread(&mtime, 8, 1, fp) != 1) {
             trace("[database_read_file] failed to read mtime\n");
             goto load_fail;
         }
 
         // read sort position
         uint32_t pos = 0;
-        if (fread(&pos, 1, 4, fp) != 4) {
+        if (fread(&pos, 4, 1, fp) != 1) {
             trace("[database_read_file] failed to read sort position\n");
             goto load_fail;
         }
@@ -280,7 +280,7 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
     }
 
     const char magic[] = "FSDB";
-    if (fwrite(magic, 1, 4, fp) != 4) {
+    if (fwrite(magic, 4, 1, fp) != 1) {
         goto save_fail;
     }
 
@@ -295,7 +295,7 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
     }
 
     uint32_t num_items = btree_node_n_nodes(location->entries);
-    if (fwrite(&num_items, 1, 4, fp) != 4) {
+    if (fwrite(&num_items, 4, 1, fp) != 1) {
         goto save_fail;
     }
 
@@ -311,11 +311,11 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
         uint16_t len = strlen(name);
         if (len) {
             // write length of node name
-            if (fwrite(&len, 1, 2, fp) != 2) {
+            if (fwrite(&len, 2, 1, fp) != 1) {
                 goto save_fail;
             }
             // write node name
-            if (fwrite(name, 1, len, fp) != len) {
+            if (fwrite(name, len, 1, fp) != 1) {
                 goto save_fail;
             }
             // write is_dir
@@ -326,26 +326,26 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
 
             // write node size
             uint64_t size = node->size;
-            if (fwrite(&size, 1, 8, fp) != 8) {
+            if (fwrite(&size, 8, 1, fp) != 1) {
                 goto save_fail;
             }
 
             // write node modification time
             uint64_t mtime = node->mtime;
-            if (fwrite(&mtime, 1, 8, fp) != 8) {
+            if (fwrite(&mtime, 8, 1, fp) != 1) {
                 goto save_fail;
             }
 
             // write node sort position
             uint32_t pos = node->pos;
-            if (fwrite(&pos, 1, 4, fp) != 4) {
+            if (fwrite(&pos, 4, 1, fp) != 1) {
                 goto save_fail;
             }
 
             BTreeNode *temp = node->children;
             if (!temp) {
                 // reached end of children, write delimiter
-                if (fwrite(&del, 1, 2, fp) != 2) {
+                if (fwrite(&del, 2, 1, fp) != 1) {
                     goto save_fail;
                 }
                 BTreeNode *current = node;
@@ -357,7 +357,7 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
                         break;
                     }
 
-                    if (fwrite(&del, 1, 2, fp) != 2) {
+                    if (fwrite(&del, 2, 1, fp) != 1) {
                         goto save_fail;
                     }
                     temp = current->parent;
