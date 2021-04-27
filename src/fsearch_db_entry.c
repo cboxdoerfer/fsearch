@@ -17,16 +17,16 @@
    */
 
 #define _GNU_SOURCE
-#include "btree.h"
+#include "fsearch_db_entry.h"
 #include "string_utils.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-BTreeNode *
-btree_node_new(const char *name, time_t mtime, off_t size, uint32_t pos, bool is_dir) {
-    BTreeNode *new = calloc(1, sizeof(BTreeNode));
+DatabaseEntry *
+db_entry_new(const char *name, time_t mtime, off_t size, uint32_t pos, bool is_dir) {
+    DatabaseEntry *new = calloc(1, sizeof(DatabaseEntry));
     assert(new);
 
     new->parent = NULL;
@@ -44,7 +44,7 @@ btree_node_new(const char *name, time_t mtime, off_t size, uint32_t pos, bool is
 }
 
 static void
-btree_node_data_free(BTreeNode *node) {
+btree_node_data_free(DatabaseEntry *node) {
     if (!node) {
         return;
     }
@@ -57,29 +57,29 @@ btree_node_data_free(BTreeNode *node) {
 }
 
 static void
-btree_nodes_free(BTreeNode *node) {
+btree_nodes_free(DatabaseEntry *node) {
     while (node) {
         if (node->children) {
             btree_nodes_free(node->children);
         }
-        BTreeNode *next = node->next;
+        DatabaseEntry *next = node->next;
         btree_node_data_free(node);
         node = next;
     }
 }
 
 void
-btree_node_unlink(BTreeNode *node) {
+btree_node_unlink(DatabaseEntry *node) {
     assert(node);
     if (!node->parent) {
         return;
     }
-    BTreeNode *parent = node->parent;
+    DatabaseEntry *parent = node->parent;
     if (parent->children == node) {
         parent->children = node->next;
     }
     else {
-        BTreeNode *sibling = parent->children;
+        DatabaseEntry *sibling = parent->children;
         while (sibling->next != node) {
             sibling = sibling->next;
         }
@@ -91,7 +91,7 @@ btree_node_unlink(BTreeNode *node) {
 }
 
 void
-btree_node_clear(BTreeNode *node) {
+btree_node_clear(DatabaseEntry *node) {
     if (node && node->name) {
         free(node->name);
         node->name = NULL;
@@ -99,7 +99,7 @@ btree_node_clear(BTreeNode *node) {
 }
 
 void
-btree_node_free(BTreeNode *node) {
+db_entry_free(DatabaseEntry *node) {
     if (!node) {
         return;
     }
@@ -112,8 +112,8 @@ btree_node_free(BTreeNode *node) {
     btree_node_data_free(node);
 }
 
-BTreeNode *
-btree_node_append(BTreeNode *parent, BTreeNode *node) {
+DatabaseEntry *
+btree_node_append(DatabaseEntry *parent, DatabaseEntry *node) {
     assert(parent);
     assert(node);
     node->parent = parent;
@@ -123,7 +123,7 @@ btree_node_append(BTreeNode *parent, BTreeNode *node) {
         parent->children = node;
         return node;
     }
-    BTreeNode *child = parent->children;
+    DatabaseEntry *child = parent->children;
     while (child->next) {
         child = child->next;
     }
@@ -131,8 +131,8 @@ btree_node_append(BTreeNode *parent, BTreeNode *node) {
     return node;
 }
 
-BTreeNode *
-btree_node_prepend(BTreeNode *parent, BTreeNode *node) {
+DatabaseEntry *
+btree_node_prepend(DatabaseEntry *parent, DatabaseEntry *node) {
     assert(parent);
     assert(node);
     node->parent = parent;
@@ -141,10 +141,10 @@ btree_node_prepend(BTreeNode *parent, BTreeNode *node) {
     return node;
 }
 
-BTreeNode *
-btree_node_get_root(BTreeNode *node) {
+DatabaseEntry *
+btree_node_get_root(DatabaseEntry *node) {
     assert(node);
-    BTreeNode *root = node;
+    DatabaseEntry *root = node;
     while (root->parent) {
         root = root->parent;
     }
@@ -152,14 +152,14 @@ btree_node_get_root(BTreeNode *node) {
 }
 
 bool
-btree_node_is_root(BTreeNode *node) {
+btree_node_is_root(DatabaseEntry *node) {
     return node->parent ? false : true;
 }
 
 uint32_t
-btree_node_depth(BTreeNode *node) {
+btree_node_depth(DatabaseEntry *node) {
     uint32_t depth = 0;
-    BTreeNode *temp = node;
+    DatabaseEntry *temp = node;
     while (temp) {
         depth++;
         temp = temp->parent;
@@ -168,13 +168,13 @@ btree_node_depth(BTreeNode *node) {
 }
 
 uint32_t
-btree_node_n_children(BTreeNode *node) {
+btree_node_n_children(DatabaseEntry *node) {
     assert(node);
     if (!node->children) {
         return 0;
     }
     uint32_t num_children = 0;
-    BTreeNode *child = node->children;
+    DatabaseEntry *child = node->children;
     while (child) {
         child = child->next;
         num_children++;
@@ -183,17 +183,17 @@ btree_node_n_children(BTreeNode *node) {
 }
 
 bool
-btree_node_has_children(BTreeNode *node) {
+btree_node_has_children(DatabaseEntry *node) {
     assert(node);
     return node->children ? true : false;
 }
 
 void
-btree_node_children_foreach(BTreeNode *node, void (*func)(BTreeNode *, void *), void *data) {
+btree_node_children_foreach(DatabaseEntry *node, void (*func)(DatabaseEntry *, void *), void *data) {
     if (!node) {
         return;
     }
-    BTreeNode *child = node->children;
+    DatabaseEntry *child = node->children;
     while (child) {
         func(child, data);
         child = child->next;
@@ -201,10 +201,10 @@ btree_node_children_foreach(BTreeNode *node, void (*func)(BTreeNode *, void *), 
 }
 
 void
-btree_node_count_nodes(BTreeNode *node, uint32_t *num_nodes) {
+btree_node_count_nodes(DatabaseEntry *node, uint32_t *num_nodes) {
     (*num_nodes)++;
     if (node->children) {
-        BTreeNode *child = node->children;
+        DatabaseEntry *child = node->children;
         while (child) {
             btree_node_count_nodes(child, num_nodes);
             child = child->next;
@@ -213,7 +213,7 @@ btree_node_count_nodes(BTreeNode *node, uint32_t *num_nodes) {
 }
 
 uint32_t
-btree_node_n_nodes(BTreeNode *node) {
+btree_node_n_nodes(DatabaseEntry *node) {
     if (!node) {
         return 0;
     }
@@ -223,10 +223,10 @@ btree_node_n_nodes(BTreeNode *node) {
 }
 
 void
-btree_node_traverse_cb(BTreeNode *node, bool (*func)(BTreeNode *, void *), void *data) {
+btree_node_traverse_cb(DatabaseEntry *node, bool (*func)(DatabaseEntry *, void *), void *data) {
     func(node, data);
     if (node->children) {
-        BTreeNode *child = node->children;
+        DatabaseEntry *child = node->children;
         while (child) {
             btree_node_traverse_cb(child, func, data);
             child = child->next;
@@ -235,7 +235,7 @@ btree_node_traverse_cb(BTreeNode *node, bool (*func)(BTreeNode *, void *), void 
 }
 
 void
-btree_node_traverse(BTreeNode *node, bool (*func)(BTreeNode *, void *), void *data) {
+btree_node_traverse(DatabaseEntry *node, bool (*func)(DatabaseEntry *, void *), void *data) {
     if (!node) {
         return;
     }
@@ -243,7 +243,7 @@ btree_node_traverse(BTreeNode *node, bool (*func)(BTreeNode *, void *), void *da
 }
 
 static bool
-btree_node_build_path(BTreeNode *node, char *path, size_t path_len) {
+btree_node_build_path(DatabaseEntry *node, char *path, size_t path_len) {
     if (!node) {
         // empty node
         return false;
@@ -262,7 +262,7 @@ btree_node_build_path(BTreeNode *node, char *path, size_t path_len) {
     char *parents[depth + 1];
     parents[depth] = NULL;
 
-    BTreeNode *temp = node;
+    DatabaseEntry *temp = node;
     for (int32_t i = depth - 1; i >= 0 && temp; i--) {
         parents[i] = temp->name;
         temp = temp->parent;
@@ -284,7 +284,7 @@ btree_node_build_path(BTreeNode *node, char *path, size_t path_len) {
 }
 
 bool
-btree_node_init_path(BTreeNode *node, char *path, size_t path_len) {
+db_entry_init_path(DatabaseEntry *node, char *path, size_t path_len) {
     if (!node) {
         // empty node
         return false;
@@ -293,7 +293,7 @@ btree_node_init_path(BTreeNode *node, char *path, size_t path_len) {
 }
 
 static void
-build_path_recursively(BTreeNode *node, GString *str) {
+build_path_recursively(DatabaseEntry *node, GString *str) {
     if (node->parent) {
         build_path_recursively(node->parent, str);
     }
@@ -302,19 +302,19 @@ build_path_recursively(BTreeNode *node, GString *str) {
 }
 
 void
-btree_node_append_path(BTreeNode *node, GString *str) {
+db_entry_append_path(DatabaseEntry *node, GString *str) {
     build_path_recursively(node, str);
 }
 
 char *
-btree_node_get_path(BTreeNode *node) {
+db_entry_get_path(DatabaseEntry *node) {
     GString *path = g_string_new(NULL);
     build_path_recursively(node, path);
     return g_string_free(path, FALSE);
 }
 
 bool
-btree_node_init_parent_path(BTreeNode *node, char *path, size_t path_len) {
+db_entry_init_parent_path(DatabaseEntry *node, char *path, size_t path_len) {
     if (!node) {
         // empty node
         return false;

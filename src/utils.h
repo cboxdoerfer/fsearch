@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "btree.h"
+#include "fsearch_db_entry.h"
 #include "fsearch_list_view.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
@@ -36,16 +36,16 @@ bool
 file_remove(const char *path);
 
 bool
-launch_node(BTreeNode *node);
+launch_node(DatabaseEntry *node);
 
 bool
-launch_node_path(BTreeNode *node, const char *cmd);
+launch_node_path(DatabaseEntry *node, const char *cmd);
 
 gchar *
 get_mimetype(const gchar *path);
 
 gchar *
-get_file_type(BTreeNode *node, const gchar *path);
+get_file_type(DatabaseEntry *node, const gchar *path);
 
 GIcon *
 get_gicon_for_path(const char *path);
@@ -57,23 +57,22 @@ int
 get_icon_size_for_height(int height);
 
 char *
-get_size_formatted(BTreeNode *node, bool show_base_2_units);
+get_size_formatted(DatabaseEntry *node, bool show_base_2_units);
 
 int
-compare_name(BTreeNode **a, BTreeNode **b);
+compare_name(DatabaseEntry **a, DatabaseEntry **b);
 
 int
-compare_pos(BTreeNode **a_node, BTreeNode **b_node);
+compare_pos(DatabaseEntry **a_node, DatabaseEntry **b_node);
 
 int
-compare_size(BTreeNode **a, BTreeNode **b);
+compare_size(DatabaseEntry **a, DatabaseEntry **b);
 
 int
-compare_path(BTreeNode **a, BTreeNode **b);
+compare_path(DatabaseEntry **a, DatabaseEntry **b);
 
 int
-compare_changed(BTreeNode **a, BTreeNode **b);
+compare_changed(DatabaseEntry **a, DatabaseEntry **b);
 
 int
-compare_type(BTreeNode **a, BTreeNode **b);
-
+compare_type(DatabaseEntry **a, DatabaseEntry **b);

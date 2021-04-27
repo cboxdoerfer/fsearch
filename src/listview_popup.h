@@ -22,9 +22,8 @@
 #include <config.h>
 #endif
 
-#include "btree.h"
+#include "fsearch_db_entry.h"
 #include <gtk/gtk.h>
 
 void
-listview_popup_menu(GtkWidget *widget, BTreeNode *node);
-
+listview_popup_menu(GtkWidget *widget, DatabaseEntry *node);

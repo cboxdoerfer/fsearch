@@ -61,17 +61,17 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
 }
 
 static char *
-build_folder_open_cmd(BTreeNode *node, const char *cmd) {
+build_folder_open_cmd(DatabaseEntry *node, const char *cmd) {
     if (!cmd || !node) {
         return NULL;
     }
 
     char path[PATH_MAX] = "";
-    if (!btree_node_init_path(node, path, sizeof(path))) {
+    if (!db_entry_init_path(node, path, sizeof(path))) {
         return NULL;
     }
     char path_full[PATH_MAX] = "";
-    if (!btree_node_init_parent_path(node, path_full, sizeof(path_full))) {
+    if (!db_entry_init_parent_path(node, path_full, sizeof(path_full))) {
         return NULL;
     }
     char *path_quoted = g_shell_quote(path);
@@ -114,7 +114,7 @@ build_folder_open_cmd(BTreeNode *node, const char *cmd) {
 }
 
 static bool
-open_with_cmd(BTreeNode *node, const char *cmd) {
+open_with_cmd(DatabaseEntry *node, const char *cmd) {
     if (!cmd) {
         return false;
     }
@@ -219,9 +219,9 @@ file_trash(const char *path) {
 }
 
 bool
-launch_node(BTreeNode *node) {
+launch_node(DatabaseEntry *node) {
     char path[PATH_MAX] = "";
-    bool res = btree_node_init_parent_path(node, path, sizeof(path));
+    bool res = db_entry_init_parent_path(node, path, sizeof(path));
     if (res) {
         return open_uri(path);
     }
@@ -229,13 +229,13 @@ launch_node(BTreeNode *node) {
 }
 
 bool
-launch_node_path(BTreeNode *node, const char *cmd) {
+launch_node_path(DatabaseEntry *node, const char *cmd) {
     if (cmd) {
         return open_with_cmd(node, cmd);
     }
     else {
         char path[PATH_MAX] = "";
-        bool res = btree_node_init_path(node, path, sizeof(path));
+        bool res = db_entry_init_path(node, path, sizeof(path));
         if (res) {
             return open_uri(path);
         }
@@ -259,7 +259,7 @@ get_mimetype(const gchar *path) {
 }
 
 gchar *
-get_file_type(BTreeNode *node, const gchar *path) {
+get_file_type(DatabaseEntry *node, const gchar *path) {
     gchar *type = NULL;
     if (node->is_dir) {
         type = g_strdup(_("Folder"));
@@ -349,7 +349,7 @@ get_icon_size_for_height(int height) {
 }
 
 char *
-get_size_formatted(BTreeNode *node, bool show_base_2_units) {
+get_size_formatted(DatabaseEntry *node, bool show_base_2_units) {
     if (!node->is_dir) {
         if (show_base_2_units) {
             return g_format_size_full(node->size, G_FORMAT_SIZE_IEC_UNITS);
@@ -372,12 +372,12 @@ get_size_formatted(BTreeNode *node, bool show_base_2_units) {
 }
 
 int
-compare_path(BTreeNode **a_node, BTreeNode **b_node) {
+compare_path(DatabaseEntry **a_node, DatabaseEntry **b_node) {
     if ((*a_node)->is_dir != (*b_node)->is_dir) {
         return (*b_node)->is_dir - (*a_node)->is_dir;
     }
-    BTreeNode *a = (*a_node)->parent;
-    BTreeNode *b = (*b_node)->parent;
+    DatabaseEntry *a = (*a_node)->parent;
+    DatabaseEntry *b = (*b_node)->parent;
     if (!a) {
         return -1;
     }
@@ -391,7 +391,7 @@ compare_path(BTreeNode **a_node, BTreeNode **b_node) {
     a_parents[a_depth] = NULL;
     b_parents[b_depth] = NULL;
 
-    BTreeNode *temp = a;
+    DatabaseEntry *temp = a;
     for (int32_t i = a_depth - 1; i >= 0 && temp; i--) {
         a_parents[i] = temp->name;
         temp = temp->parent;
@@ -419,9 +419,9 @@ compare_path(BTreeNode **a_node, BTreeNode **b_node) {
 }
 
 int
-compare_name(BTreeNode **a, BTreeNode **b) {
-    BTreeNode *node_a = *a;
-    BTreeNode *node_b = *b;
+compare_name(DatabaseEntry **a, DatabaseEntry **b) {
+    DatabaseEntry *node_a = *a;
+    DatabaseEntry *node_b = *b;
 
     const bool is_dir_a = node_a->is_dir;
     const bool is_dir_b = node_b->is_dir;
@@ -433,16 +433,16 @@ compare_name(BTreeNode **a, BTreeNode **b) {
 }
 
 int
-compare_pos(BTreeNode **a_node, BTreeNode **b_node) {
-    BTreeNode *a = *a_node;
-    BTreeNode *b = *b_node;
+compare_pos(DatabaseEntry **a_node, DatabaseEntry **b_node) {
+    DatabaseEntry *a = *a_node;
+    DatabaseEntry *b = *b_node;
     return a->pos - b->pos;
 }
 
 int
-compare_size(BTreeNode **a_node, BTreeNode **b_node) {
-    BTreeNode *a = *a_node;
-    BTreeNode *b = *b_node;
+compare_size(DatabaseEntry **a_node, DatabaseEntry **b_node) {
+    DatabaseEntry *a = *a_node;
+    DatabaseEntry *b = *b_node;
     bool is_dir_a = a->is_dir;
     bool is_dir_b = b->is_dir;
     if (is_dir_a != is_dir_b) {
@@ -462,9 +462,9 @@ compare_size(BTreeNode **a_node, BTreeNode **b_node) {
 }
 
 int
-compare_changed(BTreeNode **a_node, BTreeNode **b_node) {
-    BTreeNode *a = *a_node;
-    BTreeNode *b = *b_node;
+compare_changed(DatabaseEntry **a_node, DatabaseEntry **b_node) {
+    DatabaseEntry *a = *a_node;
+    DatabaseEntry *b = *b_node;
     if (a->is_dir != b->is_dir) {
         return b->is_dir - a->is_dir;
     }
@@ -472,9 +472,9 @@ compare_changed(BTreeNode **a_node, BTreeNode **b_node) {
 }
 
 int
-compare_type(BTreeNode **a_node, BTreeNode **b_node) {
-    BTreeNode *a = *a_node;
-    BTreeNode *b = *b_node;
+compare_type(DatabaseEntry **a_node, DatabaseEntry **b_node) {
+    DatabaseEntry *a = *a_node;
+    DatabaseEntry *b = *b_node;
     bool is_dir_a = a->is_dir;
     bool is_dir_b = b->is_dir;
     if (is_dir_a != is_dir_b) {
@@ -490,9 +490,9 @@ compare_type(BTreeNode **a_node, BTreeNode **b_node) {
     gchar path_a[PATH_MAX] = "";
     gchar path_b[PATH_MAX] = "";
 
-    btree_node_init_parent_path(a, path_a, sizeof(path_a));
+    db_entry_init_parent_path(a, path_a, sizeof(path_a));
     type_a = get_file_type(a, path_a);
-    btree_node_init_parent_path(b, path_b, sizeof(path_b));
+    db_entry_init_parent_path(b, path_b, sizeof(path_b));
     type_b = get_file_type(b, path_b);
 
     gint return_val = 0;

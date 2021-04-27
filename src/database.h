@@ -19,7 +19,7 @@
 #pragma once
 
 #include "array.h"
-#include "btree.h"
+#include "fsearch_db_entry.h"
 #include <gio/gio.h>
 #include <glib.h>
 #include <stdbool.h>

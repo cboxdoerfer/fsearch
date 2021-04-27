@@ -784,7 +784,7 @@ typedef struct {
 static void
 count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
     if (value) {
-        BTreeNode *node = value;
+        DatabaseEntry *node = value;
         if (node->is_dir) {
             ctx->num_folders++;
         }
@@ -796,7 +796,7 @@ count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
 
 static gboolean
 on_fsearch_list_view_popup(FsearchListView *view, int row_idx, GtkSortType sort_type, gpointer user_data) {
-    BTreeNode *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, user_data);
+    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, user_data);
     listview_popup_menu(user_data, node);
     return TRUE;
 }
@@ -885,7 +885,7 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         launch_folder = true;
     }
 
-    BTreeNode *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, self);
+    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, self);
     if (!node) {
         return;
     }
@@ -1025,7 +1025,7 @@ typedef struct {
 } DrawRowContext;
 
 static void
-draw_row_ctx_init(BTreeNode *node,
+draw_row_ctx_init(DatabaseEntry *node,
                   FsearchApplicationWindow *win,
                   GdkWindow *bin_window,
                   int icon_size,
@@ -1036,7 +1036,7 @@ draw_row_ctx_init(BTreeNode *node,
     ctx->name_attr = win->query_highlight ? fsearch_query_highlight_match(win->query_highlight, node->name) : NULL;
 
     char path_raw[PATH_MAX] = "";
-    btree_node_init_path(node, path_raw, sizeof(path_raw));
+    db_entry_init_path(node, path_raw, sizeof(path_raw));
 
     ctx->path = g_string_new(path_raw);
     if (win->query_highlight
@@ -1110,7 +1110,7 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    BTreeNode *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, win);
+    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, win);
     int width = col->effective_width - 2 * ROW_PADDING_X;
 
     char *text = NULL;
@@ -1124,13 +1124,13 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         break;
     case FSEARCH_LIST_VIEW_COLUMN_PATH: {
         char path_raw[PATH_MAX] = "";
-        btree_node_init_path(node, path_raw, sizeof(path_raw));
+        db_entry_init_path(node, path_raw, sizeof(path_raw));
         text = g_filename_display_name(path_raw);
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
         char path_raw[PATH_MAX] = "";
-        btree_node_init_parent_path(node, path_raw, sizeof(path_raw));
+        db_entry_init_parent_path(node, path_raw, sizeof(path_raw));
         text = get_file_type(node, path_raw);
         break;
     }
@@ -1188,7 +1188,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
     }
 
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    BTreeNode *node = fsearch_list_view_get_node_for_row(row, sort_type, win);
+    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row, sort_type, win);
     if (!node) {
         return;
     }

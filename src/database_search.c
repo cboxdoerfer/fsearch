@@ -38,7 +38,7 @@ struct _DatabaseSearch {
 
 typedef struct search_context_s {
     FsearchQuery *query;
-    BTreeNode **results;
+    DatabaseEntry **results;
     GCancellable *cancellable;
     uint32_t num_results;
     uint32_t num_folders;
@@ -118,7 +118,7 @@ search_thread_context_new(FsearchQuery *query, GCancellable *cancellable, uint32
 
     ctx->query = query;
     ctx->cancellable = cancellable;
-    ctx->results = calloc(end_pos - start_pos + 1, sizeof(BTreeNode *));
+    ctx->results = calloc(end_pos - start_pos + 1, sizeof(DatabaseEntry *));
     assert(ctx->results != NULL);
 
     ctx->num_results = 0;
@@ -128,7 +128,7 @@ search_thread_context_new(FsearchQuery *query, GCancellable *cancellable, uint32
 }
 
 static inline bool
-filter_node(BTreeNode *node, FsearchQuery *query, const char *haystack) {
+filter_node(DatabaseEntry *node, FsearchQuery *query, const char *haystack) {
     if (!query->filter) {
         return true;
     }
@@ -176,7 +176,7 @@ db_search_worker(void *user_data) {
     const uint32_t search_in_path = query->flags.search_in_path;
     const uint32_t auto_search_in_path = query->flags.auto_search_in_path;
     DynamicArray *entries = query->entries;
-    BTreeNode **results = ctx->results;
+    DatabaseEntry **results = ctx->results;
 
     if (!entries) {
         ctx->num_results = 0;
@@ -195,14 +195,14 @@ db_search_worker(void *user_data) {
         if (g_cancellable_is_cancelled(ctx->cancellable)) {
             return NULL;
         }
-        BTreeNode *node = darray_get_item(entries, i);
+        DatabaseEntry *node = darray_get_item(entries, i);
         if (!node) {
             continue;
         }
         const char *haystack_name = node->name;
         if (search_in_path || query->filter->search_in_path) {
             g_string_truncate(path_string, 0);
-            btree_node_append_path(node, path_string);
+            db_entry_append_path(node, path_string);
             path_set = true;
         }
 
@@ -227,7 +227,7 @@ db_search_worker(void *user_data) {
             if (search_in_path || (auto_search_in_path && t->has_separator)) {
                 if (!path_set) {
                     g_string_truncate(path_string, 0);
-                    btree_node_append_path(node, path_string);
+                    db_entry_append_path(node, path_string);
                     path_set = true;
                 }
                 haystack = path_string->str;

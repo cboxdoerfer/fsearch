@@ -1,11 +1,11 @@
 fsearch_sources = [
     'array.c',
-    'btree.c',
     'clipboard.c',
     'database.c',
     'database_search.c',
     'fsearch.c',
     'fsearch_config.c',
+    'fsearch_db_entry.c',
     'fsearch_exclude_path.c',
     'fsearch_filter.c',
     'fsearch_include_path.c',

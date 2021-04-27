@@ -26,7 +26,7 @@
 #include "listview_popup.h"
 
 static void
-fill_open_with_menu(GtkBuilder *builder, BTreeNode *node) {
+fill_open_with_menu(GtkBuilder *builder, DatabaseEntry *node) {
     GList *app_list = NULL;
     char *content_type = NULL;
 
@@ -77,7 +77,7 @@ clean_up:
 }
 
 void
-listview_popup_menu(GtkWidget *widget, BTreeNode *node) {
+listview_popup_menu(GtkWidget *widget, DatabaseEntry *node) {
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
     fill_open_with_menu(builder, node);

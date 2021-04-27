@@ -23,10 +23,10 @@
 #include <gio/gdesktopappinfo.h>
 #include <glib/gi18n.h>
 
-#include "btree.h"
 #include "clipboard.h"
 #include "database_search.h"
 #include "fsearch_config.h"
+#include "fsearch_db_entry.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "fsearch_timer.h"
@@ -86,8 +86,8 @@ prepend_path(gpointer key, gpointer value, gpointer user_data) {
     }
 
     GList **file_list = (GList **)user_data;
-    BTreeNode *node = value;
-    char *path = btree_node_get_path(node);
+    DatabaseEntry *node = value;
+    char *path = db_entry_get_path(node);
     if (path) {
         *file_list = g_list_prepend(*file_list, g_strdup(path));
     }
@@ -226,7 +226,7 @@ open_cb(gpointer key, gpointer value, gpointer data) {
     if (!value) {
         return;
     }
-    BTreeNode *node = value;
+    DatabaseEntry *node = value;
 
     if (!launch_node(node)) {
         bool *open_failed = data;
@@ -239,10 +239,10 @@ open_with_cb(gpointer key, gpointer value, gpointer data) {
     if (!value) {
         return;
     }
-    BTreeNode *node = value;
+    DatabaseEntry *node = value;
 
     char path_name[PATH_MAX] = "";
-    btree_node_init_parent_path(node, path_name, sizeof(path_name));
+    db_entry_init_parent_path(node, path_name, sizeof(path_name));
     GList **list = data;
     *list = g_list_append(*list, g_file_new_for_path(path_name));
 }
@@ -376,7 +376,7 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
     if (!value) {
         return;
     }
-    BTreeNode *node = value;
+    DatabaseEntry *node = value;
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (!launch_node_path(node, config->folder_open_cmd)) {
         bool *open_failed = data;

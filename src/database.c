@@ -63,7 +63,7 @@ struct _FsearchDatabase {
 
 struct _FsearchDatabaseNode {
     // B+ tree of entry nodes
-    BTreeNode *entries;
+    DatabaseEntry *entries;
     FsearchMemoryPool *pool;
     uint32_t num_items;
     uint32_t num_folders;
@@ -124,7 +124,7 @@ db_location_load_from_file(const char *fname) {
         return NULL;
     }
 
-    BTreeNode *root = NULL;
+    DatabaseEntry *root = NULL;
     FsearchDatabaseNode *location = db_location_new();
 
     char magic[4];
@@ -165,7 +165,7 @@ db_location_load_from_file(const char *fname) {
     uint32_t num_files = 0;
 
     uint32_t num_items_read = 0;
-    BTreeNode *prev = NULL;
+    DatabaseEntry *prev = NULL;
     while (true) {
         uint16_t name_len = 0;
         if (fread(&name_len, 2, 1, fp) != 1) {
@@ -224,7 +224,7 @@ db_location_load_from_file(const char *fname) {
         }
 
         int is_root = !strcmp(name, "/");
-        BTreeNode *new = fsearch_memory_pool_malloc(location->pool);
+        DatabaseEntry *new = fsearch_memory_pool_malloc(location->pool);
         new->name = is_root ? strdup("/") : strdup(name);
         new->mtime = mtime;
         new->size = size;
@@ -301,8 +301,8 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
 
     const uint16_t del = 0;
 
-    BTreeNode *root = location->entries;
-    BTreeNode *node = root;
+    DatabaseEntry *root = location->entries;
+    DatabaseEntry *node = root;
     uint32_t is_root = !strcmp(root->name, "");
 
     while (node) {
@@ -342,13 +342,13 @@ db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
                 goto save_fail;
             }
 
-            BTreeNode *temp = node->children;
+            DatabaseEntry *temp = node->children;
             if (!temp) {
                 // reached end of children, write delimiter
                 if (fwrite(&del, 2, 1, fp) != 1) {
                     goto save_fail;
                 }
-                BTreeNode *current = node;
+                DatabaseEntry *current = node;
                 while (true) {
                     temp = current->next;
                     if (temp) {
@@ -431,7 +431,7 @@ typedef struct DatabaseWalkContext {
 } DatabaseWalkContext;
 
 static int
-db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *parent) {
+db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, DatabaseEntry *parent) {
 
     if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
         return WALK_CANCEL;
@@ -489,7 +489,7 @@ db_location_walk_tree_recursive(DatabaseWalkContext *walk_context, BTreeNode *pa
             continue;
         }
 
-        BTreeNode *node = fsearch_memory_pool_malloc(walk_context->db_node->pool);
+        DatabaseEntry *node = fsearch_memory_pool_malloc(walk_context->db_node->pool);
         node->name = strdup(dent->d_name);
         node->mtime = st.st_mtime;
         node->size = st.st_size;
@@ -535,7 +535,7 @@ db_location_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellab
         root_name = dname;
     }
     FsearchDatabaseNode *location = db_location_new();
-    BTreeNode *root = fsearch_memory_pool_malloc(location->pool);
+    DatabaseEntry *root = fsearch_memory_pool_malloc(location->pool);
     root->name = strdup(root_name);
     root->mtime = 0;
     root->size = 0;
@@ -580,13 +580,14 @@ db_location_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellab
 static FsearchDatabaseNode *
 db_location_new(void) {
     FsearchDatabaseNode *location = g_new0(FsearchDatabaseNode, 1);
-    location->pool =
-        fsearch_memory_pool_new(BTREE_NODE_POOL_BLOCK_ELEMENTS, sizeof(BTreeNode), (GDestroyNotify)btree_node_clear);
+    location->pool = fsearch_memory_pool_new(BTREE_NODE_POOL_BLOCK_ELEMENTS,
+                                             sizeof(DatabaseEntry),
+                                             (GDestroyNotify)btree_node_clear);
     return location;
 }
 
 static bool
-db_list_insert_node(BTreeNode *node, void *data) {
+db_list_insert_node(DatabaseEntry *node, void *data) {
     FsearchDatabase *db = data;
     darray_set_item(db->entries, node, node->pos);
     node->is_dir ? db->num_folders++ : db->num_files++;
@@ -595,12 +596,12 @@ db_list_insert_node(BTreeNode *node, void *data) {
 }
 
 static void
-db_traverse_tree_insert(BTreeNode *node, void *data) {
+db_traverse_tree_insert(DatabaseEntry *node, void *data) {
     btree_node_traverse(node, db_list_insert_node, data);
 }
 
 static bool
-db_list_add_node(BTreeNode *node, void *data) {
+db_list_add_node(DatabaseEntry *node, void *data) {
     FsearchDatabase *db = data;
     darray_add_item(db->entries, node);
     node->is_dir ? db->num_folders++ : db->num_files++;
@@ -609,7 +610,7 @@ db_list_add_node(BTreeNode *node, void *data) {
 }
 
 static void
-db_traverse_tree_add(BTreeNode *node, void *data) {
+db_traverse_tree_add(DatabaseEntry *node, void *data) {
     btree_node_traverse(node, db_list_add_node, data);
 }
 
@@ -639,7 +640,7 @@ db_location_get_for_path(FsearchDatabase *db, const char *path) {
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
         FsearchDatabaseNode *location = (FsearchDatabaseNode *)l->data;
-        BTreeNode *root = btree_node_get_root(location->entries);
+        DatabaseEntry *root = btree_node_get_root(location->entries);
         const char *location_path = root->name;
         if (!strcmp(location_path, path)) {
             return location;
@@ -722,7 +723,7 @@ db_save(FsearchDatabase *db) {
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
         FsearchDatabaseNode *location = (FsearchDatabaseNode *)l->data;
-        BTreeNode *root = btree_node_get_root(location->entries);
+        DatabaseEntry *root = btree_node_get_root(location->entries);
         const char *location_path = root->name;
         db_save_location(db, location_path);
     }
@@ -771,7 +772,7 @@ db_update_sort_index(FsearchDatabase *db) {
     assert(db->entries != NULL);
 
     for (uint32_t i = 0; i < db->num_entries; ++i) {
-        BTreeNode *node = darray_get_item(db->entries, i);
+        DatabaseEntry *node = darray_get_item(db->entries, i);
         node->pos = i;
     }
 }
@@ -832,7 +833,7 @@ db_list_update(FsearchDatabase *db) {
     trace("[database_update_list] updated list\n");
 }
 
-// static BTreeNode *
+// static DatabaseEntry *
 // db_location_get_entries(FsearchDatabaseNode *location) {
 //    assert(location != NULL);
 //    return location->entries;
