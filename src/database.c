@@ -45,14 +45,21 @@
 #define BTREE_NODE_POOL_BLOCK_ELEMENTS 10000
 
 struct _FsearchDatabase {
+    DynamicArray *files;
+    DynamicArray *folders;
+
+    FsearchMemoryPool *file_pool;
+    FsearchMemoryPool *folder_pool;
+
+    uint32_t num_entries;
+    uint32_t num_folders;
+    uint32_t num_files;
+
     GList *locations;
     GList *includes;
     GList *excludes;
     char **exclude_files;
     DynamicArray *entries;
-    uint32_t num_entries;
-    uint32_t num_folders;
-    uint32_t num_files;
 
     bool exclude_hidden;
     time_t timestamp;
@@ -98,6 +105,36 @@ static void
 db_list_add_location(FsearchDatabase *db, FsearchDatabaseNode *location);
 
 // Implementation
+
+static FsearchDatabaseEntryFile *
+db_file_entry_new(const char *name, off_t size, FsearchDatabaseEntryFolder *parent) {
+    FsearchDatabaseEntryFile *file_entry = calloc(1, sizeof(FsearchDatabaseEntryFile));
+    assert(file_entry != NULL);
+
+    if (name) {
+        file_entry->name = strdup(name);
+    }
+    file_entry->size = size;
+    file_entry->parent = parent;
+
+    return file_entry;
+}
+
+static FsearchDatabaseEntryFolder *
+db_folder_entry_new(const char *name, off_t size, FsearchDatabaseEntryFolder *parent) {
+    FsearchDatabaseEntryFolder *folder_entry = calloc(1, sizeof(FsearchDatabaseEntryFolder));
+    assert(folder_entry != NULL);
+
+    if (name) {
+        folder_entry->name = strdup(name);
+    }
+    folder_entry->size = size;
+    folder_entry->parent = parent;
+    folder_entry->file_children = g_ptr_array_new();
+    folder_entry->folder_children = g_ptr_array_new();
+
+    return folder_entry;
+}
 
 static void
 db_sort(FsearchDatabase *db) {
@@ -525,6 +562,142 @@ db_location_free(FsearchDatabaseNode *location) {
     location = NULL;
 }
 
+static int
+db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntryFolder *parent) {
+    if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
+        return WALK_CANCEL;
+    }
+
+    GString *path = walk_context->path;
+    g_string_append_c(path, '/');
+
+    // remember end of parent path
+    gsize path_len = path->len;
+
+    DIR *dir = NULL;
+    if (!(dir = opendir(path->str))) {
+        return WALK_BADIO;
+    }
+
+    double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
+    if (elapsed_seconds > 0.1) {
+        if (walk_context->status_cb) {
+            walk_context->status_cb(path->str);
+        }
+        g_timer_start(walk_context->timer);
+    }
+
+    FsearchDatabase *db = walk_context->db;
+
+    struct dirent *dent = NULL;
+    while ((dent = readdir(dir))) {
+        if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
+            closedir(dir);
+            return WALK_CANCEL;
+        }
+        if (walk_context->exclude_hidden && dent->d_name[0] == '.') {
+            // file is dotfile, skip
+            continue;
+        }
+        if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "..")) {
+            continue;
+        }
+        if (file_is_excluded(dent->d_name, db->exclude_files)) {
+            continue;
+        }
+
+        // create full path of file/folder
+        g_string_truncate(path, path_len);
+        g_string_append(path, dent->d_name);
+
+        struct stat st;
+        if (lstat(path->str, &st) == -1) {
+            // warn("Can't stat %s", fn);
+            continue;
+        }
+
+        const bool is_dir = S_ISDIR(st.st_mode);
+        if (is_dir && directory_is_excluded(path->str, db->excludes)) {
+            trace("[database_scan] excluded directory: %s\n", path->str);
+            continue;
+        }
+
+        if (is_dir) {
+            FsearchDatabaseEntryFolder *folder_entry = fsearch_memory_pool_malloc(db->folder_pool);
+            folder_entry->name = strdup(dent->d_name);
+            folder_entry->parent = parent;
+
+            parent->size += folder_entry->size;
+
+            if (!parent->folder_children) {
+                parent->folder_children = g_ptr_array_new();
+            }
+            g_ptr_array_add(parent->folder_children, folder_entry);
+            darray_add_item(db->folders, folder_entry);
+
+            db->num_folders++;
+
+            db_folder_scan_recursive(walk_context, folder_entry);
+        }
+        else {
+            FsearchDatabaseEntryFile *file_entry = fsearch_memory_pool_malloc(db->file_pool);
+            file_entry->name = strdup(dent->d_name);
+            file_entry->size = st.st_size;
+            file_entry->parent = parent;
+
+            parent->size += file_entry->size;
+
+            if (!parent->file_children) {
+                parent->file_children = g_ptr_array_new();
+            }
+            g_ptr_array_add(parent->file_children, file_entry);
+            darray_add_item(db->files, file_entry);
+
+            db->num_files++;
+        }
+
+        db->num_entries++;
+    }
+
+    if (dir) {
+        closedir(dir);
+    }
+    return WALK_OK;
+}
+
+static void
+db_folder_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
+    printf("folder scan\n");
+
+    GTimer *timer = g_timer_new();
+    GString *path = g_string_new(dname);
+    printf("scan path: %s\n", path->str);
+
+    g_timer_start(timer);
+    DatabaseWalkContext walk_context = {
+        .db = db,
+        .path = path,
+        .timer = timer,
+        .cancellable = cancellable,
+        .status_cb = status_cb,
+        .exclude_hidden = db->exclude_hidden,
+    };
+
+    FsearchDatabaseEntryFolder *parent = fsearch_memory_pool_malloc(db->folder_pool);
+    parent->name = strdup(dname);
+    parent->parent = NULL;
+    uint32_t res = db_folder_scan_recursive(&walk_context, parent);
+
+    g_string_free(path, TRUE);
+    g_timer_destroy(timer);
+    if (res == WALK_OK) {
+        printf("scanned: %d,%d,%d\n", db->num_files, db->num_folders, db->num_entries);
+        return;
+    }
+
+    trace("[database_scan] walk error: %d\n", res);
+}
+
 static FsearchDatabaseNode *
 db_location_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
     const char *root_name = NULL;
@@ -719,6 +892,7 @@ db_save_location(FsearchDatabase *db, const char *location_name) {
 bool
 db_save(FsearchDatabase *db) {
     assert(db != NULL);
+    return false;
 
     GList *locations = db->locations;
     for (GList *l = locations; l != NULL; l = l->next) {
@@ -743,6 +917,7 @@ db_location_get_path(const char *location_name) {
 
 static FsearchDatabaseNode *
 db_location_load(FsearchDatabase *db, const char *location_name) {
+    return NULL;
     gchar *load_path = db_location_get_path(location_name);
     if (!load_path) {
         return NULL;
@@ -852,6 +1027,10 @@ db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidd
     if (exclude_files) {
         db->exclude_files = g_strdupv(exclude_files);
     }
+    db->file_pool = fsearch_memory_pool_new(BTREE_NODE_POOL_BLOCK_ELEMENTS, sizeof(FsearchDatabaseEntryFile), NULL);
+    db->folder_pool = fsearch_memory_pool_new(BTREE_NODE_POOL_BLOCK_ELEMENTS, sizeof(FsearchDatabaseEntryFolder), NULL);
+    db->files = darray_new(1000);
+    db->folders = darray_new(1000);
     db->exclude_hidden = exclude_hidden;
     db->ref_count = 1;
     return db;
@@ -901,6 +1080,22 @@ db_free(FsearchDatabase *db) {
     db_entries_clear(db);
     db_location_free_all(db);
 
+    if (db->files) {
+        darray_free(db->files);
+        db->files = NULL;
+    }
+    if (db->folders) {
+        darray_free(db->folders);
+        db->folders = NULL;
+    }
+    if (db->folder_pool) {
+        fsearch_memory_pool_free(db->folder_pool);
+        db->folder_pool = NULL;
+    }
+    if (db->file_pool) {
+        fsearch_memory_pool_free(db->file_pool);
+        db->file_pool = NULL;
+    }
     if (db->includes) {
         g_list_free_full(db->includes, (GDestroyNotify)fsearch_include_path_free);
         db->includes = NULL;
@@ -968,6 +1163,18 @@ db_try_lock(FsearchDatabase *db) {
 }
 
 DynamicArray *
+db_get_files(FsearchDatabase *db) {
+    assert(db != NULL);
+    return db->files;
+}
+
+DynamicArray *
+db_get_folders(FsearchDatabase *db) {
+    assert(db != NULL);
+    return db->folders;
+}
+
+DynamicArray *
 db_get_entries(FsearchDatabase *db) {
     assert(db != NULL);
     return db->entries;
@@ -976,6 +1183,7 @@ db_get_entries(FsearchDatabase *db) {
 bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
     assert(db != NULL);
+    return false;
 
     bool ret = false;
     for (GList *l = db->includes; l != NULL; l = l->next) {
@@ -995,6 +1203,16 @@ db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) 
     return ret;
 }
 
+int
+sort_file_by_name(FsearchDatabaseEntryFile **a, FsearchDatabaseEntryFile **b) {
+    return strverscmp((*a)->name, (*b)->name);
+}
+
+int
+sort_folder_by_name(FsearchDatabaseEntryFolder **a, FsearchDatabaseEntryFolder **b) {
+    return strverscmp((*a)->name, (*b)->name);
+}
+
 bool
 db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *)) {
     assert(db != NULL);
@@ -1011,7 +1229,8 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
         }
         FsearchDatabaseNode *location = NULL;
         if (fs_path->update) {
-            location = db_location_scan(db, fs_path->path, cancellable, status_cb);
+            // location = db_location_scan(db, fs_path->path, cancellable, status_cb);
+            db_folder_scan(db, fs_path->path, cancellable, status_cb);
         }
 
         if (location != NULL) {
@@ -1026,14 +1245,22 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
             ret = true;
         }
     }
-    if (ret) {
-        if (init_list) {
-            db_list_build(db, status_cb);
-        }
-        else {
-            db_list_update(db);
-        }
-    }
+    GTimer *timer = g_timer_new();
+    printf("sorting\n");
+    darray_sort_multi_threaded(db->files, (DynamicArrayCompareFunc)sort_file_by_name);
+    darray_sort_multi_threaded(db->folders, (DynamicArrayCompareFunc)sort_folder_by_name);
+    double seconds = g_timer_elapsed(timer, NULL);
+    printf("sorted: %f\n", seconds);
+    g_timer_destroy(timer);
+    ////darray_sort(db->entries, (DynamicArrayCompareFunc)compare_name);
+    // if (ret) {
+    //     if (init_list) {
+    //         db_list_build(db, status_cb);
+    //     }
+    //     else {
+    //         db_list_update(db);
+    //     }
+    // }
     return ret;
 }
 

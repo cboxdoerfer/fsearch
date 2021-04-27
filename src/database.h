@@ -25,6 +25,30 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+typedef struct _FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
+
+typedef struct _FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
+
+struct _FsearchDatabaseEntryFile {
+    FsearchDatabaseEntryFolder *parent;
+
+    char *name;
+    off_t size;
+    // time_t mtime;
+    // time_t ctime;
+};
+
+struct _FsearchDatabaseEntryFolder {
+    FsearchDatabaseEntryFolder *parent;
+    GPtrArray *folder_children;
+    GPtrArray *file_children;
+
+    char *name;
+    off_t size;
+    // time_t mtime;
+    // time_t ctime;
+};
+
 typedef struct _FsearchDatabase FsearchDatabase;
 
 bool
@@ -65,6 +89,12 @@ db_lock(FsearchDatabase *db);
 
 bool
 db_try_lock(FsearchDatabase *db);
+
+DynamicArray *
+db_get_folders(FsearchDatabase *db);
+
+DynamicArray *
+db_get_files(FsearchDatabase *db);
 
 DynamicArray *
 db_get_entries(FsearchDatabase *db);

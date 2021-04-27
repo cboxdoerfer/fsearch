@@ -721,7 +721,7 @@ perform_search(FsearchApplicationWindow *win) {
 
     fsearch_application_state_lock(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
-    if (!db || !db_get_entries(db)) {
+    if (!db || (!db_get_files(db) && !db_get_folders(db))) {
         fsearch_application_state_unlock(app);
         return;
     }
@@ -747,6 +747,8 @@ perform_search(FsearchApplicationWindow *win) {
 
     FsearchQuery *q = fsearch_query_new(text,
                                         db_get_entries(db),
+                                        db_get_files(db),
+                                        db_get_folders(db),
                                         db_get_num_folders(db),
                                         db_get_num_files(db),
                                         filter,

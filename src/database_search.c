@@ -25,6 +25,7 @@
 #include <string.h>
 
 #include "array.h"
+#include "database.h"
 #include "debug.h"
 #include "fsearch_limits.h"
 #include "fsearch_task.h"
@@ -37,8 +38,9 @@ struct _DatabaseSearch {
 };
 
 typedef struct search_context_s {
+    DynamicArray *entries;
     FsearchQuery *query;
-    DatabaseEntry **results;
+    void **results;
     GCancellable *cancellable;
     uint32_t num_results;
     uint32_t num_folders;
@@ -46,6 +48,9 @@ typedef struct search_context_s {
     uint32_t start_pos;
     uint32_t end_pos;
 } search_thread_context_t;
+
+static DatabaseSearchResult *
+db_search2(FsearchQuery *q, GCancellable *cancellable);
 
 static DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable);
@@ -79,7 +84,7 @@ db_search_task(gpointer data, GCancellable *cancellable) {
         result = db_search_empty(query);
     }
     else {
-        result = db_search(query, cancellable);
+        result = db_search2(query, cancellable);
     }
 
     const double seconds = g_timer_elapsed(timer, NULL);
@@ -111,14 +116,19 @@ search_thread_context_free(search_thread_context_t *ctx) {
 }
 
 static search_thread_context_t *
-search_thread_context_new(FsearchQuery *query, GCancellable *cancellable, uint32_t start_pos, uint32_t end_pos) {
+search_thread_context_new(DynamicArray *entries,
+                          FsearchQuery *query,
+                          GCancellable *cancellable,
+                          uint32_t start_pos,
+                          uint32_t end_pos) {
     search_thread_context_t *ctx = calloc(1, sizeof(search_thread_context_t));
     assert(ctx != NULL);
     assert(end_pos >= start_pos);
 
+    ctx->entries = entries;
     ctx->query = query;
     ctx->cancellable = cancellable;
-    ctx->results = calloc(end_pos - start_pos + 1, sizeof(DatabaseEntry *));
+    ctx->results = calloc(end_pos - start_pos + 1, sizeof(void *));
     assert(ctx->results != NULL);
 
     ctx->num_results = 0;
@@ -163,6 +173,191 @@ filter_node(DatabaseEntry *node, FsearchQuery *query, const char *haystack) {
 }
 
 static void *
+db_search_folders_worker(void *user_data) {
+    search_thread_context_t *ctx = (search_thread_context_t *)user_data;
+    assert(ctx != NULL);
+    assert(ctx->results != NULL);
+
+    FsearchQuery *query = ctx->query;
+    const uint32_t start = ctx->start_pos;
+    const uint32_t end = ctx->end_pos;
+    const uint32_t num_token = query->num_token;
+    FsearchToken **token = query->token;
+    const uint32_t search_in_path = query->flags.search_in_path;
+    const uint32_t auto_search_in_path = query->flags.auto_search_in_path;
+    DynamicArray *entries = query->files;
+    FsearchDatabaseEntryFolder **results = (FsearchDatabaseEntryFolder **)ctx->results;
+
+    if (!entries) {
+        ctx->num_results = 0;
+        trace("[database_search] entries empty\n");
+        return NULL;
+    }
+
+    uint32_t num_results = 0;
+    uint32_t num_files = 0;
+    uint32_t num_folders = 0;
+
+    bool path_set = false;
+
+    GString *path_string = g_string_sized_new(PATH_MAX);
+    for (uint32_t i = start; i <= end; i++) {
+        if (g_cancellable_is_cancelled(ctx->cancellable)) {
+            return NULL;
+        }
+        FsearchDatabaseEntryFolder *node = darray_get_item(entries, i);
+        if (!node) {
+            continue;
+        }
+        const char *haystack_name = node->name;
+        if (!haystack_name) {
+            printf("name null\n");
+            continue;
+        }
+        // if (search_in_path || query->filter->search_in_path) {
+        //     g_string_truncate(path_string, 0);
+        //     db_entry_append_path(node, path_string);
+        //     path_set = true;
+        // }
+
+        // if (!filter_node(node, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
+        //     continue;
+        // }
+
+        uint32_t num_found = 0;
+        while (true) {
+            if (num_found == num_token) {
+                results[num_results] = node;
+                num_results++;
+                num_files++;
+                // printf("found: %s\n", node->name);
+                //  node->is_dir ? num_folders++ : num_files++;
+                break;
+            }
+            FsearchToken *t = token[num_found++];
+            if (!t) {
+                printf("token not found\n");
+                break;
+            }
+
+            // const char *haystack = NULL;
+            // if (search_in_path || (auto_search_in_path && t->has_separator)) {
+            //     if (!path_set) {
+            //         g_string_truncate(path_string, 0);
+            //         db_entry_append_path(node, path_string);
+            //         path_set = true;
+            //     }
+            //     haystack = path_string->str;
+            // }
+            // else {
+            //     haystack = haystack_name;
+            // }
+            if (!t->search_func(haystack_name, t->text, t)) {
+                break;
+            }
+        }
+    }
+    g_string_free(path_string, TRUE);
+    path_string = NULL;
+
+    ctx->num_results = num_results;
+    ctx->num_folders = num_folders;
+    ctx->num_files = num_files;
+
+    return NULL;
+}
+
+static void *
+db_search_files_worker(void *user_data) {
+    search_thread_context_t *ctx = (search_thread_context_t *)user_data;
+    assert(ctx != NULL);
+    assert(ctx->results != NULL);
+
+    FsearchQuery *query = ctx->query;
+    const uint32_t start = ctx->start_pos;
+    const uint32_t end = ctx->end_pos;
+    const uint32_t num_token = query->num_token;
+    FsearchToken **token = query->token;
+    const uint32_t search_in_path = query->flags.search_in_path;
+    const uint32_t auto_search_in_path = query->flags.auto_search_in_path;
+    DynamicArray *entries = query->files;
+    FsearchDatabaseEntryFile **results = (FsearchDatabaseEntryFile **)ctx->results;
+
+    if (!entries) {
+        ctx->num_results = 0;
+        trace("[database_search] entries empty\n");
+        return NULL;
+    }
+
+    uint32_t num_results = 0;
+    uint32_t num_files = 0;
+    uint32_t num_folders = 0;
+
+    bool path_set = false;
+
+    GString *path_string = g_string_sized_new(PATH_MAX);
+    for (uint32_t i = start; i <= end; i++) {
+        if (g_cancellable_is_cancelled(ctx->cancellable)) {
+            return NULL;
+        }
+        FsearchDatabaseEntryFile *node = darray_get_item(entries, i);
+        if (!node) {
+            continue;
+        }
+        const char *haystack_name = node->name;
+        // printf("%s\n", node->name);
+        //  if (search_in_path || query->filter->search_in_path) {
+        //      g_string_truncate(path_string, 0);
+        //      db_entry_append_path(node, path_string);
+        //      path_set = true;
+        //  }
+
+        // if (!filter_node(node, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
+        //     continue;
+        // }
+
+        uint32_t num_found = 0;
+        while (true) {
+            if (num_found == num_token) {
+                results[num_results] = node;
+                num_results++;
+                num_files++;
+                // node->is_dir ? num_folders++ : num_files++;
+                break;
+            }
+            FsearchToken *t = token[num_found++];
+            if (!t) {
+                break;
+            }
+
+            // const char *haystack = NULL;
+            // if (search_in_path || (auto_search_in_path && t->has_separator)) {
+            //     if (!path_set) {
+            //         g_string_truncate(path_string, 0);
+            //         db_entry_append_path(node, path_string);
+            //         path_set = true;
+            //     }
+            //     haystack = path_string->str;
+            // }
+            // else {
+            //     haystack = haystack_name;
+            // }
+            if (!t->search_func(haystack_name, t->text, t)) {
+                break;
+            }
+        }
+    }
+    g_string_free(path_string, TRUE);
+    path_string = NULL;
+
+    ctx->num_results = num_results;
+    ctx->num_folders = num_folders;
+    ctx->num_files = num_files;
+
+    return NULL;
+}
+
+static void *
 db_search_worker(void *user_data) {
     search_thread_context_t *ctx = (search_thread_context_t *)user_data;
     assert(ctx != NULL);
@@ -176,7 +371,7 @@ db_search_worker(void *user_data) {
     const uint32_t search_in_path = query->flags.search_in_path;
     const uint32_t auto_search_in_path = query->flags.auto_search_in_path;
     DynamicArray *entries = query->entries;
-    DatabaseEntry **results = ctx->results;
+    DatabaseEntry **results = (DatabaseEntry **)ctx->results;
 
     if (!entries) {
         ctx->num_results = 0;
@@ -253,6 +448,7 @@ db_search_worker(void *user_data) {
 static DatabaseSearchResult *
 db_search_empty(FsearchQuery *query) {
     assert(query != NULL);
+    return NULL;
     assert(query->entries != NULL);
 
     DynamicArray *entries = query->entries;
@@ -264,6 +460,103 @@ db_search_empty(FsearchQuery *query) {
     darray_add_items(results, data, num_entries);
 
     return db_search_result_new(query, results, query->num_folders, query->num_files);
+}
+
+static DynamicArray *
+db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entries, void *(*search_func)(void *)) {
+    const uint32_t num_entries = darray_get_num_items(entries);
+    const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(q->pool), num_entries);
+    const uint32_t num_items_per_thread = num_entries / num_threads;
+
+    search_thread_context_t *thread_data[num_threads];
+    memset(thread_data, 0, num_threads * sizeof(search_thread_context_t *));
+
+    uint32_t start_pos = 0;
+    uint32_t end_pos = num_items_per_thread - 1;
+
+    if (!q->token) {
+        return NULL;
+    }
+
+    GList *threads = fsearch_thread_pool_get_threads(q->pool);
+    for (uint32_t i = 0; i < num_threads; i++) {
+        thread_data[i] = search_thread_context_new(entries,
+                                                   q,
+                                                   cancellable,
+                                                   start_pos,
+                                                   i == num_threads - 1 ? num_entries - 1 : end_pos);
+
+        start_pos = end_pos + 1;
+        end_pos += num_items_per_thread;
+
+        fsearch_thread_pool_push_data(q->pool, threads, search_func, thread_data[i]);
+        threads = threads->next;
+    }
+
+    threads = fsearch_thread_pool_get_threads(q->pool);
+    while (threads) {
+        fsearch_thread_pool_wait_for_thread(q->pool, threads);
+        threads = threads->next;
+    }
+    if (g_cancellable_is_cancelled(cancellable)) {
+        for (uint32_t i = 0; i < num_threads; i++) {
+            search_thread_context_t *ctx = thread_data[i];
+            search_thread_context_free(ctx);
+        }
+        return NULL;
+    }
+
+    // get total number of entries found
+    uint32_t num_results = 0;
+    for (uint32_t i = 0; i < num_threads; ++i) {
+        num_results += thread_data[i]->num_results;
+    }
+    printf("found num results: %d\n", num_results);
+
+    DynamicArray *results = darray_new(num_results);
+
+    uint32_t num_folders = 0;
+    uint32_t num_files = 0;
+
+    for (uint32_t i = 0; i < num_threads; i++) {
+        search_thread_context_t *ctx = thread_data[i];
+        if (!ctx) {
+            break;
+        }
+
+        num_folders += ctx->num_folders;
+        num_files += ctx->num_files;
+
+        darray_add_items(results, (void **)ctx->results, ctx->num_results);
+
+        search_thread_context_free(ctx);
+    }
+
+    return results;
+}
+
+static DatabaseSearchResult *
+db_search2(FsearchQuery *q, GCancellable *cancellable) {
+    printf("search 2\n");
+    const uint32_t num_folder_entries = darray_get_num_items(q->folders);
+    const uint32_t num_file_entries = darray_get_num_items(q->files);
+    if (num_folder_entries == 0 && num_file_entries == 0) {
+        return db_search_result_new(q, NULL, 0, 0);
+    }
+
+    printf("search in %d,%d\n", num_folder_entries, num_file_entries);
+    DatabaseSearchResult *result = db_search_result_new(q, NULL, 0, 0);
+    result->files = db_search_entries(q, cancellable, q->files, db_search_files_worker);
+    // result->folders = db_search_entries(q,cancellable, q->folders, db_search_folders_worker);
+    if (result->files) {
+        result->num_files = darray_get_num_items(result->files);
+    }
+    // if (result->folders) {
+    //     result->num_folders = darray_get_num_items(result->folders);
+    // }
+    printf("finish\n");
+
+    return result;
 }
 
 static DatabaseSearchResult *
@@ -287,8 +580,11 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
 
     GList *threads = fsearch_thread_pool_get_threads(q->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-        thread_data[i] =
-            search_thread_context_new(q, cancellable, start_pos, i == num_threads - 1 ? num_entries - 1 : end_pos);
+        thread_data[i] = search_thread_context_new(q->entries,
+                                                   q,
+                                                   cancellable,
+                                                   start_pos,
+                                                   i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
