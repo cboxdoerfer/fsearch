@@ -17,8 +17,8 @@
    */
 
 #define _GNU_SOURCE
-#include "query.h"
-#include "string_utils.h"
+#include "fsearch_query.h"
+#include "fsearch_string_utils.h"
 #include <assert.h>
 #include <fnmatch.h>
 #include <stdlib.h>

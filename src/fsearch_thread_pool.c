@@ -18,7 +18,6 @@
 
 #include <stdio.h>
 
-#include "debug.h"
 #include "fsearch_thread_pool.h"
 
 struct _FsearchThreadPool {
@@ -79,7 +78,7 @@ thread_context_free(thread_context_t *ctx) {
 
     g_mutex_lock(&ctx->mutex);
     if (ctx->thread_data) {
-        trace("[thread_pool] search data still there\n");
+        g_debug("[thread_pool] search data still there");
     }
 
     // terminate thread
@@ -207,9 +206,9 @@ fsearch_thread_pool_wait_for_thread(FsearchThreadPool *pool, GList *thread) {
     thread_context_t *ctx = thread->data;
     g_mutex_lock(&ctx->mutex);
     while (fsearch_thread_pool_task_is_busy(pool, thread)) {
-        trace("[thread_pool] busy, waiting...\n");
+        g_debug("[thread_pool] busy, waiting...");
         g_cond_wait(&ctx->finished_cond, &ctx->mutex);
-        trace("[thread_pool] continue...\n");
+        g_debug("[thread_pool] continue...");
     }
     g_mutex_unlock(&ctx->mutex);
     return true;

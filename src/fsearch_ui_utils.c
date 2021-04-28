@@ -16,7 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "ui_utils.h"
+#include "fsearch_ui_utils.h"
 
 void
 ui_utils_run_gtk_dialog_async(GtkWidget *parent,

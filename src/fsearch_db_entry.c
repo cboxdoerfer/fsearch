@@ -18,7 +18,7 @@
 
 #define _GNU_SOURCE
 #include "fsearch_db_entry.h"
-#include "string_utils.h"
+#include "fsearch_string_utils.h"
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>

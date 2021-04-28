@@ -23,7 +23,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 
 #include "fsearch.h"
 #include "fsearch_list_view.h"
-#include "query.h"
+#include "fsearch_query.h"
 
 G_BEGIN_DECLS
 

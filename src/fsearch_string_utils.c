@@ -16,7 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "string_utils.h"
+#include "fsearch_string_utils.h"
 #include <assert.h>
 #include <ctype.h>
 #include <glib.h>

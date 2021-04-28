@@ -16,12 +16,12 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "preferences_ui.h"
+#include "fsearch_preferences_ui.h"
 #include "fsearch.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
 #include "fsearch_preferences_widgets.h"
-#include "ui_utils.h"
+#include "fsearch_ui_utils.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>

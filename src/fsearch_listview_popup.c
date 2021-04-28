@@ -22,8 +22,8 @@
 
 #include <glib/gi18n.h>
 
-#include "database_search.h"
-#include "listview_popup.h"
+#include "fsearch_database_search.h"
+#include "fsearch_listview_popup.h"
 
 static void
 fill_open_with_menu(GtkBuilder *builder, const char *name, FsearchDatabaseEntryType type) {

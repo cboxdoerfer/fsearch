@@ -17,20 +17,18 @@
    */
 
 #define _GNU_SOURCE
-#include "database_search.h"
+#include "fsearch_database_search.h"
 
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-#include "array.h"
-#include "debug.h"
+#include "fsearch_array.h"
 #include "fsearch_limits.h"
+#include "fsearch_string_utils.h"
 #include "fsearch_task.h"
-#include "fsearch_timer.h"
-#include "string_utils.h"
-#include "token.h"
+#include "fsearch_token.h"
 
 struct _DatabaseSearch {
     FsearchTaskQueue *queue;
@@ -170,7 +168,9 @@ db_search_task(gpointer data, GCancellable *cancellable) {
 
     const bool empty_query = fs_str_is_empty(query->text);
 
-    GTimer *timer = fsearch_timer_start();
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
+
     DatabaseSearchResult *result = NULL;
     if (empty_query && !query->pass_on_empty_query) {
         result = db_search_result_new(query, NULL, 0, 0);
@@ -182,16 +182,19 @@ db_search_task(gpointer data, GCancellable *cancellable) {
         result = db_search(query, cancellable);
     }
 
+    const char *debug_message = NULL;
     const double seconds = g_timer_elapsed(timer, NULL);
-    if (result) {
-        trace("[search] search %d.%d finished in %.2f ms\n", query->window_id, query->id, seconds * 1000);
+    if (!g_cancellable_is_cancelled(cancellable)) {
+        debug_message = "[search] search %d.%d finished in %.2f ms";
     }
     else {
-        trace("[search] search %d.%d aborted after %.2f ms\n", query->window_id, query->id, seconds * 1000);
+        debug_message = "[search] search %d.%d aborted after %.2f ms";
     }
     g_timer_stop(timer);
     g_timer_destroy(timer);
     timer = NULL;
+
+    g_debug(debug_message, query->window_id, query->id, seconds * 1000);
 
     return result;
 }
@@ -283,7 +286,7 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
 
     if (!entries) {
         ctx->num_results = 0;
-        trace("[database_search] entries empty\n");
+        g_debug("[database_search] entries empty");
         return;
     }
 

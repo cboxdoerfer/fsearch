@@ -16,7 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "clipboard.h"
+#include "fsearch_clipboard.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
 #include <string.h>
@@ -32,7 +32,7 @@ static GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST},
 
 static void
 clipboard_clean_data(GtkClipboard *clipboard, gpointer user_data) {
-    /* g_debug("clean clipboard!\n"); */
+    /* g_debug("clean clipboard!"); */
     if (clipboard_file_list) {
         g_list_free_full(clipboard_file_list, (GDestroyNotify)g_free);
         clipboard_file_list = NULL;

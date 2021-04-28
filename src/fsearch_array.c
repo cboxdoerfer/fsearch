@@ -16,8 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "array.h"
-#include "debug.h"
+#include "fsearch_array.h"
 #include <assert.h>
 #include <glib.h>
 #include <math.h>
@@ -304,7 +303,7 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
     }
     int num_threads = merge_me->len / 2;
 
-    trace("[sort] merge with %d thread(s)\n", num_threads);
+    g_debug("[sort] merge with %d thread(s)", num_threads);
 
     GArray *merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
     GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, num_threads, FALSE, NULL);
@@ -358,7 +357,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
         return darray_sort(array, comp_func);
     }
 
-    trace("[sort] sorting with %d threads\n", num_threads);
+    g_debug("[sort] sorting with %d threads", num_threads);
 
     int num_items_per_thread = array->num_items / num_threads;
     GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_threads, FALSE, NULL);
@@ -381,11 +380,18 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
 
     if (result) {
         free(array->data);
+        array->data = NULL;
+
         DynamicArraySortContext *c = &g_array_index(result, DynamicArraySortContext, 0);
         array->data = c->dest->data;
+        array->num_items = c->dest->num_items;
+        array->max_items = c->dest->max_items;
+
         c->dest->data = NULL;
         free(c->dest);
+
         g_array_free(result, TRUE);
+        result = NULL;
     }
 }
 

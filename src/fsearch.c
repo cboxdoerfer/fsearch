@@ -20,19 +20,17 @@
 #include <config.h>
 #endif
 
-#include "clipboard.h"
-#include "database.h"
-#include "database_search.h"
-#include "debug.h"
 #include "fsearch.h"
+#include "fsearch_clipboard.h"
 #include "fsearch_config.h"
+#include "fsearch_database.h"
+#include "fsearch_database_search.h"
 #include "fsearch_limits.h"
-#include "fsearch_timer.h"
+#include "fsearch_preferences_ui.h"
+#include "fsearch_ui_utils.h"
+#include "fsearch_utils.h"
 #include "fsearch_window.h"
-#include "preferences_ui.h"
 #include "resources.h"
-#include "ui_utils.h"
-#include "utils.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <glib/gstdio.h>
@@ -93,7 +91,7 @@ fsearch_action_disable(const char *action_name);
 gboolean
 db_auto_update_cb(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
-    trace("[database] scheduled update started\n");
+    g_debug("[database] scheduled update started");
     g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
     return G_SOURCE_CONTINUE;
 }
@@ -111,7 +109,7 @@ fsearch_application_db_auto_update(FsearchApplication *fsearch) {
             seconds = 60;
         }
 
-        trace("[database] update every %d seconds\n", seconds);
+        g_debug("[database] update every %d seconds", seconds);
         fsearch->db_timeout_id = g_timeout_add_seconds(seconds, db_auto_update_cb, fsearch);
     }
 }
@@ -200,11 +198,11 @@ fsearch_application_shutdown(GApplication *app) {
         fsearch_thread_pool_free(fsearch->pool);
     }
     if (fsearch->db_pool) {
-        trace("[exit] waiting for database thread to exit...\n");
+        g_debug("[exit] waiting for database thread to exit...");
         g_cancellable_cancel(fsearch->db_thread_cancellable);
         g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
         fsearch->db_pool = FALSE;
-        trace("[exit] database thread finished.\n");
+        g_debug("[exit] database thread finished.");
     }
     if (fsearch->db) {
         db_unref(fsearch->db);
@@ -308,7 +306,8 @@ database_scan_started_cb(gpointer user_data) {
 
 static FsearchDatabase *
 database_update(FsearchApplication *app, bool rescan) {
-    GTimer *timer = fsearch_timer_start();
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
 
     g_mutex_lock(&app->mutex);
     FsearchDatabase *db = db_new(app->config->locations,
@@ -328,7 +327,10 @@ database_update(FsearchApplication *app, bool rescan) {
     }
     db_unlock(db);
 
-    fsearch_timer_stop(timer, "[database_update] finished in %.2f ms\n");
+    g_timer_stop(timer);
+    const double seconds = g_timer_elapsed(timer, NULL);
+    g_timer_destroy(timer);
+    g_debug("[database_update] finished in %.2f ms", seconds);
     timer = NULL;
 
     return db;
@@ -491,7 +493,7 @@ fsearch_action_enable(const char *action_name) {
     GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
 
     if (action) {
-        trace("[application] enable action: %s\n", action_name);
+        g_debug("[application] enable action: %s", action_name);
         g_simple_action_set_enabled(G_SIMPLE_ACTION(action), TRUE);
     }
 }
@@ -501,7 +503,7 @@ fsearch_action_disable(const char *action_name) {
     GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
 
     if (action) {
-        trace("[application] disable action: %s\n", action_name);
+        g_debug("[application] disable action: %s", action_name);
         g_simple_action_set_enabled(G_SIMPLE_ACTION(action), FALSE);
     }
 }
@@ -712,7 +714,7 @@ on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_d
     g_dbus_connection_signal_unsubscribe(connection, signal_id);
 
     if (dbus_group && reply) {
-        trace("[database] trigger update in primary instance\n");
+        g_debug("[database] trigger update in primary instance");
         g_action_group_activate_action(G_ACTION_GROUP(dbus_group), "update_database", NULL);
         g_object_unref(dbus_group);
 
@@ -733,7 +735,8 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 
 static int
 local_database_update() {
-    GTimer *timer = fsearch_timer_start();
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
 
     FsearchConfig *config = config = calloc(1, sizeof(FsearchConfig));
     if (!config_load(config)) {
@@ -760,14 +763,20 @@ local_database_update() {
     config_free(config);
     config = NULL;
 
+    g_timer_stop(timer);
+    const double seconds = g_timer_elapsed(timer, NULL);
+    g_timer_destroy(timer);
+    timer = NULL;
+
+    const char *debug_message = NULL;
     if (res == 0) {
-        fsearch_timer_stop(timer, "[database_update] finished in %.2f ms\n");
-        timer = NULL;
+        debug_message = "[database_update] finished in %.2f ms";
     }
     else {
-        fsearch_timer_stop(timer, "[database_update] failed after %.2f ms\n");
-        timer = NULL;
+        debug_message = "[database_update] failed after %.2f ms";
     }
+    g_debug(debug_message, seconds * 1000);
+
     return res;
 }
 

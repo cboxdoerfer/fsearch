@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "array.h"
+#include "fsearch_array.h"
 #include "fsearch_db_entry.h"
 #include <gio/gio.h>
 #include <glib.h>
@@ -83,6 +83,9 @@ db_get_folders(FsearchDatabase *db);
 DynamicArray *
 db_get_files(FsearchDatabase *db);
 
+FsearchDatabaseEntryFolder *
+db_entry_get_parent(FsearchDatabaseEntry *entry);
+
 off_t
 db_entry_get_size(FsearchDatabaseEntry *entry);
 
@@ -96,4 +99,7 @@ int32_t
 db_entry_init_path(FsearchDatabaseEntry *entry, char *path, size_t path_len);
 
 void
-db_entry_append_path(FsearchDatabaseEntry *node, GString *str);
+db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);
+
+FsearchDatabaseEntryType
+db_entry_get_type(FsearchDatabaseEntry *entry);

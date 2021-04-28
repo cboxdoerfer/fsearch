@@ -18,11 +18,10 @@
 
 #define _GNU_SOURCE
 
-#include "utils.h"
-#include "debug.h"
+#include "fsearch_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
-#include "ui_utils.h"
+#include "fsearch_ui_utils.h"
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <stdbool.h>
@@ -197,14 +196,14 @@ file_remove_or_trash(const char *path, bool delete) {
 
     if (success) {
         if (delete) {
-            trace("[file_remove] deleted file: %s\n", path);
+            g_debug("[file_remove] deleted file: %s", path);
         }
         else {
-            trace("[file_remove] moved file to trash: %s\n", path);
+            g_debug("[file_remove] moved file to trash: %s", path);
         }
     }
     else {
-        trace("[file_remove] failed removing: %s\n", path);
+        g_warning("[file_remove] failed removing: %s", path);
     }
     return success;
 }
@@ -351,73 +350,53 @@ get_icon_size_for_height(int height) {
 }
 
 char *
-get_size_formatted(DatabaseEntry *node, bool show_base_2_units) {
-    if (!node->is_dir) {
-        if (show_base_2_units) {
-            return g_format_size_full(node->size, G_FORMAT_SIZE_IEC_UNITS);
-        }
-        else {
-            return g_format_size_full(node->size, G_FORMAT_SIZE_DEFAULT);
-        }
-    }
-    else {
-        char buffer[100] = "";
-        uint32_t num_children = btree_node_n_children(node);
-        if (num_children == 1) {
-            snprintf(buffer, sizeof(buffer), _("%d Item"), num_children);
-        }
-        else {
-            snprintf(buffer, sizeof(buffer), _("%d Items"), num_children);
-        }
-        return g_strdup(buffer);
-    }
+get_size_formatted(off_t size, bool show_base_2_units) {
+    return g_format_size_full(size, G_FORMAT_SIZE_IEC_UNITS);
 }
 
 int
-compare_path(DatabaseEntry **a_node, DatabaseEntry **b_node) {
-    if ((*a_node)->is_dir != (*b_node)->is_dir) {
-        return (*b_node)->is_dir - (*a_node)->is_dir;
-    }
-    DatabaseEntry *a = (*a_node)->parent;
-    DatabaseEntry *b = (*b_node)->parent;
-    if (!a) {
-        return -1;
-    }
-    if (!b) {
-        return 1;
-    }
-    const int32_t a_depth = btree_node_depth(a);
-    const int32_t b_depth = btree_node_depth(b);
-    char *a_parents[a_depth + 1];
-    char *b_parents[b_depth + 1];
-    a_parents[a_depth] = NULL;
-    b_parents[b_depth] = NULL;
+compare_path(DatabaseEntry **entry_a, DatabaseEntry **entry_b) {
+    // FsearchDatabaseEntry *a = (*entry_a)->parent;
+    // FsearchDatabaseEntry *b = (*entry_b)->parent;
+    // if (!a) {
+    //     return -1;
+    // }
+    // if (!b) {
+    //     return 1;
+    // }
+    // const int32_t a_depth = btree_node_depth(a);
+    // const int32_t b_depth = btree_node_depth(b);
+    // char *a_parents[a_depth + 1];
+    // char *b_parents[b_depth + 1];
+    // a_parents[a_depth] = NULL;
+    // b_parents[b_depth] = NULL;
 
-    DatabaseEntry *temp = a;
-    for (int32_t i = a_depth - 1; i >= 0 && temp; i--) {
-        a_parents[i] = temp->name;
-        temp = temp->parent;
-    }
-    temp = b;
-    for (int32_t i = b_depth - 1; i >= 0 && temp; i--) {
-        b_parents[i] = temp->name;
-        temp = temp->parent;
-    }
+    // DatabaseEntry *temp = a;
+    // for (int32_t i = a_depth - 1; i >= 0 && temp; i--) {
+    //     a_parents[i] = temp->name;
+    //     temp = temp->parent;
+    // }
+    // temp = b;
+    // for (int32_t i = b_depth - 1; i >= 0 && temp; i--) {
+    //     b_parents[i] = temp->name;
+    //     temp = temp->parent;
+    // }
 
-    uint32_t i = 0;
-    char *a_name = a_parents[i];
-    char *b_name = b_parents[i];
+    // uint32_t i = 0;
+    // char *a_name = a_parents[i];
+    // char *b_name = b_parents[i];
 
-    while (a_name && b_name) {
-        int res = strverscmp(a_name, b_name);
-        if (res != 0) {
-            return res;
-        }
-        i++;
-        a_name = a_parents[i];
-        b_name = b_parents[i];
-    }
-    return a_depth - b_depth;
+    // while (a_name && b_name) {
+    //     int res = strverscmp(a_name, b_name);
+    //     if (res != 0) {
+    //         return res;
+    //     }
+    //     i++;
+    //     a_name = a_parents[i];
+    //     b_name = b_parents[i];
+    // }
+    // return a_depth - b_depth;
+    return 0;
 }
 
 int

@@ -22,10 +22,10 @@
 #include <pango/pango.h>
 #include <stdbool.h>
 
-#include "array.h"
+#include "fsearch_array.h"
 #include "fsearch_filter.h"
 #include "fsearch_thread_pool.h"
-#include "token.h"
+#include "fsearch_token.h"
 
 typedef struct FsearchQueryFlags {
     bool match_case;

@@ -1,8 +1,7 @@
 #define _GNU_SOURCE
 
-#include "token.h"
-#include "debug.h"
-#include "string_utils.h"
+#include "fsearch_token.h"
+#include "fsearch_string_utils.h"
 #include <assert.h>
 #include <fnmatch.h>
 #include <glib.h>
@@ -30,7 +29,7 @@ fsearch_search_func_normal_icase_u8(const char *haystack, const char *needle, vo
     // TODO: make this faster
     char *haystack_normalized = g_utf8_normalize(haystack, -1, G_NORMALIZE_DEFAULT);
     if (haystack_normalized == NULL) {
-        trace("[search] file has invalid encoding: %s\n", haystack);
+        g_warning("[search] file has invalid encoding: %s\n", haystack);
         return strcasestr(haystack, needle) ? 1 : 0;
     }
     char *haystack_down = g_utf8_strdown(haystack_normalized, -1);
@@ -141,7 +140,7 @@ fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool a
     uint32_t tmp_token_len = g_strv_length(query_split);
     FsearchToken **token = calloc(tmp_token_len + 1, sizeof(FsearchToken *));
     for (uint32_t i = 0; i < tmp_token_len; i++) {
-        // trace("[search] token %d: %s\n", i, query_split[i]);
+        // g_debug("[search] token %d: %s", i, query_split[i]);
         token[i] = fsearch_token_new(query_split[i], match_case, auto_match_case, false);
     }
 

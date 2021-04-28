@@ -22,12 +22,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "debug.h"
 #include "fsearch_config.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
 #include "fsearch_limits.h"
-#include "fsearch_timer.h"
 
 const char *config_file_name = "fsearch.conf";
 const char *config_folder_name = "fsearch";
@@ -165,13 +163,17 @@ config_load(FsearchConfig *config) {
     GKeyFile *key_file = g_key_file_new();
     g_assert(key_file != NULL);
 
-    GTimer *timer = fsearch_timer_start();
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
+
     gchar config_path[PATH_MAX] = "";
     config_build_path(config_path, sizeof(config_path));
 
+    const char *debug_message = NULL;
+
     GError *error = NULL;
     if (g_key_file_load_from_file(key_file, config_path, G_KEY_FILE_NONE, &error)) {
-        trace("[config] loading...\n");
+        g_debug("[config] loading...");
         // Interface
         config->highlight_search_terms = config_load_boolean(key_file, "Interface", "highlight_search_terms", true);
         config->single_click_open = config_load_boolean(key_file, "Interface", "single_click_open", false);
@@ -274,12 +276,18 @@ config_load(FsearchConfig *config) {
             config_load_exclude_locations(key_file, config->exclude_locations, "exclude_location");
 
         result = true;
-        fsearch_timer_stop(timer, "[config] loaded in %f ms\n");
+        debug_message = "[config] loaded in %f ms";
     }
     else {
-        fsearch_timer_stop(timer, "[config] loading failed (%f ms)\n");
+        debug_message = "[config] loading failed (%f ms)";
         g_error_free(error);
     }
+    g_timer_stop(timer);
+    const double seconds = g_timer_elapsed(timer, NULL);
+    g_timer_destroy(timer);
+    timer = NULL;
+
+    g_debug(debug_message, seconds * 1000);
 
     g_key_file_free(key_file);
     return result;
@@ -425,8 +433,11 @@ config_save(FsearchConfig *config) {
     GKeyFile *key_file = g_key_file_new();
     g_assert(key_file != NULL);
 
-    GTimer *timer = fsearch_timer_start();
-    trace("[config] saving...\n");
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
+
+    g_debug("[config] saving...");
+
     // Interface
     g_key_file_set_boolean(key_file, "Interface", "single_click_open", config->single_click_open);
     g_key_file_set_boolean(key_file, "Interface", "highlight_search_terms", config->highlight_search_terms);
@@ -519,14 +530,22 @@ config_save(FsearchConfig *config) {
     gchar config_path[PATH_MAX] = "";
     config_build_path(config_path, sizeof(config_path));
 
+    const char *debug_message = NULL;
     GError *error = NULL;
     if (g_key_file_save_to_file(key_file, config_path, &error)) {
-        fsearch_timer_stop(timer, "[config] saved in %f ms\n");
+        debug_message = "[config] saved in %f ms";
         result = true;
     }
     else {
-        fsearch_timer_stop(timer, "[config] saving failed (%f ms)\n");
+        debug_message = "[config] saving failed (%f ms)";
     }
+
+    g_timer_stop(timer);
+    const double seconds = g_timer_elapsed(timer, NULL);
+    g_timer_destroy(timer);
+    timer = NULL;
+
+    g_debug(debug_message, seconds * 1000);
 
     g_key_file_free(key_file);
     return result;

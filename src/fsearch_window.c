@@ -20,21 +20,19 @@
 #include <config.h>
 #endif
 
-#include "array.h"
-#include "database.h"
-#include "database_search.h"
-#include "debug.h"
+#include "fsearch_array.h"
 #include "fsearch_config.h"
+#include "fsearch_database.h"
+#include "fsearch_database_search.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
+#include "fsearch_listview_popup.h"
+#include "fsearch_string_utils.h"
 #include "fsearch_task.h"
-#include "fsearch_timer.h"
+#include "fsearch_ui_utils.h"
+#include "fsearch_utils.h"
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
-#include "listview_popup.h"
-#include "string_utils.h"
-#include "ui_utils.h"
-#include "utils.h"
 #include <glib/gi18n.h>
 #include <math.h>
 
@@ -164,7 +162,9 @@ fsearch_window_sort_started(gpointer data) {
 static gpointer
 fsearch_window_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
-    GTimer *timer = fsearch_timer_start();
+
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
 
     if (ctx->win->result && ctx->win->result->entries) {
         g_idle_add(fsearch_window_sort_started, ctx->win);
@@ -180,7 +180,13 @@ fsearch_window_sort_task(gpointer data, GCancellable *cancellable) {
         g_idle_add(fsearch_window_sort_finished, ctx->win);
     }
 
-    fsearch_timer_stop(timer, "[sort] finished in %2.fms\n");
+    g_timer_stop(timer);
+    const double seconds = g_timer_elapsed(timer, NULL);
+    g_timer_destroy(timer);
+    timer = NULL;
+
+    g_debug("[sort] finished in %2.fms", seconds * 1000);
+
     return NULL;
 }
 
@@ -502,7 +508,7 @@ hide_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
         gtk_widget_hide(win->overlay_database_loading);
         break;
     default:
-        trace("window: overlay %d unknown\n", overlay);
+        g_debug("window: overlay %d unknown", overlay);
     }
 }
 static void
@@ -536,7 +542,7 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
         gtk_widget_show(win->overlay_database_loading);
         break;
     default:
-        trace("window: overlay %d unknown\n", overlay);
+        g_debug("window: overlay %d unknown", overlay);
     }
 }
 
@@ -708,7 +714,7 @@ perform_search(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     if (!win->task_queue) {
-        trace("[search] not set\n");
+        g_debug("[search] not set");
         return;
     }
 
@@ -725,14 +731,14 @@ perform_search(FsearchApplicationWindow *win) {
         return;
     }
     if (!db_try_lock(db)) {
-        trace("[search] database locked\n");
+        g_debug("[search] database locked");
         db_unref(db);
         fsearch_application_state_unlock(app);
         return;
     }
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-    trace("[search] search %d.%d started with query '%s'\n", win_id, win->query_id, text);
+    g_debug("[search] search %d.%d started with query '%s'", win_id, win->query_id, text);
 
     FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
                                .match_case = config->match_case,
@@ -783,24 +789,29 @@ typedef struct {
 
 static void
 count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
-    if (value) {
-        DatabaseEntry *entry = value;
-        if (entry->is_dir) {
-            ctx->num_folders++;
-        }
-        else {
-            ctx->num_files++;
-        }
+    if (!value) {
+        return;
+    }
+    FsearchDatabaseEntry *entry = value;
+    FsearchDatabaseEntryType type = db_entry_get_type(entry);
+    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
+        ctx->num_folders++;
+    }
+    else if (type == DATABASE_ENTRY_TYPE_FILE) {
+        ctx->num_files++;
     }
 }
 
 static gboolean
 on_fsearch_list_view_popup(FsearchListView *view, int row_idx, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    const char *name = db_search_result_get_name(win->result, row_idx);
-    FsearchDatabaseEntryType type = db_search_result_get_type(win->result, row_idx);
 
-    listview_popup_menu(user_data, name, type);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row_idx, sort_type, win);
+    if (!entry) {
+        return FALSE;
+    }
+
+    listview_popup_menu(user_data, db_entry_get_name(entry), db_entry_get_type(entry));
     return TRUE;
 }
 
@@ -1063,8 +1074,8 @@ draw_row_ctx_init(uint32_t row,
             ? get_icon_surface(bin_window, ctx->full_path->str, icon_size, gtk_widget_get_scale_factor(GTK_WIDGET(win)))
             : NULL;
 
-    // ctx->size = get_size_formatted(entry, config->show_base_2_units);
-    ctx->size = g_strdup("Unknown size");
+    off_t size = db_search_result_get_size(win->result, row);
+    ctx->size = get_size_formatted(size, config->show_base_2_units);
 
     // strftime(ctx->time,
     //          100,
@@ -1118,7 +1129,6 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    FsearchDatabaseEntryType type;
     int width = col->effective_width - 2 * ROW_PADDING_X;
     const char *name = db_search_result_get_name(win->result, row_idx);
     if (!name) {
@@ -1148,8 +1158,7 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_SIZE:
-        // text = get_size_formatted(entry, config->show_base_2_units);
-        text = g_strdup("Unknown size");
+        text = get_size_formatted(db_search_result_get_size(win->result, row_idx), config->show_base_2_units);
         break;
     case FSEARCH_LIST_VIEW_COLUMN_CHANGED: {
         text = g_strdup("Unknown time");
@@ -1203,8 +1212,6 @@ fsearch_list_view_draw_row(cairo_t *cr,
     }
 
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    FsearchDatabaseEntryType type;
-
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     const int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
@@ -1298,7 +1305,7 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
 
     bool parallel_sort = true;
 
-    trace("[sort] started: %d\n", sort_order);
+    g_debug("[sort] started: %d", sort_order);
     DynamicArrayCompareFunc func = NULL;
     switch (sort_order) {
     case FSEARCH_LIST_VIEW_COLUMN_NAME:

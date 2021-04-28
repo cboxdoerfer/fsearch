@@ -2,7 +2,7 @@
 
 #include <gtk/gtk.h>
 
-#include "preferences_ui.h"
+#include "fsearch_preferences_ui.h"
 
 GList *
 pref_include_treeview_data_get(GtkTreeView *view);

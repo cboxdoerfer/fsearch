@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "database.h"
+#include "fsearch_database.h"
 #include "fsearch_db_entry.h"
 #include "fsearch_list_view.h"
 #include <gtk/gtk.h>
@@ -58,7 +58,7 @@ int
 get_icon_size_for_height(int height);
 
 char *
-get_size_formatted(DatabaseEntry *node, bool show_base_2_units);
+get_size_formatted(off_t size, bool show_base_2_units);
 
 int
 compare_name(DatabaseEntry **a, DatabaseEntry **b);

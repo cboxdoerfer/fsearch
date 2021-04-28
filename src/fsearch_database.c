@@ -35,12 +35,10 @@
 #include <sys/types.h>
 #include <unistd.h>
 
-#include "database.h"
-#include "debug.h"
+#include "fsearch_database.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
-#include "memory_pool.h"
-#include "utils.h"
+#include "fsearch_memory_pool.h"
 
 #define BTREE_NODE_POOL_BLOCK_ELEMENTS 10000
 
@@ -48,16 +46,16 @@ struct FsearchDatabaseEntryCommon {
     FsearchDatabaseEntryFolder *parent;
     char *name;
     off_t size;
+
+    uint8_t type;
 };
 
 struct _FsearchDatabaseEntryFile {
-    // Common fields with FsearchDatabaseEntryFolder must be at the top in the same order
-    struct FsearchDatabaseEntryCommon data;
+    struct FsearchDatabaseEntryCommon shared;
 };
 
 struct _FsearchDatabaseEntryFolder {
-    // Common fields with FsearchDatabaseEntryFile must be at the top in the same order
-    struct FsearchDatabaseEntryCommon data;
+    struct FsearchDatabaseEntryCommon shared;
 
     GSList *folder_children;
     GSList *file_children;
@@ -77,7 +75,6 @@ struct _FsearchDatabase {
     GList *includes;
     GList *excludes;
     char **exclude_files;
-    DynamicArray *entries;
 
     bool exclude_hidden;
     time_t timestamp;
@@ -99,9 +96,9 @@ db_file_entry_destroy(FsearchDatabaseEntryFolder *entry) {
     if (!entry) {
         return;
     }
-    if (entry->data.name) {
-        free(entry->data.name);
-        entry->data.name = NULL;
+    if (entry->shared.name) {
+        free(entry->shared.name);
+        entry->shared.name = NULL;
     }
 }
 
@@ -110,9 +107,9 @@ db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry) {
     if (!entry) {
         return;
     }
-    if (entry->data.name) {
-        free(entry->data.name);
-        entry->data.name = NULL;
+    if (entry->shared.name) {
+        free(entry->shared.name);
+        entry->shared.name = NULL;
     }
     if (entry->file_children) {
         g_slist_free(entry->file_children);
@@ -124,14 +121,68 @@ db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry) {
     }
 }
 
-static int
-sort_file_by_name(FsearchDatabaseEntryFile **a, FsearchDatabaseEntryFile **b) {
-    return strverscmp((*a)->data.name, (*b)->data.name);
+static uint32_t
+db_entry_get_depth(FsearchDatabaseEntry *entry) {
+    uint32_t depth = 0;
+    while (entry && entry->shared.parent) {
+        entry = (FsearchDatabaseEntry *)entry->shared.parent;
+        depth++;
+    }
+    return depth;
+}
+
+static FsearchDatabaseEntryFolder *
+db_entry_get_parent_nth(FsearchDatabaseEntryFolder *entry, int32_t nth) {
+    while (entry && nth > 0) {
+        entry = entry->shared.parent;
+        nth--;
+    }
+    return entry;
+}
+
+static void
+sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabaseEntryFolder *entry_b, int *res) {
+    if (!entry_a) {
+        return;
+    }
+    if (entry_a->shared.parent && entry_a->shared.parent != entry_b->shared.parent) {
+        sort_entry_by_path_recursive(entry_a->shared.parent, entry_b->shared.parent, res);
+    }
+    if (*res != 0) {
+        return;
+    }
+    *res = strverscmp(entry_a->shared.name, entry_b->shared.name);
 }
 
 static int
-sort_folder_by_name(FsearchDatabaseEntryFolder **a, FsearchDatabaseEntryFolder **b) {
-    return strverscmp((*a)->data.name, (*b)->data.name);
+sort_entry_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    FsearchDatabaseEntry *entry_a = *a;
+    FsearchDatabaseEntry *entry_b = *b;
+    uint32_t a_depth = db_entry_get_depth(entry_a);
+    uint32_t b_depth = db_entry_get_depth(entry_b);
+
+    int res = 0;
+    if (a_depth == b_depth) {
+        sort_entry_by_path_recursive(entry_a->shared.parent, entry_b->shared.parent, &res);
+    }
+    else if (a_depth > b_depth) {
+        int32_t diff = a_depth - b_depth;
+        FsearchDatabaseEntryFolder *parent_a = db_entry_get_parent_nth(entry_a->shared.parent, diff);
+        sort_entry_by_path_recursive(parent_a, entry_b->shared.parent, &res);
+        res = res == 0 ? 1 : res;
+    }
+    else {
+        int32_t diff = b_depth - a_depth;
+        FsearchDatabaseEntryFolder *parent_b = db_entry_get_parent_nth(entry_b->shared.parent, diff);
+        sort_entry_by_path_recursive(entry_a->shared.parent, parent_b, &res);
+        res = res == 0 ? -1 : res;
+    }
+    return res;
+}
+
+static int
+sort_entry_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    return strverscmp((*a)->shared.name, (*b)->shared.name);
 }
 
 static void
@@ -139,15 +190,19 @@ db_sort(FsearchDatabase *db) {
     assert(db != NULL);
 
     GTimer *timer = g_timer_new();
-    printf("sorting\n");
     if (db->files) {
-        darray_sort_multi_threaded(db->files, (DynamicArrayCompareFunc)sort_file_by_name);
+        darray_sort_multi_threaded(db->files, (DynamicArrayCompareFunc)sort_entry_by_path);
+        darray_sort(db->files, (DynamicArrayCompareFunc)sort_entry_by_name);
+        const double seconds = g_timer_elapsed(timer, NULL);
+        g_timer_reset(timer);
+        g_debug("[database] sorted files: %f s", seconds);
     }
     if (db->folders) {
-        darray_sort_multi_threaded(db->folders, (DynamicArrayCompareFunc)sort_folder_by_name);
+        darray_sort_multi_threaded(db->folders, (DynamicArrayCompareFunc)sort_entry_by_path);
+        darray_sort(db->folders, (DynamicArrayCompareFunc)sort_entry_by_name);
+        const double seconds = g_timer_elapsed(timer, NULL);
+        g_debug("[database] sorted folders: %f s", seconds);
     }
-    double seconds = g_timer_elapsed(timer, NULL);
-    printf("sorted: %f\n", seconds);
     g_timer_destroy(timer);
     timer = NULL;
 }
@@ -528,16 +583,16 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
         const bool is_dir = S_ISDIR(st.st_mode);
         if (is_dir && directory_is_excluded(path->str, db->excludes)) {
-            trace("[database_scan] excluded directory: %s\n", path->str);
+            g_debug("[database_scan] excluded directory: %s", path->str);
             continue;
         }
 
         if (is_dir) {
             FsearchDatabaseEntryFolder *folder_entry = fsearch_memory_pool_malloc(db->folder_pool);
-            folder_entry->data.name = strdup(dent->d_name);
-            folder_entry->data.parent = parent;
+            folder_entry->shared.name = strdup(dent->d_name);
+            folder_entry->shared.parent = parent;
 
-            parent->data.size += folder_entry->data.size;
+            parent->shared.size += folder_entry->shared.size;
 
             parent->folder_children = g_slist_prepend(parent->folder_children, folder_entry);
             darray_add_item(db->folders, folder_entry);
@@ -548,11 +603,11 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         }
         else {
             FsearchDatabaseEntryFile *file_entry = fsearch_memory_pool_malloc(db->file_pool);
-            file_entry->data.name = strdup(dent->d_name);
-            file_entry->data.size = st.st_size;
-            file_entry->data.parent = parent;
+            file_entry->shared.name = strdup(dent->d_name);
+            file_entry->shared.size = st.st_size;
+            file_entry->shared.parent = parent;
 
-            parent->data.size += file_entry->data.size;
+            parent->shared.size += file_entry->shared.size;
 
             parent->file_children = g_slist_prepend(parent->file_children, file_entry);
             darray_add_item(db->files, file_entry);
@@ -568,13 +623,16 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 }
 
 static void
-db_folder_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
-    printf("folder scan\n");
+db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
+    assert(dname != NULL);
+    assert(dname[0] == '/');
+    g_debug("[database] scan path: %s", dname);
+
+    GString *path = g_string_new(dname);
+    // remove leading path separator '/'
+    g_string_erase(path, 0, 1);
 
     GTimer *timer = g_timer_new();
-    GString *path = g_string_new(dname);
-    printf("scan path: %s\n", path->str);
-
     g_timer_start(timer);
     DatabaseWalkContext walk_context = {
         .db = db,
@@ -586,18 +644,22 @@ db_folder_scan(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     };
 
     FsearchDatabaseEntryFolder *parent = fsearch_memory_pool_malloc(db->folder_pool);
-    parent->data.name = strdup(dname);
-    parent->data.parent = NULL;
+    parent->shared.name = strdup(path->str);
+    parent->shared.parent = NULL;
+
+    if (strcmp(path->str, "") != 0) {
+        g_string_prepend_c(path, '/');
+    }
     uint32_t res = db_folder_scan_recursive(&walk_context, parent);
 
     g_string_free(path, TRUE);
     g_timer_destroy(timer);
     if (res == WALK_OK) {
-        printf("scanned: %d,%d,%d\n", db->num_files, db->num_folders, db->num_entries);
+        g_debug("[database] scanned: %d files, %d files -> %d total", db->num_files, db->num_folders, db->num_entries);
         return;
     }
 
-    trace("[database_scan] walk error: %d\n", res);
+    g_warning("[database_scan] walk error: %d\n", res);
 }
 
 bool
@@ -636,10 +698,10 @@ static void
 db_free(FsearchDatabase *db) {
     assert(db != NULL);
 
-    trace("[database_free] freeing...\n");
+    g_debug("[database_free] freeing...");
     db_lock(db);
     if (db->ref_count > 0) {
-        trace("[database_free] pending references on free: %d\n", db->ref_count);
+        g_warning("[database_free] pending references on free: %d", db->ref_count);
     }
 
     if (db->files) {
@@ -678,7 +740,7 @@ db_free(FsearchDatabase *db) {
 
     malloc_trim(0);
 
-    trace("[database_free] freed\n");
+    g_debug("[database_free] freed");
     return;
 }
 
@@ -747,7 +809,6 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
     assert(db != NULL);
 
     bool ret = false;
-    bool init_list = false;
     for (GList *l = db->includes; l != NULL; l = l->next) {
         FsearchIncludePath *fs_path = l->data;
         if (!fs_path->path) {
@@ -757,7 +818,7 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
             continue;
         }
         if (fs_path->update) {
-            db_folder_scan(db, fs_path->path, cancellable, status_cb);
+            db_scan_folder(db, fs_path->path, cancellable, status_cb);
         }
     }
     db_sort(db);
@@ -770,7 +831,7 @@ db_ref(FsearchDatabase *db) {
     db_lock(db);
     db->ref_count++;
     db_unlock(db);
-    // trace("[database_ref] increased to: %d\n", db->ref_count);
+    g_debug("[database_ref] increased to: %d", db->ref_count);
 }
 
 void
@@ -779,7 +840,7 @@ db_unref(FsearchDatabase *db) {
     db_lock(db);
     db->ref_count--;
     db_unlock(db);
-    // trace("[database_unref] dropped to: %d\n", db->ref_count);
+    g_debug("[database_unref] dropped to: %d", db->ref_count);
     if (db->ref_count <= 0) {
         db_free(db);
     }
@@ -788,48 +849,58 @@ db_unref(FsearchDatabase *db) {
 static char *
 init_path_recursively(FsearchDatabaseEntryFolder *folder, char *path, size_t path_len) {
     char *insert_pos = NULL;
-    if (folder->data.parent) {
-        insert_pos = init_path_recursively(folder->data.parent, path, path_len);
+    if (folder->shared.parent) {
+        insert_pos = init_path_recursively(folder->shared.parent, path, path_len);
     }
+    insert_pos += g_strlcpy(insert_pos, folder->shared.name, path - insert_pos);
     *insert_pos = '/';
     insert_pos++;
-    g_strlcpy(insert_pos, folder->data.name, path - insert_pos);
-    return NULL;
+    return insert_pos;
 }
 
 static void
 build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
-    if (folder->data.parent) {
-        build_path_recursively(folder->data.parent, str);
+    if (folder->shared.parent) {
+        build_path_recursively(folder->shared.parent, str);
     }
     g_string_append_c(str, '/');
-    g_string_append(str, folder->data.name);
+    g_string_append(str, folder->shared.name);
 }
 
 int32_t
 db_entry_init_path(FsearchDatabaseEntry *entry, char *path, size_t path_len) {
-    init_path_recursively(entry->data.parent, path, path_len);
+    init_path_recursively(entry->shared.parent, path, path_len);
     return 0;
 }
 
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry) {
     GString *path = g_string_new(NULL);
-    build_path_recursively(entry->data.parent, path);
+    build_path_recursively(entry->shared.parent, path);
     return path;
 }
 
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str) {
-    build_path_recursively(entry->data.parent, str);
+    build_path_recursively(entry->shared.parent, str);
 }
 
 off_t
 db_entry_get_size(FsearchDatabaseEntry *entry) {
-    return entry ? entry->data.size : 0;
+    return entry ? entry->shared.size : 0;
 }
 
 const char *
 db_entry_get_name(FsearchDatabaseEntry *entry) {
-    return entry ? entry->data.name : NULL;
+    return entry ? entry->shared.name : NULL;
+}
+
+FsearchDatabaseEntryFolder *
+db_entry_get_parent(FsearchDatabaseEntry *entry) {
+    return entry ? entry->shared.parent : NULL;
+}
+
+FsearchDatabaseEntryType
+db_entry_get_type(FsearchDatabaseEntry *entry) {
+    return entry ? entry->shared.type : DATABASE_ENTRY_TYPE_NONE;
 }
