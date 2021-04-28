@@ -86,10 +86,11 @@ prepend_path(gpointer key, gpointer value, gpointer user_data) {
     }
 
     GList **file_list = (GList **)user_data;
-    DatabaseEntry *node = value;
-    char *path = db_entry_get_path(node);
+    FsearchDatabaseEntry *entry = value;
+    GString *path = db_entry_get_path(entry);
     if (path) {
-        *file_list = g_list_prepend(*file_list, g_strdup(path));
+        *file_list = g_list_prepend(*file_list, path->str);
+        g_string_free(path, FALSE);
     }
 }
 
@@ -226,9 +227,9 @@ open_cb(gpointer key, gpointer value, gpointer data) {
     if (!value) {
         return;
     }
-    DatabaseEntry *node = value;
+    FsearchDatabaseEntry *entry = value;
 
-    if (!launch_node(node)) {
+    if (!launch_node(entry)) {
         bool *open_failed = data;
         *open_failed = true;
     }
@@ -239,10 +240,10 @@ open_with_cb(gpointer key, gpointer value, gpointer data) {
     if (!value) {
         return;
     }
-    DatabaseEntry *node = value;
+    FsearchDatabaseEntry *entry = value;
 
     char path_name[PATH_MAX] = "";
-    db_entry_init_parent_path(node, path_name, sizeof(path_name));
+    db_entry_init_path(entry, path_name, sizeof(path_name));
     GList **list = data;
     *list = g_list_append(*list, g_file_new_for_path(path_name));
 }
@@ -376,9 +377,9 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
     if (!value) {
         return;
     }
-    DatabaseEntry *node = value;
+    FsearchDatabaseEntry *entry = value;
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    if (!launch_node_path(node, config->folder_open_cmd)) {
+    if (!launch_node_path(entry, config->folder_open_cmd)) {
         bool *open_failed = data;
         *open_failed = true;
     }

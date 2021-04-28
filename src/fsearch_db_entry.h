@@ -80,15 +80,3 @@ btree_node_children_foreach(DatabaseEntry *node, void (*func)(DatabaseEntry *, v
 
 void
 btree_node_traverse(DatabaseEntry *node, bool (*func)(DatabaseEntry *, void *), void *data);
-
-bool
-db_entry_init_path(DatabaseEntry *node, char *path, size_t path_len);
-
-bool
-db_entry_init_parent_path(DatabaseEntry *node, char *path, size_t path_len);
-
-void
-db_entry_append_path(DatabaseEntry *node, GString *str);
-
-char *
-db_entry_get_path(DatabaseEntry *node);

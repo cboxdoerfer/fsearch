@@ -26,4 +26,4 @@
 #include <gtk/gtk.h>
 
 void
-listview_popup_menu(GtkWidget *widget, DatabaseEntry *node);
+listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryType type);

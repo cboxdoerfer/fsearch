@@ -25,29 +25,16 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct _FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
+typedef enum {
+    DATABASE_ENTRY_TYPE_NONE,
+    DATABASE_ENTRY_TYPE_FOLDER,
+    DATABASE_ENTRY_TYPE_FILE,
+    NUM_DATABASE_ENTRY_TYPES,
+} FsearchDatabaseEntryType;
 
+typedef struct _FsearchDatabaseEntryFile FsearchDatabaseEntry;
 typedef struct _FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
-
-struct _FsearchDatabaseEntryFile {
-    FsearchDatabaseEntryFolder *parent;
-
-    char *name;
-    off_t size;
-    // time_t mtime;
-    // time_t ctime;
-};
-
-struct _FsearchDatabaseEntryFolder {
-    FsearchDatabaseEntryFolder *parent;
-    GPtrArray *folder_children;
-    GPtrArray *file_children;
-
-    char *name;
-    off_t size;
-    // time_t mtime;
-    // time_t ctime;
-};
+typedef struct _FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
 
 typedef struct _FsearchDatabase FsearchDatabase;
 
@@ -96,5 +83,17 @@ db_get_folders(FsearchDatabase *db);
 DynamicArray *
 db_get_files(FsearchDatabase *db);
 
-DynamicArray *
-db_get_entries(FsearchDatabase *db);
+off_t
+db_entry_get_size(FsearchDatabaseEntry *entry);
+
+const char *
+db_entry_get_name(FsearchDatabaseEntry *entry);
+
+GString *
+db_entry_get_path(FsearchDatabaseEntry *entry);
+
+int32_t
+db_entry_init_path(FsearchDatabaseEntry *entry, char *path, size_t path_len);
+
+void
+db_entry_append_path(FsearchDatabaseEntry *node, GString *str);

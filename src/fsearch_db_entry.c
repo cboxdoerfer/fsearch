@@ -242,82 +242,82 @@ btree_node_traverse(DatabaseEntry *node, bool (*func)(DatabaseEntry *, void *), 
     btree_node_traverse_cb(node, func, data);
 }
 
-static bool
-btree_node_build_path(DatabaseEntry *node, char *path, size_t path_len) {
-    if (!node) {
-        // empty node
-        return false;
-    }
-    if (btree_node_is_root(node)) {
-        if (strlen(node->name) == 0) {
-            strncpy(path, "/", path_len);
-        }
-        else {
-            strncpy(path, node->name, path_len);
-        }
-        return true;
-    }
-
-    const int32_t depth = btree_node_depth(node);
-    char *parents[depth + 1];
-    parents[depth] = NULL;
-
-    DatabaseEntry *temp = node;
-    for (int32_t i = depth - 1; i >= 0 && temp; i--) {
-        parents[i] = temp->name;
-        temp = temp->parent;
-    }
-
-    char *ptr = path;
-    char *end = &path[path_len - 1];
-
-    uint32_t counter = 0;
-    ptr = fs_str_copy(ptr, end, parents[counter++]);
-
-    char *item = parents[counter++];
-    while (item && ptr != end) {
-        ptr = fs_str_copy(ptr, end, "/");
-        ptr = fs_str_copy(ptr, end, item);
-        item = parents[counter++];
-    }
-    return true;
-}
-
-bool
-db_entry_init_path(DatabaseEntry *node, char *path, size_t path_len) {
-    if (!node) {
-        // empty node
-        return false;
-    }
-    return btree_node_build_path(node->parent, path, path_len);
-}
-
-static void
-build_path_recursively(DatabaseEntry *node, GString *str) {
-    if (node->parent) {
-        build_path_recursively(node->parent, str);
-    }
-    g_string_append_c(str, '/');
-    g_string_append(str, node->name);
-}
-
-void
-db_entry_append_path(DatabaseEntry *node, GString *str) {
-    build_path_recursively(node, str);
-}
-
-char *
-db_entry_get_path(DatabaseEntry *node) {
-    GString *path = g_string_new(NULL);
-    build_path_recursively(node, path);
-    return g_string_free(path, FALSE);
-}
-
-bool
-db_entry_init_parent_path(DatabaseEntry *node, char *path, size_t path_len) {
-    if (!node) {
-        // empty node
-        return false;
-    }
-    return btree_node_build_path(node, path, path_len);
-}
+// static bool
+// btree_node_build_path(DatabaseEntry *node, char *path, size_t path_len) {
+//     if (!node) {
+//         // empty node
+//         return false;
+//     }
+//     if (btree_node_is_root(node)) {
+//         if (strlen(node->name) == 0) {
+//             strncpy(path, "/", path_len);
+//         }
+//         else {
+//             strncpy(path, node->name, path_len);
+//         }
+//         return true;
+//     }
+//
+//     const int32_t depth = btree_node_depth(node);
+//     char *parents[depth + 1];
+//     parents[depth] = NULL;
+//
+//     DatabaseEntry *temp = node;
+//     for (int32_t i = depth - 1; i >= 0 && temp; i--) {
+//         parents[i] = temp->name;
+//         temp = temp->parent;
+//     }
+//
+//     char *ptr = path;
+//     char *end = &path[path_len - 1];
+//
+//     uint32_t counter = 0;
+//     ptr = fs_str_copy(ptr, end, parents[counter++]);
+//
+//     char *item = parents[counter++];
+//     while (item && ptr != end) {
+//         ptr = fs_str_copy(ptr, end, "/");
+//         ptr = fs_str_copy(ptr, end, item);
+//         item = parents[counter++];
+//     }
+//     return true;
+// }
+//
+// bool
+// db_entry_init_path(DatabaseEntry *node, char *path, size_t path_len) {
+//     if (!node) {
+//         // empty node
+//         return false;
+//     }
+//     return btree_node_build_path(node->parent, path, path_len);
+// }
+//
+// static void
+// build_path_recursively(DatabaseEntry *node, GString *str) {
+//     if (node->parent) {
+//         build_path_recursively(node->parent, str);
+//     }
+//     g_string_append_c(str, '/');
+//     g_string_append(str, node->name);
+// }
+//
+// void
+// db_entry_append_path(DatabaseEntry *node, GString *str) {
+//     build_path_recursively(node, str);
+// }
+//
+// char *
+// db_entry_get_path(DatabaseEntry *node) {
+//     GString *path = g_string_new(NULL);
+//     build_path_recursively(node, path);
+//     return g_string_free(path, FALSE);
+// }
+//
+// bool
+// db_entry_init_parent_path(DatabaseEntry *node, char *path, size_t path_len) {
+//     if (!node) {
+//         // empty node
+//         return false;
+//     }
+//     return btree_node_build_path(node, path, path_len);
+// }

@@ -61,19 +61,20 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
 }
 
 static char *
-build_folder_open_cmd(DatabaseEntry *node, const char *cmd) {
-    if (!cmd || !node) {
+build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
+    if (!cmd || !entry) {
         return NULL;
     }
 
     char path[PATH_MAX] = "";
-    if (!db_entry_init_path(node, path, sizeof(path))) {
+    if (!db_entry_init_path(entry, path, sizeof(path))) {
         return NULL;
     }
     char path_full[PATH_MAX] = "";
-    if (!db_entry_init_parent_path(node, path_full, sizeof(path_full))) {
-        return NULL;
-    }
+    // TODO
+    // if (!db_entry_init_parent_path(entry, path_full, sizeof(path_full))) {
+    //    return NULL;
+    //}
     char *path_quoted = g_shell_quote(path);
     char *path_full_quoted = g_shell_quote(path_full);
 
@@ -114,12 +115,12 @@ build_folder_open_cmd(DatabaseEntry *node, const char *cmd) {
 }
 
 static bool
-open_with_cmd(DatabaseEntry *node, const char *cmd) {
+open_with_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
     if (!cmd) {
         return false;
     }
 
-    char *cmd_res = build_folder_open_cmd(node, cmd);
+    char *cmd_res = build_folder_open_cmd(entry, cmd);
     if (!cmd_res) {
         return false;
     }
@@ -219,23 +220,24 @@ file_trash(const char *path) {
 }
 
 bool
-launch_node(DatabaseEntry *node) {
+launch_node(FsearchDatabaseEntry *entry) {
     char path[PATH_MAX] = "";
-    bool res = db_entry_init_parent_path(node, path, sizeof(path));
-    if (res) {
-        return open_uri(path);
-    }
+    // TODO
+    // bool res = db_entry_init_parent_path(entry, path, sizeof(path));
+    // if (res) {
+    //    return open_uri(path);
+    //}
     return false;
 }
 
 bool
-launch_node_path(DatabaseEntry *node, const char *cmd) {
+launch_node_path(FsearchDatabaseEntry *entry, const char *cmd) {
     if (cmd) {
-        return open_with_cmd(node, cmd);
+        return open_with_cmd(entry, cmd);
     }
     else {
         char path[PATH_MAX] = "";
-        bool res = db_entry_init_path(node, path, sizeof(path));
+        bool res = db_entry_init_path(entry, path, sizeof(path));
         if (res) {
             return open_uri(path);
         }
@@ -473,40 +475,41 @@ compare_changed(DatabaseEntry **a_node, DatabaseEntry **b_node) {
 
 int
 compare_type(DatabaseEntry **a_node, DatabaseEntry **b_node) {
-    DatabaseEntry *a = *a_node;
-    DatabaseEntry *b = *b_node;
-    bool is_dir_a = a->is_dir;
-    bool is_dir_b = b->is_dir;
-    if (is_dir_a != is_dir_b) {
-        return is_dir_b - is_dir_a;
-    }
-    if (is_dir_a && is_dir_b) {
-        return 0;
-    }
+    // TODO
+    return 0;
+    // DatabaseEntry *a = *a_node;
+    // DatabaseEntry *b = *b_node;
+    // bool is_dir_a = a->is_dir;
+    // bool is_dir_b = b->is_dir;
+    // if (is_dir_a != is_dir_b) {
+    //     return is_dir_b - is_dir_a;
+    // }
+    // if (is_dir_a && is_dir_b) {
+    //     return 0;
+    // }
 
-    gchar *type_a = NULL;
-    gchar *type_b = NULL;
+    // gchar *type_a = NULL;
+    // gchar *type_b = NULL;
 
-    gchar path_a[PATH_MAX] = "";
-    gchar path_b[PATH_MAX] = "";
+    // gchar path_a[PATH_MAX] = "";
+    // gchar path_b[PATH_MAX] = "";
 
-    db_entry_init_parent_path(a, path_a, sizeof(path_a));
-    type_a = get_file_type(a, path_a);
-    db_entry_init_parent_path(b, path_b, sizeof(path_b));
-    type_b = get_file_type(b, path_b);
+    // db_entry_init_parent_path(a, path_a, sizeof(path_a));
+    // type_a = get_file_type(a, path_a);
+    // db_entry_init_parent_path(b, path_b, sizeof(path_b));
+    // type_b = get_file_type(b, path_b);
 
-    gint return_val = 0;
-    if (type_a && type_b) {
-        return_val = strverscmp(type_a, type_b);
-    }
-    if (type_a) {
-        g_free(type_a);
-        type_a = NULL;
-    }
-    if (type_b) {
-        g_free(type_b);
-        type_b = NULL;
-    }
-    return return_val;
+    // gint return_val = 0;
+    // if (type_a && type_b) {
+    //     return_val = strverscmp(type_a, type_b);
+    // }
+    // if (type_a) {
+    //     g_free(type_a);
+    //     type_a = NULL;
+    // }
+    // if (type_b) {
+    //     g_free(type_b);
+    //     type_b = NULL;
+    // }
+    // return return_val;
 }
-

@@ -135,8 +135,9 @@ fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
 static void
 fsearch_window_apply_results(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    if (self->result && self->result->entries) {
-        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), darray_get_num_items(self->result->entries));
+    if (self->result && self->result->files) {
+        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview),
+                                       self->result->num_files + self->result->num_folders);
     }
     else {
         fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0);
@@ -203,15 +204,15 @@ fsearch_window_sort_task_finished(FsearchTask *task, gpointer result, gpointer d
 static void *
 fsearch_list_view_get_node_for_row(int row_idx, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    if (!win || !win->result || !win->result->entries || !darray_get_num_items(win->result->entries)
-        || darray_get_num_items(win->result->entries) <= row_idx) {
+    if (!win || !win->result) {
         return NULL;
     }
 
     if (sort_type == GTK_SORT_DESCENDING) {
-        row_idx = darray_get_num_items(win->result->entries) - row_idx - 1;
+        row_idx = db_search_result_get_num_entries(win->result) - row_idx - 1;
     }
-    return darray_get_item(win->result->entries, row_idx);
+
+    return db_search_result_get_entry(win->result, row_idx, NULL);
 }
 
 static void
@@ -584,11 +585,9 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win, DatabaseSearch
     win->result = search_result;
 
     const gchar *text = search_result->query->text;
-    uint32_t num_results = 0;
 
-    DynamicArray *entries = search_result->entries;
-    if (entries && darray_get_num_items(entries) > 0) {
-        num_results = darray_get_num_items(entries);
+    uint32_t num_results = db_search_result_get_num_entries(search_result);
+    if (num_results > 0) {
         win->query_highlight = fsearch_query_highlight_new(text, search_result->query->flags);
     }
     else {
@@ -667,8 +666,8 @@ fsearch_window_search_cancelled(gpointer data) {
 
 uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
-    if (self->result && self->result->entries) {
-        return darray_get_num_items(self->result->entries);
+    if (self->result) {
+        return db_search_result_get_num_entries(self->result);
     }
     return 0;
 }
@@ -746,7 +745,6 @@ perform_search(FsearchApplicationWindow *win) {
     FsearchFilter *filter = filter_element->data;
 
     FsearchQuery *q = fsearch_query_new(text,
-                                        db_get_entries(db),
                                         db_get_files(db),
                                         db_get_folders(db),
                                         db_get_num_folders(db),
@@ -786,8 +784,8 @@ typedef struct {
 static void
 count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
     if (value) {
-        DatabaseEntry *node = value;
-        if (node->is_dir) {
+        DatabaseEntry *entry = value;
+        if (entry->is_dir) {
             ctx->num_folders++;
         }
         else {
@@ -798,8 +796,11 @@ count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
 
 static gboolean
 on_fsearch_list_view_popup(FsearchListView *view, int row_idx, GtkSortType sort_type, gpointer user_data) {
-    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, user_data);
-    listview_popup_menu(user_data, node);
+    FsearchApplicationWindow *win = user_data;
+    const char *name = db_search_result_get_name(win->result, row_idx);
+    FsearchDatabaseEntryType type = db_search_result_get_type(win->result, row_idx);
+
+    listview_popup_menu(user_data, name, type);
     return TRUE;
 }
 
@@ -887,12 +888,12 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         launch_folder = true;
     }
 
-    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, self);
-    if (!node) {
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row_idx, sort_type, self);
+    if (!entry) {
         return;
     }
 
-    if (!launch_folder ? launch_node(node) : launch_node_path(node, config->folder_open_cmd)) {
+    if (!launch_folder ? launch_node(entry) : launch_node_path(entry, config->folder_open_cmd)) {
         // open succeeded
         fsearch_window_action_after_file_open(true);
     }
@@ -1027,43 +1028,48 @@ typedef struct {
 } DrawRowContext;
 
 static void
-draw_row_ctx_init(DatabaseEntry *node,
+draw_row_ctx_init(uint32_t row,
                   FsearchApplicationWindow *win,
                   GdkWindow *bin_window,
                   int icon_size,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    ctx->display_name = g_filename_display_name(node->name);
-    ctx->name_attr = win->query_highlight ? fsearch_query_highlight_match(win->query_highlight, node->name) : NULL;
+    const char *name = db_search_result_get_name(win->result, row);
+    if (!name) {
+        return;
+    }
+    ctx->display_name = g_filename_display_name(name);
+    ctx->name_attr = win->query_highlight ? fsearch_query_highlight_match(win->query_highlight, name) : NULL;
 
-    char path_raw[PATH_MAX] = "";
-    db_entry_init_path(node, path_raw, sizeof(path_raw));
+    GString *path = db_search_result_get_path(win->result, row);
 
-    ctx->path = g_string_new(path_raw);
+    ctx->path = db_search_result_get_path(win->result, row);
     if (win->query_highlight
         && ((win->query_highlight->has_separator && win->query_highlight->flags.auto_search_in_path)
             || win->query_highlight->flags.search_in_path)) {
-        ctx->path_attr = fsearch_query_highlight_match(win->query_highlight, path_raw);
+        ctx->path_attr = fsearch_query_highlight_match(win->query_highlight, ctx->path->str);
     }
 
     ctx->full_path = g_string_new_len(ctx->path->str, ctx->path->len);
     g_string_append_c(ctx->full_path, '/');
-    g_string_append(ctx->full_path, node->name);
+    g_string_append(ctx->full_path, name);
 
-    ctx->type = get_file_type(node, ctx->full_path->str);
+    // ctx->type = get_file_type(entry, ctx->full_path->str);
+    ctx->type = g_strdup("Unknown type");
 
     ctx->icon_surface =
         config->show_listview_icons
             ? get_icon_surface(bin_window, ctx->full_path->str, icon_size, gtk_widget_get_scale_factor(GTK_WIDGET(win)))
             : NULL;
 
-    ctx->size = get_size_formatted(node, config->show_base_2_units);
+    // ctx->size = get_size_formatted(entry, config->show_base_2_units);
+    ctx->size = g_strdup("Unknown size");
 
-    strftime(ctx->time,
-             100,
-             "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-             localtime(&node->mtime));
+    // strftime(ctx->time,
+    //          100,
+    //          "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+    //          localtime(&entry->mtime));
 }
 
 static void
@@ -1112,9 +1118,12 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row_idx, sort_type, win);
+    FsearchDatabaseEntryType type;
     int width = col->effective_width - 2 * ROW_PADDING_X;
-
+    const char *name = db_search_result_get_name(win->result, row_idx);
+    if (!name) {
+        return NULL;
+    }
     char *text = NULL;
     switch (col->type) {
     case FSEARCH_LIST_VIEW_COLUMN_NAME:
@@ -1122,30 +1131,34 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
             int icon_size = get_icon_size_for_height(row_height - ROW_PADDING_X);
             width -= 2 * ROW_PADDING_X + icon_size;
         }
-        text = g_filename_display_name(node->name);
+        text = g_filename_display_name(name);
         break;
     case FSEARCH_LIST_VIEW_COLUMN_PATH: {
         char path_raw[PATH_MAX] = "";
-        db_entry_init_path(node, path_raw, sizeof(path_raw));
-        text = g_filename_display_name(path_raw);
+        GString *path = db_search_result_get_path(win->result, row_idx);
+        text = g_filename_display_name(path->str);
+        g_string_free(path, TRUE);
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
-        char path_raw[PATH_MAX] = "";
-        db_entry_init_parent_path(node, path_raw, sizeof(path_raw));
-        text = get_file_type(node, path_raw);
+        text = g_strdup("Unknown type");
+        // char path_raw[PATH_MAX] = "";
+        // db_search_result_init_path(win->result, row_idx, path_raw, sizeof(path_raw));
+        // text = get_file_type(entry, path_raw);
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_SIZE:
-        text = get_size_formatted(node, config->show_base_2_units);
+        // text = get_size_formatted(entry, config->show_base_2_units);
+        text = g_strdup("Unknown size");
         break;
     case FSEARCH_LIST_VIEW_COLUMN_CHANGED: {
-        char mtime[100] = "";
-        strftime(mtime,
-                 sizeof(mtime),
-                 "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-                 localtime(&node->mtime));
-        text = g_strdup(mtime);
+        text = g_strdup("Unknown time");
+        // char mtime[100] = "";
+        // strftime(mtime,
+        //          sizeof(mtime),
+        //          "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+        //          localtime(&entry->mtime));
+        // text = g_strdup(mtime);
         break;
     }
     default:
@@ -1190,20 +1203,14 @@ fsearch_list_view_draw_row(cairo_t *cr,
     }
 
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    DatabaseEntry *node = fsearch_list_view_get_node_for_row(row, sort_type, win);
-    if (!node) {
-        return;
-    }
-    if (!node->name) {
-        return;
-    }
+    FsearchDatabaseEntryType type;
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     const int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
-    draw_row_ctx_init(node, win, bin_window, icon_size, &ctx);
+    draw_row_ctx_init(row, win, bin_window, icon_size, &ctx);
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
     if (row_selected) {
@@ -1285,7 +1292,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
 void
 fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    if (!win->result || !win->result->entries) {
+    if (!win->result) {
         return;
     }
 

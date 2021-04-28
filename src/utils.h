@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include "database.h"
 #include "fsearch_db_entry.h"
 #include "fsearch_list_view.h"
 #include <gtk/gtk.h>
@@ -36,10 +37,10 @@ bool
 file_remove(const char *path);
 
 bool
-launch_node(DatabaseEntry *node);
+launch_node(FsearchDatabaseEntry *node);
 
 bool
-launch_node_path(DatabaseEntry *node, const char *cmd);
+launch_node_path(FsearchDatabaseEntry *node, const char *cmd);
 
 gchar *
 get_mimetype(const gchar *path);

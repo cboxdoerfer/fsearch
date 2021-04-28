@@ -26,7 +26,6 @@
 
 FsearchQuery *
 fsearch_query_new(const char *text,
-                  DynamicArray *entries,
                   DynamicArray *files,
                   DynamicArray *folders,
                   uint32_t num_folders,
@@ -44,7 +43,6 @@ fsearch_query_new(const char *text,
         q->text = strdup(text);
     }
 
-    q->entries = entries;
     q->files = files;
     q->folders = folders;
 

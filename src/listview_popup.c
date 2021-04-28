@@ -26,15 +26,15 @@
 #include "listview_popup.h"
 
 static void
-fill_open_with_menu(GtkBuilder *builder, DatabaseEntry *node) {
+fill_open_with_menu(GtkBuilder *builder, const char *name, FsearchDatabaseEntryType type) {
     GList *app_list = NULL;
     char *content_type = NULL;
 
-    if (node->is_dir) {
+    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
         content_type = g_content_type_from_mime_type("inode/directory");
     }
     else {
-        content_type = g_content_type_guess(node->name, NULL, 0, NULL);
+        content_type = g_content_type_guess(name, NULL, 0, NULL);
     }
 
     if (!content_type) {
@@ -77,10 +77,10 @@ clean_up:
 }
 
 void
-listview_popup_menu(GtkWidget *widget, DatabaseEntry *node) {
+listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryType type) {
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
-    fill_open_with_menu(builder, node);
+    fill_open_with_menu(builder, name, type);
 
     GMenu *menu_root = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_popup_menu"));
     GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_root));

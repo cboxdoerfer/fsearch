@@ -58,7 +58,6 @@ typedef struct FsearchQueryHighlight {
 
 typedef struct FsearchQuery {
     char *text;
-    DynamicArray *entries;
     DynamicArray *files;
     DynamicArray *folders;
     uint32_t num_folders;
@@ -85,7 +84,6 @@ typedef struct FsearchQuery {
 
 FsearchQuery *
 fsearch_query_new(const char *text,
-                  DynamicArray *array,
                   DynamicArray *files,
                   DynamicArray *folders,
                   uint32_t num_folders,
