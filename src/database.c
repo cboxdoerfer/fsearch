@@ -59,8 +59,8 @@ struct _FsearchDatabaseEntryFolder {
     // Common fields with FsearchDatabaseEntryFile must be at the top in the same order
     struct FsearchDatabaseEntryCommon data;
 
-    GPtrArray *folder_children;
-    GPtrArray *file_children;
+    GSList *folder_children;
+    GSList *file_children;
 };
 
 struct _FsearchDatabase {
@@ -115,11 +115,11 @@ db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry) {
         entry->data.name = NULL;
     }
     if (entry->file_children) {
-        g_ptr_array_free(entry->file_children, TRUE);
+        g_slist_free(entry->file_children);
         entry->file_children = NULL;
     }
     if (entry->folder_children) {
-        g_ptr_array_free(entry->folder_children, TRUE);
+        g_slist_free(entry->folder_children);
         entry->folder_children = NULL;
     }
 }
@@ -539,10 +539,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
             parent->data.size += folder_entry->data.size;
 
-            if (!parent->folder_children) {
-                parent->folder_children = g_ptr_array_new();
-            }
-            g_ptr_array_add(parent->folder_children, folder_entry);
+            parent->folder_children = g_slist_prepend(parent->folder_children, folder_entry);
             darray_add_item(db->folders, folder_entry);
 
             db->num_folders++;
@@ -557,10 +554,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
             parent->data.size += file_entry->data.size;
 
-            if (!parent->file_children) {
-                parent->file_children = g_ptr_array_new();
-            }
-            g_ptr_array_add(parent->file_children, file_entry);
+            parent->file_children = g_slist_prepend(parent->file_children, file_entry);
             darray_add_item(db->files, file_entry);
 
             db->num_files++;
@@ -569,9 +563,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         db->num_entries++;
     }
 
-    if (dir) {
-        closedir(dir);
-    }
+    closedir(dir);
     return WALK_OK;
 }
 
