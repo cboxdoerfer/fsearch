@@ -244,29 +244,31 @@ launch_node_path(FsearchDatabaseEntry *entry, const char *cmd) {
     return false;
 }
 
-gchar *
-get_mimetype(const gchar *path) {
-    if (!path) {
+static gchar *
+get_mimetype(const gchar *name) {
+    if (!name) {
         return NULL;
     }
-    gchar *content_type = g_content_type_guess(path, NULL, 1, NULL);
-    if (content_type) {
-        gchar *mimetype = g_content_type_get_description(content_type);
-        g_free(content_type);
-        content_type = NULL;
-        return mimetype;
+    gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
+    if (!content_type) {
+        return NULL;
     }
-    return NULL;
+    gchar *mimetype = g_content_type_get_description(content_type);
+
+    g_free(content_type);
+    content_type = NULL;
+
+    return mimetype;
 }
 
 gchar *
-get_file_type(DatabaseEntry *node, const gchar *path) {
+get_file_type(const char *name, gboolean is_dir) {
     gchar *type = NULL;
-    if (node->is_dir) {
+    if (is_dir) {
         type = g_strdup(_("Folder"));
     }
     else {
-        type = get_mimetype(path);
+        type = get_mimetype(name);
     }
     if (type == NULL) {
         type = g_strdup(_("Unknown Type"));

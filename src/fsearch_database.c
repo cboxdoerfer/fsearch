@@ -518,6 +518,15 @@ directory_is_excluded(const char *name, GList *excludes) {
     return false;
 }
 
+static void
+db_entry_update_folder_size(FsearchDatabaseEntryFolder *folder, off_t size) {
+    if (!folder) {
+        return;
+    }
+    folder->shared.size += size;
+    db_entry_update_folder_size(folder->shared.parent, size);
+}
+
 typedef struct DatabaseWalkContext {
     FsearchDatabase *db;
     GString *path;
@@ -591,8 +600,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             FsearchDatabaseEntryFolder *folder_entry = fsearch_memory_pool_malloc(db->folder_pool);
             folder_entry->shared.name = strdup(dent->d_name);
             folder_entry->shared.parent = parent;
-
-            parent->shared.size += folder_entry->shared.size;
+            folder_entry->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
 
             parent->folder_children = g_slist_prepend(parent->folder_children, folder_entry);
             darray_add_item(db->folders, folder_entry);
@@ -604,10 +612,12 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         else {
             FsearchDatabaseEntryFile *file_entry = fsearch_memory_pool_malloc(db->file_pool);
             file_entry->shared.name = strdup(dent->d_name);
-            file_entry->shared.size = st.st_size;
             file_entry->shared.parent = parent;
+            file_entry->shared.type = DATABASE_ENTRY_TYPE_FILE;
+            file_entry->shared.size = st.st_size;
 
-            parent->shared.size += file_entry->shared.size;
+            // update parent size
+            db_entry_update_folder_size(parent, file_entry->shared.size);
 
             parent->file_children = g_slist_prepend(parent->file_children, file_entry);
             darray_add_item(db->files, file_entry);

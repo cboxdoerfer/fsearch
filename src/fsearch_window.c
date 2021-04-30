@@ -218,7 +218,7 @@ fsearch_list_view_get_node_for_row(int row_idx, GtkSortType sort_type, gpointer 
         row_idx = db_search_result_get_num_entries(win->result) - row_idx - 1;
     }
 
-    return db_search_result_get_entry(win->result, row_idx, NULL);
+    return db_search_result_get_entry(win->result, row_idx);
 }
 
 static void
@@ -1045,16 +1045,18 @@ draw_row_ctx_init(uint32_t row,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    const char *name = db_search_result_get_name(win->result, row);
+    FsearchDatabaseEntry *entry = db_search_result_get_entry(win->result, row);
+    if (!entry) {
+        return;
+    }
+    const char *name = db_entry_get_name(entry);
     if (!name) {
         return;
     }
     ctx->display_name = g_filename_display_name(name);
     ctx->name_attr = win->query_highlight ? fsearch_query_highlight_match(win->query_highlight, name) : NULL;
 
-    GString *path = db_search_result_get_path(win->result, row);
-
-    ctx->path = db_search_result_get_path(win->result, row);
+    ctx->path = db_entry_get_path(entry);
     if (win->query_highlight
         && ((win->query_highlight->has_separator && win->query_highlight->flags.auto_search_in_path)
             || win->query_highlight->flags.search_in_path)) {
@@ -1065,8 +1067,7 @@ draw_row_ctx_init(uint32_t row,
     g_string_append_c(ctx->full_path, '/');
     g_string_append(ctx->full_path, name);
 
-    // ctx->type = get_file_type(entry, ctx->full_path->str);
-    ctx->type = g_strdup("Unknown type");
+    ctx->type = get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
 
     ctx->icon_surface =
         config->show_listview_icons
@@ -1128,12 +1129,18 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    int width = col->effective_width - 2 * ROW_PADDING_X;
-    const char *name = db_search_result_get_name(win->result, row_idx);
+    FsearchDatabaseEntry *entry = db_search_result_get_entry(win->result, row_idx);
+    if (!entry) {
+        return NULL;
+    }
+    const char *name = db_entry_get_name(entry);
     if (!name) {
         return NULL;
     }
+
+    int width = col->effective_width - 2 * ROW_PADDING_X;
     char *text = NULL;
+
     switch (col->type) {
     case FSEARCH_LIST_VIEW_COLUMN_NAME:
         if (config->show_listview_icons) {
@@ -1144,16 +1151,14 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         break;
     case FSEARCH_LIST_VIEW_COLUMN_PATH: {
         char path_raw[PATH_MAX] = "";
-        GString *path = db_search_result_get_path(win->result, row_idx);
+        GString *path = db_entry_get_path(entry);
         text = g_filename_display_name(path->str);
         g_string_free(path, TRUE);
+        path = NULL;
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
-        text = g_strdup("Unknown type");
-        // char path_raw[PATH_MAX] = "";
-        // db_search_result_init_path(win->result, row_idx, path_raw, sizeof(path_raw));
-        // text = get_file_type(entry, path_raw);
+        text = get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_SIZE:

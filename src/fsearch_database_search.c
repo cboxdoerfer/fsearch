@@ -85,8 +85,7 @@ db_search_result_get_query(DatabaseSearchResult *result) {
 
 const char *
 db_search_result_get_name(DatabaseSearchResult *result, uint32_t pos) {
-    FsearchDatabaseEntryType type = DATABASE_ENTRY_TYPE_NONE;
-    void *entry = db_search_result_get_entry(result, pos, &type);
+    void *entry = db_search_result_get_entry(result, pos);
     if (!entry) {
         return NULL;
     }
@@ -95,8 +94,7 @@ db_search_result_get_name(DatabaseSearchResult *result, uint32_t pos) {
 
 GString *
 db_search_result_get_path(DatabaseSearchResult *result, uint32_t pos) {
-    FsearchDatabaseEntryType type = DATABASE_ENTRY_TYPE_NONE;
-    void *entry = db_search_result_get_entry(result, pos, &type);
+    void *entry = db_search_result_get_entry(result, pos);
     if (!entry) {
         return NULL;
     }
@@ -105,8 +103,7 @@ db_search_result_get_path(DatabaseSearchResult *result, uint32_t pos) {
 
 void
 db_search_result_init_path(DatabaseSearchResult *result, uint32_t pos, char *path, size_t path_len) {
-    FsearchDatabaseEntryType type = DATABASE_ENTRY_TYPE_NONE;
-    void *entry = db_search_result_get_entry(result, pos, &type);
+    void *entry = db_search_result_get_entry(result, pos);
     if (!entry) {
         return;
     }
@@ -115,8 +112,7 @@ db_search_result_init_path(DatabaseSearchResult *result, uint32_t pos, char *pat
 
 off_t
 db_search_result_get_size(DatabaseSearchResult *result, uint32_t pos) {
-    FsearchDatabaseEntryType type = DATABASE_ENTRY_TYPE_NONE;
-    void *entry = db_search_result_get_entry(result, pos, &type);
+    void *entry = db_search_result_get_entry(result, pos);
     if (!entry) {
         return 0;
     }
@@ -124,25 +120,16 @@ db_search_result_get_size(DatabaseSearchResult *result, uint32_t pos) {
 }
 
 void *
-db_search_result_get_entry(DatabaseSearchResult *result, uint32_t pos, FsearchDatabaseEntryType *type) {
+db_search_result_get_entry(DatabaseSearchResult *result, uint32_t pos) {
     uint32_t num_entries = db_search_result_get_num_entries(result);
     if (pos >= num_entries) {
-        if (type) {
-            *type = DATABASE_ENTRY_TYPE_NONE;
-        }
         return NULL;
     }
     uint32_t num_folders = db_search_result_get_num_folders(result);
     if (pos < num_folders) {
-        if (type) {
-            *type = DATABASE_ENTRY_TYPE_FOLDER;
-        }
         return darray_get_item(result->folders, pos);
     }
     else {
-        if (type) {
-            *type = DATABASE_ENTRY_TYPE_FILE;
-        }
         return darray_get_item(result->files, pos - num_folders);
     }
 }

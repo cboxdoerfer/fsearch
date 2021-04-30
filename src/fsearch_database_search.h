@@ -66,7 +66,7 @@ off_t
 db_search_result_get_size(DatabaseSearchResult *result, uint32_t pos);
 
 void *
-db_search_result_get_entry(DatabaseSearchResult *result, uint32_t pos, FsearchDatabaseEntryType *type);
+db_search_result_get_entry(DatabaseSearchResult *result, uint32_t pos);
 
 void
 db_search_result_free(DatabaseSearchResult *result);

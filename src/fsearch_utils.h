@@ -43,10 +43,7 @@ bool
 launch_node_path(FsearchDatabaseEntry *node, const char *cmd);
 
 gchar *
-get_mimetype(const gchar *path);
-
-gchar *
-get_file_type(DatabaseEntry *node, const gchar *path);
+get_file_type(const gchar *name, gboolean is_dir);
 
 GIcon *
 get_gicon_for_path(const char *path);
