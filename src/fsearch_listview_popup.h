@@ -25,5 +25,5 @@
 #include "fsearch_db_entry.h"
 #include <gtk/gtk.h>
 
-void
+gboolean
 listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryType type);

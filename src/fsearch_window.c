@@ -811,8 +811,7 @@ on_fsearch_list_view_popup(FsearchListView *view, int row_idx, GtkSortType sort_
         return FALSE;
     }
 
-    listview_popup_menu(user_data, db_entry_get_name(entry), db_entry_get_type(entry));
-    return TRUE;
+    return listview_popup_menu(user_data, db_entry_get_name(entry), db_entry_get_type(entry));
 }
 
 static gboolean

@@ -76,7 +76,7 @@ clean_up:
     }
 }
 
-void
+gboolean
 listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryType type) {
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
@@ -92,5 +92,6 @@ listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryTyp
 #else
     gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif
+    return TRUE;
 }
 
