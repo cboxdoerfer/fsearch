@@ -104,8 +104,6 @@ typedef struct {
     bool parallel_sort;
 
     FsearchDatabase *db;
-    DynamicArray *entries;
-    DynamicArray *entries_sorted;
     FsearchApplicationWindow *win;
 } FsearchSortContext;
 
@@ -159,6 +157,19 @@ fsearch_window_sort_started(gpointer data) {
     return G_SOURCE_REMOVE;
 }
 
+static void
+fsearch_window_sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool parallel_sort) {
+    if (!array) {
+        return;
+    }
+    if (parallel_sort) {
+        darray_sort_multi_threaded(array, (DynamicArrayCompareFunc)sort_func);
+    }
+    else {
+        darray_sort(array, (DynamicArrayCompareFunc)sort_func);
+    }
+}
+
 static gpointer
 fsearch_window_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
@@ -166,17 +177,10 @@ fsearch_window_sort_task(gpointer data, GCancellable *cancellable) {
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
 
-    if (ctx->win->result && ctx->win->result->entries) {
+    if (ctx->win->result) {
         g_idle_add(fsearch_window_sort_started, ctx->win);
-
-        DynamicArray *entries = ctx->win->result->entries;
-        if (ctx->parallel_sort) {
-            darray_sort_multi_threaded(entries, (DynamicArrayCompareFunc)ctx->compare_func);
-        }
-        else {
-            darray_sort(entries, (DynamicArrayCompareFunc)ctx->compare_func);
-        }
-
+        fsearch_window_sort_array(ctx->win->result->folders, ctx->compare_func, ctx->parallel_sort);
+        fsearch_window_sort_array(ctx->win->result->files, ctx->compare_func, ctx->parallel_sort);
         g_idle_add(fsearch_window_sort_finished, ctx->win);
     }
 
@@ -1039,13 +1043,14 @@ typedef struct {
 
 static void
 draw_row_ctx_init(uint32_t row,
+                  GtkSortType sort_type,
                   FsearchApplicationWindow *win,
                   GdkWindow *bin_window,
                   int icon_size,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    FsearchDatabaseEntry *entry = db_search_result_get_entry(win->result, row);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row, sort_type, win);
     if (!entry) {
         return;
     }
@@ -1074,7 +1079,7 @@ draw_row_ctx_init(uint32_t row,
             ? get_icon_surface(bin_window, ctx->full_path->str, icon_size, gtk_widget_get_scale_factor(GTK_WIDGET(win)))
             : NULL;
 
-    off_t size = db_search_result_get_size(win->result, row);
+    off_t size = db_entry_get_size(entry);
     ctx->size = get_size_formatted(size, config->show_base_2_units);
 
     // strftime(ctx->time,
@@ -1129,7 +1134,7 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    FsearchDatabaseEntry *entry = db_search_result_get_entry(win->result, row_idx);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row_idx, sort_type, win);
     if (!entry) {
         return NULL;
     }
@@ -1162,7 +1167,7 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_SIZE:
-        text = get_size_formatted(db_search_result_get_size(win->result, row_idx), config->show_base_2_units);
+        text = get_size_formatted(db_entry_get_size(entry), config->show_base_2_units);
         break;
     case FSEARCH_LIST_VIEW_COLUMN_CHANGED: {
         text = g_strdup("Unknown time");
@@ -1221,7 +1226,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
     const int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
-    draw_row_ctx_init(row, win, bin_window, icon_size, &ctx);
+    draw_row_ctx_init(row, sort_type, win, bin_window, icon_size, &ctx);
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
     if (row_selected) {
@@ -1313,17 +1318,17 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
     DynamicArrayCompareFunc func = NULL;
     switch (sort_order) {
     case FSEARCH_LIST_VIEW_COLUMN_NAME:
-        func = (DynamicArrayCompareFunc)compare_pos;
+        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_name;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_PATH:
-        func = (DynamicArrayCompareFunc)compare_path;
+        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_path;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_SIZE:
         func = (DynamicArrayCompareFunc)compare_size;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_TYPE:
-        parallel_sort = false;
         func = (DynamicArrayCompareFunc)compare_type;
+        parallel_sort = false;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_CHANGED:
         func = (DynamicArrayCompareFunc)compare_changed;
@@ -1337,7 +1342,6 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
 
     ctx->win = win;
     ctx->db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-    ctx->entries = win->result->entries;
     ctx->compare_func = (DynamicArrayCompareDataFunc)func;
     ctx->parallel_sort = parallel_sort;
 

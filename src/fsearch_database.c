@@ -154,8 +154,8 @@ sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabas
     *res = strverscmp(entry_a->shared.name, entry_b->shared.name);
 }
 
-static int
-sort_entry_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+int
+db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     FsearchDatabaseEntry *entry_a = *a;
     FsearchDatabaseEntry *entry_b = *b;
     uint32_t a_depth = db_entry_get_depth(entry_a);
@@ -180,8 +180,8 @@ sort_entry_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     return res;
 }
 
-static int
-sort_entry_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+int
+db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     return strverscmp((*a)->shared.name, (*b)->shared.name);
 }
 
@@ -191,15 +191,15 @@ db_sort(FsearchDatabase *db) {
 
     GTimer *timer = g_timer_new();
     if (db->files) {
-        darray_sort_multi_threaded(db->files, (DynamicArrayCompareFunc)sort_entry_by_path);
-        darray_sort(db->files, (DynamicArrayCompareFunc)sort_entry_by_name);
+        darray_sort_multi_threaded(db->files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+        darray_sort(db->files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
         g_debug("[database] sorted files: %f s", seconds);
     }
     if (db->folders) {
-        darray_sort_multi_threaded(db->folders, (DynamicArrayCompareFunc)sort_entry_by_path);
-        darray_sort(db->folders, (DynamicArrayCompareFunc)sort_entry_by_name);
+        darray_sort_multi_threaded(db->folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+        darray_sort(db->folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[database] sorted folders: %f s", seconds);
     }

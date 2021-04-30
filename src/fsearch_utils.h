@@ -58,19 +58,19 @@ char *
 get_size_formatted(off_t size, bool show_base_2_units);
 
 int
-compare_name(DatabaseEntry **a, DatabaseEntry **b);
+compare_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
 
 int
 compare_pos(DatabaseEntry **a_node, DatabaseEntry **b_node);
 
 int
-compare_size(DatabaseEntry **a, DatabaseEntry **b);
+compare_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
 
 int
-compare_path(DatabaseEntry **a, DatabaseEntry **b);
+compare_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
 
 int
 compare_changed(DatabaseEntry **a, DatabaseEntry **b);
 
 int
-compare_type(DatabaseEntry **a, DatabaseEntry **b);
+compare_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);

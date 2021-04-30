@@ -103,3 +103,9 @@ db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);
 
 FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry);
+
+int
+db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
+
+int
+db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
