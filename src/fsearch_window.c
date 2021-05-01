@@ -1155,7 +1155,6 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         text = g_filename_display_name(name);
         break;
     case FSEARCH_LIST_VIEW_COLUMN_PATH: {
-        char path_raw[PATH_MAX] = "";
         GString *path = db_entry_get_path(entry);
         text = g_filename_display_name(path->str);
         g_string_free(path, TRUE);

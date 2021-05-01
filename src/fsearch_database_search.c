@@ -101,15 +101,6 @@ db_search_result_get_path(DatabaseSearchResult *result, uint32_t pos) {
     return db_entry_get_path(entry);
 }
 
-void
-db_search_result_init_path(DatabaseSearchResult *result, uint32_t pos, char *path, size_t path_len) {
-    void *entry = db_search_result_get_entry(result, pos);
-    if (!entry) {
-        return;
-    }
-    db_entry_init_path(entry, path, path_len);
-}
-
 off_t
 db_search_result_get_size(DatabaseSearchResult *result, uint32_t pos) {
     void *entry = db_search_result_get_entry(result, pos);

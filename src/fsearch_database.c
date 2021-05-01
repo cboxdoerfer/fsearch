@@ -896,18 +896,6 @@ db_unref(FsearchDatabase *db) {
     }
 }
 
-static char *
-init_path_recursively(FsearchDatabaseEntryFolder *folder, char *path, size_t path_len) {
-    char *insert_pos = NULL;
-    if (folder->shared.parent) {
-        insert_pos = init_path_recursively(folder->shared.parent, path, path_len);
-    }
-    insert_pos += g_strlcpy(insert_pos, folder->shared.name, path - insert_pos);
-    *insert_pos = '/';
-    insert_pos++;
-    return insert_pos;
-}
-
 static void
 build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
     if (folder->shared.parent) {
@@ -917,12 +905,6 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
         g_string_append_c(str, '/');
         g_string_append(str, folder->shared.name);
     }
-}
-
-int32_t
-db_entry_init_path(FsearchDatabaseEntry *entry, char *path, size_t path_len) {
-    init_path_recursively(entry->shared.parent, path, path_len);
-    return 0;
 }
 
 GString *
@@ -940,6 +922,7 @@ db_entry_get_path_full(FsearchDatabaseEntry *entry) {
     }
     g_string_append_c(path_full, G_DIR_SEPARATOR);
     g_string_append(path_full, entry->shared.name);
+    return path_full;
 }
 
 void

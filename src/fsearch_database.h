@@ -97,9 +97,6 @@ db_entry_get_path_full(FsearchDatabaseEntry *entry);
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry);
 
-int32_t
-db_entry_init_path(FsearchDatabaseEntry *entry, char *path, size_t path_len);
-
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);
 

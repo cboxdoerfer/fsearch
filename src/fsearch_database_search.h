@@ -52,9 +52,6 @@ db_search_result_get_query(DatabaseSearchResult *result);
 const char *
 db_search_result_get_name(DatabaseSearchResult *result, uint32_t pos);
 
-void
-db_search_result_init_path(DatabaseSearchResult *result, uint32_t pos, char *path, size_t path_len);
-
 GString *
 db_search_result_get_path(DatabaseSearchResult *result, uint32_t pos);
 
