@@ -219,7 +219,7 @@ fsearch_list_view_get_node_for_row(int row_idx, GtkSortType sort_type, gpointer 
     }
 
     if (sort_type == GTK_SORT_DESCENDING) {
-        row_idx = db_search_result_get_num_entries(win->result) - row_idx - 1;
+        row_idx = (int)db_search_result_get_num_entries(win->result) - row_idx - 1;
     }
 
     return db_search_result_get_entry(win->result, row_idx);
@@ -715,13 +715,13 @@ perform_search(FsearchApplicationWindow *win) {
         return;
     }
 
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
     if (!win->task_queue) {
         g_debug("[search] not set");
         return;
     }
 
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
     if (!config->locations) {
         show_overlay(win, OVERLAY_DATABASE_EMPTY);
         return;
