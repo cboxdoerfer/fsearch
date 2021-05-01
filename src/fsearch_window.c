@@ -726,7 +726,6 @@ perform_search(FsearchApplicationWindow *win) {
         show_overlay(win, OVERLAY_DATABASE_EMPTY);
         return;
     }
-    hide_overlays(win);
 
     fsearch_application_state_lock(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
