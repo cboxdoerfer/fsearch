@@ -28,7 +28,6 @@
 #include <stdint.h>
 
 typedef struct _DatabaseSearchResult {
-    DynamicArray *entries;
     DynamicArray *files;
     DynamicArray *folders;
     uint32_t num_folders;
