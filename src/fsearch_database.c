@@ -39,6 +39,7 @@
 #include "fsearch_exclude_path.h"
 #include "fsearch_include_path.h"
 #include "fsearch_memory_pool.h"
+#include "fsearch_utils.h"
 
 #define BTREE_NODE_POOL_BLOCK_ELEMENTS 10000
 
@@ -152,6 +153,45 @@ sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabas
         return;
     }
     *res = strverscmp(entry_a->shared.name, entry_b->shared.name);
+}
+
+int
+db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    off_t size_a = db_entry_get_size(*a);
+    off_t size_b = db_entry_get_size(*b);
+    return (size_a > size_b) ? 1 : -1;
+}
+
+int
+db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    FsearchDatabaseEntryType type_a = db_entry_get_type(*a);
+    FsearchDatabaseEntryType type_b = db_entry_get_type(*b);
+    if (type_a == DATABASE_ENTRY_TYPE_FOLDER && type_b == DATABASE_ENTRY_TYPE_FOLDER) {
+        return 0;
+    }
+
+    const char *name_a = db_entry_get_name(*a);
+    const char *name_b = db_entry_get_name(*b);
+    char *file_type_a = get_file_type_non_localized(name_a, FALSE);
+    char *file_type_b = get_file_type_non_localized(name_b, FALSE);
+
+    int return_val = strcmp(file_type_a, file_type_b);
+    g_free(file_type_a);
+    file_type_a = NULL;
+    g_free(file_type_b);
+    file_type_b = NULL;
+
+    return return_val;
+}
+
+int
+db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    return 0;
+}
+
+int
+db_entry_compare_entries_by_position(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    return 0;
 }
 
 int

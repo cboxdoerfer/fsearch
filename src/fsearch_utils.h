@@ -45,6 +45,9 @@ launch_node_path(FsearchDatabaseEntry *node, const char *cmd);
 gchar *
 get_file_type(const gchar *name, gboolean is_dir);
 
+gchar *
+get_file_type_non_localized(const char *name, gboolean is_dir);
+
 GIcon *
 get_gicon_for_path(const char *path);
 
@@ -56,21 +59,3 @@ get_icon_size_for_height(int height);
 
 char *
 get_size_formatted(off_t size, bool show_base_2_units);
-
-int
-compare_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-compare_pos(DatabaseEntry **a_node, DatabaseEntry **b_node);
-
-int
-compare_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-compare_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-compare_changed(DatabaseEntry **a, DatabaseEntry **b);
-
-int
-compare_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);

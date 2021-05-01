@@ -1324,17 +1324,17 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_path;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_SIZE:
-        func = (DynamicArrayCompareFunc)compare_size;
+        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_size;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_TYPE:
-        func = (DynamicArrayCompareFunc)compare_type;
+        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_type;
         parallel_sort = false;
         break;
     case FSEARCH_LIST_VIEW_COLUMN_CHANGED:
-        func = (DynamicArrayCompareFunc)compare_changed;
+        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time;
         break;
     default:
-        func = (DynamicArrayCompareFunc)compare_pos;
+        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_position;
     }
 
     FsearchSortContext *ctx = calloc(1, sizeof(FsearchSortContext));

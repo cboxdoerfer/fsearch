@@ -19,6 +19,7 @@
 #define _GNU_SOURCE
 
 #include "fsearch_utils.h"
+#include "fsearch_database.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "fsearch_ui_utils.h"
@@ -369,104 +370,4 @@ get_icon_size_for_height(int height) {
 char *
 get_size_formatted(off_t size, bool show_base_2_units) {
     return g_format_size_full(size, G_FORMAT_SIZE_IEC_UNITS);
-}
-
-int
-compare_path(FsearchDatabaseEntry **entry_a, FsearchDatabaseEntry **entry_b) {
-    // FsearchDatabaseEntry *a = (*entry_a)->parent;
-    // FsearchDatabaseEntry *b = (*entry_b)->parent;
-    // if (!a) {
-    //     return -1;
-    // }
-    // if (!b) {
-    //     return 1;
-    // }
-    // const int32_t a_depth = btree_node_depth(a);
-    // const int32_t b_depth = btree_node_depth(b);
-    // char *a_parents[a_depth + 1];
-    // char *b_parents[b_depth + 1];
-    // a_parents[a_depth] = NULL;
-    // b_parents[b_depth] = NULL;
-
-    // DatabaseEntry *temp = a;
-    // for (int32_t i = a_depth - 1; i >= 0 && temp; i--) {
-    //     a_parents[i] = temp->name;
-    //     temp = temp->parent;
-    // }
-    // temp = b;
-    // for (int32_t i = b_depth - 1; i >= 0 && temp; i--) {
-    //     b_parents[i] = temp->name;
-    //     temp = temp->parent;
-    // }
-
-    // uint32_t i = 0;
-    // char *a_name = a_parents[i];
-    // char *b_name = b_parents[i];
-
-    // while (a_name && b_name) {
-    //     int res = strverscmp(a_name, b_name);
-    //     if (res != 0) {
-    //         return res;
-    //     }
-    //     i++;
-    //     a_name = a_parents[i];
-    //     b_name = b_parents[i];
-    // }
-    // return a_depth - b_depth;
-    return 0;
-}
-
-int
-compare_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const char *name_a = db_entry_get_name(*a);
-    const char *name_b = db_entry_get_name(*b);
-    return strverscmp(name_a, name_b);
-}
-
-int
-compare_pos(DatabaseEntry **a_node, DatabaseEntry **b_node) {
-    DatabaseEntry *a = *a_node;
-    DatabaseEntry *b = *b_node;
-    return a->pos - b->pos;
-}
-
-int
-compare_size(FsearchDatabaseEntry **a_node, FsearchDatabaseEntry **b_node) {
-    FsearchDatabaseEntry *a = *a_node;
-    FsearchDatabaseEntry *b = *b_node;
-    off_t size_a = db_entry_get_size(a);
-    off_t size_b = db_entry_get_size(b);
-    return (size_a > size_b) ? 1 : -1;
-}
-
-int
-compare_changed(DatabaseEntry **a_node, DatabaseEntry **b_node) {
-    DatabaseEntry *a = *a_node;
-    DatabaseEntry *b = *b_node;
-    if (a->is_dir != b->is_dir) {
-        return b->is_dir - a->is_dir;
-    }
-    return a->mtime - b->mtime;
-}
-
-int
-compare_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    FsearchDatabaseEntryType type_a = db_entry_get_type(*a);
-    FsearchDatabaseEntryType type_b = db_entry_get_type(*b);
-    if (type_a == DATABASE_ENTRY_TYPE_FOLDER && type_b == DATABASE_ENTRY_TYPE_FOLDER) {
-        return 0;
-    }
-
-    const char *name_a = db_entry_get_name(*a);
-    const char *name_b = db_entry_get_name(*b);
-    char *file_type_a = get_file_type_non_localized(name_a, FALSE);
-    char *file_type_b = get_file_type_non_localized(name_b, FALSE);
-
-    int return_val = strcmp(file_type_a, file_type_b);
-    g_free(file_type_a);
-    file_type_a = NULL;
-    g_free(file_type_b);
-    file_type_b = NULL;
-
-    return return_val;
 }
