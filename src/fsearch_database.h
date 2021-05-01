@@ -93,6 +93,9 @@ const char *
 db_entry_get_name(FsearchDatabaseEntry *entry);
 
 GString *
+db_entry_get_path_full(FsearchDatabaseEntry *entry);
+
+GString *
 db_entry_get_path(FsearchDatabaseEntry *entry);
 
 int32_t

@@ -62,21 +62,17 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
 
 static char *
 build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
-    if (!cmd || !entry) {
+    GString *path = db_entry_get_path(entry);
+    if (!path) {
         return NULL;
     }
+    GString *path_full = db_entry_get_path_full(entry);
 
-    char path[PATH_MAX] = "";
-    if (!db_entry_init_path(entry, path, sizeof(path))) {
-        return NULL;
-    }
-    char path_full[PATH_MAX] = "";
-    // TODO
-    // if (!db_entry_init_parent_path(entry, path_full, sizeof(path_full))) {
-    //    return NULL;
-    //}
-    char *path_quoted = g_shell_quote(path);
-    char *path_full_quoted = g_shell_quote(path_full);
+    char *path_quoted = g_shell_quote(g_string_free(path, FALSE));
+    char *path_full_quoted = g_shell_quote(g_string_free(path_full, FALSE));
+
+    path = NULL;
+    path_full = NULL;
 
     // The following code is mostly based on the example code found here:
     // https://developer.gnome.org/glib/stable/glib-Perl-compatible-regular-expressions.html#g-regex-replace-eval
@@ -101,7 +97,7 @@ build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
     g_hash_table_insert(keywords, "{path_full}", path_full_quoted);
 
     // Regular expression which matches multiple words (and underscores)
-    // surrouned with {}
+    // surrounded with {}
     GRegex *reg = g_regex_new("{[\\w]+}", 0, 0, NULL);
     // Replace all the matched keywords
     char *cmd_res = g_regex_replace_eval(reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL);
@@ -109,17 +105,15 @@ build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
     g_regex_unref(reg);
     g_hash_table_destroy(keywords);
     g_free(path_quoted);
+    path_quoted = NULL;
     g_free(path_full_quoted);
+    path_full_quoted = NULL;
 
     return cmd_res;
 }
 
 static bool
 open_with_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
-    if (!cmd) {
-        return false;
-    }
-
     char *cmd_res = build_folder_open_cmd(entry, cmd);
     if (!cmd_res) {
         return false;
@@ -149,10 +143,6 @@ open_with_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
 
 static bool
 open_uri(const char *uri) {
-    if (!uri) {
-        return false;
-    }
-
     if (!g_file_test(uri, G_FILE_TEST_EXISTS)) {
         return false;
     }
@@ -220,29 +210,32 @@ file_trash(const char *path) {
 }
 
 bool
-launch_node(FsearchDatabaseEntry *entry) {
-    char path[PATH_MAX] = "";
-    // TODO
-    // bool res = db_entry_init_parent_path(entry, path, sizeof(path));
-    // if (res) {
-    //    return open_uri(path);
-    //}
-    return false;
+launch_entry(FsearchDatabaseEntry *entry) {
+    GString *path_full = db_entry_get_path_full(entry);
+    if (!path_full) {
+        return false;
+    }
+    bool res = open_uri(path_full->str);
+    g_string_free(path_full, TRUE);
+    path_full = NULL;
+    return res;
 }
 
 bool
-launch_node_path(FsearchDatabaseEntry *entry, const char *cmd) {
+launch_entry_for_path(FsearchDatabaseEntry *entry, const char *cmd) {
     if (cmd) {
         return open_with_cmd(entry, cmd);
     }
     else {
-        char path[PATH_MAX] = "";
-        bool res = db_entry_init_path(entry, path, sizeof(path));
-        if (res) {
-            return open_uri(path);
+        GString *path = db_entry_get_path(entry);
+        if (!path) {
+            return false;
         }
+        bool res = open_uri(path->str);
+        g_string_free(path, TRUE);
+        path = NULL;
+        return res;
     }
-    return false;
 }
 
 static gchar *

@@ -37,10 +37,10 @@ bool
 file_remove(const char *path);
 
 bool
-launch_node(FsearchDatabaseEntry *node);
+launch_entry(FsearchDatabaseEntry *entry);
 
 bool
-launch_node_path(FsearchDatabaseEntry *node, const char *cmd);
+launch_entry_for_path(FsearchDatabaseEntry *entry, const char *cmd);
 
 gchar *
 get_file_type(const gchar *name, gboolean is_dir);

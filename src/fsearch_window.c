@@ -907,7 +907,7 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         return;
     }
 
-    if (!launch_folder ? launch_node(entry) : launch_node_path(entry, config->folder_open_cmd)) {
+    if (!launch_folder ? launch_entry(entry) : launch_entry_for_path(entry, config->folder_open_cmd)) {
         // open succeeded
         fsearch_window_action_after_file_open(true);
     }

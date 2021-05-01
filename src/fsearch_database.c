@@ -913,8 +913,10 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
     if (folder->shared.parent) {
         build_path_recursively(folder->shared.parent, str);
     }
-    g_string_append_c(str, '/');
-    g_string_append(str, folder->shared.name);
+    if (strcmp(folder->shared.name, "") != 0) {
+        g_string_append_c(str, '/');
+        g_string_append(str, folder->shared.name);
+    }
 }
 
 int32_t
@@ -928,6 +930,16 @@ db_entry_get_path(FsearchDatabaseEntry *entry) {
     GString *path = g_string_new(NULL);
     build_path_recursively(entry->shared.parent, path);
     return path;
+}
+
+GString *
+db_entry_get_path_full(FsearchDatabaseEntry *entry) {
+    GString *path_full = db_entry_get_path(entry);
+    if (!path_full) {
+        return NULL;
+    }
+    g_string_append_c(path_full, G_DIR_SEPARATOR);
+    g_string_append(path_full, entry->shared.name);
 }
 
 void
