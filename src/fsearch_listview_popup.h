@@ -22,7 +22,8 @@
 #include <config.h>
 #endif
 
-#include "fsearch_db_entry.h"
+#include "fsearch_database.h"
+
 #include <gtk/gtk.h>
 
 gboolean

@@ -26,7 +26,6 @@
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
 #include "fsearch_database_search.h"
-#include "fsearch_db_entry.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "fsearch_ui_utils.h"

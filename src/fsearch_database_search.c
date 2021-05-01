@@ -223,18 +223,20 @@ search_thread_context_new(DynamicArray *entries,
 }
 
 static inline bool
-filter_entry(DatabaseEntry *entry, FsearchQuery *query, const char *haystack) {
+filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const char *haystack) {
     if (!query->filter) {
         return true;
     }
     if (query->filter->type == FSEARCH_FILTER_NONE && query->filter->query == NULL) {
         return true;
     }
-    bool is_dir = entry->is_dir;
-    if (query->filter->type == FSEARCH_FILTER_FILES && is_dir) {
+    FsearchDatabaseEntryType type = db_entry_get_type(entry);
+    bool is_dir = type == DATABASE_ENTRY_TYPE_FOLDER ? true : false;
+    bool is_file = type == DATABASE_ENTRY_TYPE_FILE ? true : false;
+    if (query->filter->type == FSEARCH_FILTER_FILES && is_file) {
         return false;
     }
-    if (query->filter->type == FSEARCH_FILTER_FOLDERS && !is_dir) {
+    if (query->filter->type == FSEARCH_FILTER_FOLDERS && is_dir) {
         return false;
     }
     if (query->filter_token) {
@@ -302,9 +304,9 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
             path_set = true;
         }
 
-        // if (!filter_entry(entry, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
-        //     continue;
-        // }
+        if (!filter_entry(entry, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
+            continue;
+        }
 
         uint32_t num_found = 0;
         while (true) {

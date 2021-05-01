@@ -37,7 +37,6 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_utils.h \
 			 fsearch_window.h \
 			 fsearch_window_actions.h \
-		     fsearch_db_entry.h \
 			 utf8.h \
 
 fsearch_SOURCES = main.c \
@@ -47,7 +46,6 @@ fsearch_SOURCES = main.c \
 		  fsearch_config.c \
 		  fsearch_database.c \
 		  fsearch_database_search.c \
-		  fsearch_db_entry.c \
 		  fsearch_exclude_path.c \
 		  fsearch_filter.c \
 		  fsearch_include_path.c \
