@@ -200,7 +200,7 @@ fsearch_query_highlight_new(const char *text, FsearchQueryFlags flags) {
     q->flags.auto_match_case = flags.auto_match_case;
     q->flags.search_in_path = flags.search_in_path;
 
-    q->has_separator = strchr(text, '/') ? 1 : 0;
+    q->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
 
     if (fs_str_is_regex(text) && flags.enable_regex) {
         FsearchQueryHighlightToken *token = fsearch_query_highlight_token_new();

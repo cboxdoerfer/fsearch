@@ -583,7 +583,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     }
 
     GString *path = walk_context->path;
-    g_string_append_c(path, '/');
+    g_string_append_c(path, G_DIR_SEPARATOR);
 
     // remember end of parent path
     gsize path_len = path->len;
@@ -675,7 +675,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 static void
 db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
     assert(dname != NULL);
-    assert(dname[0] == '/');
+    assert(dname[0] == G_DIR_SEPARATOR);
     g_debug("[database] scan path: %s", dname);
 
     GString *path = g_string_new(dname);
@@ -698,7 +698,7 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     parent->shared.parent = NULL;
 
     if (strcmp(path->str, "") != 0) {
-        g_string_prepend_c(path, '/');
+        g_string_prepend_c(path, G_DIR_SEPARATOR);
     }
     uint32_t res = db_folder_scan_recursive(&walk_context, parent);
 
@@ -902,7 +902,7 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
         build_path_recursively(folder->shared.parent, str);
     }
     if (strcmp(folder->shared.name, "") != 0) {
-        g_string_append_c(str, '/');
+        g_string_append_c(str, G_DIR_SEPARATOR);
         g_string_append(str, folder->shared.name);
     }
 }

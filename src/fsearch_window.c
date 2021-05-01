@@ -774,7 +774,7 @@ perform_search(FsearchApplicationWindow *win) {
     bool reveal_smart_case = false;
     bool reveal_smart_path = false;
     if (!fs_str_is_empty(text)) {
-        bool has_separator = strchr(text, '/') ? 1 : 0;
+        bool has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
         bool has_upper_text = fs_str_has_upper(text) ? 1 : 0;
         reveal_smart_case = config->auto_match_case && !config->match_case && has_upper_text;
         reveal_smart_path = config->auto_search_in_path && !config->search_in_path && has_separator;
@@ -1069,7 +1069,7 @@ draw_row_ctx_init(uint32_t row,
     }
 
     ctx->full_path = g_string_new_len(ctx->path->str, ctx->path->len);
-    g_string_append_c(ctx->full_path, '/');
+    g_string_append_c(ctx->full_path, G_DIR_SEPARATOR);
     g_string_append(ctx->full_path, name);
 
     ctx->type = get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);

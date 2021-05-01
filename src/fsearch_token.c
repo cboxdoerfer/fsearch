@@ -89,7 +89,7 @@ fsearch_token_new(const char *text, bool match_case, bool auto_match_case, bool 
     assert(new != NULL);
 
     new->text_len = strlen(text);
-    new->has_separator = strchr(text, '/') ? 1 : 0;
+    new->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
 
     if (auto_match_case && fs_str_utf8_has_upper(text)) {
         match_case = true;
