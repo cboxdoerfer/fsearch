@@ -369,5 +369,10 @@ get_icon_size_for_height(int height) {
 
 char *
 get_size_formatted(off_t size, bool show_base_2_units) {
-    return g_format_size_full(size, G_FORMAT_SIZE_IEC_UNITS);
+    if (show_base_2_units) {
+        return g_format_size_full(size, G_FORMAT_SIZE_IEC_UNITS);
+    }
+    else {
+        return g_format_size_full(size, G_FORMAT_SIZE_DEFAULT);
+    }
 }
