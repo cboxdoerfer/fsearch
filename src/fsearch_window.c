@@ -514,7 +514,7 @@ hide_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
         gtk_widget_hide(win->overlay_database_loading);
         break;
     default:
-        g_debug("window: overlay %d unknown", overlay);
+        g_debug("[win] overlay %d unknown", overlay);
     }
 }
 static void
@@ -548,7 +548,7 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
         gtk_widget_show(win->overlay_database_loading);
         break;
     default:
-        g_debug("window: overlay %d unknown", overlay);
+        g_debug("[win] overlay %d unknown", overlay);
     }
 }
 
@@ -718,7 +718,7 @@ perform_search(FsearchApplicationWindow *win) {
     }
 
     if (!win->task_queue) {
-        g_debug("[search] not set");
+        g_debug("[win] abort search, queue is missing");
         return;
     }
 
@@ -736,14 +736,14 @@ perform_search(FsearchApplicationWindow *win) {
         return;
     }
     if (!db_try_lock(db)) {
-        g_debug("[search] database locked");
+        g_debug("[win] search failed, database is locked");
         db_unref(db);
         fsearch_application_state_unlock(app);
         return;
     }
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-    g_debug("[search] search %d.%d started with query '%s'", win_id, win->query_id, text);
+    g_debug("[query %d.%d] started with query '%s'", win_id, win->query_id, text);
 
     FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
                                .match_case = config->match_case,

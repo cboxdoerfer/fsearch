@@ -244,13 +244,13 @@ db_sort(FsearchDatabase *db) {
         darray_sort(db->files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
-        g_debug("[database] sorted files: %f s", seconds);
+        g_debug("[db_sort] sorted files: %f s", seconds);
     }
     if (db->folders) {
         darray_sort_multi_threaded(db->folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
         darray_sort(db->folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
         const double seconds = g_timer_elapsed(timer, NULL);
-        g_debug("[database] sorted folders: %f s", seconds);
+        g_debug("[db_sort] sorted folders: %f s", seconds);
     }
     g_timer_destroy(timer);
     timer = NULL;
@@ -290,13 +290,13 @@ static FILE *
 db_file_open_locked(const char *file_path, const char *mode) {
     FILE *file_pointer = fopen(file_path, mode);
     if (!file_pointer) {
-        g_debug("can't open database file: %s", file_path);
+        g_debug("[db_file] can't open database file: %s", file_path);
         return NULL;
     }
 
     int file_descriptor = fileno(file_pointer);
     if (flock(file_descriptor, LOCK_EX | LOCK_NB) == -1) {
-        g_debug("database file is already locked by a different process: %s", file_path);
+        g_debug("[db_file] database file is already locked by a different process: %s", file_path);
 
         fclose(file_pointer);
         file_pointer = NULL;
@@ -310,14 +310,14 @@ db_load_entry_shared(FILE *fp, struct FsearchDatabaseEntryCommon *shared, GStrin
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint8_t name_offset = 0;
     if (fread(&name_offset, 1, 1, fp) != 1) {
-        g_debug("failed to load name offset");
+        g_debug("[db_load] failed to load name offset");
         return false;
     }
 
     // name_len: length of the new name characters
     uint8_t name_len = 0;
     if (fread(&name_len, 1, 1, fp) != 1) {
-        g_debug("failed to load name length");
+        g_debug("[db_load] failed to load name length");
         return false;
     }
 
@@ -328,7 +328,7 @@ db_load_entry_shared(FILE *fp, struct FsearchDatabaseEntryCommon *shared, GStrin
     // name: new characters to be appended to previous_entry_name
     if (name_len > 0) {
         if (fread(name, name_len, 1, fp) != 1) {
-            g_debug("failed to load name");
+            g_debug("[db_load] failed to load name");
             return false;
         }
         name[name_len] = '\0';
@@ -341,7 +341,7 @@ db_load_entry_shared(FILE *fp, struct FsearchDatabaseEntryCommon *shared, GStrin
     // size: size of file/folder
     uint64_t size = 0;
     if (fread(&size, 8, 1, fp) != 1) {
-        g_debug("failed to load size");
+        g_debug("[db_load] failed to load size");
         return false;
     }
     shared->size = (off_t)size;
@@ -385,7 +385,7 @@ db_load_header(FILE *fp) {
 static bool
 db_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
     if (fread(parent_idx, 4, 1, fp) != 1) {
-        g_debug("failed to load parent_idx");
+        g_debug("[db_load] failed to load parent_idx");
         return false;
     }
     return true;
@@ -425,7 +425,7 @@ db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
 
     // fail if we didn't read the correct number of folders
     if (result && idx != num_folders) {
-        g_debug("failed to read folders (read %d of %d)", idx, num_folders);
+        g_debug("[db_load] failed to read folders (read %d of %d)", idx, num_folders);
         result = false;
     }
 
@@ -465,7 +465,7 @@ db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicA
 
     // fail if we didn't read the correct number of files
     if (result && idx != num_files) {
-        g_debug("failed to read files (read %d of %d)", idx, num_files);
+        g_debug("[db_load] failed to read files (read %d of %d)", idx, num_files);
         result = false;
     }
 
@@ -501,7 +501,7 @@ db_load2(FsearchDatabase *db, const char *file_path) {
     if (fread(&num_files, 4, 1, fp) != 1) {
         goto load_fail;
     }
-    g_debug("load %d folders, %d files", num_folders, num_files);
+    g_debug("[db_load] load %d folders, %d files", num_folders, num_files);
 
     // pre-allocate the folders array so we can later map parent indices to the corresponding pointers
     folders = darray_new(num_folders);
@@ -543,7 +543,7 @@ db_load2(FsearchDatabase *db, const char *file_path) {
     return true;
 
 load_fail:
-    g_debug("load fail");
+    g_debug("[db_load] load failed");
 
     if (fp) {
         fclose(fp);
@@ -576,14 +576,14 @@ db_save_entry_shared(FILE *fp,
     // name_offset: character position after which previous_entry_name and new_entry_name differ
     uint8_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
     if (fwrite(&name_offset, 1, 1, fp) != 1) {
-        g_debug("failed to save name offset");
+        g_debug("[db_save] failed to save name offset");
         return false;
     }
 
     // name_len: length of the new name characters
     uint8_t name_len = new_entry_name->len - name_offset;
     if (fwrite(&name_len, 1, 1, fp) != 1) {
-        g_debug("failed to save name length");
+        g_debug("[db_save] failed to save name length");
         return false;
     }
 
@@ -595,7 +595,7 @@ db_save_entry_shared(FILE *fp,
         // name: new characters to be written to file
         const char *name = previous_entry_name->str + name_offset;
         if (fwrite(name, name_len, 1, fp) != 1) {
-            g_debug("failed to save name");
+            g_debug("[db_save] failed to save name");
             return false;
         }
     }
@@ -603,13 +603,13 @@ db_save_entry_shared(FILE *fp,
     // size: file or folder size (folder size: sum of all children sizes)
     uint64_t size = shared->size;
     if (fwrite(&size, 8, 1, fp) != 1) {
-        g_debug("failed to save size");
+        g_debug("[db_save] failed to save size");
         return false;
     }
 
     // parent_idx: index of parent folder
     if (fwrite(&parent_idx, 4, 1, fp) != 1) {
-        g_debug("failed to save parent_idx");
+        g_debug("[db_save] failed to save parent_idx");
         return false;
     }
 
@@ -693,7 +693,7 @@ db_save2(FsearchDatabase *db, const char *path) {
     assert(db != NULL);
 
     if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-        g_debug("database path doesn't exist: %s", path);
+        g_debug("[db_save] database path doesn't exist: %s", path);
         return false;
     }
 
@@ -757,7 +757,7 @@ db_save2(FsearchDatabase *db, const char *path) {
     g_timer_destroy(timer);
     timer = NULL;
 
-    g_debug("database file saved in: %f ms", seconds * 1000);
+    g_debug("[db_save] database file saved in: %f ms", seconds * 1000);
 
     return true;
 
@@ -885,7 +885,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
         const bool is_dir = S_ISDIR(st.st_mode);
         if (is_dir && directory_is_excluded(path->str, db->excludes)) {
-            g_debug("[database_scan] excluded directory: %s", path->str);
+            g_debug("[db_scan] excluded directory: %s", path->str);
             continue;
         }
 
@@ -929,10 +929,10 @@ static void
 db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
     assert(dname != NULL);
     assert(dname[0] == G_DIR_SEPARATOR);
-    g_debug("[database] scan path: %s", dname);
+    g_debug("[db_scan] scan path: %s", dname);
 
     if (!g_file_test(dname, G_FILE_TEST_IS_DIR)) {
-        g_warning("[database_scan] %s doesn't exist", dname);
+        g_warning("[db_scan] %s doesn't exist", dname);
         return;
     }
 
@@ -966,11 +966,11 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     g_string_free(path, TRUE);
     g_timer_destroy(timer);
     if (res == WALK_OK) {
-        g_debug("[database] scanned: %d files, %d files -> %d total", db->num_files, db->num_folders, db->num_entries);
+        g_debug("[db_scan] scanned: %d files, %d files -> %d total", db->num_files, db->num_folders, db->num_entries);
         return;
     }
 
-    g_warning("[database_scan] walk error: %d", res);
+    g_warning("[db_scan] walk error: %d", res);
 }
 
 bool
@@ -1009,10 +1009,10 @@ static void
 db_free(FsearchDatabase *db) {
     assert(db != NULL);
 
-    g_debug("[database_free] freeing...");
+    g_debug("[db_free] freeing...");
     db_lock(db);
     if (db->ref_count > 0) {
-        g_warning("[database_free] pending references on free: %d", db->ref_count);
+        g_warning("[db_free] pending references on free: %d", db->ref_count);
     }
 
     if (db->files) {
@@ -1051,7 +1051,7 @@ db_free(FsearchDatabase *db) {
 
     malloc_trim(0);
 
-    g_debug("[database_free] freed");
+    g_debug("[db_free] freed");
     return;
 }
 
@@ -1133,7 +1133,6 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
             db_scan_folder(db, fs_path->path, cancellable, status_cb);
         }
     }
-    g_debug("save database");
     db_sort(db);
     db_save2(db, "/home/cb/testdir");
     return ret;
@@ -1145,7 +1144,7 @@ db_ref(FsearchDatabase *db) {
     db_lock(db);
     db->ref_count++;
     db_unlock(db);
-    g_debug("[database_ref] increased to: %d", db->ref_count);
+    g_debug("[db_ref] increased to: %d", db->ref_count);
 }
 
 void
@@ -1154,7 +1153,7 @@ db_unref(FsearchDatabase *db) {
     db_lock(db);
     db->ref_count--;
     db_unlock(db);
-    g_debug("[database_unref] dropped to: %d", db->ref_count);
+    g_debug("[db_unref] dropped to: %d", db->ref_count);
     if (db->ref_count <= 0) {
         db_free(db);
     }

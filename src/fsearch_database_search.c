@@ -163,10 +163,10 @@ db_search_task(gpointer data, GCancellable *cancellable) {
     const char *debug_message = NULL;
     const double seconds = g_timer_elapsed(timer, NULL);
     if (!g_cancellable_is_cancelled(cancellable)) {
-        debug_message = "query %d.%d finished in %.2f ms";
+        debug_message = "[query %d.%d] finished in %.2f ms";
     }
     else {
-        debug_message = "query %d.%d aborted after %.2f ms";
+        debug_message = "[query %d.%d] aborted after %.2f ms";
     }
     g_timer_stop(timer);
     g_timer_destroy(timer);
@@ -266,7 +266,7 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
 
     if (!entries) {
         ctx->num_results = 0;
-        g_debug("[database_search] entries empty");
+        g_debug("[db_search] entries empty");
         return;
     }
 
