@@ -383,6 +383,15 @@ db_load_header(FILE *fp) {
 }
 
 static bool
+db_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
+    if (fread(parent_idx, 4, 1, fp) != 1) {
+        g_debug("failed to load parent_idx");
+        return false;
+    }
+    return true;
+}
+
+static bool
 db_load2(FsearchDatabase *db, const char *file_path) {
     assert(file_path != NULL);
     assert(db != NULL);
@@ -432,10 +441,10 @@ db_load2(FsearchDatabase *db, const char *file_path) {
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        if (fread(&parent_idx, 4, 1, fp) != 1) {
-            g_debug("failed to load parent_idx");
+        if (!db_load_parent_idx(fp, &parent_idx)) {
             goto load_fail;
         }
+
         if (parent_idx != folder->idx) {
             FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
             folder->shared.parent = parent;
@@ -457,9 +466,9 @@ db_load2(FsearchDatabase *db, const char *file_path) {
 
         db_load_entry_shared(fp, &file->shared, name_prev);
 
+        // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        if (fread(&parent_idx, 4, 1, fp) != 1) {
-            g_debug("failed to load parent_idx");
+        if (!db_load_parent_idx(fp, &parent_idx)) {
             goto load_fail;
         }
         FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
@@ -515,6 +524,7 @@ load_fail:
 static bool
 db_save_entry_shared(FILE *fp,
                      struct FsearchDatabaseEntryCommon *shared,
+                     uint32_t parent_idx,
                      GString *previous_entry_name,
                      GString *new_entry_name) {
     // init new_entry_name with the name of the current entry
@@ -547,9 +557,17 @@ db_save_entry_shared(FILE *fp,
             return false;
         }
     }
+
+    // size: file or folder size (folder size: sum of all children sizes)
     uint64_t size = shared->size;
     if (fwrite(&size, 8, 1, fp) != 1) {
         g_debug("failed to save size");
+        return false;
+    }
+
+    // parent_idx: index of parent folder
+    if (fwrite(&parent_idx, 4, 1, fp) != 1) {
+        g_debug("failed to save parent_idx");
         return false;
     }
 
@@ -620,15 +638,8 @@ db_save2(FsearchDatabase *db, const char *path) {
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(db->folders, i);
 
-        if (!db_save_entry_shared(fp, &folder->shared, name_prev, name_new)) {
-            goto save_fail;
-        }
-
-        // parent_idx: index of parent folder or if there is no parent folder (i.e. entry is root index) we store its
-        // own index instead
         uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->idx : folder->idx;
-        if (fwrite(&parent_idx, 4, 1, fp) != 1) {
-            g_debug("failed to save parent_idx");
+        if (!db_save_entry_shared(fp, &folder->shared, parent_idx, name_prev, name_new)) {
             goto save_fail;
         }
     }
@@ -636,14 +647,8 @@ db_save2(FsearchDatabase *db, const char *path) {
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntryFile *file = darray_get_item(db->files, i);
 
-        if (!db_save_entry_shared(fp, &file->shared, name_prev, name_new)) {
-            goto save_fail;
-        }
-
-        // parent_idx: index of parent folder
         uint32_t parent_idx = file->shared.parent->idx;
-        if (fwrite(&parent_idx, 4, 1, fp) != 1) {
-            g_debug("failed to save parent_idx");
+        if (!db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new)) {
             goto save_fail;
         }
     }
