@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <sys/file.h>
 #include <sys/stat.h>
 #include <sys/time.h>
 #include <sys/types.h>
@@ -281,19 +282,32 @@ get_name_offset(const char *old, const char *new) {
     return offset;
 }
 
+static FILE *
+db_file_open_locked(const char *file_path, const char *mode) {
+    FILE *file_pointer = fopen(file_path, mode);
+    if (!file_pointer) {
+        g_debug("can't open database file: %s", file_path);
+        return NULL;
+    }
+
+    int file_descriptor = fileno(file_pointer);
+    if (flock(file_descriptor, LOCK_EX | LOCK_NB) == -1) {
+        g_debug("database file is already locked by a different process: %s", file_path);
+
+        fclose(file_pointer);
+        file_pointer = NULL;
+    }
+
+    return file_pointer;
+}
+
 static bool
 db_load2(FsearchDatabase *db, const char *file_path) {
     assert(file_path != NULL);
     assert(db != NULL);
 
-    if (!g_file_test(file_path, G_FILE_TEST_EXISTS)) {
-        g_debug("%s doesn't exist", file_path);
-        return false;
-    }
-
-    FILE *fp = fopen(file_path, "rb");
+    FILE *fp = db_file_open_locked(file_path, "rb");
     if (!fp) {
-        g_debug("%s can't open", file_path);
         return false;
     }
 
@@ -446,13 +460,19 @@ db_load2(FsearchDatabase *db, const char *file_path) {
     db->num_entries = num_files + num_folders;
     db->num_files = num_files;
     db->num_folders = num_folders;
+
     fclose(fp);
+    fp = NULL;
+
     return true;
 
 load_fail:
     g_debug("load fail");
 
-    fclose(fp);
+    if (fp) {
+        fclose(fp);
+        fp = NULL;
+    }
 
     if (folders) {
         darray_free(folders);
@@ -476,7 +496,7 @@ db_save2(FsearchDatabase *db, const char *path) {
     assert(db != NULL);
 
     if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-        g_debug("%s doesn't exist", path);
+        g_debug("database path doesn't exist: %s", path);
         return false;
     }
 
@@ -487,10 +507,9 @@ db_save2(FsearchDatabase *db, const char *path) {
     GString *path_full_temp = g_string_new(path_full->str);
     g_string_append(path_full_temp, ".tmp");
 
-    FILE *fp = fopen(path_full_temp->str, "w+b");
+    FILE *fp = db_file_open_locked(path_full_temp->str, "wb");
     if (!fp) {
-        g_debug("%s can't open", path_full_temp->str);
-        return false;
+        goto save_fail;
     }
 
     db_entry_update_folder_indices(db);
@@ -607,9 +626,11 @@ db_save2(FsearchDatabase *db, const char *path) {
         }
     }
 
-    fclose(fp);
-
     unlink(path_full->str);
+
+    fclose(fp);
+    fp = NULL;
+
     if (rename(path_full_temp->str, path_full->str) != 0) {
         goto save_fail;
     }
@@ -625,7 +646,10 @@ db_save2(FsearchDatabase *db, const char *path) {
 save_fail:
     g_warning("save fail");
 
-    fclose(fp);
+    if (fp) {
+        fclose(fp);
+        fp = NULL;
+    }
 
     unlink(path_full_temp->str);
     unlink(path_full->str);
