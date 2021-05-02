@@ -352,7 +352,7 @@ db_load_entry_shared(FILE *fp, struct FsearchDatabaseEntryCommon *shared, GStrin
 static bool
 db_load_header(FILE *fp) {
     char magic[5] = "";
-    if (fread(magic, 4, 1, fp) != 1) {
+    if (fread(magic, strlen(DATABASE_MAGIC_NUMBER), 1, fp) != 1) {
         return false;
     }
     magic[4] = '\0';
