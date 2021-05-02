@@ -697,6 +697,9 @@ db_save2(FsearchDatabase *db, const char *path) {
         return false;
     }
 
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
+
     GString *path_full = g_string_new(path);
     g_string_append_c(path_full, G_DIR_SEPARATOR);
     g_string_append(path_full, "fsearch.db");
@@ -749,6 +752,13 @@ db_save2(FsearchDatabase *db, const char *path) {
     g_string_free(path_full_temp, TRUE);
     path_full_temp = NULL;
 
+    const double seconds = g_timer_elapsed(timer, NULL);
+    g_timer_stop(timer);
+    g_timer_destroy(timer);
+    timer = NULL;
+
+    g_debug("database file saved in: %f ms", seconds * 1000);
+
     return true;
 
 save_fail:
@@ -767,6 +777,9 @@ save_fail:
 
     g_string_free(path_full_temp, TRUE);
     path_full_temp = NULL;
+
+    g_timer_destroy(timer);
+    timer = NULL;
 
     return false;
 }
