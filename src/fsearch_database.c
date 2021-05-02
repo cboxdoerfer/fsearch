@@ -302,6 +302,50 @@ db_file_open_locked(const char *file_path, const char *mode) {
 }
 
 static bool
+db_load_entry_shared(FILE *fp, struct FsearchDatabaseEntryCommon *shared, GString *previous_entry_name) {
+    // name_offset: character position after which previous_entry_name and entry_name differ
+    uint8_t name_offset = 0;
+    if (fread(&name_offset, 1, 1, fp) != 1) {
+        g_debug("failed to load name offset");
+        return false;
+    }
+
+    // name_len: length of the new name characters
+    uint8_t name_len = 0;
+    if (fread(&name_len, 1, 1, fp) != 1) {
+        g_debug("failed to load name length");
+        return false;
+    }
+
+    // erase previous name starting at name_offset
+    g_string_erase(previous_entry_name, name_offset, -1);
+
+    char name[256] = "";
+    // name: new characters to be appended to previous_entry_name
+    if (name_len > 0) {
+        if (fread(name, name_len, 1, fp) != 1) {
+            g_debug("failed to load name");
+            return false;
+        }
+        name[name_len] = '\0';
+    }
+
+    // now we can build the new full file name
+    g_string_append(previous_entry_name, name);
+    shared->name = g_strdup(previous_entry_name->str);
+
+    // size: size of file/folder
+    uint64_t size = 0;
+    if (fread(&size, 8, 1, fp) != 1) {
+        g_debug("failed to load size");
+        return false;
+    }
+    shared->size = (off_t)size;
+
+    return true;
+}
+
+static bool
 db_load2(FsearchDatabase *db, const char *file_path) {
     assert(file_path != NULL);
     assert(db != NULL);
@@ -341,7 +385,9 @@ db_load2(FsearchDatabase *db, const char *file_path) {
     }
     g_debug("load %d folders, %d files", num_folders, num_files);
 
+    // pre-allocate the folders array so we can later map parent indices to the corresponding pointers
     folders = darray_new(num_folders);
+
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = fsearch_memory_pool_malloc(db->folder_pool);
         folder->idx = i;
@@ -350,41 +396,13 @@ db_load2(FsearchDatabase *db, const char *file_path) {
         darray_add_item(folders, folder);
     }
 
+    // load folders
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
-        if (!folder) {
-            goto load_fail;
-        }
 
-        uint8_t name_offset = 0;
-        if (fread(&name_offset, 1, 1, fp) != 1) {
-            g_debug("failed to load name offset");
+        if (!db_load_entry_shared(fp, &folder->shared, name_prev)) {
             goto load_fail;
         }
-        uint8_t name_len = 0;
-        if (fread(&name_len, 1, 1, fp) != 1) {
-            g_debug("failed to load name length");
-            goto load_fail;
-        }
-        g_string_erase(name_prev, name_offset, -1);
-
-        char name[256] = "";
-        if (name_len > 0) {
-            if (fread(name, name_len, 1, fp) != 1) {
-                g_debug("failed to load name");
-                goto load_fail;
-            }
-            name[name_len] = '\0';
-        }
-        g_string_append(name_prev, name);
-        folder->shared.name = g_strdup(name_prev->str);
-
-        uint64_t size = 0;
-        if (fread(&size, 8, 1, fp) != 1) {
-            g_debug("failed to load size");
-            goto load_fail;
-        }
-        folder->shared.size = (off_t)size;
 
         uint32_t parent_idx = 0;
         if (fread(&parent_idx, 4, 1, fp) != 1) {
@@ -400,42 +418,16 @@ db_load2(FsearchDatabase *db, const char *file_path) {
         }
     }
 
+    g_string_erase(name_prev, 0, -1);
+
     files = darray_new(num_files);
 
+    // load files
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntryFile *file = fsearch_memory_pool_malloc(db->file_pool);
         file->shared.type = DATABASE_ENTRY_TYPE_FILE;
-        darray_add_item(files, file);
 
-        uint8_t name_offset = 0;
-        if (fread(&name_offset, 1, 1, fp) != 1) {
-            g_debug("failed to load name offset");
-            goto load_fail;
-        }
-        uint8_t name_len = 0;
-        if (fread(&name_len, 1, 1, fp) != 1) {
-            g_debug("failed to load name length");
-            goto load_fail;
-        }
-        g_string_erase(name_prev, name_offset, -1);
-
-        char name[256] = "";
-        if (name_len > 0) {
-            if (fread(name, name_len, 1, fp) != 1) {
-                g_debug("failed to load name");
-                goto load_fail;
-            }
-            name[name_len] = '\0';
-        }
-        g_string_append(name_prev, name);
-        file->shared.name = g_strdup(name_prev->str);
-
-        uint64_t size = 0;
-        if (fread(&size, 8, 1, fp) != 1) {
-            g_debug("failed to load size");
-            goto load_fail;
-        }
-        file->shared.size = (off_t)size;
+        db_load_entry_shared(fp, &file->shared, name_prev);
 
         uint32_t parent_idx = 0;
         if (fread(&parent_idx, 4, 1, fp) != 1) {
@@ -444,6 +436,8 @@ db_load2(FsearchDatabase *db, const char *file_path) {
         }
         FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
         file->shared.parent = parent;
+
+        darray_add_item(files, file);
     }
 
     g_string_free(name_prev, TRUE);
