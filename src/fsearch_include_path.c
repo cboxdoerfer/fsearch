@@ -8,7 +8,7 @@
 #include "fsearch_include_path.h"
 
 FsearchIncludePath *
-fsearch_include_path_new(const char *path, bool enabled, bool update, uint32_t num_items, time_t last_updated) {
+fsearch_include_path_new(const char *path, bool enabled, bool update, time_t last_updated) {
     FsearchIncludePath *fs_path = calloc(1, sizeof(FsearchIncludePath));
     assert(fs_path != NULL);
 
@@ -17,7 +17,6 @@ fsearch_include_path_new(const char *path, bool enabled, bool update, uint32_t n
     }
     fs_path->enabled = enabled;
     fs_path->update = update;
-    fs_path->num_items = num_items;
     fs_path->last_updated = last_updated;
 
     return fs_path;
@@ -28,7 +27,7 @@ fsearch_include_path_copy(FsearchIncludePath *src) {
     if (!src) {
         return NULL;
     }
-    return fsearch_include_path_new(src->path, src->enabled, src->update, src->num_items, src->last_updated);
+    return fsearch_include_path_new(src->path, src->enabled, src->update, src->last_updated);
 }
 
 void

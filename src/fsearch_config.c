@@ -120,12 +120,10 @@ config_load_include_locations(GKeyFile *key_file, GList *locations, const char *
         bool enabled = config_load_boolean(key_file, "Database", key, true);
         snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
         bool update = config_load_boolean(key_file, "Database", key, true);
-        snprintf(key, sizeof(key), "%s_num_items_%d", prefix, pos);
-        bool num_items = config_load_integer(key_file, "Database", key, 0);
 
         pos++;
         if (path) {
-            FsearchIncludePath *fs_path = fsearch_include_path_new(path, enabled, update, num_items, 0);
+            FsearchIncludePath *fs_path = fsearch_include_path_new(path, enabled, update, 0);
             locations = g_list_append(locations, fs_path);
         }
         else {
@@ -366,7 +364,7 @@ config_load_default(FsearchConfig *config) {
 
     // Locations
     config->locations = NULL;
-    FsearchIncludePath *fs_path = fsearch_include_path_new(g_get_home_dir(), true, true, 0, 0);
+    FsearchIncludePath *fs_path = fsearch_include_path_new(g_get_home_dir(), true, true, 0);
     config->locations = g_list_append(config->locations, fs_path);
     config->exclude_locations = NULL;
 
@@ -395,9 +393,6 @@ config_save_include_locations(GKeyFile *key_file, GList *locations, const char *
 
         snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
         g_key_file_set_boolean(key_file, "Database", key, fs_path->update);
-
-        snprintf(key, sizeof(key), "%s_num_items_%d", prefix, pos);
-        g_key_file_set_integer(key_file, "Database", key, fs_path->num_items);
 
         pos++;
     }

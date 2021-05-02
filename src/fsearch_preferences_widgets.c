@@ -92,7 +92,7 @@ pref_include_treeview_data_get(GtkTreeView *view) {
                            -1);
 
         if (path) {
-            FsearchIncludePath *fs_path = fsearch_include_path_new(path, enable, update, 0, 0);
+            FsearchIncludePath *fs_path = fsearch_include_path_new(path, enable, update, 0);
             data = g_list_append(data, fs_path);
             g_free(path);
             path = NULL;
@@ -140,7 +140,7 @@ pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *it
 
 void
 pref_include_treeview_row_add(GtkTreeModel *include_model, const char *path) {
-    FsearchIncludePath *fs_path = fsearch_include_path_new(path, true, true, 0, 0);
+    FsearchIncludePath *fs_path = fsearch_include_path_new(path, true, true, 0);
 
     GtkTreeIter iter;
     gtk_list_store_append(GTK_LIST_STORE(include_model), &iter);

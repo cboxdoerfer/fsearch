@@ -68,7 +68,10 @@ struct _FsearchDatabaseEntryFolder {
     GSList *folder_children;
     GSList *file_children;
 
+    // idx: index in folder array sorted by name
     uint32_t idx;
+    // db_idx: the database index this folder belongs to
+    uint32_t db_idx;
 };
 
 struct _FsearchDatabase {
@@ -1114,6 +1117,7 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
     assert(db != NULL);
 
     bool ret = false;
+
     for (GList *l = db->includes; l != NULL; l = l->next) {
         FsearchIncludePath *fs_path = l->data;
         if (!fs_path->path) {
