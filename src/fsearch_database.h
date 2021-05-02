@@ -53,7 +53,7 @@ FsearchDatabase *
 db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden);
 
 bool
-db_save(FsearchDatabase *db);
+db_save(FsearchDatabase *db, const char *path);
 
 time_t
 db_get_timestamp(FsearchDatabase *db);

@@ -475,8 +475,8 @@ db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicA
     return result;
 }
 
-static bool
-db_load2(FsearchDatabase *db, const char *file_path) {
+bool
+db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char *)) {
     assert(file_path != NULL);
     assert(db != NULL);
 
@@ -514,11 +514,17 @@ db_load2(FsearchDatabase *db, const char *file_path) {
         darray_add_item(folders, folder);
     }
 
+    if (status_cb) {
+        status_cb(_("Loading folders"));
+    }
     // load folders
     if (!db_load_folders(fp, folders, num_folders)) {
         goto load_fail;
     }
 
+    if (status_cb) {
+        status_cb(_("Loading files"));
+    }
     // load files
     files = darray_new(num_files);
     if (!db_load_files(fp, db->file_pool, folders, files, num_files)) {
@@ -687,8 +693,8 @@ db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
     return result;
 }
 
-static bool
-db_save2(FsearchDatabase *db, const char *path) {
+bool
+db_save(FsearchDatabase *db, const char *path) {
     assert(path != NULL);
     assert(db != NULL);
 
@@ -973,12 +979,6 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     g_warning("[db_scan] walk error: %d", res);
 }
 
-bool
-db_save(FsearchDatabase *db) {
-    assert(db != NULL);
-    return false;
-}
-
 FsearchDatabase *
 db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden) {
     FsearchDatabase *db = g_new0(FsearchDatabase, 1);
@@ -1110,13 +1110,6 @@ db_get_folders(FsearchDatabase *db) {
 }
 
 bool
-db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
-    assert(db != NULL);
-    // return false;
-    return db_load2(db, "/home/cb/testdir/fsearch.db");
-}
-
-bool
 db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *)) {
     assert(db != NULL);
 
@@ -1134,7 +1127,6 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
         }
     }
     db_sort(db);
-    db_save2(db, "/home/cb/testdir");
     return ret;
 }
 

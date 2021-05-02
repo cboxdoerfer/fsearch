@@ -66,6 +66,12 @@ fsearch_application_state_lock(FsearchApplication *fsearch);
 void
 fsearch_application_state_unlock(FsearchApplication *fsearch);
 
+char *
+fsearch_application_get_database_file_path(FsearchApplication *fsearch);
+
+char *
+fsearch_application_get_database_dir(FsearchApplication *fsearch);
+
 void
 fsearch_application_update_listview_config(void);
 

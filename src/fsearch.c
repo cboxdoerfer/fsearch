@@ -151,6 +151,25 @@ fsearch_application_get_config(FsearchApplication *fsearch) {
     return fsearch->config;
 }
 
+char *
+fsearch_application_get_database_file_path(FsearchApplication *fsearch) {
+    GString *file_path = g_string_new(g_get_user_data_dir());
+    g_string_append_c(file_path, G_DIR_SEPARATOR);
+    g_string_append(file_path, "fsearch");
+    g_string_append_c(file_path, G_DIR_SEPARATOR);
+    g_string_append(file_path, "fsearch.db");
+
+    return g_string_free(file_path, FALSE);
+}
+
+char *
+fsearch_application_get_database_dir(FsearchApplication *fsearch) {
+    GString *db_dir = g_string_new(g_get_user_data_dir());
+    g_string_append_c(db_dir, G_DIR_SEPARATOR);
+    g_string_append(db_dir, "fsearch");
+    return g_string_free(db_dir, FALSE);
+}
+
 static gboolean
 database_scan_status_notify(gpointer user_data) {
     char *text = user_data;
@@ -321,11 +340,21 @@ database_update(FsearchApplication *app, bool rescan) {
     if (rescan) {
         db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_scan_status_cb : NULL);
         if (!g_cancellable_is_cancelled(app->db_thread_cancellable)) {
-            db_save(db);
+            char *db_path = fsearch_application_get_database_dir(app);
+            if (db_path) {
+                db_save(db, db_path);
+                free(db_path);
+                db_path = NULL;
+            }
         }
     }
     else {
-        db_load(db, NULL, NULL);
+        char *db_file_path = fsearch_application_get_database_file_path(app);
+        if (db_file_path) {
+            db_load(db, db_file_path, database_scan_status_cb);
+            free(db_file_path);
+            db_file_path = NULL;
+        }
     }
     db_unlock(db);
 
@@ -758,7 +787,14 @@ local_database_update() {
 
     db_lock(db);
     int res = !db_scan(db, NULL, NULL);
-    db_save(db);
+
+    char *db_path = fsearch_application_get_database_dir(NULL);
+    if (db_path) {
+        db_save(db, db_path);
+        free(db_path);
+        db_path = NULL;
+    }
+
     db_unlock(db);
     db_unref(db);
 
