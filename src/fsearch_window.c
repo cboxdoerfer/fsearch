@@ -214,7 +214,7 @@ fsearch_window_sort_task_finished(FsearchTask *task, gpointer result, gpointer d
 }
 
 static void *
-fsearch_list_view_get_node_for_row(int row_idx, GtkSortType sort_type, gpointer user_data) {
+fsearch_list_view_get_entry_for_row(int row_idx, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     if (!win || !win->result) {
         return NULL;
@@ -818,7 +818,7 @@ static gboolean
 on_fsearch_list_view_popup(FsearchListView *view, int row_idx, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row_idx, sort_type, win);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, sort_type, win);
     if (!entry) {
         return FALSE;
     }
@@ -910,7 +910,7 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         launch_folder = true;
     }
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row_idx, sort_type, self);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, sort_type, self);
     if (!entry) {
         return;
     }
@@ -1058,7 +1058,7 @@ draw_row_ctx_init(uint32_t row,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row, sort_type, win);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row, sort_type, win);
     if (!entry) {
         return;
     }
@@ -1142,7 +1142,7 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_node_for_row(row_idx, sort_type, win);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, sort_type, win);
     if (!entry) {
         return NULL;
     }
@@ -1420,7 +1420,7 @@ create_view_and_model(FsearchApplicationWindow *app) {
     gtk_widget_show(app->listview);
     fsearch_list_view_set_query_tooltip_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_query_tooltip, app);
     fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_draw_row, app);
-    fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_get_node_for_row, app);
+    fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_get_entry_for_row, app);
     fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->listview), fsearch_results_sort_func, app);
     fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
     gtk_widget_set_has_tooltip(GTK_WIDGET(app->listview), config->enable_list_tooltips);

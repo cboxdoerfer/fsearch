@@ -44,7 +44,7 @@
 #include "fsearch_memory_pool.h"
 #include "fsearch_utils.h"
 
-#define BTREE_NODE_POOL_BLOCK_ELEMENTS 10000
+#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define DATABASE_MAJOR_VERSION 0
 #define DATABASE_MINOR_VERSION 2
@@ -992,10 +992,10 @@ db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidd
     if (exclude_files) {
         db->exclude_files = g_strdupv(exclude_files);
     }
-    db->file_pool = fsearch_memory_pool_new(BTREE_NODE_POOL_BLOCK_ELEMENTS,
+    db->file_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                             sizeof(FsearchDatabaseEntryFile),
                                             (GDestroyNotify)db_file_entry_destroy);
-    db->folder_pool = fsearch_memory_pool_new(BTREE_NODE_POOL_BLOCK_ELEMENTS,
+    db->folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                               sizeof(FsearchDatabaseEntryFolder),
                                               (GDestroyNotify)db_folder_entry_destroy);
     db->files = darray_new(1000);
