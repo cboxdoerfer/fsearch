@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-preferences-ui"
+
 #include "fsearch_preferences_ui.h"
 #include "fsearch.h"
 #include "fsearch_exclude_path.h"

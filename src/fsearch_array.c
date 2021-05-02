@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-dynamic-array"
+
 #include "fsearch_array.h"
 #include <assert.h>
 #include <glib.h>

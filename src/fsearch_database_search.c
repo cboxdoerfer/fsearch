@@ -17,6 +17,9 @@
    */
 
 #define _GNU_SOURCE
+
+#define G_LOG_DOMAIN "fsearch-search"
+
 #include "fsearch_database_search.h"
 
 #include <assert.h>
@@ -160,10 +163,10 @@ db_search_task(gpointer data, GCancellable *cancellable) {
     const char *debug_message = NULL;
     const double seconds = g_timer_elapsed(timer, NULL);
     if (!g_cancellable_is_cancelled(cancellable)) {
-        debug_message = "[search] search %d.%d finished in %.2f ms";
+        debug_message = "query %d.%d finished in %.2f ms";
     }
     else {
-        debug_message = "[search] search %d.%d aborted after %.2f ms";
+        debug_message = "query %d.%d aborted after %.2f ms";
     }
     g_timer_stop(timer);
     g_timer_destroy(timer);

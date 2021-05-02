@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-clipboard"
+
 #include "fsearch_clipboard.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>

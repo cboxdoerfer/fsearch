@@ -1,5 +1,7 @@
 #define _GNU_SOURCE
 
+#define G_LOG_DOMAIN "fsearch-search-token"
+
 #include "fsearch_token.h"
 #include "fsearch_string_utils.h"
 #include <assert.h>

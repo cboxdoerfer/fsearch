@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-config"
+
 #include <glib.h>
 #include <stdbool.h>
 #include <stdio.h>

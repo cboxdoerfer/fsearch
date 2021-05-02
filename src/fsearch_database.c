@@ -18,6 +18,8 @@
 
 #define _GNU_SOURCE
 
+#define G_LOG_DOMAIN "fsearch-database"
+
 #include <assert.h>
 #include <ctype.h>
 #include <dirent.h>
@@ -60,6 +62,8 @@ struct _FsearchDatabaseEntryFolder {
 
     GSList *folder_children;
     GSList *file_children;
+
+    uint32_t idx;
 };
 
 struct _FsearchDatabase {
@@ -253,283 +257,387 @@ db_update_timestamp(FsearchDatabase *db) {
     db->timestamp = time(NULL);
 }
 
-// static FsearchDatabaseNode *
-// db_location_load_from_file(const char *fname) {
-//     assert(fname != NULL);
-//
-//     FILE *fp = fopen(fname, "rb");
-//     if (!fp) {
-//         return NULL;
-//     }
-//
-//     DatabaseEntry *root = NULL;
-//     FsearchDatabaseNode *location = db_location_new();
-//
-//     char magic[4];
-//     if (fread(magic, 4, 1, fp) != 1) {
-//         trace("[database_read_file] failed to read magic\n");
-//         goto load_fail;
-//     }
-//     if (strncmp(magic, "FSDB", 4)) {
-//         trace("[database_read_file] bad signature\n");
-//         goto load_fail;
-//     }
-//
-//     uint8_t majorver = 0;
-//     if (fread(&majorver, 1, 1, fp) != 1) {
-//         goto load_fail;
-//     }
-//     if (majorver != 0) {
-//         trace("[database_read_file] bad majorver=%d\n", majorver);
-//         goto load_fail;
-//     }
-//
-//     uint8_t minorver = 0;
-//     if (fread(&minorver, 1, 1, fp) != 1) {
-//         goto load_fail;
-//     }
-//     if (minorver != 1) {
-//         trace("[database_read_file] bad minorver=%d\n", minorver);
-//         goto load_fail;
-//     }
-//     trace("[database_read_file] database version=%d.%d\n", majorver, minorver);
-//
-//     uint32_t num_items = 0;
-//     if (fread(&num_items, 4, 1, fp) != 1) {
-//         goto load_fail;
-//     }
-//
-//     uint32_t num_folders = 0;
-//     uint32_t num_files = 0;
-//
-//     uint32_t num_items_read = 0;
-//     DatabaseEntry *prev = NULL;
-//     while (true) {
-//         uint16_t name_len = 0;
-//         if (fread(&name_len, 2, 1, fp) != 1) {
-//             trace("[database_read_file] failed to read name length\n");
-//             goto load_fail;
-//         }
-//
-//         if (name_len == 0) {
-//             // reached end of child marker
-//             if (!prev) {
-//                 goto load_fail;
-//             }
-//             prev = prev->parent;
-//             if (!prev) {
-//                 // prev was root node, we're done
-//                 trace("[database_read_file] reached root node. done\n");
-//                 break;
-//             }
-//             continue;
-//         }
-//
-//         // read name
-//         char name[name_len + 1];
-//         if (fread(&name, name_len, 1, fp) != 1) {
-//             trace("[database_read_file] failed to read name\n");
-//             goto load_fail;
-//         }
-//         name[name_len] = '\0';
-//
-//         // read is_dir
-//         uint8_t is_dir = 0;
-//         if (fread(&is_dir, 1, 1, fp) != 1) {
-//             trace("[database_read_file] failed to read is_dir\n");
-//             goto load_fail;
-//         }
-//
-//         // read size
-//         uint64_t size = 0;
-//         if (fread(&size, 8, 1, fp) != 1) {
-//             trace("[database_read_file] failed to read size\n");
-//             goto load_fail;
-//         }
-//
-//         // read mtime
-//         uint64_t mtime = 0;
-//         if (fread(&mtime, 8, 1, fp) != 1) {
-//             trace("[database_read_file] failed to read mtime\n");
-//             goto load_fail;
-//         }
-//
-//         // read sort position
-//         uint32_t pos = 0;
-//         if (fread(&pos, 4, 1, fp) != 1) {
-//             trace("[database_read_file] failed to read sort position\n");
-//             goto load_fail;
-//         }
-//
-//         int is_root = !strcmp(name, "/");
-//         DatabaseEntry *new = fsearch_memory_pool_malloc(location->pool);
-//         new->name = is_root ? strdup("/") : strdup(name);
-//         new->mtime = mtime;
-//         new->size = size;
-//         new->is_dir = is_dir;
-//         new->pos = pos;
-//
-//         is_dir ? num_folders++ : num_files++;
-//         num_items_read++;
-//
-//         if (!prev) {
-//             prev = new;
-//             root = new;
-//             continue;
-//         }
-//         prev = btree_node_prepend(prev, new);
-//     }
-//     trace("[database_load] finished with %d of %d items successfully read\n", num_items_read, num_items);
-//
-//     location->num_items = num_items_read;
-//     location->num_folders = num_folders;
-//     location->num_files = num_files;
-//     location->entries = root;
-//
-//     fclose(fp);
-//
-//     return location;
-//
-// load_fail:
-//     fprintf(stderr, "database load fail (%s)!\n", fname);
-//     if (fp) {
-//         fclose(fp);
-//     }
-//     db_location_free(location);
-//     return NULL;
-// }
+static void
+db_entry_update_folder_indices(FsearchDatabase *db) {
+    if (!db || !db->folders) {
+        return;
+    }
+    uint32_t num_folders = darray_get_num_items(db->folders);
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(db->folders, i);
+        if (!folder) {
+            continue;
+        }
+        folder->idx = i;
+    }
+}
 
-// static bool
-// db_location_write_to_file(FsearchDatabaseNode *location, const char *path) {
-//     assert(path != NULL);
-//     assert(location != NULL);
-//
-//     if (!location->entries) {
-//         return false;
-//     }
-//     g_mkdir_with_parents(path, 0700);
-//
-//     GString *db_path = g_string_new(path);
-//     g_string_append(db_path, "/database.db");
-//
-//     FILE *fp = fopen(db_path->str, "w+b");
-//     if (!fp) {
-//         return false;
-//     }
-//
-//     const char magic[] = "FSDB";
-//     if (fwrite(magic, 4, 1, fp) != 1) {
-//         goto save_fail;
-//     }
-//
-//     const uint8_t majorver = 0;
-//     if (fwrite(&majorver, 1, 1, fp) != 1) {
-//         goto save_fail;
-//     }
-//
-//     const uint8_t minorver = 1;
-//     if (fwrite(&minorver, 1, 1, fp) != 1) {
-//         goto save_fail;
-//     }
-//
-//     uint32_t num_items = btree_node_n_nodes(location->entries);
-//     if (fwrite(&num_items, 4, 1, fp) != 1) {
-//         goto save_fail;
-//     }
-//
-//     const uint16_t del = 0;
-//
-//     DatabaseEntry *root = location->entries;
-//     DatabaseEntry *node = root;
-//     uint32_t is_root = !strcmp(root->name, "");
-//
-//     while (node) {
-//         const char *name = is_root ? "/" : node->name;
-//         is_root = 0;
-//         uint16_t len = strlen(name);
-//         if (len) {
-//             // write length of node name
-//             if (fwrite(&len, 2, 1, fp) != 1) {
-//                 goto save_fail;
-//             }
-//             // write node name
-//             if (fwrite(name, len, 1, fp) != 1) {
-//                 goto save_fail;
-//             }
-//             // write is_dir
-//             uint8_t is_dir = node->is_dir;
-//             if (fwrite(&is_dir, 1, 1, fp) != 1) {
-//                 goto save_fail;
-//             }
-//
-//             // write node size
-//             uint64_t size = node->size;
-//             if (fwrite(&size, 8, 1, fp) != 1) {
-//                 goto save_fail;
-//             }
-//
-//             // write node modification time
-//             uint64_t mtime = node->mtime;
-//             if (fwrite(&mtime, 8, 1, fp) != 1) {
-//                 goto save_fail;
-//             }
-//
-//             // write node sort position
-//             uint32_t pos = node->pos;
-//             if (fwrite(&pos, 4, 1, fp) != 1) {
-//                 goto save_fail;
-//             }
-//
-//             DatabaseEntry *temp = node->children;
-//             if (!temp) {
-//                 // reached end of children, write delimiter
-//                 if (fwrite(&del, 2, 1, fp) != 1) {
-//                     goto save_fail;
-//                 }
-//                 DatabaseEntry *current = node;
-//                 while (true) {
-//                     temp = current->next;
-//                     if (temp) {
-//                         // found next, sibling add that
-//                         node = temp;
-//                         break;
-//                     }
-//
-//                     if (fwrite(&del, 2, 1, fp) != 1) {
-//                         goto save_fail;
-//                     }
-//                     temp = current->parent;
-//                     if (!temp) {
-//                         // reached last node, abort
-//                         node = NULL;
-//                         break;
-//                     }
-//                     else {
-//                         current = temp;
-//                     }
-//                 }
-//             }
-//             else {
-//                 node = temp;
-//             }
-//         }
-//         else {
-//             goto save_fail;
-//         }
-//     }
-//
-//     fclose(fp);
-//
-//     trace("[database_save] saved %s\n", path);
-//     return true;
-//
-// save_fail:
-//
-//     fclose(fp);
-//     unlink(db_path->str);
-//     g_string_free(db_path, TRUE);
-//     return false;
-// }
+static uint8_t
+get_name_offset(const char *old, const char *new) {
+    uint8_t offset = 0;
+    while (old[offset] == new[offset] && old[offset] != '\0' && new[offset] != '\0') {
+        offset++;
+    }
+    return offset;
+}
+
+static bool
+db_load2(FsearchDatabase *db, const char *file_path) {
+    assert(file_path != NULL);
+    assert(db != NULL);
+
+    if (!g_file_test(file_path, G_FILE_TEST_EXISTS)) {
+        g_debug("%s doesn't exist", file_path);
+        return false;
+    }
+
+    FILE *fp = fopen(file_path, "rb");
+    if (!fp) {
+        g_debug("%s can't open", file_path);
+        return false;
+    }
+
+    DynamicArray *folders = NULL;
+    DynamicArray *files = NULL;
+    GString *name_prev = g_string_sized_new(256);
+
+    char magic[4];
+    if (fread(magic, 4, 1, fp) != 1) {
+        goto load_fail;
+    }
+
+    uint8_t majorver = 0;
+    if (fread(&majorver, 1, 1, fp) != 1) {
+        goto load_fail;
+    }
+
+    uint8_t minorver = 0;
+    if (fread(&minorver, 1, 1, fp) != 1) {
+        goto load_fail;
+    }
+
+    uint32_t num_folders = 0;
+    if (fread(&num_folders, 4, 1, fp) != 1) {
+        goto load_fail;
+    }
+
+    uint32_t num_files = 0;
+    if (fread(&num_files, 4, 1, fp) != 1) {
+        goto load_fail;
+    }
+    g_debug("load %d folders, %d files", num_folders, num_files);
+
+    folders = darray_new(num_folders);
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = fsearch_memory_pool_malloc(db->folder_pool);
+        folder->idx = i;
+        folder->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
+        folder->shared.parent = NULL;
+        darray_add_item(folders, folder);
+    }
+
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
+        if (!folder) {
+            goto load_fail;
+        }
+
+        uint8_t name_offset = 0;
+        if (fread(&name_offset, 1, 1, fp) != 1) {
+            g_debug("failed to load name offset");
+            goto load_fail;
+        }
+        uint8_t name_len = 0;
+        if (fread(&name_len, 1, 1, fp) != 1) {
+            g_debug("failed to load name length");
+            goto load_fail;
+        }
+        g_string_erase(name_prev, name_offset, -1);
+
+        char name[256] = "";
+        if (name_len > 0) {
+            if (fread(name, name_len, 1, fp) != 1) {
+                g_debug("failed to load name");
+                goto load_fail;
+            }
+            name[name_len] = '\0';
+        }
+        g_string_append(name_prev, name);
+        folder->shared.name = g_strdup(name_prev->str);
+
+        uint64_t size = 0;
+        if (fread(&size, 8, 1, fp) != 1) {
+            g_debug("failed to load size");
+            goto load_fail;
+        }
+        folder->shared.size = (off_t)size;
+
+        uint32_t parent_idx = 0;
+        if (fread(&parent_idx, 4, 1, fp) != 1) {
+            g_debug("failed to load parent_idx");
+            goto load_fail;
+        }
+        if (parent_idx != folder->idx) {
+            FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
+            folder->shared.parent = parent;
+        }
+        else {
+            folder->shared.parent = NULL;
+        }
+    }
+
+    files = darray_new(num_files);
+
+    for (uint32_t i = 0; i < num_files; i++) {
+        FsearchDatabaseEntryFile *file = fsearch_memory_pool_malloc(db->file_pool);
+        file->shared.type = DATABASE_ENTRY_TYPE_FILE;
+        darray_add_item(files, file);
+
+        uint8_t name_offset = 0;
+        if (fread(&name_offset, 1, 1, fp) != 1) {
+            g_debug("failed to load name offset");
+            goto load_fail;
+        }
+        uint8_t name_len = 0;
+        if (fread(&name_len, 1, 1, fp) != 1) {
+            g_debug("failed to load name length");
+            goto load_fail;
+        }
+        g_string_erase(name_prev, name_offset, -1);
+
+        char name[256] = "";
+        if (name_len > 0) {
+            if (fread(name, name_len, 1, fp) != 1) {
+                g_debug("failed to load name");
+                goto load_fail;
+            }
+            name[name_len] = '\0';
+        }
+        g_string_append(name_prev, name);
+        file->shared.name = g_strdup(name_prev->str);
+
+        uint64_t size = 0;
+        if (fread(&size, 8, 1, fp) != 1) {
+            g_debug("failed to load size");
+            goto load_fail;
+        }
+        file->shared.size = (off_t)size;
+
+        uint32_t parent_idx = 0;
+        if (fread(&parent_idx, 4, 1, fp) != 1) {
+            g_debug("failed to load parent_idx");
+            goto load_fail;
+        }
+        FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
+        file->shared.parent = parent;
+    }
+
+    g_string_free(name_prev, TRUE);
+    name_prev = NULL;
+
+    if (db->files) {
+        darray_free(db->files);
+    }
+    db->files = files;
+    if (db->folders) {
+        darray_free(db->folders);
+    }
+    db->folders = folders;
+    db->num_entries = num_files + num_folders;
+    db->num_files = num_files;
+    db->num_folders = num_folders;
+    fclose(fp);
+    return true;
+
+load_fail:
+    g_debug("load fail");
+
+    fclose(fp);
+
+    if (folders) {
+        darray_free(folders);
+        folders = NULL;
+    }
+
+    if (files) {
+        darray_free(files);
+        files = NULL;
+    }
+
+    g_string_free(name_prev, TRUE);
+    name_prev = NULL;
+
+    return false;
+}
+
+static bool
+db_save2(FsearchDatabase *db, const char *path) {
+    assert(path != NULL);
+    assert(db != NULL);
+
+    if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
+        g_debug("%s doesn't exist", path);
+        return false;
+    }
+
+    GString *path_full = g_string_new(path);
+    g_string_append_c(path_full, G_DIR_SEPARATOR);
+    g_string_append(path_full, "fsearch.db");
+
+    GString *path_full_temp = g_string_new(path_full->str);
+    g_string_append(path_full_temp, ".tmp");
+
+    FILE *fp = fopen(path_full_temp->str, "w+b");
+    if (!fp) {
+        g_debug("%s can't open", path_full_temp->str);
+        return false;
+    }
+
+    db_entry_update_folder_indices(db);
+
+    const char magic[] = "FSDB";
+    if (fwrite(magic, 4, 1, fp) != 1) {
+        goto save_fail;
+    }
+
+    const uint8_t majorver = 0;
+    if (fwrite(&majorver, 1, 1, fp) != 1) {
+        goto save_fail;
+    }
+
+    const uint8_t minorver = 2;
+    if (fwrite(&minorver, 1, 1, fp) != 1) {
+        goto save_fail;
+    }
+
+    uint32_t num_folders = darray_get_num_items(db->folders);
+    if (fwrite(&num_folders, 4, 1, fp) != 1) {
+        goto save_fail;
+    }
+
+    uint32_t num_files = darray_get_num_items(db->files);
+    if (fwrite(&num_files, 4, 1, fp) != 1) {
+        goto save_fail;
+    }
+
+    GString *name_prev = g_string_sized_new(256);
+    GString *name_new = g_string_sized_new(256);
+
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(db->folders, i);
+        if (!folder) {
+            goto save_fail;
+        }
+
+        g_string_erase(name_new, 0, -1);
+        g_string_append(name_new, folder->shared.name);
+
+        uint8_t name_offset = get_name_offset(name_prev->str, name_new->str);
+        if (fwrite(&name_offset, 1, 1, fp) != 1) {
+            g_debug("failed to save name offset");
+            goto save_fail;
+        }
+        uint8_t name_len = name_new->len - name_offset;
+        if (fwrite(&name_len, 1, 1, fp) != 1) {
+            g_debug("failed to save name length");
+            goto save_fail;
+        }
+        g_string_erase(name_prev, name_offset, -1);
+        g_string_append(name_prev, name_new->str + name_offset);
+
+        if (name_len > 0) {
+            const char *name = name_prev->str + name_offset;
+            if (fwrite(name, name_len, 1, fp) != 1) {
+                g_debug("failed to save name");
+                goto save_fail;
+            }
+        }
+        uint64_t size = folder->shared.size;
+        if (fwrite(&size, 8, 1, fp) != 1) {
+            g_debug("failed to save size");
+            goto save_fail;
+        }
+        uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->idx : folder->idx;
+        // g_debug("%d: save folder: %s, %d", i, folder->shared.name, parent_idx);
+        if (fwrite(&parent_idx, 4, 1, fp) != 1) {
+            g_debug("failed to save parent_idx");
+            goto save_fail;
+        }
+    }
+
+    for (uint32_t i = 0; i < num_files; i++) {
+        FsearchDatabaseEntryFile *file = darray_get_item(db->files, i);
+        if (!file) {
+            goto save_fail;
+        }
+
+        g_string_erase(name_new, 0, -1);
+        g_string_append(name_new, file->shared.name);
+
+        uint8_t name_offset = get_name_offset(name_prev->str, name_new->str);
+        if (fwrite(&name_offset, 1, 1, fp) != 1) {
+            g_debug("failed to save name offset");
+            goto save_fail;
+        }
+        uint8_t name_len = name_new->len - name_offset;
+        if (fwrite(&name_len, 1, 1, fp) != 1) {
+            g_debug("failed to save name len");
+            goto save_fail;
+        }
+        g_string_erase(name_prev, name_offset, -1);
+        g_string_append(name_prev, name_new->str + name_offset);
+
+        if (name_len > 0) {
+            const char *name = name_prev->str + name_offset;
+            if (fwrite(name, name_len, 1, fp) != 1) {
+                g_debug("failed to save name");
+                goto save_fail;
+            }
+        }
+
+        uint64_t size = file->shared.size;
+        if (fwrite(&size, 8, 1, fp) != 1) {
+            g_debug("failed to save size");
+            goto save_fail;
+        }
+        uint32_t parent_idx = file->shared.parent->idx;
+        if (fwrite(&parent_idx, 4, 1, fp) != 1) {
+            g_debug("failed to save parent_idx");
+            goto save_fail;
+        }
+    }
+
+    fclose(fp);
+
+    unlink(path_full->str);
+    if (rename(path_full_temp->str, path_full->str) != 0) {
+        goto save_fail;
+    }
+
+    g_string_free(path_full, TRUE);
+    path_full = NULL;
+
+    g_string_free(path_full_temp, TRUE);
+    path_full_temp = NULL;
+
+    return true;
+
+save_fail:
+    g_warning("save fail");
+
+    fclose(fp);
+
+    unlink(path_full_temp->str);
+    unlink(path_full->str);
+
+    g_string_free(path_full, TRUE);
+    path_full = NULL;
+
+    g_string_free(path_full_temp, TRUE);
+    path_full_temp = NULL;
+
+    return false;
+}
 
 static bool
 file_is_excluded(const char *name, char **exclude_files) {
@@ -678,9 +786,16 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     assert(dname[0] == G_DIR_SEPARATOR);
     g_debug("[database] scan path: %s", dname);
 
+    if (!g_file_test(dname, G_FILE_TEST_IS_DIR)) {
+        g_warning("[database_scan] %s doesn't exist", dname);
+        return;
+    }
+
     GString *path = g_string_new(dname);
-    // remove leading path separator '/'
-    g_string_erase(path, 0, 1);
+    // remove leading path separator '/' for root directory
+    if (strcmp(path->str, G_DIR_SEPARATOR_S) == 0) {
+        g_string_erase(path, 0, 1);
+    }
 
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
@@ -696,10 +811,11 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     FsearchDatabaseEntryFolder *parent = fsearch_memory_pool_malloc(db->folder_pool);
     parent->shared.name = strdup(path->str);
     parent->shared.parent = NULL;
+    parent->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
+    darray_add_item(db->folders, parent);
+    db->num_folders++;
+    db->num_entries++;
 
-    if (strcmp(path->str, "") != 0) {
-        g_string_prepend_c(path, G_DIR_SEPARATOR);
-    }
     uint32_t res = db_folder_scan_recursive(&walk_context, parent);
 
     g_string_free(path, TRUE);
@@ -709,7 +825,7 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
         return;
     }
 
-    g_warning("[database_scan] walk error: %d\n", res);
+    g_warning("[database_scan] walk error: %d", res);
 }
 
 bool
@@ -851,7 +967,8 @@ db_get_folders(FsearchDatabase *db) {
 bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *)) {
     assert(db != NULL);
-    return false;
+    // return false;
+    return db_load2(db, "/home/cb/testdir/fsearch.db");
 }
 
 bool
@@ -871,7 +988,9 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
             db_scan_folder(db, fs_path->path, cancellable, status_cb);
         }
     }
+    g_debug("save database");
     db_sort(db);
+    db_save2(db, "/home/cb/testdir");
     return ret;
 }
 
@@ -898,11 +1017,14 @@ db_unref(FsearchDatabase *db) {
 
 static void
 build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
+    if (!folder) {
+        return;
+    }
     if (folder->shared.parent) {
         build_path_recursively(folder->shared.parent, str);
+        g_string_append_c(str, G_DIR_SEPARATOR);
     }
     if (strcmp(folder->shared.name, "") != 0) {
-        g_string_append_c(str, G_DIR_SEPARATOR);
         g_string_append(str, folder->shared.name);
     }
 }
@@ -920,7 +1042,9 @@ db_entry_get_path_full(FsearchDatabaseEntry *entry) {
     if (!path_full) {
         return NULL;
     }
-    g_string_append_c(path_full, G_DIR_SEPARATOR);
+    if (entry->shared.name[0] != G_DIR_SEPARATOR) {
+        g_string_append_c(path_full, G_DIR_SEPARATOR);
+    }
     g_string_append(path_full, entry->shared.name);
     return path_full;
 }
@@ -937,7 +1061,13 @@ db_entry_get_size(FsearchDatabaseEntry *entry) {
 
 const char *
 db_entry_get_name(FsearchDatabaseEntry *entry) {
-    return entry ? entry->shared.name : NULL;
+    if (!entry) {
+        return NULL;
+    }
+    if (strcmp(entry->shared.name, "") != 0) {
+        return entry->shared.name;
+    }
+    return G_DIR_SEPARATOR_S;
 }
 
 FsearchDatabaseEntryFolder *

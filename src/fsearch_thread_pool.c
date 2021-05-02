@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-thread-pool"
+
 #include <stdio.h>
 
 #include "fsearch_thread_pool.h"

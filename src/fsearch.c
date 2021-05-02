@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-application"
+
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -330,7 +332,7 @@ database_update(FsearchApplication *app, bool rescan) {
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
     g_timer_destroy(timer);
-    g_debug("[database_update] finished in %.2f ms", seconds);
+    g_debug("[database_update] finished in %.2f ms", seconds * 1000);
     timer = NULL;
 
     return db;

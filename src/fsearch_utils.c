@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-utils"
+
 #define _GNU_SOURCE
 
 #include "fsearch_utils.h"
