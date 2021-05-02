@@ -982,15 +982,27 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     g_warning("[db_scan] walk error: %d", res);
 }
 
+static gint
+compare_include_path(FsearchIncludePath *p1, FsearchIncludePath *p2) {
+    return strcmp(p1->path, p2->path);
+}
+
+static gint
+compare_exclude_path(FsearchExcludePath *p1, FsearchExcludePath *p2) {
+    return strcmp(p1->path, p2->path);
+}
+
 FsearchDatabase *
 db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden) {
     FsearchDatabase *db = g_new0(FsearchDatabase, 1);
     g_mutex_init(&db->mutex);
     if (includes) {
         db->includes = g_list_copy_deep(includes, (GCopyFunc)fsearch_include_path_copy, NULL);
+        db->includes = g_list_sort(db->includes, (GCompareFunc)compare_include_path);
     }
     if (excludes) {
         db->excludes = g_list_copy_deep(excludes, (GCopyFunc)fsearch_exclude_path_copy, NULL);
+        db->excludes = g_list_sort(db->excludes, (GCompareFunc)compare_exclude_path);
     }
     if (exclude_files) {
         db->exclude_files = g_strdupv(exclude_files);
@@ -1120,6 +1132,7 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
 
     for (GList *l = db->includes; l != NULL; l = l->next) {
         FsearchIncludePath *fs_path = l->data;
+        printf("scan: %s\n", fs_path->path);
         if (!fs_path->path) {
             continue;
         }

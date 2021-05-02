@@ -12,9 +12,7 @@ fsearch_include_path_new(const char *path, bool enabled, bool update, time_t las
     FsearchIncludePath *fs_path = calloc(1, sizeof(FsearchIncludePath));
     assert(fs_path != NULL);
 
-    if (path) {
-        fs_path->path = strdup(path);
-    }
+    fs_path->path = path ? strdup(path) : strdup("");
     fs_path->enabled = enabled;
     fs_path->update = update;
     fs_path->last_updated = last_updated;
