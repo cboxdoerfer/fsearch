@@ -46,6 +46,10 @@
 
 #define BTREE_NODE_POOL_BLOCK_ELEMENTS 10000
 
+#define DATABASE_MAJOR_VERSION 0
+#define DATABASE_MINOR_VERSION 2
+#define DATABASE_MAGIC_NUMBER "FSDB"
+
 struct FsearchDatabaseEntryCommon {
     FsearchDatabaseEntryFolder *parent;
     char *name;
@@ -346,6 +350,39 @@ db_load_entry_shared(FILE *fp, struct FsearchDatabaseEntryCommon *shared, GStrin
 }
 
 static bool
+db_load_header(FILE *fp) {
+    char magic[5] = "";
+    if (fread(magic, 4, 1, fp) != 1) {
+        return false;
+    }
+    magic[4] = '\0';
+    if (strcmp(magic, DATABASE_MAGIC_NUMBER) != 0) {
+        g_debug("[db_load] invalid magic number: %s", magic);
+        return false;
+    }
+
+    uint8_t majorver = 0;
+    if (fread(&majorver, 1, 1, fp) != 1) {
+        return false;
+    }
+    if (majorver != DATABASE_MAJOR_VERSION) {
+        g_debug("[db_load] invalid major version: %d", majorver);
+        return false;
+    }
+
+    uint8_t minorver = 0;
+    if (fread(&minorver, 1, 1, fp) != 1) {
+        return false;
+    }
+    if (minorver != DATABASE_MINOR_VERSION) {
+        g_debug("[db_load] invalid minor version: %d", minorver);
+        return false;
+    }
+
+    return true;
+}
+
+static bool
 db_load2(FsearchDatabase *db, const char *file_path) {
     assert(file_path != NULL);
     assert(db != NULL);
@@ -359,18 +396,7 @@ db_load2(FsearchDatabase *db, const char *file_path) {
     DynamicArray *files = NULL;
     GString *name_prev = g_string_sized_new(256);
 
-    char magic[4];
-    if (fread(magic, 4, 1, fp) != 1) {
-        goto load_fail;
-    }
-
-    uint8_t majorver = 0;
-    if (fread(&majorver, 1, 1, fp) != 1) {
-        goto load_fail;
-    }
-
-    uint8_t minorver = 0;
-    if (fread(&minorver, 1, 1, fp) != 1) {
+    if (!db_load_header(fp)) {
         goto load_fail;
     }
 
@@ -531,6 +557,26 @@ db_save_entry_shared(FILE *fp,
 }
 
 static bool
+db_save_header(FILE *fp) {
+    const char magic[] = DATABASE_MAGIC_NUMBER;
+    if (fwrite(magic, strlen(magic), 1, fp) != 1) {
+        return false;
+    }
+
+    const uint8_t majorver = DATABASE_MAJOR_VERSION;
+    if (fwrite(&majorver, 1, 1, fp) != 1) {
+        return false;
+    }
+
+    const uint8_t minorver = DATABASE_MINOR_VERSION;
+    if (fwrite(&minorver, 1, 1, fp) != 1) {
+        return false;
+    }
+
+    return true;
+}
+
+static bool
 db_save2(FsearchDatabase *db, const char *path) {
     assert(path != NULL);
     assert(db != NULL);
@@ -554,18 +600,7 @@ db_save2(FsearchDatabase *db, const char *path) {
 
     db_entry_update_folder_indices(db);
 
-    const char magic[] = "FSDB";
-    if (fwrite(magic, 4, 1, fp) != 1) {
-        goto save_fail;
-    }
-
-    const uint8_t majorver = 0;
-    if (fwrite(&majorver, 1, 1, fp) != 1) {
-        goto save_fail;
-    }
-
-    const uint8_t minorver = 2;
-    if (fwrite(&minorver, 1, 1, fp) != 1) {
+    if (!db_save_header(fp)) {
         goto save_fail;
     }
 
