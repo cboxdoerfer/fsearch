@@ -404,6 +404,7 @@ db_load2(FsearchDatabase *db, const char *file_path) {
             goto load_fail;
         }
 
+        // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
         if (fread(&parent_idx, 4, 1, fp) != 1) {
             g_debug("failed to load parent_idx");
@@ -414,6 +415,7 @@ db_load2(FsearchDatabase *db, const char *file_path) {
             folder->shared.parent = parent;
         }
         else {
+            // parent_idx and idx are the same (i.e. folder is a root index) so it has no parent
             folder->shared.parent = NULL;
         }
     }
@@ -485,6 +487,50 @@ load_fail:
 }
 
 static bool
+db_save_entry_shared(FILE *fp,
+                     struct FsearchDatabaseEntryCommon *shared,
+                     GString *previous_entry_name,
+                     GString *new_entry_name) {
+    // init new_entry_name with the name of the current entry
+    g_string_erase(new_entry_name, 0, -1);
+    g_string_append(new_entry_name, shared->name);
+
+    // name_offset: character position after which previous_entry_name and new_entry_name differ
+    uint8_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
+    if (fwrite(&name_offset, 1, 1, fp) != 1) {
+        g_debug("failed to save name offset");
+        return false;
+    }
+
+    // name_len: length of the new name characters
+    uint8_t name_len = new_entry_name->len - name_offset;
+    if (fwrite(&name_len, 1, 1, fp) != 1) {
+        g_debug("failed to save name length");
+        return false;
+    }
+
+    // append new unique characters to previous_entry_name starting at name_offset
+    g_string_erase(previous_entry_name, name_offset, -1);
+    g_string_append(previous_entry_name, new_entry_name->str + name_offset);
+
+    if (name_len > 0) {
+        // name: new characters to be written to file
+        const char *name = previous_entry_name->str + name_offset;
+        if (fwrite(name, name_len, 1, fp) != 1) {
+            g_debug("failed to save name");
+            return false;
+        }
+    }
+    uint64_t size = shared->size;
+    if (fwrite(&size, 8, 1, fp) != 1) {
+        g_debug("failed to save size");
+        return false;
+    }
+
+    return true;
+}
+
+static bool
 db_save2(FsearchDatabase *db, const char *path) {
     assert(path != NULL);
     assert(db != NULL);
@@ -538,40 +584,14 @@ db_save2(FsearchDatabase *db, const char *path) {
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(db->folders, i);
-        if (!folder) {
+
+        if (!db_save_entry_shared(fp, &folder->shared, name_prev, name_new)) {
             goto save_fail;
         }
 
-        g_string_erase(name_new, 0, -1);
-        g_string_append(name_new, folder->shared.name);
-
-        uint8_t name_offset = get_name_offset(name_prev->str, name_new->str);
-        if (fwrite(&name_offset, 1, 1, fp) != 1) {
-            g_debug("failed to save name offset");
-            goto save_fail;
-        }
-        uint8_t name_len = name_new->len - name_offset;
-        if (fwrite(&name_len, 1, 1, fp) != 1) {
-            g_debug("failed to save name length");
-            goto save_fail;
-        }
-        g_string_erase(name_prev, name_offset, -1);
-        g_string_append(name_prev, name_new->str + name_offset);
-
-        if (name_len > 0) {
-            const char *name = name_prev->str + name_offset;
-            if (fwrite(name, name_len, 1, fp) != 1) {
-                g_debug("failed to save name");
-                goto save_fail;
-            }
-        }
-        uint64_t size = folder->shared.size;
-        if (fwrite(&size, 8, 1, fp) != 1) {
-            g_debug("failed to save size");
-            goto save_fail;
-        }
+        // parent_idx: index of parent folder or if there is no parent folder (i.e. entry is root index) we store its
+        // own index instead
         uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->idx : folder->idx;
-        // g_debug("%d: save folder: %s, %d", i, folder->shared.name, parent_idx);
         if (fwrite(&parent_idx, 4, 1, fp) != 1) {
             g_debug("failed to save parent_idx");
             goto save_fail;
@@ -580,39 +600,12 @@ db_save2(FsearchDatabase *db, const char *path) {
 
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntryFile *file = darray_get_item(db->files, i);
-        if (!file) {
+
+        if (!db_save_entry_shared(fp, &file->shared, name_prev, name_new)) {
             goto save_fail;
         }
 
-        g_string_erase(name_new, 0, -1);
-        g_string_append(name_new, file->shared.name);
-
-        uint8_t name_offset = get_name_offset(name_prev->str, name_new->str);
-        if (fwrite(&name_offset, 1, 1, fp) != 1) {
-            g_debug("failed to save name offset");
-            goto save_fail;
-        }
-        uint8_t name_len = name_new->len - name_offset;
-        if (fwrite(&name_len, 1, 1, fp) != 1) {
-            g_debug("failed to save name len");
-            goto save_fail;
-        }
-        g_string_erase(name_prev, name_offset, -1);
-        g_string_append(name_prev, name_new->str + name_offset);
-
-        if (name_len > 0) {
-            const char *name = name_prev->str + name_offset;
-            if (fwrite(name, name_len, 1, fp) != 1) {
-                g_debug("failed to save name");
-                goto save_fail;
-            }
-        }
-
-        uint64_t size = file->shared.size;
-        if (fwrite(&size, 8, 1, fp) != 1) {
-            g_debug("failed to save size");
-            goto save_fail;
-        }
+        // parent_idx: index of parent folder
         uint32_t parent_idx = file->shared.parent->idx;
         if (fwrite(&parent_idx, 4, 1, fp) != 1) {
             g_debug("failed to save parent_idx");
