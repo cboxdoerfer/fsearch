@@ -392,6 +392,90 @@ db_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
 }
 
 static bool
+db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
+    bool result = true;
+    GString *previous_entry_name = g_string_sized_new(256);
+
+    // load folders
+    uint32_t idx = 0;
+    for (idx = 0; idx < num_folders; idx++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, idx);
+
+        if (!db_load_entry_shared(fp, &folder->shared, previous_entry_name)) {
+            result = false;
+            break;
+        }
+
+        // parent_idx: index of parent folder
+        uint32_t parent_idx = 0;
+        if (!db_load_parent_idx(fp, &parent_idx)) {
+            result = false;
+            break;
+        }
+
+        if (parent_idx != folder->idx) {
+            FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
+            folder->shared.parent = parent;
+        }
+        else {
+            // parent_idx and idx are the same (i.e. folder is a root index) so it has no parent
+            folder->shared.parent = NULL;
+        }
+    }
+
+    // fail if we didn't read the correct number of folders
+    if (result && idx != num_folders) {
+        g_debug("failed to read folders (read %d of %d)", idx, num_folders);
+        result = false;
+    }
+
+    g_string_free(previous_entry_name, TRUE);
+    previous_entry_name = NULL;
+
+    return result;
+}
+
+static bool
+db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicArray *files, uint32_t num_files) {
+    bool result = true;
+    GString *previous_entry_name = g_string_sized_new(256);
+
+    // load folders
+    uint32_t idx = 0;
+    for (idx = 0; idx < num_files; idx++) {
+        FsearchDatabaseEntryFile *file = fsearch_memory_pool_malloc(pool);
+        file->shared.type = DATABASE_ENTRY_TYPE_FILE;
+
+        if (!db_load_entry_shared(fp, &file->shared, previous_entry_name)) {
+            result = false;
+            break;
+        }
+
+        // parent_idx: index of parent folder
+        uint32_t parent_idx = 0;
+        if (!db_load_parent_idx(fp, &parent_idx)) {
+            result = false;
+            break;
+        }
+        FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
+        file->shared.parent = parent;
+
+        darray_add_item(files, file);
+    }
+
+    // fail if we didn't read the correct number of files
+    if (result && idx != num_files) {
+        g_debug("failed to read files (read %d of %d)", idx, num_files);
+        result = false;
+    }
+
+    g_string_free(previous_entry_name, TRUE);
+    previous_entry_name = NULL;
+
+    return result;
+}
+
+static bool
 db_load2(FsearchDatabase *db, const char *file_path) {
     assert(file_path != NULL);
     assert(db != NULL);
@@ -403,7 +487,6 @@ db_load2(FsearchDatabase *db, const char *file_path) {
 
     DynamicArray *folders = NULL;
     DynamicArray *files = NULL;
-    GString *name_prev = g_string_sized_new(256);
 
     if (!db_load_header(fp)) {
         goto load_fail;
@@ -432,53 +515,15 @@ db_load2(FsearchDatabase *db, const char *file_path) {
     }
 
     // load folders
-    for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
-
-        if (!db_load_entry_shared(fp, &folder->shared, name_prev)) {
-            goto load_fail;
-        }
-
-        // parent_idx: index of parent folder
-        uint32_t parent_idx = 0;
-        if (!db_load_parent_idx(fp, &parent_idx)) {
-            goto load_fail;
-        }
-
-        if (parent_idx != folder->idx) {
-            FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
-            folder->shared.parent = parent;
-        }
-        else {
-            // parent_idx and idx are the same (i.e. folder is a root index) so it has no parent
-            folder->shared.parent = NULL;
-        }
+    if (!db_load_folders(fp, folders, num_folders)) {
+        goto load_fail;
     }
-
-    g_string_erase(name_prev, 0, -1);
-
-    files = darray_new(num_files);
 
     // load files
-    for (uint32_t i = 0; i < num_files; i++) {
-        FsearchDatabaseEntryFile *file = fsearch_memory_pool_malloc(db->file_pool);
-        file->shared.type = DATABASE_ENTRY_TYPE_FILE;
-
-        db_load_entry_shared(fp, &file->shared, name_prev);
-
-        // parent_idx: index of parent folder
-        uint32_t parent_idx = 0;
-        if (!db_load_parent_idx(fp, &parent_idx)) {
-            goto load_fail;
-        }
-        FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
-        file->shared.parent = parent;
-
-        darray_add_item(files, file);
+    files = darray_new(num_files);
+    if (!db_load_files(fp, db->file_pool, folders, files, num_files)) {
+        goto load_fail;
     }
-
-    g_string_free(name_prev, TRUE);
-    name_prev = NULL;
 
     if (db->files) {
         darray_free(db->files);
@@ -514,9 +559,6 @@ load_fail:
         darray_free(files);
         files = NULL;
     }
-
-    g_string_free(name_prev, TRUE);
-    name_prev = NULL;
 
     return false;
 }
