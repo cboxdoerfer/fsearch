@@ -235,6 +235,13 @@ database_load_started(FsearchApplicationWindow *win) {
     snprintf(db_text, sizeof(db_text), _("Loading Database…"));
     gtk_label_set_text(GTK_LABEL(win->statusbar_database_updating_label), db_text);
 
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    if (config->show_indexing_status) {
+        gtk_widget_show(win->statusbar_scan_label);
+        gtk_widget_show(win->statusbar_scan_status_label);
+    }
+
     show_overlay(win, OVERLAY_DATABASE_LOADING);
 }
 

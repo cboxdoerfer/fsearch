@@ -171,7 +171,7 @@ fsearch_application_get_database_dir(FsearchApplication *fsearch) {
 }
 
 static gboolean
-database_scan_status_notify(gpointer user_data) {
+database_update_status_notify(gpointer user_data) {
     char *text = user_data;
     if (!text) {
         return FALSE;
@@ -194,9 +194,9 @@ database_scan_status_notify(gpointer user_data) {
 }
 
 static void
-database_scan_status_cb(const char *text) {
+database_update_status_cb(const char *text) {
     if (text) {
-        g_idle_add(database_scan_status_notify, g_strdup(text));
+        g_idle_add(database_update_status_notify, g_strdup(text));
     }
 }
 
@@ -338,7 +338,7 @@ database_update(FsearchApplication *app, bool rescan) {
     g_mutex_unlock(&app->mutex);
     db_lock(db);
     if (rescan) {
-        db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_scan_status_cb : NULL);
+        db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_update_status_cb : NULL);
         if (!g_cancellable_is_cancelled(app->db_thread_cancellable)) {
             char *db_path = fsearch_application_get_database_dir(app);
             if (db_path) {
@@ -351,7 +351,7 @@ database_update(FsearchApplication *app, bool rescan) {
     else {
         char *db_file_path = fsearch_application_get_database_file_path(app);
         if (db_file_path) {
-            db_load(db, db_file_path, database_scan_status_cb);
+            db_load(db, db_file_path, app->config->show_indexing_status ? database_update_status_cb : NULL);
             free(db_file_path);
             db_file_path = NULL;
         }

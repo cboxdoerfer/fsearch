@@ -515,7 +515,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     }
 
     if (status_cb) {
-        status_cb(_("Loading folders"));
+        status_cb(_("Loading folders…"));
     }
     // load folders
     if (!db_load_folders(fp, folders, num_folders)) {
@@ -523,7 +523,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     }
 
     if (status_cb) {
-        status_cb(_("Loading files"));
+        status_cb(_("Loading files…"));
     }
     // load files
     files = darray_new(num_files);
