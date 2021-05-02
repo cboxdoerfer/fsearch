@@ -635,6 +635,57 @@ db_save_header(FILE *fp) {
 
     return true;
 }
+static bool
+db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
+    bool result = true;
+
+    GString *name_prev = g_string_sized_new(256);
+    GString *name_new = g_string_sized_new(256);
+
+    for (uint32_t i = 0; i < num_files; i++) {
+        FsearchDatabaseEntryFile *file = darray_get_item(files, i);
+
+        uint32_t parent_idx = file->shared.parent->idx;
+        if (!db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new)) {
+            result = false;
+            break;
+        }
+    }
+
+    g_string_free(name_prev, TRUE);
+    name_prev = NULL;
+
+    g_string_free(name_new, TRUE);
+    name_new = NULL;
+
+    return result;
+}
+
+static bool
+db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
+    bool result = true;
+
+    GString *name_prev = g_string_sized_new(256);
+    GString *name_new = g_string_sized_new(256);
+
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
+
+        uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->idx : folder->idx;
+        if (!db_save_entry_shared(fp, &folder->shared, parent_idx, name_prev, name_new)) {
+            result = false;
+            break;
+        }
+    }
+
+    g_string_free(name_prev, TRUE);
+    name_prev = NULL;
+
+    g_string_free(name_new, TRUE);
+    name_new = NULL;
+
+    return result;
+}
 
 static bool
 db_save2(FsearchDatabase *db, const char *path) {
@@ -674,32 +725,20 @@ db_save2(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
-    GString *name_prev = g_string_sized_new(256);
-    GString *name_new = g_string_sized_new(256);
-
-    for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(db->folders, i);
-
-        uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->idx : folder->idx;
-        if (!db_save_entry_shared(fp, &folder->shared, parent_idx, name_prev, name_new)) {
-            goto save_fail;
-        }
+    if (!db_save_folders(fp, db->folders, num_folders)) {
+        goto save_fail;
+    }
+    if (!db_save_files(fp, db->files, num_files)) {
+        goto save_fail;
     }
 
-    for (uint32_t i = 0; i < num_files; i++) {
-        FsearchDatabaseEntryFile *file = darray_get_item(db->files, i);
-
-        uint32_t parent_idx = file->shared.parent->idx;
-        if (!db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new)) {
-            goto save_fail;
-        }
-    }
-
+    // remove current database file
     unlink(path_full->str);
 
     fclose(fp);
     fp = NULL;
 
+    // rename temporary fsearch.db.tmp to fsearch.db
     if (rename(path_full_temp->str, path_full->str) != 0) {
         goto save_fail;
     }
@@ -720,8 +759,8 @@ save_fail:
         fp = NULL;
     }
 
+    // remove temporary fsearch.db.tmp file
     unlink(path_full_temp->str);
-    unlink(path_full->str);
 
     g_string_free(path_full, TRUE);
     path_full = NULL;
