@@ -92,7 +92,7 @@ pref_index_treeview_data_get(GtkTreeView *view) {
                            -1);
 
         if (path) {
-            FsearchIndex *index = fsearch_index_new(path, enable, update, 0);
+            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enable, update, 0);
             data = g_list_append(data, index);
             g_free(path);
             path = NULL;
@@ -140,7 +140,7 @@ pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *it
 
 void
 pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path) {
-    FsearchIndex *index = fsearch_index_new(path, true, true, 0);
+    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, true, true, 0);
 
     GtkTreeIter iter;
     gtk_list_store_append(GTK_LIST_STORE(index_model), &iter);

@@ -123,7 +123,7 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
 
         pos++;
         if (path) {
-            FsearchIndex *index = fsearch_index_new(path, enabled, update, 0);
+            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, 0);
             indexes = g_list_append(indexes, index);
         }
         else {
@@ -364,7 +364,7 @@ config_load_default(FsearchConfig *config) {
 
     // Locations
     config->indexes = NULL;
-    FsearchIndex *index = fsearch_index_new(g_get_home_dir(), true, true, 0);
+    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, g_get_home_dir(), true, true, 0);
     config->indexes = g_list_append(config->indexes, index);
     config->exclude_locations = NULL;
 

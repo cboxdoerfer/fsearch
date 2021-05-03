@@ -10,6 +10,7 @@ typedef enum {
 } FsearchIndexType;
 
 typedef struct _FsearchIndex {
+    FsearchIndexType type;
 
     char *path;
     bool enabled;
@@ -19,7 +20,7 @@ typedef struct _FsearchIndex {
 } FsearchIndex;
 
 FsearchIndex *
-fsearch_index_new(const char *path, bool search_in, bool update, time_t last_updated);
+fsearch_index_new(FsearchIndexType type, const char *path, bool search_in, bool update, time_t last_updated);
 
 FsearchIndex *
 fsearch_index_copy(FsearchIndex *index);
