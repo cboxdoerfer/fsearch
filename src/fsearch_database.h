@@ -31,6 +31,14 @@ typedef enum {
     NUM_DATABASE_ENTRY_TYPES,
 } FsearchDatabaseEntryType;
 
+typedef enum {
+    DATABASE_INDEX_TYPE_NAME,
+    DATABASE_INDEX_TYPE_PATH,
+    DATABASE_INDEX_TYPE_SIZE,
+    DATABASE_INDEX_TYPE_MODIFICATION_TIME,
+    NUM_DATABASE_INDEX_TYPES,
+} FsearchDatabaseIndexType;
+
 typedef struct _FsearchDatabaseEntryFile FsearchDatabaseEntry;
 typedef struct _FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
 typedef struct _FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;

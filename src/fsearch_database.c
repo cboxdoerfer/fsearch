@@ -74,6 +74,9 @@ struct _FsearchDatabase {
     DynamicArray *files;
     DynamicArray *folders;
 
+    DynamicArray *sorted_files[NUM_DATABASE_INDEX_TYPES];
+    DynamicArray *sorted_folders[NUM_DATABASE_INDEX_TYPES];
+
     FsearchMemoryPool *file_pool;
     FsearchMemoryPool *folder_pool;
 
@@ -99,6 +102,25 @@ enum {
 };
 
 // Implementation
+
+static void
+db_sorted_entries_free(FsearchDatabase *db) {
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        DynamicArray *files = db->sorted_files[i];
+        if (files) {
+            darray_free(files);
+            files = NULL;
+        }
+        db->sorted_files[i] = NULL;
+
+        DynamicArray *folders = db->sorted_folders[i];
+        if (folders) {
+            darray_free(folders);
+            folders = NULL;
+        }
+        db->sorted_folders[i] = NULL;
+    }
+}
 
 static void
 db_file_entry_destroy(FsearchDatabaseEntryFolder *entry) {
@@ -238,19 +260,23 @@ db_sort(FsearchDatabase *db) {
     assert(db != NULL);
 
     GTimer *timer = g_timer_new();
-    if (db->files) {
-        darray_sort_multi_threaded(db->files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
-        darray_sort(db->files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
+
+    DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
+    if (files) {
+        darray_sort_multi_threaded(files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+        darray_sort(files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
         g_debug("[db_sort] sorted files: %f s", seconds);
     }
-    if (db->folders) {
-        darray_sort_multi_threaded(db->folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
-        darray_sort(db->folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
+    DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
+    if (folders) {
+        darray_sort_multi_threaded(folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+        darray_sort(folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
     }
+
     g_timer_destroy(timer);
     timer = NULL;
 }
@@ -263,12 +289,12 @@ db_update_timestamp(FsearchDatabase *db) {
 
 static void
 db_entry_update_folder_indices(FsearchDatabase *db) {
-    if (!db || !db->folders) {
+    if (!db || !db->sorted_folders[DATABASE_INDEX_TYPE_NAME]) {
         return;
     }
-    uint32_t num_folders = darray_get_num_items(db->folders);
+    uint32_t num_folders = darray_get_num_items(db->sorted_folders[DATABASE_INDEX_TYPE_NAME]);
     for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(db->folders, i);
+        FsearchDatabaseEntryFolder *folder = darray_get_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], i);
         if (!folder) {
             continue;
         }
@@ -530,14 +556,10 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
         goto load_fail;
     }
 
-    if (db->files) {
-        darray_free(db->files);
-    }
-    db->files = files;
-    if (db->folders) {
-        darray_free(db->folders);
-    }
-    db->folders = folders;
+    db_sorted_entries_free(db);
+    db->sorted_files[DATABASE_INDEX_TYPE_NAME] = files;
+    db->sorted_folders[DATABASE_INDEX_TYPE_NAME] = folders;
+
     db->num_entries = num_files + num_folders;
     db->num_files = num_files;
     db->num_folders = num_folders;
@@ -741,12 +763,15 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
-    uint32_t num_folders = darray_get_num_items(db->folders);
+    DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
+    DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
+
+    uint32_t num_folders = darray_get_num_items(folders);
     if (fwrite(&num_folders, 4, 1, fp) != 1) {
         goto save_fail;
     }
 
-    uint32_t num_files = darray_get_num_items(db->files);
+    uint32_t num_files = darray_get_num_items(files);
     if (fwrite(&num_files, 4, 1, fp) != 1) {
         goto save_fail;
     }
@@ -763,10 +788,10 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
-    if (!db_save_folders(fp, db->folders, num_folders)) {
+    if (!db_save_folders(fp, folders, num_folders)) {
         goto save_fail;
     }
-    if (!db_save_files(fp, db->files, num_files)) {
+    if (!db_save_files(fp, files, num_files)) {
         goto save_fail;
     }
 
@@ -931,7 +956,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             folder_entry->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
 
             parent->folder_children = g_slist_prepend(parent->folder_children, folder_entry);
-            darray_add_item(db->folders, folder_entry);
+            darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], folder_entry);
 
             db->num_folders++;
 
@@ -948,7 +973,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             db_entry_update_folder_size(parent, file_entry->shared.size);
 
             parent->file_children = g_slist_prepend(parent->file_children, file_entry);
-            darray_add_item(db->files, file_entry);
+            darray_add_item(db->sorted_files[DATABASE_INDEX_TYPE_NAME], file_entry);
 
             db->num_files++;
         }
@@ -992,7 +1017,8 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     parent->shared.name = strdup(path->str);
     parent->shared.parent = NULL;
     parent->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
-    darray_add_item(db->folders, parent);
+
+    darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], parent);
     db->num_folders++;
     db->num_entries++;
 
@@ -1033,14 +1059,17 @@ db_new(GList *indexes, GList *excludes, char **exclude_files, bool exclude_hidde
     if (exclude_files) {
         db->exclude_files = g_strdupv(exclude_files);
     }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        db->sorted_files[i] = NULL;
+        db->sorted_folders[i] = NULL;
+    }
     db->file_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                             sizeof(FsearchDatabaseEntryFile),
                                             (GDestroyNotify)db_file_entry_destroy);
     db->folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                               sizeof(FsearchDatabaseEntryFolder),
                                               (GDestroyNotify)db_folder_entry_destroy);
-    db->files = darray_new(1000);
-    db->folders = darray_new(1000);
     db->exclude_hidden = exclude_hidden;
     db->ref_count = 1;
     return db;
@@ -1056,22 +1085,8 @@ db_free(FsearchDatabase *db) {
         g_warning("[db_free] pending references on free: %d", db->ref_count);
     }
 
-    if (db->files) {
-        darray_free(db->files);
-        db->files = NULL;
-    }
-    if (db->folders) {
-        darray_free(db->folders);
-        db->folders = NULL;
-    }
-    if (db->folder_pool) {
-        fsearch_memory_pool_free(db->folder_pool);
-        db->folder_pool = NULL;
-    }
-    if (db->file_pool) {
-        fsearch_memory_pool_free(db->file_pool);
-        db->file_pool = NULL;
-    }
+    db_sorted_entries_free(db);
+
     if (db->indexes) {
         g_list_free_full(db->indexes, (GDestroyNotify)fsearch_index_free);
         db->indexes = NULL;
@@ -1141,13 +1156,13 @@ db_try_lock(FsearchDatabase *db) {
 DynamicArray *
 db_get_files(FsearchDatabase *db) {
     assert(db != NULL);
-    return db->files;
+    return db->sorted_files[DATABASE_INDEX_TYPE_NAME];
 }
 
 DynamicArray *
 db_get_folders(FsearchDatabase *db) {
     assert(db != NULL);
-    return db->folders;
+    return db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
 }
 
 bool
@@ -1156,9 +1171,13 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
 
     bool ret = false;
 
+    db_sorted_entries_free(db);
+
+    db->sorted_files[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
+    db->sorted_folders[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
+
     for (GList *l = db->indexes; l != NULL; l = l->next) {
         FsearchIndex *fs_path = l->data;
-        printf("scan: %s\n", fs_path->path);
         if (!fs_path->path) {
             continue;
         }
