@@ -331,7 +331,7 @@ database_update(FsearchApplication *app, bool rescan) {
     g_timer_start(timer);
 
     g_mutex_lock(&app->mutex);
-    FsearchDatabase *db = db_new(app->config->locations,
+    FsearchDatabase *db = db_new(app->config->indexes,
                                  app->config->exclude_locations,
                                  app->config->exclude_files,
                                  app->config->exclude_hidden_items);
@@ -777,7 +777,7 @@ local_database_update() {
         }
     }
     FsearchDatabase *db =
-        db_new(config->locations, config->exclude_locations, config->exclude_files, config->exclude_hidden_items);
+        db_new(config->indexes, config->exclude_locations, config->exclude_files, config->exclude_hidden_items);
     if (!db) {
         g_printerr("[database_update] failed to allocate database\n");
         config_free(config);

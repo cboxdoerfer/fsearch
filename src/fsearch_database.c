@@ -40,7 +40,7 @@
 
 #include "fsearch_database.h"
 #include "fsearch_exclude_path.h"
-#include "fsearch_include_path.h"
+#include "fsearch_index.h"
 #include "fsearch_memory_pool.h"
 #include "fsearch_utils.h"
 
@@ -85,7 +85,7 @@ struct _FsearchDatabase {
     uint32_t num_folders;
     uint32_t num_files;
 
-    GList *includes;
+    GList *indexes;
     GList *excludes;
     char **exclude_files;
 
@@ -697,6 +697,24 @@ db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
 }
 
 bool
+db_save_indexes(FILE *fp, FsearchDatabase *db) {
+    // TODO
+    return true;
+}
+
+bool
+db_save_excludes(FILE *fp, FsearchDatabase *db) {
+    // TODO
+    return true;
+}
+
+bool
+db_save_exclude_pattern(FILE *fp, FsearchDatabase *db) {
+    // TODO
+    return true;
+}
+
+bool
 db_save(FsearchDatabase *db, const char *path) {
     assert(path != NULL);
     assert(db != NULL);
@@ -734,6 +752,18 @@ db_save(FsearchDatabase *db, const char *path) {
 
     uint32_t num_files = darray_get_num_items(db->files);
     if (fwrite(&num_files, 4, 1, fp) != 1) {
+        goto save_fail;
+    }
+
+    if (!db_save_indexes(fp, db)) {
+        goto save_fail;
+    }
+
+    if (!db_save_excludes(fp, db)) {
+        goto save_fail;
+    }
+
+    if (!db_save_exclude_pattern(fp, db)) {
         goto save_fail;
     }
 
@@ -983,7 +1013,7 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
 }
 
 static gint
-compare_include_path(FsearchIncludePath *p1, FsearchIncludePath *p2) {
+compare_index_path(FsearchIndex *p1, FsearchIndex *p2) {
     return strcmp(p1->path, p2->path);
 }
 
@@ -993,12 +1023,12 @@ compare_exclude_path(FsearchExcludePath *p1, FsearchExcludePath *p2) {
 }
 
 FsearchDatabase *
-db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden) {
+db_new(GList *indexes, GList *excludes, char **exclude_files, bool exclude_hidden) {
     FsearchDatabase *db = g_new0(FsearchDatabase, 1);
     g_mutex_init(&db->mutex);
-    if (includes) {
-        db->includes = g_list_copy_deep(includes, (GCopyFunc)fsearch_include_path_copy, NULL);
-        db->includes = g_list_sort(db->includes, (GCompareFunc)compare_include_path);
+    if (indexes) {
+        db->indexes = g_list_copy_deep(indexes, (GCopyFunc)fsearch_index_copy, NULL);
+        db->indexes = g_list_sort(db->indexes, (GCompareFunc)compare_index_path);
     }
     if (excludes) {
         db->excludes = g_list_copy_deep(excludes, (GCopyFunc)fsearch_exclude_path_copy, NULL);
@@ -1046,9 +1076,9 @@ db_free(FsearchDatabase *db) {
         fsearch_memory_pool_free(db->file_pool);
         db->file_pool = NULL;
     }
-    if (db->includes) {
-        g_list_free_full(db->includes, (GDestroyNotify)fsearch_include_path_free);
-        db->includes = NULL;
+    if (db->indexes) {
+        g_list_free_full(db->indexes, (GDestroyNotify)fsearch_index_free);
+        db->indexes = NULL;
     }
     if (db->excludes) {
         g_list_free_full(db->excludes, (GDestroyNotify)fsearch_exclude_path_free);
@@ -1130,8 +1160,8 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
 
     bool ret = false;
 
-    for (GList *l = db->includes; l != NULL; l = l->next) {
-        FsearchIncludePath *fs_path = l->data;
+    for (GList *l = db->indexes; l != NULL; l = l->next) {
+        FsearchIndex *fs_path = l->data;
         printf("scan: %s\n", fs_path->path);
         if (!fs_path->path) {
             continue;

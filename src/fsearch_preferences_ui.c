@@ -21,7 +21,7 @@
 #include "fsearch_preferences_ui.h"
 #include "fsearch.h"
 #include "fsearch_exclude_path.h"
-#include "fsearch_include_path.h"
+#include "fsearch_index.h"
 #include "fsearch_preferences_widgets.h"
 #include "fsearch_ui_utils.h"
 #include <glib.h>
@@ -77,10 +77,10 @@ typedef struct {
     GtkToggleButton *show_dialog_failed_opening;
 
     // Include page
-    GtkTreeView *include_list;
-    GtkTreeModel *include_model;
-    GtkWidget *include_add_button;
-    GtkWidget *include_remove_button;
+    GtkTreeView *index_list;
+    GtkTreeModel *index_model;
+    GtkWidget *index_add_button;
+    GtkWidget *index_remove_button;
     GtkTreeSelection *sel;
 
     // Exclude model
@@ -217,11 +217,11 @@ on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
 }
 
 static void
-on_include_add_button_clicked(GtkButton *button, gpointer user_data) {
+on_index_add_button_clicked(GtkButton *button, gpointer user_data) {
     GtkTreeModel *model = user_data;
     FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
     ctx->model = model;
-    ctx->add_path_cb = pref_include_treeview_row_add;
+    ctx->add_path_cb = pref_index_treeview_row_add;
     run_file_chooser_dialog(button, ctx);
 }
 
@@ -331,10 +331,10 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     }
     new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
 
-    if (new_config->locations) {
-        g_list_free_full(new_config->locations, (GDestroyNotify)fsearch_include_path_free);
+    if (new_config->indexes) {
+        g_list_free_full(new_config->indexes, (GDestroyNotify)fsearch_index_free);
     }
-    new_config->locations = pref_include_treeview_data_get(ui->include_list);
+    new_config->indexes = pref_index_treeview_data_get(ui->index_list);
 
     if (new_config->exclude_locations) {
         g_list_free_full(new_config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
@@ -541,17 +541,17 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                        new_config->show_dialog_failed_opening);
 
     // Include page
-    ui->include_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "include_list", "help_include_list"));
-    ui->include_model = pref_include_treeview_init(ui->include_list, new_config->locations);
+    ui->index_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "index_list", "help_index_list"));
+    ui->index_model = pref_index_treeview_init(ui->index_list, new_config->indexes);
 
-    ui->include_add_button = builder_init_widget(ui->builder, "include_add_button", "help_include_add");
-    g_signal_connect(ui->include_add_button, "clicked", G_CALLBACK(on_include_add_button_clicked), ui->include_model);
+    ui->index_add_button = builder_init_widget(ui->builder, "index_add_button", "help_index_add");
+    g_signal_connect(ui->index_add_button, "clicked", G_CALLBACK(on_index_add_button_clicked), ui->index_model);
 
-    ui->include_remove_button = builder_init_widget(ui->builder, "include_remove_button", "help_include_remove");
-    g_signal_connect(ui->include_remove_button, "clicked", G_CALLBACK(on_remove_button_clicked), ui->include_list);
+    ui->index_remove_button = builder_init_widget(ui->builder, "index_remove_button", "help_index_remove");
+    g_signal_connect(ui->index_remove_button, "clicked", G_CALLBACK(on_remove_button_clicked), ui->index_list);
 
-    ui->sel = gtk_tree_view_get_selection(ui->include_list);
-    g_signal_connect(ui->sel, "changed", G_CALLBACK(on_list_selection_changed), ui->include_remove_button);
+    ui->sel = gtk_tree_view_get_selection(ui->index_list);
+    g_signal_connect(ui->sel, "changed", G_CALLBACK(on_list_selection_changed), ui->index_remove_button);
 
     // Exclude model
     ui->exclude_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "exclude_list", "help_exclude_list"));

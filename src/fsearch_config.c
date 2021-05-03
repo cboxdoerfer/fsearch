@@ -26,7 +26,7 @@
 
 #include "fsearch_config.h"
 #include "fsearch_exclude_path.h"
-#include "fsearch_include_path.h"
+#include "fsearch_index.h"
 #include "fsearch_limits.h"
 
 const char *config_file_name = "fsearch.conf";
@@ -110,7 +110,7 @@ config_load_string(GKeyFile *key_file, const char *group_name, const char *key, 
 }
 
 static GList *
-config_load_include_locations(GKeyFile *key_file, GList *locations, const char *prefix) {
+config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
     uint32_t pos = 1;
     while (true) {
         char key[100] = "";
@@ -123,14 +123,14 @@ config_load_include_locations(GKeyFile *key_file, GList *locations, const char *
 
         pos++;
         if (path) {
-            FsearchIncludePath *fs_path = fsearch_include_path_new(path, enabled, update, 0);
-            locations = g_list_append(locations, fs_path);
+            FsearchIndex *index = fsearch_index_new(path, enabled, update, 0);
+            indexes = g_list_append(indexes, index);
         }
         else {
             break;
         }
     }
-    return locations;
+    return indexes;
 }
 
 static GList *
@@ -271,7 +271,7 @@ config_load(FsearchConfig *config) {
             exclude_files_str = NULL;
         }
 
-        config->locations = config_load_include_locations(key_file, config->locations, "location");
+        config->indexes = config_load_indexes(key_file, config->indexes, "location");
         config->exclude_locations =
             config_load_exclude_locations(key_file, config->exclude_locations, "exclude_location");
 
@@ -363,36 +363,36 @@ config_load_default(FsearchConfig *config) {
     config->follow_symlinks = false;
 
     // Locations
-    config->locations = NULL;
-    FsearchIncludePath *fs_path = fsearch_include_path_new(g_get_home_dir(), true, true, 0);
-    config->locations = g_list_append(config->locations, fs_path);
+    config->indexes = NULL;
+    FsearchIndex *index = fsearch_index_new(g_get_home_dir(), true, true, 0);
+    config->indexes = g_list_append(config->indexes, index);
     config->exclude_locations = NULL;
 
     return true;
 }
 
 static void
-config_save_include_locations(GKeyFile *key_file, GList *locations, const char *prefix) {
-    if (!locations) {
+config_save_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
+    if (!indexes) {
         return;
     }
 
     uint32_t pos = 1;
-    for (GList *l = locations; l != NULL; l = l->next) {
-        FsearchIncludePath *fs_path = l->data;
-        if (!fs_path) {
+    for (GList *l = indexes; l != NULL; l = l->next) {
+        FsearchIndex *index = l->data;
+        if (!index) {
             continue;
         }
 
         char key[100] = "";
         snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        g_key_file_set_string(key_file, "Database", key, fs_path->path);
+        g_key_file_set_string(key_file, "Database", key, index->path);
 
         snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
-        g_key_file_set_boolean(key_file, "Database", key, fs_path->enabled);
+        g_key_file_set_boolean(key_file, "Database", key, index->enabled);
 
         snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
-        g_key_file_set_boolean(key_file, "Database", key, fs_path->update);
+        g_key_file_set_boolean(key_file, "Database", key, index->update);
 
         pos++;
     }
@@ -406,17 +406,17 @@ config_save_exclude_locations(GKeyFile *key_file, GList *locations, const char *
 
     uint32_t pos = 1;
     for (GList *l = locations; l != NULL; l = l->next) {
-        FsearchExcludePath *fs_path = l->data;
-        if (!fs_path) {
+        FsearchExcludePath *index = l->data;
+        if (!index) {
             continue;
         }
 
         char key[100] = "";
         snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        g_key_file_set_string(key_file, "Database", key, fs_path->path);
+        g_key_file_set_string(key_file, "Database", key, index->path);
 
         snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
-        g_key_file_set_boolean(key_file, "Database", key, fs_path->enabled);
+        g_key_file_set_boolean(key_file, "Database", key, index->enabled);
 
         pos++;
     }
@@ -515,7 +515,7 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
     g_key_file_set_boolean(key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
 
-    config_save_include_locations(key_file, config->locations, "location");
+    config_save_indexes(key_file, config->indexes, "location");
     config_save_exclude_locations(key_file, config->exclude_locations, "exclude_location");
 
     if (config->exclude_files) {
@@ -569,23 +569,23 @@ config_excludes_compare(void *e1, void *e2) {
 }
 
 static bool
-config_includes_compare(void *i1, void *i2) {
+config_indexes_compare(void *i1, void *i2) {
     if (!i1 && !i2) {
         return true;
     }
     if (!i1 || !i2) {
         return false;
     }
-    FsearchIncludePath *path1 = i1;
-    FsearchIncludePath *path2 = i2;
+    FsearchIndex *index1 = i1;
+    FsearchIndex *index2 = i2;
 
-    if (path1->enabled != path2->enabled) {
+    if (index1->enabled != index2->enabled) {
         return false;
     }
-    if (path1->update != path2->update) {
+    if (index1->update != index2->update) {
         return false;
     }
-    if (g_strcmp0(path1->path, path2->path) != 0) {
+    if (g_strcmp0(index1->path, index2->path) != 0) {
         return false;
     }
     return true;
@@ -657,12 +657,12 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
         exclude_files_changed = true;
     }
 
-    bool include_locations_changed = !config_list_compare(c1->locations, c2->locations, config_includes_compare);
+    bool indexes_changed = !config_list_compare(c1->indexes, c2->indexes, config_indexes_compare);
     bool exclude_locations_changed =
         !config_list_compare(c1->exclude_locations, c2->exclude_locations, config_excludes_compare);
 
     if (c1->exclude_hidden_items != c2->exclude_hidden_items || exclude_files_changed || exclude_locations_changed
-        || include_locations_changed) {
+        || indexes_changed) {
         result.database_config_changed = true;
     }
 
@@ -682,8 +682,8 @@ config_copy(FsearchConfig *config) {
     if (config->sort_by) {
         copy->sort_by = g_strdup(config->sort_by);
     }
-    if (config->locations) {
-        copy->locations = g_list_copy_deep(config->locations, (GCopyFunc)fsearch_include_path_copy, NULL);
+    if (config->indexes) {
+        copy->indexes = g_list_copy_deep(config->indexes, (GCopyFunc)fsearch_index_copy, NULL);
     }
     if (config->exclude_locations) {
         copy->exclude_locations =
@@ -707,9 +707,9 @@ config_free(FsearchConfig *config) {
         free(config->sort_by);
         config->sort_by = NULL;
     }
-    if (config->locations) {
-        g_list_free_full(config->locations, (GDestroyNotify)fsearch_include_path_free);
-        config->locations = NULL;
+    if (config->indexes) {
+        g_list_free_full(config->indexes, (GDestroyNotify)fsearch_index_free);
+        config->indexes = NULL;
     }
     if (config->exclude_locations) {
         g_list_free_full(config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);

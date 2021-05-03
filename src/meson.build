@@ -7,7 +7,7 @@ fsearch_sources = [
     'fsearch_database_search.c',
     'fsearch_exclude_path.c',
     'fsearch_filter.c',
-    'fsearch_include_path.c',
+    'fsearch_index.c',
     'fsearch_list_view.c',
     'fsearch_listview_popup.c',
     'fsearch_memory_pool.c',

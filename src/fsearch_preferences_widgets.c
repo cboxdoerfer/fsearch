@@ -3,9 +3,9 @@
 #include "fsearch_preferences_widgets.h"
 
 #include "fsearch_exclude_path.h"
-#include "fsearch_include_path.h"
+#include "fsearch_index.h"
 
-enum { COL_INCLUDE_ENABLE, COL_INCLUDE_PATH, COL_INCLUDE_UPDATE, NUM_INCLUDE_COLUMNS };
+enum { COL_INDEX_ENABLE, COL_INDEX_PATH, COL_INDEX_UPDATE, NUM_INDEX_COLUMNS };
 
 enum { COL_EXCLUDE_ENABLE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
 
@@ -42,15 +42,15 @@ on_column_exclude_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer
 }
 
 static void
-on_column_include_enable_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
-    GtkTreeModel *include_model = data;
-    on_column_toggled(path_str, include_model, COL_INCLUDE_ENABLE);
+on_column_index_enable_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *index_model = data;
+    on_column_toggled(path_str, index_model, COL_INDEX_ENABLE);
 }
 
 static void
-on_column_include_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
-    GtkTreeModel *include_model = data;
-    on_column_toggled(path_str, include_model, COL_INCLUDE_UPDATE);
+on_column_index_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *index_model = data;
+    on_column_toggled(path_str, index_model, COL_INDEX_UPDATE);
 }
 
 static void
@@ -70,7 +70,7 @@ column_toggle_append(GtkTreeView *view,
 }
 
 GList *
-pref_include_treeview_data_get(GtkTreeView *view) {
+pref_index_treeview_data_get(GtkTreeView *view) {
     GList *data = NULL;
     GtkTreeModel *model = gtk_tree_view_get_model(view);
 
@@ -83,17 +83,17 @@ pref_include_treeview_data_get(GtkTreeView *view) {
         gboolean enable = FALSE;
         gtk_tree_model_get(model,
                            &iter,
-                           COL_INCLUDE_ENABLE,
+                           COL_INDEX_ENABLE,
                            &enable,
-                           COL_INCLUDE_PATH,
+                           COL_INDEX_PATH,
                            &path,
-                           COL_INCLUDE_UPDATE,
+                           COL_INDEX_UPDATE,
                            &update,
                            -1);
 
         if (path) {
-            FsearchIncludePath *fs_path = fsearch_include_path_new(path, enable, update, 0);
-            data = g_list_append(data, fs_path);
+            FsearchIndex *index = fsearch_index_new(path, enable, update, 0);
+            data = g_list_append(data, index);
             g_free(path);
             path = NULL;
         }
@@ -139,19 +139,19 @@ pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *it
 }
 
 void
-pref_include_treeview_row_add(GtkTreeModel *include_model, const char *path) {
-    FsearchIncludePath *fs_path = fsearch_include_path_new(path, true, true, 0);
+pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path) {
+    FsearchIndex *index = fsearch_index_new(path, true, true, 0);
 
     GtkTreeIter iter;
-    gtk_list_store_append(GTK_LIST_STORE(include_model), &iter);
-    gtk_list_store_set(GTK_LIST_STORE(include_model),
+    gtk_list_store_append(GTK_LIST_STORE(index_model), &iter);
+    gtk_list_store_set(GTK_LIST_STORE(index_model),
                        &iter,
-                       COL_INCLUDE_ENABLE,
-                       fs_path->enabled,
-                       COL_INCLUDE_PATH,
-                       fs_path->path,
-                       COL_INCLUDE_UPDATE,
-                       fs_path->update,
+                       COL_INDEX_ENABLE,
+                       index->enabled,
+                       COL_INDEX_PATH,
+                       index->path,
+                       COL_INDEX_UPDATE,
+                       index->update,
                        -1);
 }
 
@@ -171,36 +171,36 @@ pref_exclude_treeview_row_add(GtkTreeModel *exclude_model, const char *path) {
 }
 
 GtkTreeModel *
-pref_include_treeview_init(GtkTreeView *view, GList *locations) {
-    GtkListStore *store = gtk_list_store_new(NUM_INCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN);
+pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
+    GtkListStore *store = gtk_list_store_new(NUM_INDEX_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(store));
 
     column_toggle_append(view,
                          GTK_TREE_MODEL(store),
                          _("Active"),
-                         COL_INCLUDE_ENABLE,
-                         G_CALLBACK(on_column_include_enable_toggled),
+                         COL_INDEX_ENABLE,
+                         G_CALLBACK(on_column_index_enable_toggled),
                          store);
-    column_text_append(view, _("Path"), TRUE, COL_INCLUDE_PATH);
+    column_text_append(view, _("Path"), TRUE, COL_INDEX_PATH);
     column_toggle_append(view,
                          GTK_TREE_MODEL(store),
                          _("Update"),
-                         COL_INCLUDE_UPDATE,
-                         G_CALLBACK(on_column_include_toggled),
+                         COL_INDEX_UPDATE,
+                         G_CALLBACK(on_column_index_toggled),
                          store);
 
-    for (GList *l = locations; l != NULL; l = l->next) {
+    for (GList *l = indexes; l != NULL; l = l->next) {
         GtkTreeIter iter = {};
-        FsearchIncludePath *fs_path = l->data;
+        FsearchIndex *index = l->data;
         gtk_list_store_append(store, &iter);
         gtk_list_store_set(store,
                            &iter,
-                           COL_INCLUDE_ENABLE,
-                           fs_path->enabled,
-                           COL_INCLUDE_PATH,
-                           fs_path->path,
-                           COL_INCLUDE_UPDATE,
-                           fs_path->update,
+                           COL_INDEX_ENABLE,
+                           index->enabled,
+                           COL_INDEX_PATH,
+                           index->path,
+                           COL_INDEX_UPDATE,
+                           index->update,
                            -1);
     }
 

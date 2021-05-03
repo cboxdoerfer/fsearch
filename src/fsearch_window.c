@@ -444,7 +444,7 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
 
     uint32_t num_items = db_get_num_entries(db);
 
-    if (!config->locations || num_items == 0) {
+    if (!config->indexes || num_items == 0) {
         show_overlay(self, OVERLAY_DATABASE_EMPTY);
     }
 
@@ -731,7 +731,7 @@ perform_search(FsearchApplicationWindow *win) {
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
-    if (!config->locations) {
+    if (!config->indexes) {
         show_overlay(win, OVERLAY_DATABASE_EMPTY);
         return;
     }

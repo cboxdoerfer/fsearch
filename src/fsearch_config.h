@@ -109,7 +109,7 @@ struct _FsearchConfig {
     bool exclude_hidden_items;
     bool follow_symlinks;
 
-    GList *locations;
+    GList *indexes;
     GList *exclude_locations;
     char **exclude_files;
 };
