@@ -1677,32 +1677,37 @@ fsearch_list_view_reset_sort_indicator(FsearchListView *view) {
 }
 
 static void
+fsearch_list_view_update_sort_indicator(FsearchListView *view) {
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(view, view->sort_order);
+    if (!col) {
+        return;
+    }
+
+    fsearch_list_view_reset_sort_indicator(view);
+
+    gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow),
+                                 view->sort_type == GTK_SORT_DESCENDING ? "pan-up-symbolic" : "pan-down-symbolic",
+                                 GTK_ICON_SIZE_BUTTON);
+    gtk_widget_show(col->arrow);
+}
+
+static void
 on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchListViewColumn *col = user_data;
     GtkSortType current_sort_type = col->view->sort_type;
     FsearchListViewColumnType current_sort_order = col->view->sort_order;
 
-    fsearch_list_view_reset_sort_indicator(col->view);
-
     if (current_sort_order == col->type) {
-        if (current_sort_type == GTK_SORT_ASCENDING) {
-            gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "pan-up-symbolic", GTK_ICON_SIZE_BUTTON);
-        }
-        else if (current_sort_type == GTK_SORT_DESCENDING) {
-            gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "pan-down-symbolic", GTK_ICON_SIZE_BUTTON);
-        }
+        // clicked the same column, just change sort type and redraw
         fsearch_list_view_set_sort_type(col->view, !current_sort_type);
-        gtk_widget_show(col->arrow);
     }
-    else {
-        if (col->view->sort_func) {
-            col->view->sort_func(col->type, col->view->sort_func_data);
-            col->view->sort_order = col->type;
-            gtk_widget_show(col->arrow);
-            fsearch_list_view_set_sort_type(col->view, GTK_SORT_ASCENDING);
-            gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "pan-down-symbolic", GTK_ICON_SIZE_BUTTON);
-        }
+    else if (col->view->sort_func) {
+        // clicked different column, resort
+        col->view->sort_func(col->type, col->view->sort_func_data);
+        col->view->sort_order = col->type;
+        fsearch_list_view_set_sort_type(col->view, GTK_SORT_ASCENDING);
     }
+    fsearch_list_view_update_sort_indicator(col->view);
 }
 
 static gboolean
@@ -1789,12 +1794,11 @@ fsearch_list_view_set_num_rows(FsearchListView *view,
     view->num_rows = num_rows;
     view->list_height = num_rows * view->row_height;
     fsearch_list_view_selection_clear(view);
-    fsearch_list_view_reset_sort_indicator(view);
-
     gtk_adjustment_set_value(view->vadjustment, 0);
 
     view->sort_order = sort_order;
     view->sort_type = sort_type;
+    fsearch_list_view_update_sort_indicator(view);
 
     gtk_widget_queue_resize(GTK_WIDGET(view));
 }
