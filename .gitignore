@@ -30,6 +30,7 @@ Makefile.in
 .deps
 /.version
 /config.h*
+fsearch*-dirty
 
 # Project files
 tags
