@@ -560,8 +560,8 @@ fsearch_application_startup(GApplication *app) {
     config_make_dir();
 
     char data_dir[PATH_MAX] = "";
-    init_data_dir_path(data_dir, sizeof(data_dir));
-    create_dir(data_dir);
+    fsearch_file_utils_init_data_dir_path(data_dir, sizeof(data_dir));
+    fsearch_file_utils_create_dir(data_dir);
 
     fsearch->db_thread_cancellable = g_cancellable_new();
     fsearch->config = calloc(1, sizeof(FsearchConfig));

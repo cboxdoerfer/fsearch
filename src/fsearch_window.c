@@ -915,7 +915,8 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         return;
     }
 
-    if (!launch_folder ? launch_entry(entry) : launch_entry_for_path(entry, config->folder_open_cmd)) {
+    if (!launch_folder ? fsearch_file_utils_launch_entry(entry)
+                       : fsearch_file_utils_launch_entry_with_command(entry, config->folder_open_cmd)) {
         // open succeeded
         fsearch_window_action_after_file_open(true);
     }
@@ -1035,6 +1036,41 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *app)
     gtk_widget_set_has_tooltip(GTK_WIDGET(app->listview), config->enable_list_tooltips);
 }
 
+static cairo_surface_t *
+get_icon_surface(GdkWindow *win, const char *path, int icon_size, int scale_factor) {
+    GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
+    if (!icon_theme) {
+        return NULL;
+    }
+
+    cairo_surface_t *icon_surface = NULL;
+    GIcon *icon = fsearch_file_utils_get_icon_for_path(path);
+    const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
+    if (!names) {
+        g_object_unref(icon);
+        return NULL;
+    }
+
+    GtkIconInfo *icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
+                                                                  (const char **)names,
+                                                                  icon_size,
+                                                                  scale_factor,
+                                                                  GTK_ICON_LOOKUP_FORCE_SIZE);
+    if (!icon_info) {
+        return NULL;
+    }
+
+    GdkPixbuf *pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
+    if (pixbuf) {
+        icon_surface = gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
+        g_object_unref(pixbuf);
+    }
+    g_object_unref(icon);
+    g_object_unref(icon_info);
+
+    return icon_surface;
+}
+
 typedef struct {
     char *display_name;
     PangoAttrList *name_attr;
@@ -1080,7 +1116,8 @@ draw_row_ctx_init(uint32_t row,
     g_string_append_c(ctx->full_path, G_DIR_SEPARATOR);
     g_string_append(ctx->full_path, name);
 
-    ctx->type = get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+    ctx->type =
+        fsearch_file_utils_get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
 
     ctx->icon_surface =
         config->show_listview_icons
@@ -1088,12 +1125,26 @@ draw_row_ctx_init(uint32_t row,
             : NULL;
 
     off_t size = db_entry_get_size(entry);
-    ctx->size = get_size_formatted(size, config->show_base_2_units);
+    ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
 
     // strftime(ctx->time,
     //          100,
     //          "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
     //          localtime(&entry->mtime));
+}
+
+static int
+get_icon_size_for_height(int height) {
+    if (height < 24) {
+        return 16;
+    }
+    if (height < 32) {
+        return 24;
+    }
+    if (height < 48) {
+        return 32;
+    }
+    return 48;
 }
 
 static void
@@ -1170,11 +1221,12 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
-        text = get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+        text = fsearch_file_utils_get_file_type(name,
+                                                db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
         break;
     }
     case FSEARCH_LIST_VIEW_COLUMN_SIZE:
-        text = get_size_formatted(db_entry_get_size(entry), config->show_base_2_units);
+        text = fsearch_file_utils_get_size_formatted(db_entry_get_size(entry), config->show_base_2_units);
         break;
     case FSEARCH_LIST_VIEW_COLUMN_CHANGED: {
         text = g_strdup("Unknown time");

@@ -23,7 +23,6 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_database.h"
 #include "fsearch_limits.h"
-#include "fsearch_list_view.h"
 #include "fsearch_ui_utils.h"
 #include <gio/gio.h>
 #include <glib/gi18n.h>
@@ -33,7 +32,7 @@
 const char *data_folder_name = "fsearch";
 
 void
-init_data_dir_path(char *path, size_t len) {
+fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
     g_assert(path != NULL);
     g_assert(len >= 0);
 
@@ -43,7 +42,7 @@ init_data_dir_path(char *path, size_t len) {
 }
 
 bool
-create_dir(const char *path) {
+fsearch_file_utils_create_dir(const char *path) {
     return !g_mkdir_with_parents(path, 0700);
 }
 
@@ -202,17 +201,17 @@ file_remove_or_trash(const char *path, bool delete) {
 }
 
 bool
-file_remove(const char *path) {
+fsearch_file_utils_remove(const char *path) {
     return file_remove_or_trash(path, true);
 }
 
 bool
-file_trash(const char *path) {
+fsearch_file_utils_trash(const char *path) {
     return file_remove_or_trash(path, false);
 }
 
 bool
-launch_entry(FsearchDatabaseEntry *entry) {
+fsearch_file_utils_launch_entry(FsearchDatabaseEntry *entry) {
     GString *path_full = db_entry_get_path_full(entry);
     if (!path_full) {
         return false;
@@ -224,7 +223,7 @@ launch_entry(FsearchDatabaseEntry *entry) {
 }
 
 bool
-launch_entry_for_path(FsearchDatabaseEntry *entry, const char *cmd) {
+fsearch_file_utils_launch_entry_with_command(FsearchDatabaseEntry *entry, const char *cmd) {
     if (cmd) {
         return open_with_cmd(entry, cmd);
     }
@@ -258,7 +257,7 @@ get_mimetype(const gchar *name) {
 }
 
 gchar *
-get_file_type_non_localized(const char *name, gboolean is_dir) {
+fsearch_file_utils_get_file_type_non_localized(const char *name, gboolean is_dir) {
     gchar *type = NULL;
     if (is_dir) {
         type = g_strdup("Folder");
@@ -273,7 +272,7 @@ get_file_type_non_localized(const char *name, gboolean is_dir) {
 }
 
 gchar *
-get_file_type(const char *name, gboolean is_dir) {
+fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
     gchar *type = NULL;
     if (is_dir) {
         type = g_strdup(_("Folder"));
@@ -288,7 +287,7 @@ get_file_type(const char *name, gboolean is_dir) {
 }
 
 GIcon *
-get_gicon_for_path(const char *path) {
+fsearch_file_utils_get_icon_for_path(const char *path) {
     GFile *g_file = g_file_new_for_path(path);
     if (!g_file) {
         return g_themed_icon_new("edit-delete");
@@ -313,57 +312,8 @@ get_gicon_for_path(const char *path) {
     return icon;
 }
 
-cairo_surface_t *
-get_icon_surface(GdkWindow *win, const char *path, int icon_size, int scale_factor) {
-    GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
-    if (!icon_theme) {
-        return NULL;
-    }
-
-    cairo_surface_t *icon_surface = NULL;
-    GIcon *icon = get_gicon_for_path(path);
-    const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
-    if (!names) {
-        g_object_unref(icon);
-        return NULL;
-    }
-
-    GtkIconInfo *icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
-                                                                  (const char **)names,
-                                                                  icon_size,
-                                                                  scale_factor,
-                                                                  GTK_ICON_LOOKUP_FORCE_SIZE);
-    if (!icon_info) {
-        return NULL;
-    }
-
-    GdkPixbuf *pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
-    if (pixbuf) {
-        icon_surface = gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
-        g_object_unref(pixbuf);
-    }
-    g_object_unref(icon);
-    g_object_unref(icon_info);
-
-    return icon_surface;
-}
-
-int
-get_icon_size_for_height(int height) {
-    if (height < 24) {
-        return 16;
-    }
-    if (height < 32) {
-        return 24;
-    }
-    if (height < 48) {
-        return 32;
-    }
-    return 48;
-}
-
 char *
-get_size_formatted(off_t size, bool show_base_2_units) {
+fsearch_file_utils_get_size_formatted(off_t size, bool show_base_2_units) {
     if (show_base_2_units) {
         return g_format_size_full(size, G_FORMAT_SIZE_IEC_UNITS);
     }

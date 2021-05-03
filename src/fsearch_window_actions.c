@@ -100,7 +100,7 @@ delete_file(const char *path, bool delete) {
         return false;
     }
 
-    if ((delete &&file_remove(path)) || (!delete &&file_trash(path))) {
+    if ((delete &&fsearch_file_utils_remove(path)) || (!delete &&fsearch_file_utils_trash(path))) {
         return true;
     }
     return false;
@@ -229,7 +229,7 @@ open_cb(gpointer key, gpointer value, gpointer data) {
     }
     FsearchDatabaseEntry *entry = value;
 
-    if (!launch_entry(entry)) {
+    if (!fsearch_file_utils_launch_entry(entry)) {
         bool *open_failed = data;
         *open_failed = true;
     }
@@ -383,7 +383,7 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
     }
     FsearchDatabaseEntry *entry = value;
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    if (!launch_entry_for_path(entry, config->folder_open_cmd)) {
+    if (!fsearch_file_utils_launch_entry_with_command(entry, config->folder_open_cmd)) {
         bool *open_failed = data;
         *open_failed = true;
     }

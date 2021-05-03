@@ -180,8 +180,8 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
     const char *name_a = db_entry_get_name(*a);
     const char *name_b = db_entry_get_name(*b);
-    char *file_type_a = get_file_type_non_localized(name_a, FALSE);
-    char *file_type_b = get_file_type_non_localized(name_b, FALSE);
+    char *file_type_a = fsearch_file_utils_get_file_type_non_localized(name_a, FALSE);
+    char *file_type_b = fsearch_file_utils_get_file_type_non_localized(name_b, FALSE);
 
     int return_val = strcmp(file_type_a, file_type_b);
     g_free(file_type_a);

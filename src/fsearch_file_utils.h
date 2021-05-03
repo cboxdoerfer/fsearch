@@ -19,42 +19,35 @@
 #pragma once
 
 #include "fsearch_database.h"
-#include "fsearch_list_view.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
 void
-init_data_dir_path(char *path, size_t len);
+fsearch_file_utils_init_data_dir_path(char *path, size_t len);
 
 bool
-create_dir(const char *path);
+fsearch_file_utils_create_dir(const char *path);
 
 bool
-file_trash(const char *path);
+fsearch_file_utils_trash(const char *path);
 
 bool
-file_remove(const char *path);
+fsearch_file_utils_remove(const char *path);
 
 bool
-launch_entry(FsearchDatabaseEntry *entry);
+fsearch_file_utils_launch_entry(FsearchDatabaseEntry *entry);
 
 bool
-launch_entry_for_path(FsearchDatabaseEntry *entry, const char *cmd);
+fsearch_file_utils_launch_entry_with_command(FsearchDatabaseEntry *entry, const char *cmd);
 
 gchar *
-get_file_type(const gchar *name, gboolean is_dir);
+fsearch_file_utils_get_file_type(const gchar *name, gboolean is_dir);
 
 gchar *
-get_file_type_non_localized(const char *name, gboolean is_dir);
+fsearch_file_utils_get_file_type_non_localized(const char *name, gboolean is_dir);
 
 GIcon *
-get_gicon_for_path(const char *path);
-
-cairo_surface_t *
-get_icon_surface(GdkWindow *win, const char *path, int icon_size, int scale_factor);
-
-int
-get_icon_size_for_height(int height);
+fsearch_file_utils_get_icon_for_path(const char *path);
 
 char *
-get_size_formatted(off_t size, bool show_base_2_units);
+fsearch_file_utils_get_size_formatted(off_t size, bool show_base_2_units);
