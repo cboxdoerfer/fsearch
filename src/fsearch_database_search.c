@@ -223,10 +223,10 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const char *hayst
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
     bool is_dir = type == DATABASE_ENTRY_TYPE_FOLDER ? true : false;
     bool is_file = type == DATABASE_ENTRY_TYPE_FILE ? true : false;
-    if (query->filter->type == FSEARCH_FILTER_FILES && is_file) {
+    if (query->filter->type != FSEARCH_FILTER_FILES && is_file) {
         return false;
     }
-    if (query->filter->type == FSEARCH_FILTER_FOLDERS && is_dir) {
+    if (query->filter->type != FSEARCH_FILTER_FOLDERS && is_dir) {
         return false;
     }
     if (query->filter_token) {
