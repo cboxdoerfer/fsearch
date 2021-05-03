@@ -19,11 +19,9 @@
 #define G_LOG_DOMAIN "fsearch-preferences-ui"
 
 #include "fsearch_preferences_ui.h"
-#include "fsearch.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_index.h"
 #include "fsearch_preferences_widgets.h"
-#include "fsearch_ui_utils.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
