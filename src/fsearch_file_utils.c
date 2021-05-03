@@ -20,7 +20,7 @@
 
 #define _GNU_SOURCE
 
-#include "fsearch_utils.h"
+#include "fsearch_file_utils.h"
 #include "fsearch_database.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"

@@ -36,9 +36,9 @@
 
 #include "fsearch_database.h"
 #include "fsearch_exclude_path.h"
+#include "fsearch_file_utils.h"
 #include "fsearch_index.h"
 #include "fsearch_memory_pool.h"
-#include "fsearch_utils.h"
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 

@@ -20,6 +20,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_database.h \
 			 fsearch_database_search.h \
 			 fsearch_exclude_path.h \
+			 fsearch_file_utils.h \
 			 fsearch_filter.h \
 			 fsearch_index.h \
 			 fsearch_limits.h \
@@ -34,7 +35,6 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_thread_pool.h \
 			 fsearch_token.h \
 			 fsearch_ui_utils.h \
-			 fsearch_utils.h \
 			 fsearch_window.h \
 			 fsearch_window_actions.h \
 			 utf8.h \
@@ -47,6 +47,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_database.c \
 		  fsearch_database_search.c \
 		  fsearch_exclude_path.c \
+		  fsearch_file_utils.c \
 		  fsearch_filter.c \
 		  fsearch_index.c \
 		  fsearch_list_view.c \
@@ -60,7 +61,6 @@ fsearch_SOURCES = main.c \
 		  fsearch_thread_pool.c \
 		  fsearch_token.c \
 		  fsearch_ui_utils.c \
-		  fsearch_utils.c \
 		  fsearch_window.c \
 		  fsearch_window_actions.c \
 		  resources.c \

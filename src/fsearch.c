@@ -27,10 +27,10 @@
 #include "fsearch_config.h"
 #include "fsearch_database.h"
 #include "fsearch_database_search.h"
+#include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_preferences_ui.h"
 #include "fsearch_ui_utils.h"
-#include "fsearch_utils.h"
 #include "fsearch_window.h"
 #include "resources.h"
 #include <glib.h>
