@@ -46,12 +46,6 @@ FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self);
 
 void
-fsearch_window_listview_block_selection_changed(FsearchApplicationWindow *self, gboolean block);
-
-void
-fsearch_window_listview_selection_changed(FsearchApplicationWindow *self);
-
-void
 fsearch_application_window_update_listview_config(FsearchApplicationWindow *self);
 
 void
@@ -77,9 +71,6 @@ fsearch_application_window_remove_model(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text);
-
-void
-fsearch_application_window_update_results(void *data);
 
 uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self);
