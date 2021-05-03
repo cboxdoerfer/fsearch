@@ -264,7 +264,14 @@ db_sort(FsearchDatabase *db) {
     DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
     if (files) {
         darray_sort_multi_threaded(files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+        db->sorted_files[DATABASE_INDEX_TYPE_PATH] = darray_copy(files);
+
         darray_sort(files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
+
+        db->sorted_files[DATABASE_INDEX_TYPE_SIZE] = darray_copy(files);
+        darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_SIZE],
+                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
         g_debug("[db_sort] sorted files: %f s", seconds);
@@ -272,7 +279,14 @@ db_sort(FsearchDatabase *db) {
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
     if (folders) {
         darray_sort_multi_threaded(folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+        db->sorted_folders[DATABASE_INDEX_TYPE_PATH] = darray_copy(folders);
+
         darray_sort(folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
+
+        db->sorted_folders[DATABASE_INDEX_TYPE_SIZE] = darray_copy(folders);
+        darray_sort_multi_threaded(db->sorted_folders[DATABASE_INDEX_TYPE_SIZE],
+                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
     }
@@ -1087,6 +1101,16 @@ db_free(FsearchDatabase *db) {
 
     db_sorted_entries_free(db);
 
+    if (db->file_pool) {
+        fsearch_memory_pool_free(db->file_pool);
+        db->file_pool = NULL;
+    }
+
+    if (db->folder_pool) {
+        fsearch_memory_pool_free(db->folder_pool);
+        db->folder_pool = NULL;
+    }
+
     if (db->indexes) {
         g_list_free_full(db->indexes, (GDestroyNotify)fsearch_index_free);
         db->indexes = NULL;
@@ -1151,6 +1175,24 @@ bool
 db_try_lock(FsearchDatabase *db) {
     assert(db != NULL);
     return g_mutex_trylock(&db->mutex);
+}
+
+DynamicArray *
+db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
+    assert(db != NULL);
+    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
+        return db->sorted_folders[sort_type];
+    }
+    return NULL;
+}
+
+DynamicArray *
+db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
+    assert(db != NULL);
+    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
+        return db->sorted_files[sort_type];
+    }
+    return NULL;
 }
 
 DynamicArray *

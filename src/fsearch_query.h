@@ -19,11 +19,13 @@
 #pragma once
 
 #include <glib.h>
+#include <gtk/gtk.h>
 #include <pango/pango.h>
 #include <stdbool.h>
 
 #include "fsearch_array.h"
 #include "fsearch_filter.h"
+#include "fsearch_list_view.h"
 #include "fsearch_thread_pool.h"
 #include "fsearch_token.h"
 
@@ -63,6 +65,8 @@ typedef struct FsearchQuery {
     uint32_t num_folders;
     uint32_t num_files;
 
+    FsearchListViewColumnType sort_order;
+
     FsearchThreadPool *pool;
 
     FsearchFilter *filter;
@@ -88,6 +92,7 @@ fsearch_query_new(const char *text,
                   DynamicArray *folders,
                   uint32_t num_folders,
                   uint32_t num_files,
+                  FsearchListViewColumnType sort_order,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,

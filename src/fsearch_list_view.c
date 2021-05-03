@@ -1776,7 +1776,10 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
 }
 
 void
-fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows) {
+fsearch_list_view_set_num_rows(FsearchListView *view,
+                               uint32_t num_rows,
+                               FsearchListViewColumnType sort_order,
+                               GtkSortType sort_type) {
     if (!view) {
         return;
     }
@@ -1790,8 +1793,8 @@ fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows) {
 
     gtk_adjustment_set_value(view->vadjustment, 0);
 
-    view->sort_order = FSEARCH_LIST_VIEW_COLUMN_NAME;
-    view->sort_type = GTK_SORT_ASCENDING;
+    view->sort_order = sort_order;
+    view->sort_type = sort_type;
 
     gtk_widget_queue_resize(GTK_WIDGET(view));
 }
@@ -1907,6 +1910,20 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
     }
     fsearch_list_view_scroll_row_into_view(view, row_idx);
     gtk_widget_queue_draw(GTK_WIDGET(view));
+}
+
+void
+fsearch_list_view_set_sort_order(FsearchListView *view, FsearchListViewColumnType sort_order) {
+    if (!view) {
+        return;
+    }
+    view->sort_order = sort_order;
+    gtk_widget_queue_draw(GTK_WIDGET(view));
+}
+
+FsearchListViewColumnType
+fsearch_list_view_get_sort_order(FsearchListView *view) {
+    return view->sort_order;
 }
 
 void

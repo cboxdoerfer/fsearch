@@ -376,6 +376,7 @@
                             <child>
                               <object class="GtkCheckButton" id="restore_sort_order_button">
                                 <property name="label" translatable="yes">Remember sort order</property>
+                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>

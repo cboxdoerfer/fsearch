@@ -451,3 +451,21 @@ darray_binary_search_with_data(DynamicArray *array,
     return result;
 }
 
+DynamicArray *
+darray_copy(DynamicArray *array) {
+    if (!array) {
+        return NULL;
+    }
+    DynamicArray *new = calloc(1, sizeof(DynamicArray));
+    assert(new != NULL);
+
+    new->max_items = array->max_items;
+    new->num_items = array->num_items;
+
+    new->data = calloc(new->max_items, sizeof(void *));
+    assert(new->data != NULL);
+
+    memcpy(new->data, array->data, new->max_items * sizeof(void *));
+
+    return new;
+}

@@ -86,3 +86,6 @@ darray_free(DynamicArray *array);
 
 void
 darray_clear(DynamicArray *array);
+
+DynamicArray *
+darray_copy(DynamicArray *array);

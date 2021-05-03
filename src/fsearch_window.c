@@ -87,6 +87,9 @@ struct _FsearchApplicationWindow {
     FsearchQueryHighlight *query_highlight;
     uint32_t query_id;
 
+    FsearchListViewColumnType sort_order;
+    GtkSortType sort_type;
+
     bool closing;
 
     guint statusbar_timeout_id;
@@ -127,18 +130,26 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
 static void
 fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0);
+    self->sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(self->listview));
+    self->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(self->listview));
+    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
 }
 
 static void
 fsearch_window_apply_results(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+
+    self->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(self->listview));
+
     if (self->result && self->result->files) {
+        self->sort_order = self->result->query->sort_order;
         fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview),
-                                       self->result->num_files + self->result->num_folders);
+                                       self->result->num_files + self->result->num_folders,
+                                       self->sort_order,
+                                       self->sort_type);
     }
     else {
-        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0);
+        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
     }
     fsearch_window_actions_update(self);
 }
@@ -762,11 +773,22 @@ perform_search(FsearchApplicationWindow *win) {
     GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
     FsearchFilter *filter = filter_element->data;
 
+    DynamicArray *files = db_get_files_sorted(db, win->sort_order);
+    DynamicArray *folders = db_get_folders_sorted(db, win->sort_order);
+    FsearchListViewColumnType sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(win->listview));
+    if (!files || !folders) {
+        printf("no fast sort for type: %d\n", sort_order);
+        files = db_get_files(db);
+        folders = db_get_folders(db);
+        sort_order = FSEARCH_LIST_VIEW_COLUMN_NAME;
+    }
+
     FsearchQuery *q = fsearch_query_new(text,
-                                        db_get_files(db),
-                                        db_get_folders(db),
+                                        files,
+                                        folders,
                                         db_get_num_folders(db),
                                         db_get_num_files(db),
+                                        sort_order,
                                         filter,
                                         fsearch_application_get_thread_pool(app),
                                         flags,
@@ -1410,6 +1432,8 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
                                          fsearch_window_sort_task_cancelled,
                                          ctx);
     fsearch_task_queue(win->task_queue, task, FSEARCH_TASK_CLEAR_SAME_ID);
+
+    win->sort_order = sort_order;
 }
 
 static void

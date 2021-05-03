@@ -88,7 +88,10 @@ FsearchListViewColumn *
 fsearch_list_view_get_first_column_for_type(FsearchListView *view, FsearchListViewColumnType type);
 
 void
-fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows);
+fsearch_list_view_set_num_rows(FsearchListView *view,
+                               uint32_t num_rows,
+                               FsearchListViewColumnType sort_order,
+                               GtkSortType sort_type);
 
 void
 fsearch_list_view_selection_clear(FsearchListView *view);
@@ -119,6 +122,12 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx);
 
 void
 fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean value);
+
+void
+fsearch_list_view_set_sort_order(FsearchListView *view, FsearchListViewColumnType sort_order);
+
+FsearchListViewColumnType
+fsearch_list_view_get_sort_order(FsearchListView *view);
 
 void
 fsearch_list_view_set_sort_type(FsearchListView *view, GtkSortType sort_type);

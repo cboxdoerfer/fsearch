@@ -36,6 +36,7 @@ typedef enum {
     DATABASE_INDEX_TYPE_PATH,
     DATABASE_INDEX_TYPE_SIZE,
     DATABASE_INDEX_TYPE_MODIFICATION_TIME,
+    DATABASE_INDEX_TYPE_FILETYPE,
     NUM_DATABASE_INDEX_TYPES,
 } FsearchDatabaseIndexType;
 
@@ -89,6 +90,12 @@ db_get_folders(FsearchDatabase *db);
 
 DynamicArray *
 db_get_files(FsearchDatabase *db);
+
+DynamicArray *
+db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
+
+DynamicArray *
+db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
 
 FsearchDatabaseEntryFolder *
 db_entry_get_parent(FsearchDatabaseEntry *entry);

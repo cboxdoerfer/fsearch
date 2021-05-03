@@ -30,6 +30,7 @@ fsearch_query_new(const char *text,
                   DynamicArray *folders,
                   uint32_t num_folders,
                   uint32_t num_files,
+                  FsearchListViewColumnType sort_order,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
@@ -45,6 +46,8 @@ fsearch_query_new(const char *text,
 
     q->files = files;
     q->folders = folders;
+
+    q->sort_order = sort_order;
 
     q->pool = pool;
 
