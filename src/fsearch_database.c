@@ -51,6 +51,8 @@ struct FsearchDatabaseEntryCommon {
     char *name;
     off_t size;
 
+    // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
+    uint32_t idx;
     uint8_t type;
 };
 
@@ -64,8 +66,6 @@ struct _FsearchDatabaseEntryFolder {
     GSList *folder_children;
     GSList *file_children;
 
-    // idx: index in folder array sorted by name
-    uint32_t idx;
     // db_idx: the database index this folder belongs to
     uint32_t db_idx;
 };
@@ -312,7 +312,7 @@ db_entry_update_folder_indices(FsearchDatabase *db) {
         if (!folder) {
             continue;
         }
-        folder->idx = i;
+        folder->shared.idx = i;
     }
 }
 
@@ -452,7 +452,7 @@ db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
             break;
         }
 
-        if (parent_idx != folder->idx) {
+        if (parent_idx != folder->shared.idx) {
             FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
             folder->shared.parent = parent;
         }
@@ -547,7 +547,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = fsearch_memory_pool_malloc(db->folder_pool);
-        folder->idx = i;
+        folder->shared.idx = i;
         folder->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
         folder->shared.parent = NULL;
         darray_add_item(folders, folder);
@@ -686,7 +686,7 @@ db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntryFile *file = darray_get_item(files, i);
 
-        uint32_t parent_idx = file->shared.parent->idx;
+        uint32_t parent_idx = file->shared.parent->shared.idx;
         if (!db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new)) {
             result = false;
             break;
@@ -712,7 +712,7 @@ db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
 
-        uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->idx : folder->idx;
+        uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->shared.idx : folder->shared.idx;
         if (!db_save_entry_shared(fp, &folder->shared, parent_idx, name_prev, name_new)) {
             result = false;
             break;
