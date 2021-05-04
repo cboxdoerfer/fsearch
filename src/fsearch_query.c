@@ -92,6 +92,15 @@ fsearch_query_free(FsearchQuery *query) {
     query = NULL;
 }
 
+bool
+fsearch_query_matches_everything(FsearchQuery *query) {
+    const bool empty_query = fs_str_is_empty(query->text);
+    if (empty_query && (!query->filter || query->filter->type == FSEARCH_FILTER_NONE)) {
+        return true;
+    }
+    return false;
+}
+
 static bool
 fsearch_query_highlight_match_glob(FsearchQueryHighlightToken *token, const char *text, bool match_case) {
     if (!token->end_with_asterisk && !token->start_with_asterisk) {

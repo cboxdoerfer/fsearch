@@ -107,9 +107,11 @@ fsearch_query_free(FsearchQuery *query);
 PangoAttrList *
 fsearch_query_highlight_match(FsearchQueryHighlight *q, const char *input);
 
+bool
+fsearch_query_matches_everything(FsearchQuery *query);
+
 FsearchQueryHighlight *
 fsearch_query_highlight_new(const char *text, FsearchQueryFlags flags);
 
 void
 fsearch_query_highlight_free(FsearchQueryHighlight *query_highlight);
-

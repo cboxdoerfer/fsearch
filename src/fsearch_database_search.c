@@ -152,7 +152,7 @@ db_search_task(gpointer data, GCancellable *cancellable) {
     if (empty_query && !query->pass_on_empty_query) {
         result = db_search_result_new(query);
     }
-    else if (empty_query && (!query->filter || query->filter->type == FSEARCH_FILTER_NONE)) {
+    else if (fsearch_query_matches_everything(query)) {
         result = db_search_empty(query);
     }
     else {
