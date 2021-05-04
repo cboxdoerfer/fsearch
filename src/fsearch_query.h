@@ -65,7 +65,7 @@ typedef struct FsearchQuery {
     uint32_t num_folders;
     uint32_t num_files;
 
-    FsearchListViewColumnType sort_order;
+    int32_t sort_order;
 
     FsearchThreadPool *pool;
 
@@ -92,7 +92,7 @@ fsearch_query_new(const char *text,
                   DynamicArray *folders,
                   uint32_t num_folders,
                   uint32_t num_files,
-                  FsearchListViewColumnType sort_order,
+                  int32_t tsort_order,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,

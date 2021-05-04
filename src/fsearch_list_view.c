@@ -71,7 +71,7 @@ struct _FsearchListView {
     gint list_height;
 
     GtkSortType sort_type;
-    FsearchListViewColumnType sort_order;
+    gint sort_order;
 
     FsearchListViewSortFunc sort_func;
     gpointer sort_func_data;
@@ -1695,7 +1695,7 @@ static void
 on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchListViewColumn *col = user_data;
     GtkSortType current_sort_type = col->view->sort_type;
-    FsearchListViewColumnType current_sort_order = col->view->sort_order;
+    int current_sort_order = col->view->sort_order;
 
     if (current_sort_order == col->type) {
         // clicked the same column, just change sort type and redraw
@@ -1736,7 +1736,7 @@ on_fsearch_list_view_header_button_pressed(GtkWidget *widget, GdkEvent *event, g
 }
 
 FsearchListViewColumn *
-fsearch_list_view_get_first_column_for_type(FsearchListView *view, FsearchListViewColumnType type) {
+fsearch_list_view_get_first_column_for_type(FsearchListView *view, int type) {
     if (!view) {
         return NULL;
     }
@@ -1781,10 +1781,7 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
 }
 
 void
-fsearch_list_view_set_num_rows(FsearchListView *view,
-                               uint32_t num_rows,
-                               FsearchListViewColumnType sort_order,
-                               GtkSortType sort_type) {
+fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
     if (!view) {
         return;
     }
@@ -1917,7 +1914,7 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
 }
 
 void
-fsearch_list_view_set_sort_order(FsearchListView *view, FsearchListViewColumnType sort_order) {
+fsearch_list_view_set_sort_order(FsearchListView *view, int sort_order) {
     if (!view) {
         return;
     }
@@ -1925,7 +1922,7 @@ fsearch_list_view_set_sort_order(FsearchListView *view, FsearchListViewColumnTyp
     gtk_widget_queue_draw(GTK_WIDGET(view));
 }
 
-FsearchListViewColumnType
+int
 fsearch_list_view_get_sort_order(FsearchListView *view) {
     return view->sort_order;
 }
@@ -1953,7 +1950,7 @@ fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean valu
 }
 
 FsearchListViewColumn *
-fsearch_list_view_column_new(FsearchListViewColumnType type,
+fsearch_list_view_column_new(int type,
                              char *name,
                              PangoAlignment alignment,
                              PangoEllipsizeMode ellipsize_mode,

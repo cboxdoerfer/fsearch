@@ -87,7 +87,7 @@ struct _FsearchApplicationWindow {
     FsearchQueryHighlight *query_highlight;
     uint32_t query_id;
 
-    FsearchListViewColumnType sort_order;
+    FsearchDatabaseIndexType sort_order;
     GtkSortType sort_type;
 
     bool closing;
@@ -775,12 +775,12 @@ perform_search(FsearchApplicationWindow *win) {
 
     DynamicArray *files = db_get_files_sorted(db, win->sort_order);
     DynamicArray *folders = db_get_folders_sorted(db, win->sort_order);
-    FsearchListViewColumnType sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(win->listview));
+    FsearchDatabaseIndexType sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(win->listview));
     if (!files || !folders) {
         printf("no fast sort for type: %d\n", sort_order);
         files = db_get_files(db);
         folders = db_get_folders(db);
-        sort_order = FSEARCH_LIST_VIEW_COLUMN_NAME;
+        sort_order = DATABASE_INDEX_TYPE_NAME;
     }
 
     FsearchQuery *q = fsearch_query_new(text,
@@ -921,14 +921,14 @@ on_file_open_failed_response(GtkDialog *dialog, GtkResponseType response, gpoint
 
 static void
 on_fsearch_list_view_row_activated(FsearchListView *view,
-                                   FsearchListViewColumnType col,
+                                   FsearchDatabaseIndexType col,
                                    int row_idx,
                                    GtkSortType sort_type,
                                    gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     int launch_folder = false;
-    if (config->double_click_path && col == FSEARCH_LIST_VIEW_COLUMN_PATH) {
+    if (config->double_click_path && col == DATABASE_INDEX_TYPE_PATH) {
         launch_folder = true;
     }
 
@@ -1228,29 +1228,29 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     char *text = NULL;
 
     switch (col->type) {
-    case FSEARCH_LIST_VIEW_COLUMN_NAME:
+    case DATABASE_INDEX_TYPE_NAME:
         if (config->show_listview_icons) {
             int icon_size = get_icon_size_for_height(row_height - ROW_PADDING_X);
             width -= 2 * ROW_PADDING_X + icon_size;
         }
         text = g_filename_display_name(name);
         break;
-    case FSEARCH_LIST_VIEW_COLUMN_PATH: {
+    case DATABASE_INDEX_TYPE_PATH: {
         GString *path = db_entry_get_path(entry);
         text = g_filename_display_name(path->str);
         g_string_free(path, TRUE);
         path = NULL;
         break;
     }
-    case FSEARCH_LIST_VIEW_COLUMN_TYPE: {
+    case DATABASE_INDEX_TYPE_FILETYPE: {
         text = fsearch_file_utils_get_file_type(name,
                                                 db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
         break;
     }
-    case FSEARCH_LIST_VIEW_COLUMN_SIZE:
+    case DATABASE_INDEX_TYPE_SIZE:
         text = fsearch_file_utils_get_size_formatted(db_entry_get_size(entry), config->show_base_2_units);
         break;
-    case FSEARCH_LIST_VIEW_COLUMN_CHANGED: {
+    case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
         text = g_strdup("Unknown time");
         // char mtime[100] = "";
         // strftime(mtime,
@@ -1337,7 +1337,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
         int dw = 0;
         pango_layout_set_attributes(layout, NULL);
         switch (column->type) {
-        case FSEARCH_LIST_VIEW_COLUMN_NAME: {
+        case DATABASE_INDEX_TYPE_NAME: {
             if (config->show_listview_icons && ctx.icon_surface) {
                 int x_icon = x;
                 if (right_to_left_text) {
@@ -1357,17 +1357,17 @@ fsearch_list_view_draw_row(cairo_t *cr,
             pango_layout_set_attributes(layout, ctx.name_attr);
             pango_layout_set_text(layout, ctx.display_name, -1);
         } break;
-        case FSEARCH_LIST_VIEW_COLUMN_PATH:
+        case DATABASE_INDEX_TYPE_PATH:
             pango_layout_set_attributes(layout, ctx.path_attr);
             pango_layout_set_text(layout, ctx.path->str, ctx.path->len);
             break;
-        case FSEARCH_LIST_VIEW_COLUMN_SIZE:
+        case DATABASE_INDEX_TYPE_SIZE:
             pango_layout_set_text(layout, ctx.size, -1);
             break;
-        case FSEARCH_LIST_VIEW_COLUMN_TYPE:
+        case DATABASE_INDEX_TYPE_FILETYPE:
             pango_layout_set_text(layout, ctx.type, -1);
             break;
-        case FSEARCH_LIST_VIEW_COLUMN_CHANGED:
+        case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
             pango_layout_set_text(layout, ctx.time, -1);
             break;
         default:
@@ -1387,7 +1387,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
 }
 
 void
-fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_data) {
+fsearch_results_sort_func(int sort_order, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     if (!win->result) {
         return;
@@ -1421,20 +1421,20 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
     g_debug("[sort] started: %d", sort_order);
     DynamicArrayCompareFunc func = NULL;
     switch (sort_order) {
-    case FSEARCH_LIST_VIEW_COLUMN_NAME:
+    case DATABASE_INDEX_TYPE_NAME:
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_name;
         break;
-    case FSEARCH_LIST_VIEW_COLUMN_PATH:
+    case DATABASE_INDEX_TYPE_PATH:
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_path;
         break;
-    case FSEARCH_LIST_VIEW_COLUMN_SIZE:
+    case DATABASE_INDEX_TYPE_SIZE:
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_size;
         break;
-    case FSEARCH_LIST_VIEW_COLUMN_TYPE:
+    case DATABASE_INDEX_TYPE_FILETYPE:
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_type;
         parallel_sort = false;
         break;
-    case FSEARCH_LIST_VIEW_COLUMN_CHANGED:
+    case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time;
         break;
     default:
@@ -1462,35 +1462,35 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
 static void
 add_columns(FsearchListView *view, FsearchConfig *config) {
     bool restore = config->restore_column_config;
-    FsearchListViewColumn *name_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_NAME,
+    FsearchListViewColumn *name_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_NAME,
                                                                    "Name",
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    TRUE,
                                                                    TRUE,
                                                                    restore ? config->name_column_width : 250);
-    FsearchListViewColumn *path_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_PATH,
+    FsearchListViewColumn *path_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_PATH,
                                                                    "Path",
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    restore ? config->show_path_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->path_column_width : 250);
-    FsearchListViewColumn *size_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_SIZE,
+    FsearchListViewColumn *size_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_SIZE,
                                                                    "Size",
                                                                    PANGO_ALIGN_RIGHT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    restore ? config->show_size_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->size_column_width : 75);
-    FsearchListViewColumn *type_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_TYPE,
+    FsearchListViewColumn *type_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_FILETYPE,
                                                                    "Type",
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    restore ? config->show_type_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->type_column_width : 100);
-    FsearchListViewColumn *changed_col = fsearch_list_view_column_new(FSEARCH_LIST_VIEW_COLUMN_CHANGED,
+    FsearchListViewColumn *changed_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_MODIFICATION_TIME,
                                                                       "Date Modified",
                                                                       PANGO_ALIGN_RIGHT,
                                                                       PANGO_ELLIPSIZE_END,

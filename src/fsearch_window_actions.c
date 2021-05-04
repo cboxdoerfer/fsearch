@@ -25,7 +25,7 @@
 
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
-#include "fsearch_database_search.h"
+#include "fsearch_database.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
@@ -526,7 +526,7 @@ fsearch_window_action_show_path_column(GSimpleAction *action, GVariant *variant,
     FsearchApplicationWindow *self = user_data;
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_PATH);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_PATH);
     if (!col) {
         return;
     }
@@ -542,7 +542,7 @@ fsearch_window_action_show_type_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_TYPE);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_FILETYPE);
     if (!col) {
         return;
     }
@@ -558,7 +558,7 @@ fsearch_window_action_show_size_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_SIZE);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_SIZE);
     if (!col) {
         return;
     }
@@ -574,7 +574,8 @@ fsearch_window_action_show_modified_column(GSimpleAction *action, GVariant *vari
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, FSEARCH_LIST_VIEW_COLUMN_CHANGED);
+    FsearchListViewColumn *col =
+        fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_MODIFICATION_TIME);
     if (!col) {
         return;
     }

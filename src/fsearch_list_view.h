@@ -6,15 +6,6 @@
 #define ROW_PADDING_Y 4
 #define ROW_PADDING_X 3
 
-typedef enum {
-    FSEARCH_LIST_VIEW_COLUMN_NAME,
-    FSEARCH_LIST_VIEW_COLUMN_PATH,
-    FSEARCH_LIST_VIEW_COLUMN_SIZE,
-    FSEARCH_LIST_VIEW_COLUMN_CHANGED,
-    FSEARCH_LIST_VIEW_COLUMN_TYPE,
-    NUM_FSEARCH_LIST_VIEW_COLUMNS,
-} FsearchListViewColumnType;
-
 G_BEGIN_DECLS
 
 #define FSEARCH_TYPE_LIST_VIEW (fsearch_list_view_get_type())
@@ -27,7 +18,7 @@ typedef struct {
     GtkWidget *button;
     GtkWidget *arrow;
     FsearchListView *view;
-    FsearchListViewColumnType type;
+    int type;
     char *name;
     gint width;
     gint effective_width;
@@ -61,10 +52,10 @@ typedef void (*FsearchListViewDrawRowFunc)(cairo_t *cr,
 
 typedef void *(*FsearchListViewRowDataFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
 
-typedef void (*FsearchListViewSortFunc)(FsearchListViewColumnType type, gpointer user_data);
+typedef void (*FsearchListViewSortFunc)(int type, gpointer user_data);
 
 FsearchListViewColumn *
-fsearch_list_view_column_new(FsearchListViewColumnType type,
+fsearch_list_view_column_new(int type,
                              char *name,
                              PangoAlignment alignment,
                              PangoEllipsizeMode ellipsize_mode,
@@ -85,13 +76,10 @@ void
 fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *col);
 
 FsearchListViewColumn *
-fsearch_list_view_get_first_column_for_type(FsearchListView *view, FsearchListViewColumnType type);
+fsearch_list_view_get_first_column_for_type(FsearchListView *view, int type);
 
 void
-fsearch_list_view_set_num_rows(FsearchListView *view,
-                               uint32_t num_rows,
-                               FsearchListViewColumnType sort_order,
-                               GtkSortType sort_type);
+fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
 
 void
 fsearch_list_view_selection_clear(FsearchListView *view);
@@ -124,9 +112,9 @@ void
 fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean value);
 
 void
-fsearch_list_view_set_sort_order(FsearchListView *view, FsearchListViewColumnType sort_order);
+fsearch_list_view_set_sort_order(FsearchListView *view, int sort_order);
 
-FsearchListViewColumnType
+int
 fsearch_list_view_get_sort_order(FsearchListView *view);
 
 void
