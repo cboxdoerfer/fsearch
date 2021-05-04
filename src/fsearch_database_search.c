@@ -143,13 +143,11 @@ static gpointer
 db_search_task(gpointer data, GCancellable *cancellable) {
     FsearchQuery *query = data;
 
-    const bool empty_query = fs_str_is_empty(query->text);
-
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
 
     DatabaseSearchResult *result = NULL;
-    if (empty_query && !query->pass_on_empty_query) {
+    if (fs_str_is_empty(query->text) && !query->pass_on_empty_query) {
         result = db_search_result_new(query);
     }
     else if (fsearch_query_matches_everything(query)) {
