@@ -43,7 +43,7 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define DATABASE_MAJOR_VERSION 0
-#define DATABASE_MINOR_VERSION 2
+#define DATABASE_MINOR_VERSION 3
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 struct FsearchDatabaseEntryCommon {
@@ -514,6 +514,76 @@ db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicA
     return result;
 }
 
+static bool
+db_load_sorted_entries(FILE *fp, DynamicArray *src, uint32_t num_src_entries, DynamicArray *dest) {
+
+    uint32_t *indexes = calloc(num_src_entries + 1, sizeof(uint32_t));
+    assert(indexes != NULL);
+
+    bool res = true;
+
+    if (fread(indexes, 4, num_src_entries, fp) != num_src_entries) {
+        res = false;
+    }
+    else {
+        for (uint32_t i = 0; i < num_src_entries; i++) {
+            uint32_t idx = indexes[i];
+            void *entry = darray_get_item(src, idx);
+            if (!entry) {
+                return false;
+            }
+            darray_add_item(dest, entry);
+        }
+    }
+
+    free(indexes);
+    indexes = NULL;
+
+    return res;
+}
+
+static bool
+db_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, DynamicArray **sorted_files) {
+    uint32_t num_sorted_arrays = 0;
+
+    DynamicArray *files = sorted_files[0];
+    DynamicArray *folders = sorted_folders[0];
+
+    if (fread(&num_sorted_arrays, 4, 1, fp) != 1) {
+        return false;
+    }
+    printf("num_sorted_arrays: %d\n", num_sorted_arrays);
+
+    for (uint32_t i = 0; i < num_sorted_arrays; i++) {
+        printf("%d: load sorted array\n", i);
+        uint32_t sorted_array_id = 0;
+        if (fread(&sorted_array_id, 4, 1, fp) != 1) {
+            return false;
+        }
+        printf("sorted_array_id: %d\n", sorted_array_id);
+
+        if (sorted_array_id < 1 || sorted_array_id >= NUM_DATABASE_INDEX_TYPES) {
+            return false;
+        }
+
+        uint32_t num_folders = darray_get_num_items(folders);
+        sorted_folders[sorted_array_id] = darray_new(num_folders);
+        if (!db_load_sorted_entries(fp, folders, num_folders, sorted_folders[sorted_array_id])) {
+            printf("failed to load sorted folders\n");
+            return false;
+        }
+
+        uint32_t num_files = darray_get_num_items(files);
+        sorted_files[sorted_array_id] = darray_new(num_files);
+        if (!db_load_sorted_entries(fp, files, num_files, sorted_files[sorted_array_id])) {
+            printf("failed to load sorted files\n");
+            return false;
+        }
+    }
+
+    return true;
+}
+
 bool
 db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char *)) {
     assert(file_path != NULL);
@@ -526,6 +596,8 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
 
     DynamicArray *folders = NULL;
     DynamicArray *files = NULL;
+    DynamicArray *sorted_folders[NUM_DATABASE_INDEX_TYPES] = {NULL};
+    DynamicArray *sorted_files[NUM_DATABASE_INDEX_TYPES] = {NULL};
 
     if (!db_load_header(fp)) {
         goto load_fail;
@@ -543,7 +615,8 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     g_debug("[db_load] load %d folders, %d files", num_folders, num_files);
 
     // pre-allocate the folders array so we can later map parent indices to the corresponding pointers
-    folders = darray_new(num_folders);
+    sorted_folders[DATABASE_INDEX_TYPE_NAME] = darray_new(num_folders);
+    folders = sorted_folders[DATABASE_INDEX_TYPE_NAME];
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = fsearch_memory_pool_malloc(db->folder_pool);
@@ -565,14 +638,23 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
         status_cb(_("Loading files…"));
     }
     // load files
-    files = darray_new(num_files);
+    sorted_files[DATABASE_INDEX_TYPE_NAME] = darray_new(num_files);
+    files = sorted_files[DATABASE_INDEX_TYPE_NAME];
     if (!db_load_files(fp, db->file_pool, folders, files, num_files)) {
         goto load_fail;
     }
 
+    if (!db_load_sorted_arrays(fp, sorted_folders, sorted_files)) {
+        printf("load sorted arrays failed\n");
+        goto load_fail;
+    }
+
     db_sorted_entries_free(db);
-    db->sorted_files[DATABASE_INDEX_TYPE_NAME] = files;
-    db->sorted_folders[DATABASE_INDEX_TYPE_NAME] = folders;
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        db->sorted_files[i] = sorted_files[i];
+        db->sorted_folders[i] = sorted_folders[i];
+    }
 
     db->num_entries = num_files + num_folders;
     db->num_files = num_files;
@@ -591,14 +673,16 @@ load_fail:
         fp = NULL;
     }
 
-    if (folders) {
-        darray_free(folders);
-        folders = NULL;
-    }
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        if (sorted_folders[i]) {
+            darray_free(sorted_folders[i]);
+        }
+        sorted_folders[i] = NULL;
 
-    if (files) {
-        darray_free(files);
-        files = NULL;
+        if (sorted_files[i]) {
+            darray_free(sorted_files[i]);
+        }
+        sorted_files[i] = NULL;
     }
 
     return false;
@@ -686,6 +770,10 @@ db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntryFile *file = darray_get_item(files, i);
 
+        // let's also update the idx of the file here while we're at it to make sure we have the correct
+        // idx set when we store the fast sort indexes
+        file->shared.idx = i;
+
         uint32_t parent_idx = file->shared.parent->shared.idx;
         if (!db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new)) {
             result = false;
@@ -700,6 +788,67 @@ db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
     name_new = NULL;
 
     return result;
+}
+
+static bool
+db_save_sorted_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
+    for (uint32_t i = 0; i < num_files; i++) {
+        FsearchDatabaseEntryFile *file = darray_get_item(files, i);
+        if (fwrite(&(file->shared.idx), 4, 1, fp) != 1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+static bool
+db_save_sorted_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
+        if (fwrite(&(folder->shared.idx), 4, 1, fp) != 1) {
+            return false;
+        }
+    }
+    return true;
+}
+
+static bool
+db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_t num_folders) {
+    uint32_t num_sorted_arrays = 0;
+    for (uint32_t i = 1; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        if (db->sorted_folders[i] && db->sorted_files[i]) {
+            num_sorted_arrays++;
+        }
+    }
+
+    if (fwrite(&num_sorted_arrays, 4, 1, fp) != 1) {
+        return false;
+    }
+
+    if (num_sorted_arrays < 1) {
+        return true;
+    }
+
+    for (uint32_t i = 1; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        DynamicArray *folders = db->sorted_folders[i];
+        DynamicArray *files = db->sorted_files[i];
+        if (!files || !folders) {
+            continue;
+        }
+
+        // i: this is the id of the sorted files
+        if (fwrite(&i, 4, 1, fp) != 1) {
+            return false;
+        }
+
+        if (!db_save_sorted_folders(fp, folders, num_folders)) {
+            return false;
+        }
+        if (!db_save_sorted_files(fp, files, num_files)) {
+            return false;
+        }
+    }
+    return true;
 }
 
 static bool
@@ -806,6 +955,9 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
     if (!db_save_files(fp, files, num_files)) {
+        goto save_fail;
+    }
+    if (!db_save_sorted_arrays(fp, db, num_files, num_folders)) {
         goto save_fail;
     }
 
