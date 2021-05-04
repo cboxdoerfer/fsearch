@@ -1393,6 +1393,29 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
         return;
     }
 
+    FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
+    if (!db) {
+        return;
+    }
+
+    if (fsearch_query_matches_everything(win->result->query)) {
+        // we're matching everything, so if the database has the entries already sorted we don't need
+        // to sort again
+        DynamicArray *files = db_get_files_sorted(db, sort_order);
+        DynamicArray *folders = db_get_folders_sorted(db, sort_order);
+        if (files && folders) {
+            darray_free(win->result->files);
+            darray_free(win->result->folders);
+            win->result->files = darray_copy(files);
+            win->result->folders = darray_copy(folders);
+            win->result->num_files = darray_get_num_items(files);
+            win->result->num_folders = darray_get_num_items(folders);
+            win->sort_order = sort_order;
+            db_unref(db);
+            return;
+        }
+    }
+
     bool parallel_sort = true;
 
     g_debug("[sort] started: %d", sort_order);
@@ -1422,7 +1445,7 @@ fsearch_results_sort_func(FsearchListViewColumnType sort_order, gpointer user_da
     g_assert(ctx != NULL);
 
     ctx->win = win;
-    ctx->db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
+    ctx->db = db;
     ctx->compare_func = (DynamicArrayCompareDataFunc)func;
     ctx->parallel_sort = parallel_sort;
 
