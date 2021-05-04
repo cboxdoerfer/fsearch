@@ -63,9 +63,6 @@ struct _FsearchDatabaseEntryFile {
 struct _FsearchDatabaseEntryFolder {
     struct FsearchDatabaseEntryCommon shared;
 
-    GSList *folder_children;
-    GSList *file_children;
-
     // db_idx: the database index this folder belongs to
     uint32_t db_idx;
 };
@@ -141,14 +138,6 @@ db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry) {
     if (entry->shared.name) {
         free(entry->shared.name);
         entry->shared.name = NULL;
-    }
-    if (entry->file_children) {
-        g_slist_free(entry->file_children);
-        entry->file_children = NULL;
-    }
-    if (entry->folder_children) {
-        g_slist_free(entry->folder_children);
-        entry->folder_children = NULL;
     }
 }
 
@@ -1125,7 +1114,6 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             folder_entry->shared.parent = parent;
             folder_entry->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
 
-            parent->folder_children = g_slist_prepend(parent->folder_children, folder_entry);
             darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], folder_entry);
 
             db->num_folders++;
@@ -1142,7 +1130,6 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             // update parent size
             db_entry_update_folder_size(parent, file_entry->shared.size);
 
-            parent->file_children = g_slist_prepend(parent->file_children, file_entry);
             darray_add_item(db->sorted_files[DATABASE_INDEX_TYPE_NAME], file_entry);
 
             db->num_files++;
