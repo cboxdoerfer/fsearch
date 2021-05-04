@@ -749,15 +749,8 @@ perform_search(FsearchApplicationWindow *win) {
 
     fsearch_application_state_lock(app);
     FsearchDatabase *db = fsearch_application_get_db(app);
-    if (!db || (!db_get_files(db) && !db_get_folders(db))) {
-        fsearch_application_state_unlock(app);
-        return;
-    }
-    if (!db_try_lock(db)) {
-        g_debug("[win] search failed, database is locked");
-        db_unref(db);
-        fsearch_application_state_unlock(app);
-        return;
+    if (!db || db_get_num_entries(db) < 1 || !db_try_lock(db)) {
+        goto search_failed;
     }
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
@@ -777,7 +770,7 @@ perform_search(FsearchApplicationWindow *win) {
     DynamicArray *folders = db_get_folders_sorted(db, win->sort_order);
     FsearchDatabaseIndexType sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(win->listview));
     if (!files || !folders) {
-        printf("no fast sort for type: %d\n", sort_order);
+        g_debug("no fast sort for type: %d\n", sort_order);
         files = db_get_files(db);
         folders = db_get_folders(db);
         sort_order = DATABASE_INDEX_TYPE_NAME;
@@ -814,6 +807,14 @@ perform_search(FsearchApplicationWindow *win) {
     gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_path_revealer), reveal_smart_path);
 
     fsearch_application_state_unlock(app);
+    return;
+
+search_failed:
+    if (db) {
+        db_unref(db);
+    }
+    fsearch_application_state_unlock(app);
+    return;
 }
 
 typedef struct {
