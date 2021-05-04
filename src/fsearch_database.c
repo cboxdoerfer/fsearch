@@ -484,6 +484,7 @@ db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicA
     for (idx = 0; idx < num_files; idx++) {
         FsearchDatabaseEntryFile *file = fsearch_memory_pool_malloc(pool);
         file->shared.type = DATABASE_ENTRY_TYPE_FILE;
+        file->shared.idx = idx;
 
         if (!db_load_entry_shared(fp, &file->shared, previous_entry_name)) {
             result = false;
