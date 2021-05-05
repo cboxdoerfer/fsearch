@@ -540,33 +540,33 @@ db_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, DynamicArray **so
     DynamicArray *folders = sorted_folders[0];
 
     if (fread(&num_sorted_arrays, 4, 1, fp) != 1) {
-        g_debug("failed to load number of sorted arrays");
+        g_debug("[db_load] failed to load number of sorted arrays");
         return false;
     }
 
     for (uint32_t i = 0; i < num_sorted_arrays; i++) {
         uint32_t sorted_array_id = 0;
         if (fread(&sorted_array_id, 4, 1, fp) != 1) {
-            g_debug("failed to load sorted array id");
+            g_debug("[db_load] failed to load sorted array id");
             return false;
         }
 
         if (sorted_array_id < 1 || sorted_array_id >= NUM_DATABASE_INDEX_TYPES) {
-            g_debug("sorted array id is not supported: %d", sorted_array_id);
+            g_debug("[db_load] sorted array id is not supported: %d", sorted_array_id);
             return false;
         }
 
         uint32_t num_folders = darray_get_num_items(folders);
         sorted_folders[sorted_array_id] = darray_new(num_folders);
         if (!db_load_sorted_entries(fp, folders, num_folders, sorted_folders[sorted_array_id])) {
-            g_debug("failed to load sorted folder indexes: %d", sorted_array_id);
+            g_debug("[db_load] failed to load sorted folder indexes: %d", sorted_array_id);
             return false;
         }
 
         uint32_t num_files = darray_get_num_items(files);
         sorted_files[sorted_array_id] = darray_new(num_files);
         if (!db_load_sorted_entries(fp, files, num_files, sorted_files[sorted_array_id])) {
-            g_debug("failed to load sorted file indexes: %d", sorted_array_id);
+            g_debug("[db_load] failed to load sorted file indexes: %d", sorted_array_id);
             return false;
         }
     }
@@ -827,7 +827,7 @@ db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_
     }
 
     if (fwrite(&num_sorted_arrays, 4, 1, fp) != 1) {
-        g_debug("failed to save number of sorted arrays: %d", num_sorted_arrays);
+        g_debug("[db_save] failed to save number of sorted arrays: %d", num_sorted_arrays);
         return false;
     }
 
@@ -844,16 +844,16 @@ db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_
 
         // id: this is the id of the sorted files
         if (fwrite(&id, 4, 1, fp) != 1) {
-            g_debug("failed to save sorted arrays id: %d", id);
+            g_debug("[db_save] failed to save sorted arrays id: %d", id);
             return false;
         }
 
         if (!db_save_sorted_entries(fp, folders, num_folders)) {
-            g_debug("failed to save sorted folders");
+            g_debug("[db_save] failed to save sorted folders");
             return false;
         }
         if (!db_save_sorted_entries(fp, files, num_files)) {
-            g_debug("failed to save sorted files");
+            g_debug("[db_save] failed to save sorted files");
             return false;
         }
     }
