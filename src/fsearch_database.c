@@ -677,28 +677,44 @@ load_fail:
     return false;
 }
 
-static bool
+size_t
+write_data_to_file(FILE *fp, const void *data, size_t data_size, size_t num_elements, bool *write_failed) {
+    if (data_size == 0 || num_elements == 0) {
+        return 0;
+    }
+    if (fwrite(data, data_size, num_elements, fp) != num_elements) {
+        *write_failed = true;
+        return 0;
+    }
+    return data_size * num_elements;
+}
+
+static size_t
 db_save_entry_shared(FILE *fp,
                      struct FsearchDatabaseEntryCommon *shared,
                      uint32_t parent_idx,
                      GString *previous_entry_name,
-                     GString *new_entry_name) {
+                     GString *new_entry_name,
+                     bool *write_failed) {
     // init new_entry_name with the name of the current entry
     g_string_erase(new_entry_name, 0, -1);
     g_string_append(new_entry_name, shared->name);
 
+    size_t bytes_written = 0;
     // name_offset: character position after which previous_entry_name and new_entry_name differ
     uint8_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
-    if (fwrite(&name_offset, 1, 1, fp) != 1) {
+    bytes_written += write_data_to_file(fp, &name_offset, 1, 1, write_failed);
+    if (*write_failed == true) {
         g_debug("[db_save] failed to save name offset");
-        return false;
+        goto out;
     }
 
     // name_len: length of the new name characters
     uint8_t name_len = new_entry_name->len - name_offset;
-    if (fwrite(&name_len, 1, 1, fp) != 1) {
+    bytes_written += write_data_to_file(fp, &name_len, 1, 1, write_failed);
+    if (*write_failed == true) {
         g_debug("[db_save] failed to save name length");
-        return false;
+        goto out;
     }
 
     // append new unique characters to previous_entry_name starting at name_offset
@@ -708,50 +724,64 @@ db_save_entry_shared(FILE *fp,
     if (name_len > 0) {
         // name: new characters to be written to file
         const char *name = previous_entry_name->str + name_offset;
-        if (fwrite(name, name_len, 1, fp) != 1) {
+        bytes_written += write_data_to_file(fp, name, name_len, 1, write_failed);
+        if (*write_failed == true) {
             g_debug("[db_save] failed to save name");
-            return false;
+            goto out;
         }
     }
 
     // size: file or folder size (folder size: sum of all children sizes)
     uint64_t size = shared->size;
-    if (fwrite(&size, 8, 1, fp) != 1) {
+    bytes_written += write_data_to_file(fp, &size, 8, 1, write_failed);
+    if (*write_failed == true) {
         g_debug("[db_save] failed to save size");
-        return false;
+        goto out;
     }
 
     // parent_idx: index of parent folder
-    if (fwrite(&parent_idx, 4, 1, fp) != 1) {
+    bytes_written += write_data_to_file(fp, &parent_idx, 4, 1, write_failed);
+    if (*write_failed == true) {
         g_debug("[db_save] failed to save parent_idx");
-        return false;
+        goto out;
     }
 
-    return true;
+out:
+    return bytes_written;
 }
 
-static bool
-db_save_header(FILE *fp) {
+static size_t
+db_save_header(FILE *fp, bool *write_failed) {
+    size_t bytes_written = 0;
+
     const char magic[] = DATABASE_MAGIC_NUMBER;
-    if (fwrite(magic, strlen(magic), 1, fp) != 1) {
-        return false;
+    bytes_written += write_data_to_file(fp, magic, strlen(magic), 1, write_failed);
+    if (*write_failed == true) {
+        g_debug("[db_save] failed to save magic number");
+        goto out;
     }
 
     const uint8_t majorver = DATABASE_MAJOR_VERSION;
-    if (fwrite(&majorver, 1, 1, fp) != 1) {
-        return false;
+    bytes_written += write_data_to_file(fp, &majorver, 1, 1, write_failed);
+    if (*write_failed == true) {
+        g_debug("[db_save] failed to save major version number");
+        goto out;
     }
 
     const uint8_t minorver = DATABASE_MINOR_VERSION;
-    if (fwrite(&minorver, 1, 1, fp) != 1) {
-        return false;
+    bytes_written += write_data_to_file(fp, &minorver, 1, 1, write_failed);
+    if (*write_failed == true) {
+        g_debug("[db_save] failed to save minor version number");
+        goto out;
     }
 
-    return true;
+out:
+    return bytes_written;
 }
-static bool
-db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
-    bool result = true;
+
+static size_t
+db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files, bool *write_failed) {
+    size_t bytes_written = 0;
 
     GString *name_prev = g_string_sized_new(256);
     GString *name_new = g_string_sized_new(256);
@@ -764,19 +794,19 @@ db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
         file->shared.idx = i;
 
         uint32_t parent_idx = file->shared.parent->shared.idx;
-        if (!db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new)) {
-            result = false;
-            break;
-        }
+        bytes_written += db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new, write_failed);
+        if (*write_failed == true)
+            goto out;
     }
 
+out:
     g_string_free(name_prev, TRUE);
     name_prev = NULL;
 
     g_string_free(name_new, TRUE);
     name_new = NULL;
 
-    return result;
+    return bytes_written;
 }
 
 static uint32_t *
@@ -794,31 +824,39 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
     return indexes;
 }
 
-static bool
-db_save_sorted_entries(FILE *fp, DynamicArray *entries, uint32_t num_entries) {
+static size_t
+db_save_sorted_entries(FILE *fp, DynamicArray *entries, uint32_t num_entries, bool *write_failed) {
+    size_t bytes_written = 0;
+    uint32_t *sorted_entry_index_list = NULL;
     if (num_entries < 1) {
         // nothing to write, we're done here
-        return true;
+        goto out;
     }
 
-    uint32_t *sorted_entry_index_list = build_sorted_entry_index_list(entries, num_entries);
+    sorted_entry_index_list = build_sorted_entry_index_list(entries, num_entries);
     if (!sorted_entry_index_list) {
+        *write_failed = true;
         g_debug("[db_save] failed to create sorted index list");
-        return false;
+        goto out;
     }
 
-    bool res = true;
-    if (fwrite(sorted_entry_index_list, 4, num_entries, fp) != num_entries) {
-        res = false;
+    bytes_written += write_data_to_file(fp, sorted_entry_index_list, 4, num_entries, write_failed);
+    if (*write_failed == true) {
+        g_debug("[db_save] failed to save sorted index list");
+        goto out;
     }
-    free(sorted_entry_index_list);
-    sorted_entry_index_list = NULL;
 
-    return res;
+out:
+    if (sorted_entry_index_list) {
+        free(sorted_entry_index_list);
+        sorted_entry_index_list = NULL;
+    }
+    return bytes_written;
 }
 
-static bool
-db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_t num_folders) {
+static size_t
+db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_t num_folders, bool *write_failed) {
+    size_t bytes_written = 0;
     uint32_t num_sorted_arrays = 0;
     for (uint32_t i = 1; i < NUM_DATABASE_INDEX_TYPES; i++) {
         if (db->sorted_folders[i] && db->sorted_files[i]) {
@@ -826,13 +864,14 @@ db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_
         }
     }
 
-    if (fwrite(&num_sorted_arrays, 4, 1, fp) != 1) {
+    bytes_written += write_data_to_file(fp, &num_sorted_arrays, 4, 1, write_failed);
+    if (*write_failed == true) {
         g_debug("[db_save] failed to save number of sorted arrays: %d", num_sorted_arrays);
-        return false;
+        goto out;
     }
 
     if (num_sorted_arrays < 1) {
-        return true;
+        goto out;
     }
 
     for (uint32_t id = 1; id < NUM_DATABASE_INDEX_TYPES; id++) {
@@ -843,26 +882,31 @@ db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_
         }
 
         // id: this is the id of the sorted files
-        if (fwrite(&id, 4, 1, fp) != 1) {
+        bytes_written += write_data_to_file(fp, &id, 4, 1, write_failed);
+        if (*write_failed == true) {
             g_debug("[db_save] failed to save sorted arrays id: %d", id);
-            return false;
+            goto out;
         }
 
-        if (!db_save_sorted_entries(fp, folders, num_folders)) {
+        bytes_written += db_save_sorted_entries(fp, folders, num_folders, write_failed);
+        if (*write_failed == true) {
             g_debug("[db_save] failed to save sorted folders");
-            return false;
+            goto out;
         }
-        if (!db_save_sorted_entries(fp, files, num_files)) {
+        bytes_written += db_save_sorted_entries(fp, files, num_files, write_failed);
+        if (*write_failed == true) {
             g_debug("[db_save] failed to save sorted files");
-            return false;
+            goto out;
         }
     }
-    return true;
+
+out:
+    return bytes_written;
 }
 
-static bool
-db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
-    bool result = true;
+static size_t
+db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders, bool *write_failed) {
+    size_t bytes_written = 0;
 
     GString *name_prev = g_string_sized_new(256);
     GString *name_new = g_string_sized_new(256);
@@ -871,35 +915,36 @@ db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
 
         uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->shared.idx : folder->shared.idx;
-        if (!db_save_entry_shared(fp, &folder->shared, parent_idx, name_prev, name_new)) {
-            result = false;
-            break;
+        bytes_written += db_save_entry_shared(fp, &folder->shared, parent_idx, name_prev, name_new, write_failed);
+        if (*write_failed == true) {
+            goto out;
         }
     }
 
+out:
     g_string_free(name_prev, TRUE);
     name_prev = NULL;
 
     g_string_free(name_new, TRUE);
     name_new = NULL;
 
-    return result;
+    return bytes_written;
 }
 
-bool
-db_save_indexes(FILE *fp, FsearchDatabase *db) {
+static size_t
+db_save_indexes(FILE *fp, FsearchDatabase *db, bool *write_failed) {
     // TODO
     return true;
 }
 
-bool
-db_save_excludes(FILE *fp, FsearchDatabase *db) {
+static size_t
+db_save_excludes(FILE *fp, FsearchDatabase *db, bool *write_failed) {
     // TODO
     return true;
 }
 
-bool
-db_save_exclude_pattern(FILE *fp, FsearchDatabase *db) {
+static size_t
+db_save_exclude_pattern(FILE *fp, FsearchDatabase *db, bool *write_failed) {
     // TODO
     return true;
 }
@@ -931,7 +976,12 @@ db_save(FsearchDatabase *db, const char *path) {
 
     db_entry_update_folder_indices(db);
 
-    if (!db_save_header(fp)) {
+    bool write_failed = false;
+
+    size_t bytes_written = 0;
+
+    bytes_written += db_save_header(fp, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
 
@@ -939,34 +989,38 @@ db_save(FsearchDatabase *db, const char *path) {
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
 
     uint32_t num_folders = darray_get_num_items(folders);
-    if (fwrite(&num_folders, 4, 1, fp) != 1) {
+    bytes_written += write_data_to_file(fp, &num_folders, 4, 1, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
 
     uint32_t num_files = darray_get_num_items(files);
-    if (fwrite(&num_files, 4, 1, fp) != 1) {
+    bytes_written += write_data_to_file(fp, &num_files, 4, 1, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
-
-    if (!db_save_indexes(fp, db)) {
+    bytes_written += db_save_indexes(fp, db, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
-
-    if (!db_save_excludes(fp, db)) {
+    bytes_written += db_save_excludes(fp, db, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
-
-    if (!db_save_exclude_pattern(fp, db)) {
+    bytes_written += db_save_exclude_pattern(fp, db, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
-
-    if (!db_save_folders(fp, folders, num_folders)) {
+    bytes_written += db_save_folders(fp, folders, num_folders, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
-    if (!db_save_files(fp, files, num_files)) {
+    bytes_written += db_save_files(fp, files, num_files, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
-    if (!db_save_sorted_arrays(fp, db, num_files, num_folders)) {
+    bytes_written += db_save_sorted_arrays(fp, db, num_files, num_folders, &write_failed);
+    if (write_failed == true) {
         goto save_fail;
     }
 
