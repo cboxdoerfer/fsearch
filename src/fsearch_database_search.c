@@ -289,6 +289,8 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
         if (search_in_path || query->filter->search_in_path) {
             g_string_truncate(path_string, 0);
             db_entry_append_path(entry, path_string);
+            g_string_append_c(path_string, G_DIR_SEPARATOR);
+            g_string_append(path_string, haystack_name);
             path_set = true;
         }
 
@@ -314,6 +316,8 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
                 if (!path_set) {
                     g_string_truncate(path_string, 0);
                     db_entry_append_path(entry, path_string);
+                    g_string_append_c(path_string, G_DIR_SEPARATOR);
+                    g_string_append(path_string, haystack_name);
                     path_set = true;
                 }
                 haystack = path_string->str;
