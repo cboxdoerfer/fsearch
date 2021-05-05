@@ -333,6 +333,38 @@ db_file_open_locked(const char *file_path, const char *mode) {
     return file_pointer;
 }
 
+static const uint8_t *
+db_load_entry_shared_from_memory(const uint8_t *data_block,
+                                 struct FsearchDatabaseEntryCommon *shared,
+                                 GString *previous_entry_name) {
+    // name_offset: character position after which previous_entry_name and entry_name differ
+    uint8_t name_offset = *data_block++;
+
+    // name_len: length of the new name characters
+    uint8_t name_len = *data_block++;
+
+    // erase previous name starting at name_offset
+    g_string_erase(previous_entry_name, name_offset, -1);
+
+    char name[256] = "";
+    // name: new characters to be appended to previous_entry_name
+    if (name_len > 0) {
+        memcpy(name, data_block, name_len);
+        name[name_len] = '\0';
+    }
+    data_block += name_len;
+
+    // now we can build the new full file name
+    g_string_append(previous_entry_name, name);
+    shared->name = g_strdup(previous_entry_name->str);
+
+    // size: size of file/folder
+    memcpy(&(shared->size), data_block, 8);
+    data_block += 8;
+
+    return data_block;
+}
+
 static bool
 db_load_entry_shared(FILE *fp, struct FsearchDatabaseEntryCommon *shared, GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
@@ -420,26 +452,31 @@ db_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
 }
 
 static bool
-db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
-    bool result = true;
+db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders, uint64_t folder_block_size) {
+    bool res = true;
+
     GString *previous_entry_name = g_string_sized_new(256);
 
+    uint8_t *folder_block = calloc(folder_block_size + 1, sizeof(uint8_t));
+    assert(folder_block != NULL);
+
+    if (fread(folder_block, sizeof(uint8_t), folder_block_size, fp) != folder_block_size) {
+        g_debug("[db_load] failed to read file block");
+        goto out;
+    }
+
+    const uint8_t *fb = folder_block;
     // load folders
     uint32_t idx = 0;
     for (idx = 0; idx < num_folders; idx++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, idx);
 
-        if (!db_load_entry_shared(fp, &folder->shared, previous_entry_name)) {
-            result = false;
-            break;
-        }
+        fb = db_load_entry_shared_from_memory(fb, &folder->shared, previous_entry_name);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        if (!db_load_parent_idx(fp, &parent_idx)) {
-            result = false;
-            break;
-        }
+        memcpy(&parent_idx, fb, 4);
+        fb += 4;
 
         if (parent_idx != folder->shared.idx) {
             FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
@@ -451,23 +488,48 @@ db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
         }
     }
 
-    // fail if we didn't read the correct number of folders
-    if (result && idx != num_folders) {
-        g_debug("[db_load] failed to read folders (read %d of %d)", idx, num_folders);
-        result = false;
+    // fail if we didn't read the correct number of bytes
+    if (fb - folder_block != folder_block_size) {
+        g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - folder_block, folder_block_size);
+        res = false;
+        goto out;
     }
+
+    // fail if we didn't read the correct number of folders
+    if (idx != num_folders) {
+        g_debug("[db_load] failed to read folders (read %d of %d)", idx, num_folders);
+        res = false;
+    }
+
+out:
+    free(folder_block);
+    folder_block = NULL;
 
     g_string_free(previous_entry_name, TRUE);
     previous_entry_name = NULL;
 
-    return result;
+    return res;
 }
 
 static bool
-db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicArray *files, uint32_t num_files) {
+db_load_files(FILE *fp,
+              FsearchMemoryPool *pool,
+              DynamicArray *folders,
+              DynamicArray *files,
+              uint32_t num_files,
+              uint64_t file_block_size) {
     bool result = true;
     GString *previous_entry_name = g_string_sized_new(256);
 
+    uint8_t *file_block = calloc(file_block_size + 1, sizeof(uint8_t));
+    assert(file_block != NULL);
+
+    if (fread(file_block, sizeof(uint8_t), file_block_size, fp) != file_block_size) {
+        g_debug("[db_load] failed to read file block");
+        goto out;
+    }
+
+    const uint8_t *fb = file_block;
     // load folders
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
@@ -475,21 +537,21 @@ db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicA
         file->shared.type = DATABASE_ENTRY_TYPE_FILE;
         file->shared.idx = idx;
 
-        if (!db_load_entry_shared(fp, &file->shared, previous_entry_name)) {
-            result = false;
-            break;
-        }
+        fb = db_load_entry_shared_from_memory(fb, &file->shared, previous_entry_name);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        if (!db_load_parent_idx(fp, &parent_idx)) {
-            result = false;
-            break;
-        }
+        memcpy(&parent_idx, fb, 4);
+        fb += 4;
+
         FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
         file->shared.parent = parent;
 
         darray_add_item(files, file);
+    }
+    if (fb - file_block != file_block_size) {
+        g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - file_block, file_block_size);
+        goto out;
     }
 
     // fail if we didn't read the correct number of files
@@ -497,6 +559,10 @@ db_load_files(FILE *fp, FsearchMemoryPool *pool, DynamicArray *folders, DynamicA
         g_debug("[db_load] failed to read files (read %d of %d)", idx, num_files);
         result = false;
     }
+
+out:
+    free(file_block);
+    file_block = NULL;
 
     g_string_free(previous_entry_name, TRUE);
     previous_entry_name = NULL;
@@ -631,7 +697,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
         status_cb(_("Loading folders…"));
     }
     // load folders
-    if (!db_load_folders(fp, folders, num_folders)) {
+    if (!db_load_folders(fp, folders, num_folders, folder_block_size)) {
         goto load_fail;
     }
 
@@ -641,7 +707,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     // load files
     sorted_files[DATABASE_INDEX_TYPE_NAME] = darray_new(num_files);
     files = sorted_files[DATABASE_INDEX_TYPE_NAME];
-    if (!db_load_files(fp, db->file_pool, folders, files, num_files)) {
+    if (!db_load_files(fp, db->file_pool, folders, files, num_files, file_block_size)) {
         goto load_fail;
     }
 
