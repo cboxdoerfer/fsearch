@@ -43,7 +43,7 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define DATABASE_MAJOR_VERSION 0
-#define DATABASE_MINOR_VERSION 3
+#define DATABASE_MINOR_VERSION 4
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 struct FsearchDatabaseEntryCommon {
@@ -604,6 +604,17 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     }
     g_debug("[db_load] load %d folders, %d files", num_folders, num_files);
 
+    uint64_t folder_block_size = 0;
+    if (fread(&folder_block_size, 8, 1, fp) != 1) {
+        goto load_fail;
+    }
+
+    uint64_t file_block_size = 0;
+    if (fread(&file_block_size, 8, 1, fp) != 1) {
+        goto load_fail;
+    }
+    g_debug("[db_load] folder size: %lu, file size: %lu", folder_block_size, file_block_size);
+
     // pre-allocate the folders array so we can later map parent indices to the corresponding pointers
     sorted_folders[DATABASE_INDEX_TYPE_NAME] = darray_new(num_folders);
     folders = sorted_folders[DATABASE_INDEX_TYPE_NAME];
@@ -999,6 +1010,21 @@ db_save(FsearchDatabase *db, const char *path) {
     if (write_failed == true) {
         goto save_fail;
     }
+
+    uint64_t folder_block_size = 0;
+    uint64_t folder_block_size_offset = bytes_written;
+    bytes_written += write_data_to_file(fp, &folder_block_size, 8, 1, &write_failed);
+    if (write_failed == true) {
+        goto save_fail;
+    }
+
+    uint64_t file_block_size = 0;
+    uint64_t file_block_size_offset = bytes_written;
+    bytes_written += write_data_to_file(fp, &file_block_size, 8, 1, &write_failed);
+    if (write_failed == true) {
+        goto save_fail;
+    }
+
     bytes_written += db_save_indexes(fp, db, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1011,15 +1037,30 @@ db_save(FsearchDatabase *db, const char *path) {
     if (write_failed == true) {
         goto save_fail;
     }
-    bytes_written += db_save_folders(fp, folders, num_folders, &write_failed);
+    folder_block_size = db_save_folders(fp, folders, num_folders, &write_failed);
+    bytes_written += folder_block_size;
     if (write_failed == true) {
         goto save_fail;
     }
-    bytes_written += db_save_files(fp, files, num_files, &write_failed);
+    file_block_size = db_save_files(fp, files, num_files, &write_failed);
+    bytes_written += file_block_size;
     if (write_failed == true) {
         goto save_fail;
     }
     bytes_written += db_save_sorted_arrays(fp, db, num_files, num_folders, &write_failed);
+    if (write_failed == true) {
+        goto save_fail;
+    }
+
+    // now that we know the size of the file/folder block we've written, store it in the file header
+    if (fseek(fp, (long int)folder_block_size_offset, SEEK_SET) != 0) {
+        goto save_fail;
+    }
+    bytes_written += write_data_to_file(fp, &folder_block_size, 8, 1, &write_failed);
+    if (write_failed == true) {
+        goto save_fail;
+    }
+    bytes_written += write_data_to_file(fp, &file_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
