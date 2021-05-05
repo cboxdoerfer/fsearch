@@ -779,26 +779,42 @@ db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
     return result;
 }
 
-static bool
-db_save_sorted_files(FILE *fp, DynamicArray *files, uint32_t num_files) {
-    for (uint32_t i = 0; i < num_files; i++) {
-        FsearchDatabaseEntryFile *file = darray_get_item(files, i);
-        if (fwrite(&(file->shared.idx), 4, 1, fp) != 1) {
-            return false;
-        }
+static uint32_t *
+build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
+    if (num_entries < 1) {
+        return NULL;
     }
-    return true;
+    uint32_t *indexes = calloc(num_entries + 1, sizeof(uint32_t));
+    assert(indexes != NULL);
+
+    for (int i = 0; i < num_entries; i++) {
+        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
+        indexes[i] = entry->shared.idx;
+    }
+    return indexes;
 }
 
 static bool
-db_save_sorted_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders) {
-    for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
-        if (fwrite(&(folder->shared.idx), 4, 1, fp) != 1) {
-            return false;
-        }
+db_save_sorted_entries(FILE *fp, DynamicArray *entries, uint32_t num_entries) {
+    if (num_entries < 1) {
+        // nothing to write, we're done here
+        return true;
     }
-    return true;
+
+    uint32_t *sorted_entry_index_list = build_sorted_entry_index_list(entries, num_entries);
+    if (!sorted_entry_index_list) {
+        g_debug("[db_save] failed to create sorted index list");
+        return false;
+    }
+
+    bool res = true;
+    if (fwrite(sorted_entry_index_list, 4, num_entries, fp) != num_entries) {
+        res = false;
+    }
+    free(sorted_entry_index_list);
+    sorted_entry_index_list = NULL;
+
+    return res;
 }
 
 static bool
@@ -832,11 +848,11 @@ db_save_sorted_arrays(FILE *fp, FsearchDatabase *db, uint32_t num_files, uint32_
             return false;
         }
 
-        if (!db_save_sorted_folders(fp, folders, num_folders)) {
+        if (!db_save_sorted_entries(fp, folders, num_folders)) {
             g_debug("failed to save sorted folders");
             return false;
         }
-        if (!db_save_sorted_files(fp, files, num_files)) {
+        if (!db_save_sorted_entries(fp, files, num_files)) {
             g_debug("failed to save sorted files");
             return false;
         }
