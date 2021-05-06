@@ -282,10 +282,29 @@ fsearch_list_view_get_rubberband_points(FsearchListView *view, double *x1, doubl
     *y2 = view->y_bin_drag_started + view->y_bin_drag_offset - y_drag_start_diff;
 }
 
-static gboolean
-fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
+static void
+fsearch_list_view_draw_column_header(GtkWidget *widget, GtkStyleContext *context, cairo_t *cr) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
-    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+    if (!gtk_cairo_should_draw_window(cr, view->header_window)) {
+        return;
+    }
+
+    gtk_style_context_save(context);
+    gtk_style_context_remove_class(context, GTK_STYLE_CLASS_CELL);
+    GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
+    for (GList *col = columns; col != NULL; col = col->next) {
+        FsearchListViewColumn *column = col->data;
+        if (!column->visible) {
+            continue;
+        }
+        gtk_container_propagate_draw(GTK_CONTAINER(view), column->button, cr);
+    }
+    gtk_style_context_restore(context);
+}
+
+static void
+fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t *cr) {
+    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
     int width = gtk_widget_get_allocated_width(widget);
     int height = gtk_widget_get_allocated_height(widget);
@@ -295,7 +314,7 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
     }
 
     if (!gtk_cairo_should_draw_window(cr, view->bin_window)) {
-        return FALSE;
+        return;
     }
 
     GtkAllocation alloc;
@@ -441,20 +460,26 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
 
     cairo_restore(cr);
 
-    if (gtk_cairo_should_draw_window(cr, view->header_window)) {
-        gtk_style_context_save(context);
-        gtk_style_context_remove_class(context, GTK_STYLE_CLASS_CELL);
-        for (GList *col = columns; col != NULL; col = col->next) {
-            FsearchListViewColumn *column = col->data;
-            if (!column->visible) {
-                continue;
-            }
-            gtk_container_propagate_draw(GTK_CONTAINER(view), column->button, cr);
-        }
-        gtk_style_context_restore(context);
+    g_object_unref(layout);
+}
+
+static gboolean
+fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
+    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
+    GtkStyleContext *context = gtk_widget_get_style_context(widget);
+
+    GdkRectangle clip_rec = {};
+    if (!gdk_cairo_get_clip_rectangle(cr, &clip_rec)) {
+        return FALSE;
     }
 
-    g_object_unref(layout);
+    if (clip_rec.y + clip_rec.height > view->header_height) {
+        fsearch_list_view_draw_list(widget, context, cr);
+    }
+
+    if (clip_rec.y < view->header_height) {
+        fsearch_list_view_draw_column_header(widget, context, cr);
+    }
 
     return FALSE;
 }
