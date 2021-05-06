@@ -306,13 +306,6 @@ static void
 fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t *cr) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
-    int width = gtk_widget_get_allocated_width(widget);
-    int height = gtk_widget_get_allocated_height(widget);
-
-    if (gtk_cairo_should_draw_window(cr, gtk_widget_get_window(widget))) {
-        gtk_render_background(context, cr, 0, 0, width, height);
-    }
-
     if (!gtk_cairo_should_draw_window(cr, view->bin_window)) {
         return;
     }
@@ -471,6 +464,13 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
     GdkRectangle clip_rec = {};
     if (!gdk_cairo_get_clip_rectangle(cr, &clip_rec)) {
         return FALSE;
+    }
+
+    const int width = gtk_widget_get_allocated_width(widget);
+    const int height = gtk_widget_get_allocated_height(widget);
+
+    if (gtk_cairo_should_draw_window(cr, gtk_widget_get_window(widget))) {
+        gtk_render_background(context, cr, 0, 0, width, height);
     }
 
     if (clip_rec.y + clip_rec.height > view->header_height) {
