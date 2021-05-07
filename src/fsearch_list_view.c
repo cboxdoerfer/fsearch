@@ -1671,6 +1671,28 @@ fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *co
 }
 
 void
+fsearch_list_view_column_set_tooltip(FsearchListViewColumn *col, const char *tooltip) {
+    if (!col) {
+        return;
+    }
+    gtk_widget_set_tooltip_markup(col->button, tooltip);
+}
+
+void
+fsearch_list_view_column_set_emblem(FsearchListViewColumn *col, const char *emblem_name, gboolean visible) {
+    if (!col) {
+        return;
+    }
+    gtk_image_set_from_icon_name(GTK_IMAGE(col->emblem), emblem_name, GTK_ICON_SIZE_BUTTON);
+    if (visible) {
+        gtk_widget_show(col->emblem);
+    }
+    else {
+        gtk_widget_hide(col->emblem);
+    }
+}
+
+void
 fsearch_list_view_column_set_visible(FsearchListView *view, FsearchListViewColumn *col, gboolean visible) {
     if (!view || !col) {
         return;
@@ -1988,11 +2010,14 @@ fsearch_list_view_column_new(int type,
     col->button = gtk_button_new();
     gtk_widget_show(col->button);
     GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
+    col->emblem = gtk_image_new_from_icon_name("emblem-important", GTK_ICON_SIZE_BUTTON);
+    gtk_widget_set_opacity(col->emblem, 0.3);
     col->arrow = gtk_image_new_from_icon_name("pan-down-symbolic", GTK_ICON_SIZE_BUTTON);
     GtkWidget *label = gtk_label_new(name);
     gtk_label_set_xalign(GTK_LABEL(label), 0.f);
 
     gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
+    gtk_box_pack_start(GTK_BOX(hbox), col->emblem, FALSE, FALSE, 0);
     gtk_box_pack_start(GTK_BOX(hbox), col->arrow, FALSE, FALSE, 0);
 
     gtk_container_add(GTK_CONTAINER(col->button), hbox);

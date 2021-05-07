@@ -17,6 +17,7 @@ G_END_DECLS
 typedef struct {
     GtkWidget *button;
     GtkWidget *arrow;
+    GtkWidget *emblem;
     FsearchListView *view;
     int type;
     char *name;
@@ -68,6 +69,12 @@ fsearch_list_view_new();
 
 void
 fsearch_list_view_column_set_visible(FsearchListView *view, FsearchListViewColumn *col, gboolean visible);
+
+void
+fsearch_list_view_column_set_tooltip(FsearchListViewColumn *col, const char *tooltip);
+
+void
+fsearch_list_view_column_set_emblem(FsearchListViewColumn *col, const char *emblem_name, gboolean visible);
 
 void
 fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *col);
@@ -138,4 +145,3 @@ fsearch_list_view_set_query_tooltip_func(FsearchListView *view,
 
 void
 fsearch_list_view_set_draw_row_func(FsearchListView *view, FsearchListViewDrawRowFunc func, gpointer func_data);
-
