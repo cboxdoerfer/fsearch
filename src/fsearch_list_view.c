@@ -664,10 +664,6 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
     if (!view->row_data_func) {
         return;
     }
-    if (view->rubberband_state == RUBBERBAND_SELECT_ACTIVE) {
-        return;
-    }
-
     // gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 
     if (gtk_widget_get_can_focus(GTK_WIDGET(view)) && !gtk_widget_has_focus(GTK_WIDGET(view))) {
@@ -676,6 +672,10 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 
     if (y < view->header_height) {
         gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_DENIED);
+        return;
+    }
+
+    if (view->rubberband_state == RUBBERBAND_SELECT_ACTIVE) {
         return;
     }
 
