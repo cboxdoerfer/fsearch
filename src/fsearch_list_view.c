@@ -336,7 +336,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
 
     const double y_offset = canvas_rect.y % view->row_height + view->header_height;
     const int first_visible_row = floor(-canvas_rect.y / (double)view->row_height);
-    const int num_rows_in_view = view_rect.height / view->row_height + 1;
+    const int num_rows_in_view = (int)ceil(view_rect.height / (double)view->row_height) + 1;
 
     cairo_save(cr);
     gdk_cairo_rectangle(cr, &view_rect);
