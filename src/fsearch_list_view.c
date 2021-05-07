@@ -300,6 +300,25 @@ fsearch_list_view_draw_column_header(GtkWidget *widget, GtkStyleContext *context
         gtk_container_propagate_draw(GTK_CONTAINER(view), column->button, cr);
     }
     gtk_style_context_restore(context);
+
+    const int view_width = gtk_widget_get_allocated_width(widget);
+    const int columns_width = fsearch_list_view_get_columns_effective_width(view);
+    if (columns_width < view_width) {
+        // draw filler at the end of the column headers
+        FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(view, 0);
+        if (col) {
+            // use the style context of the first column button
+            GtkStyleContext *button_style_context = gtk_widget_get_style_context(col->button);
+            gtk_style_context_save(button_style_context);
+
+            const gboolean is_rtl = fsearch_list_view_is_text_dir_rtl(view);
+            const int filler_x = is_rtl ? 0 : columns_width - 2;
+            const int filler_width = view_width - columns_width + 2;
+            gtk_render_background(button_style_context, cr, filler_x, 0, filler_width, view->header_height);
+            gtk_render_frame(button_style_context, cr, filler_x, 0, filler_width, view->header_height);
+            gtk_style_context_restore(button_style_context);
+        }
+    }
 }
 
 static void
