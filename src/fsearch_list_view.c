@@ -810,6 +810,9 @@ fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
     //     return;
     // }
 
+    if (!view->bin_drag_mode) {
+        return;
+    }
     view->rubberband_state = RUBBERBAND_SELECT_ACTIVE;
     view->x_bin_drag_offset = offset_x;
     view->y_bin_drag_offset = offset_y;
