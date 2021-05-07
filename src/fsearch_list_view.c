@@ -314,6 +314,7 @@ fsearch_list_view_draw_column_header(GtkWidget *widget, GtkStyleContext *context
             flags &= ~GTK_STATE_FLAG_PRELIGHT;
             flags &= ~GTK_STATE_FLAG_SELECTED;
             flags &= ~GTK_STATE_FLAG_FOCUSED;
+            flags |= GTK_STATE_FLAG_INSENSITIVE;
 
             gtk_style_context_save(button_style_context);
             gtk_style_context_set_state(button_style_context, flags);
