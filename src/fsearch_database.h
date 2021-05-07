@@ -113,6 +113,9 @@ db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
 FsearchDatabaseEntryFolder *
 db_entry_get_parent(FsearchDatabaseEntry *entry);
 
+time_t
+db_entry_get_mtime(FsearchDatabaseEntry *entry);
+
 off_t
 db_entry_get_size(FsearchDatabaseEntry *entry);
 

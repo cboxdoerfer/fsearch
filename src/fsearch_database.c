@@ -43,13 +43,14 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define DATABASE_MAJOR_VERSION 0
-#define DATABASE_MINOR_VERSION 5
+#define DATABASE_MINOR_VERSION 6
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 struct FsearchDatabaseEntryCommon {
     FsearchDatabaseEntryFolder *parent;
     char *name;
     off_t size;
+    time_t mtime;
 
     // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
     uint32_t idx;
@@ -207,7 +208,7 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
 int
 db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    return 0;
+    return ((*a)->shared.mtime > (*b)->shared.mtime) ? 1 : -1;
 }
 
 int
@@ -364,6 +365,12 @@ db_load_entry_shared_from_memory(const uint8_t *data_block,
     if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
         // size: size of file/folder
         memcpy(&(shared->size), data_block, 8);
+        data_block += 8;
+    }
+
+    if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
+        // mtime: modification time file/folder
+        memcpy(&(shared->mtime), data_block, 8);
         data_block += 8;
     }
 
@@ -827,10 +834,20 @@ db_save_entry_shared(FILE *fp,
 
     if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
         // size: file or folder size (folder size: sum of all children sizes)
-        uint64_t size = shared->size;
+        const uint64_t size = shared->size;
         bytes_written += write_data_to_file(fp, &size, 8, 1, write_failed);
         if (*write_failed == true) {
             g_debug("[db_save] failed to save size");
+            goto out;
+        }
+    }
+
+    if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
+        // mtime: modification time of file/folder
+        const uint64_t mtime = shared->mtime;
+        bytes_written += write_data_to_file(fp, &mtime, 8, 1, write_failed);
+        if (*write_failed == true) {
+            g_debug("[db_save] failed to save modification time");
             goto out;
         }
     }
@@ -1325,6 +1342,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             folder_entry->shared.name = strdup(dent->d_name);
             folder_entry->shared.parent = parent;
             folder_entry->shared.type = DATABASE_ENTRY_TYPE_FOLDER;
+            folder_entry->shared.mtime = st.st_mtime;
 
             darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], folder_entry);
 
@@ -1338,6 +1356,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             file_entry->shared.parent = parent;
             file_entry->shared.type = DATABASE_ENTRY_TYPE_FILE;
             file_entry->shared.size = st.st_size;
+            file_entry->shared.mtime = st.st_mtime;
 
             // update parent size
             db_entry_update_folder_size(parent, file_entry->shared.size);
@@ -1572,6 +1591,7 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
 
     db->index_flags |= DATABASE_INDEX_FLAG_NAME;
     db->index_flags |= DATABASE_INDEX_FLAG_SIZE;
+    db->index_flags |= DATABASE_INDEX_FLAG_MODIFICATION_TIME;
 
     db->sorted_files[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
     db->sorted_folders[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
@@ -1650,6 +1670,11 @@ db_entry_get_path_full(FsearchDatabaseEntry *entry) {
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str) {
     build_path_recursively(entry->shared.parent, str);
+}
+
+time_t
+db_entry_get_mtime(FsearchDatabaseEntry *entry) {
+    return entry ? entry->shared.mtime : 0;
 }
 
 off_t

@@ -1159,10 +1159,11 @@ draw_row_ctx_init(uint32_t row,
     off_t size = db_entry_get_size(entry);
     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
 
-    // strftime(ctx->time,
-    //          100,
-    //          "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-    //          localtime(&entry->mtime));
+    const time_t mtime = db_entry_get_mtime(entry);
+    strftime(ctx->time,
+             100,
+             "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+             localtime(&mtime));
 }
 
 static int
@@ -1261,13 +1262,13 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
         text = fsearch_file_utils_get_size_formatted(db_entry_get_size(entry), config->show_base_2_units);
         break;
     case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
-        text = g_strdup("Unknown time");
-        // char mtime[100] = "";
-        // strftime(mtime,
-        //          sizeof(mtime),
-        //          "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-        //          localtime(&entry->mtime));
-        // text = g_strdup(mtime);
+        const time_t mtime = db_entry_get_mtime(entry);
+        char mtime_formatted[100] = "";
+        strftime(mtime_formatted,
+                 sizeof(mtime_formatted),
+                 "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+                 localtime(&mtime));
+        text = g_strdup(mtime_formatted);
         break;
     }
     default:
