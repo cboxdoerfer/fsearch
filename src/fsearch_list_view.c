@@ -309,7 +309,14 @@ fsearch_list_view_draw_column_header(GtkWidget *widget, GtkStyleContext *context
         if (col) {
             // use the style context of the first column button
             GtkStyleContext *button_style_context = gtk_widget_get_style_context(col->button);
+            GtkStateFlags flags = gtk_style_context_get_state(button_style_context);
+            flags &= ~GTK_STATE_FLAG_ACTIVE;
+            flags &= ~GTK_STATE_FLAG_PRELIGHT;
+            flags &= ~GTK_STATE_FLAG_SELECTED;
+            flags &= ~GTK_STATE_FLAG_FOCUSED;
+
             gtk_style_context_save(button_style_context);
+            gtk_style_context_set_state(button_style_context, flags);
 
             const gboolean is_rtl = fsearch_list_view_is_text_dir_rtl(view);
             const int filler_x = is_rtl ? 0 : columns_width - 2;
