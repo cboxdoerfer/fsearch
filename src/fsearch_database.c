@@ -248,6 +248,29 @@ db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 }
 
 static void
+db_sort_entries(FsearchDatabase *db, DynamicArray *entries, DynamicArray **sorted_entries) {
+    // first sort by path
+    darray_sort_multi_threaded(entries, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+    sorted_entries[DATABASE_INDEX_TYPE_PATH] = darray_copy(entries);
+
+    // then by name
+    darray_sort(entries, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
+
+    // now build individual lists sorted by all of the indexed metadata
+    if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
+        sorted_entries[DATABASE_INDEX_TYPE_SIZE] = darray_copy(entries);
+        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_SIZE],
+                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+    }
+
+    if ((db->index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
+        sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(entries);
+        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time);
+    }
+}
+
+static void
 db_sort(FsearchDatabase *db) {
     assert(db != NULL);
 
@@ -255,22 +278,7 @@ db_sort(FsearchDatabase *db) {
 
     DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
     if (files) {
-        darray_sort_multi_threaded(files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
-        db->sorted_files[DATABASE_INDEX_TYPE_PATH] = darray_copy(files);
-
-        darray_sort(files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
-
-        if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
-            db->sorted_files[DATABASE_INDEX_TYPE_SIZE] = darray_copy(files);
-            darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_SIZE],
-                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
-        }
-
-        if ((db->index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
-            db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(files);
-            darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
-                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time);
-        }
+        db_sort_entries(db, files, db->sorted_files);
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
@@ -278,22 +286,7 @@ db_sort(FsearchDatabase *db) {
     }
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
     if (folders) {
-        darray_sort_multi_threaded(folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
-        db->sorted_folders[DATABASE_INDEX_TYPE_PATH] = darray_copy(folders);
-
-        darray_sort(folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
-
-        if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
-            db->sorted_folders[DATABASE_INDEX_TYPE_SIZE] = darray_copy(folders);
-            darray_sort_multi_threaded(db->sorted_folders[DATABASE_INDEX_TYPE_SIZE],
-                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
-        }
-
-        if ((db->index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
-            db->sorted_folders[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(folders);
-            darray_sort_multi_threaded(db->sorted_folders[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
-                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time);
-        }
+        db_sort_entries(db, folders, db->sorted_folders);
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
