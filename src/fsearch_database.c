@@ -276,6 +276,7 @@ db_sort(FsearchDatabase *db) {
 
     GTimer *timer = g_timer_new();
 
+    // first we sort all the files
     DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
     if (files) {
         db_sort_entries(db, files, db->sorted_files);
@@ -284,6 +285,8 @@ db_sort(FsearchDatabase *db) {
         g_timer_reset(timer);
         g_debug("[db_sort] sorted files: %f s", seconds);
     }
+
+    // then we sort all the folders
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
     if (folders) {
         db_sort_entries(db, folders, db->sorted_folders);
