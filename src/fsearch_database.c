@@ -43,7 +43,7 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define DATABASE_MAJOR_VERSION 0
-#define DATABASE_MINOR_VERSION 4
+#define DATABASE_MINOR_VERSION 5
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 struct FsearchDatabaseEntryCommon {
@@ -76,6 +76,8 @@ struct _FsearchDatabase {
 
     FsearchMemoryPool *file_pool;
     FsearchMemoryPool *folder_pool;
+
+    FsearchDatabaseIndexFlags index_flags;
 
     uint32_t num_entries;
     uint32_t num_folders;
@@ -335,6 +337,7 @@ db_file_open_locked(const char *file_path, const char *mode) {
 
 static const uint8_t *
 db_load_entry_shared_from_memory(const uint8_t *data_block,
+                                 FsearchDatabaseIndexFlags index_flags,
                                  struct FsearchDatabaseEntryCommon *shared,
                                  GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
@@ -358,9 +361,11 @@ db_load_entry_shared_from_memory(const uint8_t *data_block,
     g_string_append(previous_entry_name, name);
     shared->name = g_strdup(previous_entry_name->str);
 
-    // size: size of file/folder
-    memcpy(&(shared->size), data_block, 8);
-    data_block += 8;
+    if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
+        // size: size of file/folder
+        memcpy(&(shared->size), data_block, 8);
+        data_block += 8;
+    }
 
     return data_block;
 }
@@ -452,7 +457,11 @@ db_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
 }
 
 static bool
-db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders, uint64_t folder_block_size) {
+db_load_folders(FILE *fp,
+                FsearchDatabaseIndexFlags index_flags,
+                DynamicArray *folders,
+                uint32_t num_folders,
+                uint64_t folder_block_size) {
     bool res = true;
 
     GString *previous_entry_name = g_string_sized_new(256);
@@ -471,7 +480,7 @@ db_load_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders, uint64_t 
     for (idx = 0; idx < num_folders; idx++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, idx);
 
-        fb = db_load_entry_shared_from_memory(fb, &folder->shared, previous_entry_name);
+        fb = db_load_entry_shared_from_memory(fb, index_flags, &folder->shared, previous_entry_name);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -513,6 +522,7 @@ out:
 
 static bool
 db_load_files(FILE *fp,
+              FsearchDatabaseIndexFlags index_flags,
               FsearchMemoryPool *pool,
               DynamicArray *folders,
               DynamicArray *files,
@@ -537,7 +547,7 @@ db_load_files(FILE *fp,
         file->shared.type = DATABASE_ENTRY_TYPE_FILE;
         file->shared.idx = idx;
 
-        fb = db_load_entry_shared_from_memory(fb, &file->shared, previous_entry_name);
+        fb = db_load_entry_shared_from_memory(fb, index_flags, &file->shared, previous_entry_name);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -659,6 +669,11 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
         goto load_fail;
     }
 
+    uint64_t index_flags = 0;
+    if (fread(&index_flags, 8, 1, fp) != 1) {
+        goto load_fail;
+    }
+
     uint32_t num_folders = 0;
     if (fread(&num_folders, 4, 1, fp) != 1) {
         goto load_fail;
@@ -697,7 +712,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
         status_cb(_("Loading folders…"));
     }
     // load folders
-    if (!db_load_folders(fp, folders, num_folders, folder_block_size)) {
+    if (!db_load_folders(fp, index_flags, folders, num_folders, folder_block_size)) {
         goto load_fail;
     }
 
@@ -707,7 +722,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     // load files
     sorted_files[DATABASE_INDEX_TYPE_NAME] = darray_new(num_files);
     files = sorted_files[DATABASE_INDEX_TYPE_NAME];
-    if (!db_load_files(fp, db->file_pool, folders, files, num_files, file_block_size)) {
+    if (!db_load_files(fp, index_flags, db->file_pool, folders, files, num_files, file_block_size)) {
         goto load_fail;
     }
 
@@ -725,6 +740,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     db->num_entries = num_files + num_folders;
     db->num_files = num_files;
     db->num_folders = num_folders;
+    db->index_flags = index_flags;
 
     fclose(fp);
     fp = NULL;
@@ -768,6 +784,7 @@ write_data_to_file(FILE *fp, const void *data, size_t data_size, size_t num_elem
 
 static size_t
 db_save_entry_shared(FILE *fp,
+                     FsearchDatabaseIndexFlags index_flags,
                      struct FsearchDatabaseEntryCommon *shared,
                      uint32_t parent_idx,
                      GString *previous_entry_name,
@@ -808,12 +825,14 @@ db_save_entry_shared(FILE *fp,
         }
     }
 
-    // size: file or folder size (folder size: sum of all children sizes)
-    uint64_t size = shared->size;
-    bytes_written += write_data_to_file(fp, &size, 8, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save size");
-        goto out;
+    if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
+        // size: file or folder size (folder size: sum of all children sizes)
+        uint64_t size = shared->size;
+        bytes_written += write_data_to_file(fp, &size, 8, 1, write_failed);
+        if (*write_failed == true) {
+            g_debug("[db_save] failed to save size");
+            goto out;
+        }
     }
 
     // parent_idx: index of parent folder
@@ -857,7 +876,11 @@ out:
 }
 
 static size_t
-db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files, bool *write_failed) {
+db_save_files(FILE *fp,
+              FsearchDatabaseIndexFlags index_flags,
+              DynamicArray *files,
+              uint32_t num_files,
+              bool *write_failed) {
     size_t bytes_written = 0;
 
     GString *name_prev = g_string_sized_new(256);
@@ -871,7 +894,8 @@ db_save_files(FILE *fp, DynamicArray *files, uint32_t num_files, bool *write_fai
         file->shared.idx = i;
 
         uint32_t parent_idx = file->shared.parent->shared.idx;
-        bytes_written += db_save_entry_shared(fp, &file->shared, parent_idx, name_prev, name_new, write_failed);
+        bytes_written +=
+            db_save_entry_shared(fp, index_flags, &file->shared, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true)
             goto out;
     }
@@ -982,7 +1006,11 @@ out:
 }
 
 static size_t
-db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders, bool *write_failed) {
+db_save_folders(FILE *fp,
+                FsearchDatabaseIndexFlags index_flags,
+                DynamicArray *folders,
+                uint32_t num_folders,
+                bool *write_failed) {
     size_t bytes_written = 0;
 
     GString *name_prev = g_string_sized_new(256);
@@ -992,7 +1020,8 @@ db_save_folders(FILE *fp, DynamicArray *folders, uint32_t num_folders, bool *wri
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
 
         uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->shared.idx : folder->shared.idx;
-        bytes_written += db_save_entry_shared(fp, &folder->shared, parent_idx, name_prev, name_new, write_failed);
+        bytes_written +=
+            db_save_entry_shared(fp, index_flags, &folder->shared, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true) {
             goto out;
         }
@@ -1062,30 +1091,36 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
+    const uint64_t index_flags = db->index_flags;
+    bytes_written += write_data_to_file(fp, &index_flags, 8, 1, &write_failed);
+    if (write_failed == true) {
+        goto save_fail;
+    }
+
     DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
 
-    uint32_t num_folders = darray_get_num_items(folders);
+    const uint32_t num_folders = darray_get_num_items(folders);
     bytes_written += write_data_to_file(fp, &num_folders, 4, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
 
-    uint32_t num_files = darray_get_num_items(files);
+    const uint32_t num_files = darray_get_num_items(files);
     bytes_written += write_data_to_file(fp, &num_files, 4, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
 
     uint64_t folder_block_size = 0;
-    uint64_t folder_block_size_offset = bytes_written;
+    const uint64_t folder_block_size_offset = bytes_written;
     bytes_written += write_data_to_file(fp, &folder_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
 
     uint64_t file_block_size = 0;
-    uint64_t file_block_size_offset = bytes_written;
+    const uint64_t file_block_size_offset = bytes_written;
     bytes_written += write_data_to_file(fp, &file_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1103,12 +1138,12 @@ db_save(FsearchDatabase *db, const char *path) {
     if (write_failed == true) {
         goto save_fail;
     }
-    folder_block_size = db_save_folders(fp, folders, num_folders, &write_failed);
+    folder_block_size = db_save_folders(fp, index_flags, folders, num_folders, &write_failed);
     bytes_written += folder_block_size;
     if (write_failed == true) {
         goto save_fail;
     }
-    file_block_size = db_save_files(fp, files, num_files, &write_failed);
+    file_block_size = db_save_files(fp, index_flags, files, num_files, &write_failed);
     bytes_written += file_block_size;
     if (write_failed == true) {
         goto save_fail;
@@ -1534,6 +1569,9 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
     bool ret = false;
 
     db_sorted_entries_free(db);
+
+    db->index_flags |= DATABASE_INDEX_FLAG_NAME;
+    db->index_flags |= DATABASE_INDEX_FLAG_SIZE;
 
     db->sorted_files[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
     db->sorted_folders[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
