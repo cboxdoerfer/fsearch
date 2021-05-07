@@ -286,6 +286,26 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
     return type;
 }
 
+#define DEFAULT_FILE_ICON_NAME "application-octet-stream"
+
+GIcon *
+fsearch_file_utils_guess_icon(const char *name, bool is_dir) {
+    if (is_dir) {
+        return g_themed_icon_new("folder");
+    }
+    gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
+    if (!content_type) {
+        return g_themed_icon_new(DEFAULT_FILE_ICON_NAME);
+    }
+
+    GIcon *icon = g_content_type_get_icon(content_type);
+
+    g_free(content_type);
+    content_type = NULL;
+
+    return icon ? icon : g_themed_icon_new(DEFAULT_FILE_ICON_NAME);
+}
+
 GIcon *
 fsearch_file_utils_get_icon_for_path(const char *path) {
     GFile *g_file = g_file_new_for_path(path);

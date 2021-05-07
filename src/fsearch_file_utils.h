@@ -49,5 +49,8 @@ fsearch_file_utils_get_file_type_non_localized(const char *name, gboolean is_dir
 GIcon *
 fsearch_file_utils_get_icon_for_path(const char *path);
 
+GIcon *
+fsearch_file_utils_guess_icon(const char *name, bool is_dir);
+
 char *
 fsearch_file_utils_get_size_formatted(off_t size, bool show_base_2_units);

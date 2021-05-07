@@ -1060,14 +1060,20 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *app)
 }
 
 static cairo_surface_t *
-get_icon_surface(GdkWindow *win, const char *path, int icon_size, int scale_factor) {
+get_icon_surface(GdkWindow *win,
+                 const char *name,
+                 FsearchDatabaseEntryType type,
+                 const char *path,
+                 int icon_size,
+                 int scale_factor) {
     GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
     if (!icon_theme) {
         return NULL;
     }
 
     cairo_surface_t *icon_surface = NULL;
-    GIcon *icon = fsearch_file_utils_get_icon_for_path(path);
+    // GIcon *icon = fsearch_file_utils_get_icon_for_path(path);
+    GIcon *icon = fsearch_file_utils_guess_icon(name, type == DATABASE_ENTRY_TYPE_FOLDER);
     const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
     if (!names) {
         g_object_unref(icon);
@@ -1142,10 +1148,13 @@ draw_row_ctx_init(uint32_t row,
     ctx->type =
         fsearch_file_utils_get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
 
-    ctx->icon_surface =
-        config->show_listview_icons
-            ? get_icon_surface(bin_window, ctx->full_path->str, icon_size, gtk_widget_get_scale_factor(GTK_WIDGET(win)))
-            : NULL;
+    ctx->icon_surface = config->show_listview_icons ? get_icon_surface(bin_window,
+                                                                       name,
+                                                                       db_entry_get_type(entry),
+                                                                       ctx->full_path->str,
+                                                                       icon_size,
+                                                                       gtk_widget_get_scale_factor(GTK_WIDGET(win)))
+                                                    : NULL;
 
     off_t size = db_entry_get_size(entry);
     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
