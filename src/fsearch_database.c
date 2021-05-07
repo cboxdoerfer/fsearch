@@ -260,9 +260,17 @@ db_sort(FsearchDatabase *db) {
 
         darray_sort(files, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
 
-        db->sorted_files[DATABASE_INDEX_TYPE_SIZE] = darray_copy(files);
-        darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_SIZE],
-                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+        if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
+            db->sorted_files[DATABASE_INDEX_TYPE_SIZE] = darray_copy(files);
+            darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_SIZE],
+                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+        }
+
+        if ((db->index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
+            db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(files);
+            darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time);
+        }
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
@@ -275,9 +283,17 @@ db_sort(FsearchDatabase *db) {
 
         darray_sort(folders, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
 
-        db->sorted_folders[DATABASE_INDEX_TYPE_SIZE] = darray_copy(folders);
-        darray_sort_multi_threaded(db->sorted_folders[DATABASE_INDEX_TYPE_SIZE],
-                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+        if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
+            db->sorted_folders[DATABASE_INDEX_TYPE_SIZE] = darray_copy(folders);
+            darray_sort_multi_threaded(db->sorted_folders[DATABASE_INDEX_TYPE_SIZE],
+                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+        }
+
+        if ((db->index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
+            db->sorted_folders[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(folders);
+            darray_sort_multi_threaded(db->sorted_folders[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+                                       (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time);
+        }
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
