@@ -144,7 +144,7 @@ fsearch_window_apply_results(FsearchApplicationWindow *self) {
     if (self->result && self->result->files) {
         self->sort_order = self->result->query->sort_order;
         fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview),
-                                       self->result->num_files + self->result->num_folders,
+                                       db_search_result_get_num_entries(self->result),
                                        self->sort_order,
                                        self->sort_type);
     }
@@ -968,8 +968,8 @@ on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
     if (self->result) {
-        num_folders = self->result->num_folders;
-        num_files = self->result->num_files;
+        num_folders = db_search_result_get_num_folders(self->result);
+        num_files = db_search_result_get_num_files(self->result);
     }
     if (!num_folders && !num_files) {
         gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
@@ -1419,8 +1419,6 @@ fsearch_results_sort_func(int sort_order, gpointer user_data) {
             darray_free(win->result->folders);
             win->result->files = darray_copy(files);
             win->result->folders = darray_copy(folders);
-            win->result->num_files = darray_get_num_items(files);
-            win->result->num_folders = darray_get_num_items(folders);
             win->sort_order = sort_order;
             db_unref(db);
             return;

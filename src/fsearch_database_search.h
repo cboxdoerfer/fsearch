@@ -30,8 +30,6 @@
 typedef struct _DatabaseSearchResult {
     DynamicArray *files;
     DynamicArray *folders;
-    uint32_t num_folders;
-    uint32_t num_files;
 
     volatile int ref_count;
 

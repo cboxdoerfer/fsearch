@@ -380,9 +380,7 @@ db_search_empty(FsearchQuery *query) {
 
     DatabaseSearchResult *result = db_search_result_new(query);
     result->files = files;
-    result->num_files = num_files;
     result->folders = folders;
-    result->num_folders = num_folders;
     return result;
 }
 
@@ -481,11 +479,9 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
     DatabaseSearchResult *result = db_search_result_new(q);
     if (files) {
         result->files = files;
-        result->num_files = darray_get_num_items(files);
     }
     if (folders) {
         result->folders = folders;
-        result->num_folders = darray_get_num_items(folders);
     }
 
     return result;
@@ -520,9 +516,6 @@ db_search_result_free(DatabaseSearchResult *result) {
         fsearch_query_free(result->query);
         result->query = NULL;
     }
-
-    result->num_files = 0;
-    result->num_folders = 0;
 
     free(result);
     result = NULL;
