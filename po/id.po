@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2020-07-15 16:41+0000\n"
-"Last-Translator: TA <semifluid12@gmail.com>\n"
+"PO-Revision-Date: 2021-05-10 09:19+0000\n"
+"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
 "Language: id\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.2-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Membuat daftar pencarian …"
 
 #: src/database.c:802
 msgid "Sorting…"
-msgstr ""
+msgstr "Penyortiran…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -55,44 +55,43 @@ msgstr ""
 
 #: src/fsearch.glade:73
 msgid "New window"
-msgstr ""
+msgstr "Jendela baru"
 
 #: src/fsearch.glade:88
-#, fuzzy
 msgid "Update database"
-msgstr "Memuat database…"
+msgstr "Memperbarui database"
 
 #: src/fsearch.glade:103 src/fsearch.glade:630
 msgid "Cancel database update"
-msgstr ""
+msgstr "Batalkan pembaruan database"
 
 #: src/fsearch.glade:137 src/menus.ui:112
 msgid "Search in Path"
-msgstr ""
+msgstr "Cari di Jalur"
 
 #: src/fsearch.glade:151 src/menus.ui:116
 msgid "Match Case"
-msgstr ""
+msgstr "Cocokan huruf"
 
 #: src/fsearch.glade:165 src/menus.ui:120
 msgid "Enable RegEx"
-msgstr ""
+msgstr "Aktifkan RegEx"
 
 #: src/fsearch.glade:190 src/menus.ui:95
 msgid "Show Statusbar"
-msgstr ""
+msgstr "Tampilkan Bilah status"
 
 #: src/fsearch.glade:204 src/menus.ui:99
 msgid "Show Filter"
-msgstr ""
+msgstr "Tampilkan Filter"
 
 #: src/fsearch.glade:218 src/menus.ui:103
 msgid "Show Search Button"
-msgstr ""
+msgstr "Tampilkan Tombol Pencarian"
 
 #: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:48
 msgid "Preferences"
-msgstr ""
+msgstr "Preferensi"
 
 #: src/fsearch.glade:269 src/menus.ui:129
 msgid "About"
@@ -100,15 +99,15 @@ msgstr ""
 
 #: src/fsearch.glade:294 src/menus.ui:47
 msgid "Quit"
-msgstr ""
+msgstr "Keluar"
 
 #: src/fsearch.glade:417
 msgid "Number of Search Results"
-msgstr ""
+msgstr "Jumlah hasil pencarian"
 
 #: src/fsearch.glade:418
 msgid "0 Items"
-msgstr ""
+msgstr "0 Item"
 
 #: src/fsearch.glade:455
 msgid "Index:"
@@ -137,7 +136,7 @@ msgstr ""
 
 #: src/fsearch.glade:671
 msgid "Number of database items"
-msgstr ""
+msgstr "Jumlah item basisdata"
 
 #: src/fsearch.glade:672
 msgid "(empty)"
@@ -165,11 +164,11 @@ msgstr ""
 
 #: src/fsearch.glade:847 src/fsearch.glade:900
 msgid "PATH"
-msgstr ""
+msgstr "JALUR"
 
 #: src/fsearch.glade:953
 msgid "REGEX"
-msgstr ""
+msgstr "REGEX"
 
 #: src/fsearch.glade:1073
 msgid "Search…"
