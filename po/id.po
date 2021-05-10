@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
 "PO-Revision-Date: 2021-05-10 09:19+0000\n"
-"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
+"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
 "Language: id\n"
@@ -95,7 +95,7 @@ msgstr "Preferensi"
 
 #: src/fsearch.glade:269 src/menus.ui:129
 msgid "About"
-msgstr ""
+msgstr "Tentang"
 
 #: src/fsearch.glade:294 src/menus.ui:47
 msgid "Quit"
@@ -111,7 +111,7 @@ msgstr "0 Item"
 
 #: src/fsearch.glade:455
 msgid "Index:"
-msgstr ""
+msgstr "Indeks:"
 
 #: src/fsearch.glade:530
 msgid "Number of selected folders"
@@ -119,7 +119,7 @@ msgstr ""
 
 #: src/fsearch.glade:531 src/fsearch.glade:556
 msgid "0/0"
-msgstr ""
+msgstr "0/0"
 
 #: src/fsearch.glade:555
 msgid "Number of selected files"
@@ -132,7 +132,7 @@ msgstr "Memuat database…"
 
 #: src/fsearch.glade:647
 msgid "page0"
-msgstr ""
+msgstr "page0"
 
 #: src/fsearch.glade:671
 msgid "Number of database items"
@@ -140,11 +140,11 @@ msgstr "Jumlah item basisdata"
 
 #: src/fsearch.glade:672
 msgid "(empty)"
-msgstr ""
+msgstr "(kosong)"
 
 #: src/fsearch.glade:683
 msgid "page1"
-msgstr ""
+msgstr "page1"
 
 #: src/fsearch.glade:709
 msgid ""
@@ -172,7 +172,7 @@ msgstr "REGEX"
 
 #: src/fsearch.glade:1073
 msgid "Search…"
-msgstr ""
+msgstr "Cari"
 
 #: src/fsearch.glade:1095
 msgid "Select a Filter"
@@ -180,7 +180,7 @@ msgstr ""
 
 #: src/fsearch.glade:1126 src/preferences.ui:690
 msgid "Search"
-msgstr ""
+msgstr "Cari"
 
 #: src/fsearch_filter.c:79
 msgid "All"
@@ -192,7 +192,7 @@ msgstr ""
 
 #: src/fsearch_filter.c:82
 msgid "Files"
-msgstr ""
+msgstr "Fail-fail"
 
 #: src/fsearch_filter.c:84
 msgid "Archives"
@@ -200,19 +200,19 @@ msgstr ""
 
 #: src/fsearch_filter.c:86
 msgid "Audio"
-msgstr ""
+msgstr "Audio"
 
 #: src/fsearch_filter.c:89
 msgid "Documents"
-msgstr ""
+msgstr "Dokumen"
 
 #: src/fsearch_filter.c:91
 msgid "Pictures"
-msgstr ""
+msgstr "Gambar"
 
 #: src/fsearch_filter.c:93
 msgid "Videos"
-msgstr ""
+msgstr "Video"
 
 #: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
 msgid "Active"
@@ -252,7 +252,7 @@ msgstr "Gagal membuka berkas"
 
 #: src/fsearch_window.c:805 src/fsearch_window_actions.c:414
 msgid "Do you want to keep the window open?"
-msgstr ""
+msgstr "Anda mahu biar jendela terbuka?"
 
 #: src/fsearch_window.c:993
 msgid "Last Updated: %Y-%m-%d %H:%M"
@@ -261,7 +261,7 @@ msgstr "Terakhir Diperbarui: %Y-%m-%d %H:%M"
 #: src/fsearch_window_actions.c:77
 #, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr ""
+msgstr "Anda pasti mahu buka %d fail?"
 
 #: src/fsearch_window_actions.c:79
 msgid "Opening Files…"
@@ -270,7 +270,7 @@ msgstr ""
 #: src/fsearch_window_actions.c:148
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr ""
+msgstr "Anda pasti mahu hapuskan %d fail?"
 
 #: src/fsearch_window_actions.c:152
 msgid "Deleting files…"
@@ -298,7 +298,7 @@ msgstr "Jenis"
 
 #: src/menus.ui:6
 msgid "_File"
-msgstr ""
+msgstr "_Fail"
 
 #: src/menus.ui:9
 msgid "New Window"
@@ -310,7 +310,7 @@ msgstr ""
 
 #: src/menus.ui:21
 msgid "Open Folder"
-msgstr ""
+msgstr "Buka Folder"
 
 #: src/menus.ui:29
 msgid "Update Database"
@@ -382,7 +382,7 @@ msgstr ""
 
 #: src/overlay.ui:46 src/overlay.ui:116
 msgid "…"
-msgstr ""
+msgstr "…"
 
 #: src/overlay.ui:61
 msgid "This won't take long."
