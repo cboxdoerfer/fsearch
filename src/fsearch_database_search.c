@@ -59,6 +59,7 @@ db_search_result_new(FsearchQuery *query) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
     assert(result_ctx != NULL);
     result_ctx->query = query;
+    result_ctx->ref_count = 1;
     return result_ctx;
 }
 
@@ -501,7 +502,7 @@ search_was_cancelled:
     return NULL;
 }
 
-void
+static void
 db_search_result_free(DatabaseSearchResult *result) {
     if (!result) {
         return;
@@ -525,6 +526,26 @@ db_search_result_free(DatabaseSearchResult *result) {
 
     free(result);
     result = NULL;
+}
+
+DatabaseSearchResult *
+db_search_result_ref(DatabaseSearchResult *result) {
+    if (!result || result->ref_count <= 0) {
+        return NULL;
+    }
+    g_atomic_int_inc(&result->ref_count);
+    return result;
+}
+
+void
+db_search_result_unref(DatabaseSearchResult *result) {
+    if (!result || result->ref_count <= 0) {
+        return;
+    }
+    if (g_atomic_int_dec_and_test(&result->ref_count)) {
+        db_search_result_free(result);
+        result = NULL;
+    }
 }
 
 void

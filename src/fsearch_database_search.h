@@ -33,6 +33,8 @@ typedef struct _DatabaseSearchResult {
     uint32_t num_folders;
     uint32_t num_files;
 
+    volatile int ref_count;
+
     FsearchQuery *query;
 } DatabaseSearchResult;
 
@@ -63,8 +65,11 @@ db_search_result_get_size(DatabaseSearchResult *result, uint32_t pos);
 void *
 db_search_result_get_entry(DatabaseSearchResult *result, uint32_t pos);
 
+DatabaseSearchResult *
+db_search_result_ref(DatabaseSearchResult *result);
+
 void
-db_search_result_free(DatabaseSearchResult *result);
+db_search_result_unref(DatabaseSearchResult *result);
 
 void
 db_search_queue(FsearchTaskQueue *queue,

@@ -502,7 +502,7 @@ fsearch_application_window_finalize(GObject *object) {
         self->task_queue = NULL;
     }
     if (self->result) {
-        db_search_result_free(self->result);
+        db_search_result_unref(self->result);
         self->result = NULL;
     }
     if (self->query_highlight) {
@@ -609,7 +609,7 @@ fsearch_window_apply_search_result(FsearchApplicationWindow *win, DatabaseSearch
     }
 
     if (win->result) {
-        db_search_result_free(win->result);
+        db_search_result_unref(win->result);
         win->result = NULL;
     }
     win->result = search_result;
@@ -661,7 +661,7 @@ fsearch_window_search_apply_result(gpointer user_data) {
         fsearch_window_apply_search_result(win, search_result);
     }
     else {
-        db_search_result_free(search_result);
+        db_search_result_unref(search_result);
         search_result = NULL;
     }
 
