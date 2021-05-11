@@ -357,20 +357,9 @@ db_search_empty(FsearchQuery *query) {
     assert(query->folders != NULL);
     assert(query->files != NULL);
 
-    const uint32_t num_folders = darray_get_num_items(query->folders);
-    const uint32_t num_files = darray_get_num_items(query->files);
-
-    DynamicArray *files = darray_new(num_files);
-    DynamicArray *folders = darray_new(num_folders);
-
-    void **folders_data = darray_get_data(query->folders, NULL);
-    void **files_data = darray_get_data(query->files, NULL);
-    darray_add_items(files, files_data, num_files);
-    darray_add_items(folders, folders_data, num_folders);
-
     DatabaseSearchResult *result = db_search_result_new(query);
-    result->files = files;
-    result->folders = folders;
+    result->files = darray_copy(query->files);
+    result->folders = darray_copy(query->folders);
     return result;
 }
 

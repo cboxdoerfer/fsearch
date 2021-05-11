@@ -149,16 +149,6 @@ darray_expand(DynamicArray *array, size_t min) {
     memset(array->data + old_max_items, 0, expand_rate + 1);
 }
 
-void **
-darray_get_data(DynamicArray *array, size_t *num_items) {
-    assert(array != NULL);
-    assert(array->data != NULL);
-    if (num_items) {
-        *num_items = array->num_items;
-    }
-    return array->data;
-}
-
 void
 darray_add_items(DynamicArray *array, void **items, uint32_t num_items) {
     assert(array != NULL);

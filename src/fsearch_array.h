@@ -49,9 +49,6 @@ darray_get_num_items(DynamicArray *array);
 void *
 darray_get_item(DynamicArray *array, uint32_t idx);
 
-void **
-darray_get_data(DynamicArray *array, size_t *num_items);
-
 void *
 darray_get_item_next(DynamicArray *array,
                      void *item,
