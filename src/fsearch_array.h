@@ -67,16 +67,10 @@ darray_get_item_idx(DynamicArray *array,
                     uint32_t *index);
 
 void
-darray_remove_item(DynamicArray *array, uint32_t idx);
-
-void
 darray_add_items(DynamicArray *array, void **items, uint32_t num_items);
 
 void
 darray_add_item(DynamicArray *array, void *data);
-
-void
-darray_set_item(DynamicArray *array, void *data, uint32_t idx);
 
 DynamicArray *
 darray_new(size_t num_items);

@@ -186,33 +186,6 @@ darray_add_item(DynamicArray *array, void *data) {
     array->data[array->num_items++] = data;
 }
 
-void
-darray_set_item(DynamicArray *array, void *data, uint32_t idx) {
-    assert(array != NULL);
-    assert(array->data != NULL);
-
-    if (idx >= array->max_items) {
-        darray_expand(array, idx + 1);
-    }
-
-    array->data[idx] = data;
-    if (data != NULL) {
-        array->num_items++;
-    }
-}
-
-void
-darray_remove_item(DynamicArray *array, uint32_t idx) {
-    assert(array != NULL);
-    assert(array->data != NULL);
-
-    if (idx >= array->max_items) {
-        return;
-    }
-
-    array->data[idx] = NULL;
-    array->num_items--;
-}
 
 bool
 darray_get_item_idx(DynamicArray *array,
