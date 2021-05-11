@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-05-10 09:19+0000\n"
-"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
+"PO-Revision-Date: 2021-05-12 06:32+0000\n"
+"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
 "Language: id\n"
@@ -29,29 +29,27 @@ msgstr "Penyortiran…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
-msgstr ""
+msgstr "Reza Almanda (rezaalmanda.github.io)"
 
 #: src/fsearch.c:384
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Buka Dengan Aplikasi Lain"
+msgstr "Buka jendela aplikasi baru"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Tampilkan preferensi aplikasi"
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Memuat database…"
+msgstr "Perbarui basisdata dan keluar"
 
 #: src/fsearch.c:676
 msgid "Print version information and exit"
-msgstr ""
+msgstr "Cetak informasi versi dan keluar"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -115,7 +113,7 @@ msgstr "Indeks:"
 
 #: src/fsearch.glade:530
 msgid "Number of selected folders"
-msgstr ""
+msgstr "Jumlah folder yang dipilih"
 
 #: src/fsearch.glade:531 src/fsearch.glade:556
 msgid "0/0"
@@ -123,12 +121,12 @@ msgstr "0/0"
 
 #: src/fsearch.glade:555
 msgid "Number of selected files"
-msgstr ""
+msgstr "Jumlah berkas yang dipilih"
 
 #: src/fsearch.glade:614 src/fsearch_window.c:140 src/overlay.ui:102
-#, fuzzy, c-format
+#, c-format
 msgid "Updating Database…"
-msgstr "Memuat database…"
+msgstr "Memperbarui Basisdata…"
 
 #: src/fsearch.glade:647
 msgid "page0"
@@ -172,11 +170,11 @@ msgstr "REGEX"
 
 #: src/fsearch.glade:1073
 msgid "Search…"
-msgstr "Cari"
+msgstr "Cari…"
 
 #: src/fsearch.glade:1095
 msgid "Select a Filter"
-msgstr ""
+msgstr "Pilih filter"
 
 #: src/fsearch.glade:1126 src/preferences.ui:690
 msgid "Search"
@@ -184,19 +182,19 @@ msgstr "Cari"
 
 #: src/fsearch_filter.c:79
 msgid "All"
-msgstr ""
+msgstr "Semua"
 
 #: src/fsearch_filter.c:81
 msgid "Folders"
-msgstr ""
+msgstr "Folder"
 
 #: src/fsearch_filter.c:82
 msgid "Files"
-msgstr "Fail-fail"
+msgstr "Berkas"
 
 #: src/fsearch_filter.c:84
 msgid "Archives"
-msgstr ""
+msgstr "Arsip"
 
 #: src/fsearch_filter.c:86
 msgid "Audio"
@@ -216,16 +214,16 @@ msgstr "Video"
 
 #: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
 msgid "Active"
-msgstr ""
+msgstr "Aktif"
 
 #: src/fsearch_preferences_widgets.c:184 src/fsearch_preferences_widgets.c:223
 #: src/listview.c:209 src/menus.ui:222
 msgid "Path"
-msgstr ""
+msgstr "Jalur"
 
 #: src/fsearch_preferences_widgets.c:187
 msgid "Update"
-msgstr ""
+msgstr "Perbarui"
 
 #: src/fsearch_window.c:119 src/overlay.ui:32
 #, c-format
@@ -265,7 +263,7 @@ msgstr "Anda pasti mahu buka %d fail?"
 
 #: src/fsearch_window_actions.c:79
 msgid "Opening Files…"
-msgstr ""
+msgstr "Membuka berkas…"
 
 #: src/fsearch_window_actions.c:148
 #, c-format
@@ -446,11 +444,11 @@ msgstr ""
 
 #: src/preferences.ui:253
 msgid "Nothing"
-msgstr ""
+msgstr "Tidak ada"
 
 #: src/preferences.ui:254
 msgid "Minimize"
-msgstr ""
+msgstr "Minimalkan"
 
 #: src/preferences.ui:255
 msgid "Close"
@@ -458,27 +456,27 @@ msgstr ""
 
 #: src/preferences.ui:281
 msgid "General:"
-msgstr ""
+msgstr "Umum:"
 
 #: src/preferences.ui:316
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Tampilkan istilah pencarian yang disorot"
 
 #: src/preferences.ui:331
 msgid "Show tooltips"
-msgstr ""
+msgstr "Tampilkan tooltips"
 
 #: src/preferences.ui:345
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Tampilkan ikon di kolom nama"
 
 #: src/preferences.ui:359
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Ingat konfigurasi kolom"
 
 #: src/preferences.ui:373
 msgid "Remember sort order"
-msgstr ""
+msgstr "Ingat susunan urutan"
 
 #: src/preferences.ui:387
 msgid "Open path with double click in path column"
@@ -490,7 +488,7 @@ msgstr ""
 
 #: src/preferences.ui:421
 msgid "Results:"
-msgstr ""
+msgstr "Hasil:"
 
 #: src/preferences.ui:462
 msgid "Show database indexing status"
@@ -498,39 +496,39 @@ msgstr ""
 
 #: src/preferences.ui:482
 msgid "Statusbar:"
-msgstr ""
+msgstr "Bilah status:"
 
 #: src/preferences.ui:523
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Tampilkan dialog peringatan ketika:"
 
 #: src/preferences.ui:533
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "berkas / folder gagal dibuka"
 
 #: src/preferences.ui:555
 msgid "Dialogs:"
-msgstr ""
+msgstr "Dialog:"
 
 #: src/preferences.ui:580
 msgid "Interface"
-msgstr ""
+msgstr "Antarmuka"
 
 #: src/preferences.ui:599
 msgid "Limit number of results:"
-msgstr ""
+msgstr "Batasi jumlah hasil:"
 
 #: src/preferences.ui:627
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Cari di jalur ketika kueri berisi pemisah jalur"
 
 #: src/preferences.ui:641
 msgid "Search as you type"
-msgstr ""
+msgstr "Cari saat Anda mengetik"
 
 #: src/preferences.ui:655
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Sembunyikan hasil saat pencarian kosong"
 
 #: src/preferences.ui:669
 msgid "Match case when query contains at least one upper case character"
@@ -570,19 +568,19 @@ msgstr ""
 
 #: src/preferences.ui:908
 msgid "Include"
-msgstr ""
+msgstr "Sertakan"
 
 #: src/preferences.ui:964
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Menambahkan lokasi yang akan dikecualikan dari database"
 
 #: src/preferences.ui:1016 src/preferences.ui:1029
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "Mendukung wildcard. Beberapa entri harus dipisahkan oleh ';'"
 
 #: src/preferences.ui:1017
 msgid "Exclude files:"
-msgstr ""
+msgstr "Kecualikan berkas:"
 
 #: src/preferences.ui:1030
 msgid "e.g. \".git;*.tmp\""
@@ -686,6 +684,10 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b> Tampilkan tooltips:</b>\n"
+"\n"
+"Jika diaktifkan, hasil tangkapan akan menampilkan lokasi lengkap file/folder "
+"yang dituju di jendela tooltip kecil."
 
 #: src/preferences.ui:1257
 msgid ""
@@ -693,6 +695,9 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b> Tampilkan ikon di kolom nama:</b>\n"
+"\n"
+"Jika diaktifkan, ikon file/folder akan ditampilkan di kolom nama."
 
 #: src/preferences.ui:1273
 msgid ""
@@ -702,6 +707,11 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b> Ingat konfigurasi kolom:</b>\n"
+"\n"
+"Jika diaktifkan, konfigurasi kolom tampilan hasil dari sesi sebelumnya akan "
+"dipulihkan saat Anda membuka jendela FSearch. Ini termasuk ukuran dan "
+"visibilitas semua kolom."
 
 #: src/preferences.ui:1289
 msgid ""
@@ -894,27 +904,27 @@ msgstr ""
 
 #: src/preferences.ui:1645
 msgid "Help"
-msgstr ""
+msgstr "Bantuan"
 
 #: src/preferences_ui.c:183 src/preferences_ui.c:198
 msgid "Select folder"
-msgstr ""
+msgstr "Pilih folder"
 
 #: src/preferences_ui.c:186 src/preferences_ui.c:198 src/preferences_ui.c:385
 msgid "_Cancel"
-msgstr ""
+msgstr "_Batal"
 
 #: src/preferences_ui.c:188 src/preferences_ui.c:198
 msgid "_Select"
-msgstr ""
+msgstr "_Pilih"
 
 #: src/preferences_ui.c:386
 msgid "_OK"
-msgstr ""
+msgstr "_Ok"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
