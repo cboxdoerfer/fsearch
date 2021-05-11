@@ -38,10 +38,8 @@ fsearch_query_new(const char *text,
                   gpointer data) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     assert(q != NULL);
-    if (text) {
-        q->text = strdup(text);
-    }
 
+    q->text = text ? strdup(text) : "";
     q->files = files;
     q->folders = folders;
 
@@ -286,4 +284,3 @@ fsearch_query_highlight_free(FsearchQueryHighlight *q) {
     free(q);
     q = NULL;
 }
-
