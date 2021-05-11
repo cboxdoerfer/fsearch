@@ -32,12 +32,7 @@
 #include "fsearch_task.h"
 #include "fsearch_token.h"
 
-struct _DatabaseSearch {
-    FsearchTaskQueue *queue;
-};
-
 typedef struct search_context_s {
-    DynamicArray *entries;
     FsearchQuery *query;
     void **results;
     GCancellable *cancellable;
@@ -190,16 +185,11 @@ search_thread_context_free(search_thread_context_t *ctx) {
 }
 
 static search_thread_context_t *
-search_thread_context_new(DynamicArray *entries,
-                          FsearchQuery *query,
-                          GCancellable *cancellable,
-                          uint32_t start_pos,
-                          uint32_t end_pos) {
+search_thread_context_new(FsearchQuery *query, GCancellable *cancellable, uint32_t start_pos, uint32_t end_pos) {
     search_thread_context_t *ctx = calloc(1, sizeof(search_thread_context_t));
     assert(ctx != NULL);
     assert(end_pos >= start_pos);
 
-    ctx->entries = entries;
     ctx->query = query;
     ctx->cancellable = cancellable;
     ctx->results = calloc(end_pos - start_pos + 1, sizeof(void *));
@@ -402,11 +392,8 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
 
     GList *threads = fsearch_thread_pool_get_threads(q->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-        thread_data[i] = search_thread_context_new(entries,
-                                                   q,
-                                                   cancellable,
-                                                   start_pos,
-                                                   i == num_threads - 1 ? num_entries - 1 : end_pos);
+        thread_data[i] =
+            search_thread_context_new(q, cancellable, start_pos, i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;

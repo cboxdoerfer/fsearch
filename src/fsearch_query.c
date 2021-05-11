@@ -28,8 +28,6 @@ FsearchQuery *
 fsearch_query_new(const char *text,
                   DynamicArray *files,
                   DynamicArray *folders,
-                  uint32_t num_folders,
-                  uint32_t num_files,
                   int32_t sort_order,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
@@ -64,9 +62,6 @@ fsearch_query_new(const char *text,
             q->num_filter_token++;
         }
     }
-
-    q->num_folders = num_folders;
-    q->num_files = num_files;
 
     q->filter = filter;
     q->flags = flags;

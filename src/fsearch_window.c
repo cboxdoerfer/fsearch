@@ -779,8 +779,6 @@ perform_search(FsearchApplicationWindow *win) {
     FsearchQuery *q = fsearch_query_new(text,
                                         files,
                                         folders,
-                                        db_get_num_folders(db),
-                                        db_get_num_files(db),
                                         sort_order,
                                         filter,
                                         fsearch_application_get_thread_pool(app),
