@@ -182,12 +182,12 @@ pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
                          G_CALLBACK(on_column_index_enable_toggled),
                          store);
     column_text_append(view, _("Path"), TRUE, COL_INDEX_PATH);
-    column_toggle_append(view,
-                         GTK_TREE_MODEL(store),
-                         _("Update"),
-                         COL_INDEX_UPDATE,
-                         G_CALLBACK(on_column_index_toggled),
-                         store);
+    // column_toggle_append(view,
+    //                      GTK_TREE_MODEL(store),
+    //                      _("Update"),
+    //                      COL_INDEX_UPDATE,
+    //                      G_CALLBACK(on_column_index_toggled),
+    //                      store);
 
     for (GList *l = indexes; l != NULL; l = l->next) {
         GtkTreeIter iter = {};
