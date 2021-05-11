@@ -155,7 +155,7 @@ db_entry_get_depth(FsearchDatabaseEntry *entry) {
 }
 
 static FsearchDatabaseEntryFolder *
-db_entry_get_parent_nth(FsearchDatabaseEntryFolder *entry, int32_t nth) {
+db_entry_get_parent_nth(FsearchDatabaseEntryFolder *entry, uint32_t nth) {
     while (entry && nth > 0) {
         entry = entry->shared.parent;
         nth--;
@@ -179,15 +179,15 @@ sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabas
 
 int
 db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    off_t size_a = db_entry_get_size(*a);
-    off_t size_b = db_entry_get_size(*b);
+    const off_t size_a = db_entry_get_size(*a);
+    const off_t size_b = db_entry_get_size(*b);
     return (size_a > size_b) ? 1 : -1;
 }
 
 int
 db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    FsearchDatabaseEntryType type_a = db_entry_get_type(*a);
-    FsearchDatabaseEntryType type_b = db_entry_get_type(*b);
+    const FsearchDatabaseEntryType type_a = db_entry_get_type(*a);
+    const FsearchDatabaseEntryType type_b = db_entry_get_type(*b);
     if (type_a == DATABASE_ENTRY_TYPE_FOLDER && type_b == DATABASE_ENTRY_TYPE_FOLDER) {
         return 0;
     }
@@ -220,26 +220,24 @@ int
 db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     FsearchDatabaseEntry *entry_a = *a;
     FsearchDatabaseEntry *entry_b = *b;
-    uint32_t a_depth = db_entry_get_depth(entry_a);
-    uint32_t b_depth = db_entry_get_depth(entry_b);
+    const uint32_t a_depth = db_entry_get_depth(entry_a);
+    const uint32_t b_depth = db_entry_get_depth(entry_b);
 
     int res = 0;
     if (a_depth == b_depth) {
         sort_entry_by_path_recursive(entry_a->shared.parent, entry_b->shared.parent, &res);
     }
     else if (a_depth > b_depth) {
-        int32_t diff = a_depth - b_depth;
+        const uint32_t diff = a_depth - b_depth;
         FsearchDatabaseEntryFolder *parent_a = db_entry_get_parent_nth(entry_a->shared.parent, diff);
         sort_entry_by_path_recursive(parent_a, entry_b->shared.parent, &res);
-        res = res == 0 ? 1 : res;
     }
     else {
-        int32_t diff = b_depth - a_depth;
+        const uint32_t diff = b_depth - a_depth;
         FsearchDatabaseEntryFolder *parent_b = db_entry_get_parent_nth(entry_b->shared.parent, diff);
         sort_entry_by_path_recursive(entry_a->shared.parent, parent_b, &res);
-        res = res == 0 ? -1 : res;
     }
-    return res;
+    return res == 0 ? -1 : res;
 }
 
 int
@@ -310,7 +308,7 @@ db_entry_update_folder_indices(FsearchDatabase *db) {
     if (!db || !db->sorted_folders[DATABASE_INDEX_TYPE_NAME]) {
         return;
     }
-    uint32_t num_folders = darray_get_num_items(db->sorted_folders[DATABASE_INDEX_TYPE_NAME]);
+    const uint32_t num_folders = darray_get_num_items(db->sorted_folders[DATABASE_INDEX_TYPE_NAME]);
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], i);
         if (!folder) {
@@ -651,14 +649,14 @@ db_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, DynamicArray **so
             return false;
         }
 
-        uint32_t num_folders = darray_get_num_items(folders);
+        const uint32_t num_folders = darray_get_num_items(folders);
         sorted_folders[sorted_array_id] = darray_new(num_folders);
         if (!db_load_sorted_entries(fp, folders, num_folders, sorted_folders[sorted_array_id])) {
             g_debug("[db_load] failed to load sorted folder indexes: %d", sorted_array_id);
             return false;
         }
 
-        uint32_t num_files = darray_get_num_items(files);
+        const uint32_t num_files = darray_get_num_items(files);
         sorted_files[sorted_array_id] = darray_new(num_files);
         if (!db_load_sorted_entries(fp, files, num_files, sorted_files[sorted_array_id])) {
             g_debug("[db_load] failed to load sorted file indexes: %d", sorted_array_id);
@@ -815,7 +813,7 @@ db_save_entry_shared(FILE *fp,
 
     size_t bytes_written = 0;
     // name_offset: character position after which previous_entry_name and new_entry_name differ
-    uint8_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
+    const uint8_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
     bytes_written += write_data_to_file(fp, &name_offset, 1, 1, write_failed);
     if (*write_failed == true) {
         g_debug("[db_save] failed to save name offset");
@@ -823,7 +821,7 @@ db_save_entry_shared(FILE *fp,
     }
 
     // name_len: length of the new name characters
-    uint8_t name_len = new_entry_name->len - name_offset;
+    const uint8_t name_len = new_entry_name->len - name_offset;
     bytes_written += write_data_to_file(fp, &name_len, 1, 1, write_failed);
     if (*write_failed == true) {
         g_debug("[db_save] failed to save name length");
@@ -922,7 +920,7 @@ db_save_files(FILE *fp,
         // idx set when we store the fast sort indexes
         file->shared.idx = i;
 
-        uint32_t parent_idx = file->shared.parent->shared.idx;
+        const uint32_t parent_idx = file->shared.parent->shared.idx;
         bytes_written +=
             db_save_entry_shared(fp, index_flags, &file->shared, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true)
@@ -1048,7 +1046,7 @@ db_save_folders(FILE *fp,
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
 
-        uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->shared.idx : folder->shared.idx;
+        const uint32_t parent_idx = folder->shared.parent ? folder->shared.parent->shared.idx : folder->shared.idx;
         bytes_written +=
             db_save_entry_shared(fp, index_flags, &folder->shared, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true) {
@@ -1069,19 +1067,19 @@ out:
 static size_t
 db_save_indexes(FILE *fp, FsearchDatabase *db, bool *write_failed) {
     // TODO
-    return true;
+    return 0;
 }
 
 static size_t
 db_save_excludes(FILE *fp, FsearchDatabase *db, bool *write_failed) {
     // TODO
-    return true;
+    return 0;
 }
 
 static size_t
 db_save_exclude_pattern(FILE *fp, FsearchDatabase *db, bool *write_failed) {
     // TODO
-    return true;
+    return 0;
 }
 
 bool
@@ -1299,14 +1297,14 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     g_string_append_c(path, G_DIR_SEPARATOR);
 
     // remember end of parent path
-    gsize path_len = path->len;
+    const gsize path_len = path->len;
 
     DIR *dir = NULL;
     if (!(dir = opendir(path->str))) {
         return WALK_BADIO;
     }
 
-    double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
+    const double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
     if (elapsed_seconds > 0.1) {
         if (walk_context->status_cb) {
             walk_context->status_cb(path->str);
