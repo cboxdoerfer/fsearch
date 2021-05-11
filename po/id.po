@@ -9,7 +9,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
 "PO-Revision-Date: 2021-05-12 06:32+0000\n"
-"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
+"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
 "Language: id\n"
@@ -404,7 +404,7 @@ msgstr ""
 
 #: src/overlay.ui:250
 msgid "Add folders"
-msgstr ""
+msgstr "Tambah folder"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
@@ -452,7 +452,7 @@ msgstr "Minimalkan"
 
 #: src/preferences.ui:255
 msgid "Close"
-msgstr ""
+msgstr "Tutup"
 
 #: src/preferences.ui:281
 msgid "General:"
@@ -544,19 +544,19 @@ msgstr ""
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "jam dan"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "minit"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
@@ -584,7 +584,7 @@ msgstr "Kecualikan berkas:"
 
 #: src/preferences.ui:1030
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "contoh \".git;*.tmp\""
 
 #: src/preferences.ui:1047
 msgid "Exclude hidden files and folders"
@@ -596,7 +596,7 @@ msgstr ""
 
 #: src/preferences.ui:1091
 msgid "Database"
-msgstr ""
+msgstr "Database"
 
 #: src/preferences.ui:1123
 msgid ""
