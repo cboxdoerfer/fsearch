@@ -423,21 +423,16 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
 
     DynamicArray *results = darray_new(num_results);
 
-    uint32_t num_folders = 0;
-    uint32_t num_files = 0;
-
     for (uint32_t i = 0; i < num_threads; i++) {
         search_thread_context_t *ctx = thread_data[i];
         if (!ctx) {
             break;
         }
 
-        num_folders += ctx->num_folders;
-        num_files += ctx->num_files;
-
         darray_add_items(results, (void **)ctx->results, ctx->num_results);
 
         search_thread_context_free(ctx);
+        ctx = NULL;
     }
 
     return results;
