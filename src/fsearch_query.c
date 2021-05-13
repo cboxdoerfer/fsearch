@@ -61,6 +61,9 @@ fsearch_query_new(const char *text,
         }
     }
 
+    if (filter) {
+        fsearch_filter_ref(filter);
+    }
     q->filter = filter;
     q->flags = flags;
     q->pass_on_empty_query = pass_on_empty_query;
@@ -73,6 +76,9 @@ fsearch_query_new(const char *text,
 void
 fsearch_query_free(FsearchQuery *query) {
     assert(query != NULL);
+    if (query->filter) {
+        fsearch_filter_unref(query->filter);
+    }
     if (query->text) {
         free(query->text);
         query->text = NULL;

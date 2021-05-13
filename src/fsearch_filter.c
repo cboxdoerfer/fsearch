@@ -27,14 +27,12 @@ fsearch_filter_new(FsearchFilterFileType type,
     filter->match_case = match_case;
     filter->enable_regex = enable_regex;
     filter->search_in_path = search_in_path;
+    filter->ref_count = 1;
     return filter;
 }
 
-void
+static void
 fsearch_filter_free(FsearchFilter *filter) {
-    if (!filter) {
-        return;
-    }
     if (filter->name) {
         free(filter->name);
         filter->name = NULL;
@@ -46,6 +44,27 @@ fsearch_filter_free(FsearchFilter *filter) {
     free(filter);
     filter = NULL;
 }
+
+FsearchFilter *
+fsearch_filter_ref(FsearchFilter *filter) {
+    if (!filter || filter->ref_count <= 0) {
+        return NULL;
+    }
+    g_atomic_int_inc(&filter->ref_count);
+    return filter;
+}
+
+void
+fsearch_filter_unref(FsearchFilter *filter) {
+    if (!filter || filter->ref_count <= 0) {
+        return;
+    }
+    if (g_atomic_int_dec_and_test(&filter->ref_count)) {
+        fsearch_filter_free(filter);
+        filter = NULL;
+    }
+}
+
 static const char *document_filter =
     "\\.(c|chm|cpp|csv|cxx|doc|docm|docx|dot|dotm|dotx|h|hpp|htm|html|hxx|ini|java|lua|mht|mhtml|"
     "odt|pdf|potx|potm|ppam|ppsm|ppsx|pps|ppt|pptm|pptx|rtf|sldm|sldx|thmx|txt|vsd|wpd|wps|wri|"

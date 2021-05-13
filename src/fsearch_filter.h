@@ -16,6 +16,8 @@ typedef struct FsearchFilter {
     bool match_case;
     bool enable_regex;
     bool search_in_path;
+
+    volatile int ref_count;
 } FsearchFilter;
 
 FsearchFilter *
@@ -26,9 +28,11 @@ fsearch_filter_new(FsearchFilterFileType type,
                    bool enable_regex,
                    bool search_in_path);
 
+FsearchFilter *
+fsearch_filter_ref(FsearchFilter *filter);
+
 void
-fsearch_filter_free(FsearchFilter *filter);
+fsearch_filter_unref(FsearchFilter *filter);
 
 GList *
 fsearch_filter_get_default();
-

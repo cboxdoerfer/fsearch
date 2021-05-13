@@ -235,7 +235,7 @@ fsearch_application_shutdown(GApplication *app) {
     }
 
     if (fsearch->filters) {
-        g_list_free_full(fsearch->filters, (GDestroyNotify)fsearch_filter_free);
+        g_list_free_full(fsearch->filters, (GDestroyNotify)fsearch_filter_unref);
         fsearch->filters = NULL;
     }
 
