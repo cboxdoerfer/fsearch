@@ -1426,12 +1426,8 @@ fsearch_results_sort_func(int sort_order, gpointer user_data) {
             return;
         }
 
-        DynamicArray *files = db_get_files(db);
-        DynamicArray *folders = db_get_folders(db);
-        win->result->files = darray_copy(files);
-        win->result->folders = darray_copy(folders);
-        darray_unref(files);
-        darray_unref(folders);
+        win->result->files = db_get_files_copy(db);
+        win->result->folders = db_get_folders_copy(db);
     }
 
     bool parallel_sort = true;

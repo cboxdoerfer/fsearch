@@ -1561,6 +1561,14 @@ db_try_lock(FsearchDatabase *db) {
     return g_mutex_trylock(&db->mutex);
 }
 
+static bool
+is_valid_sort_type(FsearchDatabaseIndexType sort_type) {
+    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
+        return true;
+    }
+    return false;
+}
+
 bool
 db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
     assert(db != NULL);
@@ -1572,45 +1580,69 @@ db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort
 }
 
 DynamicArray *
+db_get_folders_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
+    assert(db != NULL);
+    if (!is_valid_sort_type(sort_type)) {
+        return NULL;
+    }
+    DynamicArray *folders = db->sorted_folders[sort_type];
+    return folders ? darray_copy(folders) : NULL;
+}
+
+DynamicArray *
+db_get_files_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
+    assert(db != NULL);
+    if (!is_valid_sort_type(sort_type)) {
+        return NULL;
+    }
+    DynamicArray *files = db->sorted_files[sort_type];
+    return files ? darray_copy(files) : NULL;
+}
+
+DynamicArray *
+db_get_folders_copy(FsearchDatabase *db) {
+    return db_get_folders_sorted_copy(db, DATABASE_INDEX_TYPE_NAME);
+}
+
+DynamicArray *
+db_get_files_copy(FsearchDatabase *db) {
+    return db_get_files_sorted_copy(db, DATABASE_INDEX_TYPE_NAME);
+}
+
+DynamicArray *
 db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
     assert(db != NULL);
-    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
-        DynamicArray *folders = db->sorted_folders[sort_type];
-        darray_ref(folders);
-        return folders;
+    if (!is_valid_sort_type(sort_type)) {
+        return NULL;
     }
-    return NULL;
+
+    DynamicArray *folders = db->sorted_folders[sort_type];
+    darray_ref(folders);
+    return folders;
 }
 
 DynamicArray *
 db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
     assert(db != NULL);
-    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
-        DynamicArray *files = db->sorted_files[sort_type];
-        darray_ref(files);
-        return files;
+    if (!is_valid_sort_type(sort_type)) {
+        return NULL;
     }
-    return NULL;
+
+    DynamicArray *files = db->sorted_files[sort_type];
+    darray_ref(files);
+    return files;
 }
 
 DynamicArray *
 db_get_files(FsearchDatabase *db) {
     assert(db != NULL);
-    DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
-    if (files) {
-        darray_ref(files);
-    }
-    return files;
+    return db_get_files_sorted(db, DATABASE_INDEX_TYPE_NAME);
 }
 
 DynamicArray *
 db_get_folders(FsearchDatabase *db) {
     assert(db != NULL);
-    DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
-    if (folders) {
-        darray_ref(folders);
-    }
-    return folders;
+    return db_get_folders_sorted(db, DATABASE_INDEX_TYPE_NAME);
 }
 
 bool

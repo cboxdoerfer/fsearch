@@ -99,6 +99,12 @@ bool
 db_try_lock(FsearchDatabase *db);
 
 DynamicArray *
+db_get_folders_copy(FsearchDatabase *db);
+
+DynamicArray *
+db_get_files_copy(FsearchDatabase *db);
+
+DynamicArray *
 db_get_folders(FsearchDatabase *db);
 
 DynamicArray *
@@ -106,6 +112,12 @@ db_get_files(FsearchDatabase *db);
 
 bool
 db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
+
+DynamicArray *
+db_get_folders_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
+
+DynamicArray *
+db_get_files_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
 
 DynamicArray *
 db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
