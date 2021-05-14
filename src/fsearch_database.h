@@ -104,6 +104,9 @@ db_get_folders(FsearchDatabase *db);
 DynamicArray *
 db_get_files(FsearchDatabase *db);
 
+bool
+db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
+
 DynamicArray *
 db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
 

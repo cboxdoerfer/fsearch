@@ -1561,6 +1561,16 @@ db_try_lock(FsearchDatabase *db) {
     return g_mutex_trylock(&db->mutex);
 }
 
+bool
+db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
+    assert(db != NULL);
+
+    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
+        return db->sorted_folders[sort_type] ? true : false;
+    }
+    return false;
+}
+
 DynamicArray *
 db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
     assert(db != NULL);

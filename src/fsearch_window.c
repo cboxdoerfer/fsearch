@@ -766,10 +766,15 @@ perform_search(FsearchApplicationWindow *win) {
     GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
     FsearchFilter *filter = filter_element->data;
 
-    DynamicArray *files = db_get_files_sorted(db, win->sort_order);
-    DynamicArray *folders = db_get_folders_sorted(db, win->sort_order);
+    DynamicArray *files = NULL;
+    DynamicArray *folders = NULL;
+
     FsearchDatabaseIndexType sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(win->listview));
-    if (!files || !folders) {
+    if (db_has_entries_sorted_by_type(db, sort_order)) {
+        files = db_get_files_sorted(db, sort_order);
+        folders = db_get_folders_sorted(db, sort_order);
+    }
+    else {
         g_debug("no fast sort for type: %d\n", sort_order);
         files = db_get_files(db);
         folders = db_get_folders(db);
@@ -1413,22 +1418,16 @@ fsearch_results_sort_func(int sort_order, gpointer user_data) {
         darray_unref(win->result->files);
         darray_unref(win->result->folders);
 
-        DynamicArray *files = db_get_files_sorted(db, sort_order);
-        DynamicArray *folders = db_get_folders_sorted(db, sort_order);
-
-        if (files || folders) {
-            win->result->files = files;
-            win->result->folders = folders;
+        if (db_has_entries_sorted_by_type(db, sort_order)) {
+            win->result->files = db_get_files_sorted(db, sort_order);
+            win->result->folders = db_get_folders_sorted(db, sort_order);
             win->sort_order = sort_order;
             db_unref(db);
             return;
         }
 
-        darray_unref(files);
-        darray_unref(folders);
-
-        files = db_get_files(db);
-        folders = db_get_folders(db);
+        DynamicArray *files = db_get_files(db);
+        DynamicArray *folders = db_get_folders(db);
         win->result->files = darray_copy(files);
         win->result->folders = darray_copy(folders);
         darray_unref(files);
