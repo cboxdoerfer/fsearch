@@ -1410,17 +1410,29 @@ fsearch_results_sort_func(int sort_order, gpointer user_data) {
     if (fsearch_query_matches_everything(win->result->query)) {
         // we're matching everything, so if the database has the entries already sorted we don't need
         // to sort again
+        darray_unref(win->result->files);
+        darray_unref(win->result->folders);
+
         DynamicArray *files = db_get_files_sorted(db, sort_order);
         DynamicArray *folders = db_get_folders_sorted(db, sort_order);
-        if (files && folders) {
-            darray_free(win->result->files);
-            darray_free(win->result->folders);
-            win->result->files = darray_copy(files);
-            win->result->folders = darray_copy(folders);
+
+        if (files || folders) {
+            win->result->files = files;
+            win->result->folders = folders;
             win->sort_order = sort_order;
             db_unref(db);
             return;
         }
+
+        darray_unref(files);
+        darray_unref(folders);
+
+        files = db_get_files(db);
+        folders = db_get_folders(db);
+        win->result->files = darray_copy(files);
+        win->result->folders = darray_copy(folders);
+        darray_unref(files);
+        darray_unref(folders);
     }
 
     bool parallel_sort = true;

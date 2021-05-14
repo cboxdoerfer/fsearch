@@ -358,8 +358,9 @@ db_search_empty(FsearchQuery *query) {
     assert(query->files != NULL);
 
     DatabaseSearchResult *result = db_search_result_new(query);
-    result->files = darray_copy(query->files);
-    result->folders = darray_copy(query->folders);
+
+    result->files = query->files;
+    result->folders = query->folders;
     return result;
 }
 
@@ -459,11 +460,11 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
 
 search_was_cancelled:
     if (folders) {
-        darray_free(folders);
+        darray_unref(folders);
         folders = NULL;
     }
     if (files) {
-        darray_free(files);
+        darray_unref(files);
         files = NULL;
     }
     return NULL;
@@ -476,11 +477,11 @@ db_search_result_free(DatabaseSearchResult *result) {
     }
 
     if (result->folders) {
-        darray_free(result->folders);
+        darray_unref(result->folders);
         result->folders = NULL;
     }
     if (result->files) {
-        darray_free(result->files);
+        darray_unref(result->files);
         result->files = NULL;
     }
     if (result->query) {

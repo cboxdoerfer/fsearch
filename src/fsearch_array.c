@@ -35,6 +35,8 @@ struct _DynamicArray {
     uint32_t max_items;
     // data
     void **data;
+
+    volatile int ref_count;
 };
 
 void
@@ -47,11 +49,13 @@ darray_clear(DynamicArray *array) {
     }
 }
 
-void
+static void
 darray_free(DynamicArray *array) {
     if (array == NULL) {
         return;
     }
+
+    g_debug("[darray_free] freed");
 
     darray_clear(array);
     if (array->data) {
@@ -60,6 +64,28 @@ darray_free(DynamicArray *array) {
     }
     free(array);
     array = NULL;
+}
+
+DynamicArray *
+darray_ref(DynamicArray *array) {
+    if (!array || array->ref_count <= 0) {
+        return NULL;
+    }
+    g_atomic_int_inc(&array->ref_count);
+    g_debug("[darray_ref] increased to: %d", array->ref_count);
+    return array;
+}
+
+void
+darray_unref(DynamicArray *array) {
+    if (!array || array->ref_count <= 0) {
+        return;
+    }
+    g_debug("[darray_unref] dropped to: %d", array->ref_count - 1);
+    if (g_atomic_int_dec_and_test(&array->ref_count)) {
+        darray_free(array);
+        array = NULL;
+    }
 }
 
 typedef struct {
@@ -130,6 +156,8 @@ darray_new(size_t num_items) {
 
     new->data = calloc(num_items, sizeof(void *));
     assert(new->data != NULL);
+
+    new->ref_count = 1;
 
     return new;
 }

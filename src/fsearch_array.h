@@ -73,7 +73,10 @@ DynamicArray *
 darray_new(size_t num_items);
 
 void
-darray_free(DynamicArray *array);
+darray_unref(DynamicArray *array);
+
+DynamicArray *
+darray_ref(DynamicArray *array);
 
 void
 darray_clear(DynamicArray *array);
