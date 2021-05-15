@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-02-15 22:50+0000\n"
-"Last-Translator: Artem <KovalevArtem.ru@gmail.com>\n"
+"PO-Revision-Date: 2021-05-16 19:33+0000\n"
+"Last-Translator: Axus Wizix <axus.wizix@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
 "Language: ru\n"
@@ -18,17 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.5-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/database.c:794
 msgid "Building lookup list…"
 msgstr ""
 
 #: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
 msgid "Sorting…"
-msgstr "Сортировка..."
+msgstr "Сортировка…"
 
 #: src/fsearch.c:382
 msgid "translator-credits"
@@ -49,14 +47,12 @@ msgid "Show the application preferences"
 msgstr ""
 
 #: src/fsearch.c:675
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Обновить базу данных"
+msgstr "Обновить базу данных и выйти"
 
 #: src/fsearch.c:676
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Показать информацию о версии"
+msgstr "Показать информацию о версии и выйти"
 
 #: src/fsearch.glade:73
 msgid "New window"
@@ -331,9 +327,8 @@ msgid "Cancel Update"
 msgstr "Отменить обновление"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Новое окно"
+msgstr "Закрыть окно"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -416,9 +411,8 @@ msgid "Empty Database"
 msgstr "Пустая база данных"
 
 #: src/overlay.ui:250
-#, fuzzy
 msgid "Add folders"
-msgstr "Папки"
+msgstr "Добавить папки"
 
 #: src/overlay.ui:292
 msgid "No Results Found"
