@@ -46,7 +46,6 @@ struct _FsearchApplicationWindow {
     GtkWidget *headerbar_box;
     GtkWidget *listview;
     GtkWidget *listview_scrolled_window;
-    GtkWidget *match_case_revealer;
     GtkWidget *menu_box;
     GtkWidget *overlay_database_empty;
     GtkWidget *overlay_database_loading;
@@ -60,25 +59,26 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
     GtkWidget *search_filter_label;
-    GtkWidget *search_filter_revealer;
-    GtkWidget *search_in_path_revealer;
-    GtkWidget *search_mode_revealer;
     GtkWidget *search_overlay;
-    GtkWidget *smart_case_revealer;
-    GtkWidget *smart_path_revealer;
     GtkWidget *statusbar_database_stack;
     GtkWidget *statusbar_database_status_box;
     GtkWidget *statusbar_database_status_label;
     GtkWidget *statusbar_database_updating_box;
     GtkWidget *statusbar_database_updating_label;
     GtkWidget *statusbar_database_updating_spinner;
+    GtkWidget *statusbar_match_case_revealer;
     GtkWidget *statusbar_revealer;
     GtkWidget *statusbar_scan_label;
     GtkWidget *statusbar_scan_status_label;
+    GtkWidget *statusbar_search_filter_revealer;
+    GtkWidget *statusbar_search_in_path_revealer;
     GtkWidget *statusbar_search_label;
+    GtkWidget *statusbar_search_mode_revealer;
     GtkWidget *statusbar_selection_num_files_label;
     GtkWidget *statusbar_selection_num_folders_label;
     GtkWidget *statusbar_selection_revealer;
+    GtkWidget *statusbar_smart_case_revealer;
+    GtkWidget *statusbar_smart_path_revealer;
 
     FsearchDatabaseView *db_view;
 
@@ -347,9 +347,9 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     }
     fsearch_window_apply_search_revealer_config(self);
     fsearch_window_apply_statusbar_revealer_config(self);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(self->match_case_revealer), config->match_case);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_mode_revealer), config->enable_regex);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(self->search_in_path_revealer), config->search_in_path);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_match_case_revealer), config->match_case);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_search_mode_revealer), config->enable_regex);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_search_in_path_revealer), config->search_in_path);
 
     gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(self->filter_combobox));
     for (GList *f = fsearch_application_get_filters(app); f != NULL; f = f->next) {
@@ -584,8 +584,8 @@ perform_search(FsearchApplicationWindow *win) {
         reveal_smart_path = config->auto_search_in_path && !config->search_in_path && has_separator;
     }
 
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_case_revealer), reveal_smart_case);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_path_revealer), reveal_smart_path);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_smart_case_revealer), reveal_smart_case);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_smart_path_revealer), reveal_smart_path);
 }
 
 typedef struct {
@@ -1381,7 +1381,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     const char *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
     gtk_label_set_text(GTK_LABEL(win->search_filter_label), text);
 
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_filter_revealer), active);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_search_filter_revealer), active);
 
     db_view_set_filter(win->db_view, get_active_filter(win));
 }
@@ -1497,37 +1497,37 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
 
     gtk_widget_class_set_template_from_resource(widget_class, "/io/github/cboxdoerfer/fsearch/ui/fsearch.glade");
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, app_menu);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_status_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_status_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_spinner);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_stack);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_combobox);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, match_case_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_num_files_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_num_folders_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_cancel_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_in_path_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_mode_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_overlay);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_case_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, smart_path_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_stack);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_status_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_status_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_spinner);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_match_case_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_status_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_filter_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_in_path_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_mode_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_num_files_label);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_num_folders_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_smart_case_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_smart_path_revealer);
 
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
@@ -1554,19 +1554,19 @@ fsearch_application_window_update_database_label(FsearchApplicationWindow *self,
 GtkWidget *
 fsearch_application_window_get_search_in_path_revealer(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->search_in_path_revealer;
+    return self->statusbar_search_in_path_revealer;
 }
 
 GtkWidget *
 fsearch_application_window_get_match_case_revealer(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->match_case_revealer;
+    return self->statusbar_match_case_revealer;
 }
 
 GtkWidget *
 fsearch_application_window_get_search_mode_revealer(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->search_mode_revealer;
+    return self->statusbar_search_mode_revealer;
 }
 
 FsearchListView *

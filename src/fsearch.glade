@@ -684,7 +684,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <child>
-                      <object class="GtkRevealer" id="smart_case_revealer">
+                      <object class="GtkRevealer" id="statusbar_smart_case_revealer">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-markup" translatable="yes">Search term contains upper case characters.
@@ -738,7 +738,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRevealer" id="match_case_revealer">
+                      <object class="GtkRevealer" id="statusbar_match_case_revealer">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="transition-type">slide-left</property>
@@ -791,7 +791,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRevealer" id="smart_path_revealer">
+                      <object class="GtkRevealer" id="statusbar_smart_path_revealer">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-markup" translatable="yes">Search term contains path separators.
@@ -845,7 +845,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRevealer" id="search_in_path_revealer">
+                      <object class="GtkRevealer" id="statusbar_search_in_path_revealer">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="transition-type">slide-left</property>
@@ -898,7 +898,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRevealer" id="search_mode_revealer">
+                      <object class="GtkRevealer" id="statusbar_search_mode_revealer">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="transition-type">slide-left</property>
@@ -951,7 +951,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkRevealer" id="search_filter_revealer">
+                      <object class="GtkRevealer" id="statusbar_search_filter_revealer">
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="transition-type">slide-left</property>
