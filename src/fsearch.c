@@ -131,12 +131,7 @@ fsearch_application_get_db_state(FsearchApplication *fsearch) {
 FsearchDatabase *
 fsearch_application_get_db(FsearchApplication *fsearch) {
     g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    FsearchDatabase *db = NULL;
-    if (fsearch->db) {
-        db_ref(fsearch->db);
-        db = fsearch->db;
-    }
-    return db;
+    return db_ref(fsearch->db);
 }
 
 FsearchThreadPool *
@@ -873,9 +868,22 @@ fsearch_application_add_option_entries(FsearchApplication *self) {
 }
 
 static void
+fsearch_application_win_added(GtkApplication *app, GtkWindow *win) {
+    GTK_APPLICATION_CLASS(fsearch_application_parent_class)->window_added(app, win);
+    fsearch_application_window_added(FSEARCH_WINDOW_WINDOW(win), FSEARCH_APPLICATION(app));
+}
+
+static void
+fsearch_application_win_removed(GtkApplication *app, GtkWindow *win) {
+    GTK_APPLICATION_CLASS(fsearch_application_parent_class)->window_removed(app, win);
+    fsearch_application_window_removed(FSEARCH_WINDOW_WINDOW(win), FSEARCH_APPLICATION(app));
+}
+
+static void
 fsearch_application_class_init(FsearchApplicationClass *klass) {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
     GApplicationClass *g_app_class = G_APPLICATION_CLASS(klass);
+    GtkApplicationClass *gtk_app_class = GTK_APPLICATION_CLASS(klass);
 
     object_class->finalize = fsearch_application_finalize;
 
@@ -884,6 +892,9 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
     g_app_class->shutdown = fsearch_application_shutdown;
     g_app_class->command_line = fsearch_application_command_line;
     g_app_class->handle_local_options = fsearch_application_handle_local_options;
+
+    gtk_app_class->window_added = fsearch_application_win_added;
+    gtk_app_class->window_removed = fsearch_application_win_removed;
 
     signals[DATABASE_SCAN_STARTED] = g_signal_new("database-scan-started",
                                                   G_TYPE_FROM_CLASS(klass),

@@ -77,4 +77,11 @@ fsearch_application_window_get_num_results(FsearchApplicationWindow *self);
 
 void
 fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win);
+
+void
+fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplication *app);
+
+void
+fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app);
+
 G_END_DECLS

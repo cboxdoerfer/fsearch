@@ -19,6 +19,9 @@
 #pragma once
 
 #include "fsearch_array.h"
+#include "fsearch_filter.h"
+#include "fsearch_query.h"
+
 #include <gio/gio.h>
 #include <glib.h>
 #include <stdbool.h>
@@ -53,11 +56,65 @@ typedef enum {
     NUM_DATABASE_INDEX_TYPES,
 } FsearchDatabaseIndexType;
 
-typedef struct _FsearchDatabaseEntryFile FsearchDatabaseEntry;
-typedef struct _FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
-typedef struct _FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
+typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntry;
+typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
+typedef struct FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
 
-typedef struct _FsearchDatabase FsearchDatabase;
+typedef struct FsearchDatabaseView FsearchDatabaseView;
+typedef struct FsearchDatabase FsearchDatabase;
+
+typedef void (*FsearchDatabaseViewNotifyFunc)(FsearchDatabaseView *view, gpointer user_data);
+
+void
+db_view_free(FsearchDatabaseView *view);
+
+FsearchDatabaseView *
+db_view_new(const char *query_text,
+            FsearchQueryFlags flags,
+            FsearchFilter *filter,
+            FsearchDatabaseIndexType sort_order,
+            FsearchDatabaseViewNotifyFunc view_changed_func,
+            FsearchDatabaseViewNotifyFunc search_started_func,
+            FsearchDatabaseViewNotifyFunc search_finished_func,
+            FsearchDatabaseViewNotifyFunc sort_started_func,
+            FsearchDatabaseViewNotifyFunc sort_finished_func,
+            gpointer user_data);
+
+void
+db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter);
+
+void
+db_view_set_query_flags(FsearchDatabaseView *view, FsearchQueryFlags query_flags);
+
+void
+db_view_set_query_text(FsearchDatabaseView *view, const char *query_text);
+
+void
+db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
+
+uint32_t
+db_view_get_num_folders(FsearchDatabaseView *view);
+
+uint32_t
+db_view_get_num_files(FsearchDatabaseView *view);
+
+uint32_t
+db_view_get_num_entries(FsearchDatabaseView *view);
+
+FsearchDatabaseIndexType
+db_view_get_sort_order(FsearchDatabaseView *view);
+
+void
+db_view_register(FsearchDatabase *db, FsearchDatabaseView *view);
+
+void
+db_view_unregister(FsearchDatabaseView *view);
+
+FsearchDatabaseEntry *
+db_view_get_entry(FsearchDatabaseView *view, uint32_t idx);
+
+FsearchQueryFlags
+db_view_get_query_flags(FsearchDatabaseView *view);
 
 bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
@@ -65,7 +122,7 @@ db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
 bool
 db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *));
 
-void
+FsearchDatabase *
 db_ref(FsearchDatabase *db);
 
 void

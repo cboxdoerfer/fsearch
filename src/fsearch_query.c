@@ -34,7 +34,6 @@ fsearch_query_new(const char *text,
                   FsearchQueryFlags flags,
                   uint32_t id,
                   uint32_t window_id,
-                  bool pass_on_empty_query,
                   gpointer data) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     assert(q != NULL);
@@ -61,12 +60,8 @@ fsearch_query_new(const char *text,
         }
     }
 
-    if (filter) {
-        fsearch_filter_ref(filter);
-    }
-    q->filter = filter;
+    q->filter = fsearch_filter_ref(filter);
     q->flags = flags;
-    q->pass_on_empty_query = pass_on_empty_query;
     q->id = id;
     q->window_id = window_id;
     q->data = data;
@@ -76,6 +71,14 @@ fsearch_query_new(const char *text,
 void
 fsearch_query_free(FsearchQuery *query) {
     assert(query != NULL);
+    if (query->files) {
+        darray_unref(query->files);
+        query->files = NULL;
+    }
+    if (query->folders) {
+        darray_unref(query->folders);
+        query->folders = NULL;
+    }
     if (query->filter) {
         fsearch_filter_unref(query->filter);
     }

@@ -47,9 +47,6 @@ static DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable);
 
 static DatabaseSearchResult *
-db_search_empty(FsearchQuery *query);
-
-static DatabaseSearchResult *
 db_search_result_new(FsearchQuery *query) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
     assert(result_ctx != NULL);
@@ -142,16 +139,7 @@ db_search_task(gpointer data, GCancellable *cancellable) {
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
 
-    DatabaseSearchResult *result = NULL;
-    if (fs_str_is_empty(query->text) && !query->pass_on_empty_query) {
-        result = db_search_result_new(query);
-    }
-    else if (fsearch_query_matches_everything(query)) {
-        result = db_search_empty(query);
-    }
-    else {
-        result = db_search(query, cancellable);
-    }
+    DatabaseSearchResult *result = db_search(query, cancellable);
 
     const char *debug_message = NULL;
     const double seconds = g_timer_elapsed(timer, NULL);
@@ -349,19 +337,6 @@ db_search_files_worker(void *user_data) {
 
     db_search_worker(ctx, ctx->query->files);
     return NULL;
-}
-
-static DatabaseSearchResult *
-db_search_empty(FsearchQuery *query) {
-    assert(query != NULL);
-    assert(query->folders != NULL);
-    assert(query->files != NULL);
-
-    DatabaseSearchResult *result = db_search_result_new(query);
-
-    result->files = query->files;
-    result->folders = query->folders;
-    return result;
 }
 
 static DynamicArray *

@@ -75,7 +75,6 @@ typedef struct FsearchQuery {
     FsearchToken **filter_token;
     uint32_t num_filter_token;
 
-    bool pass_on_empty_query;
     FsearchQueryFlags flags;
 
     uint32_t id;
@@ -94,7 +93,6 @@ fsearch_query_new(const char *text,
                   FsearchQueryFlags flags,
                   uint32_t id,
                   uint32_t window_id,
-                  bool pass_on_empty_query,
                   gpointer data);
 
 void

@@ -25,7 +25,6 @@
 #include "fsearch_array.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
-#include "fsearch_database_search.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
@@ -81,11 +80,10 @@ struct _FsearchApplicationWindow {
     GtkWidget *statusbar_selection_num_folders_label;
     GtkWidget *statusbar_selection_revealer;
 
-    DatabaseSearchResult *result;
+    FsearchDatabaseView *db_view;
 
     FsearchTaskQueue *task_queue;
     FsearchQueryHighlight *query_highlight;
-    uint32_t query_id;
 
     FsearchDatabaseIndexType sort_order;
     GtkSortType sort_type;
@@ -104,14 +102,6 @@ typedef enum {
     NUM_OVERLAYS,
 } FsearchOverlay;
 
-typedef struct {
-    DynamicArrayCompareDataFunc compare_func;
-    bool parallel_sort;
-
-    FsearchDatabase *db;
-    FsearchApplicationWindow *win;
-} FsearchSortContext;
-
 static void
 perform_search(FsearchApplicationWindow *win);
 
@@ -127,31 +117,18 @@ hide_overlays(FsearchApplicationWindow *win);
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
 
+static FsearchApplicationWindow *
+get_window_for_id(uint32_t win_id) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    return FSEARCH_WINDOW_WINDOW(gtk_application_get_window_by_id(GTK_APPLICATION(app), win_id));
+}
+
 static void
 fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
     self->sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(self->listview));
     self->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(self->listview));
     fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
-}
-
-static void
-fsearch_window_apply_results(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-
-    self->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(self->listview));
-
-    if (self->result && self->result->files) {
-        self->sort_order = self->result->query->sort_order;
-        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview),
-                                       db_search_result_get_num_entries(self->result),
-                                       self->sort_order,
-                                       self->sort_type);
-    }
-    else {
-        fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
-    }
-    fsearch_window_actions_update(self);
 }
 
 static gboolean
@@ -170,72 +147,18 @@ fsearch_window_sort_started(gpointer data) {
     return G_SOURCE_REMOVE;
 }
 
-static void
-fsearch_window_sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool parallel_sort) {
-    if (!array) {
-        return;
-    }
-    if (parallel_sort) {
-        darray_sort_multi_threaded(array, (DynamicArrayCompareFunc)sort_func);
-    }
-    else {
-        darray_sort(array, (DynamicArrayCompareFunc)sort_func);
-    }
-}
-
-static gpointer
-fsearch_window_sort_task(gpointer data, GCancellable *cancellable) {
-    FsearchSortContext *ctx = data;
-
-    GTimer *timer = g_timer_new();
-    g_timer_start(timer);
-
-    if (ctx->win->result) {
-        g_idle_add(fsearch_window_sort_started, ctx->win);
-        fsearch_window_sort_array(ctx->win->result->folders, ctx->compare_func, ctx->parallel_sort);
-        fsearch_window_sort_array(ctx->win->result->files, ctx->compare_func, ctx->parallel_sort);
-        g_idle_add(fsearch_window_sort_finished, ctx->win);
-    }
-
-    g_timer_stop(timer);
-    const double seconds = g_timer_elapsed(timer, NULL);
-    g_timer_destroy(timer);
-    timer = NULL;
-
-    g_debug("[sort] finished in %2.fms", seconds * 1000);
-
-    return NULL;
-}
-
-static void
-fsearch_window_sort_task_cancelled(FsearchTask *task, gpointer data) {
-    FsearchSortContext *ctx = data;
-    db_unref(ctx->db);
-
-    free(ctx);
-    ctx = NULL;
-
-    fsearch_task_free(task);
-    task = NULL;
-}
-
-static void
-fsearch_window_sort_task_finished(FsearchTask *task, gpointer result, gpointer data) {
-    fsearch_window_sort_task_cancelled(task, data);
-}
-
 static void *
 fsearch_list_view_get_entry_for_row(int row_idx, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    if (!win || !win->result) {
+    if (!win || !win->db_view) {
         return NULL;
     }
 
     if (sort_type == GTK_SORT_DESCENDING) {
-        row_idx = (int)db_search_result_get_num_entries(win->result) - row_idx - 1;
+        row_idx = (int)db_view_get_num_entries(win->db_view) - row_idx - 1;
     }
 
-    return db_search_result_get_entry(win->result, row_idx);
+    return db_view_get_entry(win->db_view, row_idx);
 }
 
 static void
@@ -501,10 +424,6 @@ fsearch_application_window_finalize(GObject *object) {
         fsearch_task_queue_free(self->task_queue);
         self->task_queue = NULL;
     }
-    if (self->result) {
-        db_search_result_unref(self->result);
-        self->result = NULL;
-    }
     if (self->query_highlight) {
         fsearch_query_highlight_free(self->query_highlight);
         self->query_highlight = NULL;
@@ -599,225 +518,95 @@ statusbar_update_delayed(FsearchApplicationWindow *win, const char *text) {
     win->statusbar_timeout_id = g_timeout_add(200, statusbar_set_query_status, win);
 }
 
-static void
-fsearch_window_apply_search_result(FsearchApplicationWindow *win, DatabaseSearchResult *search_result) {
-    fsearch_window_listview_set_empty(win);
-
-    if (win->query_highlight) {
-        fsearch_query_highlight_free(win->query_highlight);
-        win->query_highlight = NULL;
-    }
-
-    if (win->result) {
-        db_search_result_unref(win->result);
-        win->result = NULL;
-    }
-    win->result = search_result;
-
-    const gchar *text = search_result->query->text;
-
-    uint32_t num_results = db_search_result_get_num_entries(search_result);
-    if (num_results > 0) {
-        win->query_highlight = fsearch_query_highlight_new(text, search_result->query->flags);
-    }
-    else {
-        num_results = 0;
-    }
-
-    fsearch_window_apply_results(win);
-
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-
-    gchar sb_text[100] = "";
-    snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_results);
-    statusbar_update(win, sb_text);
-
-    if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
-        show_overlay(win, OVERLAY_QUERY_EMPTY);
-    }
-    else if (num_results == 0) {
-        show_overlay(win, OVERLAY_RESULTS_EMPTY);
-    }
-    else {
-        hide_overlays(win);
-    }
-}
-
-static gboolean
-fsearch_window_search_apply_result(gpointer user_data) {
-    DatabaseSearchResult *search_result = user_data;
-    FsearchQuery *query = search_result->query;
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchApplicationWindow *win =
-        FSEARCH_WINDOW_WINDOW(gtk_application_get_window_by_id(GTK_APPLICATION(app), query->window_id));
-
-    FsearchDatabase *queried_db = query->data;
-    FsearchDatabase *active_db = fsearch_application_get_db(app);
-
-    if (win && !win->closing && queried_db && active_db && queried_db == active_db) {
-        // if they window is about to be destroyed we don't want to update its widgets
-        // they might already be gone anyway
-        fsearch_window_apply_search_result(win, search_result);
-    }
-    else {
-        db_search_result_unref(search_result);
-        search_result = NULL;
-    }
-
-    if (active_db) {
-        db_unref(active_db);
-        active_db = NULL;
-    }
-
-    if (queried_db) {
-        db_unref(queried_db);
-        queried_db = NULL;
-    }
-
-    return G_SOURCE_REMOVE;
-}
-
-gboolean
-fsearch_window_search_cancelled(gpointer data) {
-    FsearchQuery *query = data;
-    FsearchDatabase *db = query->data;
-
-    if (db) {
-        db_unref(db);
-        db = NULL;
-    }
-
-    fsearch_query_free(query);
-    query = NULL;
-
-    return G_SOURCE_REMOVE;
-}
-
 uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
-    if (self->result) {
-        return db_search_result_get_num_entries(self->result);
+    if (self->db_view) {
+        return db_view_get_num_entries(self->db_view);
     }
     return 0;
 }
 
 static void
-fsearch_window_search_task_cancelled(FsearchTask *task, gpointer data) {
-    if (data) {
-        g_idle_add(fsearch_window_search_cancelled, data);
+fsearch_window_db_view_search_finished(FsearchDatabaseView *view, gpointer user_data) {
+    if (!user_data) {
+        return;
     }
+    const guint win_id = GPOINTER_TO_UINT(user_data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    fsearch_task_free(task);
-    task = NULL;
+    if (!win) {
+        return;
+    }
+    const uint32_t num_rows = db_view_get_num_entries(view);
+    win->sort_order = db_view_get_sort_order(view);
+    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
+    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
 }
 
 static void
-fsearch_window_search_task_finished(FsearchTask *task, gpointer result, gpointer data) {
-    if (result) {
-        g_idle_add(fsearch_window_search_apply_result, result);
+fsearch_window_db_view_search_started(FsearchDatabaseView *view, gpointer user_data) {
+    if (!user_data) {
+        return;
     }
-    else if (data) {
-        g_idle_add(fsearch_window_search_cancelled, data);
-    }
+    const guint win_id = GPOINTER_TO_UINT(user_data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    fsearch_task_free(task);
-    task = NULL;
+    if (!win) {
+        return;
+    }
 }
 
-static void
-perform_search(FsearchApplicationWindow *win) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+static FsearchFilter *
+get_active_filter(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
+    GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
+    FsearchFilter *filter = filter_element->data;
+    return filter;
+}
 
-    const uint32_t win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
-    if (win_id <= 0) {
-        // window isn't attached to the application yet, so searching won't have any effect
-        return;
-    }
-
-    if (!win->task_queue) {
-        g_debug("[win] abort search, queue is missing");
-        return;
-    }
-
+static FsearchQueryFlags
+get_query_flags() {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
-    if (!config->indexes) {
-        show_overlay(win, OVERLAY_DATABASE_EMPTY);
-        return;
-    }
-
-    fsearch_application_state_lock(app);
-    FsearchDatabase *db = fsearch_application_get_db(app);
-    if (!db || db_get_num_entries(db) < 1 || !db_try_lock(db)) {
-        goto search_failed;
-    }
-
-    const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-    g_debug("[query %d.%d] started with query '%s'", win_id, win->query_id, text);
-
     FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
                                .match_case = config->match_case,
                                .auto_match_case = config->auto_match_case,
                                .search_in_path = config->search_in_path,
                                .auto_search_in_path = config->auto_search_in_path};
+    return flags;
+}
 
-    uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
-    GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
-    FsearchFilter *filter = filter_element->data;
+const char *
+get_query_text(FsearchApplicationWindow *win) {
+    return gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+}
 
-    DynamicArray *files = NULL;
-    DynamicArray *folders = NULL;
-
-    FsearchDatabaseIndexType sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(win->listview));
-    if (db_has_entries_sorted_by_type(db, sort_order)) {
-        files = db_get_files_sorted(db, sort_order);
-        folders = db_get_folders_sorted(db, sort_order);
-    }
-    else {
-        g_debug("no fast sort for type: %d\n", sort_order);
-        files = db_get_files(db);
-        folders = db_get_folders(db);
-        sort_order = DATABASE_INDEX_TYPE_NAME;
+static void
+perform_search(FsearchApplicationWindow *win) {
+    if (!win || !win->db_view) {
+        return;
     }
 
-    FsearchQuery *q = fsearch_query_new(text,
-                                        files,
-                                        folders,
-                                        sort_order,
-                                        filter,
-                                        fsearch_application_get_thread_pool(app),
-                                        flags,
-                                        win->query_id++,
-                                        win_id,
-                                        !config->hide_results_on_empty_search,
-                                        db);
+    const gchar *text = get_query_text(win);
+    db_view_set_query_text(win->db_view, text);
+    db_view_set_query_flags(win->db_view, get_query_flags());
 
-    db_unlock(db);
     statusbar_update_delayed(win, _("Querying…"));
-    db_search_queue(win->task_queue, q, fsearch_window_search_task_finished, fsearch_window_search_task_cancelled);
 
     bool reveal_smart_case = false;
     bool reveal_smart_path = false;
     if (!fs_str_is_empty(text)) {
         bool has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
         bool has_upper_text = fs_str_has_upper(text) ? 1 : 0;
+        FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+        FsearchConfig *config = fsearch_application_get_config(app);
         reveal_smart_case = config->auto_match_case && !config->match_case && has_upper_text;
         reveal_smart_path = config->auto_search_in_path && !config->search_in_path && has_separator;
     }
 
     gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_case_revealer), reveal_smart_case);
     gtk_revealer_set_reveal_child(GTK_REVEALER(win->smart_path_revealer), reveal_smart_path);
-
-    fsearch_application_state_unlock(app);
-    return;
-
-search_failed:
-    if (db) {
-        db_unref(db);
-    }
-    fsearch_application_state_unlock(app);
-    return;
 }
 
 typedef struct {
@@ -970,9 +759,9 @@ on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data
 
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
-    if (self->result) {
-        num_folders = db_search_result_get_num_folders(self->result);
-        num_files = db_search_result_get_num_files(self->result);
+    if (self->db_view) {
+        num_folders = db_view_get_num_folders(self->db_view);
+        num_files = db_view_get_num_files(self->db_view);
     }
     if (!num_folders && !num_files) {
         gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
@@ -1403,74 +1192,13 @@ fsearch_list_view_draw_row(cairo_t *cr,
 void
 fsearch_results_sort_func(int sort_order, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
-    if (!win->result) {
+    if (!win->db_view) {
         return;
     }
-
-    FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-    if (!db) {
-        return;
-    }
-
-    if (fsearch_query_matches_everything(win->result->query)) {
-        // we're matching everything, so if the database has the entries already sorted we don't need
-        // to sort again
-        darray_unref(win->result->files);
-        darray_unref(win->result->folders);
-
-        if (db_has_entries_sorted_by_type(db, sort_order)) {
-            win->result->files = db_get_files_sorted(db, sort_order);
-            win->result->folders = db_get_folders_sorted(db, sort_order);
-            win->sort_order = sort_order;
-            db_unref(db);
-            return;
-        }
-
-        win->result->files = db_get_files_copy(db);
-        win->result->folders = db_get_folders_copy(db);
-    }
-
-    bool parallel_sort = true;
-
-    g_debug("[sort] started: %d", sort_order);
-    DynamicArrayCompareFunc func = NULL;
-    switch (sort_order) {
-    case DATABASE_INDEX_TYPE_NAME:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_name;
-        break;
-    case DATABASE_INDEX_TYPE_PATH:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_path;
-        break;
-    case DATABASE_INDEX_TYPE_SIZE:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_size;
-        break;
-    case DATABASE_INDEX_TYPE_FILETYPE:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_type;
-        parallel_sort = false;
-        break;
-    case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time;
-        break;
-    default:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_position;
-    }
-
-    FsearchSortContext *ctx = calloc(1, sizeof(FsearchSortContext));
-    g_assert(ctx != NULL);
-
-    ctx->win = win;
-    ctx->db = db;
-    ctx->compare_func = (DynamicArrayCompareDataFunc)func;
-    ctx->parallel_sort = parallel_sort;
-
-    FsearchTask *task = fsearch_task_new(1,
-                                         fsearch_window_sort_task,
-                                         fsearch_window_sort_task_finished,
-                                         fsearch_window_sort_task_cancelled,
-                                         ctx);
-    fsearch_task_queue(win->task_queue, task, FSEARCH_TASK_CLEAR_SAME_ID);
-
+    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
     win->sort_order = sort_order;
+
+    db_view_set_sort_order(win->db_view, win->sort_order);
 }
 
 static void
@@ -1587,6 +1315,9 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
         hide_overlay(win, OVERLAY_DATABASE_EMPTY);
     }
 
+    db_view_unregister(win->db_view);
+    db_view_register(db, win->db_view);
+
     gchar db_text[100] = "";
     snprintf(db_text, sizeof(db_text), _("%'d Items"), num_items);
     gtk_label_set_text(GTK_LABEL(win->statusbar_database_status_label), db_text);
@@ -1673,7 +1404,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
 
     gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_filter_revealer), active);
 
-    perform_search(win);
+    db_view_set_filter(win->db_view, get_active_filter(win));
 }
 
 static gboolean
@@ -1704,6 +1435,85 @@ on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user
     fsearch_application_window_prepare_shutdown(win);
     gtk_widget_destroy(widget);
     return TRUE;
+}
+
+static void
+fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
+    if (!user_data) {
+        return;
+    }
+    const guint win_id = GPOINTER_TO_UINT(user_data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
+
+    if (!win) {
+        return;
+    }
+
+    if (win->query_highlight) {
+        fsearch_query_highlight_free(win->query_highlight);
+        win->query_highlight = NULL;
+    }
+
+    const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+    const uint32_t num_rows = db_view_get_num_entries(view);
+    if (num_rows > 0) {
+        win->query_highlight = fsearch_query_highlight_new(text, db_view_get_query_flags(win->db_view));
+    }
+
+    win->sort_order = db_view_get_sort_order(view);
+    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
+    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
+    fsearch_window_actions_update(win);
+
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+
+    gchar sb_text[100] = "";
+    snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
+    statusbar_update(win, sb_text);
+
+    if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
+        show_overlay(win, OVERLAY_QUERY_EMPTY);
+    }
+    else if (num_rows == 0) {
+        show_overlay(win, OVERLAY_RESULTS_EMPTY);
+    }
+    else {
+        hide_overlays(win);
+    }
+}
+
+void
+fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplication *app) {
+    guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
+
+    if (win_id <= 0) {
+        g_debug("[window_added] id = 0");
+        return;
+    }
+    win->db_view = db_view_new(get_query_text(win),
+                               get_query_flags(),
+                               get_active_filter(win),
+                               win->sort_order,
+                               fsearch_window_db_view_changed,
+                               fsearch_window_db_view_search_started,
+                               fsearch_window_db_view_search_finished,
+                               NULL,
+                               NULL,
+                               GUINT_TO_POINTER(win_id));
+    FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
+    if (db) {
+        db_view_register(db, win->db_view);
+        db_unref(db);
+    }
+}
+
+void
+fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app) {
+    if (win->db_view) {
+        db_view_free(win->db_view);
+        win->db_view = NULL;
+    }
 }
 
 static void
