@@ -448,7 +448,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
     for (GList *w = windows; w; w = w->next) {
         FsearchApplicationWindow *window = w->data;
         if (config_diff.search_config_changed) {
-            fsearch_application_window_update_search(window);
+            fsearch_application_window_update_query_flags(window);
         }
         if (config_diff.listview_config_changed) {
             fsearch_application_window_update_listview_config(window);
@@ -511,7 +511,6 @@ static void
 new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     GtkWindow *window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
     gtk_window_present(window);
-    fsearch_application_window_update_search(FSEARCH_WINDOW_WINDOW(window));
 }
 
 static void

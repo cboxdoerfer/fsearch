@@ -60,8 +60,8 @@ fsearch_application_window_get_search_in_path_revealer(FsearchApplicationWindow 
 GtkEntry *
 fsearch_application_window_get_search_entry(FsearchApplicationWindow *self);
 
-gboolean
-fsearch_application_window_update_search(FsearchApplicationWindow *self);
+void
+fsearch_application_window_update_query_flags(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_remove_model(FsearchApplicationWindow *self);

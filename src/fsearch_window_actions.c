@@ -488,7 +488,7 @@ fsearch_window_action_search_in_path(GSimpleAction *action, GVariant *variant, g
     GtkWidget *revealer = fsearch_application_window_get_search_in_path_revealer(self);
     gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), config->search_in_path);
     if (search_in_path_old != config->search_in_path) {
-        g_idle_add((GSourceFunc)fsearch_application_window_update_search, self);
+        fsearch_application_window_update_query_flags(self);
     }
 }
 
@@ -502,7 +502,7 @@ fsearch_window_action_search_mode(GSimpleAction *action, GVariant *variant, gpoi
     GtkWidget *revealer = fsearch_application_window_get_search_mode_revealer(self);
     gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), config->enable_regex);
     if (enable_regex_old != config->enable_regex) {
-        g_idle_add((GSourceFunc)fsearch_application_window_update_search, self);
+        fsearch_application_window_update_query_flags(self);
     }
 }
 
@@ -516,7 +516,7 @@ fsearch_window_action_match_case(GSimpleAction *action, GVariant *variant, gpoin
     GtkWidget *revealer = fsearch_application_window_get_match_case_revealer(self);
     gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), config->match_case);
     if (match_case_old != config->match_case) {
-        g_idle_add((GSourceFunc)fsearch_application_window_update_search, self);
+        fsearch_application_window_update_query_flags(self);
     }
 }
 

@@ -509,6 +509,9 @@ db_view_update_entries(FsearchDatabaseView *view) {
         }
         view->query = q;
 
+        if (view->view_changed_func) {
+            view->view_changed_func(view, view->user_data);
+        }
         if (view->search_finished_func) {
             view->search_finished_func(view, view->user_data);
         }

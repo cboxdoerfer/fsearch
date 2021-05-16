@@ -113,6 +113,32 @@ hide_overlays(FsearchApplicationWindow *win);
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
 
+static FsearchFilter *
+get_active_filter(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
+    GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
+    FsearchFilter *filter = filter_element->data;
+    return filter;
+}
+
+static FsearchQueryFlags
+get_query_flags() {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
+                               .match_case = config->match_case,
+                               .auto_match_case = config->auto_match_case,
+                               .search_in_path = config->search_in_path,
+                               .auto_search_in_path = config->auto_search_in_path};
+    return flags;
+}
+
+const char *
+get_query_text(FsearchApplicationWindow *win) {
+    return gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+}
+
 static FsearchApplicationWindow *
 get_window_for_id(uint32_t win_id) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -214,11 +240,9 @@ init_statusbar(FsearchApplicationWindow *self) {
     gtk_label_set_text(GTK_LABEL(self->statusbar_database_status_label), db_text);
 }
 
-gboolean
-fsearch_application_window_update_search(FsearchApplicationWindow *win) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-    perform_search(win);
-    return FALSE;
+void
+fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
+    db_view_set_query_flags(win->db_view, get_query_flags());
 }
 
 void
@@ -534,32 +558,7 @@ fsearch_window_db_view_search_started(FsearchDatabaseView *view, gpointer user_d
     if (!win) {
         return;
     }
-}
-
-static FsearchFilter *
-get_active_filter(FsearchApplicationWindow *win) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
-    GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
-    FsearchFilter *filter = filter_element->data;
-    return filter;
-}
-
-static FsearchQueryFlags
-get_query_flags() {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-    FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
-                               .match_case = config->match_case,
-                               .auto_match_case = config->auto_match_case,
-                               .search_in_path = config->search_in_path,
-                               .auto_search_in_path = config->auto_search_in_path};
-    return flags;
-}
-
-const char *
-get_query_text(FsearchApplicationWindow *win) {
-    return gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+    statusbar_update_delayed(win, _("Querying…"));
 }
 
 static void
@@ -570,9 +569,6 @@ perform_search(FsearchApplicationWindow *win) {
 
     const gchar *text = get_query_text(win);
     db_view_set_query_text(win->db_view, text);
-    db_view_set_query_flags(win->db_view, get_query_flags());
-
-    statusbar_update_delayed(win, _("Querying…"));
 
     bool reveal_smart_case = false;
     bool reveal_smart_path = false;
@@ -1275,7 +1271,6 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     statusbar_update(win, "");
 
     fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->listview));
-    fsearch_application_window_update_search(win);
 
     hide_overlay(win, OVERLAY_DATABASE_LOADING);
     gtk_spinner_stop(GTK_SPINNER(win->statusbar_database_updating_spinner));
