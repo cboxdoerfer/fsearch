@@ -526,10 +526,14 @@ db_view_update_entries(FsearchDatabaseView *view) {
 
     if (fsearch_query_matches_everything(q)) {
         db_view_on_match_everything(view);
+        if (view->query) {
+            fsearch_query_free(view->query);
+        }
+        view->query = q;
+
         if (view->search_finished_func) {
             view->search_finished_func(view, view->user_data);
         }
-        fsearch_query_free(q);
     }
     else {
         db_search_queue(view->task_queue, q, db_view_task_query_finished, db_view_task_query_cancelled);
