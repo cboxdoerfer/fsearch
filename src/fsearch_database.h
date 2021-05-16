@@ -116,6 +116,9 @@ db_view_get_entry(FsearchDatabaseView *view, uint32_t idx);
 FsearchQueryFlags
 db_view_get_query_flags(FsearchDatabaseView *view);
 
+FsearchQuery *
+db_view_get_query(FsearchDatabaseView *view);
+
 bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
 

@@ -26,37 +26,9 @@
 #include "fsearch_array.h"
 #include "fsearch_filter.h"
 #include "fsearch_list_view.h"
+#include "fsearch_query_flags.h"
 #include "fsearch_thread_pool.h"
 #include "fsearch_token.h"
-
-typedef struct FsearchQueryFlags {
-    bool match_case;
-    bool auto_match_case;
-    bool enable_regex;
-    bool search_in_path;
-    bool auto_search_in_path;
-} FsearchQueryFlags;
-
-typedef struct FsearchQueryHighlightToken {
-    GRegex *regex;
-
-    bool is_supported_glob;
-    bool start_with_asterisk;
-    bool end_with_asterisk;
-
-    uint32_t hl_start;
-    uint32_t hl_end;
-
-    char *text;
-    size_t query_len;
-} FsearchQueryHighlightToken;
-
-typedef struct FsearchQueryHighlight {
-    GList *token;
-
-    FsearchQueryFlags flags;
-    bool has_separator;
-} FsearchQueryHighlight;
 
 typedef struct FsearchQuery {
     char *text;
@@ -75,7 +47,11 @@ typedef struct FsearchQuery {
     FsearchToken **filter_token;
     uint32_t num_filter_token;
 
+    GList *highlight_tokens;
+
     FsearchQueryFlags flags;
+
+    bool has_separator;
 
     uint32_t id;
     uint32_t window_id;
@@ -99,13 +75,7 @@ void
 fsearch_query_free(FsearchQuery *query);
 
 PangoAttrList *
-fsearch_query_highlight_match(FsearchQueryHighlight *q, const char *input);
+fsearch_query_highlight_match(FsearchQuery *q, const char *input);
 
 bool
 fsearch_query_matches_everything(FsearchQuery *query);
-
-FsearchQueryHighlight *
-fsearch_query_highlight_new(const char *text, FsearchQueryFlags flags);
-
-void
-fsearch_query_highlight_free(FsearchQueryHighlight *query_highlight);

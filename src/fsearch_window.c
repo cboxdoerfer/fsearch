@@ -83,7 +83,6 @@ struct _FsearchApplicationWindow {
     FsearchDatabaseView *db_view;
 
     FsearchTaskQueue *task_queue;
-    FsearchQueryHighlight *query_highlight;
 
     FsearchDatabaseIndexType sort_order;
     GtkSortType sort_type;
@@ -423,10 +422,6 @@ fsearch_application_window_finalize(GObject *object) {
     if (self->task_queue) {
         fsearch_task_queue_free(self->task_queue);
         self->task_queue = NULL;
-    }
-    if (self->query_highlight) {
-        fsearch_query_highlight_free(self->query_highlight);
-        self->query_highlight = NULL;
     }
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
@@ -924,13 +919,13 @@ draw_row_ctx_init(uint32_t row,
         return;
     }
     ctx->display_name = g_filename_display_name(name);
-    ctx->name_attr = win->query_highlight ? fsearch_query_highlight_match(win->query_highlight, name) : NULL;
+
+    FsearchQuery *query = db_view_get_query(win->db_view);
+    ctx->name_attr = query ? fsearch_query_highlight_match(query, name) : NULL;
 
     ctx->path = db_entry_get_path(entry);
-    if (win->query_highlight
-        && ((win->query_highlight->has_separator && win->query_highlight->flags.auto_search_in_path)
-            || win->query_highlight->flags.search_in_path)) {
-        ctx->path_attr = fsearch_query_highlight_match(win->query_highlight, ctx->path->str);
+    if (query && ((query->has_separator && query->flags.auto_search_in_path) || query->flags.search_in_path)) {
+        ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
     }
 
     ctx->full_path = g_string_new_len(ctx->path->str, ctx->path->len);
@@ -1449,16 +1444,8 @@ fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
         return;
     }
 
-    if (win->query_highlight) {
-        fsearch_query_highlight_free(win->query_highlight);
-        win->query_highlight = NULL;
-    }
-
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
     const uint32_t num_rows = db_view_get_num_entries(view);
-    if (num_rows > 0) {
-        win->query_highlight = fsearch_query_highlight_new(text, db_view_get_query_flags(win->db_view));
-    }
 
     win->sort_order = db_view_get_sort_order(view);
     win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));

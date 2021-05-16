@@ -552,6 +552,11 @@ db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter) {
     g_mutex_unlock(&view->mutex);
 }
 
+FsearchQuery *
+db_view_get_query(FsearchDatabaseView *view) {
+    return view->query;
+}
+
 FsearchQueryFlags
 db_view_get_query_flags(FsearchDatabaseView *view) {
     return view->query_flags;
