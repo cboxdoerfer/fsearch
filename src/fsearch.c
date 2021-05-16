@@ -134,12 +134,6 @@ fsearch_application_get_db(FsearchApplication *fsearch) {
     return db_ref(fsearch->db);
 }
 
-FsearchThreadPool *
-fsearch_application_get_thread_pool(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->pool;
-}
-
 FsearchConfig *
 fsearch_application_get_config(FsearchApplication *fsearch) {
     g_assert(FSEARCH_IS_APPLICATION(fsearch));
@@ -210,9 +204,6 @@ fsearch_application_shutdown(GApplication *app) {
         }
     }
 
-    if (fsearch->pool) {
-        fsearch_thread_pool_free(fsearch->pool);
-    }
     if (fsearch->db_pool) {
         g_debug("[app] waiting for database thread to exit...");
         g_cancellable_cancel(fsearch->db_thread_cancellable);
@@ -611,7 +602,6 @@ fsearch_application_startup(GApplication *app) {
     static const gchar *quit[] = {"<control>q", NULL};
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", quit);
 
-    fsearch->pool = fsearch_thread_pool_init();
     fsearch->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
 }
 

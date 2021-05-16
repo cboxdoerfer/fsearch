@@ -71,9 +71,3 @@ fsearch_application_get_database_file_path(FsearchApplication *fsearch);
 
 char *
 fsearch_application_get_database_dir(FsearchApplication *fsearch);
-
-void
-fsearch_application_update_listview_config(void);
-
-FsearchThreadPool *
-fsearch_application_get_thread_pool(FsearchApplication *fsearch);
