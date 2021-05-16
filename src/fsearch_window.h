@@ -37,9 +37,6 @@ FsearchApplicationWindow *
 fsearch_application_window_new(FsearchApplication *app);
 
 void
-fsearch_application_window_prepare_close(FsearchApplicationWindow *self);
-
-void
 fsearch_application_window_prepare_shutdown(gpointer self);
 
 FsearchListView *

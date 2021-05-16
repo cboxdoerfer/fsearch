@@ -82,12 +82,8 @@ struct _FsearchApplicationWindow {
 
     FsearchDatabaseView *db_view;
 
-    FsearchTaskQueue *task_queue;
-
     FsearchDatabaseIndexType sort_order;
     GtkSortType sort_type;
-
-    bool closing;
 
     guint statusbar_timeout_id;
 };
@@ -222,12 +218,6 @@ fsearch_application_window_update_search(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
     perform_search(win);
     return FALSE;
-}
-
-void
-fsearch_application_window_prepare_close(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    self->closing = true;
 }
 
 void
@@ -395,7 +385,6 @@ fsearch_application_window_constructed(GObject *object) {
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
 
-    self->task_queue = fsearch_task_queue_new("fsearch_task_thread");
     fsearch_window_apply_config(self);
 
     fsearch_apply_menubar_config(self);
@@ -418,11 +407,6 @@ static void
 fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-
-    if (self->task_queue) {
-        fsearch_task_queue_free(self->task_queue);
-        self->task_queue = NULL;
-    }
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
 }

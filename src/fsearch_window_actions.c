@@ -366,7 +366,6 @@ fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpo
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
 
     fsearch_application_window_prepare_shutdown(self);
-    fsearch_application_window_prepare_close(self);
     gtk_widget_destroy(GTK_WIDGET(self));
 }
 
