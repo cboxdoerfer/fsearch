@@ -19,7 +19,7 @@
 #pragma once
 
 #include "fsearch_array.h"
-#include "fsearch_database.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_filter.h"
 #include "fsearch_query.h"
 #include "fsearch_task.h"

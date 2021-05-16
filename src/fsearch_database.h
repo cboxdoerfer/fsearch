@@ -28,13 +28,6 @@
 #include <stdint.h>
 
 typedef enum {
-    DATABASE_ENTRY_TYPE_NONE,
-    DATABASE_ENTRY_TYPE_FOLDER,
-    DATABASE_ENTRY_TYPE_FILE,
-    NUM_DATABASE_ENTRY_TYPES,
-} FsearchDatabaseEntryType;
-
-typedef enum {
     DATABASE_INDEX_FLAG_NAME = 1 << 0,
     DATABASE_INDEX_FLAG_PATH = 1 << 1,
     DATABASE_INDEX_FLAG_SIZE = 1 << 2,
@@ -184,45 +177,3 @@ db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
 
 DynamicArray *
 db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
-
-FsearchDatabaseEntryFolder *
-db_entry_get_parent(FsearchDatabaseEntry *entry);
-
-time_t
-db_entry_get_mtime(FsearchDatabaseEntry *entry);
-
-off_t
-db_entry_get_size(FsearchDatabaseEntry *entry);
-
-const char *
-db_entry_get_name(FsearchDatabaseEntry *entry);
-
-GString *
-db_entry_get_path_full(FsearchDatabaseEntry *entry);
-
-GString *
-db_entry_get_path(FsearchDatabaseEntry *entry);
-
-void
-db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);
-
-FsearchDatabaseEntryType
-db_entry_get_type(FsearchDatabaseEntry *entry);
-
-int
-db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
-
-int
-db_entry_compare_entries_by_position(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);

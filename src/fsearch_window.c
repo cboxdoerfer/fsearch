@@ -25,6 +25,7 @@
 #include "fsearch_array.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"

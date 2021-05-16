@@ -4,6 +4,7 @@ fsearch_sources = [
     'fsearch_clipboard.c',
     'fsearch_config.c',
     'fsearch_database.c',
+    'fsearch_database_entry.c',
     'fsearch_database_search.c',
     'fsearch_exclude_path.c',
     'fsearch_file_utils.c',
