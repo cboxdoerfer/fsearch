@@ -239,7 +239,7 @@ fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
 }
 
 void
-fsearch_apply_menubar_config(FsearchApplicationWindow *win) {
+fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     gtk_widget_set_visible(win->menu_box, config->show_menubar);
     gtk_widget_set_visible(win->app_menu, !config->show_menubar);
@@ -356,7 +356,7 @@ fsearch_application_window_constructed(GObject *object) {
 
     fsearch_window_apply_config(self);
 
-    fsearch_apply_menubar_config(self);
+    fsearch_window_apply_menubar_config(self);
 
     switch (fsearch_application_get_db_state(app)) {
     case FSEARCH_DATABASE_STATE_LOADING:
