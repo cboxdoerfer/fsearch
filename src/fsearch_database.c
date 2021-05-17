@@ -1208,7 +1208,7 @@ db_save_entry_shared(FILE *fp,
                      bool *write_failed) {
     // init new_entry_name with the name of the current entry
     g_string_erase(new_entry_name, 0, -1);
-    g_string_append(new_entry_name, db_entry_get_name(entry));
+    g_string_append(new_entry_name, db_entry_get_name_raw(entry));
 
     size_t bytes_written = 0;
     // name_offset: character position after which previous_entry_name and new_entry_name differ

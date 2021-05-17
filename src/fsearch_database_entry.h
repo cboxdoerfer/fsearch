@@ -63,6 +63,9 @@ db_entry_get_size(FsearchDatabaseEntry *entry);
 const char *
 db_entry_get_name(FsearchDatabaseEntry *entry);
 
+const char *
+db_entry_get_name_raw(FsearchDatabaseEntry *entry);
+
 FsearchDatabaseEntryFolder *
 db_entry_get_parent(FsearchDatabaseEntry *entry);
 

@@ -97,6 +97,11 @@ db_entry_get_name(FsearchDatabaseEntry *entry) {
     return G_DIR_SEPARATOR_S;
 }
 
+const char *
+db_entry_get_name_raw(FsearchDatabaseEntry *entry) {
+    return entry ? entry->shared.name : NULL;
+}
+
 FsearchDatabaseEntryFolder *
 db_entry_get_parent(FsearchDatabaseEntry *entry) {
     return entry ? entry->shared.parent : NULL;
