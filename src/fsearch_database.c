@@ -489,6 +489,7 @@ db_view_update_entries(FsearchDatabaseView *view) {
     else {
         files = db_get_files(view->db);
         folders = db_get_folders(view->db);
+        view->sort_order = DATABASE_INDEX_TYPE_NAME;
     }
 
     FsearchQuery *q = fsearch_query_new(view->query_text,
