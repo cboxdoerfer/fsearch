@@ -75,7 +75,7 @@ confirm_action(GtkWidget *parent, const char *title, const char *question, int l
         return true;
     }
 
-    gint response = ui_utils_run_gtk_dialog(parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, title, question);
+    const gint response = ui_utils_run_gtk_dialog(parent, GTK_MESSAGE_WARNING, GTK_BUTTONS_YES_NO, title, question);
     if (response == GTK_RESPONSE_YES) {
         return true;
     }
@@ -127,7 +127,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
         return;
     }
 
-    guint num_selected_rows = fsearch_list_view_get_num_selected(view);
+    const guint num_selected_rows = fsearch_list_view_get_num_selected(view);
     GList *file_list = NULL;
     fsearch_list_view_selection_for_each(view, prepend_path, &file_list);
 
@@ -297,7 +297,7 @@ launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info)
         return;
     }
 
-    guint selected_rows = fsearch_list_view_get_num_selected(view);
+    const guint selected_rows = fsearch_list_view_get_num_selected(view);
     if (!confirm_file_open_action(GTK_WIDGET(win), selected_rows)) {
         return;
     }
@@ -347,7 +347,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GHFunc open_fu
         return;
     }
 
-    guint selected_rows = fsearch_list_view_get_num_selected(view);
+    const guint selected_rows = fsearch_list_view_get_num_selected(view);
     if (!confirm_file_open_action(GTK_WIDGET(win), selected_rows)) {
         return;
     }
