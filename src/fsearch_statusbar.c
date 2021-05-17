@@ -1,3 +1,5 @@
+#define G_LOG_DOMAIN "fsearch-window"
+
 #include "fsearch_statusbar.h"
 #include "fsearch.h"
 
