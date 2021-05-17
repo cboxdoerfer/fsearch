@@ -63,7 +63,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_entry;
     GtkWidget *search_overlay;
 
-    GtkWidget *statusbar_revealer;
+    GtkWidget *statusbar;
 
     FsearchDatabaseView *db_view;
 
@@ -273,15 +273,15 @@ fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
     else {
         gtk_style_context_remove_class(filter_style, "results_frame_last");
     }
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_revealer), config->show_statusbar);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar), config->show_statusbar);
 
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
                                               FSEARCH_STATUSBAR_REVEALER_MATCH_CASE,
                                               config->match_case);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
                                               FSEARCH_STATUSBAR_REVEALER_REGEX,
                                               config->enable_regex);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
                                               FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH,
                                               config->search_in_path);
 }
@@ -482,7 +482,7 @@ fsearch_window_db_view_search_started(FsearchDatabaseView *view, gpointer user_d
     if (!win) {
         return;
     }
-    fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar_revealer));
+    fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar));
 }
 
 static void
@@ -505,10 +505,10 @@ perform_search(FsearchApplicationWindow *win) {
         reveal_smart_path = config->auto_search_in_path && !config->search_in_path && has_separator;
     }
 
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
                                               FSEARCH_STATUSBAR_REVEALER_SMART_MATCH_CASE,
                                               reveal_smart_case);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
                                               FSEARCH_STATUSBAR_REVEALER_SMART_SEARCH_IN_PATH,
                                               reveal_smart_path);
 }
@@ -671,7 +671,7 @@ on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data
     count_results_ctx ctx = {0, 0};
     fsearch_list_view_selection_for_each(view, (GHFunc)count_results_cb, &ctx);
 
-    fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(self->statusbar_revealer),
+    fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(self->statusbar),
                                     ctx.num_files,
                                     ctx.num_folders,
                                     num_files,
@@ -1140,7 +1140,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
-    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar_revealer), "");
+    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), "");
 
     fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->listview));
 
@@ -1186,8 +1186,8 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
 
     gtk_widget_init_template(GTK_WIDGET(self));
 
-    self->statusbar_revealer = GTK_WIDGET(fsearch_statusbar_new());
-    gtk_box_pack_end(GTK_BOX(self->main_box), self->statusbar_revealer, FALSE, TRUE, 0);
+    self->statusbar = GTK_WIDGET(fsearch_statusbar_new());
+    gtk_box_pack_end(GTK_BOX(self->main_box), self->statusbar, FALSE, TRUE, 0);
 
     fsearch_window_actions_init(self);
     create_view_and_model(self);
@@ -1237,7 +1237,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
 
     int active = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     const char *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
-    fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar_revealer), active ? text : NULL);
+    fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar), active ? text : NULL);
 
     db_view_set_filter(win->db_view, get_active_filter(win));
 }
@@ -1297,7 +1297,7 @@ fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
 
     gchar sb_text[100] = "";
     snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
-    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar_revealer), sb_text);
+    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), sb_text);
 
     if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
@@ -1382,12 +1382,12 @@ fsearch_application_window_get_search_entry(FsearchApplicationWindow *self) {
 FsearchStatusbar *
 fsearch_application_window_get_statusbar(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return FSEARCH_STATUSBAR(self->statusbar_revealer);
+    return FSEARCH_STATUSBAR(self->statusbar);
 }
 
 void
 fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text) {
-    fsearch_statusbar_set_database_indexing_state(FSEARCH_STATUSBAR(self->statusbar_revealer), text);
+    fsearch_statusbar_set_database_indexing_state(FSEARCH_STATUSBAR(self->statusbar), text);
 }
 
 FsearchListView *
