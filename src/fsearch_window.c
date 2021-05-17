@@ -274,6 +274,16 @@ fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
         gtk_style_context_remove_class(filter_style, "results_frame_last");
     }
     gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_revealer), config->show_statusbar);
+
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_MATCH_CASE,
+                                              config->match_case);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_REGEX,
+                                              config->enable_regex);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH,
+                                              config->search_in_path);
 }
 
 void
@@ -310,15 +320,6 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     }
     fsearch_window_apply_search_revealer_config(self);
     fsearch_window_apply_statusbar_revealer_config(self);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(self->statusbar_revealer),
-                                              FSEARCH_STATUSBAR_REVEALER_MATCH_CASE,
-                                              config->match_case);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(self->statusbar_revealer),
-                                              FSEARCH_STATUSBAR_REVEALER_REGEX,
-                                              config->enable_regex);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(self->statusbar_revealer),
-                                              FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH,
-                                              config->search_in_path);
 
     gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(self->filter_combobox));
     for (GList *f = fsearch_application_get_filters(app); f != NULL; f = f->next) {
