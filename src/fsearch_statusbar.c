@@ -247,24 +247,30 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
 
     gtk_widget_init_template(GTK_WIDGET(self));
 
-    gtk_spinner_stop(GTK_SPINNER(self->statusbar_database_updating_spinner));
-
-    gtk_stack_set_visible_child(GTK_STACK(self->statusbar_database_stack), self->statusbar_database_status_box);
-    FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-
-    uint32_t num_items = 0;
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    uint32_t num_files = 0;
+    uint32_t num_folders = 0;
+    FsearchDatabase *db = fsearch_application_get_db(app);
     if (db) {
-        num_items = db_get_num_entries(db);
+        num_files = db_get_num_files(db);
+        num_folders = db_get_num_folders(db);
         db_unref(db);
+    }
+
+    switch (fsearch_application_get_db_state(app)) {
+    case FSEARCH_DATABASE_STATE_LOADING:
+        fsearch_statusbar_set_database_loading(self);
+        break;
+    case FSEARCH_DATABASE_STATE_SCANNING:
+        fsearch_statusbar_set_database_scanning(self);
+        break;
+    default:
+        fsearch_statusbar_set_database_idle(self, num_files, num_folders);
+        break;
     }
 
     fsearch_statusbar_set_selection(self, 0, 0, 0, 0);
 
-    gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("%'d Items"), num_items);
-    gtk_label_set_text(GTK_LABEL(self->statusbar_database_status_label), db_text);
-
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     g_signal_connect_object(app, "database-scan-started", G_CALLBACK(statusbar_scan_started_cb), self, G_CONNECT_AFTER);
     g_signal_connect_object(app,
                             "database-update-finished",
