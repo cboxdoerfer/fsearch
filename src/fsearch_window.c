@@ -454,21 +454,39 @@ fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, gui
     gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), active_filter);
 }
 
+static int
+fsearch_window_db_view_search_finished_cb(gpointer data) {
+    const guint win_id = GPOINTER_TO_UINT(data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
+
+    if (!win) {
+        return G_SOURCE_REMOVE;
+    }
+    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
+    win->sort_order = db_view_get_sort_order(win->db_view);
+    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
+    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
+    return G_SOURCE_REMOVE;
+}
+
 static void
 fsearch_window_db_view_search_finished(FsearchDatabaseView *view, gpointer user_data) {
     if (!user_data) {
         return;
     }
-    const guint win_id = GPOINTER_TO_UINT(user_data);
+    g_idle_add(fsearch_window_db_view_search_finished_cb, user_data);
+}
+
+static int
+fsearch_window_db_view_search_started_cb(gpointer data) {
+    const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
     if (!win) {
-        return;
+        return G_SOURCE_REMOVE;
     }
-    const uint32_t num_rows = db_view_get_num_entries(view);
-    win->sort_order = db_view_get_sort_order(view);
-    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
-    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
+    fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar));
+    return G_SOURCE_REMOVE;
 }
 
 static void
@@ -476,13 +494,7 @@ fsearch_window_db_view_search_started(FsearchDatabaseView *view, gpointer user_d
     if (!user_data) {
         return;
     }
-    const guint win_id = GPOINTER_TO_UINT(user_data);
-    FsearchApplicationWindow *win = get_window_for_id(win_id);
-
-    if (!win) {
-        return;
-    }
-    fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar));
+    g_idle_add(fsearch_window_db_view_search_started_cb, user_data);
 }
 
 static void
@@ -1272,22 +1284,19 @@ on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user
     return TRUE;
 }
 
-static void
-fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
-    if (!user_data) {
-        return;
-    }
-    const guint win_id = GPOINTER_TO_UINT(user_data);
+static int
+fsearch_window_db_view_changed_cb(gpointer data) {
+    const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
     if (!win) {
-        return;
+        return G_SOURCE_REMOVE;
     }
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-    const uint32_t num_rows = db_view_get_num_entries(view);
+    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
 
-    win->sort_order = db_view_get_sort_order(view);
+    win->sort_order = db_view_get_sort_order(win->db_view);
     win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
     fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
     fsearch_window_actions_update(win);
@@ -1308,6 +1317,15 @@ fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
     else {
         hide_overlays(win);
     }
+    return G_SOURCE_REMOVE;
+}
+
+static void
+fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
+    if (!user_data) {
+        return;
+    }
+    g_idle_add(fsearch_window_db_view_changed_cb, user_data);
 }
 
 void
