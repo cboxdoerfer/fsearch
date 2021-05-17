@@ -26,6 +26,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include "fsearch_database.h"
 #include "fsearch_list_view.h"
 #include "fsearch_query.h"
+#include "fsearch_statusbar.h"
 
 G_BEGIN_DECLS
 
@@ -48,17 +49,11 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *self
 void
 fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win);
 
-GtkWidget *
-fsearch_application_window_get_search_mode_revealer(FsearchApplicationWindow *self);
-
-GtkWidget *
-fsearch_application_window_get_match_case_revealer(FsearchApplicationWindow *self);
-
-GtkWidget *
-fsearch_application_window_get_search_in_path_revealer(FsearchApplicationWindow *self);
-
 GtkEntry *
 fsearch_application_window_get_search_entry(FsearchApplicationWindow *self);
+
+FsearchStatusbar *
+fsearch_application_window_get_statusbar(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_update_query_flags(FsearchApplicationWindow *self);

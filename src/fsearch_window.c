@@ -30,6 +30,7 @@
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "fsearch_listview_popup.h"
+#include "fsearch_statusbar.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_task.h"
 #include "fsearch_ui_utils.h"
@@ -47,6 +48,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *headerbar_box;
     GtkWidget *listview;
     GtkWidget *listview_scrolled_window;
+    GtkWidget *main_box;
     GtkWidget *menu_box;
     GtkWidget *overlay_database_empty;
     GtkWidget *overlay_database_loading;
@@ -59,27 +61,9 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_box;
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
-    GtkWidget *search_filter_label;
     GtkWidget *search_overlay;
-    GtkWidget *statusbar_database_stack;
-    GtkWidget *statusbar_database_status_box;
-    GtkWidget *statusbar_database_status_label;
-    GtkWidget *statusbar_database_updating_box;
-    GtkWidget *statusbar_database_updating_label;
-    GtkWidget *statusbar_database_updating_spinner;
-    GtkWidget *statusbar_match_case_revealer;
+
     GtkWidget *statusbar_revealer;
-    GtkWidget *statusbar_scan_label;
-    GtkWidget *statusbar_scan_status_label;
-    GtkWidget *statusbar_search_filter_revealer;
-    GtkWidget *statusbar_search_in_path_revealer;
-    GtkWidget *statusbar_search_label;
-    GtkWidget *statusbar_search_mode_revealer;
-    GtkWidget *statusbar_selection_num_files_label;
-    GtkWidget *statusbar_selection_num_folders_label;
-    GtkWidget *statusbar_selection_revealer;
-    GtkWidget *statusbar_smart_case_revealer;
-    GtkWidget *statusbar_smart_path_revealer;
 
     FsearchDatabaseView *db_view;
 
@@ -185,59 +169,13 @@ fsearch_list_view_get_entry_for_row(int row_idx, GtkSortType sort_type, gpointer
 
 static void
 database_load_started(FsearchApplicationWindow *win) {
-    gtk_stack_set_visible_child(GTK_STACK(win->statusbar_database_stack), win->statusbar_database_updating_box);
-    gtk_spinner_start(GTK_SPINNER(win->statusbar_database_updating_spinner));
-    gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("Loading Database…"));
-    gtk_label_set_text(GTK_LABEL(win->statusbar_database_updating_label), db_text);
-
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-    if (config->show_indexing_status) {
-        gtk_widget_show(win->statusbar_scan_label);
-        gtk_widget_show(win->statusbar_scan_status_label);
-    }
-
     show_overlay(win, OVERLAY_DATABASE_LOADING);
 }
 
 static void
 database_scan_started(FsearchApplicationWindow *win) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-
     gtk_widget_hide(win->popover_update_db);
     gtk_widget_show(win->popover_cancel_update_db);
-
-    if (config->show_indexing_status) {
-        gtk_widget_show(win->statusbar_scan_label);
-        gtk_widget_show(win->statusbar_scan_status_label);
-    }
-    gtk_stack_set_visible_child(GTK_STACK(win->statusbar_database_stack), win->statusbar_database_updating_box);
-    gtk_spinner_start(GTK_SPINNER(win->statusbar_database_updating_spinner));
-    gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("Updating Database…"));
-    gtk_label_set_text(GTK_LABEL(win->statusbar_database_updating_label), db_text);
-}
-
-static void
-init_statusbar(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-
-    gtk_spinner_stop(GTK_SPINNER(self->statusbar_database_updating_spinner));
-
-    gtk_stack_set_visible_child(GTK_STACK(self->statusbar_database_stack), self->statusbar_database_status_box);
-    FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-
-    uint32_t num_items = 0;
-    if (db) {
-        num_items = db_get_num_entries(db);
-        db_unref(db);
-    }
-
-    gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("%'d Items"), num_items);
-    gtk_label_set_text(GTK_LABEL(self->statusbar_database_status_label), db_text);
 }
 
 void
@@ -372,9 +310,15 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     }
     fsearch_window_apply_search_revealer_config(self);
     fsearch_window_apply_statusbar_revealer_config(self);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_match_case_revealer), config->match_case);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_search_mode_revealer), config->enable_regex);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_search_in_path_revealer), config->search_in_path);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(self->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_MATCH_CASE,
+                                              config->match_case);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(self->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_REGEX,
+                                              config->enable_regex);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(self->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH,
+                                              config->search_in_path);
 
     gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(self->filter_combobox));
     for (GList *f = fsearch_application_get_filters(app); f != NULL; f = f->next) {
@@ -413,8 +357,6 @@ fsearch_application_window_constructed(GObject *object) {
     fsearch_window_apply_config(self);
 
     fsearch_apply_menubar_config(self);
-
-    init_statusbar(self);
 
     switch (fsearch_application_get_db_state(app)) {
     case FSEARCH_DATABASE_STATE_LOADING:
@@ -493,35 +435,6 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
     }
 }
 
-static void
-statusbar_remove_update_cb(FsearchApplicationWindow *win) {
-    if (win->statusbar_timeout_id) {
-        g_source_remove(win->statusbar_timeout_id);
-        win->statusbar_timeout_id = 0;
-    }
-}
-static void
-statusbar_update(FsearchApplicationWindow *win, const char *text) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-    statusbar_remove_update_cb(win);
-    gtk_label_set_text(GTK_LABEL(win->statusbar_search_label), text);
-}
-
-static gboolean
-statusbar_set_query_status(gpointer user_data) {
-    FsearchApplicationWindow *win = user_data;
-    gtk_label_set_text(GTK_LABEL(win->statusbar_search_label), _("Querying…"));
-    win->statusbar_timeout_id = 0;
-    return G_SOURCE_REMOVE;
-}
-
-static void
-statusbar_update_delayed(FsearchApplicationWindow *win, const char *text) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-    statusbar_remove_update_cb(win);
-    win->statusbar_timeout_id = g_timeout_add(200, statusbar_set_query_status, win);
-}
-
 uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
     if (self->db_view) {
@@ -558,7 +471,7 @@ fsearch_window_db_view_search_started(FsearchDatabaseView *view, gpointer user_d
     if (!win) {
         return;
     }
-    statusbar_update_delayed(win, _("Querying…"));
+    fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar_revealer));
 }
 
 static void
@@ -581,8 +494,12 @@ perform_search(FsearchApplicationWindow *win) {
         reveal_smart_path = config->auto_search_in_path && !config->search_in_path && has_separator;
     }
 
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_smart_case_revealer), reveal_smart_case);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_smart_path_revealer), reveal_smart_path);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_SMART_MATCH_CASE,
+                                              reveal_smart_case);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar_revealer),
+                                              FSEARCH_STATUSBAR_REVEALER_SMART_SEARCH_IN_PATH,
+                                              reveal_smart_path);
 }
 
 typedef struct {
@@ -739,71 +656,15 @@ on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data
         num_folders = db_view_get_num_folders(self->db_view);
         num_files = db_view_get_num_files(self->db_view);
     }
-    if (!num_folders && !num_files) {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
-        return;
-    }
 
     count_results_ctx ctx = {0, 0};
     fsearch_list_view_selection_for_each(view, (GHFunc)count_results_cb, &ctx);
 
-    if (!ctx.num_folders && !ctx.num_files) {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), FALSE);
-    }
-    else {
-        gtk_revealer_set_reveal_child(GTK_REVEALER(self->statusbar_selection_revealer), TRUE);
-        char text[100] = "";
-        snprintf(text, sizeof(text), "%d/%d", ctx.num_folders, num_folders);
-        gtk_label_set_text(GTK_LABEL(self->statusbar_selection_num_folders_label), text);
-        snprintf(text, sizeof(text), "%d/%d", ctx.num_files, num_files);
-        gtk_label_set_text(GTK_LABEL(self->statusbar_selection_num_files_label), text);
-    }
-}
-
-static gboolean
-toggle_action_on_2button_press(GdkEvent *event, const char *action, gpointer user_data) {
-    guint button;
-    gdk_event_get_button(event, &button);
-    GdkEventType type = gdk_event_get_event_type(event);
-    if (button != GDK_BUTTON_PRIMARY || type != GDK_2BUTTON_PRESS) {
-        return FALSE;
-    }
-    FsearchApplicationWindow *win = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-    GActionGroup *group = G_ACTION_GROUP(win);
-    GVariant *state = g_action_group_get_action_state(group, action);
-    g_action_group_change_action_state(group, action, g_variant_new_boolean(!g_variant_get_boolean(state)));
-    g_variant_unref(state);
-    return TRUE;
-}
-
-static gboolean
-on_search_filter_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    guint button;
-    gdk_event_get_button(event, &button);
-    GdkEventType type = gdk_event_get_event_type(event);
-    if (button != GDK_BUTTON_PRIMARY || type != GDK_2BUTTON_PRESS) {
-        return FALSE;
-    }
-    FsearchApplicationWindow *win = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-    gtk_combo_box_set_active(GTK_COMBO_BOX(win->filter_combobox), 0);
-    return TRUE;
-}
-
-static gboolean
-on_search_mode_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    return toggle_action_on_2button_press(event, "search_mode", user_data);
-}
-
-static gboolean
-on_search_in_path_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    return toggle_action_on_2button_press(event, "search_in_path", user_data);
-}
-
-static gboolean
-on_match_case_label_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    return toggle_action_on_2button_press(event, "match_case", user_data);
+    fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(self->statusbar_revealer),
+                                    ctx.num_files,
+                                    ctx.num_folders,
+                                    num_files,
+                                    num_folders);
 }
 
 static void
@@ -1268,18 +1129,14 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
 
-    statusbar_update(win, "");
+    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar_revealer), "");
 
     fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->listview));
 
     hide_overlay(win, OVERLAY_DATABASE_LOADING);
-    gtk_spinner_stop(GTK_SPINNER(win->statusbar_database_updating_spinner));
     gtk_widget_show(win->popover_update_db);
     gtk_widget_hide(win->popover_cancel_update_db);
-    gtk_widget_hide(win->statusbar_scan_label);
-    gtk_widget_hide(win->statusbar_scan_status_label);
 
-    gtk_stack_set_visible_child(GTK_STACK(win->statusbar_database_stack), win->statusbar_database_status_box);
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     uint32_t num_items = db_get_num_entries(db);
 
@@ -1293,15 +1150,6 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     db_view_unregister(win->db_view);
     db_view_register(db, win->db_view);
 
-    gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("%'d Items"), num_items);
-    gtk_label_set_text(GTK_LABEL(win->statusbar_database_status_label), db_text);
-
-    time_t timestamp = db_get_timestamp(db);
-    strftime(db_text,
-             sizeof(db_text),
-             _("Last Updated: %Y-%m-%d %H:%M"), //"%Y-%m-%d %H:%M",
-             localtime(&timestamp));
     db_unref(db);
 }
 
@@ -1326,6 +1174,9 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
 
     gtk_widget_init_template(GTK_WIDGET(self));
+
+    self->statusbar_revealer = GTK_WIDGET(fsearch_statusbar_new());
+    gtk_box_pack_end(GTK_BOX(self->main_box), self->statusbar_revealer, FALSE, TRUE, 0);
 
     fsearch_window_actions_init(self);
     create_view_and_model(self);
@@ -1375,9 +1226,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
 
     int active = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     const char *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
-    gtk_label_set_text(GTK_LABEL(win->search_filter_label), text);
-
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar_search_filter_revealer), active);
+    fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar_revealer), active ? text : NULL);
 
     db_view_set_filter(win->db_view, get_active_filter(win));
 }
@@ -1437,7 +1286,7 @@ fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
 
     gchar sb_text[100] = "";
     snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
-    statusbar_update(win, sb_text);
+    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar_revealer), sb_text);
 
     if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
@@ -1497,43 +1346,20 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, filter_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, headerbar_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_cancel_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_db);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_filter_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_overlay);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_stack);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_status_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_status_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_database_updating_spinner);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_match_case_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_scan_status_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_filter_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_in_path_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_search_mode_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_num_files_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_num_folders_label);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_selection_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_smart_case_revealer);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, statusbar_smart_path_revealer);
 
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_match_case_label_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_search_filter_label_button_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_search_in_path_label_button_press_event);
-    gtk_widget_class_bind_template_callback(widget_class, on_search_mode_label_button_press_event);
 }
 
 GtkEntry *
@@ -1542,27 +1368,15 @@ fsearch_application_window_get_search_entry(FsearchApplicationWindow *self) {
     return GTK_ENTRY(self->search_entry);
 }
 
+FsearchStatusbar *
+fsearch_application_window_get_statusbar(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    return FSEARCH_STATUSBAR(self->statusbar_revealer);
+}
+
 void
 fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text) {
-    gtk_label_set_text(GTK_LABEL(self->statusbar_scan_status_label), text);
-}
-
-GtkWidget *
-fsearch_application_window_get_search_in_path_revealer(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->statusbar_search_in_path_revealer;
-}
-
-GtkWidget *
-fsearch_application_window_get_match_case_revealer(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->statusbar_match_case_revealer;
-}
-
-GtkWidget *
-fsearch_application_window_get_search_mode_revealer(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-    return self->statusbar_search_mode_revealer;
+    fsearch_statusbar_set_database_indexing_state(FSEARCH_STATUSBAR(self->statusbar_revealer), text);
 }
 
 FsearchListView *

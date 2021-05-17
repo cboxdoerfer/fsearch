@@ -29,6 +29,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
+#include "fsearch_statusbar.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window_actions.h"
 
@@ -485,8 +486,8 @@ fsearch_window_action_search_in_path(GSimpleAction *action, GVariant *variant, g
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     bool search_in_path_old = config->search_in_path;
     config->search_in_path = g_variant_get_boolean(variant);
-    GtkWidget *revealer = fsearch_application_window_get_search_in_path_revealer(self);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), config->search_in_path);
+    FsearchStatusbar *sb = fsearch_application_window_get_statusbar(self);
+    fsearch_statusbar_set_revealer_visibility(sb, FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH, config->search_in_path);
     if (search_in_path_old != config->search_in_path) {
         fsearch_application_window_update_query_flags(self);
     }
@@ -499,8 +500,8 @@ fsearch_window_action_search_mode(GSimpleAction *action, GVariant *variant, gpoi
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     bool enable_regex_old = config->enable_regex;
     config->enable_regex = g_variant_get_boolean(variant);
-    GtkWidget *revealer = fsearch_application_window_get_search_mode_revealer(self);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), config->enable_regex);
+    FsearchStatusbar *sb = fsearch_application_window_get_statusbar(self);
+    fsearch_statusbar_set_revealer_visibility(sb, FSEARCH_STATUSBAR_REVEALER_REGEX, config->enable_regex);
     if (enable_regex_old != config->enable_regex) {
         fsearch_application_window_update_query_flags(self);
     }
@@ -513,8 +514,8 @@ fsearch_window_action_match_case(GSimpleAction *action, GVariant *variant, gpoin
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     bool match_case_old = config->match_case;
     config->match_case = g_variant_get_boolean(variant);
-    GtkWidget *revealer = fsearch_application_window_get_match_case_revealer(self);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(revealer), config->match_case);
+    FsearchStatusbar *sb = fsearch_application_window_get_statusbar(self);
+    fsearch_statusbar_set_revealer_visibility(sb, FSEARCH_STATUSBAR_REVEALER_MATCH_CASE, config->match_case);
     if (match_case_old != config->match_case) {
         fsearch_application_window_update_query_flags(self);
     }
