@@ -443,6 +443,16 @@ fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
     return 0;
 }
 
+gint
+fsearch_application_window_get_active_filter(FsearchApplicationWindow *self) {
+    return gtk_combo_box_get_active(GTK_COMBO_BOX(self->filter_combobox));
+}
+
+void
+fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, guint active_filter) {
+    gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), active_filter);
+}
+
 static void
 fsearch_window_db_view_search_finished(FsearchDatabaseView *view, gpointer user_data) {
     if (!user_data) {

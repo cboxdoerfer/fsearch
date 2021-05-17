@@ -216,9 +216,13 @@ on_search_filter_label_button_press_event(GtkWidget *widget, GdkEvent *event, gp
     if (button != GDK_BUTTON_PRIMARY || type != GDK_2BUTTON_PRESS) {
         return FALSE;
     }
-    // FsearchApplicationWindow *win = user_data;
-    // g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
-    // gtk_combo_box_set_active(GTK_COMBO_BOX(win->filter_combobox), 0);
+    GActionGroup *group = gtk_widget_get_action_group(widget, "win");
+    if (!group) {
+        return FALSE;
+    }
+    GVariant *state = g_action_group_get_action_state(group, "filter");
+    g_action_group_change_action_state(group, "filter", g_variant_new_int32(0));
+    g_variant_unref(state);
     return TRUE;
 }
 

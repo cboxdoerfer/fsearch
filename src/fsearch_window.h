@@ -67,6 +67,12 @@ fsearch_application_window_update_database_label(FsearchApplicationWindow *self,
 uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self);
 
+gint
+fsearch_application_window_get_active_filter(FsearchApplicationWindow *self);
+
+void
+fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, guint active_filter);
+
 void
 fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win);
 

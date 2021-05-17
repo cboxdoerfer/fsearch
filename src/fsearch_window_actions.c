@@ -25,13 +25,25 @@
 
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
-#include "fsearch_database.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "fsearch_statusbar.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window_actions.h"
+
+static void
+action_set_active_int(GActionGroup *group, const gchar *action_name, int32_t value) {
+    g_assert(G_IS_ACTION_GROUP(group));
+    g_assert(G_IS_ACTION_MAP(group));
+
+    GAction *action = g_action_map_lookup_action(G_ACTION_MAP(group), action_name);
+
+    if (action) {
+        g_simple_action_set_state(G_SIMPLE_ACTION(action), g_variant_new_int32(value));
+    }
+}
 
 static void
 action_set_active_bool(GActionGroup *group, const gchar *action_name, bool value) {
@@ -522,6 +534,14 @@ fsearch_window_action_match_case(GSimpleAction *action, GVariant *variant, gpoin
 }
 
 static void
+fsearch_window_action_set_filter(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+    g_simple_action_set_state(action, variant);
+    guint active_filter = g_variant_get_int32(variant);
+    fsearch_application_window_set_active_filter(self, active_filter);
+}
+
+static void
 fsearch_window_action_show_path_column(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     gboolean value = g_variant_get_boolean(variant);
@@ -625,15 +645,18 @@ static GActionEntry FsearchWindowActions[] = {
     {"search_in_path", action_toggle_state_cb, NULL, "true", fsearch_window_action_search_in_path},
     {"search_mode", action_toggle_state_cb, NULL, "true", fsearch_window_action_search_mode},
     {"match_case", action_toggle_state_cb, NULL, "true", fsearch_window_action_match_case},
+    {"filter", NULL, "i", "0", fsearch_window_action_set_filter},
 };
 
 void
 fsearch_window_actions_update(FsearchApplicationWindow *self) {
-    gint num_rows = fsearch_application_window_get_num_results(self);
+    const gint num_rows = fsearch_application_window_get_num_results(self);
 
     GActionGroup *group = G_ACTION_GROUP(self);
 
     FsearchListView *view = fsearch_application_window_get_listview(self);
+    const gint active_filter = fsearch_application_window_get_active_filter(self);
+
     gint num_rows_selected = 0;
     if (view) {
         num_rows_selected = fsearch_list_view_get_num_selected(view);
@@ -677,6 +700,7 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     action_set_active_bool(group, "show_type_column", config->show_type_column);
     action_set_active_bool(group, "show_size_column", config->show_size_column);
     action_set_active_bool(group, "show_modified_column", config->show_modified_column);
+    action_set_active_int(group, "filter", active_filter);
 }
 
 void
