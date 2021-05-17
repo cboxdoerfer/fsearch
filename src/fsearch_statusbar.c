@@ -282,11 +282,7 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
 
 static void
 fsearch_statusbar_class_init(FsearchStatusbarClass *klass) {
-    GObjectClass *object_class = G_OBJECT_CLASS(klass);
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
-
-    // object_class->constructed = fsearch_application_window_constructed;
-    // object_class->finalize = fsearch_application_window_finalize;
 
     gtk_widget_class_set_template_from_resource(widget_class, "/io/github/cboxdoerfer/fsearch/ui/statusbar.glade");
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_database_stack);
