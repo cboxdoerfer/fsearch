@@ -1,4 +1,5 @@
 EXTRA_DIST = fsearch.glade \
+         statusbar.glade \
 	     shared.css \
 	     gresource.xml \
 	     preferences.ui \
@@ -18,10 +19,12 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_clipboard.h \
 			 fsearch_config.h \
 			 fsearch_database.h \
+			 fsearch_database_entry.h \
 			 fsearch_database_search.h \
 			 fsearch_exclude_path.h \
 			 fsearch_file_utils.h \
 			 fsearch_filter.h \
+		     fsearch_highlight_token.h \
 			 fsearch_index.h \
 			 fsearch_limits.h \
 			 fsearch_list_view.h \
@@ -30,6 +33,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_preferences_ui.h \
 			 fsearch_preferences_widgets.h \
 			 fsearch_query.h \
+			 fsearch_statusbar.h \
 			 fsearch_string_utils.h \
 			 fsearch_task.h \
 			 fsearch_thread_pool.h \
@@ -45,10 +49,12 @@ fsearch_SOURCES = main.c \
 		  fsearch_clipboard.c \
 		  fsearch_config.c \
 		  fsearch_database.c \
+		  fsearch_database_entry.c \
 		  fsearch_database_search.c \
 		  fsearch_exclude_path.c \
 		  fsearch_file_utils.c \
 		  fsearch_filter.c \
+		  fsearch_highlight_token.c \
 		  fsearch_index.c \
 		  fsearch_list_view.c \
 		  fsearch_listview_popup.c \
@@ -56,6 +62,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_preferences_ui.c \
 		  fsearch_preferences_widgets.c \
 		  fsearch_query.c \
+		  fsearch_statusbar.c \
 		  fsearch_string_utils.c \
 		  fsearch_task.c \
 		  fsearch_thread_pool.c \
