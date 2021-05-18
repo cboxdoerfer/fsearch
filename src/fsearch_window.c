@@ -173,7 +173,11 @@ database_load_started(FsearchApplicationWindow *win) {
 
 static void
 database_scan_started(FsearchApplicationWindow *win) {
-    gtk_stack_set_visible_child_name(GTK_STACK(win->popover_update_button_stack), "cancel_database_update");
+    GtkWidget *cancel_update_button =
+        gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "cancel_database_update");
+    if (cancel_update_button) {
+        gtk_stack_set_visible_child(GTK_STACK(win->popover_update_button_stack), cancel_update_button);
+    }
 }
 
 void
@@ -1155,7 +1159,12 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->listview));
 
     hide_overlay(win, OVERLAY_DATABASE_LOADING);
-    gtk_stack_set_visible_child_name(GTK_STACK(win->popover_update_button_stack), "update_database");
+
+    GtkWidget *update_database_button =
+        gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "update_database");
+    if (update_database_button) {
+        gtk_stack_set_visible_child(GTK_STACK(win->popover_update_button_stack), update_database_button);
+    }
 
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     uint32_t num_items = db_get_num_entries(db);
