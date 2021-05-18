@@ -76,33 +76,44 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
               </packing>
             </child>
             <child>
-              <object class="GtkButton" id="popover_update_db">
+              <object class="GtkStack" id="popover_update_button_stack">
                 <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Update database</property>
-                <property name="action-name">app.update_database</property>
-                <property name="image">image_update_database</property>
+                <property name="can-focus">False</property>
+                <property name="transition-type">crossfade</property>
+                <child>
+                  <object class="GtkButton" id="popover_update_db">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Update database</property>
+                    <property name="action-name">app.update_database</property>
+                    <property name="image">image_update_database</property>
+                  </object>
+                  <packing>
+                    <property name="name">update_database</property>
+                    <property name="title">page0</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkButton" id="popover_cancel_update_db">
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">True</property>
+                    <property name="tooltip-text" translatable="yes">Cancel database update</property>
+                    <property name="action-name">app.cancel_update_database</property>
+                    <property name="image">image_update_database1</property>
+                  </object>
+                  <packing>
+                    <property name="name">cancel_database_update</property>
+                    <property name="title">page1</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
               </object>
               <packing>
                 <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">1</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkButton" id="popover_cancel_update_db">
-                <property name="visible">True</property>
-                <property name="can-focus">True</property>
-                <property name="receives-default">True</property>
-                <property name="tooltip-text" translatable="yes">Cancel database update</property>
-                <property name="action-name">app.cancel_update_database</property>
-                <property name="image">image_update_database1</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">2</property>
               </packing>
             </child>
           </object>

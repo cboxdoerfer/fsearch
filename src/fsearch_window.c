@@ -56,8 +56,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *overlay_query_empty;
     GtkWidget *overlay_results_empty;
     GtkWidget *overlay_results_sorting;
-    GtkWidget *popover_cancel_update_db;
-    GtkWidget *popover_update_db;
+    GtkWidget *popover_update_button_stack;
     GtkWidget *search_box;
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
@@ -174,8 +173,7 @@ database_load_started(FsearchApplicationWindow *win) {
 
 static void
 database_scan_started(FsearchApplicationWindow *win) {
-    gtk_widget_hide(win->popover_update_db);
-    gtk_widget_show(win->popover_cancel_update_db);
+    gtk_stack_set_visible_child_name(GTK_STACK(win->popover_update_button_stack), "cancel_database_update");
 }
 
 void
@@ -1157,8 +1155,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->listview));
 
     hide_overlay(win, OVERLAY_DATABASE_LOADING);
-    gtk_widget_show(win->popover_update_db);
-    gtk_widget_hide(win->popover_cancel_update_db);
+    gtk_stack_set_visible_child_name(GTK_STACK(win->popover_update_button_stack), "update_database");
 
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     uint32_t num_items = db_get_num_entries(db);
@@ -1377,8 +1374,7 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_cancel_update_db);
-    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_db);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_button_stack);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
