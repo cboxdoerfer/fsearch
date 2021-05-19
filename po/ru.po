@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-05-16 19:33+0000\n"
+"PO-Revision-Date: 2021-05-20 16:33+0000\n"
 "Last-Translator: Axus Wizix <axus.wizix@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -44,7 +44,7 @@ msgstr "Открыть другой программой"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Показать настройки программы"
 
 #: src/fsearch.c:675
 msgid "Update the database and exit"
@@ -549,26 +549,24 @@ msgid "Update database on start"
 msgstr "Обновлять базу данных при старте"
 
 #: src/preferences.ui:727
-#, fuzzy
-#| msgid "Update"
 msgid "Update every"
-msgstr "Обновлять"
+msgstr "Обновлять каждые"
 
 #: src/preferences.ui:748
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/preferences.ui:765
 msgid "hour(s) and"
-msgstr ""
+msgstr "час(ов) и"
 
 #: src/preferences.ui:777
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/preferences.ui:795
 msgid "minute(s)"
-msgstr ""
+msgstr "минут(у)"
 
 #: src/preferences.ui:866
 msgid "Add path to be included in database"
@@ -682,8 +680,16 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Запомнить размер окна:</b>\n"
+"\n"
+"Если этот параметр включен, размер окна предыдущего сеанса будет "
+"восстановлен при открытии окна FSearch.\n"
+"\n"
+"Обратите внимание, что некоторые оконные менеджеры игнорируют этот запрос и "
+"заставляют окно иметь другой размер."
 
 #: src/preferences.ui:1196
+#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -700,6 +706,19 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>Поведение после успешного открытия файла:</b>\n"
+"\n"
+"После успешного открытия файла/папки можно выполняется одно из следующих "
+"действий:\n"
+"\t• <b>Ничего:</b> Не производится никаких действий.\n"
+"\t• <b>Свернуть:</b> Текущее выбранное окно FSearch будет свёрнуто. \n"
+"\t\tОбратите внимание, что не все системы позволяют сворачивать окна.\n"
+"\t• <b>Закрыть:</b> Выйти из FSearch.\n"
+"\n"
+"Вы можете настроить, какие из этих действий будут выполняться при открытии "
+"файла с помощью\n"
+"\t• <b>комбинаций клавиш или пунктов меню</b> и/или\n"
+"\t• <b>щелчком мыши</b>"
 
 #: src/preferences.ui:1220
 msgid ""
@@ -723,6 +742,10 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b>Показывать всплывающие подсказки:</b>\n"
+"\n"
+"Если этот параметр включен, то при навидении указателя, в списке результатов "
+"будет отображаться подсказка с полный путем к выбранному файлу/папке."
 
 #: src/preferences.ui:1257
 msgid ""
