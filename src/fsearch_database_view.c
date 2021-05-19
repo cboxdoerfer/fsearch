@@ -1,5 +1,7 @@
 #define _GNU_SOURCE
 
+#define G_LOG_DOMAIN "fsearch-database-view"
+
 #include "fsearch_database_view.h"
 #include "fsearch_database.h"
 #include "fsearch_database_search.h"
