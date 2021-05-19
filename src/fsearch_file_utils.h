@@ -18,7 +18,7 @@
 
 #pragma once
 
-#include "fsearch_database.h"
+#include "fsearch_database_entry.h"
 #include <gtk/gtk.h>
 #include <stdbool.h>
 

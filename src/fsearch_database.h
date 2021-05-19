@@ -49,10 +49,6 @@ typedef enum {
     NUM_DATABASE_INDEX_TYPES,
 } FsearchDatabaseIndexType;
 
-typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntry;
-typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
-typedef struct FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
-
 typedef struct FsearchDatabase FsearchDatabase;
 
 bool
