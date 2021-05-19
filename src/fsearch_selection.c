@@ -12,7 +12,7 @@ fsearch_selection_free(GHashTable *selection) {
 }
 
 GHashTable *
-fsearch_selection_new() {
+fsearch_selection_new(void) {
     return g_hash_table_new(g_direct_hash, g_direct_equal);
 }
 

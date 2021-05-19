@@ -5,6 +5,7 @@
 #include "fsearch_database_view.h"
 #include "fsearch_database.h"
 #include "fsearch_database_search.h"
+#include "fsearch_selection.h"
 #include "fsearch_task.h"
 
 #include <assert.h>
@@ -81,7 +82,7 @@ db_view_free(FsearchDatabaseView *view) {
     db_view_unregister(view);
 
     if (view->selection) {
-        g_hash_table_destroy(view->selection);
+        fsearch_selection_free(view->selection);
         view->selection = NULL;
     }
 
@@ -97,7 +98,7 @@ db_view_unregister(FsearchDatabaseView *view) {
     assert(view != NULL);
 
     if (view->selection) {
-        g_hash_table_remove_all(view->selection);
+        fsearch_selection_unselect_all(view->selection);
     }
 
     if (view->files) {
@@ -168,7 +169,7 @@ db_view_new(const char *query_text,
 
     view->task_queue = fsearch_task_queue_new("fsearch_db_task_queue");
 
-    view->selection = g_hash_table_new(g_direct_hash, g_direct_equal);
+    view->selection = fsearch_selection_new();
 
     view->query_text = strdup(query_text ? query_text : "");
     view->query_flags = flags;
@@ -220,7 +221,7 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
         DatabaseSearchResult *res = result;
 
         if (view->selection) {
-            g_hash_table_remove_all(view->selection);
+            fsearch_selection_unselect_all(view->selection);
         }
 
         if (view->files) {
@@ -536,4 +537,98 @@ FsearchDatabaseIndexType
 db_view_get_sort_order(FsearchDatabaseView *view) {
     assert(view != NULL);
     return view->sort_order;
+}
+
+static FsearchDatabaseEntry *
+db_view_get_entry_for_idx(FsearchDatabaseView *view, uint32_t idx) {
+    const uint32_t num_folders = darray_get_num_items(view->folders);
+    if (idx < num_folders) {
+        return darray_get_item(view->folders, idx);
+    }
+    idx -= num_folders - 1;
+    const uint32_t num_files = darray_get_num_items(view->files);
+    if (idx < num_files) {
+        return darray_get_item(view->files, idx);
+    }
+    return NULL;
+}
+
+void
+db_view_select_toggle(FsearchDatabaseView *view, uint32_t idx) {
+    assert(view != NULL);
+    db_view_lock(view);
+    FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
+    if (entry) {
+        fsearch_selection_select_toggle(view->selection, entry);
+    }
+    db_view_unlock(view);
+}
+
+void
+db_view_select(FsearchDatabaseView *view, uint32_t idx) {
+    assert(view != NULL);
+    db_view_lock(view);
+    FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
+    if (entry) {
+        fsearch_selection_select(view->selection, entry);
+    }
+    db_view_unlock(view);
+}
+
+bool
+db_view_is_selected(FsearchDatabaseView *view, uint32_t idx) {
+    assert(view != NULL);
+    bool is_selected = false;
+    db_view_lock(view);
+    FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
+    if (entry) {
+        is_selected = fsearch_selection_is_selected(view->selection, entry);
+    }
+    db_view_unlock(view);
+    return is_selected;
+}
+
+void
+db_view_select_all(FsearchDatabaseView *view) {
+    assert(view != NULL);
+    db_view_lock(view);
+    fsearch_selection_select_all(view->selection, view->folders);
+    fsearch_selection_select_all(view->selection, view->files);
+    db_view_unlock(view);
+}
+
+void
+db_view_unselect_all(FsearchDatabaseView *view) {
+    assert(view != NULL);
+    db_view_lock(view);
+    fsearch_selection_unselect_all(view->selection);
+    db_view_unlock(view);
+}
+
+void
+db_view_invert_selection(FsearchDatabaseView *view) {
+    assert(view != NULL);
+    db_view_lock(view);
+    fsearch_selection_invert(view->selection, view->folders);
+    fsearch_selection_invert(view->selection, view->files);
+    db_view_unlock(view);
+}
+
+uint32_t
+db_view_get_num_selected(FsearchDatabaseView *view) {
+    assert(view != NULL);
+    db_view_lock(view);
+    const uint32_t num_selected = fsearch_selection_get_num_selected(view->selection);
+    db_view_unlock(view);
+    return num_selected;
+}
+
+void
+db_view_unlock(FsearchDatabaseView *view) {
+    g_mutex_unlock(&view->mutex);
+}
+
+void
+db_view_lock(FsearchDatabaseView *view) {
+    g_mutex_lock(&view->mutex);
 }

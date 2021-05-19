@@ -10,7 +10,7 @@ void
 fsearch_selection_free(GHashTable *selection);
 
 GHashTable *
-fsearch_selection_new();
+fsearch_selection_new(void);
 
 void
 fsearch_selection_select_toggle(GHashTable *selection, gpointer item);

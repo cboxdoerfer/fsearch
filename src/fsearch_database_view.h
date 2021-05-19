@@ -66,3 +66,30 @@ db_view_get_query_flags(FsearchDatabaseView *view);
 
 FsearchQuery *
 db_view_get_query(FsearchDatabaseView *view);
+
+void
+db_view_select_toggle(FsearchDatabaseView *view, uint32_t idx);
+
+void
+db_view_select(FsearchDatabaseView *view, uint32_t idx);
+
+bool
+db_view_is_selected(FsearchDatabaseView *view, uint32_t idx);
+
+void
+db_view_select_all(FsearchDatabaseView *view);
+
+void
+db_view_unselect_all(FsearchDatabaseView *view);
+
+void
+db_view_invert_selection(FsearchDatabaseView *view);
+
+uint32_t
+db_view_get_num_selected(FsearchDatabaseView *view);
+
+void
+db_view_unlock(FsearchDatabaseView *view);
+
+void
+db_view_lock(FsearchDatabaseView *view);
