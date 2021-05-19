@@ -21,6 +21,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_database.h \
 			 fsearch_database_entry.h \
 			 fsearch_database_search.h \
+			 fsearch_database_view.h \
 			 fsearch_exclude_path.h \
 			 fsearch_file_utils.h \
 			 fsearch_filter.h \
@@ -51,6 +52,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_database.c \
 		  fsearch_database_entry.c \
 		  fsearch_database_search.c \
+		  fsearch_database_view.c \
 		  fsearch_exclude_path.c \
 		  fsearch_file_utils.c \
 		  fsearch_filter.c \

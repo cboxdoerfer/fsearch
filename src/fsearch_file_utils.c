@@ -21,7 +21,7 @@
 #define _GNU_SOURCE
 
 #include "fsearch_file_utils.h"
-#include "fsearch_database.h"
+#include "fsearch_database_view.h"
 #include "fsearch_limits.h"
 #include "fsearch_ui_utils.h"
 #include <gio/gio.h>

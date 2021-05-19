@@ -53,64 +53,13 @@ typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntry;
 typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
 typedef struct FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
 
-typedef struct FsearchDatabaseView FsearchDatabaseView;
 typedef struct FsearchDatabase FsearchDatabase;
 
-typedef void (*FsearchDatabaseViewNotifyFunc)(FsearchDatabaseView *view, gpointer user_data);
+bool
+db_register_view(FsearchDatabase *db, gpointer view);
 
-void
-db_view_free(FsearchDatabaseView *view);
-
-FsearchDatabaseView *
-db_view_new(const char *query_text,
-            FsearchQueryFlags flags,
-            FsearchFilter *filter,
-            FsearchDatabaseIndexType sort_order,
-            FsearchDatabaseViewNotifyFunc view_changed_func,
-            FsearchDatabaseViewNotifyFunc search_started_func,
-            FsearchDatabaseViewNotifyFunc search_finished_func,
-            FsearchDatabaseViewNotifyFunc sort_started_func,
-            FsearchDatabaseViewNotifyFunc sort_finished_func,
-            gpointer user_data);
-
-void
-db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter);
-
-void
-db_view_set_query_flags(FsearchDatabaseView *view, FsearchQueryFlags query_flags);
-
-void
-db_view_set_query_text(FsearchDatabaseView *view, const char *query_text);
-
-void
-db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
-
-uint32_t
-db_view_get_num_folders(FsearchDatabaseView *view);
-
-uint32_t
-db_view_get_num_files(FsearchDatabaseView *view);
-
-uint32_t
-db_view_get_num_entries(FsearchDatabaseView *view);
-
-FsearchDatabaseIndexType
-db_view_get_sort_order(FsearchDatabaseView *view);
-
-void
-db_view_register(FsearchDatabase *db, FsearchDatabaseView *view);
-
-void
-db_view_unregister(FsearchDatabaseView *view);
-
-FsearchDatabaseEntry *
-db_view_get_entry(FsearchDatabaseView *view, uint32_t idx);
-
-FsearchQueryFlags
-db_view_get_query_flags(FsearchDatabaseView *view);
-
-FsearchQuery *
-db_view_get_query(FsearchDatabaseView *view);
+bool
+db_unregister_view(FsearchDatabase *db, gpointer view);
 
 bool
 db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
@@ -162,6 +111,9 @@ db_get_folders(FsearchDatabase *db);
 
 DynamicArray *
 db_get_files(FsearchDatabase *db);
+
+FsearchThreadPool *
+db_get_thread_pool(FsearchDatabase *db);
 
 bool
 db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
