@@ -89,6 +89,9 @@ uint32_t
 db_view_get_num_selected(FsearchDatabaseView *view);
 
 void
+db_view_selection_for_each(FsearchDatabaseView *view, GHFunc func, gpointer user_data);
+
+void
 db_view_unlock(FsearchDatabaseView *view);
 
 void

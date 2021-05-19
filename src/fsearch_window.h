@@ -82,4 +82,19 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 void
 fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app);
 
+void
+fsearch_application_window_invert_selection(FsearchApplicationWindow *self);
+
+void
+fsearch_application_window_unselect_all(FsearchApplicationWindow *self);
+
+void
+fsearch_application_window_select_all(FsearchApplicationWindow *self);
+
+uint32_t
+fsearch_application_window_get_num_selected(FsearchApplicationWindow *self);
+
+void
+fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GHFunc func, gpointer user_data);
+
 G_END_DECLS

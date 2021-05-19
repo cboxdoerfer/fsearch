@@ -32,3 +32,6 @@ fsearch_selection_invert(GHashTable *selection, DynamicArray *items);
 
 uint32_t
 fsearch_selection_get_num_selected(GHashTable *selection);
+
+void
+fsearch_selection_for_each(GHashTable *selection, GHFunc func, gpointer user_data);

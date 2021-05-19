@@ -89,3 +89,8 @@ fsearch_selection_get_num_selected(GHashTable *selection) {
     assert(selection != NULL);
     return g_hash_table_size(selection);
 }
+void
+fsearch_selection_for_each(GHashTable *selection, GHFunc func, gpointer user_data) {
+    assert(selection != NULL);
+    g_hash_table_foreach(selection, func, user_data);
+}

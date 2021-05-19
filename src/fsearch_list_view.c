@@ -84,6 +84,14 @@ struct _FsearchListView {
 
     FsearchListViewRowDataFunc row_data_func;
     gpointer row_data_func_data;
+
+    gboolean has_selection_handlers;
+
+    FsearchListViewIsSelectedFunc is_selected_func;
+    FsearchListViewSelectFunc select_func;
+    FsearchListViewSelectToggleFunc select_toggle_func;
+    FsearchListViewUnselectAllFunc unselect_func;
+    gpointer selection_user_data;
 };
 
 enum { FSEARCH_LIST_VIEW_SELECTION_CHANGED, FSEARCH_LIST_VIEW_ROW_ACTIVATED, FSEARCH_LIST_VIEW_POPUP, NUM_SIGNALS };
@@ -100,6 +108,9 @@ enum {
     PROP_HSCROLL_POLICY,
     PROP_VSCROLL_POLICY,
 };
+
+static gboolean
+fsearch_list_view_is_selected(FsearchListView *view, int row);
 
 static void
 fsearch_list_view_scrollable_init(GtkScrollableInterface *iface);
@@ -255,15 +266,6 @@ fsearch_list_view_get_col_for_x_view(FsearchListView *view, int x_view) {
     return fsearch_list_view_get_col_for_x_canvas(view, x_canvas);
 }
 
-static gboolean
-fsearch_list_view_is_selected_for_idx(FsearchListView *view, gint row_idx) {
-    if (!view->row_data_func) {
-        return FALSE;
-    }
-    void *data = view->row_data_func(row_idx, view->sort_type, view->row_data_func_data);
-    return fsearch_list_view_is_selected(view, data);
-}
-
 static void
 fsearch_list_view_get_rubberband_points(FsearchListView *view, double *x1, double *y1, double *x2, double *y2) {
     gdouble x_drag_start = 0;
@@ -395,7 +397,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
                                 &row_rect,
                                 view->sort_type,
                                 row_idx,
-                                fsearch_list_view_is_selected_for_idx(view, row_idx),
+                                fsearch_list_view_is_selected(view, row_idx),
                                 view->last_clicked_idx == row_idx ? TRUE : FALSE,
                                 fsearch_list_view_is_text_dir_rtl(view),
                                 view->draw_row_func_data);
@@ -539,77 +541,46 @@ fsearch_list_view_selection_changed(FsearchListView *view) {
 }
 
 static void
-fsearch_list_view_selection_invert_silent(FsearchListView *view) {
-    GHashTable *new_selection = g_hash_table_new(g_direct_hash, g_direct_equal);
-
-    int num_selected = 0;
-
-    for (int i = 0; i < view->num_rows; i++) {
-        void *data = view->row_data_func(i, view->sort_type, view->row_data_func_data);
-        if (!data) {
-            continue;
-        }
-        if (g_hash_table_contains(view->selection, data)) {
-            continue;
-        }
-        g_hash_table_add(new_selection, data);
-        num_selected++;
-    }
-    g_hash_table_destroy(view->selection);
-    view->selection = new_selection;
-    view->num_selected = num_selected;
-}
-
-static void
-fsearch_list_view_select_all_silent(FsearchListView *view) {
-    if (!view->row_data_func) {
-        return;
-    }
-    for (int i = 0; i < view->num_rows; i++) {
-        void *data = view->row_data_func(i, view->sort_type, view->row_data_func_data);
-        if (data) {
-            g_hash_table_add(view->selection, data);
-            view->num_selected++;
-        }
-    }
-}
-
-static void
 fsearch_list_view_selection_clear_silent(FsearchListView *view) {
-    g_hash_table_steal_all(view->selection);
-    view->num_selected = 0;
-}
-
-static void
-fsearch_list_view_selection_add_silent(FsearchListView *view, void *data) {
-    if (g_hash_table_contains(view->selection, data)) {
-        return;
+    if (view->has_selection_handlers) {
+        view->unselect_func(view->selection_user_data);
     }
-    g_hash_table_add(view->selection, data);
-    view->num_selected++;
 }
 
 static void
-fsearch_list_view_selection_add(FsearchListView *view, void *data) {
-    fsearch_list_view_selection_add_silent(view, data);
-    fsearch_list_view_selection_changed(view);
-}
-
-static void
-fsearch_list_view_selection_toggle_silent(FsearchListView *view, void *data) {
-    if (g_hash_table_steal(view->selection, data)) {
-        view->num_selected--;
-        return;
+fsearch_list_view_selection_add(FsearchListView *view, int row) {
+    if (view->has_selection_handlers) {
+        view->select_func(row, view->sort_type, view->selection_user_data);
+        fsearch_list_view_selection_changed(view);
     }
-    else {
-        g_hash_table_add(view->selection, data);
-        view->num_selected++;
+}
+
+static void
+fsearch_list_view_selection_toggle_silent(FsearchListView *view, int row) {
+    if (view->has_selection_handlers) {
+        view->select_toggle_func(row, view->sort_type, view->selection_user_data);
+    }
+}
+
+static gboolean
+fsearch_list_view_is_selected(FsearchListView *view, int row) {
+    if (view->has_selection_handlers) {
+        return view->is_selected_func(row, view->sort_type, view->selection_user_data);
+    }
+    return FALSE;
+}
+
+static void
+fsearch_list_view_selection_clear(FsearchListView *view) {
+    if (view->has_selection_handlers) {
+        view->unselect_func(view->selection_user_data);
+        fsearch_list_view_selection_changed(view);
     }
 }
 
 static void
 fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, guint end_idx) {
-    if (!view->row_data_func) {
+    if (!view->has_selection_handlers) {
         return;
     }
     if (start_idx < 0 || end_idx < 0) {
@@ -626,10 +597,7 @@ fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, gu
     end_idx = MIN(view->num_rows - 1, end_idx);
 
     for (int i = start_idx; i <= end_idx; i++) {
-        void *data = view->row_data_func(i, view->sort_type, view->row_data_func_data);
-        if (data) {
-            fsearch_list_view_selection_add_silent(view, data);
-        }
+        view->select_func(i, view->sort_type, view->selection_user_data);
     }
 }
 
@@ -715,12 +683,12 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
             }
             else if (modify_selection) {
                 view->last_clicked_idx = row_idx;
-                fsearch_list_view_selection_toggle_silent(view, row_data);
+                fsearch_list_view_selection_toggle_silent(view, row_idx);
             }
             else {
                 view->last_clicked_idx = row_idx;
                 fsearch_list_view_selection_clear_silent(view);
-                fsearch_list_view_selection_toggle_silent(view, row_data);
+                fsearch_list_view_selection_toggle_silent(view, row_idx);
                 if (view->single_click_activate) {
                     FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x);
                     if (col) {
@@ -746,9 +714,9 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 
     if (button_pressed == GDK_BUTTON_SECONDARY && n_press == 1) {
         view->last_clicked_idx = row_idx;
-        if (!fsearch_list_view_is_selected(view, row_data)) {
+        if (!fsearch_list_view_is_selected(view, row_idx)) {
             fsearch_list_view_selection_clear_silent(view);
-            fsearch_list_view_selection_toggle_silent(view, row_data);
+            fsearch_list_view_selection_toggle_silent(view, row_idx);
             fsearch_list_view_selection_changed(view);
         }
         g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0, row_idx, view->sort_type);
@@ -990,8 +958,6 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         view->last_clicked_idx = -1;
         view->focused_idx = CLAMP(old_focused_idx + d_idx, 0, view->num_rows - 1);
 
-        void *row_data = view->row_data_func(view->focused_idx, view->sort_type, view->row_data_func_data);
-
         if (extend_selection) {
             if (view->extend_started_idx < 0) {
                 view->extend_started_idx = old_focused_idx;
@@ -1002,7 +968,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         else if (!modify_selection) {
             view->extend_started_idx = -1;
             fsearch_list_view_selection_clear_silent(view);
-            fsearch_list_view_selection_toggle_silent(view, row_data);
+            fsearch_list_view_selection_toggle_silent(view, view->focused_idx);
         }
 
         fsearch_list_view_selection_changed(view);
@@ -1519,10 +1485,6 @@ fsearch_list_view_destroy(GtkWidget *widget) {
         g_object_unref(view->header_drag_gesture);
         view->header_drag_gesture = NULL;
     }
-    if (view->selection) {
-        g_hash_table_destroy(view->selection);
-        view->selection = NULL;
-    }
 }
 
 static void
@@ -1613,8 +1575,6 @@ fsearch_list_view_init(FsearchListView *view) {
 
     view->min_list_width = 0;
     view->list_height = view->num_rows * view->row_height;
-
-    view->selection = g_hash_table_new(g_direct_hash, g_direct_equal);
 
     gtk_widget_set_sensitive(GTK_WIDGET(view), TRUE);
     gtk_widget_set_can_focus(GTK_WIDGET(view), TRUE);
@@ -1920,50 +1880,28 @@ fsearch_list_view_set_sort_func(FsearchListView *view, FsearchListViewSortFunc s
     view->sort_func_data = sort_func_data;
 }
 
-gboolean
-fsearch_list_view_is_selected(FsearchListView *view, void *data) {
-    return g_hash_table_contains(view->selection, data);
-}
-
-uint32_t
-fsearch_list_view_get_num_selected(FsearchListView *view) {
-    return view->num_selected;
-}
-
 void
-fsearch_list_view_selection_for_each(FsearchListView *view, GHFunc func, gpointer user_data) {
+fsearch_list_view_set_selection_handlers(FsearchListView *view,
+                                         FsearchListViewIsSelectedFunc is_selected_func,
+                                         FsearchListViewSelectFunc select_func,
+                                         FsearchListViewSelectToggleFunc select_toggle_func,
+                                         FsearchListViewUnselectAllFunc unselect_func,
+                                         gpointer user_data) {
     if (!view) {
         return;
     }
-    g_hash_table_foreach(view->selection, func, user_data);
-}
+    view->is_selected_func = is_selected_func;
+    view->select_func = select_func;
+    view->select_toggle_func = select_toggle_func;
+    view->unselect_func = unselect_func;
+    view->selection_user_data = user_data;
 
-void
-fsearch_list_view_selection_invert(FsearchListView *view) {
-
-    fsearch_list_view_selection_invert_silent(view);
-    fsearch_list_view_selection_changed(view);
-}
-
-void
-fsearch_list_view_select_range(FsearchListView *view, int start_idx, int end_idx) {
-    fsearch_list_view_select_range_silent(view, start_idx, end_idx);
-    fsearch_list_view_selection_changed(view);
-}
-
-void
-fsearch_list_view_select_all(FsearchListView *view) {
-    fsearch_list_view_select_all_silent(view);
-    fsearch_list_view_selection_changed(view);
-}
-
-void
-fsearch_list_view_selection_clear(FsearchListView *view) {
-    if (!view || !view->selection) {
-        return;
+    if (is_selected_func && select_func && select_toggle_func && unselect_func) {
+        view->has_selection_handlers = TRUE;
     }
-    fsearch_list_view_selection_clear_silent(view);
-    fsearch_list_view_selection_changed(view);
+    else {
+        view->has_selection_handlers = FALSE;
+    }
 }
 
 gint
@@ -1980,12 +1918,7 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
         return;
     }
     view->focused_idx = CLAMP(row_idx, 0, view->num_rows);
-    if (view->row_data_func) {
-        void *data = view->row_data_func(view->focused_idx, view->sort_type, view->row_data_func_data);
-        if (data) {
-            fsearch_list_view_selection_add(view, data);
-        }
-    }
+    fsearch_list_view_selection_add(view, view->focused_idx);
     fsearch_list_view_scroll_row_into_view(view, row_idx);
     gtk_widget_queue_draw(GTK_WIDGET(view));
 }

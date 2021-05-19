@@ -55,6 +55,12 @@ typedef void *(*FsearchListViewRowDataFunc)(int row_idx, GtkSortType sort_type, 
 
 typedef void (*FsearchListViewSortFunc)(int type, gpointer user_data);
 
+// selection handlers
+typedef gboolean (*FsearchListViewIsSelectedFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
+typedef void (*FsearchListViewSelectFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
+typedef void (*FsearchListViewSelectToggleFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
+typedef void (*FsearchListViewUnselectAllFunc)(gpointer user_data);
+
 FsearchListViewColumn *
 fsearch_list_view_column_new(int type,
                              char *name,
@@ -66,6 +72,14 @@ fsearch_list_view_column_new(int type,
 
 FsearchListView *
 fsearch_list_view_new();
+
+void
+fsearch_list_view_set_selection_handlers(FsearchListView *view,
+                                         FsearchListViewIsSelectedFunc is_selected_func,
+                                         FsearchListViewSelectFunc select_func,
+                                         FsearchListViewSelectToggleFunc select_toggle_func,
+                                         FsearchListViewUnselectAllFunc unselect_func,
+                                         gpointer user_data);
 
 void
 fsearch_list_view_column_set_visible(FsearchListView *view, FsearchListViewColumn *col, gboolean visible);
@@ -87,27 +101,6 @@ fsearch_list_view_get_first_column_for_type(FsearchListView *view, int type);
 
 void
 fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
-
-void
-fsearch_list_view_selection_clear(FsearchListView *view);
-
-void
-fsearch_list_view_select_all(FsearchListView *view);
-
-void
-fsearch_list_view_select_range(FsearchListView *view, int start_idx, int end_idx);
-
-void
-fsearch_list_view_selection_invert(FsearchListView *view);
-
-gboolean
-fsearch_list_view_is_selected(FsearchListView *view, void *data);
-
-uint32_t
-fsearch_list_view_get_num_selected(FsearchListView *view);
-
-void
-fsearch_list_view_selection_for_each(FsearchListView *view, GHFunc func, gpointer user_data);
 
 gint
 fsearch_list_view_get_cursor(FsearchListView *view);

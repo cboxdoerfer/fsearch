@@ -683,7 +683,7 @@ on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data
     }
 
     count_results_ctx ctx = {0, 0};
-    fsearch_list_view_selection_for_each(view, (GHFunc)count_results_cb, &ctx);
+    fsearch_application_window_selection_for_each(self, (GHFunc)count_results_cb, &ctx);
 
     fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(self->statusbar),
                                     ctx.num_files,
@@ -1114,6 +1114,50 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
 }
 
+static int
+get_row_idx_for_sort_type(FsearchDatabaseView *view, int row_idx, GtkSortType sort_type) {
+    if (sort_type == GTK_SORT_ASCENDING) {
+        return row_idx;
+    }
+    const uint32_t num_entries = db_view_get_num_entries(view);
+    return (int)num_entries - row_idx;
+}
+
+static void
+fsearch_row_unselect_all(gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    if (win->db_view) {
+        db_view_unselect_all(win->db_view);
+    }
+}
+
+static void
+fsearch_row_select_toggle(int row, GtkSortType sort_type, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    if (win->db_view) {
+        db_view_select_toggle(win->db_view, get_row_idx_for_sort_type(win->db_view, row, sort_type));
+    }
+}
+
+static void
+fsearch_row_select(int row, GtkSortType sort_type, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+
+    if (win->db_view) {
+        db_view_select(win->db_view, get_row_idx_for_sort_type(win->db_view, row, sort_type));
+    }
+}
+
+static gboolean
+fsearch_row_is_selected(int row, GtkSortType sort_type, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+
+    if (win->db_view) {
+        return db_view_is_selected(win->db_view, get_row_idx_for_sort_type(win->db_view, row, sort_type));
+    }
+    return FALSE;
+}
+
 static void
 create_view_and_model(FsearchApplicationWindow *app) {
     g_assert(FSEARCH_WINDOW_IS_WINDOW(app));
@@ -1130,6 +1174,12 @@ create_view_and_model(FsearchApplicationWindow *app) {
     fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_draw_row, app);
     fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_get_entry_for_row, app);
     fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->listview), fsearch_results_sort_func, app);
+    fsearch_list_view_set_selection_handlers(FSEARCH_LIST_VIEW(app->listview),
+                                             fsearch_row_is_selected,
+                                             fsearch_row_select,
+                                             fsearch_row_select_toggle,
+                                             fsearch_row_unselect_all,
+                                             app);
     fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
     gtk_widget_set_has_tooltip(GTK_WIDGET(app->listview), config->enable_list_tooltips);
 
@@ -1156,7 +1206,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
 
     fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), "");
 
-    fsearch_list_view_selection_clear(FSEARCH_LIST_VIEW(win->listview));
+    fsearch_application_window_unselect_all(win);
 
     hide_overlay(win, OVERLAY_DATABASE_LOADING);
 
@@ -1394,6 +1444,55 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
+}
+
+static void
+fsearch_application_window_update_listview(FsearchApplicationWindow *self) {
+    gtk_widget_queue_draw(self->listview);
+}
+
+void
+fsearch_application_window_invert_selection(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    if (self->db_view) {
+        db_view_invert_selection(self->db_view);
+        fsearch_application_window_update_listview(self);
+    }
+}
+
+void
+fsearch_application_window_unselect_all(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    if (self->db_view) {
+        db_view_unselect_all(self->db_view);
+        fsearch_application_window_update_listview(self);
+    }
+}
+
+void
+fsearch_application_window_select_all(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    if (self->db_view) {
+        db_view_select_all(self->db_view);
+        fsearch_application_window_update_listview(self);
+    }
+}
+
+uint32_t
+fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    if (self->db_view) {
+        return db_view_get_num_selected(self->db_view);
+    }
+    return 0;
+}
+
+void
+fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GHFunc func, gpointer user_data) {
+    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    if (self->db_view) {
+        db_view_selection_for_each(self->db_view, func, user_data);
+    }
 }
 
 GtkEntry *
