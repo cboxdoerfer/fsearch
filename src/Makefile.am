@@ -34,6 +34,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_preferences_ui.h \
 			 fsearch_preferences_widgets.h \
 			 fsearch_query.h \
+			 fsearch_selection.h \
 			 fsearch_statusbar.h \
 			 fsearch_string_utils.h \
 			 fsearch_task.h \
@@ -64,6 +65,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_preferences_ui.c \
 		  fsearch_preferences_widgets.c \
 		  fsearch_query.c \
+          fsearch_selection.c \
 		  fsearch_statusbar.c \
 		  fsearch_string_utils.c \
 		  fsearch_task.c \
