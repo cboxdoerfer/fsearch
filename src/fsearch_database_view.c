@@ -94,10 +94,6 @@ void
 db_view_unregister(FsearchDatabaseView *view) {
     assert(view != NULL);
 
-    FsearchDatabase *db = view->db;
-    if (db) {
-    }
-
     if (view->selection) {
         g_hash_table_remove_all(view->selection);
     }
@@ -111,7 +107,7 @@ db_view_unregister(FsearchDatabaseView *view) {
         view->folders = NULL;
     }
     if (view->db) {
-        db_unregister_view(db, view);
+        db_unregister_view(view->db, view);
         db_unref(view->db);
         view->db = NULL;
     }
@@ -123,7 +119,9 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
     assert(view != NULL);
     assert(db != NULL);
 
-    db_register_view(db, view);
+    if (!db_register_view(db, view)) {
+        return;
+    }
 
     view->db = db_ref(db);
     view->pool = db_get_thread_pool(db);
