@@ -1172,7 +1172,6 @@ create_view_and_model(FsearchApplicationWindow *app) {
     gtk_widget_show(app->listview);
     fsearch_list_view_set_query_tooltip_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_query_tooltip, app);
     fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_draw_row, app);
-    fsearch_list_view_set_row_data_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_get_entry_for_row, app);
     fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->listview), fsearch_results_sort_func, app);
     fsearch_list_view_set_selection_handlers(FSEARCH_LIST_VIEW(app->listview),
                                              fsearch_row_is_selected,

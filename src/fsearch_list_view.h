@@ -127,11 +127,6 @@ void
 fsearch_list_view_set_sort_func(FsearchListView *view, FsearchListViewSortFunc func, gpointer sort_func_data);
 
 void
-fsearch_list_view_set_row_data_func(FsearchListView *view,
-                                    FsearchListViewRowDataFunc func,
-
-                                    gpointer func_data);
-void
 fsearch_list_view_set_query_tooltip_func(FsearchListView *view,
                                          FsearchListViewQueryTooltipFunc func,
                                          gpointer func_data);

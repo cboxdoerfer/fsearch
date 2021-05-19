@@ -82,9 +82,6 @@ struct _FsearchListView {
     FsearchListViewQueryTooltipFunc query_tooltip_func;
     gpointer query_tooltip_func_data;
 
-    FsearchListViewRowDataFunc row_data_func;
-    gpointer row_data_func_data;
-
     gboolean has_selection_handlers;
 
     FsearchListViewIsSelectedFunc is_selected_func;
@@ -637,9 +634,6 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         return;
     }
 
-    if (!view->row_data_func) {
-        return;
-    }
     // gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
 
     if (gtk_widget_get_can_focus(GTK_WIDGET(view)) && !gtk_widget_has_focus(GTK_WIDGET(view))) {
@@ -658,12 +652,6 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
     int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
     if (row_idx < 0) {
         fsearch_list_view_selection_clear(view);
-        return;
-    }
-
-    void *row_data = view->row_data_func(row_idx, view->sort_type, view->row_data_func_data);
-    if (!row_data) {
-        gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_DENIED);
         return;
     }
 
@@ -1857,18 +1845,6 @@ fsearch_list_view_set_draw_row_func(FsearchListView *view,
     }
     view->draw_row_func = draw_row_func;
     view->draw_row_func_data = draw_row_func_data;
-}
-
-void
-fsearch_list_view_set_row_data_func(FsearchListView *view,
-                                    FsearchListViewRowDataFunc row_data_func,
-                                    gpointer row_data_func_data) {
-    if (!view) {
-        return;
-    }
-    view->row_data_func = row_data_func;
-    view->row_data_func_data = row_data_func_data;
-    gtk_widget_queue_draw(GTK_WIDGET(view));
 }
 
 void
