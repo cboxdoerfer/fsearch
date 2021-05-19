@@ -36,7 +36,6 @@
 
 #include "fsearch_database.h"
 #include "fsearch_database_entry.h"
-#include "fsearch_database_search.h"
 #include "fsearch_exclude_path.h"
 #include "fsearch_index.h"
 #include "fsearch_memory_pool.h"
@@ -51,9 +50,6 @@
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 struct FsearchDatabase {
-    // DynamicArray *files;
-    // DynamicArray *folders;
-
     DynamicArray *sorted_files[NUM_DATABASE_INDEX_TYPES];
     DynamicArray *sorted_folders[NUM_DATABASE_INDEX_TYPES];
 
