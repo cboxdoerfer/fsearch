@@ -57,7 +57,7 @@ db_view_free(FsearchDatabaseView *view) {
         return;
     }
 
-    g_mutex_lock(&view->mutex);
+    db_view_lock(view);
 
     if (view->filter) {
         fsearch_filter_unref(view->filter);
@@ -79,14 +79,15 @@ db_view_free(FsearchDatabaseView *view) {
         view->query = NULL;
     }
 
-    db_view_unregister(view);
-
     if (view->selection) {
         fsearch_selection_free(view->selection);
         view->selection = NULL;
     }
 
-    g_mutex_unlock(&view->mutex);
+    db_view_unlock(view);
+
+    db_view_unregister(view);
+
     g_mutex_clear(&view->mutex);
 
     free(view);
@@ -97,10 +98,10 @@ void
 db_view_unregister(FsearchDatabaseView *view) {
     assert(view != NULL);
 
+    db_view_lock(view);
     if (view->selection) {
         fsearch_selection_unselect_all(view->selection);
     }
-
     if (view->files) {
         darray_unref(view->files);
         view->files = NULL;
@@ -115,6 +116,8 @@ db_view_unregister(FsearchDatabaseView *view) {
         view->db = NULL;
     }
     view->pool = NULL;
+
+    db_view_unlock(view);
 }
 
 void
@@ -126,16 +129,19 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
         return;
     }
 
+    db_view_lock(view);
     view->db = db_ref(db);
     view->pool = db_get_thread_pool(db);
     view->files = db_get_files(db);
     view->folders = db_get_folders(db);
 
+    db_view_update_entries(view);
+    db_view_update_sort(view);
+    db_view_unlock(view);
+
     if (view->view_changed_func) {
         view->view_changed_func(view, view->user_data);
     }
-    db_view_update_entries(view);
-    db_view_update_sort(view);
 }
 
 FsearchDatabaseEntry *
@@ -217,7 +223,7 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
     view->query = query;
 
     if (result) {
-        g_mutex_lock(&view->mutex);
+        db_view_lock(view);
         DatabaseSearchResult *res = result;
 
         if (view->selection) {
@@ -234,7 +240,7 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
         }
         view->folders = res->folders;
 
-        g_mutex_unlock(&view->mutex);
+        db_view_unlock(view);
 
         if (view->search_finished_func) {
             view->search_finished_func(view, view->user_data);
@@ -449,7 +455,7 @@ db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter) {
     if (!view) {
         return;
     }
-    g_mutex_lock(&view->mutex);
+    db_view_lock(view);
     if (view->filter) {
         fsearch_filter_unref(view->filter);
     }
@@ -457,7 +463,7 @@ db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter) {
 
     db_view_update_entries(view);
 
-    g_mutex_unlock(&view->mutex);
+    db_view_unlock(view);
 }
 
 FsearchQuery *
@@ -475,12 +481,12 @@ db_view_set_query_flags(FsearchDatabaseView *view, FsearchQueryFlags query_flags
     if (!view) {
         return;
     }
-    g_mutex_lock(&view->mutex);
+    db_view_lock(view);
     view->query_flags = query_flags;
 
     db_view_update_entries(view);
 
-    g_mutex_unlock(&view->mutex);
+    db_view_unlock(view);
 }
 
 void
@@ -488,7 +494,7 @@ db_view_set_query_text(FsearchDatabaseView *view, const char *query_text) {
     if (!view) {
         return;
     }
-    g_mutex_lock(&view->mutex);
+    db_view_lock(view);
     if (view->query_text) {
         free(view->query_text);
     }
@@ -496,7 +502,7 @@ db_view_set_query_text(FsearchDatabaseView *view, const char *query_text) {
 
     db_view_update_entries(view);
 
-    g_mutex_unlock(&view->mutex);
+    db_view_unlock(view);
 }
 
 void
@@ -504,7 +510,7 @@ db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_
     if (!view) {
         return;
     }
-    g_mutex_lock(&view->mutex);
+    db_view_lock(view);
     bool needs_update = view->sort_order != sort_order;
     view->sort_order = sort_order;
 
@@ -512,7 +518,7 @@ db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_
         db_view_update_sort(view);
     }
 
-    g_mutex_unlock(&view->mutex);
+    db_view_unlock(view);
 }
 
 uint32_t
