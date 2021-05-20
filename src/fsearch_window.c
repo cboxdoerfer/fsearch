@@ -805,6 +805,14 @@ fsearch_row_unselect_all(gpointer user_data) {
 }
 
 static void
+fsearch_row_select_range(int start_row, int end_row, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    if (win->db_view) {
+        db_view_select_range(win->db_view, start_row, end_row);
+    }
+}
+
+static void
 fsearch_row_select_toggle(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     if (win->db_view) {
@@ -850,6 +858,7 @@ create_view_and_model(FsearchApplicationWindow *app) {
                                              fsearch_row_is_selected,
                                              fsearch_row_select,
                                              fsearch_row_select_toggle,
+                                             fsearch_row_select_range,
                                              fsearch_row_unselect_all,
                                              app);
     fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);

@@ -86,6 +86,7 @@ struct _FsearchListView {
 
     FsearchListViewIsSelectedFunc is_selected_func;
     FsearchListViewSelectFunc select_func;
+    FsearchListViewSelectRangeFunc select_range_func;
     FsearchListViewSelectToggleFunc select_toggle_func;
     FsearchListViewUnselectAllFunc unselect_func;
     gpointer selection_user_data;
@@ -601,9 +602,9 @@ fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, gu
 
     end_idx = MIN(view->num_rows - 1, end_idx);
 
-    for (int i = start_idx; i <= end_idx; i++) {
-        view->select_func(get_row_idx_for_sort_type(view, i), view->selection_user_data);
-    }
+    view->select_range_func(get_row_idx_for_sort_type(view, start_idx),
+                            get_row_idx_for_sort_type(view, end_idx),
+                            view->selection_user_data);
 }
 
 static void
@@ -1859,6 +1860,7 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
                                          FsearchListViewIsSelectedFunc is_selected_func,
                                          FsearchListViewSelectFunc select_func,
                                          FsearchListViewSelectToggleFunc select_toggle_func,
+                                         FsearchListViewSelectRangeFunc select_range_func,
                                          FsearchListViewUnselectAllFunc unselect_func,
                                          gpointer user_data) {
     if (!view) {
@@ -1867,6 +1869,7 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
     view->is_selected_func = is_selected_func;
     view->select_func = select_func;
     view->select_toggle_func = select_toggle_func;
+    view->select_range_func = select_range_func;
     view->unselect_func = unselect_func;
     view->selection_user_data = user_data;
 

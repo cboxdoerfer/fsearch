@@ -78,6 +78,9 @@ bool
 db_view_is_selected(FsearchDatabaseView *view, uint32_t idx);
 
 void
+db_view_select_range(FsearchDatabaseView *view, uint32_t start_idx, uint32_t end_idx);
+
+void
 db_view_select_all(FsearchDatabaseView *view);
 
 void
