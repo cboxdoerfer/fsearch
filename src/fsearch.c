@@ -406,6 +406,7 @@ about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
 
 static void
 quit_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    // TODO: windows need to be cleaned up manually here
     g_application_quit(G_APPLICATION(app));
 }
 
