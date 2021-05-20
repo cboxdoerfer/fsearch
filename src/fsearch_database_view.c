@@ -220,19 +220,19 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
     FsearchQuery *query = data;
     FsearchDatabaseView *view = query->data;
 
+    db_view_lock(view);
+
     if (view->query) {
         fsearch_query_unref(view->query);
     }
     view->query = query;
 
     if (result) {
-        db_view_lock(view);
         DatabaseSearchResult *res = result;
 
         if (view->selection) {
             fsearch_selection_unselect_all(view->selection);
         }
-
         if (view->files) {
             darray_unref(view->files);
         }
@@ -243,17 +243,17 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
         }
         view->folders = db_search_result_get_folders(res);
 
-        db_view_unlock(view);
-
         db_search_result_unref(res);
         res = NULL;
+    }
 
-        if (view->search_finished_func) {
-            view->search_finished_func(view, view->user_data);
-        }
-        if (view->view_changed_func) {
-            view->view_changed_func(view, view->user_data);
-        }
+    db_view_unlock(view);
+
+    if (view->search_finished_func) {
+        view->search_finished_func(view, view->user_data);
+    }
+    if (view->view_changed_func) {
+        view->view_changed_func(view, view->user_data);
     }
 
     fsearch_task_free(task);
