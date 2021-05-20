@@ -18,6 +18,7 @@ fsearch_sources = [
     'fsearch_preferences_ui.c',
     'fsearch_preferences_widgets.c',
     'fsearch_query.c',
+    'fsearch_result_view.c',
     'fsearch_selection.c',
     'fsearch_statusbar.c',
     'fsearch_string_utils.c',
