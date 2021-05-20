@@ -731,6 +731,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
                                  row_selected,
                                  row_focused,
                                  right_to_left_text);
+    fsearch_query_unref(query);
 }
 
 void

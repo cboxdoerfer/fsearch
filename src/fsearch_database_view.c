@@ -443,7 +443,7 @@ db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter) {
 
 FsearchQuery *
 db_view_get_query(FsearchDatabaseView *view) {
-    return view->query;
+    return fsearch_query_ref(view->query);
 }
 
 FsearchQueryFlags
