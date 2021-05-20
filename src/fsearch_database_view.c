@@ -236,12 +236,12 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
         if (view->files) {
             darray_unref(view->files);
         }
-        view->files = res->files;
+        view->files = db_search_result_get_files(res);
 
         if (view->folders) {
             darray_unref(view->folders);
         }
-        view->folders = res->folders;
+        view->folders = db_search_result_get_folders(res);
 
         db_view_unlock(view);
 

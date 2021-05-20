@@ -27,20 +27,13 @@
 #include <gio/gio.h>
 #include <stdint.h>
 
-typedef struct _DatabaseSearchResult {
-    DynamicArray *files;
-    DynamicArray *folders;
+typedef struct DatabaseSearchResult DatabaseSearchResult;
 
-    volatile int ref_count;
+DynamicArray *
+db_search_result_get_files(DatabaseSearchResult *result);
 
-    FsearchQuery *query;
-} DatabaseSearchResult;
-
-uint32_t
-db_search_result_get_num_files(DatabaseSearchResult *result);
-
-uint32_t
-db_search_result_get_num_folders(DatabaseSearchResult *result);
+DynamicArray *
+db_search_result_get_folders(DatabaseSearchResult *result);
 
 FsearchQuery *
 db_search_result_get_query(DatabaseSearchResult *result);

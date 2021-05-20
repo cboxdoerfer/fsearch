@@ -32,6 +32,15 @@
 #include "fsearch_task.h"
 #include "fsearch_token.h"
 
+struct DatabaseSearchResult {
+    DynamicArray *files;
+    DynamicArray *folders;
+
+    volatile int ref_count;
+
+    FsearchQuery *query;
+};
+
 typedef struct search_context_s {
     FsearchQuery *query;
     void **results;
@@ -58,14 +67,14 @@ db_search_result_new(FsearchQuery *query) {
     return result_ctx;
 }
 
-uint32_t
-db_search_result_get_num_files(DatabaseSearchResult *result) {
-    return result->files ? darray_get_num_items(result->files) : 0;
+DynamicArray *
+db_search_result_get_files(DatabaseSearchResult *result) {
+    return darray_ref(result->files);
 }
 
-uint32_t
-db_search_result_get_num_folders(DatabaseSearchResult *result) {
-    return result->folders ? darray_get_num_items(result->folders) : 0;
+DynamicArray *
+db_search_result_get_folders(DatabaseSearchResult *result) {
+    return darray_ref(result->folders);
 }
 
 FsearchQuery *
