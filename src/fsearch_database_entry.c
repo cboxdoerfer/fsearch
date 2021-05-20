@@ -3,6 +3,7 @@
 #include "fsearch_database_entry.h"
 #include "fsearch_file_utils.h"
 
+#include <stdlib.h>
 #include <string.h>
 
 struct FsearchDatabaseEntryCommon {
