@@ -663,30 +663,6 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
 }
 
 static void
-on_fsearch_list_view_selection_changed(FsearchListView *view, gpointer user_data) {
-    FsearchApplicationWindow *self = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
-
-    fsearch_window_actions_update(self);
-
-    uint32_t num_folders = 0;
-    uint32_t num_files = 0;
-    if (self->db_view) {
-        num_folders = db_view_get_num_folders(self->db_view);
-        num_files = db_view_get_num_files(self->db_view);
-    }
-
-    count_results_ctx ctx = {0, 0};
-    fsearch_application_window_selection_for_each(self, (GHFunc)count_results_cb, &ctx);
-
-    fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(self->statusbar),
-                                    ctx.num_files,
-                                    ctx.num_folders,
-                                    num_files,
-                                    num_folders);
-}
-
-static void
 on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
     g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
@@ -883,11 +859,6 @@ create_view_and_model(FsearchApplicationWindow *app) {
 
     g_signal_connect_object(app->listview, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), app, G_CONNECT_AFTER);
     g_signal_connect_object(app->listview,
-                            "selection-changed",
-                            G_CALLBACK(on_fsearch_list_view_selection_changed),
-                            app,
-                            G_CONNECT_AFTER);
-    g_signal_connect_object(app->listview,
                             "row-activated",
                             G_CALLBACK(on_fsearch_list_view_row_activated),
                             app,
@@ -1037,6 +1008,32 @@ on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user
 }
 
 static int
+fsearch_window_db_view_selection_changed_cb(gpointer data) {
+    const guint win_id = GPOINTER_TO_UINT(data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
+
+    fsearch_window_actions_update(win);
+
+    uint32_t num_folders = 0;
+    uint32_t num_files = 0;
+    if (win->db_view) {
+        num_folders = db_view_get_num_folders(win->db_view);
+        num_files = db_view_get_num_files(win->db_view);
+    }
+
+    count_results_ctx ctx = {0, 0};
+    fsearch_application_window_selection_for_each(win, (GHFunc)count_results_cb, &ctx);
+
+    fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(win->statusbar),
+                                    ctx.num_files,
+                                    ctx.num_folders,
+                                    num_files,
+                                    num_folders);
+
+    return G_SOURCE_REMOVE;
+}
+
+static int
 fsearch_window_db_view_changed_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
@@ -1080,6 +1077,14 @@ fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
     g_idle_add(fsearch_window_db_view_changed_cb, user_data);
 }
 
+static void
+fsearch_window_db_view_selection_changed(FsearchDatabaseView *view, gpointer user_data) {
+    if (!user_data) {
+        return;
+    }
+    g_idle_add(fsearch_window_db_view_selection_changed_cb, user_data);
+}
+
 void
 fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplication *app) {
     guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
@@ -1093,6 +1098,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
                                get_active_filter(win),
                                win->sort_order,
                                fsearch_window_db_view_changed,
+                               fsearch_window_db_view_selection_changed,
                                fsearch_window_db_view_search_started,
                                fsearch_window_db_view_search_finished,
                                NULL,

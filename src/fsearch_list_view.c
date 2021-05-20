@@ -91,7 +91,7 @@ struct _FsearchListView {
     gpointer selection_user_data;
 };
 
-enum { FSEARCH_LIST_VIEW_SELECTION_CHANGED, FSEARCH_LIST_VIEW_ROW_ACTIVATED, FSEARCH_LIST_VIEW_POPUP, NUM_SIGNALS };
+enum { FSEARCH_LIST_VIEW_ROW_ACTIVATED, FSEARCH_LIST_VIEW_POPUP, NUM_SIGNALS };
 
 static guint signals[NUM_SIGNALS];
 
@@ -543,7 +543,6 @@ fsearch_list_view_scroll_row_into_view(FsearchListView *view, int row_idx) {
 static void
 fsearch_list_view_selection_changed(FsearchListView *view) {
     gtk_widget_queue_draw(GTK_WIDGET(view));
-    g_signal_emit(view, signals[FSEARCH_LIST_VIEW_SELECTION_CHANGED], 0);
 }
 
 static void
@@ -1515,16 +1514,6 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
 
     container_class->forall = fsearch_list_view_container_for_all;
     container_class->remove = fsearch_list_view_container_remove;
-
-    signals[FSEARCH_LIST_VIEW_SELECTION_CHANGED] = g_signal_new("selection-changed",
-                                                                G_TYPE_FROM_CLASS(klass),
-                                                                G_SIGNAL_RUN_LAST,
-                                                                0,
-                                                                NULL,
-                                                                NULL,
-                                                                NULL,
-                                                                G_TYPE_NONE,
-                                                                0);
 
     signals[FSEARCH_LIST_VIEW_POPUP] = g_signal_new("row-popup",
                                                     G_TYPE_FROM_CLASS(klass),
