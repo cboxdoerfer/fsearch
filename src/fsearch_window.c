@@ -68,8 +68,6 @@ struct _FsearchApplicationWindow {
 
     FsearchDatabaseIndexType sort_order;
     GtkSortType sort_type;
-
-    guint statusbar_timeout_id;
 };
 
 typedef enum {
