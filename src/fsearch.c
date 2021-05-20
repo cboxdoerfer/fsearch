@@ -864,8 +864,8 @@ fsearch_application_win_added(GtkApplication *app, GtkWindow *win) {
 
 static void
 fsearch_application_win_removed(GtkApplication *app, GtkWindow *win) {
-    GTK_APPLICATION_CLASS(fsearch_application_parent_class)->window_removed(app, win);
     fsearch_application_window_removed(FSEARCH_WINDOW_WINDOW(win), FSEARCH_APPLICATION(app));
+    GTK_APPLICATION_CLASS(fsearch_application_parent_class)->window_removed(app, win);
 }
 
 static void
