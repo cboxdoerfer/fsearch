@@ -37,9 +37,6 @@ typedef struct _DatabaseSearchResult {
 } DatabaseSearchResult;
 
 uint32_t
-db_search_result_get_num_entries(DatabaseSearchResult *result);
-
-uint32_t
 db_search_result_get_num_files(DatabaseSearchResult *result);
 
 uint32_t
@@ -47,21 +44,6 @@ db_search_result_get_num_folders(DatabaseSearchResult *result);
 
 FsearchQuery *
 db_search_result_get_query(DatabaseSearchResult *result);
-
-const char *
-db_search_result_get_name(DatabaseSearchResult *result, uint32_t pos);
-
-GString *
-db_search_result_get_path(DatabaseSearchResult *result, uint32_t pos);
-
-FsearchDatabaseEntryType
-db_search_result_get_type(DatabaseSearchResult *result, uint32_t pos);
-
-off_t
-db_search_result_get_size(DatabaseSearchResult *result, uint32_t pos);
-
-void *
-db_search_result_get_entry(DatabaseSearchResult *result, uint32_t pos);
 
 DatabaseSearchResult *
 db_search_result_ref(DatabaseSearchResult *result);

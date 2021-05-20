@@ -59,11 +59,6 @@ db_search_result_new(FsearchQuery *query) {
 }
 
 uint32_t
-db_search_result_get_num_entries(DatabaseSearchResult *result) {
-    return db_search_result_get_num_files(result) + db_search_result_get_num_folders(result);
-}
-
-uint32_t
 db_search_result_get_num_files(DatabaseSearchResult *result) {
     return result->files ? darray_get_num_items(result->files) : 0;
 }
@@ -76,63 +71,6 @@ db_search_result_get_num_folders(DatabaseSearchResult *result) {
 FsearchQuery *
 db_search_result_get_query(DatabaseSearchResult *result) {
     return result->query;
-}
-
-const char *
-db_search_result_get_name(DatabaseSearchResult *result, uint32_t pos) {
-    void *entry = db_search_result_get_entry(result, pos);
-    if (!entry) {
-        return NULL;
-    }
-    return db_entry_get_name(entry);
-}
-
-GString *
-db_search_result_get_path(DatabaseSearchResult *result, uint32_t pos) {
-    void *entry = db_search_result_get_entry(result, pos);
-    if (!entry) {
-        return NULL;
-    }
-    return db_entry_get_path(entry);
-}
-
-off_t
-db_search_result_get_size(DatabaseSearchResult *result, uint32_t pos) {
-    void *entry = db_search_result_get_entry(result, pos);
-    if (!entry) {
-        return 0;
-    }
-    return db_entry_get_size(entry);
-}
-
-void *
-db_search_result_get_entry(DatabaseSearchResult *result, uint32_t pos) {
-    uint32_t num_entries = db_search_result_get_num_entries(result);
-    if (pos >= num_entries) {
-        return NULL;
-    }
-    uint32_t num_folders = db_search_result_get_num_folders(result);
-    if (pos < num_folders) {
-        return darray_get_item(result->folders, pos);
-    }
-    else {
-        return darray_get_item(result->files, pos - num_folders);
-    }
-}
-
-FsearchDatabaseEntryType
-db_search_result_get_type(DatabaseSearchResult *result, uint32_t pos) {
-    uint32_t num_entries = db_search_result_get_num_entries(result);
-    if (pos >= num_entries) {
-        return DATABASE_ENTRY_TYPE_NONE;
-    }
-    uint32_t num_folders = db_search_result_get_num_folders(result);
-    if (pos < num_folders) {
-        return DATABASE_ENTRY_TYPE_FOLDER;
-    }
-    else {
-        return DATABASE_ENTRY_TYPE_FILE;
-    }
 }
 
 static gpointer
