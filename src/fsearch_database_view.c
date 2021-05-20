@@ -554,7 +554,7 @@ db_view_get_entry_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     if (idx < num_folders) {
         return darray_get_item(view->folders, idx);
     }
-    idx -= num_folders - 1;
+    idx -= num_folders;
     const uint32_t num_files = darray_get_num_items(view->files);
     if (idx < num_files) {
         return darray_get_item(view->files, idx);
