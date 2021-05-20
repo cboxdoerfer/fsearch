@@ -424,7 +424,7 @@ db_search_result_free(DatabaseSearchResult *result) {
         result->files = NULL;
     }
     if (result->query) {
-        fsearch_query_free(result->query);
+        fsearch_query_unref(result->query);
         result->query = NULL;
     }
 

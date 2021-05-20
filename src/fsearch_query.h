@@ -57,6 +57,8 @@ typedef struct FsearchQuery {
     uint32_t window_id;
 
     gpointer data;
+
+    volatile int ref_count;
 } FsearchQuery;
 
 FsearchQuery *
@@ -71,8 +73,11 @@ fsearch_query_new(const char *text,
                   uint32_t window_id,
                   gpointer data);
 
+FsearchQuery *
+fsearch_query_ref(FsearchQuery *query);
+
 void
-fsearch_query_free(FsearchQuery *query);
+fsearch_query_unref(FsearchQuery *query);
 
 PangoAttrList *
 fsearch_query_highlight_match(FsearchQuery *q, const char *input);

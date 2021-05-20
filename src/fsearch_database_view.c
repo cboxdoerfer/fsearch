@@ -76,7 +76,7 @@ db_view_free(FsearchDatabaseView *view) {
     }
 
     if (view->query) {
-        fsearch_query_free(view->query);
+        fsearch_query_unref(view->query);
         view->query = NULL;
     }
 
@@ -207,7 +207,7 @@ db_view_task_query_cancelled(FsearchTask *task, gpointer data) {
     }
 
     if (query) {
-        fsearch_query_free(query);
+        fsearch_query_unref(query);
         query = NULL;
     }
 
@@ -221,9 +221,9 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
     FsearchDatabaseView *view = query->data;
 
     if (view->query) {
-        fsearch_query_free(view->query);
+        fsearch_query_unref(view->query);
     }
-    view->query = query;
+    view->query = fsearch_query_ref(query);
 
     if (result) {
         db_view_lock(view);
@@ -244,6 +244,9 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
         view->folders = db_search_result_get_folders(res);
 
         db_view_unlock(view);
+
+        db_search_result_unref(res);
+        res = NULL;
 
         if (view->search_finished_func) {
             view->search_finished_func(view, view->user_data);

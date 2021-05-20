@@ -69,6 +69,7 @@ fsearch_query_new(const char *text,
     q->id = id;
     q->window_id = window_id;
     q->data = data;
+    q->ref_count = 1;
     return q;
 }
 
@@ -100,6 +101,26 @@ fsearch_query_free(FsearchQuery *query) {
     }
     free(query);
     query = NULL;
+}
+
+FsearchQuery *
+fsearch_query_ref(FsearchQuery *query) {
+    if (!query || query->ref_count <= 0) {
+        return NULL;
+    }
+    g_atomic_int_inc(&query->ref_count);
+    return query;
+}
+
+void
+fsearch_query_unref(FsearchQuery *query) {
+    if (!query || query->ref_count <= 0) {
+        return;
+    }
+    if (g_atomic_int_dec_and_test(&query->ref_count)) {
+        fsearch_query_free(query);
+        query = NULL;
+    }
 }
 
 bool
