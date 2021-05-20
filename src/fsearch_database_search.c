@@ -37,8 +37,6 @@ struct DatabaseSearchResult {
     DynamicArray *folders;
 
     volatile int ref_count;
-
-    FsearchQuery *query;
 };
 
 typedef struct search_context_s {
@@ -59,10 +57,9 @@ static DatabaseSearchResult *
 db_search_empty(FsearchQuery *q);
 
 static DatabaseSearchResult *
-db_search_result_new(FsearchQuery *query) {
+db_search_result_new(void) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
     assert(result_ctx != NULL);
-    result_ctx->query = query;
     result_ctx->ref_count = 1;
     return result_ctx;
 }
@@ -75,11 +72,6 @@ db_search_result_get_files(DatabaseSearchResult *result) {
 DynamicArray *
 db_search_result_get_folders(DatabaseSearchResult *result) {
     return darray_ref(result->folders);
-}
-
-FsearchQuery *
-db_search_result_get_query(DatabaseSearchResult *result) {
-    return result->query;
 }
 
 static gpointer
@@ -361,7 +353,7 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
 
 static DatabaseSearchResult *
 db_search_empty(FsearchQuery *q) {
-    DatabaseSearchResult *result = db_search_result_new(q);
+    DatabaseSearchResult *result = db_search_result_new();
     result->folders = darray_ref(q->folders);
     result->files = darray_ref(q->files);
     return result;
@@ -372,7 +364,7 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
     const uint32_t num_folder_entries = darray_get_num_items(q->folders);
     const uint32_t num_file_entries = darray_get_num_items(q->files);
     if (num_folder_entries == 0 && num_file_entries == 0) {
-        return db_search_result_new(q);
+        return db_search_result_new();
     }
 
     DynamicArray *files = NULL;
@@ -387,7 +379,7 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
         goto search_was_cancelled;
     }
 
-    DatabaseSearchResult *result = db_search_result_new(q);
+    DatabaseSearchResult *result = db_search_result_new();
     if (files) {
         result->files = files;
     }
@@ -422,10 +414,6 @@ db_search_result_free(DatabaseSearchResult *result) {
     if (result->files) {
         darray_unref(result->files);
         result->files = NULL;
-    }
-    if (result->query) {
-        fsearch_query_unref(result->query);
-        result->query = NULL;
     }
 
     free(result);

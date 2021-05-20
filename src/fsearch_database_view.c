@@ -223,7 +223,7 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
     if (view->query) {
         fsearch_query_unref(view->query);
     }
-    view->query = fsearch_query_ref(query);
+    view->query = query;
 
     if (result) {
         db_view_lock(view);

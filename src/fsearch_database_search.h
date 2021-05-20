@@ -35,9 +35,6 @@ db_search_result_get_files(DatabaseSearchResult *result);
 DynamicArray *
 db_search_result_get_folders(DatabaseSearchResult *result);
 
-FsearchQuery *
-db_search_result_get_query(DatabaseSearchResult *result);
-
 DatabaseSearchResult *
 db_search_result_ref(DatabaseSearchResult *result);
 
