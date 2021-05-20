@@ -4,7 +4,6 @@
 #include "fsearch.h"
 
 #include <glib/gi18n.h>
-#include <stdint.h>
 
 struct _FsearchStatusbar {
     GtkRevealer parent_instance;

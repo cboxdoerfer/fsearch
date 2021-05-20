@@ -2,6 +2,7 @@
 
 #include <glib.h>
 #include <gtk/gtk.h>
+#include <stdint.h>
 
 G_BEGIN_DECLS
 
