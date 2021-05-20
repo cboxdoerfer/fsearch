@@ -1124,7 +1124,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 void
 fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app) {
     if (win->db_view) {
-        db_view_free(win->db_view);
+        db_view_unref(win->db_view);
         win->db_view = NULL;
     }
 }

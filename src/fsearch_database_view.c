@@ -42,6 +42,8 @@ struct FsearchDatabaseView {
     gpointer user_data;
 
     GMutex mutex;
+
+    volatile int ref_count;
 };
 
 static void
@@ -93,6 +95,26 @@ db_view_free(FsearchDatabaseView *view) {
 
     free(view);
     view = NULL;
+}
+
+FsearchDatabaseView *
+db_view_ref(FsearchDatabaseView *view) {
+    if (!view || view->ref_count <= 0) {
+        return NULL;
+    }
+    g_atomic_int_inc(&view->ref_count);
+    return view;
+}
+
+void
+db_view_unref(FsearchDatabaseView *view) {
+    if (!view || view->ref_count <= 0) {
+        return;
+    }
+    if (g_atomic_int_dec_and_test(&view->ref_count)) {
+        db_view_free(view);
+        view = NULL;
+    }
 }
 
 void
@@ -192,6 +214,8 @@ db_view_new(const char *query_text,
     view->sort_finished_func = sort_finished_func;
     view->user_data = user_data;
 
+    view->ref_count = 1;
+
     g_mutex_init(&view->mutex);
 
     return view;
@@ -206,10 +230,11 @@ db_view_task_query_cancelled(FsearchTask *task, gpointer data) {
         view->search_finished_func(view, view->user_data);
     }
 
-    if (query) {
-        fsearch_query_unref(query);
-        query = NULL;
-    }
+    db_view_unref(view);
+    view = NULL;
+
+    fsearch_query_unref(query);
+    query = NULL;
 
     fsearch_task_free(task);
     task = NULL;
@@ -255,6 +280,9 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
     if (view->view_changed_func) {
         view->view_changed_func(view, view->user_data);
     }
+
+    db_view_unref(view);
+    view = NULL;
 
     fsearch_task_free(task);
     task = NULL;
@@ -420,7 +448,7 @@ db_view_update_entries(FsearchDatabaseView *view) {
                                         view->query_flags,
                                         view->query_id++,
                                         view->id,
-                                        view);
+                                        db_view_ref(view));
 
     db_search_queue(view->task_queue, q, db_view_task_query_finished, db_view_task_query_cancelled);
 }

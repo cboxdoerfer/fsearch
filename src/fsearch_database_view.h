@@ -11,7 +11,10 @@ typedef struct FsearchDatabaseView FsearchDatabaseView;
 typedef void (*FsearchDatabaseViewNotifyFunc)(FsearchDatabaseView *view, gpointer user_data);
 
 void
-db_view_free(FsearchDatabaseView *view);
+db_view_unref(FsearchDatabaseView *view);
+
+FsearchDatabaseView *
+db_view_ref(FsearchDatabaseView *view);
 
 FsearchDatabaseView *
 db_view_new(const char *query_text,
