@@ -47,6 +47,9 @@ static DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable);
 
 static DatabaseSearchResult *
+db_search_empty(FsearchQuery *q);
+
+static DatabaseSearchResult *
 db_search_result_new(FsearchQuery *query) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
     assert(result_ctx != NULL);
@@ -139,7 +142,13 @@ db_search_task(gpointer data, GCancellable *cancellable) {
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
 
-    DatabaseSearchResult *result = db_search(query, cancellable);
+    DatabaseSearchResult *result = NULL;
+    if (fsearch_query_matches_everything(query)) {
+        result = db_search_empty(query);
+    }
+    else {
+        result = db_search(query, cancellable);
+    }
 
     const char *debug_message = NULL;
     const double seconds = g_timer_elapsed(timer, NULL);
@@ -401,6 +410,14 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
     }
 
     return results;
+}
+
+static DatabaseSearchResult *
+db_search_empty(FsearchQuery *q) {
+    DatabaseSearchResult *result = db_search_result_new(q);
+    result->folders = darray_ref(q->folders);
+    result->files = darray_ref(q->files);
+    return result;
 }
 
 static DatabaseSearchResult *

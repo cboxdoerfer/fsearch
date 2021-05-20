@@ -257,21 +257,6 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
     task = NULL;
 }
 
-static void
-db_view_on_match_everything(FsearchDatabaseView *view) {
-    darray_unref(view->files);
-    darray_unref(view->folders);
-    if (db_has_entries_sorted_by_type(view->db, view->sort_order)) {
-        view->files = db_get_files_sorted(view->db, view->sort_order);
-        view->folders = db_get_folders_sorted(view->db, view->sort_order);
-    }
-    else {
-        view->files = db_get_files(view->db);
-        view->folders = db_get_folders(view->db);
-        view->sort_order = DATABASE_INDEX_TYPE_NAME;
-    }
-}
-
 typedef struct {
     FsearchDatabaseView *view;
     DynamicArrayCompareDataFunc compare_func;
@@ -434,23 +419,7 @@ db_view_update_entries(FsearchDatabaseView *view) {
                                         view->id,
                                         view);
 
-    if (fsearch_query_matches_everything(q)) {
-        db_view_on_match_everything(view);
-        if (view->query) {
-            fsearch_query_free(view->query);
-        }
-        view->query = q;
-
-        if (view->view_changed_func) {
-            view->view_changed_func(view, view->user_data);
-        }
-        if (view->search_finished_func) {
-            view->search_finished_func(view, view->user_data);
-        }
-    }
-    else {
-        db_search_queue(view->task_queue, q, db_view_task_query_finished, db_view_task_query_cancelled);
-    }
+    db_search_queue(view->task_queue, q, db_view_task_query_finished, db_view_task_query_cancelled);
 }
 
 void
