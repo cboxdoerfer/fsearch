@@ -106,6 +106,16 @@ enum {
     PROP_VSCROLL_POLICY,
 };
 
+static inline int
+get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
+    if (view->sort_type == GTK_SORT_ASCENDING) {
+        return row_idx;
+    }
+    else {
+        return view->num_rows - row_idx - 1;
+    }
+}
+
 static gboolean
 fsearch_list_view_is_selected(FsearchListView *view, int row);
 
@@ -392,8 +402,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
                                 context,
                                 columns,
                                 &row_rect,
-                                view->sort_type,
-                                row_idx,
+                                get_row_idx_for_sort_type(view, row_idx),
                                 fsearch_list_view_is_selected(view, row_idx),
                                 view->last_clicked_idx == row_idx ? TRUE : FALSE,
                                 fsearch_list_view_is_text_dir_rtl(view),
@@ -547,7 +556,7 @@ fsearch_list_view_selection_clear_silent(FsearchListView *view) {
 static void
 fsearch_list_view_selection_add(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        view->select_func(row, view->sort_type, view->selection_user_data);
+        view->select_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
         fsearch_list_view_selection_changed(view);
     }
 }
@@ -555,14 +564,14 @@ fsearch_list_view_selection_add(FsearchListView *view, int row) {
 static void
 fsearch_list_view_selection_toggle_silent(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        view->select_toggle_func(row, view->sort_type, view->selection_user_data);
+        view->select_toggle_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
     }
 }
 
 static gboolean
 fsearch_list_view_is_selected(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
-        return view->is_selected_func(row, view->sort_type, view->selection_user_data);
+        return view->is_selected_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
     }
     return FALSE;
 }
@@ -594,7 +603,7 @@ fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, gu
     end_idx = MIN(view->num_rows - 1, end_idx);
 
     for (int i = start_idx; i <= end_idx; i++) {
-        view->select_func(i, view->sort_type, view->selection_user_data);
+        view->select_func(get_row_idx_for_sort_type(view, i), view->selection_user_data);
     }
 }
 
@@ -684,8 +693,7 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                                       signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED],
                                       0,
                                       col->type,
-                                      row_idx,
-                                      view->sort_type);
+                                      get_row_idx_for_sort_type(view, row_idx));
                     }
                 }
             }
@@ -695,7 +703,11 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         if (n_press == 2 && !view->single_click_activate) {
             FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x);
             if (col) {
-                g_signal_emit(view, signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED], 0, col->type, row_idx, view->sort_type);
+                g_signal_emit(view,
+                              signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED],
+                              0,
+                              col->type,
+                              get_row_idx_for_sort_type(view, row_idx));
             }
         }
     }
@@ -707,7 +719,7 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
             fsearch_list_view_selection_toggle_silent(view, row_idx);
             fsearch_list_view_selection_changed(view);
         }
-        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0, row_idx, view->sort_type);
+        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0, get_row_idx_for_sort_type(view, row_idx));
     }
 
     view->focused_idx = -1;
@@ -993,9 +1005,8 @@ fsearch_list_view_query_tooltip(GtkWidget *widget, int x, int y, gboolean keyboa
 
     gboolean ret_val = FALSE;
     char *tooltip_text = view->query_tooltip_func(layout,
-                                                  view->sort_type,
                                                   view->row_height,
-                                                  row_idx,
+                                                  get_row_idx_for_sort_type(view, row_idx),
                                                   col,
                                                   view->query_tooltip_func_data);
     if (tooltip_text) {
@@ -1523,9 +1534,8 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
                                                     NULL,
                                                     NULL,
                                                     G_TYPE_NONE,
-                                                    2,
-                                                    G_TYPE_INT,
-                                                    GTK_TYPE_SORT_TYPE);
+                                                    1,
+                                                    G_TYPE_INT);
 
     signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED] = g_signal_new("row-activated",
                                                             G_TYPE_FROM_CLASS(klass),
@@ -1535,10 +1545,9 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
                                                             NULL,
                                                             NULL,
                                                             G_TYPE_NONE,
-                                                            3,
+                                                            2,
                                                             G_TYPE_INT,
-                                                            G_TYPE_INT,
-                                                            GTK_TYPE_SORT_TYPE);
+                                                            G_TYPE_INT);
 
 #if GTK_CHECK_VERSION(3, 20, 0)
     gtk_widget_class_set_css_name(widget_class, "treeview");

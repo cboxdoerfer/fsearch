@@ -153,14 +153,10 @@ fsearch_window_sort_started(gpointer data) {
 }
 
 static void *
-fsearch_list_view_get_entry_for_row(int row_idx, GtkSortType sort_type, gpointer user_data) {
+fsearch_list_view_get_entry_for_row(int row_idx, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     if (!win || !win->db_view) {
         return NULL;
-    }
-
-    if (sort_type == GTK_SORT_DESCENDING) {
-        row_idx = (int)db_view_get_num_entries(win->db_view) - row_idx - 1;
     }
 
     return db_view_get_entry(win->db_view, row_idx);
@@ -548,10 +544,10 @@ count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
 }
 
 static gboolean
-on_fsearch_list_view_popup(FsearchListView *view, int row_idx, GtkSortType sort_type, gpointer user_data) {
+on_fsearch_list_view_popup(FsearchListView *view, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, sort_type, win);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, win);
     if (!entry) {
         return FALSE;
     }
@@ -634,7 +630,6 @@ static void
 on_fsearch_list_view_row_activated(FsearchListView *view,
                                    FsearchDatabaseIndexType col,
                                    int row_idx,
-                                   GtkSortType sort_type,
                                    gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -643,7 +638,7 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         launch_folder = true;
     }
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, sort_type, self);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, self);
     if (!entry) {
         return;
     }
@@ -770,14 +765,13 @@ typedef struct {
 
 static void
 draw_row_ctx_init(uint32_t row,
-                  GtkSortType sort_type,
                   FsearchApplicationWindow *win,
                   GdkWindow *bin_window,
                   int icon_size,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row, sort_type, win);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row, win);
     if (!entry) {
         return;
     }
@@ -872,7 +866,6 @@ draw_row_ctx_free(DrawRowContext *ctx) {
 
 static char *
 fsearch_list_view_query_tooltip(PangoLayout *layout,
-                                GtkSortType sort_type,
                                 uint32_t row_height,
                                 uint32_t row_idx,
                                 FsearchListViewColumn *col,
@@ -880,7 +873,7 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, sort_type, win);
+    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, win);
     if (!entry) {
         return NULL;
     }
@@ -956,7 +949,6 @@ fsearch_list_view_draw_row(cairo_t *cr,
                            GtkStyleContext *context,
                            GList *columns,
                            cairo_rectangle_int_t *rect,
-                           GtkSortType sort_type,
                            uint32_t row,
                            gboolean row_selected,
                            gboolean row_focused,
@@ -972,7 +964,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
     const int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
-    draw_row_ctx_init(row, sort_type, win, bin_window, icon_size, &ctx);
+    draw_row_ctx_init(row, win, bin_window, icon_size, &ctx);
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
     if (row_selected) {
@@ -1114,15 +1106,6 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
 }
 
-static int
-get_row_idx_for_sort_type(FsearchDatabaseView *view, int row_idx, GtkSortType sort_type) {
-    if (sort_type == GTK_SORT_ASCENDING) {
-        return row_idx;
-    }
-    const uint32_t num_entries = db_view_get_num_entries(view);
-    return (int)num_entries - row_idx;
-}
-
 static void
 fsearch_row_unselect_all(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
@@ -1132,28 +1115,28 @@ fsearch_row_unselect_all(gpointer user_data) {
 }
 
 static void
-fsearch_row_select_toggle(int row, GtkSortType sort_type, gpointer user_data) {
+fsearch_row_select_toggle(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     if (win->db_view) {
-        db_view_select_toggle(win->db_view, get_row_idx_for_sort_type(win->db_view, row, sort_type));
+        db_view_select_toggle(win->db_view, row);
     }
 }
 
 static void
-fsearch_row_select(int row, GtkSortType sort_type, gpointer user_data) {
+fsearch_row_select(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
 
     if (win->db_view) {
-        db_view_select(win->db_view, get_row_idx_for_sort_type(win->db_view, row, sort_type));
+        db_view_select(win->db_view, row);
     }
 }
 
 static gboolean
-fsearch_row_is_selected(int row, GtkSortType sort_type, gpointer user_data) {
+fsearch_row_is_selected(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
 
     if (win->db_view) {
-        return db_view_is_selected(win->db_view, get_row_idx_for_sort_type(win->db_view, row, sort_type));
+        return db_view_is_selected(win->db_view, row);
     }
     return FALSE;
 }

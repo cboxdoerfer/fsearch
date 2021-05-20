@@ -32,7 +32,6 @@ typedef struct {
 } FsearchListViewColumn;
 
 typedef char *(*FsearchListViewQueryTooltipFunc)(PangoLayout *layout,
-                                                 GtkSortType sort_type,
                                                  uint32_t row_height,
                                                  uint32_t row,
                                                  FsearchListViewColumn *col,
@@ -44,21 +43,18 @@ typedef void (*FsearchListViewDrawRowFunc)(cairo_t *cr,
                                            GtkStyleContext *context,
                                            GList *columns,
                                            cairo_rectangle_int_t *rect,
-                                           GtkSortType sort_type,
                                            uint32_t row,
                                            gboolean row_selected,
                                            gboolean row_focused,
                                            gboolean right_to_left_text,
                                            gpointer user_data);
 
-typedef void *(*FsearchListViewRowDataFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
-
 typedef void (*FsearchListViewSortFunc)(int type, gpointer user_data);
 
 // selection handlers
-typedef gboolean (*FsearchListViewIsSelectedFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
-typedef void (*FsearchListViewSelectFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
-typedef void (*FsearchListViewSelectToggleFunc)(int row_idx, GtkSortType sort_type, gpointer user_data);
+typedef gboolean (*FsearchListViewIsSelectedFunc)(int row_idx, gpointer user_data);
+typedef void (*FsearchListViewSelectFunc)(int row_idx, gpointer user_data);
+typedef void (*FsearchListViewSelectToggleFunc)(int row_idx, gpointer user_data);
 typedef void (*FsearchListViewUnselectAllFunc)(gpointer user_data);
 
 FsearchListViewColumn *
