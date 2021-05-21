@@ -10,8 +10,8 @@
 #include <gtk/gtk.h>
 #include <math.h>
 
-static int
-get_icon_size_for_height(int height) {
+static int32_t
+get_icon_size_for_height(int32_t height) {
     if (height < 24) {
         return 16;
     }
@@ -29,8 +29,8 @@ get_icon_surface(GdkWindow *win,
                  const char *name,
                  FsearchDatabaseEntryType type,
                  const char *path,
-                 int icon_size,
-                 int scale_factor) {
+                 int32_t icon_size,
+                 int32_t scale_factor) {
     GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
     if (!icon_theme) {
         return NULL;
@@ -83,7 +83,7 @@ static void
 draw_row_ctx_init(FsearchDatabaseEntry *entry,
                   FsearchQuery *query,
                   GdkWindow *bin_window,
-                  int icon_size,
+                  int32_t icon_size,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
@@ -100,7 +100,7 @@ draw_row_ctx_init(FsearchDatabaseEntry *entry,
         ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
     }
 
-    ctx->full_path = g_string_new_len(ctx->path->str, ctx->path->len);
+    ctx->full_path = g_string_new_len(ctx->path->str, (int32_t)ctx->path->len);
     g_string_append_c(ctx->full_path, G_DIR_SEPARATOR);
     g_string_append(ctx->full_path, name);
 
@@ -173,13 +173,13 @@ fsearch_result_view_query_tooltip(FsearchDatabaseEntry *entry,
         return NULL;
     }
 
-    int width = col->effective_width - 2 * ROW_PADDING_X;
+    int32_t width = col->effective_width - 2 * ROW_PADDING_X;
     char *text = NULL;
 
     switch (col->type) {
     case DATABASE_INDEX_TYPE_NAME:
         if (config->show_listview_icons) {
-            int icon_size = get_icon_size_for_height(row_height - ROW_PADDING_X);
+            int32_t icon_size = get_icon_size_for_height((int32_t)row_height - ROW_PADDING_X);
             width -= 2 * ROW_PADDING_X + icon_size;
         }
         text = g_filename_display_name(name);
@@ -219,7 +219,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseEntry *entry,
 
     pango_layout_set_text(layout, text, -1);
 
-    int layout_width = 0;
+    int32_t layout_width = 0;
     pango_layout_get_pixel_size(layout, &layout_width, NULL);
     width -= layout_width;
 
@@ -251,7 +251,7 @@ fsearch_result_view_draw_row(cairo_t *cr,
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    const int icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
+    const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
     draw_row_ctx_init(entry, query, bin_window, icon_size, &ctx);
@@ -271,7 +271,7 @@ fsearch_result_view_draw_row(cairo_t *cr,
     gtk_render_background(context, cr, rect->x, rect->y, rect->width, rect->height);
 
     // Render row foreground
-    uint32_t x = rect->x;
+    int32_t x = rect->x;
     for (GList *col = columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
         if (!column->visible) {
@@ -280,13 +280,13 @@ fsearch_result_view_draw_row(cairo_t *cr,
         cairo_save(cr);
         cairo_rectangle(cr, x, rect->y, column->effective_width, rect->height);
         cairo_clip(cr);
-        int dx = 0;
-        int dw = 0;
+        int32_t dx = 0;
+        int32_t dw = 0;
         pango_layout_set_attributes(layout, NULL);
         switch (column->type) {
         case DATABASE_INDEX_TYPE_NAME: {
             if (config->show_listview_icons && ctx.icon_surface) {
-                int x_icon = x;
+                int32_t x_icon = x;
                 if (right_to_left_text) {
                     x_icon += column->effective_width - icon_size - ROW_PADDING_X;
                 }
@@ -306,7 +306,7 @@ fsearch_result_view_draw_row(cairo_t *cr,
         } break;
         case DATABASE_INDEX_TYPE_PATH:
             pango_layout_set_attributes(layout, ctx.path_attr);
-            pango_layout_set_text(layout, ctx.path->str, ctx.path->len);
+            pango_layout_set_text(layout, ctx.path->str, (int32_t)ctx.path->len);
             break;
         case DATABASE_INDEX_TYPE_SIZE:
             pango_layout_set_text(layout, ctx.size, -1);
