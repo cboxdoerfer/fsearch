@@ -448,7 +448,7 @@ fsearch_window_action_show_filter(GSimpleAction *action, GVariant *variant, gpoi
     g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_filter = g_variant_get_boolean(variant);
-    fsearch_window_apply_search_revealer_config(self);
+    fsearch_application_window_apply_search_revealer_config(self);
 }
 
 static void
@@ -457,7 +457,7 @@ fsearch_window_action_show_search_button(GSimpleAction *action, GVariant *varian
     g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_search_button = g_variant_get_boolean(variant);
-    fsearch_window_apply_search_revealer_config(self);
+    fsearch_application_window_apply_search_revealer_config(self);
 }
 
 static void
@@ -466,7 +466,7 @@ fsearch_window_action_show_statusbar(GSimpleAction *action, GVariant *variant, g
     g_simple_action_set_state(action, variant);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     config->show_statusbar = g_variant_get_boolean(variant);
-    fsearch_window_apply_statusbar_revealer_config(self);
+    fsearch_application_window_apply_statusbar_revealer_config(self);
 }
 
 static void

@@ -51,7 +51,7 @@ void
 fsearch_application_window_update_listview_config(FsearchApplicationWindow *self);
 
 void
-fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win);
+fsearch_application_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win);
 
 GtkEntry *
 fsearch_application_window_get_search_entry(FsearchApplicationWindow *self);
@@ -78,7 +78,7 @@ void
 fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, guint active_filter);
 
 void
-fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win);
+fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow *win);
 
 void
 fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplication *app);

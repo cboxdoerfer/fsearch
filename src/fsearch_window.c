@@ -255,7 +255,7 @@ fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
 }
 
 void
-fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
+fsearch_application_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     GtkStyleContext *filter_style = gtk_widget_get_style_context(win->listview_scrolled_window);
@@ -279,7 +279,7 @@ fsearch_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
 }
 
 void
-fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win) {
+fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
     GtkStyleContext *filter_style = gtk_widget_get_style_context(win->filter_combobox);
@@ -310,8 +310,8 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     if (config->restore_window_size) {
         gtk_window_set_default_size(GTK_WINDOW(self), config->window_width, config->window_height);
     }
-    fsearch_window_apply_search_revealer_config(self);
-    fsearch_window_apply_statusbar_revealer_config(self);
+    fsearch_application_window_apply_search_revealer_config(self);
+    fsearch_application_window_apply_statusbar_revealer_config(self);
 
     gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(self->filter_combobox));
     for (GList *f = fsearch_application_get_filters(app); f != NULL; f = f->next) {
