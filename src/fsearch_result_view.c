@@ -9,6 +9,7 @@
 
 #include <gtk/gtk.h>
 #include <math.h>
+#include <stdint.h>
 
 static int32_t
 get_icon_size_for_height(int32_t height) {
