@@ -147,7 +147,7 @@ fsearch_window_sort_started(gpointer data) {
 }
 
 static void *
-fsearch_list_view_get_entry_for_row(int row_idx, gpointer user_data) {
+fsearch_list_view_get_entry_for_row(uint32_t row_idx, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
     if (!win || !win->db_view) {
         return NULL;
@@ -443,7 +443,7 @@ fsearch_application_window_get_active_filter(FsearchApplicationWindow *self) {
 
 void
 fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, guint active_filter) {
-    gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), active_filter);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), (gint)active_filter);
 }
 
 static int
