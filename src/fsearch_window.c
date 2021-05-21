@@ -27,7 +27,6 @@
 #include "fsearch_database_entry.h"
 #include "fsearch_database_view.h"
 #include "fsearch_file_utils.h"
-#include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "fsearch_listview_popup.h"
 #include "fsearch_result_view.h"
@@ -38,7 +37,6 @@
 #include "fsearch_window.h"
 #include "fsearch_window_actions.h"
 #include <glib/gi18n.h>
-#include <math.h>
 
 struct _FsearchApplicationWindow {
     GtkApplicationWindow parent_instance;
