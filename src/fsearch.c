@@ -171,7 +171,7 @@ database_update_status_notify(gpointer user_data) {
 
     for (; windows; windows = windows->next) {
         GtkWindow *window = windows->data;
-        if (FSEARCH_WINDOW_IS_WINDOW(window)) {
+        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
             fsearch_application_window_update_database_label((FsearchApplicationWindow *)window, text);
         }
     }
@@ -199,7 +199,7 @@ fsearch_application_shutdown(GApplication *app) {
 
     for (; windows; windows = windows->next) {
         window = windows->data;
-        if (FSEARCH_WINDOW_IS_WINDOW(window)) {
+        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
             fsearch_application_window_prepare_shutdown(window);
         }
     }
@@ -243,7 +243,7 @@ fsearch_prepare_windows_for_db_update(FsearchApplication *app) {
     for (; windows; windows = windows->next) {
         FsearchApplicationWindow *window = windows->data;
 
-        if (FSEARCH_WINDOW_IS_WINDOW(window)) {
+        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
             fsearch_application_window_remove_model(window);
         }
     }
@@ -632,7 +632,7 @@ fsearch_application_activate(GApplication *app) {
         for (; windows; windows = windows->next) {
             window = windows->data;
 
-            if (FSEARCH_WINDOW_IS_WINDOW(window)) {
+            if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
                 GtkWidget *entry =
                     GTK_WIDGET(fsearch_application_window_get_search_entry((FsearchApplicationWindow *)window));
                 if (entry) {
@@ -860,12 +860,12 @@ fsearch_application_add_option_entries(FsearchApplication *self) {
 static void
 fsearch_application_win_added(GtkApplication *app, GtkWindow *win) {
     GTK_APPLICATION_CLASS(fsearch_application_parent_class)->window_added(app, win);
-    fsearch_application_window_added(FSEARCH_WINDOW_WINDOW(win), FSEARCH_APPLICATION(app));
+    fsearch_application_window_added(FSEARCH_APPLICATION_WINDOW(win), FSEARCH_APPLICATION(app));
 }
 
 static void
 fsearch_application_win_removed(GtkApplication *app, GtkWindow *win) {
-    fsearch_application_window_removed(FSEARCH_WINDOW_WINDOW(win), FSEARCH_APPLICATION(app));
+    fsearch_application_window_removed(FSEARCH_APPLICATION_WINDOW(win), FSEARCH_APPLICATION(app));
     GTK_APPLICATION_CLASS(fsearch_application_parent_class)->window_removed(app, win);
 }
 

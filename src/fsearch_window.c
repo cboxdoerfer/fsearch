@@ -119,12 +119,12 @@ get_query_text(FsearchApplicationWindow *win) {
 static FsearchApplicationWindow *
 get_window_for_id(uint32_t win_id) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    return FSEARCH_WINDOW_WINDOW(gtk_application_get_window_by_id(GTK_APPLICATION(app), win_id));
+    return FSEARCH_APPLICATION_WINDOW(gtk_application_get_window_by_id(GTK_APPLICATION(app), win_id));
 }
 
 static void
 fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     self->sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(self->listview));
     self->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(self->listview));
     fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
@@ -132,7 +132,7 @@ fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
 
 static gboolean
 fsearch_window_sort_finished(gpointer data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(data);
     gtk_widget_show(win->listview);
     hide_overlay(win, OVERLAY_RESULTS_SORTING);
     return G_SOURCE_REMOVE;
@@ -140,7 +140,7 @@ fsearch_window_sort_finished(gpointer data) {
 
 static gboolean
 fsearch_window_sort_started(gpointer data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(data);
     gtk_widget_hide(win->listview);
     show_overlay(win, OVERLAY_RESULTS_SORTING);
     return G_SOURCE_REMOVE;
@@ -148,7 +148,7 @@ fsearch_window_sort_started(gpointer data) {
 
 static void *
 fsearch_list_view_get_entry_for_row(uint32_t row_idx, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (!win || !win->db_view) {
         return NULL;
     }
@@ -177,7 +177,7 @@ fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
 
 void
 fsearch_application_window_prepare_shutdown(gpointer self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     // FsearchApplicationWindow *win = self;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -226,7 +226,7 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
 
 void
 fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
     fsearch_window_listview_set_empty(win);
 }
 
@@ -303,7 +303,7 @@ fsearch_window_apply_search_revealer_config(FsearchApplicationWindow *win) {
 
 static void
 fsearch_window_apply_config(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
 
@@ -341,7 +341,7 @@ G_DEFINE_TYPE(FsearchApplicationWindow, fsearch_application_window, GTK_TYPE_APP
 static void
 fsearch_application_window_constructed(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->constructed(object);
 
@@ -366,7 +366,7 @@ fsearch_application_window_constructed(GObject *object) {
 static void
 fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
 }
@@ -552,7 +552,7 @@ on_fsearch_list_view_popup(FsearchListView *view, int row_idx, gpointer user_dat
 static gboolean
 on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
     GActionGroup *group = G_ACTION_GROUP(win);
 
     GdkModifierType default_modifiers = gtk_accelerator_get_default_mod_mask();
@@ -660,7 +660,7 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
 static void
 on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
@@ -671,7 +671,7 @@ on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
 
 void
 fsearch_application_window_update_listview_config(FsearchApplicationWindow *app) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(app));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(app));
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
@@ -684,7 +684,7 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
                                 uint32_t row_idx,
                                 FsearchListViewColumn *col,
                                 gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, win);
     if (!entry) {
         return NULL;
@@ -709,7 +709,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
         return;
     }
 
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row, win);
     if (!entry) {
         return;
@@ -731,7 +731,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
 
 void
 fsearch_results_sort_func(int sort_order, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (!win->db_view) {
         return;
     }
@@ -794,7 +794,7 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
 
 static void
 fsearch_row_unselect_all(gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (win->db_view) {
         db_view_unselect_all(win->db_view);
     }
@@ -802,7 +802,7 @@ fsearch_row_unselect_all(gpointer user_data) {
 
 static void
 fsearch_row_select_range(int start_row, int end_row, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (win->db_view) {
         db_view_select_range(win->db_view, start_row, end_row);
     }
@@ -810,7 +810,7 @@ fsearch_row_select_range(int start_row, int end_row, gpointer user_data) {
 
 static void
 fsearch_row_select_toggle(int row, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (win->db_view) {
         db_view_select_toggle(win->db_view, row);
     }
@@ -818,7 +818,7 @@ fsearch_row_select_toggle(int row, gpointer user_data) {
 
 static void
 fsearch_row_select(int row, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     if (win->db_view) {
         db_view_select(win->db_view, row);
@@ -827,7 +827,7 @@ fsearch_row_select(int row, gpointer user_data) {
 
 static gboolean
 fsearch_row_is_selected(int row, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(user_data);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     if (win->db_view) {
         return db_view_is_selected(win->db_view, row);
@@ -837,7 +837,7 @@ fsearch_row_is_selected(int row, gpointer user_data) {
 
 static void
 create_view_and_model(FsearchApplicationWindow *app) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(app));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(app));
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
@@ -874,7 +874,7 @@ create_view_and_model(FsearchApplicationWindow *app) {
 static void
 database_update_finished_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), "");
 
@@ -907,7 +907,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
 static void
 database_load_started_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     database_load_started(win);
 }
@@ -915,14 +915,14 @@ database_load_started_cb(gpointer data, gpointer user_data) {
 static void
 database_scan_started_cb(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     database_scan_started(win);
 }
 
 static void
 fsearch_application_window_init(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     gtk_widget_init_template(GTK_WIDGET(self));
 
@@ -973,7 +973,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
 static void
 on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     int active = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     const char *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
@@ -999,14 +999,14 @@ on_search_entry_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer use
 static void
 on_search_entry_activate(GtkButton *widget, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(win));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     perform_search(win);
 }
 
 static gboolean
 on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_WINDOW_WINDOW(widget);
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(widget);
     fsearch_application_window_prepare_shutdown(win);
     gtk_widget_destroy(widget);
     return TRUE;
@@ -1160,7 +1160,7 @@ fsearch_application_window_update_listview(FsearchApplicationWindow *self) {
 
 void
 fsearch_application_window_invert_selection(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         db_view_invert_selection(self->db_view);
         fsearch_application_window_update_listview(self);
@@ -1169,7 +1169,7 @@ fsearch_application_window_invert_selection(FsearchApplicationWindow *self) {
 
 void
 fsearch_application_window_unselect_all(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         db_view_unselect_all(self->db_view);
         fsearch_application_window_update_listview(self);
@@ -1178,7 +1178,7 @@ fsearch_application_window_unselect_all(FsearchApplicationWindow *self) {
 
 void
 fsearch_application_window_select_all(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         db_view_select_all(self->db_view);
         fsearch_application_window_update_listview(self);
@@ -1187,7 +1187,7 @@ fsearch_application_window_select_all(FsearchApplicationWindow *self) {
 
 uint32_t
 fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         return db_view_get_num_selected(self->db_view);
     }
@@ -1196,7 +1196,7 @@ fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
 
 void
 fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GHFunc func, gpointer user_data) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         db_view_selection_for_each(self->db_view, func, user_data);
     }
@@ -1204,13 +1204,13 @@ fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GH
 
 GtkEntry *
 fsearch_application_window_get_search_entry(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     return GTK_ENTRY(self->search_entry);
 }
 
 FsearchStatusbar *
 fsearch_application_window_get_statusbar(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     return FSEARCH_STATUSBAR(self->statusbar);
 }
 
@@ -1221,7 +1221,7 @@ fsearch_application_window_update_database_label(FsearchApplicationWindow *self,
 
 FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     return FSEARCH_LIST_VIEW(self->listview);
 }
 

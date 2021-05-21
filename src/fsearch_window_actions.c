@@ -354,7 +354,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GHFunc open_fu
 static void
 fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    g_assert(FSEARCH_WINDOW_IS_WINDOW(self));
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     fsearch_application_window_prepare_shutdown(self);
     gtk_widget_destroy(GTK_WIDGET(self));
