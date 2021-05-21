@@ -177,7 +177,7 @@ db_search_worker_context_new(FsearchQuery *query, GCancellable *cancellable, uin
 }
 
 static inline bool
-filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const char *haystack) {
+db_search_filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const char *haystack) {
     if (!query->filter) {
         return true;
     }
@@ -257,7 +257,7 @@ db_search_worker(DatabaseSearchWorkerContext *ctx, DynamicArray *entries) {
             path_set = true;
         }
 
-        if (!filter_entry(entry, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
+        if (!db_search_filter_entry(entry, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
             continue;
         }
 
