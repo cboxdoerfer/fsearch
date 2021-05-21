@@ -161,9 +161,6 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const char *hayst
                 return true;
             }
             FsearchToken *t = query->filter_token[num_found++];
-            if (!t) {
-                return false;
-            }
 
             if (!t->search_func(haystack, t->text, t)) {
                 return false;
@@ -234,10 +231,6 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
                 break;
             }
             FsearchToken *t = token[num_found++];
-            if (!t) {
-                break;
-            }
-
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && t->has_separator)) {
                 if (!path_set) {
