@@ -578,30 +578,40 @@ fsearch_application_startup(GApplication *app) {
         g_object_unref(menu_builder);
     }
 
-    static const gchar *toggle_focus[] = {"Tab", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.toggle_focus", toggle_focus);
-    static const gchar *search[] = {"<control>f", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.focus_search", search);
-    static const gchar *new_window[] = {"<control>n", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.new_window", new_window);
-    static const gchar *select_all[] = {"<control>a", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.select_all", select_all);
-    static const gchar *hide_window[] = {"Escape", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.hide_window", hide_window);
-    static const gchar *match_case[] = {"<control>i", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.match_case", match_case);
-    static const gchar *search_mode[] = {"<control>r", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.search_mode", search_mode);
-    static const gchar *search_in_path[] = {"<control>u", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.search_in_path", search_in_path);
-    static const gchar *update_database[] = {"<control><shift>r", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.update_database", update_database);
-    static const gchar *preferences[] = {"<control>p", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.preferences(uint32 0)", preferences);
-    static const gchar *close_window[] = {"<control>w", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "win.close_window", close_window);
-    static const gchar *quit[] = {"<control>q", NULL};
-    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", quit);
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.toggle_focus",
+                                          (const gchar *const[]){"Tab", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.focus_search",
+                                          (const gchar *const[]){"<control>f", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "app.new_window",
+                                          (const gchar *const[]){"<control>n", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.select_all",
+                                          (const gchar *const[]){"<control>a", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.hide_window",
+                                          (const gchar *const[]){"Escape", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.match_case",
+                                          (const gchar *const[]){"<control>i", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.search_mode",
+                                          (const gchar *const[]){"<control>r", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.search_in_path",
+                                          (const gchar *const[]){"<control>u", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "app.update_database",
+                                          (const gchar *const[]){"<control><shift>r", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "app.preferences(uint32 0)",
+                                          (const gchar *const[]){"<control>p", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app),
+                                          "win.close_window",
+                                          (const gchar *const[]){"<control>w", NULL});
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), "app.quit", (const gchar *const[]){"<control>q", NULL});
 
     fsearch->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
 }
