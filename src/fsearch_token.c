@@ -30,7 +30,7 @@ static uint32_t
 fsearch_search_func_normal_icase_u8(const char *haystack, const char *needle, void *data) {
     // TODO: make this faster
     char *haystack_normalized = g_utf8_normalize(haystack, -1, G_NORMALIZE_DEFAULT);
-    if (haystack_normalized == NULL) {
+    if (G_UNLIKELY(haystack_normalized == NULL)) {
         g_warning("[utf8] file has invalid encoding: %s\n", haystack);
         return strcasestr(haystack, needle) ? 1 : 0;
     }
@@ -151,4 +151,3 @@ fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool a
 
     return token;
 }
-
