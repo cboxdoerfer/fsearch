@@ -8,7 +8,7 @@ AlignAfterOpenBracket: Align
 AlignOperands: AlignAfterOperator
 AllowAllArgumentsOnNextLine: false
 AllowAllParametersOfDeclarationOnNextLine: false
-AllowShortBlocksOnASingleLine: false
+AllowShortBlocksOnASingleLine: Never
 AllowShortIfStatementsOnASingleLine: false
 BinPackArguments: false
 BinPackParameters: false
