@@ -90,9 +90,6 @@ hide_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
 static void
 hide_overlays(FsearchApplicationWindow *win);
 
-static void
-show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
-
 static FsearchFilter *
 get_active_filter(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
