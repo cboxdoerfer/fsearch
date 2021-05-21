@@ -39,7 +39,7 @@ struct DatabaseSearchResult {
     volatile int ref_count;
 };
 
-typedef struct search_context_s {
+typedef struct DatabaseSearchWorkerContext {
     FsearchQuery *query;
     void **results;
     GCancellable *cancellable;
@@ -48,7 +48,7 @@ typedef struct search_context_s {
     uint32_t num_files;
     uint32_t start_pos;
     uint32_t end_pos;
-} search_thread_context_t;
+} DatabaseSearchWorkerContext;
 
 static DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable);
@@ -107,7 +107,7 @@ db_search_task(gpointer data, GCancellable *cancellable) {
 }
 
 static void
-search_thread_context_free(search_thread_context_t *ctx) {
+db_search_worker_context_free(DatabaseSearchWorkerContext *ctx) {
     if (!ctx) {
         return;
     }
@@ -120,9 +120,9 @@ search_thread_context_free(search_thread_context_t *ctx) {
     ctx = NULL;
 }
 
-static search_thread_context_t *
-search_thread_context_new(FsearchQuery *query, GCancellable *cancellable, uint32_t start_pos, uint32_t end_pos) {
-    search_thread_context_t *ctx = calloc(1, sizeof(search_thread_context_t));
+static DatabaseSearchWorkerContext *
+db_search_worker_context_new(FsearchQuery *query, GCancellable *cancellable, uint32_t start_pos, uint32_t end_pos) {
+    DatabaseSearchWorkerContext *ctx = calloc(1, sizeof(DatabaseSearchWorkerContext));
     assert(ctx != NULL);
     assert(end_pos >= start_pos);
 
@@ -172,7 +172,7 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const char *hayst
 }
 
 static void
-db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
+db_search_worker(DatabaseSearchWorkerContext *ctx, DynamicArray *entries) {
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
@@ -262,7 +262,7 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
 
 static void *
 db_search_folders_worker(void *user_data) {
-    search_thread_context_t *ctx = (search_thread_context_t *)user_data;
+    DatabaseSearchWorkerContext *ctx = (DatabaseSearchWorkerContext *)user_data;
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
@@ -272,7 +272,7 @@ db_search_folders_worker(void *user_data) {
 
 static void *
 db_search_files_worker(void *user_data) {
-    search_thread_context_t *ctx = (search_thread_context_t *)user_data;
+    DatabaseSearchWorkerContext *ctx = (DatabaseSearchWorkerContext *)user_data;
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
@@ -286,8 +286,8 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
     const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(q->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
-    search_thread_context_t *thread_data[num_threads];
-    memset(thread_data, 0, num_threads * sizeof(search_thread_context_t *));
+    DatabaseSearchWorkerContext *thread_data[num_threads];
+    memset(thread_data, 0, num_threads * sizeof(DatabaseSearchWorkerContext *));
 
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
@@ -299,7 +299,7 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
     GList *threads = fsearch_thread_pool_get_threads(q->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
         thread_data[i] =
-            search_thread_context_new(q, cancellable, start_pos, i == num_threads - 1 ? num_entries - 1 : end_pos);
+            db_search_worker_context_new(q, cancellable, start_pos, i == num_threads - 1 ? num_entries - 1 : end_pos);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
@@ -315,8 +315,8 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
     }
     if (g_cancellable_is_cancelled(cancellable)) {
         for (uint32_t i = 0; i < num_threads; i++) {
-            search_thread_context_t *ctx = thread_data[i];
-            search_thread_context_free(ctx);
+            DatabaseSearchWorkerContext *ctx = thread_data[i];
+            db_search_worker_context_free(ctx);
         }
         return NULL;
     }
@@ -330,14 +330,14 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
     DynamicArray *results = darray_new(num_results);
 
     for (uint32_t i = 0; i < num_threads; i++) {
-        search_thread_context_t *ctx = thread_data[i];
+        DatabaseSearchWorkerContext *ctx = thread_data[i];
         if (!ctx) {
             break;
         }
 
         darray_add_items(results, (void **)ctx->results, ctx->num_results);
 
-        search_thread_context_free(ctx);
+        db_search_worker_context_free(ctx);
         ctx = NULL;
     }
 
