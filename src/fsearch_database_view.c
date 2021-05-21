@@ -354,7 +354,7 @@ db_sort_task_finished(FsearchTask *task, gpointer result, gpointer data) {
 
 static void
 db_view_update_sort(FsearchDatabaseView *view) {
-    if (!view || !view->db) {
+    if (!view->db) {
         return;
     }
 
@@ -418,7 +418,7 @@ db_view_update_sort(FsearchDatabaseView *view) {
 
 static void
 db_view_update_entries(FsearchDatabaseView *view) {
-    if (!view || !view->db || !view->pool) {
+    if (!view->db || !view->pool) {
         return;
     }
 
