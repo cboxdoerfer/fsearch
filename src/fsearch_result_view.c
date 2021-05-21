@@ -29,7 +29,6 @@ static cairo_surface_t *
 get_icon_surface(GdkWindow *win,
                  const char *name,
                  FsearchDatabaseEntryType type,
-                 const char *path,
                  int32_t icon_size,
                  int32_t scale_factor) {
     GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
@@ -38,7 +37,6 @@ get_icon_surface(GdkWindow *win,
     }
 
     cairo_surface_t *icon_surface = NULL;
-    // GIcon *icon = fsearch_file_utils_get_icon_for_path(path);
     GIcon *icon = fsearch_file_utils_guess_icon(name, type == DATABASE_ENTRY_TYPE_FOLDER);
     const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
     if (!names) {
@@ -111,7 +109,6 @@ draw_row_ctx_init(FsearchDatabaseEntry *entry,
     ctx->icon_surface = config->show_listview_icons ? get_icon_surface(bin_window,
                                                                        name,
                                                                        db_entry_get_type(entry),
-                                                                       ctx->full_path->str,
                                                                        icon_size,
                                                                        gdk_window_get_scale_factor(bin_window))
                                                     : NULL;
