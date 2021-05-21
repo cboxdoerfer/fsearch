@@ -203,11 +203,11 @@ db_search_worker(search_thread_context_t *ctx, DynamicArray *entries) {
             return;
         }
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        if (!entry) {
+        if (G_UNLIKELY(!entry)) {
             continue;
         }
         const char *haystack_name = db_entry_get_name(entry);
-        if (!haystack_name) {
+        if (G_UNLIKELY(!haystack_name)) {
             continue;
         }
         if (search_in_path || query->filter->search_in_path) {
