@@ -326,11 +326,8 @@ db_search_entries(FsearchQuery *q,
 
     GList *threads = fsearch_thread_pool_get_threads(q->pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-        thread_data[i] = db_search_worker_context_new(q,
-                                                      cancellable,
-                                                      entries,
-                                                      start_pos,
-                                                      i == num_threads - 1 ? num_entries - 1 : end_pos);
+        thread_data[i] =
+            db_search_worker_context_new(q, cancellable, entries, start_pos, MIN(end_pos, num_entries - 1));
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
