@@ -32,6 +32,8 @@
 #include "fsearch_task.h"
 #include "fsearch_token.h"
 
+#define THRESHOLD_FOR_PARALLEL_SEARCH 1000
+
 struct DatabaseSearchResult {
     DynamicArray *files;
     DynamicArray *folders;
@@ -314,7 +316,8 @@ db_search_entries(FsearchQuery *q,
     if (num_entries == 0) {
         return NULL;
     }
-    const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(q->pool), num_entries);
+    const uint32_t num_threads =
+        num_entries < THRESHOLD_FOR_PARALLEL_SEARCH ? 1 : fsearch_thread_pool_get_num_threads(q->pool);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     DatabaseSearchWorkerContext *thread_data[num_threads];
