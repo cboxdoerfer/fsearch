@@ -72,7 +72,8 @@ struct FsearchDatabase {
     bool exclude_hidden;
     time_t timestamp;
 
-    int32_t ref_count;
+    volatile int ref_count;
+
     GMutex mutex;
 };
 
@@ -1567,24 +1568,22 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
 
 FsearchDatabase *
 db_ref(FsearchDatabase *db) {
-    if (!db) {
+    if (!db || db->ref_count <= 0) {
         return NULL;
     }
-    db_lock(db);
-    db->ref_count++;
-    db_unlock(db);
+    g_atomic_int_inc(&db->ref_count);
     g_debug("[db_ref] increased to: %d", db->ref_count);
     return db;
 }
 
 void
 db_unref(FsearchDatabase *db) {
-    assert(db != NULL);
-    db_lock(db);
-    db->ref_count--;
-    db_unlock(db);
-    g_debug("[db_unref] dropped to: %d", db->ref_count);
-    if (db->ref_count <= 0) {
+    if (!db || db->ref_count <= 0) {
+        return;
+    }
+    g_debug("[db_unref] dropped to: %d", db->ref_count - 1);
+    if (g_atomic_int_dec_and_test(&db->ref_count)) {
         db_free(db);
+        db = NULL;
     }
 }
