@@ -315,7 +315,7 @@ db_search_entries(FsearchQuery *q,
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     DatabaseSearchWorkerContext *thread_data[num_threads];
-    memset(thread_data, 0, num_threads * sizeof(DatabaseSearchWorkerContext *));
+    memset(thread_data, 0, sizeof(thread_data));
 
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
