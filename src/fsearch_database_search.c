@@ -219,7 +219,7 @@ db_search_filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const c
     return true;
 }
 
-static void *
+static void
 db_search_worker(void *data) {
     DatabaseSearchWorkerContext *ctx = data;
     assert(ctx != NULL);
@@ -238,7 +238,7 @@ db_search_worker(void *data) {
     if (!entries) {
         ctx->num_results = 0;
         g_debug("[db_search] entries empty");
-        return NULL;
+        return;
     }
 
     uint32_t num_results = 0;
@@ -248,7 +248,7 @@ db_search_worker(void *data) {
     GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
         if (g_cancellable_is_cancelled(ctx->cancellable)) {
-            return NULL;
+            return;
         }
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
         if (G_UNLIKELY(!entry)) {
@@ -301,12 +301,13 @@ db_search_worker(void *data) {
     path_string = NULL;
 
     ctx->num_results = num_results;
-
-    return NULL;
 }
 
 static DynamicArray *
-db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entries, void *(*search_func)(void *)) {
+db_search_entries(FsearchQuery *q,
+                  GCancellable *cancellable,
+                  DynamicArray *entries,
+                  FsearchThreadPoolFunc search_func) {
     const uint32_t num_entries = darray_get_num_items(entries);
     const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(q->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;

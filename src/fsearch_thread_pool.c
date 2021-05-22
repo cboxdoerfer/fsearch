@@ -29,7 +29,7 @@ struct _FsearchThreadPool {
 
 typedef struct thread_context_s {
     GThread *thread;
-    gpointer (*thread_func)(gpointer thread_data);
+    FsearchThreadPoolFunc thread_func;
 
     gpointer *thread_data;
 
@@ -225,7 +225,10 @@ fsearch_thread_pool_get_num_threads(FsearchThreadPool *pool) {
 }
 
 bool
-fsearch_thread_pool_push_data(FsearchThreadPool *pool, GList *thread, ThreadFunc thread_func, gpointer thread_data) {
+fsearch_thread_pool_push_data(FsearchThreadPool *pool,
+                              GList *thread,
+                              FsearchThreadPoolFunc thread_func,
+                              gpointer thread_data) {
     if (!pool || !thread || !thread_func || !thread_data) {
         return false;
     }
