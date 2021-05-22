@@ -46,7 +46,7 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define DATABASE_MAJOR_VERSION 0
-#define DATABASE_MINOR_VERSION 7
+#define DATABASE_MINOR_VERSION 8
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 struct FsearchDatabase {
@@ -380,6 +380,12 @@ db_load_folders(FILE *fp,
     for (idx = 0; idx < num_folders; idx++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, idx);
         FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+
+        // TODO: db_index is currently unused
+        // db_index: the database index this folder belongs to
+        uint16_t db_index = 0;
+        memcpy(&db_index, fb, 2);
+        fb += 2;
 
         fb = db_load_entry_shared_from_memory(fb, index_flags, entry, previous_entry_name);
 
@@ -945,6 +951,14 @@ db_save_folders(FILE *fp,
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
         FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+
+        // TODO: actually store the folders db_index instead of always 0
+        const uint16_t db_index = 0;
+        bytes_written += write_data_to_file(fp, &db_index, 2, 1, write_failed);
+        if (*write_failed == true) {
+            g_debug("[db_save] failed to save folder's database index: %d", db_index);
+            goto out;
+        }
 
         FsearchDatabaseEntryFolder *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_idx((FsearchDatabaseEntry *)parent) : db_entry_get_idx(entry);
