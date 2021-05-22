@@ -45,8 +45,6 @@ typedef struct DatabaseSearchWorkerContext {
     DynamicArray *entries;
     GCancellable *cancellable;
     uint32_t num_results;
-    uint32_t num_folders;
-    uint32_t num_files;
     uint32_t start_pos;
     uint32_t end_pos;
 } DatabaseSearchWorkerContext;
@@ -244,8 +242,6 @@ db_search_worker(void *data) {
     }
 
     uint32_t num_results = 0;
-    uint32_t num_files = 0;
-    uint32_t num_folders = 0;
 
     bool path_set = false;
 
@@ -279,7 +275,6 @@ db_search_worker(void *data) {
             if (num_found == num_token) {
                 results[num_results] = entry;
                 num_results++;
-                num_files++;
                 break;
             }
             FsearchToken *t = token[num_found++];
@@ -306,8 +301,6 @@ db_search_worker(void *data) {
     path_string = NULL;
 
     ctx->num_results = num_results;
-    ctx->num_folders = num_folders;
-    ctx->num_files = num_files;
 
     return NULL;
 }
