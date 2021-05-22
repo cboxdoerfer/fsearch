@@ -219,6 +219,14 @@ db_search_filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const c
     return true;
 }
 
+static inline void
+db_search_build_path(FsearchDatabaseEntry *entry, GString *dest, const char *entry_name) {
+    g_string_truncate(dest, 0);
+    db_entry_append_path(entry, dest);
+    g_string_append_c(dest, G_DIR_SEPARATOR);
+    g_string_append(dest, entry_name);
+}
+
 static void
 db_search_worker(void *data) {
     DatabaseSearchWorkerContext *ctx = data;
@@ -259,10 +267,7 @@ db_search_worker(void *data) {
             continue;
         }
         if (search_in_path || query->filter->search_in_path) {
-            g_string_truncate(path_string, 0);
-            db_entry_append_path(entry, path_string);
-            g_string_append_c(path_string, G_DIR_SEPARATOR);
-            g_string_append(path_string, haystack_name);
+            db_search_build_path(entry, path_string, haystack_name);
             path_set = true;
         }
 
@@ -281,10 +286,7 @@ db_search_worker(void *data) {
             const char *haystack = NULL;
             if (search_in_path || (auto_search_in_path && t->has_separator)) {
                 if (!path_set) {
-                    g_string_truncate(path_string, 0);
-                    db_entry_append_path(entry, path_string);
-                    g_string_append_c(path_string, G_DIR_SEPARATOR);
-                    g_string_append(path_string, haystack_name);
+                    db_search_build_path(entry, path_string, haystack_name);
                     path_set = true;
                 }
                 haystack = path_string->str;
