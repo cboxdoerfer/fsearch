@@ -311,6 +311,9 @@ db_search_entries(FsearchQuery *q,
                   DynamicArray *entries,
                   FsearchThreadPoolFunc search_func) {
     const uint32_t num_entries = darray_get_num_items(entries);
+    if (num_entries == 0) {
+        return NULL;
+    }
     const uint32_t num_threads = MIN(fsearch_thread_pool_get_num_threads(q->pool), num_entries);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
