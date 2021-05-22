@@ -46,7 +46,7 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define DATABASE_MAJOR_VERSION 0
-#define DATABASE_MINOR_VERSION 6
+#define DATABASE_MINOR_VERSION 7
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 struct FsearchDatabase {
@@ -598,6 +598,18 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     }
     g_debug("[db_load] folder size: %lu, file size: %lu", folder_block_size, file_block_size);
 
+    // TODO: implement index loading
+    uint32_t num_indexes = 0;
+    if (fread(&num_indexes, 4, 1, fp) != 1) {
+        goto load_fail;
+    }
+
+    // TODO: implement exclude loading
+    uint32_t num_excludes = 0;
+    if (fread(&num_excludes, 4, 1, fp) != 1) {
+        goto load_fail;
+    }
+
     // pre-allocate the folders array so we can later map parent indices to the corresponding pointers
     sorted_folders[DATABASE_INDEX_TYPE_NAME] = darray_new(num_folders);
     folders = sorted_folders[DATABASE_INDEX_TYPE_NAME];
@@ -954,14 +966,32 @@ out:
 
 static size_t
 db_save_indexes(FILE *fp, FsearchDatabase *db, bool *write_failed) {
-    // TODO
-    return 0;
+    size_t bytes_written = 0;
+
+    // TODO: actually implement storing all index information
+    const uint32_t num_indexes = 0;
+    bytes_written += write_data_to_file(fp, &num_indexes, 4, 1, write_failed);
+    if (*write_failed == true) {
+        g_debug("[db_save] failed to save number of indexes: %d", num_indexes);
+        goto out;
+    }
+out:
+    return bytes_written;
 }
 
 static size_t
 db_save_excludes(FILE *fp, FsearchDatabase *db, bool *write_failed) {
-    // TODO
-    return 0;
+    size_t bytes_written = 0;
+
+    // TODO: actually implement storing all exclude information
+    const uint32_t num_excludes = 0;
+    bytes_written += write_data_to_file(fp, &num_excludes, 4, 1, write_failed);
+    if (*write_failed == true) {
+        g_debug("[db_save] failed to save number of indexes: %d", num_excludes);
+        goto out;
+    }
+out:
+    return bytes_written;
 }
 
 static size_t
