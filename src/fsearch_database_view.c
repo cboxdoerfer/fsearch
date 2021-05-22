@@ -216,6 +216,9 @@ db_view_new(const char *query_text,
 
     view->ref_count = 1;
 
+    static int id = 0;
+    view->id = id++;
+
     g_mutex_init(&view->mutex);
 
     return view;
