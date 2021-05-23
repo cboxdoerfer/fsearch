@@ -1805,7 +1805,7 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
 }
 
 void
-fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
+fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
     if (!view) {
         return;
     }

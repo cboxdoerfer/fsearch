@@ -127,7 +127,7 @@ fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     self->sort_order = fsearch_list_view_get_sort_order(FSEARCH_LIST_VIEW(self->listview));
     self->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(self->listview));
-    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
+    fsearch_list_view_set_config(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
 }
 
 static void *
@@ -435,7 +435,7 @@ fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
     const uint32_t num_rows = db_view_get_num_entries(win->db_view);
     win->sort_order = db_view_get_sort_order(win->db_view);
     win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
-    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
+    fsearch_list_view_set_config(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
 }
 
 static gboolean

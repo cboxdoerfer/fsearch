@@ -98,7 +98,7 @@ FsearchListViewColumn *
 fsearch_list_view_get_first_column_for_type(FsearchListView *view, int type);
 
 void
-fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
+fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type);
 
 gint
 fsearch_list_view_get_cursor(FsearchListView *view);
