@@ -392,8 +392,8 @@ db_search_empty(FsearchQuery *q) {
 
 static DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable) {
-    const uint32_t num_folder_entries = darray_get_num_items(q->folders);
-    const uint32_t num_file_entries = darray_get_num_items(q->files);
+    const uint32_t num_folder_entries = q->folders ? darray_get_num_items(q->folders) : 0;
+    const uint32_t num_file_entries = q->files ? darray_get_num_items(q->files) : 0;
     if (num_folder_entries == 0 && num_file_entries == 0) {
         return db_search_result_new();
     }
