@@ -153,6 +153,7 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
     }
 
     db_view_lock(view);
+
     view->db = db_ref(db);
     view->pool = db_get_thread_pool(db);
     view->files = db_get_files(db);
@@ -160,6 +161,7 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
 
     db_view_update_entries(view);
     db_view_update_sort(view);
+
     db_view_unlock(view);
 
 }

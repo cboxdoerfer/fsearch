@@ -63,6 +63,8 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
         return;
     }
 
+    GQueue *task_queue = g_queue_new();
+
     g_async_queue_lock(queue->queue);
     while (true) {
         // clear all queued tasks
@@ -71,7 +73,8 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
             break;
         }
         if (clear_policy == FSEARCH_TASK_CLEAR_SAME_ID && task->id != id) {
-            g_async_queue_push_front_unlocked(queue->queue, task);
+            // remember tasks which need to be inserted back into the async queue later
+            g_queue_push_tail(task_queue, task);
             continue;
         }
 
@@ -79,7 +82,22 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
             task->task_cancelled_func(task, task->data);
         }
     }
+
+    // insert all the tasks back into the async queue, which still need to be processed
+    while (true) {
+        FsearchTask *task = g_queue_pop_head(task_queue);
+        if (task) {
+            g_async_queue_push_unlocked(queue->queue, task);
+        }
+        else {
+            break;
+        }
+    }
+
     g_async_queue_unlock(queue->queue);
+
+    g_queue_free(task_queue);
+    task_queue = NULL;
 }
 
 void
