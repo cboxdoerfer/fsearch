@@ -92,6 +92,9 @@ struct _FsearchListView {
     gpointer selection_user_data;
 };
 
+#define VIRTUAL_ROW_ABOVE_VIEW (-1)
+#define VIRTUAL_ROW_BELOW_VIEW (-2)
+
 enum { FSEARCH_LIST_VIEW_ROW_ACTIVATED, FSEARCH_LIST_VIEW_POPUP, NUM_SIGNALS };
 
 static guint signals[NUM_SIGNALS];
@@ -188,10 +191,15 @@ fsearch_list_view_num_rows_for_view_height(FsearchListView *view) {
 
 static gint
 fsearch_list_view_get_row_idx_for_y_canvas(FsearchListView *view, int y_canvas) {
+    if (y_canvas < 0) {
+        // we're above the first row
+        return VIRTUAL_ROW_ABOVE_VIEW;
+    }
     int row_idx = floor((double)y_canvas / (double)view->row_height);
 
     if (row_idx >= view->num_rows) {
-        row_idx = -1;
+        // we're below the last row
+        row_idx = VIRTUAL_ROW_BELOW_VIEW;
     }
 
     return row_idx;
@@ -787,8 +795,21 @@ fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
 
     double x1, y1, x2, y2;
     fsearch_list_view_get_rubberband_points(view, &x1, &y1, &x2, &y2);
-    int row_idx_1 = MAX(0, fsearch_list_view_get_row_idx_for_y_canvas(view, y1));
-    int row_idx_2 = MAX(0, fsearch_list_view_get_row_idx_for_y_canvas(view, y2));
+    int row_idx_1 = fsearch_list_view_get_row_idx_for_y_canvas(view, y1);
+    if (row_idx_1 == VIRTUAL_ROW_ABOVE_VIEW) {
+        row_idx_1 = 0;
+    }
+    else if (row_idx_1 == VIRTUAL_ROW_BELOW_VIEW) {
+        row_idx_1 = view->num_rows - 1;
+    }
+
+    int row_idx_2 = fsearch_list_view_get_row_idx_for_y_canvas(view, y2);
+    if (row_idx_2 == VIRTUAL_ROW_ABOVE_VIEW) {
+        row_idx_2 = 0;
+    }
+    else if (row_idx_2 == VIRTUAL_ROW_BELOW_VIEW) {
+        row_idx_2 = view->num_rows - 1;
+    }
 
     if (row_idx_1 > row_idx_2) {
         int tmp_idx = row_idx_1;
