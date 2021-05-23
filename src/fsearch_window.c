@@ -130,22 +130,6 @@ fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
     fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
 }
 
-static gboolean
-fsearch_window_sort_finished(gpointer data) {
-    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(data);
-    gtk_widget_show(win->listview);
-    hide_overlay(win, OVERLAY_RESULTS_SORTING);
-    return G_SOURCE_REMOVE;
-}
-
-static gboolean
-fsearch_window_sort_started(gpointer data) {
-    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(data);
-    gtk_widget_hide(win->listview);
-    show_overlay(win, OVERLAY_RESULTS_SORTING);
-    return G_SOURCE_REMOVE;
-}
-
 static void *
 fsearch_list_view_get_entry_for_row(uint32_t row_idx, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
@@ -446,7 +430,63 @@ fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, gui
     gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), (gint)active_filter);
 }
 
-static int
+static void
+fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
+    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
+    win->sort_order = db_view_get_sort_order(win->db_view);
+    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
+    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
+}
+
+static gboolean
+fsearch_window_db_view_sort_finished_cb(gpointer data) {
+    const guint win_id = GPOINTER_TO_UINT(data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
+
+    if (!win) {
+        return G_SOURCE_REMOVE;
+    }
+
+    gtk_widget_show(win->listview);
+    hide_overlay(win, OVERLAY_RESULTS_SORTING);
+
+    fsearch_window_db_view_apply_changes(win);
+
+    return G_SOURCE_REMOVE;
+}
+
+static void
+fsearch_window_db_view_sort_finished(FsearchDatabaseView *view, gpointer user_data) {
+    if (!user_data) {
+        return;
+    }
+    g_idle_add(fsearch_window_db_view_sort_finished_cb, user_data);
+}
+
+static gboolean
+fsearch_window_db_view_sort_started_cb(gpointer data) {
+    const guint win_id = GPOINTER_TO_UINT(data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
+
+    if (!win) {
+        return G_SOURCE_REMOVE;
+    }
+
+    gtk_widget_hide(win->listview);
+    show_overlay(win, OVERLAY_RESULTS_SORTING);
+
+    return G_SOURCE_REMOVE;
+}
+
+static void
+fsearch_window_db_view_sort_started(FsearchDatabaseView *view, gpointer user_data) {
+    if (!user_data) {
+        return;
+    }
+    g_idle_add(fsearch_window_db_view_sort_started_cb, user_data);
+}
+
+static gboolean
 fsearch_window_db_view_search_finished_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
@@ -454,10 +494,7 @@ fsearch_window_db_view_search_finished_cb(gpointer data) {
     if (!win) {
         return G_SOURCE_REMOVE;
     }
-    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
-    win->sort_order = db_view_get_sort_order(win->db_view);
-    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
-    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
+    fsearch_window_db_view_apply_changes(win);
     return G_SOURCE_REMOVE;
 }
 
@@ -469,7 +506,7 @@ fsearch_window_db_view_search_finished(FsearchDatabaseView *view, gpointer user_
     g_idle_add(fsearch_window_db_view_search_finished_cb, user_data);
 }
 
-static int
+static gboolean
 fsearch_window_db_view_search_started_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
@@ -1048,16 +1085,14 @@ fsearch_window_db_view_changed_cb(gpointer data) {
     }
 
     const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
 
-    win->sort_order = db_view_get_sort_order(win->db_view);
-    win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
-    fsearch_list_view_set_num_rows(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
+    fsearch_window_db_view_apply_changes(win);
     fsearch_window_actions_update(win);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
 
+    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
     gchar sb_text[100] = "";
     snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
     fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), sb_text);
@@ -1106,8 +1141,8 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
                                fsearch_window_db_view_selection_changed,
                                fsearch_window_db_view_search_started,
                                fsearch_window_db_view_search_finished,
-                               NULL,
-                               NULL,
+                               fsearch_window_db_view_sort_started,
+                               fsearch_window_db_view_sort_finished,
                                GUINT_TO_POINTER(win_id));
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     if (db) {
