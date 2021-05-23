@@ -72,6 +72,7 @@ struct _FsearchApplicationWindow {
 typedef enum {
     OVERLAY_DATABASE_EMPTY,
     OVERLAY_DATABASE_LOADING,
+    OVERLAY_DATABASE_UPDATING,
     OVERLAY_QUERY_EMPTY,
     OVERLAY_RESULTS_EMPTY,
     OVERLAY_RESULTS_SORTING,
@@ -151,6 +152,16 @@ database_load_started(FsearchApplicationWindow *win) {
 
 static void
 database_scan_started(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchDatabase *db = fsearch_application_get_db(app);
+    uint32_t num_entries = 0;
+    if (db) {
+        num_entries = db_get_num_entries(db);
+        db_unref(db);
+    }
+    if (num_entries == 0) {
+        show_overlay(win, OVERLAY_DATABASE_UPDATING);
+    }
     GtkWidget *cancel_update_button =
         gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "cancel_database_update");
     if (cancel_update_button) {
@@ -377,6 +388,9 @@ hide_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
     case OVERLAY_DATABASE_LOADING:
         gtk_widget_hide(win->overlay_database_loading);
         break;
+    case OVERLAY_DATABASE_UPDATING:
+        gtk_widget_hide(win->overlay_database_updating);
+        break;
     default:
         g_debug("[win] overlay %d unknown", overlay);
     }
@@ -410,6 +424,9 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
         break;
     case OVERLAY_DATABASE_LOADING:
         gtk_widget_show(win->overlay_database_loading);
+        break;
+    case OVERLAY_DATABASE_UPDATING:
+        gtk_widget_show(win->overlay_database_updating);
         break;
     default:
         g_debug("[win] overlay %d unknown", overlay);
@@ -931,6 +948,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
     fsearch_application_window_unselect_all(win);
 
     hide_overlay(win, OVERLAY_DATABASE_LOADING);
+    hide_overlay(win, OVERLAY_DATABASE_UPDATING);
 
     GtkWidget *update_database_button =
         gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "update_database");
