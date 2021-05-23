@@ -283,6 +283,9 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
     if (view->view_changed_func) {
         view->view_changed_func(view, view->user_data);
     }
+    if (view->selection_changed_func) {
+        view->selection_changed_func(view, view->user_data);
+    }
 
     db_view_unref(view);
     view = NULL;
