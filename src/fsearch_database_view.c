@@ -162,9 +162,6 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
     db_view_update_sort(view);
     db_view_unlock(view);
 
-    if (view->view_changed_func) {
-        view->view_changed_func(view, view->user_data);
-    }
 }
 
 FsearchDatabaseEntry *
