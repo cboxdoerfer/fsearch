@@ -48,9 +48,6 @@ typedef enum {
 FsearchDatabaseState
 fsearch_application_get_db_state(FsearchApplication *fsearch);
 
-void
-fsearch_database_update(bool fullscan);
-
 FsearchDatabase *
 fsearch_application_get_db(FsearchApplication *fsearch);
 

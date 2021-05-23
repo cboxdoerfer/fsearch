@@ -311,6 +311,50 @@ database_scan_started_cb(gpointer user_data) {
     g_idle_add(database_scan_started_notify, self);
 }
 
+static void
+fsearch_database_update(bool scan) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    fsearch_action_disable("update_database");
+    fsearch_action_enable("cancel_update_database");
+
+    g_cancellable_reset(app->db_thread_cancellable);
+    app->num_database_update_active++;
+
+    DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
+    g_assert(ctx != NULL);
+
+    if (scan) {
+        ctx->rescan = true;
+        ctx->started_cb = database_scan_started_cb;
+    }
+    else {
+        ctx->started_cb = database_load_started_cb;
+    }
+    ctx->started_cb_data = app;
+    ctx->finished_cb = database_update_finished_cb;
+
+    g_thread_pool_push(app->db_pool, ctx, NULL);
+}
+
+static gboolean
+fsearch_database_scan_add(gpointer data) {
+    fsearch_database_update(true);
+    return G_SOURCE_REMOVE;
+}
+
+static void
+database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
+    db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_update_status_cb : NULL);
+    if (!g_cancellable_is_cancelled(app->db_thread_cancellable)) {
+        char *db_path = fsearch_application_get_database_dir(app);
+        if (db_path) {
+            db_save(db, db_path);
+            free(db_path);
+            db_path = NULL;
+        }
+    }
+}
+
 static FsearchDatabase *
 database_update(FsearchApplication *app, bool rescan) {
     GTimer *timer = g_timer_new();
@@ -324,20 +368,16 @@ database_update(FsearchApplication *app, bool rescan) {
     g_mutex_unlock(&app->mutex);
     db_lock(db);
     if (rescan) {
-        db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_update_status_cb : NULL);
-        if (!g_cancellable_is_cancelled(app->db_thread_cancellable)) {
-            char *db_path = fsearch_application_get_database_dir(app);
-            if (db_path) {
-                db_save(db, db_path);
-                free(db_path);
-                db_path = NULL;
-            }
-        }
+        database_update_scan_and_save(app, db);
     }
     else {
         char *db_file_path = fsearch_application_get_database_file_path(app);
         if (db_file_path) {
-            db_load(db, db_file_path, app->config->show_indexing_status ? database_update_status_cb : NULL);
+            if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_update_status_cb : NULL)
+                && !app->config->update_database_on_launch) {
+                // load failed -> trigger rescan
+                g_idle_add(fsearch_database_scan_add, NULL);
+            }
             free(db_file_path);
             db_file_path = NULL;
         }
@@ -461,31 +501,6 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
     }
     FsearchConfig *copy_config = config_copy(app->config);
     preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
-}
-
-void
-fsearch_database_update(bool scan) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    fsearch_action_disable("update_database");
-    fsearch_action_enable("cancel_update_database");
-
-    g_cancellable_reset(app->db_thread_cancellable);
-    app->num_database_update_active++;
-
-    DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
-    g_assert(ctx != NULL);
-
-    if (scan) {
-        ctx->rescan = true;
-        ctx->started_cb = database_scan_started_cb;
-    }
-    else {
-        ctx->started_cb = database_load_started_cb;
-    }
-    ctx->started_cb_data = app;
-    ctx->finished_cb = database_update_finished_cb;
-
-    g_thread_pool_push(app->db_pool, ctx, NULL);
 }
 
 static void
