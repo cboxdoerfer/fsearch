@@ -339,12 +339,11 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
           </packing>
         </child>
         <child>
-          <placeholder/>
-        </child>
-        <child>
-          <object class="GtkOverlay" id="search_overlay">
+          <object class="GtkStack" id="main_stack">
             <property name="visible">True</property>
             <property name="can-focus">False</property>
+            <property name="transition-duration">100</property>
+            <property name="transition-type">crossfade</property>
             <child>
               <object class="GtkScrolledWindow" id="listview_scrolled_window">
                 <property name="width-request">-1</property>
@@ -359,15 +358,12 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                   <class name="results_frame"/>
                 </style>
               </object>
-              <packing>
-                <property name="index">-1</property>
-              </packing>
             </child>
           </object>
           <packing>
             <property name="expand">True</property>
             <property name="fill">True</property>
-            <property name="position">2</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>
