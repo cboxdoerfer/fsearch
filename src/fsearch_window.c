@@ -137,7 +137,11 @@ fsearch_list_view_get_entry_for_row(uint32_t row_idx, gpointer user_data) {
         return NULL;
     }
 
-    return db_view_get_entry(win->db_view, row_idx);
+    db_view_lock(win->db_view);
+    void *entry = db_view_get_entry(win->db_view, row_idx);
+    db_view_unlock(win->db_view);
+
+    return entry;
 }
 
 static void
@@ -414,10 +418,13 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
 
 uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
+    uint32_t num_results = 0;
     if (self->db_view) {
-        return db_view_get_num_entries(self->db_view);
+        db_view_lock(self->db_view);
+        num_results = db_view_get_num_entries(self->db_view);
+        db_view_unlock(self->db_view);
     }
-    return 0;
+    return num_results;
 }
 
 gint
@@ -432,8 +439,11 @@ fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, gui
 
 static void
 fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
+    db_view_lock(win->db_view);
     const uint32_t num_rows = db_view_get_num_entries(win->db_view);
     win->sort_order = db_view_get_sort_order(win->db_view);
+    db_view_unlock(win->db_view);
+
     win->sort_type = fsearch_list_view_get_sort_type(FSEARCH_LIST_VIEW(win->listview));
     fsearch_list_view_set_config(FSEARCH_LIST_VIEW(win->listview), num_rows, win->sort_order, win->sort_type);
 }
@@ -751,7 +761,10 @@ fsearch_list_view_draw_row(cairo_t *cr,
     if (!entry) {
         return;
     }
+    db_view_lock(win->db_view);
     FsearchQuery *query = db_view_get_query(win->db_view);
+    db_view_unlock(win->db_view);
+
     fsearch_result_view_draw_row(cr,
                                  bin_window,
                                  layout,
@@ -1059,8 +1072,10 @@ fsearch_window_db_view_selection_changed_cb(gpointer data) {
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
     if (win->db_view) {
+        db_view_lock(win->db_view);
         num_folders = db_view_get_num_folders(win->db_view);
         num_files = db_view_get_num_files(win->db_view);
+        db_view_unlock(win->db_view);
     }
 
     count_results_ctx ctx = {0, 0};
@@ -1092,7 +1107,10 @@ fsearch_window_db_view_changed_cb(gpointer data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
 
+    db_view_lock(win->db_view);
     const uint32_t num_rows = db_view_get_num_entries(win->db_view);
+    db_view_unlock(win->db_view);
+
     gchar sb_text[100] = "";
     snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
     fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), sb_text);
