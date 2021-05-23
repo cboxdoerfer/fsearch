@@ -1814,7 +1814,6 @@ fsearch_list_view_set_num_rows(FsearchListView *view, uint32_t num_rows, int sor
     view->extend_started_idx = -1;
     view->num_rows = num_rows;
     view->list_height = num_rows * view->row_height;
-    fsearch_list_view_selection_clear(view);
     gtk_adjustment_set_value(view->vadjustment, 0);
 
     view->sort_order = sort_order;
