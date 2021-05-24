@@ -416,7 +416,7 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
         gtk_stack_set_visible_child(GTK_STACK(win->main_database_overlay_stack), win->overlay_database_updating);
         break;
     default:
-        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->listview_scrolled_window);
+        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_result_overlay);
         g_debug("[win] overlay %d unknown", overlay);
     }
 }
@@ -1013,7 +1013,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     gtk_overlay_add_overlay(GTK_OVERLAY(self->main_result_overlay), self->main_search_overlay_stack);
     gtk_widget_show_all(self->main_stack);
 
-    gtk_stack_set_visible_child(GTK_STACK(self->main_stack), self->listview_scrolled_window);
+    gtk_stack_set_visible_child(GTK_STACK(self->main_stack), self->main_database_overlay_stack);
 
     g_object_unref(builder);
 }
