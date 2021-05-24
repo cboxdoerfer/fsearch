@@ -128,6 +128,19 @@ get_window_for_id(uint32_t win_id) {
     return FSEARCH_APPLICATION_WINDOW(gtk_application_get_window_by_id(GTK_APPLICATION(app), win_id));
 }
 
+static gboolean
+is_empty_search(FsearchApplicationWindow *win) {
+    const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+
+    if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
 static void
 fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
@@ -448,7 +461,7 @@ fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, gui
 static void
 fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
     db_view_lock(win->db_view);
-    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
+    const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->db_view);
     win->sort_order = db_view_get_sort_order(win->db_view);
     db_view_unlock(win->db_view);
 
@@ -1100,23 +1113,18 @@ fsearch_window_db_view_changed_cb(gpointer data) {
         return G_SOURCE_REMOVE;
     }
 
-    const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
-
     fsearch_window_db_view_apply_changes(win);
     fsearch_window_actions_update(win);
 
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-
     db_view_lock(win->db_view);
-    const uint32_t num_rows = db_view_get_num_entries(win->db_view);
+    const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->db_view);
     db_view_unlock(win->db_view);
 
     gchar sb_text[100] = "";
     snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
     fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), sb_text);
 
-    if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
+    if (is_empty_search(win)) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
         gtk_widget_show(win->main_search_overlay_stack);
     }
