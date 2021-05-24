@@ -90,12 +90,6 @@ perform_search(FsearchApplicationWindow *win);
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
 
-static void
-hide_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
-
-static void
-hide_overlays(FsearchApplicationWindow *win);
-
 static FsearchFilter *
 get_active_filter(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -392,16 +386,6 @@ fsearch_application_window_finalize(GObject *object) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
-}
-
-static void
-hide_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
-    // gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->listview_scrolled_window);
-}
-
-static void
-hide_overlays(FsearchApplicationWindow *win) {
-    gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_result_overlay);
 }
 
 static void
