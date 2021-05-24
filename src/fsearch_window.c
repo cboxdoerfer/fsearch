@@ -1076,7 +1076,7 @@ on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user
     return TRUE;
 }
 
-static int
+static gboolean
 fsearch_window_db_view_selection_changed_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
@@ -1104,7 +1104,7 @@ fsearch_window_db_view_selection_changed_cb(gpointer data) {
     return G_SOURCE_REMOVE;
 }
 
-static int
+static gboolean
 fsearch_window_db_view_changed_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
