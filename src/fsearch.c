@@ -554,8 +554,7 @@ fsearch_application_startup(GApplication *app) {
     fsearch->db_thread_cancellable = g_cancellable_new();
     fsearch->config = calloc(1, sizeof(FsearchConfig));
     if (!config_load(fsearch->config)) {
-        if (!config_load_default(fsearch->config)) {
-        }
+        config_load_default(fsearch->config);
     }
     fsearch->db = NULL;
     fsearch->db_state = FSEARCH_DATABASE_STATE_IDLE;
