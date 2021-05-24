@@ -60,6 +60,9 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
     GtkWidget *main_stack;
+    GtkWidget *main_database_overlay_stack;
+    GtkWidget *main_result_overlay;
+    GtkWidget *main_search_overlay_stack;
 
     GtkWidget *statusbar;
 
@@ -70,10 +73,12 @@ struct _FsearchApplicationWindow {
 };
 
 typedef enum {
+    OVERLAY_DATABASE,
     OVERLAY_DATABASE_EMPTY,
     OVERLAY_DATABASE_LOADING,
     OVERLAY_DATABASE_UPDATING,
     OVERLAY_QUERY_EMPTY,
+    OVERLAY_RESULTS,
     OVERLAY_RESULTS_EMPTY,
     OVERLAY_RESULTS_SORTING,
     NUM_OVERLAYS,
@@ -152,16 +157,8 @@ database_load_started(FsearchApplicationWindow *win) {
 
 static void
 database_scan_started(FsearchApplicationWindow *win) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchDatabase *db = fsearch_application_get_db(app);
-    uint32_t num_entries = 0;
-    if (db) {
-        num_entries = db_get_num_entries(db);
-        db_unref(db);
-    }
-    if (num_entries == 0) {
-        show_overlay(win, OVERLAY_DATABASE_UPDATING);
-    }
+    show_overlay(win, OVERLAY_DATABASE_UPDATING);
+
     GtkWidget *cancel_update_button =
         gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "cancel_database_update");
     if (cancel_update_button) {
@@ -301,6 +298,31 @@ fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow
 }
 
 static void
+fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchDatabase *db = fsearch_application_get_db(app);
+    if (!db) {
+        show_overlay(win, OVERLAY_DATABASE);
+        show_overlay(win, OVERLAY_DATABASE_EMPTY);
+        return;
+    }
+
+    const uint32_t num_items = db_get_num_entries(db);
+
+    FsearchConfig *config = fsearch_application_get_config(app);
+    if (!config->indexes || num_items == 0) {
+        show_overlay(win, OVERLAY_DATABASE);
+        show_overlay(win, OVERLAY_DATABASE_EMPTY);
+    }
+    else {
+        show_overlay(win, OVERLAY_RESULTS);
+    }
+
+    db_unref(db);
+    db = NULL;
+}
+
+static void
 fsearch_window_apply_config(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -320,19 +342,8 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
         }
         gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), 0);
     }
-    FsearchDatabase *db = fsearch_application_get_db(app);
-    if (!db) {
-        show_overlay(self, OVERLAY_DATABASE_EMPTY);
-        return;
-    }
 
-    uint32_t num_items = db_get_num_entries(db);
-
-    if (!config->indexes || num_items == 0) {
-        show_overlay(self, OVERLAY_DATABASE_EMPTY);
-    }
-
-    db_unref(db);
+    fsearch_window_set_overlay_for_database_state(self);
 }
 
 G_DEFINE_TYPE(FsearchApplicationWindow, fsearch_application_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -372,34 +383,40 @@ fsearch_application_window_finalize(GObject *object) {
 
 static void
 hide_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
-    gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->listview_scrolled_window);
+    // gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->listview_scrolled_window);
 }
 
 static void
 hide_overlays(FsearchApplicationWindow *win) {
-    gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->listview_scrolled_window);
+    gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_result_overlay);
 }
 
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
     switch (overlay) {
+    case OVERLAY_RESULTS:
+        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_result_overlay);
+        break;
     case OVERLAY_RESULTS_EMPTY:
-        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->overlay_results_empty);
+        gtk_stack_set_visible_child(GTK_STACK(win->main_search_overlay_stack), win->overlay_results_empty);
         break;
     case OVERLAY_RESULTS_SORTING:
         gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->overlay_results_sorting);
         break;
+    case OVERLAY_DATABASE:
+        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_database_overlay_stack);
+        break;
     case OVERLAY_DATABASE_EMPTY:
-        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->overlay_database_empty);
+        gtk_stack_set_visible_child(GTK_STACK(win->main_database_overlay_stack), win->overlay_database_empty);
         break;
     case OVERLAY_QUERY_EMPTY:
-        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->overlay_query_empty);
+        gtk_stack_set_visible_child(GTK_STACK(win->main_search_overlay_stack), win->overlay_query_empty);
         break;
     case OVERLAY_DATABASE_LOADING:
-        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->overlay_database_loading);
+        gtk_stack_set_visible_child(GTK_STACK(win->main_database_overlay_stack), win->overlay_database_loading);
         break;
     case OVERLAY_DATABASE_UPDATING:
-        gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->overlay_database_updating);
+        gtk_stack_set_visible_child(GTK_STACK(win->main_database_overlay_stack), win->overlay_database_updating);
         break;
     default:
         gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->listview_scrolled_window);
@@ -448,7 +465,7 @@ fsearch_window_db_view_sort_finished_cb(gpointer data) {
         return G_SOURCE_REMOVE;
     }
 
-    hide_overlay(win, OVERLAY_RESULTS_SORTING);
+    fsearch_window_set_overlay_for_database_state(win);
 
     fsearch_window_db_view_apply_changes(win);
 
@@ -919,24 +936,14 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
 
     fsearch_application_window_unselect_all(win);
 
-    hide_overlay(win, OVERLAY_DATABASE_LOADING);
-    hide_overlay(win, OVERLAY_DATABASE_UPDATING);
-
     GtkWidget *update_database_button =
         gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "update_database");
     if (update_database_button) {
         gtk_stack_set_visible_child(GTK_STACK(win->popover_update_button_stack), update_database_button);
     }
+    fsearch_window_set_overlay_for_database_state(win);
 
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-    uint32_t num_items = db_get_num_entries(db);
-
-    if (!db || num_items == 0) {
-        show_overlay(win, OVERLAY_DATABASE_EMPTY);
-    }
-    else {
-        hide_overlay(win, OVERLAY_DATABASE_EMPTY);
-    }
 
     db_view_unregister(win->db_view);
     db_view_register(db, win->db_view);
@@ -983,30 +990,30 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
 
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/overlay.ui");
 
+    self->main_database_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_database_overlay_stack"));
+    self->main_search_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_search_overlay_stack"));
+
     // Overlay when no search results are found
     self->overlay_results_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_empty"));
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_results_empty, "results_empty");
 
     // Overlay when database is empty
     self->overlay_database_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_empty"));
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_database_empty, "database_empty");
 
     // Overlay when search query is empty
     self->overlay_query_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_query_empty"));
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_query_empty, "query_empty");
 
     // Overlay when database is updating
     self->overlay_database_updating = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_updating"));
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_database_updating, "database_updating");
 
     // Overlay when database is loading
     self->overlay_database_loading = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_loading"));
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_database_loading, "database_loading");
 
     // Overlay when results are being sorted
     self->overlay_results_sorting = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_sorting"));
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_results_sorting, "results_sorting");
+    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_results_sorting, "overlay_results_sorting");
+    gtk_stack_add_named(GTK_STACK(self->main_stack), self->main_database_overlay_stack, "overlay_database_stack");
 
+    gtk_overlay_add_overlay(GTK_OVERLAY(self->main_result_overlay), self->main_search_overlay_stack);
     gtk_widget_show_all(self->main_stack);
 
     gtk_stack_set_visible_child(GTK_STACK(self->main_stack), self->listview_scrolled_window);
@@ -1111,12 +1118,14 @@ fsearch_window_db_view_changed_cb(gpointer data) {
 
     if (text && text[0] == '\0' && config->hide_results_on_empty_search) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
+        gtk_widget_show(win->main_search_overlay_stack);
     }
     else if (num_rows == 0) {
         show_overlay(win, OVERLAY_RESULTS_EMPTY);
+        gtk_widget_show(win->main_search_overlay_stack);
     }
     else {
-        hide_overlays(win);
+        gtk_widget_hide(win->main_search_overlay_stack);
     }
     return G_SOURCE_REMOVE;
 }
@@ -1187,6 +1196,7 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, listview_scrolled_window);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_stack);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, main_result_overlay);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, menu_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, popover_update_button_stack);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
