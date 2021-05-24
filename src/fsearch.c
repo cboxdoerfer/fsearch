@@ -85,10 +85,7 @@ static FsearchDatabase *
 database_update(FsearchApplication *app, bool rescan);
 
 static void
-fsearch_action_enable(const char *action_name);
-
-static void
-fsearch_action_disable(const char *action_name);
+fsearch_action_set_enabled(const char *action_name, gboolean enabled);
 
 gboolean
 db_auto_update_cb(gpointer user_data) {
@@ -268,8 +265,8 @@ database_update_finished_notify(gpointer user_data) {
     g_cancellable_reset(self->db_thread_cancellable);
     self->num_database_update_active--;
     if (self->num_database_update_active == 0) {
-        fsearch_action_enable("update_database");
-        fsearch_action_disable("cancel_update_database");
+        fsearch_action_set_enabled("update_database", TRUE);
+        fsearch_action_set_enabled("cancel_update_database", FALSE);
     }
     g_mutex_unlock(&self->mutex);
     g_signal_emit(self, signals[DATABASE_UPDATE_FINISHED], 0);
@@ -314,8 +311,8 @@ database_scan_started_cb(gpointer user_data) {
 static void
 fsearch_database_update(bool scan) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    fsearch_action_disable("update_database");
-    fsearch_action_enable("cancel_update_database");
+    fsearch_action_set_enabled("update_database", FALSE);
+    fsearch_action_set_enabled("cancel_update_database", TRUE);
 
     g_cancellable_reset(app->db_thread_cancellable);
     app->num_database_update_active++;
@@ -521,23 +518,13 @@ new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
 }
 
 static void
-fsearch_action_enable(const char *action_name) {
+fsearch_action_set_enabled(const char *action_name, gboolean enabled) {
     GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
-
-    if (action) {
-        g_debug("[app] enable action: %s", action_name);
-        g_simple_action_set_enabled(G_SIMPLE_ACTION(action), TRUE);
+    if (!action) {
+        return;
     }
-}
-
-static void
-fsearch_action_disable(const char *action_name) {
-    GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
-
-    if (action) {
-        g_debug("[app] disable action: %s", action_name);
-        g_simple_action_set_enabled(G_SIMPLE_ACTION(action), FALSE);
-    }
+    g_debug(enabled ? "[app] enabled action: %s" : "[app] disabled action: %s", action_name);
+    g_simple_action_set_enabled(G_SIMPLE_ACTION(action), enabled);
 }
 
 void
