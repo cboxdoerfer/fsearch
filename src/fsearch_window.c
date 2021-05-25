@@ -307,26 +307,33 @@ fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow
 static void
 fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+
     FsearchDatabase *db = fsearch_application_get_db(app);
-    if (!db) {
-        show_overlay(win, OVERLAY_DATABASE);
-        show_overlay(win, OVERLAY_DATABASE_EMPTY);
-        return;
+    FsearchDatabaseState state = fsearch_application_get_db_state(app);
+
+    uint32_t num_items = 0;
+    if (db) {
+        num_items = db_get_num_entries(db);
+        db_unref(db);
+        db = NULL;
     }
 
-    const uint32_t num_items = db_get_num_entries(db);
-
-    FsearchConfig *config = fsearch_application_get_config(app);
-    if (!config->indexes || num_items == 0) {
+    if (num_items == 0) {
         show_overlay(win, OVERLAY_DATABASE);
-        show_overlay(win, OVERLAY_DATABASE_EMPTY);
+        if (state == FSEARCH_DATABASE_STATE_LOADING) {
+            show_overlay(win, OVERLAY_DATABASE_LOADING);
+        }
+        else if (state == FSEARCH_DATABASE_STATE_SCANNING) {
+            show_overlay(win, OVERLAY_DATABASE_UPDATING);
+        }
+        else {
+            show_overlay(win, OVERLAY_DATABASE_EMPTY);
+        }
+        return;
     }
     else {
         show_overlay(win, OVERLAY_RESULTS);
     }
-
-    db_unref(db);
-    db = NULL;
 }
 
 static void
