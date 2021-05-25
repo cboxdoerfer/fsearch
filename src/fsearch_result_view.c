@@ -86,9 +86,10 @@ draw_row_ctx_init(FsearchDatabaseView *view,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
+    db_view_lock(view);
     GString *name = db_view_entry_get_name_for_idx(view, row);
     if (!name) {
-        return;
+        goto out;
     }
     ctx->display_name = g_filename_display_name(name->str);
 
@@ -121,8 +122,12 @@ draw_row_ctx_init(FsearchDatabaseView *view,
              "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
              localtime(&mtime));
 
-    g_string_free(name, TRUE);
-    name = NULL;
+out:
+    if (name) {
+        g_string_free(name, TRUE);
+        name = NULL;
+    }
+    db_view_unlock(view);
 }
 
 static void
@@ -169,8 +174,10 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
                                   uint32_t row_height) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
+    db_view_lock(view);
     GString *name = db_view_entry_get_name_for_idx(view, row);
     if (!name) {
+        db_view_unlock(view);
         return NULL;
     }
 
@@ -215,6 +222,8 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
     default:
         g_warning("[query_tooltip] unknown index type");
     }
+
+    db_view_unlock(view);
 
     g_string_free(name, TRUE);
     name = NULL;

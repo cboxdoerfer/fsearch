@@ -587,11 +587,14 @@ on_fsearch_list_view_popup(FsearchListView *view, int row_idx, gpointer user_dat
         return FALSE;
     }
 
+    db_view_lock(win->db_view);
     GString *name = db_view_entry_get_name_for_idx(win->db_view, row_idx);
+    FsearchDatabaseEntryType type = db_view_entry_get_type_for_idx(win->db_view, row_idx);
+    db_view_unlock(win->db_view);
+
     if (!name) {
         return FALSE;
     }
-    FsearchDatabaseEntryType type = db_view_entry_get_type_for_idx(win->db_view, row_idx);
 
     const gboolean res = listview_popup_menu(user_data, name->str, type);
 
@@ -691,14 +694,18 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
     GString *path = NULL;
     GString *path_full = NULL;
 
+    db_view_lock(self->db_view);
     path = db_view_entry_get_path_for_idx(self->db_view, row_idx);
+    path_full = db_view_entry_get_path_full_for_idx(self->db_view, row_idx);
+    db_view_unlock(self->db_view);
+
     if (!path) {
         goto out;
     }
-    path_full = db_view_entry_get_path_full_for_idx(self->db_view, row_idx);
     if (!path_full) {
         goto out;
     }
+
     if (!launch_folder ? fsearch_file_utils_launch(path_full)
                        : fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
         // open succeeded

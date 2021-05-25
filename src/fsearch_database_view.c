@@ -571,124 +571,79 @@ db_view_entry_get_path_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
     GString *res = NULL;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     if (entry) {
         res = db_entry_get_path(entry);
     }
-    db_view_unlock(view);
     return res;
 }
 
 GString *
 db_view_entry_get_path_full_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
-
-    GString *res = NULL;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    if (entry) {
-        res = db_entry_get_path_full(entry);
-    }
-    db_view_unlock(view);
-    return res;
+    return entry ? db_entry_get_path_full(entry) : NULL;
 }
 
 void
 db_view_entry_append_path_for_idx(FsearchDatabaseView *view, uint32_t idx, GString *str) {
     assert(view != NULL);
-
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     if (entry) {
         db_entry_append_path(entry, str);
     }
-    db_view_unlock(view);
 }
 
 time_t
 db_view_entry_get_mtime_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
-    time_t res = 0;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    if (entry) {
-        res = db_entry_get_mtime(entry);
-    }
-    db_view_unlock(view);
-    return res;
+    return entry ? db_entry_get_mtime(entry) : 0;
 }
 
 off_t
 db_view_entry_get_size_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
-    off_t res = 0;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    if (entry) {
-        res = db_entry_get_size(entry);
-    }
-    db_view_unlock(view);
-    return res;
+    return entry ? db_entry_get_size(entry) : 0;
 }
 
 GString *
 db_view_entry_get_name_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
-    GString *res = NULL;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    if (entry) {
-        res = g_string_new(db_entry_get_name(entry));
-    }
-    db_view_unlock(view);
-    return res;
+    return entry ? g_string_new(db_entry_get_name(entry)) : NULL;
 }
 
 GString *
 db_view_entry_get_name_raw_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
-    GString *res = NULL;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    if (entry) {
-        res = g_string_new(db_entry_get_name_raw(entry));
-    }
-    db_view_unlock(view);
-    return res;
+    return entry ? g_string_new(db_entry_get_name_raw(entry)) : NULL;
 }
 
 int32_t
 db_view_entry_get_parent_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
-    int32_t res = -1;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    if (entry) {
-        FsearchDatabaseEntryFolder *folder = db_entry_get_parent(entry);
-        res = folder ? (int32_t)db_entry_get_idx((FsearchDatabaseEntry *)folder) : -1;
+    if (!entry) {
+        return -1;
     }
-    db_view_unlock(view);
-    return res;
+    FsearchDatabaseEntryFolder *folder = db_entry_get_parent(entry);
+    return folder ? (int32_t)db_entry_get_idx((FsearchDatabaseEntry *)folder) : -1;
 }
 
 FsearchDatabaseEntryType
 db_view_entry_get_type_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
-    FsearchDatabaseEntryType res = DATABASE_ENTRY_TYPE_NONE;
-    db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    if (entry) {
-        res = db_entry_get_type(entry);
-    }
-    db_view_unlock(view);
-    return res;
+    return entry ? db_entry_get_type(entry) : DATABASE_ENTRY_TYPE_NONE;
 }
 
 void
