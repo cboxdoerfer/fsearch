@@ -414,27 +414,6 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
     }
 }
 
-uint32_t
-fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
-    uint32_t num_results = 0;
-    if (self->db_view) {
-        db_view_lock(self->db_view);
-        num_results = db_view_get_num_entries(self->db_view);
-        db_view_unlock(self->db_view);
-    }
-    return num_results;
-}
-
-gint
-fsearch_application_window_get_active_filter(FsearchApplicationWindow *self) {
-    return gtk_combo_box_get_active(GTK_COMBO_BOX(self->filter_combobox));
-}
-
-void
-fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, guint active_filter) {
-    gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), (gint)active_filter);
-}
-
 static void
 fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
     db_view_lock(win->db_view);
@@ -746,15 +725,6 @@ on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
     if (config->search_as_you_type) {
         perform_search(win);
     }
-}
-
-void
-fsearch_application_window_update_listview_config(FsearchApplicationWindow *app) {
-    g_assert(FSEARCH_IS_APPLICATION_WINDOW(app));
-
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
-    gtk_widget_set_has_tooltip(GTK_WIDGET(app->listview), config->enable_list_tooltips);
 }
 
 static char *
@@ -1292,6 +1262,36 @@ void
 fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     fsearch_statusbar_set_database_indexing_state(FSEARCH_STATUSBAR(self->statusbar), text);
+}
+
+uint32_t
+fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
+    uint32_t num_results = 0;
+    if (self->db_view) {
+        db_view_lock(self->db_view);
+        num_results = db_view_get_num_entries(self->db_view);
+        db_view_unlock(self->db_view);
+    }
+    return num_results;
+}
+
+gint
+fsearch_application_window_get_active_filter(FsearchApplicationWindow *self) {
+    return gtk_combo_box_get_active(GTK_COMBO_BOX(self->filter_combobox));
+}
+
+void
+fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, guint active_filter) {
+    gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), (gint)active_filter);
+}
+
+void
+fsearch_application_window_update_listview_config(FsearchApplicationWindow *app) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(app));
+
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
+    gtk_widget_set_has_tooltip(GTK_WIDGET(app->listview), config->enable_list_tooltips);
 }
 
 FsearchListView *
