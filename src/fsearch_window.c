@@ -774,22 +774,23 @@ fsearch_list_view_draw_row(cairo_t *cr,
     }
 
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row, win);
-    if (!entry) {
+    if (!win->db_view) {
         return;
     }
+
     db_view_lock(win->db_view);
     FsearchQuery *query = db_view_get_query(win->db_view);
     db_view_unlock(win->db_view);
 
-    fsearch_result_view_draw_row(cr,
+    fsearch_result_view_draw_row(win->db_view,
+                                 cr,
                                  bin_window,
                                  layout,
                                  context,
                                  columns,
                                  rect,
-                                 entry,
                                  query,
+                                 row,
                                  row_selected,
                                  row_focused,
                                  right_to_left_text);

@@ -4,7 +4,6 @@
 
 #include "fsearch.h"
 #include "fsearch_config.h"
-#include "fsearch_database_view.h"
 #include "fsearch_file_utils.h"
 
 #include <gtk/gtk.h>
@@ -79,48 +78,51 @@ typedef struct {
 } DrawRowContext;
 
 static void
-draw_row_ctx_init(FsearchDatabaseEntry *entry,
+draw_row_ctx_init(FsearchDatabaseView *view,
+                  uint32_t row,
                   FsearchQuery *query,
                   GdkWindow *bin_window,
                   int32_t icon_size,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    const char *name = db_entry_get_name(entry);
+    GString *name = db_view_entry_get_name_for_idx(view, row);
     if (!name) {
         return;
     }
-    ctx->display_name = g_filename_display_name(name);
+    ctx->display_name = g_filename_display_name(name->str);
 
-    ctx->name_attr = query ? fsearch_query_highlight_match(query, name) : NULL;
+    ctx->name_attr = query ? fsearch_query_highlight_match(query, name->str) : NULL;
 
-    ctx->path = db_entry_get_path(entry);
+    ctx->path = db_view_entry_get_path_for_idx(view, row);
     if (query && ((query->has_separator && query->flags.auto_search_in_path) || query->flags.search_in_path)) {
         ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
     }
 
-    ctx->full_path = g_string_new_len(ctx->path->str, (int32_t)ctx->path->len);
-    g_string_append_c(ctx->full_path, G_DIR_SEPARATOR);
-    g_string_append(ctx->full_path, name);
+    ctx->full_path = db_view_entry_get_path_full_for_idx(view, row);
 
-    ctx->type =
-        fsearch_file_utils_get_file_type(name, db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+    ctx->type = fsearch_file_utils_get_file_type(
+        name->str,
+        db_view_entry_get_type_for_idx(view, row) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
 
     ctx->icon_surface = config->show_listview_icons ? get_icon_surface(bin_window,
-                                                                       name,
-                                                                       db_entry_get_type(entry),
+                                                                       name->str,
+                                                                       db_view_entry_get_type_for_idx(view, row),
                                                                        icon_size,
                                                                        gdk_window_get_scale_factor(bin_window))
                                                     : NULL;
 
-    off_t size = db_entry_get_size(entry);
+    off_t size = db_view_entry_get_size_for_idx(view, row);
     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
 
-    const time_t mtime = db_entry_get_mtime(entry);
+    const time_t mtime = db_view_entry_get_mtime_for_idx(view, row);
     strftime(ctx->time,
              100,
              "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
              localtime(&mtime));
+
+    g_string_free(name, TRUE);
+    name = NULL;
 }
 
 static void
@@ -232,14 +234,15 @@ fsearch_result_view_query_tooltip(FsearchDatabaseEntry *entry,
 }
 
 void
-fsearch_result_view_draw_row(cairo_t *cr,
+fsearch_result_view_draw_row(FsearchDatabaseView *view,
+                             cairo_t *cr,
                              GdkWindow *bin_window,
                              PangoLayout *layout,
                              GtkStyleContext *context,
                              GList *columns,
                              cairo_rectangle_int_t *rect,
-                             FsearchDatabaseEntry *entry,
                              FsearchQuery *query,
+                             uint32_t row,
                              gboolean row_selected,
                              gboolean row_focused,
                              gboolean right_to_left_text) {
@@ -252,7 +255,7 @@ fsearch_result_view_draw_row(cairo_t *cr,
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
-    draw_row_ctx_init(entry, query, bin_window, icon_size, &ctx);
+    draw_row_ctx_init(view, row, query, bin_window, icon_size, &ctx);
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
     if (row_selected) {
