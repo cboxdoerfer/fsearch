@@ -799,7 +799,9 @@ db_view_get_num_selected(FsearchDatabaseView *view) {
 void
 db_view_selection_for_each(FsearchDatabaseView *view, GHFunc func, gpointer user_data) {
     assert(view != NULL);
+    db_view_lock(view);
     g_hash_table_foreach(view->selection, func, user_data);
+    db_view_unlock(view);
 }
 
 void
