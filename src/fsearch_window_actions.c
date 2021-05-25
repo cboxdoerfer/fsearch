@@ -372,11 +372,18 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
         return;
     }
     FsearchDatabaseEntry *entry = value;
+
+    GString *path = db_entry_get_path(entry);
+    GString *path_full = db_entry_get_path_full(entry);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    if (!fsearch_file_utils_launch_entry_with_command(entry, config->folder_open_cmd)) {
+    if (!fsearch_file_utils_launch_entry_with_command(path, path_full, config->folder_open_cmd)) {
         bool *open_failed = data;
         *open_failed = true;
     }
+    g_string_free(path, TRUE);
+    path = NULL;
+    g_string_free(path_full, TRUE);
+    path_full = NULL;
 }
 
 static void

@@ -62,18 +62,12 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
 }
 
 static char *
-build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
-    GString *path = db_entry_get_path(entry);
-    if (!path) {
+build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
+    if (!path || !path_full) {
         return NULL;
     }
-    GString *path_full = db_entry_get_path_full(entry);
-
-    char *path_quoted = g_shell_quote(g_string_free(path, FALSE));
-    char *path_full_quoted = g_shell_quote(g_string_free(path_full, FALSE));
-
-    path = NULL;
-    path_full = NULL;
+    char *path_quoted = g_shell_quote(path->str);
+    char *path_full_quoted = g_shell_quote(path_full->str);
 
     // The following code is mostly based on the example code found here:
     // https://developer.gnome.org/glib/stable/glib-Perl-compatible-regular-expressions.html#g-regex-replace-eval
@@ -92,8 +86,8 @@ build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
     //     becomes '/foo/'\''bar'
 
     GHashTable *keywords = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(keywords, "{path_raw}", path);
-    g_hash_table_insert(keywords, "{path_full_raw}", path_full);
+    g_hash_table_insert(keywords, "{path_raw}", path->str);
+    g_hash_table_insert(keywords, "{path_full_raw}", path_full->str);
     g_hash_table_insert(keywords, "{path}", path_quoted);
     g_hash_table_insert(keywords, "{path_full}", path_full_quoted);
 
@@ -104,7 +98,9 @@ build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
     char *cmd_res = g_regex_replace_eval(reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL);
 
     g_regex_unref(reg);
+    reg = NULL;
     g_hash_table_destroy(keywords);
+    keywords = NULL;
     g_free(path_quoted);
     path_quoted = NULL;
     g_free(path_full_quoted);
@@ -114,8 +110,8 @@ build_folder_open_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
 }
 
 static bool
-open_with_cmd(FsearchDatabaseEntry *entry, const char *cmd) {
-    char *cmd_res = build_folder_open_cmd(entry, cmd);
+open_with_cmd(GString *path, GString *path_full, const char *cmd) {
+    char *cmd_res = build_folder_open_cmd(path, path_full, cmd);
     if (!cmd_res) {
         return false;
     }
@@ -223,19 +219,15 @@ fsearch_file_utils_launch_entry(FsearchDatabaseEntry *entry) {
 }
 
 bool
-fsearch_file_utils_launch_entry_with_command(FsearchDatabaseEntry *entry, const char *cmd) {
+fsearch_file_utils_launch_entry_with_command(GString *path, GString *path_full, const char *cmd) {
+    if (!path) {
+        return false;
+    }
     if (cmd) {
-        return open_with_cmd(entry, cmd);
+        return open_with_cmd(path, path_full, cmd);
     }
     else {
-        GString *path = db_entry_get_path(entry);
-        if (!path) {
-            return false;
-        }
-        bool res = open_uri(path->str);
-        g_string_free(path, TRUE);
-        path = NULL;
-        return res;
+        return open_uri(path->str);
     }
 }
 

@@ -694,8 +694,10 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         return;
     }
 
+    GString *path = db_entry_get_path(entry);
+    GString *path_full = db_entry_get_path_full(entry);
     if (!launch_folder ? fsearch_file_utils_launch_entry(entry)
-                       : fsearch_file_utils_launch_entry_with_command(entry, config->folder_open_cmd)) {
+                       : fsearch_file_utils_launch_entry_with_command(path, path_full, config->folder_open_cmd)) {
         // open succeeded
         fsearch_window_action_after_file_open(true);
     }
@@ -712,6 +714,11 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
                                           NULL);
         }
     }
+
+    g_string_free(path, TRUE);
+    path = NULL;
+    g_string_free(path_full, TRUE);
+    path_full = NULL;
 }
 
 static void

@@ -38,7 +38,7 @@ bool
 fsearch_file_utils_launch_entry(FsearchDatabaseEntry *entry);
 
 bool
-fsearch_file_utils_launch_entry_with_command(FsearchDatabaseEntry *entry, const char *cmd);
+fsearch_file_utils_launch_entry_with_command(GString *path, GString *path_full, const char *cmd);
 
 gchar *
 fsearch_file_utils_get_file_type(const gchar *name, gboolean is_dir);
