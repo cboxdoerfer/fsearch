@@ -44,6 +44,7 @@ db_view_set_query_text(FsearchDatabaseView *view, const char *query_text);
 void
 db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
 
+// NOTE: Getters are not thread save, they need to be wrapped with db_view_lock/db_view_unlock
 uint32_t
 db_view_get_num_folders(FsearchDatabaseView *view);
 
@@ -89,15 +90,13 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view);
 void
 db_view_unregister(FsearchDatabaseView *view);
 
-FsearchDatabaseEntry *
-db_view_get_entry(FsearchDatabaseView *view, uint32_t idx);
-
 FsearchQueryFlags
 db_view_get_query_flags(FsearchDatabaseView *view);
 
 FsearchQuery *
 db_view_get_query(FsearchDatabaseView *view);
 
+// NOTE: Selection handlers are thread safe
 void
 db_view_select_toggle(FsearchDatabaseView *view, uint32_t idx);
 

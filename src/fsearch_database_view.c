@@ -165,21 +165,6 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
     db_view_unlock(view);
 }
 
-FsearchDatabaseEntry *
-db_view_get_entry(FsearchDatabaseView *view, uint32_t idx) {
-    uint32_t num_entries = db_view_get_num_entries(view);
-    if (idx >= num_entries) {
-        return NULL;
-    }
-    uint32_t num_folders = db_view_get_num_folders(view);
-    if (idx < num_folders) {
-        return darray_get_item(view->folders, idx);
-    }
-    else {
-        return darray_get_item(view->files, idx - num_folders);
-    }
-}
-
 FsearchDatabaseView *
 db_view_new(const char *query_text,
             FsearchQueryFlags flags,
