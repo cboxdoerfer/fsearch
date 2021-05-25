@@ -162,13 +162,14 @@ draw_row_ctx_free(DrawRowContext *ctx) {
 }
 
 char *
-fsearch_result_view_query_tooltip(FsearchDatabaseEntry *entry,
+fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
+                                  uint32_t row,
                                   FsearchListViewColumn *col,
                                   PangoLayout *layout,
                                   uint32_t row_height) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
-    const char *name = db_entry_get_name(entry);
+    GString *name = db_view_entry_get_name_for_idx(view, row);
     if (!name) {
         return NULL;
     }
@@ -182,25 +183,27 @@ fsearch_result_view_query_tooltip(FsearchDatabaseEntry *entry,
             int32_t icon_size = get_icon_size_for_height((int32_t)row_height - ROW_PADDING_X);
             width -= 2 * ROW_PADDING_X + icon_size;
         }
-        text = g_filename_display_name(name);
+        text = g_filename_display_name(name->str);
         break;
     case DATABASE_INDEX_TYPE_PATH: {
-        GString *path = db_entry_get_path(entry);
+        GString *path = db_view_entry_get_path_for_idx(view, row);
         text = g_filename_display_name(path->str);
         g_string_free(path, TRUE);
         path = NULL;
         break;
     }
     case DATABASE_INDEX_TYPE_FILETYPE: {
-        text = fsearch_file_utils_get_file_type(name,
-                                                db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+        text = fsearch_file_utils_get_file_type(
+            name->str,
+            db_view_entry_get_type_for_idx(view, row) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
         break;
     }
     case DATABASE_INDEX_TYPE_SIZE:
-        text = fsearch_file_utils_get_size_formatted(db_entry_get_size(entry), config->show_base_2_units);
+        text =
+            fsearch_file_utils_get_size_formatted(db_view_entry_get_size_for_idx(view, row), config->show_base_2_units);
         break;
     case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
-        const time_t mtime = db_entry_get_mtime(entry);
+        const time_t mtime = db_view_entry_get_mtime_for_idx(view, row);
         char mtime_formatted[100] = "";
         strftime(mtime_formatted,
                  sizeof(mtime_formatted),
@@ -210,8 +213,11 @@ fsearch_result_view_query_tooltip(FsearchDatabaseEntry *entry,
         break;
     }
     default:
-        return NULL;
+        g_warning("[query_tooltip] unknown index type");
     }
+
+    g_string_free(name, TRUE);
+    name = NULL;
 
     if (!text) {
         return NULL;

@@ -5,7 +5,8 @@
 #include "fsearch_query.h"
 
 char *
-fsearch_result_view_query_tooltip(FsearchDatabaseEntry *entry,
+fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
+                                  uint32_t row,
                                   FsearchListViewColumn *col,
                                   PangoLayout *layout,
                                   uint32_t row_height);

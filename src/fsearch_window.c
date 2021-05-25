@@ -749,12 +749,11 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
                                 FsearchListViewColumn *col,
                                 gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, win);
-    if (!entry) {
+    if (!win->db_view) {
         return NULL;
     }
 
-    return fsearch_result_view_query_tooltip(entry, col, layout, row_height);
+    return fsearch_result_view_query_tooltip(win->db_view, row_idx, col, layout, row_height);
 }
 
 static void
