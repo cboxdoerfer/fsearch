@@ -696,8 +696,8 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
 
     GString *path = db_entry_get_path(entry);
     GString *path_full = db_entry_get_path_full(entry);
-    if (!launch_folder ? fsearch_file_utils_launch_entry(path_full)
-                       : fsearch_file_utils_launch_entry_with_command(path, path_full, config->folder_open_cmd)) {
+    if (!launch_folder ? fsearch_file_utils_launch(path_full)
+                       : fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
         // open succeeded
         fsearch_window_action_after_file_open(true);
     }

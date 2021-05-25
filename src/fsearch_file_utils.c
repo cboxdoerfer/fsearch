@@ -206,7 +206,7 @@ fsearch_file_utils_trash(const char *path) {
 }
 
 bool
-fsearch_file_utils_launch_entry(GString *path_full) {
+fsearch_file_utils_launch(GString *path_full) {
     if (!path_full) {
         return false;
     }
@@ -214,7 +214,7 @@ fsearch_file_utils_launch_entry(GString *path_full) {
 }
 
 bool
-fsearch_file_utils_launch_entry_with_command(GString *path, GString *path_full, const char *cmd) {
+fsearch_file_utils_launch_with_command(GString *path, GString *path_full, const char *cmd) {
     if (!path) {
         return false;
     }

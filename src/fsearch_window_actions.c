@@ -231,7 +231,7 @@ open_cb(gpointer key, gpointer value, gpointer data) {
     FsearchDatabaseEntry *entry = value;
     GString *path_full = db_entry_get_path_full(entry);
 
-    if (!fsearch_file_utils_launch_entry(path_full)) {
+    if (!fsearch_file_utils_launch(path_full)) {
         bool *open_failed = data;
         *open_failed = true;
     }
@@ -379,7 +379,7 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
     GString *path = db_entry_get_path(entry);
     GString *path_full = db_entry_get_path_full(entry);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    if (!fsearch_file_utils_launch_entry_with_command(path, path_full, config->folder_open_cmd)) {
+    if (!fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
         bool *open_failed = data;
         *open_failed = true;
     }

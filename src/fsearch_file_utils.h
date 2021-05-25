@@ -34,10 +34,10 @@ bool
 fsearch_file_utils_remove(const char *path);
 
 bool
-fsearch_file_utils_launch_entry(GString *path_full);
+fsearch_file_utils_launch(GString *path_full);
 
 bool
-fsearch_file_utils_launch_entry_with_command(GString *path, GString *path_full, const char *cmd);
+fsearch_file_utils_launch_with_command(GString *path, GString *path_full, const char *cmd);
 
 gchar *
 fsearch_file_utils_get_file_type(const gchar *name, gboolean is_dir);
