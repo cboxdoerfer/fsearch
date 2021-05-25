@@ -5,6 +5,7 @@
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "fsearch_file_utils.h"
+#include "fsearch_query.h"
 
 #include <gtk/gtk.h>
 #include <math.h>

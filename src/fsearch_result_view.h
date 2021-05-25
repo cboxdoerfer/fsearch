@@ -2,7 +2,6 @@
 
 #include "fsearch_database_view.h"
 #include "fsearch_list_view.h"
-#include "fsearch_query.h"
 
 char *
 fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
