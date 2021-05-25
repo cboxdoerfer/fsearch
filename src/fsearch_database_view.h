@@ -56,6 +56,33 @@ db_view_get_num_entries(FsearchDatabaseView *view);
 FsearchDatabaseIndexType
 db_view_get_sort_order(FsearchDatabaseView *view);
 
+GString *
+db_view_entry_get_path_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
+GString *
+db_view_entry_get_path_full_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
+void
+db_view_entry_append_path_for_idx(FsearchDatabaseView *view, uint32_t idx, GString *str);
+
+time_t
+db_view_entry_get_mtime_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
+off_t
+db_view_entry_get_size_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
+GString *
+db_view_entry_get_name_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
+GString *
+db_view_entry_get_name_raw_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
+int32_t
+db_view_entry_get_parent_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
+FsearchDatabaseEntryType
+db_view_entry_get_type_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
 void
 db_view_register(FsearchDatabase *db, FsearchDatabaseView *view);
 
