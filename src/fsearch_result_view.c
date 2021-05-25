@@ -80,7 +80,6 @@ typedef struct {
 static void
 draw_row_ctx_init(FsearchDatabaseView *view,
                   uint32_t row,
-                  FsearchQuery *query,
                   GdkWindow *bin_window,
                   int32_t icon_size,
                   DrawRowContext *ctx) {
@@ -93,11 +92,16 @@ draw_row_ctx_init(FsearchDatabaseView *view,
     }
     ctx->display_name = g_filename_display_name(name->str);
 
-    ctx->name_attr = query ? fsearch_query_highlight_match(query, name->str) : NULL;
-
     ctx->path = db_view_entry_get_path_for_idx(view, row);
-    if (query && ((query->has_separator && query->flags.auto_search_in_path) || query->flags.search_in_path)) {
-        ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
+
+    FsearchQuery *query = db_view_get_query(view);
+    if (query) {
+        ctx->name_attr = fsearch_query_highlight_match(query, name->str);
+        if ((query->has_separator && query->flags.auto_search_in_path) || query->flags.search_in_path) {
+            ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
+        }
+        fsearch_query_unref(query);
+        query = NULL;
     }
 
     ctx->full_path = db_view_entry_get_path_full_for_idx(view, row);
@@ -253,7 +257,6 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
                              GtkStyleContext *context,
                              GList *columns,
                              cairo_rectangle_int_t *rect,
-                             FsearchQuery *query,
                              uint32_t row,
                              gboolean row_selected,
                              gboolean row_focused,
@@ -267,7 +270,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
-    draw_row_ctx_init(view, row, query, bin_window, icon_size, &ctx);
+    draw_row_ctx_init(view, row, bin_window, icon_size, &ctx);
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
     if (row_selected) {

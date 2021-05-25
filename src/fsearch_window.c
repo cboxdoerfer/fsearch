@@ -792,10 +792,6 @@ fsearch_list_view_draw_row(cairo_t *cr,
         return;
     }
 
-    db_view_lock(win->db_view);
-    FsearchQuery *query = db_view_get_query(win->db_view);
-    db_view_unlock(win->db_view);
-
     fsearch_result_view_draw_row(win->db_view,
                                  cr,
                                  bin_window,
@@ -803,12 +799,10 @@ fsearch_list_view_draw_row(cairo_t *cr,
                                  context,
                                  columns,
                                  rect,
-                                 query,
                                  row,
                                  row_selected,
                                  row_focused,
                                  right_to_left_text);
-    fsearch_query_unref(query);
 }
 
 void
