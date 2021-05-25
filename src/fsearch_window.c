@@ -111,7 +111,7 @@ get_query_flags() {
     return flags;
 }
 
-const char *
+static const char *
 get_query_text(FsearchApplicationWindow *win) {
     return gtk_entry_get_text(GTK_ENTRY(win->search_entry));
 }
@@ -219,7 +219,7 @@ fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
     fsearch_window_listview_set_empty(win);
 }
 
-void
+static void
 fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     gtk_widget_set_visible(win->menu_box, config->show_menubar);
@@ -775,7 +775,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
                                  right_to_left_text);
 }
 
-void
+static void
 fsearch_results_sort_func(int sort_order, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (!win->db_view) {
