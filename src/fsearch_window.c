@@ -683,19 +683,27 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
                                    int row_idx,
                                    gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
+    if (!self->db_view) {
+        return;
+    }
+
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     int launch_folder = false;
     if (config->double_click_path && col == DATABASE_INDEX_TYPE_PATH) {
         launch_folder = true;
     }
 
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, self);
-    if (!entry) {
-        return;
-    }
+    GString *path = NULL;
+    GString *path_full = NULL;
 
-    GString *path = db_entry_get_path(entry);
-    GString *path_full = db_entry_get_path_full(entry);
+    path = db_view_entry_get_path_for_idx(self->db_view, row_idx);
+    if (!path) {
+        goto out;
+    }
+    path_full = db_view_entry_get_path_full_for_idx(self->db_view, row_idx);
+    if (!path_full) {
+        goto out;
+    }
     if (!launch_folder ? fsearch_file_utils_launch(path_full)
                        : fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
         // open succeeded
@@ -715,10 +723,15 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         }
     }
 
-    g_string_free(path, TRUE);
-    path = NULL;
-    g_string_free(path_full, TRUE);
-    path_full = NULL;
+out:
+    if (path) {
+        g_string_free(path, TRUE);
+        path = NULL;
+    }
+    if (path_full) {
+        g_string_free(path_full, TRUE);
+        path_full = NULL;
+    }
 }
 
 static void
