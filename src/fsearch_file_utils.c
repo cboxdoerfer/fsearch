@@ -21,7 +21,6 @@
 #define _GNU_SOURCE
 
 #include "fsearch_file_utils.h"
-#include "fsearch_database_view.h"
 #include "fsearch_limits.h"
 #include "fsearch_ui_utils.h"
 #include <gio/gio.h>
@@ -207,15 +206,11 @@ fsearch_file_utils_trash(const char *path) {
 }
 
 bool
-fsearch_file_utils_launch_entry(FsearchDatabaseEntry *entry) {
-    GString *path_full = db_entry_get_path_full(entry);
+fsearch_file_utils_launch_entry(GString *path_full) {
     if (!path_full) {
         return false;
     }
-    bool res = open_uri(path_full->str);
-    g_string_free(path_full, TRUE);
-    path_full = NULL;
-    return res;
+    return open_uri(path_full->str);
 }
 
 bool

@@ -229,11 +229,14 @@ open_cb(gpointer key, gpointer value, gpointer data) {
         return;
     }
     FsearchDatabaseEntry *entry = value;
+    GString *path_full = db_entry_get_path_full(entry);
 
-    if (!fsearch_file_utils_launch_entry(entry)) {
+    if (!fsearch_file_utils_launch_entry(path_full)) {
         bool *open_failed = data;
         *open_failed = true;
     }
+    g_string_free(path_full, TRUE);
+    path_full = NULL;
 }
 
 static void
