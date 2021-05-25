@@ -159,66 +159,6 @@ database_scan_started(FsearchApplicationWindow *win) {
     }
 }
 
-void
-fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
-    db_view_set_query_flags(win->db_view, get_query_flags());
-}
-
-void
-fsearch_application_window_prepare_shutdown(gpointer self) {
-    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    // FsearchApplicationWindow *win = self;
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-
-    gint width = 800;
-    gint height = 800;
-    gtk_window_get_size(GTK_WINDOW(self), &width, &height);
-    config->window_width = width;
-    config->window_height = height;
-
-    // gint sort_column_id = 0;
-    // GtkSortType order = GTK_SORT_ASCENDING;
-    // gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(win->list_model), &sort_column_id, &order);
-
-    // if (config->sort_by) {
-    //    g_free(config->sort_by);
-    //    config->sort_by = NULL;
-    //}
-
-    // if (sort_column_id == SORT_ID_NAME) {
-    //    config->sort_by = g_strdup("Name");
-    //}
-    // else if (sort_column_id == SORT_ID_PATH) {
-    //    config->sort_by = g_strdup("Path");
-    //}
-    // else if (sort_column_id == SORT_ID_TYPE) {
-    //    config->sort_by = g_strdup("Type");
-    //}
-    // else if (sort_column_id == SORT_ID_SIZE) {
-    //    config->sort_by = g_strdup("Size");
-    //}
-    // else if (sort_column_id == SORT_ID_CHANGED) {
-    //    config->sort_by = g_strdup("Date Modified");
-    //}
-    // else {
-    //    config->sort_by = g_strdup("Name");
-    //}
-
-    // if (order == GTK_SORT_ASCENDING) {
-    //    config->sort_ascending = true;
-    //}
-    // else {
-    //    config->sort_ascending = false;
-    //}
-}
-
-void
-fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
-    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
-    fsearch_window_listview_set_empty(win);
-}
-
 static void
 fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -241,53 +181,6 @@ fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
     }
     // ensure search entry still has focus after reordering the search_box
     gtk_widget_grab_focus(win->search_entry);
-}
-
-void
-fsearch_application_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->listview_scrolled_window);
-    if (!config->show_statusbar) {
-        gtk_style_context_add_class(filter_style, "results_frame_last");
-    }
-    else {
-        gtk_style_context_remove_class(filter_style, "results_frame_last");
-    }
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar), config->show_statusbar);
-
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
-                                              FSEARCH_STATUSBAR_REVEALER_MATCH_CASE,
-                                              config->match_case);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
-                                              FSEARCH_STATUSBAR_REVEALER_REGEX,
-                                              config->enable_regex);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
-                                              FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH,
-                                              config->search_in_path);
-}
-
-void
-fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow *win) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->filter_combobox);
-    if (config->show_search_button && config->show_filter) {
-        gtk_style_context_add_class(filter_style, "filter_centered");
-    }
-    else {
-        gtk_style_context_remove_class(filter_style, "filter_centered");
-    }
-    GtkStyleContext *entry_style = gtk_widget_get_style_context(win->search_entry);
-    if (config->show_search_button || config->show_filter) {
-        gtk_style_context_add_class(entry_style, "search_entry_has_neighbours");
-    }
-    else {
-        gtk_style_context_remove_class(entry_style, "search_entry_has_neighbours");
-    }
-
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->filter_revealer), config->show_filter);
-    gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_button_revealer), config->show_search_button);
 }
 
 static void
@@ -1164,6 +1057,113 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
+}
+
+void
+fsearch_application_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->listview_scrolled_window);
+    if (!config->show_statusbar) {
+        gtk_style_context_add_class(filter_style, "results_frame_last");
+    }
+    else {
+        gtk_style_context_remove_class(filter_style, "results_frame_last");
+    }
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->statusbar), config->show_statusbar);
+
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
+                                              FSEARCH_STATUSBAR_REVEALER_MATCH_CASE,
+                                              config->match_case);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
+                                              FSEARCH_STATUSBAR_REVEALER_REGEX,
+                                              config->enable_regex);
+    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
+                                              FSEARCH_STATUSBAR_REVEALER_SEARCH_IN_PATH,
+                                              config->search_in_path);
+}
+
+void
+fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    GtkStyleContext *filter_style = gtk_widget_get_style_context(win->filter_combobox);
+    if (config->show_search_button && config->show_filter) {
+        gtk_style_context_add_class(filter_style, "filter_centered");
+    }
+    else {
+        gtk_style_context_remove_class(filter_style, "filter_centered");
+    }
+    GtkStyleContext *entry_style = gtk_widget_get_style_context(win->search_entry);
+    if (config->show_search_button || config->show_filter) {
+        gtk_style_context_add_class(entry_style, "search_entry_has_neighbours");
+    }
+    else {
+        gtk_style_context_remove_class(entry_style, "search_entry_has_neighbours");
+    }
+
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->filter_revealer), config->show_filter);
+    gtk_revealer_set_reveal_child(GTK_REVEALER(win->search_button_revealer), config->show_search_button);
+}
+
+void
+fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
+    db_view_set_query_flags(win->db_view, get_query_flags());
+}
+
+void
+fsearch_application_window_prepare_shutdown(gpointer self) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+    // FsearchApplicationWindow *win = self;
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+
+    gint width = 800;
+    gint height = 800;
+    gtk_window_get_size(GTK_WINDOW(self), &width, &height);
+    config->window_width = width;
+    config->window_height = height;
+
+    // gint sort_column_id = 0;
+    // GtkSortType order = GTK_SORT_ASCENDING;
+    // gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(win->list_model), &sort_column_id, &order);
+
+    // if (config->sort_by) {
+    //    g_free(config->sort_by);
+    //    config->sort_by = NULL;
+    //}
+
+    // if (sort_column_id == SORT_ID_NAME) {
+    //    config->sort_by = g_strdup("Name");
+    //}
+    // else if (sort_column_id == SORT_ID_PATH) {
+    //    config->sort_by = g_strdup("Path");
+    //}
+    // else if (sort_column_id == SORT_ID_TYPE) {
+    //    config->sort_by = g_strdup("Type");
+    //}
+    // else if (sort_column_id == SORT_ID_SIZE) {
+    //    config->sort_by = g_strdup("Size");
+    //}
+    // else if (sort_column_id == SORT_ID_CHANGED) {
+    //    config->sort_by = g_strdup("Date Modified");
+    //}
+    // else {
+    //    config->sort_by = g_strdup("Name");
+    //}
+
+    // if (order == GTK_SORT_ASCENDING) {
+    //    config->sort_ascending = true;
+    //}
+    // else {
+    //    config->sort_ascending = false;
+    //}
+}
+
+void
+fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+    fsearch_window_listview_set_empty(win);
 }
 
 void
