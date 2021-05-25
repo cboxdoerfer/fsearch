@@ -102,16 +102,13 @@ draw_row_ctx_init(FsearchDatabaseView *view,
 
     ctx->full_path = db_view_entry_get_path_full_for_idx(view, row);
 
-    ctx->type = fsearch_file_utils_get_file_type(
-        name->str,
-        db_view_entry_get_type_for_idx(view, row) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+    FsearchDatabaseEntryType type = db_view_entry_get_type_for_idx(view, row);
+    ctx->type = fsearch_file_utils_get_file_type(name->str, type == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
 
-    ctx->icon_surface = config->show_listview_icons ? get_icon_surface(bin_window,
-                                                                       name->str,
-                                                                       db_view_entry_get_type_for_idx(view, row),
-                                                                       icon_size,
-                                                                       gdk_window_get_scale_factor(bin_window))
-                                                    : NULL;
+    ctx->icon_surface =
+        config->show_listview_icons
+            ? get_icon_surface(bin_window, name->str, type, icon_size, gdk_window_get_scale_factor(bin_window))
+            : NULL;
 
     off_t size = db_view_entry_get_size_for_idx(view, row);
     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
