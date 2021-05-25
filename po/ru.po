@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-03-14 16:52+0100\n"
-"PO-Revision-Date: 2021-05-20 16:33+0000\n"
+"PO-Revision-Date: 2021-05-26 21:33+0000\n"
 "Last-Translator: Axus Wizix <axus.wizix@mail.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 
 #: src/database.c:794
 msgid "Building lookup list…"
-msgstr ""
+msgstr "Создание списка поиска…"
 
 #: src/database.c:802
 msgid "Sorting…"
@@ -38,9 +38,8 @@ msgstr ""
 "Инструмент поиска, нацеленный на быстродействие и продвинутые возможности"
 
 #: src/fsearch.c:673
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Открыть другой программой"
+msgstr "Открыть новое окно приложения"
 
 #: src/fsearch.c:674
 msgid "Show the application preferences"
@@ -247,10 +246,9 @@ msgid "Querying…"
 msgstr "Идёт запрос…"
 
 #: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "≥%'d Items"
-msgstr "%'d элемент(а/ов)"
+msgstr "≥%'d элемент(а/ов)"
 
 #: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
 msgid "Failed to open file"
@@ -689,7 +687,6 @@ msgstr ""
 "заставляют окно иметь другой размер."
 
 #: src/preferences.ui:1196
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -753,6 +750,10 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Показать значки в названиях столбцов:</b>\n"
+"\n"
+"Если этот параметр включен, в названиях столбцов будут отображаться значки "
+"файлов/папок."
 
 #: src/preferences.ui:1273
 msgid ""
@@ -770,6 +771,10 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Помнить порядок сортировки:</b>\n"
+"\n"
+"Если этот параметр задействован, при запуске окна FSearch будет восстановлен "
+"порядок сортировки результатов предыдущего сеанса."
 
 #: src/preferences.ui:1305
 msgid ""
