@@ -597,13 +597,22 @@ count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
 static gboolean
 on_fsearch_list_view_popup(FsearchListView *view, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-
-    FsearchDatabaseEntry *entry = fsearch_list_view_get_entry_for_row(row_idx, win);
-    if (!entry) {
+    if (!win->db_view) {
         return FALSE;
     }
 
-    return listview_popup_menu(user_data, db_entry_get_name(entry), db_entry_get_type(entry));
+    GString *name = db_view_entry_get_name_for_idx(win->db_view, row_idx);
+    if (!name) {
+        return FALSE;
+    }
+    FsearchDatabaseEntryType type = db_view_entry_get_type_for_idx(win->db_view, row_idx);
+
+    const gboolean res = listview_popup_menu(user_data, name->str, type);
+
+    g_string_free(name, TRUE);
+    name = NULL;
+
+    return res;
 }
 
 static gboolean
