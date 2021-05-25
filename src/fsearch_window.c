@@ -143,20 +143,6 @@ fsearch_window_listview_set_empty(FsearchApplicationWindow *self) {
     fsearch_list_view_set_config(FSEARCH_LIST_VIEW(self->listview), 0, self->sort_order, self->sort_type);
 }
 
-static void *
-fsearch_list_view_get_entry_for_row(uint32_t row_idx, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    if (!win || !win->db_view) {
-        return NULL;
-    }
-
-    db_view_lock(win->db_view);
-    void *entry = db_view_get_entry(win->db_view, row_idx);
-    db_view_unlock(win->db_view);
-
-    return entry;
-}
-
 static void
 database_load_started(FsearchApplicationWindow *win) {
     show_overlay(win, OVERLAY_DATABASE_LOADING);
