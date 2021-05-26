@@ -775,7 +775,46 @@ fsearch_row_is_selected(int row, gpointer user_data) {
 }
 
 static void
-create_view_and_model(FsearchApplicationWindow *app) {
+fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+
+    GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/overlay.ui");
+
+    win->main_database_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_database_overlay_stack"));
+    win->main_search_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_search_overlay_stack"));
+
+    // Overlay when no search results are found
+    win->overlay_results_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_empty"));
+
+    // Overlay when database is empty
+    win->overlay_database_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_empty"));
+
+    // Overlay when search query is empty
+    win->overlay_query_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_query_empty"));
+
+    // Overlay when database is updating
+    win->overlay_database_updating = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_updating"));
+
+    // Overlay when database is loading
+    win->overlay_database_loading = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_loading"));
+
+    // Overlay when results are being sorted
+    win->overlay_results_sorting = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_sorting"));
+
+    gtk_stack_add_named(GTK_STACK(win->main_stack), win->overlay_results_sorting, "overlay_results_sorting");
+    gtk_stack_add_named(GTK_STACK(win->main_stack), win->main_database_overlay_stack, "overlay_database_stack");
+
+    gtk_overlay_add_overlay(GTK_OVERLAY(win->main_result_overlay), win->main_search_overlay_stack);
+    gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_database_overlay_stack);
+
+    gtk_widget_show_all(win->main_stack);
+
+    g_object_unref(builder);
+    builder = NULL;
+}
+
+static void
+fsearch_application_window_init_listview(FsearchApplicationWindow *app) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(app));
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -860,7 +899,8 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     gtk_box_pack_end(GTK_BOX(self->main_box), self->statusbar, FALSE, TRUE, 0);
 
     fsearch_window_actions_init(self);
-    create_view_and_model(self);
+    fsearch_application_window_init_listview(self);
+    fsearch_application_window_init_overlays(self);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     g_signal_connect_object(app, "database-scan-started", G_CALLBACK(database_scan_started_cb), self, G_CONNECT_AFTER);
@@ -870,38 +910,6 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
                             self,
                             G_CONNECT_AFTER);
     g_signal_connect_object(app, "database-load-started", G_CALLBACK(database_load_started_cb), self, G_CONNECT_AFTER);
-
-    GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/overlay.ui");
-
-    self->main_database_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_database_overlay_stack"));
-    self->main_search_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_search_overlay_stack"));
-
-    // Overlay when no search results are found
-    self->overlay_results_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_empty"));
-
-    // Overlay when database is empty
-    self->overlay_database_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_empty"));
-
-    // Overlay when search query is empty
-    self->overlay_query_empty = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_query_empty"));
-
-    // Overlay when database is updating
-    self->overlay_database_updating = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_updating"));
-
-    // Overlay when database is loading
-    self->overlay_database_loading = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_database_loading"));
-
-    // Overlay when results are being sorted
-    self->overlay_results_sorting = GTK_WIDGET(gtk_builder_get_object(builder, "overlay_results_sorting"));
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->overlay_results_sorting, "overlay_results_sorting");
-    gtk_stack_add_named(GTK_STACK(self->main_stack), self->main_database_overlay_stack, "overlay_database_stack");
-
-    gtk_overlay_add_overlay(GTK_OVERLAY(self->main_result_overlay), self->main_search_overlay_stack);
-    gtk_widget_show_all(self->main_stack);
-
-    gtk_stack_set_visible_child(GTK_STACK(self->main_stack), self->main_database_overlay_stack);
-
-    g_object_unref(builder);
 }
 
 static void
