@@ -190,21 +190,20 @@ fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
     FsearchDatabaseState state = fsearch_application_get_db_state(app);
     uint32_t num_items = fsearch_application_get_num_db_entries(app);
 
-    if (num_items == 0) {
-        show_overlay(win, OVERLAY_DATABASE);
-        if (state == FSEARCH_DATABASE_STATE_LOADING) {
-            show_overlay(win, OVERLAY_DATABASE_LOADING);
-        }
-        else if (state == FSEARCH_DATABASE_STATE_SCANNING) {
-            show_overlay(win, OVERLAY_DATABASE_UPDATING);
-        }
-        else {
-            show_overlay(win, OVERLAY_DATABASE_EMPTY);
-        }
+    if (num_items > 0) {
+        show_overlay(win, OVERLAY_RESULTS);
         return;
     }
+
+    show_overlay(win, OVERLAY_DATABASE);
+    if (state == FSEARCH_DATABASE_STATE_LOADING) {
+        show_overlay(win, OVERLAY_DATABASE_LOADING);
+    }
+    else if (state == FSEARCH_DATABASE_STATE_SCANNING) {
+        show_overlay(win, OVERLAY_DATABASE_UPDATING);
+    }
     else {
-        show_overlay(win, OVERLAY_RESULTS);
+        show_overlay(win, OVERLAY_DATABASE_EMPTY);
     }
 }
 
