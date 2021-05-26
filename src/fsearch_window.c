@@ -842,7 +842,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *app) {
 }
 
 static void
-database_update_finished_cb(gpointer data, gpointer user_data) {
+on_database_update_finished(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -866,7 +866,7 @@ database_update_finished_cb(gpointer data, gpointer user_data) {
 }
 
 static void
-database_load_started_cb(gpointer data, gpointer user_data) {
+on_database_load_started(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -874,7 +874,7 @@ database_load_started_cb(gpointer data, gpointer user_data) {
 }
 
 static void
-database_scan_started_cb(gpointer data, gpointer user_data) {
+on_database_scan_started(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -895,13 +895,13 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     fsearch_application_window_init_overlays(self);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    g_signal_connect_object(app, "database-scan-started", G_CALLBACK(database_scan_started_cb), self, G_CONNECT_AFTER);
+    g_signal_connect_object(app, "database-scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(app,
                             "database-update-finished",
-                            G_CALLBACK(database_update_finished_cb),
+                            G_CALLBACK(on_database_update_finished),
                             self,
                             G_CONNECT_AFTER);
-    g_signal_connect_object(app, "database-load-started", G_CALLBACK(database_load_started_cb), self, G_CONNECT_AFTER);
+    g_signal_connect_object(app, "database-load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
 }
 
 static void

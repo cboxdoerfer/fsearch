@@ -159,7 +159,7 @@ fsearch_statusbar_set_database_idle(FsearchStatusbar *sb, uint32_t num_files, ui
 }
 
 static void
-statusbar_scan_started_cb(gpointer data, gpointer user_data) {
+on_database_scan_started(gpointer data, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -172,7 +172,7 @@ statusbar_scan_started_cb(gpointer data, gpointer user_data) {
 }
 
 static void
-statusbar_load_started_cb(gpointer data, gpointer user_data) {
+on_database_load_started(gpointer data, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -184,7 +184,7 @@ statusbar_load_started_cb(gpointer data, gpointer user_data) {
 }
 
 static void
-statusbar_update_finished_cb(gpointer data, gpointer user_data) {
+on_database_update_finished(gpointer data, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     fsearch_statusbar_set_database_idle(statusbar, db ? db_get_num_files(db) : 0, db ? db_get_num_folders(db) : 0);
@@ -273,13 +273,13 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
 
     fsearch_statusbar_set_selection(self, 0, 0, 0, 0);
 
-    g_signal_connect_object(app, "database-scan-started", G_CALLBACK(statusbar_scan_started_cb), self, G_CONNECT_AFTER);
+    g_signal_connect_object(app, "database-scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(app,
                             "database-update-finished",
-                            G_CALLBACK(statusbar_update_finished_cb),
+                            G_CALLBACK(on_database_update_finished),
                             self,
                             G_CONNECT_AFTER);
-    g_signal_connect_object(app, "database-load-started", G_CALLBACK(statusbar_load_started_cb), self, G_CONNECT_AFTER);
+    g_signal_connect_object(app, "database-load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
 }
 
 static void
