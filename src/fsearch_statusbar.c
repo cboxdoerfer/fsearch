@@ -135,18 +135,18 @@ fsearch_statusbar_set_database_updating(FsearchStatusbar *sb, const char *text) 
     gtk_label_set_text(GTK_LABEL(sb->statusbar_database_updating_label), db_text);
 }
 
-void
+static void
 fsearch_statusbar_set_database_loading(FsearchStatusbar *sb) {
     fsearch_statusbar_set_database_updating(sb, _("Loading…"));
 }
 
-void
+static void
 fsearch_statusbar_set_database_scanning(FsearchStatusbar *sb) {
     fsearch_statusbar_set_database_updating(sb, _("Scanning…"));
 }
 
-void
-fsearch_statusbar_set_database_idle(FsearchStatusbar *sb, uint32_t num_files, uint32_t num_folders) {
+static void
+fsearch_statusbar_set_database_idle(FsearchStatusbar *sb) {
     fsearch_statusbar_set_query_text(sb, "");
 
     gtk_spinner_stop(GTK_SPINNER(sb->statusbar_database_updating_spinner));
@@ -154,8 +154,12 @@ fsearch_statusbar_set_database_idle(FsearchStatusbar *sb, uint32_t num_files, ui
     gtk_widget_hide(sb->statusbar_scan_status_label);
 
     gtk_stack_set_visible_child(GTK_STACK(sb->statusbar_database_stack), sb->statusbar_database_status_box);
+
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    const uint32_t num_entries = fsearch_application_get_num_db_entries(app);
+
     gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("%'d Items"), num_files + num_folders);
+    snprintf(db_text, sizeof(db_text), _("%'d Items"), num_entries);
     gtk_label_set_text(GTK_LABEL(sb->statusbar_database_status_label), db_text);
 }
 
@@ -187,9 +191,7 @@ on_database_load_started(gpointer data, gpointer user_data) {
 static void
 on_database_update_finished(gpointer data, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
-    FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-    fsearch_statusbar_set_database_idle(statusbar, db ? db_get_num_files(db) : 0, db ? db_get_num_folders(db) : 0);
-    db_unref(db);
+    fsearch_statusbar_set_database_idle(statusbar);
 }
 
 static gboolean
@@ -251,15 +253,6 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
     gtk_widget_init_template(GTK_WIDGET(self));
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    uint32_t num_files = 0;
-    uint32_t num_folders = 0;
-    FsearchDatabase *db = fsearch_application_get_db(app);
-    if (db) {
-        num_files = db_get_num_files(db);
-        num_folders = db_get_num_folders(db);
-        db_unref(db);
-    }
-
     switch (fsearch_application_get_db_state(app)) {
     case FSEARCH_DATABASE_STATE_LOADING:
         fsearch_statusbar_set_database_loading(self);
@@ -268,7 +261,7 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
         fsearch_statusbar_set_database_scanning(self);
         break;
     default:
-        fsearch_statusbar_set_database_idle(self, num_files, num_folders);
+        fsearch_statusbar_set_database_idle(self);
         break;
     }
 
