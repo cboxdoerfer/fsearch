@@ -48,7 +48,7 @@ fsearch_statusbar_set_query_text(FsearchStatusbar *sb, const char *text) {
 }
 
 static gboolean
-statusbar_set_query_status(gpointer user_data) {
+on_statusbar_set_query_status(gpointer user_data) {
     FsearchStatusbar *sb = user_data;
     gtk_label_set_text(GTK_LABEL(sb->statusbar_search_label), _("Querying…"));
     sb->statusbar_timeout_id = 0;
@@ -58,7 +58,7 @@ statusbar_set_query_status(gpointer user_data) {
 void
 fsearch_statusbar_set_query_status_delayed(FsearchStatusbar *sb) {
     statusbar_remove_query_status_update_timeout(sb);
-    sb->statusbar_timeout_id = g_timeout_add(200, statusbar_set_query_status, sb);
+    sb->statusbar_timeout_id = g_timeout_add(200, on_statusbar_set_query_status, sb);
 }
 
 void
@@ -126,22 +126,23 @@ fsearch_statusbar_set_selection(FsearchStatusbar *sb,
     }
 }
 
-void
-fsearch_statusbar_set_database_loading(FsearchStatusbar *sb) {
+static void
+fsearch_statusbar_set_database_updating(FsearchStatusbar *sb, const char *text) {
     gtk_stack_set_visible_child(GTK_STACK(sb->statusbar_database_stack), sb->statusbar_database_updating_box);
     gtk_spinner_start(GTK_SPINNER(sb->statusbar_database_updating_spinner));
     gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("Loading Database…"));
+    snprintf(db_text, sizeof(db_text), "%s", text);
     gtk_label_set_text(GTK_LABEL(sb->statusbar_database_updating_label), db_text);
 }
 
 void
+fsearch_statusbar_set_database_loading(FsearchStatusbar *sb) {
+    fsearch_statusbar_set_database_updating(sb, _("Loading…"));
+}
+
+void
 fsearch_statusbar_set_database_scanning(FsearchStatusbar *sb) {
-    gtk_stack_set_visible_child(GTK_STACK(sb->statusbar_database_stack), sb->statusbar_database_updating_box);
-    gtk_spinner_start(GTK_SPINNER(sb->statusbar_database_updating_spinner));
-    gchar db_text[100] = "";
-    snprintf(db_text, sizeof(db_text), _("Updating Database…"));
-    gtk_label_set_text(GTK_LABEL(sb->statusbar_database_updating_label), db_text);
+    fsearch_statusbar_set_database_updating(sb, _("Scanning…"));
 }
 
 void
