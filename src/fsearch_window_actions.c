@@ -410,6 +410,7 @@ on_fsearch_window_action_open_with_response(GtkDialog *dialog, gint response_id,
 
     g_object_unref(app_info);
 }
+
 static void
 fsearch_window_action_open_with_other(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
