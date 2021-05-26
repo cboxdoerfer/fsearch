@@ -1294,12 +1294,12 @@ fsearch_application_window_set_active_filter(FsearchApplicationWindow *self, gui
 }
 
 void
-fsearch_application_window_update_listview_config(FsearchApplicationWindow *app) {
-    g_assert(FSEARCH_IS_APPLICATION_WINDOW(app));
+fsearch_application_window_update_listview_config(FsearchApplicationWindow *win) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
-    gtk_widget_set_has_tooltip(GTK_WIDGET(app->listview), config->enable_list_tooltips);
+    fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(win->listview), config->single_click_open);
+    gtk_widget_set_has_tooltip(GTK_WIDGET(win->listview), config->enable_list_tooltips);
 }
 
 FsearchListView *
