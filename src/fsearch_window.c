@@ -732,7 +732,7 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
 }
 
 static void
-fsearch_row_unselect_all(gpointer user_data) {
+on_listview_row_unselect_all(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (win->db_view) {
         db_view_unselect_all(win->db_view);
@@ -740,7 +740,7 @@ fsearch_row_unselect_all(gpointer user_data) {
 }
 
 static void
-fsearch_row_select_range(int start_row, int end_row, gpointer user_data) {
+on_listview_row_select_range(int start_row, int end_row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (win->db_view) {
         db_view_select_range(win->db_view, start_row, end_row);
@@ -748,7 +748,7 @@ fsearch_row_select_range(int start_row, int end_row, gpointer user_data) {
 }
 
 static void
-fsearch_row_select_toggle(int row, gpointer user_data) {
+on_listview_row_select_toggle(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (win->db_view) {
         db_view_select_toggle(win->db_view, row);
@@ -756,7 +756,7 @@ fsearch_row_select_toggle(int row, gpointer user_data) {
 }
 
 static void
-fsearch_row_select(int row, gpointer user_data) {
+on_listview_row_select(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     if (win->db_view) {
@@ -765,7 +765,7 @@ fsearch_row_select(int row, gpointer user_data) {
 }
 
 static gboolean
-fsearch_row_is_selected(int row, gpointer user_data) {
+on_listview_row_is_selected(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     if (win->db_view) {
@@ -829,11 +829,11 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *app) {
     fsearch_list_view_set_draw_row_func(FSEARCH_LIST_VIEW(app->listview), fsearch_list_view_draw_row, app);
     fsearch_list_view_set_sort_func(FSEARCH_LIST_VIEW(app->listview), fsearch_results_sort_func, app);
     fsearch_list_view_set_selection_handlers(FSEARCH_LIST_VIEW(app->listview),
-                                             fsearch_row_is_selected,
-                                             fsearch_row_select,
-                                             fsearch_row_select_toggle,
-                                             fsearch_row_select_range,
-                                             fsearch_row_unselect_all,
+                                             on_listview_row_is_selected,
+                                             on_listview_row_select,
+                                             on_listview_row_select_toggle,
+                                             on_listview_row_select_range,
+                                             on_listview_row_unselect_all,
                                              app);
     fsearch_list_view_set_single_click_activate(FSEARCH_LIST_VIEW(app->listview), config->single_click_open);
     gtk_widget_set_has_tooltip(GTK_WIDGET(app->listview), config->enable_list_tooltips);
