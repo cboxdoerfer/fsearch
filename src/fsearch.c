@@ -125,6 +125,12 @@ fsearch_application_get_db_state(FsearchApplication *fsearch) {
     return fsearch->db_state;
 }
 
+uint32_t
+fsearch_application_get_num_db_entries(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->db ? db_get_num_entries(fsearch->db) : 0;
+}
+
 FsearchDatabase *
 fsearch_application_get_db(FsearchApplication *fsearch) {
     g_assert(FSEARCH_IS_APPLICATION(fsearch));

@@ -187,15 +187,8 @@ static void
 fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
 
-    FsearchDatabase *db = fsearch_application_get_db(app);
     FsearchDatabaseState state = fsearch_application_get_db_state(app);
-
-    uint32_t num_items = 0;
-    if (db) {
-        num_items = db_get_num_entries(db);
-        db_unref(db);
-        db = NULL;
-    }
+    uint32_t num_items = fsearch_application_get_num_db_entries(app);
 
     if (num_items == 0) {
         show_overlay(win, OVERLAY_DATABASE);
