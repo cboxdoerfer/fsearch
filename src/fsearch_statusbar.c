@@ -95,7 +95,7 @@ fsearch_statusbar_set_filter(FsearchStatusbar *sb, const char *filter_name) {
 }
 
 void
-fsearch_statusbar_set_database_indexing_state(FsearchStatusbar *sb, const char *text) {
+fsearch_statusbar_set_database_index_text(FsearchStatusbar *sb, const char *text) {
     if (!text) {
         gtk_widget_hide(sb->statusbar_scan_label);
         gtk_widget_hide(sb->statusbar_scan_status_label);

@@ -1267,9 +1267,9 @@ fsearch_application_window_get_statusbar(FsearchApplicationWindow *self) {
 }
 
 void
-fsearch_application_window_update_database_label(FsearchApplicationWindow *self, const char *text) {
+fsearch_application_window_set_database_index_text(FsearchApplicationWindow *self, const char *text) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    fsearch_statusbar_set_database_indexing_state(FSEARCH_STATUSBAR(self->statusbar), text);
+    fsearch_statusbar_set_database_index_text(FSEARCH_STATUSBAR(self->statusbar), text);
 }
 
 uint32_t

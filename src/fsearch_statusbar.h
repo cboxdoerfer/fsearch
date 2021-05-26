@@ -50,7 +50,7 @@ fsearch_statusbar_set_database_state(FsearchStatusbar *sb,
                                      uint32_t num_folders);
 
 void
-fsearch_statusbar_set_database_indexing_state(FsearchStatusbar *sb, const char *text);
+fsearch_statusbar_set_database_index_text(FsearchStatusbar *sb, const char *text);
 
 void
 fsearch_statusbar_set_selection(FsearchStatusbar *sb,

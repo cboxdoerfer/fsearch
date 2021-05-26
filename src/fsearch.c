@@ -169,7 +169,7 @@ database_update_status_notify(gpointer user_data) {
     for (; windows; windows = windows->next) {
         GtkWindow *window = windows->data;
         if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
-            fsearch_application_window_update_database_label((FsearchApplicationWindow *)window, text);
+            fsearch_application_window_set_database_index_text((FsearchApplicationWindow *)window, text);
         }
     }
 
