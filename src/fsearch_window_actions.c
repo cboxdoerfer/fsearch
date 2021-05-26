@@ -277,14 +277,14 @@ launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info)
         return;
     }
 
-    GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
-    GdkAppLaunchContext *launch_context = gdk_display_get_app_launch_context(display);
-    if (!launch_context) {
+    const guint selected_rows = fsearch_application_window_get_num_selected(win);
+    if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
         return;
     }
 
-    const guint selected_rows = fsearch_application_window_get_num_selected(win);
-    if (!confirm_file_open_action(GTK_WIDGET(win), selected_rows)) {
+    GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
+    GdkAppLaunchContext *launch_context = gdk_display_get_app_launch_context(display);
+    if (!launch_context) {
         return;
     }
 
