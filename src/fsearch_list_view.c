@@ -637,11 +637,11 @@ fsearch_list_view_get_selection_modifiers(FsearchListView *view, gboolean *modif
 }
 
 static void
-fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
-                                              gint n_press,
-                                              gdouble x,
-                                              gdouble y,
-                                              FsearchListView *view) {
+on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
+                                                 gint n_press,
+                                                 gdouble x,
+                                                 gdouble y,
+                                                 FsearchListView *view) {
 
     guint button_pressed = gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
 
@@ -739,11 +739,11 @@ fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 }
 
 static void
-fsearch_list_view_multi_press_gesture_released(GtkGestureMultiPress *gesture,
-                                               gint n_press,
-                                               gdouble x,
-                                               gdouble y,
-                                               FsearchListView *view) {
+on_fsearch_list_view_multi_press_gesture_released(GtkGestureMultiPress *gesture,
+                                                  gint n_press,
+                                                  gdouble x,
+                                                  gdouble y,
+                                                  FsearchListView *view) {
     guint button_pressed = gtk_gesture_single_get_current_button(GTK_GESTURE_SINGLE(gesture));
 
     if (button_pressed > 3) {
@@ -757,10 +757,10 @@ fsearch_list_view_multi_press_gesture_released(GtkGestureMultiPress *gesture,
 }
 
 static void
-fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
-                                       gdouble offset_x,
-                                       gdouble offset_y,
-                                       FsearchListView *view) {
+on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
+                                          gdouble offset_x,
+                                          gdouble offset_y,
+                                          FsearchListView *view) {
     //  GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
     if (view->bin_drag_mode) {
         view->bin_drag_mode = FALSE;
@@ -776,10 +776,10 @@ fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
 }
 
 static void
-fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
-                                          gdouble offset_x,
-                                          gdouble offset_y,
-                                          FsearchListView *view) {
+on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
+                                             gdouble offset_x,
+                                             gdouble offset_y,
+                                             FsearchListView *view) {
     GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
 
     // if (gtk_gesture_get_sequence_state(GTK_GESTURE(gesture), sequence) != GTK_EVENT_SEQUENCE_CLAIMED) {
@@ -829,10 +829,10 @@ fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
 }
 
 static void
-fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
-                                         gdouble start_x,
-                                         gdouble start_y,
-                                         FsearchListView *view) {
+on_fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
+                                            gdouble start_x,
+                                            gdouble start_y,
+                                            FsearchListView *view) {
     if (start_y > view->header_height) {
         if (!gtk_widget_has_focus(GTK_WIDGET(view))) {
             gtk_widget_grab_focus(GTK_WIDGET(view));
@@ -847,10 +847,10 @@ fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
 }
 
 static void
-fsearch_list_view_header_drag_gesture_end(GtkGestureDrag *gesture,
-                                          gdouble offset_x,
-                                          gdouble offset_y,
-                                          FsearchListView *view) {
+on_fsearch_list_view_header_drag_gesture_end(GtkGestureDrag *gesture,
+                                             gdouble offset_x,
+                                             gdouble offset_y,
+                                             FsearchListView *view) {
     // GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
     if (view->col_resize_mode) {
         view->col_resize_mode = FALSE;
@@ -859,10 +859,10 @@ fsearch_list_view_header_drag_gesture_end(GtkGestureDrag *gesture,
 }
 
 static void
-fsearch_list_view_header_drag_gesture_update(GtkGestureDrag *gesture,
-                                             gdouble offset_x,
-                                             gdouble offset_y,
-                                             FsearchListView *view) {
+on_fsearch_list_view_header_drag_gesture_update(GtkGestureDrag *gesture,
+                                                gdouble offset_x,
+                                                gdouble offset_y,
+                                                FsearchListView *view) {
     GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
 
     if (gtk_gesture_get_sequence_state(GTK_GESTURE(gesture), sequence) != GTK_EVENT_SEQUENCE_CLAIMED) {
@@ -895,10 +895,10 @@ fsearch_list_view_header_drag_gesture_update(GtkGestureDrag *gesture,
 }
 
 static void
-fsearch_list_view_header_drag_gesture_begin(GtkGestureDrag *gesture,
-                                            gdouble start_x,
-                                            gdouble start_y,
-                                            FsearchListView *view) {
+on_fsearch_list_view_header_drag_gesture_begin(GtkGestureDrag *gesture,
+                                               gdouble start_x,
+                                               gdouble start_y,
+                                               FsearchListView *view) {
     GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
     const GdkEvent *event = gtk_gesture_get_last_event(GTK_GESTURE(gesture), sequence);
     GdkWindow *window = event->any.window;
@@ -1071,7 +1071,7 @@ fsearch_list_view_get_property(GObject *object, guint prop_id, GValue *value, GP
 }
 
 static void
-fsearch_list_view_adjustment_changed(GtkAdjustment *adjustment, FsearchListView *view) {
+on_fsearch_list_view_adjustment_changed(GtkAdjustment *adjustment, FsearchListView *view) {
     if (gtk_widget_get_realized(GTK_WIDGET(view))) {
         gdk_window_move(view->bin_window,
                         -gtk_adjustment_get_value(view->hadjustment),
@@ -1123,7 +1123,7 @@ fsearch_list_view_set_hadjustment(FsearchListView *view, GtkAdjustment *adjustme
     }
 
     if (view->hadjustment != NULL) {
-        g_signal_handlers_disconnect_by_func(view->hadjustment, fsearch_list_view_adjustment_changed, view);
+        g_signal_handlers_disconnect_by_func(view->hadjustment, on_fsearch_list_view_adjustment_changed, view);
         g_object_unref(view->hadjustment);
     }
 
@@ -1131,7 +1131,7 @@ fsearch_list_view_set_hadjustment(FsearchListView *view, GtkAdjustment *adjustme
         adjustment = gtk_adjustment_new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     }
 
-    g_signal_connect(adjustment, "value-changed", G_CALLBACK(fsearch_list_view_adjustment_changed), view);
+    g_signal_connect(adjustment, "value-changed", G_CALLBACK(on_fsearch_list_view_adjustment_changed), view);
     view->hadjustment = g_object_ref_sink(adjustment);
 
     fsearch_list_view_set_hadjustment_value(view);
@@ -1146,7 +1146,7 @@ fsearch_list_view_set_vadjustment(FsearchListView *view, GtkAdjustment *adjustme
     }
 
     if (view->vadjustment != NULL) {
-        g_signal_handlers_disconnect_by_func(view->vadjustment, fsearch_list_view_adjustment_changed, view);
+        g_signal_handlers_disconnect_by_func(view->vadjustment, on_fsearch_list_view_adjustment_changed, view);
         g_object_unref(view->vadjustment);
     }
 
@@ -1154,7 +1154,7 @@ fsearch_list_view_set_vadjustment(FsearchListView *view, GtkAdjustment *adjustme
         adjustment = gtk_adjustment_new(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
     }
 
-    g_signal_connect(adjustment, "value-changed", G_CALLBACK(fsearch_list_view_adjustment_changed), view);
+    g_signal_connect(adjustment, "value-changed", G_CALLBACK(on_fsearch_list_view_adjustment_changed), view);
     view->vadjustment = g_object_ref_sink(adjustment);
 
     fsearch_list_view_set_vadjustment_value(view);
@@ -1591,33 +1591,36 @@ fsearch_list_view_init(FsearchListView *view) {
     gtk_gesture_single_set_button(GTK_GESTURE_SINGLE(view->multi_press_gesture), 0);
     g_signal_connect(view->multi_press_gesture,
                      "pressed",
-                     G_CALLBACK(fsearch_list_view_multi_press_gesture_pressed),
+                     G_CALLBACK(on_fsearch_list_view_multi_press_gesture_pressed),
                      view);
     g_signal_connect(view->multi_press_gesture,
                      "released",
-                     G_CALLBACK(fsearch_list_view_multi_press_gesture_released),
+                     G_CALLBACK(on_fsearch_list_view_multi_press_gesture_released),
                      view);
 
     view->bin_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
-    g_signal_connect(view->bin_drag_gesture, "drag-begin", G_CALLBACK(fsearch_list_view_bin_drag_gesture_begin), view);
+    g_signal_connect(view->bin_drag_gesture,
+                     "drag-begin",
+                     G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_begin),
+                     view);
     g_signal_connect(view->bin_drag_gesture,
                      "drag-update",
-                     G_CALLBACK(fsearch_list_view_bin_drag_gesture_update),
+                     G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_update),
                      view);
-    g_signal_connect(view->bin_drag_gesture, "drag-end", G_CALLBACK(fsearch_list_view_bin_drag_gesture_end), view);
+    g_signal_connect(view->bin_drag_gesture, "drag-end", G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_end), view);
 
     view->header_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
     g_signal_connect(view->header_drag_gesture,
                      "drag-begin",
-                     G_CALLBACK(fsearch_list_view_header_drag_gesture_begin),
+                     G_CALLBACK(on_fsearch_list_view_header_drag_gesture_begin),
                      view);
     g_signal_connect(view->header_drag_gesture,
                      "drag-update",
-                     G_CALLBACK(fsearch_list_view_header_drag_gesture_update),
+                     G_CALLBACK(on_fsearch_list_view_header_drag_gesture_update),
                      view);
     g_signal_connect(view->header_drag_gesture,
                      "drag-end",
-                     G_CALLBACK(fsearch_list_view_header_drag_gesture_end),
+                     G_CALLBACK(on_fsearch_list_view_header_drag_gesture_end),
                      view);
     GtkStyleContext *style = gtk_widget_get_style_context(GTK_WIDGET(view));
     gtk_style_context_add_class(style, GTK_STYLE_CLASS_VIEW);

@@ -396,7 +396,7 @@ fsearch_window_action_open_folder(GSimpleAction *action, GVariant *variant, gpoi
 }
 
 static void
-fsearch_window_action_open_with_response_cb(GtkDialog *dialog, gint response_id, gpointer user_data) {
+on_fsearch_window_action_open_with_response(GtkDialog *dialog, gint response_id, gpointer user_data) {
     if (response_id != GTK_RESPONSE_OK) {
         gtk_widget_destroy(GTK_WIDGET(dialog));
         return;
@@ -426,7 +426,7 @@ fsearch_window_action_open_with_other(GSimpleAction *action, GVariant *variant, 
     GtkWidget *widget = gtk_app_chooser_dialog_get_widget(GTK_APP_CHOOSER_DIALOG(app_chooser_dlg));
     g_object_set(widget, "show-fallback", TRUE, "show-other", TRUE, NULL);
 
-    g_signal_connect(app_chooser_dlg, "response", G_CALLBACK(fsearch_window_action_open_with_response_cb), self);
+    g_signal_connect(app_chooser_dlg, "response", G_CALLBACK(on_fsearch_window_action_open_with_response), self);
 }
 
 static void
