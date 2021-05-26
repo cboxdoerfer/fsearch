@@ -954,11 +954,18 @@ on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user
     return TRUE;
 }
 
+static void
+fsearch_application_window_redraw_listview(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+    gtk_widget_queue_draw(self->listview);
+}
+
 static gboolean
 fsearch_window_db_view_selection_changed_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
+    fsearch_application_window_redraw_listview(win);
     fsearch_window_actions_update(win);
 
     uint32_t num_folders = 0;
@@ -1030,11 +1037,6 @@ fsearch_window_db_view_selection_changed(FsearchDatabaseView *view, gpointer use
         return;
     }
     g_idle_add(fsearch_window_db_view_selection_changed_cb, user_data);
-}
-
-static void
-fsearch_application_window_update_listview(FsearchApplicationWindow *self) {
-    gtk_widget_queue_draw(self->listview);
 }
 
 static void
@@ -1215,7 +1217,6 @@ fsearch_application_window_invert_selection(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         db_view_invert_selection(self->db_view);
-        fsearch_application_window_update_listview(self);
     }
 }
 
@@ -1224,7 +1225,6 @@ fsearch_application_window_unselect_all(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         db_view_unselect_all(self->db_view);
-        fsearch_application_window_update_listview(self);
     }
 }
 
@@ -1233,7 +1233,6 @@ fsearch_application_window_select_all(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     if (self->db_view) {
         db_view_select_all(self->db_view);
-        fsearch_application_window_update_listview(self);
     }
 }
 
