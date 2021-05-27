@@ -269,7 +269,6 @@ database_update(FsearchApplication *app, bool rescan) {
                                  app->config->exclude_files,
                                  app->config->exclude_hidden_items);
     g_mutex_unlock(&app->mutex);
-    db_lock(db);
     if (rescan) {
         database_update_scan_and_save(app, db);
     }
@@ -285,7 +284,6 @@ database_update(FsearchApplication *app, bool rescan) {
             db_file_path = NULL;
         }
     }
-    db_unlock(db);
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
@@ -725,7 +723,6 @@ database_update_in_local_instance() {
         return 1;
     }
 
-    db_lock(db);
     int res = !db_scan(db, NULL, NULL);
 
     char *db_path = fsearch_application_get_database_dir(NULL);
@@ -735,7 +732,6 @@ database_update_in_local_instance() {
         db_path = NULL;
     }
 
-    db_unlock(db);
     db_unref(db);
 
     config_free(config);
