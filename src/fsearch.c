@@ -872,11 +872,13 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
 
 void
 fsearch_application_state_lock(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
     g_mutex_lock(&fsearch->mutex);
 }
 
 void
 fsearch_application_state_unlock(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
     g_mutex_unlock(&fsearch->mutex);
 }
 
@@ -912,6 +914,7 @@ fsearch_application_get_config(FsearchApplication *fsearch) {
 
 char *
 fsearch_application_get_database_file_path(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
     GString *file_path = g_string_new(g_get_user_data_dir());
     g_string_append_c(file_path, G_DIR_SEPARATOR);
     g_string_append(file_path, "fsearch");
@@ -923,6 +926,7 @@ fsearch_application_get_database_file_path(FsearchApplication *fsearch) {
 
 char *
 fsearch_application_get_database_dir(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
     GString *db_dir = g_string_new(g_get_user_data_dir());
     g_string_append_c(db_dir, G_DIR_SEPARATOR);
     g_string_append(db_dir, "fsearch");
