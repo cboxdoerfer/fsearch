@@ -70,6 +70,8 @@ struct _FsearchApplicationWindow {
 
     FsearchDatabaseIndexType sort_order;
     GtkSortType sort_type;
+
+    guint sort_overlay_timeout_id;
 };
 
 typedef enum {
@@ -89,6 +91,14 @@ perform_search(FsearchApplicationWindow *win);
 
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
+
+static void
+sort_overlay_remove_timeout(FsearchApplicationWindow *win) {
+    if (win->sort_overlay_timeout_id) {
+        g_source_remove(win->sort_overlay_timeout_id);
+        win->sort_overlay_timeout_id = 0;
+    }
+}
 
 static FsearchFilter *
 get_active_filter(FsearchApplicationWindow *win) {
@@ -315,13 +325,12 @@ fsearch_window_db_view_sort_finished_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    if (!win) {
-        return G_SOURCE_REMOVE;
+    if (win) {
+        sort_overlay_remove_timeout(win);
+        fsearch_window_set_overlay_for_database_state(win);
+
+        fsearch_window_db_view_apply_changes(win);
     }
-
-    fsearch_window_set_overlay_for_database_state(win);
-
-    fsearch_window_db_view_apply_changes(win);
 
     return G_SOURCE_REMOVE;
 }
@@ -335,16 +344,25 @@ fsearch_window_db_view_sort_finished(FsearchDatabaseView *view, gpointer user_da
 }
 
 static gboolean
+on_sort_overlay_show(gpointer data) {
+    const guint win_id = GPOINTER_TO_UINT(data);
+    FsearchApplicationWindow *win = get_window_for_id(win_id);
+    if (win) {
+        show_overlay(win, OVERLAY_RESULTS_SORTING);
+        win->sort_overlay_timeout_id = 0;
+    }
+    return G_SOURCE_REMOVE;
+}
+
+static gboolean
 fsearch_window_db_view_sort_started_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    if (!win) {
-        return G_SOURCE_REMOVE;
+    if (win) {
+        sort_overlay_remove_timeout(win);
+        win->sort_overlay_timeout_id = g_timeout_add(30, on_sort_overlay_show, data);
     }
-
-    show_overlay(win, OVERLAY_RESULTS_SORTING);
-
     return G_SOURCE_REMOVE;
 }
 
@@ -361,10 +379,9 @@ fsearch_window_db_view_search_finished_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    if (!win) {
-        return G_SOURCE_REMOVE;
+    if (win) {
+        fsearch_window_db_view_apply_changes(win);
     }
-    fsearch_window_db_view_apply_changes(win);
     return G_SOURCE_REMOVE;
 }
 
@@ -381,10 +398,9 @@ fsearch_window_db_view_search_started_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    if (!win) {
-        return G_SOURCE_REMOVE;
+    if (win) {
+        fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar));
     }
-    fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar));
     return G_SOURCE_REMOVE;
 }
 
