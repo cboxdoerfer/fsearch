@@ -87,7 +87,7 @@ database_update(FsearchApplication *app, bool rescan);
 static void
 fsearch_action_set_enabled(const char *action_name, gboolean enabled);
 
-gboolean
+static gboolean
 on_database_auto_update(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     g_debug("[app] scheduled database update started");
@@ -111,55 +111,6 @@ database_auto_update_init(FsearchApplication *fsearch) {
         g_debug("[app] update database every %d seconds", seconds);
         fsearch->db_timeout_id = g_timeout_add_seconds(seconds, on_database_auto_update, fsearch);
     }
-}
-
-GList *
-fsearch_application_get_filters(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->filters;
-}
-
-FsearchDatabaseState
-fsearch_application_get_db_state(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->db_state;
-}
-
-uint32_t
-fsearch_application_get_num_db_entries(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->db ? db_get_num_entries(fsearch->db) : 0;
-}
-
-FsearchDatabase *
-fsearch_application_get_db(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return db_ref(fsearch->db);
-}
-
-FsearchConfig *
-fsearch_application_get_config(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->config;
-}
-
-char *
-fsearch_application_get_database_file_path(FsearchApplication *fsearch) {
-    GString *file_path = g_string_new(g_get_user_data_dir());
-    g_string_append_c(file_path, G_DIR_SEPARATOR);
-    g_string_append(file_path, "fsearch");
-    g_string_append_c(file_path, G_DIR_SEPARATOR);
-    g_string_append(file_path, "fsearch.db");
-
-    return g_string_free(file_path, FALSE);
-}
-
-char *
-fsearch_application_get_database_dir(FsearchApplication *fsearch) {
-    GString *db_dir = g_string_new(g_get_user_data_dir());
-    g_string_append_c(db_dir, G_DIR_SEPARATOR);
-    g_string_append(db_dir, "fsearch");
-    return g_string_free(db_dir, FALSE);
 }
 
 static gboolean
@@ -533,16 +484,6 @@ fsearch_action_set_enabled(const char *action_name, gboolean enabled) {
     g_simple_action_set_enabled(G_SIMPLE_ACTION(action), enabled);
 }
 
-void
-fsearch_application_state_lock(FsearchApplication *fsearch) {
-    g_mutex_lock(&fsearch->mutex);
-}
-
-void
-fsearch_application_state_unlock(FsearchApplication *fsearch) {
-    g_mutex_unlock(&fsearch->mutex);
-}
-
 static void
 fsearch_application_startup(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
@@ -861,7 +802,7 @@ fsearch_application_handle_local_options(GApplication *application, GVariantDict
     return -1;
 }
 
-void
+static void
 fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
         {"new-window", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Open a new application window")},
@@ -932,6 +873,67 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
                                                   NULL,
                                                   G_TYPE_NONE,
                                                   0);
+}
+
+// Public functions
+
+void
+fsearch_application_state_lock(FsearchApplication *fsearch) {
+    g_mutex_lock(&fsearch->mutex);
+}
+
+void
+fsearch_application_state_unlock(FsearchApplication *fsearch) {
+    g_mutex_unlock(&fsearch->mutex);
+}
+
+GList *
+fsearch_application_get_filters(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->filters;
+}
+
+FsearchDatabaseState
+fsearch_application_get_db_state(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->db_state;
+}
+
+uint32_t
+fsearch_application_get_num_db_entries(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->db ? db_get_num_entries(fsearch->db) : 0;
+}
+
+FsearchDatabase *
+fsearch_application_get_db(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return db_ref(fsearch->db);
+}
+
+FsearchConfig *
+fsearch_application_get_config(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->config;
+}
+
+char *
+fsearch_application_get_database_file_path(FsearchApplication *fsearch) {
+    GString *file_path = g_string_new(g_get_user_data_dir());
+    g_string_append_c(file_path, G_DIR_SEPARATOR);
+    g_string_append(file_path, "fsearch");
+    g_string_append_c(file_path, G_DIR_SEPARATOR);
+    g_string_append(file_path, "fsearch.db");
+
+    return g_string_free(file_path, FALSE);
+}
+
+char *
+fsearch_application_get_database_dir(FsearchApplication *fsearch) {
+    GString *db_dir = g_string_new(g_get_user_data_dir());
+    g_string_append_c(db_dir, G_DIR_SEPARATOR);
+    g_string_append(db_dir, "fsearch");
+    return g_string_free(db_dir, FALSE);
 }
 
 FsearchApplication *
