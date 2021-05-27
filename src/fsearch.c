@@ -88,7 +88,7 @@ static void
 fsearch_action_set_enabled(const char *action_name, gboolean enabled);
 
 gboolean
-db_auto_update_cb(gpointer user_data) {
+on_database_auto_update(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     g_debug("[app] scheduled database update started");
     g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
@@ -96,7 +96,7 @@ db_auto_update_cb(gpointer user_data) {
 }
 
 static void
-fsearch_application_db_auto_update(FsearchApplication *fsearch) {
+database_auto_update_init(FsearchApplication *fsearch) {
     if (fsearch->db_timeout_id != 0) {
         g_source_remove(fsearch->db_timeout_id);
         fsearch->db_timeout_id = 0;
@@ -109,7 +109,7 @@ fsearch_application_db_auto_update(FsearchApplication *fsearch) {
         }
 
         g_debug("[app] update database every %d seconds", seconds);
-        fsearch->db_timeout_id = g_timeout_add_seconds(seconds, db_auto_update_cb, fsearch);
+        fsearch->db_timeout_id = g_timeout_add_seconds(seconds, on_database_auto_update, fsearch);
     }
 }
 
@@ -175,7 +175,7 @@ fsearch_application_get_database_dir(FsearchApplication *fsearch) {
 }
 
 static gboolean
-database_update_status_notify(gpointer user_data) {
+on_database_update_status(gpointer user_data) {
     char *text = user_data;
     if (!text) {
         return G_SOURCE_REMOVE;
@@ -200,7 +200,7 @@ database_update_status_notify(gpointer user_data) {
 static void
 database_update_status_cb(const char *text) {
     if (text) {
-        g_idle_add(database_update_status_notify, g_strdup(text));
+        g_idle_add(on_database_update_status, g_strdup(text));
     }
 }
 
@@ -266,7 +266,7 @@ fsearch_prepare_windows_for_db_update(FsearchApplication *app) {
 }
 
 static gboolean
-database_update_finished_notify(gpointer user_data) {
+on_database_update_finished(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     g_mutex_lock(&self->mutex);
     FsearchDatabase *db = user_data;
@@ -295,18 +295,18 @@ static void
 database_update_finished_cb(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
-    g_idle_add(database_update_finished_notify, user_data);
+    g_idle_add(on_database_update_finished, user_data);
 }
 
 static gboolean
-database_load_started_notify(gpointer user_data) {
+on_database_load_started(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     g_signal_emit(self, signals[DATABASE_LOAD_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
 static gboolean
-database_scan_started_notify(gpointer user_data) {
+on_database_scan_started(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     g_signal_emit(self, signals[DATABASE_SCAN_STARTED], 0);
     return G_SOURCE_REMOVE;
@@ -316,14 +316,14 @@ static void
 database_load_started_cb(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     self->db_state = FSEARCH_DATABASE_STATE_LOADING;
-    g_idle_add(database_load_started_notify, self);
+    g_idle_add(on_database_load_started, self);
 }
 
 static void
 database_scan_started_cb(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     self->db_state = FSEARCH_DATABASE_STATE_SCANNING;
-    g_idle_add(database_scan_started_notify, self);
+    g_idle_add(on_database_scan_started, self);
 }
 
 static void
@@ -352,7 +352,7 @@ fsearch_database_update(bool scan) {
 }
 
 static gboolean
-fsearch_database_scan_add(gpointer data) {
+on_database_scan_add(gpointer data) {
     fsearch_database_update(true);
     return G_SOURCE_REMOVE;
 }
@@ -391,7 +391,7 @@ database_update(FsearchApplication *app, bool rescan) {
             if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_update_status_cb : NULL)
                 && !app->config->update_database_on_launch) {
                 // load failed -> trigger rescan
-                g_idle_add(fsearch_database_scan_add, NULL);
+                g_idle_add(on_database_scan_add, NULL);
             }
             free(db_file_path);
             db_file_path = NULL;
@@ -431,7 +431,7 @@ database_pool_func(gpointer data, gpointer user_data) {
 }
 
 static void
-about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
 
@@ -460,7 +460,7 @@ about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
 }
 
 static void
-quit_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+action_quit_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     // TODO: windows need to be cleaned up manually here
     g_application_quit(G_APPLICATION(app));
 }
@@ -485,7 +485,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
     config_save(app->config);
 
     g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
-    fsearch_application_db_auto_update(app);
+    database_auto_update_init(app);
 
     if (config_diff.database_config_changed) {
         fsearch_database_update(true);
@@ -504,7 +504,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
 }
 
 static void
-preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp) {
+action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp) {
     g_assert(FSEARCH_IS_APPLICATION(gapp));
     FsearchApplication *app = FSEARCH_APPLICATION(gapp);
 
@@ -519,18 +519,18 @@ preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp)
 }
 
 static void
-cancel_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+action_cancel_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     g_cancellable_cancel(app->db_thread_cancellable);
 }
 
 static void
-update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
+action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     fsearch_database_update(true);
 }
 
 static void
-new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     GtkWindow *window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
     gtk_window_present(window);
 }
@@ -635,12 +635,13 @@ fsearch_application_startup(GApplication *app) {
     fsearch->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
 }
 
-static GActionEntry app_entries[] = {{"new_window", new_window_activated, NULL, NULL, NULL},
-                                     {"about", about_activated, NULL, NULL, NULL},
-                                     {"update_database", update_database_activated, NULL, NULL, NULL},
-                                     {"cancel_update_database", cancel_update_database_activated, NULL, NULL, NULL},
-                                     {"preferences", preferences_activated, "u", NULL, NULL},
-                                     {"quit", quit_activated, NULL, NULL, NULL}};
+static GActionEntry app_entries[] = {
+    {"new_window", action_new_window_activated, NULL, NULL, NULL},
+    {"about", action_about_activated, NULL, NULL, NULL},
+    {"update_database", action_update_database_activated, NULL, NULL, NULL},
+    {"cancel_update_database", action_cancel_update_database_activated, NULL, NULL, NULL},
+    {"preferences", action_preferences_activated, "u", NULL, NULL},
+    {"quit", action_quit_activated, NULL, NULL, NULL}};
 
 static void
 fsearch_application_init(FsearchApplication *app) {
@@ -675,7 +676,7 @@ fsearch_application_activate(GApplication *app) {
 
     g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", NULL);
 
-    fsearch_application_db_auto_update(self);
+    database_auto_update_init(self);
 
     g_cancellable_reset(self->db_thread_cancellable);
     fsearch_database_update(false);
