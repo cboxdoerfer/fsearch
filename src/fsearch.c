@@ -144,53 +144,6 @@ database_update_status_cb(const char *text) {
 }
 
 static void
-fsearch_application_shutdown(GApplication *app) {
-    g_assert(FSEARCH_IS_APPLICATION(app));
-    FsearchApplication *fsearch = FSEARCH_APPLICATION(app);
-
-    GtkWindow *window = NULL;
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-
-    for (; windows; windows = windows->next) {
-        window = windows->data;
-        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
-            fsearch_application_window_prepare_shutdown(window);
-        }
-    }
-
-    if (fsearch->db_pool) {
-        g_debug("[app] waiting for database thread to exit...");
-        g_cancellable_cancel(fsearch->db_thread_cancellable);
-        g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
-        fsearch->db_pool = FALSE;
-        g_debug("[app] database thread finished.");
-    }
-    if (fsearch->db) {
-        db_unref(fsearch->db);
-    }
-
-    if (fsearch->db_thread_cancellable) {
-        g_object_unref(fsearch->db_thread_cancellable);
-        fsearch->db_thread_cancellable = NULL;
-    }
-
-    if (fsearch->filters) {
-        g_list_free_full(fsearch->filters, (GDestroyNotify)fsearch_filter_unref);
-        fsearch->filters = NULL;
-    }
-
-    config_save(fsearch->config);
-    config_free(fsearch->config);
-    g_mutex_clear(&fsearch->mutex);
-    G_APPLICATION_CLASS(fsearch_application_parent_class)->shutdown(app);
-}
-
-static void
-fsearch_application_finalize(GObject *object) {
-    G_OBJECT_CLASS(fsearch_application_parent_class)->finalize(object);
-}
-
-static void
 prepare_windows_for_db_update(FsearchApplication *app) {
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
 
@@ -482,6 +435,53 @@ action_set_enabled(const char *action_name, gboolean enabled) {
     }
     g_debug(enabled ? "[app] enabled action: %s" : "[app] disabled action: %s", action_name);
     g_simple_action_set_enabled(G_SIMPLE_ACTION(action), enabled);
+}
+
+static void
+fsearch_application_shutdown(GApplication *app) {
+    g_assert(FSEARCH_IS_APPLICATION(app));
+    FsearchApplication *fsearch = FSEARCH_APPLICATION(app);
+
+    GtkWindow *window = NULL;
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
+
+    for (; windows; windows = windows->next) {
+        window = windows->data;
+        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
+            fsearch_application_window_prepare_shutdown(window);
+        }
+    }
+
+    if (fsearch->db_pool) {
+        g_debug("[app] waiting for database thread to exit...");
+        g_cancellable_cancel(fsearch->db_thread_cancellable);
+        g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
+        fsearch->db_pool = FALSE;
+        g_debug("[app] database thread finished.");
+    }
+    if (fsearch->db) {
+        db_unref(fsearch->db);
+    }
+
+    if (fsearch->db_thread_cancellable) {
+        g_object_unref(fsearch->db_thread_cancellable);
+        fsearch->db_thread_cancellable = NULL;
+    }
+
+    if (fsearch->filters) {
+        g_list_free_full(fsearch->filters, (GDestroyNotify)fsearch_filter_unref);
+        fsearch->filters = NULL;
+    }
+
+    config_save(fsearch->config);
+    config_free(fsearch->config);
+    g_mutex_clear(&fsearch->mutex);
+    G_APPLICATION_CLASS(fsearch_application_parent_class)->shutdown(app);
+}
+
+static void
+fsearch_application_finalize(GObject *object) {
+    G_OBJECT_CLASS(fsearch_application_parent_class)->finalize(object);
 }
 
 static void
