@@ -85,7 +85,7 @@ static FsearchDatabase *
 database_update(FsearchApplication *app, bool rescan);
 
 static void
-fsearch_action_set_enabled(const char *action_name, gboolean enabled);
+action_set_enabled(const char *action_name, gboolean enabled);
 
 static gboolean
 on_database_auto_update(gpointer user_data) {
@@ -191,7 +191,7 @@ fsearch_application_finalize(GObject *object) {
 }
 
 static void
-fsearch_prepare_windows_for_db_update(FsearchApplication *app) {
+prepare_windows_for_db_update(FsearchApplication *app) {
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
 
     for (; windows; windows = windows->next) {
@@ -210,7 +210,7 @@ on_database_update_finished(gpointer user_data) {
     g_mutex_lock(&self->mutex);
     FsearchDatabase *db = user_data;
     if (!g_cancellable_is_cancelled(self->db_thread_cancellable)) {
-        fsearch_prepare_windows_for_db_update(self);
+        prepare_windows_for_db_update(self);
         if (self->db) {
             db_unref(self->db);
         }
@@ -222,8 +222,8 @@ on_database_update_finished(gpointer user_data) {
     g_cancellable_reset(self->db_thread_cancellable);
     self->num_database_update_active--;
     if (self->num_database_update_active == 0) {
-        fsearch_action_set_enabled("update_database", TRUE);
-        fsearch_action_set_enabled("cancel_update_database", FALSE);
+        action_set_enabled("update_database", TRUE);
+        action_set_enabled("cancel_update_database", FALSE);
     }
     g_mutex_unlock(&self->mutex);
     g_signal_emit(self, signals[DATABASE_UPDATE_FINISHED], 0);
@@ -266,10 +266,10 @@ database_scan_started_cb(gpointer user_data) {
 }
 
 static void
-fsearch_database_update(bool scan) {
+database_update_add(bool scan) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    fsearch_action_set_enabled("update_database", FALSE);
-    fsearch_action_set_enabled("cancel_update_database", TRUE);
+    action_set_enabled("update_database", FALSE);
+    action_set_enabled("cancel_update_database", TRUE);
 
     g_cancellable_reset(app->db_thread_cancellable);
     app->num_database_update_active++;
@@ -292,7 +292,7 @@ fsearch_database_update(bool scan) {
 
 static gboolean
 on_database_scan_add(gpointer data) {
-    fsearch_database_update(true);
+    database_update_add(true);
     return G_SOURCE_REMOVE;
 }
 
@@ -427,7 +427,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
     database_auto_update_init(app);
 
     if (config_diff.database_config_changed) {
-        fsearch_database_update(true);
+        database_update_add(true);
     }
 
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
@@ -465,7 +465,7 @@ action_cancel_update_database_activated(GSimpleAction *action, GVariant *paramet
 
 static void
 action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
-    fsearch_database_update(true);
+    database_update_add(true);
 }
 
 static void
@@ -475,7 +475,7 @@ action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer
 }
 
 static void
-fsearch_action_set_enabled(const char *action_name, gboolean enabled) {
+action_set_enabled(const char *action_name, gboolean enabled) {
     GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
     if (!action) {
         return;
@@ -608,9 +608,9 @@ fsearch_application_activate(GApplication *app) {
     database_auto_update_init(self);
 
     g_cancellable_reset(self->db_thread_cancellable);
-    fsearch_database_update(false);
+    database_update_add(false);
     if (self->config->update_database_on_launch) {
-        fsearch_database_update(true);
+        database_update_add(true);
     }
 }
 
