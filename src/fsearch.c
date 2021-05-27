@@ -178,7 +178,7 @@ static gboolean
 database_update_status_notify(gpointer user_data) {
     char *text = user_data;
     if (!text) {
-        return FALSE;
+        return G_SOURCE_REMOVE;
     }
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -194,7 +194,7 @@ database_update_status_notify(gpointer user_data) {
     free(text);
     text = NULL;
 
-    return FALSE;
+    return G_SOURCE_REMOVE;
 }
 
 static void
