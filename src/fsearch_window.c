@@ -103,7 +103,7 @@ sort_overlay_remove_timeout(FsearchApplicationWindow *win) {
 static FsearchFilter *
 get_active_filter(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
+    const uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
     FsearchFilter *filter = filter_element->data;
     return filter;
@@ -198,7 +198,7 @@ fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
 
     FsearchDatabaseState state = fsearch_application_get_db_state(app);
-    uint32_t num_items = fsearch_application_get_num_db_entries(app);
+    const uint32_t num_items = fsearch_application_get_num_db_entries(app);
 
     if (num_items > 0) {
         show_overlay(win, OVERLAY_RESULTS);
@@ -424,8 +424,8 @@ perform_search(FsearchApplicationWindow *win) {
     bool reveal_smart_case = false;
     bool reveal_smart_path = false;
     if (!fs_str_is_empty(text)) {
-        bool has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
-        bool has_upper_text = fs_str_has_upper(text) ? 1 : 0;
+        const bool has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
+        const bool has_upper_text = fs_str_has_upper(text) ? 1 : 0;
         FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
         FsearchConfig *config = fsearch_application_get_config(app);
         reveal_smart_case = config->auto_match_case && !config->match_case && has_upper_text;
@@ -690,7 +690,7 @@ fsearch_results_sort_func(int sort_order, gpointer user_data) {
 
 static void
 add_columns(FsearchListView *view, FsearchConfig *config) {
-    bool restore = config->restore_column_config;
+    const bool restore = config->restore_column_config;
     FsearchListViewColumn *name_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_NAME,
                                                                    "Name",
                                                                    PANGO_ALIGN_LEFT,
@@ -938,7 +938,7 @@ on_search_entry_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer use
     guint keyval;
     gdk_event_get_keyval(event, &keyval);
     if (keyval == GDK_KEY_Down) {
-        gint cursor_idx = fsearch_list_view_get_cursor(FSEARCH_LIST_VIEW(win->listview));
+        const gint cursor_idx = fsearch_list_view_get_cursor(FSEARCH_LIST_VIEW(win->listview));
         gtk_widget_grab_focus(win->listview);
         fsearch_list_view_set_cursor(FSEARCH_LIST_VIEW(win->listview), cursor_idx);
         return TRUE;
