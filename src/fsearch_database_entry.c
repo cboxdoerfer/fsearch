@@ -222,18 +222,20 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     int res = 0;
     if (a_depth == b_depth) {
         sort_entry_by_path_recursive(entry_a->shared.parent, entry_b->shared.parent, &res);
+        return res == 0 ? db_entry_compare_entries_by_name(a, b) : res;
     }
     else if (a_depth > b_depth) {
         const uint32_t diff = a_depth - b_depth;
         FsearchDatabaseEntryFolder *parent_a = db_entry_get_parent_nth(entry_a->shared.parent, diff);
         sort_entry_by_path_recursive(parent_a, entry_b->shared.parent, &res);
+        return res == 0 ? 1 : res;
     }
     else {
         const uint32_t diff = b_depth - a_depth;
         FsearchDatabaseEntryFolder *parent_b = db_entry_get_parent_nth(entry_b->shared.parent, diff);
         sort_entry_by_path_recursive(entry_a->shared.parent, parent_b, &res);
+        return res == 0 ? -1 : res;
     }
-    return res == 0 ? -1 : res;
 }
 
 static void
