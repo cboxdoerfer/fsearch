@@ -51,12 +51,6 @@ fsearch_application_get_db_state(FsearchApplication *fsearch);
 uint32_t
 fsearch_application_get_num_db_entries(FsearchApplication *fsearch);
 
-uint32_t
-fsearch_application_get_num_db_folders(FsearchApplication *fsearch);
-
-uint32_t
-fsearch_application_get_num_db_files(FsearchApplication *fsearch);
-
 FsearchDatabase *
 fsearch_application_get_db(FsearchApplication *fsearch);
 

@@ -126,18 +126,6 @@ fsearch_application_get_db_state(FsearchApplication *fsearch) {
 }
 
 uint32_t
-fsearch_application_get_num_db_files(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->db ? db_get_num_files(fsearch->db) : 0;
-}
-
-uint32_t
-fsearch_application_get_num_db_folders(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->db ? db_get_num_folders(fsearch->db) : 0;
-}
-
-uint32_t
 fsearch_application_get_num_db_entries(FsearchApplication *fsearch) {
     g_assert(FSEARCH_IS_APPLICATION(fsearch));
     return fsearch->db ? db_get_num_entries(fsearch->db) : 0;
