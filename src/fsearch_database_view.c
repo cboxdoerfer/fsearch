@@ -11,6 +11,13 @@
 #include <assert.h>
 #include <string.h>
 
+// A DatabaseView provides a unique view into a registered database
+// It provides:
+// * filtering
+// * searching
+// * sorting
+// * selection handling
+
 struct FsearchDatabaseView {
     uint32_t id;
 
