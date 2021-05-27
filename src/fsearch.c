@@ -26,7 +26,6 @@
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
 #include "fsearch_database.h"
-#include "fsearch_database_search.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_preferences_ui.h"
@@ -35,13 +34,10 @@
 #include "resources.h"
 #include <glib.h>
 #include <glib/gi18n.h>
-#include <glib/gstdio.h>
 #include <limits.h>
 #include <stdint.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/time.h>
 
 struct _FsearchApplication {
     GtkApplication parent;
