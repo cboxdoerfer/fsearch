@@ -156,7 +156,7 @@ prepare_windows_for_db_update(FsearchApplication *app) {
 static gboolean
 on_database_update_finished(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
-    g_mutex_lock(&self->mutex);
+    fsearch_application_state_lock(self);
     FsearchDatabase *db = user_data;
     if (!g_cancellable_is_cancelled(self->db_thread_cancellable)) {
         prepare_windows_for_db_update(self);
@@ -174,7 +174,7 @@ on_database_update_finished(gpointer user_data) {
         action_set_enabled("update_database", TRUE);
         action_set_enabled("cancel_update_database", FALSE);
     }
-    g_mutex_unlock(&self->mutex);
+    fsearch_application_state_unlock(self);
     g_signal_emit(self, fsearch_signals[DATABASE_UPDATE_FINISHED], 0);
     return G_SOURCE_REMOVE;
 }
@@ -263,12 +263,13 @@ database_update(FsearchApplication *app, bool rescan) {
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
 
-    g_mutex_lock(&app->mutex);
+    fsearch_application_state_lock(app);
     FsearchDatabase *db = db_new(app->config->indexes,
                                  app->config->exclude_locations,
                                  app->config->exclude_files,
                                  app->config->exclude_hidden_items);
-    g_mutex_unlock(&app->mutex);
+    fsearch_application_state_unlock(app);
+
     if (rescan) {
         database_update_scan_and_save(app, db);
     }
