@@ -7,6 +7,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_query.h"
 
+#include <assert.h>
 #include <gtk/gtk.h>
 #include <math.h>
 #include <stdint.h>
@@ -348,4 +349,20 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
     gtk_style_context_restore(context);
 
     draw_row_ctx_free(&ctx);
+}
+
+FsearchResultView *
+fsearch_result_view_new(void) {
+    FsearchResultView *result_view = calloc(1, sizeof(FsearchResultView));
+    assert(result_view != NULL);
+    return result_view;
+}
+
+void
+fsearch_result_view_free(FsearchResultView *result_view) {
+    if (!result_view) {
+        return;
+    }
+    free(result_view);
+    result_view = NULL;
 }

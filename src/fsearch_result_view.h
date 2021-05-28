@@ -3,6 +3,20 @@
 #include "fsearch_database_view.h"
 #include "fsearch_list_view.h"
 
+typedef struct {
+    FsearchDatabaseView *database_view;
+    FsearchListView *list_view;
+
+    FsearchDatabaseIndexType sort_order;
+    GtkSortType sort_type;
+} FsearchResultView;
+
+FsearchResultView *
+fsearch_result_view_new(void);
+
+void
+fsearch_result_view_free(FsearchResultView *result_view);
+
 char *
 fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
                                   uint32_t row,
