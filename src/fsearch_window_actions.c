@@ -658,7 +658,7 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     action_set_enabled(group, "copy_clipboard", num_rows_selected);
     action_set_enabled(group, "copy_filepath_clipboard", num_rows_selected);
     action_set_enabled(group, "cut_clipboard", num_rows_selected);
-    action_set_enabled(group, "delete_selection", num_rows_selected);
+    action_set_enabled(group, "delete_selection", FALSE);
     action_set_enabled(group, "move_to_trash", num_rows_selected);
     action_set_enabled(group, "open", num_rows_selected);
     action_set_enabled(group, "open_with", num_rows_selected >= 1 ? TRUE : FALSE);
