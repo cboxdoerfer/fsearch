@@ -720,12 +720,6 @@ database_update_in_local_instance() {
     }
     FsearchDatabase *db =
         db_new(config->indexes, config->exclude_locations, config->exclude_files, config->exclude_hidden_items);
-    if (!db) {
-        g_printerr("[database_update] failed to allocate database\n");
-        config_free(config);
-        config = NULL;
-        return 1;
-    }
 
     int res = !db_scan(db, NULL, NULL);
 
