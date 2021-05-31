@@ -708,7 +708,7 @@ database_update_in_local_instance() {
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
 
-    FsearchConfig *config = config = calloc(1, sizeof(FsearchConfig));
+    FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
     if (!config_load(config)) {
         if (!config_load_default(config)) {
             g_printerr("[database_update] failed to load config\n");
