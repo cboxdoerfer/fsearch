@@ -24,6 +24,8 @@ fsearch_memory_pool_new_block(FsearchMemoryPool *pool) {
     assert(block != NULL);
 
     block->items = calloc(pool->block_size + 1, pool->item_size);
+    assert(block->items != NULL);
+
     block->num_used = 0;
     block->capacity = pool->block_size;
     pool->blocks = g_list_prepend(pool->blocks, block);

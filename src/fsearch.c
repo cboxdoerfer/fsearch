@@ -495,6 +495,7 @@ fsearch_application_startup(GApplication *app) {
 
     fsearch->db_thread_cancellable = g_cancellable_new();
     fsearch->config = calloc(1, sizeof(FsearchConfig));
+    g_assert(fsearch->config != NULL);
     if (!config_load(fsearch->config)) {
         config_load_default(fsearch->config);
     }
@@ -709,6 +710,8 @@ database_update_in_local_instance() {
     g_timer_start(timer);
 
     FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
+    g_assert(config != NULL);
+
     if (!config_load(config)) {
         if (!config_load_default(config)) {
             g_printerr("[database_update] failed to load config\n");

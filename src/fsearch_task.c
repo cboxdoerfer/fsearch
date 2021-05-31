@@ -175,6 +175,7 @@ fsearch_task_new(int id,
                  FsearchTaskCancelledFunc task_cancelled_func,
                  gpointer data) {
     FsearchTask *task = calloc(1, sizeof(FsearchTask));
+    g_assert(task != NULL);
     task->task_cancellable = g_cancellable_new();
     task->task_func = task_func;
     task->task_finished_func = task_finished_func;

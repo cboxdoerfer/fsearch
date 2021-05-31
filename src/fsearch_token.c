@@ -130,6 +130,7 @@ fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool a
     const bool is_reg = fs_str_is_regex(query);
     if (is_reg && enable_regex) {
         FsearchToken **token = calloc(2, sizeof(FsearchToken *));
+        assert(token != NULL);
         token[0] = fsearch_token_new(query, match_case, auto_match_case, true);
         token[1] = NULL;
         return token;
@@ -141,6 +142,7 @@ fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool a
 
     uint32_t tmp_token_len = g_strv_length(query_split);
     FsearchToken **token = calloc(tmp_token_len + 1, sizeof(FsearchToken *));
+    assert(token != NULL);
     for (uint32_t i = 0; i < tmp_token_len; i++) {
         // g_debug("[search] token %d: %s", i, query_split[i]);
         token[i] = fsearch_token_new(query_split[i], match_case, auto_match_case, false);

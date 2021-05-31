@@ -1368,6 +1368,7 @@ compare_exclude_path(FsearchExcludePath *p1, FsearchExcludePath *p2) {
 FsearchDatabase *
 db_new(GList *indexes, GList *excludes, char **exclude_files, bool exclude_hidden) {
     FsearchDatabase *db = g_new0(FsearchDatabase, 1);
+    g_assert(db != NULL);
     g_mutex_init(&db->mutex);
     if (indexes) {
         db->indexes = g_list_copy_deep(indexes, (GCopyFunc)fsearch_index_copy, NULL);

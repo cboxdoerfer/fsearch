@@ -586,6 +586,7 @@ preferences_ui_launch(FsearchConfig *config,
                       FsearchPreferencesPage page,
                       void (*finsihed_cb)(FsearchConfig *)) {
     FsearchPreferencesInterface *ui = calloc(1, sizeof(FsearchPreferencesInterface));
+    g_assert(ui != NULL);
     ui->new_config = config;
     ui->finished_cb = finsihed_cb;
     ui->window = window;
@@ -594,4 +595,3 @@ preferences_ui_launch(FsearchConfig *config,
 
     gtk_widget_show(ui->dialog);
 }
-
