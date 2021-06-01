@@ -42,6 +42,9 @@ src/tags
 src/fsearch.glade~
 src/*.ui~
 
+# Valgrind
+callgrind.out*
+
 # VS Code
 *.vscode
 
