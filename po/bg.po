@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-03-14 16:52+0100\n"
+"POT-Creation-Date: 2021-06-01 18:21+0200\n"
 "PO-Revision-Date: 2021-05-07 06:35+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -19,41 +19,33 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.7-dev\n"
 
-#: src/database.c:794
-msgid "Building lookup list…"
-msgstr "Изграждане на списък за търсене …"
-
-#: src/database.c:802
-msgid "Sorting…"
-msgstr "Сортиране…"
-
-#: src/fsearch.c:382
+#: src/fsearch.c:341
 msgid "translator-credits"
 msgstr "cybercop (cybercop_montana@abv.bg)"
 
-#: src/fsearch.c:384
+#: src/fsearch.c:343
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Инструмент за търсене, фокусиран върху висока производителност и разширени "
 "възможности"
 
-#: src/fsearch.c:673
+#: src/fsearch.c:798
 msgid "Open a new application window"
 msgstr "Отваряне на нов прозорец на приложението"
 
-#: src/fsearch.c:674
+#: src/fsearch.c:799
 msgid "Show the application preferences"
 msgstr "Покажи настройките на програмата"
 
-#: src/fsearch.c:675
+#: src/fsearch.c:800
 msgid "Update the database and exit"
 msgstr "Обновяване на базата с данни и изход"
 
-#: src/fsearch.c:676
+#: src/fsearch.c:801
 msgid "Print version information and exit"
 msgstr "Показване на информация за версията и изход"
 
-#: src/fsearch.glade:73
+#: src/fsearch.glade:68
 msgid "New window"
 msgstr "Нов прозорец"
 
@@ -61,244 +53,219 @@ msgstr "Нов прозорец"
 msgid "Update database"
 msgstr "Обновяване на базата с данни"
 
-#: src/fsearch.glade:103 src/fsearch.glade:630
+#: src/fsearch.glade:102 src/statusbar.glade:256
 msgid "Cancel database update"
 msgstr "Отказ от обновяването на базата"
 
-#: src/fsearch.glade:137 src/menus.ui:112
+#: src/fsearch.glade:143 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Търсене в Пътя"
 
-#: src/fsearch.glade:151 src/menus.ui:116
+#: src/fsearch.glade:157 src/menus.ui:116
 msgid "Match Case"
 msgstr "Случай на съвпадение"
 
-#: src/fsearch.glade:165 src/menus.ui:120
+#: src/fsearch.glade:171 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Включване на регулярни изрази"
 
-#: src/fsearch.glade:190 src/menus.ui:95
+#: src/fsearch.glade:196 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Показване на лентата на състоянието"
 
-#: src/fsearch.glade:204 src/menus.ui:99
+#: src/fsearch.glade:210 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Показване на филтър"
 
-#: src/fsearch.glade:218 src/menus.ui:103
+#: src/fsearch.glade:224 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Показване на бутон за търсене"
 
-#: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:48
+#: src/fsearch.glade:250 src/menus.ui:84 src/preferences.ui:43
 msgid "Preferences"
 msgstr "Предпочитания"
 
-#: src/fsearch.glade:269 src/menus.ui:129
+#: src/fsearch.glade:275 src/menus.ui:129
 msgid "About"
 msgstr "Относно"
 
-#: src/fsearch.glade:294 src/menus.ui:47
+#: src/fsearch.glade:300 src/menus.ui:47
 msgid "Quit"
 msgstr "Изход"
 
-#: src/fsearch.glade:417
-msgid "Number of Search Results"
-msgstr "Брой на резултатите от търсенето"
-
-#: src/fsearch.glade:418
-msgid "0 Items"
-msgstr "0 елемента"
-
-#: src/fsearch.glade:455
-msgid "Index:"
-msgstr "Индекс:"
-
-#: src/fsearch.glade:530
-msgid "Number of selected folders"
-msgstr "Брой на избраните папки"
-
-#: src/fsearch.glade:531 src/fsearch.glade:556
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:555
-msgid "Number of selected files"
-msgstr "Брой на избраните файлове"
-
-#: src/fsearch.glade:614 src/fsearch_window.c:140 src/overlay.ui:102
-#, c-format
-msgid "Updating Database…"
-msgstr "Обновяване на Базата с данни…"
-
-#: src/fsearch.glade:647
-msgid "page0"
-msgstr "страница0"
-
-#: src/fsearch.glade:671
-msgid "Number of database items"
-msgstr "Брой на елементите в базата с данни"
-
-#: src/fsearch.glade:672
-msgid "(empty)"
-msgstr "(празно)"
-
-#: src/fsearch.glade:683
-msgid "page1"
-msgstr "страница1"
-
-#: src/fsearch.glade:709
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-"Думата за търсене съдържа главни букви.\n"
-"<b>Точно съвпадение</b> е временно активирано за този израз."
-
-#: src/fsearch.glade:740 src/fsearch.glade:793
-msgid "CASE"
-msgstr "Папка"
-
-#: src/fsearch.glade:816
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-"Търсеният израз съдържа разделители.\n"
-"<b>Търсене в пътя</b> е временно активирано за този израз."
-
-#: src/fsearch.glade:847 src/fsearch.glade:900
-msgid "PATH"
-msgstr "Път"
-
-#: src/fsearch.glade:953
-msgid "REGEX"
-msgstr "Регулярен израз"
-
-#: src/fsearch.glade:1073
+#: src/fsearch.glade:408
 msgid "Search…"
 msgstr "Търсене…"
 
-#: src/fsearch.glade:1095
+#: src/fsearch.glade:430
 msgid "Select a Filter"
 msgstr "Избор на Филтър"
 
-#: src/fsearch.glade:1126 src/preferences.ui:690
+#: src/fsearch.glade:461 src/preferences.ui:676
 msgid "Search"
 msgstr "Търсене"
 
-#: src/fsearch_filter.c:79
+#: src/fsearch_database.c:633
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Loading folders…"
+msgstr "Зареждане на базата с данни…"
+
+#: src/fsearch_database.c:641
+#, fuzzy
+#| msgid "Deleting files…"
+msgid "Loading files…"
+msgstr "Изтриване на файловете…"
+
+#: src/fsearch_file_utils.c:265
+#, fuzzy
+#| msgid "Folders"
+msgid "Folder"
+msgstr "Папки"
+
+#: src/fsearch_file_utils.c:271
+msgid "Unknown Type"
+msgstr ""
+
+#: src/fsearch_filter.c:98
 msgid "All"
 msgstr "Всички"
 
-#: src/fsearch_filter.c:81
+#: src/fsearch_filter.c:100
 msgid "Folders"
 msgstr "Папки"
 
-#: src/fsearch_filter.c:82
+#: src/fsearch_filter.c:101
 msgid "Files"
 msgstr "Файлове"
 
-#: src/fsearch_filter.c:84
+#: src/fsearch_filter.c:103
 msgid "Archives"
 msgstr "Архиви"
 
-#: src/fsearch_filter.c:86
+#: src/fsearch_filter.c:105
 msgid "Audio"
 msgstr "Аудио"
 
-#: src/fsearch_filter.c:89
+#: src/fsearch_filter.c:108
 msgid "Documents"
 msgstr "Документи"
 
-#: src/fsearch_filter.c:91
+#: src/fsearch_filter.c:110
 msgid "Pictures"
 msgstr "Снимки"
 
-#: src/fsearch_filter.c:93
+#: src/fsearch_filter.c:112
 msgid "Videos"
 msgstr "Видео"
+
+#: src/fsearch_listview_popup.c:64
+#, fuzzy
+#| msgid "Other Application"
+msgid "Other Application…"
+msgstr "Друга програма"
+
+#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
+msgid "Select folder"
+msgstr "Избор на папка"
+
+#: src/fsearch_preferences_ui.c:187 src/fsearch_preferences_ui.c:199
+#: src/fsearch_preferences_ui.c:391
+msgid "_Cancel"
+msgstr "_Отказ"
+
+#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:199
+msgid "_Select"
+msgstr "_Избор"
+
+#: src/fsearch_preferences_ui.c:392
+msgid "_OK"
+msgstr "_ОК"
 
 #: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
 msgid "Active"
 msgstr "Активно"
 
 #: src/fsearch_preferences_widgets.c:184 src/fsearch_preferences_widgets.c:223
-#: src/listview.c:209 src/menus.ui:222
+#: src/fsearch_window.c:708 src/menus.ui:216
 msgid "Path"
 msgstr "Път"
 
-#: src/fsearch_preferences_widgets.c:187
-msgid "Update"
-msgstr "Обновяване"
+#: src/fsearch_statusbar.c:53
+msgid "Querying…"
+msgstr "Запитване…"
 
-#: src/fsearch_window.c:119 src/overlay.ui:32
-#, c-format
-msgid "Loading Database…"
-msgstr "Зареждане на базата с данни…"
+#: src/fsearch_statusbar.c:140
+#, fuzzy
+#| msgid "Sorting…"
+msgid "Loading…"
+msgstr "Сортиране…"
 
-#: src/fsearch_window.c:160 src/fsearch_window.c:521 src/fsearch_window.c:987
+#: src/fsearch_statusbar.c:145
+#, fuzzy
+#| msgid "Sorting…"
+msgid "Scanning…"
+msgstr "Сортиране…"
+
+#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
 msgid "%'d Items"
 msgstr "%'d елемента"
 
-#: src/fsearch_window.c:449 src/fsearch_window.c:616
-msgid "Querying…"
-msgstr "Запитване…"
-
-#: src/fsearch_window.c:518
-#, c-format
-msgid "≥%'d Items"
-msgstr "≥%'d елемента"
-
-#: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
+#: src/fsearch_window.c:607 src/fsearch_window_actions.c:349
 msgid "Failed to open file"
 msgstr "Файлът не може да бъде отворен"
 
-#: src/fsearch_window.c:805 src/fsearch_window_actions.c:414
+#: src/fsearch_window.c:608 src/fsearch_window_actions.c:350
 msgid "Do you want to keep the window open?"
 msgstr "Искате ли да оставите прозореца отворен?"
 
-#: src/fsearch_window.c:993
-msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "Последно обновяване: %Y-%m-%d %H:%M"
+#: src/fsearch_window.c:701 src/menus.ui:212
+msgid "Name"
+msgstr "Име"
 
-#: src/fsearch_window_actions.c:77
+#: src/fsearch_window.c:715 src/menus.ui:224
+msgid "Size"
+msgstr "Размер"
+
+#: src/fsearch_window.c:722 src/menus.ui:220
+msgid "Type"
+msgstr "Тип"
+
+#: src/fsearch_window.c:729 src/menus.ui:228
+msgid "Date Modified"
+msgstr "Дата на промяна"
+
+#: src/fsearch_window.c:743
+msgid ""
+"Sorting by <b>Type</b> can be very slow with many results and it can't be "
+"aborted.\n"
+"\n"
+"This sort order is not persistent, it will be reset when the search term "
+"changes."
+msgstr ""
+
+#: src/fsearch_window_actions.c:88
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "Наистина ли искате да отворите %d файл (а)?"
 
-#: src/fsearch_window_actions.c:79
+#: src/fsearch_window_actions.c:90
 msgid "Opening Files…"
 msgstr "Отваряне на Файл (ове)…"
 
-#: src/fsearch_window_actions.c:148
+#: src/fsearch_window_actions.c:132
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Наистина ли искате да премахнете %d файл (а)?"
 
-#: src/fsearch_window_actions.c:152
+#: src/fsearch_window_actions.c:136
 msgid "Deleting files…"
 msgstr "Изтриване на файловете…"
 
-#: src/fsearch_window_actions.c:152
+#: src/fsearch_window_actions.c:136
 msgid "Moving files to trash…"
 msgstr "Преместване на файловете в кошчето…"
-
-#: src/listview.c:184 src/menus.ui:218
-msgid "Name"
-msgstr "Име"
-
-#: src/listview.c:236 src/menus.ui:230
-msgid "Size"
-msgstr "Размер"
-
-#: src/listview.c:254 src/menus.ui:234
-msgid "Date Modified"
-msgstr "Дата на промяна"
-
-#: src/listview.c:271 src/menus.ui:226
-msgid "Type"
-msgstr "Тип"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -380,233 +347,251 @@ msgstr "_Копиране на пътя до файла"
 msgid "Move to _Trash"
 msgstr "Преместване в кошчето"
 
-#: src/menus.ui:200
-msgid "_Delete"
-msgstr "_Изтриване"
-
-#: src/overlay.ui:46 src/overlay.ui:116
-msgid "…"
-msgstr "…"
-
-#: src/overlay.ui:61
-msgid "This won't take long."
-msgstr "Това няма да отнеме много време."
-
-#: src/overlay.ui:131
-msgid "This may take a while."
-msgstr "Това може да отнеме известно време."
-
-#: src/overlay.ui:172
-msgid "Empty Query"
-msgstr "Няма задание"
-
-#: src/overlay.ui:187
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете"
-
-#: src/overlay.ui:234
+#: src/overlay.ui:43
 msgid "Empty Database"
 msgstr "Базата с данни е празна"
 
-#: src/overlay.ui:250
+#: src/overlay.ui:59
 msgid "Add folders"
 msgstr "Добавяне на папки"
 
-#: src/overlay.ui:292
+#: src/overlay.ui:76 src/overlay.ui:271 src/statusbar.glade:273
+msgid "page0"
+msgstr "страница0"
+
+#: src/overlay.ui:107
+msgid "Loading Database…"
+msgstr "Зареждане на базата с данни…"
+
+#: src/overlay.ui:122
+msgid "This won't take long."
+msgstr "Това няма да отнеме много време."
+
+#: src/overlay.ui:138 src/overlay.ui:333 src/statusbar.glade:309
+msgid "page1"
+msgstr "страница1"
+
+#: src/overlay.ui:170 src/statusbar.glade:240
+msgid "Updating Database…"
+msgstr "Обновяване на Базата с данни…"
+
+#: src/overlay.ui:185 src/overlay.ui:380
+msgid "This may take a while."
+msgstr "Това може да отнеме известно време."
+
+#: src/overlay.ui:201
+msgid "page2"
+msgstr "страница2"
+
+#: src/overlay.ui:239
+msgid "Empty Query"
+msgstr "Няма задание"
+
+#: src/overlay.ui:254
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете"
+
+#: src/overlay.ui:302
 msgid "No Results Found"
 msgstr "Не са намерени резултати"
 
-#: src/overlay.ui:307
+#: src/overlay.ui:317
 msgid "Try a different search"
 msgstr "Опитайте с друго търсене"
 
-#: src/preferences.ui:116
+#: src/overlay.ui:365
+#, fuzzy
+#| msgid "Sorting…"
+msgid "Sorting results…"
+msgstr "Сортиране…"
+
+#: src/preferences.ui:112
 msgid "Enable dark theme"
 msgstr "Включване на тъмната тема"
 
-#: src/preferences.ui:130
+#: src/preferences.ui:127
 msgid "Enable client-side decorations (requires restart)"
 msgstr "Активиране на декорации от страна на клиента (изисква рестартиране)"
 
-#: src/preferences.ui:144
+#: src/preferences.ui:142
 msgid "Use binary units instead of decimal units"
 msgstr "Използване на бинарни единици вместо десетични"
 
-#: src/preferences.ui:159
+#: src/preferences.ui:158
 msgid "Remember window size"
 msgstr "Запомняне на размера на прозореца"
 
-#: src/preferences.ui:194
+#: src/preferences.ui:195
 msgid "with keyboard shortcuts or menu entries"
 msgstr "с преки пътища или елементи в менюто"
 
-#: src/preferences.ui:209
+#: src/preferences.ui:210
 msgid "with double click"
 msgstr "с двойно кликване"
 
-#: src/preferences.ui:237
+#: src/preferences.ui:238
 msgid "Behaviour after successfully opening a file:"
 msgstr "Поведение след успешно отваряне на файл:"
 
-#: src/preferences.ui:253
+#: src/preferences.ui:254
 msgid "Nothing"
 msgstr "Нищо"
 
-#: src/preferences.ui:254
+#: src/preferences.ui:255
 msgid "Minimize"
 msgstr "Минимизиране"
 
-#: src/preferences.ui:255
+#: src/preferences.ui:256
 msgid "Close"
 msgstr "Затваряне"
 
-#: src/preferences.ui:281
+#: src/preferences.ui:282
 msgid "General:"
 msgstr "Общи:"
 
-#: src/preferences.ui:316
+#: src/preferences.ui:317
 msgid "Show highlighted search terms"
 msgstr "Показване на маркираните думи за търсене"
 
-#: src/preferences.ui:331
+#: src/preferences.ui:333
 msgid "Show tooltips"
 msgstr "Показване на подсказки"
 
-#: src/preferences.ui:345
+#: src/preferences.ui:348
 msgid "Show icons in name column"
 msgstr "Показване на икони в имената на колоните"
 
-#: src/preferences.ui:359
+#: src/preferences.ui:363
 msgid "Remember column configuration"
 msgstr "Запомняне конфигурацията на колоните"
 
-#: src/preferences.ui:373
+#: src/preferences.ui:378
 msgid "Remember sort order"
 msgstr "Запомняне на реда на подреждане"
 
-#: src/preferences.ui:387
+#: src/preferences.ui:393
 msgid "Open path with double click in path column"
 msgstr "Отваряне на пътя с двойно кликване в колоната с пътя"
 
-#: src/preferences.ui:401
+#: src/preferences.ui:408
 msgid "Single click to open"
 msgstr "Отваряне с едно кликване"
 
-#: src/preferences.ui:421
+#: src/preferences.ui:429
 msgid "Results:"
 msgstr "Резултати:"
 
-#: src/preferences.ui:462
+#: src/preferences.ui:470
 msgid "Show database indexing status"
 msgstr "Показване на статуса на индексиране на базата с данни"
 
-#: src/preferences.ui:482
+#: src/preferences.ui:491
 msgid "Statusbar:"
 msgstr "Лента на състоянието:"
 
-#: src/preferences.ui:523
+#: src/preferences.ui:532
 msgid "Show warning dialogs when:"
 msgstr "Показване на диалог за предупреждение, когато:"
 
-#: src/preferences.ui:533
+#: src/preferences.ui:542
 msgid "file / folder failed to open"
 msgstr "файлът / папката не могат да бъдат отворени"
 
-#: src/preferences.ui:555
+#: src/preferences.ui:565
 msgid "Dialogs:"
 msgstr "Диалози:"
 
-#: src/preferences.ui:580
+#: src/preferences.ui:590
 msgid "Interface"
 msgstr "Интерфейс"
 
-#: src/preferences.ui:599
-msgid "Limit number of results:"
-msgstr "Ограничаване броя на резултатите:"
-
-#: src/preferences.ui:627
+#: src/preferences.ui:609
 msgid "Search in path when query contains path separators"
 msgstr "Търсене в пътя, когато заявката съдържа разделители"
 
-#: src/preferences.ui:641
+#: src/preferences.ui:624
 msgid "Search as you type"
 msgstr "Търсене по време на въвеждането"
 
-#: src/preferences.ui:655
+#: src/preferences.ui:639
 msgid "Hide results when search is empty"
 msgstr "Скриване на резултатите, когато заявката е празна"
 
-#: src/preferences.ui:669
+#: src/preferences.ui:654
 msgid "Match case when query contains at least one upper case character"
 msgstr "Случай на съвпадение, когато заявката съдържа поне една главна буква"
 
-#: src/preferences.ui:709
+#: src/preferences.ui:695
 msgid "Update database on start"
 msgstr "Обновяване на базата с данни при стартиране"
 
-#: src/preferences.ui:727
+#: src/preferences.ui:715
 msgid "Update every"
 msgstr "Обновяване на всички"
 
-#: src/preferences.ui:748
+#: src/preferences.ui:737
 msgid "0"
 msgstr "0"
 
-#: src/preferences.ui:765
+#: src/preferences.ui:754
 msgid "hour(s) and"
 msgstr "час (а) и"
 
-#: src/preferences.ui:777
+#: src/preferences.ui:766
 msgid "30"
 msgstr "30"
 
-#: src/preferences.ui:795
+#: src/preferences.ui:784
 msgid "minute(s)"
 msgstr "минута (и)"
 
-#: src/preferences.ui:866
-msgid "Add path to be included in database"
+#: src/preferences.ui:856
+#, fuzzy
+#| msgid "Add path to be included in database"
+msgid ""
+"Add path to be included in database\n"
+"                                "
 msgstr "Добавянето на пътя ще бъде включено в базата с данни"
 
-#: src/preferences.ui:882 src/preferences.ui:980
+#: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
 msgstr "Премахване на избраният път"
 
-#: src/preferences.ui:908
+#: src/preferences.ui:899
 msgid "Include"
 msgstr "Включване"
 
-#: src/preferences.ui:964
+#: src/preferences.ui:956
 msgid "Add path to be excluded from database"
 msgstr "Добавянето на пътя ще бъде изключено от базата с данни"
 
-#: src/preferences.ui:1016 src/preferences.ui:1029
+#: src/preferences.ui:1008 src/preferences.ui:1021
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Поддържа заместващи символи. Многократните записи трябва да бъдат разделени "
 "от ';'"
 
-#: src/preferences.ui:1017
+#: src/preferences.ui:1009
 msgid "Exclude files:"
 msgstr "Изключване на файлове:"
 
-#: src/preferences.ui:1030
+#: src/preferences.ui:1022
 msgid "e.g. \".git;*.tmp\""
 msgstr "напр. \".git;*.tmp\""
 
-#: src/preferences.ui:1047
+#: src/preferences.ui:1039
 msgid "Exclude hidden files and folders"
 msgstr "Изключване на скритите файлове и папки"
 
-#: src/preferences.ui:1068
+#: src/preferences.ui:1061
 msgid "Exclude"
 msgstr "Изключване"
 
-#: src/preferences.ui:1091
+#: src/preferences.ui:1084
 msgid "Database"
 msgstr "База с данни"
 
-#: src/preferences.ui:1123
+#: src/preferences.ui:1116
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -624,7 +609,7 @@ msgstr ""
 "Имайте предвид, че не всички системни теми имат тъмен вариант, така, че "
 "включването на тази настройка може да няма ефект."
 
-#: src/preferences.ui:1140
+#: src/preferences.ui:1134
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -645,7 +630,7 @@ msgstr ""
 "Това е по-традиционно оформление на потребителския интерфейс и отнема малко "
 "повече място."
 
-#: src/preferences.ui:1159
+#: src/preferences.ui:1154
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -665,7 +650,7 @@ msgstr ""
 "  <b>Десетични единици:</b> Това се отнася до десетичните SI префикси "
 "<i>(напр. 1 kB = 1000 bytes)</i>"
 
-#: src/preferences.ui:1178
+#: src/preferences.ui:1174
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -683,7 +668,7 @@ msgstr ""
 "Имайте предвид, че някои мениджъри на прозорци пренебрегват тази заявка и "
 "принуждават прозореца да има различен размер."
 
-#: src/preferences.ui:1196
+#: src/preferences.ui:1193
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -715,7 +700,7 @@ msgstr ""
 "\t• <b>клаваишна комбинация или елементите от менюто</b> и/или\n"
 "\t• <b>кликване с мишката</b>"
 
-#: src/preferences.ui:1220
+#: src/preferences.ui:1218
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -741,7 +726,7 @@ msgstr ""
 "Това също е приложимо за регулярни изрази и изрази със заместващи символи, "
 "започващи или завършващи със звездичка. "
 
-#: src/preferences.ui:1241
+#: src/preferences.ui:1240
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -764,7 +749,7 @@ msgstr ""
 "Ако е активирано в имената на колоните ще бъдат показвани икони на файл/"
 "папка."
 
-#: src/preferences.ui:1273
+#: src/preferences.ui:1274
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -778,7 +763,7 @@ msgstr ""
 "предходната сесия ще бъде възстановена, когато отново отворите прозореца на "
 "FSearch. Това включва размера и видомостта на всички колони."
 
-#: src/preferences.ui:1289
+#: src/preferences.ui:1291
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -790,7 +775,7 @@ msgstr ""
 "Ако е активирано, редът на сортиране на изгледа с резултати от предишната "
 "сесия ще бъде възстановен, когато отворите прозореца на FSearch."
 
-#: src/preferences.ui:1305
+#: src/preferences.ui:1308
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
@@ -801,7 +786,7 @@ msgstr ""
 "Ако е активирано, при двойно кликване в колоната с пътя ще бъде отворен "
 "избраният път."
 
-#: src/preferences.ui:1321
+#: src/preferences.ui:1325
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -816,7 +801,7 @@ msgstr ""
 "настройка е активна, вие трябва да задържите <i>Ctrl</i> по времето, когато "
 "кликвате върху файла/папката."
 
-#: src/preferences.ui:1337
+#: src/preferences.ui:1342
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -828,7 +813,7 @@ msgstr ""
 "Ако е активирано, пътят, който в момента се индексира, се показва в лентата "
 "на състоянието."
 
-#: src/preferences.ui:1353
+#: src/preferences.ui:1359
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -842,7 +827,7 @@ msgstr ""
 "\n"
 " файл или папка не могат да бъдат отворени\n"
 
-#: src/preferences.ui:1372
+#: src/preferences.ui:1379
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -851,10 +836,10 @@ msgid ""
 msgstr ""
 "<b>Търсене в пътя, когато заявката съдържа разделители на пътища:</b>\n"
 "\n"
-"Ако е активирано, думите за търсене, съдържащи разделители на пътища (т.е. \""
-"/\"), ще бъдат автоматично съпоставени с пълния път на файл или папка."
+"Ако е активирано, думите за търсене, съдържащи разделители на пътища (т.е. "
+"\"/\"), ще бъдат автоматично съпоставени с пълния път на файл или папка."
 
-#: src/preferences.ui:1388
+#: src/preferences.ui:1396
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -862,15 +847,15 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
-"<b>Съвпадение на регистър, когато заявката съдържа поне един главен знак:</b>"
-"\n"
+"<b>Съвпадение на регистър, когато заявката съдържа поне един главен знак:</"
+"b>\n"
 "\n"
 "Ако е активирана, думите за търсене, съдържащи поне един главен регистър, ще "
 "задействат търсене, чувствително на малки и големи букви. Това означава, че "
 "термин за търсене като <i> Foo </i> ще съответства на <i> FooBar.txt </i>, "
 "но не и <i> foobar.txt </i>."
 
-#: src/preferences.ui:1404
+#: src/preferences.ui:1413
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -887,7 +872,7 @@ msgstr ""
 "Ако е изключено, ще се показват всички файлове и папки, когато няма "
 "резултати от търсенето."
 
-#: src/preferences.ui:1422
+#: src/preferences.ui:1432
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -904,25 +889,7 @@ msgstr ""
 "Ако е изключено, търсенето ще бъде обновено само след натискане на <i>Enter</"
 "i> или на бутона за търсене. "
 
-#: src/preferences.ui:1440
-msgid ""
-"<b>Limit number of results:</b>\n"
-"\n"
-"If enabled, the number of search results will be limited to the specified "
-"number.\n"
-"\n"
-"Displaying lots of results has a significant performance impact, especially "
-"when the list isn't sorted by name. This will be improved in future versions."
-msgstr ""
-"<b>Ограничаване на броят на резултатите:</b>\n"
-"\n"
-"Ако е активирано, броят на резултатите ще бъде ограничен до зададения брой.\n"
-"\n"
-"Показването на много резултати има значително въздействие върху "
-"производителността, особено когато списъкът не е сортиран по име. Това ще "
-"бъде подобрено в бъдещи версии."
-
-#: src/preferences.ui:1458
+#: src/preferences.ui:1451
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -934,19 +901,35 @@ msgstr ""
 "Ако е активирано, базата с данни ще бъде обновена във фонов режим, когато "
 "стартирате FSearch."
 
-#: src/preferences.ui:1474
+#: src/preferences.ui:1468
+#, fuzzy
+#| msgid ""
+#| "<b>Included folders:</b>\n"
+#| "\n"
+#| "This list contains all folders you want to include in the database.\n"
+#| "\n"
+#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
+#| "be searched in.\n"
+#| "\t• <b>Path:</b> The full path to be included.\n"
+#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
+#| "paths from being\n"
+#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
+#| "often)</i>"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
-"This list contains all folders you want to include in the database.\n"
+"                      This list contains all folders you want to include in "
+"the database.\n"
 "\n"
-"\t• <b>Active:</b> If enabled, the path will included in the database to be "
-"searched in.\n"
-"\t• <b>Path:</b> The full path to be included.\n"
-"\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-"paths from being\n"
-"\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-"often)</i>"
+"                      • <b>Active:</b> If enabled, the path will included in "
+"the database to be searched in.\n"
+"                      • <b>Path:</b> The full path to be included.\n"
+"                      • <b>Update:</b> This setting is useful if you want to "
+"exclude certain paths from\n"
+"                      being\n"
+"                      updated <i>(e.g. a path to a slow USB drive which "
+"doesn't change often)</i>\n"
+"                    "
 msgstr ""
 "<b>Включени папки</b>\n"
 "\n"
@@ -961,12 +944,20 @@ msgstr ""
 "при обновяване <i>(напр. път към бавно USB устройство, което не се променя "
 "често)</i>"
 
-#: src/preferences.ui:1495
+#: src/preferences.ui:1492
+#, fuzzy
+#| msgid ""
+#| "<b>Add folder to database:</b>\n"
+#| "\n"
+#| "This button opens a dialog where you can select a folder you want to "
+#| "include in the database for searching."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
-"This button opens a dialog where you can select a folder you want to include "
-"in the database for searching."
+"                      This button opens a dialog where you can select a "
+"folder you want to include in the database for\n"
+"                      searching.\n"
+"                    "
 msgstr ""
 "<b>Добавяне на папка към базата с данни:</b>\n"
 "\n"
@@ -974,16 +965,23 @@ msgstr ""
 "бъде включена в базата с данни за търсене."
 
 #: src/preferences.ui:1511
+#, fuzzy
+#| msgid ""
+#| "<b>Remove selected row:</b>\n"
+#| "\n"
+#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
-"This removes the selected folder from the list of included folders."
+"                      This removes the selected folder from the list of "
+"included folders.\n"
+"                    "
 msgstr ""
 "<b>Премахване на избраният ред:</b>\n"
 "\n"
 "Това премахва избраната папка от списъка с включените папки."
 
-#: src/preferences.ui:1527
+#: src/preferences.ui:1529
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -1003,7 +1001,7 @@ msgstr ""
 "и не може да се извърши търсене в него.\n"
 "• <b>Път:</b> Пълният път ще бъде изключен."
 
-#: src/preferences.ui:1547
+#: src/preferences.ui:1550
 msgid ""
 "<b>Exclude folder from database:</b>\n"
 "\n"
@@ -1015,7 +1013,7 @@ msgstr ""
 "Този бутон отваря диалог, където ще можете да изберете папка, която да "
 "изключите от базата с данни."
 
-#: src/preferences.ui:1563
+#: src/preferences.ui:1567
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -1025,7 +1023,7 @@ msgstr ""
 "\n"
 "Това премахва избраната папка от списъка с изключените папки."
 
-#: src/preferences.ui:1579
+#: src/preferences.ui:1584
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -1041,7 +1039,7 @@ msgstr ""
 "всички файлове или папки, които се наричат <i> .git </i> или <i> .cache </i> "
 "или завършват с <i> .swp </i>."
 
-#: src/preferences.ui:1595
+#: src/preferences.ui:1601
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -1053,13 +1051,13 @@ msgstr ""
 "Ако е активирано, скритите файлове и папки ще бъдат изключени от базата с "
 "данни <i>(т.е. всички файлове или папки, които започват с точка)</i>."
 
-#: src/preferences.ui:1611
+#: src/preferences.ui:1618
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 "Фокусирайте настройката, за да получите подробно описание на това, което "
 "прави."
 
-#: src/preferences.ui:1623
+#: src/preferences.ui:1631
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -1083,25 +1081,69 @@ msgstr ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 
-#: src/preferences.ui:1645
+#: src/preferences.ui:1654
 msgid "Help"
 msgstr "Помощ"
 
-#: src/preferences_ui.c:183 src/preferences_ui.c:198
-msgid "Select folder"
-msgstr "Избор на папка"
+#: src/statusbar.glade:43
+msgid "Number of Search Results"
+msgstr "Брой на резултатите от търсенето"
 
-#: src/preferences_ui.c:186 src/preferences_ui.c:198 src/preferences_ui.c:385
-msgid "_Cancel"
-msgstr "_Отказ"
+#: src/statusbar.glade:44
+msgid "0 Items"
+msgstr "0 елемента"
 
-#: src/preferences_ui.c:188 src/preferences_ui.c:198
-msgid "_Select"
-msgstr "_Избор"
+#: src/statusbar.glade:81
+msgid "Index:"
+msgstr "Индекс:"
 
-#: src/preferences_ui.c:386
-msgid "_OK"
-msgstr "_ОК"
+#: src/statusbar.glade:156
+msgid "Number of selected folders"
+msgstr "Брой на избраните папки"
+
+#: src/statusbar.glade:157 src/statusbar.glade:182
+msgid "0/0"
+msgstr "0/0"
+
+#: src/statusbar.glade:181
+msgid "Number of selected files"
+msgstr "Брой на избраните файлове"
+
+#: src/statusbar.glade:297
+msgid "Number of database items"
+msgstr "Брой на елементите в базата с данни"
+
+#: src/statusbar.glade:298
+msgid "(empty)"
+msgstr "(празно)"
+
+#: src/statusbar.glade:335
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+"Думата за търсене съдържа главни букви.\n"
+"<b>Точно съвпадение</b> е временно активирано за този израз."
+
+#: src/statusbar.glade:366 src/statusbar.glade:419
+msgid "CASE"
+msgstr "Папка"
+
+#: src/statusbar.glade:442
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+"Търсеният израз съдържа разделители.\n"
+"<b>Търсене в пътя</b> е временно активирано за този израз."
+
+#: src/statusbar.glade:473 src/statusbar.glade:526
+msgid "PATH"
+msgstr "Път"
+
+#: src/statusbar.glade:579
+msgid "REGEX"
+msgstr "Регулярен израз"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
@@ -1120,6 +1162,46 @@ msgstr ""
 "търсене;fsearch;файлове;папки;музика;видео;документи;намиране;инструмент;"
 "всичко;"
 
+#~ msgid "Building lookup list…"
+#~ msgstr "Изграждане на списък за търсене …"
+
+#~ msgid "Update"
+#~ msgstr "Обновяване"
+
+#~ msgid "≥%'d Items"
+#~ msgstr "≥%'d елемента"
+
+#~ msgid "Last Updated: %Y-%m-%d %H:%M"
+#~ msgstr "Последно обновяване: %Y-%m-%d %H:%M"
+
+#~ msgid "_Delete"
+#~ msgstr "_Изтриване"
+
+#~ msgid "…"
+#~ msgstr "…"
+
+#~ msgid "Limit number of results:"
+#~ msgstr "Ограничаване броя на резултатите:"
+
+#~ msgid ""
+#~ "<b>Limit number of results:</b>\n"
+#~ "\n"
+#~ "If enabled, the number of search results will be limited to the specified "
+#~ "number.\n"
+#~ "\n"
+#~ "Displaying lots of results has a significant performance impact, "
+#~ "especially when the list isn't sorted by name. This will be improved in "
+#~ "future versions."
+#~ msgstr ""
+#~ "<b>Ограничаване на броят на резултатите:</b>\n"
+#~ "\n"
+#~ "Ако е активирано, броят на резултатите ще бъде ограничен до зададения "
+#~ "брой.\n"
+#~ "\n"
+#~ "Показването на много резултати има значително въздействие върху "
+#~ "производителността, особено когато списъкът не е сортиран по име. Това ще "
+#~ "бъде подобрено в бъдещи версии."
+
 #~ msgid "Background tasks are active."
 #~ msgstr "Задачите във фонов режим са активни."
 
@@ -1134,9 +1216,6 @@ msgstr ""
 #~ msgstr ""
 #~ "Отидете до <b>Редактиране → Настройки → База с данни</b> и добавете "
 #~ "желаните местоположения"
-
-#~ msgid "page2"
-#~ msgstr "страница2"
 
 #~ msgid "page3"
 #~ msgstr "страница3"
@@ -1333,9 +1412,6 @@ msgstr ""
 
 #~ msgid "files?"
 #~ msgstr "файловете?"
-
-#~ msgid "Other Application"
-#~ msgstr "Друга програма"
 
 #~ msgid "C_ut"
 #~ msgstr "Отрязване"

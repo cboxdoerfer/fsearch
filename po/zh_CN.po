@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-03-14 16:52+0100\n"
+"POT-Creation-Date: 2021-06-01 18:21+0200\n"
 "PO-Revision-Date: 2021-04-18 07:27+0000\n"
 "Last-Translator: thinksung <thinksung@sina.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,41 +19,31 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.6-dev\n"
 
-#: src/database.c:794
-msgid "Building lookup list…"
-msgstr "构建查找列表…"
-
-#: src/database.c:802
-#, fuzzy
-#| msgid "Sorting..."
-msgid "Sorting…"
-msgstr "排序中…"
-
-#: src/fsearch.c:382
+#: src/fsearch.c:341
 msgid "translator-credits"
 msgstr "翻译人员"
 
-#: src/fsearch.c:384
+#: src/fsearch.c:343
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
-#: src/fsearch.c:673
+#: src/fsearch.c:798
 msgid "Open a new application window"
 msgstr "开启新窗口"
 
-#: src/fsearch.c:674
+#: src/fsearch.c:799
 msgid "Show the application preferences"
 msgstr "显示首选项"
 
-#: src/fsearch.c:675
+#: src/fsearch.c:800
 msgid "Update the database and exit"
 msgstr "更新数据库并退出"
 
-#: src/fsearch.c:676
+#: src/fsearch.c:801
 msgid "Print version information and exit"
 msgstr "显示版本信息并退出"
 
-#: src/fsearch.glade:73
+#: src/fsearch.glade:68
 msgid "New window"
 msgstr "新窗口打开"
 
@@ -61,245 +51,222 @@ msgstr "新窗口打开"
 msgid "Update database"
 msgstr "更新数据源"
 
-#: src/fsearch.glade:103 src/fsearch.glade:630
+#: src/fsearch.glade:102 src/statusbar.glade:256
 msgid "Cancel database update"
 msgstr "取消更新数据库"
 
-#: src/fsearch.glade:137 src/menus.ui:112
+#: src/fsearch.glade:143 src/menus.ui:112
 msgid "Search in Path"
 msgstr "搜索路径"
 
-#: src/fsearch.glade:151 src/menus.ui:116
+#: src/fsearch.glade:157 src/menus.ui:116
 msgid "Match Case"
 msgstr "区分大小写"
 
-#: src/fsearch.glade:165 src/menus.ui:120
+#: src/fsearch.glade:171 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "启用正则"
 
-#: src/fsearch.glade:190 src/menus.ui:95
+#: src/fsearch.glade:196 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "显示状态栏"
 
-#: src/fsearch.glade:204 src/menus.ui:99
+#: src/fsearch.glade:210 src/menus.ui:99
 msgid "Show Filter"
 msgstr "筛选设置"
 
-#: src/fsearch.glade:218 src/menus.ui:103
+#: src/fsearch.glade:224 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "显示搜索按钮"
 
-#: src/fsearch.glade:244 src/menus.ui:84 src/preferences.ui:48
+#: src/fsearch.glade:250 src/menus.ui:84 src/preferences.ui:43
 msgid "Preferences"
 msgstr "选项"
 
-#: src/fsearch.glade:269 src/menus.ui:129
+#: src/fsearch.glade:275 src/menus.ui:129
 msgid "About"
 msgstr "关于"
 
-#: src/fsearch.glade:294 src/menus.ui:47
+#: src/fsearch.glade:300 src/menus.ui:47
 msgid "Quit"
 msgstr "退出"
 
-#: src/fsearch.glade:417
-msgid "Number of Search Results"
-msgstr "搜索到的数量"
-
-#: src/fsearch.glade:418
-msgid "0 Items"
-msgstr "0 项"
-
-#: src/fsearch.glade:455
-msgid "Index:"
-msgstr "索引"
-
-#: src/fsearch.glade:530
-msgid "Number of selected folders"
-msgstr "已择文件夹的数量"
-
-#: src/fsearch.glade:531 src/fsearch.glade:556
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch.glade:555
-msgid "Number of selected files"
-msgstr "选定的文件数量"
-
-#: src/fsearch.glade:614 src/fsearch_window.c:140 src/overlay.ui:102
-#, c-format
-msgid "Updating Database…"
-msgstr "数据库更新中…"
-
-#: src/fsearch.glade:647
-msgid "page0"
-msgstr "第0页"
-
-#: src/fsearch.glade:671
-msgid "Number of database items"
-msgstr "数据库的项目数"
-
-#: src/fsearch.glade:672
-msgid "(empty)"
-msgstr "(空)"
-
-#: src/fsearch.glade:683
-msgid "page1"
-msgstr "页1"
-
-#: src/fsearch.glade:709
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-"搜索词包含大写字符。\n"
-"<b>匹配大小写</b>在这个搜索词被暂时激活。"
-
-#: src/fsearch.glade:740 src/fsearch.glade:793
-msgid "CASE"
-msgstr "实例"
-
-#: src/fsearch.glade:816
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-"搜索关键词包含路径分隔符。\n"
-"该词暂时启用了<b>匹配路径</b>。"
-
-#: src/fsearch.glade:847 src/fsearch.glade:900
-msgid "PATH"
-msgstr "路径"
-
-#: src/fsearch.glade:953
-msgid "REGEX"
-msgstr "正则表达式"
-
-#: src/fsearch.glade:1073
+#: src/fsearch.glade:408
 msgid "Search…"
 msgstr "搜索…"
 
-#: src/fsearch.glade:1095
+#: src/fsearch.glade:430
 msgid "Select a Filter"
 msgstr "选择筛选器"
 
-#: src/fsearch.glade:1126 src/preferences.ui:690
+#: src/fsearch.glade:461 src/preferences.ui:676
 msgid "Search"
 msgstr "搜索"
 
-#: src/fsearch_filter.c:79
+#: src/fsearch_database.c:633
+#, fuzzy
+#| msgid "Loading Database…"
+msgid "Loading folders…"
+msgstr "加载数据库…"
+
+#: src/fsearch_database.c:641
+#, fuzzy
+#| msgid "Deleting files…"
+msgid "Loading files…"
+msgstr "删除文件中…"
+
+#: src/fsearch_file_utils.c:265
+#, fuzzy
+#| msgid "Folders"
+msgid "Folder"
+msgstr "文件夹"
+
+#: src/fsearch_file_utils.c:271
+msgid "Unknown Type"
+msgstr ""
+
+#: src/fsearch_filter.c:98
 msgid "All"
 msgstr "所有"
 
-#: src/fsearch_filter.c:81
+#: src/fsearch_filter.c:100
 msgid "Folders"
 msgstr "文件夹"
 
-#: src/fsearch_filter.c:82
+#: src/fsearch_filter.c:101
 msgid "Files"
 msgstr "文件"
 
-#: src/fsearch_filter.c:84
+#: src/fsearch_filter.c:103
 msgid "Archives"
 msgstr "归档文件"
 
-#: src/fsearch_filter.c:86
+#: src/fsearch_filter.c:105
 msgid "Audio"
 msgstr "音频"
 
-#: src/fsearch_filter.c:89
+#: src/fsearch_filter.c:108
 msgid "Documents"
 msgstr "文档"
 
-#: src/fsearch_filter.c:91
+#: src/fsearch_filter.c:110
 msgid "Pictures"
 msgstr "图片"
 
-#: src/fsearch_filter.c:93
+#: src/fsearch_filter.c:112
 msgid "Videos"
 msgstr "视频"
+
+#: src/fsearch_listview_popup.c:64
+#, fuzzy
+#| msgid "Other Application"
+msgid "Other Application…"
+msgstr "其他应用程序"
+
+#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
+#, fuzzy
+msgid "Select folder"
+msgstr "选择筛选器"
+
+#: src/fsearch_preferences_ui.c:187 src/fsearch_preferences_ui.c:199
+#: src/fsearch_preferences_ui.c:391
+#, fuzzy
+msgid "_Cancel"
+msgstr "更新"
+
+#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:199
+#, fuzzy
+msgid "_Select"
+msgstr "取消所有选择"
+
+#: src/fsearch_preferences_ui.c:392
+msgid "_OK"
+msgstr ""
 
 #: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
 msgid "Active"
 msgstr "激活"
 
 #: src/fsearch_preferences_widgets.c:184 src/fsearch_preferences_widgets.c:223
-#: src/listview.c:209 src/menus.ui:222
+#: src/fsearch_window.c:708 src/menus.ui:216
 msgid "Path"
 msgstr "路径"
 
-#: src/fsearch_preferences_widgets.c:187
-msgid "Update"
-msgstr "更新"
+#: src/fsearch_statusbar.c:53
+msgid "Querying…"
+msgstr "查询中…"
 
-#: src/fsearch_window.c:119 src/overlay.ui:32
-#, c-format
-msgid "Loading Database…"
-msgstr "加载数据库…"
+#: src/fsearch_statusbar.c:140
+#, fuzzy
+#| msgid "Sorting..."
+msgid "Loading…"
+msgstr "排序中…"
 
-#: src/fsearch_window.c:160 src/fsearch_window.c:521 src/fsearch_window.c:987
+#: src/fsearch_statusbar.c:145
+#, fuzzy
+#| msgid "Sorting..."
+msgid "Scanning…"
+msgstr "排序中…"
+
+#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
 msgid "%'d Items"
 msgstr "%'d 项"
 
-#: src/fsearch_window.c:449 src/fsearch_window.c:616
-msgid "Querying…"
-msgstr "查询中…"
-
-#: src/fsearch_window.c:518
-#, fuzzy, c-format
-#| msgid "%'d Items"
-msgid "≥%'d Items"
-msgstr "%'d 项"
-
-#: src/fsearch_window.c:804 src/fsearch_window_actions.c:413
+#: src/fsearch_window.c:607 src/fsearch_window_actions.c:349
 msgid "Failed to open file"
 msgstr "打开文件失败"
 
-#: src/fsearch_window.c:805 src/fsearch_window_actions.c:414
+#: src/fsearch_window.c:608 src/fsearch_window_actions.c:350
 msgid "Do you want to keep the window open?"
 msgstr "是否保持窗口打开？"
 
-#: src/fsearch_window.c:993
-msgid "Last Updated: %Y-%m-%d %H:%M"
-msgstr "最后更新: %Y-%m-%d %H:%M"
+#: src/fsearch_window.c:701 src/menus.ui:212
+msgid "Name"
+msgstr "名称"
 
-#: src/fsearch_window_actions.c:77
+#: src/fsearch_window.c:715 src/menus.ui:224
+msgid "Size"
+msgstr "大小"
+
+#: src/fsearch_window.c:722 src/menus.ui:220
+msgid "Type"
+msgstr "类型"
+
+#: src/fsearch_window.c:729 src/menus.ui:228
+msgid "Date Modified"
+msgstr "修改日期"
+
+#: src/fsearch_window.c:743
+msgid ""
+"Sorting by <b>Type</b> can be very slow with many results and it can't be "
+"aborted.\n"
+"\n"
+"This sort order is not persistent, it will be reset when the search term "
+"changes."
+msgstr ""
+
+#: src/fsearch_window_actions.c:88
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "确认要打开%d吗？"
 
-#: src/fsearch_window_actions.c:79
+#: src/fsearch_window_actions.c:90
 msgid "Opening Files…"
 msgstr "打开文件中…"
 
-#: src/fsearch_window_actions.c:148
+#: src/fsearch_window_actions.c:132
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "确认要删除%d吗？"
 
-#: src/fsearch_window_actions.c:152
+#: src/fsearch_window_actions.c:136
 msgid "Deleting files…"
 msgstr "删除文件中…"
 
-#: src/fsearch_window_actions.c:152
+#: src/fsearch_window_actions.c:136
 msgid "Moving files to trash…"
 msgstr "正在移动文件到回收站…"
-
-#: src/listview.c:184 src/menus.ui:218
-msgid "Name"
-msgstr "名称"
-
-#: src/listview.c:236 src/menus.ui:230
-msgid "Size"
-msgstr "大小"
-
-#: src/listview.c:254 src/menus.ui:234
-msgid "Date Modified"
-msgstr "修改日期"
-
-#: src/listview.c:271 src/menus.ui:226
-msgid "Type"
-msgstr "类型"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -382,236 +349,256 @@ msgstr "(_C)复制文件路径"
 msgid "Move to _Trash"
 msgstr "移动到回收站"
 
-#: src/menus.ui:200
-msgid "_Delete"
-msgstr "_删除"
-
-#: src/overlay.ui:46 src/overlay.ui:116
-msgid "…"
-msgstr "…"
-
-#: src/overlay.ui:61
-msgid "This won't take long."
-msgstr "不会花很长时间。"
-
-#: src/overlay.ui:131
-msgid "This may take a while."
-msgstr "可能需要一些时间。"
-
-#: src/overlay.ui:172
-msgid "Empty Query"
-msgstr "空的查询"
-
-#: src/overlay.ui:187
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "按 <b>Ctrl + F</b> 开始输入"
-
-#: src/overlay.ui:234
+#: src/overlay.ui:43
 msgid "Empty Database"
 msgstr "空数据库"
 
-#: src/overlay.ui:250
+#: src/overlay.ui:59
 #, fuzzy
 msgid "Add folders"
 msgstr "文件夹"
 
-#: src/overlay.ui:292
+#: src/overlay.ui:76 src/overlay.ui:271 src/statusbar.glade:273
+msgid "page0"
+msgstr "第0页"
+
+#: src/overlay.ui:107
+msgid "Loading Database…"
+msgstr "加载数据库…"
+
+#: src/overlay.ui:122
+msgid "This won't take long."
+msgstr "不会花很长时间。"
+
+#: src/overlay.ui:138 src/overlay.ui:333 src/statusbar.glade:309
+msgid "page1"
+msgstr "页1"
+
+#: src/overlay.ui:170 src/statusbar.glade:240
+msgid "Updating Database…"
+msgstr "数据库更新中…"
+
+#: src/overlay.ui:185 src/overlay.ui:380
+msgid "This may take a while."
+msgstr "可能需要一些时间。"
+
+#: src/overlay.ui:201
+#, fuzzy
+#| msgid "page0"
+msgid "page2"
+msgstr "页0"
+
+#: src/overlay.ui:239
+msgid "Empty Query"
+msgstr "空的查询"
+
+#: src/overlay.ui:254
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "按 <b>Ctrl + F</b> 开始输入"
+
+#: src/overlay.ui:302
 msgid "No Results Found"
 msgstr "没有找到结果"
 
-#: src/overlay.ui:307
+#: src/overlay.ui:317
 msgid "Try a different search"
 msgstr "试试其他搜索条件"
 
-#: src/preferences.ui:116
+#: src/overlay.ui:365
+#, fuzzy
+#| msgid "Sorting..."
+msgid "Sorting results…"
+msgstr "排序中…"
+
+#: src/preferences.ui:112
 msgid "Enable dark theme"
 msgstr "启用暗色主题"
 
-#: src/preferences.ui:130
+#: src/preferences.ui:127
 msgid "Enable client-side decorations (requires restart)"
 msgstr "启用客户端装饰（需要重启）"
 
-#: src/preferences.ui:144
+#: src/preferences.ui:142
 msgid "Use binary units instead of decimal units"
 msgstr "使用二进制单位（代替十进制单位）"
 
-#: src/preferences.ui:159
+#: src/preferences.ui:158
 msgid "Remember window size"
 msgstr "记住窗口大小"
 
-#: src/preferences.ui:194
+#: src/preferences.ui:195
 msgid "with keyboard shortcuts or menu entries"
 msgstr "使用快捷键或菜单"
 
-#: src/preferences.ui:209
+#: src/preferences.ui:210
 msgid "with double click"
 msgstr "使用双击"
 
-#: src/preferences.ui:237
+#: src/preferences.ui:238
 msgid "Behaviour after successfully opening a file:"
 msgstr "打开文件成功后的动作："
 
-#: src/preferences.ui:253
+#: src/preferences.ui:254
 msgid "Nothing"
 msgstr "无"
 
-#: src/preferences.ui:254
+#: src/preferences.ui:255
 msgid "Minimize"
 msgstr "最小化"
 
-#: src/preferences.ui:255
+#: src/preferences.ui:256
 msgid "Close"
 msgstr "关闭"
 
-#: src/preferences.ui:281
+#: src/preferences.ui:282
 msgid "General:"
 msgstr "常规："
 
-#: src/preferences.ui:316
+#: src/preferences.ui:317
 msgid "Show highlighted search terms"
 msgstr "高亮显示搜索词"
 
-#: src/preferences.ui:331
+#: src/preferences.ui:333
 msgid "Show tooltips"
 msgstr "显示工具提示"
 
-#: src/preferences.ui:345
+#: src/preferences.ui:348
 msgid "Show icons in name column"
 msgstr "显示图标"
 
-#: src/preferences.ui:359
+#: src/preferences.ui:363
 msgid "Remember column configuration"
 msgstr "记住列的配置"
 
-#: src/preferences.ui:373
+#: src/preferences.ui:378
 msgid "Remember sort order"
 msgstr "记住排列顺序"
 
-#: src/preferences.ui:387
+#: src/preferences.ui:393
 msgid "Open path with double click in path column"
 msgstr "在路径列中双击打开路径"
 
-#: src/preferences.ui:401
+#: src/preferences.ui:408
 msgid "Single click to open"
 msgstr "单击打开"
 
-#: src/preferences.ui:421
+#: src/preferences.ui:429
 msgid "Results:"
 msgstr "结果："
 
-#: src/preferences.ui:462
+#: src/preferences.ui:470
 #, fuzzy
 msgid "Show database indexing status"
 msgstr "启动时更新数据库"
 
-#: src/preferences.ui:482
+#: src/preferences.ui:491
 msgid "Statusbar:"
 msgstr "状态栏："
 
-#: src/preferences.ui:523
+#: src/preferences.ui:532
 msgid "Show warning dialogs when:"
 msgstr "显示警告窗口，当："
 
-#: src/preferences.ui:533
+#: src/preferences.ui:542
 msgid "file / folder failed to open"
 msgstr "文件或目录打开失败"
 
-#: src/preferences.ui:555
+#: src/preferences.ui:565
 #, fuzzy
 msgid "Dialogs:"
 msgstr "对话框："
 
-#: src/preferences.ui:580
+#: src/preferences.ui:590
 msgid "Interface"
 msgstr "接口"
 
-#: src/preferences.ui:599
-msgid "Limit number of results:"
-msgstr "限制结果的数量:"
-
-#: src/preferences.ui:627
+#: src/preferences.ui:609
 msgid "Search in path when query contains path separators"
 msgstr "搜索路径(如有路径分隔符)"
 
-#: src/preferences.ui:641
+#: src/preferences.ui:624
 msgid "Search as you type"
 msgstr "即时搜索"
 
-#: src/preferences.ui:655
+#: src/preferences.ui:639
 msgid "Hide results when search is empty"
 msgstr "搜索条件为空时不显示结果"
 
-#: src/preferences.ui:669
+#: src/preferences.ui:654
 msgid "Match case when query contains at least one upper case character"
 msgstr "当查询至少包含一个大写字符时，区分大小写"
 
-#: src/preferences.ui:709
+#: src/preferences.ui:695
 msgid "Update database on start"
 msgstr "启动时更新数据库"
 
-#: src/preferences.ui:727
+#: src/preferences.ui:715
 #, fuzzy
 #| msgid "Update"
 msgid "Update every"
 msgstr "更新"
 
-#: src/preferences.ui:748
+#: src/preferences.ui:737
 msgid "0"
 msgstr "0"
 
-#: src/preferences.ui:765
+#: src/preferences.ui:754
 msgid "hour(s) and"
 msgstr ""
 
-#: src/preferences.ui:777
+#: src/preferences.ui:766
 msgid "30"
 msgstr "30"
 
-#: src/preferences.ui:795
+#: src/preferences.ui:784
 msgid "minute(s)"
 msgstr "分钟"
 
-#: src/preferences.ui:866
-msgid "Add path to be included in database"
+#: src/preferences.ui:856
+#, fuzzy
+#| msgid "Add path to be included in database"
+msgid ""
+"Add path to be included in database\n"
+"                                "
 msgstr "添加要包含在数据库中的路径"
 
-#: src/preferences.ui:882 src/preferences.ui:980
+#: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
 msgstr "删除所选路径"
 
-#: src/preferences.ui:908
+#: src/preferences.ui:899
 msgid "Include"
 msgstr "包含"
 
-#: src/preferences.ui:964
+#: src/preferences.ui:956
 msgid "Add path to be excluded from database"
 msgstr "添加要从数据库中排除的路径"
 
-#: src/preferences.ui:1016 src/preferences.ui:1029
+#: src/preferences.ui:1008 src/preferences.ui:1021
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "支持通配符。多个条件必须用 ';' 分开"
 
-#: src/preferences.ui:1017
+#: src/preferences.ui:1009
 msgid "Exclude files:"
 msgstr "排除文件:"
 
-#: src/preferences.ui:1030
+#: src/preferences.ui:1022
 msgid "e.g. \".git;*.tmp\""
 msgstr "例如 \".git;*.tmp\""
 
-#: src/preferences.ui:1047
+#: src/preferences.ui:1039
 msgid "Exclude hidden files and folders"
 msgstr "不包含隐藏的文件及文件夹"
 
-#: src/preferences.ui:1068
+#: src/preferences.ui:1061
 msgid "Exclude"
 msgstr "排除"
 
-#: src/preferences.ui:1091
+#: src/preferences.ui:1084
 msgid "Database"
 msgstr "数据库"
 
-#: src/preferences.ui:1123
+#: src/preferences.ui:1116
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -622,7 +609,7 @@ msgid ""
 "enabling this setting might not have an effect."
 msgstr ""
 
-#: src/preferences.ui:1140
+#: src/preferences.ui:1134
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -634,7 +621,7 @@ msgid ""
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
 
-#: src/preferences.ui:1159
+#: src/preferences.ui:1154
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -646,7 +633,7 @@ msgid ""
 "= 1000 bytes)</i>"
 msgstr ""
 
-#: src/preferences.ui:1178
+#: src/preferences.ui:1174
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -657,7 +644,7 @@ msgid ""
 "have a different size."
 msgstr ""
 
-#: src/preferences.ui:1196
+#: src/preferences.ui:1193
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -675,7 +662,7 @@ msgid ""
 "\t• <b>mouse click</b>"
 msgstr ""
 
-#: src/preferences.ui:1220
+#: src/preferences.ui:1218
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -690,7 +677,7 @@ msgid ""
 "ending with an asterisk. "
 msgstr ""
 
-#: src/preferences.ui:1241
+#: src/preferences.ui:1240
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -705,7 +692,7 @@ msgid ""
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
 
-#: src/preferences.ui:1273
+#: src/preferences.ui:1274
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -714,7 +701,7 @@ msgid ""
 "size and visibility of all columns."
 msgstr ""
 
-#: src/preferences.ui:1289
+#: src/preferences.ui:1291
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -722,14 +709,14 @@ msgid ""
 "will be restored when you open an FSearch window."
 msgstr ""
 
-#: src/preferences.ui:1305
+#: src/preferences.ui:1308
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
 
-#: src/preferences.ui:1321
+#: src/preferences.ui:1325
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -738,7 +725,7 @@ msgid ""
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
 
-#: src/preferences.ui:1337
+#: src/preferences.ui:1342
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -746,7 +733,7 @@ msgid ""
 "statusbar."
 msgstr ""
 
-#: src/preferences.ui:1353
+#: src/preferences.ui:1359
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -755,7 +742,7 @@ msgid ""
 "\t•  a file or folder failed to open\n"
 msgstr ""
 
-#: src/preferences.ui:1372
+#: src/preferences.ui:1379
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -763,7 +750,7 @@ msgid ""
 "automatically matched against the full path of a file or folder."
 msgstr ""
 
-#: src/preferences.ui:1388
+#: src/preferences.ui:1396
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -772,7 +759,7 @@ msgid ""
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
 
-#: src/preferences.ui:1404
+#: src/preferences.ui:1413
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -782,7 +769,7 @@ msgid ""
 "is empty."
 msgstr ""
 
-#: src/preferences.ui:1422
+#: src/preferences.ui:1432
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -792,18 +779,7 @@ msgid ""
 "the search button. "
 msgstr ""
 
-#: src/preferences.ui:1440
-msgid ""
-"<b>Limit number of results:</b>\n"
-"\n"
-"If enabled, the number of search results will be limited to the specified "
-"number.\n"
-"\n"
-"Displaying lots of results has a significant performance impact, especially "
-"when the list isn't sorted by name. This will be improved in future versions."
-msgstr ""
-
-#: src/preferences.ui:1458
+#: src/preferences.ui:1451
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -811,37 +787,44 @@ msgid ""
 "when you start FSearch."
 msgstr ""
 
-#: src/preferences.ui:1474
+#: src/preferences.ui:1468
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
-"This list contains all folders you want to include in the database.\n"
+"                      This list contains all folders you want to include in "
+"the database.\n"
 "\n"
-"\t• <b>Active:</b> If enabled, the path will included in the database to be "
-"searched in.\n"
-"\t• <b>Path:</b> The full path to be included.\n"
-"\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-"paths from being\n"
-"\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-"often)</i>"
+"                      • <b>Active:</b> If enabled, the path will included in "
+"the database to be searched in.\n"
+"                      • <b>Path:</b> The full path to be included.\n"
+"                      • <b>Update:</b> This setting is useful if you want to "
+"exclude certain paths from\n"
+"                      being\n"
+"                      updated <i>(e.g. a path to a slow USB drive which "
+"doesn't change often)</i>\n"
+"                    "
 msgstr ""
 
-#: src/preferences.ui:1495
+#: src/preferences.ui:1492
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
-"This button opens a dialog where you can select a folder you want to include "
-"in the database for searching."
+"                      This button opens a dialog where you can select a "
+"folder you want to include in the database for\n"
+"                      searching.\n"
+"                    "
 msgstr ""
 
 #: src/preferences.ui:1511
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
-"This removes the selected folder from the list of included folders."
+"                      This removes the selected folder from the list of "
+"included folders.\n"
+"                    "
 msgstr ""
 
-#: src/preferences.ui:1527
+#: src/preferences.ui:1529
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -852,7 +835,7 @@ msgid ""
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
 
-#: src/preferences.ui:1547
+#: src/preferences.ui:1550
 msgid ""
 "<b>Exclude folder from database:</b>\n"
 "\n"
@@ -860,14 +843,14 @@ msgid ""
 "from the database."
 msgstr ""
 
-#: src/preferences.ui:1563
+#: src/preferences.ui:1567
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
 
-#: src/preferences.ui:1579
+#: src/preferences.ui:1584
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -877,7 +860,7 @@ msgid ""
 "end with <i>.swp</i>."
 msgstr ""
 
-#: src/preferences.ui:1595
+#: src/preferences.ui:1601
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -885,11 +868,11 @@ msgid ""
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
 
-#: src/preferences.ui:1611
+#: src/preferences.ui:1618
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 
-#: src/preferences.ui:1623
+#: src/preferences.ui:1631
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -903,29 +886,70 @@ msgid ""
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
 
-#: src/preferences.ui:1645
+#: src/preferences.ui:1654
 #, fuzzy
 msgid "Help"
 msgstr "_帮助"
 
-#: src/preferences_ui.c:183 src/preferences_ui.c:198
-#, fuzzy
-msgid "Select folder"
-msgstr "选择筛选器"
+#: src/statusbar.glade:43
+msgid "Number of Search Results"
+msgstr "搜索到的数量"
 
-#: src/preferences_ui.c:186 src/preferences_ui.c:198 src/preferences_ui.c:385
-#, fuzzy
-msgid "_Cancel"
-msgstr "更新"
+#: src/statusbar.glade:44
+msgid "0 Items"
+msgstr "0 项"
 
-#: src/preferences_ui.c:188 src/preferences_ui.c:198
-#, fuzzy
-msgid "_Select"
-msgstr "取消所有选择"
+#: src/statusbar.glade:81
+msgid "Index:"
+msgstr "索引"
 
-#: src/preferences_ui.c:386
-msgid "_OK"
+#: src/statusbar.glade:156
+msgid "Number of selected folders"
+msgstr "已择文件夹的数量"
+
+#: src/statusbar.glade:157 src/statusbar.glade:182
+msgid "0/0"
+msgstr "0/0"
+
+#: src/statusbar.glade:181
+msgid "Number of selected files"
+msgstr "选定的文件数量"
+
+#: src/statusbar.glade:297
+msgid "Number of database items"
+msgstr "数据库的项目数"
+
+#: src/statusbar.glade:298
+msgid "(empty)"
+msgstr "(空)"
+
+#: src/statusbar.glade:335
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"搜索词包含大写字符。\n"
+"<b>匹配大小写</b>在这个搜索词被暂时激活。"
+
+#: src/statusbar.glade:366 src/statusbar.glade:419
+msgid "CASE"
+msgstr "实例"
+
+#: src/statusbar.glade:442
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+"搜索关键词包含路径分隔符。\n"
+"该词暂时启用了<b>匹配路径</b>。"
+
+#: src/statusbar.glade:473 src/statusbar.glade:526
+msgid "PATH"
+msgstr "路径"
+
+#: src/statusbar.glade:579
+msgid "REGEX"
+msgstr "正则表达式"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
@@ -940,6 +964,29 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
 
+#~ msgid "Building lookup list…"
+#~ msgstr "构建查找列表…"
+
+#~ msgid "Update"
+#~ msgstr "更新"
+
+#, fuzzy
+#~| msgid "%'d Items"
+#~ msgid "≥%'d Items"
+#~ msgstr "%'d 项"
+
+#~ msgid "Last Updated: %Y-%m-%d %H:%M"
+#~ msgstr "最后更新: %Y-%m-%d %H:%M"
+
+#~ msgid "_Delete"
+#~ msgstr "_删除"
+
+#~ msgid "…"
+#~ msgstr "…"
+
+#~ msgid "Limit number of results:"
+#~ msgstr "限制结果的数量:"
+
 #~ msgid "Background tasks are active."
 #~ msgstr "后台任务处于活动状态。"
 
@@ -952,11 +999,6 @@ msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何�
 
 #~ msgid "Go to <b>Edit → Preferences → Database</b> and add some locations"
 #~ msgstr "前往 <b>编辑 → 选项 → 数据库</b> 添加路径"
-
-#, fuzzy
-#~| msgid "page0"
-#~ msgid "page2"
-#~ msgstr "页0"
 
 #, fuzzy
 #~| msgid "page0"
@@ -1160,9 +1202,6 @@ msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何�
 
 #~ msgid "files?"
 #~ msgstr "项文件?"
-
-#~ msgid "Other Application"
-#~ msgstr "其他应用程序"
 
 #~ msgid "C_ut"
 #~ msgstr "C_ut"
