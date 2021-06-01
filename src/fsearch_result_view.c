@@ -8,6 +8,7 @@
 #include "fsearch_query.h"
 
 #include <assert.h>
+#include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <math.h>
 #include <stdint.h>
@@ -315,6 +316,10 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         int32_t dx = 0;
         int32_t dw = 0;
         pango_layout_set_attributes(layout, NULL);
+
+        const char *text = NULL;
+        int text_len = -1;
+
         switch (column->type) {
         case DATABASE_INDEX_TYPE_NAME: {
             FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -335,24 +340,26 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
                                         rect->y + floor((rect->height - icon_size) / 2.0));
             }
             pango_layout_set_attributes(layout, ctx.name_attr);
-            pango_layout_set_text(layout, ctx.display_name, -1);
+            text = ctx.display_name;
         } break;
         case DATABASE_INDEX_TYPE_PATH:
             pango_layout_set_attributes(layout, ctx.path_attr);
-            pango_layout_set_text(layout, ctx.path->str, (int32_t)ctx.path->len);
+            text = ctx.path->str;
+            text_len = (int32_t)ctx.path->len;
             break;
         case DATABASE_INDEX_TYPE_SIZE:
-            pango_layout_set_text(layout, ctx.size, -1);
+            text = ctx.size;
             break;
         case DATABASE_INDEX_TYPE_FILETYPE:
-            pango_layout_set_text(layout, ctx.type, -1);
+            text = ctx.type;
             break;
         case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
-            pango_layout_set_text(layout, ctx.time, -1);
+            text = ctx.time;
             break;
         default:
-            pango_layout_set_text(layout, "Unknown column", -1);
+            text = NULL;
         }
+        pango_layout_set_text(layout, text ? text : _("Invalid row data"), text_len);
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);
         pango_layout_set_alignment(layout, column->alignment);
