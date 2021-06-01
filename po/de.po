@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-04-25 01:32+0000\n"
-"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
+"PO-Revision-Date: 2021-06-03 15:33+0000\n"
+"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -106,26 +106,20 @@ msgid "Search"
 msgstr "Suche"
 
 #: src/fsearch_database.c:633
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
-msgstr "Lade Datenbank…"
+msgstr "Lade Ordner…"
 
 #: src/fsearch_database.c:641
-#, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
-msgstr "Lösche Elemente …"
+msgstr "Lade Dateien …"
 
 #: src/fsearch_file_utils.c:265
-#, fuzzy
-#| msgid "Folders"
 msgid "Folder"
 msgstr "Ordner"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "Unbekannter Dateityp"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -160,10 +154,8 @@ msgid "Videos"
 msgstr "Videos"
 
 #: src/fsearch_listview_popup.c:64
-#, fuzzy
-#| msgid "Other Application"
 msgid "Other Application…"
-msgstr "Mit anderer Anwendung öffnen"
+msgstr "Andere Anwendung…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -196,16 +188,12 @@ msgid "Querying…"
 msgstr "Suche…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Loading…"
-msgstr "Sortiere …"
+msgstr "Lade…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Scanning…"
-msgstr "Sortiere …"
+msgstr "Scanne…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -244,6 +232,10 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Sortieren nach <b>Typ</b> ist unter Umständen sehr langsam und kann nicht "
+"abgebrochen werden.\n"
+"\n"
+"Diese Sortierreihenfolge wird außerdem bei der nächsten Suche zurückgesetzt."
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -400,10 +392,8 @@ msgid "Try a different search"
 msgstr "Versuche eine andere Suche"
 
 #: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Sorting results…"
-msgstr "Sortiere …"
+msgstr "Sortiere Ergebnisse…"
 
 #: src/preferences.ui:112
 msgid "Enable dark theme"
@@ -547,12 +537,12 @@ msgid "minute(s)"
 msgstr "Minute(n)"
 
 #: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Pfad zur Datenbank hinzufügen"
+msgstr ""
+"Pfad zur Datenbank hinzufügen\n"
+"                                "
 
 #: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
@@ -899,19 +889,6 @@ msgstr ""
 "im Hintergrund aktualisiert."
 
 #: src/preferences.ui:1468
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-#| "paths from being\n"
-#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-#| "often)</i>"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -939,15 +916,10 @@ msgstr ""
 "\t• <b>Aktualisieren:</b> Diese Einstellung legt fest, ob bestimmte Pfade "
 "aktualisiert werden\n"
 "\t\tsollen <i>(beispielsweise der Pfad zu einem langsamen USB Laufwerk, "
-"dessen Inhalt sich selten ändert).</i>"
+"dessen Inhalt sich selten ändert).</i>\n"
+"                    "
 
 #: src/preferences.ui:1492
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "include in the database for searching."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -958,14 +930,10 @@ msgid ""
 msgstr ""
 "<b>Pfad zu Datenbank hinzufügen:</b>\n"
 "\n"
-"Öffnet einen Dialog, um einen Ordner zur Suchdatenbank hinzuzufügen."
+"Öffnet einen Dialog, um einen Ordner zur Suchdatenbank hinzuzufügen.\n"
+"                    "
 
 #: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -976,7 +944,8 @@ msgstr ""
 "<b>Ausgewählten Pfad entfernen:</b>\n"
 "\n"
 "Entfernt den ausgewählten Ordner aus der Liste der Ordner, die in der "
-"Datenbank enthalten sind."
+"Datenbank enthalten sind.\n"
+"                    "
 
 #: src/preferences.ui:1529
 msgid ""
