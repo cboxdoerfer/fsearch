@@ -79,7 +79,7 @@ typedef struct {
     char time[100];
 } DrawRowContext;
 
-static void
+static bool
 draw_row_ctx_init(FsearchDatabaseView *view,
                   uint32_t row,
                   GdkWindow *bin_window,
@@ -87,9 +87,20 @@ draw_row_ctx_init(FsearchDatabaseView *view,
                   DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
+    bool ret = true;
     db_view_lock(view);
+
+    const uint32_t num_items = db_view_get_num_entries(view);
+    if (row >= num_items) {
+        g_debug("[draw_row] row idx out of bound");
+        ret = false;
+        goto out;
+    }
+
     GString *name = db_view_entry_get_name_for_idx(view, row);
     if (!name) {
+        g_debug("[draw_row] failed to get entry name");
+        ret = false;
         goto out;
     }
     ctx->display_name = g_filename_display_name(name->str);
@@ -131,6 +142,7 @@ out:
         name = NULL;
     }
     db_view_unlock(view);
+    return ret;
 }
 
 static void
@@ -272,7 +284,9 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
-    draw_row_ctx_init(view, row, bin_window, icon_size, &ctx);
+    if (!draw_row_ctx_init(view, row, bin_window, icon_size, &ctx)) {
+        return;
+    }
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
     if (row_selected) {
