@@ -279,8 +279,6 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         return;
     }
 
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext ctx = {};
@@ -317,6 +315,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         pango_layout_set_attributes(layout, NULL);
         switch (column->type) {
         case DATABASE_INDEX_TYPE_NAME: {
+            FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
             if (config->show_listview_icons && ctx.icon_surface) {
                 int32_t x_icon = x;
                 if (right_to_left_text) {
