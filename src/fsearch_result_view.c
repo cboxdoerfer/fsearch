@@ -90,6 +90,8 @@ draw_row_ctx_init(FsearchDatabaseView *view,
     bool ret = true;
     db_view_lock(view);
 
+    GString *name = NULL;
+
     const uint32_t num_items = db_view_get_num_entries(view);
     if (row >= num_items) {
         g_debug("[draw_row] row idx out of bound");
@@ -97,7 +99,7 @@ draw_row_ctx_init(FsearchDatabaseView *view,
         goto out;
     }
 
-    GString *name = db_view_entry_get_name_for_idx(view, row);
+    name = db_view_entry_get_name_for_idx(view, row);
     if (!name) {
         g_debug("[draw_row] failed to get entry name");
         ret = false;
