@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-03-21 18:29+0000\n"
+"PO-Revision-Date: 2021-06-03 15:33+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/fsearch.c:341
 msgid "translator-credits"
@@ -66,7 +66,7 @@ msgstr "Büyük/Küçük Harfe Duyarlı"
 
 #: src/fsearch.glade:171 src/menus.ui:120
 msgid "Enable RegEx"
-msgstr "RegEx'i Aktifleştir"
+msgstr "Düzenli İfadeleri Etkinleştir"
 
 #: src/fsearch.glade:196 src/menus.ui:95
 msgid "Show Statusbar"
@@ -78,7 +78,7 @@ msgstr "Filtreyi Göster"
 
 #: src/fsearch.glade:224 src/menus.ui:103
 msgid "Show Search Button"
-msgstr "Arama Bununu Göster"
+msgstr "Arama Düğmesini Göster"
 
 #: src/fsearch.glade:250 src/menus.ui:84 src/preferences.ui:43
 msgid "Preferences"
@@ -105,26 +105,20 @@ msgid "Search"
 msgstr "Ara"
 
 #: src/fsearch_database.c:633
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
-msgstr "Veri Tabanı Yükleniyor…"
+msgstr "Klasörler yükleniyor…"
 
 #: src/fsearch_database.c:641
-#, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
-msgstr "Dosyalar siliniyor…"
+msgstr "Dosyalar yükleniyor…"
 
 #: src/fsearch_file_utils.c:265
-#, fuzzy
-#| msgid "Folders"
 msgid "Folder"
-msgstr "Klasörler"
+msgstr "Klasör"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "Bilinmeyen Tür"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -159,10 +153,8 @@ msgid "Videos"
 msgstr "Videolar"
 
 #: src/fsearch_listview_popup.c:64
-#, fuzzy
-#| msgid "Other Application"
 msgid "Other Application…"
-msgstr "Diğer Uygulama"
+msgstr "Diğer Uygulama…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -195,16 +187,12 @@ msgid "Querying…"
 msgstr "Sorgulanıyor…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Loading…"
-msgstr "Sıralanıyor…"
+msgstr "Yükleniyor…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Scanning…"
-msgstr "Sıralanıyor…"
+msgstr "Taranıyor…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -221,7 +209,7 @@ msgstr "Pencereyi açık tutmak istiyor musunuz?"
 
 #: src/fsearch_window.c:701 src/menus.ui:212
 msgid "Name"
-msgstr "İsim"
+msgstr "Ad"
 
 #: src/fsearch_window.c:715 src/menus.ui:224
 msgid "Size"
@@ -233,7 +221,7 @@ msgstr "Tür"
 
 #: src/fsearch_window.c:729 src/menus.ui:228
 msgid "Date Modified"
-msgstr "Düzenlenme Tarihi"
+msgstr "Değiştirilme Tarihi"
 
 #: src/fsearch_window.c:743
 msgid ""
@@ -243,6 +231,11 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"<b>Tür</b>'e göre sıralama, birçok sonuçla birlikte çok yavaş olabilir ve "
+"iptal edilemez.\n"
+"\n"
+"Bu sıralama düzeni kalıcı değildir, arama terimi değiştiğinde "
+"sıfırlanacaktır."
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -264,7 +257,7 @@ msgstr "Dosyalar siliniyor…"
 
 #: src/fsearch_window_actions.c:136
 msgid "Moving files to trash…"
-msgstr "Dosyalar çöp sepetine taşınıyor…"
+msgstr "Dosyalar çöp kutusuna taşınıyor…"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -312,11 +305,11 @@ msgstr "Tümünü Seç"
 
 #: src/menus.ui:74
 msgid "Deselect All"
-msgstr "Bütün Seçimi Kaldır"
+msgstr "Tümünün Seçimini Kaldır"
 
 #: src/menus.ui:78
 msgid "Invert Selection"
-msgstr "Seçimini Tersine Çevir"
+msgstr "Seçimi Tersine Çevir"
 
 #: src/menus.ui:92
 msgid "_View"
@@ -332,7 +325,7 @@ msgstr "_Yardım"
 
 #: src/menus.ui:145
 msgid "Open _With"
-msgstr "İle_Aç"
+msgstr "Birlikte _Aç"
 
 #: src/menus.ui:159
 msgid "_Open Folder"
@@ -344,7 +337,7 @@ msgstr "_Dosya Yolunu Kopyala"
 
 #: src/menus.ui:194
 msgid "Move to _Trash"
-msgstr "_Çöp Sepetine Taşı"
+msgstr "_Çöp Kutusuna Taşı"
 
 #: src/overlay.ui:43
 msgid "Empty Database"
@@ -352,7 +345,7 @@ msgstr "Boş Veri Tabanı"
 
 #: src/overlay.ui:59
 msgid "Add folders"
-msgstr "Klasörler ekle"
+msgstr "Klasör ekle"
 
 #: src/overlay.ui:76 src/overlay.ui:271 src/statusbar.glade:273
 msgid "page0"
@@ -392,17 +385,15 @@ msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
 
 #: src/overlay.ui:302
 msgid "No Results Found"
-msgstr "Hiç bir sonuç bulunamadı"
+msgstr "Sonuç Bulunamadı"
 
 #: src/overlay.ui:317
 msgid "Try a different search"
-msgstr "Farklı bir arama deneyiniz"
+msgstr "Farklı bir arama deneyin"
 
 #: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Sorting results…"
-msgstr "Sıralanıyor…"
+msgstr "Sonuçlar sıralanıyor…"
 
 #: src/preferences.ui:112
 msgid "Enable dark theme"
@@ -418,7 +409,7 @@ msgstr "Onluk birimler yerine ikilik birimler kullan"
 
 #: src/preferences.ui:158
 msgid "Remember window size"
-msgstr "Ekran Boyutunu Hatırla"
+msgstr "Pencere boyutunu hatırla"
 
 #: src/preferences.ui:195
 msgid "with keyboard shortcuts or menu entries"
@@ -454,7 +445,7 @@ msgstr "Vurgulanan arama terimlerini göster"
 
 #: src/preferences.ui:333
 msgid "Show tooltips"
-msgstr "İpuçlarını Göster"
+msgstr "Araç ipuçlarını göster"
 
 #: src/preferences.ui:348
 msgid "Show icons in name column"
@@ -547,12 +538,12 @@ msgid "minute(s)"
 msgstr "dakika"
 
 #: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Veri tabanına dahil edilecek yolu ekle"
+msgstr ""
+"Veri tabanına dahil edilecek yolu ekle\n"
+"                                "
 
 #: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
@@ -560,7 +551,7 @@ msgstr "Seçili yolu kaldır"
 
 #: src/preferences.ui:899
 msgid "Include"
-msgstr "Aktar"
+msgstr "Dahil et"
 
 #: src/preferences.ui:956
 msgid "Add path to be excluded from database"
@@ -732,10 +723,10 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
-"<b>İpuçlarını göster:</b>\n"
+"<b>Araç ipuçlarını göster:</b>\n"
 "\n"
-"Etkinleştirilirse, sonuçlar görünümü odaklanan dosyanın/klasörün tam yolunu "
-"küçük bir ipucu penceresinde gösterecektir."
+"Etkinleştirilirse, sonuçlar görünümü odaklanılan dosyanın/klasörün tam "
+"yolunu küçük bir ipucu penceresinde gösterecektir."
 
 #: src/preferences.ui:1257
 msgid ""
@@ -896,19 +887,6 @@ msgstr ""
 "olarak güncellenecektir."
 
 #: src/preferences.ui:1468
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-#| "paths from being\n"
-#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-#| "often)</i>"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -927,23 +905,20 @@ msgid ""
 msgstr ""
 "<b>Dahil edilen klasörler:</b>\n"
 "\n"
-"Bu liste, veri tabanına dahil etmek istediğiniz tüm klasörleri içerir.\n"
+"                      Bu liste, veri tabanına dahil etmek istediğiniz tüm "
+"klasörleri içerir.\n"
 "\n"
-"\t• <b>Etkin:</b> Etkinleştirilirse, yol aramak için veri tabanına dahil "
-"edilecektir.\n"
-"\t• <b>Yol:</b> Dahil edilecek tam yol.\n"
-"\t• <b>Güncelle:</b> Bu ayar, belirli yolları güncellemenin dışında bırakmak "
-"istiyorsanız\n"
-"\t\t\tyararlıdır <i>(örn. fazla değişmeyen yavaş bir USB sürücüsünün yolu)</"
-"i>"
+"                      • <b>Etkin:</b> Etkinleştirilirse, yol aramak için "
+"veri tabanına dahil edilecektir.\n"
+"                      • <b>Yol:</b> Dahil edilecek tam yol.\n"
+"                      • <b>Güncelle:</b> Bu ayar, belirli yolları "
+"güncellemenin dışında bırakmak istiyorsanız\n"
+"                      yararlıdır\n"
+"                      <i>(örneğin, fazla değişmeyen yavaş bir USB "
+"sürücüsünün yolu)</i>\n"
+"                    "
 
 #: src/preferences.ui:1492
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "include in the database for searching."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -954,15 +929,12 @@ msgid ""
 msgstr ""
 "<b>Veri tabanına klasör ekle:</b>\n"
 "\n"
-"Bu düğme, aramak için veri tabanına dahil etmek istediğiniz bir klasörü "
-"seçebileceğiniz bir iletişim kutusu açar."
+"                      Bu düğme, aramak için veri tabanına dahil etmek "
+"istediğiniz bir klasörü seçebileceğiniz bir iletişim\n"
+"                      kutusu açar.\n"
+"                    "
 
 #: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -972,7 +944,9 @@ msgid ""
 msgstr ""
 "<b>Seçili satırı kaldır:</b>\n"
 "\n"
-"Bu, seçilen klasörü dahil edilen klasörler listesinden kaldırır."
+"                      Bu, seçilen klasörü dahil edilen klasörler listesinden "
+"kaldırır.\n"
+"                    "
 
 #: src/preferences.ui:1529
 msgid ""
@@ -1079,7 +1053,7 @@ msgstr "Yardım"
 
 #: src/statusbar.glade:43
 msgid "Number of Search Results"
-msgstr "Arama Sonucunun Sayısı"
+msgstr "Arama Sonucu Sayısı"
 
 #: src/statusbar.glade:44
 msgid "0 Items"
@@ -1137,7 +1111,7 @@ msgstr "YOL"
 
 #: src/statusbar.glade:579
 msgid "REGEX"
-msgstr "REGEX"
+msgstr "DÜZENLİ İFADE"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
@@ -1152,7 +1126,8 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
-"arama;fsearch;dosyalar;klasörler;müzik;video;belgeler;bul;araç;her şey;"
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;arama"
+";dosyalar;klasörler;müzik;belgeler;bul;araç;her şey;"
 
 #~ msgid "Building lookup list…"
 #~ msgstr "Arama listesi oluşturuluyor…"
