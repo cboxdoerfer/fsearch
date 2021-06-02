@@ -102,6 +102,18 @@ fs_str_has_upper(const char *strc) {
     return false;
 }
 
+const char *
+fs_str_get_extension(const char *file_name) {
+    const char *ext = strrchr(file_name, '.');
+    if (!ext || ext == file_name || ext[1] == '\0') {
+        // filename has no dot
+        // OR filename starts with dot (i.e. hidden file)
+        // OR filename ends with dot
+        return NULL;
+    }
+    return ext + 1;
+}
+
 char *
 fs_str_copy(char *dest, char *end, const char *src) {
     char *ptr = dest;
@@ -207,4 +219,3 @@ fs_str_split(const char *src) {
 
     return (char **)g_ptr_array_free(new, FALSE);
 }
-
