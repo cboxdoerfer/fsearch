@@ -722,9 +722,16 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
                                                                    _("Type"),
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
-                                                                   restore ? config->show_type_column : TRUE,
+                                                                   restore ? config->show_type_column : FALSE,
                                                                    FALSE,
                                                                    restore ? config->type_column_width : 100);
+    FsearchListViewColumn *ext_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_EXTENSION,
+                                                                  _("Extension"),
+                                                                  PANGO_ALIGN_LEFT,
+                                                                  PANGO_ELLIPSIZE_END,
+                                                                  restore ? config->show_extension_column : TRUE,
+                                                                  FALSE,
+                                                                  restore ? config->extension_column_width : 100);
     FsearchListViewColumn *changed_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_MODIFICATION_TIME,
                                                                       _("Date Modified"),
                                                                       PANGO_ALIGN_RIGHT,
@@ -735,6 +742,7 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
 
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), name_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), path_col);
+    fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), ext_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), type_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), size_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);

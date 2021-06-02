@@ -77,6 +77,7 @@ typedef struct {
     GString *full_path;
     char *size;
     char *type;
+    char *extension;
     char time[100];
 } DrawRowContext;
 
@@ -107,6 +108,8 @@ draw_row_ctx_init(FsearchDatabaseView *view,
         goto out;
     }
     ctx->display_name = g_filename_display_name(name->str);
+
+    ctx->extension = db_view_entry_get_extension_for_idx(view, row);
 
     ctx->path = db_view_entry_get_path_for_idx(view, row);
 
@@ -153,6 +156,10 @@ draw_row_ctx_free(DrawRowContext *ctx) {
     if (ctx->display_name) {
         g_free(ctx->display_name);
         ctx->display_name = NULL;
+    }
+    if (ctx->extension) {
+        g_free(ctx->extension);
+        ctx->extension = NULL;
     }
     if (ctx->type) {
         g_free(ctx->type);
@@ -215,6 +222,10 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
         text = g_filename_display_name(path->str);
         g_string_free(path, TRUE);
         path = NULL;
+        break;
+    }
+    case DATABASE_INDEX_TYPE_EXTENSION: {
+        text = db_view_entry_get_extension_for_idx(view, row);
         break;
     }
     case DATABASE_INDEX_TYPE_FILETYPE: {
@@ -349,6 +360,9 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
             break;
         case DATABASE_INDEX_TYPE_SIZE:
             text = ctx.size;
+            break;
+        case DATABASE_INDEX_TYPE_EXTENSION:
+            text = ctx.extension;
             break;
         case DATABASE_INDEX_TYPE_FILETYPE:
             text = ctx.type;
