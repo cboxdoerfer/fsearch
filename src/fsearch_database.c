@@ -156,6 +156,11 @@ db_sort(FsearchDatabase *db) {
     if (files) {
         db_sort_entries(db, files, db->sorted_files);
 
+        // now build extension sort array
+        db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION] = darray_copy(files);
+        darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION],
+                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_extension);
+
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
         g_debug("[db_sort] sorted files: %f s", seconds);
@@ -165,6 +170,9 @@ db_sort(FsearchDatabase *db) {
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
     if (folders) {
         db_sort_entries(db, folders, db->sorted_folders);
+
+        // Folders don't have a file extension -> use the name array instead
+        db->sorted_folders[DATABASE_INDEX_TYPE_EXTENSION] = darray_ref(folders);
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
