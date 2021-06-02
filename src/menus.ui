@@ -217,6 +217,10 @@
             <attribute name="action">win.show_path_column</attribute>
         </item>
         <item>
+            <attribute name="label" translatable="yes">Extension</attribute>
+            <attribute name="action">win.show_extension_column</attribute>
+        </item>
+        <item>
             <attribute name="label" translatable="yes">Type</attribute>
             <attribute name="action">win.show_type_column</attribute>
         </item>
