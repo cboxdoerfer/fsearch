@@ -212,14 +212,16 @@ config_load(FsearchConfig *config) {
         if (config->restore_column_config) {
             config->show_listview_icons = config_load_boolean(key_file, "Interface", "show_listview_icons", true);
             config->show_path_column = config_load_boolean(key_file, "Interface", "show_path_column", true);
-            config->show_type_column = config_load_boolean(key_file, "Interface", "show_type_column", true);
+            config->show_type_column = config_load_boolean(key_file, "Interface", "show_type_column", false);
+            config->show_extension_column = config_load_boolean(key_file, "Interface", "show_extension_column", true);
             config->show_size_column = config_load_boolean(key_file, "Interface", "show_size_column", true);
             config->show_modified_column = config_load_boolean(key_file, "Interface", "show_modified_column", true);
         }
         else {
             config->show_listview_icons = true;
             config->show_path_column = true;
-            config->show_type_column = true;
+            config->show_type_column = false;
+            config->show_extension_column = true;
             config->show_size_column = true;
             config->show_modified_column = true;
         }
@@ -231,6 +233,7 @@ config_load(FsearchConfig *config) {
         // Column Size
         config->name_column_width = config_load_integer(key_file, "Interface", "name_column_width", 250);
         config->path_column_width = config_load_integer(key_file, "Interface", "path_column_width", 250);
+        config->extension_column_width = config_load_integer(key_file, "Interface", "extension_column_width", 100);
         config->type_column_width = config_load_integer(key_file, "Interface", "type_column_width", 100);
         config->size_column_width = config_load_integer(key_file, "Interface", "size_column_width", 75);
         config->modified_column_width = config_load_integer(key_file, "Interface", "modified_column_width", 75);
@@ -327,7 +330,8 @@ config_load_default(FsearchConfig *config) {
     // Columns
     config->show_listview_icons = true;
     config->show_path_column = true;
-    config->show_type_column = true;
+    config->show_type_column = false;
+    config->show_extension_column = false;
     config->show_size_column = true;
     config->show_modified_column = true;
 
@@ -342,6 +346,7 @@ config_load_default(FsearchConfig *config) {
 
     config->name_column_width = 250;
     config->path_column_width = 250;
+    config->extension_column_width = 100;
     config->type_column_width = 100;
     config->size_column_width = 75;
     config->modified_column_width = 125;
@@ -468,6 +473,7 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Interface", "show_listview_icons", config->show_listview_icons);
     g_key_file_set_boolean(key_file, "Interface", "show_path_column", config->show_path_column);
     g_key_file_set_boolean(key_file, "Interface", "show_type_column", config->show_type_column);
+    g_key_file_set_boolean(key_file, "Interface", "show_extension_column", config->show_extension_column);
     g_key_file_set_boolean(key_file, "Interface", "show_size_column", config->show_size_column);
     g_key_file_set_boolean(key_file, "Interface", "show_modified_column", config->show_modified_column);
 
@@ -479,6 +485,7 @@ config_save(FsearchConfig *config) {
     // Column width
     g_key_file_set_integer(key_file, "Interface", "name_column_width", config->name_column_width);
     g_key_file_set_integer(key_file, "Interface", "path_column_width", config->path_column_width);
+    g_key_file_set_integer(key_file, "Interface", "extension_column_width", config->extension_column_width);
     g_key_file_set_integer(key_file, "Interface", "type_column_width", config->type_column_width);
     g_key_file_set_integer(key_file, "Interface", "size_column_width", config->size_column_width);
     g_key_file_set_integer(key_file, "Interface", "modified_column_width", config->modified_column_width);
