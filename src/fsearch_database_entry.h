@@ -61,6 +61,9 @@ off_t
 db_entry_get_size(FsearchDatabaseEntry *entry);
 
 const char *
+db_entry_get_extension(FsearchDatabaseEntry *entry);
+
+const char *
 db_entry_get_name(FsearchDatabaseEntry *entry);
 
 const char *
@@ -77,6 +80,9 @@ db_file_entry_destroy(FsearchDatabaseEntryFolder *entry);
 
 void
 db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry);
+
+int
+db_entry_compare_entries_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
 
 int
 db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);

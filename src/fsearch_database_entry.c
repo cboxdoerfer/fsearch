@@ -2,6 +2,7 @@
 
 #include "fsearch_database_entry.h"
 #include "fsearch_file_utils.h"
+#include "fsearch_string_utils.h"
 
 #include <stdlib.h>
 #include <string.h>
@@ -85,6 +86,17 @@ db_entry_get_mtime(FsearchDatabaseEntry *entry) {
 off_t
 db_entry_get_size(FsearchDatabaseEntry *entry) {
     return entry ? entry->shared.size : 0;
+}
+
+const char *
+db_entry_get_extension(FsearchDatabaseEntry *entry) {
+    if (!entry) {
+        return NULL;
+    }
+    if (entry->shared.type == DATABASE_ENTRY_TYPE_FOLDER) {
+        return NULL;
+    }
+    return fs_str_get_extension(entry->shared.name);
 }
 
 const char *
@@ -245,6 +257,13 @@ db_entry_update_folder_size(FsearchDatabaseEntryFolder *folder, off_t size) {
     }
     folder->shared.size += size;
     db_entry_update_folder_size(folder->shared.parent, size);
+}
+
+int
+db_entry_compare_entries_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const char *ext_a = db_entry_get_extension(*a);
+    const char *ext_b = db_entry_get_extension(*b);
+    return strcmp(ext_a ? ext_a : "", ext_b ? ext_b : "");
 }
 
 int
