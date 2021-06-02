@@ -72,6 +72,9 @@ db_view_entry_get_mtime_for_idx(FsearchDatabaseView *view, uint32_t idx);
 off_t
 db_view_entry_get_size_for_idx(FsearchDatabaseView *view, uint32_t idx);
 
+char *
+db_view_entry_get_extension_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
 GString *
 db_view_entry_get_name_for_idx(FsearchDatabaseView *view, uint32_t idx);
 

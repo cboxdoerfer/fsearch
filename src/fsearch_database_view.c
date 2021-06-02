@@ -390,6 +390,9 @@ db_view_update_sort(FsearchDatabaseView *view) {
     case DATABASE_INDEX_TYPE_SIZE:
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_size;
         break;
+    case DATABASE_INDEX_TYPE_EXTENSION:
+        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_extension;
+        break;
     case DATABASE_INDEX_TYPE_FILETYPE:
         func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_type;
         parallel_sort = false;
@@ -600,6 +603,18 @@ db_view_entry_get_size_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     return entry ? db_entry_get_size(entry) : 0;
+}
+
+char *
+db_view_entry_get_extension_for_idx(FsearchDatabaseView *view, uint32_t idx) {
+    assert(view != NULL);
+
+    FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
+    if (!entry) {
+        return NULL;
+    }
+    const char *ext = db_entry_get_extension(entry);
+    return g_strdup(ext ? ext : "");
 }
 
 GString *
