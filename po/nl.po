@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-03-21 18:29+0000\n"
-"Last-Translator: Heimen Stoffels <vistausss@outlook.com>\n"
+"PO-Revision-Date: 2021-06-03 15:33+0000\n"
+"Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
 "Language: nl\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/fsearch.c:341
 msgid "translator-credits"
@@ -104,26 +104,20 @@ msgid "Search"
 msgstr "Zoeken"
 
 #: src/fsearch_database.c:633
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
-msgstr "Bezig met laden van databank…"
+msgstr "Bezig met laden van mappen…"
 
 #: src/fsearch_database.c:641
-#, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
-msgstr "Bezig met verwijderen…"
+msgstr "Bezig met laden van bestanden…"
 
 #: src/fsearch_file_utils.c:265
-#, fuzzy
-#| msgid "Folders"
 msgid "Folder"
-msgstr "Mappen"
+msgstr "Map"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "Onbekend type"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -158,10 +152,8 @@ msgid "Videos"
 msgstr "Video's"
 
 #: src/fsearch_listview_popup.c:64
-#, fuzzy
-#| msgid "Other Application"
 msgid "Other Application…"
-msgstr "Andere applicatie"
+msgstr "Andere toepassing…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -194,16 +186,12 @@ msgid "Querying…"
 msgstr "Bezig met zoeken…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Loading…"
-msgstr "Bezig met sorteren…"
+msgstr "Bezig met laden…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Scanning…"
-msgstr "Bezig met sorteren…"
+msgstr "Bezig met doorzoeken…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -242,6 +230,10 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Sorteren op <b>type</b> kan erg traag zijn en leiden tot veel resultaten. "
+"Bovendien kan het proces niet worden afgebroken.\n"
+"\n"
+"Deze volgorde wordt niet permanent ingesteld."
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -398,8 +390,6 @@ msgid "Try a different search"
 msgstr "Probeer een andere zoekopdracht"
 
 #: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Sorting results…"
 msgstr "Bezig met sorteren…"
 
@@ -546,12 +536,12 @@ msgid "minute(s)"
 msgstr "minute(n)"
 
 #: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Voeg het op te nemen pad toe"
+msgstr ""
+"Voeg het op te nemen pad toe\n"
+"                                "
 
 #: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
@@ -899,19 +889,6 @@ msgstr ""
 "je FSearch opent."
 
 #: src/preferences.ui:1468
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-#| "paths from being\n"
-#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-#| "often)</i>"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -937,15 +914,10 @@ msgstr ""
 "\t• <b>Bijwerken:</b> deze instelling kan worden gebruikt om bepaalde paden "
 "uit te sluiten\n"
 "\t\t\tbij het bijwerken <i>(bijv. als het pad op een langzame usb-schijf "
-"staat)</i>"
+"staat)</i>\n"
+"                    "
 
 #: src/preferences.ui:1492
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "include in the database for searching."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -957,14 +929,10 @@ msgstr ""
 "<b>Map toevoegen aan databank:</b>\n"
 "\n"
 "Met deze knop open je een venster waar je een map kunt kiezen die je wilt "
-"toevoegen aan de databank."
+"toevoegen aan de databank.\n"
+"                    "
 
 #: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -975,6 +943,8 @@ msgstr ""
 "<b>Geselecteerde rij verwijderen:</b>\n"
 "\n"
 "Hiermee verwijder je de geselecteerde map van de lijst met opgenomen mappen."
+"\n"
+"                    "
 
 #: src/preferences.ui:1529
 msgid ""

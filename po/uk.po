@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-03-21 18:29+0000\n"
+"PO-Revision-Date: 2021-06-03 15:33+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/fsearch.c:341
 msgid "translator-credits"
@@ -105,26 +105,20 @@ msgid "Search"
 msgstr "Пошук"
 
 #: src/fsearch_database.c:633
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
-msgstr "Завантаження бази даних…"
+msgstr "Завантаження каталогів…"
 
 #: src/fsearch_database.c:641
-#, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
-msgstr "Видалення файлів…"
+msgstr "Завантаження файлів…"
 
 #: src/fsearch_file_utils.c:265
-#, fuzzy
-#| msgid "Folders"
 msgid "Folder"
-msgstr "Каталоги"
+msgstr "Каталог"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "Невідомий тип"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -159,10 +153,8 @@ msgid "Videos"
 msgstr "Відео"
 
 #: src/fsearch_listview_popup.c:64
-#, fuzzy
-#| msgid "Other Application"
 msgid "Other Application…"
-msgstr "інші програми"
+msgstr "Інші програми…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -195,16 +187,12 @@ msgid "Querying…"
 msgstr "Йде запит…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Loading…"
-msgstr "Сортування…"
+msgstr "Завантаження…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Scanning…"
-msgstr "Сортування…"
+msgstr "Сканування…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -243,6 +231,11 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Сортування за <b>Типом</b> може бути дуже повільним з великою кількістю "
+"результатів і його не можливо завершити.\n"
+"\n"
+"Цей порядок сортування не є постійним, він скинеться коли зміниться "
+"пошуковий запит."
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -379,10 +372,8 @@ msgid "This may take a while."
 msgstr "Це займе деякий час."
 
 #: src/overlay.ui:201
-#, fuzzy
-#| msgid "page0"
 msgid "page2"
-msgstr "сторінка0"
+msgstr "сторінка2"
 
 #: src/overlay.ui:239
 msgid "Empty Query"
@@ -401,10 +392,8 @@ msgid "Try a different search"
 msgstr "Спробуйте написати інакше"
 
 #: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Sorting results…"
-msgstr "Сортування…"
+msgstr "Сортування результатів…"
 
 #: src/preferences.ui:112
 msgid "Enable dark theme"
@@ -549,12 +538,12 @@ msgid "minute(s)"
 msgstr "хвилин"
 
 #: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Додати шлях для включення в базу"
+msgstr ""
+"Додати шлях для включення в базу\n"
+"                                "
 
 #: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
@@ -894,19 +883,6 @@ msgstr ""
 "ви запускатимете FSearch."
 
 #: src/preferences.ui:1468
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-#| "paths from being\n"
-#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-#| "often)</i>"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -925,22 +901,21 @@ msgid ""
 msgstr ""
 "<b>Враховані каталоги:</b>\n"
 "\n"
-"Даний список містить усі каталоги, які ви хочете включити до бази даних.\n"
+"                      Даний список містить усі каталоги, які ви хочете "
+"включити до бази даних.\n"
 "\n"
-"\t• <b>Активний:</b> якщо дозволено, шлях враховуватиметься під час пошуку.\n"
-"\t• <b>Шлях:</b> повний шлях, який потрібно враховувати.\n"
-"\t• <b>Оновляти:</b> це налаштування корисне, якщо ви бажаєте виключити "
-"певний шлях з періодичного\n"
-"\t\t\tоновлення <i>(напр., якщо шлях належить повільному USB-пристрою, який "
-"рідко змінюється)</i>"
+"                      • <b>Активний:</b> якщо дозволено, шлях "
+"враховуватиметься під час пошуку.\n"
+"                      • <b>Шлях:</b> повний шлях, який потрібно враховувати."
+"\n"
+"                      • <b>Оновляти:</b> це налаштування корисне, якщо ви "
+"бажаєте виключити\n"
+"                      певний шлях з періодичного оновлення\n"
+"                      <i>(напр., якщо шлях належить повільному USB-пристрою, "
+"який рідко змінюється)</i>\n"
+"                    "
 
 #: src/preferences.ui:1492
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "include in the database for searching."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -951,15 +926,12 @@ msgid ""
 msgstr ""
 "<b>Додати каталог до бази даних:</b>\n"
 "\n"
-"Ця кнопка відкриває діалогове вікно, в якому ви маєте обрати каталог, який "
-"хочете включити до бази даних пошуку."
+"                      Ця кнопка відкриває діалогове вікно, в якому ви маєте "
+"обрати каталог, який хочете включити\n"
+"                       до бази даних пошуку.\n"
+"                    "
 
 #: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -969,7 +941,9 @@ msgid ""
 msgstr ""
 "<b>Вилучити вибраний рядок:</b>\n"
 "\n"
-"Вилучає вибраний каталог зі списку врахованих каталогів."
+"                      Вилучає вибраний каталог зі списку врахованих "
+"каталогів.\n"
+"                    "
 
 #: src/preferences.ui:1529
 msgid ""

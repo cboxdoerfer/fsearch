@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-04-15 08:26+0000\n"
+"PO-Revision-Date: 2021-06-03 15:33+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.6-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/fsearch.c:341
 msgid "translator-credits"
@@ -97,7 +97,7 @@ msgstr "חיפוש…"
 
 #: src/fsearch.glade:430
 msgid "Select a Filter"
-msgstr ""
+msgstr "בחירת מסנן"
 
 #: src/fsearch.glade:461 src/preferences.ui:676
 msgid "Search"
@@ -123,7 +123,7 @@ msgstr "תיקיות"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "סוג לא ידוע"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -159,28 +159,28 @@ msgstr "סרטונים"
 
 #: src/fsearch_listview_popup.c:64
 msgid "Other Application…"
-msgstr ""
+msgstr "יישום אחר…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
-msgstr ""
+msgstr "בחירת תיקייה"
 
 #: src/fsearch_preferences_ui.c:187 src/fsearch_preferences_ui.c:199
 #: src/fsearch_preferences_ui.c:391
 msgid "_Cancel"
-msgstr ""
+msgstr "_ביטול"
 
 #: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:199
 msgid "_Select"
-msgstr ""
+msgstr "ב_חירה"
 
 #: src/fsearch_preferences_ui.c:392
 msgid "_OK"
-msgstr ""
+msgstr "_אישור"
 
 #: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
 msgid "Active"
-msgstr ""
+msgstr "פעיל"
 
 #: src/fsearch_preferences_widgets.c:184 src/fsearch_preferences_widgets.c:223
 #: src/fsearch_window.c:708 src/menus.ui:216
@@ -189,7 +189,7 @@ msgstr "נתיב"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
-msgstr ""
+msgstr "מתבצע תשאול…"
 
 #: src/fsearch_statusbar.c:140
 #, fuzzy
@@ -218,19 +218,19 @@ msgstr "להשאיר את החלון פתוח?"
 
 #: src/fsearch_window.c:701 src/menus.ui:212
 msgid "Name"
-msgstr ""
+msgstr "שם"
 
 #: src/fsearch_window.c:715 src/menus.ui:224
 msgid "Size"
-msgstr ""
+msgstr "גודל"
 
 #: src/fsearch_window.c:722 src/menus.ui:220
 msgid "Type"
-msgstr ""
+msgstr "סוג"
 
 #: src/fsearch_window.c:729 src/menus.ui:228
 msgid "Date Modified"
-msgstr ""
+msgstr "מועד השינוי"
 
 #: src/fsearch_window.c:743
 msgid ""
