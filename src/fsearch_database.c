@@ -340,6 +340,7 @@ db_load_header(FILE *fp) {
     }
     if (majorver != DATABASE_MAJOR_VERSION) {
         g_debug("[db_load] invalid major version: %d", majorver);
+        g_debug("[db_load] expected major version: %d", DATABASE_MAJOR_VERSION);
         return false;
     }
 
@@ -349,6 +350,7 @@ db_load_header(FILE *fp) {
     }
     if (minorver > DATABASE_MINOR_VERSION) {
         g_debug("[db_load] invalid minor version: %d", minorver);
+        g_debug("[db_load] expected minor version: <= %d", DATABASE_MINOR_VERSION);
         return false;
     }
 
