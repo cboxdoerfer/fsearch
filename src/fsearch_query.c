@@ -73,9 +73,8 @@ fsearch_query_new(const char *text,
     return q;
 }
 
-void
+static void
 fsearch_query_free(FsearchQuery *query) {
-    assert(query != NULL);
     if (query->files) {
         darray_unref(query->files);
         query->files = NULL;
