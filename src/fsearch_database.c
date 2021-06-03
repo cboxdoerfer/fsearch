@@ -347,7 +347,7 @@ db_load_header(FILE *fp) {
     if (fread(&minorver, 1, 1, fp) != 1) {
         return false;
     }
-    if (minorver != DATABASE_MINOR_VERSION) {
+    if (minorver > DATABASE_MINOR_VERSION) {
         g_debug("[db_load] invalid minor version: %d", minorver);
         return false;
     }
