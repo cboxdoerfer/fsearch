@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-03-21 18:29+0000\n"
+"PO-Revision-Date: 2021-06-06 09:33+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.7-dev\n"
 
 #: src/fsearch.c:341
 msgid "translator-credits"
@@ -107,26 +107,20 @@ msgid "Search"
 msgstr "Szukaj"
 
 #: src/fsearch_database.c:633
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
-msgstr "Ładowania bazy danych…"
+msgstr "Ładowanie katalogów…"
 
 #: src/fsearch_database.c:641
-#, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
-msgstr "Usuwanie plików…"
+msgstr "Ładowanie plików…"
 
 #: src/fsearch_file_utils.c:265
-#, fuzzy
-#| msgid "Folders"
 msgid "Folder"
-msgstr "Katalogi"
+msgstr "Katalog"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "Nieznany typ"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -161,10 +155,8 @@ msgid "Videos"
 msgstr "Wideo"
 
 #: src/fsearch_listview_popup.c:64
-#, fuzzy
-#| msgid "Other Application"
 msgid "Other Application…"
-msgstr "Inna aplikacja"
+msgstr "Inna aplikacja…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -197,16 +189,12 @@ msgid "Querying…"
 msgstr "Odpytywanie…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Loading…"
-msgstr "Sortowanie…"
+msgstr "Ładowanie…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Scanning…"
-msgstr "Sortowanie…"
+msgstr "Skanowanie…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -245,6 +233,11 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Sortowanie wg <b>typu</b> może być bardzo wolne przy wielu wynikach i nie "
+"może być przerwane.\n"
+"\n"
+"Ten porządek sortowania nie jest stały, zostanie zresetowany przy zmianie "
+"wyszukiwania."
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -401,10 +394,8 @@ msgid "Try a different search"
 msgstr "Spróbuj innego wyszukiwania"
 
 #: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Sorting results…"
-msgstr "Sortowanie…"
+msgstr "Sortowanie wyników…"
 
 #: src/preferences.ui:112
 msgid "Enable dark theme"
@@ -548,12 +539,12 @@ msgid "minute(s)"
 msgstr "minut(y)"
 
 #: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Dodaj ścieżkę do bazy danych"
+msgstr ""
+"Dodaj ścieżkę do bazy danych\n"
+"                                "
 
 #: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
@@ -937,8 +928,8 @@ msgid ""
 msgstr ""
 "<b>Dołącz:</b>\n"
 "\n"
-"Ta lista zawiera wszystkie katalogi, które chcesz uwzględnić w bazie "
-"danych.\n"
+"Ta lista zawiera wszystkie katalogi, które chcesz uwzględnić w bazie danych."
+"\n"
 "\n"
 "• <b> Aktywna: </b> jeśli włączone, ścieżka zostanie uwzględniona w bazie "
 "danych, w której ma być przeszukiwana.\n"
@@ -946,7 +937,8 @@ msgstr ""
 "• <b> Aktualizacja: </b> To ustawienie jest przydatne, jeśli chcesz "
 "wykluczyć pewne ścieżki\n"
 " z aktualizacji<i> (np. ścieżka do wolnego dysku USB na którym nieczęsto się "
-"coś zmienia) </i>"
+"coś zmienia) </i>\n"
+"                    "
 
 #: src/preferences.ui:1492
 #, fuzzy
@@ -966,14 +958,10 @@ msgstr ""
 "<b>Dodaj katalog do bazy danych:</b>\n"
 "\n"
 "Ten przycisk otwiera okno dialogowe, w którym możesz wybrać katalog, który "
-"chcesz uwzględnić w bazie danych do wyszukiwania."
+"chcesz uwzględnić w bazie danych do wyszukiwania.\n"
+"                    "
 
 #: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -983,7 +971,9 @@ msgid ""
 msgstr ""
 "<b>Usuń zaznaczony wiersz:</b>\n"
 "\n"
-"Spowoduje to usunięcie wybranego katalogu z listy dołączonych katalogów."
+"                       Spowoduje to usunięcie wybranego katalogu z listy "
+"dołączonych katalogów.\n"
+"                    "
 
 #: src/preferences.ui:1529
 msgid ""
