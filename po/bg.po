@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-05-07 06:35+0000\n"
+"PO-Revision-Date: 2021-06-06 09:33+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -106,26 +106,20 @@ msgid "Search"
 msgstr "Търсене"
 
 #: src/fsearch_database.c:633
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
-msgstr "Зареждане на базата с данни…"
+msgstr "Зареждане на папки…"
 
 #: src/fsearch_database.c:641
-#, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
-msgstr "Изтриване на файловете…"
+msgstr "Зареждане на файлове…"
 
 #: src/fsearch_file_utils.c:265
-#, fuzzy
-#| msgid "Folders"
 msgid "Folder"
-msgstr "Папки"
+msgstr "Папка"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "Неизвестен тип"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -160,10 +154,8 @@ msgid "Videos"
 msgstr "Видео"
 
 #: src/fsearch_listview_popup.c:64
-#, fuzzy
-#| msgid "Other Application"
 msgid "Other Application…"
-msgstr "Друга програма"
+msgstr "Друга програма…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -196,16 +188,12 @@ msgid "Querying…"
 msgstr "Запитване…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Loading…"
-msgstr "Сортиране…"
+msgstr "Зареждане…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Scanning…"
-msgstr "Сортиране…"
+msgstr "Сканиране…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -244,6 +232,11 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Сортирането по <b> Тип </b> може да бъде много бавно с много резултати и не "
+"може да бъде отменено.\n"
+"\n"
+"Този ред на сортиране не е постоянен, той ще бъде нулиран, когато думата за "
+"търсене се промени."
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -400,10 +393,8 @@ msgid "Try a different search"
 msgstr "Опитайте с друго търсене"
 
 #: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Sorting results…"
-msgstr "Сортиране…"
+msgstr "Сортиране на резултатите…"
 
 #: src/preferences.ui:112
 msgid "Enable dark theme"
@@ -546,12 +537,12 @@ msgid "minute(s)"
 msgstr "минута (и)"
 
 #: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Добавянето на пътя ще бъде включено в базата с данни"
+msgstr ""
+"Добавяне на път, който ще бъде включен в базата с данни\n"
+"                                "
 
 #: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
@@ -902,19 +893,6 @@ msgstr ""
 "стартирате FSearch."
 
 #: src/preferences.ui:1468
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-#| "paths from being\n"
-#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-#| "often)</i>"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -933,24 +911,20 @@ msgid ""
 msgstr ""
 "<b>Включени папки</b>\n"
 "\n"
-"Този списък съдържа всички папки, които искате да включите в базата с данни "
-"за търсене.\n"
+"                             Този списък съдържа всички папки, които искате "
+"да включите в базата с данни за търсене.\n"
 "\n"
-"• <b>Активно:</b> Ако е активирано, пътят ще бъде включен в базата с данни "
-"за търсене.\n"
-"• <b>Път:</b> Ще бъде включен пълният път.\n"
-"• <b>Обновяване:</b> Тази настройка се използва, ако искате да изключите "
-"някой от съществуващите пътища\n"
-"при обновяване <i>(напр. път към бавно USB устройство, което не се променя "
-"често)</i>"
+"                             • <b>Активно:</b> Ако е активирано, пътят ще "
+"бъде включен в базата с данни за търсене.\n"
+"                             • <b>Път:</b> Ще бъде включен пълният път.\n"
+"                             • <b>Обновяване:</b> Тази настройка се "
+"използва, ако искате да изключите някой от съществуващите пътища\n"
+"                             от\n"
+"                             обновяване <i>(напр. път към бавно USB "
+"устройство, което не се променя често)</i>\n"
+"                    "
 
 #: src/preferences.ui:1492
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "include in the database for searching."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -961,15 +935,12 @@ msgid ""
 msgstr ""
 "<b>Добавяне на папка към базата с данни:</b>\n"
 "\n"
-"Този бутон ще отвори диалог, където ще можете да изберете папка, която да "
-"бъде включена в базата с данни за търсене."
+"                            Този бутон ще отвори диалог, където ще можете да "
+"изберете папка, която да бъде включена в базата с данни \n"
+"                            за търсене.\n"
+"                    "
 
 #: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -979,7 +950,9 @@ msgid ""
 msgstr ""
 "<b>Премахване на избраният ред:</b>\n"
 "\n"
-"Това премахва избраната папка от списъка с включените папки."
+"                             Това премахва избраната папка от списъка с "
+"включените папки.\n"
+"                    "
 
 #: src/preferences.ui:1529
 msgid ""
