@@ -1356,7 +1356,11 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     uint32_t res = db_folder_scan_recursive(&walk_context, parent);
 
     g_string_free(path, TRUE);
+    path = NULL;
+
     g_timer_destroy(timer);
+    timer = NULL;
+
     if (res == WALK_OK) {
         g_debug("[db_scan] scanned: %d files, %d files -> %d total", db->num_files, db->num_folders, db->num_entries);
         return;
