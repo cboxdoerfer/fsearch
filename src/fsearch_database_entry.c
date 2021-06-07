@@ -90,7 +90,7 @@ db_entry_get_size(FsearchDatabaseEntry *entry) {
 
 const char *
 db_entry_get_extension(FsearchDatabaseEntry *entry) {
-    if (!entry) {
+    if (G_UNLIKELY(!entry)) {
         return NULL;
     }
     if (entry->shared.type == DATABASE_ENTRY_TYPE_FOLDER) {
@@ -101,7 +101,7 @@ db_entry_get_extension(FsearchDatabaseEntry *entry) {
 
 const char *
 db_entry_get_name(FsearchDatabaseEntry *entry) {
-    if (!entry) {
+    if (G_UNLIKELY(!entry)) {
         return NULL;
     }
     if (strcmp(entry->shared.name, "") != 0) {
@@ -132,7 +132,7 @@ db_entry_get_idx(FsearchDatabaseEntry *entry) {
 
 void
 db_file_entry_destroy(FsearchDatabaseEntryFolder *entry) {
-    if (!entry) {
+    if (G_UNLIKELY(!entry)) {
         return;
     }
     if (entry->shared.name) {
@@ -143,7 +143,7 @@ db_file_entry_destroy(FsearchDatabaseEntryFolder *entry) {
 
 void
 db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry) {
-    if (!entry) {
+    if (G_UNLIKELY(!entry)) {
         return;
     }
     if (entry->shared.name) {
@@ -173,7 +173,7 @@ db_entry_get_parent_nth(FsearchDatabaseEntryFolder *entry, uint32_t nth) {
 
 static void
 sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabaseEntryFolder *entry_b, int *res) {
-    if (!entry_a) {
+    if (G_UNLIKELY(!entry_a || !entry_b)) {
         return;
     }
     if (entry_a->shared.parent && entry_a->shared.parent != entry_b->shared.parent) {
