@@ -257,7 +257,7 @@ db_search_worker(void *data) {
 
     GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
-        if (g_cancellable_is_cancelled(ctx->cancellable)) {
+        if (G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
             return;
         }
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
