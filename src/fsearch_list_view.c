@@ -601,7 +601,9 @@ fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, gu
         return;
     }
 
-    int temp_idx = start_idx;
+    start_idx = get_row_idx_for_sort_type(view, (gint)start_idx);
+    end_idx = get_row_idx_for_sort_type(view, (gint)end_idx);
+    guint temp_idx = start_idx;
 
     if (start_idx > end_idx) {
         start_idx = end_idx;
@@ -610,9 +612,7 @@ fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, gu
 
     end_idx = MIN(view->num_rows - 1, end_idx);
 
-    view->select_range_func(get_row_idx_for_sort_type(view, start_idx),
-                            get_row_idx_for_sort_type(view, end_idx),
-                            view->selection_user_data);
+    view->select_range_func((gint)start_idx, (gint)end_idx, view->selection_user_data);
 }
 
 static void
