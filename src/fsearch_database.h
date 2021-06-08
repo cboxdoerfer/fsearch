@@ -19,6 +19,7 @@
 #pragma once
 
 #include "fsearch_array.h"
+#include "fsearch_database_index.h"
 #include "fsearch_filter.h"
 #include "fsearch_query.h"
 
@@ -26,29 +27,6 @@
 #include <glib.h>
 #include <stdbool.h>
 #include <stdint.h>
-
-typedef enum {
-    DATABASE_INDEX_FLAG_NAME = 1 << 0,
-    DATABASE_INDEX_FLAG_PATH = 1 << 1,
-    DATABASE_INDEX_FLAG_SIZE = 1 << 2,
-    DATABASE_INDEX_FLAG_MODIFICATION_TIME = 1 << 3,
-    DATABASE_INDEX_FLAG_ACCESS_TIME = 1 << 4,
-    DATABASE_INDEX_FLAG_CREATION_TIME = 1 << 5,
-    DATABASE_INDEX_FLAG_STATUS_CHANGE_TIME = 1 << 6,
-} FsearchDatabaseIndexFlags;
-
-typedef enum {
-    DATABASE_INDEX_TYPE_NAME,
-    DATABASE_INDEX_TYPE_PATH,
-    DATABASE_INDEX_TYPE_SIZE,
-    DATABASE_INDEX_TYPE_MODIFICATION_TIME,
-    DATABASE_INDEX_TYPE_ACCESS_TIME,
-    DATABASE_INDEX_TYPE_CREATION_TIME,
-    DATABASE_INDEX_TYPE_STATUS_CHANGE_TIME,
-    DATABASE_INDEX_TYPE_FILETYPE,
-    DATABASE_INDEX_TYPE_EXTENSION,
-    NUM_DATABASE_INDEX_TYPES,
-} FsearchDatabaseIndexType;
 
 typedef struct FsearchDatabase FsearchDatabase;
 
