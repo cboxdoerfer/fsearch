@@ -603,7 +603,7 @@ fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, gu
 
     start_idx = get_row_idx_for_sort_type(view, (gint)start_idx);
     end_idx = get_row_idx_for_sort_type(view, (gint)end_idx);
-    guint temp_idx = start_idx;
+    const guint temp_idx = start_idx;
 
     if (start_idx > end_idx) {
         start_idx = end_idx;
