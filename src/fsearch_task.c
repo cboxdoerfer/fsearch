@@ -147,11 +147,7 @@ fsearch_task_queue_free(FsearchTaskQueue *queue) {
 
     fsearch_task_queue_clear(queue, FSEARCH_TASK_CLEAR_ALL, -1);
 
-    g_mutex_lock(&queue->current_task_lock);
-    if (queue->current_task) {
-        g_cancellable_cancel(queue->current_task->task_cancellable);
-    }
-    g_mutex_unlock(&queue->current_task_lock);
+    fsearch_task_queue_cancel_current(queue);
 
     FsearchTask *task = calloc(1, sizeof(FsearchTask));
     g_assert(task != NULL);
