@@ -434,6 +434,5 @@ db_search_queue(FsearchTaskQueue *queue,
                 FsearchQuery *query,
                 FsearchTaskFinishedFunc finished_func,
                 FsearchTaskCancelledFunc cancelled_func) {
-    FsearchTask *task = fsearch_task_new(0, db_search_task, finished_func, cancelled_func, query);
-    fsearch_task_queue(queue, task, FSEARCH_TASK_CLEAR_ALL);
+    fsearch_task_queue(queue, 0, db_search_task, finished_func, cancelled_func, FSEARCH_TASK_CLEAR_SAME_ID, query);
 }

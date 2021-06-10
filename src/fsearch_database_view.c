@@ -215,7 +215,7 @@ db_view_new(const char *query_text,
 }
 
 static void
-db_view_task_query_cancelled(FsearchTask *task, gpointer data) {
+db_view_task_query_cancelled(gpointer data) {
     FsearchQuery *query = data;
     FsearchDatabaseView *view = query->data;
 
@@ -228,13 +228,10 @@ db_view_task_query_cancelled(FsearchTask *task, gpointer data) {
 
     fsearch_query_unref(query);
     query = NULL;
-
-    fsearch_task_free(task);
-    task = NULL;
 }
 
 static void
-db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
+db_view_task_query_finished(gpointer result, gpointer data) {
     FsearchQuery *query = data;
     FsearchDatabaseView *view = query->data;
 
@@ -279,9 +276,6 @@ db_view_task_query_finished(FsearchTask *task, gpointer result, gpointer data) {
 
     db_view_unref(view);
     view = NULL;
-
-    fsearch_task_free(task);
-    task = NULL;
 }
 
 typedef struct {
@@ -333,19 +327,15 @@ db_sort_task(gpointer data, GCancellable *cancellable) {
 }
 
 static void
-db_sort_task_cancelled(FsearchTask *task, gpointer data) {
+db_sort_task_cancelled(gpointer data) {
     FsearchSortContext *ctx = data;
-
     free(ctx);
     ctx = NULL;
-
-    fsearch_task_free(task);
-    task = NULL;
 }
 
 static void
-db_sort_task_finished(FsearchTask *task, gpointer result, gpointer data) {
-    db_sort_task_cancelled(task, data);
+db_sort_task_finished(gpointer result, gpointer data) {
+    db_sort_task_cancelled(data);
 }
 
 static void
@@ -411,8 +401,13 @@ db_view_update_sort(FsearchDatabaseView *view) {
     ctx->compare_func = (DynamicArrayCompareDataFunc)func;
     ctx->parallel_sort = parallel_sort;
 
-    FsearchTask *task = fsearch_task_new(1, db_sort_task, db_sort_task_finished, db_sort_task_cancelled, ctx);
-    fsearch_task_queue(view->task_queue, task, FSEARCH_TASK_CLEAR_SAME_ID);
+    fsearch_task_queue(view->task_queue,
+                       1,
+                       db_sort_task,
+                       db_sort_task_finished,
+                       db_sort_task_cancelled,
+                       FSEARCH_TASK_CLEAR_SAME_ID,
+                       ctx);
 }
 
 static void

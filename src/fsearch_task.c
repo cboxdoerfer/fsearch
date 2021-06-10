@@ -20,6 +20,33 @@ struct _FsearchTask {
     gpointer data;
 };
 
+static void
+fsearch_task_free(FsearchTask *task) {
+    g_object_unref(task->task_cancellable);
+    task->task_cancellable = NULL;
+
+    free(task);
+    task = NULL;
+}
+
+static FsearchTask *
+fsearch_task_new(int id,
+                 FsearchTaskFunc task_func,
+                 FsearchTaskFinishedFunc task_finished_func,
+                 FsearchTaskCancelledFunc task_cancelled_func,
+                 gpointer data) {
+    FsearchTask *task = calloc(1, sizeof(FsearchTask));
+    g_assert(task != NULL);
+    task->task_cancellable = g_cancellable_new();
+    task->task_func = task_func;
+    task->task_finished_func = task_finished_func;
+    task->task_cancelled_func = task_cancelled_func;
+    task->data = data;
+    task->id = id;
+
+    return task;
+}
+
 static gpointer
 fsearch_task_queue_thread(FsearchTaskQueue *queue) {
     while (true) {
@@ -43,7 +70,10 @@ fsearch_task_queue_thread(FsearchTaskQueue *queue) {
         g_mutex_unlock(&queue->current_task_lock);
 
         g_cancellable_reset(task->task_cancellable);
-        task->task_finished_func(task, result, task->data);
+        task->task_finished_func(result, task->data);
+
+        fsearch_task_free(task);
+        task = NULL;
     }
     return NULL;
 }
@@ -79,8 +109,10 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
         }
 
         if (task->task_cancelled_func) {
-            task->task_cancelled_func(task, task->data);
+            task->task_cancelled_func(task->data);
         }
+        fsearch_task_free(task);
+        task = NULL;
     }
 
     // insert all the tasks back into the async queue, which still need to be processed
@@ -145,7 +177,14 @@ fsearch_task_queue_new(const char *name) {
 }
 
 void
-fsearch_task_queue(FsearchTaskQueue *queue, FsearchTask *task, FsearchTaskQueueClearPolicy clear_policy) {
+fsearch_task_queue(FsearchTaskQueue *queue,
+                   gint id,
+                   FsearchTaskFunc task_func,
+                   FsearchTaskFinishedFunc task_finished_func,
+                   FsearchTaskCancelledFunc task_cancelled_func,
+                   FsearchTaskQueueClearPolicy clear_policy,
+                   gpointer data) {
+    FsearchTask *task = fsearch_task_new(id, task_func, task_finished_func, task_cancelled_func, data);
     if (clear_policy != FSEARCH_TASK_CLEAR_NONE) {
         fsearch_task_queue_clear(queue, clear_policy, task->id);
         g_mutex_lock(&queue->current_task_lock);
@@ -159,29 +198,3 @@ fsearch_task_queue(FsearchTaskQueue *queue, FsearchTask *task, FsearchTaskQueueC
     g_async_queue_push(queue->queue, task);
 }
 
-void
-fsearch_task_free(FsearchTask *task) {
-    g_object_unref(task->task_cancellable);
-    task->task_cancellable = NULL;
-
-    free(task);
-    task = NULL;
-}
-
-FsearchTask *
-fsearch_task_new(int id,
-                 FsearchTaskFunc task_func,
-                 FsearchTaskFinishedFunc task_finished_func,
-                 FsearchTaskCancelledFunc task_cancelled_func,
-                 gpointer data) {
-    FsearchTask *task = calloc(1, sizeof(FsearchTask));
-    g_assert(task != NULL);
-    task->task_cancellable = g_cancellable_new();
-    task->task_func = task_func;
-    task->task_finished_func = task_finished_func;
-    task->task_cancelled_func = task_cancelled_func;
-    task->data = data;
-    task->id = id;
-
-    return task;
-}
