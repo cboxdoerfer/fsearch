@@ -3,21 +3,21 @@
 #include <assert.h>
 #include <stdbool.h>
 
-struct _FsearchTaskQueue {
-    GAsyncQueue *queue;
-    GThread *queue_thread;
-    GCancellable *queue_thread_cancellable;
-    FsearchTask *current_task;
-    GMutex current_task_lock;
-};
-
-struct _FsearchTask {
+typedef struct FsearchTask {
     int id;
     GCancellable *task_cancellable;
     FsearchTaskFunc task_func;
     FsearchTaskFinishedFunc task_finished_func;
     FsearchTaskCancelledFunc task_cancelled_func;
     gpointer data;
+} FsearchTask;
+
+struct _FsearchTaskQueue {
+    GAsyncQueue *queue;
+    GThread *queue_thread;
+    GCancellable *queue_thread_cancellable;
+    FsearchTask *current_task;
+    GMutex current_task_lock;
 };
 
 static void

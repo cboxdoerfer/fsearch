@@ -5,7 +5,6 @@
 #include <glib.h>
 
 typedef struct _FsearchTaskQueue FsearchTaskQueue;
-typedef struct _FsearchTask FsearchTask;
 
 typedef gpointer (*FsearchTaskFunc)(gpointer data, GCancellable *cancellable);
 typedef void (*FsearchTaskCancelledFunc)(gpointer data);
