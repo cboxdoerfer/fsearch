@@ -1,3 +1,5 @@
+#define G_LOG_DOMAIN "fsearch-task"
+
 #include "fsearch_task.h"
 
 #include <assert.h>
