@@ -4,6 +4,10 @@
 #include <stdbool.h>
 
 typedef struct FsearchTask {
+    enum {
+        FSEARCH_TASK_TYPE_QUIT,
+        FSEARCH_TASK_TYPE_NORMAL,
+    } type;
     int id;
     GCancellable *task_cancellable;
     FsearchTaskFunc task_func;
@@ -15,7 +19,6 @@ typedef struct FsearchTask {
 struct _FsearchTaskQueue {
     GAsyncQueue *queue;
     GThread *queue_thread;
-    GCancellable *queue_thread_cancellable;
     FsearchTask *current_task;
     GMutex current_task_lock;
 };
@@ -37,6 +40,7 @@ fsearch_task_new(int id,
                  gpointer data) {
     FsearchTask *task = calloc(1, sizeof(FsearchTask));
     g_assert(task != NULL);
+    task->type = FSEARCH_TASK_TYPE_NORMAL;
     task->task_cancellable = g_cancellable_new();
     task->task_func = task_func;
     task->task_finished_func = task_finished_func;
@@ -50,13 +54,16 @@ fsearch_task_new(int id,
 static gpointer
 fsearch_task_queue_thread(FsearchTaskQueue *queue) {
     while (true) {
-        if (g_cancellable_is_cancelled(queue->queue_thread_cancellable)) {
-            break;
-        }
-
-        FsearchTask *task = g_async_queue_timeout_pop(queue->queue, 500000);
+        FsearchTask *task = g_async_queue_pop(queue->queue);
         if (!task) {
             continue;
+        }
+        if (task->type == FSEARCH_TASK_TYPE_QUIT) {
+            // quit task queue thread
+            g_debug("[queue_thread] quit");
+            free(task);
+            task = NULL;
+            break;
         }
         g_mutex_lock(&queue->current_task_lock);
         queue->current_task = task;
@@ -144,17 +151,18 @@ fsearch_task_queue_free(FsearchTaskQueue *queue) {
     }
     g_mutex_unlock(&queue->current_task_lock);
 
-    g_mutex_clear(&queue->current_task_lock);
+    FsearchTask *task = calloc(1, sizeof(FsearchTask));
+    g_assert(task != NULL);
+    task->type = FSEARCH_TASK_TYPE_QUIT;
+    g_async_queue_push(queue->queue, task);
 
-    g_cancellable_cancel(queue->queue_thread_cancellable);
     g_thread_join(queue->queue_thread);
     queue->queue_thread = NULL;
 
+    g_mutex_clear(&queue->current_task_lock);
+
     g_async_queue_unref(queue->queue);
     queue->queue = NULL;
-
-    g_object_unref(queue->queue_thread_cancellable);
-    queue->queue_thread_cancellable = NULL;
 
     g_free(queue);
     queue = NULL;
@@ -168,7 +176,6 @@ fsearch_task_queue_new(const char *name) {
     assert(queue != NULL);
 
     queue->queue = g_async_queue_new();
-    queue->queue_thread_cancellable = g_cancellable_new();
     queue->queue_thread = g_thread_new(name, (GThreadFunc)fsearch_task_queue_thread, queue);
 
     g_mutex_init(&queue->current_task_lock);
