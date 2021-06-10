@@ -4,7 +4,7 @@
 #include <gio/gio.h>
 #include <glib.h>
 
-typedef struct _FsearchTaskQueue FsearchTaskQueue;
+typedef struct FsearchTaskQueue FsearchTaskQueue;
 
 typedef gpointer (*FsearchTaskFunc)(gpointer data, GCancellable *cancellable);
 typedef void (*FsearchTaskCancelledFunc)(gpointer data);

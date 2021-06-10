@@ -18,7 +18,7 @@ typedef struct FsearchTask {
     gpointer data;
 } FsearchTask;
 
-struct _FsearchTaskQueue {
+struct FsearchTaskQueue {
     GAsyncQueue *queue;
     GThread *queue_thread;
     FsearchTask *current_task;
