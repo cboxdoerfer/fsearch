@@ -67,10 +67,6 @@ db_search_result_new(void) {
 
 static void
 db_search_result_free(DatabaseSearchResult *result) {
-    if (!result) {
-        return;
-    }
-
     if (result->folders) {
         darray_unref(result->folders);
         result->folders = NULL;
