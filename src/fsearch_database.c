@@ -1266,7 +1266,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             continue;
         }
         if (file_is_excluded(dent->d_name, db->exclude_files)) {
-            g_debug("[db_scan] cancelled");
+            g_debug("[db_scan] excluded: %s", dent->d_name);
             continue;
         }
 
