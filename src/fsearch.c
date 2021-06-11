@@ -249,7 +249,7 @@ static void
 database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
     db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_update_status_cb : NULL);
     if (!g_cancellable_is_cancelled(app->db_thread_cancellable)) {
-        char *db_path = fsearch_application_get_database_dir(app);
+        char *db_path = fsearch_application_get_database_dir();
         if (db_path) {
             db_save(db, db_path);
             free(db_path);
@@ -274,7 +274,7 @@ database_update(FsearchApplication *app, bool rescan) {
         database_update_scan_and_save(app, db);
     }
     else {
-        char *db_file_path = fsearch_application_get_database_file_path(app);
+        char *db_file_path = fsearch_application_get_database_file_path();
         if (db_file_path) {
             if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_update_status_cb : NULL)
                 && !app->config->update_database_on_launch) {
@@ -723,7 +723,7 @@ database_update_in_local_instance() {
 
     int res = !db_scan(db, NULL, NULL);
 
-    char *db_path = fsearch_application_get_database_dir(NULL);
+    char *db_path = fsearch_application_get_database_dir();
     if (db_path) {
         db_save(db, db_path);
         free(db_path);
@@ -910,8 +910,7 @@ fsearch_application_get_config(FsearchApplication *fsearch) {
 }
 
 char *
-fsearch_application_get_database_file_path(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+fsearch_application_get_database_file_path() {
     GString *file_path = g_string_new(g_get_user_data_dir());
     g_string_append_c(file_path, G_DIR_SEPARATOR);
     g_string_append(file_path, "fsearch");
@@ -922,8 +921,7 @@ fsearch_application_get_database_file_path(FsearchApplication *fsearch) {
 }
 
 char *
-fsearch_application_get_database_dir(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+fsearch_application_get_database_dir() {
     GString *db_dir = g_string_new(g_get_user_data_dir());
     g_string_append_c(db_dir, G_DIR_SEPARATOR);
     g_string_append(db_dir, "fsearch");
