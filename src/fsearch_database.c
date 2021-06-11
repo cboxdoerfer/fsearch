@@ -1223,6 +1223,7 @@ typedef struct DatabaseWalkContext {
 static int
 db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntryFolder *parent) {
     if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
+        g_debug("[db_scan] cancelled");
         return WALK_CANCEL;
     }
 
@@ -1234,8 +1235,10 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
     DIR *dir = NULL;
     if (!(dir = opendir(path->str))) {
+        g_debug("[db_scan] failed to open directory: %s", path->str);
         return WALK_BADIO;
     }
+    g_debug("[db_scan] scanning directory: %s", path->str);
 
     const double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
     if (elapsed_seconds > 0.1) {
@@ -1250,17 +1253,20 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
         if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
+            g_debug("[db_scan] cancelled");
             closedir(dir);
             return WALK_CANCEL;
         }
         if (walk_context->exclude_hidden && dent->d_name[0] == '.') {
             // file is dotfile, skip
+            g_debug("[db_scan] exclude hidden: %s", dent->d_name);
             continue;
         }
         if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "..")) {
             continue;
         }
         if (file_is_excluded(dent->d_name, db->exclude_files)) {
+            g_debug("[db_scan] cancelled");
             continue;
         }
 
@@ -1270,7 +1276,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
         struct stat st;
         if (lstat(path->str, &st) == -1) {
-            // warn("Can't stat %s", fn);
+            g_debug("[db_scan] can't stat: %s", path->str);
             continue;
         }
 
