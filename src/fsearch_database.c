@@ -1295,6 +1295,12 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             continue;
         }
 
+        const size_t d_name_len = strlen(dent->d_name);
+        if (d_name_len >= 256) {
+            g_warning("[db_scan] file name too long, skipping: \"%s\" (len: %lu)", dent->d_name, d_name_len);
+            continue;
+        }
+
         // create full path of file/folder
         g_string_truncate(path, path_len);
         g_string_append(path, dent->d_name);
