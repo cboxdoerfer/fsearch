@@ -1238,7 +1238,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         g_debug("[db_scan] failed to open directory: %s", path->str);
         return WALK_BADIO;
     }
-    g_debug("[db_scan] scanning directory: %s", path->str);
+    // g_debug("[db_scan] scanning directory: %s", path->str);
 
     const double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
     if (elapsed_seconds > 0.1) {
@@ -1259,14 +1259,14 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         }
         if (walk_context->exclude_hidden && dent->d_name[0] == '.') {
             // file is dotfile, skip
-            g_debug("[db_scan] exclude hidden: %s", dent->d_name);
+            // g_debug("[db_scan] exclude hidden: %s", dent->d_name);
             continue;
         }
         if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "..")) {
             continue;
         }
         if (file_is_excluded(dent->d_name, db->exclude_files)) {
-            g_debug("[db_scan] excluded: %s", dent->d_name);
+            // g_debug("[db_scan] excluded: %s", dent->d_name);
             continue;
         }
 
