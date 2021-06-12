@@ -1085,7 +1085,7 @@ db_save(FsearchDatabase *db, const char *path) {
     }
 
     const uint32_t num_files = darray_get_num_items(files);
-    g_debug("[db_save] saving number of folders: %d", num_files);
+    g_debug("[db_save] saving number of files: %d", num_files);
     bytes_written += write_data_to_file(fp, &num_files, 4, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1107,7 +1107,7 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
-    g_debug("[db_save] saving indice...s");
+    g_debug("[db_save] saving indices...");
     bytes_written += db_save_indexes(fp, db, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1389,7 +1389,7 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
     timer = NULL;
 
     if (res == WALK_OK) {
-        g_debug("[db_scan] scanned: %d files, %d files -> %d total", db->num_files, db->num_folders, db->num_entries);
+        g_debug("[db_scan] scanned: %d files, %d folders -> %d total", db->num_files, db->num_folders, db->num_entries);
         return;
     }
 
