@@ -1029,6 +1029,8 @@ db_save(FsearchDatabase *db, const char *path) {
     assert(path != NULL);
     assert(db != NULL);
 
+    g_debug("[db_save] saving database to file...");
+
     if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
         g_debug("[db_save] database path doesn't exist: %s", path);
         return false;
@@ -1044,22 +1046,28 @@ db_save(FsearchDatabase *db, const char *path) {
     GString *path_full_temp = g_string_new(path_full->str);
     g_string_append(path_full_temp, ".tmp");
 
+    g_debug("[db_save] trying to open temporary database file: %s", path_full_temp->str);
+
     FILE *fp = db_file_open_locked(path_full_temp->str, "wb");
     if (!fp) {
+        g_debug("[db_save] failed to open temporary database file: %s", path_full_temp->str);
         goto save_fail;
     }
 
+    g_debug("[db_save] updating folder indices...");
     db_entry_update_folder_indices(db);
 
     bool write_failed = false;
 
     size_t bytes_written = 0;
 
+    g_debug("[db_save] saving database header...");
     bytes_written += db_save_header(fp, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
 
+    g_debug("[db_save] saving database index flags...");
     const uint64_t index_flags = db->index_flags;
     bytes_written += write_data_to_file(fp, &index_flags, 8, 1, &write_failed);
     if (write_failed == true) {
@@ -1070,12 +1078,14 @@ db_save(FsearchDatabase *db, const char *path) {
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
 
     const uint32_t num_folders = darray_get_num_items(folders);
+    g_debug("[db_save] saving number of folders: %d", num_folders);
     bytes_written += write_data_to_file(fp, &num_folders, 4, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
 
     const uint32_t num_files = darray_get_num_items(files);
+    g_debug("[db_save] saving number of folders: %d", num_files);
     bytes_written += write_data_to_file(fp, &num_files, 4, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1083,6 +1093,7 @@ db_save(FsearchDatabase *db, const char *path) {
 
     uint64_t folder_block_size = 0;
     const uint64_t folder_block_size_offset = bytes_written;
+    g_debug("[db_save] saving folder block size...");
     bytes_written += write_data_to_file(fp, &folder_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1090,33 +1101,40 @@ db_save(FsearchDatabase *db, const char *path) {
 
     uint64_t file_block_size = 0;
     const uint64_t file_block_size_offset = bytes_written;
+    g_debug("[db_save] saving file block size...");
     bytes_written += write_data_to_file(fp, &file_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
 
+    g_debug("[db_save] saving indice...s");
     bytes_written += db_save_indexes(fp, db, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
+    g_debug("[db_save] saving excludes...");
     bytes_written += db_save_excludes(fp, db, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
+    g_debug("[db_save] saving exclude pattern...");
     bytes_written += db_save_exclude_pattern(fp, db, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
+    g_debug("[db_save] saving folders...");
     folder_block_size = db_save_folders(fp, index_flags, folders, num_folders, &write_failed);
     bytes_written += folder_block_size;
     if (write_failed == true) {
         goto save_fail;
     }
+    g_debug("[db_save] saving files...");
     file_block_size = db_save_files(fp, index_flags, files, num_files, &write_failed);
     bytes_written += file_block_size;
     if (write_failed == true) {
         goto save_fail;
     }
+    g_debug("[db_save] saving sorted arrays...");
     bytes_written += db_save_sorted_arrays(fp, db, num_files, num_folders, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1126,6 +1144,7 @@ db_save(FsearchDatabase *db, const char *path) {
     if (fseek(fp, (long int)folder_block_size_offset, SEEK_SET) != 0) {
         goto save_fail;
     }
+    g_debug("[db_save] updating file and folder block size: %lu, %lu", folder_block_size, file_block_size);
     bytes_written += write_data_to_file(fp, &folder_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1135,12 +1154,14 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
+    g_debug("[db_save] removing current database file...");
     // remove current database file
     unlink(path_full->str);
 
     fclose(fp);
     fp = NULL;
 
+    g_debug("[db_save] renaming temporary database file: %s -> %s", path_full_temp->str, path_full->str);
     // rename temporary fsearch.db.tmp to fsearch.db
     if (rename(path_full_temp->str, path_full->str) != 0) {
         goto save_fail;
@@ -1162,7 +1183,7 @@ db_save(FsearchDatabase *db, const char *path) {
     return true;
 
 save_fail:
-    g_warning("save fail");
+    g_warning("[db_save] saving failed");
 
     if (fp) {
         fclose(fp);
