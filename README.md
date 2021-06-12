@@ -9,7 +9,6 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 * For bug reports and feature requests please use the issue tracker: https://github.com/cboxdoerfer/fsearch/issues
 * For everything else related to FSearch you can talk to me on Matrix: https://matrix.to/#/#fsearch:matrix.org
 
-For 
 ![](https://user-images.githubusercontent.com/6108388/94472642-51f60a80-01cb-11eb-9b8c-e38fe2c02e43.png)
 ![](https://user-images.githubusercontent.com/6108388/94607184-dd3ed100-029b-11eb-86db-121e7984ca92.png)
 
