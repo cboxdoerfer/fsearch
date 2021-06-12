@@ -205,8 +205,12 @@ db_entry_update_folder_indices(FsearchDatabase *db) {
 
 static uint8_t
 get_name_offset(const char *old, const char *new) {
+    if (!old || !new) {
+        return 0;
+    }
+
     uint8_t offset = 0;
-    while (old[offset] == new[offset] && old[offset] != '\0' && new[offset] != '\0') {
+    while (old[offset] == new[offset] && old[offset] != '\0' && new[offset] != '\0' && offset < 255) {
         offset++;
     }
     return offset;
