@@ -1589,6 +1589,35 @@ db_get_files_copy(FsearchDatabase *db) {
     return db_get_files_sorted_copy(db, DATABASE_INDEX_TYPE_NAME);
 }
 
+bool
+db_get_entries_sorted(FsearchDatabase *db,
+                      FsearchDatabaseIndexType requested_sort_type,
+                      FsearchDatabaseIndexType *returned_sort_type,
+                      DynamicArray **folders,
+                      DynamicArray **files) {
+    assert(db != NULL);
+    assert(returned_sort_type != NULL);
+    assert(folders != NULL);
+    assert(files != NULL);
+    if (!is_valid_sort_type(requested_sort_type)) {
+        return false;
+    }
+
+    FsearchDatabaseIndexType sort_type = requested_sort_type;
+    if (!db_has_entries_sorted_by_type(db, requested_sort_type)) {
+        sort_type = DATABASE_INDEX_TYPE_NAME;
+    }
+
+    if (!db_has_entries_sorted_by_type(db, sort_type)) {
+        return false;
+    }
+
+    *folders = darray_ref(db->sorted_folders[sort_type]);
+    *files = darray_ref(db->sorted_files[sort_type]);
+    *returned_sort_type = sort_type;
+    return true;
+}
+
 DynamicArray *
 db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
     assert(db != NULL);

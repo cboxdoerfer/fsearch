@@ -416,21 +416,15 @@ db_view_update_entries(FsearchDatabaseView *view) {
         return;
     }
 
-    if (view->search_started_func) {
-        view->search_started_func(view, view->user_data);
-    }
-
     DynamicArray *files = NULL;
     DynamicArray *folders = NULL;
 
-    if (db_has_entries_sorted_by_type(view->db, view->sort_order)) {
-        files = db_get_files_sorted(view->db, view->sort_order);
-        folders = db_get_folders_sorted(view->db, view->sort_order);
+    if (!db_get_entries_sorted(view->db, view->sort_order, &view->sort_order, &folders, &files)) {
+        return;
     }
-    else {
-        files = db_get_files(view->db);
-        folders = db_get_folders(view->db);
-        view->sort_order = DATABASE_INDEX_TYPE_NAME;
+
+    if (view->search_started_func) {
+        view->search_started_func(view, view->user_data);
     }
 
     FsearchQuery *q = fsearch_query_new(view->query_text,
