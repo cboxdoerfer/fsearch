@@ -20,8 +20,7 @@
 
 #include "fsearch_array.h"
 #include "fsearch_database_index.h"
-#include "fsearch_filter.h"
-#include "fsearch_query.h"
+#include "fsearch_thread_pool.h"
 
 #include <gio/gio.h>
 #include <glib.h>
