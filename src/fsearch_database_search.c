@@ -385,31 +385,23 @@ db_search_empty(FsearchQuery *q) {
 
 static DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable) {
-    const uint32_t num_folder_entries = q->folders ? darray_get_num_items(q->folders) : 0;
-    const uint32_t num_file_entries = q->files ? darray_get_num_items(q->files) : 0;
-    if (num_folder_entries == 0 && num_file_entries == 0) {
-        return db_search_result_new();
-    }
-
     DynamicArray *files = NULL;
     DynamicArray *folders = NULL;
 
-    folders = db_search_entries(q, cancellable, q->folders, db_search_worker);
+    const uint32_t num_folders = q->folders ? darray_get_num_items(q->folders) : 0;
+    folders = num_folders > 0 ? db_search_entries(q, cancellable, q->folders, db_search_worker) : NULL;
     if (g_cancellable_is_cancelled(cancellable)) {
         goto search_was_cancelled;
     }
-    files = db_search_entries(q, cancellable, q->files, db_search_worker);
+    const uint32_t num_files = q->files ? darray_get_num_items(q->files) : 0;
+    files = num_files > 0 ? db_search_entries(q, cancellable, q->files, db_search_worker) : NULL;
     if (g_cancellable_is_cancelled(cancellable)) {
         goto search_was_cancelled;
     }
 
     DatabaseSearchResult *result = db_search_result_new();
-    if (files) {
-        result->files = files;
-    }
-    if (folders) {
-        result->folders = folders;
-    }
+    result->files = files;
+    result->folders = folders;
 
     return result;
 
