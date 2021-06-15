@@ -54,7 +54,7 @@ struct FsearchDatabaseView {
 };
 
 static void
-db_view_update_entries(FsearchDatabaseView *view);
+db_view_search(FsearchDatabaseView *view);
 
 static void
 db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
@@ -166,7 +166,7 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
     view->files = db_get_files(db);
     view->folders = db_get_folders(db);
 
-    db_view_update_entries(view);
+    db_view_search(view);
     db_view_sort(view, view->sort_order);
 
     db_view_unlock(view);
@@ -215,7 +215,7 @@ db_view_new(const char *query_text,
 }
 
 static void
-db_view_task_query_cancelled(gpointer data) {
+db_view_search_task_cancelled(gpointer data) {
     FsearchQuery *query = data;
     FsearchDatabaseView *view = query->data;
 
@@ -231,7 +231,7 @@ db_view_task_query_cancelled(gpointer data) {
 }
 
 static void
-db_view_task_query_finished(gpointer result, gpointer data) {
+db_view_search_task_finished(gpointer result, gpointer data) {
     FsearchQuery *query = data;
     FsearchDatabaseView *view = query->data;
 
@@ -292,7 +292,7 @@ typedef struct {
 } FsearchSortContext;
 
 static void
-db_sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool parallel_sort) {
+sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool parallel_sort) {
     if (!array) {
         return;
     }
@@ -333,7 +333,7 @@ get_sort_func(FsearchDatabaseIndexType sort_order) {
 }
 
 static gpointer
-db_sort_task(gpointer data, GCancellable *cancellable) {
+db_view_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
     FsearchDatabaseView *view = ctx->view;
 
@@ -377,8 +377,8 @@ db_sort_task(gpointer data, GCancellable *cancellable) {
 
     g_debug("[sort] started: %d", ctx->sort_order);
 
-    db_sort_array(folders, func, parallel_sort);
-    db_sort_array(files, func, parallel_sort);
+    sort_array(folders, func, parallel_sort);
+    sort_array(files, func, parallel_sort);
 
 out:
     g_clear_pointer(&view->folders, darray_unref);
@@ -405,15 +405,15 @@ out:
 }
 
 static void
-db_sort_task_cancelled(gpointer data) {
+db_view_sort_task_cancelled(gpointer data) {
     FsearchSortContext *ctx = data;
     free(ctx);
     ctx = NULL;
 }
 
 static void
-db_sort_task_finished(gpointer result, gpointer data) {
-    db_sort_task_cancelled(data);
+db_view_sort_task_finished(gpointer result, gpointer data) {
+    db_view_sort_task_cancelled(data);
 }
 
 static void
@@ -426,15 +426,15 @@ db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order) {
 
     fsearch_task_queue(view->task_queue,
                        1,
-                       db_sort_task,
-                       db_sort_task_finished,
-                       db_sort_task_cancelled,
+                       db_view_sort_task,
+                       db_view_sort_task_finished,
+                       db_view_sort_task_cancelled,
                        FSEARCH_TASK_CLEAR_SAME_ID,
                        ctx);
 }
 
 static void
-db_view_update_entries(FsearchDatabaseView *view) {
+db_view_search(FsearchDatabaseView *view) {
     if (!view->db || !view->pool) {
         return;
     }
@@ -453,7 +453,7 @@ db_view_update_entries(FsearchDatabaseView *view) {
                                         view->id,
                                         db_view_ref(view));
 
-    db_search_queue(view->task_queue, q, db_view_task_query_finished, db_view_task_query_cancelled);
+    db_search_queue(view->task_queue, q, db_view_search_task_finished, db_view_search_task_cancelled);
 }
 
 void
@@ -467,7 +467,7 @@ db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter) {
     }
     view->filter = fsearch_filter_ref(filter);
 
-    db_view_update_entries(view);
+    db_view_search(view);
 
     db_view_unlock(view);
 }
@@ -490,7 +490,7 @@ db_view_set_query_flags(FsearchDatabaseView *view, FsearchQueryFlags query_flags
     db_view_lock(view);
     view->query_flags = query_flags;
 
-    db_view_update_entries(view);
+    db_view_search(view);
 
     db_view_unlock(view);
 }
@@ -506,7 +506,7 @@ db_view_set_query_text(FsearchDatabaseView *view, const char *query_text) {
     }
     view->query_text = strdup(query_text ? query_text : "");
 
-    db_view_update_entries(view);
+    db_view_search(view);
 
     db_view_unlock(view);
 }
