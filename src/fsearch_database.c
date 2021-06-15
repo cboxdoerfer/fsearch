@@ -104,19 +104,8 @@ db_unregister_view(FsearchDatabase *db, gpointer view) {
 static void
 db_sorted_entries_free(FsearchDatabase *db) {
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
-        DynamicArray *files = db->sorted_files[i];
-        if (files) {
-            darray_unref(files);
-            files = NULL;
-        }
-        db->sorted_files[i] = NULL;
-
-        DynamicArray *folders = db->sorted_folders[i];
-        if (folders) {
-            darray_unref(folders);
-            folders = NULL;
-        }
-        db->sorted_folders[i] = NULL;
+        g_clear_pointer(&db->sorted_files[i], darray_unref);
+        g_clear_pointer(&db->sorted_folders[i], darray_unref);
     }
 }
 
