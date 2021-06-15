@@ -24,6 +24,7 @@
 #include <stdbool.h>
 
 #include "fsearch_array.h"
+#include "fsearch_database.h"
 #include "fsearch_filter.h"
 #include "fsearch_list_view.h"
 #include "fsearch_query_flags.h"
@@ -32,8 +33,8 @@
 
 typedef struct FsearchQuery {
     char *text;
-    DynamicArray *files;
-    DynamicArray *folders;
+
+    FsearchDatabase *db;
 
     int32_t sort_order;
 
@@ -63,8 +64,7 @@ typedef struct FsearchQuery {
 
 FsearchQuery *
 fsearch_query_new(const char *text,
-                  DynamicArray *files,
-                  DynamicArray *folders,
+                  FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,

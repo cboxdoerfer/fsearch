@@ -26,8 +26,7 @@
 
 FsearchQuery *
 fsearch_query_new(const char *text,
-                  DynamicArray *files,
-                  DynamicArray *folders,
+                  FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
@@ -41,8 +40,7 @@ fsearch_query_new(const char *text,
     q->text = text ? strdup(text) : "";
     q->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
 
-    q->files = files;
-    q->folders = folders;
+    q->db = db_ref(db);
 
     q->sort_order = sort_order;
 
@@ -75,13 +73,9 @@ fsearch_query_new(const char *text,
 
 static void
 fsearch_query_free(FsearchQuery *query) {
-    if (query->files) {
-        darray_unref(query->files);
-        query->files = NULL;
-    }
-    if (query->folders) {
-        darray_unref(query->folders);
-        query->folders = NULL;
+    if (query->db) {
+        db_unref(query->db);
+        query->db = NULL;
     }
     if (query->filter) {
         fsearch_filter_unref(query->filter);

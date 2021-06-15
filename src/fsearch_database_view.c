@@ -245,18 +245,26 @@ db_view_task_query_finished(gpointer result, gpointer data) {
     if (result) {
         DatabaseSearchResult *res = result;
 
-        if (view->selection) {
-            fsearch_selection_unselect_all(view->selection);
-        }
-        if (view->files) {
-            darray_unref(view->files);
-        }
-        view->files = db_search_result_get_files(res);
+        FsearchDatabase *db = db_search_result_get_db(res);
+        if (view->db == db) {
+            if (view->selection) {
+                fsearch_selection_unselect_all(view->selection);
+            }
+            if (view->files) {
+                darray_unref(view->files);
+            }
+            view->files = db_search_result_get_files(res);
 
-        if (view->folders) {
-            darray_unref(view->folders);
+            if (view->folders) {
+                darray_unref(view->folders);
+            }
+            view->folders = db_search_result_get_folders(res);
+
+            view->sort_order = db_search_result_get_sort_type(res);
         }
-        view->folders = db_search_result_get_folders(res);
+
+        db_unref(db);
+        db = NULL;
 
         db_search_result_unref(res);
         res = NULL;
@@ -416,20 +424,12 @@ db_view_update_entries(FsearchDatabaseView *view) {
         return;
     }
 
-    DynamicArray *files = NULL;
-    DynamicArray *folders = NULL;
-
-    if (!db_get_entries_sorted(view->db, view->sort_order, &view->sort_order, &folders, &files)) {
-        return;
-    }
-
     if (view->search_started_func) {
         view->search_started_func(view, view->user_data);
     }
 
     FsearchQuery *q = fsearch_query_new(view->query_text,
-                                        files,
-                                        folders,
+                                        view->db,
                                         view->sort_order,
                                         view->filter,
                                         view->pool,

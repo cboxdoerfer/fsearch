@@ -38,6 +38,9 @@ struct DatabaseSearchResult {
     DynamicArray *files;
     DynamicArray *folders;
 
+    FsearchDatabase *db;
+    FsearchDatabaseIndexType sort_type;
+
     volatile int ref_count;
 };
 
@@ -75,6 +78,10 @@ db_search_result_free(DatabaseSearchResult *result) {
         darray_unref(result->files);
         result->files = NULL;
     }
+    if (result->db) {
+        db_unref(result->db);
+        result->db = NULL;
+    }
 
     free(result);
     result = NULL;
@@ -98,6 +105,16 @@ db_search_result_unref(DatabaseSearchResult *result) {
         db_search_result_free(result);
         result = NULL;
     }
+}
+
+FsearchDatabaseIndexType
+db_search_result_get_sort_type(DatabaseSearchResult *result) {
+    return result->sort_type;
+}
+
+FsearchDatabase *
+db_search_result_get_db(DatabaseSearchResult *result) {
+    return db_ref(result->db);
 }
 
 DynamicArray *
@@ -378,42 +395,66 @@ db_search_entries(FsearchQuery *q,
 static DatabaseSearchResult *
 db_search_empty(FsearchQuery *q) {
     DatabaseSearchResult *result = db_search_result_new();
-    result->folders = darray_ref(q->folders);
-    result->files = darray_ref(q->files);
+    DynamicArray *files = NULL;
+    DynamicArray *folders = NULL;
+
+    FsearchDatabaseIndexType sort_type;
+
+    db_lock(q->db);
+    db_get_entries_sorted(q->db, q->sort_order, &sort_type, &folders, &files);
+    result->folders = folders;
+    result->files = files;
+    result->db = db_ref(q->db);
+    result->sort_type = sort_type;
+    db_unlock(q->db);
     return result;
 }
 
 static DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable) {
-    DynamicArray *files = NULL;
-    DynamicArray *folders = NULL;
+    DynamicArray *files_in = NULL;
+    DynamicArray *folders_in = NULL;
 
-    const uint32_t num_folders = q->folders ? darray_get_num_items(q->folders) : 0;
-    folders = num_folders > 0 ? db_search_entries(q, cancellable, q->folders, db_search_worker) : NULL;
+    FsearchDatabaseIndexType sort_type;
+
+    db_lock(q->db);
+    db_get_entries_sorted(q->db, q->sort_order, &sort_type, &folders_in, &files_in);
+
+    DynamicArray *files_res = NULL;
+    DynamicArray *folders_res = NULL;
+
+    const uint32_t num_folders = folders_in ? darray_get_num_items(folders_in) : 0;
+    folders_res = num_folders > 0 ? db_search_entries(q, cancellable, folders_in, db_search_worker) : NULL;
+    g_clear_pointer(&folders_in, darray_unref);
     if (g_cancellable_is_cancelled(cancellable)) {
         goto search_was_cancelled;
     }
-    const uint32_t num_files = q->files ? darray_get_num_items(q->files) : 0;
-    files = num_files > 0 ? db_search_entries(q, cancellable, q->files, db_search_worker) : NULL;
+    const uint32_t num_files = files_in ? darray_get_num_items(files_in) : 0;
+    files_res = num_files > 0 ? db_search_entries(q, cancellable, files_in, db_search_worker) : NULL;
+    g_clear_pointer(&files_in, darray_unref);
     if (g_cancellable_is_cancelled(cancellable)) {
         goto search_was_cancelled;
     }
 
     DatabaseSearchResult *result = db_search_result_new();
-    result->files = files;
-    result->folders = folders;
+    result->files = files_res;
+    result->folders = folders_res;
+    result->db = db_ref(q->db);
+    result->sort_type = sort_type;
 
+    db_unlock(q->db);
     return result;
 
 search_was_cancelled:
-    if (folders) {
-        darray_unref(folders);
-        folders = NULL;
+    if (folders_res) {
+        darray_unref(folders_res);
+        folders_res = NULL;
     }
-    if (files) {
-        darray_unref(files);
-        files = NULL;
+    if (files_res) {
+        darray_unref(files_res);
+        files_res = NULL;
     }
+    db_unlock(q->db);
     return NULL;
 }
 
