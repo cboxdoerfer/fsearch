@@ -1350,7 +1350,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     return WALK_OK;
 }
 
-static void
+static bool
 db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
     assert(dname != NULL);
     assert(dname[0] == G_DIR_SEPARATOR);
@@ -1358,7 +1358,7 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
 
     if (!g_file_test(dname, G_FILE_TEST_IS_DIR)) {
         g_warning("[db_scan] %s doesn't exist", dname);
-        return;
+        return false;
     }
 
     GString *path = g_string_new(dname);
@@ -1398,10 +1398,11 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
 
     if (res == WALK_OK) {
         g_debug("[db_scan] scanned: %d files, %d folders -> %d total", db->num_files, db->num_folders, db->num_entries);
-        return;
+        return true;
     }
 
     g_warning("[db_scan] walk error: %d", res);
+    return false;
 }
 
 static gint
@@ -1682,7 +1683,7 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
             continue;
         }
         if (fs_path->update) {
-            db_scan_folder(db, fs_path->path, cancellable, status_cb);
+            ret = db_scan_folder(db, fs_path->path, cancellable, status_cb) || ret;
         }
     }
     db_sort(db);

@@ -706,31 +706,37 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 
 static int
 database_update_in_local_instance() {
-    GTimer *timer = g_timer_new();
-    g_timer_start(timer);
-
     FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
     g_assert(config != NULL);
 
     if (!config_load(config)) {
         if (!config_load_default(config)) {
-            g_printerr("[database_update] failed to load config\n");
-            return 1;
+            g_printerr("[fsearch] failed to load config\n");
+            config_free(config);
+            config = NULL;
+            return EXIT_FAILURE;
         }
     }
+
+    GTimer *timer = g_timer_new();
+    g_timer_start(timer);
+
     FsearchDatabase *db =
         db_new(config->indexes, config->exclude_locations, config->exclude_files, config->exclude_hidden_items);
 
-    int res = !db_scan(db, NULL, NULL);
+    int res = EXIT_FAILURE;
+    if (db_scan(db, NULL, NULL)) {
+        char *db_path = fsearch_application_get_database_dir();
+        if (db_path) {
+            res = db_save(db, db_path) ? EXIT_SUCCESS : EXIT_FAILURE;
 
-    char *db_path = fsearch_application_get_database_dir();
-    if (db_path) {
-        db_save(db, db_path);
-        free(db_path);
-        db_path = NULL;
+            free(db_path);
+            db_path = NULL;
+        }
     }
 
     db_unref(db);
+    db = NULL;
 
     config_free(config);
     config = NULL;
@@ -740,14 +746,12 @@ database_update_in_local_instance() {
     g_timer_destroy(timer);
     timer = NULL;
 
-    const char *debug_message = NULL;
-    if (res == 0) {
-        debug_message = "[app] database update finished in %.2f ms";
+    if (res == EXIT_SUCCESS) {
+        g_print("[fsearch] database update finished successfully in %.2f seconds\n", seconds);
     }
     else {
-        debug_message = "[app] database update failed after %.2f ms";
+        g_printerr("[fsearch] database update failed\n");
     }
-    g_debug(debug_message, seconds * 1000);
 
     return res;
 }
