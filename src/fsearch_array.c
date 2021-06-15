@@ -55,7 +55,7 @@ darray_free(DynamicArray *array) {
         return;
     }
 
-    // g_debug("[darray_free] freed");
+    g_debug("[darray_free] freed");
 
     darray_clear(array);
     if (array->data) {
@@ -72,7 +72,7 @@ darray_ref(DynamicArray *array) {
         return NULL;
     }
     g_atomic_int_inc(&array->ref_count);
-    // g_debug("[darray_ref] increased to: %d", array->ref_count);
+    g_debug("[darray_ref] increased to: %d", array->ref_count);
     return array;
 }
 
@@ -81,7 +81,7 @@ darray_unref(DynamicArray *array) {
     if (!array || array->ref_count <= 0) {
         return;
     }
-    // g_debug("[darray_unref] dropped to: %d", array->ref_count - 1);
+    g_debug("[darray_unref] dropped to: %d", array->ref_count - 1);
     if (g_atomic_int_dec_and_test(&array->ref_count)) {
         darray_free(array);
         array = NULL;

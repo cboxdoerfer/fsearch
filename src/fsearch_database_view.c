@@ -57,7 +57,7 @@ static void
 db_view_update_entries(FsearchDatabaseView *view);
 
 static void
-db_view_update_sort(FsearchDatabaseView *view);
+db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
 
 // Implementation
 
@@ -167,7 +167,7 @@ db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
     view->folders = db_get_folders(db);
 
     db_view_update_entries(view);
-    db_view_update_sort(view);
+    db_view_sort(view, view->sort_order);
 
     db_view_unlock(view);
 }
@@ -288,8 +288,7 @@ db_view_task_query_finished(gpointer result, gpointer data) {
 
 typedef struct {
     FsearchDatabaseView *view;
-    DynamicArrayCompareDataFunc compare_func;
-    bool parallel_sort;
+    FsearchDatabaseIndexType sort_order;
 } FsearchSortContext;
 
 static void
@@ -305,10 +304,45 @@ db_sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool p
     }
 }
 
+static DynamicArrayCompareDataFunc
+get_sort_func(FsearchDatabaseIndexType sort_order) {
+    DynamicArrayCompareDataFunc func = NULL;
+    switch (sort_order) {
+    case DATABASE_INDEX_TYPE_NAME:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name;
+        break;
+    case DATABASE_INDEX_TYPE_PATH:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
+        break;
+    case DATABASE_INDEX_TYPE_SIZE:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size;
+        break;
+    case DATABASE_INDEX_TYPE_EXTENSION:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension;
+        break;
+    case DATABASE_INDEX_TYPE_FILETYPE:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_type;
+        break;
+    case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time;
+        break;
+    default:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_position;
+    }
+    return func;
+}
+
 static gpointer
 db_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
     FsearchDatabaseView *view = ctx->view;
+
+    if (!view->db) {
+        return NULL;
+    }
+
+    DynamicArray *files = NULL;
+    DynamicArray *folders = NULL;
 
     if (view->sort_started_func) {
         view->sort_started_func(view, view->user_data);
@@ -317,13 +351,49 @@ db_sort_task(gpointer data, GCancellable *cancellable) {
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
 
-    db_sort_array(view->folders, ctx->compare_func, ctx->parallel_sort);
-    db_sort_array(view->files, ctx->compare_func, ctx->parallel_sort);
+    db_view_lock(view);
+    db_lock(view->db);
+
+    if (!view->query || fsearch_query_matches_everything(view->query)) {
+        // we're matching everything, so if the database has the entries already sorted we don't need
+        // to sort again
+        if (db_has_entries_sorted_by_type(view->db, ctx->sort_order)) {
+            files = db_get_files_sorted(view->db, ctx->sort_order);
+            folders = db_get_folders_sorted(view->db, ctx->sort_order);
+            goto out;
+        }
+        else {
+            files = db_get_files_copy(view->db);
+            folders = db_get_folders_copy(view->db);
+        }
+    }
+    else {
+        folders = darray_ref(view->folders);
+        files = darray_ref(view->files);
+    }
+
+    DynamicArrayCompareDataFunc func = get_sort_func(ctx->sort_order);
+    const bool parallel_sort = ctx->sort_order == DATABASE_INDEX_TYPE_FILETYPE ? true : false;
+
+    g_debug("[sort] started: %d", ctx->sort_order);
+
+    db_sort_array(folders, func, parallel_sort);
+    db_sort_array(files, func, parallel_sort);
+
+out:
+    g_clear_pointer(&view->folders, darray_unref);
+    g_clear_pointer(&view->files, darray_unref);
+    view->folders = g_steal_pointer(&folders);
+    view->files = g_steal_pointer(&files);
+    view->sort_order = ctx->sort_order;
+
+    db_unlock(view->db);
+    db_view_unlock(view);
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-    g_timer_destroy(timer);
-    timer = NULL;
+
+    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug("[sort] finished in %2.fms", seconds * 1000);
 
@@ -347,67 +417,12 @@ db_sort_task_finished(gpointer result, gpointer data) {
 }
 
 static void
-db_view_update_sort(FsearchDatabaseView *view) {
-    if (!view->db) {
-        return;
-    }
-
-    if (!view->query || fsearch_query_matches_everything(view->query)) {
-        // we're matching everything, so if the database has the entries already sorted we don't need
-        // to sort again
-        darray_unref(view->files);
-        darray_unref(view->folders);
-
-        if (db_has_entries_sorted_by_type(view->db, view->sort_order)) {
-            if (view->sort_started_func) {
-                view->sort_started_func(view, view->user_data);
-            }
-            view->files = db_get_files_sorted(view->db, view->sort_order);
-            view->folders = db_get_folders_sorted(view->db, view->sort_order);
-            if (view->sort_finished_func) {
-                view->sort_finished_func(view, view->user_data);
-            }
-            return;
-        }
-
-        view->files = db_get_files_copy(view->db);
-        view->folders = db_get_folders_copy(view->db);
-    }
-
-    bool parallel_sort = true;
-
-    g_debug("[sort] started: %d", view->sort_order);
-    DynamicArrayCompareFunc func = NULL;
-    switch (view->sort_order) {
-    case DATABASE_INDEX_TYPE_NAME:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_name;
-        break;
-    case DATABASE_INDEX_TYPE_PATH:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_path;
-        break;
-    case DATABASE_INDEX_TYPE_SIZE:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_size;
-        break;
-    case DATABASE_INDEX_TYPE_EXTENSION:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_extension;
-        break;
-    case DATABASE_INDEX_TYPE_FILETYPE:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_type;
-        parallel_sort = false;
-        break;
-    case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time;
-        break;
-    default:
-        func = (DynamicArrayCompareFunc)db_entry_compare_entries_by_position;
-    }
-
+db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order) {
     FsearchSortContext *ctx = calloc(1, sizeof(FsearchSortContext));
     g_assert(ctx != NULL);
 
     ctx->view = view;
-    ctx->compare_func = (DynamicArrayCompareDataFunc)func;
-    ctx->parallel_sort = parallel_sort;
+    ctx->sort_order = sort_order;
 
     fsearch_task_queue(view->task_queue,
                        1,
@@ -502,13 +517,9 @@ db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_
         return;
     }
     db_view_lock(view);
-    bool needs_update = view->sort_order != sort_order;
-    view->sort_order = sort_order;
-
-    if (needs_update) {
-        db_view_update_sort(view);
+    if (view->sort_order != sort_order) {
+        db_view_sort(view, sort_order);
     }
-
     db_view_unlock(view);
 }
 

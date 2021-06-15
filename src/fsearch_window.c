@@ -366,6 +366,7 @@ fsearch_window_db_view_sort_started_cb(gpointer data) {
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
     if (win) {
+        fsearch_window_listview_set_empty(win);
         sort_overlay_remove_timeout(win);
         win->sort_overlay_timeout_id = g_timeout_add(30, on_sort_overlay_show, data);
     }
