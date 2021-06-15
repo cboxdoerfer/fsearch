@@ -73,27 +73,12 @@ fsearch_query_new(const char *text,
 
 static void
 fsearch_query_free(FsearchQuery *query) {
-    if (query->db) {
-        db_unref(query->db);
-        query->db = NULL;
-    }
-    if (query->filter) {
-        fsearch_filter_unref(query->filter);
-    }
-    if (query->highlight_tokens) {
-        fsearch_highlight_tokens_free(query->highlight_tokens);
-        query->highlight_tokens = NULL;
-    }
-    if (query->text) {
-        free(query->text);
-        query->text = NULL;
-    }
-    if (query->token) {
-        fsearch_tokens_free(query->token);
-        query->token = NULL;
-    }
-    free(query);
-    query = NULL;
+    g_clear_pointer(&query->db, db_unref);
+    g_clear_pointer(&query->filter, fsearch_filter_unref);
+    g_clear_pointer(&query->highlight_tokens, fsearch_highlight_tokens_free);
+    g_clear_pointer(&query->text, free);
+    g_clear_pointer(&query->token, fsearch_tokens_free);
+    g_clear_pointer(&query, free);
 }
 
 FsearchQuery *
@@ -111,8 +96,7 @@ fsearch_query_unref(FsearchQuery *query) {
         return;
     }
     if (g_atomic_int_dec_and_test(&query->ref_count)) {
-        fsearch_query_free(query);
-        query = NULL;
+        g_clear_pointer(&query, free);
     }
 }
 
