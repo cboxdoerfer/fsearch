@@ -251,6 +251,9 @@ database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
     if (!g_cancellable_is_cancelled(app->db_thread_cancellable)) {
         char *db_path = fsearch_application_get_database_dir();
         if (db_path) {
+            if (app->config->show_indexing_status) {
+                database_update_status_cb(_("Saving…"));
+            }
             db_save(db, db_path);
             free(db_path);
             db_path = NULL;
