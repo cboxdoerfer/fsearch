@@ -96,7 +96,7 @@ fsearch_query_unref(FsearchQuery *query) {
         return;
     }
     if (g_atomic_int_dec_and_test(&query->ref_count)) {
-        g_clear_pointer(&query, free);
+        g_clear_pointer(&query, fsearch_query_free);
     }
 }
 
