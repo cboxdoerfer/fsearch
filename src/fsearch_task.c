@@ -28,11 +28,8 @@ struct FsearchTaskQueue {
 
 static void
 fsearch_task_free(FsearchTask *task) {
-    g_object_unref(task->task_cancellable);
-    task->task_cancellable = NULL;
-
-    free(task);
-    task = NULL;
+    g_clear_pointer(&task->task_cancellable, g_object_unref);
+    g_clear_pointer(&task, free);
 }
 
 static FsearchTask *
@@ -64,8 +61,7 @@ fsearch_task_queue_thread(FsearchTaskQueue *queue) {
         if (task->type == FSEARCH_TASK_TYPE_QUIT) {
             // quit task queue thread
             g_debug("[queue_thread] quit");
-            free(task);
-            task = NULL;
+            g_clear_pointer(&task, fsearch_task_free);
             break;
         }
         g_mutex_lock(&queue->current_task_lock);
@@ -82,8 +78,7 @@ fsearch_task_queue_thread(FsearchTaskQueue *queue) {
         g_cancellable_reset(task->task_cancellable);
         task->task_finished_func(result, task->data);
 
-        fsearch_task_free(task);
-        task = NULL;
+        g_clear_pointer(&task, fsearch_task_free);
     }
     return NULL;
 }
@@ -121,8 +116,7 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
         if (task->task_cancelled_func) {
             task->task_cancelled_func(task->data);
         }
-        fsearch_task_free(task);
-        task = NULL;
+        g_clear_pointer(&task, fsearch_task_free);
     }
 
     // insert all the tasks back into the async queue, which still need to be processed
@@ -138,8 +132,7 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
 
     g_async_queue_unlock(queue->queue);
 
-    g_queue_free(task_queue);
-    task_queue = NULL;
+    g_clear_pointer(&task_queue, g_queue_free);
 }
 
 void
@@ -160,13 +153,8 @@ fsearch_task_queue_free(FsearchTaskQueue *queue) {
 
     g_mutex_clear(&queue->current_task_lock);
 
-    g_async_queue_unref(queue->queue);
-    queue->queue = NULL;
-
-    g_free(queue);
-    queue = NULL;
-
-    return;
+    g_clear_pointer(&queue->queue, g_async_queue_unref);
+    g_clear_pointer(&queue, g_free);
 }
 
 FsearchTaskQueue *
