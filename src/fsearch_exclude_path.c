@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include <assert.h>
+#include <glib.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -33,13 +34,6 @@ fsearch_exclude_path_free(FsearchExcludePath *fs_path) {
         return;
     }
 
-    if (fs_path->path) {
-        free(fs_path->path);
-        fs_path->path = NULL;
-    }
-    free(fs_path);
-    fs_path = NULL;
-
-    return;
+    g_clear_pointer(&fs_path->path, free);
+    g_clear_pointer(&fs_path, free);
 }
-

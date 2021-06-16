@@ -87,13 +87,13 @@ thread_context_free(thread_context_t *ctx) {
     ctx->terminate = true;
     g_cond_signal(&ctx->start_cond);
     g_mutex_unlock(&ctx->mutex);
-    g_thread_join(ctx->thread);
+    g_thread_join(g_steal_pointer(&ctx->thread));
 
     g_mutex_clear(&ctx->mutex);
     g_cond_clear(&ctx->start_cond);
     g_cond_clear(&ctx->finished_cond);
-    g_free(ctx);
-    ctx = NULL;
+
+    g_clear_pointer(&ctx, g_free);
 }
 
 static thread_context_t *
@@ -140,12 +140,11 @@ fsearch_thread_pool_free(FsearchThreadPool *pool) {
     GList *thread = pool->threads;
     for (uint32_t i = 0; thread && i < pool->num_threads; i++) {
         thread_context_t *ctx = thread->data;
-        thread_context_free(ctx);
+        g_clear_pointer(&ctx, thread_context_free);
         thread = thread->next;
     }
     pool->num_threads = 0;
-    g_free(pool);
-    pool = NULL;
+    g_clear_pointer(&pool, g_free);
 }
 
 GList *

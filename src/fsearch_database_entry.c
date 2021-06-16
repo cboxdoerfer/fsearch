@@ -135,10 +135,7 @@ db_file_entry_destroy(FsearchDatabaseEntryFolder *entry) {
     if (G_UNLIKELY(!entry)) {
         return;
     }
-    if (entry->shared.name) {
-        free(entry->shared.name);
-        entry->shared.name = NULL;
-    }
+    g_clear_pointer(&entry->shared.name, free);
 }
 
 void
@@ -146,10 +143,7 @@ db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry) {
     if (G_UNLIKELY(!entry)) {
         return;
     }
-    if (entry->shared.name) {
-        free(entry->shared.name);
-        entry->shared.name = NULL;
-    }
+    g_clear_pointer(&entry->shared.name, free);
 }
 
 static uint32_t

@@ -37,7 +37,6 @@ fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
 
     const gchar *xdg_data_dir = g_get_user_data_dir();
     snprintf(path, len, "%s/%s", xdg_data_dir, data_folder_name);
-    return;
 }
 
 bool
@@ -55,7 +54,7 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
     if (r) {
         g_string_append(res, r);
     }
-    g_free(match);
+    g_clear_pointer(&match, g_free);
 
     return FALSE;
 }
@@ -96,14 +95,10 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
     // Replace all the matched keywords
     char *cmd_res = g_regex_replace_eval(reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL);
 
-    g_regex_unref(reg);
-    reg = NULL;
-    g_hash_table_destroy(keywords);
-    keywords = NULL;
-    g_free(path_quoted);
-    path_quoted = NULL;
-    g_free(path_full_quoted);
-    path_full_quoted = NULL;
+    g_clear_pointer(&reg, g_regex_unref);
+    g_clear_pointer(&keywords, g_hash_table_destroy);
+    g_clear_pointer(&path_quoted, g_free);
+    g_clear_pointer(&path_full_quoted, g_free);
 
     return cmd_res;
 }
@@ -127,12 +122,11 @@ open_with_cmd(GString *path, GString *path_full, const char *cmd) {
                                       error->message,
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
-        g_error_free(error);
+        g_clear_pointer(&error, g_error_free);
         result = false;
     }
 
-    g_free(cmd_res);
-    cmd_res = NULL;
+    g_clear_pointer(&cmd_res, g_free);
 
     return result;
 }
@@ -159,7 +153,7 @@ open_uri(const char *uri) {
                                       error->message,
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
-        g_error_free(error);
+        g_clear_pointer(&error, g_error_free);
 
         return false;
     }
@@ -179,7 +173,7 @@ file_remove_or_trash(const char *path, bool delete) {
     else {
         success = g_file_trash(file, NULL, NULL);
     }
-    g_object_unref(file);
+    g_clear_object(&file);
 
     if (success) {
         if (delete) {
@@ -237,8 +231,7 @@ get_mimetype(const gchar *name) {
     }
     gchar *mimetype = g_content_type_get_description(content_type);
 
-    g_free(content_type);
-    content_type = NULL;
+    g_clear_pointer(&content_type, g_free);
 
     return mimetype;
 }
@@ -287,8 +280,7 @@ fsearch_file_utils_guess_icon(const char *name, bool is_dir) {
 
     GIcon *icon = g_content_type_get_icon(content_type);
 
-    g_free(content_type);
-    content_type = NULL;
+    g_clear_pointer(&content_type, g_free);
 
     return icon ? icon : g_themed_icon_new(DEFAULT_FILE_ICON_NAME);
 }
@@ -302,19 +294,15 @@ fsearch_file_utils_get_icon_for_path(const char *path) {
 
     GFileInfo *file_info = g_file_query_info(g_file, "standard::icon", 0, NULL, NULL);
     if (!file_info) {
-        g_object_unref(g_file);
-        g_file = NULL;
+        g_clear_object(&g_file);
         return g_themed_icon_new("edit-delete");
     }
 
     GIcon *icon = g_file_info_get_icon(file_info);
     g_object_ref(icon);
 
-    g_object_unref(file_info);
-    file_info = NULL;
-
-    g_object_unref(g_file);
-    g_file = NULL;
+    g_clear_object(&file_info);
+    g_clear_object(&g_file);
 
     return icon;
 }

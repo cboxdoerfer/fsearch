@@ -7,8 +7,7 @@
 void
 fsearch_selection_free(GHashTable *selection) {
     assert(selection != NULL);
-    g_hash_table_destroy(selection);
-    selection = NULL;
+    g_clear_pointer(&selection, g_hash_table_destroy);
 }
 
 GHashTable *

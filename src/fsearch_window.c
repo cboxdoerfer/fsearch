@@ -827,7 +827,7 @@ fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
 
     gtk_widget_show_all(win->main_stack);
 
-    g_clear_pointer(&builder, g_object_unref);
+    g_clear_object(&builder);
 }
 
 static void
@@ -971,7 +971,7 @@ static gboolean
 on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(widget);
     fsearch_application_window_prepare_shutdown(win);
-    gtk_widget_destroy(widget);
+    g_clear_pointer(&widget, gtk_widget_destroy);
     return TRUE;
 }
 

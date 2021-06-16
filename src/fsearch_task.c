@@ -28,7 +28,7 @@ struct FsearchTaskQueue {
 
 static void
 fsearch_task_free(FsearchTask *task) {
-    g_clear_pointer(&task->task_cancellable, g_object_unref);
+    g_clear_object(&task->task_cancellable);
     g_clear_pointer(&task, free);
 }
 
@@ -109,7 +109,7 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
         }
         if (clear_policy == FSEARCH_TASK_CLEAR_SAME_ID && task->id != id) {
             // remember tasks which need to be inserted back into the async queue later
-            g_queue_push_tail(task_queue, task);
+            g_queue_push_tail(task_queue, g_steal_pointer(&task));
             continue;
         }
 
@@ -123,7 +123,7 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
     while (true) {
         FsearchTask *task = g_queue_pop_head(task_queue);
         if (task) {
-            g_async_queue_push_unlocked(queue->queue, task);
+            g_async_queue_push_unlocked(queue->queue, g_steal_pointer(&task));
         }
         else {
             break;
@@ -146,10 +146,9 @@ fsearch_task_queue_free(FsearchTaskQueue *queue) {
     FsearchTask *task = calloc(1, sizeof(FsearchTask));
     g_assert(task != NULL);
     task->type = FSEARCH_TASK_TYPE_QUIT;
-    g_async_queue_push(queue->queue, task);
+    g_async_queue_push(queue->queue, g_steal_pointer(&task));
 
-    g_thread_join(queue->queue_thread);
-    queue->queue_thread = NULL;
+    g_thread_join(g_steal_pointer(&queue->queue_thread));
 
     g_mutex_clear(&queue->current_task_lock);
 
@@ -189,6 +188,6 @@ fsearch_task_queue(FsearchTaskQueue *queue,
         }
         g_mutex_unlock(&queue->current_task_lock);
     }
-    g_async_queue_push(queue->queue, task);
+    g_async_queue_push(queue->queue, g_steal_pointer(&task));
 }
 

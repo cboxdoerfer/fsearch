@@ -42,7 +42,7 @@ get_icon_surface(GdkWindow *win,
     GIcon *icon = fsearch_file_utils_guess_icon(name, type == DATABASE_ENTRY_TYPE_FOLDER);
     const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
     if (!names) {
-        g_clear_pointer(&icon, g_object_unref);
+        g_clear_object(&icon);
         return NULL;
     }
 
@@ -59,9 +59,9 @@ get_icon_surface(GdkWindow *win,
     if (pixbuf) {
         icon_surface = gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
     }
-    g_clear_pointer(&pixbuf, g_object_unref);
-    g_clear_pointer(&icon, g_object_unref);
-    g_clear_pointer(&icon_info, g_object_unref);
+    g_clear_object(&pixbuf);
+    g_clear_object(&icon);
+    g_clear_object(&icon_info);
 
     return icon_surface;
 }

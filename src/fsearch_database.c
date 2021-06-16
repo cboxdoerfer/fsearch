@@ -657,18 +657,14 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     db->num_folders = num_folders;
     db->index_flags = index_flags;
 
-    fclose(fp);
-    fp = NULL;
+    g_clear_pointer(&fp, fclose);
 
     return true;
 
 load_fail:
     g_debug("[db_load] load failed");
 
-    if (fp) {
-        fclose(fp);
-        fp = NULL;
-    }
+    g_clear_pointer(&fp, fclose);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
         g_clear_pointer(&sorted_folders[i], darray_unref);

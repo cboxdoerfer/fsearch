@@ -86,7 +86,7 @@ fsearch_highlight_tokens_match(GList *tokens, FsearchQueryFlags flags, const cha
             }
             g_match_info_next(match_info, NULL);
         }
-        g_match_info_free(match_info);
+        g_clear_pointer(&match_info, g_match_info_free);
     }
     return attr;
 }
@@ -149,10 +149,9 @@ fsearch_highlight_tokens_new(const char *text, FsearchQueryFlags flags) {
         // whitespace is regarded as AND so split query there in multiple
         // queries
         gchar **queries = fs_str_split(tmp);
-        guint n_queries = g_strv_length(queries);
+        g_clear_pointer(&tmp, g_free);
 
-        g_free(tmp);
-        tmp = NULL;
+        const guint n_queries = g_strv_length(queries);
 
         for (int i = 0; i < n_queries; i++) {
             FsearchHighlightToken *token = fsearch_highlight_token_new();
@@ -166,16 +165,14 @@ fsearch_highlight_tokens_new(const char *text, FsearchQueryFlags flags) {
                 query_match_case = has_uppercase ? true : false;
             }
             token->regex = g_regex_new(query_escaped, !query_match_case ? G_REGEX_CASELESS : 0, 0, NULL);
-            g_free(query_escaped);
-            query_escaped = NULL;
+            g_clear_pointer(&query_escaped, g_free);
 
             fsearch_highlight_token_init(token, queries[i]);
 
             tokens = g_list_append(tokens, token);
         }
 
-        g_strfreev(queries);
-        queries = NULL;
+        g_clear_pointer(&queries, g_strfreev);
     }
 
     return tokens;
@@ -186,21 +183,14 @@ fsearch_highlight_token_free(FsearchHighlightToken *token) {
     if (!token) {
         return;
     }
-    if (token->regex) {
-        g_regex_unref(token->regex);
-        token->regex = NULL;
-    }
-    if (token->text) {
-        free(token->text);
-        token->text = NULL;
-    }
-    free(token);
-    token = NULL;
+    g_clear_pointer(&token->regex, g_regex_unref);
+    g_clear_pointer(&token->text, free);
+    g_clear_pointer(&token, free);
 }
 
 void
 fsearch_highlight_tokens_free(GList *tokens) {
     if (tokens) {
-        g_list_free_full(tokens, (GDestroyNotify)fsearch_highlight_token_free);
+        g_list_free_full(g_steal_pointer(&tokens), (GDestroyNotify)fsearch_highlight_token_free);
     }
 }

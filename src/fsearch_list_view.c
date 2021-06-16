@@ -237,7 +237,7 @@ fsearch_list_view_get_font_height(FsearchListView *view) {
 
     gint text_height;
     pango_layout_get_pixel_size(layout, NULL, &text_height);
-    g_object_unref(layout);
+    g_clear_object(&layout);
 
     return text_height;
 }
@@ -497,7 +497,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
 
     cairo_restore(cr);
 
-    g_object_unref(layout);
+    g_clear_object(&layout);
 }
 
 static gboolean
@@ -1032,11 +1032,10 @@ fsearch_list_view_query_tooltip(GtkWidget *widget, int x, int y, gboolean keyboa
                                                   view->query_tooltip_func_data);
     if (tooltip_text) {
         gtk_tooltip_set_text(tooltip, tooltip_text);
-        g_free(tooltip_text);
-        tooltip_text = NULL;
+        g_clear_pointer(&tooltip_text, g_free);
         ret_val = TRUE;
     }
-    g_object_unref(layout);
+    g_clear_object(&layout);
     return ret_val;
 }
 
@@ -1124,7 +1123,7 @@ fsearch_list_view_set_hadjustment(FsearchListView *view, GtkAdjustment *adjustme
 
     if (view->hadjustment != NULL) {
         g_signal_handlers_disconnect_by_func(view->hadjustment, on_fsearch_list_view_adjustment_changed, view);
-        g_object_unref(view->hadjustment);
+        g_clear_object(&view->hadjustment);
     }
 
     if (adjustment == NULL) {
@@ -1147,7 +1146,7 @@ fsearch_list_view_set_vadjustment(FsearchListView *view, GtkAdjustment *adjustme
 
     if (view->vadjustment != NULL) {
         g_signal_handlers_disconnect_by_func(view->vadjustment, on_fsearch_list_view_adjustment_changed, view);
-        g_object_unref(view->vadjustment);
+        g_clear_object(&view->vadjustment);
     }
 
     if (adjustment == NULL) {
@@ -1364,8 +1363,7 @@ fsearch_list_view_grab_focus(GtkWidget *widget) {
 static void
 fsearch_list_view_unrealize_column(FsearchListView *view, FsearchListViewColumn *column) {
     gtk_widget_unregister_window(GTK_WIDGET(view), column->window);
-    gdk_window_destroy(column->window);
-    column->window = NULL;
+    g_clear_pointer(&column->window, gdk_window_destroy);
 }
 
 static void
@@ -1384,12 +1382,10 @@ fsearch_list_view_unrealize(GtkWidget *widget) {
     fsearch_list_view_unrealize_columns(view);
 
     gtk_widget_unregister_window(widget, view->bin_window);
-    gdk_window_destroy(view->bin_window);
-    view->bin_window = NULL;
+    g_clear_pointer(&view->bin_window, gdk_window_destroy);
 
     gtk_widget_unregister_window(widget, view->header_window);
-    gdk_window_destroy(view->header_window);
-    view->header_window = NULL;
+    g_clear_pointer(&view->header_window, gdk_window_destroy);
 
     gtk_gesture_set_window(view->multi_press_gesture, NULL);
 
@@ -1428,7 +1424,7 @@ fsearch_list_view_realize_column(FsearchListView *view, FsearchListViewColumn *c
     col->window = gdk_window_new(view->header_window, &attrs, attrs_mask);
     gtk_widget_register_window(GTK_WIDGET(view), col->window);
 
-    g_object_unref(attrs.cursor);
+    g_clear_object(&attrs.cursor);
 }
 
 static void
@@ -1493,18 +1489,9 @@ static void
 fsearch_list_view_destroy(GtkWidget *widget) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
-    if (view->multi_press_gesture) {
-        g_object_unref(view->multi_press_gesture);
-        view->multi_press_gesture = NULL;
-    }
-    if (view->bin_drag_gesture) {
-        g_object_unref(view->bin_drag_gesture);
-        view->bin_drag_gesture = NULL;
-    }
-    if (view->header_drag_gesture) {
-        g_object_unref(view->header_drag_gesture);
-        view->header_drag_gesture = NULL;
-    }
+    g_clear_object(&view->multi_press_gesture);
+    g_clear_object(&view->bin_drag_gesture);
+    g_clear_object(&view->header_drag_gesture);
 }
 
 static void
@@ -1658,17 +1645,9 @@ fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *co
         gtk_widget_queue_resize(GTK_WIDGET(view));
     }
 
-    if (col->button) {
-        g_object_unref(col->button);
-    }
-
-    if (col->name) {
-        free(col->name);
-        col->name = NULL;
-    }
-
-    free(col);
-    col = NULL;
+    g_clear_object(&col->button);
+    g_clear_pointer(&col->name, free);
+    g_clear_pointer(&col, free);
 }
 
 void
@@ -1777,7 +1756,7 @@ on_fsearch_list_view_header_button_pressed(GtkWidget *widget, GdkEvent *event, g
 #else
         gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif
-        g_object_unref(builder);
+        g_clear_object(&builder);
         return TRUE;
     }
     return FALSE;

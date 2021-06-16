@@ -54,8 +54,8 @@ fsearch_memory_pool_free_block(FsearchMemoryPoolBlock *block, FsearchMemoryPool 
             pool->item_free_func(data);
         }
     }
-    free(block->items);
-    free(block);
+    g_clear_pointer(&block->items, free);
+    g_clear_pointer(&block, free);
 }
 
 void
@@ -66,15 +66,12 @@ fsearch_memory_pool_free(FsearchMemoryPool *pool) {
     for (GList *b = pool->blocks; b != NULL; b = b->next) {
         FsearchMemoryPoolBlock *block = b->data;
         assert(block != NULL);
-        fsearch_memory_pool_free_block(block, pool);
-        block = NULL;
+        fsearch_memory_pool_free_block(g_steal_pointer(&block), pool);
     }
 
-    g_list_free(pool->blocks);
-    pool->blocks = NULL;
+    g_clear_pointer(&pool->blocks, g_list_free);
 
-    free(pool);
-    pool = NULL;
+    g_clear_pointer(&pool, free);
 }
 
 bool

@@ -139,8 +139,7 @@ db_search_task(gpointer data, GCancellable *cancellable) {
         debug_message = "[query %d.%d] aborted after %.2f ms";
     }
     g_timer_stop(timer);
-    g_timer_destroy(timer);
-    timer = NULL;
+    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug(debug_message, query->window_id, query->id, seconds * 1000);
 

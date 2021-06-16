@@ -56,23 +56,19 @@ fill_open_with_menu(GtkBuilder *builder, const char *name, FsearchDatabaseEntryT
         GMenuItem *menu_item = g_menu_item_new(display_name, detailed_action);
         g_menu_item_set_icon(menu_item, g_app_info_get_icon(app_info));
         g_menu_append_item(menu_mime, menu_item);
-        g_object_unref(menu_item);
+        g_clear_object(&menu_item);
     }
 
     char detailed_action[1024] = "";
     snprintf(detailed_action, sizeof(detailed_action), "win.open_with_other('%s')", content_type);
     GMenuItem *open_with_item = g_menu_item_new(_("Other Application…"), detailed_action);
     g_menu_append_item(menu_mime, open_with_item);
-    g_object_unref(open_with_item);
+    g_clear_object(&open_with_item);
 
 clean_up:
-    if (content_type) {
-        g_free(content_type);
-        content_type = NULL;
-    }
+    g_clear_pointer(&content_type, g_free);
     if (app_list) {
-        g_list_free_full(app_list, g_object_unref);
-        app_list = NULL;
+        g_list_free_full(g_steal_pointer(&app_list), g_object_unref);
     }
 }
 
@@ -84,7 +80,7 @@ listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryTyp
 
     GMenu *menu_root = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_popup_menu"));
     GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_root));
-    g_object_unref(builder);
+    g_clear_object(&builder);
 
     gtk_menu_attach_to_widget(GTK_MENU(menu_widget), GTK_WIDGET(widget), NULL);
 #if !GTK_CHECK_VERSION(3, 22, 0)
@@ -94,4 +90,3 @@ listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryTyp
 #endif
     return TRUE;
 }
-

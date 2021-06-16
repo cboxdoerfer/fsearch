@@ -452,7 +452,7 @@ fsearch_application_shutdown(GApplication *app) {
     }
 
     g_clear_pointer(&fsearch->db, db_unref);
-    g_clear_pointer(&fsearch->db_thread_cancellable, g_object_unref);
+    g_clear_object(&fsearch->db_thread_cancellable);
 
     if (fsearch->filters) {
         g_list_free_full(g_steal_pointer(&fsearch->filters), (GDestroyNotify)fsearch_filter_unref);
@@ -500,7 +500,7 @@ fsearch_application_startup(GApplication *app) {
     gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
                                               GTK_STYLE_PROVIDER(provider),
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    g_object_unref(provider);
+    g_clear_object(&provider);
 
     g_object_set(gtk_settings_get_default(),
                  "gtk-application-prefer-dark-theme",
@@ -511,7 +511,7 @@ fsearch_application_startup(GApplication *app) {
         GtkBuilder *menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
-        g_clear_pointer(&menu_builder, g_object_unref);
+        g_clear_object(&menu_builder);
     }
 
     gtk_application_set_accels_for_action(GTK_APPLICATION(app),
@@ -679,7 +679,7 @@ on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_d
     if (dbus_group && reply) {
         g_debug("[app] trigger database update in primary instance");
         g_action_group_activate_action(G_ACTION_GROUP(dbus_group), "update_database", NULL);
-        g_clear_pointer(&dbus_group, g_object_unref);
+        g_clear_object(&dbus_group);
 
         worker_ctx->update_called_on_primary = true;
     }

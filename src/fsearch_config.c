@@ -73,7 +73,7 @@ config_load_handle_error(GError *error) {
     default:
         fprintf(stderr, "load_config: unknown error: %s\n", error->message);
     }
-    g_error_free(error);
+    g_clear_pointer(&error, g_error_free);
 }
 
 static uint32_t
@@ -270,8 +270,7 @@ config_load(FsearchConfig *config) {
         char *exclude_files_str = config_load_string(key_file, "Database", "exclude_files", NULL);
         if (exclude_files_str) {
             config->exclude_files = g_strsplit(exclude_files_str, ";", -1);
-            free(exclude_files_str);
-            exclude_files_str = NULL;
+            g_clear_pointer(&exclude_files_str, free);
         }
 
         config->indexes = config_load_indexes(key_file, config->indexes, "location");
@@ -283,16 +282,16 @@ config_load(FsearchConfig *config) {
     }
     else {
         debug_message = "[config] loading failed (%f ms)";
-        g_error_free(error);
+        g_clear_pointer(&error, g_error_free);
     }
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-    g_timer_destroy(timer);
-    timer = NULL;
+
+    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug(debug_message, seconds * 1000);
 
-    g_key_file_free(key_file);
+    g_clear_pointer(&key_file, g_key_file_free);
     return result;
 }
 
@@ -528,7 +527,7 @@ config_save(FsearchConfig *config) {
     if (config->exclude_files) {
         char *exclude_files_str = g_strjoinv(";", config->exclude_files);
         g_key_file_set_string(key_file, "Database", "exclude_files", exclude_files_str);
-        free(exclude_files_str);
+        g_clear_pointer(&exclude_files_str, free);
     }
 
     gchar config_path[PATH_MAX] = "";
@@ -546,12 +545,12 @@ config_save(FsearchConfig *config) {
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-    g_timer_destroy(timer);
-    timer = NULL;
+
+    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug(debug_message, seconds * 1000);
 
-    g_key_file_free(key_file);
+    g_clear_pointer(&key_file, g_key_file_free);
     return result;
 }
 
@@ -706,27 +705,14 @@ void
 config_free(FsearchConfig *config) {
     g_assert(config != NULL);
 
-    if (config->folder_open_cmd) {
-        free(config->folder_open_cmd);
-        config->folder_open_cmd = NULL;
-    }
-    if (config->sort_by) {
-        free(config->sort_by);
-        config->sort_by = NULL;
-    }
+    g_clear_pointer(&config->folder_open_cmd, free);
+    g_clear_pointer(&config->sort_by, free);
     if (config->indexes) {
-        g_list_free_full(config->indexes, (GDestroyNotify)fsearch_index_free);
-        config->indexes = NULL;
+        g_list_free_full(g_steal_pointer(&config->indexes), (GDestroyNotify)fsearch_index_free);
     }
     if (config->exclude_locations) {
-        g_list_free_full(config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
-        config->exclude_locations = NULL;
+        g_list_free_full(g_steal_pointer(&config->exclude_locations), (GDestroyNotify)fsearch_exclude_path_free);
     }
-    if (config->exclude_files) {
-        g_strfreev(config->exclude_files);
-        config->exclude_files = NULL;
-    }
-    free(config);
-    config = NULL;
+    g_clear_pointer(&config->exclude_files, g_strfreev);
+    g_clear_pointer(&config, free);
 }
-

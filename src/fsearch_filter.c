@@ -33,16 +33,9 @@ fsearch_filter_new(FsearchFilterFileType type,
 
 static void
 fsearch_filter_free(FsearchFilter *filter) {
-    if (filter->name) {
-        free(filter->name);
-        filter->name = NULL;
-    }
-    if (filter->query) {
-        free(filter->query);
-        filter->query = NULL;
-    }
-    free(filter);
-    filter = NULL;
+    g_clear_pointer(&filter->name, free);
+    g_clear_pointer(&filter->query, free);
+    g_clear_pointer(&filter, free);
 }
 
 FsearchFilter *
@@ -60,8 +53,7 @@ fsearch_filter_unref(FsearchFilter *filter) {
         return;
     }
     if (g_atomic_int_dec_and_test(&filter->ref_count)) {
-        fsearch_filter_free(filter);
-        filter = NULL;
+        g_clear_pointer(&filter, fsearch_filter_free);
     }
 }
 

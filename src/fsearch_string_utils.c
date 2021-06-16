@@ -54,11 +54,9 @@ fs_str_is_utf8(const char *str) {
     size_t up_len = g_utf8_strlen(up, -1);
     size_t down_len = g_utf8_strlen(down, -1);
 
-    g_free(down);
-    g_free(up);
-    g_free(normalized);
-    down = NULL;
-    up = NULL;
+    g_clear_pointer(&down, g_free);
+    g_clear_pointer(&up, g_free);
+    g_clear_pointer(&normalized, g_free);
 
     if (str_len != up_len || str_len != down_len || up_str_len != up_len || down_str_len != down_len) {
         return true;
@@ -215,7 +213,7 @@ fs_str_split(const char *src) {
     // make sure last element is NULL
     g_ptr_array_add(new, NULL);
 
-    g_free(dest);
+    g_clear_pointer(&dest, g_free);
 
     return (char **)g_ptr_array_free(new, FALSE);
 }

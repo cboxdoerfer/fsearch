@@ -209,7 +209,7 @@ toggle_action_on_2button_press(GdkEvent *event, const char *action, gpointer use
     }
     GVariant *state = g_action_group_get_action_state(group, action);
     g_action_group_change_action_state(group, action, g_variant_new_boolean(!g_variant_get_boolean(state)));
-    g_variant_unref(state);
+    g_clear_pointer(&state, g_variant_unref);
     return TRUE;
 }
 
@@ -227,7 +227,7 @@ on_search_filter_label_button_press_event(GtkWidget *widget, GdkEvent *event, gp
     }
     GVariant *state = g_action_group_get_action_state(group, "filter");
     g_action_group_change_action_state(group, "filter", g_variant_new_int32(0));
-    g_variant_unref(state);
+    g_clear_pointer(&state, g_variant_unref);
     return TRUE;
 }
 

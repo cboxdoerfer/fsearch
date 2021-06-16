@@ -81,8 +81,7 @@ db_view_free(FsearchDatabaseView *view) {
 
     g_mutex_clear(&view->mutex);
 
-    free(view);
-    view = NULL;
+    g_clear_pointer(&view, free);
 }
 
 FsearchDatabaseView *

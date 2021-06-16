@@ -152,26 +152,23 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
         char *uri = gtk_file_chooser_get_uri(chooser);
         path = g_filename_from_uri(uri, NULL, NULL);
-        g_free(uri);
-        uri = NULL;
+        g_clear_pointer(&uri, g_free);
 
         if (path) {
             if (ctx->add_path_cb) {
                 ctx->add_path_cb(ctx->model, path);
             }
-            g_free(path);
-            path = NULL;
+            g_clear_pointer(&path, g_free);
         }
     }
 
 #if !GTK_CHECK_VERSION(3, 20, 0)
     gtk_widget_destroy(GTK_WIDGET(dialog));
 #else
-    g_object_unref(dialog);
+    g_clear_object(&dialog);
 #endif
 
-    g_slice_free(FsearchPreferencesFileChooserContext, ctx);
-    ctx = NULL;
+    g_slice_free(FsearchPreferencesFileChooserContext, g_steal_pointer(&ctx));
 }
 
 static void
@@ -323,29 +320,23 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
     new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
 
-    if (new_config->exclude_files) {
-        g_strfreev(new_config->exclude_files);
-        new_config->exclude_files = NULL;
-    }
+    g_clear_pointer(&new_config->exclude_files, g_strfreev);
     new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
 
     if (new_config->indexes) {
-        g_list_free_full(new_config->indexes, (GDestroyNotify)fsearch_index_free);
+        g_list_free_full(g_steal_pointer(&new_config->indexes), (GDestroyNotify)fsearch_index_free);
     }
     new_config->indexes = pref_index_treeview_data_get(ui->index_list);
 
     if (new_config->exclude_locations) {
-        g_list_free_full(new_config->exclude_locations, (GDestroyNotify)fsearch_exclude_path_free);
+        g_list_free_full(g_steal_pointer(&new_config->exclude_locations), (GDestroyNotify)fsearch_exclude_path_free);
     }
     new_config->exclude_locations = pref_exclude_treeview_data_get(ui->exclude_list);
 }
 
 static void
 preferences_ui_cleanup(FsearchPreferencesInterface *ui) {
-    if (ui->exclude_files_str) {
-        free(ui->exclude_files_str);
-        ui->exclude_files_str = NULL;
-    }
+    g_clear_pointer(&ui->exclude_files_str, free);
 
     if (help_reset_timeout_id != 0) {
         g_source_remove(help_reset_timeout_id);
@@ -354,11 +345,9 @@ preferences_ui_cleanup(FsearchPreferencesInterface *ui) {
     help_stack = NULL;
     help_expander = NULL;
 
-    g_object_unref(ui->builder);
-    gtk_widget_destroy(ui->dialog);
-
-    free(ui);
-    ui = NULL;
+    g_clear_object(&ui->builder);
+    g_clear_pointer(&ui->dialog, gtk_widget_destroy);
+    g_clear_pointer(&ui, free);
 }
 
 static void
@@ -366,8 +355,7 @@ on_preferences_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer
     FsearchPreferencesInterface *ui = user_data;
 
     if (response != GTK_RESPONSE_OK) {
-        config_free(ui->new_config);
-        ui->new_config = NULL;
+        g_clear_pointer(&ui->new_config, config_free);
     }
     else {
         preferences_ui_get_state(ui);

@@ -64,8 +64,8 @@ ui_utils_run_gtk_dialog(GtkWidget *parent,
     gtk_window_set_title(GTK_WINDOW(dialog), "");
 
     gint response = gtk_dialog_run(GTK_DIALOG(dialog));
-    gtk_widget_destroy(dialog);
+
+    g_clear_pointer(&dialog, gtk_widget_destroy);
 
     return response;
 }
-

@@ -1,5 +1,6 @@
 #define _GNU_SOURCE
 #include <assert.h>
+#include <glib.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,12 +35,6 @@ fsearch_index_free(FsearchIndex *index) {
         return;
     }
 
-    if (index->path) {
-        free(index->path);
-        index->path = NULL;
-    }
-    free(index);
-    index = NULL;
-
-    return;
+    g_clear_pointer(&index->path, free);
+    g_clear_pointer(&index, free);
 }

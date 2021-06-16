@@ -56,20 +56,10 @@ fsearch_token_free(void *data) {
     FsearchToken *token = data;
     assert(token != NULL);
 
-    if (token->text != NULL) {
-        g_free(token->text);
-        token->text = NULL;
-    }
-    if (token->regex_study != NULL) {
-        pcre_free_study(token->regex_study);
-        token->regex_study = NULL;
-    }
-    if (token->regex != NULL) {
-        pcre_free(token->regex);
-        token->regex = NULL;
-    }
-    g_free(token);
-    token = NULL;
+    g_clear_pointer(&token->text, g_free);
+    g_clear_pointer(&token->regex_study, pcre_free_study);
+    g_clear_pointer(&token->regex, pcre_free);
+    g_clear_pointer(&token, g_free);
 }
 
 void
@@ -78,11 +68,9 @@ fsearch_tokens_free(FsearchToken **tokens) {
         return;
     }
     for (uint32_t i = 0; tokens[i] != NULL; ++i) {
-        fsearch_token_free(tokens[i]);
-        tokens[i] = NULL;
+        g_clear_pointer(&tokens[i], fsearch_token_free);
     }
-    free(tokens);
-    tokens = NULL;
+    g_clear_pointer(&tokens, free);
 }
 
 static FsearchToken *
@@ -99,8 +87,8 @@ fsearch_token_new(const char *text, bool match_case, bool auto_match_case, bool 
 
     char *normalized = g_utf8_normalize(text, -1, G_NORMALIZE_DEFAULT);
     new->text = match_case ? g_strdup(text) : g_utf8_strdown(normalized, -1);
-    g_free(normalized);
-    normalized = NULL;
+
+    g_clear_pointer(&normalized, g_free);
 
     if (is_regex) {
         const char *error;
@@ -148,8 +136,7 @@ fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool a
         token[i] = fsearch_token_new(query_split[i], match_case, auto_match_case, false);
     }
 
-    g_strfreev(query_split);
-    query_split = NULL;
+    g_clear_pointer(&query_split, g_strfreev);
 
     return token;
 }

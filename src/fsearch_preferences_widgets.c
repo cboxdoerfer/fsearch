@@ -30,7 +30,7 @@ on_column_toggled(gchar *path_str, GtkTreeModel *model, int col) {
     val ^= 1;
 
     gtk_list_store_set(GTK_LIST_STORE(model), &iter, col, val, -1);
-    gtk_tree_path_free(path);
+    g_clear_pointer(&path, gtk_tree_path_free);
 
     return val;
 }
@@ -94,8 +94,7 @@ pref_index_treeview_data_get(GtkTreeView *view) {
         if (path) {
             FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enable, update, 0);
             data = g_list_append(data, index);
-            g_free(path);
-            path = NULL;
+            g_clear_pointer(&path, g_free);
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
@@ -123,8 +122,7 @@ pref_exclude_treeview_data_get(GtkTreeView *view) {
         if (path) {
             FsearchExcludePath *fs_path = fsearch_exclude_path_new(path, enable);
             data = g_list_append(data, fs_path);
-            g_free(path);
-            path = NULL;
+            g_clear_pointer(&path, g_free);
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
