@@ -272,10 +272,8 @@ fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
-    if (self->result_view) {
-        fsearch_result_view_free(self->result_view);
-        self->result_view = NULL;
-    }
+    g_clear_pointer(&self->result_view, fsearch_result_view_free);
+
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
 }
 
@@ -485,8 +483,7 @@ on_fsearch_list_view_popup(FsearchListView *view, int row_idx, gpointer user_dat
 
     const gboolean res = listview_popup_menu(user_data, name->str, type);
 
-    g_string_free(name, TRUE);
-    name = NULL;
+    g_string_free(g_steal_pointer(&name), TRUE);
 
     return res;
 }
@@ -614,12 +611,10 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
 
 out:
     if (path) {
-        g_string_free(path, TRUE);
-        path = NULL;
+        g_string_free(g_steal_pointer(&path), TRUE);
     }
     if (path_full) {
-        g_string_free(path_full, TRUE);
-        path_full = NULL;
+        g_string_free(g_steal_pointer(&path_full), TRUE);
     }
 }
 
@@ -832,8 +827,7 @@ fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
 
     gtk_widget_show_all(win->main_stack);
 
-    g_object_unref(builder);
-    builder = NULL;
+    g_clear_pointer(&builder, g_object_unref);
 }
 
 static void
@@ -895,7 +889,7 @@ on_database_update_finished(gpointer data, gpointer user_data) {
     db_view_unregister(win->result_view->database_view);
     db_view_register(db, win->result_view->database_view);
 
-    db_unref(db);
+    g_clear_pointer(&db, db_unref);
 }
 
 static void
@@ -1226,17 +1220,14 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     if (db) {
         db_view_register(db, win->result_view->database_view);
-        db_unref(db);
+        g_clear_pointer(&db, db_unref);
     }
 }
 
 void
 fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
-    if (win->result_view->database_view) {
-        db_view_unref(win->result_view->database_view);
-        win->result_view->database_view = NULL;
-    }
+    g_clear_pointer(&win->result_view->database_view, db_view_unref);
 }
 
 void
