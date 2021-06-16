@@ -1413,8 +1413,8 @@ db_free(FsearchDatabase *db) {
 
     db_sorted_entries_free(db);
 
-    g_clear_pointer(&db->file_pool, fsearch_memory_pool_free);
-    g_clear_pointer(&db->folder_pool, fsearch_memory_pool_free);
+    g_clear_pointer(&db->file_pool, fsearch_memory_pool_free_all);
+    g_clear_pointer(&db->folder_pool, fsearch_memory_pool_free_all);
 
     if (db->indexes) {
         g_list_free_full(g_steal_pointer(&db->indexes), (GDestroyNotify)fsearch_index_free);
