@@ -63,7 +63,7 @@ fsearch_memory_pool_free_block(FsearchMemoryPool *pool, FsearchMemoryPoolBlock *
 }
 
 void
-fsearch_memory_pool_free_all(FsearchMemoryPool *pool) {
+fsearch_memory_pool_free_pool(FsearchMemoryPool *pool) {
     if (!pool) {
         return;
     }

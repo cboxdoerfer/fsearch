@@ -14,7 +14,7 @@ void
 fsearch_memory_pool_free(FsearchMemoryPool *pool, void *item, bool item_clear);
 
 void
-fsearch_memory_pool_free_all(FsearchMemoryPool *pool);
+fsearch_memory_pool_free_pool(FsearchMemoryPool *pool);
 
 void *
 fsearch_memory_pool_malloc(FsearchMemoryPool *pool);
