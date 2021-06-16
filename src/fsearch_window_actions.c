@@ -102,9 +102,7 @@ prepend_path(gpointer key, gpointer value, gpointer user_data) {
     if (!path_full) {
         return;
     }
-    *file_list = g_list_prepend(*file_list, path_full->str);
-    g_string_free(path_full, FALSE);
-    path_full = NULL;
+    *file_list = g_list_prepend(*file_list, g_string_free(g_steal_pointer(&path_full), FALSE));
 }
 
 static bool
@@ -156,8 +154,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
 
 save_fail:
     if (file_list) {
-        g_list_free_full(file_list, (GDestroyNotify)g_free);
-        file_list = NULL;
+        g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
     }
 }
 
@@ -235,8 +232,7 @@ open_cb(gpointer key, gpointer value, gpointer data) {
         bool *open_failed = data;
         *open_failed = true;
     }
-    g_string_free(path_full, TRUE);
-    path_full = NULL;
+    g_string_free(g_steal_pointer(&path_full), TRUE);
 }
 
 static void
@@ -252,8 +248,7 @@ open_with_cb(gpointer key, gpointer value, gpointer data) {
     }
     GList **list = data;
     *list = g_list_append(*list, g_file_new_for_path(path_full->str));
-    g_string_free(path_full, TRUE);
-    path_full = NULL;
+    g_string_free(g_steal_pointer(&path_full), TRUE);
 }
 
 void
@@ -292,12 +287,10 @@ launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info)
     fsearch_application_window_selection_for_each(win, open_with_cb, &file_list);
     g_app_info_launch(app_info, file_list, G_APP_LAUNCH_CONTEXT(launch_context), NULL);
 
-    g_object_unref(launch_context);
-    launch_context = NULL;
+    g_clear_pointer(&launch_context, g_object_unref);
 
     if (file_list) {
-        g_list_free_full(file_list, g_object_unref);
-        file_list = NULL;
+        g_list_free_full(g_steal_pointer(&file_list), g_object_unref);
     }
 }
 
@@ -315,8 +308,7 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     }
     launch_selection_for_app_info(self, G_APP_INFO(app_info));
 
-    g_object_unref(app_info);
-    app_info = NULL;
+    g_clear_pointer(&app_info, g_object_unref);
 }
 
 static void
@@ -383,10 +375,8 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
         bool *open_failed = data;
         *open_failed = true;
     }
-    g_string_free(path, TRUE);
-    path = NULL;
-    g_string_free(path_full, TRUE);
-    path_full = NULL;
+    g_string_free(g_steal_pointer(&path), TRUE);
+    g_string_free(g_steal_pointer(&path_full), TRUE);
 }
 
 static void
@@ -408,7 +398,7 @@ on_fsearch_window_action_open_with_response(GtkDialog *dialog, gint response_id,
 
     launch_selection_for_app_info(self, app_info);
 
-    g_object_unref(app_info);
+    g_clear_pointer(&app_info, g_object_unref);
 }
 
 static void
@@ -616,7 +606,7 @@ action_toggle_state_cb(GSimpleAction *saction, GVariant *parameter, gpointer use
 
     GVariant *state = g_action_get_state(action);
     g_action_change_state(action, g_variant_new_boolean(!g_variant_get_boolean(state)));
-    g_variant_unref(state);
+    g_clear_pointer(&state, g_variant_unref);
 }
 
 static GActionEntry FsearchWindowActions[] = {
