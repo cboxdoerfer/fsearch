@@ -2,8 +2,11 @@
 
 #include <assert.h>
 #include <glib.h>
-#include <stdbool.h>
 #include <stdio.h>
+
+typedef struct FsearchMemoryPoolFreed {
+    struct FsearchMemoryPoolFreed *next;
+} FsearchMemoryPoolFreed;
 
 typedef struct {
     uint32_t num_used;
@@ -13,6 +16,7 @@ typedef struct {
 
 struct _FsearchMemoryPool {
     GList *blocks;
+    FsearchMemoryPoolFreed *freed_items;
     uint32_t block_size;
     size_t item_size;
     GDestroyNotify item_free_func;
@@ -37,7 +41,7 @@ fsearch_memory_pool_new(uint32_t block_size, size_t item_size, GDestroyNotify it
     assert(pool != NULL);
     pool->item_free_func = item_free_func;
     pool->block_size = block_size;
-    pool->item_size = item_size;
+    pool->item_size = MAX(item_size, sizeof(FsearchMemoryPoolFreed));
     fsearch_memory_pool_new_block(pool);
 
     return pool;
@@ -68,6 +72,7 @@ fsearch_memory_pool_free_all(FsearchMemoryPool *pool) {
         assert(block != NULL);
         fsearch_memory_pool_free_block(pool, g_steal_pointer(&block));
     }
+    pool->freed_items = NULL;
 
     g_clear_pointer(&pool->blocks, g_list_free);
     g_clear_pointer(&pool, free);
@@ -83,11 +88,30 @@ fsearch_memory_pool_is_block_full(FsearchMemoryPool *pool) {
     return true;
 }
 
+void
+fsearch_memory_pool_free(FsearchMemoryPool *pool, void *item, bool item_clear) {
+    if (!pool || !item) {
+        return;
+    }
+    if (item_clear && pool->item_free_func) {
+        pool->item_free_func(item);
+    }
+    FsearchMemoryPoolFreed *freed_items = pool->freed_items;
+    pool->freed_items = item;
+    pool->freed_items->next = freed_items;
+}
+
 void *
 fsearch_memory_pool_malloc(FsearchMemoryPool *pool) {
     if (!pool) {
         return NULL;
     }
+    if (pool->freed_items) {
+        void *freed_head = pool->freed_items;
+        pool->freed_items = pool->freed_items->next;
+        return freed_head;
+    }
+
     if (!pool->blocks || fsearch_memory_pool_is_block_full(pool)) {
         fsearch_memory_pool_new_block(pool);
     }
@@ -96,4 +120,3 @@ fsearch_memory_pool_malloc(FsearchMemoryPool *pool) {
 
     return block->items + block->num_used++ * pool->item_size;
 }
-
