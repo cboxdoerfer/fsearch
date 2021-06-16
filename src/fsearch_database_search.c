@@ -70,21 +70,10 @@ db_search_result_new(void) {
 
 static void
 db_search_result_free(DatabaseSearchResult *result) {
-    if (result->folders) {
-        darray_unref(result->folders);
-        result->folders = NULL;
-    }
-    if (result->files) {
-        darray_unref(result->files);
-        result->files = NULL;
-    }
-    if (result->db) {
-        db_unref(result->db);
-        result->db = NULL;
-    }
-
-    free(result);
-    result = NULL;
+    g_clear_pointer(&result->folders, darray_unref);
+    g_clear_pointer(&result->files, darray_unref);
+    g_clear_pointer(&result->db, db_unref);
+    g_clear_pointer(&result, free);
 }
 
 DatabaseSearchResult *
@@ -102,8 +91,7 @@ db_search_result_unref(DatabaseSearchResult *result) {
         return;
     }
     if (g_atomic_int_dec_and_test(&result->ref_count)) {
-        db_search_result_free(result);
-        result = NULL;
+        g_clear_pointer(&result, db_search_result_free);
     }
 }
 
@@ -164,18 +152,10 @@ db_search_worker_context_free(DatabaseSearchWorkerContext *ctx) {
     if (!ctx) {
         return;
     }
-    if (ctx->results) {
-        g_free(ctx->results);
-        ctx->results = NULL;
-    }
 
-    if (ctx->entries) {
-        darray_unref(ctx->entries);
-        ctx->entries = NULL;
-    }
-
-    g_free(ctx);
-    ctx = NULL;
+    g_clear_pointer(&ctx->results, free);
+    g_clear_pointer(&ctx->entries, darray_unref);
+    g_clear_pointer(&ctx, free);
 }
 
 static DatabaseSearchWorkerContext *
@@ -311,8 +291,7 @@ db_search_worker(void *data) {
             }
         }
     }
-    g_string_free(path_string, TRUE);
-    path_string = NULL;
+    g_string_free(g_steal_pointer(&path_string), TRUE);
 
     ctx->num_results = num_results;
 }
@@ -363,8 +342,7 @@ db_search_entries(FsearchQuery *q,
     }
     if (g_cancellable_is_cancelled(cancellable)) {
         for (uint32_t i = 0; i < num_threads; i++) {
-            DatabaseSearchWorkerContext *ctx = thread_data[i];
-            db_search_worker_context_free(ctx);
+            g_clear_pointer(&thread_data[i], db_search_worker_context_free);
         }
         return NULL;
     }
@@ -385,8 +363,7 @@ db_search_entries(FsearchQuery *q,
 
         darray_add_items(results, (void **)ctx->results, ctx->num_results);
 
-        db_search_worker_context_free(ctx);
-        ctx = NULL;
+        g_clear_pointer(&ctx, db_search_worker_context_free);
     }
 
     return results;
@@ -446,14 +423,9 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
     return result;
 
 search_was_cancelled:
-    if (folders_res) {
-        darray_unref(folders_res);
-        folders_res = NULL;
-    }
-    if (files_res) {
-        darray_unref(files_res);
-        files_res = NULL;
-    }
+    g_clear_pointer(&folders_res, darray_unref);
+    g_clear_pointer(&files_res, darray_unref);
+
     db_unlock(q->db);
     return NULL;
 }
