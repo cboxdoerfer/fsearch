@@ -419,8 +419,7 @@ db_load_folders(FILE *fp,
 out:
     g_clear_pointer(&folder_block, free);
 
-    g_string_free(previous_entry_name, TRUE);
-    previous_entry_name = NULL;
+    g_string_free(g_steal_pointer(&previous_entry_name), TRUE);
 
     return res;
 }
@@ -479,8 +478,7 @@ db_load_files(FILE *fp,
 out:
     g_clear_pointer(&file_block, free);
 
-    g_string_free(previous_entry_name, TRUE);
-    previous_entry_name = NULL;
+    g_string_free(g_steal_pointer(&previous_entry_name), TRUE);
 
     return result;
 }
@@ -822,11 +820,8 @@ db_save_files(FILE *fp,
     }
 
 out:
-    g_string_free(name_prev, TRUE);
-    name_prev = NULL;
-
-    g_string_free(name_new, TRUE);
-    name_new = NULL;
+    g_string_free(g_steal_pointer(&name_prev), TRUE);
+    g_string_free(g_steal_pointer(&name_new), TRUE);
 
     return bytes_written;
 }
@@ -956,11 +951,8 @@ db_save_folders(FILE *fp,
     }
 
 out:
-    g_string_free(name_prev, TRUE);
-    name_prev = NULL;
-
-    g_string_free(name_new, TRUE);
-    name_new = NULL;
+    g_string_free(g_steal_pointer(&name_prev), TRUE);
+    g_string_free(g_steal_pointer(&name_new), TRUE);
 
     return bytes_written;
 }
@@ -1143,11 +1135,9 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
-    g_string_free(path_full, TRUE);
-    path_full = NULL;
+    g_string_free(g_steal_pointer(&path_full), TRUE);
 
-    g_string_free(path_full_temp, TRUE);
-    path_full_temp = NULL;
+    g_string_free(g_steal_pointer(&path_full_temp), TRUE);
 
     const double seconds = g_timer_elapsed(timer, NULL);
     g_timer_stop(timer);
@@ -1166,11 +1156,8 @@ save_fail:
     // remove temporary fsearch.db.tmp file
     unlink(path_full_temp->str);
 
-    g_string_free(path_full, TRUE);
-    path_full = NULL;
-
-    g_string_free(path_full_temp, TRUE);
-    path_full_temp = NULL;
+    g_string_free(g_steal_pointer(&path_full), TRUE);
+    g_string_free(g_steal_pointer(&path_full_temp), TRUE);
 
     g_clear_pointer(&timer, g_timer_destroy);
 
@@ -1360,8 +1347,7 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
 
     uint32_t res = db_folder_scan_recursive(&walk_context, parent);
 
-    g_string_free(path, TRUE);
-    path = NULL;
+    g_string_free(g_steal_pointer(&path), TRUE);
 
     g_clear_pointer(&timer, g_timer_destroy);
 
@@ -1435,12 +1421,10 @@ db_free(FsearchDatabase *db) {
     g_clear_pointer(&db->folder_pool, fsearch_memory_pool_free);
 
     if (db->indexes) {
-        g_list_free_full(db->indexes, (GDestroyNotify)fsearch_index_free);
-        db->indexes = NULL;
+        g_list_free_full(g_steal_pointer(&db->indexes), (GDestroyNotify)fsearch_index_free);
     }
     if (db->excludes) {
-        g_list_free_full(db->excludes, (GDestroyNotify)fsearch_exclude_path_free);
-        db->excludes = NULL;
+        g_list_free_full(g_steal_pointer(&db->excludes), (GDestroyNotify)fsearch_exclude_path_free);
     }
 
     g_clear_pointer(&db->exclude_files, g_strfreev);
