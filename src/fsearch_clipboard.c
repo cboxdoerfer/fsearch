@@ -36,8 +36,7 @@ static void
 clipboard_clean_data(GtkClipboard *clipboard, gpointer user_data) {
     /* g_debug("clean clipboard!"); */
     if (clipboard_file_list) {
-        g_list_free_full(clipboard_file_list, (GDestroyNotify)g_free);
-        clipboard_file_list = NULL;
+        g_list_free_full(g_steal_pointer(&clipboard_file_list), (GDestroyNotify)g_free);
     }
     clipboard_action = GDK_ACTION_DEFAULT;
 }
@@ -79,7 +78,7 @@ clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, gu
             file_name = g_filename_display_name((char *)l->data);
         }
         g_string_append(list, file_name);
-        g_free(file_name);
+        g_clear_pointer(&file_name, g_free);
 
         if (l->next != NULL) {
             if (info == GNOME_COPIED_FILES) {
@@ -104,7 +103,8 @@ clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, gu
                            list->len + 1);
 
 out:
-    g_string_free(list, TRUE);
+
+    g_string_free(g_steal_pointer(&list), TRUE);
 }
 
 void
@@ -135,6 +135,6 @@ clipboard_copy_filepath_list(GList *file_list) {
             g_string_append(filepathlist, "\n");
         }
     }
-    gtk_clipboard_set_text(clip, filepathlist->str, filepathlist->len);
-    g_string_free(filepathlist, TRUE);
+    gtk_clipboard_set_text(clip, filepathlist->str, (gint)filepathlist->len);
+    g_string_free(g_steal_pointer(&filepathlist), TRUE);
 }
