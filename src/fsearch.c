@@ -126,8 +126,7 @@ on_database_update_status(gpointer user_data) {
         }
     }
 
-    free(text);
-    text = NULL;
+    g_clear_pointer(&text, free);
 
     return G_SOURCE_REMOVE;
 }
@@ -160,13 +159,11 @@ on_database_update_finished(gpointer user_data) {
     FsearchDatabase *db = user_data;
     if (!g_cancellable_is_cancelled(self->db_thread_cancellable)) {
         prepare_windows_for_db_update(self);
-        if (self->db) {
-            db_unref(self->db);
-        }
-        self->db = db;
+        g_clear_pointer(&self->db, db_unref);
+        self->db = g_steal_pointer(&db);
     }
     else if (db) {
-        db_unref(db);
+        g_clear_pointer(&db, db_unref);
     }
     g_cancellable_reset(self->db_thread_cancellable);
     self->num_database_update_active--;
@@ -255,8 +252,7 @@ database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
                 database_update_status_cb(_("Saving…"));
             }
             db_save(db, db_path);
-            free(db_path);
-            db_path = NULL;
+            g_clear_pointer(&db_path, free);
         }
     }
 }
@@ -284,16 +280,15 @@ database_update(FsearchApplication *app, bool rescan) {
                 // load failed -> trigger rescan
                 g_idle_add(on_database_scan_add, NULL);
             }
-            free(db_file_path);
-            db_file_path = NULL;
+            g_clear_pointer(&db_file_path, free);
         }
     }
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-    g_timer_destroy(timer);
+    g_clear_pointer(&timer, g_timer_destroy);
+
     g_debug("[app] database update finished in %.2f ms", seconds * 1000);
-    timer = NULL;
 
     return db;
 }
@@ -316,8 +311,7 @@ database_pool_func(gpointer data, gpointer user_data) {
         ctx->finished_cb(db);
     }
 
-    g_free(ctx);
-    ctx = NULL;
+    g_clear_pointer(&ctx, g_free);
 }
 
 static void
@@ -369,7 +363,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
 
     if (app->config) {
         config_diff = config_cmp(app->config, new_config);
-        config_free(app->config);
+        g_clear_pointer(&app->config, config_free);
     }
     app->config = new_config;
     config_save(app->config);
@@ -453,27 +447,22 @@ fsearch_application_shutdown(GApplication *app) {
     if (fsearch->db_pool) {
         g_debug("[app] waiting for database thread to exit...");
         g_cancellable_cancel(fsearch->db_thread_cancellable);
-        g_thread_pool_free(fsearch->db_pool, FALSE, TRUE);
-        fsearch->db_pool = FALSE;
+        g_thread_pool_free(g_steal_pointer(&fsearch->db_pool), FALSE, TRUE);
         g_debug("[app] database thread finished.");
     }
-    if (fsearch->db) {
-        db_unref(fsearch->db);
-    }
 
-    if (fsearch->db_thread_cancellable) {
-        g_object_unref(fsearch->db_thread_cancellable);
-        fsearch->db_thread_cancellable = NULL;
-    }
+    g_clear_pointer(&fsearch->db, db_unref);
+    g_clear_pointer(&fsearch->db_thread_cancellable, g_object_unref);
 
     if (fsearch->filters) {
-        g_list_free_full(fsearch->filters, (GDestroyNotify)fsearch_filter_unref);
-        fsearch->filters = NULL;
+        g_list_free_full(g_steal_pointer(&fsearch->filters), (GDestroyNotify)fsearch_filter_unref);
     }
 
     config_save(fsearch->config);
-    config_free(fsearch->config);
+    g_clear_pointer(&fsearch->config, config_free);
+
     g_mutex_clear(&fsearch->mutex);
+
     G_APPLICATION_CLASS(fsearch_application_parent_class)->shutdown(app);
 }
 
@@ -522,7 +511,7 @@ fsearch_application_startup(GApplication *app) {
         GtkBuilder *menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
-        g_object_unref(menu_builder);
+        g_clear_pointer(&menu_builder, g_object_unref);
     }
 
     gtk_application_set_accels_for_action(GTK_APPLICATION(app),
@@ -690,12 +679,12 @@ on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_d
     if (dbus_group && reply) {
         g_debug("[app] trigger database update in primary instance");
         g_action_group_activate_action(G_ACTION_GROUP(dbus_group), "update_database", NULL);
-        g_object_unref(dbus_group);
+        g_clear_pointer(&dbus_group, g_object_unref);
 
         worker_ctx->update_called_on_primary = true;
     }
-    if (worker_ctx && worker_ctx->loop) {
-        g_main_loop_quit(worker_ctx->loop);
+    if (worker_ctx) {
+        g_clear_pointer(&worker_ctx->loop, g_main_loop_quit);
     }
 }
 
@@ -715,8 +704,7 @@ database_update_in_local_instance() {
     if (!config_load(config)) {
         if (!config_load_default(config)) {
             g_printerr("[fsearch] failed to load config\n");
-            config_free(config);
-            config = NULL;
+            g_clear_pointer(&config, config_free);
             return EXIT_FAILURE;
         }
     }
@@ -733,21 +721,16 @@ database_update_in_local_instance() {
         if (db_path) {
             res = db_save(db, db_path) ? EXIT_SUCCESS : EXIT_FAILURE;
 
-            free(db_path);
-            db_path = NULL;
+            g_clear_pointer(&db_path, free);
         }
     }
 
-    db_unref(db);
-    db = NULL;
-
-    config_free(config);
-    config = NULL;
+    g_clear_pointer(&db, db_unref);
+    g_clear_pointer(&config, config_free);
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-    g_timer_destroy(timer);
-    timer = NULL;
+    g_clear_pointer(&timer, g_timer_destroy);
 
     if (res == EXIT_SUCCESS) {
         g_print("[fsearch] database update finished successfully in %.2f seconds\n", seconds);
