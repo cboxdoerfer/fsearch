@@ -43,8 +43,8 @@ fsearch_memory_pool_new(uint32_t block_size, size_t item_size, GDestroyNotify it
     return pool;
 }
 
-void
-fsearch_memory_pool_free_block(FsearchMemoryPoolBlock *block, FsearchMemoryPool *pool) {
+static void
+fsearch_memory_pool_free_block(FsearchMemoryPool *pool, FsearchMemoryPoolBlock *block) {
     if (pool->item_free_func) {
         for (int i = 0; i < block->num_used; i++) {
             void *data = block->items + i * pool->item_size;
@@ -66,11 +66,10 @@ fsearch_memory_pool_free(FsearchMemoryPool *pool) {
     for (GList *b = pool->blocks; b != NULL; b = b->next) {
         FsearchMemoryPoolBlock *block = b->data;
         assert(block != NULL);
-        fsearch_memory_pool_free_block(g_steal_pointer(&block), pool);
+        fsearch_memory_pool_free_block(pool, g_steal_pointer(&block));
     }
 
     g_clear_pointer(&pool->blocks, g_list_free);
-
     g_clear_pointer(&pool, free);
 }
 
