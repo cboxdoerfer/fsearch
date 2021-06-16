@@ -333,7 +333,7 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
     }
 
     DynamicArrayCompareDataFunc func = get_sort_func(ctx->sort_order);
-    const bool parallel_sort = ctx->sort_order == DATABASE_INDEX_TYPE_FILETYPE ? true : false;
+    const bool parallel_sort = ctx->sort_order == DATABASE_INDEX_TYPE_FILETYPE ? false : true;
 
     g_debug("[sort] started: %d", ctx->sort_order);
 
