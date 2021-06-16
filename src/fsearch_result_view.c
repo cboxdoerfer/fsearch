@@ -42,7 +42,7 @@ get_icon_surface(GdkWindow *win,
     GIcon *icon = fsearch_file_utils_guess_icon(name, type == DATABASE_ENTRY_TYPE_FOLDER);
     const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
     if (!names) {
-        g_object_unref(icon);
+        g_clear_pointer(&icon, g_object_unref);
         return NULL;
     }
 
@@ -58,10 +58,10 @@ get_icon_surface(GdkWindow *win,
     GdkPixbuf *pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
     if (pixbuf) {
         icon_surface = gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
-        g_object_unref(pixbuf);
     }
-    g_object_unref(icon);
-    g_object_unref(icon_info);
+    g_clear_pointer(&pixbuf, g_object_unref);
+    g_clear_pointer(&icon, g_object_unref);
+    g_clear_pointer(&icon_info, g_object_unref);
 
     return icon_surface;
 }
@@ -119,8 +119,7 @@ draw_row_ctx_init(FsearchDatabaseView *view,
         if ((query->has_separator && query->flags.auto_search_in_path) || query->flags.search_in_path) {
             ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
         }
-        fsearch_query_unref(query);
-        query = NULL;
+        g_clear_pointer(&query, fsearch_query_unref);
     }
 
     ctx->full_path = db_view_entry_get_path_full_for_idx(view, row);
@@ -144,50 +143,26 @@ draw_row_ctx_init(FsearchDatabaseView *view,
 
 out:
     if (name) {
-        g_string_free(name, TRUE);
-        name = NULL;
+        g_string_free(g_steal_pointer(&name), TRUE);
     }
     db_view_unlock(view);
     return ret;
 }
 
 static void
-draw_row_ctx_free(DrawRowContext *ctx) {
-    if (ctx->display_name) {
-        g_free(ctx->display_name);
-        ctx->display_name = NULL;
-    }
-    if (ctx->extension) {
-        g_free(ctx->extension);
-        ctx->extension = NULL;
-    }
-    if (ctx->type) {
-        g_free(ctx->type);
-        ctx->type = NULL;
-    }
-    if (ctx->size) {
-        g_free(ctx->size);
-        ctx->size = NULL;
-    }
-    if (ctx->path_attr) {
-        pango_attr_list_unref(ctx->path_attr);
-        ctx->path_attr = NULL;
-    }
-    if (ctx->name_attr) {
-        pango_attr_list_unref(ctx->name_attr);
-        ctx->name_attr = NULL;
-    }
+draw_row_ctx_destroy(DrawRowContext *ctx) {
+    g_clear_pointer(&ctx->display_name, g_free);
+    g_clear_pointer(&ctx->extension, g_free);
+    g_clear_pointer(&ctx->type, g_free);
+    g_clear_pointer(&ctx->size, g_free);
+    g_clear_pointer(&ctx->path_attr, pango_attr_list_unref);
+    g_clear_pointer(&ctx->name_attr, pango_attr_list_unref);
+    g_clear_pointer(&ctx->icon_surface, cairo_surface_destroy);
     if (ctx->path) {
-        g_string_free(ctx->path, TRUE);
-        ctx->path = NULL;
+        g_string_free(g_steal_pointer(&ctx->path), TRUE);
     }
     if (ctx->full_path) {
-        g_string_free(ctx->full_path, TRUE);
-        ctx->full_path = NULL;
-    }
-    if (ctx->icon_surface) {
-        cairo_surface_destroy(ctx->icon_surface);
-        ctx->icon_surface = NULL;
+        g_string_free(g_steal_pointer(&ctx->full_path), TRUE);
     }
 }
 
@@ -220,8 +195,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
     case DATABASE_INDEX_TYPE_PATH: {
         GString *path = db_view_entry_get_path_for_idx(view, row);
         text = g_filename_display_name(path->str);
-        g_string_free(path, TRUE);
-        path = NULL;
+        g_string_free(g_steal_pointer(&path), TRUE);
         break;
     }
     case DATABASE_INDEX_TYPE_EXTENSION: {
@@ -254,8 +228,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
 
     db_view_unlock(view);
 
-    g_string_free(name, TRUE);
-    name = NULL;
+    g_string_free(g_steal_pointer(&name), TRUE);
 
     if (!text) {
         return NULL;
@@ -271,8 +244,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
         return text;
     }
 
-    g_free(text);
-    text = NULL;
+    g_clear_pointer(&text, g_free);
 
     return NULL;
 }
@@ -384,7 +356,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
     }
     gtk_style_context_restore(context);
 
-    draw_row_ctx_free(&ctx);
+    draw_row_ctx_destroy(&ctx);
 }
 
 FsearchResultView *
@@ -396,9 +368,5 @@ fsearch_result_view_new(void) {
 
 void
 fsearch_result_view_free(FsearchResultView *result_view) {
-    if (!result_view) {
-        return;
-    }
-    free(result_view);
-    result_view = NULL;
+    g_clear_pointer(&result_view, free);
 }
