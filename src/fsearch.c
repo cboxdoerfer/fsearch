@@ -50,6 +50,9 @@ struct _FsearchApplication {
 
     bool new_window;
 
+    guint file_manager_watch_id;
+    bool has_file_manager_on_bus;
+
     FsearchDatabaseState db_state;
     guint db_timeout_id;
 
@@ -444,6 +447,11 @@ fsearch_application_shutdown(GApplication *app) {
         }
     }
 
+    if (fsearch->file_manager_watch_id) {
+        g_bus_unwatch_name(fsearch->file_manager_watch_id);
+        fsearch->file_manager_watch_id = 0;
+    }
+
     if (fsearch->db_pool) {
         g_debug("[app] waiting for database thread to exit...");
         g_cancellable_cancel(fsearch->db_thread_cancellable);
@@ -472,6 +480,27 @@ fsearch_application_finalize(GObject *object) {
 }
 
 static void
+on_file_manager_name_appeared(GDBusConnection *connection,
+                              const gchar *name,
+                              const gchar *name_owner,
+                              gpointer user_data) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    if (!app) {
+        return;
+    }
+    app->has_file_manager_on_bus = true;
+}
+
+static void
+on_file_manager_name_vanished(GDBusConnection *connection, const gchar *name, gpointer user_data) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    if (!app) {
+        return;
+    }
+    app->has_file_manager_on_bus = false;
+}
+
+static void
 fsearch_application_startup(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     G_APPLICATION_CLASS(fsearch_application_parent_class)->startup(app);
@@ -494,6 +523,14 @@ fsearch_application_startup(GApplication *app) {
     fsearch->db = NULL;
     fsearch->db_state = FSEARCH_DATABASE_STATE_IDLE;
     fsearch->filters = fsearch_filter_get_default();
+
+    fsearch->file_manager_watch_id = g_bus_watch_name(G_BUS_TYPE_SESSION,
+                                                      "org.freedesktop.FileManager1",
+                                                      G_BUS_NAME_WATCHER_FLAGS_NONE,
+                                                      on_file_manager_name_appeared,
+                                                      on_file_manager_name_vanished,
+                                                      NULL,
+                                                      NULL);
 
     GtkCssProvider *provider = gtk_css_provider_new();
     gtk_css_provider_load_from_resource(provider, "/io/github/cboxdoerfer/fsearch/ui/shared.css");
@@ -916,6 +953,12 @@ fsearch_application_get_database_dir() {
     g_string_append_c(db_dir, G_DIR_SEPARATOR);
     g_string_append(db_dir, "fsearch");
     return g_string_free(db_dir, FALSE);
+}
+
+gboolean
+fsearch_application_has_file_manager_on_bus(FsearchApplication *fsearch) {
+    g_assert(FSEARCH_IS_APPLICATION(fsearch));
+    return fsearch->has_file_manager_on_bus;
 }
 
 FsearchApplication *

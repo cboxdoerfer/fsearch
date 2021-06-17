@@ -71,3 +71,6 @@ fsearch_application_get_database_file_path(void);
 
 char *
 fsearch_application_get_database_dir(void);
+
+gboolean
+fsearch_application_has_file_manager_on_bus(FsearchApplication *fsearch);
