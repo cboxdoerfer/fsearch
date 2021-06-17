@@ -203,7 +203,7 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
 
-    char **file_uris = (char **)g_ptr_array_free(file_array, FALSE);
+    char **file_uris = (char **)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
     if (file_uris) {
         GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
         if (connection) {
