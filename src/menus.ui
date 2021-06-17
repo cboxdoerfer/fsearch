@@ -205,12 +205,14 @@
             </item>
             -->
         </section>
-        <section id="fsearch_listview_menu_properties_section">
+        <section id="fsearch_listview_menu_file_properties_section">
+            <!--
             <item>
                 <attribute name="label" translatable="yes">Properties…</attribute>
                 <attribute name="action">win.file_properties</attribute>
                 <attribute name="icon">document-properties</attribute>
             </item>
+            -->
         </section>
     </menu>
 <menu id="fsearch_listview_column_popup_menu">

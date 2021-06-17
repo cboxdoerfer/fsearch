@@ -22,8 +22,23 @@
 
 #include <glib/gi18n.h>
 
+#include "fsearch.h"
 #include "fsearch_database_search.h"
 #include "fsearch_listview_popup.h"
+
+static void
+add_file_properties_entry(GtkBuilder *builder) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    if (app && fsearch_application_has_file_manager_on_bus(app)) {
+        GMenu *menu_properties_section =
+            G_MENU(gtk_builder_get_object(builder, "fsearch_listview_menu_file_properties_section"));
+        if (menu_properties_section) {
+            GMenuItem *properties_item = g_menu_item_new(_("Properties…"), "win.file_properties");
+            g_menu_append_item(menu_properties_section, properties_item);
+            g_clear_object(&properties_item);
+        }
+    }
+}
 
 static void
 fill_open_with_menu(GtkBuilder *builder, const char *name, FsearchDatabaseEntryType type) {
@@ -77,6 +92,7 @@ listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryTyp
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
     fill_open_with_menu(builder, name, type);
+    add_file_properties_entry(builder);
 
     GMenu *menu_root = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_popup_menu"));
     GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_root));

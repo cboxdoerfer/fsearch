@@ -108,7 +108,7 @@ prepend_path_uri_to_array(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-prepend_path(gpointer key, gpointer value, gpointer user_data) {
+prepend_path_to_list(gpointer key, gpointer value, gpointer user_data) {
     if (!value) {
         return;
     }
@@ -140,7 +140,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
 
     const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
     GList *file_list = NULL;
-    fsearch_application_window_selection_for_each(self, prepend_path, &file_list);
+    fsearch_application_window_selection_for_each(self, prepend_path_to_list, &file_list);
 
     if (delete || num_selected_rows > 20) {
         GString *warning_message = g_string_new(NULL);
@@ -274,7 +274,7 @@ static void
 fsearch_window_action_cut_or_copy(GSimpleAction *action, GVariant *variant, bool copy, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     GList *file_list = NULL;
-    fsearch_application_window_selection_for_each(self, prepend_path, &file_list);
+    fsearch_application_window_selection_for_each(self, prepend_path_to_list, &file_list);
     file_list = g_list_reverse(file_list);
     clipboard_copy_file_list(file_list, copy);
 }
@@ -293,7 +293,7 @@ static void
 fsearch_window_action_copy_filepath(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     GList *file_list = NULL;
-    fsearch_application_window_selection_for_each(self, prepend_path, &file_list);
+    fsearch_application_window_selection_for_each(self, prepend_path_to_list, &file_list);
     file_list = g_list_reverse(file_list);
     clipboard_copy_filepath_list(file_list);
 }
