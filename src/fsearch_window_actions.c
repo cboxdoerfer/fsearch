@@ -27,7 +27,6 @@
 #include "fsearch_config.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_file_utils.h"
-#include "fsearch_limits.h"
 #include "fsearch_list_view.h"
 #include "fsearch_statusbar.h"
 #include "fsearch_ui_utils.h"
@@ -144,13 +143,15 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
     fsearch_application_window_selection_for_each(self, prepend_path, &file_list);
 
     if (delete || num_selected_rows > 20) {
-        char error_msg[PATH_MAX] = "";
-        snprintf(error_msg, sizeof(error_msg), _("Do you really want to remove %d file(s)?"), num_selected_rows);
+        GString *warning_message = g_string_new(NULL);
+        g_string_printf(warning_message, _("Do you really want to remove %d file(s)?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
                                                 delete ? _("Deleting files…") : _("Moving files to trash…"),
-                                                error_msg);
+                                                warning_message->str);
+        g_string_free(g_steal_pointer(&warning_message), TRUE);
+
         if (response != GTK_RESPONSE_OK) {
             goto save_fail;
         }
@@ -185,16 +186,15 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     fsearch_application_window_selection_for_each(self, prepend_path_uri_to_array, &file_array);
 
     if (num_selected_rows > 20) {
-        char error_msg[PATH_MAX] = "";
-        snprintf(error_msg,
-                 sizeof(error_msg),
-                 _("Do you really want to open %d file property windows?"),
-                 num_selected_rows);
+        GString *warning_message = g_string_new(NULL);
+        g_string_printf(warning_message, _("Do you really want to open %d file property windows?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
                                                 _("Opening file properties…"),
-                                                error_msg);
+                                                warning_message->str);
+        g_string_free(g_steal_pointer(&warning_message), TRUE);
+
         if (response != GTK_RESPONSE_OK) {
             goto save_fail;
         }
