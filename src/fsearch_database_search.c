@@ -245,7 +245,6 @@ db_search_worker(void *data) {
 
     uint32_t num_results = 0;
 
-    bool path_set = false;
 
     GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
@@ -257,6 +256,8 @@ db_search_worker(void *data) {
         if (G_UNLIKELY(!haystack_name)) {
             continue;
         }
+
+        bool path_set = false;
         if (search_in_path || query->filter->search_in_path) {
             db_search_build_path(entry, path_string, haystack_name);
             path_set = true;
