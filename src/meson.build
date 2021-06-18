@@ -1,4 +1,4 @@
-fsearch_sources = [
+fsearch_sources = files(
     'fsearch.c',
     'fsearch_array.c',
     'fsearch_clipboard.c',
@@ -30,7 +30,7 @@ fsearch_sources = [
     'fsearch_window.c',
     'fsearch_window_actions.c',
     'main.c',
-]
+)
 
 fsearch_deps = [
   cc.find_library('m', required: true),
@@ -50,3 +50,6 @@ fsearch = executable('fsearch', fsearch_sources,
          dependencies: fsearch_deps,
               install: true,
 )
+
+subdir('tests')
+
