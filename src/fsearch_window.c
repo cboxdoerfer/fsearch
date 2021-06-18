@@ -339,14 +339,6 @@ fsearch_window_db_view_sort_finished_cb(gpointer data) {
     return G_SOURCE_REMOVE;
 }
 
-static void
-fsearch_window_db_view_sort_finished(FsearchDatabaseView *view, gpointer user_data) {
-    if (!user_data) {
-        return;
-    }
-    g_idle_add(fsearch_window_db_view_sort_finished_cb, user_data);
-}
-
 static gboolean
 on_sort_overlay_show(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
@@ -371,14 +363,6 @@ fsearch_window_db_view_sort_started_cb(gpointer data) {
     return G_SOURCE_REMOVE;
 }
 
-static void
-fsearch_window_db_view_sort_started(FsearchDatabaseView *view, gpointer user_data) {
-    if (!user_data) {
-        return;
-    }
-    g_idle_add(fsearch_window_db_view_sort_started_cb, user_data);
-}
-
 static gboolean
 fsearch_window_db_view_search_finished_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
@@ -390,14 +374,6 @@ fsearch_window_db_view_search_finished_cb(gpointer data) {
     return G_SOURCE_REMOVE;
 }
 
-static void
-fsearch_window_db_view_search_finished(FsearchDatabaseView *view, gpointer user_data) {
-    if (!user_data) {
-        return;
-    }
-    g_idle_add(fsearch_window_db_view_search_finished_cb, user_data);
-}
-
 static gboolean
 fsearch_window_db_view_search_started_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
@@ -407,14 +383,6 @@ fsearch_window_db_view_search_started_cb(gpointer data) {
         fsearch_statusbar_set_query_status_delayed(FSEARCH_STATUSBAR(win->statusbar));
     }
     return G_SOURCE_REMOVE;
-}
-
-static void
-fsearch_window_db_view_search_started(FsearchDatabaseView *view, gpointer user_data) {
-    if (!user_data) {
-        return;
-    }
-    g_idle_add(fsearch_window_db_view_search_started_cb, user_data);
 }
 
 static void
@@ -1011,7 +979,7 @@ fsearch_window_db_view_selection_changed_cb(gpointer data) {
 }
 
 static gboolean
-fsearch_window_db_view_changed_cb(gpointer data) {
+fsearch_window_db_view_content_changed_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
@@ -1045,19 +1013,33 @@ fsearch_window_db_view_changed_cb(gpointer data) {
 }
 
 static void
-fsearch_window_db_view_changed(FsearchDatabaseView *view, gpointer user_data) {
+fsearch_window_db_view_notify(FsearchDatabaseView *view, FsearchDatabaseViewNotify id, gpointer user_data) {
     if (!user_data) {
         return;
     }
-    g_idle_add(fsearch_window_db_view_changed_cb, user_data);
-}
-
-static void
-fsearch_window_db_view_selection_changed(FsearchDatabaseView *view, gpointer user_data) {
-    if (!user_data) {
-        return;
+    switch (id) {
+    case DATABASE_VIEW_NOTIFY_CONTENT_CHANGED:
+        g_idle_add(fsearch_window_db_view_content_changed_cb, user_data);
+        break;
+    case DATABASE_VIEW_NOTIFY_SELECTION_CHANGED:
+        g_idle_add(fsearch_window_db_view_selection_changed_cb, user_data);
+        break;
+    case DATABASE_VIEW_NOTIFY_SEARCH_STARTED:
+        g_idle_add(fsearch_window_db_view_search_started_cb, user_data);
+        break;
+    case DATABASE_VIEW_NOTIFY_SEARCH_FINISHED:
+        g_idle_add(fsearch_window_db_view_search_finished_cb, user_data);
+        break;
+    case DATABASE_VIEW_NOTIFY_SORT_STARTED:
+        g_idle_add(fsearch_window_db_view_sort_started_cb, user_data);
+        break;
+    case DATABASE_VIEW_NOTIFY_SORT_FINISHED:
+        g_idle_add(fsearch_window_db_view_sort_finished_cb, user_data);
+        break;
+    default:
+        g_debug("[view_notify] unknown id: %d", id);
+        break;
     }
-    g_idle_add(fsearch_window_db_view_selection_changed_cb, user_data);
 }
 
 static void
@@ -1210,12 +1192,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
                                                   get_query_flags(),
                                                   get_active_filter(win),
                                                   win->result_view->sort_order,
-                                                  fsearch_window_db_view_changed,
-                                                  fsearch_window_db_view_selection_changed,
-                                                  fsearch_window_db_view_search_started,
-                                                  fsearch_window_db_view_search_finished,
-                                                  fsearch_window_db_view_sort_started,
-                                                  fsearch_window_db_view_sort_finished,
+                                                  fsearch_window_db_view_notify,
                                                   GUINT_TO_POINTER(win_id));
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     if (db) {

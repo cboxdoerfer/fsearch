@@ -6,9 +6,20 @@
 #include "fsearch_query.h"
 #include "fsearch_query_flags.h"
 
+typedef enum {
+    DATABASE_VIEW_NOTIFY_CONTENT_CHANGED,
+    DATABASE_VIEW_NOTIFY_SELECTION_CHANGED,
+    DATABASE_VIEW_NOTIFY_SEARCH_STARTED,
+    DATABASE_VIEW_NOTIFY_SEARCH_FINISHED,
+    DATABASE_VIEW_NOTIFY_SORT_STARTED,
+    DATABASE_VIEW_NOTIFY_SORT_FINISHED,
+} FsearchDatabaseViewNotify;
+
 typedef struct FsearchDatabaseView FsearchDatabaseView;
 
-typedef void (*FsearchDatabaseViewNotifyFunc)(FsearchDatabaseView *view, gpointer user_data);
+typedef void (*FsearchDatabaseViewNotifyFunc)(FsearchDatabaseView *view,
+                                              FsearchDatabaseViewNotify id,
+                                              gpointer user_data);
 
 void
 db_view_unref(FsearchDatabaseView *view);
@@ -21,13 +32,8 @@ db_view_new(const char *query_text,
             FsearchQueryFlags flags,
             FsearchFilter *filter,
             FsearchDatabaseIndexType sort_order,
-            FsearchDatabaseViewNotifyFunc view_changed_func,
-            FsearchDatabaseViewNotifyFunc selection_changed_func,
-            FsearchDatabaseViewNotifyFunc search_started_func,
-            FsearchDatabaseViewNotifyFunc search_finished_func,
-            FsearchDatabaseViewNotifyFunc sort_started_func,
-            FsearchDatabaseViewNotifyFunc sort_finished_func,
-            gpointer user_data);
+            FsearchDatabaseViewNotifyFunc notify_func,
+            gpointer notify_func_data);
 
 void
 db_view_set_thread_pool(FsearchDatabaseView *view, FsearchThreadPool *pool);
