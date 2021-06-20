@@ -7,6 +7,7 @@
 #include "fsearch_database_search.h"
 #include "fsearch_selection.h"
 #include "fsearch_task.h"
+#include "fsearch_task_ids.h"
 
 #include <assert.h>
 #include <string.h>
@@ -363,7 +364,7 @@ db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order) {
     ctx->sort_order = sort_order;
 
     fsearch_task_queue(view->task_queue,
-                       1,
+                       FSEARCH_TASK_ID_SORT,
                        db_view_sort_task,
                        db_view_sort_task_finished,
                        db_view_sort_task_cancelled,

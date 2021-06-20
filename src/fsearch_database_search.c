@@ -30,6 +30,7 @@
 #include "fsearch_limits.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_task.h"
+#include "fsearch_task_ids.h"
 #include "fsearch_token.h"
 
 #define THRESHOLD_FOR_PARALLEL_SEARCH 1000
@@ -435,5 +436,11 @@ db_search_queue(FsearchTaskQueue *queue,
                 FsearchQuery *query,
                 FsearchTaskFinishedFunc finished_func,
                 FsearchTaskCancelledFunc cancelled_func) {
-    fsearch_task_queue(queue, 0, db_search_task, finished_func, cancelled_func, FSEARCH_TASK_CLEAR_SAME_ID, query);
+    fsearch_task_queue(queue,
+                       FSEARCH_TASK_ID_SEARCH,
+                       db_search_task,
+                       finished_func,
+                       cancelled_func,
+                       FSEARCH_TASK_CLEAR_SAME_ID,
+                       query);
 }
