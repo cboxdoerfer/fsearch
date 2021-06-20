@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-06-03 15:33+0000\n"
-"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
+"PO-Revision-Date: 2021-06-21 06:34+0000\n"
+"Last-Translator: J. Lavoie <j.lavoie@net-c.ca>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.7\n"
 
 #: src/fsearch.c:341
 msgid "translator-credits"
@@ -95,7 +95,7 @@ msgstr "Beenden"
 
 #: src/fsearch.glade:408
 msgid "Search…"
-msgstr "Suche…"
+msgstr "Suche …"
 
 #: src/fsearch.glade:430
 msgid "Select a Filter"
@@ -107,7 +107,7 @@ msgstr "Suche"
 
 #: src/fsearch_database.c:633
 msgid "Loading folders…"
-msgstr "Lade Ordner…"
+msgstr "Lade Ordner …"
 
 #: src/fsearch_database.c:641
 msgid "Loading files…"
@@ -155,7 +155,7 @@ msgstr "Videos"
 
 #: src/fsearch_listview_popup.c:64
 msgid "Other Application…"
-msgstr "Andere Anwendung…"
+msgstr "Andere Anwendung …"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -185,15 +185,15 @@ msgstr "Pfad"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
-msgstr "Suche…"
+msgstr "Suche …"
 
 #: src/fsearch_statusbar.c:140
 msgid "Loading…"
-msgstr "Lade…"
+msgstr "Lade …"
 
 #: src/fsearch_statusbar.c:145
 msgid "Scanning…"
-msgstr "Scanne…"
+msgstr "Scanne …"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -353,7 +353,7 @@ msgstr "page0"
 
 #: src/overlay.ui:107
 msgid "Loading Database…"
-msgstr "Lade Datenbank…"
+msgstr "Lade Datenbank …"
 
 #: src/overlay.ui:122
 msgid "This won't take long."
@@ -393,7 +393,7 @@ msgstr "Versuche eine andere Suche"
 
 #: src/overlay.ui:365
 msgid "Sorting results…"
-msgstr "Sortiere Ergebnisse…"
+msgstr "Sortiere Ergebnisse …"
 
 #: src/preferences.ui:112
 msgid "Enable dark theme"
