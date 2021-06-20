@@ -42,5 +42,4 @@ char **
 fs_str_split(const char *str);
 
 bool
-fs_str_is_utf8(const char *str);
-
+fs_str_case_is_ascii(const char *str);

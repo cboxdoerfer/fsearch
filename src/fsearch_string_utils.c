@@ -16,6 +16,8 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#define G_LOG_DOMAIN "fsearch-string-utils"
+
 #include "fsearch_string_utils.h"
 #include <assert.h>
 #include <ctype.h>
@@ -37,31 +39,26 @@ fs_str_is_empty(const char *str) {
 }
 
 bool
-fs_str_is_utf8(const char *str) {
-    char *normalized = g_utf8_normalize(str, -1, G_NORMALIZE_DEFAULT);
-    if (normalized == NULL) {
-        return false;
+fs_str_case_is_ascii(const char *str) {
+    const gssize str_len = (gssize)strlen(str);
+    if (str_len == 0) {
+        return true;
     }
-    char *down = g_utf8_strdown(normalized, -1);
-    char *up = g_utf8_strup(normalized, -1);
+    char *down = g_utf8_strdown(str, str_len);
+    char *up = g_utf8_strup(str, str_len);
 
-    assert(down != NULL);
-    assert(up != NULL);
-
-    size_t str_len = strlen(str);
-    size_t up_str_len = strlen(up);
-    size_t down_str_len = strlen(down);
-    size_t up_len = g_utf8_strlen(up, -1);
-    size_t down_len = g_utf8_strlen(down, -1);
+    bool ret = false;
+    if (g_str_is_ascii(down) && g_str_is_ascii(up)) {
+        ret = true;
+    }
+    else {
+        g_debug("[non_ascii_string] \"%s\" (down: \"%s\", up: \"%s\")", str, down, up);
+        ret = false;
+    }
 
     g_clear_pointer(&down, g_free);
     g_clear_pointer(&up, g_free);
-    g_clear_pointer(&normalized, g_free);
-
-    if (str_len != up_len || str_len != down_len || up_str_len != up_len || down_str_len != down_len) {
-        return true;
-    }
-    return false;
+    return ret;
 }
 
 int

@@ -106,7 +106,7 @@ fsearch_token_new(const char *text, bool match_case, bool auto_match_case, bool 
         }
         else {
             new->search_func =
-                fs_str_is_utf8(text) ? fsearch_search_func_normal_icase_u8 : fsearch_search_func_normal_icase;
+                !fs_str_case_is_ascii(text) ? fsearch_search_func_normal_icase_u8 : fsearch_search_func_normal_icase;
         }
     }
     return new;
