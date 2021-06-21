@@ -23,10 +23,6 @@ config_h.set_quoted('PACKAGE_NAME', 'FSearch')
 add_project_arguments('-DHAVE_CONFIG_H', language : 'c')
 add_project_arguments('-D_FILE_OFFSET_BITS=64', language : 'c')
 
-if get_option('buildtype').startswith('debug')
-    add_project_arguments('-DDEBUG', language : 'c')
-endif
-
 fsearch_include_dirs = include_directories(
   '.',
 )
