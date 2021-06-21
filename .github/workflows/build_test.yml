@@ -8,19 +8,15 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-16.04
+    runs-on: ubuntu-18.04
 
     steps:
     - uses: actions/checkout@v2
     - name: install build dependencies
-      run: sudo apt-get -qq update && sudo apt-get install -y build-essential automake autopoint autoconf libtool pkg-config intltool autoconf-archive libpcre3-dev libglib2.0-dev libgtk-3-dev libxml2-utils
-    - name: autogen
-      run: ./autogen.sh
-    - name: configure
-      run: ./configure
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+      run: sudo apt-get -qq update && sudo apt-get install -y build-essential meson pkg-config intltool libpcre3-dev libglib2.0-dev libgtk-3-dev libxml2-utils
+    - name: setup build config
+      run: meson build . && cd build
+    - name: run build
+      run: ninja build
+    - name: run tests
+      run: ninja test
