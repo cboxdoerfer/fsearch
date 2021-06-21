@@ -1,7 +1,7 @@
 #include <glib.h>
 #include <stdlib.h>
 
-#include "../fsearch_token.h"
+#include <src/fsearch_token.h>
 
 typedef struct TestQuery {
     const char *query;

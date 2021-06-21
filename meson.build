@@ -27,6 +27,10 @@ if get_option('buildtype').startswith('debug')
     add_project_arguments('-DDEBUG', language : 'c')
 endif
 
+fsearch_include_dirs = include_directories(
+  '.',
+)
+
 subdir('data')
 subdir('src')
 subdir('po')
