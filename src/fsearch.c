@@ -152,7 +152,6 @@ prepare_windows_for_db_update(FsearchApplication *app) {
             fsearch_application_window_remove_model(window);
         }
     }
-    return;
 }
 
 static gboolean
@@ -395,7 +394,7 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
     g_assert(FSEARCH_IS_APPLICATION(gapp));
     FsearchApplication *app = FSEARCH_APPLICATION(gapp);
 
-    FsearchPreferencesPage page = g_variant_get_uint32(parameter);
+    const FsearchPreferencesPage page = g_variant_get_uint32(parameter);
 
     GtkWindow *win_active = gtk_application_get_active_window(GTK_APPLICATION(app));
     if (!win_active) {
@@ -672,16 +671,16 @@ on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_d
 
     GDBusActionGroup *dbus_group = g_dbus_action_group_get(connection, fsearch_bus_name, fsearch_object_path);
 
-    guint signal_id = g_dbus_connection_signal_subscribe(connection,
-                                                         fsearch_bus_name,
-                                                         "org.gtk.Actions",
-                                                         "Changed",
-                                                         fsearch_object_path,
-                                                         NULL,
-                                                         G_DBUS_SIGNAL_FLAGS_NONE,
-                                                         on_action_group_changed,
-                                                         NULL,
-                                                         NULL);
+    const guint signal_id = g_dbus_connection_signal_subscribe(connection,
+                                                               fsearch_bus_name,
+                                                               "org.gtk.Actions",
+                                                               "Changed",
+                                                               fsearch_object_path,
+                                                               NULL,
+                                                               G_DBUS_SIGNAL_FLAGS_NONE,
+                                                               on_action_group_changed,
+                                                               NULL,
+                                                               NULL);
 
     GVariant *reply = g_dbus_connection_call_sync(connection,
                                                   fsearch_bus_name,
@@ -768,14 +767,14 @@ fsearch_application_local_database_update() {
     // If yes, trigger update there, so the UI is aware of the update and can display its progress
     FsearchApplicationDatabaseWorker worker_ctx = {};
     worker_ctx.loop = g_main_loop_new(NULL, FALSE);
-    guint owner_id = g_bus_own_name(G_BUS_TYPE_SESSION,
-                                    fsearch_db_worker_bus_name,
-                                    G_BUS_NAME_OWNER_FLAGS_NONE,
-                                    NULL,
-                                    on_name_acquired,
-                                    on_name_lost,
-                                    &worker_ctx,
-                                    NULL);
+    const guint owner_id = g_bus_own_name(G_BUS_TYPE_SESSION,
+                                          fsearch_db_worker_bus_name,
+                                          G_BUS_NAME_OWNER_FLAGS_NONE,
+                                          NULL,
+                                          on_name_acquired,
+                                          on_name_lost,
+                                          &worker_ctx,
+                                          NULL);
     g_main_loop_run(worker_ctx.loop);
     g_bus_unown_name(owner_id);
 
