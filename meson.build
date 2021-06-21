@@ -1,6 +1,6 @@
 project('fsearch', 'c',
     version: '0.1beta4',
-    meson_version: '>= 0.50.0',
+    meson_version: '>= 0.45.0',
     default_options: ['c_std=c11'],
     )
 app_id = 'io.github.cboxdoerfer.FSearch'
