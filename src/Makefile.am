@@ -41,6 +41,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_statusbar.h \
 			 fsearch_string_utils.h \
 			 fsearch_task.h \
+			 fsearch_task_ids.h \
 			 fsearch_thread_pool.h \
 			 fsearch_token.h \
 			 fsearch_ui_utils.h \
