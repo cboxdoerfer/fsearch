@@ -4,11 +4,9 @@
 
 #include <src/fsearch_query.h>
 
-static bool
-test_query(const char *needle, const char *haystack, bool enable_regex, bool match_case, bool auto_match_case) {
-    FsearchQueryFlags flags = {.enable_regex = enable_regex,
-                               .match_case = match_case,
-                               .auto_match_case = auto_match_case};
+static void
+test_query(const char *needle, const char *haystack, bool result) {
+    FsearchQueryFlags flags = {};
     FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, flags, 0, 0, NULL);
     bool found = true;
 
@@ -20,7 +18,11 @@ test_query(const char *needle, const char *haystack, bool enable_regex, bool mat
         }
     }
     g_clear_pointer(&q, fsearch_query_unref);
-    return found;
+
+    if (found != result) {
+        g_printerr("Finding %s in %s should %s.\n", needle, haystack, result ? "succeed" : "fail");
+    }
+    g_assert(found == result);
 }
 
 static bool
@@ -39,48 +41,91 @@ set_locale(const char *locale) {
     return true;
 }
 
+typedef struct QueryTest {
+    const char *needle;
+    const char *haystack;
+    bool result;
+} QueryTest;
+
 int
 main(int argc, char *argv[]) {
     if (set_locale("en_US.UTF-8")) {
-        g_assert_false(test_query("i j l", "I J K", false, false, false));
-        g_assert_false(test_query("i", "J K", false, false, false));
-        g_assert_false(test_query("I", "i j k", false, true, false));
-        g_assert_false(test_query("i", "ı", false, false, false));
-        g_assert_false(test_query("i", "İ", false, false, false));
+        QueryTest us_tests[] = {
+            // Mismatches
+            {"i j l", "I J K", false},
+            {"i", "J K", false},
+            {"i", "ı", false},
+            {"i", "İ", false},
+            {"abc", "ab_c", false},
 
-        g_assert_true(test_query("i", "I J K", false, false, false));
-        g_assert_true(test_query("i j", "I J K", false, false, false));
-        g_assert_true(test_query("i j", "İIäój", false, false, false));
+            {"é", "e", false},
+            {"ó", "o", false},
+            {"å", "a", false},
+
+            // Matches
+            {"é", "É", true},
+            {"ó", "Ó", true},
+            {"å", "Å", true},
+
+            {"i", "I J K", true},
+            {"i j", "I J K", true},
+            {"i j", "İIäój", true},
+        };
+
+        for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {
+            QueryTest *t = &us_tests[i];
+            test_query(t->needle, t->haystack, t->result);
+        }
     }
 
     if (set_locale("tr_TR.UTF-8")) {
-        g_assert_false(test_query("i", "ı", false, false, false));
-        g_assert_false(test_query("i", "I", false, false, false));
-        g_assert_false(test_query("ı", "i", false, false, false));
-        g_assert_false(test_query("ı", "İ", false, false, false));
+        QueryTest tr_tests[] = {
+            // Mismatches
+            {"i", "ı", false},
+            {"i", "I", false},
+            {"ı", "i", false},
+            {"ı", "İ", false},
 
-        g_assert_true(test_query("ı", "I", false, false, false));
-        g_assert_true(test_query("i", "İ", false, false, false));
+            // Matches
+            {"ı", "I", true},
+            {"i", "İ", true},
+            {"I", "ı", true},
+            {"İ", "i", true},
+        };
+
+        for (uint32_t i = 0; i < G_N_ELEMENTS(tr_tests); i++) {
+            QueryTest *t = &tr_tests[i];
+            test_query(t->needle, t->haystack, t->result);
+        }
     }
 
     if (set_locale("de_DE.UTF-8")) {
-        g_assert_false(test_query("ä", "a", false, false, false));
-        g_assert_false(test_query("ä", "A", false, false, false));
-        g_assert_false(test_query("Ä", "a", false, false, false));
-        g_assert_false(test_query("Ä", "A", false, false, false));
+        QueryTest de_tests[] = {
+            // Mismatches
+            {"ä", "a", false},
+            {"ä", "A", false},
+            {"Ä", "a", false},
+            {"Ä", "A", false},
+            {"ö", "o", false},
+            {"ö", "O", false},
+            {"Ö", "o", false},
+            {"Ö", "O", false},
+            {"ü", "u", false},
+            {"ü", "U", false},
+            {"Ü", "u", false},
+            {"Ü", "U", false},
 
-        g_assert_false(test_query("ö", "o", false, false, false));
-        g_assert_false(test_query("ö", "O", false, false, false));
-        g_assert_false(test_query("Ö", "o", false, false, false));
-        g_assert_false(test_query("Ö", "O", false, false, false));
+            // Matches
+            {"ä", "Ä", true},
+            {"ö", "Ö", true},
+            {"ü", "Ü", true},
 
-        g_assert_false(test_query("ü", "u", false, false, false));
-        g_assert_false(test_query("ü", "U", false, false, false));
-        g_assert_false(test_query("Ü", "u", false, false, false));
-        g_assert_false(test_query("Ü", "U", false, false, false));
+            {"ß", "ẞ", true},
+        };
 
-        g_assert_true(test_query("ä", "Ä", false, false, false));
-        g_assert_true(test_query("ö", "Ö", false, false, false));
-        g_assert_true(test_query("ü", "Ü", false, false, false));
+        for (uint32_t i = 0; i < G_N_ELEMENTS(de_tests); i++) {
+            QueryTest *t = &de_tests[i];
+            test_query(t->needle, t->haystack, t->result);
+        }
     }
 }
