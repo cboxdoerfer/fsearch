@@ -109,11 +109,22 @@ static FsearchQueryFlags
 get_query_flags() {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
-    FsearchQueryFlags flags = {.enable_regex = config->enable_regex,
-                               .match_case = config->match_case,
-                               .auto_match_case = config->auto_match_case,
-                               .search_in_path = config->search_in_path,
-                               .auto_search_in_path = config->auto_search_in_path};
+    FsearchQueryFlags flags = 0;
+    if (config->match_case) {
+        flags |= QUERY_FLAG_MATCH_CASE;
+    }
+    if (config->auto_match_case) {
+        flags |= QUERY_FLAG_AUTO_MATCH_CASE;
+    }
+    if (config->enable_regex) {
+        flags |= QUERY_FLAG_REGEX;
+    }
+    if (config->search_in_path) {
+        flags |= QUERY_FLAG_SEARCH_IN_PATH;
+    }
+    if (config->auto_search_in_path) {
+        flags |= QUERY_FLAG_AUTO_SEARCH_IN_PATH;
+    }
     return flags;
 }
 

@@ -46,14 +46,14 @@ fsearch_query_new(const char *text,
 
     q->pool = pool;
 
-    q->token = fsearch_tokens_new(text, flags.match_case, flags.enable_regex, flags.auto_match_case);
+    q->token = fsearch_tokens_new(text, flags);
     q->num_token = 0;
     for (uint32_t i = 0; q->token[i] != NULL; i++) {
         q->num_token++;
     }
 
     if (filter && filter->query) {
-        q->filter_token = fsearch_tokens_new(filter->query, filter->match_case, filter->enable_regex, false);
+        q->filter_token = fsearch_tokens_new(filter->query, filter->flags);
         q->num_filter_token = 0;
         for (uint32_t i = 0; q->filter_token[i] != NULL; i++) {
             q->num_filter_token++;

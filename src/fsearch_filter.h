@@ -3,6 +3,8 @@
 #include <glib.h>
 #include <stdbool.h>
 
+#include "fsearch_query_flags.h"
+
 typedef enum FsearchFilterFileType {
     FSEARCH_FILTER_NONE,
     FSEARCH_FILTER_FOLDERS,
@@ -13,20 +15,13 @@ typedef struct FsearchFilter {
     FsearchFilterFileType type;
     char *name;
     char *query;
-    bool match_case;
-    bool enable_regex;
-    bool search_in_path;
+    FsearchQueryFlags flags;
 
     volatile int ref_count;
 } FsearchFilter;
 
 FsearchFilter *
-fsearch_filter_new(FsearchFilterFileType type,
-                   const char *name,
-                   const char *query,
-                   bool match_case,
-                   bool enable_regex,
-                   bool search_in_path);
+fsearch_filter_new(FsearchFilterFileType type, const char *name, const char *query, FsearchQueryFlags flags);
 
 FsearchFilter *
 fsearch_filter_ref(FsearchFilter *filter);

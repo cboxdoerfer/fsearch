@@ -5,6 +5,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "fsearch_query_flags.h"
+
 #define OVECCOUNT 3
 
 typedef struct FsearchToken {
@@ -21,7 +23,7 @@ typedef struct FsearchToken {
 } FsearchToken;
 
 FsearchToken **
-fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool auto_match_case);
+fsearch_tokens_new(const char *query, FsearchQueryFlags flags);
 
 void
 fsearch_tokens_free(FsearchToken **tokens);

@@ -45,7 +45,7 @@ main(int argc, char *argv[]) {
 
     const int num_test_queries = sizeof(test_queries) / sizeof(test_queries[0]);
     for (int i = 0; i < num_test_queries; i++) {
-        FsearchToken **tokens = fsearch_tokens_new(test_queries[i].query, false, false, true);
+        FsearchToken **tokens = fsearch_tokens_new(test_queries[i].query, QUERY_FLAG_AUTO_MATCH_CASE);
         g_assert(tokens != NULL);
 
         int num_token = 0;

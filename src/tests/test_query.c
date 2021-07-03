@@ -6,8 +6,7 @@
 
 static void
 test_query(const char *needle, const char *haystack, bool result) {
-    FsearchQueryFlags flags = {};
-    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, flags, 0, 0, NULL);
+    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, 0, 0, 0, NULL);
     bool found = true;
 
     for (uint32_t i = 0; i < q->num_token; i++) {

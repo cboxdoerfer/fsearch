@@ -116,7 +116,8 @@ draw_row_ctx_init(FsearchDatabaseView *view,
     FsearchQuery *query = db_view_get_query(view);
     if (query) {
         ctx->name_attr = fsearch_query_highlight_match(query, name->str);
-        if ((query->has_separator && query->flags.auto_search_in_path) || query->flags.search_in_path) {
+        if ((query->has_separator && query->flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH)
+            || query->flags & QUERY_FLAG_SEARCH_IN_PATH) {
             ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
         }
         g_clear_pointer(&query, fsearch_query_unref);

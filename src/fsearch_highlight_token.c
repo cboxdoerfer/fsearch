@@ -64,7 +64,8 @@ fsearch_highlight_tokens_match(GList *tokens, FsearchQueryFlags flags, const cha
         }
         l = l->next;
 
-        if (token->is_supported_glob && fsearch_query_highlight_match_glob(token, input, flags.match_case)) {
+        if (token->is_supported_glob
+            && fsearch_query_highlight_match_glob(token, input, flags & QUERY_FLAG_MATCH_CASE)) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
             pa->start_index = token->hl_start;
             pa->end_index = token->hl_end;
@@ -129,14 +130,14 @@ fsearch_highlight_tokens_new(const char *text, FsearchQueryFlags flags) {
     }
 
     GList *tokens = NULL;
-    if (fs_str_is_regex(text) && flags.enable_regex) {
+    if (fs_str_is_regex(text) && (flags & QUERY_FLAG_REGEX)) {
         FsearchHighlightToken *token = fsearch_highlight_token_new();
 
         bool has_uppercase = fs_str_utf8_has_upper(text);
-        if (!flags.match_case && flags.auto_match_case) {
-            flags.match_case = has_uppercase ? true : false;
+        if (has_uppercase && (flags & QUERY_FLAG_AUTO_MATCH_CASE)) {
+            flags |= QUERY_FLAG_MATCH_CASE;
         }
-        token->regex = g_regex_new(text, !flags.match_case ? G_REGEX_CASELESS : 0, 0, NULL);
+        token->regex = g_regex_new(text, !(flags & QUERY_FLAG_MATCH_CASE) ? G_REGEX_CASELESS : 0, 0, NULL);
         token->text = g_strdup(text);
         token->query_len = strlen(text);
         tokens = g_list_append(tokens, token);
@@ -160,11 +161,12 @@ fsearch_highlight_tokens_new(const char *text, FsearchQueryFlags flags) {
             gchar *query_escaped = g_regex_escape_string(queries[i], -1);
 
             bool has_uppercase = fs_str_utf8_has_upper(query_escaped);
-            bool query_match_case = false;
-            if (!flags.match_case && flags.auto_match_case) {
-                query_match_case = has_uppercase ? true : false;
+            FsearchQueryFlags flags_token = flags;
+            if (has_uppercase && (flags & QUERY_FLAG_AUTO_MATCH_CASE)) {
+                flags_token |= QUERY_FLAG_MATCH_CASE;
             }
-            token->regex = g_regex_new(query_escaped, !query_match_case ? G_REGEX_CASELESS : 0, 0, NULL);
+            token->regex =
+                g_regex_new(query_escaped, !(flags_token & QUERY_FLAG_MATCH_CASE) ? G_REGEX_CASELESS : 0, 0, NULL);
             g_clear_pointer(&query_escaped, g_free);
 
             fsearch_highlight_token_init(token, queries[i]);

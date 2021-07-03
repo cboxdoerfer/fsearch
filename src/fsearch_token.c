@@ -74,34 +74,35 @@ fsearch_tokens_free(FsearchToken **tokens) {
 }
 
 static FsearchToken *
-fsearch_token_new(const char *text, bool match_case, bool auto_match_case, bool is_regex) {
+fsearch_token_new(const char *text, FsearchQueryFlags flags) {
     FsearchToken *new = calloc(1, sizeof(FsearchToken));
     assert(new != NULL);
 
     new->text_len = strlen(text);
     new->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
 
-    if (auto_match_case && fs_str_utf8_has_upper(text)) {
-        match_case = true;
+    if ((flags & QUERY_FLAG_AUTO_MATCH_CASE) && fs_str_utf8_has_upper(text)) {
+        flags |= QUERY_FLAG_MATCH_CASE;
     }
 
     char *normalized = g_utf8_normalize(text, -1, G_NORMALIZE_DEFAULT);
-    new->text = match_case ? g_strdup(text) : g_utf8_strdown(normalized, -1);
+    new->text = (flags & QUERY_FLAG_MATCH_CASE) ? g_strdup(text) : g_utf8_strdown(normalized, -1);
 
     g_clear_pointer(&normalized, g_free);
 
-    if (is_regex) {
+    if (flags & QUERY_FLAG_REGEX) {
         const char *error;
         int erroffset;
-        new->regex = pcre_compile(text, match_case ? 0 : PCRE_CASELESS, &error, &erroffset, NULL);
+        new->regex = pcre_compile(text, flags & QUERY_FLAG_MATCH_CASE ? 0 : PCRE_CASELESS, &error, &erroffset, NULL);
         new->regex_study = pcre_study(new->regex, PCRE_STUDY_JIT_COMPILE, &error);
         new->search_func = fsearch_search_func_regex;
     }
     else if (strchr(text, '*') || strchr(text, '?')) {
-        new->search_func = match_case ? fsearch_search_func_wildcard : fsearch_search_func_wildcard_icase;
+        new->search_func =
+            flags &QUERY_FLAG_MATCH_CASE ? fsearch_search_func_wildcard : fsearch_search_func_wildcard_icase;
     }
     else {
-        if (match_case) {
+        if (flags & QUERY_FLAG_MATCH_CASE) {
             new->search_func = fsearch_search_func_normal;
         }
         else {
@@ -113,13 +114,13 @@ fsearch_token_new(const char *text, bool match_case, bool auto_match_case, bool 
 }
 
 FsearchToken **
-fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool auto_match_case) {
+fsearch_tokens_new(const char *query, FsearchQueryFlags flags) {
     // check if regex characters are present
     const bool is_reg = fs_str_is_regex(query);
-    if (is_reg && enable_regex) {
+    if (is_reg && (flags & QUERY_FLAG_REGEX)) {
         FsearchToken **token = calloc(2, sizeof(FsearchToken *));
         assert(token != NULL);
-        token[0] = fsearch_token_new(query, match_case, auto_match_case, true);
+        token[0] = fsearch_token_new(query, flags);
         token[1] = NULL;
         return token;
     }
@@ -133,7 +134,7 @@ fsearch_tokens_new(const char *query, bool match_case, bool enable_regex, bool a
     assert(token != NULL);
     for (uint32_t i = 0; i < tmp_token_len; i++) {
         // g_debug("[search] token %d: %s", i, query_split[i]);
-        token[i] = fsearch_token_new(query_split[i], match_case, auto_match_case, false);
+        token[i] = fsearch_token_new(query_split[i], flags);
     }
 
     g_clear_pointer(&query_split, g_strfreev);

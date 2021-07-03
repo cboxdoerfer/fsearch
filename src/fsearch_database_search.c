@@ -233,8 +233,8 @@ db_search_worker(void *data) {
     const uint32_t end = ctx->end_pos;
     const uint32_t num_token = query->num_token;
     FsearchToken **token = query->token;
-    const uint32_t search_in_path = query->flags.search_in_path;
-    const uint32_t auto_search_in_path = query->flags.auto_search_in_path;
+    const uint32_t search_in_path = query->flags & QUERY_FLAG_SEARCH_IN_PATH;
+    const uint32_t auto_search_in_path = query->flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH;
     FsearchDatabaseEntry **results = (FsearchDatabaseEntry **)ctx->results;
     DynamicArray *entries = ctx->entries;
 
@@ -245,7 +245,6 @@ db_search_worker(void *data) {
     }
 
     uint32_t num_results = 0;
-
 
     GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
@@ -259,12 +258,15 @@ db_search_worker(void *data) {
         }
 
         bool path_set = false;
-        if (search_in_path || query->filter->search_in_path) {
+        if (search_in_path || query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH) {
             db_search_build_path(entry, path_string, haystack_name);
             path_set = true;
         }
 
-        if (!db_search_filter_entry(entry, query, query->filter->search_in_path ? path_string->str : haystack_name)) {
+        if (!db_search_filter_entry(entry,
+                                    query,
+                                    query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str
+                                                                                     : haystack_name)) {
             continue;
         }
 
