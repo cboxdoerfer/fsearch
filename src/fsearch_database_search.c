@@ -181,7 +181,11 @@ db_search_worker_context_new(FsearchQuery *query,
 }
 
 static inline bool
-db_search_filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const char *haystack) {
+db_search_filter_entry(FsearchDatabaseEntry *entry,
+                       FsearchQuery *query,
+                       const char *haystack,
+                       char *haystack_buffer,
+                       size_t haystack_buffer_len) {
     if (!query->filter) {
         return true;
     }
@@ -205,7 +209,7 @@ db_search_filter_entry(FsearchDatabaseEntry *entry, FsearchQuery *query, const c
             }
             FsearchToken *t = query->filter_token[num_found++];
 
-            if (!t->search_func(haystack, t->text, t)) {
+            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len)) {
                 return false;
             }
         }
@@ -246,6 +250,10 @@ db_search_worker(void *data) {
 
     uint32_t num_results = 0;
 
+    // The search functions use this buffer for case folding etc.
+    const size_t haystack_buffer_len = 4 * PATH_MAX;
+    char *haystack_buffer = calloc(haystack_buffer_len, sizeof(char));
+
     GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
         if (G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
@@ -265,8 +273,9 @@ db_search_worker(void *data) {
 
         if (!db_search_filter_entry(entry,
                                     query,
-                                    query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str
-                                                                                     : haystack_name)) {
+                                    query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str : haystack_name,
+                                    haystack_buffer,
+                                    haystack_buffer_len)) {
             continue;
         }
 
@@ -289,11 +298,13 @@ db_search_worker(void *data) {
             else {
                 haystack = haystack_name;
             }
-            if (!t->search_func(haystack, t->text, t)) {
+            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len)) {
                 break;
             }
         }
     }
+
+    g_clear_pointer(&haystack_buffer, free);
     g_string_free(g_steal_pointer(&path_string), TRUE);
 
     ctx->num_results = num_results;

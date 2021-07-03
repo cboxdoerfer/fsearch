@@ -79,6 +79,10 @@ PKG_CHECK_MODULES(PCRE, libpcre)
 AC_SUBST(PCRE_CFLAGS)
 AC_SUBST(PCRE_LIBS)
 
+PKG_CHECK_MODULES(ICU, icu-uc > 3.8)
+AC_SUBST(ICU_CFLAGS)
+AC_SUBST(ICU_LIBS)
+
 AC_CONFIG_FILES([Makefile
                  data/Makefile
                  data/fsearch.desktop.in

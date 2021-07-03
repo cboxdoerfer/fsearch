@@ -9,9 +9,10 @@ test_query(const char *needle, const char *haystack, bool result) {
     FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, 0, 0, 0, NULL);
     bool found = true;
 
+    char haystack_buffer[4 * PATH_MAX] = "";
     for (uint32_t i = 0; i < q->num_token; i++) {
         FsearchToken *t = q->token[i];
-        if (!t->search_func(haystack, t->text, NULL)) {
+        if (!t->search_func(haystack, t->text, t, haystack_buffer, sizeof(haystack_buffer))) {
             found = false;
             break;
         }
