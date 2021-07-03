@@ -67,6 +67,9 @@ main(int argc, char *argv[]) {
             {"i", "İ", false},
             {"I", "ı", false},
             {"İ", "i", false},
+            // wildcards
+            {"?", "aa", false},
+            {"*.txt", "testtxt", false},
 
             // Matches
             {"é", "É", true},
@@ -81,6 +84,11 @@ main(int argc, char *argv[]) {
             {"i j", "İIäój", true},
             {"abc", "abcdef", true},
             {"ab cd", "abcdef", true},
+            // wildcards
+            {"?", "ı", true},
+            {"*c*f", "abcdef", true},
+            {"ab*ef", "abcdef", true},
+            {"abc?ef", "abcdef", true},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {
@@ -106,6 +114,11 @@ main(int argc, char *argv[]) {
             {"i", "İ", true},
             {"I", "ı", true},
             {"İ", "i", true},
+            // trigger wildcard search
+            {"ı*", "I", true},
+            {"i*", "İ", true},
+            {"I*", "ı", true},
+            {"İ*", "i", true},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(tr_tests); i++) {
