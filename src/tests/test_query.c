@@ -53,7 +53,7 @@ main(int argc, char *argv[]) {
         QueryTest us_tests[] = {
             // Mismatches
             {"i j l", "I J K", false},
-            {"i", "J K", false},
+            {"i", "j", false},
             {"i", "ı", false},
             {"i", "İ", false},
             {"abc", "ab_c", false},
@@ -66,10 +66,15 @@ main(int argc, char *argv[]) {
             {"é", "É", true},
             {"ó", "Ó", true},
             {"å", "Å", true},
+            {"É", "é", true},
+            {"Ó", "Ó", true},
+            {"Å", "å", true},
 
             {"i", "I J K", true},
-            {"i j", "I J K", true},
+            {"j i", "I J K", true},
             {"i j", "İIäój", true},
+            {"abc", "abcdef", true},
+            {"ab cd", "abcdef", true},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {
@@ -85,6 +90,10 @@ main(int argc, char *argv[]) {
             {"i", "I", false},
             {"ı", "i", false},
             {"ı", "İ", false},
+            {"İ", "ı", false},
+            {"İ", "I", false},
+            {"I", "i", false},
+            {"I", "İ", false},
 
             // Matches
             {"ı", "I", true},
@@ -102,6 +111,19 @@ main(int argc, char *argv[]) {
     if (set_locale("de_DE.UTF-8")) {
         QueryTest de_tests[] = {
             // Mismatches
+            {"a", "ä", false},
+            {"A", "ä", false},
+            {"a", "Ä", false},
+            {"A", "Ä", false},
+            {"o", "ö", false},
+            {"O", "ö", false},
+            {"o", "Ö", false},
+            {"O", "Ö", false},
+            {"u", "ü", false},
+            {"U", "ü", false},
+            {"u", "Ü", false},
+            {"U", "Ü", false},
+
             {"ä", "a", false},
             {"ä", "A", false},
             {"Ä", "a", false},
@@ -116,6 +138,12 @@ main(int argc, char *argv[]) {
             {"Ü", "U", false},
 
             // Matches
+            {"ä", "ä", true},
+            {"ö", "ö", true},
+            {"ü", "ü", true},
+            {"Ä", "ä", true},
+            {"Ö", "ö", true},
+            {"Ü", "ü", true},
             {"ä", "Ä", true},
             {"ö", "Ö", true},
             {"ü", "Ü", true},
