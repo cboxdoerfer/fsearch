@@ -5,8 +5,8 @@
 #include <src/fsearch_query.h>
 
 static void
-test_query(const char *needle, const char *haystack, bool result) {
-    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, 0, 0, 0, NULL);
+test_query(const char *needle, const char *haystack, FsearchQueryFlags flags, bool result) {
+    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, flags, 0, 0, NULL);
     bool found = true;
 
     char haystack_buffer[4 * PATH_MAX] = "";
@@ -44,6 +44,7 @@ set_locale(const char *locale) {
 typedef struct QueryTest {
     const char *needle;
     const char *haystack;
+    FsearchQueryFlags flags;
     bool result;
 } QueryTest;
 
@@ -52,127 +53,140 @@ main(int argc, char *argv[]) {
     if (set_locale("en_US.UTF-8")) {
         QueryTest us_tests[] = {
             // Mismatches
-            {"i j l", "I J K", false},
-            {"i", "j", false},
-            {"i", "ı", false},
-            {"i", "İ", false},
-            {"abc", "ab_c", false},
+            {"i j l", "I J K", 0, false},
+            {"i", "j", 0, false},
+            {"i", "ı", 0, false},
+            {"i", "İ", 0, false},
+            {"abc", "ab_c", 0, false},
 
-            {"é", "e", false},
-            {"ó", "o", false},
-            {"å", "a", false},
+            {"é", "e", 0, false},
+            {"ó", "o", 0, false},
+            {"å", "a", 0, false},
 
             // ensure that we don't match turkic "i" mappings
-            {"ı", "I", false},
-            {"i", "İ", false},
-            {"I", "ı", false},
-            {"İ", "i", false},
+            {"ı", "I", 0, false},
+            {"i", "İ", 0, false},
+            {"I", "ı", 0, false},
+            {"İ", "i", 0, false},
             // wildcards
-            {"?", "aa", false},
-            {"*.txt", "testtxt", false},
+            {"?", "aa", 0, false},
+            {"*.txt", "testtxt", 0, false},
+            // regex
+            {"^a", "ba", QUERY_FLAG_REGEX, false},
+            // match case
+            {"a", "A", QUERY_FLAG_MATCH_CASE, false},
+            // auto match case
+            {"A", "a", QUERY_FLAG_AUTO_MATCH_CASE, false},
 
             // Matches
-            {"é", "É", true},
-            {"ó", "Ó", true},
-            {"å", "Å", true},
-            {"É", "é", true},
-            {"Ó", "Ó", true},
-            {"Å", "å", true},
+            {"é", "É", 0, true},
+            {"ó", "Ó", 0, true},
+            {"å", "Å", 0, true},
+            {"É", "é", 0, true},
+            {"Ó", "Ó", 0, true},
+            {"Å", "å", 0, true},
 
-            {"i", "I J K", true},
-            {"j i", "I J K", true},
-            {"i j", "İIäój", true},
-            {"abc", "abcdef", true},
-            {"ab cd", "abcdef", true},
+            {"i", "I J K", 0, true},
+            {"j i", "I J K", 0, true},
+            {"i j", "İIäój", 0, true},
+            {"abc", "abcdef", 0, true},
+            {"ab cd", "abcdef", 0, true},
             // wildcards
-            {"?", "ı", true},
-            {"*c*f", "abcdef", true},
-            {"ab*ef", "abcdef", true},
-            {"abc?ef", "abcdef", true},
+            {"?", "ı", 0, true},
+            {"*c*f", "abcdef", 0, true},
+            {"ab*ef", "abcdef", 0, true},
+            {"abc?ef", "abcdef", 0, true},
+            // regex
+            {"^b", "ba", QUERY_FLAG_REGEX, true},
+            {"^B", "ba", QUERY_FLAG_REGEX, true},
+            // match case
+            {"a", "a", QUERY_FLAG_MATCH_CASE, true},
+            // auto match case
+            {"A", "A", QUERY_FLAG_AUTO_MATCH_CASE, true},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {
             QueryTest *t = &us_tests[i];
-            test_query(t->needle, t->haystack, t->result);
+            test_query(t->needle, t->haystack, t->flags, t->result);
         }
     }
 
     if (set_locale("tr_TR.UTF-8")) {
         QueryTest tr_tests[] = {
             // Mismatches
-            {"i", "ı", false},
-            {"i", "I", false},
-            {"ı", "i", false},
-            {"ı", "İ", false},
-            {"İ", "ı", false},
-            {"İ", "I", false},
-            {"I", "i", false},
-            {"I", "İ", false},
+            {"i", "ı", 0, false},
+            {"i", "I", 0, false},
+            {"ı", "i", 0, false},
+            {"ı", "İ", 0, false},
+            {"İ", "ı", 0, false},
+            {"İ", "I", 0, false},
+            {"I", "i", 0, false},
+            {"I", "İ", 0, false},
 
             // Matches
-            {"ı", "I", true},
-            {"i", "İ", true},
-            {"I", "ı", true},
-            {"İ", "i", true},
-            // trigger wildcard search
-            {"ı*", "I", true},
-            {"i*", "İ", true},
-            {"I*", "ı", true},
-            {"İ*", "i", true},
+            {"ı", "I", 0, true},
+            {"i", "İ", 0, true},
+            {"I", "ı", 0, true},
+            {"İ", "i", 0, true},
+            // trigger 0, wildcard search
+            {"ı*", "I", 0, true},
+            {"i*", "İ", 0, true},
+            {"I*", "ı", 0, true},
+            {"İ*", "i", 0, true},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(tr_tests); i++) {
             QueryTest *t = &tr_tests[i];
-            test_query(t->needle, t->haystack, t->result);
+            test_query(t->needle, t->haystack, t->flags, t->result);
         }
     }
 
     if (set_locale("de_DE.UTF-8")) {
         QueryTest de_tests[] = {
             // Mismatches
-            {"a", "ä", false},
-            {"A", "ä", false},
-            {"a", "Ä", false},
-            {"A", "Ä", false},
-            {"o", "ö", false},
-            {"O", "ö", false},
-            {"o", "Ö", false},
-            {"O", "Ö", false},
-            {"u", "ü", false},
-            {"U", "ü", false},
-            {"u", "Ü", false},
-            {"U", "Ü", false},
+            {"a", "ä", 0, false},
+            {"A", "ä", 0, false},
+            {"a", "Ä", 0, false},
+            {"A", "Ä", 0, false},
+            {"o", "ö", 0, false},
+            {"O", "ö", 0, false},
+            {"o", "Ö", 0, false},
+            {"O", "Ö", 0, false},
+            {"u", "ü", 0, false},
+            {"U", "ü", 0, false},
+            {"u", "Ü", 0, false},
+            {"U", "Ü", 0, false},
 
-            {"ä", "a", false},
-            {"ä", "A", false},
-            {"Ä", "a", false},
-            {"Ä", "A", false},
-            {"ö", "o", false},
-            {"ö", "O", false},
-            {"Ö", "o", false},
-            {"Ö", "O", false},
-            {"ü", "u", false},
-            {"ü", "U", false},
-            {"Ü", "u", false},
-            {"Ü", "U", false},
+            {"ä", "a", 0, false},
+            {"ä", "A", 0, false},
+            {"Ä", "a", 0, false},
+            {"Ä", "A", 0, false},
+            {"ö", "o", 0, false},
+            {"ö", "O", 0, false},
+            {"Ö", "o", 0, false},
+            {"Ö", "O", 0, false},
+            {"ü", "u", 0, false},
+            {"ü", "U", 0, false},
+            {"Ü", "u", 0, false},
+            {"Ü", "U", 0, false},
 
             // Matches
-            {"ä", "ä", true},
-            {"ö", "ö", true},
-            {"ü", "ü", true},
-            {"Ä", "ä", true},
-            {"Ö", "ö", true},
-            {"Ü", "ü", true},
-            {"ä", "Ä", true},
-            {"ö", "Ö", true},
-            {"ü", "Ü", true},
+            {"ä", "ä", 0, true},
+            {"ö", "ö", 0, true},
+            {"ü", "ü", 0, true},
+            {"Ä", "ä", 0, true},
+            {"Ö", "ö", 0, true},
+            {"Ü", "ü", 0, true},
+            {"ä", "Ä", 0, true},
+            {"ö", "Ö", 0, true},
+            {"ü", "Ü", 0, true},
 
-            {"ß", "ẞ", true},
+            {"ß", "ẞ", 0, true},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(de_tests); i++) {
             QueryTest *t = &de_tests[i];
-            test_query(t->needle, t->haystack, t->result);
+            test_query(t->needle, t->haystack, t->flags, t->result);
         }
     }
 }
