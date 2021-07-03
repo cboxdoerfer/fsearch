@@ -61,6 +61,12 @@ main(int argc, char *argv[]) {
             {"ó", "o", false},
             {"å", "a", false},
 
+            // ensure that we don't match turkic "i" mappings
+            {"ı", "I", false},
+            {"i", "İ", false},
+            {"I", "ı", false},
+            {"İ", "i", false},
+
             // Matches
             {"é", "É", true},
             {"ó", "Ó", true},
