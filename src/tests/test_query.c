@@ -56,7 +56,6 @@ main(int argc, char *argv[]) {
             {"i j l", "I J K", 0, false},
             {"i", "j", 0, false},
             {"i", "ı", 0, false},
-            {"i", "İ", 0, false},
             {"abc", "ab_c", 0, false},
 
             {"é", "e", 0, false},
@@ -64,7 +63,9 @@ main(int argc, char *argv[]) {
             {"å", "a", 0, false},
 
             // ensure that we don't match turkic "i" mappings
+            {"ı", "i", 0, false},
             {"ı", "I", 0, false},
+            {"i", "ı", 0, false},
             {"i", "İ", 0, false},
             {"I", "ı", 0, false},
             {"İ", "i", 0, false},
@@ -86,6 +87,7 @@ main(int argc, char *argv[]) {
             {"Ó", "Ó", 0, true},
             {"Å", "å", 0, true},
 
+            {"ﬀ", "affe", 0, true},
             {"i", "I J K", 0, true},
             {"j i", "I J K", 0, true},
             {"i j", "İIäój", 0, true},
