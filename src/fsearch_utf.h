@@ -14,12 +14,12 @@ typedef struct FsearchUtfConversionBuffer {
     int32_t string_normalized_folded_len;
     int32_t string_utf8_folded_len;
 
-    int32_t capacity;
+    int32_t num_characters;
     bool init;
 } FsearchUtfConversionBuffer;
 
 void
-fsearch_utf_conversion_buffer_init(FsearchUtfConversionBuffer *buffer, int32_t string_capacity);
+fsearch_utf_conversion_buffer_init(FsearchUtfConversionBuffer *buffer, int32_t num_characters);
 
 void
 fsearch_utf_conversion_buffer_clear(FsearchUtfConversionBuffer *buffer);

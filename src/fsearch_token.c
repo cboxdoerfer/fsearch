@@ -139,6 +139,14 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
 
     const char *current_locale = setlocale(LC_CTYPE, NULL);
 
+    new->text = g_strdup(text);
+    new->text_len = strlen(text);
+    new->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
+
+    if ((flags & QUERY_FLAG_AUTO_MATCH_CASE) && fs_str_utf8_has_upper(text)) {
+        flags |= QUERY_FLAG_MATCH_CASE;
+    }
+
     new->fold_options = U_FOLD_CASE_DEFAULT;
     if (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2)) {
         // Use special case mapping for Turkic languages
@@ -152,25 +160,16 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
     new->normalizer = unorm2_getNFDInstance(&status);
     assert(U_SUCCESS(status));
 
+    // set up case folded needle in UTF16 format
     new->needle_buffer = calloc(1, sizeof(FsearchUtfConversionBuffer));
-    fsearch_utf_conversion_buffer_init(new->needle_buffer, 4 * PATH_MAX);
-    fsearch_utf_normalize_and_fold_case(new->normalizer, new->case_map, new->needle_buffer, text);
+    fsearch_utf_conversion_buffer_init(new->needle_buffer, 8 * new->text_len);
+    const bool utf_ready =
+        fsearch_utf_normalize_and_fold_case(new->normalizer, new->case_map, new->needle_buffer, text);
+    assert(utf_ready == true);
 
-    new->text_len = strlen(text);
-
-    // make sure the buffer is large enough, because case folding can result in a larger string
-    const int32_t needle_capacity = (int32_t)(8 * new->text_len);
-    new->needle_down = calloc(needle_capacity, sizeof(char));
-    new->needle_down_len = ucasemap_utf8FoldCase(new->case_map, new->needle_down, needle_capacity, text, -1, &status);
-    assert(U_SUCCESS(status));
-
-    new->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
-
-    if ((flags & QUERY_FLAG_AUTO_MATCH_CASE) && fs_str_utf8_has_upper(text)) {
-        flags |= QUERY_FLAG_MATCH_CASE;
-    }
-
-    new->text = g_strdup(text);
+    // set up case folded needle in UTF8 format
+    new->needle_down = g_strdup(new->needle_buffer->string_utf8_folded);
+    new->needle_down_len = new->needle_buffer->string_utf8_folded_len;
 
     if (flags & QUERY_FLAG_REGEX) {
         const char *error;
