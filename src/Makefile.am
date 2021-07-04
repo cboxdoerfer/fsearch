@@ -45,6 +45,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_thread_pool.h \
 			 fsearch_token.h \
 			 fsearch_ui_utils.h \
+			 fsearch_utf.h \
 			 fsearch_window.h \
 			 fsearch_window_actions.h \
 			 utf8.h
@@ -78,6 +79,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_thread_pool.c \
 		  fsearch_token.c \
 		  fsearch_ui_utils.c \
+		  fsearch_utf.c \
 		  fsearch_window.c \
 		  fsearch_window_actions.c \
 		  resources.c \

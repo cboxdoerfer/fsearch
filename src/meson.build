@@ -34,6 +34,7 @@ libfsearch_sources = [
     'fsearch_thread_pool.c',
     'fsearch_token.c',
     'fsearch_ui_utils.c',
+    'fsearch_utf.c',
     'fsearch_window.c',
     'fsearch_window_actions.c',
 ]

@@ -9,14 +9,18 @@ test_query(const char *needle, const char *haystack, FsearchQueryFlags flags, bo
     FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, flags, 0, 0, NULL);
     bool found = true;
 
+    FsearchUtfConversionBuffer utf_buffer = {};
+    fsearch_utf_conversion_buffer_init(&utf_buffer, 4 * PATH_MAX);
+
     char haystack_buffer[4 * PATH_MAX] = "";
     for (uint32_t i = 0; i < q->num_token; i++) {
         FsearchToken *t = q->token[i];
-        if (!t->search_func(haystack, t->text, t, haystack_buffer, sizeof(haystack_buffer))) {
+        if (!t->search_func(haystack, t->text, t, haystack_buffer, sizeof(haystack_buffer), &utf_buffer)) {
             found = false;
             break;
         }
     }
+    fsearch_utf_conversion_buffer_clear(&utf_buffer);
     g_clear_pointer(&q, fsearch_query_unref);
 
     if (found != result) {

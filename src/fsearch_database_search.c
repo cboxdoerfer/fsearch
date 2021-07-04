@@ -32,6 +32,7 @@
 #include "fsearch_task.h"
 #include "fsearch_task_ids.h"
 #include "fsearch_token.h"
+#include "fsearch_utf.h"
 
 #define THRESHOLD_FOR_PARALLEL_SEARCH 1000
 
@@ -185,7 +186,8 @@ db_search_filter_entry(FsearchDatabaseEntry *entry,
                        FsearchQuery *query,
                        const char *haystack,
                        char *haystack_buffer,
-                       size_t haystack_buffer_len) {
+                       size_t haystack_buffer_len,
+                       FsearchUtfConversionBuffer *utf_buffer) {
     if (!query->filter) {
         return true;
     }
@@ -209,7 +211,7 @@ db_search_filter_entry(FsearchDatabaseEntry *entry,
             }
             FsearchToken *t = query->filter_token[num_found++];
 
-            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len)) {
+            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len, utf_buffer)) {
                 return false;
             }
         }
@@ -232,6 +234,8 @@ db_search_worker(void *data) {
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
+    FsearchUtfConversionBuffer utf_buffer = {};
+    fsearch_utf_conversion_buffer_init(&utf_buffer, 4 * PATH_MAX);
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
@@ -275,7 +279,8 @@ db_search_worker(void *data) {
                                     query,
                                     query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str : haystack_name,
                                     haystack_buffer,
-                                    haystack_buffer_len)) {
+                                    haystack_buffer_len,
+                                    &utf_buffer)) {
             continue;
         }
 
@@ -298,12 +303,13 @@ db_search_worker(void *data) {
             else {
                 haystack = haystack_name;
             }
-            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len)) {
+            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len, &utf_buffer)) {
                 break;
             }
         }
     }
 
+    fsearch_utf_conversion_buffer_clear(&utf_buffer);
     g_clear_pointer(&haystack_buffer, free);
     g_string_free(g_steal_pointer(&path_string), TRUE);
 

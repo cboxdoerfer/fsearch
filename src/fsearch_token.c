@@ -4,19 +4,20 @@
 
 #include "fsearch_token.h"
 #include "fsearch_string_utils.h"
+#include "fsearch_utf.h"
 #include <assert.h>
 #include <fnmatch.h>
 #include <glib.h>
 #include <locale.h>
 #include <string.h>
-#include <unicode/uloc.h>
 
 static uint32_t
 fsearch_search_func_regex(const char *haystack,
                           const char *needle,
                           void *token,
                           char *haystack_buffer,
-                          size_t haystack_buffer_len) {
+                          size_t haystack_buffer_len,
+                          FsearchUtfConversionBuffer *buffer) {
     FsearchToken *t = token;
     size_t haystack_len = strlen(haystack);
     return pcre_exec(t->regex, t->regex_study, haystack, haystack_len, 0, 0, t->ovector, OVECCOUNT) >= 0 ? 1 : 0;
@@ -27,7 +28,8 @@ fsearch_search_func_wildcard_icase(const char *haystack,
                                    const char *needle,
                                    void *token,
                                    char *haystack_buffer,
-                                   size_t haystack_buffer_len) {
+                                   size_t haystack_buffer_len,
+                                   FsearchUtfConversionBuffer *buffer) {
     return !fnmatch(needle, haystack, FNM_CASEFOLD) ? 1 : 0;
 }
 
@@ -36,18 +38,19 @@ fsearch_search_func_wildcard(const char *haystack,
                              const char *needle,
                              void *token,
                              char *haystack_buffer,
-                             size_t haystack_buffer_len) {
+                             size_t haystack_buffer_len,
+                             FsearchUtfConversionBuffer *buffer) {
     return !fnmatch(needle, haystack, 0) ? 1 : 0;
 }
 
 static uint32_t
-fsearch_search_func_normal_icase_u8(const char *haystack,
-                                    const char *needle,
-                                    void *token,
-                                    char *haystack_buffer,
-                                    size_t haystack_buffer_len) {
+fsearch_search_func_normal_icase_u8_fast(const char *haystack,
+                                         const char *needle,
+                                         void *token,
+                                         char *haystack_buffer,
+                                         size_t haystack_buffer_len,
+                                         FsearchUtfConversionBuffer *buffer) {
     FsearchToken *t = token;
-
     UErrorCode status = U_ZERO_ERROR;
     ucasemap_utf8FoldCase(t->case_map, haystack_buffer, (int32_t)haystack_buffer_len, haystack, -1, &status);
     if (G_LIKELY(U_SUCCESS(status))) {
@@ -61,11 +64,35 @@ fsearch_search_func_normal_icase_u8(const char *haystack,
 }
 
 static uint32_t
+fsearch_search_func_normal_icase_u8(const char *haystack,
+                                    const char *needle,
+                                    void *token,
+                                    char *haystack_buffer,
+                                    size_t haystack_buffer_len,
+                                    FsearchUtfConversionBuffer *buffer) {
+    FsearchToken *t = token;
+    if (G_LIKELY(fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, buffer, haystack))) {
+        return u_strFindFirst(buffer->string_normalized_folded,
+                              buffer->string_normalized_folded_len,
+                              t->needle_buffer->string_normalized_folded,
+                              t->needle_buffer->string_normalized_folded_len)
+                 ? 1
+                 : 0;
+    }
+    else {
+        // failed to fold case, fall back to fast but not accurate ascii search
+        g_warning("[utf8_search] failed to lower case: %s", haystack);
+        return strcasestr(haystack, needle) ? 1 : 0;
+    }
+}
+
+static uint32_t
 fsearch_search_func_normal_icase(const char *haystack,
                                  const char *needle,
                                  void *token,
                                  char *haystack_buffer,
-                                 size_t haystack_buffer_len) {
+                                 size_t haystack_buffer_len,
+                                 FsearchUtfConversionBuffer *buffer) {
     return strcasestr(haystack, needle) ? 1 : 0;
 }
 
@@ -74,7 +101,8 @@ fsearch_search_func_normal(const char *haystack,
                            const char *needle,
                            void *token,
                            char *haystack_buffer,
-                           size_t haystack_buffer_len) {
+                           size_t haystack_buffer_len,
+                           FsearchUtfConversionBuffer *buffer) {
     return strstr(haystack, needle) ? 1 : 0;
 }
 
@@ -83,6 +111,8 @@ fsearch_token_free(void *data) {
     FsearchToken *token = data;
     assert(token != NULL);
 
+    fsearch_utf_conversion_buffer_clear(token->needle_buffer);
+    g_clear_pointer(&token->needle_buffer, free);
     g_clear_pointer(&token->case_map, ucasemap_close);
     g_clear_pointer(&token->needle_down, g_free);
     g_clear_pointer(&token->text, g_free);
@@ -109,20 +139,29 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
 
     const char *current_locale = setlocale(LC_CTYPE, NULL);
 
-    uint32_t fold_case_options = U_FOLD_CASE_DEFAULT;
+    new->fold_options = U_FOLD_CASE_DEFAULT;
     if (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2)) {
         // Use special case mapping for Turkic languages
-        fold_case_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
+        new->fold_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
     }
+
     UErrorCode status = U_ZERO_ERROR;
-    new->case_map = ucasemap_open(current_locale, fold_case_options, &status);
+    new->case_map = ucasemap_open(current_locale, new->fold_options, &status);
     assert(U_SUCCESS(status));
+
+    new->normalizer = unorm2_getNFDInstance(&status);
+    assert(U_SUCCESS(status));
+
+    new->needle_buffer = calloc(1, sizeof(FsearchUtfConversionBuffer));
+    fsearch_utf_conversion_buffer_init(new->needle_buffer, 4 * PATH_MAX);
+    fsearch_utf_normalize_and_fold_case(new->normalizer, new->case_map, new->needle_buffer, text);
 
     new->text_len = strlen(text);
 
     // make sure the buffer is large enough, because case folding can result in a larger string
-    new->needle_down = calloc(8 * new->text_len, sizeof(char));
-    new->needle_down_len = ucasemap_utf8FoldCase(new->case_map, new->needle_down, 8 * new->text_len, text, -1, &status);
+    const int32_t needle_capacity = (int32_t)(8 * new->text_len);
+    new->needle_down = calloc(needle_capacity, sizeof(char));
+    new->needle_down_len = ucasemap_utf8FoldCase(new->case_map, new->needle_down, needle_capacity, text, -1, &status);
     assert(U_SUCCESS(status));
 
     new->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
@@ -131,10 +170,7 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
         flags |= QUERY_FLAG_MATCH_CASE;
     }
 
-    char *normalized = g_utf8_normalize(text, -1, G_NORMALIZE_DEFAULT);
-    new->text = (flags & QUERY_FLAG_MATCH_CASE) ? g_strdup(text) : g_utf8_strdown(normalized, -1);
-
-    g_clear_pointer(&normalized, g_free);
+    new->text = g_strdup(text);
 
     if (flags & QUERY_FLAG_REGEX) {
         const char *error;
@@ -151,9 +187,12 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
         if (flags & QUERY_FLAG_MATCH_CASE) {
             new->search_func = fsearch_search_func_normal;
         }
+        else if (fs_str_case_is_ascii(text)) {
+            new->search_func = fsearch_search_func_normal_icase;
+        }
         else {
-            new->search_func =
-                !fs_str_case_is_ascii(text) ? fsearch_search_func_normal_icase_u8 : fsearch_search_func_normal_icase;
+            new->search_func = fsearch_search_func_normal_icase_u8;
+            // new->search_func = fsearch_search_func_normal_icase_u8_fast;
         }
     }
     return new;
