@@ -39,34 +39,61 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
     if (!buffer || !buffer->init) {
         goto fail;
     }
+
     UErrorCode status = U_ZERO_ERROR;
+
+    // first perform case folding (this can be done while our string is still in UTF8 form)
     buffer->string_utf8_folded_len =
         ucasemap_utf8FoldCase(case_map, buffer->string_utf8_folded, buffer->capacity, string, -1, &status);
-    if (U_FAILURE(status)) {
+    if (G_UNLIKELY(U_FAILURE(status))) {
         goto fail;
     }
 
+    // then convert folded UTF8 string to UTF16 for normalizer
     u_strFromUTF8(buffer->string_folded,
                   buffer->capacity,
                   &buffer->string_folded_len,
                   buffer->string_utf8_folded,
                   buffer->string_utf8_folded_len,
                   &status);
-    if (U_FAILURE(status)) {
+    if (G_UNLIKELY(U_FAILURE(status))) {
         goto fail;
     }
 
-    buffer->string_normalized_folded_len = unorm2_normalize(normalizer,
-                                                            buffer->string_folded,
-                                                            buffer->string_folded_len,
-                                                            buffer->string_normalized_folded,
-                                                            buffer->capacity,
-                                                            &status);
-    if (U_FAILURE(status)) {
+    // check how much of the string needs to be normalized (if anything at all)
+    const int32_t span_end =
+        unorm2_spanQuickCheckYes(normalizer, buffer->string_folded, buffer->string_folded_len, &status);
+    if (G_UNLIKELY(U_FAILURE(status))) {
         goto fail;
     }
 
-    return true;
+    if (G_LIKELY(span_end == buffer->string_folded_len)) {
+        // the string is already normalized
+        // this should be the most common case and fortunately is the quickest (simple memcpy)
+        memcpy(buffer->string_normalized_folded, buffer->string_folded, span_end * sizeof(UChar));
+        buffer->string_normalized_folded_len = buffer->string_folded_len;
+        return true;
+    }
+    else if (span_end < buffer->string_folded_len) {
+        // the string isn't fully normalized
+        // normalize everything after string_folded + span_end
+        u_strncpy(buffer->string_normalized_folded, buffer->string_folded, span_end);
+        buffer->string_normalized_folded_len = unorm2_normalizeSecondAndAppend(normalizer,
+                                                                               buffer->string_normalized_folded,
+                                                                               span_end,
+                                                                               buffer->capacity,
+                                                                               buffer->string_folded + span_end,
+                                                                               buffer->string_folded_len - span_end,
+                                                                               &status);
+        if (G_UNLIKELY(U_FAILURE(status))) {
+            goto fail;
+        }
+        return true;
+    }
+    else {
+        // span_end is reported to be after string_folded_len, there's likely a bug in our code
+        g_assert_not_reached();
+    }
 fail:
     buffer->string_utf8_folded_len = 0;
     buffer->string_folded_len = 0;
