@@ -32,7 +32,7 @@
 #include "fsearch_token.h"
 
 typedef struct FsearchQuery {
-    char *text;
+    char *search_term;
 
     FsearchDatabase *db;
 
@@ -63,7 +63,7 @@ typedef struct FsearchQuery {
 } FsearchQuery;
 
 FsearchQuery *
-fsearch_query_new(const char *text,
+fsearch_query_new(const char *search_term,
                   FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,

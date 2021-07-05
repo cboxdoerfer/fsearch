@@ -215,7 +215,7 @@ db_search_filter_entry(FsearchDatabaseEntry *entry,
                     fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
             }
 
-            if (!t->search_func(haystack, t->text, t, utf_buffer)) {
+            if (!t->search_func(haystack, t->search_term, t, utf_buffer)) {
                 return false;
             }
         }
@@ -322,7 +322,7 @@ db_search_worker(void *data) {
                     fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
             }
 
-            if (!t->search_func(haystack, t->text, t, utf_buffer)) {
+            if (!t->search_func(haystack, t->search_term, t, utf_buffer)) {
                 break;
             }
         }

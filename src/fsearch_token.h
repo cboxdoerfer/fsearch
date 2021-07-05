@@ -14,14 +14,11 @@
 
 typedef struct FsearchToken {
 
-    char *text;
-    size_t text_len;
+    char *search_term;
+    size_t search_term_len;
 
     uint32_t has_separator;
-    uint32_t (*search_func)(const char *,
-                            const char *,
-                            void *token,
-                            FsearchUtfConversionBuffer *buffer);
+    uint32_t (*search_func)(const char *, const char *, void *token, FsearchUtfConversionBuffer *buffer);
 
     UCaseMap *case_map;
     const UNormalizer2 *normalizer;
@@ -38,7 +35,7 @@ typedef struct FsearchToken {
 } FsearchToken;
 
 FsearchToken **
-fsearch_tokens_new(const char *query, FsearchQueryFlags flags);
+fsearch_tokens_new(const char *search_term, FsearchQueryFlags flags);
 
 void
 fsearch_tokens_free(FsearchToken **tokens);

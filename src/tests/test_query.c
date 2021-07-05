@@ -15,7 +15,7 @@ test_query(const char *needle, const char *haystack, FsearchQueryFlags flags, bo
     for (uint32_t i = 0; i < q->num_token; i++) {
         FsearchToken *t = q->token[i];
         fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, &utf_buffer, haystack);
-        if (!t->search_func(haystack, t->text, t, &utf_buffer)) {
+        if (!t->search_func(haystack, t->search_term, t, &utf_buffer)) {
             found = false;
             break;
         }

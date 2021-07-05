@@ -50,8 +50,8 @@ main(int argc, char *argv[]) {
 
         int num_token = 0;
         for (uint32_t j = 0; tokens[j] != NULL; j++) {
-            g_print("%d: token %d: %s\n", i, j, tokens[j]->text);
-            g_assert(g_strcmp0(tokens[j]->text, test_queries[i].expected_tokens[j]) == 0);
+            g_print("%d: token %d: %s\n", i, j, tokens[j]->search_term);
+            g_assert(g_strcmp0(tokens[j]->search_term, test_queries[i].expected_tokens[j]) == 0);
             num_token++;
         }
         g_clear_pointer(&test_queries[i].expected_tokens, g_strfreev);

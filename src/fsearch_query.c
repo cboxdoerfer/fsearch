@@ -25,7 +25,7 @@
 #include <string.h>
 
 FsearchQuery *
-fsearch_query_new(const char *text,
+fsearch_query_new(const char *search_term,
                   FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,
@@ -37,8 +37,8 @@ fsearch_query_new(const char *text,
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     assert(q != NULL);
 
-    q->text = text ? strdup(text) : "";
-    q->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
+    q->search_term = search_term ? strdup(search_term) : "";
+    q->has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
 
     q->db = db_ref(db);
 
@@ -46,7 +46,7 @@ fsearch_query_new(const char *text,
 
     q->pool = pool;
 
-    q->token = fsearch_tokens_new(text, flags);
+    q->token = fsearch_tokens_new(search_term, flags);
     q->num_token = 0;
     for (uint32_t i = 0; q->token[i] != NULL; i++) {
         q->num_token++;
@@ -60,7 +60,7 @@ fsearch_query_new(const char *text,
         }
     }
 
-    q->highlight_tokens = fsearch_highlight_tokens_new(q->text, flags);
+    q->highlight_tokens = fsearch_highlight_tokens_new(q->search_term, flags);
 
     q->filter = fsearch_filter_ref(filter);
     q->flags = flags;
@@ -76,7 +76,7 @@ fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->db, db_unref);
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->highlight_tokens, fsearch_highlight_tokens_free);
-    g_clear_pointer(&query->text, free);
+    g_clear_pointer(&query->search_term, free);
     g_clear_pointer(&query->token, fsearch_tokens_free);
     g_clear_pointer(&query, free);
 }
@@ -102,7 +102,7 @@ fsearch_query_unref(FsearchQuery *query) {
 
 bool
 fsearch_query_matches_everything(FsearchQuery *query) {
-    const bool empty_query = fs_str_is_empty(query->text);
+    const bool empty_query = fs_str_is_empty(query->search_term);
     if (empty_query && (!query->filter || query->filter->type == FSEARCH_FILTER_NONE)) {
         return true;
     }
