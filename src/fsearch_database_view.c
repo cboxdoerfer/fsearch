@@ -382,15 +382,17 @@ db_view_search(FsearchDatabaseView *view) {
         view->notify_func(view, DATABASE_VIEW_NOTIFY_SEARCH_STARTED, view->notify_func_data);
     }
 
+    GString *query_id = g_string_new(NULL);
+    g_string_printf(query_id, "query:%02d.%04d", view->id, view->query_id++);
     FsearchQuery *q = fsearch_query_new(view->query_text,
                                         view->db,
                                         view->sort_order,
                                         view->filter,
                                         view->pool,
                                         view->query_flags,
-                                        view->query_id++,
-                                        view->id,
+                                        query_id->str,
                                         db_view_ref(view));
+    g_string_free(g_steal_pointer(&query_id), TRUE);
 
     db_search_queue(view->task_queue, g_steal_pointer(&q), db_view_search_task_finished, db_view_search_task_cancelled);
 }

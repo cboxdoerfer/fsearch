@@ -54,8 +54,7 @@ typedef struct FsearchQuery {
 
     bool has_separator;
 
-    uint32_t id;
-    uint32_t window_id;
+    char *query_id;
 
     gpointer data;
 
@@ -69,8 +68,7 @@ fsearch_query_new(const char *search_term,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
-                  uint32_t id,
-                  uint32_t window_id,
+                  const char *query_id,
                   gpointer data);
 
 FsearchQuery *

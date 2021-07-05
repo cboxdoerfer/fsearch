@@ -135,15 +135,15 @@ db_search_task(gpointer data, GCancellable *cancellable) {
     const char *debug_message = NULL;
     const double seconds = g_timer_elapsed(timer, NULL);
     if (!g_cancellable_is_cancelled(cancellable)) {
-        debug_message = "[query %d.%d] finished in %.2f ms";
+        debug_message = "[%s] finished in %.2f ms";
     }
     else {
-        debug_message = "[query %d.%d] aborted after %.2f ms";
+        debug_message = "[%s] aborted after %.2f ms";
     }
     g_timer_stop(timer);
     g_clear_pointer(&timer, g_timer_destroy);
 
-    g_debug(debug_message, query->window_id, query->id, seconds * 1000);
+    g_debug(debug_message, query->query_id, seconds * 1000);
 
     return result;
 }

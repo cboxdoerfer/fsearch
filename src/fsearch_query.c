@@ -31,8 +31,7 @@ fsearch_query_new(const char *search_term,
                   FsearchFilter *filter,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
-                  uint32_t id,
-                  uint32_t window_id,
+                  const char *query_id,
                   gpointer data) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     assert(q != NULL);
@@ -58,8 +57,7 @@ fsearch_query_new(const char *search_term,
 
     q->filter = fsearch_filter_ref(filter);
     q->flags = flags;
-    q->id = id;
-    q->window_id = window_id;
+    q->query_id = strdup(query_id);
     q->data = data;
     q->ref_count = 1;
     return q;
@@ -67,6 +65,7 @@ fsearch_query_new(const char *search_term,
 
 static void
 fsearch_query_free(FsearchQuery *query) {
+    g_clear_pointer(&query->query_id, free);
     g_clear_pointer(&query->db, db_unref);
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->highlight_tokens, fsearch_highlight_tokens_free);

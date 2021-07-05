@@ -6,7 +6,7 @@
 
 static void
 test_query(const char *needle, const char *haystack, FsearchQueryFlags flags, bool result) {
-    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, flags, 0, 0, NULL);
+    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, flags, "debug_query", NULL);
     bool found = true;
 
     FsearchUtfConversionBuffer utf_buffer = {};
