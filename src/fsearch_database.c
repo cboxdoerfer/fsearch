@@ -22,6 +22,7 @@
 
 #include <assert.h>
 #include <dirent.h>
+#include <fcntl.h>
 #include <fnmatch.h>
 #include <glib/gi18n.h>
 #include <malloc.h>
@@ -1214,7 +1215,8 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         g_debug("[db_scan] failed to open directory: %s", path->str);
         return WALK_BADIO;
     }
-    // g_debug("[db_scan] scanning directory: %s", path->str);
+
+    const int dir_fd = dirfd(dir);
 
     const double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
     if (elapsed_seconds > 0.1) {
@@ -1257,7 +1259,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         g_string_append(path, dent->d_name);
 
         struct stat st;
-        if (lstat(path->str, &st) == -1) {
+        if (fstatat(dir_fd, dent->d_name, &st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT)) {
             g_debug("[db_scan] can't stat: %s", path->str);
             continue;
         }
