@@ -11,6 +11,7 @@ fsearch_utf_conversion_buffer_init(FsearchUtfConversionBuffer *buffer, int32_t n
         return;
     }
     buffer->init = true;
+    buffer->ready = false;
     buffer->num_characters = num_characters;
     buffer->string_utf8_folded = calloc(buffer->num_characters, sizeof(char));
     buffer->string_utf8_folded_len = 0;
@@ -72,6 +73,7 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
         // this should be the most common case and fortunately is the quickest (simple memcpy)
         memcpy(buffer->string_normalized_folded, buffer->string_folded, span_end * sizeof(UChar));
         buffer->string_normalized_folded_len = buffer->string_folded_len;
+        buffer->ready = true;
         return true;
     }
     else if (span_end < buffer->string_folded_len) {
@@ -88,6 +90,7 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
         if (G_UNLIKELY(U_FAILURE(status))) {
             goto fail;
         }
+        buffer->ready = true;
         return true;
     }
     else {
@@ -98,5 +101,6 @@ fail:
     buffer->string_utf8_folded_len = 0;
     buffer->string_folded_len = 0;
     buffer->string_normalized_folded_len = 0;
+    buffer->ready = false;
     return false;
 }

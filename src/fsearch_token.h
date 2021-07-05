@@ -35,6 +35,8 @@ typedef struct FsearchToken {
     pcre *regex;
     pcre_extra *regex_study;
     int ovector[OVECCOUNT];
+
+    int32_t is_utf;
 } FsearchToken;
 
 FsearchToken **

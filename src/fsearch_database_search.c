@@ -187,7 +187,8 @@ db_search_filter_entry(FsearchDatabaseEntry *entry,
                        const char *haystack,
                        char *haystack_buffer,
                        size_t haystack_buffer_len,
-                       FsearchUtfConversionBuffer *utf_buffer) {
+                       FsearchUtfConversionBuffer *utf_buffer,
+                       bool *utf_search_ready) {
     if (!query->filter) {
         return true;
     }
@@ -210,6 +211,11 @@ db_search_filter_entry(FsearchDatabaseEntry *entry,
                 return true;
             }
             FsearchToken *t = query->filter_token[num_found++];
+
+            if (t->is_utf && *utf_search_ready == false) {
+                *utf_search_ready =
+                    fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
+            }
 
             if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len, utf_buffer)) {
                 return false;
@@ -234,8 +240,12 @@ db_search_worker(void *data) {
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
-    FsearchUtfConversionBuffer utf_buffer = {};
-    fsearch_utf_conversion_buffer_init(&utf_buffer, 4 * PATH_MAX);
+    FsearchUtfConversionBuffer utf_name_buffer = {};
+    fsearch_utf_conversion_buffer_init(&utf_name_buffer, 4 * PATH_MAX);
+
+    FsearchUtfConversionBuffer utf_path_buffer = {};
+    fsearch_utf_conversion_buffer_init(&utf_path_buffer, 4 * PATH_MAX);
+
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
@@ -269,18 +279,23 @@ db_search_worker(void *data) {
             continue;
         }
 
+        bool utf_name_ready = false;
+        bool utf_path_ready = false;
+
         bool path_set = false;
         if (search_in_path || query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH) {
             db_search_build_path(entry, path_string, haystack_name);
             path_set = true;
         }
 
-        if (!db_search_filter_entry(entry,
-                                    query,
-                                    query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str : haystack_name,
-                                    haystack_buffer,
-                                    haystack_buffer_len,
-                                    &utf_buffer)) {
+        if (!db_search_filter_entry(
+                entry,
+                query,
+                query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str : haystack_name,
+                haystack_buffer,
+                haystack_buffer_len,
+                query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? &utf_path_buffer : &utf_name_buffer,
+                query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? &utf_path_ready : &utf_name_ready)) {
             continue;
         }
 
@@ -293,23 +308,36 @@ db_search_worker(void *data) {
             }
             FsearchToken *t = token[num_found++];
             const char *haystack = NULL;
+            FsearchUtfConversionBuffer *utf_buffer = NULL;
+            bool *utf_buffer_ready = NULL;
+
             if (search_in_path || (auto_search_in_path && t->has_separator)) {
                 if (!path_set) {
                     db_search_build_path(entry, path_string, haystack_name);
                     path_set = true;
                 }
                 haystack = path_string->str;
+                utf_buffer = &utf_path_buffer;
+                utf_buffer_ready = &utf_path_ready;
             }
             else {
                 haystack = haystack_name;
+                utf_buffer = &utf_name_buffer;
+                utf_buffer_ready = &utf_name_ready;
             }
-            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len, &utf_buffer)) {
+            if (t->is_utf && *utf_buffer_ready == false) {
+                *utf_buffer_ready =
+                    fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
+            }
+
+            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len, utf_buffer)) {
                 break;
             }
         }
     }
 
-    fsearch_utf_conversion_buffer_clear(&utf_buffer);
+    fsearch_utf_conversion_buffer_clear(&utf_path_buffer);
+    fsearch_utf_conversion_buffer_clear(&utf_name_buffer);
     g_clear_pointer(&haystack_buffer, free);
     g_string_free(g_steal_pointer(&path_string), TRUE);
 

@@ -16,6 +16,7 @@ typedef struct FsearchUtfConversionBuffer {
 
     int32_t num_characters;
     bool init;
+    bool ready;
 } FsearchUtfConversionBuffer;
 
 void

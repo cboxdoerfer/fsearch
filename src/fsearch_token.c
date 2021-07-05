@@ -71,7 +71,7 @@ fsearch_search_func_normal_icase_u8(const char *haystack,
                                     size_t haystack_buffer_len,
                                     FsearchUtfConversionBuffer *buffer) {
     FsearchToken *t = token;
-    if (G_LIKELY(fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, buffer, haystack))) {
+    if (G_LIKELY(buffer->ready)) {
         return u_strFindFirst(buffer->string_normalized_folded,
                               buffer->string_normalized_folded_len,
                               t->needle_buffer->string_normalized_folded,
@@ -185,6 +185,7 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
             new->search_func = fsearch_search_func_normal_icase;
         }
         else {
+            new->is_utf = 1;
             new->search_func = fsearch_search_func_normal_icase_u8;
             // new->search_func = fsearch_search_func_normal_icase_u8_fast;
         }
