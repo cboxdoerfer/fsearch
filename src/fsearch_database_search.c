@@ -185,8 +185,6 @@ static inline bool
 db_search_filter_entry(FsearchDatabaseEntry *entry,
                        FsearchQuery *query,
                        const char *haystack,
-                       char *haystack_buffer,
-                       size_t haystack_buffer_len,
                        FsearchUtfConversionBuffer *utf_buffer,
                        bool *utf_search_ready) {
     if (!query->filter) {
@@ -217,7 +215,7 @@ db_search_filter_entry(FsearchDatabaseEntry *entry,
                     fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
             }
 
-            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len, utf_buffer)) {
+            if (!t->search_func(haystack, t->text, t, utf_buffer)) {
                 return false;
             }
         }
@@ -264,10 +262,6 @@ db_search_worker(void *data) {
 
     uint32_t num_results = 0;
 
-    // The search functions use this buffer for case folding etc.
-    const size_t haystack_buffer_len = 4 * PATH_MAX;
-    char *haystack_buffer = calloc(haystack_buffer_len, sizeof(char));
-
     GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
         if (G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
@@ -292,8 +286,6 @@ db_search_worker(void *data) {
                 entry,
                 query,
                 query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str : haystack_name,
-                haystack_buffer,
-                haystack_buffer_len,
                 query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? &utf_path_buffer : &utf_name_buffer,
                 query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? &utf_path_ready : &utf_name_ready)) {
             continue;
@@ -330,7 +322,7 @@ db_search_worker(void *data) {
                     fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
             }
 
-            if (!t->search_func(haystack, t->text, t, haystack_buffer, haystack_buffer_len, utf_buffer)) {
+            if (!t->search_func(haystack, t->text, t, utf_buffer)) {
                 break;
             }
         }
@@ -338,7 +330,6 @@ db_search_worker(void *data) {
 
     fsearch_utf_conversion_buffer_clear(&utf_path_buffer);
     fsearch_utf_conversion_buffer_clear(&utf_name_buffer);
-    g_clear_pointer(&haystack_buffer, free);
     g_string_free(g_steal_pointer(&path_string), TRUE);
 
     ctx->num_results = num_results;

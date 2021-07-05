@@ -12,12 +12,7 @@
 #include <string.h>
 
 static uint32_t
-fsearch_search_func_regex(const char *haystack,
-                          const char *needle,
-                          void *token,
-                          char *haystack_buffer,
-                          size_t haystack_buffer_len,
-                          FsearchUtfConversionBuffer *buffer) {
+fsearch_search_func_regex(const char *haystack, const char *needle, void *token, FsearchUtfConversionBuffer *buffer) {
     FsearchToken *t = token;
     size_t haystack_len = strlen(haystack);
     return pcre_exec(t->regex, t->regex_study, haystack, haystack_len, 0, 0, t->ovector, OVECCOUNT) >= 0 ? 1 : 0;
@@ -27,8 +22,6 @@ static uint32_t
 fsearch_search_func_wildcard_icase(const char *haystack,
                                    const char *needle,
                                    void *token,
-                                   char *haystack_buffer,
-                                   size_t haystack_buffer_len,
                                    FsearchUtfConversionBuffer *buffer) {
     return !fnmatch(needle, haystack, FNM_CASEFOLD) ? 1 : 0;
 }
@@ -37,8 +30,6 @@ static uint32_t
 fsearch_search_func_wildcard(const char *haystack,
                              const char *needle,
                              void *token,
-                             char *haystack_buffer,
-                             size_t haystack_buffer_len,
                              FsearchUtfConversionBuffer *buffer) {
     return !fnmatch(needle, haystack, 0) ? 1 : 0;
 }
@@ -47,14 +38,11 @@ static uint32_t
 fsearch_search_func_normal_icase_u8_fast(const char *haystack,
                                          const char *needle,
                                          void *token,
-                                         char *haystack_buffer,
-                                         size_t haystack_buffer_len,
                                          FsearchUtfConversionBuffer *buffer) {
     FsearchToken *t = token;
     UErrorCode status = U_ZERO_ERROR;
-    ucasemap_utf8FoldCase(t->case_map, haystack_buffer, (int32_t)haystack_buffer_len, haystack, -1, &status);
-    if (G_LIKELY(U_SUCCESS(status))) {
-        return strstr(haystack_buffer, t->needle_buffer->string_utf8_folded) ? 1 : 0;
+    if (G_LIKELY(buffer->string_utf8_is_folded)) {
+        return strstr(buffer->string_utf8_folded, t->needle_buffer->string_utf8_folded) ? 1 : 0;
     }
     else {
         // failed to fold case, fall back to fast but not accurate ascii search
@@ -67,11 +55,9 @@ static uint32_t
 fsearch_search_func_normal_icase_u8(const char *haystack,
                                     const char *needle,
                                     void *token,
-                                    char *haystack_buffer,
-                                    size_t haystack_buffer_len,
                                     FsearchUtfConversionBuffer *buffer) {
     FsearchToken *t = token;
-    if (G_LIKELY(buffer->ready)) {
+    if (G_LIKELY(buffer->string_is_folded_and_normalized)) {
         return u_strFindFirst(buffer->string_normalized_folded,
                               buffer->string_normalized_folded_len,
                               t->needle_buffer->string_normalized_folded,
@@ -90,19 +76,12 @@ static uint32_t
 fsearch_search_func_normal_icase(const char *haystack,
                                  const char *needle,
                                  void *token,
-                                 char *haystack_buffer,
-                                 size_t haystack_buffer_len,
                                  FsearchUtfConversionBuffer *buffer) {
     return strcasestr(haystack, needle) ? 1 : 0;
 }
 
 static uint32_t
-fsearch_search_func_normal(const char *haystack,
-                           const char *needle,
-                           void *token,
-                           char *haystack_buffer,
-                           size_t haystack_buffer_len,
-                           FsearchUtfConversionBuffer *buffer) {
+fsearch_search_func_normal(const char *haystack, const char *needle, void *token, FsearchUtfConversionBuffer *buffer) {
     return strstr(haystack, needle) ? 1 : 0;
 }
 

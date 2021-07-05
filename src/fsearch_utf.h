@@ -15,8 +15,9 @@ typedef struct FsearchUtfConversionBuffer {
     int32_t string_utf8_folded_len;
 
     int32_t num_characters;
-    bool init;
-    bool ready;
+    bool initialized;
+    bool string_is_folded_and_normalized;
+    bool string_utf8_is_folded;
 } FsearchUtfConversionBuffer;
 
 void
@@ -24,6 +25,9 @@ fsearch_utf_conversion_buffer_init(FsearchUtfConversionBuffer *buffer, int32_t n
 
 void
 fsearch_utf_conversion_buffer_clear(FsearchUtfConversionBuffer *buffer);
+
+bool
+fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfConversionBuffer *buffer, const char *string);
 
 bool
 fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,

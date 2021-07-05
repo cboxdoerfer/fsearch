@@ -21,8 +21,6 @@ typedef struct FsearchToken {
     uint32_t (*search_func)(const char *,
                             const char *,
                             void *token,
-                            char *haystack_buffer,
-                            size_t haystack_buffer_len,
                             FsearchUtfConversionBuffer *buffer);
 
     UCaseMap *case_map;

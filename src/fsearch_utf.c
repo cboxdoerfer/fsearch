@@ -10,8 +10,9 @@ fsearch_utf_conversion_buffer_init(FsearchUtfConversionBuffer *buffer, int32_t n
     if (!buffer) {
         return;
     }
-    buffer->init = true;
-    buffer->ready = false;
+    buffer->initialized = true;
+    buffer->string_utf8_is_folded = false;
+    buffer->string_is_folded_and_normalized = false;
     buffer->num_characters = num_characters;
     buffer->string_utf8_folded = calloc(buffer->num_characters, sizeof(char));
     buffer->string_utf8_folded_len = 0;
@@ -26,10 +27,30 @@ fsearch_utf_conversion_buffer_clear(FsearchUtfConversionBuffer *buffer) {
     if (!buffer) {
         return;
     }
-    buffer->init = false;
+    buffer->initialized = false;
     g_clear_pointer(&buffer->string_utf8_folded, free);
     g_clear_pointer(&buffer->string_folded, free);
     g_clear_pointer(&buffer->string_normalized_folded, free);
+}
+
+bool
+fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfConversionBuffer *buffer, const char *string) {
+    if (!buffer || !buffer->initialized) {
+        return false;
+    }
+
+    UErrorCode status = U_ZERO_ERROR;
+
+    // first perform case folding (this can be done while our string is still in UTF8 form)
+    buffer->string_utf8_folded_len =
+        ucasemap_utf8FoldCase(case_map, buffer->string_utf8_folded, buffer->num_characters, string, -1, &status);
+    if (G_UNLIKELY(U_FAILURE(status))) {
+        return false;
+    }
+    buffer->string_utf8_is_folded = true;
+    buffer->string_is_folded_and_normalized = false;
+
+    return true;
 }
 
 bool
@@ -37,7 +58,7 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
                                     UCaseMap *case_map,
                                     FsearchUtfConversionBuffer *buffer,
                                     const char *string) {
-    if (!buffer || !buffer->init) {
+    if (!buffer || !buffer->initialized) {
         goto fail;
     }
 
@@ -49,6 +70,7 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
     if (G_UNLIKELY(U_FAILURE(status))) {
         goto fail;
     }
+    buffer->string_utf8_is_folded = true;
 
     // then convert folded UTF8 string to UTF16 for normalizer
     u_strFromUTF8(buffer->string_folded,
@@ -73,8 +95,6 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
         // this should be the most common case and fortunately is the quickest (simple memcpy)
         memcpy(buffer->string_normalized_folded, buffer->string_folded, span_end * sizeof(UChar));
         buffer->string_normalized_folded_len = buffer->string_folded_len;
-        buffer->ready = true;
-        return true;
     }
     else if (span_end < buffer->string_folded_len) {
         // the string isn't fully normalized
@@ -90,17 +110,20 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
         if (G_UNLIKELY(U_FAILURE(status))) {
             goto fail;
         }
-        buffer->ready = true;
-        return true;
     }
     else {
         // span_end is reported to be after string_folded_len, there's likely a bug in our code
         g_assert_not_reached();
     }
+
+    buffer->string_is_folded_and_normalized = true;
+    return true;
+
 fail:
     buffer->string_utf8_folded_len = 0;
     buffer->string_folded_len = 0;
     buffer->string_normalized_folded_len = 0;
-    buffer->ready = false;
+    buffer->string_is_folded_and_normalized = false;
+    buffer->string_utf8_is_folded = false;
     return false;
 }

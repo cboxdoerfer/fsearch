@@ -12,10 +12,10 @@ test_query(const char *needle, const char *haystack, FsearchQueryFlags flags, bo
     FsearchUtfConversionBuffer utf_buffer = {};
     fsearch_utf_conversion_buffer_init(&utf_buffer, 4 * PATH_MAX);
 
-    char haystack_buffer[4 * PATH_MAX] = "";
     for (uint32_t i = 0; i < q->num_token; i++) {
         FsearchToken *t = q->token[i];
-        if (!t->search_func(haystack, t->text, t, haystack_buffer, sizeof(haystack_buffer), &utf_buffer)) {
+        fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, &utf_buffer, haystack);
+        if (!t->search_func(haystack, t->text, t, &utf_buffer)) {
             found = false;
             break;
         }
