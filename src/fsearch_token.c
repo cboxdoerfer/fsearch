@@ -40,7 +40,6 @@ fsearch_search_func_normal_icase_u8_fast(const char *haystack,
                                          void *token,
                                          FsearchUtfConversionBuffer *buffer) {
     FsearchToken *t = token;
-    UErrorCode status = U_ZERO_ERROR;
     if (G_LIKELY(buffer->string_utf8_is_folded)) {
         return strstr(buffer->string_utf8_folded, t->needle_buffer->string_utf8_folded) ? 1 : 0;
     }
