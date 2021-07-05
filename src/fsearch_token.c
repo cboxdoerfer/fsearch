@@ -115,8 +115,6 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
     FsearchToken *new = calloc(1, sizeof(FsearchToken));
     assert(new != NULL);
 
-    const char *current_locale = setlocale(LC_CTYPE, NULL);
-
     new->text = g_strdup(text);
     new->text_len = strlen(text);
     new->has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
@@ -126,7 +124,8 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
     }
 
     new->fold_options = U_FOLD_CASE_DEFAULT;
-    if (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2)) {
+    const char *current_locale = setlocale(LC_CTYPE, NULL);
+    if (current_locale && (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2))) {
         // Use special case mapping for Turkic languages
         new->fold_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
     }
