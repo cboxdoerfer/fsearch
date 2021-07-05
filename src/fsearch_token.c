@@ -54,7 +54,7 @@ fsearch_search_func_normal_icase_u8_fast(const char *haystack,
     UErrorCode status = U_ZERO_ERROR;
     ucasemap_utf8FoldCase(t->case_map, haystack_buffer, (int32_t)haystack_buffer_len, haystack, -1, &status);
     if (G_LIKELY(U_SUCCESS(status))) {
-        return strstr(haystack_buffer, t->needle_down) ? 1 : 0;
+        return strstr(haystack_buffer, t->needle_buffer->string_utf8_folded) ? 1 : 0;
     }
     else {
         // failed to fold case, fall back to fast but not accurate ascii search
@@ -114,7 +114,6 @@ fsearch_token_free(void *data) {
     fsearch_utf_conversion_buffer_clear(token->needle_buffer);
     g_clear_pointer(&token->needle_buffer, free);
     g_clear_pointer(&token->case_map, ucasemap_close);
-    g_clear_pointer(&token->needle_down, g_free);
     g_clear_pointer(&token->text, g_free);
     g_clear_pointer(&token->regex_study, pcre_free_study);
     g_clear_pointer(&token->regex, pcre_free);
@@ -166,10 +165,6 @@ fsearch_token_new(const char *text, FsearchQueryFlags flags) {
     const bool utf_ready =
         fsearch_utf_normalize_and_fold_case(new->normalizer, new->case_map, new->needle_buffer, text);
     assert(utf_ready == true);
-
-    // set up case folded needle in UTF8 format
-    new->needle_down = g_strdup(new->needle_buffer->string_utf8_folded);
-    new->needle_down_len = new->needle_buffer->string_utf8_folded_len;
 
     if (flags & QUERY_FLAG_REGEX) {
         const char *error;

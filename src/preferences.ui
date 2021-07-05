@@ -651,7 +651,9 @@
                 </child>
                 <child>
                   <object class="GtkCheckButton" id="auto_match_case_button">
-                    <property name="label" translatable="yes">Match case when query contains at least one upper case character</property>
+                    <property name="label" translatable="yes">Match case when query contains at least one upper case
+                      character
+                    </property>
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>

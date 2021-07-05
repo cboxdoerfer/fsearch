@@ -26,11 +26,10 @@ typedef struct FsearchToken {
                             FsearchUtfConversionBuffer *buffer);
 
     UCaseMap *case_map;
-    char *needle_down;
-    int32_t needle_down_len;
-
     const UNormalizer2 *normalizer;
+
     FsearchUtfConversionBuffer *needle_buffer;
+
     uint32_t fold_options;
 
     pcre *regex;
