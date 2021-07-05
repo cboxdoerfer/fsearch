@@ -46,18 +46,12 @@ fsearch_query_new(const char *search_term,
 
     q->pool = pool;
 
-    q->token = fsearch_tokens_new(search_term, flags);
     q->num_token = 0;
-    for (uint32_t i = 0; q->token[i] != NULL; i++) {
-        q->num_token++;
-    }
+    q->token = fsearch_tokens_new(search_term, flags, &q->num_token);
 
     if (filter && filter->query) {
-        q->filter_token = fsearch_tokens_new(filter->query, filter->flags);
         q->num_filter_token = 0;
-        for (uint32_t i = 0; q->filter_token[i] != NULL; i++) {
-            q->num_filter_token++;
-        }
+        q->filter_token = fsearch_tokens_new(filter->query, filter->flags, &q->num_filter_token);
     }
 
     q->highlight_tokens = fsearch_highlight_tokens_new(q->search_term, flags);

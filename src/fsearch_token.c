@@ -172,7 +172,7 @@ fsearch_token_new(const char *search_term, FsearchQueryFlags flags) {
 }
 
 FsearchToken **
-fsearch_tokens_new(const char *query, FsearchQueryFlags flags) {
+fsearch_tokens_new(const char *query, FsearchQueryFlags flags, uint32_t *num_token) {
     // check if regex characters are present
     const bool is_reg = fs_str_is_regex(query);
     if (is_reg && (flags & QUERY_FLAG_REGEX)) {
@@ -180,6 +180,9 @@ fsearch_tokens_new(const char *query, FsearchQueryFlags flags) {
         assert(token != NULL);
         token[0] = fsearch_token_new(query, flags);
         token[1] = NULL;
+        if (num_token) {
+            *num_token = 1;
+        }
         return token;
     }
 
@@ -193,6 +196,9 @@ fsearch_tokens_new(const char *query, FsearchQueryFlags flags) {
     for (uint32_t i = 0; i < tmp_token_len; i++) {
         // g_debug("[search] token %d: %s", i, query_split[i]);
         token[i] = fsearch_token_new(query_split[i], flags);
+    }
+    if (num_token) {
+        *num_token = tmp_token_len;
     }
 
     g_clear_pointer(&query_split, g_strfreev);

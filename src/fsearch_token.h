@@ -35,7 +35,7 @@ typedef struct FsearchToken {
 } FsearchToken;
 
 FsearchToken **
-fsearch_tokens_new(const char *search_term, FsearchQueryFlags flags);
+fsearch_tokens_new(const char *search_term, FsearchQueryFlags flags, uint32_t *num_token);
 
 void
 fsearch_tokens_free(FsearchToken **tokens);
