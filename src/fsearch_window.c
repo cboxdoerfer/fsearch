@@ -832,6 +832,10 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
                                              on_listview_row_unselect_all,
                                              win);
     fsearch_list_view_set_single_click_activate(list_view, config->single_click_open);
+    fsearch_list_view_set_sort_type(list_view,
+                                    config->restore_column_config
+                                        ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
+                                        : GTK_SORT_ASCENDING);
     gtk_widget_set_has_tooltip(GTK_WIDGET(list_view), config->enable_list_tooltips);
 
     add_columns(list_view, config);
@@ -1135,10 +1139,63 @@ fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
     db_view_set_query_flags(win->result_view->database_view, get_query_flags());
 }
 
+static FsearchDatabaseIndexType
+get_sort_type_for_name(const char *name) {
+    if (!strcmp(name, "Name")) {
+        return DATABASE_INDEX_TYPE_NAME;
+    }
+    else if (!strcmp(name, "Path")) {
+        return DATABASE_INDEX_TYPE_PATH;
+    }
+    else if (!strcmp(name, "Size")) {
+        return DATABASE_INDEX_TYPE_SIZE;
+    }
+    else if (!strcmp(name, "Date Modified")) {
+        return DATABASE_INDEX_TYPE_MODIFICATION_TIME;
+    }
+    else if (!strcmp(name, "Extension")) {
+        return DATABASE_INDEX_TYPE_EXTENSION;
+    }
+    else if (!strcmp(name, "Type")) {
+        return DATABASE_INDEX_TYPE_FILETYPE;
+    }
+    else {
+        return DATABASE_INDEX_TYPE_NAME;
+    }
+}
+
+static char *
+get_sort_name_for_type(FsearchDatabaseIndexType type) {
+    const char *name = NULL;
+    switch (type) {
+    case DATABASE_INDEX_TYPE_NAME:
+        name = "Name";
+        break;
+    case DATABASE_INDEX_TYPE_PATH:
+        name = "Path";
+        break;
+    case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
+        name = "Date Modified";
+        break;
+    case DATABASE_INDEX_TYPE_EXTENSION:
+        name = "Extension";
+        break;
+    case DATABASE_INDEX_TYPE_FILETYPE:
+        name = "Type";
+        break;
+    case DATABASE_INDEX_TYPE_SIZE:
+        name = "Size";
+        break;
+    default:
+        name = "Name";
+    }
+    return g_strdup(name);
+}
+
 void
 fsearch_application_window_prepare_shutdown(gpointer self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    // FsearchApplicationWindow *win = self;
+    FsearchApplicationWindow *win = self;
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
 
@@ -1148,40 +1205,15 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
     config->window_width = width;
     config->window_height = height;
 
-    // gint sort_column_id = 0;
-    // GtkSortType order = GTK_SORT_ASCENDING;
-    // gtk_tree_sortable_get_sort_column_id(GTK_TREE_SORTABLE(win->list_model), &sort_column_id, &order);
+    if (win->result_view && win->result_view->list_view) {
+        config->sort_ascending =
+            fsearch_list_view_get_sort_type(win->result_view->list_view) == GTK_SORT_ASCENDING ? true : false;
 
-    // if (config->sort_by) {
-    //    g_free(config->sort_by);
-    //    config->sort_by = NULL;
-    //}
-
-    // if (sort_column_id == SORT_ID_NAME) {
-    //    config->sort_by = g_strdup("Name");
-    //}
-    // else if (sort_column_id == SORT_ID_PATH) {
-    //    config->sort_by = g_strdup("Path");
-    //}
-    // else if (sort_column_id == SORT_ID_TYPE) {
-    //    config->sort_by = g_strdup("Type");
-    //}
-    // else if (sort_column_id == SORT_ID_SIZE) {
-    //    config->sort_by = g_strdup("Size");
-    //}
-    // else if (sort_column_id == SORT_ID_CHANGED) {
-    //    config->sort_by = g_strdup("Date Modified");
-    //}
-    // else {
-    //    config->sort_by = g_strdup("Name");
-    //}
-
-    // if (order == GTK_SORT_ASCENDING) {
-    //    config->sort_ascending = true;
-    //}
-    // else {
-    //    config->sort_ascending = false;
-    //}
+        if (config->sort_by) {
+            g_clear_pointer(&config->sort_by, g_free);
+        }
+        config->sort_by = get_sort_name_for_type(fsearch_list_view_get_sort_order(win->result_view->list_view));
+    }
 }
 
 void
@@ -1199,12 +1231,24 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
         g_debug("[window_added] id = 0");
         return;
     }
+
+    FsearchConfig *config = fsearch_application_get_config(app);
+
+    FsearchDatabaseIndexType sort_order =
+        config->restore_column_config ? get_sort_type_for_name(config->sort_by) : DATABASE_INDEX_TYPE_NAME;
+    if (sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
+        // file type order is not indexed, so it would make startup really slow
+        // -> fall back to sort by name instead
+        sort_order = DATABASE_INDEX_TYPE_NAME;
+    }
+
     win->result_view->database_view = db_view_new(get_query_text(win),
                                                   get_query_flags(),
                                                   get_active_filter(win),
-                                                  win->result_view->sort_order,
+                                                  sort_order,
                                                   fsearch_window_db_view_notify,
                                                   GUINT_TO_POINTER(win_id));
+
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     if (db) {
         db_view_register(db, win->result_view->database_view);
