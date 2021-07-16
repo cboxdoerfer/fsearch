@@ -1141,22 +1141,22 @@ fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
 
 static FsearchDatabaseIndexType
 get_sort_type_for_name(const char *name) {
-    if (!strcmp(name, "Name")) {
+    if (!strcmp(name, DATABASE_INDEX_TYPE_NAME_STRING)) {
         return DATABASE_INDEX_TYPE_NAME;
     }
-    else if (!strcmp(name, "Path")) {
+    else if (!strcmp(name, DATABASE_INDEX_TYPE_PATH_STRING)) {
         return DATABASE_INDEX_TYPE_PATH;
     }
-    else if (!strcmp(name, "Size")) {
+    else if (!strcmp(name, DATABASE_INDEX_TYPE_SIZE_STRING)) {
         return DATABASE_INDEX_TYPE_SIZE;
     }
-    else if (!strcmp(name, "Date Modified")) {
+    else if (!strcmp(name, DATABASE_INDEX_TYPE_MODIFICATION_TIME_STRING)) {
         return DATABASE_INDEX_TYPE_MODIFICATION_TIME;
     }
-    else if (!strcmp(name, "Extension")) {
+    else if (!strcmp(name, DATABASE_INDEX_TYPE_EXTENSION_STRING)) {
         return DATABASE_INDEX_TYPE_EXTENSION;
     }
-    else if (!strcmp(name, "Type")) {
+    else if (!strcmp(name, DATABASE_INDEX_TYPE_FILETYPE_STRING)) {
         return DATABASE_INDEX_TYPE_FILETYPE;
     }
     else {
@@ -1169,25 +1169,25 @@ get_sort_name_for_type(FsearchDatabaseIndexType type) {
     const char *name = NULL;
     switch (type) {
     case DATABASE_INDEX_TYPE_NAME:
-        name = "Name";
+        name = DATABASE_INDEX_TYPE_NAME_STRING;
         break;
     case DATABASE_INDEX_TYPE_PATH:
-        name = "Path";
+        name = DATABASE_INDEX_TYPE_PATH_STRING;
         break;
     case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
-        name = "Date Modified";
+        name = DATABASE_INDEX_TYPE_MODIFICATION_TIME_STRING;
         break;
     case DATABASE_INDEX_TYPE_EXTENSION:
-        name = "Extension";
+        name = DATABASE_INDEX_TYPE_EXTENSION_STRING;
         break;
     case DATABASE_INDEX_TYPE_FILETYPE:
-        name = "Type";
+        name = DATABASE_INDEX_TYPE_FILETYPE_STRING;
         break;
     case DATABASE_INDEX_TYPE_SIZE:
-        name = "Size";
+        name = DATABASE_INDEX_TYPE_SIZE_STRING;
         break;
     default:
-        name = "Name";
+        name = DATABASE_INDEX_TYPE_NAME_STRING;
     }
     return g_strdup(name);
 }
