@@ -35,6 +35,8 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 https://aur.archlinux.org/packages/fsearch-git/
 #### Fedora/RHEL/CentOS (unofficial)
 https://copr.fedorainfracloud.org/coprs/inori39/fsearch/
+#### NixOS (unofficial)
+https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch
 #### openSUSE (unofficial)
 https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch
 #### Ubuntu
