@@ -280,7 +280,7 @@ static void
 fsearch_statusbar_class_init(FsearchStatusbarClass *klass) {
     GtkWidgetClass *widget_class = GTK_WIDGET_CLASS(klass);
 
-    gtk_widget_class_set_template_from_resource(widget_class, "/io/github/cboxdoerfer/fsearch/ui/statusbar.glade");
+    gtk_widget_class_set_template_from_resource(widget_class, "/io/github/cboxdoerfer/fsearch/ui/fsearch_statusbar.ui");
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_database_stack);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_database_status_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_database_status_label);

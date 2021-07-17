@@ -1,9 +1,9 @@
-EXTRA_DIST = fsearch.glade \
-         statusbar.glade \
-	     shared.css \
+EXTRA_DIST = fsearch_window.ui \
+	     fsearch_overlay.ui \
+	     fsearch_preferences.ui \
+         fsearch_statusbar.ui \
 	     gresource.xml \
-	     preferences.ui \
-	     overlay.ui \
+	     shared.css \
 	     menus.ui
 
 if DEBUG

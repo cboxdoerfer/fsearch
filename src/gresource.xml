@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/io/github/cboxdoerfer/fsearch/ui">
-    <file compressed="true">fsearch.glade</file>
-    <file compressed="true">statusbar.glade</file>
-    <file compressed="true">shared.css</file>
-    <file compressed="true">menus.ui</file>
-    <file compressed="true">preferences.ui</file>
-    <file compressed="true">overlay.ui</file>
-  </gresource>
+        <file compressed="true">fsearch_overlay.ui</file>
+        <file compressed="true">fsearch_preferences.ui</file>
+        <file compressed="true">fsearch_statusbar.ui</file>
+        <file compressed="true">fsearch_window.ui</file>
+        <file compressed="true">menus.ui</file>
+        <file compressed="true">shared.css</file>
+    </gresource>
 </gresources>

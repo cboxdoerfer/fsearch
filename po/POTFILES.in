@@ -1,5 +1,4 @@
 src/fsearch.c
-src/fsearch.glade
 src/fsearch_database.c
 src/fsearch_file_utils.c
 src/fsearch_filter.c
@@ -9,8 +8,9 @@ src/fsearch_preferences_widgets.c
 src/fsearch_statusbar.c
 src/fsearch_window.c
 src/fsearch_window_actions.c
+src/fsearch_overlay.ui
+src/fsearch_preferences.ui
+src/fsearch_statusbar.ui
+src/fsearch_window.ui
 src/menus.ui
-src/overlay.ui
-src/preferences.ui
-src/statusbar.glade
 data/fsearch.desktop.in.in
