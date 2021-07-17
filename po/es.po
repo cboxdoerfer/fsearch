@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-06-01 18:21+0200\n"
-"PO-Revision-Date: 2021-03-24 17:29+0000\n"
+"PO-Revision-Date: 2021-07-18 22:35+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 
 #: src/fsearch.c:341
 msgid "translator-credits"
@@ -106,26 +106,20 @@ msgid "Search"
 msgstr "Buscar"
 
 #: src/fsearch_database.c:633
-#, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
-msgstr "Cargando base de datos…"
+msgstr "Cargando carpetas…"
 
 #: src/fsearch_database.c:641
-#, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
-msgstr "Eliminando archivos…"
+msgstr "Cargando archivos…"
 
 #: src/fsearch_file_utils.c:265
-#, fuzzy
-#| msgid "Folders"
 msgid "Folder"
-msgstr "Carpetas"
+msgstr "Carpeta"
 
 #: src/fsearch_file_utils.c:271
 msgid "Unknown Type"
-msgstr ""
+msgstr "Tipo desconocido"
 
 #: src/fsearch_filter.c:98
 msgid "All"
@@ -160,10 +154,8 @@ msgid "Videos"
 msgstr "Videos"
 
 #: src/fsearch_listview_popup.c:64
-#, fuzzy
-#| msgid "Other Application"
 msgid "Other Application…"
-msgstr "Otra aplicación"
+msgstr "Otra aplicación…"
 
 #: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
 msgid "Select folder"
@@ -196,16 +188,12 @@ msgid "Querying…"
 msgstr "Consultando…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Loading…"
-msgstr "Ordenando…"
+msgstr "Cargando…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Scanning…"
-msgstr "Ordenando…"
+msgstr "Escaneando…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
 #, c-format
@@ -244,6 +232,11 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Ordenar por <b> Tipo </b> puede ser muy lento con muchos resultados y no se "
+"puede cancelar.\n"
+"\n"
+"Este orden de clasificación no es persistente, se restablecerá cuando cambie "
+"el término de búsqueda."
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -400,10 +393,8 @@ msgid "Try a different search"
 msgstr "Pruebe una búsqueda distinta"
 
 #: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting…"
 msgid "Sorting results…"
-msgstr "Ordenando…"
+msgstr "Ordenando resultados…"
 
 #: src/preferences.ui:112
 msgid "Enable dark theme"
@@ -548,12 +539,12 @@ msgid "minute(s)"
 msgstr "minuto(s)"
 
 #: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Agregar ruta para ser incluido en la base de datos"
+msgstr ""
+"Agregar ruta para ser incluido en la base de datos\n"
+"                                "
 
 #: src/preferences.ui:873 src/preferences.ui:972
 msgid "Remove selected path"
@@ -907,19 +898,6 @@ msgstr ""
 "segundo plano al iniciar FSearch."
 
 #: src/preferences.ui:1468
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-#| "paths from being\n"
-#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-#| "often)</i>"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -938,24 +916,20 @@ msgid ""
 msgstr ""
 "<b>Carpetas incluidas:</b>\n"
 "\n"
-"Esta lista contiene todas las carpetas que desea incluir en la base de "
+"\t\t\tEsta lista contiene todas las carpetas que desea incluir en la base de "
 "datos.\n"
 "\n"
-"\t• <b>Activo:</b> Si está habilitada, la ruta de acceso se incluirá en la "
-"base de datos en la que se buscará.\n"
-"\t• <b>Ruta:</b> La ruta completa que se incluirá.\n"
-"\t• <b>Actualizar:</b> Esta configuración es útil si desea excluir ciertas "
-"rutas de acceso de \n"
+"\t\t\t• <b>Activo:</b> Si está habilitada, la ruta de acceso se incluirá en "
+"la base de datos en la\n"
+"\t\t\tque se buscará.\n"
+"\t\t\t• <b>Ruta:</b> La ruta completa que se incluirá.\n"
+"\t\t\t• <b>Actualizar:</b> Esta configuración es útil si desea excluir "
+"ciertas rutas de acceso de\n"
 "\t\t\tla actualización <i>(p. ej. una ruta a una unidad USB lenta que no "
-"cambia a menudo)</i>"
+"cambia a menudo)</i>\n"
+"                    "
 
 #: src/preferences.ui:1492
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "include in the database for searching."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -966,15 +940,12 @@ msgid ""
 msgstr ""
 "<b>Añadir carpeta a la base de datos:</b>\n"
 "\n"
-"Este botón abre un cuadro de diálogo donde puede seleccionar la carpeta que "
-"desea incluir en la base de datos para realizar búsquedas."
+"\t\t\tEste botón abre un cuadro de diálogo donde puede seleccionar la "
+"carpeta que desea incluir en la\n"
+"\t\t\tbase de datos para realizar búsquedas.\n"
+"                    "
 
 #: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -984,7 +955,9 @@ msgid ""
 msgstr ""
 "<b>Eliminar la fila seleccionada:</b>\n"
 "\n"
-"Esto elimina la carpeta seleccionada de la lista de carpetas incluidas."
+"\t\t\tEsto elimina la carpeta seleccionada de la lista de carpetas incluidas."
+"\n"
+"                    "
 
 #: src/preferences.ui:1529
 msgid ""
