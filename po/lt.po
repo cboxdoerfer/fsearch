@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-06-01 18:21+0200\n"
+"POT-Creation-Date: 2021-07-17 17:17+0200\n"
 "PO-Revision-Date: 2021-07-01 20:33+0000\n"
 "Last-Translator: Gediminas Murauskas <muziejusinfo@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
@@ -20,166 +20,120 @@ msgstr ""
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
 "X-Generator: Weblate 4.8-dev\n"
 
-#: src/fsearch.c:341
+#: src/fsearch.c:254
+#, fuzzy
+msgid "Saving…"
+msgstr "Skenuojama…"
+
+#: src/fsearch.c:340
 msgid "translator-credits"
 msgstr "Moo"
 
-#: src/fsearch.c:343
+#: src/fsearch.c:342
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Paieškos programa, kuri susitelkia ties našumu ir išplėstinėmis ypatybėmis"
 
-#: src/fsearch.c:798
+#: src/fsearch.c:807
 msgid "Open a new application window"
 msgstr "Atverti naują programos langą"
 
-#: src/fsearch.c:799
+#: src/fsearch.c:808
 msgid "Show the application preferences"
 msgstr "Rodyti programos nuostatas"
 
-#: src/fsearch.c:800
+#: src/fsearch.c:809
 msgid "Update the database and exit"
 msgstr "Atnaujinti duomenų bazę ir išeiti"
 
-#: src/fsearch.c:801
+#: src/fsearch.c:810
 msgid "Print version information and exit"
 msgstr "Rodyti spausdinimo versijos informaciją ir išeiti"
 
-#: src/fsearch.glade:68
-msgid "New window"
-msgstr "Naujas langas"
-
-#: src/fsearch.glade:88
-msgid "Update database"
-msgstr "Atnaujinti duomenų bazę"
-
-#: src/fsearch.glade:102 src/statusbar.glade:256
-msgid "Cancel database update"
-msgstr "Atsisakyti duomenų bazės atnaujinimo"
-
-#: src/fsearch.glade:143 src/menus.ui:112
-msgid "Search in Path"
-msgstr "Ieškoti kelyje"
-
-#: src/fsearch.glade:157 src/menus.ui:116
-msgid "Match Case"
-msgstr "Skirti didžiąsias ir mažąsias raides"
-
-#: src/fsearch.glade:171 src/menus.ui:120
-msgid "Enable RegEx"
-msgstr "Įjungti reguliariuosius reiškinius"
-
-#: src/fsearch.glade:196 src/menus.ui:95
-msgid "Show Statusbar"
-msgstr "Rodyti būsenos juostą"
-
-#: src/fsearch.glade:210 src/menus.ui:99
-msgid "Show Filter"
-msgstr "Rodyti filtrą"
-
-#: src/fsearch.glade:224 src/menus.ui:103
-msgid "Show Search Button"
-msgstr "Rodyti paieškos mygtuką"
-
-#: src/fsearch.glade:250 src/menus.ui:84 src/preferences.ui:43
-msgid "Preferences"
-msgstr "Nuostatos"
-
-#: src/fsearch.glade:275 src/menus.ui:129
-msgid "About"
-msgstr "Apie"
-
-#: src/fsearch.glade:300 src/menus.ui:47
-msgid "Quit"
-msgstr "Išeiti"
-
-#: src/fsearch.glade:408
-msgid "Search…"
-msgstr "Ieškoti…"
-
-#: src/fsearch.glade:430
-msgid "Select a Filter"
-msgstr "Pasirinkti filtrą"
-
-#: src/fsearch.glade:461 src/preferences.ui:676
-msgid "Search"
-msgstr "Ieškoti"
-
-#: src/fsearch_database.c:633
+#: src/fsearch_database.c:628
 msgid "Loading folders…"
 msgstr "Įkeliami aplankai…"
 
-#: src/fsearch_database.c:641
+#: src/fsearch_database.c:636
 msgid "Loading files…"
 msgstr "Įkeliami failai…"
 
-#: src/fsearch_file_utils.c:265
+#: src/fsearch_database.c:1629
+#, fuzzy
+msgid "Sorting…"
+msgstr "Rūšiuojama rezultatus…"
+
+#: src/fsearch_file_utils.c:258
 msgid "Folder"
 msgstr "Aplankas"
 
-#: src/fsearch_file_utils.c:271
+#: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
 msgstr "Nežinomas tipas"
 
-#: src/fsearch_filter.c:98
+#: src/fsearch_filter.c:83
 msgid "All"
 msgstr "Visi"
 
-#: src/fsearch_filter.c:100
+#: src/fsearch_filter.c:84
 msgid "Folders"
 msgstr "Aplankai"
 
-#: src/fsearch_filter.c:101
+#: src/fsearch_filter.c:85
 msgid "Files"
 msgstr "Failai"
 
-#: src/fsearch_filter.c:103
+#: src/fsearch_filter.c:88
 msgid "Archives"
 msgstr "Archyvai"
 
-#: src/fsearch_filter.c:105
+#: src/fsearch_filter.c:93
 msgid "Audio"
 msgstr "Garso įrašai"
 
-#: src/fsearch_filter.c:108
+#: src/fsearch_filter.c:96
 msgid "Documents"
 msgstr "Dokumentai"
 
-#: src/fsearch_filter.c:110
+#: src/fsearch_filter.c:101
 msgid "Pictures"
 msgstr "Paveikslai"
 
-#: src/fsearch_filter.c:112
+#: src/fsearch_filter.c:106
 msgid "Videos"
 msgstr "Vaizdo įrašai"
 
-#: src/fsearch_listview_popup.c:64
+#: src/fsearch_listview_popup.c:36
+msgid "Properties…"
+msgstr ""
+
+#: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
 msgstr "Kitą programą…"
 
-#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
+#: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
 msgid "Select folder"
 msgstr "Pasirinkti aplanką"
 
-#: src/fsearch_preferences_ui.c:187 src/fsearch_preferences_ui.c:199
-#: src/fsearch_preferences_ui.c:391
+#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:196
+#: src/fsearch_preferences_ui.c:379
 msgid "_Cancel"
 msgstr "_Atsisakyti"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:199
+#: src/fsearch_preferences_ui.c:186 src/fsearch_preferences_ui.c:196
 msgid "_Select"
 msgstr "_Pažymėti"
 
-#: src/fsearch_preferences_ui.c:392
+#: src/fsearch_preferences_ui.c:380
 msgid "_OK"
 msgstr "_Gerai"
 
-#: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
+#: src/fsearch_preferences_widgets.c:178 src/fsearch_preferences_widgets.c:217
 msgid "Active"
 msgstr "Aktyvus"
 
-#: src/fsearch_preferences_widgets.c:184 src/fsearch_preferences_widgets.c:223
-#: src/fsearch_window.c:708 src/menus.ui:216
+#: src/fsearch_preferences_widgets.c:182 src/fsearch_preferences_widgets.c:221
+#: src/fsearch_window.c:683 src/menus.ui:225
 msgid "Path"
 msgstr "Kelias"
 
@@ -195,36 +149,40 @@ msgstr "Įkeliama…"
 msgid "Scanning…"
 msgstr "Skenuojama…"
 
-#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
+#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1013
 #, c-format
 msgid "%'d Items"
 msgstr "%'d elementų"
 
-#: src/fsearch_window.c:607 src/fsearch_window_actions.c:349
+#: src/fsearch_window.c:584 src/fsearch_window_actions.c:419
 msgid "Failed to open file"
 msgstr "Nepavyko atverti failo"
 
-#: src/fsearch_window.c:608 src/fsearch_window_actions.c:350
+#: src/fsearch_window.c:585 src/fsearch_window_actions.c:420
 msgid "Do you want to keep the window open?"
 msgstr "Ar norite palikti langą atvertą?"
 
-#: src/fsearch_window.c:701 src/menus.ui:212
+#: src/fsearch_window.c:676 src/menus.ui:221
 msgid "Name"
 msgstr "Pavadinimas"
 
-#: src/fsearch_window.c:715 src/menus.ui:224
+#: src/fsearch_window.c:690 src/menus.ui:237
 msgid "Size"
 msgstr "Dydis"
 
-#: src/fsearch_window.c:722 src/menus.ui:220
+#: src/fsearch_window.c:697 src/menus.ui:233
 msgid "Type"
 msgstr "Tipas"
 
-#: src/fsearch_window.c:729 src/menus.ui:228
+#: src/fsearch_window.c:704 src/menus.ui:229
+msgid "Extension"
+msgstr ""
+
+#: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
 msgstr "Keitimo data"
 
-#: src/fsearch_window.c:743
+#: src/fsearch_window.c:726
 msgid ""
 "Sorting by <b>Type</b> can be very slow with many results and it can't be "
 "aborted.\n"
@@ -238,27 +196,877 @@ msgstr ""
 "Ši rūšiavimo tvarka nėra nuolatinė, ji bus nustatyta iš naujo, kai pasikeis "
 "paieškos terminas."
 
-#: src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:87
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "Ar tikrai norite atverti %d failą(-us)?"
 
-#: src/fsearch_window_actions.c:90
+#: src/fsearch_window_actions.c:89
 msgid "Opening Files…"
 msgstr "Atveriami failai…"
 
-#: src/fsearch_window_actions.c:132
+#: src/fsearch_window_actions.c:147
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Ar tikrai norite pašalinti %d failą(-us)?"
 
-#: src/fsearch_window_actions.c:136
+#: src/fsearch_window_actions.c:151
 msgid "Deleting files…"
 msgstr "Ištrinami failai…"
 
-#: src/fsearch_window_actions.c:136
+#: src/fsearch_window_actions.c:151
 msgid "Moving files to trash…"
 msgstr "Perkeliami failai į šiukšlinę…"
+
+#: src/fsearch_window_actions.c:190
+#, fuzzy, c-format
+msgid "Do you really want to open %d file property windows?"
+msgstr "Ar tikrai norite atverti %d failą(-us)?"
+
+#: src/fsearch_window_actions.c:194
+#, fuzzy
+msgid "Opening file properties…"
+msgstr "Atveriami failai…"
+
+#: src/fsearch_overlay.ui:43
+msgid "Empty Database"
+msgstr "Duomenų bazė tuščia"
+
+#: src/fsearch_overlay.ui:59
+msgid "Add folders"
+msgstr "Pridėti aplankus"
+
+#: src/fsearch_overlay.ui:76 src/fsearch_overlay.ui:271
+#: src/fsearch_statusbar.ui:273
+msgid "page0"
+msgstr "puslapis0"
+
+#: src/fsearch_overlay.ui:107
+msgid "Loading Database…"
+msgstr "Įkeliama duomenų bazė…"
+
+#: src/fsearch_overlay.ui:122
+msgid "This won't take long."
+msgstr "Tai ilgai neužtruks."
+
+#: src/fsearch_overlay.ui:138 src/fsearch_overlay.ui:333
+#: src/fsearch_statusbar.ui:309
+msgid "page1"
+msgstr "puslapis1"
+
+#: src/fsearch_overlay.ui:170 src/fsearch_statusbar.ui:240
+msgid "Updating Database…"
+msgstr "Atnaujinama duomenų bazė…"
+
+#: src/fsearch_overlay.ui:185 src/fsearch_overlay.ui:380
+msgid "This may take a while."
+msgstr "Tai gali šiek tiek užtrukti."
+
+#: src/fsearch_overlay.ui:201
+msgid "page2"
+msgstr "puslapis2"
+
+#: src/fsearch_overlay.ui:239
+msgid "Empty Query"
+msgstr "Tuščia užklausa"
+
+#: src/fsearch_overlay.ui:254
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "Paspauskite <b>Ctrl + F</b> ir pradėkite rašyti"
+
+#: src/fsearch_overlay.ui:302
+msgid "No Results Found"
+msgstr "Nerasta jokių rezultatų"
+
+#: src/fsearch_overlay.ui:317
+msgid "Try a different search"
+msgstr "Pabandykite kitą paiešką"
+
+#: src/fsearch_overlay.ui:365
+msgid "Sorting results…"
+msgstr "Rūšiuojama rezultatus…"
+
+#: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
+msgid "Preferences"
+msgstr "Nuostatos"
+
+#: src/fsearch_preferences.ui:112
+msgid "Enable dark theme"
+msgstr "Įjungti tamsią temą"
+
+#: src/fsearch_preferences.ui:127
+msgid "Enable client-side decorations (requires restart)"
+msgstr "Įgalinti kliento-pusės dekoracijas (reikalauja perkrovimo)"
+
+#: src/fsearch_preferences.ui:142
+msgid "Use binary units instead of decimal units"
+msgstr "Vietoj dešimtainių vienetų, naudoti dvejetainius vienetus"
+
+#: src/fsearch_preferences.ui:158
+msgid "Remember window size"
+msgstr "Prisiminti lango dydį"
+
+#: src/fsearch_preferences.ui:195
+msgid "with keyboard shortcuts or menu entries"
+msgstr "naudojant sparčiuosius klavišus ar meniu įrašus"
+
+#: src/fsearch_preferences.ui:210
+msgid "with double click"
+msgstr "naudojant dvikartį spustelėjimą"
+
+#: src/fsearch_preferences.ui:238
+msgid "Behaviour after successfully opening a file:"
+msgstr "Elgsena, sėkmingai atvėrus failą:"
+
+#: src/fsearch_preferences.ui:254
+msgid "Nothing"
+msgstr "Nieko"
+
+#: src/fsearch_preferences.ui:255
+msgid "Minimize"
+msgstr "Suskleisti"
+
+#: src/fsearch_preferences.ui:256
+msgid "Close"
+msgstr "Užverti"
+
+#: src/fsearch_preferences.ui:282
+msgid "General:"
+msgstr "Bendra:"
+
+#: src/fsearch_preferences.ui:317
+msgid "Show highlighted search terms"
+msgstr "Rodyti paryškintus paieškos terminus"
+
+#: src/fsearch_preferences.ui:333
+msgid "Show tooltips"
+msgstr "Rodyti paaiškinimus"
+
+#: src/fsearch_preferences.ui:348
+msgid "Show icons in name column"
+msgstr "Rodyti pavadinimo stulpelyje piktogramas"
+
+#: src/fsearch_preferences.ui:363
+msgid "Remember column configuration"
+msgstr "Prisiminti stulpelių konfigūraciją"
+
+#: src/fsearch_preferences.ui:378
+msgid "Remember sort order"
+msgstr "Prisiminti rikiavimo tvarką"
+
+#: src/fsearch_preferences.ui:393
+msgid "Open path with double click in path column"
+msgstr "Atidarykite kelią dukart spustelėjant kelio stulpelyje"
+
+#: src/fsearch_preferences.ui:408
+msgid "Single click to open"
+msgstr "Atverti vienkarčiu spustelėjimu"
+
+#: src/fsearch_preferences.ui:429
+msgid "Results:"
+msgstr "Rezultatai:"
+
+#: src/fsearch_preferences.ui:470
+msgid "Show database indexing status"
+msgstr "Rodyti duomenų bazės indeksavimo būseną"
+
+#: src/fsearch_preferences.ui:491
+msgid "Statusbar:"
+msgstr "Būsenos juosta:"
+
+#: src/fsearch_preferences.ui:532
+msgid "Show warning dialogs when:"
+msgstr "Rodyti įspėjimo dialogus, kai:"
+
+#: src/fsearch_preferences.ui:542
+msgid "file / folder failed to open"
+msgstr "nepavyko atverti failo/aplanko"
+
+#: src/fsearch_preferences.ui:565
+msgid "Dialogs:"
+msgstr "Dialogai:"
+
+#: src/fsearch_preferences.ui:590
+msgid "Interface"
+msgstr "Sąsaja"
+
+#: src/fsearch_preferences.ui:609
+msgid "Search in path when query contains path separators"
+msgstr "Ieškoti kelyje, kai užklausoje yra kelio skirtukai"
+
+#: src/fsearch_preferences.ui:624
+msgid "Search as you type"
+msgstr "Ieškoti, renkant tekstą"
+
+#: src/fsearch_preferences.ui:639
+msgid "Hide results when search is empty"
+msgstr "Slėpti rezultatus, kai paieškos laukas tuščias"
+
+#: src/fsearch_preferences.ui:654
+#, fuzzy
+msgid ""
+"Match case when query contains at least one upper case\n"
+"                      character\n"
+"                    "
+msgstr ""
+"Sutapatinti raidžių dydžius, kai užklausoje yra bent vienas didžiųjų raidžių "
+"simbolis"
+
+#: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
+msgid "Search"
+msgstr "Ieškoti"
+
+#: src/fsearch_preferences.ui:697
+msgid "Update database on start"
+msgstr "Paleidus programą, atnaujinti duomenų bazę"
+
+#: src/fsearch_preferences.ui:717
+msgid "Update every"
+msgstr "Atnaujinti kiekvieną"
+
+#: src/fsearch_preferences.ui:739
+msgid "0"
+msgstr "0"
+
+#: src/fsearch_preferences.ui:756
+msgid "hour(s) and"
+msgstr "valanda(-os) ir"
+
+#: src/fsearch_preferences.ui:768
+msgid "30"
+msgstr "30"
+
+#: src/fsearch_preferences.ui:786
+msgid "minute(s)"
+msgstr "minutė(-s)"
+
+#: src/fsearch_preferences.ui:858
+msgid ""
+"Add path to be included in database\n"
+"                                "
+msgstr ""
+"Pridėti kelią, kuris bus įtrauktas į duomenų bazę\n"
+"                                "
+
+#: src/fsearch_preferences.ui:875 src/fsearch_preferences.ui:974
+msgid "Remove selected path"
+msgstr "Pašalinti pasirinktą kelią"
+
+#: src/fsearch_preferences.ui:901
+msgid "Include"
+msgstr "Įtraukti"
+
+#: src/fsearch_preferences.ui:958
+msgid "Add path to be excluded from database"
+msgstr "Pridėti kelią, kurio nereikia traukti į duomenų bazę"
+
+#: src/fsearch_preferences.ui:1010 src/fsearch_preferences.ui:1023
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr ""
+"Palaiko pakaitos simbolius. Keli įrašai privalo būti atskirti \";"
+"\" (kabliataškiu)"
+
+#: src/fsearch_preferences.ui:1011
+msgid "Exclude files:"
+msgstr "Išbraukti failus:"
+
+#: src/fsearch_preferences.ui:1024
+msgid "e.g. \".git;*.tmp\""
+msgstr "pvz., \".git;*.tmp\""
+
+#: src/fsearch_preferences.ui:1041
+msgid "Exclude hidden files and folders"
+msgstr "Išbraukti paslėptus failus ir aplankus"
+
+#: src/fsearch_preferences.ui:1063
+msgid "Exclude"
+msgstr "Išbraukti"
+
+#: src/fsearch_preferences.ui:1086
+msgid "Database"
+msgstr "Duomenų bazė"
+
+#: src/fsearch_preferences.ui:1118
+msgid ""
+"<b>Enable dark theme:</b>\n"
+"\n"
+"If enabled, the system theme is asked to use a darker styling for the "
+"application <i>(i.e. dark UI elements on bright text)</i>.\n"
+"\n"
+"Note that not all system themes provide such a darker variant, therefore "
+"enabling this setting might not have an effect."
+msgstr ""
+"<b> Įgalinti tamsią temą: </b>\n"
+"\n"
+"Jei įgalinta, sistemos tema bus prašoma naudoti tamsesnį programos stilių "
+"<i> (t. Y. Tamsūs vartotojo sąsajos elementai ant šviesaus teksto) </i>\n"
+"\n"
+"Atminkite, kad ne visose sistemos temose pateikiamas toks tamsesnis "
+"variantas, todėl šio nustatymo įgalinimas gali neturėti jokio poveikio."
+
+#: src/fsearch_preferences.ui:1136
+msgid ""
+"<b>Enable client-side decorations:</b>\n"
+"\n"
+"If enabled, the search entry and main menu are displayed in the window title "
+"bar.\n"
+"\n"
+"If disabled, the main menu is displayed as a menu bar with the search entry "
+"below it.\n"
+"This resembles a more traditonal UI layout and takes a little bit more space."
+msgstr ""
+"<b> Įgalinti kliento-pusės dekoracijas: </b>\n"
+"\n"
+"Jei įgalinta, paieškos įrašas ir pagrindinis meniu yra rodomi lango "
+"pavadinimo juostoje.\n"
+"\n"
+"Jei jis išjungta, pagrindinis meniu yra rodomas kaip meniu juosta, po kuria "
+"yra paieškos įrašas.\n"
+"Tai primena labiau tradicinį vartotojo sąsajos išdėstymą ir užima šiek tiek "
+"daugiau vietos."
+
+#: src/fsearch_preferences.ui:1156
+msgid ""
+"<b>Use binary units instead of decimal units:</b>\n"
+"\n"
+"This settings controls how file sizes are displayed.\n"
+"\n"
+"\t• <b>Binary units:</b> This refers to binary IEC prefixes <i>(e.g. 1 KiB = "
+"1024 bytes)</i>\n"
+"\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
+"= 1000 bytes)</i>"
+msgstr ""
+"<b> Vietoje dešimtainių vienetų naudokite dvejetainius vienetus: </b>\n"
+"\n"
+"Šie nustatymai kontroliuoja, kaip rodomi failų dydžiai.\n"
+"\n"
+"• <b> Dvejetainiai vienetai: </b> Tai reiškia dvejetainius IEC priešdėlius "
+"<i> (pvz., 1 KiB = 1024 baitai) </i>\n"
+"• <b> Dešimtainiai vienetai: </b> Tai reiškia dešimtainius SI priešdėlius "
+"<i> (pvz., 1 kB = 1000 baitų) </i>"
+
+#: src/fsearch_preferences.ui:1176
+msgid ""
+"<b>Remember window size:</b>\n"
+"\n"
+"If enabled, the window size from the previous session will be restored when "
+"you open an FSearch window.\n"
+"\n"
+"Note that some window managers ignore this request and force the window to "
+"have a different size."
+msgstr ""
+"<b> Prisiminti lango dydį: </b>\n"
+"\n"
+"Jei įgalinta, ankstesnio seanso lango dydis bus atkurtas, kai atidarysite "
+"„FSearch“ langą.\n"
+"\n"
+"Atminkite, kad kai kurie langų tvarkytuvai nepaiso šios užklausos ir "
+"priverčia langą būti kitokio dydžio."
+
+#: src/fsearch_preferences.ui:1195
+msgid ""
+"<b>Behaviour after successfully opening a file:</b>\n"
+"\n"
+"When a file/folder was succesfully opened one of the following actions can "
+"be performed:\n"
+"\t• <b>Nothing:</b> Nothing happens.\n"
+"\t• <b>Minimize:</b> The currently selected FSearch window becomes "
+"minimized. \n"
+"\t\tNote that not all systems allow windows to be minimized.\n"
+"\t• <b>Close:</b> Quit FSearch.\n"
+"\n"
+"You can configure if those actions should be triggered when the file was "
+"opened with\n"
+"\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
+"\t• <b>mouse click</b>"
+msgstr ""
+"<b> Elgesys sėkmingai atidarius failą: </b>\n"
+"\n"
+"Kai failas / aplankas buvo sėkmingai atidarytas, galima atlikti vieną iš šių "
+"veiksmų:\n"
+"• <b> Nieko: </b> nieko nevyksta.\n"
+"• <b> Sumažinti: </b> šiuo metu pasirinktas „FSearch“ langas sumažinamas ir "
+"nuleidžiamas.\n"
+"Atkreipkite dėmesį, kad ne visos sistemos leidžia sumažinti ir nuleisti "
+"langus.\n"
+"• <b> Uždaryti: </b> „FSearch“ uždaroma.\n"
+"\n"
+"Galite sukonfigūruoti, ar tie veiksmai turėtų būti suaktyvinti atidarius "
+"failą\n"
+"• <b> spartieji klavišai arba meniu įrašai </b> ir (arba)\n"
+"• <b> pelės paspaudimas </b>"
+
+#: src/fsearch_preferences.ui:1220
+msgid ""
+"<b>Show highlighted search terms:</b>\n"
+"\n"
+"If enabled, the search terms will be highlighted in the results view. For "
+"example when you search for \"foo\" all appearances of <i>foo</i> in file/"
+"folder names will be highlighted with bold characters:\n"
+"\n"
+"\t\t<b>foo</b>bar.txt\n"
+"\t\tfile.<b>foo</b>\n"
+"\n"
+"This also works for regular expressions and wildcard expressions starting or "
+"ending with an asterisk. "
+msgstr ""
+"<b> Rodyti paryškintus paieškos terminus: </b>\n"
+"\n"
+"Jei įgalinta, paieškos terminai bus paryškinti rezultatų rodinyje. "
+"Pavyzdžiui, kai ieškote „foo“, visi <i> foo </i> parodymai failų / aplankų "
+"pavadinimuose bus išskirti paryškintais rašmenimis:\n"
+"\n"
+"<b> foo </b> bar.txt\n"
+"failas. <b> foo </b>\n"
+"\n"
+"Tai taip pat tinka įprastoms ir „wildcard“ išraiškoms, prasidedančioms arba "
+"besibaigiančioms žvaigždute. "
+
+#: src/fsearch_preferences.ui:1242
+msgid ""
+"<b>Show tooltips:</b>\n"
+"\n"
+"If enabled, the results view will show the full path of the focused file/"
+"folder in a small tooltip window."
+msgstr ""
+"<b>Rodyti patarimus:</b>\n"
+"\n"
+"Jei įgalinta, rezultatų rodinyje bus rodomas visas pasirinkto failo / "
+"aplanko kelias mažame patarimo lange."
+
+#: src/fsearch_preferences.ui:1259
+msgid ""
+"<b>Show icons in name column:</b>\n"
+"\n"
+"If enabled, file/folder icons will be shown in the name column."
+msgstr ""
+"<b>Rodyti piktogramas vardo stulpelyje:</b>\n"
+"\n"
+"Jei įgalinta, failo / aplanko piktogramos bus rodomos pavadinimo stulpelyje."
+
+#: src/fsearch_preferences.ui:1276
+msgid ""
+"<b>Remember column configuration:</b>\n"
+"\n"
+"If enabled, the column configuration of the results view from the previous "
+"session will be restored when you open an FSearch window. This includes the "
+"size and visibility of all columns."
+msgstr ""
+"<b>Prisiminti stulpelio konfigūraciją:</b>\n"
+"\n"
+"Jei įgalinta, ankstesnio seanso rezultatų rodinio stulpelių konfigūracija "
+"bus atkurta, kai atidarysite FSearch langą. Tai apima visų stulpelių dydį ir "
+"matomumą."
+
+#: src/fsearch_preferences.ui:1293
+msgid ""
+"<b>Remember sort order:</b>\n"
+"\n"
+"If enabled, the sort order of the results view from the previous session "
+"will be restored when you open an FSearch window."
+msgstr ""
+"<b>Prisiminkite rūšiavimo tvarką:</b>\n"
+"\n"
+"Jei įgalinta, ankstesnio seanso rezultatų rodinio rūšiavimo tvarka bus "
+"atkurta, kai atidarysite FSearch langą."
+
+#: src/fsearch_preferences.ui:1310
+msgid ""
+"<b>Open path with double click in path column:</b>\n"
+"\n"
+"If enabled, double clicking in the path column will open the selected path."
+msgstr ""
+"<b>Atidarykite kelią dukart spustelėdami kelio stulpelyje:</b>\n"
+"\n"
+"Jei įgalinta, dukart spustelėjus kelio stulpelyje bus atidarytas pasirinktas "
+"kelias."
+
+#: src/fsearch_preferences.ui:1327
+msgid ""
+"<b>Single click to open:</b>\n"
+"\n"
+"If enabled, a single click will open the selected file/folder. If you only "
+"want to select a file/folder while this setting is active, you need to a "
+"hold <i>Ctrl</i> at the same time while clicking the file/folder."
+msgstr ""
+"<b>Atidaryti vienu paspaudimu:</b>\n"
+"\n"
+"Jei įgalinta, vienu paspaudimu atidaromas pasirinktas failas / aplankas. Jei "
+"norite pasirinkti failą / aplanką tik tada, kai šis parametras yra aktyvus, "
+"spustelėdami failą / aplanką, tuo pačiu metu laikydami <i>Ctrl</i>."
+
+#: src/fsearch_preferences.ui:1344
+msgid ""
+"<b>Show database indexing status:</b>\n"
+"\n"
+"If enabled, the path that is currently being indexed is displayed in the "
+"statusbar."
+msgstr ""
+"<b>Rodyti duomenų bazės indeksavimo būseną:</b>\n"
+"\n"
+"Jei įjungta, būsenos juostoje rodomas kelias, kuris šiuo metu indeksuojamas."
+
+#: src/fsearch_preferences.ui:1361
+msgid ""
+"<b>Show warning dialogs:</b>\n"
+"\n"
+"If enabled, a warning dialog is displayed when:\n"
+"\n"
+"\t•  a file or folder failed to open\n"
+msgstr ""
+"<b>Rodyti įspėjimo dialogus:</b>\n"
+"\n"
+"Jei įgalinta, perspėjimo dialogas yra rodomas, kai:\n"
+"\n"
+"• failo ar aplanko nepavyko atidaryti\n"
+
+#: src/fsearch_preferences.ui:1381
+msgid ""
+"<b>Search in path when query contains path separators:</b>\n"
+"\n"
+"If enabled, search terms containing path separators (i.e. \"/\") will be "
+"automatically matched against the full path of a file or folder."
+msgstr ""
+"<b>Ieškokite kelyje, kai užklausoje yra kelio skyriklių:</b>\n"
+"\n"
+"Jei įgalinta, paieškos terminai, kuriuose yra kelio skyrikliai (t. y. „/“), "
+"bus automatiškai suderinti (matched) su visu failo ar aplanko keliu."
+
+#: src/fsearch_preferences.ui:1398
+msgid ""
+"<b>Match case when query contains at least one upper case character:</b>\n"
+"\n"
+"If enabled, search terms containing at least one upper case character will "
+"trigger a case-sensitive search. This means a search term like <i>Foo</i> "
+"will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
+msgstr ""
+"<b>Sutapatinti raidžių dydį, kai užklausoje yra bent vienas didžiosios "
+"raidės simbolis:</b>\n"
+"\n"
+"Jei įgalinta, paieškos terminai, kuriuose yra bent vienas didžiosios raidės "
+"simbolis, suaktyvins į didžiąsias ar mažąsias raides jautria paiešką. Tai "
+"reiškia, kad toks paieškos terminas kaip <i>Foo</i> atitiks <i> FooBar.txt </"
+"i>, bet ne <i>foobar.txt</i>."
+
+#: src/fsearch_preferences.ui:1415
+msgid ""
+"<b>Hide results when search is empty:</b>\n"
+"\n"
+"If enabled, no search results are displayed when the search entry is empty.\n"
+"\n"
+"If disabled, all files and folders will be displayed when the search entry "
+"is empty."
+msgstr ""
+"<b>Slėpti rezultatus, kai paieška tuščia:</b>\n"
+"\n"
+"Jei įgalinta, paieškos rezultatai nebus rodomi, kai paieškos įrašas "
+"tuščias.\n"
+"\n"
+"Jei išjungta, visi failai ir aplankai bus rodomi, kai paieškos įrašas bus "
+"tuščias."
+
+#: src/fsearch_preferences.ui:1434
+msgid ""
+"<b>Search as you type:</b>\n"
+"\n"
+"If enabled, the search is automatically updated with every keystroke.\n"
+"\n"
+"If disabled, the search is only updated when you hit <i>Enter</i> or press "
+"the search button. "
+msgstr ""
+"<b>Ieškokite bevedant tekstą:</b>\n"
+"\n"
+"Jei įjungta, paieška yra automatiškai atnaujinama kiekvieną kartą paspaudus "
+"klavišą.\n"
+"\n"
+"Jei ji išjungta, paieška atnaujinama tik paspaudus <i>Enter</i> arba "
+"paspaudus paieškos mygtuką. "
+
+#: src/fsearch_preferences.ui:1453
+msgid ""
+"<b>Update database on start:</b>\n"
+"\n"
+"If enabled, the database will be updated automatically in the background "
+"when you start FSearch."
+msgstr ""
+"<b>Atnaujinti duomenų bazę startuojant:</b>\n"
+"\n"
+"Jei įgalinta, duomenų bazė bus automatiškai atnaujinta fone, kai „FSearch“ "
+"bus paleistas."
+
+#: src/fsearch_preferences.ui:1470
+msgid ""
+"<b>Included folders:</b>\n"
+"\n"
+"                      This list contains all folders you want to include in "
+"the database.\n"
+"\n"
+"                      • <b>Active:</b> If enabled, the path will included in "
+"the database to be searched in.\n"
+"                      • <b>Path:</b> The full path to be included.\n"
+"                      • <b>Update:</b> This setting is useful if you want to "
+"exclude certain paths from\n"
+"                      being\n"
+"                      updated <i>(e.g. a path to a slow USB drive which "
+"doesn't change often)</i>\n"
+"                    "
+msgstr ""
+"<b> Įtraukti aplankai: </b>\n"
+"\n"
+"Šiame sąraše yra visi aplankai, kuriuos norite įtraukti į duomenų bazę.\n"
+"\n"
+"• <b> Aktyvus: </b> jei įgalinta, kelias bus įtrauktas į duomenų bazę, "
+"kurioje bus ieškoma.\n"
+"• <b> Kelias: </b> visas kelias, kurį reikia įtraukti.\n"
+"• <b> Atnaujinti: </b> Šis nustatymas naudingas, jei norite pašalinti tam "
+"tikrus kelius\n"
+"kad jie nebūtų\n"
+"atnaujinami <i> (pvz., kelias į lėtą USB diską, kuris dažnai nesikeičia) </"
+"i>\n"
+"                    "
+
+#: src/fsearch_preferences.ui:1494
+msgid ""
+"<b>Add folder to database:</b>\n"
+"\n"
+"                      This button opens a dialog where you can select a "
+"folder you want to include in the database for\n"
+"                      searching.\n"
+"                    "
+msgstr ""
+"<b>Pridėti aplanką prie duomenų bazės:</b>\n"
+"\n"
+"Šis mygtukas atveria dialogo langą, kuriame galite pasirinkti aplanką, kurį "
+"norite įtraukti į duomenų bazę\n"
+"ieškojimui.\n"
+"                    "
+
+#: src/fsearch_preferences.ui:1513
+msgid ""
+"<b>Remove selected row:</b>\n"
+"\n"
+"                      This removes the selected folder from the list of "
+"included folders.\n"
+"                    "
+msgstr ""
+"<b>Pašalinti pasirinktą eilutę:</b>\n"
+"\n"
+"Tai pašalins pasirinktą aplanką iš įtrauktų aplankų sąrašo.\n"
+"                    "
+
+#: src/fsearch_preferences.ui:1531
+msgid ""
+"<b>Excluded folders:</b>\n"
+"\n"
+"This list contains all folders you want to exclude from the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
+"\t\t and can't be searched in.\n"
+"\t• <b>Path:</b> The full path to be excluded."
+msgstr ""
+"<b>Netrauktini aplankai:</b>\n"
+"\n"
+"Šiame sąraše yra visi aplankai, kuriuos norite netraukti į duomenų bazę.\n"
+"\n"
+"• <b>Aktyvus:</b> jei įgalinta, kelias bus pašalintas iš duomenų bazės\n"
+"ir jame nebus galima ieškoti.\n"
+"• <b>Kelias:</b> visas kelias, kurį reikia netraukti."
+
+#: src/fsearch_preferences.ui:1552
+msgid ""
+"<b>Exclude folder from database:</b>\n"
+"\n"
+"This button opens a dialog where you can select a folder you want to exclude "
+"from the database."
+msgstr ""
+"<b>Išskirti aplanką, kuris neturi būti traukiamas į duomenų bazę:</b>\n"
+"\n"
+"Šis mygtukas atveria dialogo langą, kuriame galite pasirinkti aplanką, kuris "
+"neturi būti traukiamas į duomenų bazę."
+
+#: src/fsearch_preferences.ui:1569
+msgid ""
+"<b>Remove selected row:</b>\n"
+"\n"
+"This removes the selected folder from the list of excluded folders."
+msgstr ""
+"<b>Pašalinti pasirinktą eilutę:</b>\n"
+"\n"
+"Tai pašalina pasirinktą aplanką iš aplankų, kurie neturi būti traukiami, "
+"sąrašo."
+
+#: src/fsearch_preferences.ui:1586
+msgid ""
+"<b>Exclude files and folders from database:</b>\n"
+"\n"
+"This is a semi-colon separated list of files (or folders) you want to "
+"exclude from the database. For example <i>.git;.cache;*.swp</i> will exclude "
+"all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
+"end with <i>.swp</i>."
+msgstr ""
+"<b> Išskirkite failus ir aplankus iš duomenų bazės, kad jie nebūtų "
+"traukiami: </b>\n"
+"\n"
+"Tai yra kabliataškiais atskirtas failų (arba aplankų) sąrašas, kurį norite "
+"pašalinti iš duomenų bazės. Pvz., <i>.git;.cache;*.swp</i> netrauks visų "
+"failų ar aplankų, kurie vadinami <i>.git</i> arba <i>.cache</i> arba "
+"baigiasi <i>.swp</i>."
+
+#: src/fsearch_preferences.ui:1603
+msgid ""
+"<b>Exclude hidden files and folders:</b>\n"
+"\n"
+"If enabled, hidden files and folders will be excluded from the database "
+"<i>(i.e. all files or folders which start with a dot character)</i>."
+msgstr ""
+"<b>Išskirkite paslėptus failus ir aplankus:</b>\n"
+"\n"
+"Jei bus įjungta, paslėpti failai ir aplankai nebus įtraukti į duomenų bazę "
+"<i>(t. y. Visi failai ar aplankai, prasidedantys taškiniu simboliu)</i>."
+
+#: src/fsearch_preferences.ui:1620
+msgid "Focus a setting to get a detailed description of what it does."
+msgstr "Pasirinkite nustatymą, kad gautumėte išsamų jo veikimo aprašymą."
+
+#: src/fsearch_preferences.ui:1633
+msgid ""
+"<b>Periodically update database at a specific time interval:</b>\n"
+"\n"
+"If enabled and as long as FSearch is running, the database will be updated "
+"periodically with the given time interval.\n"
+"\n"
+"If you want to update the database in the background, even when FSearch is "
+"not running, you should use tools like cron or systemd timers to "
+"periodically trigger the update with:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
+msgstr ""
+"<b> Periodiškai atnaujinti duomenų bazę kas tam tikrą laiko tarpą: </b>\n"
+"\n"
+"Jei įgalinta ir tol, kol veikia „FSearch“, duomenų bazė bus periodiškai "
+"atnaujinama nurodytu laiko intervalu.\n"
+"\n"
+"Jei norite atnaujinti duomenų bazę fone, net kai „FSearch“ neveikia, "
+"turėtumėte naudoti tokius įrankius kaip „cron“ arba „systemd“ laikmačius, "
+"kad periodiškai suaktyvintumėte atnaujinimą su:\n"
+"\n"
+"<i> <tt> fsearch --update-database </tt> </i>"
+
+#: src/fsearch_preferences.ui:1656
+msgid "Help"
+msgstr "Žinynas"
+
+#: src/fsearch_statusbar.ui:43
+msgid "Number of Search Results"
+msgstr "Paieškos rezultatų skaičius"
+
+#: src/fsearch_statusbar.ui:44
+msgid "0 Items"
+msgstr "0 elementų"
+
+#: src/fsearch_statusbar.ui:81
+msgid "Index:"
+msgstr "Indeksas:"
+
+#: src/fsearch_statusbar.ui:156
+msgid "Number of selected folders"
+msgstr "Pasirinktų aplankų skaičius"
+
+#: src/fsearch_statusbar.ui:157 src/fsearch_statusbar.ui:182
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch_statusbar.ui:181
+msgid "Number of selected files"
+msgstr "Pasirinktų failų skaičius"
+
+#: src/fsearch_statusbar.ui:256 src/fsearch_window.ui:102
+msgid "Cancel database update"
+msgstr "Atsisakyti duomenų bazės atnaujinimo"
+
+#: src/fsearch_statusbar.ui:297
+msgid "Number of database items"
+msgstr "Duomenų bazės elementų skaičius"
+
+#: src/fsearch_statusbar.ui:298
+msgid "(empty)"
+msgstr "(tuščia)"
+
+#: src/fsearch_statusbar.ui:335
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+"Paieškos terminą sudaro didžiosios raidės.\n"
+"<b>Raidžių dydžių vienodinimas</b> buvo laikinai suaktyvinta šiam terminui."
+
+#: src/fsearch_statusbar.ui:366 src/fsearch_statusbar.ui:419
+msgid "CASE"
+msgstr "REGISTRAS"
+
+#: src/fsearch_statusbar.ui:442
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+"Paieškos termine yra kelio skyrikliai.\n"
+"Šiam terminui buvo laikinai suaktyvinta <b>paieška kelyje</b>."
+
+#: src/fsearch_statusbar.ui:473 src/fsearch_statusbar.ui:526
+msgid "PATH"
+msgstr "KELIAS"
+
+#: src/fsearch_statusbar.ui:579
+msgid "REGEX"
+msgstr "REG REIŠK"
+
+#: src/fsearch_window.ui:68
+msgid "New window"
+msgstr "Naujas langas"
+
+#: src/fsearch_window.ui:88
+msgid "Update database"
+msgstr "Atnaujinti duomenų bazę"
+
+#: src/fsearch_window.ui:143 src/menus.ui:112
+msgid "Search in Path"
+msgstr "Ieškoti kelyje"
+
+#: src/fsearch_window.ui:157 src/menus.ui:116
+msgid "Match Case"
+msgstr "Skirti didžiąsias ir mažąsias raides"
+
+#: src/fsearch_window.ui:171 src/menus.ui:120
+msgid "Enable RegEx"
+msgstr "Įjungti reguliariuosius reiškinius"
+
+#: src/fsearch_window.ui:196 src/menus.ui:95
+msgid "Show Statusbar"
+msgstr "Rodyti būsenos juostą"
+
+#: src/fsearch_window.ui:210 src/menus.ui:99
+msgid "Show Filter"
+msgstr "Rodyti filtrą"
+
+#: src/fsearch_window.ui:224 src/menus.ui:103
+msgid "Show Search Button"
+msgstr "Rodyti paieškos mygtuką"
+
+#: src/fsearch_window.ui:275 src/menus.ui:129
+msgid "About"
+msgstr "Apie"
+
+#: src/fsearch_window.ui:300 src/menus.ui:47
+msgid "Quit"
+msgstr "Išeiti"
+
+#: src/fsearch_window.ui:408
+msgid "Search…"
+msgstr "Ieškoti…"
+
+#: src/fsearch_window.ui:430
+msgid "Select a Filter"
+msgstr "Pasirinkti filtrą"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -340,780 +1148,6 @@ msgstr "_Kopijuoti failo kelią"
 msgid "Move to _Trash"
 msgstr "Perkelti į ši_ukšlinę"
 
-#: src/overlay.ui:43
-msgid "Empty Database"
-msgstr "Duomenų bazė tuščia"
-
-#: src/overlay.ui:59
-msgid "Add folders"
-msgstr "Pridėti aplankus"
-
-#: src/overlay.ui:76 src/overlay.ui:271 src/statusbar.glade:273
-msgid "page0"
-msgstr "puslapis0"
-
-#: src/overlay.ui:107
-msgid "Loading Database…"
-msgstr "Įkeliama duomenų bazė…"
-
-#: src/overlay.ui:122
-msgid "This won't take long."
-msgstr "Tai ilgai neužtruks."
-
-#: src/overlay.ui:138 src/overlay.ui:333 src/statusbar.glade:309
-msgid "page1"
-msgstr "puslapis1"
-
-#: src/overlay.ui:170 src/statusbar.glade:240
-msgid "Updating Database…"
-msgstr "Atnaujinama duomenų bazė…"
-
-#: src/overlay.ui:185 src/overlay.ui:380
-msgid "This may take a while."
-msgstr "Tai gali šiek tiek užtrukti."
-
-#: src/overlay.ui:201
-msgid "page2"
-msgstr "puslapis2"
-
-#: src/overlay.ui:239
-msgid "Empty Query"
-msgstr "Tuščia užklausa"
-
-#: src/overlay.ui:254
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "Paspauskite <b>Ctrl + F</b> ir pradėkite rašyti"
-
-#: src/overlay.ui:302
-msgid "No Results Found"
-msgstr "Nerasta jokių rezultatų"
-
-#: src/overlay.ui:317
-msgid "Try a different search"
-msgstr "Pabandykite kitą paiešką"
-
-#: src/overlay.ui:365
-msgid "Sorting results…"
-msgstr "Rūšiuojama rezultatus…"
-
-#: src/preferences.ui:112
-msgid "Enable dark theme"
-msgstr "Įjungti tamsią temą"
-
-#: src/preferences.ui:127
-msgid "Enable client-side decorations (requires restart)"
-msgstr "Įgalinti kliento-pusės dekoracijas (reikalauja perkrovimo)"
-
-#: src/preferences.ui:142
-msgid "Use binary units instead of decimal units"
-msgstr "Vietoj dešimtainių vienetų, naudoti dvejetainius vienetus"
-
-#: src/preferences.ui:158
-msgid "Remember window size"
-msgstr "Prisiminti lango dydį"
-
-#: src/preferences.ui:195
-msgid "with keyboard shortcuts or menu entries"
-msgstr "naudojant sparčiuosius klavišus ar meniu įrašus"
-
-#: src/preferences.ui:210
-msgid "with double click"
-msgstr "naudojant dvikartį spustelėjimą"
-
-#: src/preferences.ui:238
-msgid "Behaviour after successfully opening a file:"
-msgstr "Elgsena, sėkmingai atvėrus failą:"
-
-#: src/preferences.ui:254
-msgid "Nothing"
-msgstr "Nieko"
-
-#: src/preferences.ui:255
-msgid "Minimize"
-msgstr "Suskleisti"
-
-#: src/preferences.ui:256
-msgid "Close"
-msgstr "Užverti"
-
-#: src/preferences.ui:282
-msgid "General:"
-msgstr "Bendra:"
-
-#: src/preferences.ui:317
-msgid "Show highlighted search terms"
-msgstr "Rodyti paryškintus paieškos terminus"
-
-#: src/preferences.ui:333
-msgid "Show tooltips"
-msgstr "Rodyti paaiškinimus"
-
-#: src/preferences.ui:348
-msgid "Show icons in name column"
-msgstr "Rodyti pavadinimo stulpelyje piktogramas"
-
-#: src/preferences.ui:363
-msgid "Remember column configuration"
-msgstr "Prisiminti stulpelių konfigūraciją"
-
-#: src/preferences.ui:378
-msgid "Remember sort order"
-msgstr "Prisiminti rikiavimo tvarką"
-
-#: src/preferences.ui:393
-msgid "Open path with double click in path column"
-msgstr "Atidarykite kelią dukart spustelėjant kelio stulpelyje"
-
-#: src/preferences.ui:408
-msgid "Single click to open"
-msgstr "Atverti vienkarčiu spustelėjimu"
-
-#: src/preferences.ui:429
-msgid "Results:"
-msgstr "Rezultatai:"
-
-#: src/preferences.ui:470
-msgid "Show database indexing status"
-msgstr "Rodyti duomenų bazės indeksavimo būseną"
-
-#: src/preferences.ui:491
-msgid "Statusbar:"
-msgstr "Būsenos juosta:"
-
-#: src/preferences.ui:532
-msgid "Show warning dialogs when:"
-msgstr "Rodyti įspėjimo dialogus, kai:"
-
-#: src/preferences.ui:542
-msgid "file / folder failed to open"
-msgstr "nepavyko atverti failo/aplanko"
-
-#: src/preferences.ui:565
-msgid "Dialogs:"
-msgstr "Dialogai:"
-
-#: src/preferences.ui:590
-msgid "Interface"
-msgstr "Sąsaja"
-
-#: src/preferences.ui:609
-msgid "Search in path when query contains path separators"
-msgstr "Ieškoti kelyje, kai užklausoje yra kelio skirtukai"
-
-#: src/preferences.ui:624
-msgid "Search as you type"
-msgstr "Ieškoti, renkant tekstą"
-
-#: src/preferences.ui:639
-msgid "Hide results when search is empty"
-msgstr "Slėpti rezultatus, kai paieškos laukas tuščias"
-
-#: src/preferences.ui:654
-msgid "Match case when query contains at least one upper case character"
-msgstr ""
-"Sutapatinti raidžių dydžius, kai užklausoje yra bent vienas didžiųjų raidžių "
-"simbolis"
-
-#: src/preferences.ui:695
-msgid "Update database on start"
-msgstr "Paleidus programą, atnaujinti duomenų bazę"
-
-#: src/preferences.ui:715
-msgid "Update every"
-msgstr "Atnaujinti kiekvieną"
-
-#: src/preferences.ui:737
-msgid "0"
-msgstr "0"
-
-#: src/preferences.ui:754
-msgid "hour(s) and"
-msgstr "valanda(-os) ir"
-
-#: src/preferences.ui:766
-msgid "30"
-msgstr "30"
-
-#: src/preferences.ui:784
-msgid "minute(s)"
-msgstr "minutė(-s)"
-
-#: src/preferences.ui:856
-msgid ""
-"Add path to be included in database\n"
-"                                "
-msgstr ""
-"Pridėti kelią, kuris bus įtrauktas į duomenų bazę\n"
-"                                "
-
-#: src/preferences.ui:873 src/preferences.ui:972
-msgid "Remove selected path"
-msgstr "Pašalinti pasirinktą kelią"
-
-#: src/preferences.ui:899
-msgid "Include"
-msgstr "Įtraukti"
-
-#: src/preferences.ui:956
-msgid "Add path to be excluded from database"
-msgstr "Pridėti kelią, kurio nereikia traukti į duomenų bazę"
-
-#: src/preferences.ui:1008 src/preferences.ui:1021
-msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
-"Palaiko pakaitos simbolius. Keli įrašai privalo būti atskirti \";"
-"\" (kabliataškiu)"
-
-#: src/preferences.ui:1009
-msgid "Exclude files:"
-msgstr "Išbraukti failus:"
-
-#: src/preferences.ui:1022
-msgid "e.g. \".git;*.tmp\""
-msgstr "pvz., \".git;*.tmp\""
-
-#: src/preferences.ui:1039
-msgid "Exclude hidden files and folders"
-msgstr "Išbraukti paslėptus failus ir aplankus"
-
-#: src/preferences.ui:1061
-msgid "Exclude"
-msgstr "Išbraukti"
-
-#: src/preferences.ui:1084
-msgid "Database"
-msgstr "Duomenų bazė"
-
-#: src/preferences.ui:1116
-msgid ""
-"<b>Enable dark theme:</b>\n"
-"\n"
-"If enabled, the system theme is asked to use a darker styling for the "
-"application <i>(i.e. dark UI elements on bright text)</i>.\n"
-"\n"
-"Note that not all system themes provide such a darker variant, therefore "
-"enabling this setting might not have an effect."
-msgstr ""
-"<b> Įgalinti tamsią temą: </b>\n"
-"\n"
-"Jei įgalinta, sistemos tema bus prašoma naudoti tamsesnį programos stilių "
-"<i> (t. Y. Tamsūs vartotojo sąsajos elementai ant šviesaus teksto) </i>\n"
-"\n"
-"Atminkite, kad ne visose sistemos temose pateikiamas toks tamsesnis "
-"variantas, todėl šio nustatymo įgalinimas gali neturėti jokio poveikio."
-
-#: src/preferences.ui:1134
-msgid ""
-"<b>Enable client-side decorations:</b>\n"
-"\n"
-"If enabled, the search entry and main menu are displayed in the window title "
-"bar.\n"
-"\n"
-"If disabled, the main menu is displayed as a menu bar with the search entry "
-"below it.\n"
-"This resembles a more traditonal UI layout and takes a little bit more space."
-msgstr ""
-"<b> Įgalinti kliento-pusės dekoracijas: </b>\n"
-"\n"
-"Jei įgalinta, paieškos įrašas ir pagrindinis meniu yra rodomi lango "
-"pavadinimo juostoje.\n"
-"\n"
-"Jei jis išjungta, pagrindinis meniu yra rodomas kaip meniu juosta, po kuria "
-"yra paieškos įrašas.\n"
-"Tai primena labiau tradicinį vartotojo sąsajos išdėstymą ir užima šiek tiek "
-"daugiau vietos."
-
-#: src/preferences.ui:1154
-msgid ""
-"<b>Use binary units instead of decimal units:</b>\n"
-"\n"
-"This settings controls how file sizes are displayed.\n"
-"\n"
-"\t• <b>Binary units:</b> This refers to binary IEC prefixes <i>(e.g. 1 KiB = "
-"1024 bytes)</i>\n"
-"\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
-"= 1000 bytes)</i>"
-msgstr ""
-"<b> Vietoje dešimtainių vienetų naudokite dvejetainius vienetus: </b>\n"
-"\n"
-"Šie nustatymai kontroliuoja, kaip rodomi failų dydžiai.\n"
-"\n"
-"• <b> Dvejetainiai vienetai: </b> Tai reiškia dvejetainius IEC priešdėlius "
-"<i> (pvz., 1 KiB = 1024 baitai) </i>\n"
-"• <b> Dešimtainiai vienetai: </b> Tai reiškia dešimtainius SI priešdėlius "
-"<i> (pvz., 1 kB = 1000 baitų) </i>"
-
-#: src/preferences.ui:1174
-msgid ""
-"<b>Remember window size:</b>\n"
-"\n"
-"If enabled, the window size from the previous session will be restored when "
-"you open an FSearch window.\n"
-"\n"
-"Note that some window managers ignore this request and force the window to "
-"have a different size."
-msgstr ""
-"<b> Prisiminti lango dydį: </b>\n"
-"\n"
-"Jei įgalinta, ankstesnio seanso lango dydis bus atkurtas, kai atidarysite "
-"„FSearch“ langą.\n"
-"\n"
-"Atminkite, kad kai kurie langų tvarkytuvai nepaiso šios užklausos ir "
-"priverčia langą būti kitokio dydžio."
-
-#: src/preferences.ui:1193
-msgid ""
-"<b>Behaviour after successfully opening a file:</b>\n"
-"\n"
-"When a file/folder was succesfully opened one of the following actions can "
-"be performed:\n"
-"\t• <b>Nothing:</b> Nothing happens.\n"
-"\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-"minimized. \n"
-"\t\tNote that not all systems allow windows to be minimized.\n"
-"\t• <b>Close:</b> Quit FSearch.\n"
-"\n"
-"You can configure if those actions should be triggered when the file was "
-"opened with\n"
-"\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-"\t• <b>mouse click</b>"
-msgstr ""
-"<b> Elgesys sėkmingai atidarius failą: </b>\n"
-"\n"
-"Kai failas / aplankas buvo sėkmingai atidarytas, galima atlikti vieną iš šių "
-"veiksmų:\n"
-"• <b> Nieko: </b> nieko nevyksta.\n"
-"• <b> Sumažinti: </b> šiuo metu pasirinktas „FSearch“ langas sumažinamas ir "
-"nuleidžiamas.\n"
-"Atkreipkite dėmesį, kad ne visos sistemos leidžia sumažinti ir nuleisti "
-"langus.\n"
-"• <b> Uždaryti: </b> „FSearch“ uždaroma.\n"
-"\n"
-"Galite sukonfigūruoti, ar tie veiksmai turėtų būti suaktyvinti atidarius "
-"failą\n"
-"• <b> spartieji klavišai arba meniu įrašai </b> ir (arba)\n"
-"• <b> pelės paspaudimas </b>"
-
-#: src/preferences.ui:1218
-msgid ""
-"<b>Show highlighted search terms:</b>\n"
-"\n"
-"If enabled, the search terms will be highlighted in the results view. For "
-"example when you search for \"foo\" all appearances of <i>foo</i> in file/"
-"folder names will be highlighted with bold characters:\n"
-"\n"
-"\t\t<b>foo</b>bar.txt\n"
-"\t\tfile.<b>foo</b>\n"
-"\n"
-"This also works for regular expressions and wildcard expressions starting or "
-"ending with an asterisk. "
-msgstr ""
-"<b> Rodyti paryškintus paieškos terminus: </b>\n"
-"\n"
-"Jei įgalinta, paieškos terminai bus paryškinti rezultatų rodinyje. "
-"Pavyzdžiui, kai ieškote „foo“, visi <i> foo </i> parodymai failų / aplankų "
-"pavadinimuose bus išskirti paryškintais rašmenimis:\n"
-"\n"
-"<b> foo </b> bar.txt\n"
-"failas. <b> foo </b>\n"
-"\n"
-"Tai taip pat tinka įprastoms ir „wildcard“ išraiškoms, prasidedančioms arba "
-"besibaigiančioms žvaigždute. "
-
-#: src/preferences.ui:1240
-msgid ""
-"<b>Show tooltips:</b>\n"
-"\n"
-"If enabled, the results view will show the full path of the focused file/"
-"folder in a small tooltip window."
-msgstr ""
-"<b>Rodyti patarimus:</b>\n"
-"\n"
-"Jei įgalinta, rezultatų rodinyje bus rodomas visas pasirinkto failo / "
-"aplanko kelias mažame patarimo lange."
-
-#: src/preferences.ui:1257
-msgid ""
-"<b>Show icons in name column:</b>\n"
-"\n"
-"If enabled, file/folder icons will be shown in the name column."
-msgstr ""
-"<b>Rodyti piktogramas vardo stulpelyje:</b>\n"
-"\n"
-"Jei įgalinta, failo / aplanko piktogramos bus rodomos pavadinimo stulpelyje."
-
-#: src/preferences.ui:1274
-msgid ""
-"<b>Remember column configuration:</b>\n"
-"\n"
-"If enabled, the column configuration of the results view from the previous "
-"session will be restored when you open an FSearch window. This includes the "
-"size and visibility of all columns."
-msgstr ""
-"<b>Prisiminti stulpelio konfigūraciją:</b>\n"
-"\n"
-"Jei įgalinta, ankstesnio seanso rezultatų rodinio stulpelių konfigūracija "
-"bus atkurta, kai atidarysite FSearch langą. Tai apima visų stulpelių dydį ir "
-"matomumą."
-
-#: src/preferences.ui:1291
-msgid ""
-"<b>Remember sort order:</b>\n"
-"\n"
-"If enabled, the sort order of the results view from the previous session "
-"will be restored when you open an FSearch window."
-msgstr ""
-"<b>Prisiminkite rūšiavimo tvarką:</b>\n"
-"\n"
-"Jei įgalinta, ankstesnio seanso rezultatų rodinio rūšiavimo tvarka bus "
-"atkurta, kai atidarysite FSearch langą."
-
-#: src/preferences.ui:1308
-msgid ""
-"<b>Open path with double click in path column:</b>\n"
-"\n"
-"If enabled, double clicking in the path column will open the selected path."
-msgstr ""
-"<b>Atidarykite kelią dukart spustelėdami kelio stulpelyje:</b>\n"
-"\n"
-"Jei įgalinta, dukart spustelėjus kelio stulpelyje bus atidarytas pasirinktas "
-"kelias."
-
-#: src/preferences.ui:1325
-msgid ""
-"<b>Single click to open:</b>\n"
-"\n"
-"If enabled, a single click will open the selected file/folder. If you only "
-"want to select a file/folder while this setting is active, you need to a "
-"hold <i>Ctrl</i> at the same time while clicking the file/folder."
-msgstr ""
-"<b>Atidaryti vienu paspaudimu:</b>\n"
-"\n"
-"Jei įgalinta, vienu paspaudimu atidaromas pasirinktas failas / aplankas. Jei "
-"norite pasirinkti failą / aplanką tik tada, kai šis parametras yra aktyvus, "
-"spustelėdami failą / aplanką, tuo pačiu metu laikydami <i>Ctrl</i>."
-
-#: src/preferences.ui:1342
-msgid ""
-"<b>Show database indexing status:</b>\n"
-"\n"
-"If enabled, the path that is currently being indexed is displayed in the "
-"statusbar."
-msgstr ""
-"<b>Rodyti duomenų bazės indeksavimo būseną:</b>\n"
-"\n"
-"Jei įjungta, būsenos juostoje rodomas kelias, kuris šiuo metu indeksuojamas."
-
-#: src/preferences.ui:1359
-msgid ""
-"<b>Show warning dialogs:</b>\n"
-"\n"
-"If enabled, a warning dialog is displayed when:\n"
-"\n"
-"\t•  a file or folder failed to open\n"
-msgstr ""
-"<b>Rodyti įspėjimo dialogus:</b>\n"
-"\n"
-"Jei įgalinta, perspėjimo dialogas yra rodomas, kai:\n"
-"\n"
-"• failo ar aplanko nepavyko atidaryti\n"
-
-#: src/preferences.ui:1379
-msgid ""
-"<b>Search in path when query contains path separators:</b>\n"
-"\n"
-"If enabled, search terms containing path separators (i.e. \"/\") will be "
-"automatically matched against the full path of a file or folder."
-msgstr ""
-"<b>Ieškokite kelyje, kai užklausoje yra kelio skyriklių:</b>\n"
-"\n"
-"Jei įgalinta, paieškos terminai, kuriuose yra kelio skyrikliai (t. y. „/“), "
-"bus automatiškai suderinti (matched) su visu failo ar aplanko keliu."
-
-#: src/preferences.ui:1396
-msgid ""
-"<b>Match case when query contains at least one upper case character:</b>\n"
-"\n"
-"If enabled, search terms containing at least one upper case character will "
-"trigger a case-sensitive search. This means a search term like <i>Foo</i> "
-"will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
-msgstr ""
-"<b>Sutapatinti raidžių dydį, kai užklausoje yra bent vienas didžiosios "
-"raidės simbolis:</b>\n"
-"\n"
-"Jei įgalinta, paieškos terminai, kuriuose yra bent vienas didžiosios raidės "
-"simbolis, suaktyvins į didžiąsias ar mažąsias raides jautria paiešką. Tai "
-"reiškia, kad toks paieškos terminas kaip <i>Foo</i> atitiks <i> FooBar.txt </"
-"i>, bet ne <i>foobar.txt</i>."
-
-#: src/preferences.ui:1413
-msgid ""
-"<b>Hide results when search is empty:</b>\n"
-"\n"
-"If enabled, no search results are displayed when the search entry is empty.\n"
-"\n"
-"If disabled, all files and folders will be displayed when the search entry "
-"is empty."
-msgstr ""
-"<b>Slėpti rezultatus, kai paieška tuščia:</b>\n"
-"\n"
-"Jei įgalinta, paieškos rezultatai nebus rodomi, kai paieškos įrašas tuščias."
-"\n"
-"\n"
-"Jei išjungta, visi failai ir aplankai bus rodomi, kai paieškos įrašas bus "
-"tuščias."
-
-#: src/preferences.ui:1432
-msgid ""
-"<b>Search as you type:</b>\n"
-"\n"
-"If enabled, the search is automatically updated with every keystroke.\n"
-"\n"
-"If disabled, the search is only updated when you hit <i>Enter</i> or press "
-"the search button. "
-msgstr ""
-"<b>Ieškokite bevedant tekstą:</b>\n"
-"\n"
-"Jei įjungta, paieška yra automatiškai atnaujinama kiekvieną kartą paspaudus "
-"klavišą.\n"
-"\n"
-"Jei ji išjungta, paieška atnaujinama tik paspaudus <i>Enter</i> arba "
-"paspaudus paieškos mygtuką. "
-
-#: src/preferences.ui:1451
-msgid ""
-"<b>Update database on start:</b>\n"
-"\n"
-"If enabled, the database will be updated automatically in the background "
-"when you start FSearch."
-msgstr ""
-"<b>Atnaujinti duomenų bazę startuojant:</b>\n"
-"\n"
-"Jei įgalinta, duomenų bazė bus automatiškai atnaujinta fone, kai „FSearch“ "
-"bus paleistas."
-
-#: src/preferences.ui:1468
-msgid ""
-"<b>Included folders:</b>\n"
-"\n"
-"                      This list contains all folders you want to include in "
-"the database.\n"
-"\n"
-"                      • <b>Active:</b> If enabled, the path will included in "
-"the database to be searched in.\n"
-"                      • <b>Path:</b> The full path to be included.\n"
-"                      • <b>Update:</b> This setting is useful if you want to "
-"exclude certain paths from\n"
-"                      being\n"
-"                      updated <i>(e.g. a path to a slow USB drive which "
-"doesn't change often)</i>\n"
-"                    "
-msgstr ""
-"<b> Įtraukti aplankai: </b>\n"
-"\n"
-"Šiame sąraše yra visi aplankai, kuriuos norite įtraukti į duomenų bazę.\n"
-"\n"
-"• <b> Aktyvus: </b> jei įgalinta, kelias bus įtrauktas į duomenų bazę, "
-"kurioje bus ieškoma.\n"
-"• <b> Kelias: </b> visas kelias, kurį reikia įtraukti.\n"
-"• <b> Atnaujinti: </b> Šis nustatymas naudingas, jei norite pašalinti tam "
-"tikrus kelius\n"
-"kad jie nebūtų\n"
-"atnaujinami <i> (pvz., kelias į lėtą USB diską, kuris dažnai nesikeičia) </i>"
-"\n"
-"                    "
-
-#: src/preferences.ui:1492
-msgid ""
-"<b>Add folder to database:</b>\n"
-"\n"
-"                      This button opens a dialog where you can select a "
-"folder you want to include in the database for\n"
-"                      searching.\n"
-"                    "
-msgstr ""
-"<b>Pridėti aplanką prie duomenų bazės:</b>\n"
-"\n"
-"Šis mygtukas atveria dialogo langą, kuriame galite pasirinkti aplanką, kurį "
-"norite įtraukti į duomenų bazę\n"
-"ieškojimui.\n"
-"                    "
-
-#: src/preferences.ui:1511
-msgid ""
-"<b>Remove selected row:</b>\n"
-"\n"
-"                      This removes the selected folder from the list of "
-"included folders.\n"
-"                    "
-msgstr ""
-"<b>Pašalinti pasirinktą eilutę:</b>\n"
-"\n"
-"Tai pašalins pasirinktą aplanką iš įtrauktų aplankų sąrašo.\n"
-"                    "
-
-#: src/preferences.ui:1529
-msgid ""
-"<b>Excluded folders:</b>\n"
-"\n"
-"This list contains all folders you want to exclude from the database.\n"
-"\n"
-"\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
-"\t\t and can't be searched in.\n"
-"\t• <b>Path:</b> The full path to be excluded."
-msgstr ""
-"<b>Netrauktini aplankai:</b>\n"
-"\n"
-"Šiame sąraše yra visi aplankai, kuriuos norite netraukti į duomenų bazę.\n"
-"\n"
-"• <b>Aktyvus:</b> jei įgalinta, kelias bus pašalintas iš duomenų bazės\n"
-"ir jame nebus galima ieškoti.\n"
-"• <b>Kelias:</b> visas kelias, kurį reikia netraukti."
-
-#: src/preferences.ui:1550
-msgid ""
-"<b>Exclude folder from database:</b>\n"
-"\n"
-"This button opens a dialog where you can select a folder you want to exclude "
-"from the database."
-msgstr ""
-"<b>Išskirti aplanką, kuris neturi būti traukiamas į duomenų bazę:</b>\n"
-"\n"
-"Šis mygtukas atveria dialogo langą, kuriame galite pasirinkti aplanką, kuris "
-"neturi būti traukiamas į duomenų bazę."
-
-#: src/preferences.ui:1567
-msgid ""
-"<b>Remove selected row:</b>\n"
-"\n"
-"This removes the selected folder from the list of excluded folders."
-msgstr ""
-"<b>Pašalinti pasirinktą eilutę:</b>\n"
-"\n"
-"Tai pašalina pasirinktą aplanką iš aplankų, kurie neturi būti traukiami, "
-"sąrašo."
-
-#: src/preferences.ui:1584
-msgid ""
-"<b>Exclude files and folders from database:</b>\n"
-"\n"
-"This is a semi-colon separated list of files (or folders) you want to "
-"exclude from the database. For example <i>.git;.cache;*.swp</i> will exclude "
-"all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
-"end with <i>.swp</i>."
-msgstr ""
-"<b> Išskirkite failus ir aplankus iš duomenų bazės, kad jie nebūtų traukiami:"
-" </b>\n"
-"\n"
-"Tai yra kabliataškiais atskirtas failų (arba aplankų) sąrašas, kurį norite "
-"pašalinti iš duomenų bazės. Pvz., <i>.git;.cache;*.swp</i> netrauks visų "
-"failų ar aplankų, kurie vadinami <i>.git</i> arba <i>.cache</i> arba "
-"baigiasi <i>.swp</i>."
-
-#: src/preferences.ui:1601
-msgid ""
-"<b>Exclude hidden files and folders:</b>\n"
-"\n"
-"If enabled, hidden files and folders will be excluded from the database "
-"<i>(i.e. all files or folders which start with a dot character)</i>."
-msgstr ""
-"<b>Išskirkite paslėptus failus ir aplankus:</b>\n"
-"\n"
-"Jei bus įjungta, paslėpti failai ir aplankai nebus įtraukti į duomenų bazę "
-"<i>(t. y. Visi failai ar aplankai, prasidedantys taškiniu simboliu)</i>."
-
-#: src/preferences.ui:1618
-msgid "Focus a setting to get a detailed description of what it does."
-msgstr "Pasirinkite nustatymą, kad gautumėte išsamų jo veikimo aprašymą."
-
-#: src/preferences.ui:1631
-msgid ""
-"<b>Periodically update database at a specific time interval:</b>\n"
-"\n"
-"If enabled and as long as FSearch is running, the database will be updated "
-"periodically with the given time interval.\n"
-"\n"
-"If you want to update the database in the background, even when FSearch is "
-"not running, you should use tools like cron or systemd timers to "
-"periodically trigger the update with:\n"
-"\n"
-"<i><tt>fsearch --update-database</tt></i>"
-msgstr ""
-"<b> Periodiškai atnaujinti duomenų bazę kas tam tikrą laiko tarpą: </b>\n"
-"\n"
-"Jei įgalinta ir tol, kol veikia „FSearch“, duomenų bazė bus periodiškai "
-"atnaujinama nurodytu laiko intervalu.\n"
-"\n"
-"Jei norite atnaujinti duomenų bazę fone, net kai „FSearch“ neveikia, "
-"turėtumėte naudoti tokius įrankius kaip „cron“ arba „systemd“ laikmačius, "
-"kad periodiškai suaktyvintumėte atnaujinimą su:\n"
-"\n"
-"<i> <tt> fsearch --update-database </tt> </i>"
-
-#: src/preferences.ui:1654
-msgid "Help"
-msgstr "Žinynas"
-
-#: src/statusbar.glade:43
-msgid "Number of Search Results"
-msgstr "Paieškos rezultatų skaičius"
-
-#: src/statusbar.glade:44
-msgid "0 Items"
-msgstr "0 elementų"
-
-#: src/statusbar.glade:81
-msgid "Index:"
-msgstr "Indeksas:"
-
-#: src/statusbar.glade:156
-msgid "Number of selected folders"
-msgstr "Pasirinktų aplankų skaičius"
-
-#: src/statusbar.glade:157 src/statusbar.glade:182
-msgid "0/0"
-msgstr "0/0"
-
-#: src/statusbar.glade:181
-msgid "Number of selected files"
-msgstr "Pasirinktų failų skaičius"
-
-#: src/statusbar.glade:297
-msgid "Number of database items"
-msgstr "Duomenų bazės elementų skaičius"
-
-#: src/statusbar.glade:298
-msgid "(empty)"
-msgstr "(tuščia)"
-
-#: src/statusbar.glade:335
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-"Paieškos terminą sudaro didžiosios raidės.\n"
-"<b>Raidžių dydžių vienodinimas</b> buvo laikinai suaktyvinta šiam terminui."
-
-#: src/statusbar.glade:366 src/statusbar.glade:419
-msgid "CASE"
-msgstr "REGISTRAS"
-
-#: src/statusbar.glade:442
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-"Paieškos termine yra kelio skyrikliai.\n"
-"Šiam terminui buvo laikinai suaktyvinta <b>paieška kelyje</b>."
-
-#: src/statusbar.glade:473 src/statusbar.glade:526
-msgid "PATH"
-msgstr "KELIAS"
-
-#: src/statusbar.glade:579
-msgid "REGEX"
-msgstr "REG REIŠK"
-
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
 msgstr "FSearch"
@@ -1128,8 +1162,8 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
-"paieška;fsearch;failai;aplankai;muzika;vaizdo "
-"įrašai;dokumentai;rasti;įrankis;viskas;"
+"paieška;fsearch;failai;aplankai;muzika;vaizdo įrašai;dokumentai;rasti;"
+"įrankis;viskas;"
 
 #~ msgid "Update"
 #~ msgstr "Atnaujinti"

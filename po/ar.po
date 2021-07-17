@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-06-01 18:21+0200\n"
+"POT-Creation-Date: 2021-07-17 17:17+0200\n"
 "PO-Revision-Date: 2021-01-13 10:23+0300\n"
 "Last-Translator: Mubarak AlQahtani <mubarak.qahtani@outlook.sa>\n"
 "Language-Team: Arabic <mubarak.qahtani@outlook.sa>\n"
@@ -20,173 +20,124 @@ msgstr ""
 "&& n%100<=10 ? 3 : n%100>=11 && n%100<=99 ? 4 : 5;\n"
 "X-Generator: Gtranslator 3.36.0\n"
 
-#: src/fsearch.c:341
+#: src/fsearch.c:254
+#, fuzzy
+msgid "Saving…"
+msgstr "فرز..."
+
+#: src/fsearch.c:340
 msgid "translator-credits"
 msgstr "Mubarak AlQahtani"
 
-#: src/fsearch.c:343
+#: src/fsearch.c:342
 msgid "A search utility focusing on performance and advanced features"
 msgstr "أداة بحث تركز على الأداء والميزات المتقدمة"
 
-#: src/fsearch.c:798
+#: src/fsearch.c:807
 msgid "Open a new application window"
 msgstr ""
 
-#: src/fsearch.c:799
+#: src/fsearch.c:808
 msgid "Show the application preferences"
 msgstr ""
 
-#: src/fsearch.c:800
+#: src/fsearch.c:809
 #, fuzzy
 msgid "Update the database and exit"
 msgstr "حدث قاعدة البيانات"
 
-#: src/fsearch.c:801
+#: src/fsearch.c:810
 #, fuzzy
 msgid "Print version information and exit"
 msgstr "إظهار معلومات الإصدار"
 
-#: src/fsearch.glade:68
-msgid "New window"
-msgstr "نافذة جديدة"
-
-#: src/fsearch.glade:88
-msgid "Update database"
-msgstr "تحديث قاعدة البيانات"
-
-#: src/fsearch.glade:102 src/statusbar.glade:256
-msgid "Cancel database update"
-msgstr "إلغاء تحديث قاعدة البيانات"
-
-#: src/fsearch.glade:143 src/menus.ui:112
-msgid "Search in Path"
-msgstr "البحث في المسار"
-
-#: src/fsearch.glade:157 src/menus.ui:116
-msgid "Match Case"
-msgstr "طابق حالة الأحرف"
-
-#: src/fsearch.glade:171 src/menus.ui:120
-msgid "Enable RegEx"
-msgstr "تمكين التعابير المنطقية (RegEx)"
-
-#: src/fsearch.glade:196 src/menus.ui:95
-msgid "Show Statusbar"
-msgstr "أظهر شريط الحالة"
-
-#: src/fsearch.glade:210 src/menus.ui:99
-msgid "Show Filter"
-msgstr "أظهر التصفية"
-
-#: src/fsearch.glade:224 src/menus.ui:103
-msgid "Show Search Button"
-msgstr "اظهر زر البحث"
-
-#: src/fsearch.glade:250 src/menus.ui:84 src/preferences.ui:43
-msgid "Preferences"
-msgstr "التفضيلات"
-
-#: src/fsearch.glade:275 src/menus.ui:129
-msgid "About"
-msgstr "حول"
-
-#: src/fsearch.glade:300 src/menus.ui:47
-msgid "Quit"
-msgstr "خروج"
-
-#: src/fsearch.glade:408
-msgid "Search…"
-msgstr "بحث"
-
-#: src/fsearch.glade:430
-msgid "Select a Filter"
-msgstr "حدد عامل تصفية"
-
-#: src/fsearch.glade:461 src/preferences.ui:676
-msgid "Search"
-msgstr "بحث"
-
-#: src/fsearch_database.c:633
+#: src/fsearch_database.c:628
 #, fuzzy
-#| msgid "Loading Database…"
 msgid "Loading folders…"
 msgstr "تحميل قاعدة البيانات..."
 
-#: src/fsearch_database.c:641
+#: src/fsearch_database.c:636
 #, fuzzy
-#| msgid "Deleting files…"
 msgid "Loading files…"
 msgstr "جارِ حذف الملفات ..."
 
-#: src/fsearch_file_utils.c:265
+#: src/fsearch_database.c:1629
 #, fuzzy
-#| msgid "Folders"
+msgid "Sorting…"
+msgstr "فرز..."
+
+#: src/fsearch_file_utils.c:258
+#, fuzzy
 msgid "Folder"
 msgstr "مجلدات"
 
-#: src/fsearch_file_utils.c:271
+#: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
 msgstr ""
 
-#: src/fsearch_filter.c:98
+#: src/fsearch_filter.c:83
 msgid "All"
 msgstr "الكل"
 
-#: src/fsearch_filter.c:100
+#: src/fsearch_filter.c:84
 msgid "Folders"
 msgstr "مجلدات"
 
-#: src/fsearch_filter.c:101
+#: src/fsearch_filter.c:85
 msgid "Files"
 msgstr "ملفات"
 
-#: src/fsearch_filter.c:103
+#: src/fsearch_filter.c:88
 msgid "Archives"
 msgstr "مؤرشفة"
 
-#: src/fsearch_filter.c:105
+#: src/fsearch_filter.c:93
 msgid "Audio"
 msgstr "صوتية"
 
-#: src/fsearch_filter.c:108
+#: src/fsearch_filter.c:96
 msgid "Documents"
 msgstr "مستندات"
 
-#: src/fsearch_filter.c:110
+#: src/fsearch_filter.c:101
 msgid "Pictures"
 msgstr "صور"
 
-#: src/fsearch_filter.c:112
+#: src/fsearch_filter.c:106
 msgid "Videos"
 msgstr "فيديو"
 
-#: src/fsearch_listview_popup.c:64
+#: src/fsearch_listview_popup.c:36
+msgid "Properties…"
+msgstr ""
+
+#: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
 msgstr ""
 
-#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:199
+#: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
 msgid "Select folder"
 msgstr "اختر مجلد"
 
-#: src/fsearch_preferences_ui.c:187 src/fsearch_preferences_ui.c:199
-#: src/fsearch_preferences_ui.c:391
+#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:196
+#: src/fsearch_preferences_ui.c:379
 msgid "_Cancel"
 msgstr "_ألغِ"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:199
+#: src/fsearch_preferences_ui.c:186 src/fsearch_preferences_ui.c:196
 msgid "_Select"
 msgstr "_اختر"
 
-#: src/fsearch_preferences_ui.c:392
+#: src/fsearch_preferences_ui.c:380
 msgid "_OK"
 msgstr "_موافق"
 
-#: src/fsearch_preferences_widgets.c:180 src/fsearch_preferences_widgets.c:219
+#: src/fsearch_preferences_widgets.c:178 src/fsearch_preferences_widgets.c:217
 msgid "Active"
 msgstr "نشط"
 
-#: src/fsearch_preferences_widgets.c:184 src/fsearch_preferences_widgets.c:223
-#: src/fsearch_window.c:708 src/menus.ui:216
+#: src/fsearch_preferences_widgets.c:182 src/fsearch_preferences_widgets.c:221
+#: src/fsearch_window.c:683 src/menus.ui:225
 msgid "Path"
 msgstr "مسار"
 
@@ -196,46 +147,48 @@ msgstr "جاري الاستعلام ..."
 
 #: src/fsearch_statusbar.c:140
 #, fuzzy
-#| msgid "Sorting..."
 msgid "Loading…"
 msgstr "فرز..."
 
 #: src/fsearch_statusbar.c:145
 #, fuzzy
-#| msgid "Sorting..."
 msgid "Scanning…"
 msgstr "فرز..."
 
-#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1027
+#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1013
 #, c-format
 msgid "%'d Items"
 msgstr "%'d عناصر"
 
-#: src/fsearch_window.c:607 src/fsearch_window_actions.c:349
+#: src/fsearch_window.c:584 src/fsearch_window_actions.c:419
 msgid "Failed to open file"
 msgstr "فشل فتح الملف"
 
-#: src/fsearch_window.c:608 src/fsearch_window_actions.c:350
+#: src/fsearch_window.c:585 src/fsearch_window_actions.c:420
 msgid "Do you want to keep the window open?"
 msgstr "هل تريد ابقاء النافذة مفتوحة"
 
-#: src/fsearch_window.c:701 src/menus.ui:212
+#: src/fsearch_window.c:676 src/menus.ui:221
 msgid "Name"
 msgstr "اسم"
 
-#: src/fsearch_window.c:715 src/menus.ui:224
+#: src/fsearch_window.c:690 src/menus.ui:237
 msgid "Size"
 msgstr "حجم"
 
-#: src/fsearch_window.c:722 src/menus.ui:220
+#: src/fsearch_window.c:697 src/menus.ui:233
 msgid "Type"
 msgstr "النوع"
 
-#: src/fsearch_window.c:729 src/menus.ui:228
+#: src/fsearch_window.c:704 src/menus.ui:229
+msgid "Extension"
+msgstr ""
+
+#: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
 msgstr "تاريخ التعديل"
 
-#: src/fsearch_window.c:743
+#: src/fsearch_window.c:726
 msgid ""
 "Sorting by <b>Type</b> can be very slow with many results and it can't be "
 "aborted.\n"
@@ -244,27 +197,854 @@ msgid ""
 "changes."
 msgstr ""
 
-#: src/fsearch_window_actions.c:88
+#: src/fsearch_window_actions.c:87
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "هل تريد حقًا فتح %d ملف (ملفات)؟"
 
-#: src/fsearch_window_actions.c:90
+#: src/fsearch_window_actions.c:89
 msgid "Opening Files…"
 msgstr "جارِ فتح الملفات ..."
 
-#: src/fsearch_window_actions.c:132
+#: src/fsearch_window_actions.c:147
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "هل تريد حقًا إزالة %d ملف (ملفات)؟"
 
-#: src/fsearch_window_actions.c:136
+#: src/fsearch_window_actions.c:151
 msgid "Deleting files…"
 msgstr "جارِ حذف الملفات ..."
 
-#: src/fsearch_window_actions.c:136
+#: src/fsearch_window_actions.c:151
 msgid "Moving files to trash…"
 msgstr "جارِ نقل الملفات إلى المهملات ..."
+
+#: src/fsearch_window_actions.c:190
+#, fuzzy, c-format
+msgid "Do you really want to open %d file property windows?"
+msgstr "هل تريد حقًا فتح %d ملف (ملفات)؟"
+
+#: src/fsearch_window_actions.c:194
+#, fuzzy
+msgid "Opening file properties…"
+msgstr "جارِ فتح الملفات ..."
+
+#: src/fsearch_overlay.ui:43
+msgid "Empty Database"
+msgstr "قاعدة بيانات فارغة"
+
+#: src/fsearch_overlay.ui:59
+#, fuzzy
+msgid "Add folders"
+msgstr "مجلدات"
+
+#: src/fsearch_overlay.ui:76 src/fsearch_overlay.ui:271
+#: src/fsearch_statusbar.ui:273
+msgid "page0"
+msgstr "صفحة 0"
+
+#: src/fsearch_overlay.ui:107
+msgid "Loading Database…"
+msgstr "تحميل قاعدة البيانات..."
+
+#: src/fsearch_overlay.ui:122
+msgid "This won't take long."
+msgstr "هذا لن يستغرق وقتًا طويلاً."
+
+#: src/fsearch_overlay.ui:138 src/fsearch_overlay.ui:333
+#: src/fsearch_statusbar.ui:309
+msgid "page1"
+msgstr "صفحة 1"
+
+#: src/fsearch_overlay.ui:170 src/fsearch_statusbar.ui:240
+msgid "Updating Database…"
+msgstr "تحديث قاعدة البيانات"
+
+#: src/fsearch_overlay.ui:185 src/fsearch_overlay.ui:380
+msgid "This may take a while."
+msgstr "هذا قد يستغرق بعض الوقت."
+
+#: src/fsearch_overlay.ui:201
+msgid "page2"
+msgstr "صفحة 2"
+
+#: src/fsearch_overlay.ui:239
+msgid "Empty Query"
+msgstr "استعلام فارغ"
+
+#: src/fsearch_overlay.ui:254
+msgid "Press <b>Ctrl + F</b> and start typing"
+msgstr "اضغط على <b>Ctrl + F</b> وابدأ في الكتابة"
+
+#: src/fsearch_overlay.ui:302
+msgid "No Results Found"
+msgstr "لم يتم العثور على نتائج"
+
+#: src/fsearch_overlay.ui:317
+msgid "Try a different search"
+msgstr "جرب بحثًا مختلفًا"
+
+#: src/fsearch_overlay.ui:365
+#, fuzzy
+msgid "Sorting results…"
+msgstr "فرز..."
+
+#: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
+msgid "Preferences"
+msgstr "التفضيلات"
+
+#: src/fsearch_preferences.ui:112
+msgid "Enable dark theme"
+msgstr "تفعيل المظهر الداكن"
+
+#: src/fsearch_preferences.ui:127
+msgid "Enable client-side decorations (requires restart)"
+msgstr "تمكين زخارف النافذة من جانب العميل (يتطلب إعادة التشغيل)"
+
+#: src/fsearch_preferences.ui:142
+msgid "Use binary units instead of decimal units"
+msgstr "استخدام الوحدات الثنائية بدلاً من الوحدات العشرية"
+
+#: src/fsearch_preferences.ui:158
+msgid "Remember window size"
+msgstr "تذكر حجم النافذة"
+
+#: src/fsearch_preferences.ui:195
+msgid "with keyboard shortcuts or menu entries"
+msgstr "باستخدام اختصارات لوحة المفاتيح أو إدخالات القائمة"
+
+#: src/fsearch_preferences.ui:210
+msgid "with double click"
+msgstr "مع النقر المزدوج"
+
+#: src/fsearch_preferences.ui:238
+msgid "Behaviour after successfully opening a file:"
+msgstr "التصرف بعد فتح الملف بنجاح:"
+
+#: src/fsearch_preferences.ui:254
+msgid "Nothing"
+msgstr "لا شيء"
+
+#: src/fsearch_preferences.ui:255
+msgid "Minimize"
+msgstr "تصغير"
+
+#: src/fsearch_preferences.ui:256
+msgid "Close"
+msgstr "إغلاق"
+
+#: src/fsearch_preferences.ui:282
+msgid "General:"
+msgstr "عام:"
+
+#: src/fsearch_preferences.ui:317
+msgid "Show highlighted search terms"
+msgstr "إظهار مصطلحات البحث المميزة"
+
+#: src/fsearch_preferences.ui:333
+msgid "Show tooltips"
+msgstr "عرض التلميحات"
+
+#: src/fsearch_preferences.ui:348
+msgid "Show icons in name column"
+msgstr "إظهار الرموز في عمود الاسم"
+
+#: src/fsearch_preferences.ui:363
+msgid "Remember column configuration"
+msgstr "تذكر ترتيب العمود"
+
+#: src/fsearch_preferences.ui:378
+msgid "Remember sort order"
+msgstr "تذكر ترتيب الفرز"
+
+#: src/fsearch_preferences.ui:393
+msgid "Open path with double click in path column"
+msgstr "افتح المسار بالنقر المزدوج في عمود المسار"
+
+#: src/fsearch_preferences.ui:408
+msgid "Single click to open"
+msgstr "نقرة واحدة لفتح"
+
+#: src/fsearch_preferences.ui:429
+msgid "Results:"
+msgstr "النتائج:"
+
+#: src/fsearch_preferences.ui:470
+msgid "Show database indexing status"
+msgstr "إظهار حالة فهرسة قاعدة البيانات"
+
+#: src/fsearch_preferences.ui:491
+msgid "Statusbar:"
+msgstr "شريط الحالة:"
+
+#: src/fsearch_preferences.ui:532
+msgid "Show warning dialogs when:"
+msgstr "إظهار نوافذ التحذير عندما:"
+
+#: src/fsearch_preferences.ui:542
+msgid "file / folder failed to open"
+msgstr "فشل فتح الملف / المجلد"
+
+#: src/fsearch_preferences.ui:565
+msgid "Dialogs:"
+msgstr "نوافذ الحوارات:"
+
+#: src/fsearch_preferences.ui:590
+msgid "Interface"
+msgstr "الواجهة"
+
+#: src/fsearch_preferences.ui:609
+msgid "Search in path when query contains path separators"
+msgstr "البحث في المسار عندما يحتوي الاستعلام على فواصل المسارات"
+
+#: src/fsearch_preferences.ui:624
+msgid "Search as you type"
+msgstr "البحث أثناء الكتابة"
+
+#: src/fsearch_preferences.ui:639
+msgid "Hide results when search is empty"
+msgstr "إخفاء النتائج عندما يكون البحث فارغًا"
+
+#: src/fsearch_preferences.ui:654
+#, fuzzy
+msgid ""
+"Match case when query contains at least one upper case\n"
+"                      character\n"
+"                    "
+msgstr "طابق الحالة عندما يحتوي الاستعلام على حرف كبير واحد على الأقل"
+
+#: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
+msgid "Search"
+msgstr "بحث"
+
+#: src/fsearch_preferences.ui:697
+msgid "Update database on start"
+msgstr "تحديث قاعدة البيانات عند التشغيل"
+
+#: src/fsearch_preferences.ui:717
+#, fuzzy
+msgid "Update every"
+msgstr "تحديث"
+
+#: src/fsearch_preferences.ui:739
+msgid "0"
+msgstr ""
+
+#: src/fsearch_preferences.ui:756
+msgid "hour(s) and"
+msgstr ""
+
+#: src/fsearch_preferences.ui:768
+msgid "30"
+msgstr ""
+
+#: src/fsearch_preferences.ui:786
+msgid "minute(s)"
+msgstr ""
+
+#: src/fsearch_preferences.ui:858
+#, fuzzy
+msgid ""
+"Add path to be included in database\n"
+"                                "
+msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
+
+#: src/fsearch_preferences.ui:875 src/fsearch_preferences.ui:974
+msgid "Remove selected path"
+msgstr "إزالة المسار المحدد"
+
+#: src/fsearch_preferences.ui:901
+msgid "Include"
+msgstr "تضمين"
+
+#: src/fsearch_preferences.ui:958
+msgid "Add path to be excluded from database"
+msgstr "اضف مسار ليتم استبعاده من قاعدة البيانات"
+
+#: src/fsearch_preferences.ui:1010 src/fsearch_preferences.ui:1023
+msgid "Supports wildcards. Multiple entries must be separated by ';'"
+msgstr "دعم أحرف البدل. يجب فصل الإدخالات المتعددة بـ \";\""
+
+#: src/fsearch_preferences.ui:1011
+msgid "Exclude files:"
+msgstr "استبعاد ملفات:"
+
+#: src/fsearch_preferences.ui:1024
+msgid "e.g. \".git;*.tmp\""
+msgstr "مثال: الملفات من نوع \".git؛ *. tmp\""
+
+#: src/fsearch_preferences.ui:1041
+msgid "Exclude hidden files and folders"
+msgstr "استبعاد الملفات والمجلدات المخفية"
+
+#: src/fsearch_preferences.ui:1063
+msgid "Exclude"
+msgstr "استبعاد"
+
+#: src/fsearch_preferences.ui:1086
+msgid "Database"
+msgstr "قاعدة البيانات"
+
+#: src/fsearch_preferences.ui:1118
+msgid ""
+"<b>Enable dark theme:</b>\n"
+"\n"
+"If enabled, the system theme is asked to use a darker styling for the "
+"application <i>(i.e. dark UI elements on bright text)</i>.\n"
+"\n"
+"Note that not all system themes provide such a darker variant, therefore "
+"enabling this setting might not have an effect."
+msgstr ""
+"<b> تمكين المظهر الداكن: </b>\n"
+"\n"
+"في حالة التمكين ، يُطلب من سمة النظام استخدام تصميم أغمق للتطبيق <i> (أي "
+"عناصر واجهة مستخدم داكنة على نص ساطع) </i>.\n"
+"\n"
+"لاحظ أنه ليست كل سمات النظام توفر مثل هذا المتغير الغامق ، وبالتالي فإن "
+"تمكين هذا الإعداد قد لا يكون له تأثير."
+
+#: src/fsearch_preferences.ui:1136
+msgid ""
+"<b>Enable client-side decorations:</b>\n"
+"\n"
+"If enabled, the search entry and main menu are displayed in the window title "
+"bar.\n"
+"\n"
+"If disabled, the main menu is displayed as a menu bar with the search entry "
+"below it.\n"
+"This resembles a more traditonal UI layout and takes a little bit more space."
+msgstr ""
+"<b> تمكين الزخارف من جانب العميل: </b>\n"
+"\n"
+"في حالة التمكين ، يتم عرض إدخال البحث والقائمة الرئيسية في شريط عنوان "
+"النافذة.\n"
+"\n"
+"في حالة التعطيل ، يتم عرض القائمة الرئيسية كشريط قوائم مع إدخال البحث "
+"أسفلها.\n"
+"هذا يشبه تصميم واجهة مستخدم أكثر تقليدية ويأخذ مساحة أكبر قليلاً."
+
+#: src/fsearch_preferences.ui:1156
+msgid ""
+"<b>Use binary units instead of decimal units:</b>\n"
+"\n"
+"This settings controls how file sizes are displayed.\n"
+"\n"
+"\t• <b>Binary units:</b> This refers to binary IEC prefixes <i>(e.g. 1 KiB = "
+"1024 bytes)</i>\n"
+"\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
+"= 1000 bytes)</i>"
+msgstr ""
+"<b> استخدم الوحدات الثنائية بدلاً من الوحدات العشرية: </b>\n"
+"\n"
+"تتحكم هذه الإعدادات في كيفية عرض أحجام الملفات.\n"
+"\n"
+"• <b> الوحدات الثنائية: </b> يشير هذا إلى بادئات IEC الثنائية <i> (مثل 1 "
+"كيلو بايت = 1024 بايت) </i>\n"
+"• <b> الوحدات العشرية: </b> يشير هذا إلى بادئات النظام الدولي للوحدات "
+"العشرية <i> (على سبيل المثال ، 1 كيلو بايت = 1000 بايت) </i>"
+
+#: src/fsearch_preferences.ui:1176
+msgid ""
+"<b>Remember window size:</b>\n"
+"\n"
+"If enabled, the window size from the previous session will be restored when "
+"you open an FSearch window.\n"
+"\n"
+"Note that some window managers ignore this request and force the window to "
+"have a different size."
+msgstr ""
+"<b> تذكر حجم النافذة: </b>\n"
+"\n"
+"في حالة التمكين ، ستتم استعادة حجم النافذة من الجلسة السابقة عند فتح نافذة "
+"FSearch.\n"
+"\n"
+"لاحظ أن بعض مديري النوافذ يتجاهلون هذا الطلب ويفرضون أن يكون للنافذة حجم "
+"مختلف."
+
+#: src/fsearch_preferences.ui:1195
+#, fuzzy
+msgid ""
+"<b>Behaviour after successfully opening a file:</b>\n"
+"\n"
+"When a file/folder was succesfully opened one of the following actions can "
+"be performed:\n"
+"\t• <b>Nothing:</b> Nothing happens.\n"
+"\t• <b>Minimize:</b> The currently selected FSearch window becomes "
+"minimized. \n"
+"\t\tNote that not all systems allow windows to be minimized.\n"
+"\t• <b>Close:</b> Quit FSearch.\n"
+"\n"
+"You can configure if those actions should be triggered when the file was "
+"opened with\n"
+"\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
+"\t• <b>mouse click</b>"
+msgstr ""
+"<b> السلوك بعد فتح الملف بنجاح: </b>\n"
+"\n"
+"عند فتح ملف / مجلد بنجاح ، يمكن تنفيذ أحد الإجراءات التالية:\n"
+"\n"
+"• <b> لا شيء: </b> لم يحدث شيء.\n"
+"• <b> تصغير: </b> يتم تصغير نافذة FSearch المحددة حاليًا.\n"
+"لاحظ أنه ليست كل الأنظمة تسمح بتصغير النوافذ.\n"
+"• <b> إغلاق: </b> قم بإنهاء FSearch.\n"
+"\n"
+"يمكنك تكوين ما إذا كان يجب تشغيل هذه الإجراءات عند فتح الملف باستخدام\n"
+"\n"
+"• <b> اختصارات لوحة المفاتيح أو إدخالات القائمة </b> و / أو\n"
+"• <b> النقر بالماوس </b>"
+
+#: src/fsearch_preferences.ui:1220
+msgid ""
+"<b>Show highlighted search terms:</b>\n"
+"\n"
+"If enabled, the search terms will be highlighted in the results view. For "
+"example when you search for \"foo\" all appearances of <i>foo</i> in file/"
+"folder names will be highlighted with bold characters:\n"
+"\n"
+"\t\t<b>foo</b>bar.txt\n"
+"\t\tfile.<b>foo</b>\n"
+"\n"
+"This also works for regular expressions and wildcard expressions starting or "
+"ending with an asterisk. "
+msgstr ""
+"<b> إظهار مصطلحات البحث المميزة: </b>\n"
+"\n"
+"في حالة التمكين ، سيتم تمييز مصطلحات البحث في عرض النتائج. على سبيل المثال ، "
+"عندما تبحث عن \"foo\" ، سيتم تمييز جميع مظاهر <i> foo </i> في أسماء "
+"الملفات / المجلدات بأحرف غامقة:\n"
+"\n"
+"<b>foo</b> bar.txt\n"
+"ملف. <b>foo</b>\n"
+"\n"
+"يعمل هذا أيضًا مع التعبيرات العادية وتعبيرات أحرف البدل التي تبدأ بعلامة "
+"النجمة أو تنتهي بها."
+
+#: src/fsearch_preferences.ui:1242
+msgid ""
+"<b>Show tooltips:</b>\n"
+"\n"
+"If enabled, the results view will show the full path of the focused file/"
+"folder in a small tooltip window."
+msgstr ""
+"<b> إظهار تلميحات الأدوات: </b>\n"
+"\n"
+"في حالة التمكين ، سيعرض عرض النتائج المسار الكامل للملف / المجلد المركّز في "
+"نافذة تلميح أداة صغيرة."
+
+#: src/fsearch_preferences.ui:1259
+msgid ""
+"<b>Show icons in name column:</b>\n"
+"\n"
+"If enabled, file/folder icons will be shown in the name column."
+msgstr ""
+"<b> إظهار الرموز في عمود الاسم: </b>\n"
+"\n"
+"في حالة التمكين ، ستظهر أيقونات الملف / المجلد في عمود الاسم."
+
+#: src/fsearch_preferences.ui:1276
+msgid ""
+"<b>Remember column configuration:</b>\n"
+"\n"
+"If enabled, the column configuration of the results view from the previous "
+"session will be restored when you open an FSearch window. This includes the "
+"size and visibility of all columns."
+msgstr ""
+"<b> تذكر ترتيب العمود: </b>\n"
+"\n"
+"في حالة التمكين ، سيتم استعادة تكوين العمود الخاص بعرض النتائج من الجلسة "
+"السابقة عند فتح نافذة FSearch. يتضمن ذلك حجم جميع الأعمدة وإمكانية رؤيتها."
+
+#: src/fsearch_preferences.ui:1293
+msgid ""
+"<b>Remember sort order:</b>\n"
+"\n"
+"If enabled, the sort order of the results view from the previous session "
+"will be restored when you open an FSearch window."
+msgstr ""
+"<b> تذكر ترتيب الفرز: </b>\n"
+"\n"
+"في حالة التمكين ، سيتم استعادة ترتيب عرض النتائج من الجلسة السابقة عند فتح "
+"نافذة FSearch."
+
+#: src/fsearch_preferences.ui:1310
+msgid ""
+"<b>Open path with double click in path column:</b>\n"
+"\n"
+"If enabled, double clicking in the path column will open the selected path."
+msgstr ""
+"<b> افتح المسار بالنقر المزدوج في عمود المسار: </b>\n"
+"\n"
+"في حالة التمكين ، سيؤدي النقر المزدوج في عمود المسار إلى فتح المسار المحدد."
+
+#: src/fsearch_preferences.ui:1327
+msgid ""
+"<b>Single click to open:</b>\n"
+"\n"
+"If enabled, a single click will open the selected file/folder. If you only "
+"want to select a file/folder while this setting is active, you need to a "
+"hold <i>Ctrl</i> at the same time while clicking the file/folder."
+msgstr ""
+"<b> نقرة واحدة للفتح: </b>\n"
+"\n"
+"في حالة التمكين ، سيتم فتح الملف / المجلد المحدد بنقرة واحدة. إذا كنت تريد "
+"فقط تحديد ملف / مجلد أثناء تنشيط هذا الإعداد ، فستحتاج إلى الضغط باستمرار "
+"على <i> Ctrl </i> في نفس الوقت أثناء النقر فوق الملف / المجلد."
+
+#: src/fsearch_preferences.ui:1344
+msgid ""
+"<b>Show database indexing status:</b>\n"
+"\n"
+"If enabled, the path that is currently being indexed is displayed in the "
+"statusbar."
+msgstr ""
+"<b> إظهار حالة فهرسة قاعدة البيانات: </b>\n"
+"\n"
+"في حالة التمكين ، يتم عرض المسار الذي تتم فهرسته حاليًا في شريط الحالة."
+
+#: src/fsearch_preferences.ui:1361
+#, fuzzy
+msgid ""
+"<b>Show warning dialogs:</b>\n"
+"\n"
+"If enabled, a warning dialog is displayed when:\n"
+"\n"
+"\t•  a file or folder failed to open\n"
+msgstr ""
+"<b> إظهار مربعات حوار التحذير: </b>\n"
+"\n"
+"في حالة التمكين ، يتم عرض مربع حوار تحذير عندما:\n"
+"\n"
+"• فشل فتح ملف أو مجلد"
+
+#: src/fsearch_preferences.ui:1381
+msgid ""
+"<b>Search in path when query contains path separators:</b>\n"
+"\n"
+"If enabled, search terms containing path separators (i.e. \"/\") will be "
+"automatically matched against the full path of a file or folder."
+msgstr ""
+"<b> البحث في المسار عندما يحتوي الاستعلام على فواصل مسار: </b>\n"
+"\n"
+"في حالة التمكين ، ستتم مطابقة مصطلحات البحث التي تحتوي على فواصل المسارات "
+"(أي \"/\") تلقائيًا مع المسار الكامل لملف أو مجلد."
+
+#: src/fsearch_preferences.ui:1398
+msgid ""
+"<b>Match case when query contains at least one upper case character:</b>\n"
+"\n"
+"If enabled, search terms containing at least one upper case character will "
+"trigger a case-sensitive search. This means a search term like <i>Foo</i> "
+"will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
+msgstr ""
+"<b> حالة المطابقة عندما يحتوي طلب البحث على حرف كبير واحد على الأقل: </b>\n"
+"\n"
+"في حالة التمكين ، ستؤدي مصطلحات البحث التي تحتوي على حرف واحد كبير على الأقل "
+"إلى بدء بحث حساس لحالة الأحرف. هذا يعني أن عبارة بحث مثل <i> Foo </i> ستطابق "
+"<i> FooBar.txt </i> وليس <i> foobar.txt </i>."
+
+#: src/fsearch_preferences.ui:1415
+msgid ""
+"<b>Hide results when search is empty:</b>\n"
+"\n"
+"If enabled, no search results are displayed when the search entry is empty.\n"
+"\n"
+"If disabled, all files and folders will be displayed when the search entry "
+"is empty."
+msgstr ""
+"<b> إخفاء النتائج عندما يكون البحث فارغًا: </b>\n"
+"\n"
+"في حالة التمكين ، لا يتم عرض أي نتائج بحث عندما يكون إدخال البحث فارغًا.\n"
+"\n"
+"إذا تم تعطيله ، فسيتم عرض جميع الملفات والمجلدات عندما يكون إدخال البحث "
+"فارغًا."
+
+#: src/fsearch_preferences.ui:1434
+msgid ""
+"<b>Search as you type:</b>\n"
+"\n"
+"If enabled, the search is automatically updated with every keystroke.\n"
+"\n"
+"If disabled, the search is only updated when you hit <i>Enter</i> or press "
+"the search button. "
+msgstr ""
+"<b> ابحث أثناء الكتابة: </b>\n"
+"\n"
+"في حالة التمكين ، يتم تحديث البحث تلقائيًا مع كل ضغطة مفتاح.\n"
+"\n"
+"في حالة التعطيل ، يتم تحديث البحث فقط عند الضغط على <i> Enter </i> أو الضغط "
+"على زر البحث."
+
+#: src/fsearch_preferences.ui:1453
+msgid ""
+"<b>Update database on start:</b>\n"
+"\n"
+"If enabled, the database will be updated automatically in the background "
+"when you start FSearch."
+msgstr ""
+"<b> تحديث قاعدة البيانات عند البدء: </b>\n"
+"\n"
+"في حالة التمكين ، سيتم تحديث قاعدة البيانات تلقائيًا في الخلفية عند بدء "
+"FSearch."
+
+#: src/fsearch_preferences.ui:1470
+#, fuzzy
+msgid ""
+"<b>Included folders:</b>\n"
+"\n"
+"                      This list contains all folders you want to include in "
+"the database.\n"
+"\n"
+"                      • <b>Active:</b> If enabled, the path will included in "
+"the database to be searched in.\n"
+"                      • <b>Path:</b> The full path to be included.\n"
+"                      • <b>Update:</b> This setting is useful if you want to "
+"exclude certain paths from\n"
+"                      being\n"
+"                      updated <i>(e.g. a path to a slow USB drive which "
+"doesn't change often)</i>\n"
+"                    "
+msgstr ""
+"<b> المجلدات المضمنة: </b>\n"
+"\n"
+"تحتوي هذه القائمة على جميع المجلدات التي تريد تضمينها في قاعدة البيانات.\n"
+"\n"
+"• <b> نشط: </b> في حالة التمكين ، سيتم تضمين المسار في قاعدة البيانات التي "
+"سيتم البحث فيها.\n"
+"• <b> المسار: </b> المسار الكامل المطلوب تضمينه.\n"
+"• <b> تحديث: </b> هذا الإعداد مفيد إذا كنت تريد استبعاد مسارات معينة من "
+"الوجود\n"
+"تحديث <i> (على سبيل المثال ، مسار إلى محرك أقراص USB بطيء لا يتغير كثيرًا) </"
+"i>"
+
+#: src/fsearch_preferences.ui:1494
+#, fuzzy
+msgid ""
+"<b>Add folder to database:</b>\n"
+"\n"
+"                      This button opens a dialog where you can select a "
+"folder you want to include in the database for\n"
+"                      searching.\n"
+"                    "
+msgstr ""
+"<b> إضافة مجلد إلى قاعدة البيانات: </b>\n"
+"\n"
+"يفتح هذا الزر مربع حوار حيث يمكنك تحديد المجلد الذي تريد تضمينه في قاعدة "
+"البيانات للبحث."
+
+#: src/fsearch_preferences.ui:1513
+#, fuzzy
+msgid ""
+"<b>Remove selected row:</b>\n"
+"\n"
+"                      This removes the selected folder from the list of "
+"included folders.\n"
+"                    "
+msgstr ""
+"<b> إزالة الصف المحدد: </b>\n"
+"\n"
+"يؤدي هذا إلى إزالة المجلد المحدد من قائمة المجلدات المضمنة."
+
+#: src/fsearch_preferences.ui:1531
+msgid ""
+"<b>Excluded folders:</b>\n"
+"\n"
+"This list contains all folders you want to exclude from the database.\n"
+"\n"
+"\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
+"\t\t and can't be searched in.\n"
+"\t• <b>Path:</b> The full path to be excluded."
+msgstr ""
+"<b> المجلدات المستبعدة: </b>\n"
+"\n"
+"تحتوي هذه القائمة على جميع المجلدات التي تريد استبعادها من قاعدة البيانات.\n"
+"\n"
+"• <b> نشط: </b> إذا تم تمكينه ، فسيتم استبعاد المسار من قاعدة البيانات\n"
+"ولا يمكن البحث فيها.\n"
+"• <b> المسار: </b> المسار الكامل المطلوب استبعاده."
+
+#: src/fsearch_preferences.ui:1552
+msgid ""
+"<b>Exclude folder from database:</b>\n"
+"\n"
+"This button opens a dialog where you can select a folder you want to exclude "
+"from the database."
+msgstr ""
+"<b> استبعاد مجلد من قاعدة البيانات: </b>\n"
+"\n"
+"يفتح هذا الزر نافذة حوار حيث يمكنك تحديد المجلد الذي تريد استبعاده من قاعدة "
+"البيانات."
+
+#: src/fsearch_preferences.ui:1569
+msgid ""
+"<b>Remove selected row:</b>\n"
+"\n"
+"This removes the selected folder from the list of excluded folders."
+msgstr ""
+"<b> إزالة صف محدد: </b>\n"
+"\n"
+"يؤدي هذا إلى إزالة المجلد المحدد من قائمة المجلدات المستبعدة."
+
+#: src/fsearch_preferences.ui:1586
+msgid ""
+"<b>Exclude files and folders from database:</b>\n"
+"\n"
+"This is a semi-colon separated list of files (or folders) you want to "
+"exclude from the database. For example <i>.git;.cache;*.swp</i> will exclude "
+"all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
+"end with <i>.swp</i>."
+msgstr ""
+"<b> استبعاد الملفات والمجلدات من قاعدة البيانات: </b>\n"
+"\n"
+"هذه قائمة من الملفات (أو المجلدات) مفصولة بفاصلة منقوطة تريد استبعادها من "
+"قاعدة البيانات. على سبيل المثال ، سيستبعد <i> .git؛ .cache؛ *. swp </i> جميع "
+"الملفات أو المجلدات التي تسمى إما <i> .git </i> أو <i> .cache </i> أو تنتهي "
+"بـ <i> .swp </i>."
+
+#: src/fsearch_preferences.ui:1603
+msgid ""
+"<b>Exclude hidden files and folders:</b>\n"
+"\n"
+"If enabled, hidden files and folders will be excluded from the database "
+"<i>(i.e. all files or folders which start with a dot character)</i>."
+msgstr ""
+"<b> استبعاد الملفات والمجلدات المخفية: </b>\n"
+"\n"
+"في حالة التمكين ، سيتم استبعاد الملفات والمجلدات المخفية من قاعدة البيانات "
+"<i> (أي جميع الملفات أو المجلدات التي تبدأ بحرف نقطة) </i>."
+
+#: src/fsearch_preferences.ui:1620
+msgid "Focus a setting to get a detailed description of what it does."
+msgstr "ركز على أحد الإعدادات للحصول على وصف مفصل لما يفعله."
+
+#: src/fsearch_preferences.ui:1633
+msgid ""
+"<b>Periodically update database at a specific time interval:</b>\n"
+"\n"
+"If enabled and as long as FSearch is running, the database will be updated "
+"periodically with the given time interval.\n"
+"\n"
+"If you want to update the database in the background, even when FSearch is "
+"not running, you should use tools like cron or systemd timers to "
+"periodically trigger the update with:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
+msgstr ""
+
+#: src/fsearch_preferences.ui:1656
+msgid "Help"
+msgstr "مساعدة"
+
+#: src/fsearch_statusbar.ui:43
+msgid "Number of Search Results"
+msgstr "عدد نتائج البحث"
+
+#: src/fsearch_statusbar.ui:44
+msgid "0 Items"
+msgstr "لا نتائج"
+
+#: src/fsearch_statusbar.ui:81
+msgid "Index:"
+msgstr "فهرس:"
+
+#: src/fsearch_statusbar.ui:156
+msgid "Number of selected folders"
+msgstr "عدد المجلدات المحددة"
+
+#: src/fsearch_statusbar.ui:157 src/fsearch_statusbar.ui:182
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch_statusbar.ui:181
+msgid "Number of selected files"
+msgstr "عدد الملفات المحددة"
+
+#: src/fsearch_statusbar.ui:256 src/fsearch_window.ui:102
+msgid "Cancel database update"
+msgstr "إلغاء تحديث قاعدة البيانات"
+
+#: src/fsearch_statusbar.ui:297
+msgid "Number of database items"
+msgstr "عدد عناصر قاعدة البيانات"
+
+#: src/fsearch_statusbar.ui:298
+msgid "(empty)"
+msgstr "(فارغ)"
+
+#: src/fsearch_statusbar.ui:335
+msgid ""
+"Search term contains upper case characters.\n"
+"<b>Match Case</b> was temporarily activated for this term."
+msgstr ""
+"مصطلح البحث يحتوي على أحرف كبيرة.\n"
+"تم تنشيط <b> Match Case </b> مؤقتًا لهذا المصطلح."
+
+#: src/fsearch_statusbar.ui:366 src/fsearch_statusbar.ui:419
+msgid "CASE"
+msgstr "حالة"
+
+#: src/fsearch_statusbar.ui:442
+msgid ""
+"Search term contains path separators.\n"
+"<b>Search in Path</b> was temporarily activated for this term."
+msgstr ""
+"مصطلح البحث يحتوي على فواصل المسار.\n"
+"تم تنشيط <b> البحث في المسار </b> مؤقتًا لهذا المصطلح."
+
+#: src/fsearch_statusbar.ui:473 src/fsearch_statusbar.ui:526
+msgid "PATH"
+msgstr "مسار"
+
+#: src/fsearch_statusbar.ui:579
+msgid "REGEX"
+msgstr "تعابير منطقية"
+
+#: src/fsearch_window.ui:68
+msgid "New window"
+msgstr "نافذة جديدة"
+
+#: src/fsearch_window.ui:88
+msgid "Update database"
+msgstr "تحديث قاعدة البيانات"
+
+#: src/fsearch_window.ui:143 src/menus.ui:112
+msgid "Search in Path"
+msgstr "البحث في المسار"
+
+#: src/fsearch_window.ui:157 src/menus.ui:116
+msgid "Match Case"
+msgstr "طابق حالة الأحرف"
+
+#: src/fsearch_window.ui:171 src/menus.ui:120
+msgid "Enable RegEx"
+msgstr "تمكين التعابير المنطقية (RegEx)"
+
+#: src/fsearch_window.ui:196 src/menus.ui:95
+msgid "Show Statusbar"
+msgstr "أظهر شريط الحالة"
+
+#: src/fsearch_window.ui:210 src/menus.ui:99
+msgid "Show Filter"
+msgstr "أظهر التصفية"
+
+#: src/fsearch_window.ui:224 src/menus.ui:103
+msgid "Show Search Button"
+msgstr "اظهر زر البحث"
+
+#: src/fsearch_window.ui:275 src/menus.ui:129
+msgid "About"
+msgstr "حول"
+
+#: src/fsearch_window.ui:300 src/menus.ui:47
+msgid "Quit"
+msgstr "خروج"
+
+#: src/fsearch_window.ui:408
+msgid "Search…"
+msgstr "بحث"
+
+#: src/fsearch_window.ui:430
+msgid "Select a Filter"
+msgstr "حدد عامل تصفية"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -346,781 +1126,6 @@ msgstr "نسخ مسار ملف"
 #: src/menus.ui:194
 msgid "Move to _Trash"
 msgstr "ارسال الى سلة المحذوفات"
-
-#: src/overlay.ui:43
-msgid "Empty Database"
-msgstr "قاعدة بيانات فارغة"
-
-#: src/overlay.ui:59
-#, fuzzy
-msgid "Add folders"
-msgstr "مجلدات"
-
-#: src/overlay.ui:76 src/overlay.ui:271 src/statusbar.glade:273
-msgid "page0"
-msgstr "صفحة 0"
-
-#: src/overlay.ui:107
-msgid "Loading Database…"
-msgstr "تحميل قاعدة البيانات..."
-
-#: src/overlay.ui:122
-msgid "This won't take long."
-msgstr "هذا لن يستغرق وقتًا طويلاً."
-
-#: src/overlay.ui:138 src/overlay.ui:333 src/statusbar.glade:309
-msgid "page1"
-msgstr "صفحة 1"
-
-#: src/overlay.ui:170 src/statusbar.glade:240
-msgid "Updating Database…"
-msgstr "تحديث قاعدة البيانات"
-
-#: src/overlay.ui:185 src/overlay.ui:380
-msgid "This may take a while."
-msgstr "هذا قد يستغرق بعض الوقت."
-
-#: src/overlay.ui:201
-msgid "page2"
-msgstr "صفحة 2"
-
-#: src/overlay.ui:239
-msgid "Empty Query"
-msgstr "استعلام فارغ"
-
-#: src/overlay.ui:254
-msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "اضغط على <b>Ctrl + F</b> وابدأ في الكتابة"
-
-#: src/overlay.ui:302
-msgid "No Results Found"
-msgstr "لم يتم العثور على نتائج"
-
-#: src/overlay.ui:317
-msgid "Try a different search"
-msgstr "جرب بحثًا مختلفًا"
-
-#: src/overlay.ui:365
-#, fuzzy
-#| msgid "Sorting..."
-msgid "Sorting results…"
-msgstr "فرز..."
-
-#: src/preferences.ui:112
-msgid "Enable dark theme"
-msgstr "تفعيل المظهر الداكن"
-
-#: src/preferences.ui:127
-msgid "Enable client-side decorations (requires restart)"
-msgstr "تمكين زخارف النافذة من جانب العميل (يتطلب إعادة التشغيل)"
-
-#: src/preferences.ui:142
-msgid "Use binary units instead of decimal units"
-msgstr "استخدام الوحدات الثنائية بدلاً من الوحدات العشرية"
-
-#: src/preferences.ui:158
-msgid "Remember window size"
-msgstr "تذكر حجم النافذة"
-
-#: src/preferences.ui:195
-msgid "with keyboard shortcuts or menu entries"
-msgstr "باستخدام اختصارات لوحة المفاتيح أو إدخالات القائمة"
-
-#: src/preferences.ui:210
-msgid "with double click"
-msgstr "مع النقر المزدوج"
-
-#: src/preferences.ui:238
-msgid "Behaviour after successfully opening a file:"
-msgstr "التصرف بعد فتح الملف بنجاح:"
-
-#: src/preferences.ui:254
-msgid "Nothing"
-msgstr "لا شيء"
-
-#: src/preferences.ui:255
-msgid "Minimize"
-msgstr "تصغير"
-
-#: src/preferences.ui:256
-msgid "Close"
-msgstr "إغلاق"
-
-#: src/preferences.ui:282
-msgid "General:"
-msgstr "عام:"
-
-#: src/preferences.ui:317
-msgid "Show highlighted search terms"
-msgstr "إظهار مصطلحات البحث المميزة"
-
-#: src/preferences.ui:333
-msgid "Show tooltips"
-msgstr "عرض التلميحات"
-
-#: src/preferences.ui:348
-msgid "Show icons in name column"
-msgstr "إظهار الرموز في عمود الاسم"
-
-#: src/preferences.ui:363
-msgid "Remember column configuration"
-msgstr "تذكر ترتيب العمود"
-
-#: src/preferences.ui:378
-msgid "Remember sort order"
-msgstr "تذكر ترتيب الفرز"
-
-#: src/preferences.ui:393
-msgid "Open path with double click in path column"
-msgstr "افتح المسار بالنقر المزدوج في عمود المسار"
-
-#: src/preferences.ui:408
-msgid "Single click to open"
-msgstr "نقرة واحدة لفتح"
-
-#: src/preferences.ui:429
-msgid "Results:"
-msgstr "النتائج:"
-
-#: src/preferences.ui:470
-msgid "Show database indexing status"
-msgstr "إظهار حالة فهرسة قاعدة البيانات"
-
-#: src/preferences.ui:491
-msgid "Statusbar:"
-msgstr "شريط الحالة:"
-
-#: src/preferences.ui:532
-msgid "Show warning dialogs when:"
-msgstr "إظهار نوافذ التحذير عندما:"
-
-#: src/preferences.ui:542
-msgid "file / folder failed to open"
-msgstr "فشل فتح الملف / المجلد"
-
-#: src/preferences.ui:565
-msgid "Dialogs:"
-msgstr "نوافذ الحوارات:"
-
-#: src/preferences.ui:590
-msgid "Interface"
-msgstr "الواجهة"
-
-#: src/preferences.ui:609
-msgid "Search in path when query contains path separators"
-msgstr "البحث في المسار عندما يحتوي الاستعلام على فواصل المسارات"
-
-#: src/preferences.ui:624
-msgid "Search as you type"
-msgstr "البحث أثناء الكتابة"
-
-#: src/preferences.ui:639
-msgid "Hide results when search is empty"
-msgstr "إخفاء النتائج عندما يكون البحث فارغًا"
-
-#: src/preferences.ui:654
-msgid "Match case when query contains at least one upper case character"
-msgstr "طابق الحالة عندما يحتوي الاستعلام على حرف كبير واحد على الأقل"
-
-#: src/preferences.ui:695
-msgid "Update database on start"
-msgstr "تحديث قاعدة البيانات عند التشغيل"
-
-#: src/preferences.ui:715
-#, fuzzy
-#| msgid "Update"
-msgid "Update every"
-msgstr "تحديث"
-
-#: src/preferences.ui:737
-msgid "0"
-msgstr ""
-
-#: src/preferences.ui:754
-msgid "hour(s) and"
-msgstr ""
-
-#: src/preferences.ui:766
-msgid "30"
-msgstr ""
-
-#: src/preferences.ui:784
-msgid "minute(s)"
-msgstr ""
-
-#: src/preferences.ui:856
-#, fuzzy
-#| msgid "Add path to be included in database"
-msgid ""
-"Add path to be included in database\n"
-"                                "
-msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
-
-#: src/preferences.ui:873 src/preferences.ui:972
-msgid "Remove selected path"
-msgstr "إزالة المسار المحدد"
-
-#: src/preferences.ui:899
-msgid "Include"
-msgstr "تضمين"
-
-#: src/preferences.ui:956
-msgid "Add path to be excluded from database"
-msgstr "اضف مسار ليتم استبعاده من قاعدة البيانات"
-
-#: src/preferences.ui:1008 src/preferences.ui:1021
-msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "دعم أحرف البدل. يجب فصل الإدخالات المتعددة بـ \";\""
-
-#: src/preferences.ui:1009
-msgid "Exclude files:"
-msgstr "استبعاد ملفات:"
-
-#: src/preferences.ui:1022
-msgid "e.g. \".git;*.tmp\""
-msgstr "مثال: الملفات من نوع \".git؛ *. tmp\""
-
-#: src/preferences.ui:1039
-msgid "Exclude hidden files and folders"
-msgstr "استبعاد الملفات والمجلدات المخفية"
-
-#: src/preferences.ui:1061
-msgid "Exclude"
-msgstr "استبعاد"
-
-#: src/preferences.ui:1084
-msgid "Database"
-msgstr "قاعدة البيانات"
-
-#: src/preferences.ui:1116
-msgid ""
-"<b>Enable dark theme:</b>\n"
-"\n"
-"If enabled, the system theme is asked to use a darker styling for the "
-"application <i>(i.e. dark UI elements on bright text)</i>.\n"
-"\n"
-"Note that not all system themes provide such a darker variant, therefore "
-"enabling this setting might not have an effect."
-msgstr ""
-"<b> تمكين المظهر الداكن: </b>\n"
-"\n"
-"في حالة التمكين ، يُطلب من سمة النظام استخدام تصميم أغمق للتطبيق <i> (أي "
-"عناصر واجهة مستخدم داكنة على نص ساطع) </i>.\n"
-"\n"
-"لاحظ أنه ليست كل سمات النظام توفر مثل هذا المتغير الغامق ، وبالتالي فإن "
-"تمكين هذا الإعداد قد لا يكون له تأثير."
-
-#: src/preferences.ui:1134
-msgid ""
-"<b>Enable client-side decorations:</b>\n"
-"\n"
-"If enabled, the search entry and main menu are displayed in the window title "
-"bar.\n"
-"\n"
-"If disabled, the main menu is displayed as a menu bar with the search entry "
-"below it.\n"
-"This resembles a more traditonal UI layout and takes a little bit more space."
-msgstr ""
-"<b> تمكين الزخارف من جانب العميل: </b>\n"
-"\n"
-"في حالة التمكين ، يتم عرض إدخال البحث والقائمة الرئيسية في شريط عنوان "
-"النافذة.\n"
-"\n"
-"في حالة التعطيل ، يتم عرض القائمة الرئيسية كشريط قوائم مع إدخال البحث "
-"أسفلها.\n"
-"هذا يشبه تصميم واجهة مستخدم أكثر تقليدية ويأخذ مساحة أكبر قليلاً."
-
-#: src/preferences.ui:1154
-msgid ""
-"<b>Use binary units instead of decimal units:</b>\n"
-"\n"
-"This settings controls how file sizes are displayed.\n"
-"\n"
-"\t• <b>Binary units:</b> This refers to binary IEC prefixes <i>(e.g. 1 KiB = "
-"1024 bytes)</i>\n"
-"\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
-"= 1000 bytes)</i>"
-msgstr ""
-"<b> استخدم الوحدات الثنائية بدلاً من الوحدات العشرية: </b>\n"
-"\n"
-"تتحكم هذه الإعدادات في كيفية عرض أحجام الملفات.\n"
-"\n"
-"• <b> الوحدات الثنائية: </b> يشير هذا إلى بادئات IEC الثنائية <i> (مثل 1 "
-"كيلو بايت = 1024 بايت) </i>\n"
-"• <b> الوحدات العشرية: </b> يشير هذا إلى بادئات النظام الدولي للوحدات "
-"العشرية <i> (على سبيل المثال ، 1 كيلو بايت = 1000 بايت) </i>"
-
-#: src/preferences.ui:1174
-msgid ""
-"<b>Remember window size:</b>\n"
-"\n"
-"If enabled, the window size from the previous session will be restored when "
-"you open an FSearch window.\n"
-"\n"
-"Note that some window managers ignore this request and force the window to "
-"have a different size."
-msgstr ""
-"<b> تذكر حجم النافذة: </b>\n"
-"\n"
-"في حالة التمكين ، ستتم استعادة حجم النافذة من الجلسة السابقة عند فتح نافذة "
-"FSearch.\n"
-"\n"
-"لاحظ أن بعض مديري النوافذ يتجاهلون هذا الطلب ويفرضون أن يكون للنافذة حجم "
-"مختلف."
-
-#: src/preferences.ui:1193
-#, fuzzy
-msgid ""
-"<b>Behaviour after successfully opening a file:</b>\n"
-"\n"
-"When a file/folder was succesfully opened one of the following actions can "
-"be performed:\n"
-"\t• <b>Nothing:</b> Nothing happens.\n"
-"\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-"minimized. \n"
-"\t\tNote that not all systems allow windows to be minimized.\n"
-"\t• <b>Close:</b> Quit FSearch.\n"
-"\n"
-"You can configure if those actions should be triggered when the file was "
-"opened with\n"
-"\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-"\t• <b>mouse click</b>"
-msgstr ""
-"<b> السلوك بعد فتح الملف بنجاح: </b>\n"
-"\n"
-"عند فتح ملف / مجلد بنجاح ، يمكن تنفيذ أحد الإجراءات التالية:\n"
-"\n"
-"• <b> لا شيء: </b> لم يحدث شيء.\n"
-"• <b> تصغير: </b> يتم تصغير نافذة FSearch المحددة حاليًا.\n"
-"لاحظ أنه ليست كل الأنظمة تسمح بتصغير النوافذ.\n"
-"• <b> إغلاق: </b> قم بإنهاء FSearch.\n"
-"\n"
-"يمكنك تكوين ما إذا كان يجب تشغيل هذه الإجراءات عند فتح الملف باستخدام\n"
-"\n"
-"• <b> اختصارات لوحة المفاتيح أو إدخالات القائمة </b> و / أو\n"
-"• <b> النقر بالماوس </b>"
-
-#: src/preferences.ui:1218
-msgid ""
-"<b>Show highlighted search terms:</b>\n"
-"\n"
-"If enabled, the search terms will be highlighted in the results view. For "
-"example when you search for \"foo\" all appearances of <i>foo</i> in file/"
-"folder names will be highlighted with bold characters:\n"
-"\n"
-"\t\t<b>foo</b>bar.txt\n"
-"\t\tfile.<b>foo</b>\n"
-"\n"
-"This also works for regular expressions and wildcard expressions starting or "
-"ending with an asterisk. "
-msgstr ""
-"<b> إظهار مصطلحات البحث المميزة: </b>\n"
-"\n"
-"في حالة التمكين ، سيتم تمييز مصطلحات البحث في عرض النتائج. على سبيل المثال ، "
-"عندما تبحث عن \"foo\" ، سيتم تمييز جميع مظاهر <i> foo </i> في أسماء "
-"الملفات / المجلدات بأحرف غامقة:\n"
-"\n"
-"<b>foo</b> bar.txt\n"
-"ملف. <b>foo</b>\n"
-"\n"
-"يعمل هذا أيضًا مع التعبيرات العادية وتعبيرات أحرف البدل التي تبدأ بعلامة "
-"النجمة أو تنتهي بها."
-
-#: src/preferences.ui:1240
-msgid ""
-"<b>Show tooltips:</b>\n"
-"\n"
-"If enabled, the results view will show the full path of the focused file/"
-"folder in a small tooltip window."
-msgstr ""
-"<b> إظهار تلميحات الأدوات: </b>\n"
-"\n"
-"في حالة التمكين ، سيعرض عرض النتائج المسار الكامل للملف / المجلد المركّز في "
-"نافذة تلميح أداة صغيرة."
-
-#: src/preferences.ui:1257
-msgid ""
-"<b>Show icons in name column:</b>\n"
-"\n"
-"If enabled, file/folder icons will be shown in the name column."
-msgstr ""
-"<b> إظهار الرموز في عمود الاسم: </b>\n"
-"\n"
-"في حالة التمكين ، ستظهر أيقونات الملف / المجلد في عمود الاسم."
-
-#: src/preferences.ui:1274
-msgid ""
-"<b>Remember column configuration:</b>\n"
-"\n"
-"If enabled, the column configuration of the results view from the previous "
-"session will be restored when you open an FSearch window. This includes the "
-"size and visibility of all columns."
-msgstr ""
-"<b> تذكر ترتيب العمود: </b>\n"
-"\n"
-"في حالة التمكين ، سيتم استعادة تكوين العمود الخاص بعرض النتائج من الجلسة "
-"السابقة عند فتح نافذة FSearch. يتضمن ذلك حجم جميع الأعمدة وإمكانية رؤيتها."
-
-#: src/preferences.ui:1291
-msgid ""
-"<b>Remember sort order:</b>\n"
-"\n"
-"If enabled, the sort order of the results view from the previous session "
-"will be restored when you open an FSearch window."
-msgstr ""
-"<b> تذكر ترتيب الفرز: </b>\n"
-"\n"
-"في حالة التمكين ، سيتم استعادة ترتيب عرض النتائج من الجلسة السابقة عند فتح "
-"نافذة FSearch."
-
-#: src/preferences.ui:1308
-msgid ""
-"<b>Open path with double click in path column:</b>\n"
-"\n"
-"If enabled, double clicking in the path column will open the selected path."
-msgstr ""
-"<b> افتح المسار بالنقر المزدوج في عمود المسار: </b>\n"
-"\n"
-"في حالة التمكين ، سيؤدي النقر المزدوج في عمود المسار إلى فتح المسار المحدد."
-
-#: src/preferences.ui:1325
-msgid ""
-"<b>Single click to open:</b>\n"
-"\n"
-"If enabled, a single click will open the selected file/folder. If you only "
-"want to select a file/folder while this setting is active, you need to a "
-"hold <i>Ctrl</i> at the same time while clicking the file/folder."
-msgstr ""
-"<b> نقرة واحدة للفتح: </b>\n"
-"\n"
-"في حالة التمكين ، سيتم فتح الملف / المجلد المحدد بنقرة واحدة. إذا كنت تريد "
-"فقط تحديد ملف / مجلد أثناء تنشيط هذا الإعداد ، فستحتاج إلى الضغط باستمرار "
-"على <i> Ctrl </i> في نفس الوقت أثناء النقر فوق الملف / المجلد."
-
-#: src/preferences.ui:1342
-msgid ""
-"<b>Show database indexing status:</b>\n"
-"\n"
-"If enabled, the path that is currently being indexed is displayed in the "
-"statusbar."
-msgstr ""
-"<b> إظهار حالة فهرسة قاعدة البيانات: </b>\n"
-"\n"
-"في حالة التمكين ، يتم عرض المسار الذي تتم فهرسته حاليًا في شريط الحالة."
-
-#: src/preferences.ui:1359
-#, fuzzy
-msgid ""
-"<b>Show warning dialogs:</b>\n"
-"\n"
-"If enabled, a warning dialog is displayed when:\n"
-"\n"
-"\t•  a file or folder failed to open\n"
-msgstr ""
-"<b> إظهار مربعات حوار التحذير: </b>\n"
-"\n"
-"في حالة التمكين ، يتم عرض مربع حوار تحذير عندما:\n"
-"\n"
-"• فشل فتح ملف أو مجلد"
-
-#: src/preferences.ui:1379
-msgid ""
-"<b>Search in path when query contains path separators:</b>\n"
-"\n"
-"If enabled, search terms containing path separators (i.e. \"/\") will be "
-"automatically matched against the full path of a file or folder."
-msgstr ""
-"<b> البحث في المسار عندما يحتوي الاستعلام على فواصل مسار: </b>\n"
-"\n"
-"في حالة التمكين ، ستتم مطابقة مصطلحات البحث التي تحتوي على فواصل المسارات "
-"(أي \"/\") تلقائيًا مع المسار الكامل لملف أو مجلد."
-
-#: src/preferences.ui:1396
-msgid ""
-"<b>Match case when query contains at least one upper case character:</b>\n"
-"\n"
-"If enabled, search terms containing at least one upper case character will "
-"trigger a case-sensitive search. This means a search term like <i>Foo</i> "
-"will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
-msgstr ""
-"<b> حالة المطابقة عندما يحتوي طلب البحث على حرف كبير واحد على الأقل: </b>\n"
-"\n"
-"في حالة التمكين ، ستؤدي مصطلحات البحث التي تحتوي على حرف واحد كبير على الأقل "
-"إلى بدء بحث حساس لحالة الأحرف. هذا يعني أن عبارة بحث مثل <i> Foo </i> ستطابق "
-"<i> FooBar.txt </i> وليس <i> foobar.txt </i>."
-
-#: src/preferences.ui:1413
-msgid ""
-"<b>Hide results when search is empty:</b>\n"
-"\n"
-"If enabled, no search results are displayed when the search entry is empty.\n"
-"\n"
-"If disabled, all files and folders will be displayed when the search entry "
-"is empty."
-msgstr ""
-"<b> إخفاء النتائج عندما يكون البحث فارغًا: </b>\n"
-"\n"
-"في حالة التمكين ، لا يتم عرض أي نتائج بحث عندما يكون إدخال البحث فارغًا.\n"
-"\n"
-"إذا تم تعطيله ، فسيتم عرض جميع الملفات والمجلدات عندما يكون إدخال البحث "
-"فارغًا."
-
-#: src/preferences.ui:1432
-msgid ""
-"<b>Search as you type:</b>\n"
-"\n"
-"If enabled, the search is automatically updated with every keystroke.\n"
-"\n"
-"If disabled, the search is only updated when you hit <i>Enter</i> or press "
-"the search button. "
-msgstr ""
-"<b> ابحث أثناء الكتابة: </b>\n"
-"\n"
-"في حالة التمكين ، يتم تحديث البحث تلقائيًا مع كل ضغطة مفتاح.\n"
-"\n"
-"في حالة التعطيل ، يتم تحديث البحث فقط عند الضغط على <i> Enter </i> أو الضغط "
-"على زر البحث."
-
-#: src/preferences.ui:1451
-msgid ""
-"<b>Update database on start:</b>\n"
-"\n"
-"If enabled, the database will be updated automatically in the background "
-"when you start FSearch."
-msgstr ""
-"<b> تحديث قاعدة البيانات عند البدء: </b>\n"
-"\n"
-"في حالة التمكين ، سيتم تحديث قاعدة البيانات تلقائيًا في الخلفية عند بدء "
-"FSearch."
-
-#: src/preferences.ui:1468
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>Update:</b> This setting is useful if you want to exclude certain "
-#| "paths from being\n"
-#| "\t\t\tupdated <i>(e.g. a path to a slow USB drive which doesn't change "
-#| "often)</i>"
-msgid ""
-"<b>Included folders:</b>\n"
-"\n"
-"                      This list contains all folders you want to include in "
-"the database.\n"
-"\n"
-"                      • <b>Active:</b> If enabled, the path will included in "
-"the database to be searched in.\n"
-"                      • <b>Path:</b> The full path to be included.\n"
-"                      • <b>Update:</b> This setting is useful if you want to "
-"exclude certain paths from\n"
-"                      being\n"
-"                      updated <i>(e.g. a path to a slow USB drive which "
-"doesn't change often)</i>\n"
-"                    "
-msgstr ""
-"<b> المجلدات المضمنة: </b>\n"
-"\n"
-"تحتوي هذه القائمة على جميع المجلدات التي تريد تضمينها في قاعدة البيانات.\n"
-"\n"
-"• <b> نشط: </b> في حالة التمكين ، سيتم تضمين المسار في قاعدة البيانات التي "
-"سيتم البحث فيها.\n"
-"• <b> المسار: </b> المسار الكامل المطلوب تضمينه.\n"
-"• <b> تحديث: </b> هذا الإعداد مفيد إذا كنت تريد استبعاد مسارات معينة من "
-"الوجود\n"
-"تحديث <i> (على سبيل المثال ، مسار إلى محرك أقراص USB بطيء لا يتغير كثيرًا) </"
-"i>"
-
-#: src/preferences.ui:1492
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "include in the database for searching."
-msgid ""
-"<b>Add folder to database:</b>\n"
-"\n"
-"                      This button opens a dialog where you can select a "
-"folder you want to include in the database for\n"
-"                      searching.\n"
-"                    "
-msgstr ""
-"<b> إضافة مجلد إلى قاعدة البيانات: </b>\n"
-"\n"
-"يفتح هذا الزر مربع حوار حيث يمكنك تحديد المجلد الذي تريد تضمينه في قاعدة "
-"البيانات للبحث."
-
-#: src/preferences.ui:1511
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of included folders."
-msgid ""
-"<b>Remove selected row:</b>\n"
-"\n"
-"                      This removes the selected folder from the list of "
-"included folders.\n"
-"                    "
-msgstr ""
-"<b> إزالة الصف المحدد: </b>\n"
-"\n"
-"يؤدي هذا إلى إزالة المجلد المحدد من قائمة المجلدات المضمنة."
-
-#: src/preferences.ui:1529
-msgid ""
-"<b>Excluded folders:</b>\n"
-"\n"
-"This list contains all folders you want to exclude from the database.\n"
-"\n"
-"\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
-"\t\t and can't be searched in.\n"
-"\t• <b>Path:</b> The full path to be excluded."
-msgstr ""
-"<b> المجلدات المستبعدة: </b>\n"
-"\n"
-"تحتوي هذه القائمة على جميع المجلدات التي تريد استبعادها من قاعدة البيانات.\n"
-"\n"
-"• <b> نشط: </b> إذا تم تمكينه ، فسيتم استبعاد المسار من قاعدة البيانات\n"
-"ولا يمكن البحث فيها.\n"
-"• <b> المسار: </b> المسار الكامل المطلوب استبعاده."
-
-#: src/preferences.ui:1550
-msgid ""
-"<b>Exclude folder from database:</b>\n"
-"\n"
-"This button opens a dialog where you can select a folder you want to exclude "
-"from the database."
-msgstr ""
-"<b> استبعاد مجلد من قاعدة البيانات: </b>\n"
-"\n"
-"يفتح هذا الزر نافذة حوار حيث يمكنك تحديد المجلد الذي تريد استبعاده من قاعدة "
-"البيانات."
-
-#: src/preferences.ui:1567
-msgid ""
-"<b>Remove selected row:</b>\n"
-"\n"
-"This removes the selected folder from the list of excluded folders."
-msgstr ""
-"<b> إزالة صف محدد: </b>\n"
-"\n"
-"يؤدي هذا إلى إزالة المجلد المحدد من قائمة المجلدات المستبعدة."
-
-#: src/preferences.ui:1584
-msgid ""
-"<b>Exclude files and folders from database:</b>\n"
-"\n"
-"This is a semi-colon separated list of files (or folders) you want to "
-"exclude from the database. For example <i>.git;.cache;*.swp</i> will exclude "
-"all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
-"end with <i>.swp</i>."
-msgstr ""
-"<b> استبعاد الملفات والمجلدات من قاعدة البيانات: </b>\n"
-"\n"
-"هذه قائمة من الملفات (أو المجلدات) مفصولة بفاصلة منقوطة تريد استبعادها من "
-"قاعدة البيانات. على سبيل المثال ، سيستبعد <i> .git؛ .cache؛ *. swp </i> جميع "
-"الملفات أو المجلدات التي تسمى إما <i> .git </i> أو <i> .cache </i> أو تنتهي "
-"بـ <i> .swp </i>."
-
-#: src/preferences.ui:1601
-msgid ""
-"<b>Exclude hidden files and folders:</b>\n"
-"\n"
-"If enabled, hidden files and folders will be excluded from the database "
-"<i>(i.e. all files or folders which start with a dot character)</i>."
-msgstr ""
-"<b> استبعاد الملفات والمجلدات المخفية: </b>\n"
-"\n"
-"في حالة التمكين ، سيتم استبعاد الملفات والمجلدات المخفية من قاعدة البيانات "
-"<i> (أي جميع الملفات أو المجلدات التي تبدأ بحرف نقطة) </i>."
-
-#: src/preferences.ui:1618
-msgid "Focus a setting to get a detailed description of what it does."
-msgstr "ركز على أحد الإعدادات للحصول على وصف مفصل لما يفعله."
-
-#: src/preferences.ui:1631
-msgid ""
-"<b>Periodically update database at a specific time interval:</b>\n"
-"\n"
-"If enabled and as long as FSearch is running, the database will be updated "
-"periodically with the given time interval.\n"
-"\n"
-"If you want to update the database in the background, even when FSearch is "
-"not running, you should use tools like cron or systemd timers to "
-"periodically trigger the update with:\n"
-"\n"
-"<i><tt>fsearch --update-database</tt></i>"
-msgstr ""
-
-#: src/preferences.ui:1654
-msgid "Help"
-msgstr "مساعدة"
-
-#: src/statusbar.glade:43
-msgid "Number of Search Results"
-msgstr "عدد نتائج البحث"
-
-#: src/statusbar.glade:44
-msgid "0 Items"
-msgstr "لا نتائج"
-
-#: src/statusbar.glade:81
-msgid "Index:"
-msgstr "فهرس:"
-
-#: src/statusbar.glade:156
-msgid "Number of selected folders"
-msgstr "عدد المجلدات المحددة"
-
-#: src/statusbar.glade:157 src/statusbar.glade:182
-msgid "0/0"
-msgstr "0/0"
-
-#: src/statusbar.glade:181
-msgid "Number of selected files"
-msgstr "عدد الملفات المحددة"
-
-#: src/statusbar.glade:297
-msgid "Number of database items"
-msgstr "عدد عناصر قاعدة البيانات"
-
-#: src/statusbar.glade:298
-msgid "(empty)"
-msgstr "(فارغ)"
-
-#: src/statusbar.glade:335
-msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
-msgstr ""
-"مصطلح البحث يحتوي على أحرف كبيرة.\n"
-"تم تنشيط <b> Match Case </b> مؤقتًا لهذا المصطلح."
-
-#: src/statusbar.glade:366 src/statusbar.glade:419
-msgid "CASE"
-msgstr "حالة"
-
-#: src/statusbar.glade:442
-msgid ""
-"Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
-msgstr ""
-"مصطلح البحث يحتوي على فواصل المسار.\n"
-"تم تنشيط <b> البحث في المسار </b> مؤقتًا لهذا المصطلح."
-
-#: src/statusbar.glade:473 src/statusbar.glade:526
-msgid "PATH"
-msgstr "مسار"
-
-#: src/statusbar.glade:579
-msgid "REGEX"
-msgstr "تعابير منطقية"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
