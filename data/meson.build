@@ -1,3 +1,5 @@
+install_man('fsearch.1')
+
 desktop_file_in_config = configuration_data()
 desktop_file_in_config.set('app_id', app_id)
 desktop_file_in = configure_file(
