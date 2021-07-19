@@ -27,7 +27,7 @@ struct FsearchThreadPool {
     uint32_t num_threads;
 };
 
-typedef struct thread_context_s {
+typedef struct {
     GThread *thread;
     FsearchThreadPoolFunc thread_func;
 
@@ -38,7 +38,7 @@ typedef struct thread_context_s {
     GCond finished_cond;
     FsearchThreadStatus status;
     bool terminate;
-} thread_context_t;
+} FsearchThreadPoolContext;
 
 static bool
 thread_pool_has_thread(FsearchThreadPool *pool, GList *thread) {
@@ -54,7 +54,7 @@ thread_pool_has_thread(FsearchThreadPool *pool, GList *thread) {
 
 static gpointer
 fsearch_thread_pool_thread(gpointer user_data) {
-    thread_context_t *ctx = user_data;
+    FsearchThreadPoolContext *ctx = user_data;
 
     g_mutex_lock(&ctx->mutex);
     while (!ctx->terminate) {
@@ -73,7 +73,7 @@ fsearch_thread_pool_thread(gpointer user_data) {
 }
 
 static void
-thread_context_free(thread_context_t *ctx) {
+thread_context_free(FsearchThreadPoolContext *ctx) {
     if (!ctx) {
         return;
     }
@@ -96,9 +96,9 @@ thread_context_free(thread_context_t *ctx) {
     g_clear_pointer(&ctx, g_free);
 }
 
-static thread_context_t *
+static FsearchThreadPoolContext *
 thread_context_new(void) {
-    thread_context_t *ctx = g_new0(thread_context_t, 1);
+    FsearchThreadPoolContext *ctx = g_new0(FsearchThreadPoolContext, 1);
     if (!ctx) {
         return NULL;
     }
@@ -122,7 +122,7 @@ fsearch_thread_pool_init(void) {
 
     uint32_t num_cpus = g_get_num_processors();
     for (uint32_t i = 0; i < num_cpus; i++) {
-        thread_context_t *ctx = thread_context_new();
+        FsearchThreadPoolContext *ctx = thread_context_new();
         if (ctx) {
             pool->threads = g_list_prepend(pool->threads, ctx);
             pool->num_threads++;
@@ -139,7 +139,7 @@ fsearch_thread_pool_free(FsearchThreadPool *pool) {
     }
     GList *thread = pool->threads;
     for (uint32_t i = 0; thread && i < pool->num_threads; i++) {
-        thread_context_t *ctx = thread->data;
+        FsearchThreadPoolContext *ctx = thread->data;
         g_clear_pointer(&ctx, thread_context_free);
         thread = thread->next;
     }
@@ -163,7 +163,7 @@ fsearch_thread_pool_get_data(FsearchThreadPool *pool, GList *thread) {
     if (!thread_pool_has_thread(pool, thread)) {
         return NULL;
     }
-    thread_context_t *ctx = thread->data;
+    FsearchThreadPoolContext *ctx = thread->data;
     if (!ctx) {
         return NULL;
     }
@@ -176,7 +176,7 @@ fsearch_thread_pool_task_is_idle(FsearchThreadPool *pool, GList *thread) {
     if (!thread_pool_has_thread(pool, thread)) {
         return res;
     }
-    thread_context_t *ctx = thread->data;
+    FsearchThreadPoolContext *ctx = thread->data;
     if (!ctx) {
         return res;
     }
@@ -192,7 +192,7 @@ fsearch_thread_pool_task_is_busy(FsearchThreadPool *pool, GList *thread) {
     if (!thread_pool_has_thread(pool, thread)) {
         return res;
     }
-    thread_context_t *ctx = thread->data;
+    FsearchThreadPoolContext *ctx = thread->data;
     if (!ctx) {
         return res;
     }
@@ -204,7 +204,7 @@ fsearch_thread_pool_task_is_busy(FsearchThreadPool *pool, GList *thread) {
 
 bool
 fsearch_thread_pool_wait_for_thread(FsearchThreadPool *pool, GList *thread) {
-    thread_context_t *ctx = thread->data;
+    FsearchThreadPoolContext *ctx = thread->data;
     g_mutex_lock(&ctx->mutex);
     while (fsearch_thread_pool_task_is_busy(pool, thread)) {
         g_debug("[thread_pool] busy, waiting...");
@@ -234,7 +234,7 @@ fsearch_thread_pool_push_data(FsearchThreadPool *pool,
     if (!thread_pool_has_thread(pool, thread)) {
         return false;
     }
-    thread_context_t *ctx = thread->data;
+    FsearchThreadPoolContext *ctx = thread->data;
     g_mutex_lock(&ctx->mutex);
     ctx->thread_func = thread_func;
     ctx->thread_data = thread_data;
