@@ -22,7 +22,7 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-typedef struct _DynamicArray DynamicArray;
+typedef struct DynamicArray DynamicArray;
 
 typedef int32_t (*DynamicArrayCompareFunc)(void *a, void *b);
 typedef int32_t (*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);

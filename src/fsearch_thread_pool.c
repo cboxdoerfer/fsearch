@@ -22,7 +22,7 @@
 
 #include "fsearch_thread_pool.h"
 
-struct _FsearchThreadPool {
+struct FsearchThreadPool {
     GList *threads;
     uint32_t num_threads;
 };

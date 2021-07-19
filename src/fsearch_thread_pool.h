@@ -22,11 +22,11 @@
 #include <stdbool.h>
 #include <stdint.h>
 
-typedef struct _FsearchThreadPool FsearchThreadPool;
+typedef struct FsearchThreadPool FsearchThreadPool;
 typedef void (*FsearchThreadPoolFunc)(void *data);
 ;
 
-typedef enum _FsearchThreadStatus { THREAD_IDLE, THREAD_BUSY, THREAD_FINISHED } FsearchThreadStatus;
+typedef enum FsearchThreadStatus { THREAD_IDLE, THREAD_BUSY, THREAD_FINISHED } FsearchThreadStatus;
 
 FsearchThreadPool *
 fsearch_thread_pool_init(void);

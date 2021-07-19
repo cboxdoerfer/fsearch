@@ -14,7 +14,7 @@ typedef struct {
     void *items;
 } FsearchMemoryPoolBlock;
 
-struct _FsearchMemoryPool {
+struct FsearchMemoryPool {
     GList *blocks;
     FsearchMemoryPoolFreed *freed_items;
     uint32_t block_size;

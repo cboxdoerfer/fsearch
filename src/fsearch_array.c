@@ -28,7 +28,7 @@
 
 #define MAX_SORT_THREADS 8
 
-struct _DynamicArray {
+struct DynamicArray {
     // number of items in array
     uint32_t num_items;
     // total size of array
