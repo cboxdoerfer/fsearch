@@ -266,7 +266,12 @@ db_entry_compare_entries_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseE
 
 int
 db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    return strverscmp((*a)->shared.name, (*b)->shared.name);
+    if (G_UNLIKELY(*a == NULL || *b == NULL)) {
+        return 0;
+    }
+    const char *name_a = (*a)->shared.name;
+    const char *name_b = (*b)->shared.name;
+    return strverscmp(name_a ? name_a : "", name_b ? name_b : "");
 }
 
 void
