@@ -37,7 +37,7 @@ fsearch_query_new(const char *search_term,
     assert(q != NULL);
 
     q->search_term = search_term ? strdup(search_term) : "";
-    q->has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
+    q->has_separator = strchr(q->search_term, G_DIR_SEPARATOR) ? 1 : 0;
 
     q->db = db_ref(db);
 
@@ -46,7 +46,7 @@ fsearch_query_new(const char *search_term,
     q->pool = pool;
 
     q->num_token = 0;
-    q->token = fsearch_tokens_new(search_term, flags, &q->num_token);
+    q->token = fsearch_tokens_new(q->search_term, flags, &q->num_token);
 
     if (filter && filter->query) {
         q->num_filter_token = 0;
