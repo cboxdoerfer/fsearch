@@ -58,7 +58,8 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
                                     UCaseMap *case_map,
                                     FsearchUtfConversionBuffer *buffer,
                                     const char *string) {
-    if (!buffer || !buffer->initialized) {
+    g_assert(buffer != NULL);
+    if (!buffer->initialized) {
         goto fail;
     }
 
