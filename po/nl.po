@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-06-03 15:33+0000\n"
+"PO-Revision-Date: 2021-07-24 19:33+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,12 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "Bezig met doorzoeken…"
+msgstr "Bezig met opslaan…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -57,7 +56,6 @@ msgid "Loading files…"
 msgstr "Bezig met laden van bestanden…"
 
 #: src/fsearch_database.c:1629
-#, fuzzy
 msgid "Sorting…"
 msgstr "Bezig met sorteren…"
 
@@ -103,7 +101,7 @@ msgstr "Video's"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Eigenschappen…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
@@ -174,7 +172,7 @@ msgstr "Type"
 
 #: src/fsearch_window.c:704 src/menus.ui:229
 msgid "Extension"
-msgstr ""
+msgstr "Extensie"
 
 #: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
@@ -216,12 +214,11 @@ msgid "Moving files to trash…"
 msgstr "Bezig met verplaatsen naar prullenbak…"
 
 #: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Weet je zeker dat je %d bestand(en) wilt openen?"
+msgstr "Weet je zeker dat je %d bestandseigenschap(pen) wilt openen?"
 
 #: src/fsearch_window_actions.c:194
-#, fuzzy
 msgid "Opening file properties…"
 msgstr "Bezig met openen…"
 
@@ -400,14 +397,14 @@ msgid "Hide results when search is empty"
 msgstr "Resultaten verbergen als zoekopdracht blanco is"
 
 #: src/fsearch_preferences.ui:654
-#, fuzzy
 msgid ""
 "Match case when query contains at least one upper case\n"
 "                      character\n"
 "                    "
 msgstr ""
-"Lettergrootte moet overeenkomen als zoekopdracht minstens één hoofdletter "
-"bevat"
+"Lettergrootte moet overeenkomen als zoekopdracht minstens één\n"
+"              hoofdletter bevat\n"
+"                    "
 
 #: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
 msgid "Search"
@@ -991,7 +988,7 @@ msgid ""
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 "De zoekterm bevat hoofdletters.\n"
-"De optie <b>Hoofdlettergevoelig</b> is ingeschakeld."
+"De optie <b>Hoofdlettergevoelig</b> is tijdelijk ingeschakeld."
 
 #: src/fsearch_statusbar.ui:366 src/fsearch_statusbar.ui:419
 msgid "CASE"
@@ -1003,7 +1000,7 @@ msgid ""
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "De zoekterm bevat padscheidingstekens.\n"
-"De optie <b>Pad doorzoeken</b> is ingeschakeld."
+"De optie <b>Pad doorzoeken</b> is tijdelijk ingeschakeld."
 
 #: src/fsearch_statusbar.ui:473 src/fsearch_statusbar.ui:526
 msgid "PATH"
