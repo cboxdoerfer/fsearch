@@ -53,12 +53,12 @@ msgstr "Mostrar información de la versión y salir"
 #: src/fsearch_database.c:628
 #, fuzzy
 msgid "Loading folders…"
-msgstr "Cargando base de datos…"
+msgstr "Cargando carpetas…"
 
 #: src/fsearch_database.c:636
 #, fuzzy
 msgid "Loading files…"
-msgstr "Eliminando archivos…"
+msgstr "Cargando archivos…"
 
 #: src/fsearch_database.c:1629
 #, fuzzy
@@ -68,11 +68,11 @@ msgstr "Ordenando…"
 #: src/fsearch_file_utils.c:258
 #, fuzzy
 msgid "Folder"
-msgstr "Carpetas"
+msgstr "Carpeta"
 
 #: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
-msgstr ""
+msgstr "Tipo desconocido"
 
 #: src/fsearch_filter.c:83
 msgid "All"
@@ -113,7 +113,7 @@ msgstr ""
 #: src/fsearch_listview_popup.c:79
 #, fuzzy
 msgid "Other Application…"
-msgstr "Otra aplicación"
+msgstr "Otra aplicación…"
 
 #: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
 msgid "Select folder"
@@ -148,12 +148,12 @@ msgstr "Consultando…"
 #: src/fsearch_statusbar.c:140
 #, fuzzy
 msgid "Loading…"
-msgstr "Ordenando…"
+msgstr "Cargando…"
 
 #: src/fsearch_statusbar.c:145
 #, fuzzy
 msgid "Scanning…"
-msgstr "Ordenando…"
+msgstr "Escaneando…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1013
 #, c-format
@@ -195,7 +195,9 @@ msgid ""
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
-msgstr ""
+msgstr "Ordenar por <b> Tipo </b> puede ser muy lento con muchos resultados y no se puede cancelar.\n"
+"\n"
+"Este orden de clasificación no es persistente, se restablecerá cuando cambie el término de búsqueda."
 
 #: src/fsearch_window_actions.c:87
 #, c-format
@@ -286,7 +288,7 @@ msgstr "Pruebe una búsqueda distinta"
 #: src/fsearch_overlay.ui:365
 #, fuzzy
 msgid "Sorting results…"
-msgstr "Ordenando…"
+msgstr "Ordenando resultados…"
 
 #: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -447,7 +449,8 @@ msgstr "minuto(s)"
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Agregar ruta para ser incluido en la base de datos"
+msgstr "Agregar ruta para ser incluido en la base de datos\n"
+"                                "
 
 #: src/fsearch_preferences.ui:875 src/fsearch_preferences.ui:974
 msgid "Remove selected path"
@@ -820,16 +823,15 @@ msgid ""
 msgstr ""
 "<b>Carpetas incluidas:</b>\n"
 "\n"
-"Esta lista contiene todas las carpetas que desea incluir en la base de "
+"                      Esta lista contiene todas las carpetas que desea incluir en la base de "
 "datos.\n"
 "\n"
-"\t• <b>Activo:</b> Si está habilitada, la ruta de acceso se incluirá en la "
-"base de datos en la que se buscará.\n"
-"\t• <b>Ruta:</b> La ruta completa que se incluirá.\n"
-"\t• <b>Actualizar:</b> Esta configuración es útil si desea excluir ciertas "
-"rutas de acceso de \n"
-"\t\t\tla actualización <i>(p. ej. una ruta a una unidad USB lenta que no "
-"cambia a menudo)</i>"
+"                      • <b>Activo:</b> Si está habilitada, la ruta de acceso se incluirá en la\n"
+"                      base de datos en la que se buscará.\n"
+"                      • <b>Ruta:</b> La ruta completa que se incluirá.\n"
+"                      • <b>Actualizar:</b> Esta configuración es útil si desea excluir ciertas\n"
+"                      rutas de acceso de la actualización <i>(p. ej. una ruta a una unidad USB \n"
+"                      lenta que no cambia a menudo)</i>\n"
 
 #: src/fsearch_preferences.ui:1494
 #, fuzzy
