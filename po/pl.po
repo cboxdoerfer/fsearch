@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-06-23 07:35+0000\n"
+"PO-Revision-Date: 2021-07-24 19:33+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,12 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7.1-dev\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "Skanowanie…"
+msgstr "Zapisywanie…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -60,9 +59,8 @@ msgid "Loading files…"
 msgstr "Ładowanie plików…"
 
 #: src/fsearch_database.c:1629
-#, fuzzy
 msgid "Sorting…"
-msgstr "Sortowanie wyników…"
+msgstr "Sortowanie…"
 
 #: src/fsearch_file_utils.c:258
 msgid "Folder"
@@ -177,7 +175,7 @@ msgstr "Typ"
 
 #: src/fsearch_window.c:704 src/menus.ui:229
 msgid "Extension"
-msgstr ""
+msgstr "Rozszerzenie"
 
 #: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
