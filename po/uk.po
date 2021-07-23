@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-06-06 09:33+0000\n"
+"PO-Revision-Date: 2021-07-23 17:29+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -18,12 +18,11 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.7.2-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "Сканування…"
+msgstr "Зберігання…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -58,9 +57,8 @@ msgid "Loading files…"
 msgstr "Завантаження файлів…"
 
 #: src/fsearch_database.c:1629
-#, fuzzy
 msgid "Sorting…"
-msgstr "Сортування результатів…"
+msgstr "Сортування…"
 
 #: src/fsearch_file_utils.c:258
 msgid "Folder"
@@ -104,7 +102,7 @@ msgstr "Відео"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Властивості…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
@@ -175,7 +173,7 @@ msgstr "Тип"
 
 #: src/fsearch_window.c:704 src/menus.ui:229
 msgid "Extension"
-msgstr ""
+msgstr "Розширення"
 
 #: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
@@ -218,14 +216,13 @@ msgid "Moving files to trash…"
 msgstr "Переміщення файлів у смітник…"
 
 #: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Ви дійсно хочете відкрити стільки (%d) файлів?"
+msgstr "Ви дійсно хочете відкрити %d вікон властивостей файлів?"
 
 #: src/fsearch_window_actions.c:194
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Відкриття файлів…"
+msgstr "Відкриття властивостей файлів…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
@@ -402,14 +399,14 @@ msgid "Hide results when search is empty"
 msgstr "Ховати результати, якщо пошукове поле порожнє"
 
 #: src/fsearch_preferences.ui:654
-#, fuzzy
 msgid ""
 "Match case when query contains at least one upper case\n"
 "                      character\n"
 "                    "
 msgstr ""
-"Враховувати регістр, якщо запит містить принаймні один символ верхнього "
-"регістру"
+"Враховувати регістр, якщо запит містить принаймні один\n"
+"                      символ верхнього регістру\n"
+"                    "
 
 #: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
 msgid "Search"
