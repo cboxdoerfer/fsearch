@@ -137,13 +137,7 @@ fsearch_thread_pool_free(FsearchThreadPool *pool) {
     if (!pool) {
         return;
     }
-    GList *thread = pool->threads;
-    for (uint32_t i = 0; thread && i < pool->num_threads; i++) {
-        FsearchThreadPoolContext *ctx = thread->data;
-        g_clear_pointer(&ctx, thread_context_free);
-        thread = thread->next;
-    }
-    pool->num_threads = 0;
+    g_list_free_full(g_steal_pointer(&pool->threads), (GDestroyNotify)thread_context_free);
     g_clear_pointer(&pool, g_free);
 }
 
