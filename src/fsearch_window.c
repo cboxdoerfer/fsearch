@@ -922,8 +922,9 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     int active = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
-    const char *text = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
-    fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar), active ? text : NULL);
+    char *active_filter_name = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
+    fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar), active ? active_filter_name : NULL);
+    g_clear_pointer(&active_filter_name, g_free);
 
     db_view_set_filter(win->result_view->database_view, get_active_filter(win));
 }
