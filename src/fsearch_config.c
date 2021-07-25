@@ -125,6 +125,7 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
         if (path) {
             FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, 0);
             indexes = g_list_append(indexes, index);
+            g_clear_pointer(&path, free);
         }
         else {
             break;
@@ -147,6 +148,7 @@ config_load_exclude_locations(GKeyFile *key_file, GList *locations, const char *
         if (path) {
             FsearchExcludePath *fs_path = fsearch_exclude_path_new(path, enabled);
             locations = g_list_append(locations, fs_path);
+            g_clear_pointer(&path, free);
         }
         else {
             break;
