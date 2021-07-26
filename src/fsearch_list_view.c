@@ -1489,6 +1489,8 @@ static void
 fsearch_list_view_destroy(GtkWidget *widget) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
+    g_list_free(g_steal_pointer(&view->columns_reversed));
+    g_list_free_full(g_steal_pointer(&view->columns), (GDestroyNotify)fsearch_list_view_column_unref);
     g_clear_object(&view->multi_press_gesture);
     g_clear_object(&view->bin_drag_gesture);
     g_clear_object(&view->header_drag_gesture);
@@ -1625,6 +1627,17 @@ fsearch_list_view_scrollable_init(GtkScrollableInterface *iface) {
     iface->get_border = fsearch_list_view_get_border;
 }
 
+static void
+fsearch_list_view_column_free(FsearchListViewColumn *col) {
+    if (!col) {
+        return;
+    }
+
+    g_clear_pointer(&col->name, g_free);
+    g_clear_object(&col->button);
+    g_clear_pointer(&col, free);
+}
+
 void
 fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *col) {
     if (!view || !col) {
@@ -1645,9 +1658,7 @@ fsearch_list_view_remove_column(FsearchListView *view, FsearchListViewColumn *co
         gtk_widget_queue_resize(GTK_WIDGET(view));
     }
 
-    g_clear_object(&col->button);
-    g_clear_pointer(&col->name, free);
-    g_clear_pointer(&col, free);
+    fsearch_list_view_column_unref(g_steal_pointer(&col));
 }
 
 void
@@ -1939,6 +1950,25 @@ fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean valu
 }
 
 FsearchListViewColumn *
+fsearch_list_view_column_ref(FsearchListViewColumn *col) {
+    if (!col || col->ref_count <= 0) {
+        return NULL;
+    }
+    g_atomic_int_inc(&col->ref_count);
+    return col;
+}
+
+void
+fsearch_list_view_column_unref(FsearchListViewColumn *col) {
+    if (!col || col->ref_count <= 0) {
+        return;
+    }
+    if (g_atomic_int_dec_and_test(&col->ref_count)) {
+        g_clear_pointer(&col, fsearch_list_view_column_free);
+    }
+}
+
+FsearchListViewColumn *
 fsearch_list_view_column_new(int type,
                              char *name,
                              PangoAlignment alignment,
@@ -1968,12 +1998,13 @@ fsearch_list_view_column_new(int type,
     gtk_widget_show(label);
 
     col->type = type;
-    col->name = name ? g_strdup(name) : NULL;
+    col->name = g_strdup(name ? name : "");
     col->alignment = alignment;
     col->ellipsize_mode = ellipsize_mode;
     col->width = width;
     col->expand = expand;
     col->visible = visible;
+    col->ref_count = 1;
 
     return col;
 }

@@ -29,6 +29,8 @@ typedef struct {
     PangoEllipsizeMode ellipsize_mode;
 
     GdkWindow *window;
+
+    volatile gint ref_count;
 } FsearchListViewColumn;
 
 typedef char *(*FsearchListViewQueryTooltipFunc)(PangoLayout *layout,
@@ -57,6 +59,12 @@ typedef void (*FsearchListViewSelectFunc)(int row_idx, gpointer user_data);
 typedef void (*FsearchListViewSelectToggleFunc)(int row_idx, gpointer user_data);
 typedef void (*FsearchListViewSelectRangeFunc)(int start_idx, int end_idx, gpointer user_data);
 typedef void (*FsearchListViewUnselectAllFunc)(gpointer user_data);
+
+FsearchListViewColumn *
+fsearch_list_view_column_ref(FsearchListViewColumn *col);
+
+void
+fsearch_list_view_column_unref(FsearchListViewColumn *col);
 
 FsearchListViewColumn *
 fsearch_list_view_column_new(int type,
