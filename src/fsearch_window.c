@@ -283,6 +283,7 @@ fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
+    g_clear_pointer(&self->result_view->database_view, db_view_unref);
     g_clear_pointer(&self->result_view, fsearch_result_view_free);
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
@@ -1260,7 +1261,6 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 void
 fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
-    g_clear_pointer(&win->result_view->database_view, db_view_unref);
 }
 
 void
