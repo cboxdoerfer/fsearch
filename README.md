@@ -31,12 +31,19 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 - ICU 3.8
 
 ## Download
+
 #### Arch Linux (AUR)
+
 https://aur.archlinux.org/packages/fsearch-git/
+
 #### Fedora/RHEL/CentOS
+
+[![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/)
+
 https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/
 
 ##### copr Installation
+
 ```
 sudo dnf copr enable cboxdoerfer/fsearch_nightly
 sudo dnf install fsearch
