@@ -1,6 +1,7 @@
 # Build files
 Makefile.in
 /build
+/build*
 /builddir
 /Makefile
 /data/Makefile
@@ -44,6 +45,8 @@ src/*.ui~
 
 # Valgrind
 callgrind.out*
+*.supp
+vgdump
 
 # VS Code
 *.vscode
