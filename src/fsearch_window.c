@@ -245,8 +245,8 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
         if (filter && filter->name) {
             gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(self->filter_combobox), NULL, filter->name);
         }
-        gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), 0);
     }
+    gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), 0);
 
     fsearch_window_set_overlay_for_database_state(self);
 }
