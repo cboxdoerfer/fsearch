@@ -45,5 +45,6 @@ desktop-file-install \
 %files
 %{_bindir}/fsearch
 %{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
+%{_datadir}/man/man1/fsearch.1.gz
 %{_datadir}/locale/*/*/fsearch.mo
 
