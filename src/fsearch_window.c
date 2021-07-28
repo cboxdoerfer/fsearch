@@ -1230,7 +1230,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
     guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
 
     if (win_id <= 0) {
-        g_debug("[window_added] id = 0");
+        g_warning("[window_added] window isn't part of FsearchApplication");
         return;
     }
 
