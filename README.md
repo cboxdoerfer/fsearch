@@ -82,6 +82,15 @@ https://docs.weblate.org/en/latest/user/basic.html
 
 And of course: Thank you for taking the time to translate FSearch!
 
+## Current Limitations
+
+* Sorting lots of results by *Type* can be very slow, since gathering that information is expensive, and the data isn't
+  indexed. This also means that when the view is sorted by *Type*, searching will reset the sort order to *Name*.
+* Sorting can't be aborted. This is usually not an issue, because it's very fast for all columns except the *Type*
+  column.
+* Using the *Move to Trash* option doesn't update the database index, so trashed files/folders show up in the result
+  list as if nothing happend to them.
+
 ## Why yet another search utility?
 
 Performance. On Windows I really like to use Everything Search Engine. It provides instant results as you type for all
