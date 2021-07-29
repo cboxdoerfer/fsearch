@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-07-24 19:33+0000\n"
+"PO-Revision-Date: 2021-07-29 07:34+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -20,9 +20,8 @@ msgstr ""
 "X-Generator: Weblate 4.7.2-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "מתבצע מיון…"
+msgstr "מתבצעת שמירה…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -49,24 +48,20 @@ msgid "Print version information and exit"
 msgstr "הצגת מידע על הגרסה ויציאה"
 
 #: src/fsearch_database.c:628
-#, fuzzy
 msgid "Loading folders…"
-msgstr "מסד הנתונים נטען…"
+msgstr "תיקיות נטענות…"
 
 #: src/fsearch_database.c:636
-#, fuzzy
 msgid "Loading files…"
-msgstr "הקבצים נמחקים…"
+msgstr "קבצים נטענים…"
 
 #: src/fsearch_database.c:1629
-#, fuzzy
 msgid "Sorting…"
 msgstr "מתבצע מיון…"
 
 #: src/fsearch_file_utils.c:258
-#, fuzzy
 msgid "Folder"
-msgstr "תיקיות"
+msgstr "תיקייה"
 
 #: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
@@ -143,14 +138,12 @@ msgid "Querying…"
 msgstr "מתבצע תשאול…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
 msgid "Loading…"
-msgstr "מתבצע מיון…"
+msgstr "בטעינה…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
 msgid "Scanning…"
-msgstr "מתבצע מיון…"
+msgstr "מתבצעת סריקה…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1013
 #, c-format
@@ -214,7 +207,7 @@ msgstr "הקבצים נמחקים…"
 
 #: src/fsearch_window_actions.c:151
 msgid "Moving files to trash…"
-msgstr ""
+msgstr "קבצים מועברים לאשפה…"
 
 #: src/fsearch_window_actions.c:190
 #, fuzzy, c-format
@@ -222,18 +215,16 @@ msgid "Do you really want to open %d file property windows?"
 msgstr "לפתוח %d קבצים?"
 
 #: src/fsearch_window_actions.c:194
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "קבצים נפתחים…"
+msgstr "מאפייני הקובץ נפתחים…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
 msgstr ""
 
 #: src/fsearch_overlay.ui:59
-#, fuzzy
 msgid "Add folders"
-msgstr "תיקיות"
+msgstr "הוספת תיקיות"
 
 #: src/fsearch_overlay.ui:76 src/fsearch_overlay.ui:271
 #: src/fsearch_statusbar.ui:273
@@ -246,7 +237,7 @@ msgstr "מסד הנתונים נטען…"
 
 #: src/fsearch_overlay.ui:122
 msgid "This won't take long."
-msgstr ""
+msgstr "פעולה זו לא תארוך זמן רב."
 
 #: src/fsearch_overlay.ui:138 src/fsearch_overlay.ui:333
 #: src/fsearch_statusbar.ui:309
@@ -262,9 +253,8 @@ msgid "This may take a while."
 msgstr ""
 
 #: src/fsearch_overlay.ui:201
-#, fuzzy
 msgid "page2"
-msgstr "עמוד0"
+msgstr "עמוד2"
 
 #: src/fsearch_overlay.ui:239
 msgid "Empty Query"
@@ -283,9 +273,8 @@ msgid "Try a different search"
 msgstr ""
 
 #: src/fsearch_overlay.ui:365
-#, fuzzy
 msgid "Sorting results…"
-msgstr "מתבצע מיון…"
+msgstr "התוצאות ממוינות…"
 
 #: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -419,9 +408,8 @@ msgid "Update database on start"
 msgstr ""
 
 #: src/fsearch_preferences.ui:717
-#, fuzzy
 msgid "Update every"
-msgstr "עדכון"
+msgstr "עדכון בכל"
 
 #: src/fsearch_preferences.ui:739
 msgid "0"
@@ -908,9 +896,8 @@ msgid "Cancel Update"
 msgstr ""
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "חלון חדש"
+msgstr "סגירת החלון"
 
 #: src/menus.ui:54
 msgid "_Edit"
