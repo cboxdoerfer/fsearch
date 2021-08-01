@@ -31,5 +31,8 @@ main(int argc, char *argv[]) {
     bindtextdomain(GETTEXT_PACKAGE, LOCALEDIR);
     bind_textdomain_codeset(GETTEXT_PACKAGE, "UTF-8");
     textdomain(GETTEXT_PACKAGE);
+
+    g_set_application_name(_("FSearch"));
+
     return g_application_run(G_APPLICATION(fsearch_application_new()), argc, argv);
 }
