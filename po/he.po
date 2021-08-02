@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-07-29 07:34+0000\n"
+"PO-Revision-Date: 2021-08-03 12:34+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"X-Generator: Weblate 4.8-dev\n"
 
 #: src/fsearch.c:254
 msgid "Saving…"
@@ -210,9 +210,9 @@ msgid "Moving files to trash…"
 msgstr "קבצים מועברים לאשפה…"
 
 #: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "לפתוח %d קבצים?"
+msgstr "לפתוח %d חלונות מאפייני קבצים?"
 
 #: src/fsearch_window_actions.c:194
 msgid "Opening file properties…"
@@ -220,7 +220,7 @@ msgstr "מאפייני הקובץ נפתחים…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
-msgstr ""
+msgstr "מסד נתונים ריק"
 
 #: src/fsearch_overlay.ui:59
 msgid "Add folders"
@@ -250,7 +250,7 @@ msgstr "מסד הנתונים מתעדכן…"
 
 #: src/fsearch_overlay.ui:185 src/fsearch_overlay.ui:380
 msgid "This may take a while."
-msgstr ""
+msgstr "פעולה זו עשויה לארוך זמן מה."
 
 #: src/fsearch_overlay.ui:201
 msgid "page2"
@@ -258,19 +258,19 @@ msgstr "עמוד2"
 
 #: src/fsearch_overlay.ui:239
 msgid "Empty Query"
-msgstr ""
+msgstr "שאילתה ריקה"
 
 #: src/fsearch_overlay.ui:254
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "יש ללחוץ <b>Ctrl + F</b> ולהתחיל להקליד"
 
 #: src/fsearch_overlay.ui:302
 msgid "No Results Found"
-msgstr ""
+msgstr "לא נמצאו תוצאות"
 
 #: src/fsearch_overlay.ui:317
 msgid "Try a different search"
-msgstr ""
+msgstr "כדאי לנסות חיפוש אחר"
 
 #: src/fsearch_overlay.ui:365
 msgid "Sorting results…"
@@ -282,15 +282,15 @@ msgstr "העדפות"
 
 #: src/fsearch_preferences.ui:112
 msgid "Enable dark theme"
-msgstr ""
+msgstr "הפעלת ערכת צבעים כהה"
 
 #: src/fsearch_preferences.ui:127
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "הפעלת קישוטים בצד לקוח (דורש הפעלה מחדש)"
 
 #: src/fsearch_preferences.ui:142
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "להשתמש ביחידות בינריות במקום ביחידות עשרוניות"
 
 #: src/fsearch_preferences.ui:158
 msgid "Remember window size"
@@ -909,7 +909,7 @@ msgstr ""
 
 #: src/menus.ui:62 src/menus.ui:186
 msgid "Cu_t"
-msgstr ""
+msgstr "ג_זירה"
 
 #: src/menus.ui:69
 msgid "Select All"
@@ -937,23 +937,23 @@ msgstr ""
 
 #: src/menus.ui:145
 msgid "Open _With"
-msgstr ""
+msgstr "פתיחה _עם"
 
 #: src/menus.ui:159
 msgid "_Open Folder"
-msgstr ""
+msgstr "פתיחת _תיקייה"
 
 #: src/menus.ui:181
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "ה_עתקת נתיב קובץ"
 
 #: src/menus.ui:194
 msgid "Move to _Trash"
-msgstr ""
+msgstr "העברה ל_אשפה"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: data/fsearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
