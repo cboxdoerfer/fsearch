@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-06-06 09:33+0000\n"
+"PO-Revision-Date: 2021-08-03 12:34+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,12 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.8-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "Сканиране…"
+msgstr "Запазване…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -59,9 +58,8 @@ msgid "Loading files…"
 msgstr "Зареждане на файлове…"
 
 #: src/fsearch_database.c:1629
-#, fuzzy
 msgid "Sorting…"
-msgstr "Сортиране на резултатите…"
+msgstr "Сортиране…"
 
 #: src/fsearch_file_utils.c:258
 msgid "Folder"
@@ -105,7 +103,7 @@ msgstr "Видео"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Свойства…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
@@ -176,7 +174,7 @@ msgstr "Тип"
 
 #: src/fsearch_window.c:704 src/menus.ui:229
 msgid "Extension"
-msgstr ""
+msgstr "Разширение"
 
 #: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
@@ -219,14 +217,13 @@ msgid "Moving files to trash…"
 msgstr "Преместване на файловете в кошчето…"
 
 #: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Наистина ли искате да отворите %d файл (а)?"
+msgstr "Наистина ли искате да отворите %d прозореца със свойствата на файла ?"
 
 #: src/fsearch_window_actions.c:194
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Отваряне на Файл (ове)…"
+msgstr "Отваряне на свойствата на файла…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
@@ -403,12 +400,14 @@ msgid "Hide results when search is empty"
 msgstr "Скриване на резултатите, когато заявката е празна"
 
 #: src/fsearch_preferences.ui:654
-#, fuzzy
 msgid ""
 "Match case when query contains at least one upper case\n"
 "                      character\n"
 "                    "
-msgstr "Случай на съвпадение, когато заявката съдържа поне една главна буква"
+msgstr ""
+"Случай на съвпадение, когато заявката съдържа поне една главна \n"
+"буква\n"
+"                    "
 
 #: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
 msgid "Search"
