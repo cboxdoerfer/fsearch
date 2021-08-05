@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-08-05 14:54+0000\n"
+"PO-Revision-Date: 2021-08-05 16:01+0000\n"
 "Last-Translator: Сергей <sw@atrus.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -26,7 +26,7 @@ msgstr "Сохранение…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
-msgstr "Konstantin Yablochkin @yakonstb"
+msgstr "Konstantin Yablochkin @yakonstb; Ser82-png"
 
 #: src/fsearch.c:342
 msgid "A search utility focusing on performance and advanced features"
@@ -690,7 +690,7 @@ msgstr ""
 "\n"
 "Если этот параметр включен, то один щелчок откроет выбранный файл/папку. "
 "Если вы хотите выбрать только файл/папку, когда этот параметр активен, вам "
-"нужно одновременно удерживать <i>Ctrl</i>, щелкая по файлу/папке."
+"нужно одновременно удерживая <i>Ctrl</i>, щелкнуть по файлу/папке."
 
 #: src/fsearch_preferences.ui:1344
 msgid ""
