@@ -1081,8 +1081,8 @@ on_fsearch_list_view_adjustment_changed(GtkAdjustment *adjustment, FsearchListVi
 
 static void
 fsearch_list_view_set_adjustment_value(GtkAdjustment *adjustment, double allocated_size, double size) {
-    gdouble old_value = gtk_adjustment_get_value(adjustment);
-    gdouble new_upper = MAX(allocated_size, size);
+    const gdouble old_value = gtk_adjustment_get_value(adjustment);
+    const gdouble new_upper = MAX(allocated_size, size);
 
     g_object_set(adjustment,
                  "lower",
@@ -1097,7 +1097,7 @@ fsearch_list_view_set_adjustment_value(GtkAdjustment *adjustment, double allocat
                  allocated_size * 0.9,
                  NULL);
 
-    gdouble new_value = CLAMP(old_value, 0, new_upper - allocated_size);
+    const gdouble new_value = CLAMP(old_value, 0, new_upper - allocated_size);
     if (new_value != old_value) {
         gtk_adjustment_set_value(adjustment, new_value);
     }
@@ -1105,13 +1105,13 @@ fsearch_list_view_set_adjustment_value(GtkAdjustment *adjustment, double allocat
 
 static void
 fsearch_list_view_set_hadjustment_value(FsearchListView *view) {
-    gint width = gtk_widget_get_allocated_width(GTK_WIDGET(view));
+    const gint width = gtk_widget_get_allocated_width(GTK_WIDGET(view));
     fsearch_list_view_set_adjustment_value(view->hadjustment, width, view->min_list_width);
 }
 
 static void
 fsearch_list_view_set_vadjustment_value(FsearchListView *view) {
-    gint height = gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
+    const gint height = gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
     fsearch_list_view_set_adjustment_value(view->vadjustment, height, view->list_height);
 }
 
