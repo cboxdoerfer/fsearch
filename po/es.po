@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-03-24 17:29+0000\n"
+"PO-Revision-Date: 2021-08-21 23:33+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
@@ -18,12 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5.2-dev\n"
+"X-Generator: Weblate 4.8.1-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "Ordenando…"
+msgstr "Grabando…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -51,22 +50,18 @@ msgid "Print version information and exit"
 msgstr "Mostrar información de la versión y salir"
 
 #: src/fsearch_database.c:628
-#, fuzzy
 msgid "Loading folders…"
 msgstr "Cargando carpetas…"
 
 #: src/fsearch_database.c:636
-#, fuzzy
 msgid "Loading files…"
 msgstr "Cargando archivos…"
 
 #: src/fsearch_database.c:1629
-#, fuzzy
 msgid "Sorting…"
 msgstr "Ordenando…"
 
 #: src/fsearch_file_utils.c:258
-#, fuzzy
 msgid "Folder"
 msgstr "Carpeta"
 
@@ -108,10 +103,9 @@ msgstr "Videos"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Propiedades…"
 
 #: src/fsearch_listview_popup.c:79
-#, fuzzy
 msgid "Other Application…"
 msgstr "Otra aplicación…"
 
@@ -146,12 +140,10 @@ msgid "Querying…"
 msgstr "Consultando…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
 msgid "Loading…"
 msgstr "Cargando…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
 msgid "Scanning…"
 msgstr "Escaneando…"
 
@@ -182,7 +174,7 @@ msgstr "Tipo"
 
 #: src/fsearch_window.c:704 src/menus.ui:229
 msgid "Extension"
-msgstr ""
+msgstr "Extensión"
 
 #: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
@@ -225,14 +217,13 @@ msgid "Moving files to trash…"
 msgstr "Enviando archivos a la papelera…"
 
 #: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "¿En verdad quiere abrir %d archivo(s)?"
+msgstr "¿En verdad quiere abrir %d ventanas de propiedades de archivo?"
 
 #: src/fsearch_window_actions.c:194
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Abrir archivo(s)…"
+msgstr "Abrir propiedades de archivo…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
@@ -289,7 +280,6 @@ msgid "Try a different search"
 msgstr "Pruebe una búsqueda distinta"
 
 #: src/fsearch_overlay.ui:365
-#, fuzzy
 msgid "Sorting results…"
 msgstr "Ordenando resultados…"
 
@@ -410,14 +400,14 @@ msgid "Hide results when search is empty"
 msgstr "Ocultar resultados cuando la búsqueda esté vacía"
 
 #: src/fsearch_preferences.ui:654
-#, fuzzy
 msgid ""
 "Match case when query contains at least one upper case\n"
 "                      character\n"
 "                    "
 msgstr ""
-"Coincidir mayúsculas y minúsculas cuando la consulta contiene al menos un "
-"carácter en mayúscula"
+"Match case when query contains at least one upper case\n"
+"                      en mayúscula\n"
+"                    "
 
 #: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
 msgid "Search"
@@ -448,7 +438,6 @@ msgid "minute(s)"
 msgstr "minuto(s)"
 
 #: src/fsearch_preferences.ui:858
-#, fuzzy
 msgid ""
 "Add path to be included in database\n"
 "                                "
@@ -808,7 +797,6 @@ msgstr ""
 "segundo plano al iniciar FSearch."
 
 #: src/fsearch_preferences.ui:1470
-#, fuzzy
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -837,11 +825,11 @@ msgstr ""
 "                      • <b>Actualizar:</b> Esta configuración es útil si "
 "desea excluir ciertas\n"
 "                      rutas de acceso de la actualización <i>(p. ej. una "
-"ruta a una unidad USB \n"
+"ruta a una unidad USB\n"
 "                      lenta que no cambia a menudo)</i>\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1494
-#, fuzzy
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -852,11 +840,12 @@ msgid ""
 msgstr ""
 "<b>Añadir carpeta a la base de datos:</b>\n"
 "\n"
-"Este botón abre un cuadro de diálogo donde puede seleccionar la carpeta que "
-"desea incluir en la base de datos para realizar búsquedas."
+"                      Este botón abre un cuadro de diálogo donde puede "
+"seleccionar la carpeta que desea incluir en la base de\n"
+"                      datos para realizar búsquedas.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1513
-#, fuzzy
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -866,7 +855,9 @@ msgid ""
 msgstr ""
 "<b>Eliminar la fila seleccionada:</b>\n"
 "\n"
-"Esto elimina la carpeta seleccionada de la lista de carpetas incluidas."
+"                      Esto elimina la carpeta seleccionada de la lista de "
+"carpetas incluidas.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1531
 msgid ""
