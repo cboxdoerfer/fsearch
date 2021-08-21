@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-05-12 06:32+0000\n"
-"Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
+"PO-Revision-Date: 2021-08-21 23:33+0000\n"
+"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
 "Language: id\n"
@@ -17,12 +17,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.7-dev\n"
+"X-Generator: Weblate 4.8.1-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "Penyortiran…"
+msgstr "Menyimpan…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -49,28 +48,24 @@ msgid "Print version information and exit"
 msgstr "Cetak informasi versi dan keluar"
 
 #: src/fsearch_database.c:628
-#, fuzzy
 msgid "Loading folders…"
-msgstr "Memuat database…"
+msgstr "Memuat folder…"
 
 #: src/fsearch_database.c:636
-#, fuzzy
 msgid "Loading files…"
-msgstr "Membuka berkas…"
+msgstr "Memuat berkas…"
 
 #: src/fsearch_database.c:1629
-#, fuzzy
 msgid "Sorting…"
 msgstr "Penyortiran…"
 
 #: src/fsearch_file_utils.c:258
-#, fuzzy
 msgid "Folder"
 msgstr "Folder"
 
 #: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
-msgstr ""
+msgstr "Tipe Tidak Diketahui"
 
 #: src/fsearch_filter.c:83
 msgid "All"
@@ -106,11 +101,11 @@ msgstr "Video"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Properti…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
-msgstr ""
+msgstr "Aplikasi lainnya…"
 
 #: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
 msgid "Select folder"
@@ -143,19 +138,17 @@ msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
 msgid "Loading…"
-msgstr "Penyortiran…"
+msgstr "Memuat…"
 
 #: src/fsearch_statusbar.c:145
-#, fuzzy
 msgid "Scanning…"
-msgstr "Penyortiran…"
+msgstr "Memindai…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1013
 #, c-format
 msgid "%'d Items"
-msgstr ""
+msgstr "%'d Item"
 
 #: src/fsearch_window.c:584 src/fsearch_window_actions.c:419
 msgid "Failed to open file"
@@ -179,7 +172,7 @@ msgstr "Jenis"
 
 #: src/fsearch_window.c:704 src/menus.ui:229
 msgid "Extension"
-msgstr ""
+msgstr "Ekstensi"
 
 #: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
@@ -210,25 +203,24 @@ msgstr "Anda pasti mahu hapuskan %d fail?"
 
 #: src/fsearch_window_actions.c:151
 msgid "Deleting files…"
-msgstr ""
+msgstr "Menghapus file…"
 
 #: src/fsearch_window_actions.c:151
 msgid "Moving files to trash…"
-msgstr ""
+msgstr "Memindahkan file ke sampah…"
 
 #: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Anda pasti mahu buka %d fail?"
+msgstr "Apakah Anda benar-benar ingin membuka jendela properti file %d?"
 
 #: src/fsearch_window_actions.c:194
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Membuka berkas…"
+msgstr "Membuka properti file…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
-msgstr ""
+msgstr "Basis Data Kosong"
 
 #: src/fsearch_overlay.ui:59
 msgid "Add folders"
@@ -245,7 +237,7 @@ msgstr "Memuat database…"
 
 #: src/fsearch_overlay.ui:122
 msgid "This won't take long."
-msgstr ""
+msgstr "Ini tidak akan lama."
 
 #: src/fsearch_overlay.ui:138 src/fsearch_overlay.ui:333
 #: src/fsearch_statusbar.ui:309
@@ -258,33 +250,31 @@ msgstr "Memperbarui Basisdata…"
 
 #: src/fsearch_overlay.ui:185 src/fsearch_overlay.ui:380
 msgid "This may take a while."
-msgstr ""
+msgstr "Ini mungkin memakan waktu cukup lama."
 
 #: src/fsearch_overlay.ui:201
-#, fuzzy
 msgid "page2"
-msgstr "page0"
+msgstr "halaman2"
 
 #: src/fsearch_overlay.ui:239
 msgid "Empty Query"
-msgstr ""
+msgstr "Kueri Kosong"
 
 #: src/fsearch_overlay.ui:254
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr ""
+msgstr "Tekan <b>Ctrl + F</b> dan mulai mengetik"
 
 #: src/fsearch_overlay.ui:302
 msgid "No Results Found"
-msgstr ""
+msgstr "Tidak ada hasil yang ditemukan"
 
 #: src/fsearch_overlay.ui:317
 msgid "Try a different search"
-msgstr ""
+msgstr "Coba pencarian lain"
 
 #: src/fsearch_overlay.ui:365
-#, fuzzy
 msgid "Sorting results…"
-msgstr "Penyortiran…"
+msgstr "Menyortir hasil…"
 
 #: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -292,27 +282,27 @@ msgstr "Preferensi"
 
 #: src/fsearch_preferences.ui:112
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Aktifkan tema gelap"
 
 #: src/fsearch_preferences.ui:127
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Aktifkan dekorasi client-side (memerlukan restart)"
 
 #: src/fsearch_preferences.ui:142
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Gunakan unit biner, bukan unit desimal"
 
 #: src/fsearch_preferences.ui:158
 msgid "Remember window size"
-msgstr ""
+msgstr "Ingat ukuran jendela"
 
 #: src/fsearch_preferences.ui:195
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "dengan pintasan papan tik atau entri menu"
 
 #: src/fsearch_preferences.ui:210
 msgid "with double click"
-msgstr ""
+msgstr "dengan klik dua kali"
 
 #: src/fsearch_preferences.ui:238
 msgid "Behaviour after successfully opening a file:"
@@ -356,11 +346,11 @@ msgstr "Ingat susunan urutan"
 
 #: src/fsearch_preferences.ui:393
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Buka jalur dengan klik ganda di kolom jalur"
 
 #: src/fsearch_preferences.ui:408
 msgid "Single click to open"
-msgstr ""
+msgstr "Satu klik untuk membuka"
 
 #: src/fsearch_preferences.ui:429
 msgid "Results:"
@@ -419,7 +409,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:717
 msgid "Update every"
-msgstr ""
+msgstr "Perbarui setiap"
 
 #: src/fsearch_preferences.ui:739
 msgid "0"
@@ -473,7 +463,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1063
 msgid "Exclude"
-msgstr ""
+msgstr "Mengecualikan"
 
 #: src/fsearch_preferences.ui:1086
 msgid "Database"
@@ -897,11 +887,11 @@ msgstr "_Fail"
 
 #: src/menus.ui:9
 msgid "New Window"
-msgstr ""
+msgstr "Buka Jendela"
 
 #: src/menus.ui:16 src/menus.ui:139
 msgid "_Open"
-msgstr ""
+msgstr "_Buka"
 
 #: src/menus.ui:21
 msgid "Open Folder"
@@ -909,67 +899,67 @@ msgstr "Buka Folder"
 
 #: src/menus.ui:29
 msgid "Update Database"
-msgstr ""
+msgstr "Perbarui Database"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "Batalkan Pembaruan"
 
 #: src/menus.ui:42
 msgid "Close Window"
-msgstr ""
+msgstr "Tutup Jendela"
 
 #: src/menus.ui:54
 msgid "_Edit"
-msgstr ""
+msgstr "_Sunting"
 
 #: src/menus.ui:57 src/menus.ui:175
 msgid "_Copy"
-msgstr ""
+msgstr "_Salin"
 
 #: src/menus.ui:62 src/menus.ui:186
 msgid "Cu_t"
-msgstr ""
+msgstr "Poto_ng"
 
 #: src/menus.ui:69
 msgid "Select All"
-msgstr ""
+msgstr "Pilih Semua"
 
 #: src/menus.ui:74
 msgid "Deselect All"
-msgstr ""
+msgstr "Batal pilih semua"
 
 #: src/menus.ui:78
 msgid "Invert Selection"
-msgstr ""
+msgstr "Pemilihan Invert"
 
 #: src/menus.ui:92
 msgid "_View"
-msgstr ""
+msgstr "_Lihat"
 
 #: src/menus.ui:109
 msgid "_Search"
-msgstr ""
+msgstr "_Cari"
 
 #: src/menus.ui:126
 msgid "_Help"
-msgstr ""
+msgstr "_Bantuan"
 
 #: src/menus.ui:145
 msgid "Open _With"
-msgstr ""
+msgstr "Buka_dengan"
 
 #: src/menus.ui:159
 msgid "_Open Folder"
-msgstr ""
+msgstr "_Buka Folder"
 
 #: src/menus.ui:181
 msgid "_Copy Filepath"
-msgstr ""
+msgstr "_Salin Jalur Berkas"
 
 #: src/menus.ui:194
 msgid "Move to _Trash"
-msgstr ""
+msgstr "Pindah ke _Sampah"
 
 #: data/fsearch.desktop.in.in:5
 msgid "FSearch"
