@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-07-24 19:33+0000\n"
+"PO-Revision-Date: 2021-08-23 10:33+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"X-Generator: Weblate 4.8.1-dev\n"
 
 #: src/fsearch.c:254
 msgid "Saving…"
@@ -104,7 +104,7 @@ msgstr "Wideo"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Właściwości…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
@@ -218,14 +218,13 @@ msgid "Moving files to trash…"
 msgstr "Przenoszenie plików do kosza…"
 
 #: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Na pewno chcesz otworzyć %d plik(i)?"
+msgstr "Na pewno chcesz otworzyć okno właściwości pliku %d?"
 
 #: src/fsearch_window_actions.c:194
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Otwieranie plików…"
+msgstr "Otwieranie okna właściwości plików…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
@@ -402,13 +401,13 @@ msgid "Hide results when search is empty"
 msgstr "Ukryj wyniki gdy pole wyszukiwania jest puste"
 
 #: src/fsearch_preferences.ui:654
-#, fuzzy
 msgid ""
 "Match case when query contains at least one upper case\n"
 "                      character\n"
 "                    "
 msgstr ""
-"Rozróżniaj wielkość liter gdy zapytanie zawiera choć jedną wielką literę"
+"Rozróżniaj wielkość liter gdy zapytanie zawiera choć jedną wielką literę\n"
+"                    "
 
 #: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
 msgid "Search"
