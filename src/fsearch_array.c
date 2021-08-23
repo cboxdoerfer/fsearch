@@ -155,8 +155,8 @@ darray_expand(DynamicArray *array, size_t min) {
     assert(array != NULL);
     assert(array->data != NULL);
 
-    size_t old_max_items = array->max_items;
-    size_t expand_rate = MAX(array->max_items / 2, min - old_max_items);
+    const size_t old_max_items = array->max_items;
+    const size_t expand_rate = MAX(array->max_items / 2, min - old_max_items);
     array->max_items += expand_rate;
 
     void *new_data = realloc(array->data, array->max_items * sizeof(void *));
@@ -281,7 +281,7 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
     if (merge_me->len == 1) {
         return merge_me;
     }
-    int num_threads = merge_me->len / 2;
+    const uint32_t num_threads = merge_me->len / 2;
 
     g_debug("[sort] merge with %d thread(s)", num_threads);
 
@@ -321,10 +321,10 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
 static int
 darray_get_ideal_thread_count() {
     // int num_processors = 1;
-    int num_processors = (int)g_get_num_processors();
+    const int num_processors = (int)g_get_num_processors();
 
-    int e = floor(log2(num_processors));
-    int num_threads = (int)pow(2, e);
+    const int e = floor(log2(num_processors));
+    const int num_threads = (int)pow(2, e);
     return MAX(num_threads, MAX_SORT_THREADS);
 }
 
@@ -338,7 +338,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
 
     g_debug("[sort] sorting with %d threads", num_threads);
 
-    int num_items_per_thread = (int)(array->num_items / num_threads);
+    const int num_items_per_thread = (int)(array->num_items / num_threads);
     GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_threads, FALSE, NULL);
 
     GArray *sort_ctx_array = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
