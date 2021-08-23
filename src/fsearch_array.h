@@ -78,8 +78,5 @@ darray_unref(DynamicArray *array);
 DynamicArray *
 darray_ref(DynamicArray *array);
 
-void
-darray_clear(DynamicArray *array);
-
 DynamicArray *
 darray_copy(DynamicArray *array);

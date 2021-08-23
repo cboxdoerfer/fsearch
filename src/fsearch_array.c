@@ -39,16 +39,6 @@ struct DynamicArray {
     volatile int ref_count;
 };
 
-void
-darray_clear(DynamicArray *array) {
-    assert(array != NULL);
-    if (array->num_items > 0) {
-        for (uint32_t i = 0; i < array->max_items; i++) {
-            array->data[i] = NULL;
-        }
-    }
-}
-
 static void
 darray_free(DynamicArray *array) {
     if (array == NULL) {
