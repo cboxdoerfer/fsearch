@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-08-03 12:34+0000\n"
+"PO-Revision-Date: 2021-08-30 21:33+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.8-dev\n"
+"X-Generator: Weblate 4.8.1-dev\n"
 
 #: src/fsearch.c:254
 msgid "Saving…"
@@ -294,15 +294,15 @@ msgstr "להשתמש ביחידות בינריות במקום ביחידות ע�
 
 #: src/fsearch_preferences.ui:158
 msgid "Remember window size"
-msgstr ""
+msgstr "לזכור את גודל החלון"
 
 #: src/fsearch_preferences.ui:195
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "עם קיצורי מקשים או רשומות בתפריט"
 
 #: src/fsearch_preferences.ui:210
 msgid "with double click"
-msgstr ""
+msgstr "עם לחיצה כפולה"
 
 #: src/fsearch_preferences.ui:238
 msgid "Behaviour after successfully opening a file:"
@@ -310,7 +310,7 @@ msgstr "התנהגות לאחר פתיחת קובץ מוצלחת:"
 
 #: src/fsearch_preferences.ui:254
 msgid "Nothing"
-msgstr ""
+msgstr "כלום"
 
 #: src/fsearch_preferences.ui:255
 msgid "Minimize"
@@ -326,11 +326,11 @@ msgstr "כללי:"
 
 #: src/fsearch_preferences.ui:317
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "הצגת מונחי חיפוש מודגשים"
 
 #: src/fsearch_preferences.ui:333
 msgid "Show tooltips"
-msgstr ""
+msgstr "הצגת חלוניות עצה"
 
 #: src/fsearch_preferences.ui:348
 msgid "Show icons in name column"
@@ -338,11 +338,11 @@ msgstr "הצגת סמלים בעמודת השם"
 
 #: src/fsearch_preferences.ui:363
 msgid "Remember column configuration"
-msgstr ""
+msgstr "שמירת תצורת העמודות"
 
 #: src/fsearch_preferences.ui:378
 msgid "Remember sort order"
-msgstr ""
+msgstr "שמירת אופן המיון"
 
 #: src/fsearch_preferences.ui:393
 msgid "Open path with double click in path column"
@@ -350,11 +350,11 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:408
 msgid "Single click to open"
-msgstr ""
+msgstr "לחיצה בודדת לפתיחה"
 
 #: src/fsearch_preferences.ui:429
 msgid "Results:"
-msgstr ""
+msgstr "תוצאות:"
 
 #: src/fsearch_preferences.ui:470
 msgid "Show database indexing status"
