@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2020-10-15 18:26+0000\n"
+"PO-Revision-Date: 2021-08-30 21:33+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -18,12 +18,11 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.3-dev\n"
+"X-Generator: Weblate 4.8.1-dev\n"
 
 #: src/fsearch.c:254
-#, fuzzy
 msgid "Saving…"
-msgstr "Carregando a base de dados…"
+msgstr "A gravar…"
 
 #: src/fsearch.c:340
 msgid "translator-credits"
@@ -58,9 +57,8 @@ msgid "Loading folders…"
 msgstr "Carregando a base de dados…"
 
 #: src/fsearch_database.c:636
-#, fuzzy
 msgid "Loading files…"
-msgstr "A apagar ficheiros…"
+msgstr "A carregar ficheiros…"
 
 #: src/fsearch_database.c:1629
 #, fuzzy
@@ -68,13 +66,12 @@ msgid "Sorting…"
 msgstr "Carregando a base de dados…"
 
 #: src/fsearch_file_utils.c:258
-#, fuzzy
 msgid "Folder"
-msgstr "Pastas"
+msgstr "Pasta"
 
 #: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
-msgstr ""
+msgstr "Tipo desconhecido"
 
 #: src/fsearch_filter.c:83
 msgid "All"
@@ -90,32 +87,31 @@ msgstr "Ficheiros"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr ""
+msgstr "Arquivos"
 
 #: src/fsearch_filter.c:93
 msgid "Audio"
-msgstr ""
+msgstr "Áudio"
 
 #: src/fsearch_filter.c:96
 msgid "Documents"
-msgstr ""
+msgstr "Documentos"
 
 #: src/fsearch_filter.c:101
 msgid "Pictures"
-msgstr ""
+msgstr "Fotos"
 
 #: src/fsearch_filter.c:106
 msgid "Videos"
-msgstr ""
+msgstr "Vídeos"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
 msgstr ""
 
 #: src/fsearch_listview_popup.c:79
-#, fuzzy
 msgid "Other Application…"
-msgstr "Outra Aplicação"
+msgstr "Outra aplicação…"
 
 #: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
 #, fuzzy
@@ -148,12 +144,11 @@ msgstr "Caminho"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
-msgstr ""
+msgstr "A consultar…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
 msgid "Loading…"
-msgstr "Carregando a base de dados…"
+msgstr "A carregar…"
 
 #: src/fsearch_statusbar.c:145
 msgid "Scanning…"
@@ -269,9 +264,8 @@ msgid "This may take a while."
 msgstr "Isto pode demorar um bocado."
 
 #: src/fsearch_overlay.ui:201
-#, fuzzy
 msgid "page2"
-msgstr "Página 0"
+msgstr "página2"
 
 #: src/fsearch_overlay.ui:239
 msgid "Empty Query"
@@ -327,7 +321,7 @@ msgstr "Comportamento após abrir ficheiro com sucesso:"
 
 #: src/fsearch_preferences.ui:254
 msgid "Nothing"
-msgstr ""
+msgstr "Nada"
 
 #: src/fsearch_preferences.ui:255
 msgid "Minimize"
@@ -339,7 +333,7 @@ msgstr "Fechar"
 
 #: src/fsearch_preferences.ui:282
 msgid "General:"
-msgstr ""
+msgstr "Geral:"
 
 #: src/fsearch_preferences.ui:317
 msgid "Show highlighted search terms"
@@ -371,12 +365,11 @@ msgstr "Abrir com clique único"
 
 #: src/fsearch_preferences.ui:429
 msgid "Results:"
-msgstr ""
+msgstr "Resultados:"
 
 #: src/fsearch_preferences.ui:470
-#, fuzzy
 msgid "Show database indexing status"
-msgstr "Atualizar base de dados ao iniciar"
+msgstr "Mostrar status de indexação da base de dados"
 
 #: src/fsearch_preferences.ui:491
 msgid "Statusbar:"
@@ -391,9 +384,8 @@ msgid "file / folder failed to open"
 msgstr "Falhar ao abrir arquivo/pasta"
 
 #: src/fsearch_preferences.ui:565
-#, fuzzy
 msgid "Dialogs:"
-msgstr "Caixas de diálogos"
+msgstr "Caixas de diálogo:"
 
 #: src/fsearch_preferences.ui:590
 msgid "Interface"
@@ -430,25 +422,24 @@ msgid "Update database on start"
 msgstr "Atualizar base de dados ao iniciar"
 
 #: src/fsearch_preferences.ui:717
-#, fuzzy
 msgid "Update every"
-msgstr "Atualizar"
+msgstr "Atualizar a cada"
 
 #: src/fsearch_preferences.ui:739
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/fsearch_preferences.ui:756
 msgid "hour(s) and"
-msgstr ""
+msgstr "hora(s) e"
 
 #: src/fsearch_preferences.ui:768
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/fsearch_preferences.ui:786
 msgid "minute(s)"
-msgstr ""
+msgstr "minuto(s)"
 
 #: src/fsearch_preferences.ui:858
 msgid ""
@@ -458,7 +449,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:875 src/fsearch_preferences.ui:974
 msgid "Remove selected path"
-msgstr ""
+msgstr "Remover caminho selecionado"
 
 #: src/fsearch_preferences.ui:901
 msgid "Include"
@@ -466,7 +457,7 @@ msgstr "Incluir"
 
 #: src/fsearch_preferences.ui:958
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Adicionar caminho para ser excluído da base de dados"
 
 #: src/fsearch_preferences.ui:1010 src/fsearch_preferences.ui:1023
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -502,6 +493,13 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Ativar tema escuro:</b>\n"
+"\n"
+"Se ativado, o tema do sistema é solicitado a usar um estilo mais escuro para "
+"a aplicação <i>(i.e. elementos de IU escuros em texto claro)</i>.\n"
+"\n"
+"Observe que nem todos os temas do sistema fornecem uma variante mais escura, "
+"portanto, ativar essa configuração pode não surtir efeito."
 
 #: src/fsearch_preferences.ui:1136
 msgid ""
@@ -526,6 +524,14 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Usar unidades binárias em vez de unidades decimais: </b>\n"
+"\n"
+"Esta configuração controla como os tamanhos dos ficheiros são exibidos.\n"
+"\n"
+"\t• <b>Unidades binárias:</b> refere-se aos prefixos IEC binários <i>(por "
+"exemplo, 1 KiB = 1024 bytes)</i>\n"
+"\t• <b>Unidades decimais:</b> refere-se aos prefixos SI decimais <i>(por "
+"exemplo, 1 kB = 1000 bytes)</i>"
 
 #: src/fsearch_preferences.ui:1176
 msgid ""
@@ -537,6 +543,13 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Lembrar o tamanho da janela:</b>\n"
+"\n"
+"Se ativado, o tamanho da janela da sessão anterior será restaurado quando "
+"abrir uma janela FSearch.\n"
+"\n"
+"Observe que alguns gerenciadores de janela ignoram esta solicitação e forçam "
+"a janela a ter um tamanho diferente."
 
 #: src/fsearch_preferences.ui:1195
 msgid ""
@@ -585,6 +598,9 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Mostrar ícones na coluna de nome:</b>\n"
+"\n"
+"Se ativado, os ícones de ficheiros/pastas serão mostrados na coluna de nome."
 
 #: src/fsearch_preferences.ui:1276
 msgid ""
@@ -594,6 +610,11 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>Lembrar da configuração da coluna:</b>\n"
+"\n"
+"Se ativado, a configuração da coluna da exibição de resultados da sessão "
+"anterior será restaurada quando abrir uma janela FSearch. Isso inclui o "
+"tamanho e a visibilidade de todas as colunas."
 
 #: src/fsearch_preferences.ui:1293
 msgid ""
@@ -602,6 +623,10 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Lembrar da ordem de classificação:</b>\n"
+"\n"
+"Se ativada, a ordem de classificação da exibição de resultados da sessão "
+"anterior será restaurada quando abrir uma janela FSearch."
 
 #: src/fsearch_preferences.ui:1310
 msgid ""
@@ -609,6 +634,10 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>Abrir o caminho com um clique duplo na coluna de caminho:</b>\n"
+"\n"
+"Se ativado, um clique duplo na coluna de caminho abrirá o caminho "
+"selecionado."
 
 #: src/fsearch_preferences.ui:1327
 msgid ""
@@ -626,6 +655,10 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>Mostrar status de indexação da base de dados:</b>\n"
+"\n"
+"Se ativado, o caminho que está sendo indexado atualmente é exibido na barra "
+"de status."
 
 #: src/fsearch_preferences.ui:1361
 msgid ""
@@ -672,6 +705,13 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>Pesquisar enquanto digita:</b>\n"
+"\n"
+"Se ativado, a pesquisa é atualizada automaticamente a cada pressionamento de "
+"tecla.\n"
+"\n"
+"Se desativado, a pesquisa só é atualizada quando pressiona <i>Enter</i> ou "
+"pressiona o botão de pesquisa. "
 
 #: src/fsearch_preferences.ui:1453
 msgid ""
@@ -680,6 +720,10 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>Atualizar base de dados ao iniciar:</b>\n"
+"\n"
+"Se ativado, a base de dados será atualizada automaticamente em segundo plano "
+"quando iniciar o FSearch."
 
 #: src/fsearch_preferences.ui:1470
 msgid ""
@@ -781,9 +825,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
 msgid "Help"
-msgstr "_Ajuda"
+msgstr "Ajuda"
 
 #: src/fsearch_statusbar.ui:43
 msgid "Number of Search Results"
@@ -795,30 +838,27 @@ msgstr "0 Itens"
 
 #: src/fsearch_statusbar.ui:81
 msgid "Index:"
-msgstr ""
+msgstr "Índice:"
 
 #: src/fsearch_statusbar.ui:156
-#, fuzzy
 msgid "Number of selected folders"
-msgstr "Número de Resultados de Pesquisa"
+msgstr "Quantidade de pastas selecionadas"
 
 #: src/fsearch_statusbar.ui:157 src/fsearch_statusbar.ui:182
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch_statusbar.ui:181
-#, fuzzy
 msgid "Number of selected files"
-msgstr "Número de Resultados de Pesquisa"
+msgstr "Quantidade de ficheiros selecionados"
 
 #: src/fsearch_statusbar.ui:256 src/fsearch_window.ui:102
-#, fuzzy
 msgid "Cancel database update"
-msgstr "Atualizar base de dados ao iniciar"
+msgstr "Cancelar atualização da base de dados"
 
 #: src/fsearch_statusbar.ui:297
 msgid "Number of database items"
-msgstr ""
+msgstr "Quantidade de itens na base de dados"
 
 #: src/fsearch_statusbar.ui:298
 msgid "(empty)"
@@ -917,14 +957,12 @@ msgid "Update Database"
 msgstr "Atualizar Base de Dados"
 
 #: src/menus.ui:35
-#, fuzzy
 msgid "Cancel Update"
-msgstr "Atualizar"
+msgstr "Cancelar atualização"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Nova Janela"
+msgstr "Fechar janela"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -936,12 +974,11 @@ msgstr "_Copiar"
 
 #: src/menus.ui:62 src/menus.ui:186
 msgid "Cu_t"
-msgstr ""
+msgstr "Cor_tar"
 
 #: src/menus.ui:69
-#, fuzzy
 msgid "Select All"
-msgstr "Desmarcar Tudo"
+msgstr "Selecionar tudo"
 
 #: src/menus.ui:74
 msgid "Deselect All"
