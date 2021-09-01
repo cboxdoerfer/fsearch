@@ -145,11 +145,11 @@ prepend_name_to_list(gpointer key, gpointer value, gpointer user_data) {
 
     GList **file_list = (GList **)user_data;
     FsearchDatabaseEntry *entry = value;
-    const char *name = db_entry_get_name_raw_for_display(entry);
+    GString *name = db_entry_get_name_for_display(entry);
     if (!name) {
         return;
     }
-    *file_list = g_list_prepend(*file_list, g_strdup(name));
+    *file_list = g_list_prepend(*file_list, g_string_free(g_steal_pointer(&name), FALSE));
 }
 
 static bool
