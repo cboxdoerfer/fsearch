@@ -145,7 +145,7 @@ prepend_name_to_list(gpointer key, gpointer value, gpointer user_data) {
 
     GList **file_list = (GList **)user_data;
     FsearchDatabaseEntry *entry = value;
-    const char *name = db_entry_get_name(entry);
+    const char *name = db_entry_get_name_raw_for_display(entry);
     if (!name) {
         return;
     }

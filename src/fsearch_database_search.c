@@ -268,7 +268,7 @@ db_search_worker(void *data) {
             break;
         }
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        const char *haystack_name = db_entry_get_name(entry);
+        const char *haystack_name = db_entry_get_name_raw_for_display(entry);
         if (G_UNLIKELY(!haystack_name)) {
             continue;
         }

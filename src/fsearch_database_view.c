@@ -561,7 +561,7 @@ db_view_entry_get_name_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     assert(view != NULL);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
-    return entry ? g_string_new(db_entry_get_name(entry)) : NULL;
+    return entry ? g_string_new(db_entry_get_name_raw_for_display(entry)) : NULL;
 }
 
 GString *

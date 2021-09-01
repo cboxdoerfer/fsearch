@@ -100,7 +100,7 @@ db_entry_get_extension(FsearchDatabaseEntry *entry) {
 }
 
 const char *
-db_entry_get_name(FsearchDatabaseEntry *entry) {
+db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
@@ -194,8 +194,8 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
         return 0;
     }
 
-    const char *name_a = db_entry_get_name(*a);
-    const char *name_b = db_entry_get_name(*b);
+    const char *name_a = db_entry_get_name_raw_for_display(*a);
+    const char *name_b = db_entry_get_name_raw_for_display(*b);
     char *file_type_a = fsearch_file_utils_get_file_type_non_localized(name_a, FALSE);
     char *file_type_b = fsearch_file_utils_get_file_type_non_localized(name_b, FALSE);
 
