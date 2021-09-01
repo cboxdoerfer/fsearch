@@ -177,11 +177,21 @@
                 <attribute name="accel">&lt;control&gt;c</attribute>
                 <attribute name="icon">edit-copy</attribute>
             </item>
-            <item>
-                <attribute name="label" translatable="yes">_Copy Filepath</attribute>
-                <attribute name="action">win.copy_filepath_clipboard</attribute>
-                <attribute name="accel">&lt;shift&gt;&lt;control&gt;c</attribute>
-            </item>
+            <submenu id="fsearch_listview_menu_copy_as_text">
+                <attribute name="label" translatable="yes">Copy as Text</attribute>
+                <item>
+                    <attribute name="label" translatable="yes">Name</attribute>
+                    <attribute name="action">win.copy_as_text_name_clipboard</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Path</attribute>
+                    <attribute name="action">win.copy_as_text_path_clipboard</attribute>
+                </item>
+                <item>
+                    <attribute name="label" translatable="yes">Path + Name</attribute>
+                    <attribute name="action">win.copy_as_text_path_and_name_clipboard</attribute>
+                </item>
+            </submenu>
             <item>
                 <attribute name="label" translatable="yes">Cu_t</attribute>
                 <attribute name="action">win.cut_clipboard</attribute>
