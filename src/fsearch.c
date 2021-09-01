@@ -48,6 +48,7 @@ struct _FsearchApplication {
     GThreadPool *db_pool;
     GList *filters;
 
+    char *option_search_term;
     bool new_window;
 
     guint file_manager_watch_id;
@@ -317,6 +318,24 @@ database_pool_func(gpointer data, gpointer user_data) {
 }
 
 static void
+move_search_term_to_window(FsearchApplication *app, FsearchApplicationWindow *win) {
+    if (!app->option_search_term) {
+        return;
+    }
+    GtkEntry *entry = fsearch_application_window_get_search_entry(win);
+    if (!entry) {
+        return;
+    }
+
+    gtk_entry_set_text(entry, app->option_search_term);
+    g_clear_pointer(&app->option_search_term, g_free);
+
+    // Make sure the entry also has focus and the text is selected
+    gtk_widget_grab_focus(GTK_WIDGET(entry));
+    gtk_editable_select_region(GTK_EDITABLE(entry), 0, -1);
+}
+
+static void
 action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
@@ -418,6 +437,10 @@ action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpo
 static void
 action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     GtkWindow *window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
+    FsearchApplication *self = FSEARCH_APPLICATION(app);
+
+    move_search_term_to_window(self, FSEARCH_APPLICATION_WINDOW(window));
+
     gtk_window_present(window);
 }
 
@@ -460,6 +483,8 @@ fsearch_application_shutdown(GApplication *app) {
 
     g_clear_pointer(&fsearch->db, db_unref);
     g_clear_object(&fsearch->db_thread_cancellable);
+
+    g_clear_pointer(&fsearch->option_search_term, g_free);
 
     if (fsearch->filters) {
         g_list_free_full(g_steal_pointer(&fsearch->filters), (GDestroyNotify)fsearch_filter_unref);
@@ -599,11 +624,8 @@ fsearch_application_activate(GApplication *app) {
             window = windows->data;
 
             if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
-                GtkWidget *entry =
-                    GTK_WIDGET(fsearch_application_window_get_search_entry((FsearchApplicationWindow *)window));
-                if (entry) {
-                    gtk_widget_grab_focus(entry);
-                }
+                move_search_term_to_window(self, FSEARCH_APPLICATION_WINDOW(window));
+
                 gtk_window_present(window);
                 return;
             }
@@ -641,6 +663,12 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
     if (g_variant_dict_contains(dict, "update-database")) {
         g_action_group_activate_action(G_ACTION_GROUP(self), "update_database", NULL);
         return 0;
+    }
+
+    const gchar *search_term = NULL;
+    if (g_variant_dict_lookup(dict, "search", "&s", &search_term)) {
+        g_clear_pointer(&self->option_search_term, g_free);
+        self->option_search_term = g_strdup(search_term);
     }
 
     g_application_activate(G_APPLICATION(self));
@@ -806,6 +834,7 @@ fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
         {"new-window", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Open a new application window")},
         {"preferences", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Show the application preferences")},
+        {"search", 's', 0, G_OPTION_ARG_STRING, NULL, N_("Set the search pattern"), "PATTERN"},
         {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update the database and exit")},
         {"version", 'v', 0, G_OPTION_ARG_NONE, NULL, N_("Print version information and exit")},
         {NULL}};
