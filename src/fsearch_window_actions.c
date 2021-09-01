@@ -108,48 +108,58 @@ prepend_path_uri_to_array(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
+prepend_string_to_list(GList **string_list,
+                       FsearchDatabaseEntry *entry,
+                       GString *(*get_string_func)(FsearchDatabaseEntry *)) {
+    if (!entry || !string_list || !get_string_func) {
+        return;
+    }
+
+    GString *string = get_string_func(entry);
+    if (!string) {
+        return;
+    }
+    *string_list = g_list_prepend(*string_list, g_string_free(g_steal_pointer(&string), FALSE));
+}
+
+static void
+append_line_to_string(GString *buffer,
+                      FsearchDatabaseEntry *entry,
+                      GString *(*get_string_func)(FsearchDatabaseEntry *)) {
+    if (!entry || !buffer || !get_string_func) {
+        return;
+    }
+
+    GString *string = get_string_func(entry);
+    if (!string) {
+        return;
+    }
+    if (buffer->len > 0) {
+        g_string_append_c(buffer, '\n');
+    }
+    g_string_append(buffer, string->str);
+
+    g_string_free(g_steal_pointer(&string), TRUE);
+}
+
+static void
 prepend_full_path_to_list(gpointer key, gpointer value, gpointer user_data) {
-    if (!value) {
-        return;
-    }
-
-    GList **file_list = (GList **)user_data;
-    FsearchDatabaseEntry *entry = value;
-    GString *path_full = db_entry_get_path_full(entry);
-    if (!path_full) {
-        return;
-    }
-    *file_list = g_list_prepend(*file_list, g_string_free(g_steal_pointer(&path_full), FALSE));
+    prepend_string_to_list(user_data, value, db_entry_get_path_full);
 }
 
 static void
-prepend_path_to_list(gpointer key, gpointer value, gpointer user_data) {
-    if (!value) {
-        return;
-    }
-
-    GList **file_list = (GList **)user_data;
-    FsearchDatabaseEntry *entry = value;
-    GString *path = db_entry_get_path(entry);
-    if (!path) {
-        return;
-    }
-    *file_list = g_list_prepend(*file_list, g_string_free(g_steal_pointer(&path), FALSE));
+append_full_path_to_string(gpointer key, gpointer value, gpointer user_data) {
+    append_line_to_string(user_data, value, db_entry_get_path_full);
 }
 
 static void
-prepend_name_to_list(gpointer key, gpointer value, gpointer user_data) {
-    if (!value) {
-        return;
-    }
+append_path_to_string(gpointer key, gpointer value, gpointer user_data) {
+    append_line_to_string(user_data, value, db_entry_get_path);
+}
 
-    GList **file_list = (GList **)user_data;
-    FsearchDatabaseEntry *entry = value;
-    GString *name = db_entry_get_name_for_display(entry);
-    if (!name) {
-        return;
-    }
-    *file_list = g_list_prepend(*file_list, g_string_free(g_steal_pointer(&name), FALSE));
+static void
+append_name_to_string(gpointer key, gpointer value, gpointer user_data) {
+    append_line_to_string(user_data, value, db_entry_get_name_for_display);
 }
 
 static bool
@@ -320,32 +330,32 @@ fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer us
 }
 
 static void
-copy_as_text(FsearchApplicationWindow *win, GHFunc text_copy_func) {
-    GList *file_list = NULL;
-    fsearch_application_window_selection_for_each(win, text_copy_func, &file_list);
-    file_list = g_list_reverse(file_list);
-    clipboard_copy_filepath_list(file_list);
-    if (file_list) {
-        g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
-    }
+copy_selection_as_text(FsearchApplicationWindow *win, GHFunc text_copy_func) {
+    GString *file_list_buffer = g_string_sized_new(8192);
+    fsearch_application_window_selection_for_each(win, text_copy_func, file_list_buffer);
+
+    GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
+    gtk_clipboard_set_text(clip, file_list_buffer->str, (gint)file_list_buffer->len);
+
+    g_string_free(g_steal_pointer(&file_list_buffer), TRUE);
 }
 
 static void
 fsearch_window_action_copy_full_path(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    copy_as_text(win, prepend_full_path_to_list);
+    copy_selection_as_text(win, append_full_path_to_string);
 }
 
 static void
 fsearch_window_action_copy_path(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    copy_as_text(win, prepend_path_to_list);
+    copy_selection_as_text(win, append_path_to_string);
 }
 
 static void
 fsearch_window_action_copy_name(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
-    copy_as_text(win, prepend_name_to_list);
+    copy_selection_as_text(win, append_name_to_string);
 }
 
 static void
