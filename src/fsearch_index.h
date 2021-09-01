@@ -15,12 +15,18 @@ typedef struct _FsearchIndex {
     char *path;
     bool enabled;
     bool update;
+    bool one_filesystem;
 
     time_t last_updated;
 } FsearchIndex;
 
 FsearchIndex *
-fsearch_index_new(FsearchIndexType type, const char *path, bool search_in, bool update, time_t last_updated);
+fsearch_index_new(FsearchIndexType type,
+                  const char *path,
+                  bool search_in,
+                  bool update,
+                  bool one_filesystem,
+                  time_t last_updated);
 
 FsearchIndex *
 fsearch_index_copy(FsearchIndex *index);

@@ -1194,6 +1194,9 @@ typedef struct DatabaseWalkContext {
     GTimer *timer;
     GCancellable *cancellable;
     void (*status_cb)(const char *);
+
+    dev_t root_device_id;
+    bool one_filesystem;
     bool exclude_hidden;
 } DatabaseWalkContext;
 
@@ -1264,6 +1267,11 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             continue;
         }
 
+        if (walk_context->one_filesystem && walk_context->root_device_id != st.st_dev) {
+            g_debug("[db_scan] different filesystem, skipping: %s", path->str);
+            continue;
+        }
+
         const bool is_dir = S_ISDIR(st.st_mode);
         if (is_dir && directory_is_excluded(path->str, db->excludes)) {
             g_debug("[db_scan] excluded directory: %s", path->str);
@@ -1306,7 +1314,11 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 }
 
 static bool
-db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable, void (*status_cb)(const char *)) {
+db_scan_folder(FsearchDatabase *db,
+               const char *dname,
+               bool one_filesystem,
+               GCancellable *cancellable,
+               void (*status_cb)(const char *)) {
     assert(dname != NULL);
     assert(dname[0] == G_DIR_SEPARATOR);
     g_debug("[db_scan] scan path: %s", dname);
@@ -1324,12 +1336,20 @@ db_scan_folder(FsearchDatabase *db, const char *dname, GCancellable *cancellable
 
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
+
+    struct stat root_st;
+    if (lstat(dname, &root_st)) {
+        g_debug("[db_scan] can't stat: %s", dname);
+    }
+
     DatabaseWalkContext walk_context = {
         .db = db,
         .path = path,
         .timer = timer,
         .cancellable = cancellable,
         .status_cb = status_cb,
+        .root_device_id = root_st.st_dev,
+        .one_filesystem = one_filesystem,
         .exclude_hidden = db->exclude_hidden,
     };
 
@@ -1622,7 +1642,7 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
             continue;
         }
         if (fs_path->update) {
-            ret = db_scan_folder(db, fs_path->path, cancellable, status_cb) || ret;
+            ret = db_scan_folder(db, fs_path->path, fs_path->one_filesystem, cancellable, status_cb) || ret;
         }
     }
     if (status_cb) {

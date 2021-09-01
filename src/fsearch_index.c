@@ -8,7 +8,12 @@
 #include "fsearch_index.h"
 
 FsearchIndex *
-fsearch_index_new(FsearchIndexType type, const char *path, bool search_in, bool update, time_t last_updated) {
+fsearch_index_new(FsearchIndexType type,
+                  const char *path,
+                  bool search_in,
+                  bool update,
+                  bool one_filesystem,
+                  time_t last_updated) {
     FsearchIndex *index = calloc(1, sizeof(FsearchIndex));
     assert(index != NULL);
 
@@ -16,6 +21,7 @@ fsearch_index_new(FsearchIndexType type, const char *path, bool search_in, bool 
     index->path = path ? strdup(path) : strdup("");
     index->enabled = search_in;
     index->update = update;
+    index->one_filesystem = one_filesystem;
     index->last_updated = last_updated;
 
     return index;
@@ -26,7 +32,12 @@ fsearch_index_copy(FsearchIndex *index) {
     if (!index) {
         return NULL;
     }
-    return fsearch_index_new(index->type, index->path, index->enabled, index->update, index->last_updated);
+    return fsearch_index_new(index->type,
+                             index->path,
+                             index->enabled,
+                             index->update,
+                             index->one_filesystem,
+                             index->last_updated);
 }
 
 void

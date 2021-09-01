@@ -120,10 +120,13 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
         bool enabled = config_load_boolean(key_file, "Database", key, true);
         snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
         bool update = config_load_boolean(key_file, "Database", key, true);
+        snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
+        bool one_filesystem = config_load_boolean(key_file, "Database", key, false);
 
         pos++;
         if (path) {
-            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, 0);
+            FsearchIndex *index =
+                fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, 0);
             indexes = g_list_append(indexes, index);
             g_clear_pointer(&path, free);
         }
@@ -370,7 +373,7 @@ config_load_default(FsearchConfig *config) {
 
     // Locations
     config->indexes = NULL;
-    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, g_get_home_dir(), true, true, 0);
+    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, g_get_home_dir(), true, true, false, 0);
     config->indexes = g_list_append(config->indexes, index);
     config->exclude_locations = NULL;
 
@@ -399,6 +402,9 @@ config_save_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
 
         snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
         g_key_file_set_boolean(key_file, "Database", key, index->update);
+
+        snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
+        g_key_file_set_boolean(key_file, "Database", key, index->one_filesystem);
 
         pos++;
     }
@@ -591,6 +597,9 @@ config_indexes_compare(void *i1, void *i2) {
         return false;
     }
     if (index1->update != index2->update) {
+        return false;
+    }
+    if (index1->one_filesystem != index2->one_filesystem) {
         return false;
     }
     if (g_strcmp0(index1->path, index2->path) != 0) {

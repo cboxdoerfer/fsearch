@@ -5,7 +5,7 @@
 #include "fsearch_exclude_path.h"
 #include "fsearch_index.h"
 
-enum { COL_INDEX_ENABLE, COL_INDEX_PATH, COL_INDEX_UPDATE, NUM_INDEX_COLUMNS };
+enum { COL_INDEX_ENABLE, COL_INDEX_PATH, COL_INDEX_UPDATE, COL_INDEX_ONE_FS, NUM_INDEX_COLUMNS };
 
 enum { COL_EXCLUDE_ENABLE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
 
@@ -48,6 +48,12 @@ on_column_index_enable_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpo
 }
 
 static void
+on_column_index_one_fs_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *index_model = data;
+    on_column_toggled(path_str, index_model, COL_INDEX_ONE_FS);
+}
+
+static void
 on_column_index_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
     GtkTreeModel *index_model = data;
     on_column_toggled(path_str, index_model, COL_INDEX_UPDATE);
@@ -81,6 +87,7 @@ pref_index_treeview_data_get(GtkTreeView *view) {
         gchar *path = NULL;
         gboolean update = FALSE;
         gboolean enable = FALSE;
+        gboolean one_filesystem = FALSE;
         gtk_tree_model_get(model,
                            &iter,
                            COL_INDEX_ENABLE,
@@ -89,10 +96,12 @@ pref_index_treeview_data_get(GtkTreeView *view) {
                            &path,
                            COL_INDEX_UPDATE,
                            &update,
+                           COL_INDEX_ONE_FS,
+                           &one_filesystem,
                            -1);
 
         if (path) {
-            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enable, update, 0);
+            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enable, update, one_filesystem, 0);
             data = g_list_append(data, index);
             g_clear_pointer(&path, g_free);
         }
@@ -138,7 +147,7 @@ pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *it
 
 void
 pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path) {
-    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, true, true, 0);
+    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, true, true, false, 0);
 
     GtkTreeIter iter;
     gtk_list_store_append(GTK_LIST_STORE(index_model), &iter);
@@ -150,6 +159,8 @@ pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path) {
                        index->path,
                        COL_INDEX_UPDATE,
                        index->update,
+                       COL_INDEX_ONE_FS,
+                       index->one_filesystem,
                        -1);
 }
 
@@ -170,7 +181,8 @@ pref_exclude_treeview_row_add(GtkTreeModel *exclude_model, const char *path) {
 
 GtkTreeModel *
 pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
-    GtkListStore *store = gtk_list_store_new(NUM_INDEX_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN);
+    GtkListStore *store =
+        gtk_list_store_new(NUM_INDEX_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(store));
 
     column_toggle_append(view,
@@ -180,6 +192,12 @@ pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
                          G_CALLBACK(on_column_index_enable_toggled),
                          store);
     column_text_append(view, _("Path"), TRUE, COL_INDEX_PATH);
+    column_toggle_append(view,
+                         GTK_TREE_MODEL(store),
+                         _("One Filesystem"),
+                         COL_INDEX_ONE_FS,
+                         G_CALLBACK(on_column_index_one_fs_toggled),
+                         store);
     // column_toggle_append(view,
     //                      GTK_TREE_MODEL(store),
     //                      _("Update"),
@@ -199,6 +217,8 @@ pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
                            index->path,
                            COL_INDEX_UPDATE,
                            index->update,
+                           COL_INDEX_ONE_FS,
+                           index->one_filesystem,
                            -1);
     }
 
