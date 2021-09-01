@@ -110,6 +110,12 @@ db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry) {
     return G_DIR_SEPARATOR_S;
 }
 
+GString *
+db_entry_get_name_for_display(FsearchDatabaseEntry *entry) {
+    const char *name = db_entry_get_name_raw_for_display(entry);
+    return name ? g_string_new(name) : NULL;
+}
+
 const char *
 db_entry_get_name_raw(FsearchDatabaseEntry *entry) {
     return entry ? entry->shared.name : NULL;

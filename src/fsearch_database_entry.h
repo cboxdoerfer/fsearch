@@ -63,6 +63,9 @@ db_entry_get_size(FsearchDatabaseEntry *entry);
 const char *
 db_entry_get_extension(FsearchDatabaseEntry *entry);
 
+GString *
+db_entry_get_name_for_display(FsearchDatabaseEntry *entry);
+
 const char *
 db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry);
 
