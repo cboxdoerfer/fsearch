@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2021-08-30 21:33+0000\n"
+"PO-Revision-Date: 2021-09-02 07:33+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -425,25 +425,27 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:786
 msgid "minute(s)"
-msgstr ""
+msgstr "דקה/ות"
 
 #: src/fsearch_preferences.ui:858
 msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
+"הוספת נתיב להכללה במסד הנתונים\n"
+"                                "
 
 #: src/fsearch_preferences.ui:875 src/fsearch_preferences.ui:974
 msgid "Remove selected path"
-msgstr ""
+msgstr "הסרת הנתיב הנבחר"
 
 #: src/fsearch_preferences.ui:901
 msgid "Include"
-msgstr ""
+msgstr "לכלול"
 
 #: src/fsearch_preferences.ui:958
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "הוספת נתיב להחרגה ממסד הנתונים"
 
 #: src/fsearch_preferences.ui:1010 src/fsearch_preferences.ui:1023
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -451,23 +453,23 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1011
 msgid "Exclude files:"
-msgstr ""
+msgstr "קבצים מוחרגים:"
 
 #: src/fsearch_preferences.ui:1024
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "למשל: „‎.git;*.tmp”"
 
 #: src/fsearch_preferences.ui:1041
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "להחריג קבצים ותיקיות מוסתרים"
 
 #: src/fsearch_preferences.ui:1063
 msgid "Exclude"
-msgstr ""
+msgstr "החרגה"
 
 #: src/fsearch_preferences.ui:1086
 msgid "Database"
-msgstr ""
+msgstr "מסד נתונים"
 
 #: src/fsearch_preferences.ui:1118
 msgid ""
