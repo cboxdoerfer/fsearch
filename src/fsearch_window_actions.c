@@ -374,7 +374,7 @@ open_cb(gpointer key, gpointer value, gpointer data) {
 }
 
 static void
-open_with_cb(gpointer key, gpointer value, gpointer data) {
+append_file_to_list(gpointer key, gpointer value, gpointer data) {
     if (!value) {
         return;
     }
@@ -422,14 +422,13 @@ launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info)
     }
 
     GList *file_list = NULL;
-    fsearch_application_window_selection_for_each(win, open_with_cb, &file_list);
-    g_app_info_launch(app_info, file_list, G_APP_LAUNCH_CONTEXT(launch_context), NULL);
-
-    g_clear_object(&launch_context);
-
+    fsearch_application_window_selection_for_each(win, append_file_to_list, &file_list);
     if (file_list) {
+        g_app_info_launch(app_info, file_list, G_APP_LAUNCH_CONTEXT(launch_context), NULL);
         g_list_free_full(g_steal_pointer(&file_list), g_object_unref);
     }
+
+    g_clear_object(&launch_context);
 }
 
 static void
