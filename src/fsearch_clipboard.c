@@ -48,43 +48,33 @@ clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, gu
     }
 
     GString *list = g_string_sized_new(8192);
-    gboolean use_uri = FALSE;
 
     if (info == GNOME_COPIED_FILES) {
+        g_debug("[get_data] GNOME_COPIED_FILES");
         const gchar *action = clipboard_action == GDK_ACTION_MOVE ? "cut\n" : "copy\n";
         g_string_append(list, action);
-        use_uri = TRUE;
     }
     else if (info == URI_LIST) {
-        use_uri = TRUE;
+        g_debug("[get_data] URI_LIST");
     }
     else if (info == NAUTILUS_WORKAROUND) {
+        g_debug("[get_data] NAUTILUS_WORKAROUND");
         g_string_append(list, "x-special/nautilus-clipboard\n");
         const gchar *action = clipboard_action == GDK_ACTION_MOVE ? "cut\n" : "copy\n";
         g_string_append(list, action);
-        use_uri = TRUE;
     }
     else {
+        g_debug("[get_data] unknown format: %d", info);
         goto out;
     }
 
-    GList *l = NULL;
-    for (l = clipboard_file_list; l; l = l->next) {
-        gchar *file_name = NULL;
-        if (use_uri) {
-            file_name = g_filename_to_uri((char *)l->data, NULL, NULL);
-        }
-        else {
-            file_name = g_filename_display_name((char *)l->data);
-        }
+    for (GList *l = clipboard_file_list; l; l = l->next) {
+        gchar *file_name = g_filename_to_uri((char *)l->data, NULL, NULL);
         g_string_append(list, file_name);
         g_clear_pointer(&file_name, g_free);
 
         if (l->next != NULL) {
-            if (info == GNOME_COPIED_FILES) {
-                g_string_append_c(list, '\n');
-            }
-            else if (info == URI_LIST) {
+            if (info == URI_LIST) {
                 g_string_append(list, "\r\n");
             }
             else {
@@ -100,7 +90,7 @@ clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, gu
                            gtk_selection_data_get_target(selection_data),
                            8,
                            (guchar *)list->str,
-                           list->len + 1);
+                           (gint)list->len + 1);
 
 out:
 
