@@ -115,26 +115,3 @@ clipboard_copy_file_list(GList *file_list, bool copy) {
     clipboard_file_list = file_list;
     clipboard_action = copy ? GDK_ACTION_COPY : GDK_ACTION_MOVE;
 }
-
-void
-clipboard_copy_filepath_list(GList *file_list) {
-    GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-    GString *filepathlist = NULL;
-    if (g_list_length(file_list) == 1) {
-        gchar *file_name = NULL;
-        file_name = (char *)(g_list_first(file_list))->data;
-        filepathlist = g_string_new(file_name);
-    }
-    else {
-        filepathlist = g_string_sized_new(8192);
-        for (GList *file = file_list; file != NULL; file = file->next) {
-            gchar *file_name = NULL;
-            file_name = (char *)file->data;
-
-            g_string_append(filepathlist, file_name);
-            g_string_append(filepathlist, "\n");
-        }
-    }
-    gtk_clipboard_set_text(clip, filepathlist->str, (gint)filepathlist->len);
-    g_string_free(g_steal_pointer(&filepathlist), TRUE);
-}
