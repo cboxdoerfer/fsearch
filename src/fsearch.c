@@ -335,33 +335,43 @@ move_search_term_to_window(FsearchApplication *app, FsearchApplicationWindow *wi
     gtk_editable_select_region(GTK_EDITABLE(entry), -1, -1);
 }
 
+static FsearchApplicationWindow *
+get_first_application_window(FsearchApplication *app) {
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
+
+    if (!windows || !FSEARCH_IS_APPLICATION_WINDOW(windows->data)) {
+        return NULL;
+    }
+
+    return FSEARCH_APPLICATION_WINDOW(windows->data);
+}
+
 static void
 action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-
-    for (; windows; windows = windows->next) {
-        GtkWindow *window = windows->data;
-        gtk_show_about_dialog(GTK_WINDOW(window),
-                              "program-name",
-                              PACKAGE_NAME,
-                              "logo-icon-name",
-                              "system-search",
-                              "license-type",
-                              GTK_LICENSE_GPL_2_0,
-                              "copyright",
-                              "Christian Boxdörfer",
-                              "website",
-                              "https://github.com/cboxdoerfer/fsearch",
-                              "version",
-                              PACKAGE_VERSION,
-                              "translator-credits",
-                              _("translator-credits"),
-                              "comments",
-                              _("A search utility focusing on performance and advanced features"),
-                              NULL);
-        break;
+    FsearchApplicationWindow *window = get_first_application_window(app);
+    if (!window) {
+        return;
     }
+
+    gtk_show_about_dialog(GTK_WINDOW(window),
+                          "program-name",
+                          PACKAGE_NAME,
+                          "logo-icon-name",
+                          "system-search",
+                          "license-type",
+                          GTK_LICENSE_GPL_2_0,
+                          "copyright",
+                          "Christian Boxdörfer",
+                          "website",
+                          "https://github.com/cboxdoerfer/fsearch",
+                          "version",
+                          PACKAGE_VERSION,
+                          "translator-credits",
+                          _("translator-credits"),
+                          "comments",
+                          _("A search utility focusing on performance and advanced features"),
+                          NULL);
 }
 
 static void
@@ -617,18 +627,11 @@ fsearch_application_activate(GApplication *app) {
 
     if (!self->new_window) {
         // If there's already a window make it visible
-        GtkWindow *window = NULL;
-        GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-
-        for (; windows; windows = windows->next) {
-            window = windows->data;
-
-            if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
-                move_search_term_to_window(self, FSEARCH_APPLICATION_WINDOW(window));
-
-                gtk_window_present(window);
-                return;
-            }
+        FsearchApplicationWindow *window = get_first_application_window(FSEARCH_APPLICATION(app));
+        if (window) {
+            move_search_term_to_window(self, window);
+            gtk_window_present(GTK_WINDOW(window));
+            return;
         }
     }
 
