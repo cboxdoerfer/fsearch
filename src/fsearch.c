@@ -332,7 +332,7 @@ move_search_term_to_window(FsearchApplication *app, FsearchApplicationWindow *wi
 
     // Make sure the entry also has focus and the text is selected
     gtk_widget_grab_focus(GTK_WIDGET(entry));
-    gtk_editable_select_region(GTK_EDITABLE(entry), 0, -1);
+    gtk_editable_select_region(GTK_EDITABLE(entry), -1, -1);
 }
 
 static void
