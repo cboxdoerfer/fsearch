@@ -533,10 +533,9 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
 
 static void
 on_file_open_failed_response(GtkDialog *dialog, GtkResponseType response, gpointer user_data) {
-    if (response != GTK_RESPONSE_YES) {
-        fsearch_window_action_after_file_open(false);
-    }
+    GString *path = user_data;
     gtk_widget_destroy(GTK_WIDGET(dialog));
+    g_string_free(path, TRUE);
 }
 
 static void
@@ -575,18 +574,16 @@ on_fsearch_list_view_row_activated(FsearchListView *view,
         // open succeeded
         fsearch_window_action_after_file_open(true);
     }
-    else {
+    else if (config->show_dialog_failed_opening) {
         // open failed
-        if ((config->action_after_file_open_keyboard || config->action_after_file_open_mouse)
-            && config->show_dialog_failed_opening) {
-            ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
-                                          GTK_MESSAGE_WARNING,
-                                          GTK_BUTTONS_YES_NO,
-                                          _("Failed to open file"),
-                                          _("Do you want to keep the window open?"),
-                                          G_CALLBACK(on_file_open_failed_response),
-                                          NULL);
-        }
+        ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                      GTK_MESSAGE_WARNING,
+                                      GTK_BUTTONS_OK,
+                                      _("Failed to open:"),
+                                      path_full->str,
+                                      G_CALLBACK(on_file_open_failed_response),
+                                      path_full);
+        path_full = NULL;
     }
 
 out:
