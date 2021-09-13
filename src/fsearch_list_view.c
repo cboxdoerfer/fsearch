@@ -1388,15 +1388,15 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
     }
     else {
         view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, (int)(event->y));
-    }
 
-    if (view->single_click_activate && view->hovered_idx >= 0) {
-        GdkCursor *cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
-        gdk_window_set_cursor(event->window, cursor);
-        g_clear_object(&cursor);
-    }
-    else {
-        gdk_window_set_cursor(event->window, NULL);
+        if (view->single_click_activate && view->hovered_idx >= 0) {
+            GdkCursor *cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
+            gdk_window_set_cursor(event->window, cursor);
+            g_clear_object(&cursor);
+        }
+        else {
+            gdk_window_set_cursor(event->window, NULL);
+        }
     }
 
     if (old_hovered_idx != view->hovered_idx) {
