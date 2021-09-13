@@ -48,6 +48,7 @@ typedef void (*FsearchListViewDrawRowFunc)(cairo_t *cr,
                                            uint32_t row,
                                            gboolean row_selected,
                                            gboolean row_focused,
+                                           gboolean row_hovered,
                                            gboolean right_to_left_text,
                                            gpointer user_data);
 

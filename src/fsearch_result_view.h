@@ -35,4 +35,5 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
                              uint32_t row,
                              gboolean row_selected,
                              gboolean row_focused,
+                             gboolean row_hovered,
                              gboolean right_to_left_text);

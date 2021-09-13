@@ -631,6 +631,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
                            uint32_t row,
                            gboolean row_selected,
                            gboolean row_focused,
+                           gboolean row_hovered,
                            gboolean right_to_left_text,
                            gpointer user_data) {
     if (!columns) {
@@ -652,6 +653,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
                                  row,
                                  row_selected,
                                  row_focused,
+                                 row_hovered,
                                  right_to_left_text);
 }
 

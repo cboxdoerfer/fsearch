@@ -261,6 +261,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
                              uint32_t row,
                              gboolean row_selected,
                              gboolean row_focused,
+                             gboolean row_hovered,
                              gboolean right_to_left_text) {
     if (!columns) {
         return;
@@ -280,12 +281,18 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
     if (row_focused) {
         flags |= GTK_STATE_FLAG_FOCUSED;
     }
+    if (row_hovered) {
+        flags |= GTK_STATE_FLAG_PRELIGHT;
+    }
 
     gtk_style_context_save(context);
     gtk_style_context_set_state(context, flags);
 
     // Render row background
     gtk_render_background(context, cr, rect->x, rect->y, rect->width, rect->height);
+    if (row_hovered) {
+        gtk_render_focus(context, cr, rect->x, rect->y, rect->width, rect->height);
+    }
 
     // Render row foreground
     int32_t x = rect->x;
