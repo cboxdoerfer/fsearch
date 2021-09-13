@@ -424,6 +424,9 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
         && view->focused_idx <= first_visible_row + num_rows_in_view) {
         GtkStateFlags flags = gtk_style_context_get_state(context);
         flags |= GTK_STATE_FLAG_FOCUSED;
+        if (fsearch_list_view_is_selected(view, view->focused_idx)) {
+            flags |= GTK_STATE_FLAG_SELECTED;
+        }
 
         gtk_style_context_save(context);
         gtk_style_context_set_state(context, flags);
