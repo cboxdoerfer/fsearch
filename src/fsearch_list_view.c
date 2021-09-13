@@ -1387,7 +1387,7 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
         view->hovered_idx = -1;
     }
     else {
-        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_view(view, (int)(event->y + view->header_height));
+        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, (int)(event->y));
     }
 
     if (view->single_click_activate && view->hovered_idx >= 0) {
