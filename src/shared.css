@@ -68,6 +68,9 @@
 .results_frame treeview button {
     border-radius: 0;
     border-top: 0;
+    border-right: 0;
+    margin-left: 0;
+    margin-right: 0;
 }
 
 .results_frame treeview button:first-child:dir(rtl) {
