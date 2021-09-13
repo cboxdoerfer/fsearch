@@ -1958,7 +1958,6 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
     view->focused_idx = CLAMP(row_idx, 0, view->num_rows);
     fsearch_list_view_selection_add(view, view->focused_idx);
     fsearch_list_view_scroll_row_into_view(view, row_idx);
-    gtk_widget_queue_draw(GTK_WIDGET(view));
 }
 
 void
