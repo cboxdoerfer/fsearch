@@ -1009,7 +1009,7 @@ fsearch_list_view_focus_out_event(GtkWidget *widget, GdkEventFocus *event) {
     // FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     // view->focused_idx = -1;
     gtk_widget_queue_draw(widget);
-    return TRUE;
+    return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->focus_out_event(widget, event);
 }
 
 static gboolean
@@ -1366,6 +1366,18 @@ fsearch_list_view_grab_focus(GtkWidget *widget) {
 }
 
 static gboolean
+fsearch_list_view_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event) {
+    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
+    if (gtk_widget_get_realized(widget)) {
+        gdk_window_set_cursor(view->bin_window, NULL);
+        gtk_widget_queue_draw(widget);
+    }
+    view->hovered_idx = -1;
+
+    return TRUE;
+}
+
+static gboolean
 fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
@@ -1377,6 +1389,16 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
     else {
         view->hovered_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
     }
+
+    if (view->single_click_activate && view->hovered_idx >= 0) {
+        GdkCursor *cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
+        gdk_window_set_cursor(event->window, cursor);
+        g_clear_object(&cursor);
+    }
+    else {
+        gdk_window_set_cursor(event->window, NULL);
+    }
+
     gtk_widget_queue_draw(GTK_WIDGET(view));
 
     return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->motion_notify_event(widget, event);
@@ -1545,6 +1567,7 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
     widget_class->grab_focus = fsearch_list_view_grab_focus;
     widget_class->focus_out_event = fsearch_list_view_focus_out_event;
     widget_class->motion_notify_event = fsearch_list_view_motion_notify_event;
+    widget_class->leave_notify_event = fsearch_list_view_leave_notify_event;
 
     container_class->forall = fsearch_list_view_container_for_all;
     container_class->remove = fsearch_list_view_container_remove;
