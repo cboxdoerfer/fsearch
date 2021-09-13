@@ -1381,13 +1381,13 @@ static gboolean
 fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
-    gdouble x = event->x;
-    gdouble y = event->y + view->header_height;
-    if (y < view->header_height) {
+    const gint old_hovered_idx = view->hovered_idx;
+
+    if (event->window != view->bin_window) {
         view->hovered_idx = -1;
     }
     else {
-        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
+        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_view(view, (int)(event->y + view->header_height));
     }
 
     if (view->single_click_activate && view->hovered_idx >= 0) {
@@ -1399,7 +1399,9 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
         gdk_window_set_cursor(event->window, NULL);
     }
 
-    gtk_widget_queue_draw(GTK_WIDGET(view));
+    if (old_hovered_idx != view->hovered_idx) {
+        gtk_widget_queue_draw(GTK_WIDGET(view));
+    }
 
     return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->motion_notify_event(widget, event);
 }
