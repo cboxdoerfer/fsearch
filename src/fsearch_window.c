@@ -728,6 +728,12 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
 }
 
+static guint
+on_listview_row_num_selected(gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
+    return win->result_view->database_view ? db_view_get_num_selected(win->result_view->database_view) : 0;
+}
+
 static void
 on_listview_row_unselect_all(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
@@ -830,6 +836,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
                                              on_listview_row_select_toggle,
                                              on_listview_row_select_range,
                                              on_listview_row_unselect_all,
+                                             on_listview_row_num_selected,
                                              win);
     fsearch_list_view_set_single_click_activate(list_view, config->single_click_open);
     fsearch_list_view_set_sort_type(list_view,

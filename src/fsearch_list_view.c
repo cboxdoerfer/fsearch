@@ -52,9 +52,6 @@ struct _FsearchListView {
     gint rubberband_start_idx;
     gint rubberband_end_idx;
 
-    GHashTable *selection;
-    uint32_t num_selected;
-
     gboolean single_click_activate;
 
     gint focused_idx;
@@ -90,6 +87,7 @@ struct _FsearchListView {
     FsearchListViewSelectRangeFunc select_range_func;
     FsearchListViewSelectToggleFunc select_toggle_func;
     FsearchListViewUnselectAllFunc unselect_func;
+    FsearchListViewNumSelectedFunc num_selected_func;
     gpointer selection_user_data;
 };
 
@@ -170,16 +168,30 @@ fsearch_list_view_get_columns_width(FsearchListView *view) {
 }
 
 static gboolean
-fsearch_list_view_is_row_in_view(FsearchListView *view, int row_idx) {
+get_row_rect_in_view(FsearchListView *view, int row_idx, cairo_rectangle_int_t *rec) {
     if (row_idx < 0) {
         return FALSE;
     }
 
-    int y_view_start = floor(gtk_adjustment_get_value(view->vadjustment));
-    int y_view_end = y_view_start + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
-    int y_row = row_idx * view->row_height;
+    const int y_view_start = floor(gtk_adjustment_get_value(view->vadjustment));
+    const int y_view_end = y_view_start + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
+    const int y_row = row_idx * view->row_height;
 
-    if (y_view_start <= y_row && y_row <= y_view_end - view->row_height) {
+    if (y_view_start - view->row_height < y_row && y_row < y_view_end) {
+        rec->x = 0;
+        rec->y = y_row - y_view_start;
+        rec->width = gdk_window_get_width(view->bin_window);
+        rec->height = view->row_height;
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static gboolean
+redraw_row(FsearchListView *view, int row_idx) {
+    cairo_rectangle_int_t rec = {};
+    if (get_row_rect_in_view(view, row_idx, &rec)) {
+        gtk_widget_queue_draw_area(GTK_WIDGET(view), rec.x, rec.y + view->header_height, rec.width, rec.height);
         return TRUE;
     }
     return FALSE;
@@ -537,14 +549,13 @@ static void
 fsearch_list_view_scroll_row_into_view(FsearchListView *view, int row_idx) {
     row_idx = CLAMP(row_idx, 0, view->num_rows - 1);
 
-    if (fsearch_list_view_is_row_in_view(view, row_idx)) {
-        gtk_widget_queue_draw(GTK_WIDGET(view));
+    if (redraw_row(view, row_idx)) {
         return;
     }
 
     int view_height = gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
     int y_row = view->row_height * row_idx;
-    int y_view_start = floor(gtk_adjustment_get_value(view->vadjustment)) + view->header_height;
+    int y_view_start = (int)floor(gtk_adjustment_get_value(view->vadjustment)) + view->header_height;
 
     if (y_view_start >= y_row) {
         gtk_adjustment_set_value(view->vadjustment, y_row);
@@ -559,6 +570,11 @@ fsearch_list_view_selection_changed(FsearchListView *view) {
     gtk_widget_queue_draw(GTK_WIDGET(view));
 }
 
+static guint
+fsearch_list_view_selection_num_selected(FsearchListView *view) {
+    return view->has_selection_handlers ? view->num_selected_func(view->selection_user_data) : 0;
+}
+
 static void
 fsearch_list_view_selection_clear_silent(FsearchListView *view) {
     if (view->has_selection_handlers) {
@@ -570,7 +586,7 @@ static void
 fsearch_list_view_selection_add(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
         view->select_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
-        fsearch_list_view_selection_changed(view);
+        redraw_row(view, row);
     }
 }
 
@@ -984,16 +1000,22 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         view->last_clicked_idx = -1;
         view->focused_idx = CLAMP(old_focused_idx + d_idx, 0, view->num_rows - 1);
 
+        const guint num_selected = fsearch_list_view_selection_num_selected(view);
+
         if (extend_selection) {
             if (view->extend_started_idx < 0) {
                 view->extend_started_idx = old_focused_idx;
             }
-            fsearch_list_view_selection_clear_silent(view);
+            if (num_selected > 0) {
+                fsearch_list_view_selection_clear_silent(view);
+            }
             fsearch_list_view_select_range_silent(view, view->extend_started_idx, view->focused_idx);
         }
         else if (!modify_selection) {
             view->extend_started_idx = -1;
-            fsearch_list_view_selection_clear_silent(view);
+            if (num_selected > 0) {
+                fsearch_list_view_selection_clear_silent(view);
+            }
             fsearch_list_view_selection_toggle_silent(view, view->focused_idx);
         }
 
@@ -1006,9 +1028,8 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 
 static gint
 fsearch_list_view_focus_out_event(GtkWidget *widget, GdkEventFocus *event) {
-    // FsearchListView *view = FSEARCH_LIST_VIEW(widget);
-    // view->focused_idx = -1;
-    gtk_widget_queue_draw(widget);
+    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
+    redraw_row(view, view->focused_idx);
     return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->focus_out_event(widget, event);
 }
 
@@ -1370,7 +1391,7 @@ fsearch_list_view_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event)
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     if (gtk_widget_get_realized(widget)) {
         gdk_window_set_cursor(view->bin_window, NULL);
-        gtk_widget_queue_draw(widget);
+        redraw_row(view, view->hovered_idx);
     }
     view->hovered_idx = -1;
 
@@ -1400,7 +1421,8 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
     }
 
     if (old_hovered_idx != view->hovered_idx) {
-        gtk_widget_queue_draw(GTK_WIDGET(view));
+        redraw_row(view, old_hovered_idx);
+        redraw_row(view, view->hovered_idx);
     }
 
     return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->motion_notify_event(widget, event);
@@ -1923,6 +1945,7 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
                                          FsearchListViewSelectToggleFunc select_toggle_func,
                                          FsearchListViewSelectRangeFunc select_range_func,
                                          FsearchListViewUnselectAllFunc unselect_func,
+                                         FsearchListViewNumSelectedFunc num_selected_func,
                                          gpointer user_data) {
     if (!view) {
         return;
@@ -1932,6 +1955,7 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
     view->select_toggle_func = select_toggle_func;
     view->select_range_func = select_range_func;
     view->unselect_func = unselect_func;
+    view->num_selected_func = num_selected_func;
     view->selection_user_data = user_data;
 
     if (is_selected_func && select_func && select_toggle_func && unselect_func) {
