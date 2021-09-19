@@ -226,8 +226,8 @@ fsearch_list_view_convert_view_to_canvas_coords(FsearchListView *view,
                                                 int *y_canvas) {
 
     cairo_rectangle_int_t canvas_rect;
-    canvas_rect.x = gtk_adjustment_get_value(view->hadjustment);
-    canvas_rect.y = gtk_adjustment_get_value(view->vadjustment);
+    canvas_rect.x = (int)gtk_adjustment_get_value(view->hadjustment);
+    canvas_rect.y = (int)gtk_adjustment_get_value(view->vadjustment);
     canvas_rect.width = gdk_window_get_width(view->bin_window);
     canvas_rect.height = gdk_window_get_height(view->bin_window);
 
@@ -382,8 +382,8 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
 
     const int columns_width = fsearch_list_view_get_columns_effective_width(view);
     cairo_rectangle_int_t canvas_rect;
-    canvas_rect.x = -gtk_adjustment_get_value(view->hadjustment);
-    canvas_rect.y = -gtk_adjustment_get_value(view->vadjustment);
+    canvas_rect.x = -(int)gtk_adjustment_get_value(view->hadjustment);
+    canvas_rect.y = -(int)gtk_adjustment_get_value(view->vadjustment);
     canvas_rect.width = gdk_window_get_width(view->bin_window);
     canvas_rect.height = gdk_window_get_height(view->bin_window);
 
