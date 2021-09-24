@@ -46,13 +46,6 @@ https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/
 
 https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/
 
-##### copr Installation
-
-```
-sudo dnf copr enable cboxdoerfer/fsearch_nightly
-sudo dnf install fsearch
-````
-
 #### NixOS (unofficial)
 https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch
 #### openSUSE (unofficial)
