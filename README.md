@@ -41,7 +41,7 @@ https://aur.archlinux.org/packages/fsearch-git/
 
 https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/
 
-##### Daily Development Builds
+##### Development Builds
 [![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/)
 
 https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/
@@ -58,7 +58,7 @@ https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch
 #### openSUSE (unofficial)
 https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch
 #### Ubuntu
-##### Daily Development Builds PPA
+##### Development Builds
 https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
 
 ##### PPA Installation
