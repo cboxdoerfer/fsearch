@@ -4,8 +4,6 @@
 
 FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK3.
 
-**Note: The application is still in beta stage**
-
 * For bug reports and feature requests please use the issue tracker: https://github.com/cboxdoerfer/fsearch/issues
 * For everything else related to FSearch you can talk to me on Matrix: https://matrix.to/#/#fsearch:matrix.org
 
