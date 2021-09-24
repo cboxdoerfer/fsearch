@@ -36,6 +36,12 @@ https://aur.archlinux.org/packages/fsearch-git/
 
 #### Fedora/RHEL/CentOS
 
+##### Release Builds
+[![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/package/fsearch/)
+
+https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/
+
+##### Daily Development Builds
 [![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/)
 
 https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/
