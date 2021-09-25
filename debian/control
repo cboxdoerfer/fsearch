@@ -28,11 +28,3 @@ Description: A fast graphical file search utility
     FSearch is a fast file search utility, based on GTK3.
     It supports regular expressions, wildcards, fast sorting,
     instant results with millions of files and more.
-
-Package: fsearch-trunk
-Depends: fsearch, ${misc:Depends}
-Architecture: all
-Priority: optional
-Section: oldlibs
-Description: transitional package
-    This is a transitional package. It can safely be removed.
