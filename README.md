@@ -51,16 +51,11 @@ https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch
 #### openSUSE (unofficial)
 https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch
 #### Ubuntu
+
+##### Release Builds
+https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable
 ##### Development Builds
 https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
-
-##### PPA Installation
-
-```
-sudo add-apt-repository ppa:christian-boxdoerfer/fsearch-daily
-sudo apt-get update
-sudo apt install fsearch-trunk
-```
  
 ## Roadmap
 https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
