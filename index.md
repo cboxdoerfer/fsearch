@@ -33,35 +33,35 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ### Ubuntu
 
-**Release Builds:**
-<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable>
+* Release Builds:
+  <https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable>
 
-**Development Builds:**
-<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily>
+* Development Builds:
+  <https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily>
 
 ### Arch Linux (AUR)
 
-**Release Builds:**
-<https://aur.archlinux.org/packages/fsearch/>
+* Release Builds:
+  <https://aur.archlinux.org/packages/fsearch/>
 
-**Development Builds**:
-<https://aur.archlinux.org/packages/fsearch-git/>
+* Development Builds:
+  <https://aur.archlinux.org/packages/fsearch-git/>
 
 ### Fedora/RHEL/CentOS
 
-**Release Builds:**
-<https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/>
+* Release Builds:
+  <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/>
 
-**Development Builds:**
-<https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/>
+* Development Builds:
+  <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/>
 
 ### NixOS (unofficial)
 
-**Development Builds:** <https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch>
+* Development Builds: <https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch>
 
 ### openSUSE (unofficial)
 
-**Development Builds:** <https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch>
+* Development Builds: <https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch>
 
 ## Roadmap
 
