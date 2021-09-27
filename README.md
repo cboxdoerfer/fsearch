@@ -31,7 +31,9 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 ## Download
 
 #### Arch Linux (AUR)
-
+##### Release Builds
+https://aur.archlinux.org/packages/fsearch/
+##### Development Builds
 https://aur.archlinux.org/packages/fsearch-git/
 
 #### Fedora/RHEL/CentOS
