@@ -22,6 +22,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 - Customizable interface (e.g., switch between traditional UI with menubar and client-side decorations)
 
 ## Requirements
+
 - GTK 3.18
 - GLib 2.44
 - glibc 2.19 or musl 1.1.15 (other C standard libraries might work too, those are just the ones I verified)
@@ -30,42 +31,48 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ## Download
 
-#### Arch Linux (AUR)
-##### Release Builds
+### Ubuntu
+
+**Release Builds:**
+<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable>
+
+**Development Builds:**
+<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily>
+
+### Arch Linux (AUR)
+
+**Release Builds:**
 <https://aur.archlinux.org/packages/fsearch/>
-##### Development Builds
+
+**Development Builds**:
 <https://aur.archlinux.org/packages/fsearch-git/>
 
-#### Fedora/RHEL/CentOS
+### Fedora/RHEL/CentOS
 
-##### Release Builds
-[![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/package/fsearch/)
-
+**Release Builds:**
 <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/>
 
-##### Development Builds
-[![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/)
-
+**Development Builds:**
 <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/>
 
-#### NixOS (unofficial)
-<https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch>
-#### openSUSE (unofficial)
-<https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch>
-#### Ubuntu
+### NixOS (unofficial)
 
-##### Release Builds
-<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable>
-##### Development Builds
-<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily>
- 
+**Development Builds:** <https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch>
+
+### openSUSE (unofficial)
+
+**Development Builds:** <https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch>
+
 ## Roadmap
+
 <https://github.com/cboxdoerfer/fsearch/wiki/Roadmap>
 
 ## Build Instructions
+
 <https://github.com/cboxdoerfer/fsearch/wiki/Build-instructions>
 
 ## Localization
+
 The localization of FSearch is managed with Weblate.
 
 <https://hosted.weblate.org/projects/fsearch/>
