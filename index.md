@@ -4,8 +4,8 @@
 
 FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK3.
 
-* For bug reports and feature requests please use the issue tracker: https://github.com/cboxdoerfer/fsearch/issues
-* For everything else related to FSearch you can talk to me on Matrix: https://matrix.to/#/#fsearch:matrix.org
+* For bug reports and feature requests please use the issue tracker: <https://github.com/cboxdoerfer/fsearch/issues>
+* For everything else related to FSearch you can talk to me on Matrix: <https://matrix.to/#/#fsearch:matrix.org>
 
 ![](https://user-images.githubusercontent.com/6108388/94472642-51f60a80-01cb-11eb-9b8c-e38fe2c02e43.png)
 ![](https://user-images.githubusercontent.com/6108388/94607184-dd3ed100-029b-11eb-86db-121e7984ca92.png)
@@ -32,47 +32,47 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 #### Arch Linux (AUR)
 ##### Release Builds
-https://aur.archlinux.org/packages/fsearch/
+<https://aur.archlinux.org/packages/fsearch/>
 ##### Development Builds
-https://aur.archlinux.org/packages/fsearch-git/
+<https://aur.archlinux.org/packages/fsearch-git/>
 
 #### Fedora/RHEL/CentOS
 
 ##### Release Builds
 [![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/package/fsearch/)
 
-https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/
+<https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/>
 
 ##### Development Builds
 [![Copr build status](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/status_image/last_build.png)](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/package/fsearch/)
 
-https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/
+<https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/>
 
 #### NixOS (unofficial)
-https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch
+<https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch>
 #### openSUSE (unofficial)
-https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch
+<https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch>
 #### Ubuntu
 
 ##### Release Builds
-https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable
+<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable>
 ##### Development Builds
-https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily
+<https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily>
  
 ## Roadmap
-https://github.com/cboxdoerfer/fsearch/wiki/Roadmap
+<https://github.com/cboxdoerfer/fsearch/wiki/Roadmap>
 
 ## Build Instructions
-https://github.com/cboxdoerfer/fsearch/wiki/Build-instructions
+<https://github.com/cboxdoerfer/fsearch/wiki/Build-instructions>
 
 ## Localization
 The localization of FSearch is managed with Weblate.
 
-https://hosted.weblate.org/projects/fsearch/
+<https://hosted.weblate.org/projects/fsearch/>
 
 If you want to contribute translations please submit them there, instead of opening pull requets on GitHub. Instructions
 can be found here:
-https://docs.weblate.org/en/latest/user/basic.html
+<https://docs.weblate.org/en/latest/user/basic.html>
 
 And of course: Thank you for taking the time to translate FSearch!
 
