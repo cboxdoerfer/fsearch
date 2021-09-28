@@ -14,15 +14,15 @@
         <p>
             There are a lot of features which make searching as efficient and powerful
             as possible. Such as:
-            <ul>
-                <li>Ignore case (e.g. searching for "fsearch" will match "FSearch" as well)</li>
-                <li>Regular expressions</li>
-                <li>Wildcard support</li>
-                <li>Filter support (e.g. only search for audio files)</li>
-                <li>Exclude certain files and folders</li>
-                <li>Fast sort by name, path, size, modification time and extension</li>
-            </ul>
         </p>
+        <ul>
+            <li>Ignore case (e.g. searching for "fsearch" will match "FSearch" as well)</li>
+            <li>Regular expressions</li>
+            <li>Wildcard support</li>
+            <li>Filter support (e.g. only search for audio files)</li>
+            <li>Exclude certain files and folders</li>
+            <li>Fast sort by name, path, size, modification time and extension</li>
+        </ul>
         <p>
             Note: Due to Flatpak's sandboxing, FSearch can't find every file on your system.
         </p>
