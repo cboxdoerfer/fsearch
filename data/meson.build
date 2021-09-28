@@ -24,3 +24,22 @@ if desktop_utils.found()
     args: [desktop_file]
   )
 endif
+
+appdata_file = i18n.merge_file(
+  input: 'io.github.cboxdoerfer.FSearch.appdata.xml.in',
+  output: 'io.github.cboxdoerfer.FSearch.appdata.xml',
+  type: 'xml',
+  po_dir: join_paths(meson.source_root(), 'po'),
+  install: true,
+  install_dir: join_paths(get_option('datadir'), 'metainfo')
+)
+
+appstream_util = find_program('appstream-util', required: false)
+if appstream_util.found()
+  test(
+    'validate-appdata', appstream_util,
+    args: [
+      'validate-relax', '--nonet', appdata_file.full_path()
+    ]
+  )
+endif

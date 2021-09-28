@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021 Christian Boxdörfer <christian.boxdoerfer@posteo.de> -->
+<component type="desktop-application">
+    <id>io.github.cboxdoerfer.FSearch</id>
+    <metadata_license>CC0-1.0</metadata_license>
+    <project_license>GPL-2.0+</project_license>
+    <name>FSearch</name>
+    <summary>A graphical file search application</summary>
+    <description>
+        <p>
+            FSearch helps you to find files and folders as easy and fast as possible.
+            Just type a few letters and search results will appear almost instantly.
+        </p>
+        <p>
+            There are a lot of features which make searching as efficient and powerful
+            as possible. Such as:
+            <ul>
+                <li>Ignore case (e.g. searching for "fsearch" will match "FSearch" as well)</li>
+                <li>Regular expressions</li>
+                <li>Wildcard support</li>
+                <li>Filter support (e.g. only search for audio files)</li>
+                <li>Exclude certain files and folders</li>
+                <li>Fast sort by name, path, size, modification time and extension</li>
+            </ul>
+        </p>
+        <p>
+            Note: Due to Flatpak's sandboxing, FSearch can't find every file on your system.
+        </p>
+    </description>
+    <screenshots>
+        <screenshot type="default">
+            <image>https://user-images.githubusercontent.com/6108388/94472642-51f60a80-01cb-11eb-9b8c-e38fe2c02e43.png
+            </image>
+            <caption>The default UI layout</caption>
+        </screenshot>
+        <screenshot>
+            <image>https://user-images.githubusercontent.com/6108388/94607184-dd3ed100-029b-11eb-86db-121e7984ca92.png
+            </image>
+            <caption>A layout more closely following GNOME HIGs</caption>
+        </screenshot>
+    </screenshots>
+    <url type="homepage">https://github.com/cboxdoerfer/fsearch</url>
+    <url type="bugtracker">https://github.com/cboxdoerfer/fsearch/issues</url>
+    <url type="help">https://github.com/cboxdoerfer/fsearch/issues</url>
+    <!-- Translators: please do NOT translate this. -->
+    <developer_name>Christian Boxdörfer</developer_name>
+    <update_contact>christian.boxdoerfer_at_posteo.de</update_contact>
+    <translation type="gettext">fsearch</translation>
+    <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.appdata.xml.in`. -->
+    <content_rating type="oars-1.0"/>
+    <releases>
+        <release date="2021-09-25" version="0.1"/>
+    </releases>
+    <launchable type="desktop-id">io.github.cboxdoerfer.FSearch.desktop</launchable>
+</component>
