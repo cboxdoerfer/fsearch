@@ -49,7 +49,11 @@
     <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.appdata.xml.in`. -->
     <content_rating type="oars-1.0"/>
     <releases>
-        <release date="2021-09-25" version="0.1"/>
+        <release date="2021-09-25" version="0.1">
+            <description>
+                <p>Initial release.</p>
+            </description>
+        </release>
     </releases>
     <launchable type="desktop-id">io.github.cboxdoerfer.FSearch.desktop</launchable>
 </component>
