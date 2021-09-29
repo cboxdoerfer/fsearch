@@ -1,7 +1,13 @@
-resources = gnome.compile_resources('resources',
+resources = gnome.compile_resources('ui_resources',
     'gresource.xml',
     source_dir: '.',
-    c_name: 'fsearch',
+    c_name: 'fsearch_ui',
+)
+
+resources += gnome.compile_resources('icon_resources',
+    join_paths(meson.source_root(), 'data', 'gresource.xml'),
+    source_dir: join_paths(meson.source_root(), 'data'),
+    c_name: 'fsearch_icons',
 )
 
 libfsearch_sources = [

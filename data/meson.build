@@ -1,5 +1,9 @@
 install_man('fsearch.1')
 
+install_data('io.github.cboxdoerfer.FSearch.svg',
+  install_dir: join_paths(get_option('datadir'), 'icons', 'hicolor', 'scalable', 'apps'))
+
+
 desktop_file_in_config = configuration_data()
 desktop_file_in_config.set('app_id', app_id)
 desktop_file_in = configure_file(

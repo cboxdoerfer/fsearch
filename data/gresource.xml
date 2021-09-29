@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+    <gresource prefix="/io/github/cboxdoerfer/fsearch/icons">
+        <file preprocess="xml-stripblanks">io.github.cboxdoerfer.FSearch.svg</file>
+    </gresource>
+</gresources>
