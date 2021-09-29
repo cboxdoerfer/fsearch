@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-29 17:30+0200\n"
-"PO-Revision-Date: 2021-07-24 19:33+0000\n"
+"PO-Revision-Date: 2021-09-30 16:49+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/fsearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -39,69 +39,75 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Grafiksel dosya arama uygulaması"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch, dosya ve klasörleri olabildiğince kolay ve hızlı bulmanıza yardımcı "
+"olur. Sadece birkaç harf yazın ve arama sonuçları neredeyse anında "
+"görünecektir."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Aramayı olabildiğince verimli ve güçlü kılan birçok özellik vardır. Örneğin:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Büyük/küçük harf durumunu yok say (örn. \"fsearch\" arandığında \"FSearch\" "
+"ile de eşleşecektir)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Düzenli ifadeler"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Joker karakter desteği"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Filtreleme desteği (örn. yalnızca ses dosyalarını ara)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Gizli dosya ve klasörleri dışarıda bırak"
+msgstr "Belirli dosya ve klasörleri dışarıda bırak"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "Ada, yola, boyuta, değiştirme tarihine ve uzantıya göre hızlı sıralama"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Not: Flatpak'ın korumalı alanı nedeniyle, FSearch sisteminizdeki her dosyayı "
+"bulamaz."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Öntanımlı kullanıcı arayüzü düzeni"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "GNOME HIG'yi daha yakından takip eden bir düzen"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "İlk sürüm."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -124,10 +130,8 @@ msgid "Show the application preferences"
 msgstr "Uygulama tercihlerini göster"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Arama Düğmesini Göster"
+msgstr "Arama kalıbını ayarla"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -372,16 +376,10 @@ msgid "Hide results when search is empty"
 msgstr "Arama boş olduğunda sonuçları gizle"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
-#| msgid ""
-#| "Match case when query contains at least one upper case\n"
-#| "                      character\n"
-#| "                    "
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
-"Sorgu en az bir büyük harf karakteri içerdiğinde küçük/büyük\n"
-"                      harf durumunu eşleştir\n"
-"                    "
+"Sorgu en az bir büyük harf karakteri içerdiğinde küçük/büyük harf durumunu "
+"eşleştir"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -952,10 +950,8 @@ msgid "Path"
 msgstr "Yol"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Dosya Aç"
+msgstr "Bir Dosya Sistemi"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1041,10 +1037,8 @@ msgid "REGEX"
 msgstr "DÜZENLİ İFADE"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Dosya açılamadı"
+msgstr "Açılamadı:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1241,11 +1235,11 @@ msgstr "_Klasörü Aç"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Metin Olarak Kopyala"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Yol + Ad"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
