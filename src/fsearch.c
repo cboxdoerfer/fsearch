@@ -31,7 +31,8 @@
 #include "fsearch_preferences_ui.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
-#include "resources.h"
+#include "icon_resources.h"
+#include "ui_resources.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <limits.h>
@@ -358,7 +359,7 @@ action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app)
                           "program-name",
                           PACKAGE_NAME,
                           "logo-icon-name",
-                          "system-search",
+                          "io.github.cboxdoerfer.FSearch",
                           "license-type",
                           GTK_LICENSE_GPL_2_0,
                           "copyright",

@@ -82,22 +82,31 @@ fsearch_SOURCES = main.c \
 		  fsearch_utf.c \
 		  fsearch_window.c \
 		  fsearch_window_actions.c \
-		  resources.c \
+		  icon_resources.c \
+		  ui_resources.c \
 		  $(fsearch_NOINST_H_FILES)
 
-BUILT_SOURCES=resources.c resources.h
+BUILT_SOURCES=ui_resources.c ui_resources.h icon_resources.c icon_resources.h
 
 CLEANFILES = $(BUILT_SOURCES)
 
 fsearch_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\"
 
-resource_files=$(shell $(GLIB_COMPILE_RESOURCES) --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/gresource.xml)
+ui_resource_files=$(shell $(GLIB_COMPILE_RESOURCES) --c-name=fsearch_ui --sourcedir=$(srcdir) --generate-dependencies $(srcdir)/gresource.xml)
 
-resources.h:
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-header $(srcdir)/gresource.xml
+ui_resources.h:
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --c-name=fsearch_ui --target=$@ --sourcedir=$(srcdir) --generate-header $(srcdir)/gresource.xml
 
-resources.c: gresource.xml $(resource_files) resources.h
-	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/gresource.xml
+ui_resources.c: gresource.xml $(resource_files) ui_resources.h
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --c-name=fsearch_ui --target=$@ --sourcedir=$(srcdir) --generate-source $(srcdir)/gresource.xml
+
+icon_resource_files=$(shell $(GLIB_COMPILE_RESOURCES) --c-name=fsearch_icons --sourcedir=$(top_srcdir)/data --generate-dependencies $(top_srcdir)/data/gresource.xml)
+
+icon_resources.h:
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --c-name=fsearch_icons --target=$@ --sourcedir=$(top_srcdir)/data --generate-header $(top_srcdir)/data/gresource.xml
+
+icon_resources.c: gresource.xml $(resource_files) icon_resources.h
+	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --c-name=fsearch_icons --target=$@ --sourcedir=$(top_srcdir)/data --generate-source $(top_srcdir)/data/gresource.xml
 
 fsearch_LDADD = $(FSEARCH_LIBS) $(GTK_LIBS) $(GLIB_LIBS) $(GIO_LIBS) $(PCRE_LIBS) $(ICU_LIBS) -lm
 
