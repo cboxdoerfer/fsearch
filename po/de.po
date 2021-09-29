@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-29 17:30+0200\n"
-"PO-Revision-Date: 2021-09-29 11:35+0000\n"
-"Last-Translator: Detlef Bieritz <detlef.bieritz@posteo.de>\n"
+"PO-Revision-Date: 2021-09-30 16:49+0000\n"
+"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
 "Language: de\n"
@@ -39,74 +39,83 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Ein grafisches Datei-Suchprogramm"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch hilft dabei, Dateien und Ordner so einfach und schnell wie möglich, "
+"zu finden. Die Ergebnisse aktualisieren sich umgehend mit jedem Buchstaben "
+"der eingegeben wird."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Um die Suche so effizient und nützlich wie möglich zu machen, werden unter "
+"anderem folgende Funktionen unterstützt:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Groß- und Kleinschreibung ignorieren (z.B. findet man mit \"fsearch\" auch "
+"\"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Reguläre Ausdrücke"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Wildcard-Unterstützung"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Filter (z.B. reduziere die Ergebnisse auf Audio-Dateien)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Versteckte Dateien und Ordner ausschließen"
+msgstr "Bestimmte Dateien und Ordner ausschließen"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Schnelles Sortieren nach Name, Pfad, Größe, Änderungsdatum und Datei-"
+"Erweiterung"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Hinweis: Flatpak Anwendungen haben aufgrund einer Sandbox, keinen "
+"vollständigen Zugriff auf das Dateisystem. Daher kann FSearch nicht alle "
+"Dateien im System finden."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Die Standard-Oberfläche"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Eine Oberfläche die sich am GNOME Design orientiert"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Erste Veröffentlichung."
 
 #: src/fsearch.c:256
-#, fuzzy
 msgid "Saving…"
-msgstr "Scanne …"
+msgstr "Speichere…"
 
 #: src/fsearch.c:372
 msgid "translator-credits"
@@ -126,10 +135,8 @@ msgid "Show the application preferences"
 msgstr "Anwendungseinstellungen anzeigen"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Suchschaltfläche anzeigen"
+msgstr "Suchbegriff festlegen"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -148,9 +155,8 @@ msgid "Loading files…"
 msgstr "Lade Dateien …"
 
 #: src/fsearch_database.c:1649
-#, fuzzy
 msgid "Sorting…"
-msgstr "Sortiere Ergebnisse …"
+msgstr "Sortiere …"
 
 #: src/fsearch_file_utils.c:258
 msgid "Folder"
@@ -375,7 +381,6 @@ msgid "Hide results when search is empty"
 msgstr "Bei leerem Suchfeld nichts anzeigen"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Groß- und Kleinschreibung beachten, falls die Suche Großbuchstaben enthält"
@@ -785,10 +790,9 @@ msgstr ""
 "\t• <b>Aktiv:</b> Falls aktiviert, wird der Pfad in die Suchdatenbank "
 "aufgenommen.\n"
 "\t• <b>Pfad:</b> Der vollständige Pfad, der einbezogen werden soll.\n"
-"\t• <b>Aktualisieren:</b> Diese Einstellung legt fest, ob bestimmte Pfade "
-"aktualisiert werden\n"
-"\t\tsollen <i>(beispielsweise der Pfad zu einem langsamen USB Laufwerk, "
-"dessen Inhalt sich selten ändert).</i>\n"
+"\t• <b>Aktualisieren:</b> Mit dieser Einstellung können bestimmte Pfade von "
+"der Aktualisierung ausgenommen werden <i>(z.B. der Pfad zu einem langsamen "
+"USB Laufwerk, dessen Inhalt sich selten ändert).</i>\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1488
@@ -802,7 +806,8 @@ msgid ""
 msgstr ""
 "<b>Pfad zu Datenbank hinzufügen:</b>\n"
 "\n"
-"Öffnet einen Dialog, um einen Ordner zur Suchdatenbank hinzuzufügen.\n"
+"Öffnet einen Dialog, mit dem ein Ordner zur Suchdatenbank hinzugefügt werden "
+"kann.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1507
@@ -949,10 +954,8 @@ msgid "Path"
 msgstr "Pfad"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Datei(en) öffnen"
+msgstr "Einzelnes Dateisystem"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1036,10 +1039,8 @@ msgid "REGEX"
 msgstr "REGEX"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Datei konnte nicht geöffnet werden"
+msgstr "Fehler beim Öffnen von:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1055,7 +1056,7 @@ msgstr "Typ"
 
 #: src/fsearch_window.c:704 src/menus.ui:239
 msgid "Extension"
-msgstr ""
+msgstr "Erweiterung"
 
 #: src/fsearch_window.c:711 src/menus.ui:251
 msgid "Date Modified"
@@ -1145,14 +1146,13 @@ msgid "Moving files to trash…"
 msgstr "Verschiebe Elemente in den Papierkorb …"
 
 #: src/fsearch_window_actions.c:230
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Möchten Sie wirklich %d Datei(en) öffnen?"
+msgstr "Möchten Sie wirklich %d Dateieigenschaften öffnen?"
 
 #: src/fsearch_window_actions.c:234
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Öffne Datei(en) …"
+msgstr "Öffne Dateieigenschaften…"
 
 #: src/fsearch_window_actions.c:478
 msgid "Failed to open file"
@@ -1236,11 +1236,11 @@ msgstr "Ordner _öffnen"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Als Text kopieren"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Pfad + Name"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
