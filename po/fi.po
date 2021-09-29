@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-07-17 17:17+0200\n"
-"PO-Revision-Date: 2020-12-09 21:29+0000\n"
+"PO-Revision-Date: 2021-09-29 11:35+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
 "translations/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.4-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: src/fsearch.c:254
 #, fuzzy
@@ -42,9 +42,8 @@ msgid "Show the application preferences"
 msgstr ""
 
 #: src/fsearch.c:809
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Päivitä tietokanta"
+msgstr "Päivitä tietokanta ja poistu"
 
 #: src/fsearch.c:810
 #, fuzzy
@@ -52,14 +51,12 @@ msgid "Print version information and exit"
 msgstr "Näytä versiotiedot"
 
 #: src/fsearch_database.c:628
-#, fuzzy
 msgid "Loading folders…"
-msgstr "Ladataan tietokanta…"
+msgstr "Ladataan kansioita…"
 
 #: src/fsearch_database.c:636
-#, fuzzy
 msgid "Loading files…"
-msgstr "Poistetaan tiedostoja…"
+msgstr "Ladataan tiedostoja…"
 
 #: src/fsearch_database.c:1629
 #, fuzzy
@@ -67,13 +64,12 @@ msgid "Sorting…"
 msgstr "Lajitellaan…"
 
 #: src/fsearch_file_utils.c:258
-#, fuzzy
 msgid "Folder"
-msgstr "Kansiot"
+msgstr "Kansio"
 
 #: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
-msgstr ""
+msgstr "Tuntematon tyyppi"
 
 #: src/fsearch_filter.c:83
 msgid "All"
@@ -112,9 +108,8 @@ msgid "Properties…"
 msgstr ""
 
 #: src/fsearch_listview_popup.c:79
-#, fuzzy
 msgid "Other Application…"
-msgstr "Muu sovellus"
+msgstr "Muu sovellus…"
 
 #: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
 msgid "Select folder"
@@ -147,9 +142,8 @@ msgid "Querying…"
 msgstr "Kysellään…"
 
 #: src/fsearch_statusbar.c:140
-#, fuzzy
 msgid "Loading…"
-msgstr "Lajitellaan…"
+msgstr "Ladataan…"
 
 #: src/fsearch_statusbar.c:145
 #, fuzzy
@@ -183,7 +177,7 @@ msgstr "Tyyppi"
 
 #: src/fsearch_window.c:704 src/menus.ui:229
 msgid "Extension"
-msgstr ""
+msgstr "Laajennus"
 
 #: src/fsearch_window.c:711 src/menus.ui:241
 msgid "Date Modified"
@@ -235,9 +229,8 @@ msgid "Empty Database"
 msgstr "Tyhjä tietokanta"
 
 #: src/fsearch_overlay.ui:59
-#, fuzzy
 msgid "Add folders"
-msgstr "Kansiot"
+msgstr "Lisää kansioita"
 
 #: src/fsearch_overlay.ui:76 src/fsearch_overlay.ui:271
 #: src/fsearch_statusbar.ui:273
@@ -286,9 +279,8 @@ msgid "Try a different search"
 msgstr "Kokeile eri Hakusanalla"
 
 #: src/fsearch_overlay.ui:365
-#, fuzzy
 msgid "Sorting results…"
-msgstr "Lajitellaan…"
+msgstr "Lajitellaan tuloksia…"
 
 #: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -424,25 +416,24 @@ msgid "Update database on start"
 msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
 
 #: src/fsearch_preferences.ui:717
-#, fuzzy
 msgid "Update every"
-msgstr "Päivitä"
+msgstr "Päivitä joka"
 
 #: src/fsearch_preferences.ui:739
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/fsearch_preferences.ui:756
 msgid "hour(s) and"
-msgstr ""
+msgstr "tunti(a) ja"
 
 #: src/fsearch_preferences.ui:768
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/fsearch_preferences.ui:786
 msgid "minute(s)"
-msgstr ""
+msgstr "minuutti(a)"
 
 #: src/fsearch_preferences.ui:858
 #, fuzzy
