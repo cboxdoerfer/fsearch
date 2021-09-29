@@ -1,16 +1,16 @@
 data/fsearch.desktop.in.in
         data/io.github.cboxdoerfer.FSearch.appdata.xml.in
         src/fsearch.c
-src/fsearch_database.c
-src/fsearch_file_utils.c
-src/fsearch_filter.c
-src/fsearch_listview_popup.c
-src/fsearch_overlay.ui
-src/fsearch_preferences.ui
-src/fsearch_preferences_ui.c
-src/fsearch_preferences_widgets.c
-src/fsearch_statusbar.c
-src/fsearch_statusbar.ui
+        src/fsearch_database.c
+        src/fsearch_file_utils.c
+        src/fsearch_filter.c
+        src/fsearch_listview_popup.c
+        src/fsearch_overlay.ui
+        src/fsearch_preferences.ui
+        src/fsearch_preferences_ui.c
+        src/fsearch_preferences_widgets.c
+        src/fsearch_statusbar.c
+        src/fsearch_statusbar.ui
 src/fsearch_window.c
 src/fsearch_window.ui
 src/fsearch_window_actions.c

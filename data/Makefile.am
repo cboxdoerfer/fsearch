@@ -22,7 +22,7 @@ EXTRA_DIST = \
 	     $(NULL)
 
 CLEANFILES = \
-	     $(appdata_in_files) \
+	     $(appdata_DATA) \
 	     $(desktop_DATA) \
 	     $(desktop_in_files) \
 	     $(NULL)
