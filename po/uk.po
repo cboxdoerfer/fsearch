@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-29 17:30+0200\n"
-"PO-Revision-Date: 2021-07-23 17:29+0000\n"
+"PO-Revision-Date: 2021-09-30 16:49+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/fsearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -38,69 +38,76 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Графічний застосунок пошуку файлів"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch шукає файли і каталоги так легко і швидко, наскільки це можливо. "
+"Просто введіть кілька літер і результати пошуку зʼявляться майже миттєво."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Має багато можливостей, що роблять пошук ефективним і потужним, наскільки це "
+"можливо. Як-от:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Ігнорування регістру (напр., під запит \"fsearch\" підпадатиме \"FSearch\" "
+"також)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Регулярні вирази"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Підтримка шаблонів"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Підтримка фільтру (напр., пошук лише звукових файлів)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Не враховувати приховані файли і каталоги"
+msgstr "Виключення з пошуку певних файлів і каталогів"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Швидке сортування за назвою, шляхом, розміром, часом зміни і розширенням"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Примітка: Через пісочницю Flatpak, FSearch не зможе знайти кожен файл у "
+"Вашій системі."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Типовий вигляд КІ"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Щільніше компонування через GNOME HIG"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Початковий випуск."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -123,10 +130,8 @@ msgid "Show the application preferences"
 msgstr "Показати налаштування програми"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Показувати кнопку Пошук"
+msgstr "Вказати шаблон пошуку"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -371,16 +376,10 @@ msgid "Hide results when search is empty"
 msgstr "Ховати результати, якщо пошукове поле порожнє"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
-#| msgid ""
-#| "Match case when query contains at least one upper case\n"
-#| "                      character\n"
-#| "                    "
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
-"Враховувати регістр, якщо запит містить принаймні один\n"
-"                      символ верхнього регістру\n"
-"                    "
+"Враховувати регістр, якщо запит містить принаймні один символ верхнього "
+"регістру"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -888,7 +887,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1614
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr "Наведіть вказівник на налаштування, щоб отримати докладний опис."
+msgstr "Наведіть вказівник на параметр, щоб отримати докладний опис."
 
 #: src/fsearch_preferences.ui:1627
 msgid ""
@@ -945,10 +944,8 @@ msgid "Path"
 msgstr "Шлях"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Відкрити файл(и)"
+msgstr "Одна файлова система"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1032,10 +1029,8 @@ msgid "REGEX"
 msgstr "ВИР"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Не вдалося відкрити файл"
+msgstr "Не вдалося відкрити:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1232,11 +1227,11 @@ msgstr "Відкрити ка_талог"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Копіювати як текст"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Шлях + Назва"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
