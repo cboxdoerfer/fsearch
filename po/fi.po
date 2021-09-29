@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-07-17 17:17+0200\n"
+"POT-Creation-Date: 2021-09-29 17:30+0200\n"
 "PO-Revision-Date: 2021-09-29 11:35+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
@@ -19,33 +19,119 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.9-dev\n"
 
-#: src/fsearch.c:254
+#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
+msgid "FSearch"
+msgstr "FSearch"
+
+#: data/fsearch.desktop.in.in:6
+msgid "A file search application focusing on performance and advanced features"
+msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
+
+#: data/fsearch.desktop.in.in:11
+msgid ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
+msgid "A graphical file search application"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
+msgid ""
+"FSearch helps you to find files and folders as easy and fast as possible. "
+"Just type a few letters and search results will appear almost instantly."
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
+msgid ""
+"Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
+msgid "Regular expressions"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
+msgid "Wildcard support"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
+msgid "Filter support (e.g. only search for audio files)"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
+#, fuzzy
+#| msgid "Exclude hidden files and folders"
+msgid "Exclude certain files and folders"
+msgstr "Ohita piilotetut tiedostot ja kansiot"
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
+msgid "Fast sort by name, path, size, modification time and extension"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
+msgid ""
+"Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
+"system."
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
+msgid "The default UI layout"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
+msgid "A layout more closely following GNOME HIGs"
+msgstr ""
+
+#. Translators: please do NOT translate this.
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
+msgid "Christian Boxdörfer"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
+msgid "Initial release."
+msgstr ""
+
+#: src/fsearch.c:256
 #, fuzzy
 msgid "Saving…"
 msgstr "Lajitellaan…"
 
-#: src/fsearch.c:340
+#: src/fsearch.c:372
 msgid "translator-credits"
 msgstr ""
 
-#: src/fsearch.c:342
+#: src/fsearch.c:374
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 
-#: src/fsearch.c:807
+#: src/fsearch.c:839
 #, fuzzy
 msgid "Open a new application window"
 msgstr "Avaa muussa sovelluksessa"
 
-#: src/fsearch.c:808
+#: src/fsearch.c:840
 msgid "Show the application preferences"
 msgstr ""
 
-#: src/fsearch.c:809
+#: src/fsearch.c:841
+#, fuzzy
+#| msgid "Show Search Button"
+msgid "Set the search pattern"
+msgstr "Näytä Etsi-painike"
+
+#: src/fsearch.c:842
 msgid "Update the database and exit"
 msgstr "Päivitä tietokanta ja poistu"
 
-#: src/fsearch.c:810
+#: src/fsearch.c:843
 #, fuzzy
 msgid "Print version information and exit"
 msgstr "Näytä versiotiedot"
@@ -58,7 +144,7 @@ msgstr "Ladataan kansioita…"
 msgid "Loading files…"
 msgstr "Ladataan tiedostoja…"
 
-#: src/fsearch_database.c:1629
+#: src/fsearch_database.c:1649
 #, fuzzy
 msgid "Sorting…"
 msgstr "Lajitellaan…"
@@ -110,119 +196,6 @@ msgstr ""
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
 msgstr "Muu sovellus…"
-
-#: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
-msgid "Select folder"
-msgstr "Valitse kansio"
-
-#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:196
-#: src/fsearch_preferences_ui.c:379
-msgid "_Cancel"
-msgstr "_Peruuttaa"
-
-#: src/fsearch_preferences_ui.c:186 src/fsearch_preferences_ui.c:196
-msgid "_Select"
-msgstr "_Valitse"
-
-#: src/fsearch_preferences_ui.c:380
-msgid "_OK"
-msgstr "_OK"
-
-#: src/fsearch_preferences_widgets.c:178 src/fsearch_preferences_widgets.c:217
-msgid "Active"
-msgstr "Aktiivinen"
-
-#: src/fsearch_preferences_widgets.c:182 src/fsearch_preferences_widgets.c:221
-#: src/fsearch_window.c:683 src/menus.ui:225
-msgid "Path"
-msgstr "Polku"
-
-#: src/fsearch_statusbar.c:53
-msgid "Querying…"
-msgstr "Kysellään…"
-
-#: src/fsearch_statusbar.c:140
-msgid "Loading…"
-msgstr "Ladataan…"
-
-#: src/fsearch_statusbar.c:145
-#, fuzzy
-msgid "Scanning…"
-msgstr "Lajitellaan…"
-
-#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1013
-#, c-format
-msgid "%'d Items"
-msgstr "%'d kohdetta"
-
-#: src/fsearch_window.c:584 src/fsearch_window_actions.c:419
-msgid "Failed to open file"
-msgstr "Tiedoston avaaminen epäonnistui"
-
-#: src/fsearch_window.c:585 src/fsearch_window_actions.c:420
-msgid "Do you want to keep the window open?"
-msgstr "Haluatko pitää ikkunan auki?"
-
-#: src/fsearch_window.c:676 src/menus.ui:221
-msgid "Name"
-msgstr "Nimi"
-
-#: src/fsearch_window.c:690 src/menus.ui:237
-msgid "Size"
-msgstr "Koko"
-
-#: src/fsearch_window.c:697 src/menus.ui:233
-msgid "Type"
-msgstr "Tyyppi"
-
-#: src/fsearch_window.c:704 src/menus.ui:229
-msgid "Extension"
-msgstr "Laajennus"
-
-#: src/fsearch_window.c:711 src/menus.ui:241
-msgid "Date Modified"
-msgstr "Muokattu"
-
-#: src/fsearch_window.c:726
-msgid ""
-"Sorting by <b>Type</b> can be very slow with many results and it can't be "
-"aborted.\n"
-"\n"
-"This sort order is not persistent, it will be reset when the search term "
-"changes."
-msgstr ""
-
-#: src/fsearch_window_actions.c:87
-#, c-format
-msgid "Do you really want to open %d file(s)?"
-msgstr "Haluatko todella avata %d tiedosto(n/a)?"
-
-#: src/fsearch_window_actions.c:89
-msgid "Opening Files…"
-msgstr "Avataan tiedosto(ja)…"
-
-#: src/fsearch_window_actions.c:147
-#, c-format
-msgid "Do you really want to remove %d file(s)?"
-msgstr "Haluatko todella poistaa %d tiedosto(n/a)?"
-
-#: src/fsearch_window_actions.c:151
-msgid "Deleting files…"
-msgstr "Poistetaan tiedostoja…"
-
-#: src/fsearch_window_actions.c:151
-msgid "Moving files to trash…"
-msgstr "Siirretään tiedostoja roskakoriin…"
-
-#: src/fsearch_window_actions.c:190
-#, fuzzy, c-format
-msgid "Do you really want to open %d file property windows?"
-msgstr "Haluatko todella avata %d tiedosto(n/a)?"
-
-#: src/fsearch_window_actions.c:194
-#, fuzzy
-msgid "Opening file properties…"
-msgstr "Avataan tiedosto(ja)…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
@@ -391,95 +364,92 @@ msgstr "Käyttöliittymä"
 msgid "Search in path when query contains path separators"
 msgstr "Etsi polusta, kun haku sisältää polkuerottimia"
 
-#: src/fsearch_preferences.ui:624
+#: src/fsearch_preferences.ui:623
 msgid "Search as you type"
 msgstr "Etsi kirjoitettaessa"
 
-#: src/fsearch_preferences.ui:639
+#: src/fsearch_preferences.ui:637
 msgid "Hide results when search is empty"
 msgstr "Piilota tulokset, kun haku on tyhjä"
 
-#: src/fsearch_preferences.ui:654
+#: src/fsearch_preferences.ui:651
 #, fuzzy
-msgid ""
-"Match case when query contains at least one upper case\n"
-"                      character\n"
-"                    "
+msgid "Match case when query contains at least one upper case character"
 msgstr "Sama kirjainkoko, kun kysely sisältää vähintään yhden ison kirjaimen"
 
-#: src/fsearch_preferences.ui:678 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
 msgstr "Etsi"
 
-#: src/fsearch_preferences.ui:697
+#: src/fsearch_preferences.ui:691
 msgid "Update database on start"
 msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
 
-#: src/fsearch_preferences.ui:717
+#: src/fsearch_preferences.ui:711
 msgid "Update every"
 msgstr "Päivitä joka"
 
-#: src/fsearch_preferences.ui:739
+#: src/fsearch_preferences.ui:733
 msgid "0"
 msgstr "0"
 
-#: src/fsearch_preferences.ui:756
+#: src/fsearch_preferences.ui:750
 msgid "hour(s) and"
 msgstr "tunti(a) ja"
 
-#: src/fsearch_preferences.ui:768
+#: src/fsearch_preferences.ui:762
 msgid "30"
 msgstr "30"
 
-#: src/fsearch_preferences.ui:786
+#: src/fsearch_preferences.ui:780
 msgid "minute(s)"
 msgstr "minuutti(a)"
 
-#: src/fsearch_preferences.ui:858
+#: src/fsearch_preferences.ui:852
 #, fuzzy
 msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr "Lisää tietokantaan sisällytettävä polku"
 
-#: src/fsearch_preferences.ui:875 src/fsearch_preferences.ui:974
+#: src/fsearch_preferences.ui:869 src/fsearch_preferences.ui:968
 msgid "Remove selected path"
 msgstr "Poista valittu polku"
 
-#: src/fsearch_preferences.ui:901
+#: src/fsearch_preferences.ui:895
 msgid "Include"
 msgstr "Sisällytä"
 
-#: src/fsearch_preferences.ui:958
+#: src/fsearch_preferences.ui:952
 msgid "Add path to be excluded from database"
 msgstr "Lisää tietokannasta poissuljettava polku"
 
-#: src/fsearch_preferences.ui:1010 src/fsearch_preferences.ui:1023
+#: src/fsearch_preferences.ui:1004 src/fsearch_preferences.ui:1017
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
 "Tukee yleismerkkejä. Useat merkinnät on eroteltava toisistaan merkillä ';'"
 
-#: src/fsearch_preferences.ui:1011
+#: src/fsearch_preferences.ui:1005
 msgid "Exclude files:"
 msgstr "Ohita tiedostot:"
 
-#: src/fsearch_preferences.ui:1024
+#: src/fsearch_preferences.ui:1018
 msgid "e.g. \".git;*.tmp\""
 msgstr "esim. \".git;*.tmp\""
 
-#: src/fsearch_preferences.ui:1041
+#: src/fsearch_preferences.ui:1035
 msgid "Exclude hidden files and folders"
 msgstr "Ohita piilotetut tiedostot ja kansiot"
 
-#: src/fsearch_preferences.ui:1063
+#: src/fsearch_preferences.ui:1057
 msgid "Exclude"
 msgstr "Ohita"
 
-#: src/fsearch_preferences.ui:1086
+#: src/fsearch_preferences.ui:1080
 msgid "Database"
 msgstr "Tietokanta"
 
-#: src/fsearch_preferences.ui:1118
+#: src/fsearch_preferences.ui:1112
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -490,7 +460,7 @@ msgid ""
 "enabling this setting might not have an effect."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1136
+#: src/fsearch_preferences.ui:1130
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -502,7 +472,7 @@ msgid ""
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1156
+#: src/fsearch_preferences.ui:1150
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -514,7 +484,7 @@ msgid ""
 "= 1000 bytes)</i>"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1176
+#: src/fsearch_preferences.ui:1170
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -525,7 +495,7 @@ msgid ""
 "have a different size."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1195
+#: src/fsearch_preferences.ui:1189
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -543,7 +513,7 @@ msgid ""
 "\t• <b>mouse click</b>"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1220
+#: src/fsearch_preferences.ui:1214
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -558,7 +528,7 @@ msgid ""
 "ending with an asterisk. "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1242
+#: src/fsearch_preferences.ui:1236
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -566,14 +536,14 @@ msgid ""
 "folder in a small tooltip window."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1259
+#: src/fsearch_preferences.ui:1253
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1276
+#: src/fsearch_preferences.ui:1270
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -582,7 +552,7 @@ msgid ""
 "size and visibility of all columns."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1293
+#: src/fsearch_preferences.ui:1287
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -590,14 +560,14 @@ msgid ""
 "will be restored when you open an FSearch window."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1310
+#: src/fsearch_preferences.ui:1304
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1327
+#: src/fsearch_preferences.ui:1321
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -606,7 +576,7 @@ msgid ""
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1344
+#: src/fsearch_preferences.ui:1338
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -614,7 +584,7 @@ msgid ""
 "statusbar."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1361
+#: src/fsearch_preferences.ui:1355
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -623,7 +593,7 @@ msgid ""
 "\t•  a file or folder failed to open\n"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1381
+#: src/fsearch_preferences.ui:1375
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -631,7 +601,7 @@ msgid ""
 "automatically matched against the full path of a file or folder."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1398
+#: src/fsearch_preferences.ui:1392
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -640,7 +610,7 @@ msgid ""
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1415
+#: src/fsearch_preferences.ui:1409
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -650,7 +620,7 @@ msgid ""
 "is empty."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1434
+#: src/fsearch_preferences.ui:1428
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -660,7 +630,7 @@ msgid ""
 "the search button. "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1453
+#: src/fsearch_preferences.ui:1447
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -668,7 +638,7 @@ msgid ""
 "when you start FSearch."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1470
+#: src/fsearch_preferences.ui:1464
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -686,7 +656,7 @@ msgid ""
 "                    "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1494
+#: src/fsearch_preferences.ui:1488
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
@@ -696,7 +666,7 @@ msgid ""
 "                    "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1513
+#: src/fsearch_preferences.ui:1507
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -705,7 +675,7 @@ msgid ""
 "                    "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1531
+#: src/fsearch_preferences.ui:1525
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -716,7 +686,7 @@ msgid ""
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1552
+#: src/fsearch_preferences.ui:1546
 msgid ""
 "<b>Exclude folder from database:</b>\n"
 "\n"
@@ -724,14 +694,14 @@ msgid ""
 "from the database."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1569
+#: src/fsearch_preferences.ui:1563
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1586
+#: src/fsearch_preferences.ui:1580
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -741,7 +711,7 @@ msgid ""
 "end with <i>.swp</i>."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1603
+#: src/fsearch_preferences.ui:1597
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -749,12 +719,12 @@ msgid ""
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1620
+#: src/fsearch_preferences.ui:1614
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 "Kohdista asetukseen saadaksesi yksityiskohtaisen kuvauksen sen toiminnasta."
 
-#: src/fsearch_preferences.ui:1633
+#: src/fsearch_preferences.ui:1627
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -768,9 +738,59 @@ msgid ""
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1656
+#: src/fsearch_preferences.ui:1650
 msgid "Help"
 msgstr "Ohje"
+
+#: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
+msgid "Select folder"
+msgstr "Valitse kansio"
+
+#: src/fsearch_preferences_ui.c:184 src/fsearch_preferences_ui.c:196
+#: src/fsearch_preferences_ui.c:379
+msgid "_Cancel"
+msgstr "_Peruuttaa"
+
+#: src/fsearch_preferences_ui.c:186 src/fsearch_preferences_ui.c:196
+msgid "_Select"
+msgstr "_Valitse"
+
+#: src/fsearch_preferences_ui.c:380
+msgid "_OK"
+msgstr "_OK"
+
+#: src/fsearch_preferences_widgets.c:190 src/fsearch_preferences_widgets.c:237
+msgid "Active"
+msgstr "Aktiivinen"
+
+#: src/fsearch_preferences_widgets.c:194 src/fsearch_preferences_widgets.c:241
+#: src/fsearch_window.c:683 src/menus.ui:187 src/menus.ui:235
+msgid "Path"
+msgstr "Polku"
+
+#: src/fsearch_preferences_widgets.c:197
+#, fuzzy
+#| msgid "Open File(s)"
+msgid "One Filesystem"
+msgstr "Avaa tiedosto(t)"
+
+#: src/fsearch_statusbar.c:53
+msgid "Querying…"
+msgstr "Kysellään…"
+
+#: src/fsearch_statusbar.c:140
+msgid "Loading…"
+msgstr "Ladataan…"
+
+#: src/fsearch_statusbar.c:145
+#, fuzzy
+msgid "Scanning…"
+msgstr "Lajitellaan…"
+
+#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1021
+#, c-format
+msgid "%'d Items"
+msgstr "%'d kohdetta"
 
 #: src/fsearch_statusbar.ui:43
 msgid "Number of Search Results"
@@ -836,6 +856,41 @@ msgstr "POLKU"
 msgid "REGEX"
 msgstr "SÄÄNNÖLLINEN LAUSEKE"
 
+#: src/fsearch_window.c:582
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to open:"
+msgstr "Tiedoston avaaminen epäonnistui"
+
+#: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
+msgid "Name"
+msgstr "Nimi"
+
+#: src/fsearch_window.c:690 src/menus.ui:247
+msgid "Size"
+msgstr "Koko"
+
+#: src/fsearch_window.c:697 src/menus.ui:243
+msgid "Type"
+msgstr "Tyyppi"
+
+#: src/fsearch_window.c:704 src/menus.ui:239
+msgid "Extension"
+msgstr "Laajennus"
+
+#: src/fsearch_window.c:711 src/menus.ui:251
+msgid "Date Modified"
+msgstr "Muokattu"
+
+#: src/fsearch_window.c:726
+msgid ""
+"Sorting by <b>Type</b> can be very slow with many results and it can't be "
+"aborted.\n"
+"\n"
+"This sort order is not persistent, it will be reset when the search term "
+"changes."
+msgstr ""
+
 #: src/fsearch_window.ui:68
 msgid "New window"
 msgstr "Uusi ikkuna"
@@ -884,6 +939,46 @@ msgstr "Etsi…"
 msgid "Select a Filter"
 msgstr "Valitse suodatin"
 
+#: src/fsearch_window_actions.c:87
+#, c-format
+msgid "Do you really want to open %d file(s)?"
+msgstr "Haluatko todella avata %d tiedosto(n/a)?"
+
+#: src/fsearch_window_actions.c:89
+msgid "Opening Files…"
+msgstr "Avataan tiedosto(ja)…"
+
+#: src/fsearch_window_actions.c:187
+#, c-format
+msgid "Do you really want to remove %d file(s)?"
+msgstr "Haluatko todella poistaa %d tiedosto(n/a)?"
+
+#: src/fsearch_window_actions.c:191
+msgid "Deleting files…"
+msgstr "Poistetaan tiedostoja…"
+
+#: src/fsearch_window_actions.c:191
+msgid "Moving files to trash…"
+msgstr "Siirretään tiedostoja roskakoriin…"
+
+#: src/fsearch_window_actions.c:230
+#, fuzzy, c-format
+msgid "Do you really want to open %d file property windows?"
+msgstr "Haluatko todella avata %d tiedosto(n/a)?"
+
+#: src/fsearch_window_actions.c:234
+#, fuzzy
+msgid "Opening file properties…"
+msgstr "Avataan tiedosto(ja)…"
+
+#: src/fsearch_window_actions.c:478
+msgid "Failed to open file"
+msgstr "Tiedoston avaaminen epäonnistui"
+
+#: src/fsearch_window_actions.c:479
+msgid "Do you want to keep the window open?"
+msgstr "Haluatko pitää ikkunan auki?"
+
 #: src/menus.ui:6
 msgid "_File"
 msgstr "_Tiedosto"
@@ -921,7 +1016,7 @@ msgstr "_Muokkaa"
 msgid "_Copy"
 msgstr "_Kopioi"
 
-#: src/menus.ui:62 src/menus.ui:186
+#: src/menus.ui:62 src/menus.ui:196
 msgid "Cu_t"
 msgstr "Leik_kaa"
 
@@ -958,25 +1053,19 @@ msgid "_Open Folder"
 msgstr "_Avaa kansio"
 
 #: src/menus.ui:181
-msgid "_Copy Filepath"
-msgstr "_Kopioi tiedostopolku"
+msgid "Copy as Text"
+msgstr ""
 
-#: src/menus.ui:194
+#: src/menus.ui:191
+msgid "Path + Name"
+msgstr ""
+
+#: src/menus.ui:204
 msgid "Move to _Trash"
 msgstr "Siirrä _roskakoriin"
 
-#: data/fsearch.desktop.in.in:5
-msgid "FSearch"
-msgstr "FSearch"
-
-#: data/fsearch.desktop.in.in:6
-msgid "A file search application focusing on performance and advanced features"
-msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
-
-#: data/fsearch.desktop.in.in:11
-msgid ""
-"search;fsearch;files;folders;music;video;documents;find;tool;everything;"
-msgstr ""
+#~ msgid "_Copy Filepath"
+#~ msgstr "_Kopioi tiedostopolku"
 
 #~ msgid "Update"
 #~ msgstr "Päivitä"
@@ -1117,9 +1206,6 @@ msgstr ""
 #~| msgid "Enable RegEx"
 #~ msgid "Enable menubar"
 #~ msgstr "Käytä säännöllisiä lausekkeita"
-
-#~ msgid "Open File(s)"
-#~ msgstr "Avaa tiedosto(t)"
 
 #~ msgid "Open Containing Folder"
 #~ msgstr "Avaa sisältävä kansio"
