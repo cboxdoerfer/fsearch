@@ -10,7 +10,10 @@ cc = meson.get_compiler('c')
 gnome = import('gnome')
 i18n = import('i18n')
 
+have_malloc_trim = meson.get_compiler('c').has_function('malloc_trim')
+
 config_h = configuration_data()
+config_h.set('HAVE_MALLOC_TRIM', have_malloc_trim)
 config_h.set_quoted('APP_ID', app_id)
 config_h.set_quoted('PACKAGE_VERSION', meson.project_version())
 config_h.set_quoted('VERSION', meson.project_version())

@@ -58,7 +58,7 @@ AC_FUNC_ALLOCA
 AC_FUNC_LSTAT_FOLLOWS_SLASHED_SYMLINK
 AC_FUNC_MALLOC
 AC_FUNC_REALLOC
-AC_CHECK_FUNCS([atexit floor gettimeofday memset setlocale strchr strdup strpbrk strstr strverscmp])
+AC_CHECK_FUNCS([atexit floor gettimeofday malloc_trim memset setlocale strchr strdup strpbrk strstr strverscmp])
 
 PKG_PROG_PKG_CONFIG
 AC_PATH_PROG([GLIB_COMPILE_RESOURCES], [glib-compile-resources])

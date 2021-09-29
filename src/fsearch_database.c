@@ -18,6 +18,10 @@
 
 #define _GNU_SOURCE
 
+#ifdef HAVE_CONFIG_H
+#include <config.h>
+#endif
+
 #define G_LOG_DOMAIN "fsearch-database"
 
 #include <assert.h>
@@ -25,7 +29,11 @@
 #include <fcntl.h>
 #include <fnmatch.h>
 #include <glib/gi18n.h>
+
+#ifdef HAVE_MALLOC_TRIM
 #include <malloc.h>
+#endif
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
@@ -1454,7 +1462,9 @@ db_free(FsearchDatabase *db) {
 
     g_clear_pointer(&db, free);
 
+#ifdef HAVE_MALLOC_TRIM
     malloc_trim(0);
+#endif
 
     g_debug("[db_free] freed");
 }
