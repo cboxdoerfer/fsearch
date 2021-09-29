@@ -1270,7 +1270,11 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         g_string_append(path, dent->d_name);
 
         struct stat st;
-        if (fstatat(dir_fd, dent->d_name, &st, AT_SYMLINK_NOFOLLOW | AT_NO_AUTOMOUNT)) {
+        int stat_flags = AT_SYMLINK_NOFOLLOW;
+#ifdef AT_NO_AUTOMOUNT
+        stat_flags |= AT_NO_AUTOMOUNT;
+#endif
+        if (fstatat(dir_fd, dent->d_name, &st, stat_flags)) {
             g_debug("[db_scan] can't stat: %s", path->str);
             continue;
         }
