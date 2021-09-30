@@ -128,3 +128,15 @@ po/stamp-it
 /.idea_save/misc.xml
 /.idea_save/vcs.xml
 /.idea_save/.gitignore
+/data/io.github.cboxdoerfer.FSearch.appdata.xml
+/debian/.debhelper/
+/debian/fsearch/
+/debian/fsearch-trunk/
+/debian/files
+/config.guess.dh-orig
+/config.sub.dh-orig
+/src/icon_resources.c
+/src/icon_resources.h
+/src/ui_resources.c
+/src/ui_resources.h
+/tools/print_version.sh
