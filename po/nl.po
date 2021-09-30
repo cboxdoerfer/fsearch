@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-29 17:30+0200\n"
-"PO-Revision-Date: 2021-07-24 19:33+0000\n"
+"PO-Revision-Date: 2021-09-30 16:49+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/fsearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -37,69 +37,74 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Een grafisch zoekhulpmiddel"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch helpt je op eenvoudige wijze bestanden en mappen te zoeken. Typ een "
+"paar letters en je ziet meteen resultaat."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Er zijn veel functies die FSearch efficiënt doch krachtig maken, waaronder:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Negeer hoofdlettergebruik (voorbeeld: zoeken naar ‘fsearch’ levert ook "
+"‘FSearch’ op als resultaat)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Reguliere uitdrukkingen"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Jokertekens"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Filtermogelijkheden (bijv. alleen audiobestanden)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Verborgen bestanden en mappen uitsluiten"
+msgstr "Sluit verborgen bestanden en mappen uit"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "Sorteer op naam, locatie, grootte, bewerkdatum en bestandsextensie"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Let op: Flatpak schermt bepaalde delen van het systeem af, waardoor FSearch "
+"niet alles kan doorzoeken."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "De standaard vormgeving"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Een vormgeving die meer overeenkomt met de GNOME-ontwerprichtlijnen"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Eerste uitgave."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -111,7 +116,7 @@ msgstr "Heimen Stoffels"
 
 #: src/fsearch.c:374
 msgid "A search utility focusing on performance and advanced features"
-msgstr "Een zoekhulpmiddel met als doel snelheid en uitgebreide mogelijkheden"
+msgstr "Een zoekhulpmiddel, gericht op snelheid en uitgebreide mogelijkheden"
 
 #: src/fsearch.c:839
 msgid "Open a new application window"
@@ -122,10 +127,8 @@ msgid "Show the application preferences"
 msgstr "Toepassingsvoorkeuren openen"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Zoekknop tonen"
+msgstr "Zoekpatroon instellen"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -323,7 +326,7 @@ msgstr "Sorteervolgorde onthouden"
 
 #: src/fsearch_preferences.ui:393
 msgid "Open path with double click in path column"
-msgstr "Pad openen door te dubbelklikken in de padkolom"
+msgstr "Locatie openen door te dubbelklikken in de locatiekolom"
 
 #: src/fsearch_preferences.ui:408
 msgid "Single click to open"
@@ -359,7 +362,7 @@ msgstr "Uiterlijk"
 
 #: src/fsearch_preferences.ui:609
 msgid "Search in path when query contains path separators"
-msgstr "Pad doorzoeken als de zoekopdracht padscheidingsteken bevat"
+msgstr "Locatie doorzoeken als de zoekopdracht locatie-scheidingstekens bevat"
 
 #: src/fsearch_preferences.ui:623
 msgid "Search as you type"
@@ -370,16 +373,10 @@ msgid "Hide results when search is empty"
 msgstr "Resultaten verbergen als zoekopdracht blanco is"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
-#| msgid ""
-#| "Match case when query contains at least one upper case\n"
-#| "                      character\n"
-#| "                    "
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
-"Lettergrootte moet overeenkomen als zoekopdracht minstens één\n"
-"              hoofdletter bevat\n"
-"                    "
+"Tekstgrootte moet overeenkomen als de zoekopdracht minstens één hoofdletter "
+"bevat"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -414,12 +411,12 @@ msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
-"Voeg het op te nemen pad toe\n"
+"Voeg doe op te nemen locatie toe\n"
 "                                "
 
 #: src/fsearch_preferences.ui:869 src/fsearch_preferences.ui:968
 msgid "Remove selected path"
-msgstr "Geselecteerd pad verwijderen"
+msgstr "Geselecteerde locatie verwijderen"
 
 #: src/fsearch_preferences.ui:895
 msgid "Include"
@@ -427,13 +424,11 @@ msgstr "Opnemen"
 
 #: src/fsearch_preferences.ui:952
 msgid "Add path to be excluded from database"
-msgstr "Voeg het uit te sluiten pad toe"
+msgstr "Voeg de uit te sluiten locatie toe"
 
 #: src/fsearch_preferences.ui:1004 src/fsearch_preferences.ui:1017
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
-"Jokertekens worden ondersteund. Meerdere items moeten worden gescheiden door "
-"';'"
+msgstr "Jokertekens worden ondersteund. Scheid meerdere items met ‘;’"
 
 #: src/fsearch_preferences.ui:1005
 msgid "Exclude files:"
@@ -467,8 +462,8 @@ msgid ""
 msgstr ""
 "<b>Donker thema gebruiken:</b>\n"
 "\n"
-"Schakel in om het systeem het donkere thema toe te laten passen op FSearch "
-"<i>(donker uiterlijk met lichte tekst)</i>.\n"
+"Schakel in om het donkere systeemthema te gebruiken in FSearch <i>(donkere "
+"vormgeving met lichte tekst)</i>.\n"
 "\n"
 "Let op: niet alle systeemthema's bieden een donkere variant, dus deze "
 "instelling kan ook géén effect hebben."
@@ -583,7 +578,7 @@ msgstr ""
 "<b>Zoektermen markeren:</b>\n"
 "\n"
 "Schakel in om de zoektermen te markeren in het resultatenvenster. Voorbeeld: "
-"als je zoekt naar 'iets', dan worden alle items met <i>iets</i> in de "
+"als je zoekt naar ‘iets’, dan worden alle items met <i>iets</i> in de "
 "bestands- of mapnaam vetgedrukt getoond:\n"
 "\n"
 "\t\t<b>iets</b>bar.txt\n"
@@ -601,7 +596,7 @@ msgid ""
 msgstr ""
 "<b>Hulpballonnen tonen:</b>\n"
 "\n"
-"Schakel in om het volledige pad naar een geselecteerd(e) bestand/map in het "
+"Schakel in om de volledige locatie in een geselecteerd(e) bestand/map in het "
 "resultatenvenster te tonen in een kleine hulpballon."
 
 #: src/fsearch_preferences.ui:1253
@@ -646,10 +641,10 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
-"<b>Pad openen door te dubbelklikken in de padkolom:</b>\n"
+"<b>Locatie openen door te dubbelklikken in de locatiekolom:</b>\n"
 "\n"
-"Schakel in om het geselecteerde pad te openen door te dubbelklikken in de "
-"padkolom."
+"Schakel in om de geselecteerde locatie te openen door te dubbelklikken in de "
+"locatiekolom."
 
 #: src/fsearch_preferences.ui:1321
 msgid ""
@@ -673,7 +668,7 @@ msgid ""
 msgstr ""
 "<b>Databank-bijwerkstatus tonen:</b>\n"
 "\n"
-"Schakel in om op de statusbalk aan te geven welk pad momenteel wordt "
+"Schakel in om op de statusbalk aan te geven welke locatie momenteel wordt "
 "geïndexeerd."
 
 #: src/fsearch_preferences.ui:1355
@@ -697,10 +692,11 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
-"<b>Pad doorzoeken als zoekopdracht padscheidingstekens bevat:</b>\n"
+"<b>Locatie doorzoeken als zoekopdracht locatie-scheidingstekens bevat:</b>\n"
 "\n"
-"Schakel in om zoektermen met padscheidingstekens (bijv. '/') automatisch "
-"overeen te laten komen met het volledige pad van een bestand of map."
+"Schakel in om zoektermen met locatie-scheidingstekens (bijv. ‘/’) "
+"automatisch overeen te laten komen met de volledige locatie van een bestand "
+"of map."
 
 #: src/fsearch_preferences.ui:1392
 msgid ""
@@ -710,12 +706,12 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
-"<b>Lettergrootte moet overeenkomen als zoekopdracht minstens één hoofdletter "
-"bevat:</b>\n"
+"<b>Tekstgrootte moet overeenkomen als de zoekopdracht minstens één "
+"hoofdletter bevat:</b>\n"
 "\n"
 "Schakel in om van zoekopdrachten met minimaal één hoofdletter een "
 "hoofdlettergevoelige zoekopdracht te maken. Dit betekent dat termen als "
-"<i>Iets</i> overeenkomen met <i>IetsBar.txt</i> maar niet met <i>ietsbar."
+"<i>Iets</i> overeenkomen met <i>IetsBar.txt</i>, maar niet met <i>ietsbar."
 "txt</i>."
 
 #: src/fsearch_preferences.ui:1409
@@ -783,11 +779,11 @@ msgstr ""
 "\n"
 "Deze lijst bevat alle mappen die je wilt opnemen in de databank.\n"
 "\n"
-"\t• <b>Actief:</b> schakel in om het pad op te nemen in de databank.\n"
-"\t• <b>Pad:</b> het volledige op te nemen pad.\n"
-"\t• <b>Bijwerken:</b> deze instelling kan worden gebruikt om bepaalde paden "
-"uit te sluiten\n"
-"\t\t\tbij het bijwerken <i>(bijv. als het pad op een langzame usb-schijf "
+"\t• <b>Actief:</b> schakel in om de locatie op te nemen in de databank.\n"
+"\t• <b>Locatie:</b> de volledige op te nemen locatie.\n"
+"\t• <b>Bijwerken:</b> deze instelling kan worden gebruikt om bepaalde "
+"locaties uit te sluiten\n"
+"\t\t\tbij het bijwerken <i>(bijv. als de locatie op een langzame usb-schijf "
 "staat)</i>\n"
 "                    "
 
@@ -834,9 +830,9 @@ msgstr ""
 "\n"
 "Deze lijst bevat alle mappen die je niet wilt opnemen in de databank.\n"
 "\n"
-"\t• <b>Actief:</b> schakel in om een pad uit te sluiten en dus niet te "
+"\t• <b>Actief:</b> schakel in om een locatie uit te sluiten en dus niet te "
 "doorzoeken.\n"
-"\t• <b>Pad:</b> het volledige uit te sluiten pad."
+"\t• <b>Locatie:</b> de volledige uit te sluiten locatie."
 
 #: src/fsearch_preferences.ui:1546
 msgid ""
@@ -945,13 +941,11 @@ msgstr "Actief"
 #: src/fsearch_preferences_widgets.c:194 src/fsearch_preferences_widgets.c:241
 #: src/fsearch_window.c:683 src/menus.ui:187 src/menus.ui:235
 msgid "Path"
-msgstr "Pad"
+msgstr "Locatie"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Bestand(en) openen"
+msgstr "Eén bestandssysteem"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1023,22 +1017,20 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
-"De zoekterm bevat padscheidingstekens.\n"
-"De optie <b>Pad doorzoeken</b> is tijdelijk ingeschakeld."
+"De zoekterm bevat locatie-scheidingstekens.\n"
+"De optie <b>Locatie doorzoeken</b> is tijdelijk ingeschakeld."
 
 #: src/fsearch_statusbar.ui:473 src/fsearch_statusbar.ui:526
 msgid "PATH"
-msgstr "PAD"
+msgstr "LOCATIE"
 
 #: src/fsearch_statusbar.ui:579
 msgid "REGEX"
 msgstr "REGEX"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Kan bestand niet openen"
+msgstr "Openen mislukt:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1083,7 +1075,7 @@ msgstr "Databank bijwerken"
 
 #: src/fsearch_window.ui:143 src/menus.ui:112
 msgid "Search in Path"
-msgstr "Pad doorzoeken"
+msgstr "Locatie doorzoeken"
 
 #: src/fsearch_window.ui:157 src/menus.ui:116
 msgid "Match Case"
@@ -1091,7 +1083,7 @@ msgstr "Hoofdlettergevoelig"
 
 #: src/fsearch_window.ui:171 src/menus.ui:120
 msgid "Enable RegEx"
-msgstr "Reguliere expressies gebruiken"
+msgstr "Reguliere uitdrukkingen gebruiken"
 
 #: src/fsearch_window.ui:196 src/menus.ui:95
 msgid "Show Statusbar"
@@ -1234,11 +1226,11 @@ msgstr "Map _openen"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Kopiëren als tekst"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Locatie + naam"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
