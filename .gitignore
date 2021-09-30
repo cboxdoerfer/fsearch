@@ -140,3 +140,5 @@ po/stamp-it
 /src/ui_resources.c
 /src/ui_resources.h
 /tools/print_version.sh
+/data/io.github.cboxdoerfer.FSearch.desktop
+/data/io.github.cboxdoerfer.FSearch.desktop.in
