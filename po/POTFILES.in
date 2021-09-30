@@ -1,4 +1,4 @@
-data/fsearch.desktop.in.in
+data/io.github.cboxdoerfer.FSearch.desktop.in.in
 data/io.github.cboxdoerfer.FSearch.appdata.xml.in
 src/fsearch.c
 src/fsearch_database.c

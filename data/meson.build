@@ -7,7 +7,7 @@ install_data('io.github.cboxdoerfer.FSearch.svg',
 desktop_file_in_config = configuration_data()
 desktop_file_in_config.set('app_id', app_id)
 desktop_file_in = configure_file(
-          input: 'fsearch.desktop.in.in',
+          input: 'io.github.cboxdoerfer.FSearch.desktop.in.in',
          output: '@0@.desktop.in'.format(app_id),
   configuration: desktop_file_in_config,
 )

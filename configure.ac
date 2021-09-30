@@ -85,7 +85,7 @@ AC_SUBST(ICU_LIBS)
 
 AC_CONFIG_FILES([Makefile
                  data/Makefile
-                 data/fsearch.desktop.in
+                 data/io.github.cboxdoerfer.FSearch.desktop.in
                  po/Makefile.in
                  src/Makefile])
 AC_OUTPUT
