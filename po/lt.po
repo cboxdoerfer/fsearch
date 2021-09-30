@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2021-07-24 19:33+0000\n"
 "Last-Translator: Gediminas Murauskas <muziejusinfo@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
@@ -20,18 +20,18 @@ msgstr ""
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
 "X-Generator: Weblate 4.7.2-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Failų paieškos programa, kuri daugiausia dėmesio skiria našumui ir "
 "išplėstinėmis ypatybėmis"
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
@@ -139,15 +139,15 @@ msgstr "Atnaujinti duomenų bazę ir išeiti"
 msgid "Print version information and exit"
 msgstr "Rodyti spausdinimo versijos informaciją ir išeiti"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 msgid "Loading folders…"
 msgstr "Įkeliami aplankai…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 msgid "Loading files…"
 msgstr "Įkeliami failai…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 msgid "Sorting…"
 msgstr "Rūšiuojama…"
 

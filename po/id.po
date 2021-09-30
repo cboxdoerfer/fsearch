@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2021-08-21 23:33+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
@@ -19,16 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.8.1-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
@@ -131,15 +131,15 @@ msgstr "Perbarui basisdata dan keluar"
 msgid "Print version information and exit"
 msgstr "Cetak informasi versi dan keluar"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 msgid "Loading folders…"
 msgstr "Memuat folder…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 msgid "Loading files…"
 msgstr "Memuat berkas…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 msgid "Sorting…"
 msgstr "Penyortiran…"
 

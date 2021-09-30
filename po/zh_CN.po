@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2021-09-18 18:21+0000\n"
 "Last-Translator: 戢斌斌 <zbb10000@163.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -19,16 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.9-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr "注重性能和高级功能的文件搜索工具"
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何事情;"
@@ -133,15 +133,15 @@ msgstr "更新数据库并退出"
 msgid "Print version information and exit"
 msgstr "显示版本信息并退出"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 msgid "Loading folders…"
 msgstr "正在加载文件夹…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 msgid "Loading files…"
 msgstr "正在加载文件…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 msgid "Sorting…"
 msgstr "排序中"
 

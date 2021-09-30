@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2021-09-30 16:49+0000\n"
 "Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -20,17 +20,17 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.9-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
 "Performans ve gelişmiş özelliklere odaklanan bir dosya arama uygulaması"
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
@@ -141,15 +141,15 @@ msgstr "Veri tabanını güncelle ve çık"
 msgid "Print version information and exit"
 msgstr "Sürüm bilgilerini yazdır ve çık"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 msgid "Loading folders…"
 msgstr "Klasörler yükleniyor…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 msgid "Loading files…"
 msgstr "Dosyalar yükleniyor…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 msgid "Sorting…"
 msgstr "Sıralanıyor…"
 

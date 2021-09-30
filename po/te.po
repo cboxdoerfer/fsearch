@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: akash rao <akash.rao.ind@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/fsearch/"
@@ -19,16 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.3-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "ఎఫ్ సర్చ్"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr "పనితనం మరియు ఆధునిక ఫీచర్ లు కలిగిఉన్న ఫైల్ లు వెతికే అప్లికేషన్"
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "సర్చ్;ఎఫ్ సర్చ్; ఫైల్ లు;ఫోల్డరు లు;సంగీతం;వీడియో;డాక్యుమెంట్లు;కనుగొను;పనిముట్టు;సమస్తమూ;"
@@ -139,17 +139,17 @@ msgstr "డేటాబేస్ ని ఆధునికీకరణ చేయ
 msgid "Print version information and exit"
 msgstr "వర్షన్ సమాచారము చూపించుము"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 #, fuzzy
 msgid "Loading folders…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 #, fuzzy
 msgid "Loading files…"
 msgstr "ఫైల్ లని తీసివేస్తున్నాము…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 #, fuzzy
 msgid "Sorting…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"

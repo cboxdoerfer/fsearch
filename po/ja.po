@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2021-05-15 00:44+0000\n"
 "Last-Translator: Jacque Fresco <aidter@use.startmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -19,17 +19,17 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 4.7-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 #, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
@@ -138,17 +138,17 @@ msgstr "データベースをアップデート"
 msgid "Print version information and exit"
 msgstr "バージョン情報を表示"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 #, fuzzy
 msgid "Loading folders…"
 msgstr "データベースを読み込み中…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 #, fuzzy
 msgid "Loading files…"
 msgstr "ファイルを削除中…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 #, fuzzy
 msgid "Sorting…"
 msgstr "ソート中..."

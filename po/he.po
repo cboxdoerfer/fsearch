@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2021-09-18 18:21+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
@@ -19,16 +19,16 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Weblate 4.9-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr "יישום חיפוש קבצים ממוקד ביצועים ותכונות מתקדמות"
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
@@ -133,15 +133,15 @@ msgstr "עדכון מסד הנתונים ויציאה"
 msgid "Print version information and exit"
 msgstr "הצגת מידע על הגרסה ויציאה"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 msgid "Loading folders…"
 msgstr "תיקיות נטענות…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 msgid "Loading files…"
 msgstr "קבצים נטענים…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 msgid "Sorting…"
 msgstr "מתבצע מיון…"
 

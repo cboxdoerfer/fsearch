@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
-"POT-Creation-Date: 2021-09-29 17:30+0200\n"
+"POT-Creation-Date: 2021-09-30 19:08+0200\n"
 "PO-Revision-Date: 2017-09-27 19:46+0000\n"
 "Last-Translator: Kevin Kim <root@hamonikr.org>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -19,17 +19,17 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 2.17-dev\n"
 
-#: data/fsearch.desktop.in.in:5
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "데스크탑 검색"
 
-#: data/fsearch.desktop.in.in:6
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 #, fuzzy
 msgid "A file search application focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
-#: data/fsearch.desktop.in.in:11
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
@@ -138,17 +138,17 @@ msgstr "데이터베이스 업데이트"
 msgid "Print version information and exit"
 msgstr "버전 정보 보기"
 
-#: src/fsearch_database.c:628
+#: src/fsearch_database.c:636
 #, fuzzy
 msgid "Loading folders…"
 msgstr "데이터베이스 로딩중…"
 
-#: src/fsearch_database.c:636
+#: src/fsearch_database.c:644
 #, fuzzy
 msgid "Loading files…"
 msgstr "파일 삭제 중…"
 
-#: src/fsearch_database.c:1649
+#: src/fsearch_database.c:1663
 #, fuzzy
 msgid "Sorting…"
 msgstr "데이터베이스 로딩중…"
