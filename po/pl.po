@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-09-03 11:32+0000\n"
+"PO-Revision-Date: 2021-10-02 10:35+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -40,56 +40,65 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Graficzna aplikacja do wyszukiwania plików"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch pomaga znaleźć pliki i katalogi tak łatwo i szybko, jak to możliwe. "
+"Wystarczy wpisać kilka liter, a wyniki wyszukiwania pojawią się niemal "
+"natychmiast."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Posiada wiele funkcjonalności, które sprawiają, że wyszukiwanie jest "
+"efektywne i wydajne, jak to tylko możliwe. Na przykład:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Ignorowanie wielkość liter (np. wyszukiwanie „fsearch” również dopasuje się "
+"do „FSearch”)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Wyrażenia regularne"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Obsługa symboli wieloznacznych"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Obsługa filtrów (np. tylko wyszukiwanie plików audio)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Wykluczenie ukrytych plików i katalogów"
+msgstr "Wykluczenie pewnych plików i katalogów"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Szybkie sortowanie według nazwy, ścieżki, rozmiaru, czasu modyfikacji i "
+"rozszerzenia"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Uwaga: ze względu na piaskownicę Flatpak, FSearch nie może znaleźć każdego "
+"pliku w twoim systemie."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Domyślny układ interfejsu użytkownika"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
@@ -102,7 +111,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Pierwsze wydanie."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -127,10 +136,8 @@ msgid "Show the application preferences"
 msgstr "Pokaż ustawienia aplikacji"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Pokaż przycisk Szukaj"
+msgstr "Ustaw wzorzec wyszukiwania"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -375,15 +382,9 @@ msgid "Hide results when search is empty"
 msgstr "Ukryj wyniki gdy pole wyszukiwania jest puste"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
-#| msgid ""
-#| "Match case when query contains at least one upper case\n"
-#| "                      character\n"
-#| "                    "
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
-"Rozróżniaj wielkość liter gdy zapytanie zawiera choć jedną wielką literę\n"
-"                    "
+"Rozróżniaj wielkość liter gdy zapytanie zawiera choć jedną wielką literę"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -962,10 +963,8 @@ msgid "Path"
 msgstr "Ścieżka"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Otwórz plik(i)"
+msgstr "Jeden system plików"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1049,10 +1048,8 @@ msgid "REGEX"
 msgstr "REGEX"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Nie udało się otworzyć pliku"
+msgstr "Nie udało się otworzyć:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1249,11 +1246,11 @@ msgstr "_Otwórz katalog"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Kopiuj jako tekst"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Ścieżka + Nazwa"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
