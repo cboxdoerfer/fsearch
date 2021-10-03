@@ -44,6 +44,7 @@ typedef struct {
     GtkToggleButton *show_menubar_button;
     GtkToggleButton *show_tooltips_button;
     GtkToggleButton *restore_win_size_button;
+    GtkToggleButton *exit_on_escape_button;
     GtkToggleButton *restore_sort_order_button;
     GtkToggleButton *restore_column_config_button;
     GtkToggleButton *double_click_path_button;
@@ -431,6 +432,7 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->double_click_path = gtk_toggle_button_get_active(ui->double_click_path_button);
     new_config->enable_list_tooltips = gtk_toggle_button_get_active(ui->show_tooltips_button);
     new_config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
+    new_config->exit_on_escape = gtk_toggle_button_get_active(ui->exit_on_escape_button);
     new_config->update_database_on_launch = gtk_toggle_button_get_active(ui->update_db_at_start_button);
     new_config->update_database_every = gtk_toggle_button_get_active(ui->auto_update_checkbox);
     new_config->update_database_every_hours = gtk_spin_button_get_value_as_int(
@@ -531,6 +533,9 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
 
     ui->restore_win_size_button =
         toggle_button_get(ui->builder, "restore_win_size_button", "help_window_size", new_config->restore_window_size);
+
+    ui->exit_on_escape_button =
+        toggle_button_get(ui->builder, "exit_on_escape_button", "help_exit_on_escape", new_config->exit_on_escape);
 
     ui->restore_sort_order_button = toggle_button_get(ui->builder,
                                                       "restore_sort_order_button",
