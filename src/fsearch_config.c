@@ -247,6 +247,7 @@ config_load(FsearchConfig *config) {
             config_load_boolean(key_file, "Interface", "action_after_file_open_keyboard", false);
         config->action_after_file_open_mouse =
             config_load_boolean(key_file, "Interface", "action_after_file_open_mouse", false);
+        config->exit_on_escape = config_load_boolean(key_file, "Interface", "exit_on_escape", false);
         config->show_indexing_status = config_load_boolean(key_file, "Interface", "show_indexing_status", true);
 
         // Warning Dialogs
@@ -376,6 +377,7 @@ config_load_default(FsearchConfig *config) {
     config->action_after_file_open = ACTION_AFTER_OPEN_NOTHING;
     config->action_after_file_open_keyboard = false;
     config->action_after_file_open_mouse = false;
+    config->exit_on_escape = false;
     config->show_indexing_status = true;
 
     // Columns
@@ -549,6 +551,7 @@ config_save(FsearchConfig *config) {
                            "action_after_file_open_keyboard",
                            config->action_after_file_open_keyboard);
     g_key_file_set_boolean(key_file, "Interface", "action_after_file_open_mouse", config->action_after_file_open_mouse);
+    g_key_file_set_boolean(key_file, "Interface", "exit_on_escape", config->exit_on_escape);
     g_key_file_set_boolean(key_file, "Interface", "show_indexing_status", config->show_indexing_status);
 
     // Warning Dialogs
