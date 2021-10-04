@@ -123,6 +123,14 @@ prepend_string_to_list(GList **string_list,
 }
 
 static void
+append_line(GString *str, const char *text) {
+    if (str->len > 0) {
+        g_string_append_c(str, '\n');
+    }
+    g_string_append(str, text);
+}
+
+static void
 append_line_to_string(GString *buffer,
                       FsearchDatabaseEntry *entry,
                       GString *(*get_string_func)(FsearchDatabaseEntry *)) {
@@ -134,10 +142,7 @@ append_line_to_string(GString *buffer,
     if (!string) {
         return;
     }
-    if (buffer->len > 0) {
-        g_string_append_c(buffer, '\n');
-    }
-    g_string_append(buffer, string->str);
+    append_line(buffer, string->str);
 
     g_string_free(g_steal_pointer(&string), TRUE);
 }
@@ -367,8 +372,8 @@ open_cb(gpointer key, gpointer value, gpointer data) {
     GString *path_full = db_entry_get_path_full(entry);
 
     if (!fsearch_file_utils_launch(path_full)) {
-        bool *open_failed = data;
-        *open_failed = true;
+        GString *open_failed_string = data;
+        append_line(open_failed_string, path_full->str);
     }
     g_string_free(g_steal_pointer(&path_full), TRUE);
 }
@@ -449,10 +454,9 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-on_failed_to_open_file_response(GtkDialog *dialig, GtkResponseType response, gpointer user_data) {
-    if (response != GTK_RESPONSE_YES) {
-        fsearch_window_action_after_file_open(false);
-    }
+on_failed_to_open_file_response(GtkDialog *dialog, GtkResponseType response, gpointer user_data) {
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+    dialog = NULL;
 }
 
 static void
@@ -462,9 +466,9 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GHFunc open_fu
         return;
     }
 
-    bool open_failed = false;
-    fsearch_application_window_selection_for_each(win, open_func, &open_failed);
-    if (!open_failed) {
+    GString *open_failed_string = g_string_sized_new(8192);
+    fsearch_application_window_selection_for_each(win, open_func, open_failed_string);
+    if (open_failed_string->len == 0) {
         // open succeeded
         fsearch_window_action_after_file_open(false);
     }
@@ -474,13 +478,14 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GHFunc open_fu
         if (config->show_dialog_failed_opening) {
             ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
                                           GTK_MESSAGE_WARNING,
-                                          GTK_BUTTONS_YES_NO,
-                                          _("Failed to open file"),
-                                          _("Do you want to keep the window open?"),
+                                          GTK_BUTTONS_OK,
+                                          _("Failed to open:"),
+                                          open_failed_string->str,
                                           G_CALLBACK(on_failed_to_open_file_response),
                                           NULL);
         }
     }
+    g_string_free(g_steal_pointer(&open_failed_string), TRUE);
 }
 
 static void
@@ -509,8 +514,8 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
     GString *path_full = db_entry_get_path_full(entry);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (!fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
-        bool *open_failed = data;
-        *open_failed = true;
+        GString *open_failed_string = data;
+        append_line(open_failed_string, path_full->str);
     }
     g_string_free(g_steal_pointer(&path), TRUE);
     g_string_free(g_steal_pointer(&path_full), TRUE);
