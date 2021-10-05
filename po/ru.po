@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-09-29 11:35+0000\n"
+"PO-Revision-Date: 2021-10-05 08:08+0000\n"
 "Last-Translator: Сергей <sw@atrus.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -40,69 +40,76 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Приложение для поиска файлов с графическим интерфейсом"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch помогает находить файлы и папки максимально просто и быстро. Просто "
+"введите несколько букв, и результаты поиска появятся практически мгновенно."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Существует множество функций, которые делают поиск максимально эффективным и "
+"мощным. Такие как:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Игнорировать регистр (например, поиску \"fsearch\" также будет "
+"соответствовать \"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Регулярные выражения"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Поддержка подстановочных знаков"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Поддержка фильтров (например, поиск только аудиофайлов)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Исключать скрытые файлы и папки"
+msgstr "Исключать определенные файлы и папки"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Быстрая сортировка по имени, пути, размеру, времени модификации и расширению"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Примечание: благодаря Flatpak песочнице FSearch не может найти все файлы в "
+"вашей системе."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Макет интерфейса по молчанию"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Макет, более близкий к GNOME HIG"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Первый релиз."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -126,10 +133,8 @@ msgid "Show the application preferences"
 msgstr "Показать настройки программы"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Показать кнопку поиска"
+msgstr "Установить шаблон поиска"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -374,16 +379,10 @@ msgid "Hide results when search is empty"
 msgstr "Спрятать результаты, когда поиск пустой"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
-#| msgid ""
-#| "Match case when query contains at least one upper case\n"
-#| "                      character\n"
-#| "                    "
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
-"Учитывать регистр, когда запрос содержит хотя бы один символ\n"
-"верхнего регистра\n"
-"                    "
+"Учитывать регистр, когда запрос содержит хотя бы один символ верхнего "
+"регистра"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -962,10 +961,8 @@ msgid "Path"
 msgstr "Путь"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Открыть файл(ы)"
+msgstr "Одна файловая система"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1049,10 +1046,8 @@ msgid "REGEX"
 msgstr "РЕГ ВЫР"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Невозможно открыть файл"
+msgstr "Не удалось открыть:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1122,7 +1117,7 @@ msgstr "Показать кнопку поиска"
 
 #: src/fsearch_window.ui:275 src/menus.ui:129
 msgid "About"
-msgstr "О программе"
+msgstr "О приложении"
 
 #: src/fsearch_window.ui:300 src/menus.ui:47
 msgid "Quit"
@@ -1249,11 +1244,11 @@ msgstr "Открыть _папку"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Копировать как текст"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Путь + Имя"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
