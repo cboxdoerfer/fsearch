@@ -23,7 +23,6 @@
 #include <glib/gi18n.h>
 
 #include "fsearch.h"
-#include "fsearch_database_search.h"
 #include "fsearch_listview_popup.h"
 
 static void

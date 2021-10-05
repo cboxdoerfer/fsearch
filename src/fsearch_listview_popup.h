@@ -22,7 +22,7 @@
 #include <config.h>
 #endif
 
-#include "fsearch_database.h"
+#include "fsearch_database_entry.h"
 
 #include <gtk/gtk.h>
 
