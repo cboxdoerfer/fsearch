@@ -452,20 +452,7 @@ on_fsearch_list_view_popup(FsearchListView *view, int row_idx, gpointer user_dat
         return FALSE;
     }
 
-    db_view_lock(win->result_view->database_view);
-    GString *name = db_view_entry_get_name_for_idx(win->result_view->database_view, row_idx);
-    FsearchDatabaseEntryType type = db_view_entry_get_type_for_idx(win->result_view->database_view, row_idx);
-    db_view_unlock(win->result_view->database_view);
-
-    if (!name) {
-        return FALSE;
-    }
-
-    const gboolean res = listview_popup_menu(user_data, name->str, type);
-
-    g_string_free(g_steal_pointer(&name), TRUE);
-
-    return res;
+    return listview_popup_menu(user_data, win->result_view->database_view);
 }
 
 static gboolean

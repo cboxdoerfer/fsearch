@@ -39,58 +39,150 @@ add_file_properties_entry(GtkBuilder *builder) {
     }
 }
 
-static void
-fill_open_with_menu(GtkBuilder *builder, const char *name, FsearchDatabaseEntryType type) {
-    GList *app_list = NULL;
-    char *content_type = NULL;
+struct content_type_context {
+    GHashTable *content_types;
+    GHashTable *applications;
+    bool first_run;
+};
 
-    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
-        content_type = g_content_type_from_mime_type("inode/directory");
+static gboolean
+should_remove_application_for_application_list(gpointer key, gpointer value, gpointer user_data) {
+    GList *app_infos = user_data;
+    const char *current_app_id = key;
+    for (GList *app_info_iter = app_infos; app_info_iter; app_info_iter = app_info_iter->next) {
+        GAppInfo *app_info = app_info_iter->data;
+        const char *app_id = g_app_info_get_id(app_info);
+        if (!g_strcmp0(app_id, current_app_id)) {
+            return FALSE;
+        }
+    }
+    return TRUE;
+}
+
+static void
+refresh_applications_for_content_type(GHashTable *applications, const char *content_type, bool first_run) {
+
+    GList *app_infos = g_app_info_get_all_for_type(content_type);
+    if (!app_infos) {
+        // there are no applications which can open this content type,
+        // so we must remove everything from the hash table and return
+        g_hash_table_remove_all(applications);
+        return;
+    }
+
+    if (first_run) {
+        // we can safely add all applications for the first entry we process
+        for (GList *app_info_iter = app_infos; app_info_iter; app_info_iter = app_info_iter->next) {
+            GAppInfo *app_info = app_info_iter->data;
+            const char *app_id = g_app_info_get_id(app_info);
+            g_hash_table_insert(applications, g_strdup(app_id), g_object_ref(app_info));
+        }
     }
     else {
-        content_type = g_content_type_guess(name, NULL, 0, NULL);
+        // remove all applications which don't support the current content type
+        g_hash_table_foreach_remove(applications, should_remove_application_for_application_list, app_infos);
     }
 
-    if (!content_type) {
-        goto clean_up;
+    g_list_free_full(g_steal_pointer(&app_infos), g_object_unref);
+}
+
+static void
+intersect_supported_appliations(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabaseEntry *entry = value;
+    if (G_UNLIKELY(!entry)) {
+        return;
     }
 
-    app_list = g_app_info_get_all_for_type(content_type);
+    struct content_type_context *ctx = user_data;
+    if (!ctx->first_run && g_hash_table_size(ctx->applications) == 0) {
+        // there are already no applications which can open all processed entries,
+        // hence we don't need to process the remaining entries
+        return;
+    }
+
+    if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
+        // we already know the content type for folders, so we can use a slightly more
+        // efficient and reliable path for them here
+        const char *dir_content_type = "inode/directory";
+        if (!g_hash_table_contains(ctx->content_types, dir_content_type)) {
+            // no folder content type was added up until now, let's add one
+            g_hash_table_add(ctx->content_types, g_strdup(dir_content_type));
+            // refresh the table of applications which can open all selected entries
+            refresh_applications_for_content_type(ctx->applications, dir_content_type, ctx->first_run);
+            ctx->first_run = false;
+        }
+        return;
+    }
+
+    GString *name = db_entry_get_name_for_display(entry);
+    if (!name) {
+        return;
+    }
+
+    char *content_type = g_content_type_guess(name->str, NULL, 0, NULL);
+    g_string_free(g_steal_pointer(&name), TRUE);
+
+    if (!g_hash_table_contains(ctx->content_types, content_type)) {
+        // a new content type, add it
+        g_hash_table_add(ctx->content_types, content_type);
+        // refresh the table of applications which can open all selected entries
+        refresh_applications_for_content_type(ctx->applications, g_steal_pointer(&content_type), ctx->first_run);
+        ctx->first_run = false;
+    }
+
+    g_clear_pointer(&content_type, g_free);
+}
+
+static void
+append_application_to_menu(gpointer key, gpointer value, gpointer user_data) {
+    GMenu *menu_mime = user_data;
+    GAppInfo *app_info = value;
+    const char *display_name = g_app_info_get_display_name(app_info);
+    const char *app_id = g_app_info_get_id(app_info);
+
+    char detailed_action[1024] = "";
+    snprintf(detailed_action, sizeof(detailed_action), "win.open_with('%s')", app_id);
+
+    GMenuItem *menu_item = g_menu_item_new(display_name, detailed_action);
+    g_menu_item_set_icon(menu_item, g_app_info_get_icon(app_info));
+    g_menu_append_item(menu_mime, menu_item);
+    g_clear_object(&menu_item);
+}
+
+static void
+fill_open_with_menu(GtkBuilder *builder, FsearchDatabaseView *db_view) {
+
+    struct content_type_context content_type_ctx = {};
+    content_type_ctx.content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+    content_type_ctx.applications = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
+    content_type_ctx.first_run = true;
+    // find applications which can open all selected files
+    // this basically computes the intersection of the lists of applications for each entry
+    db_view_selection_for_each(db_view, intersect_supported_appliations, &content_type_ctx);
+    g_hash_table_remove_all(content_type_ctx.content_types);
+    g_clear_pointer(&content_type_ctx.content_types, g_hash_table_destroy);
 
     GMenu *menu_mime = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_menu_open_with_mime_section"));
 
-    for (GList *list_iter = app_list; list_iter; list_iter = list_iter->next) {
-        GAppInfo *app_info = list_iter->data;
-        const char *display_name = g_app_info_get_display_name(app_info);
-        const char *app_id = g_app_info_get_id(app_info);
+    // add the application menu entries to the menu
+    g_hash_table_foreach(content_type_ctx.applications, append_application_to_menu, menu_mime);
 
-        char detailed_action[1024] = "";
-        snprintf(detailed_action, sizeof(detailed_action), "win.open_with('%s')", app_id);
+    g_hash_table_remove_all(content_type_ctx.applications);
+    g_clear_pointer(&content_type_ctx.applications, g_hash_table_destroy);
 
-        GMenuItem *menu_item = g_menu_item_new(display_name, detailed_action);
-        g_menu_item_set_icon(menu_item, g_app_info_get_icon(app_info));
-        g_menu_append_item(menu_mime, menu_item);
-        g_clear_object(&menu_item);
-    }
-
+    // add the "Open with -> Other Application" entry
     char detailed_action[1024] = "";
-    snprintf(detailed_action, sizeof(detailed_action), "win.open_with_other('%s')", content_type);
+    snprintf(detailed_action, sizeof(detailed_action), "win.open_with_other('%s')", "");
     GMenuItem *open_with_item = g_menu_item_new(_("Other Application…"), detailed_action);
     g_menu_append_item(menu_mime, open_with_item);
     g_clear_object(&open_with_item);
-
-clean_up:
-    g_clear_pointer(&content_type, g_free);
-    if (app_list) {
-        g_list_free_full(g_steal_pointer(&app_list), g_object_unref);
-    }
 }
 
 gboolean
-listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryType type) {
+listview_popup_menu(GtkWidget *widget, FsearchDatabaseView *db_view) {
     GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
-    fill_open_with_menu(builder, name, type);
+    fill_open_with_menu(builder, db_view);
     add_file_properties_entry(builder);
 
     GMenu *menu_root = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_popup_menu"));

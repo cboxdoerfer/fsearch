@@ -22,9 +22,9 @@
 #include <config.h>
 #endif
 
-#include "fsearch_database_entry.h"
+#include "fsearch_database_view.h"
 
 #include <gtk/gtk.h>
 
 gboolean
-listview_popup_menu(GtkWidget *widget, const char *name, FsearchDatabaseEntryType type);
+listview_popup_menu(GtkWidget *widget, FsearchDatabaseView *db_view);
