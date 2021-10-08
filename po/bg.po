@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-08-03 12:34+0000\n"
+"PO-Revision-Date: 2021-10-10 17:04+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -39,69 +39,76 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Графично приложение за търсене на файлове"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch ви помага да намерите файлове и папки, възможно най- лесно и бързо. "
+"Просто, напишете няколко букви и резултатите от търсенето ще се появят почти "
+"моментално."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Има много функции, които правят търсенето възможно най -ефективно и мощно. "
+"Като:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Игнориране на резултата (напр. търсенето на „fsearch“ ще съвпадне и с "
+"„FSearch“)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Регулярни изрази"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Поддръжка на заместващи символи"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Поддръжка на филтри (напр. само търсене на аудио файлове)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Изключване на скритите файлове и папки"
+msgstr "Изключване на определени файлове и папки"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "Бързо сортиране по име, път, размер, дата на промяна и разширение"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Забележка: Поради пясъчника на Flatpak, FSearch не може да намери всеки файл "
+"във вашата система."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Стандартно оформление на потребителският интерфейс"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Оформлението да наподобява изгледа на Gnome"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Първоначално издание."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -126,10 +133,8 @@ msgid "Show the application preferences"
 msgstr "Покажи настройките на програмата"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Показване на бутон за търсене"
+msgstr "Задаване на шаблон за търсене"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -374,16 +379,8 @@ msgid "Hide results when search is empty"
 msgstr "Скриване на резултатите, когато заявката е празна"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
-#| msgid ""
-#| "Match case when query contains at least one upper case\n"
-#| "                      character\n"
-#| "                    "
 msgid "Match case when query contains at least one upper case character"
-msgstr ""
-"Случай на съвпадение, когато заявката съдържа поне една главна \n"
-"буква\n"
-"                    "
+msgstr "Съвпадение на резултата, когато заявката съдържа поне една главна буква"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -962,10 +959,8 @@ msgid "Path"
 msgstr "Път"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Отваряне на Файл (ове)"
+msgstr "Една файлова система"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1049,10 +1044,8 @@ msgid "REGEX"
 msgstr "Регулярен израз"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Файлът не може да бъде отворен"
+msgstr "Неуспешно отваряне:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1249,11 +1242,11 @@ msgstr "Отваряне на папка"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Копиране като текст"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Път + Име"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
