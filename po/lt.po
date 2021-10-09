@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-07-24 19:33+0000\n"
+"PO-Revision-Date: 2021-10-10 17:04+0000\n"
 "Last-Translator: Gediminas Murauskas <muziejusinfo@gmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/lt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || n"
 "%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
-"X-Generator: Weblate 4.7.2-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -40,69 +40,77 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Grafinė failų paieškos programa"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch padeda kuo lengviau ir greičiau rasti failus ir aplankus. Tiesiog "
+"įveskite kelias raides ir paieškos rezultatai pasirodys beveik iš karto."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Yra daug funkcijų, kurios daro paiešką kuo efektyvesnę ir galingesnę. "
+"Pavyzdžiui:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Nepaisyti didžiųjų ir mažųjų raidžių (pvz., Paieška „fsearch“ atitiks ir "
+"„FSearch“)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Reguliarusis reiškinys"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Pakaitos simbolių palaikymas"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Filtravimo palaikymas (pvz., ieškoti tik garso failų)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Išbraukti paslėptus failus ir aplankus"
+msgstr "Išskirkite tam tikrus failus ir aplankus"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Greitas rūšiavimas pagal pavadinimą, kelią, dydį, modifikavimo laiką ir "
+"plėtinį"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Pastaba: dėl „Flatpak“ atliekamo „sandboxing“, „FSearch“ negali rasti "
+"kiekvieno failo jūsų sistemoje."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Numatytasis vartotojo sąsajos išdėstymas"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Išdėstymas, labiau atitinkantis GNOME HIG"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Pirminis leidimas."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -126,10 +134,8 @@ msgid "Show the application preferences"
 msgstr "Rodyti programos nuostatas"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Rodyti paieškos mygtuką"
+msgstr "Paieškos šablono nustatymas"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -374,17 +380,10 @@ msgid "Hide results when search is empty"
 msgstr "Slėpti rezultatus, kai paieškos laukas tuščias"
 
 #: src/fsearch_preferences.ui:651
-#, fuzzy
-#| msgid ""
-#| "Match case when query contains at least one upper case\n"
-#| "                      character\n"
-#| "                    "
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
-"Sutapatinti raidžių dydžius, kai užklausoje yra bent vienas didžiųjų "
-"raidžių\n"
-"simbolis\n"
-"                    "
+"Sutapatinti raidžių dydžius, kai užklausoje yra bent vienas didžiųjų raidžių "
+"simbolis"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -957,10 +956,8 @@ msgid "Path"
 msgstr "Kelias"
 
 #: src/fsearch_preferences_widgets.c:197
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Atverti failą(-us)"
+msgstr "Viena failų sistema"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1044,10 +1041,8 @@ msgid "REGEX"
 msgstr "REG REIŠK"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Nepavyko atverti failo"
+msgstr "Nepavyko atidaryti:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1244,11 +1239,11 @@ msgstr "_Atverti aplanką"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Kopijuoti kaip tekstą"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Kelias + pavadinimas"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
