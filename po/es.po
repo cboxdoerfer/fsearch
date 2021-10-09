@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-08-21 23:33+0000\n"
-"Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
+"PO-Revision-Date: 2021-10-10 17:04+0000\n"
+"Last-Translator: Toni Estévez <toni.estevez@gmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -39,100 +39,107 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Una aplicación gráfica para buscar archivos"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch le ayuda a encontrar archivos y carpetas de la forma más fácil y "
+"rápida posible. Solo tiene que escribir unas cuantas letras y los resultados "
+"de la búsqueda aparecerán casi al instante."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Hay un montón de características que hacen que la búsqueda sea lo más "
+"eficiente y potente posible. Por ejemplo:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Ignorar mayúsculas y minúsculas (p. ej., la búsqueda de «fsearch» coincidirá "
+"con «FSearch»)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Expresiones regulares"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Admitir caracteres comodín"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Admitir filtros (p. ej., para buscar solo archivos de audio)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Excluir archivos y carpetas ocultos"
+msgstr "Excluir determinados archivos y carpetas"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Ordenación rápida por nombre, ruta, tamaño, fecha de modificación y extensión"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Nota: debido al aislamiento de Flatpak, FSearch no puede encontrar todos los "
+"archivos del sistema."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "El diseño de la interfaz por defecto"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Un diseño más cercano a las directrices de GNOME"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "La versión inicial."
 
 #: src/fsearch.c:256
 msgid "Saving…"
-msgstr "Grabando…"
+msgstr "Guardando…"
 
 #: src/fsearch.c:372
 msgid "translator-credits"
-msgstr "Eugenio Monforte"
+msgstr ""
+"Eugenio Monforte\n"
+"Toni Estévez"
 
 #: src/fsearch.c:374
 msgid "A search utility focusing on performance and advanced features"
-msgstr ""
-"Herramienta de búsqueda centrada en la velocidad y con prestaciones avanzadas"
+msgstr "Una herramienta de búsqueda rápida con prestaciones avanzadas"
 
 #: src/fsearch.c:839
 msgid "Open a new application window"
-msgstr "Abrir una nueva ventana del programa"
+msgstr "Abrir una ventana nueva de la aplicación"
 
 #: src/fsearch.c:840
 msgid "Show the application preferences"
-msgstr "Mostrar las configuraciones de la aplicación"
+msgstr "Mostrar las preferencias de la aplicación"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Mostrar botón de busca"
+msgstr "Definir el patrón de búsqueda"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
-msgstr "Actualizar base de datos y salir"
+msgstr "Actualizar la base de datos y salir"
 
 #: src/fsearch.c:843
 msgid "Print version information and exit"
@@ -188,7 +195,7 @@ msgstr "Imágenes"
 
 #: src/fsearch_filter.c:106
 msgid "Videos"
-msgstr "Videos"
+msgstr "Vídeos"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
@@ -204,7 +211,7 @@ msgstr "Base de datos vacía"
 
 #: src/fsearch_overlay.ui:59
 msgid "Add folders"
-msgstr "Agregar carpetas"
+msgstr "Añadir carpetas"
 
 #: src/fsearch_overlay.ui:76 src/fsearch_overlay.ui:271
 #: src/fsearch_statusbar.ui:273
@@ -213,11 +220,11 @@ msgstr "Página 0"
 
 #: src/fsearch_overlay.ui:107
 msgid "Loading Database…"
-msgstr "Cargando base de datos…"
+msgstr "Cargando la base de datos…"
 
 #: src/fsearch_overlay.ui:122
 msgid "This won't take long."
-msgstr "Esto no llevará mucho tiempo."
+msgstr "Esta acción no llevará mucho tiempo."
 
 #: src/fsearch_overlay.ui:138 src/fsearch_overlay.ui:333
 #: src/fsearch_statusbar.ui:309
@@ -226,11 +233,11 @@ msgstr "Página 1"
 
 #: src/fsearch_overlay.ui:170 src/fsearch_statusbar.ui:240
 msgid "Updating Database…"
-msgstr "Actualizando base de datos…"
+msgstr "Actualizando la base de datos…"
 
 #: src/fsearch_overlay.ui:185 src/fsearch_overlay.ui:380
 msgid "This may take a while."
-msgstr "Esto puede demorar un rato."
+msgstr "Esta acción puede demorar un rato."
 
 #: src/fsearch_overlay.ui:201
 msgid "page2"
@@ -242,19 +249,19 @@ msgstr "Consulta vacía"
 
 #: src/fsearch_overlay.ui:254
 msgid "Press <b>Ctrl + F</b> and start typing"
-msgstr "Oprima <b>Ctrl + F</b> y comience a escribir"
+msgstr "Presione <b>Ctrl + F</b> y comience a escribir"
 
 #: src/fsearch_overlay.ui:302
 msgid "No Results Found"
-msgstr "No se encontraron resultados"
+msgstr "No se ha encontrado ningún resultado"
 
 #: src/fsearch_overlay.ui:317
 msgid "Try a different search"
-msgstr "Pruebe una búsqueda distinta"
+msgstr "Pruebe con otra búsqueda"
 
 #: src/fsearch_overlay.ui:365
 msgid "Sorting results…"
-msgstr "Ordenando resultados…"
+msgstr "Ordenando los resultados…"
 
 #: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
