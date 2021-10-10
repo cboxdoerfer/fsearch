@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-10-02 10:35+0000\n"
+"PO-Revision-Date: 2021-10-11 22:05+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -102,7 +102,7 @@ msgstr "Domyślny układ interfejsu użytkownika"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Układ bardziej zbliżony do GNOME HIG"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
