@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-09-30 16:49+0000\n"
+"PO-Revision-Date: 2021-10-20 12:34+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -377,9 +377,7 @@ msgstr "Ховати результати, якщо пошукове поле п
 
 #: src/fsearch_preferences.ui:651
 msgid "Match case when query contains at least one upper case character"
-msgstr ""
-"Враховувати регістр, якщо запит містить принаймні один символ верхнього "
-"регістру"
+msgstr "Враховувати регістр, якщо запит містить принаймні одну велику літеру"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -701,13 +699,13 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
-"<b>Враховувати регістр, якщо запит містить принаймні один символ верхнього "
-"регістру:</b>\n"
+"<b>Враховувати регістр, якщо запит містить принаймні одну велику літеру:</b>"
+"\n"
 "\n"
 "Якщо ввімкнено, пошуковий запит, що містить принаймні один символ верхнього "
 "регістру перемикається на чутливий до регістру пошук. Це означає, що запити "
-"на кшталт <i>Foo</i> зіставлятимуться з <i>FooBar.txt</i>, але не з "
-"<i>foobar.txt</i>."
+"на кшталт <i>Foo</i> зіставлятимуться з <i>FooBar.txt</i>, але не з <i>foobar"
+".txt</i>."
 
 #: src/fsearch_preferences.ui:1409
 msgid ""
