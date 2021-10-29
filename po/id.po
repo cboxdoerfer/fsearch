@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-08-21 23:33+0000\n"
+"PO-Revision-Date: 2021-10-30 00:43+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.9-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -56,15 +56,15 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Ekpresi reguler"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Dukungan wildcard"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Dukungan filter ( khusus pencarian file audio)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
 msgid "Exclude certain files and folders"
@@ -91,11 +91,11 @@ msgstr ""
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Rilis awal."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -118,10 +118,8 @@ msgid "Show the application preferences"
 msgstr "Tampilkan preferensi aplikasi"
 
 #: src/fsearch.c:841
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Tampilkan Tombol Pencarian"
+msgstr "Atur pola pencarian"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
@@ -853,10 +851,8 @@ msgid "REGEX"
 msgstr "REGEX"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Gagal membuka berkas"
+msgstr "Gagal membuka:"
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
@@ -1048,11 +1044,11 @@ msgstr "_Buka Folder"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Salin sebagai Teks"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Path + Nama"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
