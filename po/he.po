@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-10-05 08:08+0000\n"
+"PO-Revision-Date: 2021-11-08 21:49+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -321,7 +321,7 @@ msgstr "שמירת אופן המיון"
 
 #: src/fsearch_preferences.ui:393
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "לחיצה כפולה בעמודת הנתיב תפתח את הנתיב"
 
 #: src/fsearch_preferences.ui:408
 msgid "Single click to open"
@@ -357,7 +357,7 @@ msgstr "מנשק"
 
 #: src/fsearch_preferences.ui:609
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "חיפוש בנתיב כאשר השאילתה מכילה מפרידי נתיב"
 
 #: src/fsearch_preferences.ui:623
 msgid "Search as you type"
@@ -369,7 +369,7 @@ msgstr "הסתרת התוצאות כאשר החיפוש ריק"
 
 #: src/fsearch_preferences.ui:651
 msgid "Match case when query contains at least one upper case character"
-msgstr ""
+msgstr "להתאים רישיות כשהשאילתה מכילה לפחות אות אחת לטינית גדולה"
 
 #: src/fsearch_preferences.ui:672 src/fsearch_window.ui:461
 msgid "Search"
@@ -377,7 +377,7 @@ msgstr "חיפוש"
 
 #: src/fsearch_preferences.ui:691
 msgid "Update database on start"
-msgstr ""
+msgstr "עדכון מסד הנתונים עם ההפעלה"
 
 #: src/fsearch_preferences.ui:711
 msgid "Update every"
@@ -421,7 +421,7 @@ msgstr "הוספת נתיב להחרגה ממסד הנתונים"
 
 #: src/fsearch_preferences.ui:1004 src/fsearch_preferences.ui:1017
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "יש תמיכה בתווי הכללה. יש להפריד בין רשומות עם ‚;’"
 
 #: src/fsearch_preferences.ui:1005
 msgid "Exclude files:"
@@ -545,6 +545,10 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>שימור הגדרות העמודות:</b>\n"
+"\n"
+"אם פעילה, הגדרת העמודות של תצוגת התוצאות מההפעלה הקודמת תשוחזר עם פתיחת חלון "
+"FSearch. כולל את הגודל ומצב התצוגה של כל העמודות."
 
 #: src/fsearch_preferences.ui:1287
 msgid ""
@@ -733,7 +737,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1650
 msgid "Help"
-msgstr ""
+msgstr "עזרה"
 
 #: src/fsearch_preferences_ui.c:181 src/fsearch_preferences_ui.c:196
 msgid "Select folder"
