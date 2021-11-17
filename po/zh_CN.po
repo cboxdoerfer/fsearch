@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-11-17 02:49+0000\n"
-"Last-Translator: Xeon M <carlnerv@outlook.com>\n"
+"PO-Revision-Date: 2021-11-18 14:23+0000\n"
+"Last-Translator: Eric <spice2wolf@gmail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -352,7 +352,6 @@ msgid "file / folder failed to open"
 msgstr "文件或目录打开失败"
 
 #: src/fsearch_preferences.ui:565
-#, fuzzy
 msgid "Dialogs:"
 msgstr "对话框："
 
@@ -407,11 +406,12 @@ msgid "minute(s)"
 msgstr "分钟"
 
 #: src/fsearch_preferences.ui:852
-#, fuzzy
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "添加要包含在数据库中的路径"
+msgstr ""
+"添加要包含在数据库中的路径\n"
+"                                "
 
 #: src/fsearch_preferences.ui:869 src/fsearch_preferences.ui:968
 msgid "Remove selected path"
@@ -948,7 +948,7 @@ msgstr "0 项"
 
 #: src/fsearch_statusbar.ui:81
 msgid "Index:"
-msgstr "索引"
+msgstr "索引："
 
 #: src/fsearch_statusbar.ui:156
 msgid "Number of selected folders"
@@ -1003,10 +1003,8 @@ msgid "REGEX"
 msgstr "正则表达式"
 
 #: src/fsearch_window.c:582
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "打开文件失败"
+msgstr "打开失败："
 
 #: src/fsearch_window.c:676 src/menus.ui:183 src/menus.ui:231
 msgid "Name"
