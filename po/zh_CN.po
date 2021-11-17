@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-09-18 18:21+0000\n"
-"Last-Translator: 戢斌斌 <zbb10000@163.com>\n"
+"PO-Revision-Date: 2021-11-17 02:49+0000\n"
+"Last-Translator: Xeon M <carlnerv@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.9.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -35,36 +35,36 @@ msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;任何�
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "有图形界面的文件搜索工具"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
-msgstr ""
+msgstr "FSearch可以帮助你简单快速地搜索文件和文件夹。只要输入一些字符即可列出搜索结果。"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
-msgstr ""
+msgstr "FSearch有很多功能可以使搜索尽可能高效和强大。比如："
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
-msgstr ""
+msgstr "忽略大小写（例：搜索“fsearch”也会匹配“FSearch”）"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "正则表达式"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "通配符"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "过滤器（例：只搜索音频文件）"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
 #, fuzzy
@@ -74,21 +74,21 @@ msgstr "不包含隐藏的文件及文件夹"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "通过名称、路径、大小、修改时间、扩展名快速排序"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
-msgstr ""
+msgstr "注：因为Flatpak沙盒，FSearch无法搜索文件系统内的所有文件。"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "默认UI界面布局"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "更符合GNOME人机界面指南的布局"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
@@ -143,7 +143,7 @@ msgstr "正在加载文件…"
 
 #: src/fsearch_database.c:1663
 msgid "Sorting…"
-msgstr "排序中"
+msgstr "排序中…"
 
 #: src/fsearch_file_utils.c:258
 #, fuzzy
@@ -191,9 +191,8 @@ msgid "Properties…"
 msgstr "特性…"
 
 #: src/fsearch_listview_popup.c:79
-#, fuzzy
 msgid "Other Application…"
-msgstr "其他应用程序"
+msgstr "其他应用程序…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
@@ -231,9 +230,8 @@ msgid "This may take a while."
 msgstr "可能需要一些时间。"
 
 #: src/fsearch_overlay.ui:201
-#, fuzzy
 msgid "page2"
-msgstr "页0"
+msgstr "页2"
 
 #: src/fsearch_overlay.ui:239
 msgid "Empty Query"
