@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-10-10 17:04+0000\n"
-"Last-Translator: Marcelo dos Santos Mafra <msmafra@gmail.com>\n"
+"PO-Revision-Date: 2021-11-19 15:52+0000\n"
+"Last-Translator: Gustavo Costa <xfgusta@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.9.1\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -31,7 +31,8 @@ msgstr "FSearch"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
-msgstr "Um utilitário de busca focado em performance e recursos avançados"
+msgstr ""
+"Um utilitário de busca de arquivos focado em desempenho e recursos avançados"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
@@ -58,8 +59,8 @@ msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
-"Possui muitas características que tornam a busca tão eficiente e poderosa "
-"quanto possível. Tais como:"
+"Existem muitos recursos que tornam a pesquisa o mais eficiente e poderosa "
+"possível. Tais como:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
@@ -74,11 +75,11 @@ msgstr "Expressões regulares"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr "Suporte ao caracteres especiais"
+msgstr "Suporte a caractere curinga"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr "Opção de filtro (por exemplo, só procura por arquivos de áudio)"
+msgstr "Suporte a filtro (por exemplo, pesquisa apenas por arquivos de áudio)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
 msgid "Exclude certain files and folders"
@@ -95,8 +96,8 @@ msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
-"Aviso: Devido ao isolamento de processos do Flatpak, FSearch não pode "
-"encontrar todos os arquivos no seu sistema."
+"Aviso: devido ao isolamento de processos do Flatpak, FSearch não consegue "
+"encontrar todos os arquivos em seu sistema."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
@@ -123,7 +124,8 @@ msgstr "Salvando…"
 msgid "translator-credits"
 msgstr ""
 "Atílio Antônio\n"
-"inkhorn"
+"inkhorn\n"
+"Gustavo Costa <xfgusta@gmail.com>"
 
 #: src/fsearch.c:374
 msgid "A search utility focusing on performance and advanced features"
@@ -131,23 +133,23 @@ msgstr "Um utilitário de busca focado em desempenho e recursos avançados"
 
 #: src/fsearch.c:839
 msgid "Open a new application window"
-msgstr "Abrir uma nova janela do software"
+msgstr "Abre uma nova janela"
 
 #: src/fsearch.c:840
 msgid "Show the application preferences"
-msgstr "Mostrar as preferências"
+msgstr "Mostra as preferências"
 
 #: src/fsearch.c:841
 msgid "Set the search pattern"
-msgstr "Definir o modelo de busca"
+msgstr "Define o padrão de pesquisa"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
-msgstr "Atualizar a base de dados e sair"
+msgstr "Atualiza a base de dados e sai"
 
 #: src/fsearch.c:843
 msgid "Print version information and exit"
-msgstr "Mostrar informações da versão e sair"
+msgstr "Mostra informações da versão e sai"
 
 #: src/fsearch_database.c:636
 msgid "Loading folders…"
@@ -203,7 +205,7 @@ msgstr "Vídeos"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr "Características…"
+msgstr "Propriedades…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
@@ -228,7 +230,7 @@ msgstr "Carregando a base de dados…"
 
 #: src/fsearch_overlay.ui:122
 msgid "This won't take long."
-msgstr "Isto não vai demorar muito."
+msgstr "Isso não vai demorar muito."
 
 #: src/fsearch_overlay.ui:138 src/fsearch_overlay.ui:333
 #: src/fsearch_statusbar.ui:309
@@ -241,7 +243,7 @@ msgstr "Atualizando a base de dados…"
 
 #: src/fsearch_overlay.ui:185 src/fsearch_overlay.ui:380
 msgid "This may take a while."
-msgstr "Isto pode demorar um pouco."
+msgstr "Isso pode demorar um pouco."
 
 #: src/fsearch_overlay.ui:201
 msgid "page2"
@@ -265,7 +267,7 @@ msgstr "Tentar uma pesquisa diferente"
 
 #: src/fsearch_overlay.ui:365
 msgid "Sorting results…"
-msgstr "Ordenando…"
+msgstr "Ordenando os resultados…"
 
 #: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -273,11 +275,11 @@ msgstr "Preferências"
 
 #: src/fsearch_preferences.ui:112
 msgid "Enable dark theme"
-msgstr "Ativar tema escuro"
+msgstr "Habilitar tema escuro"
 
 #: src/fsearch_preferences.ui:127
 msgid "Enable client-side decorations (requires restart)"
-msgstr "Ativar adaptações no cliente (requer reinício)"
+msgstr "Habilitar decorações do lado do cliente (requer reinicialização)"
 
 #: src/fsearch_preferences.ui:142
 msgid "Use binary units instead of decimal units"
@@ -361,7 +363,7 @@ msgstr "Mostrar diálogos de aviso quando:"
 
 #: src/fsearch_preferences.ui:542
 msgid "file / folder failed to open"
-msgstr "arquivo / pasta falhou ao abrir"
+msgstr "arquivo/pasta falhou ao abrir"
 
 #: src/fsearch_preferences.ui:565
 msgid "Dialogs:"
@@ -440,8 +442,7 @@ msgstr "Adicionar caminho para ser excluído da base de dados"
 #: src/fsearch_preferences.ui:1004 src/fsearch_preferences.ui:1017
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr ""
-"Suporta caracteres especiais. Múltiplas entradas precisam ser separadas por "
-"';'"
+"Suporta caractere curinga. Múltiplas entradas precisam ser separadas por ';'"
 
 #: src/fsearch_preferences.ui:1005
 msgid "Exclude files:"
@@ -473,10 +474,10 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
-"<b>Ativar tema escuro:</b>\n"
+"<b>Habilitar tema escuro:</b>\n"
 "\n"
-"Se ativado, o tema do sistema é solicitado a usar um estilo mais escuro para "
-"o aplicativo <i>(i.e. elementos de IU escuros em texto claro)</i>.\n"
+"Se habilitado, o tema do sistema é solicitado a usar um estilo mais escuro "
+"para o aplicativo <i>(i.e. elementos de IU escuros em texto claro)</i>.\n"
 "\n"
 "Observe que nem todos os temas do sistema fornecem uma variante mais escura, "
 "portanto, habilitar essa configuração pode não surtir efeito."
@@ -492,15 +493,15 @@ msgid ""
 "below it.\n"
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
-"<b>Ativar adaptações no cliente:</b>\n"
+"<b>Habilitar decorações do lado do cliente:</b>\n"
 "\n"
-"Se ativado, o termo de busca e o menu principal serão exibidos na barra de "
-"título da janela.\n"
+"Se habilitado, o termo de busca e o menu principal serão exibidos na barra "
+"de título da janela.\n"
 "\n"
-"Se desativado, o menu principal será exibido como uma barra de menu com o "
+"Se desabilitado, o menu principal será exibido como uma barra de menu com o "
 "termo de busca abaixo dele.\n"
-"Isto se assemelha a um layout mais traditonal da IU e ocupa um pouco mais de "
-"espaço."
+"Isso se assemelha a um layout mais tradicional da IU e ocupa um pouco mais "
+"de espaço."
 
 #: src/fsearch_preferences.ui:1150
 msgid ""
@@ -588,9 +589,9 @@ msgid ""
 msgstr ""
 "<b>Mostrar termos de busca destacados:</b>\n"
 "\n"
-"Se ativado, os termos de busca serão destacados nos resultados. Por exemplo, "
-"quando você procura por \"foo\" todas as ocorrências de nome <i>foo</i> em "
-"arquivos/pastas serão destacadas em negrito:\n"
+"Se habilitado, os termos de busca serão destacados nos resultados. Por "
+"exemplo, quando você procura por \"foo\" todas as ocorrências de nome "
+"<i>foo</i> em arquivos/pastas serão destacadas em negrito:\n"
 "\n"
 "\t\t<b>foo</b>bar.txt\n"
 "\t\tfile.<b>foo</b>\n"
@@ -607,7 +608,7 @@ msgid ""
 msgstr ""
 "<b>Mostrar dicas de contexto:</b>\n"
 "\n"
-"Se ativado, os resultados também mostrarão o caminho completo do arquivo/"
+"Se habilitado, os resultados também mostrarão o caminho completo do arquivo/"
 "pasta em questão em uma pequena janela dedicada."
 
 #: src/fsearch_preferences.ui:1253
@@ -618,7 +619,7 @@ msgid ""
 msgstr ""
 "<b>Mostrar ícones na coluna Nome:</b>\n"
 "\n"
-"Se ativado, os ícones de arquivos/pastas serão mostrados na coluna Nome."
+"Se habilitado, os ícones de arquivos/pastas serão mostrados na coluna Nome."
 
 #: src/fsearch_preferences.ui:1270
 msgid ""
@@ -630,7 +631,7 @@ msgid ""
 msgstr ""
 "<b>Lembrar da configuração da coluna:</b>\n"
 "\n"
-"Se ativado, a configuração da coluna da exibição de resultados da sessão "
+"Se habilitado, a configuração da coluna da exibição de resultados da sessão "
 "anterior será restaurada quando você abrir uma janela FSearch. Isso inclui o "
 "tamanho e a visibilidade de todas as colunas."
 
@@ -654,7 +655,8 @@ msgid ""
 msgstr ""
 "<b>Abrir caminho com duplo clique na coluna caminho:</b>\n"
 "\n"
-"Se ativado, um duplo clique na coluna caminho abrirá o caminho selecionado."
+"Se habilitado, um duplo clique na coluna caminho abrirá o caminho "
+"selecionado."
 
 #: src/fsearch_preferences.ui:1321
 msgid ""
@@ -666,7 +668,7 @@ msgid ""
 msgstr ""
 "<b>Clique único para abrir:</b>\n"
 "\n"
-"Se ativado, um clique único abrirá o arquivo/pasta selecionado. Se você "
+"Se habilitado, um clique único abrirá o arquivo/pasta selecionado. Se você "
 "quiser apenas selecionar um arquivo/pasta enquanto esta configuração estiver "
 "ativa, você precisará segurar o <i>Ctrl</i> e ao mesmo tempo clicar no "
 "arquivo/pasta."
@@ -680,8 +682,8 @@ msgid ""
 msgstr ""
 "<b>Mostrar status de indexação da base de dados:</b>\n"
 "\n"
-"Se ativado, o caminho que está sendo indexado atualmente é exibido na barra "
-"de status."
+"Se habilitado, o caminho que está sendo indexado atualmente é exibido na "
+"barra de status."
 
 #: src/fsearch_preferences.ui:1355
 msgid ""
@@ -693,7 +695,7 @@ msgid ""
 msgstr ""
 "<b>Mostrar diálogo de aviso:</b>\n"
 "\n"
-"Se ativado, um diálogo de aviso será exibido quando:\n"
+"Se habilitado, um diálogo de aviso será exibido quando:\n"
 "\n"
 "\t•  um arquivo ou pasta falhou ao abrir\n"
 
@@ -707,9 +709,9 @@ msgstr ""
 "<b>Pesquisar no caminho quando a consulta contém separadores de caminho:</b>"
 "\n"
 "\n"
-"Se ativado, os termos de busca contendo separadores de caminho (ou seja, \"/"
-"\") serão automaticamente comparados com o caminho completo de um arquivo ou "
-"pasta."
+"Se habilitado, os termos de busca contendo separadores de caminho (ou seja, "
+"\"/\") serão automaticamente comparados com o caminho completo de um arquivo "
+"ou pasta."
 
 #: src/fsearch_preferences.ui:1392
 msgid ""
@@ -722,7 +724,7 @@ msgstr ""
 "<b>Coincidir maiúsculas e minúsculas quando a busca contém pelo menos um "
 "caractere maiúsculo:</b>\n"
 "\n"
-"Se ativado, os termos de busca contendo pelo menos um caractere em "
+"Se habilitado, os termos de busca contendo pelo menos um caractere em "
 "maiúsculas irão acionar uma busca sensível a maiúsculas e minúsculas. Isto "
 "significa que um termo de busca como <i>Foo</i> irá corresponder ao <i>FooBar"
 ".txt</i> mas não ao <i>foobar.txt</i>."
@@ -738,11 +740,11 @@ msgid ""
 msgstr ""
 "<b>Ocultar resultados quando a busca está vazia:</b>\n"
 "\n"
-"Se ativado, nenhum resultado de busca será exibido quando a entrada de busca "
-"estiver vazia.\n"
+"Se habilitado, nenhum resultado de busca será exibido quando a entrada de "
+"busca estiver vazia.\n"
 "\n"
-"Se desativado, todos os arquivos e pastas serão exibidos quando a entrada de "
-"busca estiver vazia."
+"Se desabilitado, todos os arquivos e pastas serão exibidos quando a entrada "
+"de busca estiver vazia."
 
 #: src/fsearch_preferences.ui:1428
 msgid ""
@@ -755,11 +757,11 @@ msgid ""
 msgstr ""
 "<b>Pesquisar enquanto digita:</b>\n"
 "\n"
-"Se ativado, a pesquisa é atualizada automaticamente a cada pressionamento de "
-"tecla.\n"
+"Se habilitado, a pesquisa é atualizada automaticamente a cada pressionamento "
+"de tecla.\n"
 "\n"
-"Se desativado, a pesquisa só é atualizada quando você pressiona <i>Enter</i> "
-"ou pressiona o botão de pesquisa. "
+"Se desabilitado, a pesquisa só é atualizada quando você pressiona <i>Enter</"
+"i> ou pressiona o botão de pesquisa. "
 
 #: src/fsearch_preferences.ui:1447
 msgid ""
@@ -770,8 +772,8 @@ msgid ""
 msgstr ""
 "<b>Atualizar base de dados ao iniciar:</b>\n"
 "\n"
-"Se ativado, a base de dados será atualizada automaticamente em segundo plano "
-"quando você iniciar o FSearch."
+"Se habilitado, a base de dados será atualizada automaticamente em segundo "
+"plano quando você iniciar o FSearch."
 
 #: src/fsearch_preferences.ui:1464
 msgid ""
@@ -795,8 +797,8 @@ msgstr ""
 "                      Esta lista contém todas as pastas que você deseja "
 "incluir na base de dados.\n"
 "\n"
-"                      • <b>Ativo:</b> Se ativado, o caminho será incluído na "
-"base de dados a ser pesquisado.\n"
+"                      • <b>Ativo:</b> Se habilitado, o caminho será incluído "
+"na base de dados a ser pesquisado.\n"
 "                      • <b>Caminho:</b> O caminho completo a ser incluído.\n"
 "                      • <b>Atualizar:</b> Esta configuração é útil se você "
 "quiser excluir certos caminhos de\n"
@@ -849,7 +851,7 @@ msgstr ""
 "\n"
 "Esta lista contém todas as pastas que você deseja excluir da base de dados.\n"
 "\n"
-"\t• <b>Ativo:</b> Se ativado, o caminho será excluído da base de dados\n"
+"\t• <b>Ativo:</b> Se habilitado, o caminho será excluído da base de dados\n"
 "\t\t e não pode ser procurado.\n"
 "\t• <b>Caminho:</b> O caminho completo a ser excluído."
 
@@ -900,8 +902,8 @@ msgid ""
 msgstr ""
 "<b>Excluir arquivos e pastas ocultos:</b>\n"
 "\n"
-"Se ativado, arquivos e pastas ocultos serão excluídos da base de dados <i>("
-"ou seja, todos os arquivos ou pastas que começam com um caractere de "
+"Se habilitado, arquivos e pastas ocultos serão excluídos da base de dados "
+"<i>(ou seja, todos os arquivos ou pastas que começam com um caractere de "
 "ponto)</i>."
 
 #: src/fsearch_preferences.ui:1614
@@ -923,12 +925,12 @@ msgid ""
 msgstr ""
 "<b>Atualizar periodicamente a base de dados em um intervalo de tempo:</b>\n"
 "\n"
-"Se ativado, desde que o FSearch estiver em execução, a base de dados será "
+"Se habilitado, desde que o FSearch estiver em execução, a base de dados será "
 "atualizada periodicamente com o intervalo de tempo definido.\n"
 "\n"
 "Se você quiser atualizar a base de dados em segundo plano, mesmo quando o "
-"FSearch não estiver em execução, você precisa usar ferramentas como Cron ou "
-"timer do Sistemd para acionar periodicamente a atualização via:\n"
+"FSearch não estiver em execução, você precisa usar ferramentas como cron ou "
+"timer do systemd para acionar periodicamente a atualização via:\n"
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 
@@ -1104,7 +1106,7 @@ msgstr "Coincidir maiúsculas e minúsculas"
 
 #: src/fsearch_window.ui:171 src/menus.ui:120
 msgid "Enable RegEx"
-msgstr "Ativar RegEx"
+msgstr "Habilitar RegEx"
 
 #: src/fsearch_window.ui:196 src/menus.ui:95
 msgid "Show Statusbar"
