@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-08-30 21:33+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"PO-Revision-Date: 2021-11-20 17:52+0000\n"
+"Last-Translator: Paulo C. <paulop1976@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
 "Language: pt\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.8.1-dev\n"
+"X-Generator: Weblate 4.9.1\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -40,69 +40,77 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Uma aplicação de pesquisa em modo gráfico"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"O Fsearch ajuda a encontrar ficheiros e pastas da maneira mais fácil e "
+"rápida. Escreva alguma letras e os resultados surgem quase de imediato."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Existem muitas características que tornam a pesquisa o mais eficiente e "
+"poderosa possível, tais como:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Ignorar a capitalização (ex: pesquisar por \"fsearch\" é o mesmo que "
+"pesquisar por \"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Expressões regulares"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Suporte a wildcards"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Filtro (ex: pesquisar apenas ficheiros áudio)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Excluir ficheiros e pastas escondidos"
+msgstr "Excluir determinados ficheiros e pastas"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Organizar rapidamente por nome, caminho, tamanho, tempo de modificação e "
+"extensão"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Nota: Devido ao sandboxing do Flatpak, o FSearch não pode encontrar todos os "
+"ficheiros no seu sistema."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Interface de Utilizador padrão"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Um modelo que segue de perto as normas GNOME"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Versão inicial."
 
 #: src/fsearch.c:256
 msgid "Saving…"
@@ -123,7 +131,7 @@ msgstr "Abrir com outra Aplicação"
 
 #: src/fsearch.c:840
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Exibir preferências da aplicação"
 
 #: src/fsearch.c:841
 #, fuzzy
@@ -197,7 +205,7 @@ msgstr "Vídeos"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Propriedades…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
@@ -260,7 +268,7 @@ msgstr "Tentar uma pesquisa diferente"
 
 #: src/fsearch_overlay.ui:365
 msgid "Sorting results…"
-msgstr ""
+msgstr "A ordenar os resultados…"
 
 #: src/fsearch_preferences.ui:43 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -272,7 +280,7 @@ msgstr "Ativar tema escuro"
 
 #: src/fsearch_preferences.ui:127
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Ativar decorações do lado do cliente (necessita reinicio da aplicação)"
 
 #: src/fsearch_preferences.ui:142
 msgid "Use binary units instead of decimal units"
@@ -418,6 +426,9 @@ msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
+"Adicionar o caminho a ser incluído na base de dados\n"
+"…………………\n"
+"                                "
 
 #: src/fsearch_preferences.ui:869 src/fsearch_preferences.ui:968
 msgid "Remove selected path"
@@ -698,6 +709,7 @@ msgstr ""
 "quando iniciar o FSearch."
 
 #: src/fsearch_preferences.ui:1464
+#, fuzzy
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -714,6 +726,20 @@ msgid ""
 "doesn't change often)</i>\n"
 "                    "
 msgstr ""
+"<b>Pastas Incluídas :</b>\n"
+"\n"
+"                      Esta lista contem todas as pastas que deseja incluir "
+"na base de dados.\n"
+"\n"
+"                      • <b>Activar:</b>Se activado, o caminho será incluído "
+"na base de dados a pesquisar.\n"
+"                      • <b>Caminho:</b> O caminho completo a ser incluído.\n"
+"                      • <b>Actualizar:</b> Esta definição é util se deseja "
+"impedir certos caminhos de serem actualizados\n"
+"                      serem\n"
+"                      actualizados <i>(ex: o caminho para uma drive USB "
+"lenta, que não sofre muitas alterações)</i>\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1488
 msgid ""
