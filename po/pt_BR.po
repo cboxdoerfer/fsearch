@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-11-19 15:52+0000\n"
+"PO-Revision-Date: 2021-11-20 17:52+0000\n"
 "Last-Translator: Gustavo Costa <xfgusta@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
@@ -185,11 +185,11 @@ msgstr "Arquivos"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr "Arquivos"
+msgstr "Arquivos compactados"
 
 #: src/fsearch_filter.c:93
 msgid "Audio"
-msgstr "Áudio"
+msgstr "Áudios"
 
 #: src/fsearch_filter.c:96
 msgid "Documents"
@@ -263,7 +263,7 @@ msgstr "Nenhum resultado encontrado"
 
 #: src/fsearch_overlay.ui:317
 msgid "Try a different search"
-msgstr "Tentar uma pesquisa diferente"
+msgstr "Tente uma pesquisa diferente"
 
 #: src/fsearch_overlay.ui:365
 msgid "Sorting results…"
@@ -303,7 +303,7 @@ msgstr "Comportamento após abrir um arquivo com sucesso:"
 
 #: src/fsearch_preferences.ui:254
 msgid "Nothing"
-msgstr "Nada"
+msgstr "Nenhum"
 
 #: src/fsearch_preferences.ui:255
 msgid "Minimize"
@@ -327,7 +327,7 @@ msgstr "Mostrar dicas de contexto"
 
 #: src/fsearch_preferences.ui:348
 msgid "Show icons in name column"
-msgstr "Mostrar ícones na coluna Nome"
+msgstr "Mostrar ícones na coluna nome"
 
 #: src/fsearch_preferences.ui:363
 msgid "Remember column configuration"
@@ -363,7 +363,7 @@ msgstr "Mostrar diálogos de aviso quando:"
 
 #: src/fsearch_preferences.ui:542
 msgid "file / folder failed to open"
-msgstr "arquivo/pasta falhou ao abrir"
+msgstr "erro ao abrir arquivo/pasta"
 
 #: src/fsearch_preferences.ui:565
 msgid "Dialogs:"
@@ -450,7 +450,7 @@ msgstr "Excluir arquivos:"
 
 #: src/fsearch_preferences.ui:1018
 msgid "e.g. \".git;*.tmp\""
-msgstr "exemplo \".git;*.tmp\""
+msgstr "exemplo: \".git;*.tmp\""
 
 #: src/fsearch_preferences.ui:1035
 msgid "Exclude hidden files and folders"
@@ -1072,7 +1072,7 @@ msgstr "Extensão"
 
 #: src/fsearch_window.c:711 src/menus.ui:251
 msgid "Date Modified"
-msgstr "Data de Modificação"
+msgstr "Data de modificação"
 
 #: src/fsearch_window.c:726
 msgid ""
@@ -1181,7 +1181,7 @@ msgstr "_Arquivo"
 
 #: src/menus.ui:9
 msgid "New Window"
-msgstr "Nova Janela"
+msgstr "Nova janela"
 
 #: src/menus.ui:16 src/menus.ui:139
 msgid "_Open"
@@ -1189,7 +1189,7 @@ msgstr "_Abrir"
 
 #: src/menus.ui:21
 msgid "Open Folder"
-msgstr "Abrir Pasta"
+msgstr "Abrir pasta"
 
 #: src/menus.ui:29
 msgid "Update Database"
@@ -1201,7 +1201,7 @@ msgstr "Cancelar atualização"
 
 #: src/menus.ui:42
 msgid "Close Window"
-msgstr "Fechar Janela"
+msgstr "Fechar janela"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -1241,15 +1241,15 @@ msgstr "_Ajuda"
 
 #: src/menus.ui:145
 msgid "Open _With"
-msgstr "Abrir _Com"
+msgstr "Abrir _com"
 
 #: src/menus.ui:159
 msgid "_Open Folder"
-msgstr "_Abrir Pasta"
+msgstr "_Abrir pasta"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr "Copiar como Texto"
+msgstr "Copiar como texto"
 
 #: src/menus.ui:191
 msgid "Path + Name"
@@ -1257,7 +1257,7 @@ msgstr "Caminho + Nome"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
-msgstr "Mover para a _Lixeira"
+msgstr "Mover para a lixeira"
 
 #~ msgid "_Copy Filepath"
 #~ msgstr "_Copiar Caminho do Arquivo"
