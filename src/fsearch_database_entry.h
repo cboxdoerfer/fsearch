@@ -11,7 +11,7 @@ typedef enum {
     NUM_DATABASE_ENTRY_TYPES,
 } FsearchDatabaseEntryType;
 
-typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntry;
+typedef struct FsearchDatabaseEntry FsearchDatabaseEntry;
 typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
 typedef struct FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
 
@@ -79,10 +79,7 @@ FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry);
 
 void
-db_file_entry_destroy(FsearchDatabaseEntryFolder *entry);
-
-void
-db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry);
+db_entry_destroy(FsearchDatabaseEntry *entry);
 
 int
 db_entry_compare_entries_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);

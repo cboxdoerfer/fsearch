@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct FsearchDatabaseEntryCommon {
+struct FsearchDatabaseEntry {
     FsearchDatabaseEntryFolder *parent;
     char *name;
     off_t size;
@@ -19,11 +19,11 @@ struct FsearchDatabaseEntryCommon {
 };
 
 struct FsearchDatabaseEntryFile {
-    struct FsearchDatabaseEntryCommon shared;
+    struct FsearchDatabaseEntry super;
 };
 
 struct FsearchDatabaseEntryFolder {
-    struct FsearchDatabaseEntryCommon shared;
+    struct FsearchDatabaseEntry super;
 
     // db_idx: the database index this folder belongs to
     uint32_t db_idx;
@@ -34,12 +34,13 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
     if (!folder) {
         return;
     }
-    if (folder->shared.parent) {
-        build_path_recursively(folder->shared.parent, str);
+    FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+    if (entry->parent) {
+        build_path_recursively(entry->parent, str);
         g_string_append_c(str, G_DIR_SEPARATOR);
     }
-    if (strcmp(folder->shared.name, "") != 0) {
-        g_string_append(str, folder->shared.name);
+    if (strcmp(entry->name, "") != 0) {
+        g_string_append(str, entry->name);
     }
 }
 
@@ -56,7 +57,7 @@ db_entry_get_sizeof_file_entry() {
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry) {
     GString *path = g_string_new(NULL);
-    build_path_recursively(entry->shared.parent, path);
+    build_path_recursively(entry->parent, path);
     return path;
 }
 
@@ -66,26 +67,26 @@ db_entry_get_path_full(FsearchDatabaseEntry *entry) {
     if (!path_full) {
         return NULL;
     }
-    if (entry->shared.name[0] != G_DIR_SEPARATOR) {
+    if (entry->name[0] != G_DIR_SEPARATOR) {
         g_string_append_c(path_full, G_DIR_SEPARATOR);
     }
-    g_string_append(path_full, entry->shared.name);
+    g_string_append(path_full, entry->name);
     return path_full;
 }
 
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str) {
-    build_path_recursively(entry->shared.parent, str);
+    build_path_recursively(entry->parent, str);
 }
 
 time_t
 db_entry_get_mtime(FsearchDatabaseEntry *entry) {
-    return entry ? entry->shared.mtime : 0;
+    return entry ? entry->mtime : 0;
 }
 
 off_t
 db_entry_get_size(FsearchDatabaseEntry *entry) {
-    return entry ? entry->shared.size : 0;
+    return entry ? entry->size : 0;
 }
 
 const char *
@@ -93,10 +94,10 @@ db_entry_get_extension(FsearchDatabaseEntry *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
-    if (entry->shared.type == DATABASE_ENTRY_TYPE_FOLDER) {
+    if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
         return NULL;
     }
-    return fs_str_get_extension(entry->shared.name);
+    return fs_str_get_extension(entry->name);
 }
 
 const char *
@@ -104,8 +105,8 @@ db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
-    if (strcmp(entry->shared.name, "") != 0) {
-        return entry->shared.name;
+    if (strcmp(entry->name, "") != 0) {
+        return entry->name;
     }
     return G_DIR_SEPARATOR_S;
 }
@@ -118,45 +119,37 @@ db_entry_get_name_for_display(FsearchDatabaseEntry *entry) {
 
 const char *
 db_entry_get_name_raw(FsearchDatabaseEntry *entry) {
-    return entry ? entry->shared.name : NULL;
+    return entry ? entry->name : NULL;
 }
 
 FsearchDatabaseEntryFolder *
 db_entry_get_parent(FsearchDatabaseEntry *entry) {
-    return entry ? entry->shared.parent : NULL;
+    return entry ? entry->parent : NULL;
 }
 
 FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry) {
-    return entry ? entry->shared.type : DATABASE_ENTRY_TYPE_NONE;
+    return entry ? entry->type : DATABASE_ENTRY_TYPE_NONE;
 }
 
 uint32_t
 db_entry_get_idx(FsearchDatabaseEntry *entry) {
-    return entry ? entry->shared.idx : 0;
+    return entry ? entry->idx : 0;
 }
 
 void
-db_file_entry_destroy(FsearchDatabaseEntryFolder *entry) {
+db_entry_destroy(FsearchDatabaseEntry *entry) {
     if (G_UNLIKELY(!entry)) {
         return;
     }
-    g_clear_pointer(&entry->shared.name, free);
-}
-
-void
-db_folder_entry_destroy(FsearchDatabaseEntryFolder *entry) {
-    if (G_UNLIKELY(!entry)) {
-        return;
-    }
-    g_clear_pointer(&entry->shared.name, free);
+    g_clear_pointer(&entry->name, free);
 }
 
 static uint32_t
 db_entry_get_depth(FsearchDatabaseEntry *entry) {
     uint32_t depth = 0;
-    while (entry && entry->shared.parent) {
-        entry = (FsearchDatabaseEntry *)entry->shared.parent;
+    while (entry && entry->parent) {
+        entry = (FsearchDatabaseEntry *)entry->parent;
         depth++;
     }
     return depth;
@@ -165,7 +158,7 @@ db_entry_get_depth(FsearchDatabaseEntry *entry) {
 static FsearchDatabaseEntryFolder *
 db_entry_get_parent_nth(FsearchDatabaseEntryFolder *entry, uint32_t nth) {
     while (entry && nth > 0) {
-        entry = entry->shared.parent;
+        entry = entry->super.parent;
         nth--;
     }
     return entry;
@@ -176,13 +169,13 @@ sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabas
     if (G_UNLIKELY(!entry_a || !entry_b)) {
         return;
     }
-    if (entry_a->shared.parent && entry_a->shared.parent != entry_b->shared.parent) {
-        sort_entry_by_path_recursive(entry_a->shared.parent, entry_b->shared.parent, res);
+    if (entry_a->super.parent && entry_a->super.parent != entry_b->super.parent) {
+        sort_entry_by_path_recursive(entry_a->super.parent, entry_b->super.parent, res);
     }
     if (*res != 0) {
         return;
     }
-    *res = strverscmp(entry_a->shared.name, entry_b->shared.name);
+    *res = strverscmp(entry_a->super.name, entry_b->super.name);
 }
 
 int
@@ -216,7 +209,7 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
 int
 db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    return ((*a)->shared.mtime > (*b)->shared.mtime) ? 1 : -1;
+    return ((*a)->mtime > (*b)->mtime) ? 1 : -1;
 }
 
 int
@@ -233,19 +226,19 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
     int res = 0;
     if (a_depth == b_depth) {
-        sort_entry_by_path_recursive(entry_a->shared.parent, entry_b->shared.parent, &res);
+        sort_entry_by_path_recursive(entry_a->parent, entry_b->parent, &res);
         return res == 0 ? db_entry_compare_entries_by_name(a, b) : res;
     }
     else if (a_depth > b_depth) {
         const uint32_t diff = a_depth - b_depth;
-        FsearchDatabaseEntryFolder *parent_a = db_entry_get_parent_nth(entry_a->shared.parent, diff);
-        sort_entry_by_path_recursive(parent_a, entry_b->shared.parent, &res);
+        FsearchDatabaseEntryFolder *parent_a = db_entry_get_parent_nth(entry_a->parent, diff);
+        sort_entry_by_path_recursive(parent_a, entry_b->parent, &res);
         return res == 0 ? 1 : res;
     }
     else {
         const uint32_t diff = b_depth - a_depth;
-        FsearchDatabaseEntryFolder *parent_b = db_entry_get_parent_nth(entry_b->shared.parent, diff);
-        sort_entry_by_path_recursive(entry_a->shared.parent, parent_b, &res);
+        FsearchDatabaseEntryFolder *parent_b = db_entry_get_parent_nth(entry_b->parent, diff);
+        sort_entry_by_path_recursive(entry_a->parent, parent_b, &res);
         return res == 0 ? -1 : res;
     }
 }
@@ -255,8 +248,8 @@ db_entry_update_folder_size(FsearchDatabaseEntryFolder *folder, off_t size) {
     if (!folder) {
         return;
     }
-    folder->shared.size += size;
-    db_entry_update_folder_size(folder->shared.parent, size);
+    folder->super.size += size;
+    db_entry_update_folder_size(folder->super.parent, size);
 }
 
 int
@@ -275,45 +268,45 @@ db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     if (G_UNLIKELY(*a == NULL || *b == NULL)) {
         return 0;
     }
-    const char *name_a = (*a)->shared.name;
-    const char *name_b = (*b)->shared.name;
+    const char *name_a = (*a)->name;
+    const char *name_b = (*b)->name;
     return strverscmp(name_a ? name_a : "", name_b ? name_b : "");
 }
 
 void
 db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime) {
-    entry->shared.mtime = mtime;
+    entry->mtime = mtime;
 }
 
 void
 db_entry_set_size(FsearchDatabaseEntry *entry, off_t size) {
-    entry->shared.size = size;
+    entry->size = size;
 }
 
 void
 db_entry_set_name(FsearchDatabaseEntry *entry, const char *name) {
-    if (entry->shared.name) {
-        free(entry->shared.name);
+    if (entry->name) {
+        free(entry->name);
     }
-    entry->shared.name = strdup(name ? name : "");
+    entry->name = strdup(name ? name : "");
 }
 
 void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *parent) {
-    entry->shared.parent = parent;
+    entry->parent = parent;
 }
 
 void
 db_entry_set_type(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type) {
-    entry->shared.type = type;
+    entry->type = type;
 }
 
 void
 db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx) {
-    entry->shared.idx = idx;
+    entry->idx = idx;
 }
 
 void
 db_entry_update_parent_size(FsearchDatabaseEntry *entry) {
-    db_entry_update_folder_size(entry->shared.parent, entry->shared.size);
+    db_entry_update_folder_size(entry->parent, entry->size);
 }

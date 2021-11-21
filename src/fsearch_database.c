@@ -456,8 +456,7 @@ db_load_files(FILE *fp,
     // load folders
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
-        FsearchDatabaseEntryFile *file = fsearch_memory_pool_malloc(pool);
-        FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)file;
+        FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(pool);
         db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
         db_entry_set_idx(entry, idx);
 
@@ -471,7 +470,7 @@ db_load_files(FILE *fp,
         FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
         db_entry_set_parent(entry, parent);
 
-        darray_add_item(files, file);
+        darray_add_item(files, entry);
     }
     if (fb - file_block != file_block_size) {
         g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - file_block, file_block_size);
@@ -810,8 +809,7 @@ db_save_files(FILE *fp,
     GString *name_new = g_string_sized_new(256);
 
     for (uint32_t i = 0; i < num_files; i++) {
-        FsearchDatabaseEntryFile *file = darray_get_item(files, i);
-        FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)file;
+        FsearchDatabaseEntry *entry = darray_get_item(files, i);
 
         // let's also update the idx of the file here while we're at it to make sure we have the correct
         // idx set when we store the fast sort indexes
@@ -936,8 +934,7 @@ db_save_folders(FILE *fp,
     GString *name_new = g_string_sized_new(256);
 
     for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
-        FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+        FsearchDatabaseEntry *entry = darray_get_item(folders, i);
 
         // TODO: actually store the folders db_index instead of always 0
         const uint16_t db_index = 0;
@@ -1291,21 +1288,20 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         }
 
         if (is_dir) {
-            FsearchDatabaseEntryFolder *folder_entry = fsearch_memory_pool_malloc(db->folder_pool);
-            FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder_entry;
+            FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(db->folder_pool);
             db_entry_set_name(entry, dent->d_name);
             db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
             db_entry_set_mtime(entry, st.st_mtime);
             db_entry_set_parent(entry, parent);
 
-            darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], folder_entry);
+            darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], entry);
 
             db->num_folders++;
 
-            db_folder_scan_recursive(walk_context, folder_entry);
+            db_folder_scan_recursive(walk_context, (FsearchDatabaseEntryFolder *)entry);
         }
         else {
-            FsearchDatabaseEntryFile *file_entry = fsearch_memory_pool_malloc(db->file_pool);
+            FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(db->file_pool);
             db_entry_set_name(file_entry, dent->d_name);
             db_entry_set_size(file_entry, st.st_size);
             db_entry_set_mtime(file_entry, st.st_mtime);
@@ -1365,17 +1361,16 @@ db_scan_folder(FsearchDatabase *db,
         .exclude_hidden = db->exclude_hidden,
     };
 
-    FsearchDatabaseEntryFolder *parent = fsearch_memory_pool_malloc(db->folder_pool);
-    FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)parent;
+    FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(db->folder_pool);
     db_entry_set_name(entry, path->str);
     db_entry_set_parent(entry, NULL);
     db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
 
-    darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], parent);
+    darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], entry);
     db->num_folders++;
     db->num_entries++;
 
-    uint32_t res = db_folder_scan_recursive(&walk_context, parent);
+    uint32_t res = db_folder_scan_recursive(&walk_context, (FsearchDatabaseEntryFolder *)entry);
 
     g_string_free(g_steal_pointer(&path), TRUE);
 
@@ -1423,10 +1418,10 @@ db_new(GList *indexes, GList *excludes, char **exclude_files, bool exclude_hidde
     }
     db->file_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                             db_entry_get_sizeof_file_entry(),
-                                            (GDestroyNotify)db_file_entry_destroy);
+                                            (GDestroyNotify)db_entry_destroy);
     db->folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                               db_entry_get_sizeof_folder_entry(),
-                                              (GDestroyNotify)db_folder_entry_destroy);
+                                              (GDestroyNotify)db_entry_destroy);
 
     db->thread_pool = fsearch_thread_pool_init();
 
