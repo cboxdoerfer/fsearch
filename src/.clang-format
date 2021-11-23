@@ -16,3 +16,12 @@ BreakBeforeBinaryOperators: NonAssignment
 BreakBeforeBraces: Custom
 BraceWrapping:
   BeforeElse: true
+
+# Penalties
+PenaltyBreakAssignment: 50
+PenaltyBreakBeforeFirstCallParameter: 40
+PenaltyBreakComment: 10
+PenaltyBreakFirstLessLess: 0
+PenaltyBreakString: 10
+PenaltyExcessCharacter: 10
+PenaltyReturnTypeOnItsOwnLine: 30
