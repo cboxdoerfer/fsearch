@@ -3,6 +3,9 @@ description: A search utility focusing on performance and advanced features
 google_analytics: 
 show_downloads: true
 theme: jekyll-theme-minimal
+github:
+  zip_url: https://github.com/cboxdoerfer/fsearch/zipball/master
+  tar_url: https://github.com/cboxdoerfer/fsearch/tarball/master
 
 gems:
   - jekyll-mentions
