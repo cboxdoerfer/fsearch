@@ -172,8 +172,8 @@ static void
 database_scan_started(FsearchApplicationWindow *win) {
     show_overlay(win, OVERLAY_DATABASE_UPDATING);
 
-    GtkWidget *cancel_update_button =
-        gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "cancel_database_update");
+    GtkWidget *cancel_update_button = gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack),
+                                                                  "cancel_database_update");
     if (cancel_update_button) {
         gtk_stack_set_visible_child(GTK_STACK(win->popover_update_button_stack), cancel_update_button);
     }
@@ -526,10 +526,7 @@ on_file_open_failed_response(GtkDialog *dialog, GtkResponseType response, gpoint
 }
 
 static void
-on_fsearch_list_view_row_activated(FsearchListView *view,
-                                   FsearchDatabaseIndexType col,
-                                   int row_idx,
-                                   gpointer user_data) {
+on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexType col, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     if (!self->result_view->database_view) {
         return;
@@ -708,10 +705,11 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), type_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), size_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
-    fsearch_list_view_column_set_tooltip(
-        type_col,
-        _("Sorting by <b>Type</b> can be very slow with many results and it can't be aborted.\n\n"
-          "This sort order is not persistent, it will be reset when the search term changes."));
+    fsearch_list_view_column_set_tooltip(type_col,
+                                         _("Sorting by <b>Type</b> can be very slow with many results and it can't be "
+                                           "aborted.\n\n"
+                                           "This sort order is not persistent, it will be reset when the search term "
+                                           "changes."));
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
 }
 
@@ -854,8 +852,8 @@ on_database_update_finished(gpointer data, gpointer user_data) {
 
     fsearch_application_window_unselect_all(win);
 
-    GtkWidget *update_database_button =
-        gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack), "update_database");
+    GtkWidget *update_database_button = gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack),
+                                                                    "update_database");
     if (update_database_button) {
         gtk_stack_set_visible_child(GTK_STACK(win->popover_update_button_stack), update_database_button);
     }
@@ -1201,8 +1199,9 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
     config->window_height = height;
 
     if (win->result_view && win->result_view->list_view) {
-        config->sort_ascending =
-            fsearch_list_view_get_sort_type(win->result_view->list_view) == GTK_SORT_ASCENDING ? true : false;
+        config->sort_ascending = fsearch_list_view_get_sort_type(win->result_view->list_view) == GTK_SORT_ASCENDING
+                                   ? true
+                                   : false;
 
         if (config->sort_by) {
             g_clear_pointer(&config->sort_by, g_free);
@@ -1210,17 +1209,20 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
         config->sort_by = get_sort_name_for_type(fsearch_list_view_get_sort_order(win->result_view->list_view));
 
         // update the config with the widths of all columns whose width we can store
-        const struct { int type; uint32_t *width; } columns[] = {
-            { DATABASE_INDEX_TYPE_NAME,              &config->name_column_width      },
-            { DATABASE_INDEX_TYPE_PATH,              &config->path_column_width      },
-            { DATABASE_INDEX_TYPE_FILETYPE,          &config->type_column_width      },
-            { DATABASE_INDEX_TYPE_EXTENSION,         &config->extension_column_width },
-            { DATABASE_INDEX_TYPE_SIZE,              &config->size_column_width      },
-            { DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width  },
+        const struct {
+            int type;
+            uint32_t *width;
+        } columns[] = {
+            {DATABASE_INDEX_TYPE_NAME, &config->name_column_width},
+            {DATABASE_INDEX_TYPE_PATH, &config->path_column_width},
+            {DATABASE_INDEX_TYPE_FILETYPE, &config->type_column_width},
+            {DATABASE_INDEX_TYPE_EXTENSION, &config->extension_column_width},
+            {DATABASE_INDEX_TYPE_SIZE, &config->size_column_width},
+            {DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width},
         };
         for (int i = 0; i < G_N_ELEMENTS(columns); i++) {
-            const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(
-                    win->result_view->list_view, columns[i].type);
+            const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(win->result_view->list_view,
+                                                                                           columns[i].type);
             if (col) {
                 *columns[i].width = col->width;
             }
@@ -1246,8 +1248,8 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 
     FsearchConfig *config = fsearch_application_get_config(app);
 
-    FsearchDatabaseIndexType sort_order =
-        config->restore_column_config ? get_sort_type_for_name(config->sort_by) : DATABASE_INDEX_TYPE_NAME;
+    FsearchDatabaseIndexType sort_order = config->restore_column_config ? get_sort_type_for_name(config->sort_by)
+                                                                        : DATABASE_INDEX_TYPE_NAME;
     if (sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
         // -> fall back to sort by name instead

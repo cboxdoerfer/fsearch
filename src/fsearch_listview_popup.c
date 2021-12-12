@@ -29,8 +29,8 @@ static void
 add_file_properties_entry(GtkBuilder *builder) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     if (app && fsearch_application_has_file_manager_on_bus(app)) {
-        GMenu *menu_properties_section =
-            G_MENU(gtk_builder_get_object(builder, "fsearch_listview_menu_file_properties_section"));
+        GMenu *menu_properties_section = G_MENU(
+            gtk_builder_get_object(builder, "fsearch_listview_menu_file_properties_section"));
         if (menu_properties_section) {
             GMenuItem *properties_item = g_menu_item_new(_("Properties…"), "win.file_properties");
             g_menu_append_item(menu_properties_section, properties_item);
