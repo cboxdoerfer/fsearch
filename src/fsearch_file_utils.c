@@ -22,7 +22,9 @@
 
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
+#include "fsearch_string_utils.h"
 #include "fsearch_ui_utils.h"
+#include <gio/gdesktopappinfo.h>
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <stdbool.h>
@@ -132,9 +134,44 @@ open_with_cmd(GString *path, GString *path_full, const char *cmd) {
 }
 
 static bool
-open_uri(const char *uri) {
+open_application(const char *uri) {
+    GdkDisplay *display = gdk_display_get_default();
+    if (!display) {
+        return false;
+    }
+    GAppInfo *info = (GAppInfo *)g_desktop_app_info_new_from_filename(uri);
+    if (!info) {
+        return false;
+    }
+
+    GAppLaunchContext *context = (GAppLaunchContext *)gdk_display_get_app_launch_context(display);
+    GError *error = NULL;
+    g_app_info_launch(info, NULL, context, &error);
+    g_clear_object(&context);
+    g_clear_object(&info);
+
+    if (error) {
+        g_warning("Failed to launch app: %s", error->message);
+        g_clear_pointer(&error, g_error_free);
+        return false;
+    }
+
+    return true;
+}
+
+static bool
+open_uri(const char *uri, bool launch_desktop_files) {
     if (!g_file_test(uri, G_FILE_TEST_EXISTS)) {
         return false;
+    }
+
+    if (launch_desktop_files) {
+        // if uri points to a desktop file we try to launch it
+        const char *uri_extension = fs_str_get_extension(uri);
+        if (uri_extension && !strcmp(uri_extension, "desktop") && g_file_test(uri, G_FILE_TEST_IS_REGULAR)
+            && open_application(uri)) {
+            return true;
+        }
     }
 
     GError *error = NULL;
@@ -200,11 +237,11 @@ fsearch_file_utils_trash(const char *path) {
 }
 
 bool
-fsearch_file_utils_launch(GString *path_full) {
+fsearch_file_utils_launch(GString *path_full, bool launch_desktop_files) {
     if (!path_full) {
         return false;
     }
-    return open_uri(path_full->str);
+    return open_uri(path_full->str, false);
 }
 
 bool
@@ -216,7 +253,7 @@ fsearch_file_utils_launch_with_command(GString *path, GString *path_full, const 
         return open_with_cmd(path, path_full, cmd);
     }
     else {
-        return open_uri(path->str);
+        return open_uri(path->str, false);
     }
 }
 

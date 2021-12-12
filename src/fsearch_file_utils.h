@@ -34,7 +34,7 @@ bool
 fsearch_file_utils_remove(const char *path);
 
 bool
-fsearch_file_utils_launch(GString *path_full);
+fsearch_file_utils_launch(GString *path_full, bool launch_desktop_files);
 
 bool
 fsearch_file_utils_launch_with_command(GString *path, GString *path_full, const char *cmd);
