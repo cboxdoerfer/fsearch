@@ -46,6 +46,15 @@ fsearch_file_utils_create_dir(const char *path) {
     return !g_mkdir_with_parents(path, 0700);
 }
 
+static bool
+is_desktop_file(const char *path) {
+    const char *uri_extension = fs_str_get_extension(path);
+    if (uri_extension && !strcmp(uri_extension, "desktop")) {
+        return true;
+    }
+    return false;
+}
+
 static gboolean
 keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
     gchar *match = g_match_info_fetch(info, 0);
@@ -167,9 +176,7 @@ open_uri(const char *uri, bool launch_desktop_files) {
 
     if (launch_desktop_files) {
         // if uri points to a desktop file we try to launch it
-        const char *uri_extension = fs_str_get_extension(uri);
-        if (uri_extension && !strcmp(uri_extension, "desktop") && g_file_test(uri, G_FILE_TEST_IS_REGULAR)
-            && open_application(uri)) {
+        if (is_desktop_file(uri) && g_file_test(uri, G_FILE_TEST_IS_REGULAR) && open_application(uri)) {
             return true;
         }
     }
@@ -306,10 +313,45 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 #define DEFAULT_FILE_ICON_NAME "application-octet-stream"
 
 GIcon *
-fsearch_file_utils_guess_icon(const char *name, bool is_dir) {
+get_desktop_file_icon(const char *path) {
+    GAppInfo *info = NULL;
+    GdkDisplay *display = gdk_display_get_default();
+    if (!display) {
+        goto fail;
+    }
+
+    info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
+    if (!info) {
+        goto fail;
+    }
+
+    GIcon *icon = g_app_info_get_icon(info);
+    if (!icon) {
+        goto fail;
+    }
+    if (!G_IS_THEMED_ICON(icon)) {
+        goto fail;
+    }
+
+    g_object_ref(icon);
+    g_clear_object(&info);
+    return icon;
+
+fail:
+    g_clear_object(&info);
+    return g_themed_icon_new("application-x-executable");
+}
+
+GIcon *
+fsearch_file_utils_guess_icon(const char *name, const char *path, bool is_dir) {
     if (is_dir) {
         return g_themed_icon_new("folder");
     }
+
+    if (is_desktop_file(name)) {
+        return get_desktop_file_icon(path);
+    }
+
     gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
     if (!content_type) {
         return g_themed_icon_new(DEFAULT_FILE_ICON_NAME);

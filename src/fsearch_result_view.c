@@ -30,6 +30,7 @@ get_icon_size_for_height(int32_t height) {
 static cairo_surface_t *
 get_icon_surface(GdkWindow *win,
                  const char *name,
+                 const char *path,
                  FsearchDatabaseEntryType type,
                  int32_t icon_size,
                  int32_t scale_factor) {
@@ -39,8 +40,9 @@ get_icon_surface(GdkWindow *win,
     }
 
     cairo_surface_t *icon_surface = NULL;
-    GIcon *icon = fsearch_file_utils_guess_icon(name, type == DATABASE_ENTRY_TYPE_FOLDER);
+    GIcon *icon = fsearch_file_utils_guess_icon(name, path, type == DATABASE_ENTRY_TYPE_FOLDER);
     const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
+
     if (!names) {
         g_clear_object(&icon);
         return NULL;
@@ -130,7 +132,7 @@ draw_row_ctx_init(FsearchDatabaseView *view,
 
     ctx->icon_surface =
         config->show_listview_icons
-            ? get_icon_surface(bin_window, name->str, type, icon_size, gdk_window_get_scale_factor(bin_window))
+            ? get_icon_surface(bin_window, name->str, ctx->full_path->str, type, icon_size, gdk_window_get_scale_factor(bin_window))
             : NULL;
 
     off_t size = db_view_entry_get_size_for_idx(view, row);
