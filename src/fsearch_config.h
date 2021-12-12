@@ -59,6 +59,7 @@ struct _FsearchConfig {
     // Interface
     bool highlight_search_terms;
     bool single_click_open;
+    bool launch_desktop_files;
     bool enable_dark_theme;
     bool enable_list_tooltips;
     bool restore_column_config;

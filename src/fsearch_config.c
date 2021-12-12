@@ -182,6 +182,7 @@ config_load(FsearchConfig *config) {
         // Interface
         config->highlight_search_terms = config_load_boolean(key_file, "Interface", "highlight_search_terms", true);
         config->single_click_open = config_load_boolean(key_file, "Interface", "single_click_open", false);
+        config->launch_desktop_files = config_load_boolean(key_file, "Interface", "launch_desktop_files", true);
         config->restore_sort_order = config_load_boolean(key_file, "Interface", "restore_sort_order", true);
         config->restore_column_config =
             config_load_boolean(key_file, "Interface", "restore_column_configuration", false);
@@ -315,6 +316,7 @@ config_load_default(FsearchConfig *config) {
 
     // Interface
     config->single_click_open = false;
+    config->launch_desktop_files = true;
     config->highlight_search_terms = true;
     config->enable_dark_theme = false;
     config->enable_list_tooltips = true;
@@ -449,6 +451,7 @@ config_save(FsearchConfig *config) {
 
     // Interface
     g_key_file_set_boolean(key_file, "Interface", "single_click_open", config->single_click_open);
+    g_key_file_set_boolean(key_file, "Interface", "launch_desktop_files", config->launch_desktop_files);
     g_key_file_set_boolean(key_file, "Interface", "highlight_search_terms", config->highlight_search_terms);
     g_key_file_set_boolean(key_file, "Interface", "restore_column_configuration", config->restore_column_config);
     g_key_file_set_boolean(key_file, "Interface", "restore_sort_order", config->restore_sort_order);

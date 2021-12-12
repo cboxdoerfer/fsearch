@@ -241,7 +241,7 @@ fsearch_file_utils_launch(GString *path_full, bool launch_desktop_files) {
     if (!path_full) {
         return false;
     }
-    return open_uri(path_full->str, false);
+    return open_uri(path_full->str, launch_desktop_files);
 }
 
 bool

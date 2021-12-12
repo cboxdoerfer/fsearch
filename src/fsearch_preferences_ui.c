@@ -47,6 +47,7 @@ typedef struct {
     GtkToggleButton *restore_column_config_button;
     GtkToggleButton *double_click_path_button;
     GtkToggleButton *single_click_open_button;
+    GtkToggleButton *launch_desktop_files_button;
     GtkToggleButton *show_icons_button;
     GtkToggleButton *highlight_search_terms;
     GtkToggleButton *show_base_2_units;
@@ -317,6 +318,7 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
     new_config->highlight_search_terms = gtk_toggle_button_get_active(ui->highlight_search_terms);
     new_config->single_click_open = gtk_toggle_button_get_active(ui->single_click_open_button);
+    new_config->launch_desktop_files = gtk_toggle_button_get_active(ui->launch_desktop_files_button);
     new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
     new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
 
@@ -419,6 +421,12 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                      "single_click_open_button",
                                                      "help_single_click_open",
                                                      new_config->single_click_open);
+
+    ui->launch_desktop_files_button = toggle_button_get(ui->builder,
+                                                     "launch_desktop_files_button",
+                                                     "help_launch_desktop_files",
+                                                     new_config->launch_desktop_files);
+
 
     ui->show_icons_button =
         toggle_button_get(ui->builder, "show_icons_button", "help_show_icons", new_config->show_listview_icons);

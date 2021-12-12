@@ -418,6 +418,21 @@
                                 <property name="position">6</property>
                               </packing>
                             </child>
+                            <child>
+                              <object class="GtkCheckButton" id="launch_desktop_files_button">
+                                <property name="label" translatable="yes">Launch desktop files</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="draw-indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">7</property>
+                              </packing>
+                            </child>
                           </object>
                         </child>
                       </object>
@@ -1639,6 +1654,23 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="name">page29</property>
                     <property name="title">page29</property>
                     <property name="position">28</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_launch_desktop_files">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Launch desktop files:&lt;/b&gt;
+
+If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the application defined within that file. This way FSearch can act like an application launcher. Otherwise the &lt;i&gt;.desktop&lt;/i&gt; file will be opened with the default handler for this type of files, which is usually a text editor.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page30</property>
+                    <property name="title" translatable="yes">page30</property>
+                    <property name="position">29</property>
                   </packing>
                 </child>
               </object>

@@ -371,7 +371,8 @@ open_cb(gpointer key, gpointer value, gpointer data) {
     FsearchDatabaseEntry *entry = value;
     GString *path_full = db_entry_get_path_full(entry);
 
-    if (!fsearch_file_utils_launch(path_full, false)) {
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    if (!fsearch_file_utils_launch(path_full, config->launch_desktop_files)) {
         GString *open_failed_string = data;
         append_line(open_failed_string, path_full->str);
     }
