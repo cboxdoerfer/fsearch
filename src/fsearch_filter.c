@@ -52,9 +52,9 @@ fsearch_filter_unref(FsearchFilter *filter) {
 
 static const char *document_filter =
     "\\.(c|chm|cpp|csv|cxx|doc|docm|docx|dot|dotm|dotx|h|hpp|htm|html|hxx|ini|java|lua|mht|mhtml|"
-    "odt|pdf|potx|potm|ppam|ppsm|ppsx|pps|ppt|pptm|pptx|rtf|sldm|sldx|thmx|txt|vsd|wpd|wps|wri|"
+    "ods|odt|odp|pdf|potx|potm|ppam|ppsm|ppsx|pps|ppt|pptm|pptx|rtf|sldm|sldx|thmx|txt|vsd|wpd|wps|wri|"
     "xlam|xls|xlsb|xlsm|xlsx|xltm|xltx|xml|C|CHM|CPP|CSV|CXX|DOC|DOCM|DOCX|DOT|DOTM|DOTX|H|HPP|HTM|"
-    "HTML|HXX|INI|JAVA|LUA|MHT|MHTML|ODT|PDF|POTX|POTM|PPAM|PPSM|PPSX|PPS|PPT|PPTM|PPTX|RTF|SLDM|"
+    "HTML|HXX|INI|JAVA|LUA|MHT|MHTML|ODS|ODT|ODP|PDF|POTX|POTM|PPAM|PPSM|PPSX|PPS|PPT|PPTM|PPTX|RTF|SLDM|"
     "SLDX|THMX|TXT|VSD|WPD|WPS|WRI|XLAM|XLS|XLSB|XLSM|XLSX|XLTM|XLTX|XML)$";
 static const char *audio_filter =
     "\\.(aac|ac3|aif|aifc|aiff|au|cda|dts|fla|flac|it|m1a|m2a|m3u|m4a|mid|midi|mka|mod|mp2|mp3|mpa|"
