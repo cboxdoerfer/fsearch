@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2021-11-20 17:52+0000\n"
+"PO-Revision-Date: 2021-12-17 11:53+0000\n"
 "Last-Translator: Paulo C. <paulop1976@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.9.1\n"
+"X-Generator: Weblate 4.10\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -806,7 +806,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1614
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr ""
+msgstr "Focar uma definição para obter uma descrição detalhada dela."
 
 #: src/fsearch_preferences.ui:1627
 msgid ""
@@ -844,7 +844,7 @@ msgstr "Desmarcar Tudo"
 
 #: src/fsearch_preferences_ui.c:380
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: src/fsearch_preferences_widgets.c:190 src/fsearch_preferences_widgets.c:237
 msgid "Active"
@@ -871,7 +871,7 @@ msgstr "A carregar…"
 
 #: src/fsearch_statusbar.c:145
 msgid "Scanning…"
-msgstr ""
+msgstr "A pesquisar…"
 
 #: src/fsearch_statusbar.c:162 src/fsearch_window.c:1021
 #, c-format
@@ -919,6 +919,8 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
+"Pesquisar termos que contenham maiúsculas.\n"
+"<b>Coincidir Capitalização</b> foi temporariamente ativado por este termo."
 
 #: src/fsearch_statusbar.ui:366 src/fsearch_statusbar.ui:419
 msgid "CASE"
@@ -929,6 +931,8 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
+"Pesquisar por termos que contenham separadores de caminho.\n"
+"<b>Pesquisar no Caminho</b> foi temporariamente ativado por este termo."
 
 #: src/fsearch_statusbar.ui:473 src/fsearch_statusbar.ui:526
 msgid "PATH"
@@ -958,7 +962,7 @@ msgstr "Tipo"
 
 #: src/fsearch_window.c:704 src/menus.ui:239
 msgid "Extension"
-msgstr ""
+msgstr "Extensão"
 
 #: src/fsearch_window.c:711 src/menus.ui:251
 msgid "Date Modified"
@@ -972,6 +976,11 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Ordenar por <b>Tipo</b> pode ser lento, se tiver muitos resultados e não "
+"pode ser abortado.\n"
+"\n"
+"Esta ordenação não é persistente e será resetada quando o termo pesquisado "
+"mudar."
 
 #: src/fsearch_window.ui:68
 msgid "New window"
@@ -1135,11 +1144,11 @@ msgstr "_Abrir Pasta"
 
 #: src/menus.ui:181
 msgid "Copy as Text"
-msgstr ""
+msgstr "Copiar como Texto"
 
 #: src/menus.ui:191
 msgid "Path + Name"
-msgstr ""
+msgstr "Caminho + Nome"
 
 #: src/menus.ui:204
 msgid "Move to _Trash"
