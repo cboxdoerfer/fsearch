@@ -89,7 +89,7 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
     // - {path_full_raw}
     //     The raw full path of a file or folder. E.g. the full path of /foo/bar
     //     is /foo/bar
-    // - {path_quoted} and {path_full_quoted}
+    // - {path} and {path_full}
     //     Those are the same as {path_raw} and {path_full_raw} but they get
     //     properly escaped and quoted for the usage in shells. E.g. /foo/'bar
     //     becomes '/foo/'\''bar'
