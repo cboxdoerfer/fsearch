@@ -51,12 +51,10 @@
     <releases>
         <release date="2022-01-22" version="0.1.1">
             <description>
-                <p>
-                    <ul>
-                        <li>Add application icon</li>
-                        <li>Add flatpak support</li>
-                    </ul>
-                </p>
+                <ul>
+                    <li>Add application icon</li>
+                    <li>Add flatpak support</li>
+                </ul>
             </description>
         </release>
         <release date="2021-09-25" version="0.1">
