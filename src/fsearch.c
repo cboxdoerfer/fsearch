@@ -330,10 +330,6 @@ move_search_term_to_window(FsearchApplication *app, FsearchApplicationWindow *wi
 
     gtk_entry_set_text(entry, app->option_search_term);
     g_clear_pointer(&app->option_search_term, g_free);
-
-    // Make sure the entry also has focus and the text is selected
-    gtk_widget_grab_focus(GTK_WIDGET(entry));
-    gtk_editable_select_region(GTK_EDITABLE(entry), -1, -1);
 }
 
 static FsearchApplicationWindow *
@@ -451,6 +447,7 @@ action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer
     FsearchApplication *self = FSEARCH_APPLICATION(app);
 
     move_search_term_to_window(self, FSEARCH_APPLICATION_WINDOW(window));
+    fsearch_application_window_focus_search_entry(FSEARCH_APPLICATION_WINDOW(window));
 
     gtk_window_present(window);
 }
@@ -624,6 +621,7 @@ static void
 fsearch_application_activate(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
 
+    printf("activate fsearch\n");
     FsearchApplication *self = FSEARCH_APPLICATION(app);
 
     if (!self->new_window) {
@@ -631,6 +629,7 @@ fsearch_application_activate(GApplication *app) {
         FsearchApplicationWindow *window = get_first_application_window(FSEARCH_APPLICATION(app));
         if (window) {
             move_search_term_to_window(self, window);
+            fsearch_application_window_focus_search_entry(FSEARCH_APPLICATION_WINDOW(window));
             gtk_window_present(GTK_WINDOW(window));
             return;
         }

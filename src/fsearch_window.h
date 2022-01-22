@@ -32,11 +32,7 @@ G_BEGIN_DECLS
 
 #define FSEARCH_APPLICATION_WINDOW_TYPE (fsearch_application_window_get_type())
 
-G_DECLARE_FINAL_TYPE(FsearchApplicationWindow,
-                     fsearch_application_window,
-                     FSEARCH,
-                     APPLICATION_WINDOW,
-                     GtkApplicationWindow)
+G_DECLARE_FINAL_TYPE(FsearchApplicationWindow, fsearch_application_window, FSEARCH, APPLICATION_WINDOW, GtkApplicationWindow)
 
 FsearchApplicationWindow *
 fsearch_application_window_new(FsearchApplication *app);
@@ -52,6 +48,9 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *self
 
 void
 fsearch_application_window_apply_statusbar_revealer_config(FsearchApplicationWindow *win);
+
+void
+fsearch_application_window_focus_search_entry(FsearchApplicationWindow *win);
 
 GtkEntry *
 fsearch_application_window_get_search_entry(FsearchApplicationWindow *self);
