@@ -4,3 +4,9 @@ Version 0.2 Alpha
 
 * Automatically scroll the result list in rubberband selection mode
 * Focus search entry when the main window gets activated
+* Add filter for applications (i.e. .desktop files)
+* Add option to launch applications directly instead of opening the .desktop files
+* Show application icons for .desktop files
+* Add .odp and .ods files to document filter
+* "Open with" menu now only shows applications which can handle the selected files
+* Improve support for non-Linux systems
