@@ -315,7 +315,8 @@ fsearch_list_view_get_rubberband_points(FsearchListView *view, double *x1, doubl
 }
 
 static gboolean
-vertical_autoscroll(FsearchListView *view) {
+vertical_autoscroll(gpointer data) {
+    FsearchListView *view = data;
     if (!gtk_gesture_is_recognized(view->bin_drag_gesture)) {
         goto out;
     }
@@ -356,7 +357,7 @@ out:
 static void
 add_vertical_autoscroll_timeout(FsearchListView *view) {
     if (view->scroll_timeout == 0) {
-        view->scroll_timeout = g_timeout_add(33, G_SOURCE_FUNC(vertical_autoscroll), view);
+        view->scroll_timeout = g_timeout_add(33, vertical_autoscroll, view);
     }
 }
 
