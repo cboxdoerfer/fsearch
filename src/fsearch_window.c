@@ -1321,7 +1321,6 @@ fsearch_application_window_focus_search_entry(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
     // Make sure the entry also has focus and the text is selected
     gtk_widget_grab_focus(win->search_entry);
-    gtk_editable_select_region(GTK_EDITABLE(win->search_entry), -1, -1);
 }
 
 GtkEntry *
