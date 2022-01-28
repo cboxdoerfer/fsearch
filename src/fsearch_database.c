@@ -798,11 +798,7 @@ out:
 }
 
 static size_t
-db_save_files(FILE *fp,
-              FsearchDatabaseIndexFlags index_flags,
-              DynamicArray *files,
-              uint32_t num_files,
-              bool *write_failed) {
+db_save_files(FILE *fp, FsearchDatabaseIndexFlags index_flags, DynamicArray *files, uint32_t num_files, bool *write_failed) {
     size_t bytes_written = 0;
 
     GString *name_prev = g_string_sized_new(256);

@@ -103,8 +103,8 @@ database_auto_update_init(FsearchApplication *fsearch) {
         fsearch->db_timeout_id = 0;
     }
     if (fsearch->config->update_database_every) {
-        guint seconds =
-            fsearch->config->update_database_every_hours * 3600 + fsearch->config->update_database_every_minutes * 60;
+        guint seconds = fsearch->config->update_database_every_hours * 3600
+                      + fsearch->config->update_database_every_minutes * 60;
         if (seconds < 60) {
             seconds = 60;
         }
@@ -512,10 +512,7 @@ fsearch_application_finalize(GObject *object) {
 }
 
 static void
-on_file_manager_name_appeared(GDBusConnection *connection,
-                              const gchar *name,
-                              const gchar *name_owner,
-                              gpointer user_data) {
+on_file_manager_name_appeared(GDBusConnection *connection, const gchar *name, const gchar *name_owner, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     if (!app) {
         return;
@@ -576,10 +573,7 @@ fsearch_application_startup(GApplication *app) {
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
     g_clear_object(&provider);
 
-    g_object_set(gtk_settings_get_default(),
-                 "gtk-application-prefer-dark-theme",
-                 fsearch->config->enable_dark_theme,
-                 NULL);
+    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", fsearch->config->enable_dark_theme, NULL);
 
     if (fsearch->config->show_menubar) {
         GtkBuilder *menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
