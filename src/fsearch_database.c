@@ -1658,6 +1658,9 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
         if (fs_path->update) {
             ret = db_scan_folder(db, fs_path->path, fs_path->one_filesystem, cancellable, status_cb) || ret;
         }
+        if (g_cancellable_is_cancelled(cancellable)) {
+            return false;
+        }
     }
     if (status_cb) {
         status_cb(_("Sorting…"));
