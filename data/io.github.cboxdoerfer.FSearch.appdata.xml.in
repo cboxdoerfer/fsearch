@@ -29,12 +29,14 @@
     </description>
     <screenshots>
         <screenshot type="default">
-            <image>https://user-images.githubusercontent.com/6108388/94472642-51f60a80-01cb-11eb-9b8c-e38fe2c02e43.png
+            <image width="848" height="477">
+                https://raw.githubusercontent.com/cboxdoerfer/fsearch/master/data/screenshots/02-main_window_menubar.png
             </image>
             <caption>The default UI layout</caption>
         </screenshot>
         <screenshot>
-            <image>https://user-images.githubusercontent.com/6108388/94607184-dd3ed100-029b-11eb-86db-121e7984ca92.png
+            <image width="848" height="477">
+                https://raw.githubusercontent.com/cboxdoerfer/fsearch/master/data/screenshots/01-main_window_headerbar.png
             </image>
             <caption>A layout more closely following GNOME HIGs</caption>
         </screenshot>
