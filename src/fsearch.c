@@ -61,6 +61,8 @@ struct _FsearchApplication {
     GCancellable *db_thread_cancellable;
     int num_database_update_active;
     GMutex mutex;
+
+    bool is_shutting_down;
 };
 
 typedef struct {
@@ -159,8 +161,13 @@ prepare_windows_for_db_update(FsearchApplication *app) {
 static gboolean
 on_database_update_finished(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
-    fsearch_application_state_lock(self);
     FsearchDatabase *db = user_data;
+    if (self->is_shutting_down) {
+        g_debug("[app] update finished, but app is shutting down");
+        g_clear_pointer(&db, db_unref);
+        return G_SOURCE_REMOVE;
+    }
+    fsearch_application_state_lock(self);
     if (!g_cancellable_is_cancelled(self->db_thread_cancellable)) {
         prepare_windows_for_db_update(self);
         g_clear_pointer(&self->db, db_unref);
@@ -487,6 +494,7 @@ fsearch_application_shutdown(GApplication *app) {
 
     if (fsearch->db_pool) {
         g_debug("[app] waiting for database thread to exit...");
+        fsearch->is_shutting_down = true;
         g_cancellable_cancel(fsearch->db_thread_cancellable);
         g_thread_pool_free(g_steal_pointer(&fsearch->db_pool), FALSE, TRUE);
         g_debug("[app] database thread finished.");
@@ -605,6 +613,7 @@ fsearch_application_startup(GApplication *app) {
     set_accel_for_action(app, "app.quit", "<control>q");
 
     fsearch->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
+    fsearch->is_shutting_down = false;
 }
 
 static GActionEntry fsearch_app_entries[] = {
