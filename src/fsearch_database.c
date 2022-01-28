@@ -1381,7 +1381,12 @@ db_scan_folder(FsearchDatabase *db,
         return true;
     }
 
-    g_warning("[db_scan] walk error: %d", res);
+    if (res == WALK_CANCEL) {
+        g_debug("[db_scan] scan cancelled.");
+    }
+    else {
+        g_warning("[db_scan] walk error: %d", res);
+    }
     return false;
 }
 
