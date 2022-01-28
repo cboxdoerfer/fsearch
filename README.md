@@ -31,6 +31,11 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ## Download
 
+### Flatpak
+
+* Release Builds:
+  <https://flathub.org/apps/details/io.github.cboxdoerfer.FSearch>
+  
 ### Ubuntu
 
 * Release Builds:
