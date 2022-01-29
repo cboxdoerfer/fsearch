@@ -1,5 +1,5 @@
 project('fsearch', 'c',
-    version: '0.1.1',
+    version: '0.1.2',
     meson_version: '>= 0.45.0',
     default_options: ['c_std=c11'],
     )

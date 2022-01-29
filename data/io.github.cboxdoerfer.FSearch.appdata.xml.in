@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Copyright 2021 Christian Boxdörfer <christian.boxdoerfer@posteo.de> -->
+<!-- Copyright 2022 Christian Boxdörfer <christian.boxdoerfer@posteo.de> -->
 <component type="desktop-application">
     <id>io.github.cboxdoerfer.FSearch</id>
     <metadata_license>CC0-1.0</metadata_license>
@@ -8,7 +8,7 @@
     <summary>A graphical file search application</summary>
     <description>
         <p>
-            FSearch helps you to find files and folders as easy and fast as possible.
+            FSearch helps you find files and folders as easy and fast as possible.
             Just type a few letters and search results will appear almost instantly.
         </p>
         <p>
@@ -51,6 +51,17 @@
     <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.appdata.xml.in`. -->
     <content_rating type="oars-1.0"/>
     <releases>
+        <release date="2022-01-29" version="0.1.2">
+            <description>
+                <ul>
+                    <li>Fix potential crash when FSearch gets closed while a database scan is active at the same time</li>
+                    <li>Don't sort new database after scan was cancelled</li>
+                    <li>Don't save database if scan failed</li>
+                    <li>Don't print warning if database scan was cancelled</li>
+                    <li>Update screenshots</li>
+                </ul>
+            </description>
+        </release>
         <release date="2022-01-22" version="0.1.1">
             <description>
                 <ul>
