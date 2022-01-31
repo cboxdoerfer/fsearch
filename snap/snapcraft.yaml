@@ -1,0 +1,45 @@
+name: fsearch
+version: '0.2alpha'
+grade: devel
+adopt-info: fsearch
+base: core18
+confinement: strict
+license: GPL-2.0+
+compression: lzo
+
+apps:
+  fsearch:
+    command: usr/bin/fsearch
+    extensions: [ gnome-3-28 ]
+    plugs:
+      - home
+      - removable-media
+      - udisks2
+    slots:
+      - dbus-daemon
+    common-id: io.github.cboxdoerfer.FSearch
+
+parts:
+  fsearch:
+    plugin: meson
+    source: https://github.com/cboxdoerfer/fsearch.git
+    meson-parameters:
+      - --buildtype=release
+      - --prefix=/snap/fsearch/current/usr
+    build-packages:
+      - gettext
+      - libglib2.0-dev
+      - libicu-dev
+      - libpcre3-dev
+    stage-packages:
+      - libicu60
+      - libpcre3
+    organize:
+      snap/fsearch/current/usr: usr
+    parse-info: [ usr/share/metainfo/io.github.cboxdoerfer.FSearch.appdata.xml ]
+
+slots:
+  dbus-daemon:
+    interface: dbus
+    bus: session
+    name: io.github.cboxdoerfer.FSearch
