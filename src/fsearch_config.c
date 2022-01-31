@@ -184,15 +184,14 @@ config_load(FsearchConfig *config) {
         config->single_click_open = config_load_boolean(key_file, "Interface", "single_click_open", false);
         config->launch_desktop_files = config_load_boolean(key_file, "Interface", "launch_desktop_files", true);
         config->restore_sort_order = config_load_boolean(key_file, "Interface", "restore_sort_order", true);
-        config->restore_column_config =
-            config_load_boolean(key_file, "Interface", "restore_column_configuration", false);
+        config->restore_column_config = config_load_boolean(key_file, "Interface", "restore_column_configuration", true);
         config->double_click_path = config_load_boolean(key_file, "Interface", "double_click_path", false);
         config->enable_list_tooltips = config_load_boolean(key_file, "Interface", "enable_list_tooltips", true);
         config->enable_dark_theme = config_load_boolean(key_file, "Interface", "enable_dark_theme", false);
         config->show_menubar = config_load_boolean(key_file, "Interface", "show_menubar", true);
         config->show_statusbar = config_load_boolean(key_file, "Interface", "show_statusbar", true);
         config->show_filter = config_load_boolean(key_file, "Interface", "show_filter", true);
-        config->show_search_button = config_load_boolean(key_file, "Interface", "show_search_button", true);
+        config->show_search_button = config_load_boolean(key_file, "Interface", "show_search_button", false);
         config->show_base_2_units = config_load_boolean(key_file, "Interface", "show_base_2_units", false);
         config->action_after_file_open =
             config_load_integer(key_file, "Interface", "action_after_file_open", ACTION_AFTER_OPEN_NOTHING);
@@ -259,7 +258,7 @@ config_load(FsearchConfig *config) {
         config->enable_regex = config_load_boolean(key_file, "Search", "enable_regex", false);
         config->search_in_path = config_load_boolean(key_file, "Search", "search_in_path", false);
         config->hide_results_on_empty_search =
-            config_load_boolean(key_file, "Search", "hide_results_on_empty_search", true);
+            config_load_boolean(key_file, "Search", "hide_results_on_empty_search", false);
 
         // Database
         config->update_database_on_launch =
@@ -312,7 +311,7 @@ config_load_default(FsearchConfig *config) {
     config->match_case = false;
     config->enable_regex = false;
     config->search_in_path = false;
-    config->hide_results_on_empty_search = true;
+    config->hide_results_on_empty_search = false;
 
     // Interface
     config->single_click_open = false;
@@ -320,13 +319,13 @@ config_load_default(FsearchConfig *config) {
     config->highlight_search_terms = true;
     config->enable_dark_theme = false;
     config->enable_list_tooltips = true;
-    config->restore_column_config = false;
+    config->restore_column_config = true;
     config->restore_sort_order = true;
     config->double_click_path = false;
     config->show_menubar = true;
     config->show_statusbar = true;
     config->show_filter = true;
-    config->show_search_button = true;
+    config->show_search_button = false;
     config->show_base_2_units = false;
     config->action_after_file_open = ACTION_AFTER_OPEN_NOTHING;
     config->action_after_file_open_keyboard = false;
