@@ -1,6 +1,6 @@
 name: fsearch
 version: '0.1.2'
-grade: devel
+grade: stable
 adopt-info: fsearch
 base: core18
 confinement: strict
