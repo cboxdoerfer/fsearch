@@ -280,17 +280,22 @@ db_load_entry_shared_from_memory(const uint8_t *data_block,
 }
 
 static bool
+read_element_from_file(void *restrict ptr, size_t size, FILE *restrict stream) {
+    return fread(ptr, size, 1, stream) == 1 ? true : false;
+}
+
+static bool
 db_load_entry_shared(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint8_t name_offset = 0;
-    if (fread(&name_offset, 1, 1, fp) != 1) {
+    if (!read_element_from_file(&name_offset, 1, fp)) {
         g_debug("[db_load] failed to load name offset");
         return false;
     }
 
     // name_len: length of the new name characters
     uint8_t name_len = 0;
-    if (fread(&name_len, 1, 1, fp) != 1) {
+    if (!read_element_from_file(&name_len, 1, fp)) {
         g_debug("[db_load] failed to load name length");
         return false;
     }
@@ -301,7 +306,7 @@ db_load_entry_shared(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_en
     char name[256] = "";
     // name: new characters to be appended to previous_entry_name
     if (name_len > 0) {
-        if (fread(name, name_len, 1, fp) != 1) {
+        if (!read_element_from_file(name, name_len, fp)) {
             g_debug("[db_load] failed to load name");
             return false;
         }
@@ -314,7 +319,7 @@ db_load_entry_shared(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_en
 
     // size: size of file/folder
     uint64_t size = 0;
-    if (fread(&size, 8, 1, fp) != 1) {
+    if (!read_element_from_file(&size, 8, fp)) {
         g_debug("[db_load] failed to load size");
         return false;
     }
@@ -326,7 +331,7 @@ db_load_entry_shared(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_en
 static bool
 db_load_header(FILE *fp) {
     char magic[5] = "";
-    if (fread(magic, strlen(DATABASE_MAGIC_NUMBER), 1, fp) != 1) {
+    if (!read_element_from_file(magic, strlen(DATABASE_MAGIC_NUMBER), fp)) {
         return false;
     }
     magic[4] = '\0';
@@ -336,7 +341,7 @@ db_load_header(FILE *fp) {
     }
 
     uint8_t majorver = 0;
-    if (fread(&majorver, 1, 1, fp) != 1) {
+    if (!read_element_from_file(&majorver, 1, fp)) {
         return false;
     }
     if (majorver != DATABASE_MAJOR_VERSION) {
@@ -346,7 +351,7 @@ db_load_header(FILE *fp) {
     }
 
     uint8_t minorver = 0;
-    if (fread(&minorver, 1, 1, fp) != 1) {
+    if (!read_element_from_file(&minorver, 1, fp)) {
         return false;
     }
     if (minorver > DATABASE_MINOR_VERSION) {
@@ -360,7 +365,7 @@ db_load_header(FILE *fp) {
 
 static bool
 db_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
-    if (fread(parent_idx, 4, 1, fp) != 1) {
+    if (!read_element_from_file(parent_idx, 4, fp)) {
         g_debug("[db_load] failed to load parent_idx");
         return false;
     }
@@ -525,14 +530,14 @@ db_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, DynamicArray **so
     DynamicArray *files = sorted_files[0];
     DynamicArray *folders = sorted_folders[0];
 
-    if (fread(&num_sorted_arrays, 4, 1, fp) != 1) {
+    if (!read_element_from_file(&num_sorted_arrays, 4, fp)) {
         g_debug("[db_load] failed to load number of sorted arrays");
         return false;
     }
 
     for (uint32_t i = 0; i < num_sorted_arrays; i++) {
         uint32_t sorted_array_id = 0;
-        if (fread(&sorted_array_id, 4, 1, fp) != 1) {
+        if (!read_element_from_file(&sorted_array_id, 4, fp)) {
             g_debug("[db_load] failed to load sorted array id");
             return false;
         }
@@ -580,41 +585,41 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     }
 
     uint64_t index_flags = 0;
-    if (fread(&index_flags, 8, 1, fp) != 1) {
+    if (!read_element_from_file(&index_flags, 8, fp)) {
         goto load_fail;
     }
 
     uint32_t num_folders = 0;
-    if (fread(&num_folders, 4, 1, fp) != 1) {
+    if (!read_element_from_file(&num_folders, 4, fp)) {
         goto load_fail;
     }
 
     uint32_t num_files = 0;
-    if (fread(&num_files, 4, 1, fp) != 1) {
+    if (!read_element_from_file(&num_files, 4, fp)) {
         goto load_fail;
     }
     g_debug("[db_load] load %d folders, %d files", num_folders, num_files);
 
     uint64_t folder_block_size = 0;
-    if (fread(&folder_block_size, 8, 1, fp) != 1) {
+    if (!read_element_from_file(&folder_block_size, 8, fp)) {
         goto load_fail;
     }
 
     uint64_t file_block_size = 0;
-    if (fread(&file_block_size, 8, 1, fp) != 1) {
+    if (!read_element_from_file(&file_block_size, 8, fp)) {
         goto load_fail;
     }
     g_debug("[db_load] folder size: %lu, file size: %lu", folder_block_size, file_block_size);
 
     // TODO: implement index loading
     uint32_t num_indexes = 0;
-    if (fread(&num_indexes, 4, 1, fp) != 1) {
+    if (!read_element_from_file(&num_indexes, 4, fp)) {
         goto load_fail;
     }
 
     // TODO: implement exclude loading
     uint32_t num_excludes = 0;
-    if (fread(&num_excludes, 4, 1, fp) != 1) {
+    if (!read_element_from_file(&num_excludes, 4, fp)) {
         goto load_fail;
     }
 
