@@ -230,6 +230,12 @@ db_file_open_locked(const char *file_path, const char *mode) {
 }
 
 static const uint8_t *
+copy_bytes_and_return_new_src(void *dest, const uint8_t *src, size_t len) {
+    memcpy(dest, src, len);
+    return src + len;
+}
+
+static const uint8_t *
 db_load_entry_shared_from_memory(const uint8_t *data_block,
                                  FsearchDatabaseIndexFlags index_flags,
                                  FsearchDatabaseEntry *entry,
@@ -246,10 +252,9 @@ db_load_entry_shared_from_memory(const uint8_t *data_block,
     char name[256] = "";
     // name: new characters to be appended to previous_entry_name
     if (name_len > 0) {
-        memcpy(name, data_block, name_len);
+        data_block = copy_bytes_and_return_new_src(name, data_block, name_len);
         name[name_len] = '\0';
     }
-    data_block += name_len;
 
     // now we can build the new full file name
     g_string_append(previous_entry_name, name);
@@ -258,8 +263,7 @@ db_load_entry_shared_from_memory(const uint8_t *data_block,
     if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
         // size: size of file/folder
         off_t size = 0;
-        memcpy(&size, data_block, 8);
-        data_block += 8;
+        data_block = copy_bytes_and_return_new_src(&size, data_block, 8);
 
         db_entry_set_size(entry, size);
     }
@@ -267,8 +271,7 @@ db_load_entry_shared_from_memory(const uint8_t *data_block,
     if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time file/folder
         time_t mtime = 0;
-        memcpy(&mtime, data_block, 8);
-        data_block += 8;
+        data_block = copy_bytes_and_return_new_src(&mtime, data_block, 8);
 
         db_entry_set_mtime(entry, mtime);
     }
@@ -392,15 +395,13 @@ db_load_folders(FILE *fp,
         // TODO: db_index is currently unused
         // db_index: the database index this folder belongs to
         uint16_t db_index = 0;
-        memcpy(&db_index, fb, 2);
-        fb += 2;
+        fb = copy_bytes_and_return_new_src(&db_index, fb, 2);
 
         fb = db_load_entry_shared_from_memory(fb, index_flags, entry, previous_entry_name);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        memcpy(&parent_idx, fb, 4);
-        fb += 4;
+        fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
 
         if (parent_idx != db_entry_get_idx(entry)) {
             FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
@@ -464,8 +465,7 @@ db_load_files(FILE *fp,
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        memcpy(&parent_idx, fb, 4);
-        fb += 4;
+        fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
 
         FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
         db_entry_set_parent(entry, parent);
