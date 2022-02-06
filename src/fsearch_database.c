@@ -483,7 +483,7 @@ db_load_files(FILE *fp,
     }
 
     // fail if we didn't read the correct number of files
-    if (result && idx != num_files) {
+    if (idx != num_files) {
         g_debug("[db_load] failed to read files (read %d of %d)", idx, num_files);
         result = false;
     }
