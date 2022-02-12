@@ -28,6 +28,7 @@
 
 #include "fsearch_array.h"
 #include "fsearch_limits.h"
+#include "fsearch_query_match_context.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_task.h"
 #include "fsearch_task_ids.h"
@@ -181,76 +182,17 @@ db_search_worker_context_new(FsearchQuery *query,
     return ctx;
 }
 
-static inline bool
-db_search_filter_entry(FsearchDatabaseEntry *entry,
-                       FsearchQuery *query,
-                       const char *haystack,
-                       FsearchUtfConversionBuffer *utf_buffer,
-                       bool *utf_search_ready) {
-    if (!query->filter) {
-        return true;
-    }
-    if (query->filter->type == FSEARCH_FILTER_NONE && query->filter->query == NULL) {
-        return true;
-    }
-    FsearchDatabaseEntryType type = db_entry_get_type(entry);
-    bool is_dir = type == DATABASE_ENTRY_TYPE_FOLDER ? true : false;
-    bool is_file = type == DATABASE_ENTRY_TYPE_FILE ? true : false;
-    if (query->filter->type != FSEARCH_FILTER_FILES && is_file) {
-        return false;
-    }
-    if (query->filter->type != FSEARCH_FILTER_FOLDERS && is_dir) {
-        return false;
-    }
-    if (query->filter_token) {
-        uint32_t num_found = 0;
-        while (true) {
-            if (num_found == query->num_filter_token) {
-                return true;
-            }
-            FsearchToken *t = query->filter_token[num_found++];
-
-            if (t->is_utf && *utf_search_ready == false) {
-                *utf_search_ready =
-                    fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
-            }
-
-            if (!t->search_func(haystack, t->search_term, t, utf_buffer)) {
-                return false;
-            }
-        }
-        return false;
-    }
-    return true;
-}
-
-static inline void
-db_search_build_path(FsearchDatabaseEntry *entry, GString *dest, const char *entry_name) {
-    g_string_truncate(dest, 0);
-    db_entry_append_path(entry, dest);
-    g_string_append_c(dest, G_DIR_SEPARATOR);
-    g_string_append(dest, entry_name);
-}
-
 static void
 db_search_worker(void *data) {
     DatabaseSearchWorkerContext *ctx = data;
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
-    FsearchUtfConversionBuffer utf_name_buffer = {};
-    fsearch_utf_conversion_buffer_init(&utf_name_buffer, 4 * PATH_MAX);
-
-    FsearchUtfConversionBuffer utf_path_buffer = {};
-    fsearch_utf_conversion_buffer_init(&utf_path_buffer, 4 * PATH_MAX);
+    FsearchQueryMatchContext *matcher = fsearch_query_match_context_new();
 
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
-    const uint32_t num_token = query->num_token;
-    FsearchToken **token = query->token;
-    const uint32_t search_in_path = query->flags & QUERY_FLAG_SEARCH_IN_PATH;
-    const uint32_t auto_search_in_path = query->flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH;
     FsearchDatabaseEntry **results = (FsearchDatabaseEntry **)ctx->results;
     DynamicArray *entries = ctx->entries;
 
@@ -261,76 +203,17 @@ db_search_worker(void *data) {
     }
 
     uint32_t num_results = 0;
-
-    GString *path_string = g_string_sized_new(PATH_MAX);
     for (uint32_t i = start; i <= end; i++) {
         if (G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
             break;
         }
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        const char *haystack_name = db_entry_get_name_raw_for_display(entry);
-        if (G_UNLIKELY(!haystack_name)) {
-            continue;
-        }
-
-        bool utf_name_ready = false;
-        bool utf_path_ready = false;
-
-        bool path_set = false;
-        if (search_in_path || query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH) {
-            db_search_build_path(entry, path_string, haystack_name);
-            path_set = true;
-        }
-
-        if (!db_search_filter_entry(
-                entry,
-                query,
-                query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? path_string->str : haystack_name,
-                query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? &utf_path_buffer : &utf_name_buffer,
-                query->filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? &utf_path_ready : &utf_name_ready)) {
-            continue;
-        }
-
-        uint32_t num_found = 0;
-        while (true) {
-            if (num_found == num_token) {
-                results[num_results] = entry;
-                num_results++;
-                break;
-            }
-            FsearchToken *t = token[num_found++];
-            const char *haystack = NULL;
-            FsearchUtfConversionBuffer *utf_buffer = NULL;
-            bool *utf_buffer_ready = NULL;
-
-            if (search_in_path || (auto_search_in_path && t->has_separator)) {
-                if (!path_set) {
-                    db_search_build_path(entry, path_string, haystack_name);
-                    path_set = true;
-                }
-                haystack = path_string->str;
-                utf_buffer = &utf_path_buffer;
-                utf_buffer_ready = &utf_path_ready;
-            }
-            else {
-                haystack = haystack_name;
-                utf_buffer = &utf_name_buffer;
-                utf_buffer_ready = &utf_name_ready;
-            }
-            if (t->is_utf && *utf_buffer_ready == false) {
-                *utf_buffer_ready =
-                    fsearch_utf_normalize_and_fold_case(t->normalizer, t->case_map, utf_buffer, haystack);
-            }
-
-            if (!t->search_func(haystack, t->search_term, t, utf_buffer)) {
-                break;
-            }
+        fsearch_query_match_context_set_entry(matcher, entry);
+        if (fsearch_query_match(query, matcher)) {
+            results[num_results++] = entry;
         }
     }
-
-    fsearch_utf_conversion_buffer_clear(&utf_path_buffer);
-    fsearch_utf_conversion_buffer_clear(&utf_name_buffer);
-    g_string_free(g_steal_pointer(&path_string), TRUE);
+    g_clear_pointer(&matcher, fsearch_query_match_context_free);
 
     ctx->num_results = num_results;
 }

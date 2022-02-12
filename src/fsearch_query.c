@@ -18,6 +18,7 @@
 
 #define _GNU_SOURCE
 #include "fsearch_query.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_highlight_token.h"
 #include "fsearch_string_utils.h"
 #include <assert.h>
@@ -105,4 +106,63 @@ fsearch_query_matches_everything(FsearchQuery *query) {
 PangoAttrList *
 fsearch_query_highlight_match(FsearchQuery *q, const char *input) {
     return fsearch_highlight_tokens_match(q->highlight_tokens, q->flags, input);
+}
+
+static inline bool
+filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, FsearchQuery *query) {
+    if (!query->filter) {
+        return true;
+    }
+    if (query->filter->type == FSEARCH_FILTER_NONE && query->filter->query == NULL) {
+        return true;
+    }
+    FsearchDatabaseEntryType type = db_entry_get_type(entry);
+    bool is_dir = type == DATABASE_ENTRY_TYPE_FOLDER ? true : false;
+    bool is_file = type == DATABASE_ENTRY_TYPE_FILE ? true : false;
+    if (query->filter->type != FSEARCH_FILTER_FILES && is_file) {
+        return false;
+    }
+    if (query->filter->type != FSEARCH_FILTER_FOLDERS && is_dir) {
+        return false;
+    }
+    if (query->filter_token) {
+        uint32_t num_found = 0;
+        while (true) {
+            if (num_found == query->num_filter_token) {
+                return true;
+            }
+            FsearchToken *t = query->filter_token[num_found++];
+            if (!t->search_func(t, matcher)) {
+                return false;
+            }
+        }
+        return false;
+    }
+    return true;
+}
+
+bool
+fsearch_query_match(FsearchQuery *query, FsearchQueryMatchContext *matcher) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
+    if (G_UNLIKELY(!matcher || !entry)) {
+        return false;
+    }
+    const uint32_t num_token = query->num_token;
+    FsearchToken **token = query->token;
+
+    if (!filter_entry(entry, matcher, query)) {
+        return false;
+    }
+
+    uint32_t num_found = 0;
+    while (true) {
+        if (num_found == num_token) {
+            return true;
+        }
+        FsearchToken *t = token[num_found++];
+
+        if (!t->search_func(t, matcher)) {
+            return false;
+        }
+    }
 }

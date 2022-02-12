@@ -6,6 +6,7 @@
 #include <unicode/utypes.h>
 
 typedef struct FsearchUtfConversionBuffer {
+    char *string;
     char *string_utf8_folded;
     UChar *string_folded;
     UChar *string_normalized_folded;
@@ -30,7 +31,7 @@ bool
 fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfConversionBuffer *buffer, const char *string);
 
 bool
-fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
-                                    UCaseMap *case_map,
-                                    FsearchUtfConversionBuffer *buffer,
-                                    const char *string);
+fsearch_utf_converion_buffer_normalize_and_fold_case(FsearchUtfConversionBuffer *buffer,
+                                                     UCaseMap *case_map,
+                                                     const UNormalizer2 *normalizer,
+                                                     const char *string);

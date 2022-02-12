@@ -27,6 +27,7 @@
 #include "fsearch_database.h"
 #include "fsearch_filter.h"
 #include "fsearch_list_view.h"
+#include "fsearch_query_match_context.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_thread_pool.h"
 #include "fsearch_token.h"
@@ -82,3 +83,6 @@ fsearch_query_highlight_match(FsearchQuery *q, const char *input);
 
 bool
 fsearch_query_matches_everything(FsearchQuery *query);
+
+bool
+fsearch_query_match(FsearchQuery *queyr, FsearchQueryMatchContext *matcher);

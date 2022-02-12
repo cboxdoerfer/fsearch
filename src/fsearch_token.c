@@ -3,6 +3,7 @@
 #define G_LOG_DOMAIN "fsearch-search-token"
 
 #include "fsearch_token.h"
+#include "fsearch_query_match_context.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_utf.h"
 #include <assert.h>
@@ -12,76 +13,104 @@
 #include <string.h>
 
 static uint32_t
-fsearch_search_func_regex(const char *haystack, const char *needle, void *token, FsearchUtfConversionBuffer *buffer) {
-    FsearchToken *t = token;
+fsearch_search_func_regex(const char *haystack, FsearchToken *token) {
     size_t haystack_len = strlen(haystack);
-    return pcre_exec(t->regex, t->regex_study, haystack, haystack_len, 0, 0, t->ovector, OVECCOUNT) >= 0 ? 1 : 0;
+    return pcre_exec(token->regex, token->regex_study, haystack, haystack_len, 0, 0, token->ovector, OVECCOUNT) >= 0 ? 1
+                                                                                                                     : 0;
 }
 
 static uint32_t
-fsearch_search_func_wildcard_icase(const char *haystack,
-                                   const char *needle,
-                                   void *token,
-                                   FsearchUtfConversionBuffer *buffer) {
-    return !fnmatch(needle, haystack, FNM_CASEFOLD) ? 1 : 0;
+fsearch_search_func_regex_path(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    const char *haystack = fsearch_query_match_context_get_path_str(matcher);
+    return fsearch_search_func_regex(haystack, token);
 }
 
 static uint32_t
-fsearch_search_func_wildcard(const char *haystack,
-                             const char *needle,
-                             void *token,
-                             FsearchUtfConversionBuffer *buffer) {
-    return !fnmatch(needle, haystack, 0) ? 1 : 0;
+fsearch_search_func_regex_name(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    const char *haystack = fsearch_query_match_context_get_name_str(matcher);
+    return fsearch_search_func_regex(haystack, token);
 }
 
 static uint32_t
-fsearch_search_func_normal_icase_u8_fast(const char *haystack,
-                                         const char *needle,
-                                         void *token,
-                                         FsearchUtfConversionBuffer *buffer) {
-    FsearchToken *t = token;
-    if (G_LIKELY(buffer->string_utf8_is_folded)) {
-        return strstr(buffer->string_utf8_folded, t->needle_buffer->string_utf8_folded) ? 1 : 0;
-    }
-    else {
-        // failed to fold case, fall back to fast but not accurate ascii search
-        g_warning("[utf8_search] failed to lower case: %s", haystack);
-        return strcasestr(haystack, needle) ? 1 : 0;
-    }
+fsearch_search_func_wildcard(const char *haystack, FsearchToken *token) {
+    return !fnmatch(token->search_term, haystack, token->wildcard_flags) ? 1 : 0;
 }
 
 static uint32_t
-fsearch_search_func_normal_icase_u8(const char *haystack,
-                                    const char *needle,
-                                    void *token,
-                                    FsearchUtfConversionBuffer *buffer) {
-    FsearchToken *t = token;
-    if (G_LIKELY(buffer->string_is_folded_and_normalized)) {
-        return u_strFindFirst(buffer->string_normalized_folded,
-                              buffer->string_normalized_folded_len,
-                              t->needle_buffer->string_normalized_folded,
-                              t->needle_buffer->string_normalized_folded_len)
+fsearch_search_func_wildcard_path(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    const char *haystack = fsearch_query_match_context_get_path_str(matcher);
+    return fsearch_search_func_wildcard(haystack, token);
+}
+
+static uint32_t
+fsearch_search_func_wildcard_name(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    const char *haystack = fsearch_query_match_context_get_name_str(matcher);
+    return fsearch_search_func_wildcard(haystack, token);
+}
+
+// static uint32_t
+// fsearch_search_func_normal_icase_u8_fast(FsearchToken *token, FsearchQueryMatcher *matcher) {
+//     FsearchUtfConversionBuffer *buffer = token->get_haystack(matcher);
+//     if (G_LIKELY(buffer->string_utf8_is_folded)) {
+//         return strstr(buffer->string_utf8_folded, token->needle_buffer->string_utf8_folded) ? 1 : 0;
+//     }
+//     else {
+//         // failed to fold case, fall back to fast but not accurate ascii search
+//         // g_warning("[utf8_search] failed to lower case: %s", haystack);
+//         // return strcasestr(haystack, needle) ? 1 : 0;
+//     }
+// }
+
+static uint32_t
+fsearch_search_func_normal_icase_u8(FsearchUtfConversionBuffer *haystack_buffer,
+                                    FsearchUtfConversionBuffer *needle_buffer) {
+    if (G_LIKELY(haystack_buffer->string_is_folded_and_normalized)) {
+        return u_strFindFirst(haystack_buffer->string_normalized_folded,
+                              haystack_buffer->string_normalized_folded_len,
+                              needle_buffer->string_normalized_folded,
+                              needle_buffer->string_normalized_folded_len)
                  ? 1
                  : 0;
     }
     else {
         // failed to fold case, fall back to fast but not accurate ascii search
-        g_warning("[utf8_search] failed to lower case: %s", haystack);
-        return strcasestr(haystack, needle) ? 1 : 0;
+        g_warning("[utf8_search] failed to lower case: %s", haystack_buffer->string);
+        return strcasestr(haystack_buffer->string, needle_buffer->string) ? 1 : 0;
     }
 }
 
 static uint32_t
-fsearch_search_func_normal_icase(const char *haystack,
-                                 const char *needle,
-                                 void *token,
-                                 FsearchUtfConversionBuffer *buffer) {
-    return strcasestr(haystack, needle) ? 1 : 0;
+fsearch_search_func_normal_icase_u8_path(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    FsearchUtfConversionBuffer *haystack_buffer = fsearch_query_match_context_get_utf_path_buffer(matcher);
+    FsearchUtfConversionBuffer *needle_buffer = token->needle_buffer;
+    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer);
 }
 
 static uint32_t
-fsearch_search_func_normal(const char *haystack, const char *needle, void *token, FsearchUtfConversionBuffer *buffer) {
-    return strstr(haystack, needle) ? 1 : 0;
+fsearch_search_func_normal_icase_u8_name(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    FsearchUtfConversionBuffer *haystack_buffer = fsearch_query_match_context_get_utf_name_buffer(matcher);
+    FsearchUtfConversionBuffer *needle_buffer = token->needle_buffer;
+    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer);
+}
+
+static uint32_t
+fsearch_search_func_normal_icase_path(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    return strcasestr(fsearch_query_match_context_get_path_str(matcher), token->search_term) ? 1 : 0;
+}
+
+static uint32_t
+fsearch_search_func_normal_icase_name(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    return strcasestr(fsearch_query_match_context_get_name_str(matcher), token->search_term) ? 1 : 0;
+}
+
+static uint32_t
+fsearch_search_func_normal_path(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    return strstr(fsearch_query_match_context_get_path_str(matcher), token->search_term) ? 1 : 0;
+}
+
+static uint32_t
+fsearch_search_func_normal_name(FsearchToken *token, FsearchQueryMatchContext *matcher) {
+    return strstr(fsearch_query_match_context_get_name_str(matcher), token->search_term) ? 1 : 0;
 }
 
 static void
@@ -139,9 +168,14 @@ fsearch_token_new(const char *search_term, FsearchQueryFlags flags) {
     // set up case folded needle in UTF16 format
     new->needle_buffer = calloc(1, sizeof(FsearchUtfConversionBuffer));
     fsearch_utf_conversion_buffer_init(new->needle_buffer, 8 * new->search_term_len);
-    const bool utf_ready =
-        fsearch_utf_normalize_and_fold_case(new->normalizer, new->case_map, new->needle_buffer, search_term);
+    const bool utf_ready = fsearch_utf_converion_buffer_normalize_and_fold_case(new->needle_buffer,
+                                                                                new->case_map,
+                                                                                new->normalizer,
+                                                                                search_term);
     assert(utf_ready == true);
+
+    const bool search_in_path = flags & QUERY_FLAG_SEARCH_IN_PATH
+                             || (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && new->has_separator);
 
     if (flags & QUERY_FLAG_REGEX) {
         const char *error;
@@ -149,23 +183,24 @@ fsearch_token_new(const char *search_term, FsearchQueryFlags flags) {
         new->regex =
             pcre_compile(search_term, flags & QUERY_FLAG_MATCH_CASE ? 0 : PCRE_CASELESS, &error, &erroffset, NULL);
         new->regex_study = pcre_study(new->regex, PCRE_STUDY_JIT_COMPILE, &error);
-        new->search_func = fsearch_search_func_regex;
+        new->search_func = search_in_path ? fsearch_search_func_regex_path : fsearch_search_func_regex_name;
     }
     else if (strchr(search_term, '*') || strchr(search_term, '?')) {
-        new->search_func =
-            flags &QUERY_FLAG_MATCH_CASE ? fsearch_search_func_wildcard : fsearch_search_func_wildcard_icase;
+        new->search_func = search_in_path ? fsearch_search_func_wildcard_path : fsearch_search_func_wildcard_name;
+        new->wildcard_flags = flags &QUERY_FLAG_MATCH_CASE ? FNM_CASEFOLD : 0;
     }
     else {
         if (flags & QUERY_FLAG_MATCH_CASE) {
-            new->search_func = fsearch_search_func_normal;
+            new->search_func = search_in_path ? fsearch_search_func_normal_path : fsearch_search_func_normal_name;
         }
         else if (fs_str_case_is_ascii(search_term)) {
-            new->search_func = fsearch_search_func_normal_icase;
+            new->search_func = search_in_path ? fsearch_search_func_normal_icase_path
+                                              : fsearch_search_func_normal_icase_name;
         }
         else {
             new->is_utf = 1;
-            new->search_func = fsearch_search_func_normal_icase_u8;
-            // new->search_func = fsearch_search_func_normal_icase_u8_fast;
+            new->search_func = search_in_path ? fsearch_search_func_normal_icase_u8_path
+                                              : fsearch_search_func_normal_icase_u8_name;
         }
     }
     return new;

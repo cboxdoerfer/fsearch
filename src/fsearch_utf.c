@@ -28,6 +28,7 @@ fsearch_utf_conversion_buffer_clear(FsearchUtfConversionBuffer *buffer) {
         return;
     }
     buffer->initialized = false;
+    g_clear_pointer(&buffer->string, free);
     g_clear_pointer(&buffer->string_utf8_folded, free);
     g_clear_pointer(&buffer->string_folded, free);
     g_clear_pointer(&buffer->string_normalized_folded, free);
@@ -54,10 +55,10 @@ fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfConversionBuffer *buffe
 }
 
 bool
-fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
-                                    UCaseMap *case_map,
-                                    FsearchUtfConversionBuffer *buffer,
-                                    const char *string) {
+fsearch_utf_converion_buffer_normalize_and_fold_case(FsearchUtfConversionBuffer *buffer,
+                                                     UCaseMap *case_map,
+                                                     const UNormalizer2 *normalizer,
+                                                     const char *string) {
     g_assert(buffer != NULL);
     if (!buffer->initialized) {
         goto fail;
@@ -65,6 +66,7 @@ fsearch_utf_normalize_and_fold_case(const UNormalizer2 *normalizer,
 
     UErrorCode status = U_ZERO_ERROR;
 
+    buffer->string = g_strdup(string);
     // first perform case folding (this can be done while our string is still in UTF8 form)
     buffer->string_utf8_folded_len =
         ucasemap_utf8FoldCase(case_map, buffer->string_utf8_folded, buffer->num_characters, string, -1, &status);
