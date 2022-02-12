@@ -27,7 +27,6 @@
 #include <string.h>
 
 #include "fsearch_array.h"
-#include "fsearch_limits.h"
 #include "fsearch_query_match_context.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_task.h"

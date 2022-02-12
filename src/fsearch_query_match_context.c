@@ -3,6 +3,7 @@
 #include <locale.h>
 #include <stdlib.h>
 
+#include "fsearch_limits.h"
 #include "fsearch_query_match_context.h"
 #include "fsearch_utf.h"
 
