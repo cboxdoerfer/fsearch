@@ -84,11 +84,7 @@ typedef struct {
 void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
-    g_qsort_with_data(ctx->dest->data,
-                      (int)ctx->dest->num_items,
-                      sizeof(void *),
-                      (GCompareDataFunc)ctx->comp_func,
-                      NULL);
+    g_qsort_with_data(ctx->dest->data, (int)ctx->dest->num_items, sizeof(void *), (GCompareDataFunc)ctx->comp_func, NULL);
     // qsort(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareFunc)ctx->comp_func);
 }
 
@@ -192,28 +188,22 @@ darray_add_item(DynamicArray *array, void *data) {
     array->data[array->num_items++] = data;
 }
 
-
 bool
-darray_get_item_idx(DynamicArray *array,
-                    void *item,
-                    DynamicArrayCompareDataFunc compare_func,
-                    void *data,
-                    uint32_t *index) {
+darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index) {
     assert(array != NULL);
     assert(item != NULL);
     assert(index != NULL);
 
-    bool found = false;
     if (compare_func) {
-        found = darray_binary_search_with_data(array, item, compare_func, data, index);
+        return darray_binary_search_with_data(array, item, compare_func, data, index);
     }
-    else {
-        for (uint32_t i = 0; i < array->num_items; i++) {
-            if (item == array->data[i]) {
-                found = true;
-                *index = i;
-                break;
-            }
+
+    bool found = false;
+    for (uint32_t i = 0; i < array->num_items; i++) {
+        if (item == array->data[i]) {
+            found = true;
+            *index = i;
+            break;
         }
     }
     return found;
