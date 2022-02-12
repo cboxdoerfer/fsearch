@@ -1,4 +1,9 @@
 =================
+Version 0.1.3alpha
+=================
+* Fix unresponsive column headers when an overlay is shown (e.g. when no results are found)
+
+=================
 Version 0.1.2
 =================
 
