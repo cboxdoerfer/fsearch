@@ -7,6 +7,7 @@
 - Update release notes in `data/io.github.cboxdoerfer.FSearch.appdata.xml.in`
 - Update screenshots (if necessary) in `data/io.github.cboxdoerfer.FSearch.appdata.xml.in`
 - Update version number in `copr/fsearch_release.spec`
+- Update debian changelog: `dch --release`
 - Build the project and make sure tests pass: `ninja -C $builddir test`
 - Commit release: `git commit -a -m "Release FSearch $version"`
 - Add tag: `git tag $version`
