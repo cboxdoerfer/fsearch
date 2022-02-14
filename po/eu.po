@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2022-02-14 14:54+0000\n"
+"PO-Revision-Date: 2022-02-15 22:55+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -55,172 +55,181 @@ msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Ezaugarri asko daude bilaketa ahalik eta eraginkorrena eta indartsuena "
+"egiten dutenak. Hala nola:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Ezikusi letra larriak eta xeheak (adibidez, \"fsearch\" bilatuta \"FSearch\" "
+"ere topatuko luke)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Adierazpen erregularrak"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
-msgstr ""
+msgstr "Onartu komodin karaktereak"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Onartu iragazkiak (adib. bilatu soilik audio fitxategiak)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
 msgid "Exclude certain files and folders"
-msgstr ""
+msgstr "Baztertu hainbat fitxategi eta karpetak"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Ordenazio azkarra izena, bidea, tamaina, aldatze-data eta luzapenean "
+"oinarrituta"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Oharra: Flatpak-en ingurune isolatuaren ondorioz, FSearch-ek ezin ditu zure "
+"sistemako fitxategi guztiak aurkitu."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:34
 msgid "The default UI layout"
-msgstr ""
+msgstr "Lehenetsitako interfazearen diseinua"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:39
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "GNOMEren jarraibideak hurbilagotik jarraitzen duen diseinua"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:46
+#, fuzzy
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:54
 msgid "Initial release."
-msgstr ""
+msgstr "Hasierako bertsioa."
 
 #: src/fsearch.c:256
 msgid "Saving…"
-msgstr ""
+msgstr "Gordetzen…"
 
 #: src/fsearch.c:372
 msgid "translator-credits"
-msgstr ""
+msgstr "Alexander Gabilondo"
 
 #: src/fsearch.c:374
 msgid "A search utility focusing on performance and advanced features"
-msgstr ""
+msgstr "Errendimenduan eta funtzio aurreratuetan zentratzen den bilatze-tresna"
 
 #: src/fsearch.c:839
 msgid "Open a new application window"
-msgstr ""
+msgstr "Ireki aplikazioaren leiho berri bat"
 
 #: src/fsearch.c:840
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Erakutsi aplikazioaren hobespenak"
 
 #: src/fsearch.c:841
 msgid "Set the search pattern"
-msgstr ""
+msgstr "Ezarri bilaketa-eredua"
 
 #: src/fsearch.c:842
 msgid "Update the database and exit"
-msgstr ""
+msgstr "Eguneratu datu-basea eta irten"
 
 #: src/fsearch.c:843
 msgid "Print version information and exit"
-msgstr ""
+msgstr "Erakutsi bertsioaren informazioa eta irten"
 
 #: src/fsearch_database.c:636
 msgid "Loading folders…"
-msgstr ""
+msgstr "Karpetak kargatzen…"
 
 #: src/fsearch_database.c:644
 msgid "Loading files…"
-msgstr ""
+msgstr "Fitxategiak kargatzen…"
 
 #: src/fsearch_database.c:1663
 msgid "Sorting…"
-msgstr ""
+msgstr "Ordenatzen…"
 
 #: src/fsearch_file_utils.c:258
 msgid "Folder"
-msgstr ""
+msgstr "Karpeta"
 
 #: src/fsearch_file_utils.c:264
 msgid "Unknown Type"
-msgstr ""
+msgstr "Mota ezezaguna"
 
 #: src/fsearch_filter.c:83
 msgid "All"
-msgstr ""
+msgstr "Dena"
 
 #: src/fsearch_filter.c:84
 msgid "Folders"
-msgstr ""
+msgstr "Karpetak"
 
 #: src/fsearch_filter.c:85
 msgid "Files"
-msgstr ""
+msgstr "Fitxategiak"
 
 #: src/fsearch_filter.c:88
 msgid "Archives"
-msgstr ""
+msgstr "Artxiboak"
 
 #: src/fsearch_filter.c:93
 msgid "Audio"
-msgstr ""
+msgstr "Audioa"
 
 #: src/fsearch_filter.c:96
 msgid "Documents"
-msgstr ""
+msgstr "Dokumentuak"
 
 #: src/fsearch_filter.c:101
 msgid "Pictures"
-msgstr ""
+msgstr "Irudiak"
 
 #: src/fsearch_filter.c:106
 msgid "Videos"
-msgstr ""
+msgstr "Bideoak"
 
 #: src/fsearch_listview_popup.c:36
 msgid "Properties…"
-msgstr ""
+msgstr "Propietateak…"
 
 #: src/fsearch_listview_popup.c:79
 msgid "Other Application…"
-msgstr ""
+msgstr "Beste aplikazio bat…"
 
 #: src/fsearch_overlay.ui:43
 msgid "Empty Database"
-msgstr ""
+msgstr "Hustu datu-basea"
 
 #: src/fsearch_overlay.ui:59
 msgid "Add folders"
-msgstr ""
+msgstr "Gehitu karpetak"
 
 #: src/fsearch_overlay.ui:76 src/fsearch_overlay.ui:271
 #: src/fsearch_statusbar.ui:273
 msgid "page0"
-msgstr ""
+msgstr "0 orria"
 
 #: src/fsearch_overlay.ui:107
 msgid "Loading Database…"
-msgstr ""
+msgstr "Datu-basea kargatzen…"
 
 #: src/fsearch_overlay.ui:122
 msgid "This won't take long."
-msgstr ""
+msgstr "Honek ez du luze joko."
 
 #: src/fsearch_overlay.ui:138 src/fsearch_overlay.ui:333
 #: src/fsearch_statusbar.ui:309
 msgid "page1"
-msgstr ""
+msgstr "1 orria"
 
 #: src/fsearch_overlay.ui:170 src/fsearch_statusbar.ui:240
 msgid "Updating Database…"
