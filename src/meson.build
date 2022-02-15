@@ -33,6 +33,7 @@ libfsearch_sources = [
     'fsearch_preferences_widgets.c',
     'fsearch_query.c',
     'fsearch_query_match_context.c',
+    'fsearch_query_parser.c',
     'fsearch_result_view.c',
     'fsearch_selection.c',
     'fsearch_statusbar.c',

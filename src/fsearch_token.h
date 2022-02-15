@@ -16,10 +16,28 @@
 typedef struct FsearchToken FsearchToken;
 typedef uint32_t(FsearchTokenSearchFunc)(FsearchToken *, FsearchQueryMatchContext *);
 
+typedef enum FsearchTokenType {
+    FSEARCH_TOKEN_TYPE_NORMAL,
+    FSEARCH_TOKEN_TYPE_FUNC_SIZE,
+    NUM_FSEARCH_TOKEN_TYPES,
+} FsearchTokenType;
+
+typedef enum FsearchTokenSizeComparisonType {
+    FSEARCH_TOKEN_SIZE_COMPARISON_EQUAL,
+    FSEARCH_TOKEN_SIZE_COMPARISON_GREATER,
+    FSEARCH_TOKEN_SIZE_COMPARISON_GREATER_EQ,
+    FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER,
+    FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER_EQ,
+} FsearchTokenSizeComparisonType;
+
 struct FsearchToken {
+    FsearchTokenType type;
 
     char *search_term;
     size_t search_term_len;
+
+    off_t size;
+    FsearchTokenSizeComparisonType size_comparison_type;
 
     uint32_t has_separator;
     FsearchTokenSearchFunc *search_func;

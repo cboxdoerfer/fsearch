@@ -155,6 +155,11 @@ consume_escape(char *str, char **dest, bool *eos) {
     return str + 1;
 }
 
+bool
+prefix(const char *pre, const char *str) {
+    return strncmp(pre, str, strlen(pre)) == 0;
+}
+
 char **
 fs_str_split(const char *src) {
     if (!src) {
@@ -196,9 +201,15 @@ fs_str_split(const char *src) {
             s = consume_space(s + 1, &eos);
             break;
         default:
-            *d = *s;
-            d++;
-            s++;
+            if (prefix("size:", s)) {
+                size_t prefix_len = strlen("size:");
+                s += prefix_len;
+            }
+            else {
+                *d = *s;
+                d++;
+                s++;
+            }
             break;
         }
     }
