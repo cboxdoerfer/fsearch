@@ -287,7 +287,7 @@ parse_size(GString *string, GPtrArray *token_list, FsearchTokenSizeComparisonTyp
     g_ptr_array_add(token_list, fsearch_token_new_size(size, comp_type));
 }
 
-void
+static void
 parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags, GPtrArray *token_list) {
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
@@ -329,6 +329,23 @@ out:
     }
 }
 
+static void
+parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags, GPtrArray *token_list) {
+    GString *token_value = NULL;
+    FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
+    if (token == FSEARCH_QUERY_TOKEN_WORD) {
+        flags |= QUERY_FLAG_REGEX;
+        g_ptr_array_add(token_list, fsearch_token_new(token_value->str, flags));
+    }
+    else {
+        g_print("regex field: invalid format\n");
+    }
+
+    if (token_value) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
+    }
+}
+
 typedef void(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryFlags, GPtrArray *);
 
 typedef struct FsearchTokenField {
@@ -338,9 +355,10 @@ typedef struct FsearchTokenField {
 
 FsearchTokenField supported_fields[] = {
     {"size", parse_field_size},
+    {"regex", parse_field_regex},
 };
 
-GPtrArray *
+static GPtrArray *
 get_tokens(const char *src, FsearchQueryFlags flags) {
     assert(src != NULL);
 
