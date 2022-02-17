@@ -147,6 +147,8 @@ fsearch_query_match(FsearchQuery *query, FsearchQueryMatchContext *matcher) {
     if (G_UNLIKELY(!matcher || !entry)) {
         return false;
     }
+
+    FsearchDatabaseEntryType type = db_entry_get_type(entry);
     const uint32_t num_token = query->num_token;
     FsearchToken **token = query->token;
 
@@ -160,6 +162,12 @@ fsearch_query_match(FsearchQuery *query, FsearchQueryMatchContext *matcher) {
             return true;
         }
         FsearchToken *t = token[num_found++];
+        if (t->flags & QUERY_FLAG_FOLDERS_ONLY && type != DATABASE_ENTRY_TYPE_FOLDER) {
+            return false;
+        }
+        if (t->flags & QUERY_FLAG_FILES_ONLY && type != DATABASE_ENTRY_TYPE_FILE) {
+            return false;
+        }
 
         if (!t->search_func(t, matcher)) {
             return false;

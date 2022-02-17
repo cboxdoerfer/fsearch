@@ -14,6 +14,19 @@
 #include <stdbool.h>
 #include <string.h>
 
+static FsearchToken *
+parse_field(FsearchQueryParser *parser, GString *field_name, FsearchQueryFlags flags);
+
+static FsearchToken *
+parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+typedef FsearchToken *(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryFlags);
+
+typedef struct FsearchTokenField {
+    const char *name;
+    FsearchTokenFieldParser *parser;
+} FsearchTokenField;
+
 static uint32_t
 fsearch_search_func_size(FsearchToken *token, FsearchQueryMatchContext *matcher) {
     FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
@@ -162,7 +175,7 @@ fsearch_tokens_free(FsearchToken **tokens) {
 }
 
 static FsearchToken *
-fsearch_token_new_size(off_t size, FsearchTokenSizeComparisonType comp_type) {
+fsearch_token_new_size(FsearchQueryFlags flags, off_t size, FsearchTokenSizeComparisonType comp_type) {
     FsearchToken *new = calloc(1, sizeof(FsearchToken));
     assert(new != NULL);
 
@@ -170,6 +183,7 @@ fsearch_token_new_size(off_t size, FsearchTokenSizeComparisonType comp_type) {
     new->size = size;
     new->size_comparison_type = comp_type;
     new->search_func = fsearch_search_func_size;
+    new->flags = flags;
     return new;
 }
 
@@ -186,6 +200,7 @@ fsearch_token_new(const char *search_term, FsearchQueryFlags flags) {
     if ((flags & QUERY_FLAG_AUTO_MATCH_CASE) && fs_str_utf8_has_upper(search_term)) {
         flags |= QUERY_FLAG_MATCH_CASE;
     }
+    new->flags = flags;
 
     new->fold_options = U_FOLD_CASE_DEFAULT;
     const char *current_locale = setlocale(LC_CTYPE, NULL);
@@ -242,13 +257,18 @@ fsearch_token_new(const char *search_term, FsearchQueryFlags flags) {
     return new;
 }
 
-static void
-parse_size(GString *string, GPtrArray *token_list, FsearchTokenSizeComparisonType comp_type) {
+FsearchToken *
+empty_token(FsearchQueryFlags flags) {
+    return fsearch_token_new("", flags);
+}
+
+static FsearchToken *
+parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonType comp_type) {
     char *size_suffix = NULL;
     off_t size = strtoll(string->str, &size_suffix, 10);
     if (size_suffix == string->str) {
         g_print("Invalid size format: %s\n", string->str);
-        return;
+        return empty_token(flags);
     }
     if (size_suffix && *size_suffix != '\0') {
         switch (*size_suffix) {
@@ -270,7 +290,7 @@ parse_size(GString *string, GPtrArray *token_list, FsearchTokenSizeComparisonTyp
             break;
         default:
             g_print("Invalid size suffix: %s\n", size_suffix);
-            return;
+            return empty_token(flags);
         }
         size_suffix++;
 
@@ -281,17 +301,18 @@ parse_size(GString *string, GPtrArray *token_list, FsearchTokenSizeComparisonTyp
             break;
         default:
             g_print("Invalid size suffix: %s\n", size_suffix);
-            return;
+            return empty_token(flags);
         }
     }
-    g_ptr_array_add(token_list, fsearch_token_new_size(size, comp_type));
+    return fsearch_token_new_size(flags, size, comp_type);
 }
 
-static void
-parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags, GPtrArray *token_list) {
+static FsearchToken *
+parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
     FsearchTokenSizeComparisonType comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_EQUAL;
+    FsearchToken *result = NULL;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_SMALLER:
         comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER;
@@ -306,7 +327,7 @@ parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags, GPtrArray 
         comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        parse_size(token_value, token_list, comp_type);
+        result = parse_size(token_value, flags, comp_type);
         break;
     default:
         g_print("size field: invalid format\n");
@@ -317,7 +338,7 @@ parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags, GPtrArray 
         GString *next_token_value = NULL;
         FsearchQueryToken next_token = fsearch_query_parser_get_next_token(parser, &next_token_value);
         if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
-            parse_size(next_token_value, token_list, comp_type);
+            result = parse_size(next_token_value, flags, comp_type);
         }
         if (next_token_value) {
             g_string_free(g_steal_pointer(&next_token_value), TRUE);
@@ -327,36 +348,90 @@ out:
     if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
     }
+    if (!result) {
+        result = empty_token(flags);
+    }
+    return result;
 }
 
-static void
-parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags, GPtrArray *token_list) {
+static FsearchToken *
+parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
+    FsearchToken *result = NULL;
     if (token == FSEARCH_QUERY_TOKEN_WORD) {
         flags |= QUERY_FLAG_REGEX;
-        g_ptr_array_add(token_list, fsearch_token_new(token_value->str, flags));
+        result = fsearch_token_new(token_value->str, flags);
     }
     else {
         g_print("regex field: invalid format\n");
+        result = empty_token(flags);
     }
 
     if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
     }
+    return result;
 }
 
-typedef void(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryFlags, GPtrArray *);
+static FsearchToken *
+parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    GString *token_value = NULL;
+    FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
+    FsearchToken *result = NULL;
+    if (token == FSEARCH_QUERY_TOKEN_WORD) {
+        result = fsearch_token_new(token_value->str, flags);
+    }
+    else if (token == FSEARCH_QUERY_TOKEN_FIELD) {
+        result = parse_field(parser, token_value, flags);
+    }
+    else {
+        result = empty_token(flags);
+    }
 
-typedef struct FsearchTokenField {
-    const char *name;
-    FsearchTokenFieldParser *parser;
-} FsearchTokenField;
+    if (token_value) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
+    }
+
+    return result;
+}
+
+static FsearchToken *
+parse_field_folder(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    FsearchToken *token = parse_modifier(parser, flags);
+    if (token) {
+        token->flags |= QUERY_FLAG_FOLDERS_ONLY;
+    }
+    return token;
+}
+
+static FsearchToken *
+parse_field_file(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    FsearchToken *token = parse_modifier(parser, flags);
+    if (token) {
+        token->flags |= QUERY_FLAG_FILES_ONLY;
+    }
+    return token;
+}
 
 FsearchTokenField supported_fields[] = {
     {"size", parse_field_size},
     {"regex", parse_field_regex},
+    {"file", parse_field_file},
+    {"files", parse_field_file},
+    {"folder", parse_field_folder},
+    {"folders", parse_field_folder},
 };
+
+static FsearchToken *
+parse_field(FsearchQueryParser *parser, GString *field_name, FsearchQueryFlags flags) {
+    g_print("field detected: [%s]\n", field_name->str);
+    for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
+        if (!strcmp(supported_fields[i].name, field_name->str)) {
+            return supported_fields[i].parser(parser, flags);
+        }
+    }
+}
 
 static GPtrArray *
 get_tokens(const char *src, FsearchQueryFlags flags) {
@@ -371,23 +446,25 @@ get_tokens(const char *src, FsearchQueryFlags flags) {
         GString *next_token_value = NULL;
         FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
         FsearchQueryToken next_token = fsearch_query_parser_peek_next_token(parser, &next_token_value);
+
+        FsearchToken *result = NULL;
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
             goto out;
         case FSEARCH_QUERY_TOKEN_WORD:
-            g_ptr_array_add(token_list, fsearch_token_new(token_value->str, flags));
+            result = fsearch_token_new(token_value->str, flags);
             break;
         case FSEARCH_QUERY_TOKEN_FIELD:
-            g_print("field detected: [%s]\n", token_value->str);
-            for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
-                if (!strcmp(supported_fields[i].name, token_value->str)) {
-                    supported_fields[i].parser(parser, flags, token_list);
-                }
-            }
+            result = parse_field(parser, token_value, flags);
             break;
         default:
             g_print("Unhandled token: %d\n", token);
         }
+
+        if (result) {
+            g_ptr_array_add(token_list, result);
+        }
+
         if (token_value) {
             g_string_free(g_steal_pointer(&token_value), TRUE);
         }

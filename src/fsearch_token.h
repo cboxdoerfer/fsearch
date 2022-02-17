@@ -55,6 +55,8 @@ struct FsearchToken {
 
     int32_t wildcard_flags;
     int32_t is_utf;
+
+    FsearchQueryFlags flags;
 };
 
 FsearchToken **
