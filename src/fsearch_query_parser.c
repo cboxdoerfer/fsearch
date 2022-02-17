@@ -1,7 +1,7 @@
 #include <assert.h>
 #include <glib.h>
+#include <stdlib.h>
 #include <stdint.h>
-#include <stdio.h>
 
 #include "fsearch_query_parser.h"
 
