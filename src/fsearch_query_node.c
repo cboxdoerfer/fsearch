@@ -663,6 +663,8 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
     if (!g_queue_is_empty(query_stack)) {
         g_print("Query stack still has nodes left!!\n");
     }
+
+    g_queue_free_full(g_steal_pointer(&query_stack), (GDestroyNotify)free_tree);
     return root;
 }
 
