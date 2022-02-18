@@ -298,7 +298,6 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
                                               : fsearch_search_func_normal_icase_name;
         }
         else {
-            new->is_utf = 1;
             new->search_func = search_in_path ? fsearch_search_func_normal_icase_u8_path
                                               : fsearch_search_func_normal_icase_u8_name;
         }
