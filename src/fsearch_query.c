@@ -46,12 +46,10 @@ fsearch_query_new(const char *search_term,
 
     q->pool = pool;
 
-    q->num_token = 0;
-    q->token = fsearch_tokens_new(q->search_term, flags, &q->num_token);
+    q->token = fsearch_query_node_tree_new(q->search_term, flags);
 
     if (filter && filter->query) {
-        q->num_filter_token = 0;
-        q->filter_token = fsearch_tokens_new(filter->query, filter->flags, &q->num_filter_token);
+        q->filter_token = fsearch_query_node_tree_new(filter->query, filter->flags);
     }
 
     q->highlight_tokens = fsearch_highlight_tokens_new(q->search_term, flags);
@@ -71,7 +69,7 @@ fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->highlight_tokens, fsearch_highlight_tokens_free);
     g_clear_pointer(&query->search_term, free);
-    g_clear_pointer(&query->token, fsearch_tokens_free);
+    g_clear_pointer(&query->token, fsearch_query_node_tree_free);
     g_clear_pointer(&query, free);
 }
 
@@ -108,7 +106,36 @@ fsearch_query_highlight_match(FsearchQuery *q, const char *input) {
     return fsearch_highlight_tokens_match(q->highlight_tokens, q->flags, input);
 }
 
-static inline bool
+static bool
+matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, FsearchDatabaseEntryType type) {
+    if (!node) {
+        return true;
+    }
+    FsearchQueryNode *n = node->data;
+    if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
+        GNode *left = node->children;
+        assert(left != NULL);
+        GNode *right = left->next;
+        if (n->operator== FSEARCH_TOKEN_OPERATOR_AND) {
+            return matches(left, entry, matcher, type) && matches(right, entry, matcher, type);
+        }
+        else {
+            return matches(left, entry, matcher, type) || matches(right, entry, matcher, type);
+        }
+    }
+    else {
+        if (n->flags & QUERY_FLAG_FOLDERS_ONLY && type != DATABASE_ENTRY_TYPE_FOLDER) {
+            return false;
+        }
+        if (n->flags & QUERY_FLAG_FILES_ONLY && type != DATABASE_ENTRY_TYPE_FILE) {
+            return false;
+        }
+
+        return n->search_func(n, matcher);
+    }
+}
+
+static bool
 filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, FsearchQuery *query) {
     if (!query->filter) {
         return true;
@@ -126,17 +153,7 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, Fse
         return false;
     }
     if (query->filter_token) {
-        uint32_t num_found = 0;
-        while (true) {
-            if (num_found == query->num_filter_token) {
-                return true;
-            }
-            FsearchToken *t = query->filter_token[num_found++];
-            if (!t->search_func(t, matcher)) {
-                return false;
-            }
-        }
-        return false;
+        return matches(query->filter_token, entry, matcher, type);
     }
     return true;
 }
@@ -149,28 +166,11 @@ fsearch_query_match(FsearchQuery *query, FsearchQueryMatchContext *matcher) {
     }
 
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
-    const uint32_t num_token = query->num_token;
-    FsearchToken **token = query->token;
+    GNode *token = query->token;
 
     if (!filter_entry(entry, matcher, query)) {
         return false;
     }
 
-    uint32_t num_found = 0;
-    while (true) {
-        if (num_found == num_token) {
-            return true;
-        }
-        FsearchToken *t = token[num_found++];
-        if (t->flags & QUERY_FLAG_FOLDERS_ONLY && type != DATABASE_ENTRY_TYPE_FOLDER) {
-            return false;
-        }
-        if (t->flags & QUERY_FLAG_FILES_ONLY && type != DATABASE_ENTRY_TYPE_FILE) {
-            return false;
-        }
-
-        if (!t->search_func(t, matcher)) {
-            return false;
-        }
-    }
+    return matches(token, entry, matcher, type);
 }

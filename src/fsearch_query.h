@@ -30,7 +30,7 @@
 #include "fsearch_query_match_context.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_thread_pool.h"
-#include "fsearch_token.h"
+#include "fsearch_query_node.h"
 
 typedef struct FsearchQuery {
     char *search_term;
@@ -43,11 +43,8 @@ typedef struct FsearchQuery {
 
     FsearchFilter *filter;
 
-    FsearchToken **token;
-    uint32_t num_token;
-
-    FsearchToken **filter_token;
-    uint32_t num_filter_token;
+    GNode *token;
+    GNode *filter_token;
 
     GList *highlight_tokens;
 

@@ -36,6 +36,7 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_preferences_widgets.h \
 			 fsearch_query.h \
 			 fsearch_query_match_context.h \
+			 fsearch_query_node.h \
 		     fsearch_query_parser.h \
 			 fsearch_query_flags.h \
              fsearch_result_view.h \
@@ -45,7 +46,6 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_task.h \
 			 fsearch_task_ids.h \
 			 fsearch_thread_pool.h \
-			 fsearch_token.h \
 			 fsearch_ui_utils.h \
 			 fsearch_utf.h \
 			 fsearch_window.h \
@@ -73,6 +73,7 @@ fsearch_SOURCES = main.c \
 		  fsearch_preferences_widgets.c \
 		  fsearch_query.c \
 		  fsearch_query_match_context.c \
+		  fsearch_query_node.c \
 		  fsearch_query_parser.c \
           fsearch_result_view.c \
           fsearch_selection.c \
@@ -80,7 +81,6 @@ fsearch_SOURCES = main.c \
 		  fsearch_string_utils.c \
 		  fsearch_task.c \
 		  fsearch_thread_pool.c \
-		  fsearch_token.c \
 		  fsearch_ui_utils.c \
 		  fsearch_utf.c \
 		  fsearch_window.c \

@@ -21,6 +21,7 @@ struct FsearchQueryMatchContext {
     bool utf_name_ready;
     bool utf_path_ready;
     bool path_ready;
+    bool matches;
 };
 
 FsearchUtfConversionBuffer *
@@ -135,4 +136,14 @@ fsearch_query_match_context_set_entry(FsearchQueryMatchContext *matcher, Fsearch
     matcher->path_ready = false;
 
     matcher->entry = entry;
+}
+
+void
+fsearch_query_match_context_set_result(FsearchQueryMatchContext *matcher, bool result) {
+    matcher->matches = result;
+}
+
+bool
+fsearch_query_match_context_get_result(FsearchQueryMatchContext *matcher) {
+    return matcher->matches;
 }

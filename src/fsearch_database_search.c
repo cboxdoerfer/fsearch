@@ -31,7 +31,7 @@
 #include "fsearch_string_utils.h"
 #include "fsearch_task.h"
 #include "fsearch_task_ids.h"
-#include "fsearch_token.h"
+#include "fsearch_query_node.h"
 #include "fsearch_utf.h"
 
 #define THRESHOLD_FOR_PARALLEL_SEARCH 1000

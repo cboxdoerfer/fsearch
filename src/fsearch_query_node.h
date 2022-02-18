@@ -13,14 +13,14 @@
 
 #define OVECCOUNT 3
 
-typedef struct FsearchToken FsearchToken;
-typedef uint32_t(FsearchTokenSearchFunc)(FsearchToken *, FsearchQueryMatchContext *);
+typedef struct FsearchQueryNode FsearchQueryNode;
+typedef uint32_t(FsearchQueryNodeSearchFunc)(FsearchQueryNode *, FsearchQueryMatchContext *);
 
-typedef enum FsearchTokenType {
-    FSEARCH_TOKEN_TYPE_NORMAL,
-    FSEARCH_TOKEN_TYPE_FUNC_SIZE,
-    NUM_FSEARCH_TOKEN_TYPES,
-} FsearchTokenType;
+typedef enum FsearchQueryNodeType {
+    FSEARCH_QUERY_NODE_TYPE_OPERATOR,
+    FSEARCH_QUERY_NODE_TYPE_QUERY,
+    NUM_FSEARCH_QUERY_NODE_TYPES,
+} FsearchQueryNodeType;
 
 typedef enum FsearchTokenSizeComparisonType {
     FSEARCH_TOKEN_SIZE_COMPARISON_EQUAL,
@@ -30,8 +30,16 @@ typedef enum FsearchTokenSizeComparisonType {
     FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER_EQ,
 } FsearchTokenSizeComparisonType;
 
-struct FsearchToken {
-    FsearchTokenType type;
+typedef enum FsearchQueryNodeOperator {
+    FSEARCH_TOKEN_OPERATOR_AND,
+    FSEARCH_TOKEN_OPERATOR_OR,
+    NUM_FSEARCH_TOKEN_OPERATORS,
+} FsearchQueryNodeOperator;
+
+struct FsearchQueryNode {
+    FsearchQueryNodeType type;
+
+    FsearchQueryNodeOperator operator;
 
     char *search_term;
     size_t search_term_len;
@@ -40,7 +48,7 @@ struct FsearchToken {
     FsearchTokenSizeComparisonType size_comparison_type;
 
     uint32_t has_separator;
-    FsearchTokenSearchFunc *search_func;
+    FsearchQueryNodeSearchFunc *search_func;
 
     UCaseMap *case_map;
     const UNormalizer2 *normalizer;
@@ -59,8 +67,8 @@ struct FsearchToken {
     FsearchQueryFlags flags;
 };
 
-FsearchToken **
-fsearch_tokens_new(const char *search_term, FsearchQueryFlags flags, uint32_t *num_token);
+GNode *
+fsearch_query_node_tree_new(const char *search_term, FsearchQueryFlags flags);
 
 void
-fsearch_tokens_free(FsearchToken **tokens);
+fsearch_query_node_tree_free(GNode *node);

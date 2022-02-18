@@ -16,6 +16,12 @@ fsearch_query_match_context_free(FsearchQueryMatchContext *matcher);
 void
 fsearch_query_match_context_set_entry(FsearchQueryMatchContext *matcher, FsearchDatabaseEntry *entry);
 
+void
+fsearch_query_match_context_set_result(FsearchQueryMatchContext *matcher, bool result);
+
+bool
+fsearch_query_match_context_get_result(FsearchQueryMatchContext *matcher);
+
 const char *
 fsearch_query_match_context_get_name_str(FsearchQueryMatchContext *matcher);
 
