@@ -553,7 +553,6 @@ next_token_is_implicit_and_operator(FsearchQueryToken current_token, FsearchQuer
     case FSEARCH_QUERY_TOKEN_WORD:
     case FSEARCH_QUERY_TOKEN_FIELD:
     case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
-    case FSEARCH_QUERY_TOKEN_EOS:
         return true;
     default:
         return false;
@@ -582,9 +581,7 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
 
     while (true) {
         GString *token_value = NULL;
-        GString *next_token_value = NULL;
         FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-        FsearchQueryToken next_token = fsearch_query_parser_peek_next_token(parser, &next_token_value);
 
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
@@ -617,8 +614,9 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             break;
         }
 
-        if (last_token != FSEARCH_QUERY_TOKEN_AND && last_token != FSEARCH_QUERY_TOKEN_OR
-            && next_token_is_implicit_and_operator(token, next_token)) {
+        GString *next_token_value = NULL;
+        FsearchQueryToken next_token = fsearch_query_parser_peek_next_token(parser, &next_token_value);
+        if (next_token_is_implicit_and_operator(token, next_token)) {
             postfix_query = handle_operator_token(postfix_query, operator_stack, FSEARCH_QUERY_TOKEN_AND);
         }
 
@@ -628,8 +626,6 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
         if (next_token_value) {
             g_string_free(g_steal_pointer(&next_token_value), TRUE);
         }
-
-        last_token = token;
     }
 
 out:
