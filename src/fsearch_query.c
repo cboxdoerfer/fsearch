@@ -56,7 +56,7 @@ fsearch_query_new(const char *search_term,
 
     q->filter = fsearch_filter_ref(filter);
     q->flags = flags;
-    q->query_id = strdup(query_id);
+    q->query_id = strdup(query_id ? query_id : "[missing_id]");
     q->data = data;
     q->ref_count = 1;
     return q;
