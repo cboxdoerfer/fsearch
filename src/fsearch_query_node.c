@@ -577,6 +577,9 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
 
     int32_t num_open_brackets = 0;
     int32_t num_close_brackets = 0;
+
+    FsearchQueryToken last_token = FSEARCH_QUERY_TOKEN_NONE;
+
     while (true) {
         GString *token_value = NULL;
         GString *next_token_value = NULL;
@@ -614,7 +617,8 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             break;
         }
 
-        if (next_token_is_implicit_and_operator(token, next_token)) {
+        if (last_token != FSEARCH_QUERY_TOKEN_AND && last_token != FSEARCH_QUERY_TOKEN_OR
+            && next_token_is_implicit_and_operator(token, next_token)) {
             postfix_query = handle_operator_token(postfix_query, operator_stack, FSEARCH_QUERY_TOKEN_AND);
         }
 
@@ -624,6 +628,8 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
         if (next_token_value) {
             g_string_free(g_steal_pointer(&next_token_value), TRUE);
         }
+
+        last_token = token;
     }
 
 out:
@@ -675,18 +681,18 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
     GList *query_postfix = convert_query_from_infix_to_postfix(parser, flags);
     GNode *root = build_query_tree(query_postfix, flags);
 
-    // g_print("Postfix representation of query:\n");
-    // g_print("================================\n");
-    // for (GList *q = query_postfix; q != NULL; q = q->next) {
-    //     FsearchQueryNode *node = q->data;
-    //     if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-    //         g_print("%s ", node->operator== FSEARCH_TOKEN_OPERATOR_AND ? "AND" : "OR");
-    //     }
-    //     else {
-    //         g_print("%s ", node->search_term ? node->search_term : "[empty query]");
-    //     }
-    // }
-    // g_print("\n");
+    g_print("Postfix representation of query:\n");
+    g_print("================================\n");
+    for (GList *q = query_postfix; q != NULL; q = q->next) {
+        FsearchQueryNode *node = q->data;
+        if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
+            g_print("%s ", node->operator== FSEARCH_TOKEN_OPERATOR_AND ? "AND" : "OR");
+        }
+        else {
+            g_print("%s ", node->search_term ? node->search_term : "[empty query]");
+        }
+    }
+    g_print("\n");
     g_list_free(g_steal_pointer(&query_postfix));
 
     g_clear_pointer(&parser, fsearch_query_parser_free);
