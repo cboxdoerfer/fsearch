@@ -322,7 +322,6 @@ string_prefix_to_size(const char *str, off_t *size_out, char **end_ptr) {
     char *size_suffix = NULL;
     off_t size = strtoll(str, &size_suffix, 10);
     if (size_suffix == str) {
-        g_debug("Invalid size format: %s", str);
         return false;
     }
     if (size_suffix && *size_suffix != '\0') {
@@ -389,7 +388,7 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
         }
         return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
     }
-    g_debug("size: invalid argument");
+    g_debug("[size:] invalid argument: %s", string->str);
     return get_empty_query_node(flags);
 }
 
@@ -400,7 +399,7 @@ parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonT
     if (string_prefix_to_size(string->str, &size, &end_ptr)) {
         return fsearch_query_node_new_size(flags, size, size, comp_type);
     }
-    g_debug("size: invalid argument");
+    g_debug("[size:] invalid argument: %s", string->str);
     return get_empty_query_node(flags);
 }
 
@@ -427,7 +426,7 @@ parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags) {
         result = parse_size_with_optional_range(token_value, flags, comp_type);
         break;
     default:
-        g_debug("size field: invalid format");
+        g_debug("[size:] invalid or missing argument");
         goto out;
     }
 
@@ -461,7 +460,7 @@ parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
         result = fsearch_query_node_new(token_value->str, flags);
     }
     else {
-        g_debug("regex: invalid format");
+        g_debug("[regex:] invalid format");
         result = get_empty_query_node(flags);
     }
 
@@ -513,7 +512,7 @@ parse_field_file(FsearchQueryParser *parser, FsearchQueryFlags flags) {
 
 static FsearchQueryNode *
 parse_field(FsearchQueryParser *parser, GString *field_name, FsearchQueryFlags flags) {
-    g_debug("field detected: [%s]", field_name->str);
+    // g_debug("[field] detected: [%s:]", field_name->str);
     for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
         if (!strcmp(supported_fields[i].name, field_name->str)) {
             return supported_fields[i].parser(parser, flags);
@@ -578,7 +577,6 @@ get_operator_precedence(FsearchQueryToken operator) {
 static GList *
 append_operator(GList *list, FsearchQueryToken token) {
     if (token != FSEARCH_QUERY_TOKEN_AND && token != FSEARCH_QUERY_TOKEN_OR) {
-        g_debug("Invalid operator: %d", token);
         return list;
     }
     return g_list_append(list,
@@ -658,7 +656,7 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             postfix_query = g_list_append(postfix_query, parse_field(parser, token_value, flags));
             break;
         default:
-            g_debug("Ignoring unexpected token: %d", token);
+            g_debug("[infix-postfix] ignoring unexpected token: %d", token);
             break;
         }
 
@@ -710,7 +708,7 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
     }
     GNode *root = g_queue_pop_tail(query_stack);
     if (!g_queue_is_empty(query_stack)) {
-        g_debug("Query stack still has nodes left!!");
+        g_debug("[builder_tree] query stack still has nodes left!!");
     }
 
     g_queue_free_full(g_steal_pointer(&query_stack), (GDestroyNotify)free_tree);
