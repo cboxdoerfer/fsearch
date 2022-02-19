@@ -117,6 +117,12 @@ main(int argc, char *argv[]) {
             {"a && (b || c)", "ac", 0, 0, true},
             {"a && (b || c)", "ad", 0, 0, false},
             {"a && (b || c)", "bc", 0, 0, false},
+            {"a && (b || c || d || e)", "ae", 0, 0, true},
+            {"a && (b || (c && d))", "bc", 0, 0, false},
+            {"a && (b || (c && d))", "ac", 0, 0, false},
+            {"a && (b || (c && d))", "bcd", 0, 0, false},
+            {"a && (b || (c && d))", "acd", 0, 0, true},
+            {"a && (b || (c && d))", "ab", 0, 0, true},
 
             // fields
             {"size:>300", "test", 301, 0, true},
