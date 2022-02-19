@@ -89,17 +89,17 @@ fsearch_search_func_size(FsearchQueryNode *node, FsearchQueryMatchContext *match
     if (entry) {
         off_t size = db_entry_get_size(entry);
         switch (node->size_comparison_type) {
-        case FSEARCH_TOKEN_SIZE_COMPARISON_EQUAL:
+        case FSEARCH_TOKEN_COMPARISON_EQUAL:
             return size == node->size;
-        case FSEARCH_TOKEN_SIZE_COMPARISON_GREATER:
+        case FSEARCH_TOKEN_COMPARISON_GREATER:
             return size > node->size;
-        case FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER:
+        case FSEARCH_TOKEN_COMPARISON_SMALLER:
             return size < node->size;
-        case FSEARCH_TOKEN_SIZE_COMPARISON_GREATER_EQ:
+        case FSEARCH_TOKEN_COMPARISON_GREATER_EQ:
             return size >= node->size;
-        case FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER_EQ:
+        case FSEARCH_TOKEN_COMPARISON_SMALLER_EQ:
             return size <= node->size;
-        case FSEARCH_TOKEN_SIZE_COMPARISON_RANGE:
+        case FSEARCH_TOKEN_COMPARISON_RANGE:
             return node->size <= size && size <= node->size_upper_limit;
         }
     }
@@ -254,10 +254,7 @@ fsearch_query_node_tree_free(GNode *node) {
 }
 
 static FsearchQueryNode *
-fsearch_query_node_new_size(FsearchQueryFlags flags,
-                            off_t size_start,
-                            off_t size_end,
-                            FsearchTokenSizeComparisonType comp_type) {
+fsearch_query_node_new_size(FsearchQueryFlags flags, off_t size_start, off_t size_end, FsearchTokenComparisonType comp_type) {
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
@@ -427,13 +424,13 @@ string_starts_with_range(char *str, char **end_ptr) {
 }
 
 static FsearchQueryNode *
-parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonType comp_type) {
+parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
     char *end_ptr = NULL;
     off_t size_start = 0;
     off_t size_end = 0;
     if (string_prefix_to_size(string->str, &size_start, &end_ptr)) {
         if (string_starts_with_range(end_ptr, &end_ptr) && string_prefix_to_size(end_ptr, &size_end, &end_ptr)) {
-            comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_RANGE;
+            comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
         }
         return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
     }
@@ -442,7 +439,7 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
 }
 
 static FsearchQueryNode *
-parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonType comp_type) {
+parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
     char *end_ptr = NULL;
     off_t size = 0;
     if (string_prefix_to_size(string->str, &size, &end_ptr)) {
@@ -456,20 +453,20 @@ static FsearchQueryNode *
 parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-    FsearchTokenSizeComparisonType comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_EQUAL;
+    FsearchTokenComparisonType comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
     FsearchQueryNode *result = NULL;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_SMALLER:
-        comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER;
+        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER;
         break;
     case FSEARCH_QUERY_TOKEN_SMALLER_EQ:
-        comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER_EQ;
+        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_GREATER:
-        comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_GREATER;
+        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER;
         break;
     case FSEARCH_QUERY_TOKEN_GREATER_EQ:
-        comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_GREATER_EQ;
+        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
         result = parse_size_with_optional_range(token_value, flags, comp_type);
@@ -479,7 +476,7 @@ parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags) {
         goto out;
     }
 
-    if (comp_type != FSEARCH_TOKEN_SIZE_COMPARISON_EQUAL) {
+    if (comp_type != FSEARCH_TOKEN_COMPARISON_EQUAL) {
         GString *next_token_value = NULL;
         FsearchQueryToken next_token = fsearch_query_parser_get_next_token(parser, &next_token_value);
         if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
@@ -678,8 +675,6 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
 
     int32_t num_open_brackets = 0;
     int32_t num_close_brackets = 0;
-
-    FsearchQueryToken last_token = FSEARCH_QUERY_TOKEN_NONE;
 
     while (true) {
         GString *token_value = NULL;
