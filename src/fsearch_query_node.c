@@ -33,6 +33,15 @@ static FsearchQueryNode *
 parse_field_case(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
+parse_field_nocase(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+static FsearchQueryNode *
+parse_field_noregex(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+static FsearchQueryNode *
+parse_field_nopath(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+static FsearchQueryNode *
 parse_field_folder(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
@@ -57,9 +66,12 @@ FsearchTokenField supported_fields[] = {
     {"files", parse_field_file},
     {"folder", parse_field_folder},
     {"folders", parse_field_folder},
+    {"nocase", parse_field_nocase},
+    {"nopath", parse_field_nopath},
+    {"noregex", parse_field_noregex},
+    {"path", parse_field_path},
     {"regex", parse_field_regex},
     {"size", parse_field_size},
-    {"path", parse_field_path},
 };
 
 static u_int32_t
@@ -486,13 +498,28 @@ parse_field_path(FsearchQueryParser *parser, FsearchQueryFlags flags) {
 }
 
 static FsearchQueryNode *
+parse_field_nopath(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    return parse_modifier(parser, flags & ~QUERY_FLAG_SEARCH_IN_PATH);
+}
+
+static FsearchQueryNode *
 parse_field_case(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     return parse_modifier(parser, flags | QUERY_FLAG_MATCH_CASE);
 }
 
 static FsearchQueryNode *
+parse_field_nocase(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    return parse_modifier(parser, flags & ~QUERY_FLAG_MATCH_CASE);
+}
+
+static FsearchQueryNode *
 parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     return parse_modifier(parser, flags | QUERY_FLAG_REGEX);
+}
+
+static FsearchQueryNode *
+parse_field_noregex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    return parse_modifier(parser, flags & ~QUERY_FLAG_REGEX);
 }
 
 static FsearchQueryNode *
