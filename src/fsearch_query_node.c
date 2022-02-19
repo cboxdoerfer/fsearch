@@ -27,6 +27,12 @@ static FsearchQueryNode *
 parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
+parse_field_path(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+static FsearchQueryNode *
+parse_field_case(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+static FsearchQueryNode *
 parse_field_folder(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
@@ -46,12 +52,14 @@ typedef struct FsearchTokenField {
 } FsearchTokenField;
 
 FsearchTokenField supported_fields[] = {
-    {"size", parse_field_size},
-    {"regex", parse_field_regex},
+    {"case", parse_field_case},
     {"file", parse_field_file},
     {"files", parse_field_file},
     {"folder", parse_field_folder},
     {"folders", parse_field_folder},
+    {"regex", parse_field_regex},
+    {"size", parse_field_size},
+    {"path", parse_field_path},
 };
 
 static u_int32_t
@@ -470,6 +478,16 @@ parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     }
 
     return result;
+}
+
+static FsearchQueryNode *
+parse_field_path(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    return parse_modifier(parser, flags | QUERY_FLAG_SEARCH_IN_PATH);
+}
+
+static FsearchQueryNode *
+parse_field_case(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    return parse_modifier(parser, flags | QUERY_FLAG_MATCH_CASE);
 }
 
 static FsearchQueryNode *
