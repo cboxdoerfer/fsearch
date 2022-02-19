@@ -28,6 +28,7 @@ typedef enum FsearchTokenSizeComparisonType {
     FSEARCH_TOKEN_SIZE_COMPARISON_GREATER_EQ,
     FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER,
     FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER_EQ,
+    FSEARCH_TOKEN_SIZE_COMPARISON_RANGE,
 } FsearchTokenSizeComparisonType;
 
 typedef enum FsearchQueryNodeOperator {
@@ -45,6 +46,7 @@ struct FsearchQueryNode {
     size_t search_term_len;
 
     off_t size;
+    off_t size_upper_limit;
     FsearchTokenSizeComparisonType size_comparison_type;
 
     uint32_t has_separator;

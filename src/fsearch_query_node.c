@@ -75,6 +75,8 @@ fsearch_search_func_size(FsearchQueryNode *node, FsearchQueryMatchContext *match
             return size >= node->size;
         case FSEARCH_TOKEN_SIZE_COMPARISON_SMALLER_EQ:
             return size <= node->size;
+        case FSEARCH_TOKEN_SIZE_COMPARISON_RANGE:
+            return node->size <= size && size <= node->size_upper_limit;
         }
     }
     return 0;
@@ -203,12 +205,16 @@ fsearch_query_node_tree_free(GNode *node) {
 }
 
 static FsearchQueryNode *
-fsearch_query_node_new_size(FsearchQueryFlags flags, off_t size, FsearchTokenSizeComparisonType comp_type) {
+fsearch_query_node_new_size(FsearchQueryFlags flags,
+                            off_t size_start,
+                            off_t size_end,
+                            FsearchTokenSizeComparisonType comp_type) {
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    new->size = size;
+    new->size = size_start;
+    new->size_upper_limit = size_end;
     new->size_comparison_type = comp_type;
     new->search_func = fsearch_search_func_size;
     new->flags = flags;
@@ -310,13 +316,14 @@ get_empty_query_node(FsearchQueryFlags flags) {
     return fsearch_query_node_new_match_everything(flags);
 }
 
-static FsearchQueryNode *
-parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonType comp_type) {
+static bool
+string_prefix_to_size(const char *str, off_t *size_out, char **end_ptr) {
+    assert(size_out != NULL);
     char *size_suffix = NULL;
-    off_t size = strtoll(string->str, &size_suffix, 10);
-    if (size_suffix == string->str) {
-        g_print("Invalid size format: %s\n", string->str);
-        return get_empty_query_node(flags);
+    off_t size = strtoll(str, &size_suffix, 10);
+    if (size_suffix == str) {
+        g_debug("Invalid size format: %s", str);
+        return false;
     }
     if (size_suffix && *size_suffix != '\0') {
         switch (*size_suffix) {
@@ -337,27 +344,68 @@ parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonT
             size *= (off_t)1000 * 1000 * 1000 * 1000;
             break;
         default:
-            g_print("Invalid size suffix: %s\n", size_suffix);
-            return get_empty_query_node(flags);
+            goto out;
         }
         size_suffix++;
 
         switch (*size_suffix) {
-        case '\0':
         case 'b':
         case 'B':
+            size_suffix++;
             break;
         default:
-            g_print("Invalid size suffix: %s\n", size_suffix);
-            return get_empty_query_node(flags);
+            goto out;
         }
     }
-    return fsearch_query_node_new_size(flags, size, comp_type);
+out:
+    if (end_ptr) {
+        *end_ptr = size_suffix;
+    }
+    *size_out = size;
+    return true;
+}
+
+static bool
+string_starts_with_range(char *str, char **end_ptr) {
+    if (g_str_has_prefix(str, "..")) {
+        *end_ptr = str + 2;
+        return true;
+    }
+    else if (g_str_has_prefix(str, "-")) {
+        *end_ptr = str + 1;
+        return true;
+    }
+    return false;
+}
+
+static FsearchQueryNode *
+parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonType comp_type) {
+    char *end_ptr = NULL;
+    off_t size_start = 0;
+    off_t size_end = 0;
+    if (string_prefix_to_size(string->str, &size_start, &end_ptr)) {
+        if (string_starts_with_range(end_ptr, &end_ptr) && string_prefix_to_size(end_ptr, &size_end, &end_ptr)) {
+            comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_RANGE;
+        }
+        return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
+    }
+    g_debug("size: invalid argument");
+    return get_empty_query_node(flags);
+}
+
+static FsearchQueryNode *
+parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenSizeComparisonType comp_type) {
+    char *end_ptr = NULL;
+    off_t size = 0;
+    if (string_prefix_to_size(string->str, &size, &end_ptr)) {
+        return fsearch_query_node_new_size(flags, size, size, comp_type);
+    }
+    g_debug("size: invalid argument");
+    return get_empty_query_node(flags);
 }
 
 static FsearchQueryNode *
 parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    g_print("Parse size field\n");
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
     FsearchTokenSizeComparisonType comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_EQUAL;
@@ -376,10 +424,10 @@ parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags) {
         comp_type = FSEARCH_TOKEN_SIZE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        result = parse_size(token_value, flags, comp_type);
+        result = parse_size_with_optional_range(token_value, flags, comp_type);
         break;
     default:
-        g_print("size field: invalid format\n");
+        g_debug("size field: invalid format");
         goto out;
     }
 
@@ -413,7 +461,7 @@ parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
         result = fsearch_query_node_new(token_value->str, flags);
     }
     else {
-        g_print("regex field: invalid format\n");
+        g_debug("regex: invalid format");
         result = get_empty_query_node(flags);
     }
 
@@ -465,7 +513,7 @@ parse_field_file(FsearchQueryParser *parser, FsearchQueryFlags flags) {
 
 static FsearchQueryNode *
 parse_field(FsearchQueryParser *parser, GString *field_name, FsearchQueryFlags flags) {
-    g_print("field detected: [%s]\n", field_name->str);
+    g_debug("field detected: [%s]", field_name->str);
     for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
         if (!strcmp(supported_fields[i].name, field_name->str)) {
             return supported_fields[i].parser(parser, flags);
@@ -530,7 +578,7 @@ get_operator_precedence(FsearchQueryToken operator) {
 static GList *
 append_operator(GList *list, FsearchQueryToken token) {
     if (token != FSEARCH_QUERY_TOKEN_AND && token != FSEARCH_QUERY_TOKEN_OR) {
-        g_print("Invalid operator: %d\n", token);
+        g_debug("Invalid operator: %d", token);
         return list;
     }
     return g_list_append(list,
@@ -610,7 +658,7 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             postfix_query = g_list_append(postfix_query, parse_field(parser, token_value, flags));
             break;
         default:
-            g_print("Ignoring unexpected token: %d\n", token);
+            g_debug("Ignoring unexpected token: %d", token);
             break;
         }
 
@@ -662,7 +710,7 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
     }
     GNode *root = g_queue_pop_tail(query_stack);
     if (!g_queue_is_empty(query_stack)) {
-        g_print("Query stack still has nodes left!!\n");
+        g_debug("Query stack still has nodes left!!");
     }
 
     g_queue_free_full(g_steal_pointer(&query_stack), (GDestroyNotify)free_tree);
@@ -677,18 +725,18 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
     GList *query_postfix = convert_query_from_infix_to_postfix(parser, flags);
     GNode *root = build_query_tree(query_postfix, flags);
 
-    g_print("Postfix representation of query:\n");
-    g_print("================================\n");
-    for (GList *q = query_postfix; q != NULL; q = q->next) {
-        FsearchQueryNode *node = q->data;
-        if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-            g_print("%s ", node->operator== FSEARCH_TOKEN_OPERATOR_AND ? "AND" : "OR");
-        }
-        else {
-            g_print("%s ", node->search_term ? node->search_term : "[empty query]");
-        }
-    }
-    g_print("\n");
+    // g_print("Postfix representation of query:\n");
+    // g_print("================================\n");
+    // for (GList *q = query_postfix; q != NULL; q = q->next) {
+    //     FsearchQueryNode *node = q->data;
+    //     if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
+    //         g_print("%s ", node->operator== FSEARCH_TOKEN_OPERATOR_AND ? "AND" : "OR");
+    //     }
+    //     else {
+    //         g_print("%s ", node->search_term ? node->search_term : "[empty query]");
+    //     }
+    // }
+    // g_print("\n");
     g_list_free(g_steal_pointer(&query_postfix));
 
     g_clear_pointer(&parser, fsearch_query_parser_free);
