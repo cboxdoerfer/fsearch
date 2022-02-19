@@ -135,6 +135,16 @@ main(int argc, char *argv[]) {
             {"size:>1MB", "test", 1000000, 0, false},
             {"regex:suffix$", "suffix prefix", 0, 0, false},
             {"regex:suffix$", "prefix suffix", 0, 0, true},
+            {"exact:ABC", "aBc", 0, 0, true},
+            {"exact:ABC", "aBcd", 0, 0, false},
+            {"case:exact:ABC", "aBc", 0, 0, false},
+            {"exact:Ȁ", "Ȁ", 0, 0, true},
+            {"exact:ȁ", "Ȁ", 0, 0, true},
+            {"exact:Ȁ", "ȁ", 0, 0, true},
+            {"case:exact:ȁ", "Ȁ", 0, 0, false},
+            {"case:exact:Ȁ", "ȁ", 0, 0, false},
+            {"case:exact:Ȁ", "Ȁ", 0, 0, true},
+            {"exact:Ȁ", "Ȁb", 0, 0, false},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {

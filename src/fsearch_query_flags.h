@@ -10,4 +10,5 @@ typedef enum FsearchQueryFlags {
     QUERY_FLAG_AUTO_SEARCH_IN_PATH = 1 << 4,
     QUERY_FLAG_FILES_ONLY = 1 << 5,
     QUERY_FLAG_FOLDERS_ONLY = 1 << 6,
+    QUERY_FLAG_EXACT_MATCH = 1 << 7,
 } FsearchQueryFlags;

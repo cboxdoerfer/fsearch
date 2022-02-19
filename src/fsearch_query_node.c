@@ -21,6 +21,9 @@ static FsearchQueryNode *
 parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
+parse_field_exact(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+static FsearchQueryNode *
 parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
@@ -62,6 +65,7 @@ typedef struct FsearchTokenField {
 
 FsearchTokenField supported_fields[] = {
     {"case", parse_field_case},
+    {"exact", parse_field_exact},
     {"file", parse_field_file},
     {"files", parse_field_file},
     {"folder", parse_field_folder},
@@ -152,8 +156,18 @@ fsearch_search_func_wildcard_name(FsearchQueryNode *node, FsearchQueryMatchConte
 
 static uint32_t
 fsearch_search_func_normal_icase_u8(FsearchUtfConversionBuffer *haystack_buffer,
-                                    FsearchUtfConversionBuffer *needle_buffer) {
+                                    FsearchUtfConversionBuffer *needle_buffer,
+                                    bool exact_match) {
     if (G_LIKELY(haystack_buffer->string_is_folded_and_normalized)) {
+        if (exact_match) {
+            return !u_strCompare(haystack_buffer->string_normalized_folded,
+                                 haystack_buffer->string_normalized_folded_len,
+                                 needle_buffer->string_normalized_folded,
+                                 needle_buffer->string_normalized_folded_len,
+                                 false)
+                     ? 1
+                     : 0;
+        }
         return u_strFindFirst(haystack_buffer->string_normalized_folded,
                               haystack_buffer->string_normalized_folded_len,
                               needle_buffer->string_normalized_folded,
@@ -164,6 +178,9 @@ fsearch_search_func_normal_icase_u8(FsearchUtfConversionBuffer *haystack_buffer,
     else {
         // failed to fold case, fall back to fast but not accurate ascii search
         g_warning("[utf8_search] failed to lower case: %s", haystack_buffer->string);
+        if (exact_match) {
+            return !strcasecmp(haystack_buffer->string, needle_buffer->string) ? 1 : 0;
+        }
         return strcasestr(haystack_buffer->string, needle_buffer->string) ? 1 : 0;
     }
 }
@@ -172,33 +189,45 @@ static uint32_t
 fsearch_search_func_normal_icase_u8_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
     FsearchUtfConversionBuffer *haystack_buffer = fsearch_query_match_context_get_utf_path_buffer(matcher);
     FsearchUtfConversionBuffer *needle_buffer = node->needle_buffer;
-    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer);
+    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer, node->flags & QUERY_FLAG_EXACT_MATCH);
 }
 
 static uint32_t
 fsearch_search_func_normal_icase_u8_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
     FsearchUtfConversionBuffer *haystack_buffer = fsearch_query_match_context_get_utf_name_buffer(matcher);
     FsearchUtfConversionBuffer *needle_buffer = node->needle_buffer;
-    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer);
+    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer, node->flags & QUERY_FLAG_EXACT_MATCH);
 }
 
 static uint32_t
 fsearch_search_func_normal_icase_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
+        return !strcasecmp(fsearch_query_match_context_get_path_str(matcher), node->search_term) ? 1 : 0;
+    }
     return strcasestr(fsearch_query_match_context_get_path_str(matcher), node->search_term) ? 1 : 0;
 }
 
 static uint32_t
 fsearch_search_func_normal_icase_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
+        return !strcasecmp(fsearch_query_match_context_get_name_str(matcher), node->search_term) ? 1 : 0;
+    }
     return strcasestr(fsearch_query_match_context_get_name_str(matcher), node->search_term) ? 1 : 0;
 }
 
 static uint32_t
 fsearch_search_func_normal_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
+        return !strcmp(fsearch_query_match_context_get_path_str(matcher), node->search_term) ? 1 : 0;
+    }
     return strstr(fsearch_query_match_context_get_path_str(matcher), node->search_term) ? 1 : 0;
 }
 
 static uint32_t
 fsearch_search_func_normal_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
+        return !strcmp(fsearch_query_match_context_get_name_str(matcher), node->search_term) ? 1 : 0;
+    }
     return strstr(fsearch_query_match_context_get_name_str(matcher), node->search_term) ? 1 : 0;
 }
 
@@ -490,6 +519,11 @@ parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     }
 
     return result;
+}
+
+static FsearchQueryNode *
+parse_field_exact(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    return parse_modifier(parser, flags | QUERY_FLAG_EXACT_MATCH);
 }
 
 static FsearchQueryNode *
