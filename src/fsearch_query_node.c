@@ -738,9 +738,9 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
 
 GNode *
 fsearch_query_node_tree_new(const char *search_term, FsearchQueryFlags flags) {
-    // check if regex characters are present
-    const bool is_reg = fs_str_is_regex(search_term);
-    if (is_reg && (flags & QUERY_FLAG_REGEX)) {
+    if (flags & QUERY_FLAG_REGEX) {
+        // If we're in regex mode we're passing the whole search term to the regex engine
+        // i.e. there's only one query node
         return g_node_new(fsearch_query_node_new(search_term, flags));
     }
 
