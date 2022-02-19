@@ -45,8 +45,8 @@ struct FsearchQueryNode {
     char *search_term;
     size_t search_term_len;
 
-    off_t size;
-    off_t size_upper_limit;
+    int64_t size;
+    int64_t size_upper_limit;
     FsearchTokenComparisonType size_comparison_type;
 
     uint32_t has_separator;

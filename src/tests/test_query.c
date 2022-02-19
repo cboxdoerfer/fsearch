@@ -125,6 +125,9 @@ main(int argc, char *argv[]) {
             {"a && (b || (c && d))", "ab", 0, 0, true},
 
             // fields
+            {"size:300..", "test", 1000, 0, true},
+            {"size:300-", "test", 1000, 0, true},
+            {"size:300-", "test", 200, 0, false},
             {"size:>300", "test", 301, 0, true},
             {"size:>300", "test", 300, 0, false},
             {"size:>=300", "test", 300, 0, true},

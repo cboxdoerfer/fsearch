@@ -87,7 +87,7 @@ static uint32_t
 fsearch_search_func_size(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
     FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
     if (entry) {
-        off_t size = db_entry_get_size(entry);
+        int64_t size = db_entry_get_size(entry);
         switch (node->size_comparison_type) {
         case FSEARCH_TOKEN_COMPARISON_EQUAL:
             return size == node->size;
@@ -254,7 +254,10 @@ fsearch_query_node_tree_free(GNode *node) {
 }
 
 static FsearchQueryNode *
-fsearch_query_node_new_size(FsearchQueryFlags flags, off_t size_start, off_t size_end, FsearchTokenComparisonType comp_type) {
+fsearch_query_node_new_size(FsearchQueryFlags flags,
+                            int64_t size_start,
+                            int64_t size_end,
+                            FsearchTokenComparisonType comp_type) {
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
@@ -363,10 +366,10 @@ get_empty_query_node(FsearchQueryFlags flags) {
 }
 
 static bool
-string_prefix_to_size(const char *str, off_t *size_out, char **end_ptr) {
+string_prefix_to_size(const char *str, int64_t *size_out, char **end_ptr) {
     assert(size_out != NULL);
     char *size_suffix = NULL;
-    off_t size = strtoll(str, &size_suffix, 10);
+    int64_t size = strtoll(str, &size_suffix, 10);
     if (size_suffix == str) {
         return false;
     }
@@ -386,7 +389,7 @@ string_prefix_to_size(const char *str, off_t *size_out, char **end_ptr) {
             break;
         case 't':
         case 'T':
-            size *= (off_t)1000 * 1000 * 1000 * 1000;
+            size *= (int64_t)1000 * 1000 * 1000 * 1000;
             break;
         default:
             goto out;
@@ -426,11 +429,17 @@ string_starts_with_range(char *str, char **end_ptr) {
 static FsearchQueryNode *
 parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
     char *end_ptr = NULL;
-    off_t size_start = 0;
-    off_t size_end = 0;
+    int64_t size_start = 0;
+    int64_t size_end = 0;
     if (string_prefix_to_size(string->str, &size_start, &end_ptr)) {
-        if (string_starts_with_range(end_ptr, &end_ptr) && string_prefix_to_size(end_ptr, &size_end, &end_ptr)) {
-            comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+        if (string_starts_with_range(end_ptr, &end_ptr)) {
+            if (end_ptr && *end_ptr == '\0') {
+                // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
+                comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
+            }
+            else if (string_prefix_to_size(end_ptr, &size_end, &end_ptr)) {
+                comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+            }
         }
         return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
     }
@@ -441,7 +450,7 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
 static FsearchQueryNode *
 parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
     char *end_ptr = NULL;
-    off_t size = 0;
+    int64_t size = 0;
     if (string_prefix_to_size(string->str, &size, &end_ptr)) {
         return fsearch_query_node_new_size(flags, size, size, comp_type);
     }
