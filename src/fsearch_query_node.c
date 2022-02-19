@@ -451,26 +451,6 @@ out:
 }
 
 static FsearchQueryNode *
-parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    GString *token_value = NULL;
-    FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-    FsearchQueryNode *result = NULL;
-    if (token == FSEARCH_QUERY_TOKEN_WORD) {
-        flags |= QUERY_FLAG_REGEX;
-        result = fsearch_query_node_new(token_value->str, flags);
-    }
-    else {
-        g_debug("[regex:] invalid format");
-        result = get_empty_query_node(flags);
-    }
-
-    if (token_value) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
-    }
-    return result;
-}
-
-static FsearchQueryNode *
 parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
@@ -493,21 +473,18 @@ parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
 }
 
 static FsearchQueryNode *
+parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    return parse_modifier(parser, flags | QUERY_FLAG_REGEX);
+}
+
+static FsearchQueryNode *
 parse_field_folder(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    FsearchQueryNode *token = parse_modifier(parser, flags);
-    if (token) {
-        token->flags |= QUERY_FLAG_FOLDERS_ONLY;
-    }
-    return token;
+    return parse_modifier(parser, flags | QUERY_FLAG_FOLDERS_ONLY);
 }
 
 static FsearchQueryNode *
 parse_field_file(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    FsearchQueryNode *node = parse_modifier(parser, flags);
-    if (node) {
-        node->flags |= QUERY_FLAG_FILES_ONLY;
-    }
-    return node;
+    return parse_modifier(parser, flags | QUERY_FLAG_FILES_ONLY);
 }
 
 static FsearchQueryNode *
