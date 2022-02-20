@@ -695,20 +695,9 @@ uneven_number_of_consecutive_not_tokens(FsearchQueryParser *parser, FsearchQuery
 
     bool res = true;
 
-    GString *next_token_value = NULL;
-    while (fsearch_query_parser_peek_next_token(parser, &next_token_value) == FSEARCH_QUERY_TOKEN_NOT) {
-        if (next_token_value) {
-            g_string_free(g_steal_pointer(&next_token_value), TRUE);
-        }
-        GString *token_value = NULL;
-        fsearch_query_parser_get_next_token(parser, &token_value);
-        if (token_value) {
-            g_string_free(g_steal_pointer(&token_value), TRUE);
-        }
+    while (fsearch_query_parser_peek_next_token(parser, NULL) == FSEARCH_QUERY_TOKEN_NOT) {
+        fsearch_query_parser_get_next_token(parser, NULL);
         res = !res;
-    }
-    if (next_token_value) {
-        g_string_free(g_steal_pointer(&next_token_value), TRUE);
     }
     return res;
 }
@@ -759,17 +748,13 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             break;
         }
 
-        GString *next_token_value = NULL;
-        FsearchQueryToken next_token = fsearch_query_parser_peek_next_token(parser, &next_token_value);
+        FsearchQueryToken next_token = fsearch_query_parser_peek_next_token(parser, NULL);
         if (next_token_is_implicit_and_operator(token, next_token)) {
             postfix_query = handle_operator_token(postfix_query, operator_stack, FSEARCH_QUERY_TOKEN_AND);
         }
 
         if (token_value) {
             g_string_free(g_steal_pointer(&token_value), TRUE);
-        }
-        if (next_token_value) {
-            g_string_free(g_steal_pointer(&next_token_value), TRUE);
         }
     }
 
