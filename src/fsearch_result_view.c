@@ -70,8 +70,8 @@ get_icon_surface(GdkWindow *win,
 
 typedef struct {
     char *display_name;
-    PangoAttrList *name_attr;
-    PangoAttrList *path_attr;
+
+    PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
 
     cairo_surface_t *icon_surface;
 
@@ -117,10 +117,10 @@ draw_row_ctx_init(FsearchDatabaseView *view,
 
     FsearchQuery *query = db_view_get_query(view);
     if (query) {
-        ctx->name_attr = fsearch_query_highlight_match(query, name->str);
+        ctx->highlights[DATABASE_INDEX_TYPE_NAME] = fsearch_query_highlight_match(query, name->str);
         if ((query->has_separator && query->flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH)
             || query->flags & QUERY_FLAG_SEARCH_IN_PATH) {
-            ctx->path_attr = fsearch_query_highlight_match(query, ctx->path->str);
+            ctx->highlights[DATABASE_INDEX_TYPE_PATH] = fsearch_query_highlight_match(query, ctx->path->str);
         }
         g_clear_pointer(&query, fsearch_query_unref);
     }
@@ -158,8 +158,11 @@ draw_row_ctx_destroy(DrawRowContext *ctx) {
     g_clear_pointer(&ctx->extension, g_free);
     g_clear_pointer(&ctx->type, g_free);
     g_clear_pointer(&ctx->size, g_free);
-    g_clear_pointer(&ctx->path_attr, pango_attr_list_unref);
-    g_clear_pointer(&ctx->name_attr, pango_attr_list_unref);
+    for (uint32_t i; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        if (ctx->highlights[i]) {
+            g_clear_pointer(&ctx->highlights[i], pango_attr_list_unref);
+        }
+    }
     g_clear_pointer(&ctx->icon_surface, cairo_surface_destroy);
     if (ctx->path) {
         g_string_free(g_steal_pointer(&ctx->path), TRUE);
@@ -332,11 +335,11 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
                                         x_icon,
                                         rect->y + floor((rect->height - icon_size) / 2.0));
             }
-            pango_layout_set_attributes(layout, ctx.name_attr);
+            pango_layout_set_attributes(layout, ctx.highlights[DATABASE_INDEX_TYPE_NAME]);
             text = ctx.display_name;
         } break;
         case DATABASE_INDEX_TYPE_PATH:
-            pango_layout_set_attributes(layout, ctx.path_attr);
+            pango_layout_set_attributes(layout, ctx.highlights[DATABASE_INDEX_TYPE_PATH]);
             text = ctx.path->str;
             text_len = (int32_t)ctx.path->len;
             break;
