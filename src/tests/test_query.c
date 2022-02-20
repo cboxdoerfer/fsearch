@@ -123,6 +123,11 @@ main(int argc, char *argv[]) {
             {"a && (b || (c && d))", "bcd", 0, 0, false},
             {"a && (b || (c && d))", "acd", 0, 0, true},
             {"a && (b || (c && d))", "ab", 0, 0, true},
+            {"!a", "b", 0, 0, true},
+            {"!b", "b", 0, 0, false},
+            {"!!b", "b", 0, 0, true},
+            {"a && !(b || c)", "abc", 0, 0, false},
+            {"a && !(b || !c)", "ac", 0, 0, true},
 
             // fields
             {"size:300..", "test", 1000, 0, true},

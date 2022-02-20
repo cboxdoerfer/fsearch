@@ -272,7 +272,8 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
 
 static FsearchQueryNode *
 fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
-    assert(operator== FSEARCH_TOKEN_OPERATOR_AND || operator== FSEARCH_TOKEN_OPERATOR_OR);
+    assert(operator== FSEARCH_TOKEN_OPERATOR_AND || operator== FSEARCH_TOKEN_OPERATOR_OR ||
+           operator== FSEARCH_TOKEN_OPERATOR_NOT);
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
     new->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
@@ -589,10 +590,7 @@ get_empty_node(FsearchQueryFlags flags) {
 }
 
 static GNode *
-get_operator_node(FsearchQueryToken token) {
-    assert(token == FSEARCH_QUERY_TOKEN_AND || token == FSEARCH_QUERY_TOKEN_OR);
-    FsearchQueryNodeOperator operator= token == FSEARCH_QUERY_TOKEN_AND ? FSEARCH_TOKEN_OPERATOR_AND
-                                                                        : FSEARCH_TOKEN_OPERATOR_OR;
+get_operator_node(FsearchQueryNodeOperator operator) {
     return g_node_new(fsearch_query_node_new_operator(operator));
 }
 
@@ -627,6 +625,8 @@ push_token(GQueue *stack, FsearchQueryToken token) {
 static uint32_t
 get_operator_precedence(FsearchQueryToken operator) {
     switch (operator) {
+    case FSEARCH_QUERY_TOKEN_NOT:
+        return 3;
     case FSEARCH_QUERY_TOKEN_AND:
         return 2;
     case FSEARCH_QUERY_TOKEN_OR:
@@ -638,12 +638,21 @@ get_operator_precedence(FsearchQueryToken operator) {
 
 static GList *
 append_operator(GList *list, FsearchQueryToken token) {
-    if (token != FSEARCH_QUERY_TOKEN_AND && token != FSEARCH_QUERY_TOKEN_OR) {
+    FsearchQueryNodeOperator op = 0;
+    switch (token) {
+    case FSEARCH_QUERY_TOKEN_AND:
+        op = FSEARCH_TOKEN_OPERATOR_AND;
+        break;
+    case FSEARCH_QUERY_TOKEN_OR:
+        op = FSEARCH_TOKEN_OPERATOR_OR;
+        break;
+    case FSEARCH_QUERY_TOKEN_NOT:
+        op = FSEARCH_TOKEN_OPERATOR_NOT;
+        break;
+    default:
         return list;
     }
-    return g_list_append(list,
-                         fsearch_query_node_new_operator(token == FSEARCH_QUERY_TOKEN_AND ? FSEARCH_TOKEN_OPERATOR_AND
-                                                                                          : FSEARCH_TOKEN_OPERATOR_OR));
+    return g_list_append(list, fsearch_query_node_new_operator(op));
 }
 
 static bool
@@ -660,6 +669,7 @@ next_token_is_implicit_and_operator(FsearchQueryToken current_token, FsearchQuer
     switch (next_token) {
     case FSEARCH_QUERY_TOKEN_WORD:
     case FSEARCH_QUERY_TOKEN_FIELD:
+    case FSEARCH_QUERY_TOKEN_NOT:
     case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
         return true;
     default:
@@ -677,13 +687,36 @@ handle_operator_token(GList *postfix_query, GQueue *operator_stack, FsearchQuery
     return postfix_query;
 }
 
+static bool
+uneven_number_of_consecutive_not_tokens(FsearchQueryParser *parser, FsearchQueryToken current_token) {
+    if (current_token != FSEARCH_QUERY_TOKEN_NOT) {
+        return false;
+    }
+
+    bool res = true;
+
+    GString *next_token_value = NULL;
+    while (fsearch_query_parser_peek_next_token(parser, &next_token_value) == FSEARCH_QUERY_TOKEN_NOT) {
+        if (next_token_value) {
+            g_string_free(g_steal_pointer(&next_token_value), TRUE);
+        }
+        GString *token_value = NULL;
+        fsearch_query_parser_get_next_token(parser, &token_value);
+        if (token_value) {
+            g_string_free(g_steal_pointer(&token_value), TRUE);
+        }
+        res = !res;
+    }
+    if (next_token_value) {
+        g_string_free(g_steal_pointer(&next_token_value), TRUE);
+    }
+    return res;
+}
+
 static GList *
 convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     GQueue *operator_stack = g_queue_new();
     GList *postfix_query = NULL;
-
-    int32_t num_open_brackets = 0;
-    int32_t num_close_brackets = 0;
 
     while (true) {
         GString *token_value = NULL;
@@ -692,20 +725,26 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
             goto out;
+        case FSEARCH_QUERY_TOKEN_NOT:
+            if (uneven_number_of_consecutive_not_tokens(parser, token)) {
+                // We want to support consecutive NOT operators (i.e. `NOT NOT a`)
+                // so even numbers of NOT operators get ignored and for uneven numbers
+                // we simply add a single one
+                postfix_query = handle_operator_token(postfix_query, operator_stack, token);
+            }
+            break;
         case FSEARCH_QUERY_TOKEN_AND:
         case FSEARCH_QUERY_TOKEN_OR:
             postfix_query = handle_operator_token(postfix_query, operator_stack, token);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
-            num_open_brackets++;
             push_token(operator_stack, token);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
-            if (num_open_brackets >= num_close_brackets + 1) {
-                num_close_brackets++;
-                while (top_token(operator_stack) != FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-                    postfix_query = append_operator(postfix_query, pop_token(operator_stack));
-                }
+            while (top_token(operator_stack) != FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+                postfix_query = append_operator(postfix_query, pop_token(operator_stack));
+            }
+            if (top_token(operator_stack) == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
                 pop_token(operator_stack);
             }
             break;
@@ -754,11 +793,12 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
     for (GList *q = postfix_query; q != NULL; q = q->next) {
         FsearchQueryNode *node = q->data;
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-            GNode *op_node = get_operator_node(node->operator== FSEARCH_TOKEN_OPERATOR_AND ? FSEARCH_QUERY_TOKEN_AND
-                                                                                           : FSEARCH_QUERY_TOKEN_OR);
+            GNode *op_node = get_operator_node(node->operator);
             GNode *right = g_queue_pop_tail(query_stack);
-            GNode *left = g_queue_pop_tail(query_stack);
-            g_node_append(op_node, left ? left : get_empty_node(flags));
+            if (node->operator!= FSEARCH_TOKEN_OPERATOR_NOT) {
+                GNode *left = g_queue_pop_tail(query_stack);
+                g_node_append(op_node, left ? left : get_empty_node(flags));
+            }
             g_node_append(op_node, right ? right : get_empty_node(flags));
             g_queue_push_tail(query_stack, op_node);
         }
@@ -788,7 +828,8 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
     // for (GList *q = query_postfix; q != NULL; q = q->next) {
     //     FsearchQueryNode *node = q->data;
     //     if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-    //         g_print("%s ", node->operator== FSEARCH_TOKEN_OPERATOR_AND ? "AND" : "OR");
+    //         g_print("%s ", node->operator== FSEARCH_TOKEN_OPERATOR_AND ? "AND" : node->operator ==
+    //         FSEARCH_TOKEN_OPERATOR_OR ? "OR" : "NOT");
     //     }
     //     else {
     //         g_print("%s ", node->search_term ? node->search_term : "[empty query]");

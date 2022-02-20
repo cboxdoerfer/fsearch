@@ -114,6 +114,8 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
             return FSEARCH_QUERY_TOKEN_GREATER;
         }
     }
+    case '!':
+        return FSEARCH_QUERY_TOKEN_NOT;
     case '(':
         return FSEARCH_QUERY_TOKEN_BRACKET_OPEN;
     case ')':
@@ -152,6 +154,10 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
         }
     }
 
+    if (!strcmp(res->str, "NOT")) {
+        g_string_free(g_steal_pointer(&res), TRUE);
+        return FSEARCH_QUERY_TOKEN_NOT;
+    }
     if (!strcmp(res->str, "AND") || !strcmp(res->str, "&&")) {
         g_string_free(g_steal_pointer(&res), TRUE);
         return FSEARCH_QUERY_TOKEN_AND;

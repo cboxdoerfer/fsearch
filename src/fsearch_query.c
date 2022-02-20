@@ -119,8 +119,11 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matc
         if (n->operator== FSEARCH_TOKEN_OPERATOR_AND) {
             return matches(left, entry, matcher, type) && matches(right, entry, matcher, type);
         }
-        else {
+        else if (n->operator== FSEARCH_TOKEN_OPERATOR_OR) {
             return matches(left, entry, matcher, type) || matches(right, entry, matcher, type);
+        }
+        else {
+            return !matches(left, entry, matcher, type);
         }
     }
     else {

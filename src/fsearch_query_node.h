@@ -34,6 +34,7 @@ typedef enum FsearchTokenComparisonType {
 typedef enum FsearchQueryNodeOperator {
     FSEARCH_TOKEN_OPERATOR_AND,
     FSEARCH_TOKEN_OPERATOR_OR,
+    FSEARCH_TOKEN_OPERATOR_NOT,
     NUM_FSEARCH_TOKEN_OPERATORS,
 } FsearchQueryNodeOperator;
 
