@@ -692,14 +692,12 @@ uneven_number_of_consecutive_not_tokens(FsearchQueryParser *parser, FsearchQuery
     if (current_token != FSEARCH_QUERY_TOKEN_NOT) {
         return false;
     }
-
-    bool res = true;
-
+    bool uneven_number_of_not_tokens = true;
     while (fsearch_query_parser_peek_next_token(parser, NULL) == FSEARCH_QUERY_TOKEN_NOT) {
         fsearch_query_parser_get_next_token(parser, NULL);
-        res = !res;
+        uneven_number_of_not_tokens = !uneven_number_of_not_tokens;
     }
-    return res;
+    return uneven_number_of_not_tokens;
 }
 
 static GList *
