@@ -709,6 +709,9 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
         GString *token_value = NULL;
         FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
 
+        uint32_t num_open_brackets = 0;
+        uint32_t num_close_brackets = 0;
+
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
             goto out;
@@ -725,14 +728,19 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             postfix_query = handle_operator_token(postfix_query, operator_stack, token);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
+            num_open_brackets++;
             push_token(operator_stack, token);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
-            while (top_token(operator_stack) != FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-                postfix_query = append_operator(postfix_query, pop_token(operator_stack));
-            }
-            if (top_token(operator_stack) == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-                pop_token(operator_stack);
+            if (num_open_brackets > num_close_brackets) {
+                // only add closing bracket if there's at least one matching open bracket
+                while (top_token(operator_stack) != FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+                    postfix_query = append_operator(postfix_query, pop_token(operator_stack));
+                }
+                if (top_token(operator_stack) == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+                    pop_token(operator_stack);
+                }
+                num_close_brackets++;
             }
             break;
         case FSEARCH_QUERY_TOKEN_WORD:
