@@ -76,7 +76,8 @@ parse_quoted_string(FsearchQueryParser *parser, GString *string) {
 
 FsearchQueryToken
 fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) {
-    assert(word != NULL);
+    FsearchQueryToken token = FSEARCH_QUERY_TOKEN_NONE;
+    GString *token_value = NULL;
 
     char c = '\0';
 
@@ -125,50 +126,58 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
     give_back_char(parser, c);
 
     // Other chars start a term or field name or reserved word
-    GString *res = g_string_sized_new(1024);
+    token_value = g_string_sized_new(1024);
     while ((c = get_next_char(parser))) {
         if (g_ascii_isspace(c)) {
             // word broken by whitespace
             break;
         }
         else if (c == '"') {
-            parse_quoted_string(parser, res);
+            parse_quoted_string(parser, token_value);
         }
         else if (c == '\\') {
             // escape: get next char
             c = get_next_char(parser);
-            g_string_append_c(res, c);
+            g_string_append_c(token_value, c);
         }
         else if (strchr(reserved_chars, c)) {
             if (c == ':') {
                 // field: detected
-                *word = res;
-                return FSEARCH_QUERY_TOKEN_FIELD;
+                token = FSEARCH_QUERY_TOKEN_FIELD;
+                goto out;
             }
             // word broken by reserved character
             give_back_char(parser, c);
             break;
         }
         else {
-            g_string_append_c(res, c);
+            g_string_append_c(token_value, c);
         }
     }
 
-    if (!strcmp(res->str, "NOT")) {
-        g_string_free(g_steal_pointer(&res), TRUE);
+    if (!strcmp(token_value->str, "NOT")) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
         return FSEARCH_QUERY_TOKEN_NOT;
     }
-    if (!strcmp(res->str, "AND") || !strcmp(res->str, "&&")) {
-        g_string_free(g_steal_pointer(&res), TRUE);
+    if (!strcmp(token_value->str, "AND") || !strcmp(token_value->str, "&&")) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
         return FSEARCH_QUERY_TOKEN_AND;
     }
-    else if (!strcmp(res->str, "OR") || !strcmp(res->str, "||")) {
-        g_string_free(g_steal_pointer(&res), TRUE);
+    else if (!strcmp(token_value->str, "OR") || !strcmp(token_value->str, "||")) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
         return FSEARCH_QUERY_TOKEN_OR;
     }
 
-    *word = res;
-    return FSEARCH_QUERY_TOKEN_WORD;
+    token = FSEARCH_QUERY_TOKEN_WORD;
+
+out:
+    if (word) {
+        *word = token_value;
+    }
+    else if (token_value) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
+    }
+    return token;
 }
 
 FsearchQueryToken
