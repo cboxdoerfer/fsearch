@@ -27,6 +27,9 @@ static FsearchQueryNode *
 parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
+parse_field_extension(FsearchQueryParser *parser, FsearchQueryFlags flags);
+
+static FsearchQueryNode *
 parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
@@ -66,6 +69,7 @@ typedef struct FsearchTokenField {
 FsearchTokenField supported_fields[] = {
     {"case", parse_field_case},
     {"exact", parse_field_exact},
+    {"ext", parse_field_extension},
     {"file", parse_field_file},
     {"files", parse_field_file},
     {"folder", parse_field_folder},
@@ -81,6 +85,56 @@ FsearchTokenField supported_fields[] = {
 static u_int32_t
 fsearch_search_func_true(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
     return 1;
+}
+
+static uint32_t
+fsearch_search_func_extension(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    if (!node->search_term_list) {
+        return 0;
+    }
+    FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
+    const char *ext = db_entry_get_extension(entry);
+    if (!ext) {
+        return 0;
+    }
+    for (uint32_t i = 0; i < node->num_search_term_list_entries; i++) {
+        if (node->flags & QUERY_FLAG_MATCH_CASE) {
+            if (!strcmp(ext, node->search_term_list[i])) {
+                return 1;
+            }
+        }
+        else if (!strcasecmp(ext, node->search_term_list[i])) {
+            return 1;
+        }
+    }
+    return 0;
+}
+
+static bool
+fsearch_highlight_func_extension(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    if (!node->search_term_list) {
+        return false;
+    }
+    if (!fsearch_search_func_extension(node, matcher)) {
+        return false;
+    }
+    FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
+    const char *ext = db_entry_get_extension(entry);
+    const char *name = fsearch_query_match_context_get_name_str(matcher);
+    if (!name) {
+        return false;
+    }
+    size_t name_len = strlen(name);
+    size_t ext_len = strlen(ext);
+
+    PangoAttribute *pa_name = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+    pa_name->start_index = name_len - ext_len;
+    pa_name->end_index = G_MAXUINT;
+    fsearch_query_match_context_add_highlight(matcher, pa_name, DATABASE_INDEX_TYPE_NAME);
+
+    PangoAttribute *pa_ext = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+    fsearch_query_match_context_add_highlight(matcher, pa_ext, DATABASE_INDEX_TYPE_EXTENSION);
+    return true;
 }
 
 static uint32_t
@@ -404,6 +458,7 @@ fsearch_query_node_free(void *data) {
     assert(node != NULL);
 
     fsearch_utf_conversion_buffer_clear(node->needle_buffer);
+    g_clear_pointer(&node->search_term_list, g_strfreev);
     g_clear_pointer(&node->ovector, free);
     g_clear_pointer(&node->needle_buffer, free);
     g_clear_pointer(&node->case_map, ucasemap_close);
@@ -679,6 +734,33 @@ out:
     if (!result) {
         result = get_empty_query_node(flags);
     }
+    return result;
+}
+
+static FsearchQueryNode *
+parse_field_extension(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    GString *token_value = NULL;
+    FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
+    FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
+    result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    result->search_func = fsearch_search_func_extension;
+    result->highlight_func = fsearch_highlight_func_extension;
+    result->flags = flags;
+    if (token == FSEARCH_QUERY_TOKEN_WORD) {
+        result->search_term_list = g_strsplit(token_value->str, ";", -1);
+    }
+    else {
+        // Show all files with no extension
+        result->search_term_list = calloc(2, sizeof(char *));
+        result->search_term_list[0] = g_strdup("");
+        result->search_term_list[1] = NULL;
+    }
+    result->num_search_term_list_entries = result->search_term_list ? g_strv_length(result->search_term_list) : 0;
+
+    if (token_value) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
+    }
+
     return result;
 }
 

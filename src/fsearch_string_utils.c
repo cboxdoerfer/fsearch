@@ -104,7 +104,7 @@ fs_str_get_extension(const char *file_name) {
         // filename has no dot
         // OR filename starts with dot (i.e. hidden file)
         // OR filename ends with dot
-        return NULL;
+        return "";
     }
     return ext + 1;
 }
