@@ -19,7 +19,6 @@
 #define _GNU_SOURCE
 #include "fsearch_query.h"
 #include "fsearch_database_entry.h"
-#include "fsearch_highlight_token.h"
 #include "fsearch_string_utils.h"
 #include <assert.h>
 #include <stdlib.h>
@@ -52,8 +51,6 @@ fsearch_query_new(const char *search_term,
         q->filter_token = fsearch_query_node_tree_new(filter->query, filter->flags);
     }
 
-    q->highlight_tokens = fsearch_highlight_tokens_new(q->search_term, flags);
-
     q->filter = fsearch_filter_ref(filter);
     q->flags = flags;
     q->query_id = strdup(query_id ? query_id : "[missing_id]");
@@ -67,7 +64,6 @@ fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->query_id, free);
     g_clear_pointer(&query->db, db_unref);
     g_clear_pointer(&query->filter, fsearch_filter_unref);
-    g_clear_pointer(&query->highlight_tokens, fsearch_highlight_tokens_free);
     g_clear_pointer(&query->search_term, free);
     g_clear_pointer(&query->token, fsearch_query_node_tree_free);
     g_clear_pointer(&query, free);
@@ -101,9 +97,36 @@ fsearch_query_matches_everything(FsearchQuery *query) {
     return false;
 }
 
-PangoAttrList *
-fsearch_query_highlight_match(FsearchQuery *q, const char *input) {
-    return fsearch_highlight_tokens_match(q->highlight_tokens, q->flags, input);
+static bool
+highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, FsearchDatabaseEntryType type) {
+    if (!node) {
+        return true;
+    }
+    FsearchQueryNode *n = node->data;
+    if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
+        GNode *left = node->children;
+        assert(left != NULL);
+        GNode *right = left->next;
+        if (n->operator== FSEARCH_TOKEN_OPERATOR_AND) {
+            return highlight(left, entry, matcher, type) && highlight(right, entry, matcher, type);
+        }
+        else if (n->operator== FSEARCH_TOKEN_OPERATOR_OR) {
+            return highlight(left, entry, matcher, type) || highlight(right, entry, matcher, type);
+        }
+        else {
+            return !highlight(left, entry, matcher, type);
+        }
+    }
+    else {
+        if (n->flags & QUERY_FLAG_FOLDERS_ONLY && type != DATABASE_ENTRY_TYPE_FOLDER) {
+            return false;
+        }
+        if (n->flags & QUERY_FLAG_FILES_ONLY && type != DATABASE_ENTRY_TYPE_FILE) {
+            return false;
+        }
+
+        return n->highlight_func ? n->highlight_func(n, matcher) : false;
+    }
 }
 
 static bool
@@ -159,6 +182,23 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, Fse
         return matches(query->filter_token, entry, matcher, type);
     }
     return true;
+}
+
+bool
+fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchContext *matcher) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
+    if (G_UNLIKELY(!matcher || !entry)) {
+        return false;
+    }
+
+    FsearchDatabaseEntryType type = db_entry_get_type(entry);
+    GNode *token = query->token;
+
+    if (!filter_entry(entry, matcher, query)) {
+        return false;
+    }
+
+    return highlight(token, entry, matcher, type);
 }
 
 bool

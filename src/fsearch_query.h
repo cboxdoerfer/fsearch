@@ -46,8 +46,6 @@ typedef struct FsearchQuery {
     GNode *token;
     GNode *filter_token;
 
-    GList *highlight_tokens;
-
     FsearchQueryFlags flags;
 
     bool has_separator;
@@ -83,3 +81,6 @@ fsearch_query_matches_everything(FsearchQuery *query);
 
 bool
 fsearch_query_match(FsearchQuery *queyr, FsearchQueryMatchContext *matcher);
+
+bool
+fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchContext *matcher);

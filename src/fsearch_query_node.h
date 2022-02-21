@@ -1,20 +1,24 @@
 
 #pragma once
 
+#include <pango/pango-attributes.h>
 #include <pcre.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <unicode/ucasemap.h>
 #include <unicode/unorm2.h>
 
+#include "fsearch_database_index.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_query_match_context.h"
 #include "fsearch_utf.h"
 
-#define OVECCOUNT 3
+#define OVECCOUNT 18
 
 typedef struct FsearchQueryNode FsearchQueryNode;
+typedef struct FsearchQueryNodeHighlight FsearchQueryNodeHighlight;
 typedef uint32_t(FsearchQueryNodeSearchFunc)(FsearchQueryNode *, FsearchQueryMatchContext *);
+typedef bool(FsearchQueryNodeHighlightFunc)(FsearchQueryNode *, FsearchQueryMatchContext *);
 
 typedef enum FsearchQueryNodeType {
     FSEARCH_QUERY_NODE_TYPE_OPERATOR,
@@ -52,6 +56,7 @@ struct FsearchQueryNode {
 
     uint32_t has_separator;
     FsearchQueryNodeSearchFunc *search_func;
+    FsearchQueryNodeHighlightFunc *highlight_func;
 
     UCaseMap *case_map;
     const UNormalizer2 *normalizer;
@@ -62,7 +67,8 @@ struct FsearchQueryNode {
 
     pcre *regex;
     pcre_extra *regex_study;
-    int ovector[OVECCOUNT];
+    int *ovector;
+    int oveccount;
 
     int32_t wildcard_flags;
 

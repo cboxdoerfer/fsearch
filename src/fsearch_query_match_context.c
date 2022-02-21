@@ -18,6 +18,8 @@ struct FsearchQueryMatchContext {
     const UNormalizer2 *normalizer;
     uint32_t fold_options;
 
+    PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
+
     bool utf_name_ready;
     bool utf_path_ready;
     bool path_ready;
@@ -106,11 +108,25 @@ fsearch_query_match_context_new(void) {
     return matcher;
 }
 
+static void
+free_highlights(FsearchQueryMatchContext *matcher) {
+    if (!matcher) {
+        return;
+    }
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        if (matcher->highlights[i]) {
+            g_clear_pointer(&matcher->highlights[i], pango_attr_list_unref);
+        }
+    }
+}
+
 void
 fsearch_query_match_context_free(FsearchQueryMatchContext *matcher) {
     if (!matcher) {
         return;
     }
+
+    free_highlights(matcher);
 
     fsearch_utf_conversion_buffer_clear(matcher->utf_name_buffer);
     g_clear_pointer(&matcher->utf_name_buffer, free);
@@ -131,6 +147,7 @@ fsearch_query_match_context_set_entry(FsearchQueryMatchContext *matcher, Fsearch
     }
 
     // invalidate string buffers
+    free_highlights(matcher);
     matcher->utf_name_ready = false;
     matcher->utf_path_ready = false;
     matcher->path_ready = false;
@@ -146,4 +163,21 @@ fsearch_query_match_context_set_result(FsearchQueryMatchContext *matcher, bool r
 bool
 fsearch_query_match_context_get_result(FsearchQueryMatchContext *matcher) {
     return matcher->matches;
+}
+
+PangoAttrList *
+fsearch_query_match_get_highlight(FsearchQueryMatchContext *matcher, FsearchDatabaseIndexType idx) {
+    assert(idx < NUM_DATABASE_INDEX_TYPES);
+    return matcher->highlights[idx];
+}
+
+void
+fsearch_query_match_context_add_highlight(FsearchQueryMatchContext *matcher,
+                                          PangoAttribute *attribute,
+                                          FsearchDatabaseIndexType idx) {
+    assert(idx < NUM_DATABASE_INDEX_TYPES);
+    if (!matcher->highlights[idx]) {
+        matcher->highlights[idx] = pango_attr_list_new();
+    }
+    pango_attr_list_change(matcher->highlights[idx], attribute);
 }

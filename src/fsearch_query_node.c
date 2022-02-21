@@ -106,10 +106,102 @@ fsearch_search_func_size(FsearchQueryNode *node, FsearchQueryMatchContext *match
     return 0;
 }
 
+static void
+add_path_highlight(FsearchQueryMatchContext *matcher, uint32_t start_idx, uint32_t needle_len) {
+    // It's possible that the path highlighting spans across both the path and name string
+    const char *name = fsearch_query_match_context_get_name_str(matcher);
+    const char *path = fsearch_query_match_context_get_path_str(matcher);
+    const size_t name_len = strlen(name);
+    const size_t path_len = strlen(path);
+    const size_t parent_len = path_len - name_len;
+
+    PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+    pa->start_index = start_idx;
+    if (pa->start_index > parent_len) {
+        // the matching part is only in the file name
+        pa->start_index -= parent_len;
+        pa->end_index = pa->start_index + needle_len;
+        fsearch_query_match_context_add_highlight(matcher, pa, DATABASE_INDEX_TYPE_NAME);
+        return;
+    }
+    else if (pa->start_index + needle_len > parent_len) {
+        // the matching part spans across the path and name
+        pa->end_index = G_MAXUINT;
+        fsearch_query_match_context_add_highlight(matcher, pa, DATABASE_INDEX_TYPE_PATH);
+        PangoAttribute *pa_name = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+        pa_name->start_index = 0;
+        pa_name->end_index = pa->start_index + needle_len - parent_len;
+        fsearch_query_match_context_add_highlight(matcher, pa_name, DATABASE_INDEX_TYPE_NAME);
+        return;
+    }
+    else {
+        // the matching part is only in the path name
+        pa->end_index = pa->start_index + needle_len;
+        fsearch_query_match_context_add_highlight(matcher, pa, DATABASE_INDEX_TYPE_PATH);
+        return;
+    }
+}
+
+static bool
+fsearch_highlight_func_size(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    if (fsearch_search_func_size(node, matcher)) {
+        PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+        fsearch_query_match_context_add_highlight(matcher, pa, DATABASE_INDEX_TYPE_SIZE);
+        return true;
+    }
+    return false;
+}
+
+static bool
+fsearch_highlight_func_regex(FsearchQueryMatchContext *matcher,
+                             const char *haystack,
+                             FsearchQueryNode *node,
+                             FsearchDatabaseIndexType idx) {
+    size_t haystack_len = strlen(haystack);
+    int res = pcre_exec(node->regex, node->regex_study, haystack, haystack_len, 0, 0, node->ovector, node->oveccount) >= 0
+                ? 1
+                : 0;
+    if (res > 0) {
+        for (int i = 0; i < res; i++) {
+            uint32_t start_idx = node->ovector[2 * i];
+            uint32_t end_idx = node->ovector[2 * i + 1];
+            if (idx == DATABASE_INDEX_TYPE_NAME) {
+                PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+                pa->start_index = start_idx;
+                pa->end_index = end_idx;
+                fsearch_query_match_context_add_highlight(matcher, pa, idx);
+            }
+            else {
+                add_path_highlight(matcher, start_idx, end_idx - start_idx);
+            }
+        }
+        return true;
+    }
+    return false;
+}
+
+static bool
+fsearch_highlight_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    return fsearch_highlight_func_regex(matcher,
+                                        fsearch_query_match_context_get_name_str(matcher),
+                                        node,
+                                        DATABASE_INDEX_TYPE_NAME);
+}
+
+static bool
+fsearch_highlight_func_regex_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    return fsearch_highlight_func_regex(matcher,
+                                        fsearch_query_match_context_get_path_str(matcher),
+                                        node,
+                                        DATABASE_INDEX_TYPE_PATH);
+}
+
 static uint32_t
 fsearch_search_func_regex(const char *haystack, FsearchQueryNode *node) {
     size_t haystack_len = strlen(haystack);
-    return pcre_exec(node->regex, node->regex_study, haystack, haystack_len, 0, 0, node->ovector, OVECCOUNT) >= 0 ? 1 : 0;
+    return pcre_exec(node->regex, node->regex_study, haystack, haystack_len, 0, 0, node->ovector, node->oveccount) >= 0
+             ? 1
+             : 0;
 }
 
 static uint32_t
@@ -199,6 +291,81 @@ fsearch_search_func_normal_icase_u8_name(FsearchQueryNode *node, FsearchQueryMat
     return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer, node->flags & QUERY_FLAG_EXACT_MATCH);
 }
 
+typedef int(FsearchStringCompFunc)(const char *, const char *);
+typedef char *(FsearchStringStringFunc)(const char *, const char *);
+
+static bool
+fsearch_highlight_func_path(FsearchQueryNode *node,
+                            FsearchQueryMatchContext *matcher,
+                            FsearchStringCompFunc *comp_func,
+                            FsearchStringStringFunc strstr_func) {
+    const char *haystack = fsearch_query_match_context_get_path_str(matcher);
+    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
+        if (!comp_func(haystack, node->search_term)) {
+            PangoAttribute *pa_path = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+            fsearch_query_match_context_add_highlight(matcher, pa_path, DATABASE_INDEX_TYPE_PATH);
+
+            PangoAttribute *pa_name = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+            fsearch_query_match_context_add_highlight(matcher, pa_name, DATABASE_INDEX_TYPE_NAME);
+            return true;
+        }
+        return false;
+    }
+
+    char *dest = strstr_func(haystack, node->search_term);
+    if (!dest) {
+        return false;
+    }
+    const size_t needle_len = strlen(node->search_term);
+    add_path_highlight(matcher, dest - haystack, needle_len);
+    return true;
+}
+
+static bool
+fsearch_highlight_func_normal_icase_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    return fsearch_highlight_func_path(node, matcher, strcasecmp, strcasestr);
+}
+
+static bool
+fsearch_highlight_func_normal_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    return fsearch_highlight_func_path(node, matcher, strcmp, strstr);
+}
+
+static bool
+fsearch_highlight_func_name(FsearchQueryNode *node,
+                            FsearchQueryMatchContext *matcher,
+                            FsearchStringCompFunc comp_func,
+                            FsearchStringStringFunc strstr_func) {
+    const char *haystack = fsearch_query_match_context_get_name_str(matcher);
+    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
+        if (!comp_func(haystack, node->search_term)) {
+            PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+            fsearch_query_match_context_add_highlight(matcher, pa, DATABASE_INDEX_TYPE_NAME);
+            return true;
+        }
+        return false;
+    }
+    char *dest = strstr_func(haystack, node->search_term);
+    if (!dest) {
+        return false;
+    }
+    PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+    pa->start_index = dest - haystack;
+    pa->end_index = pa->start_index + strlen(node->search_term);
+    fsearch_query_match_context_add_highlight(matcher, pa, DATABASE_INDEX_TYPE_NAME);
+    return true;
+}
+
+static bool
+fsearch_highlight_func_normal_icase_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    return fsearch_highlight_func_name(node, matcher, strcasecmp, strcasestr);
+}
+
+static bool
+fsearch_highlight_func_normal_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
+    return fsearch_highlight_func_name(node, matcher, strcmp, strstr);
+}
+
 static uint32_t
 fsearch_search_func_normal_icase_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
     if (node->flags & QUERY_FLAG_EXACT_MATCH) {
@@ -237,6 +404,7 @@ fsearch_query_node_free(void *data) {
     assert(node != NULL);
 
     fsearch_utf_conversion_buffer_clear(node->needle_buffer);
+    g_clear_pointer(&node->ovector, free);
     g_clear_pointer(&node->needle_buffer, free);
     g_clear_pointer(&node->case_map, ucasemap_close);
     g_clear_pointer(&node->search_term, g_free);
@@ -266,6 +434,7 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     new->size_upper_limit = size_end;
     new->size_comparison_type = comp_type;
     new->search_func = fsearch_search_func_size;
+    new->highlight_func = fsearch_highlight_func_size;
     new->flags = flags;
     return new;
 }
@@ -340,6 +509,9 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
             pcre_compile(search_term, flags & QUERY_FLAG_MATCH_CASE ? 0 : PCRE_CASELESS, &error, &erroffset, NULL);
         new->regex_study = pcre_study(new->regex, PCRE_STUDY_JIT_COMPILE, &error);
         new->search_func = search_in_path ? fsearch_search_func_regex_path : fsearch_search_func_regex_name;
+        new->highlight_func = search_in_path ? fsearch_highlight_func_regex_path : fsearch_highlight_func_regex_name;
+        new->oveccount = 90;
+        new->ovector = calloc(new->oveccount, sizeof(int));
     }
     else if (strchr(search_term, '*') || strchr(search_term, '?')) {
         new->search_func = search_in_path ? fsearch_search_func_wildcard_path : fsearch_search_func_wildcard_name;
@@ -348,10 +520,14 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     else {
         if (flags & QUERY_FLAG_MATCH_CASE) {
             new->search_func = search_in_path ? fsearch_search_func_normal_path : fsearch_search_func_normal_name;
+            new->highlight_func = search_in_path ? fsearch_highlight_func_normal_path
+                                                 : fsearch_highlight_func_normal_name;
         }
         else if (fs_str_case_is_ascii(search_term)) {
             new->search_func = search_in_path ? fsearch_search_func_normal_icase_path
                                               : fsearch_search_func_normal_icase_name;
+            new->highlight_func = search_in_path ? fsearch_highlight_func_normal_icase_path
+                                                 : fsearch_highlight_func_normal_icase_name;
         }
         else {
             new->search_func = search_in_path ? fsearch_search_func_normal_icase_u8_path
@@ -705,12 +881,12 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
     GQueue *operator_stack = g_queue_new();
     GList *postfix_query = NULL;
 
+    uint32_t num_open_brackets = 0;
+    uint32_t num_close_brackets = 0;
+
     while (true) {
         GString *token_value = NULL;
         FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-
-        uint32_t num_open_brackets = 0;
-        uint32_t num_close_brackets = 0;
 
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:

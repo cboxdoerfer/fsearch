@@ -26,7 +26,6 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_exclude_path.h \
 			 fsearch_file_utils.h \
 			 fsearch_filter.h \
-		     fsearch_highlight_token.h \
 			 fsearch_index.h \
 			 fsearch_limits.h \
 			 fsearch_list_view.h \
@@ -64,7 +63,6 @@ fsearch_SOURCES = main.c \
 		  fsearch_exclude_path.c \
 		  fsearch_file_utils.c \
 		  fsearch_filter.c \
-		  fsearch_highlight_token.c \
 		  fsearch_index.c \
 		  fsearch_list_view.c \
 		  fsearch_listview_popup.c \

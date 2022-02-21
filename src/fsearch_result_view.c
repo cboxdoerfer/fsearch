@@ -71,6 +71,7 @@ get_icon_surface(GdkWindow *win,
 typedef struct {
     char *display_name;
 
+    FsearchQueryMatchContext *matcher;
     PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
 
     cairo_surface_t *icon_surface;
@@ -84,11 +85,7 @@ typedef struct {
 } DrawRowContext;
 
 static bool
-draw_row_ctx_init(FsearchDatabaseView *view,
-                  uint32_t row,
-                  GdkWindow *bin_window,
-                  int32_t icon_size,
-                  DrawRowContext *ctx) {
+draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window, int32_t icon_size, DrawRowContext *ctx) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     bool ret = true;
@@ -117,11 +114,12 @@ draw_row_ctx_init(FsearchDatabaseView *view,
 
     FsearchQuery *query = db_view_get_query(view);
     if (query) {
-        ctx->highlights[DATABASE_INDEX_TYPE_NAME] = fsearch_query_highlight_match(query, name->str);
-        if ((query->has_separator && query->flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH)
-            || query->flags & QUERY_FLAG_SEARCH_IN_PATH) {
-            ctx->highlights[DATABASE_INDEX_TYPE_PATH] = fsearch_query_highlight_match(query, ctx->path->str);
-        }
+        FsearchDatabaseEntry *entry = db_view_entry_get_for_idx(view, row);
+        ctx->matcher = fsearch_query_match_context_new();
+        fsearch_query_match_context_set_entry(ctx->matcher, entry);
+
+        fsearch_query_highlight(query, ctx->matcher);
+
         g_clear_pointer(&query, fsearch_query_unref);
     }
 
@@ -130,10 +128,13 @@ draw_row_ctx_init(FsearchDatabaseView *view,
     FsearchDatabaseEntryType type = db_view_entry_get_type_for_idx(view, row);
     ctx->type = fsearch_file_utils_get_file_type(name->str, type == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
 
-    ctx->icon_surface =
-        config->show_listview_icons
-            ? get_icon_surface(bin_window, name->str, ctx->full_path->str, type, icon_size, gdk_window_get_scale_factor(bin_window))
-            : NULL;
+    ctx->icon_surface = config->show_listview_icons ? get_icon_surface(bin_window,
+                                                                       name->str,
+                                                                       ctx->full_path->str,
+                                                                       type,
+                                                                       icon_size,
+                                                                       gdk_window_get_scale_factor(bin_window))
+                                                    : NULL;
 
     off_t size = db_view_entry_get_size_for_idx(view, row);
     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
@@ -154,6 +155,7 @@ out:
 
 static void
 draw_row_ctx_destroy(DrawRowContext *ctx) {
+    g_clear_pointer(&ctx->matcher, fsearch_query_match_context_free);
     g_clear_pointer(&ctx->display_name, g_free);
     g_clear_pointer(&ctx->extension, g_free);
     g_clear_pointer(&ctx->type, g_free);
@@ -215,8 +217,8 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
         break;
     }
     case DATABASE_INDEX_TYPE_SIZE:
-        text =
-            fsearch_file_utils_get_size_formatted(db_view_entry_get_size_for_idx(view, row), config->show_base_2_units);
+        text = fsearch_file_utils_get_size_formatted(db_view_entry_get_size_for_idx(view, row),
+                                                     config->show_base_2_units);
         break;
     case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
         const time_t mtime = db_view_entry_get_mtime_for_idx(view, row);
@@ -253,6 +255,15 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
     g_clear_pointer(&text, g_free);
 
     return NULL;
+}
+
+static void
+set_attributes(PangoLayout *layout, FsearchQueryMatchContext *matcher, FsearchDatabaseIndexType idx) {
+    assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
+    PangoAttrList *attrs = fsearch_query_match_get_highlight(matcher, idx);
+    if (attrs) {
+        pango_layout_set_attributes(layout, attrs);
+    }
 }
 
 void
@@ -335,11 +346,9 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
                                         x_icon,
                                         rect->y + floor((rect->height - icon_size) / 2.0));
             }
-            pango_layout_set_attributes(layout, ctx.highlights[DATABASE_INDEX_TYPE_NAME]);
             text = ctx.display_name;
         } break;
         case DATABASE_INDEX_TYPE_PATH:
-            pango_layout_set_attributes(layout, ctx.highlights[DATABASE_INDEX_TYPE_PATH]);
             text = ctx.path->str;
             text_len = (int32_t)ctx.path->len;
             break;
@@ -358,6 +367,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         default:
             text = NULL;
         }
+        set_attributes(layout, ctx.matcher, column->type);
         pango_layout_set_text(layout, text ? text : _("Invalid row data"), text_len);
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);

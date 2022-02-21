@@ -84,6 +84,9 @@ db_view_entry_get_extension_for_idx(FsearchDatabaseView *view, uint32_t idx);
 GString *
 db_view_entry_get_name_for_idx(FsearchDatabaseView *view, uint32_t idx);
 
+FsearchDatabaseEntry *
+db_view_entry_get_for_idx(FsearchDatabaseView *view, uint32_t idx);
+
 GString *
 db_view_entry_get_name_raw_for_idx(FsearchDatabaseView *view, uint32_t idx);
 
