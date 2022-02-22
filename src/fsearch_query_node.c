@@ -8,7 +8,6 @@
 #include "fsearch_string_utils.h"
 #include "fsearch_utf.h"
 #include <assert.h>
-#include <fnmatch.h>
 #include <glib.h>
 #include <locale.h>
 #include <stdbool.h>
@@ -270,23 +269,6 @@ fsearch_search_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchContext 
     return fsearch_search_func_regex(haystack, node);
 }
 
-static uint32_t
-fsearch_search_func_wildcard(const char *haystack, FsearchQueryNode *node) {
-    return !fnmatch(node->search_term, haystack, node->wildcard_flags) ? 1 : 0;
-}
-
-static uint32_t
-fsearch_search_func_wildcard_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
-    const char *haystack = fsearch_query_match_context_get_path_str(matcher);
-    return fsearch_search_func_wildcard(haystack, node);
-}
-
-static uint32_t
-fsearch_search_func_wildcard_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
-    const char *haystack = fsearch_query_match_context_get_name_str(matcher);
-    return fsearch_search_func_wildcard(haystack, node);
-}
-
 // static uint32_t
 // fsearch_search_func_normal_icase_u8_fast(FsearchToken *token, FsearchQueryMatcher *matcher) {
 //     FsearchUtfConversionBuffer *buffer = token->get_haystack(matcher);
@@ -517,18 +499,102 @@ fsearch_query_node_new_match_everything(FsearchQueryFlags flags) {
 }
 
 static FsearchQueryNode *
+fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
+    FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
+    assert(new != NULL);
+
+    new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    new->flags = flags;
+
+    const char *error;
+    int erroffset;
+    new->regex = pcre_compile(search_term,
+                              (flags & QUERY_FLAG_MATCH_CASE ? 0 : PCRE_CASELESS) | PCRE_UTF8,
+                              &error,
+                              &erroffset,
+                              NULL);
+    new->regex_study = pcre_study(new->regex, PCRE_STUDY_JIT_COMPILE, &error);
+
+    const bool search_in_path = flags & QUERY_FLAG_SEARCH_IN_PATH
+                             || (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && new->has_separator);
+
+    new->search_func = search_in_path ? fsearch_search_func_regex_path : fsearch_search_func_regex_name;
+    new->highlight_func = search_in_path ? fsearch_highlight_func_regex_path : fsearch_highlight_func_regex_name;
+    new->oveccount = 90;
+    new->ovector = calloc(new->oveccount, sizeof(int));
+    return new;
+}
+
+static FsearchQueryNode *
+fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags) {
+    // We convert the wildcard pattern to a regex pattern
+    // The regex engine is not only faster than fnmatch, but it also handles utf8 strings better
+    // and it provides matching information, which are useful for the highlighting engine
+    GString *new = g_string_sized_new(strlen(search_term));
+    g_string_append_c(new, '^');
+    const char *s = search_term;
+    while (*s != '\0') {
+        // .^$*+?()[{\|
+        switch (*s) {
+        case '.':
+        case '^':
+        case '$':
+        case '+':
+        case '(':
+        case ')':
+        case '[':
+        case ']':
+        case '{':
+        case '\\':
+        case '|':
+            g_string_append_c(new, '\\');
+            g_string_append_c(new, *s);
+            break;
+        case '*':
+            g_string_append_c(new, '.');
+            g_string_append_c(new, '*');
+            break;
+        case '?':
+            g_string_append_c(new, '.');
+            break;
+        default:
+            g_string_append_c(new, *s);
+            break;
+        }
+        s++;
+    }
+    g_string_append_c(new, '$');
+    FsearchQueryNode *res = fsearch_query_node_new_regex(new->str, flags);
+    g_string_free(g_steal_pointer(&new), TRUE);
+    return res;
+}
+
+static FsearchQueryNode *
 fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
+    bool has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
+    const bool search_in_path = flags & QUERY_FLAG_SEARCH_IN_PATH
+                             || (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && has_separator);
+    if (search_in_path) {
+        flags |= QUERY_FLAG_SEARCH_IN_PATH;
+    }
+    if ((flags & QUERY_FLAG_AUTO_MATCH_CASE) && fs_str_utf8_has_upper(search_term)) {
+        flags |= QUERY_FLAG_MATCH_CASE;
+    }
+
+    if (flags & QUERY_FLAG_REGEX) {
+        return fsearch_query_node_new_regex(search_term, flags);
+    }
+    else if (strchr(search_term, '*') || strchr(search_term, '?')) {
+        return fsearch_query_node_new_wildcard(search_term, flags);
+    }
+
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     new->search_term = g_strdup(search_term);
     new->search_term_len = strlen(search_term);
-    new->has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
 
-    if ((flags & QUERY_FLAG_AUTO_MATCH_CASE) && fs_str_utf8_has_upper(search_term)) {
-        flags |= QUERY_FLAG_MATCH_CASE;
-    }
     new->flags = flags;
 
     new->fold_options = U_FOLD_CASE_DEFAULT;
@@ -554,40 +620,18 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
                                                                                 search_term);
     assert(utf_ready == true);
 
-    const bool search_in_path = flags & QUERY_FLAG_SEARCH_IN_PATH
-                             || (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && new->has_separator);
-
-    if (flags & QUERY_FLAG_REGEX) {
-        const char *error;
-        int erroffset;
-        new->regex =
-            pcre_compile(search_term, flags & QUERY_FLAG_MATCH_CASE ? 0 : PCRE_CASELESS, &error, &erroffset, NULL);
-        new->regex_study = pcre_study(new->regex, PCRE_STUDY_JIT_COMPILE, &error);
-        new->search_func = search_in_path ? fsearch_search_func_regex_path : fsearch_search_func_regex_name;
-        new->highlight_func = search_in_path ? fsearch_highlight_func_regex_path : fsearch_highlight_func_regex_name;
-        new->oveccount = 90;
-        new->ovector = calloc(new->oveccount, sizeof(int));
+    if (flags & QUERY_FLAG_MATCH_CASE) {
+        new->search_func = search_in_path ? fsearch_search_func_normal_path : fsearch_search_func_normal_name;
+        new->highlight_func = search_in_path ? fsearch_highlight_func_normal_path : fsearch_highlight_func_normal_name;
     }
-    else if (strchr(search_term, '*') || strchr(search_term, '?')) {
-        new->search_func = search_in_path ? fsearch_search_func_wildcard_path : fsearch_search_func_wildcard_name;
-        new->wildcard_flags = flags &QUERY_FLAG_MATCH_CASE ? FNM_CASEFOLD : 0;
+    else if (fs_str_case_is_ascii(search_term)) {
+        new->search_func = search_in_path ? fsearch_search_func_normal_icase_path : fsearch_search_func_normal_icase_name;
+        new->highlight_func = search_in_path ? fsearch_highlight_func_normal_icase_path
+                                             : fsearch_highlight_func_normal_icase_name;
     }
     else {
-        if (flags & QUERY_FLAG_MATCH_CASE) {
-            new->search_func = search_in_path ? fsearch_search_func_normal_path : fsearch_search_func_normal_name;
-            new->highlight_func = search_in_path ? fsearch_highlight_func_normal_path
-                                                 : fsearch_highlight_func_normal_name;
-        }
-        else if (fs_str_case_is_ascii(search_term)) {
-            new->search_func = search_in_path ? fsearch_search_func_normal_icase_path
-                                              : fsearch_search_func_normal_icase_name;
-            new->highlight_func = search_in_path ? fsearch_highlight_func_normal_icase_path
-                                                 : fsearch_highlight_func_normal_icase_name;
-        }
-        else {
-            new->search_func = search_in_path ? fsearch_search_func_normal_icase_u8_path
-                                              : fsearch_search_func_normal_icase_u8_name;
-        }
+        new->search_func = search_in_path ? fsearch_search_func_normal_icase_u8_path
+                                          : fsearch_search_func_normal_icase_u8_name;
     }
     return new;
 }
