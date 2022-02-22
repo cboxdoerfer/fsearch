@@ -20,6 +20,8 @@ struct FsearchQueryMatchContext {
 
     PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
 
+    int32_t thread_id;
+
     bool utf_name_ready;
     bool utf_path_ready;
     bool path_ready;
@@ -163,6 +165,16 @@ fsearch_query_match_context_set_result(FsearchQueryMatchContext *matcher, bool r
 bool
 fsearch_query_match_context_get_result(FsearchQueryMatchContext *matcher) {
     return matcher->matches;
+}
+
+void
+fsearch_query_match_context_set_thread_id(FsearchQueryMatchContext *matcher, int32_t thread_id) {
+    matcher->thread_id = thread_id;
+}
+
+int32_t
+fsearch_query_match_context_get_thread_id(FsearchQueryMatchContext *matcher) {
+    return matcher->thread_id;
 }
 
 PangoAttrList *

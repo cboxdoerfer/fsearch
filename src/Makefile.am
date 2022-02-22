@@ -7,9 +7,9 @@ EXTRA_DIST = fsearch_window.ui \
 	     menus.ui
 
 if DEBUG
-AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) $(ICU_CFLAGS) -lm -Wall -std=c11 -D_FILE_OFFSET_BITS=64 -g -Ofast -DDEBUG=1
+AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE2_CFLAGS) $(ICU_CFLAGS) -lm -Wall -std=c11 -D_FILE_OFFSET_BITS=64 -g -Ofast -DDEBUG=1
 else
-AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE_CFLAGS) $(ICU_CFLAGS) -lm -Wall -std=c11 -D_FILE_OFFSET_BITS=64 -Ofast
+AM_CFLAGS = $(FSEARCH_CFLAGS) $(GTK_CFLAGS) $(GLIB_CFLAGS) $(GIO_CFLAGS) $(PCRE2_CFLAGS) $(ICU_CFLAGS) -lm -Wall -std=c11 -D_FILE_OFFSET_BITS=64 -Ofast
 endif
 
 bin_PROGRAMS = fsearch
@@ -109,5 +109,5 @@ icon_resources.h:
 icon_resources.c: gresource.xml $(resource_files) icon_resources.h
 	$(AM_V_GEN) $(GLIB_COMPILE_RESOURCES) --c-name=fsearch_icons --target=$@ --sourcedir=$(top_srcdir)/data --generate-source $(top_srcdir)/data/gresource.xml
 
-fsearch_LDADD = $(FSEARCH_LIBS) $(GTK_LIBS) $(GLIB_LIBS) $(GIO_LIBS) $(PCRE_LIBS) $(ICU_LIBS) -lm
+fsearch_LDADD = $(FSEARCH_LIBS) $(GTK_LIBS) $(GLIB_LIBS) $(GIO_LIBS) $(PCRE2_LIBS) $(ICU_LIBS) -lm
 

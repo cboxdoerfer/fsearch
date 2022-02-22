@@ -12,7 +12,7 @@ Build-Depends: debhelper (>=9),
     autopoint,
     autoconf-archive,
     libicu-dev,
-    libpcre3-dev,
+    libpcre2-dev,
     libglib2.0-dev,
     libgtk-3-dev,
     libxml2-utils

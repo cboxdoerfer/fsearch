@@ -30,10 +30,10 @@ parts:
       - gettext
       - libglib2.0-dev
       - libicu-dev
-      - libpcre3-dev
+      - libpcre2-dev
     stage-packages:
       - libicu60
-      - libpcre3
+      - libpcre2-8
     organize:
       snap/fsearch/current/usr: usr
     parse-info: [ usr/share/metainfo/io.github.cboxdoerfer.FSearch.appdata.xml ]

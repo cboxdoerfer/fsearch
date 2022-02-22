@@ -3,6 +3,7 @@
 #define G_LOG_DOMAIN "fsearch-query-node"
 
 #include "fsearch_query_node.h"
+#include "fsearch_limits.h"
 #include "fsearch_query_match_context.h"
 #include "fsearch_query_parser.h"
 #include "fsearch_string_utils.h"
@@ -57,6 +58,9 @@ free_tree_node(GNode *node, gpointer data);
 
 static void
 free_tree(GNode *root);
+
+static FsearchQueryNode *
+get_empty_query_node(FsearchQueryFlags flags);
 
 typedef FsearchQueryNode *(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryFlags);
 
@@ -210,27 +214,33 @@ fsearch_highlight_func_regex(FsearchQueryMatchContext *matcher,
                              const char *haystack,
                              FsearchQueryNode *node,
                              FsearchDatabaseIndexType idx) {
-    size_t haystack_len = strlen(haystack);
-    int res = pcre_exec(node->regex, node->regex_study, haystack, haystack_len, 0, 0, node->ovector, node->oveccount) >= 0
-                ? 1
-                : 0;
-    if (res > 0) {
-        for (int i = 0; i < res; i++) {
-            uint32_t start_idx = node->ovector[2 * i];
-            uint32_t end_idx = node->ovector[2 * i + 1];
-            if (idx == DATABASE_INDEX_TYPE_NAME) {
-                PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-                pa->start_index = start_idx;
-                pa->end_index = end_idx;
-                fsearch_query_match_context_add_highlight(matcher, pa, idx);
-            }
-            else {
-                add_path_highlight(matcher, start_idx, end_idx - start_idx);
-            }
-        }
-        return true;
+    int32_t thread_id = fsearch_query_match_context_get_thread_id(matcher);
+    const size_t haystack_len = strlen(haystack);
+    pcre2_match_data *regex_match_data = g_ptr_array_index(node->regex_match_data_for_threads, thread_id);
+    if (!regex_match_data) {
+        return false;
     }
-    return false;
+    int num_matches =
+        pcre2_match(node->regex, (PCRE2_SPTR)haystack, (PCRE2_SIZE)haystack_len, 0, 0, regex_match_data, NULL);
+    if (num_matches <= 0) {
+        return false;
+    }
+
+    PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(regex_match_data);
+    for (int i = 0; i < num_matches; i++) {
+        const uint32_t start_idx = ovector[2 * i];
+        const uint32_t end_idx = ovector[2 * i + 1];
+        if (idx == DATABASE_INDEX_TYPE_NAME) {
+            PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+            pa->start_index = start_idx;
+            pa->end_index = end_idx;
+            fsearch_query_match_context_add_highlight(matcher, pa, idx);
+        }
+        else {
+            add_path_highlight(matcher, start_idx, end_idx - start_idx);
+        }
+    }
+    return true;
 }
 
 static bool
@@ -250,23 +260,38 @@ fsearch_highlight_func_regex_path(FsearchQueryNode *node, FsearchQueryMatchConte
 }
 
 static uint32_t
-fsearch_search_func_regex(const char *haystack, FsearchQueryNode *node) {
-    size_t haystack_len = strlen(haystack);
-    return pcre_exec(node->regex, node->regex_study, haystack, haystack_len, 0, 0, node->ovector, node->oveccount) >= 0
-             ? 1
-             : 0;
+fsearch_search_func_regex(FsearchQueryMatchContext *matcher, const char *haystack, FsearchQueryNode *node) {
+    const size_t haystack_len = strlen(haystack);
+    if (!node->regex) {
+        return 0;
+    }
+    const int32_t thread_id = fsearch_query_match_context_get_thread_id(matcher);
+    pcre2_match_data *regex_match_data = g_ptr_array_index(node->regex_match_data_for_threads, thread_id);
+    if (!regex_match_data) {
+        return 0;
+    }
+    int num_matches = 0;
+    if (node->regex_jit_available) {
+        num_matches =
+            pcre2_jit_match(node->regex, (PCRE2_SPTR)haystack, (PCRE2_SIZE)haystack_len, 0, 0, regex_match_data, NULL);
+    }
+    else {
+        num_matches =
+            pcre2_match(node->regex, (PCRE2_SPTR)haystack, (PCRE2_SIZE)haystack_len, 0, 0, regex_match_data, NULL);
+    }
+    return num_matches > 0 ? 1 : 0;
 }
 
 static uint32_t
 fsearch_search_func_regex_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
     const char *haystack = fsearch_query_match_context_get_path_str(matcher);
-    return fsearch_search_func_regex(haystack, node);
+    return fsearch_search_func_regex(matcher, haystack, node);
 }
 
 static uint32_t
 fsearch_search_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
     const char *haystack = fsearch_query_match_context_get_name_str(matcher);
-    return fsearch_search_func_regex(haystack, node);
+    return fsearch_search_func_regex(matcher, haystack, node);
 }
 
 // static uint32_t
@@ -441,12 +466,15 @@ fsearch_query_node_free(void *data) {
 
     fsearch_utf_conversion_buffer_clear(node->needle_buffer);
     g_clear_pointer(&node->search_term_list, g_strfreev);
-    g_clear_pointer(&node->ovector, free);
     g_clear_pointer(&node->needle_buffer, free);
     g_clear_pointer(&node->case_map, ucasemap_close);
     g_clear_pointer(&node->search_term, g_free);
-    g_clear_pointer(&node->regex_study, pcre_free_study);
-    g_clear_pointer(&node->regex, pcre_free);
+
+    if (node->regex_match_data_for_threads) {
+        g_ptr_array_free(g_steal_pointer(&node->regex_match_data_for_threads), TRUE);
+    }
+    g_clear_pointer(&node->regex, pcre2_code_free);
+
     g_clear_pointer(&node, g_free);
 }
 
@@ -500,28 +528,48 @@ fsearch_query_node_new_match_everything(FsearchQueryFlags flags) {
 
 static FsearchQueryNode *
 fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
+    int error_code;
+
+    PCRE2_SIZE erroroffset;
+    uint32_t regex_options = PCRE2_UTF | (flags & QUERY_FLAG_MATCH_CASE ? 0 : PCRE2_CASELESS);
+    pcre2_code *regex = pcre2_compile((PCRE2_SPTR)search_term,
+                                      (PCRE2_SIZE)strlen(search_term),
+                                      regex_options,
+                                      &error_code,
+                                      &erroroffset,
+                                      NULL);
+    if (!regex) {
+        PCRE2_UCHAR buffer[256] = "";
+        pcre2_get_error_message(error_code, buffer, sizeof(buffer));
+        g_debug("[regex] PCRE2 compilation failed at offset %d. Error message: %s", (int)erroroffset, buffer);
+        return NULL;
+    }
+
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
+    new->regex = regex;
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     new->flags = flags;
 
-    const char *error;
-    int erroffset;
-    new->regex = pcre_compile(search_term,
-                              (flags & QUERY_FLAG_MATCH_CASE ? 0 : PCRE_CASELESS) | PCRE_UTF8,
-                              &error,
-                              &erroffset,
-                              NULL);
-    new->regex_study = pcre_study(new->regex, PCRE_STUDY_JIT_COMPILE, &error);
+    if (pcre2_jit_compile(regex, PCRE2_JIT_COMPLETE) != 0) {
+        g_debug("[regex] JIT compilation failed.\n");
+        new->regex_jit_available = false;
+    }
+    else {
+        new->regex_jit_available = true;
+    }
+    new->regex_match_data_for_threads = g_ptr_array_sized_new(FSEARCH_THREAD_LIMIT);
+    g_ptr_array_set_free_func(new->regex_match_data_for_threads, (GDestroyNotify)pcre2_match_data_free);
+    for (int32_t i = 0; i < FSEARCH_THREAD_LIMIT; i++) {
+        g_ptr_array_add(new->regex_match_data_for_threads, pcre2_match_data_create_from_pattern(new->regex, NULL));
+    }
 
     const bool search_in_path = flags & QUERY_FLAG_SEARCH_IN_PATH
                              || (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && new->has_separator);
 
     new->search_func = search_in_path ? fsearch_search_func_regex_path : fsearch_search_func_regex_name;
     new->highlight_func = search_in_path ? fsearch_highlight_func_regex_path : fsearch_highlight_func_regex_name;
-    new->oveccount = 90;
-    new->ovector = calloc(new->oveccount, sizeof(int));
     return new;
 }
 
@@ -534,7 +582,6 @@ fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags
     g_string_append_c(new, '^');
     const char *s = search_term;
     while (*s != '\0') {
-        // .^$*+?()[{\|
         switch (*s) {
         case '.':
         case '^':

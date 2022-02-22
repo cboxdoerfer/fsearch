@@ -51,6 +51,7 @@ typedef struct DatabaseSearchWorkerContext {
     void **results;
     DynamicArray *entries;
     GCancellable *cancellable;
+    int32_t thread_id;
     uint32_t num_results;
     uint32_t start_pos;
     uint32_t end_pos;
@@ -163,6 +164,7 @@ static DatabaseSearchWorkerContext *
 db_search_worker_context_new(FsearchQuery *query,
                              GCancellable *cancellable,
                              DynamicArray *entries,
+                             int32_t thread_id,
                              uint32_t start_pos,
                              uint32_t end_pos) {
     DatabaseSearchWorkerContext *ctx = calloc(1, sizeof(DatabaseSearchWorkerContext));
@@ -178,6 +180,7 @@ db_search_worker_context_new(FsearchQuery *query,
     ctx->entries = darray_ref(entries);
     ctx->start_pos = start_pos;
     ctx->end_pos = end_pos;
+    ctx->thread_id = thread_id;
     return ctx;
 }
 
@@ -189,6 +192,7 @@ db_search_worker(void *data) {
 
     FsearchQueryMatchContext *matcher = fsearch_query_match_context_new();
 
+    fsearch_query_match_context_set_thread_id(matcher, ctx->thread_id);
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
@@ -246,6 +250,7 @@ db_search_entries(FsearchQuery *q,
         thread_data[i] = db_search_worker_context_new(q,
                                                       cancellable,
                                                       entries,
+                                                      (int32_t)i,
                                                       start_pos,
                                                       i == num_threads - 1 ? num_entries - 1 : end_pos);
 

@@ -5,6 +5,7 @@
 #include "fsearch_utf.h"
 
 #include <pango/pango-attributes.h>
+#include <stdint.h>
 #include <stdbool.h>
 
 typedef struct FsearchQueryMatchContext FsearchQueryMatchContext;
@@ -25,6 +26,12 @@ fsearch_query_match_context_add_highlight(FsearchQueryMatchContext *matcher,
 
 PangoAttrList *
 fsearch_query_match_get_highlight(FsearchQueryMatchContext *matcher, FsearchDatabaseIndexType idx);
+
+void
+fsearch_query_match_context_set_thread_id(FsearchQueryMatchContext *matcher, int32_t thread_id);
+
+int32_t
+fsearch_query_match_context_get_thread_id(FsearchQueryMatchContext *matcher);
 
 void
 fsearch_query_match_context_set_result(FsearchQueryMatchContext *matcher, bool result);

@@ -103,6 +103,9 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *ma
         return true;
     }
     FsearchQueryNode *n = node->data;
+    if (!n) {
+        return false;
+    }
     if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
         GNode *left = node->children;
         assert(left != NULL);
@@ -135,6 +138,9 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matc
         return true;
     }
     FsearchQueryNode *n = node->data;
+    if (!n) {
+        return false;
+    }
     if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
         GNode *left = node->children;
         assert(left != NULL);

@@ -50,7 +50,7 @@ fsearch_deps = [
     cc.find_library('m', required: true),
     dependency('gio-unix-2.0', version: '>= 2.50'),
     dependency('gtk+-3.0', version: '>= 3.18'),
-    dependency('libpcre', version: '>= 8.31'),
+    dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 3.8'),
 ]
 

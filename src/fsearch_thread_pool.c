@@ -20,6 +20,7 @@
 
 #include <stdio.h>
 
+#include "fsearch_limits.h"
 #include "fsearch_thread_pool.h"
 
 struct FsearchThreadPool {
@@ -120,7 +121,7 @@ fsearch_thread_pool_init(void) {
     pool->threads = NULL;
     pool->num_threads = 0;
 
-    uint32_t num_cpus = g_get_num_processors();
+    uint32_t num_cpus = MIN(g_get_num_processors(), FSEARCH_THREAD_LIMIT);
     for (uint32_t i = 0; i < num_cpus; i++) {
         FsearchThreadPoolContext *ctx = thread_context_new();
         if (ctx) {
@@ -238,4 +239,3 @@ fsearch_thread_pool_push_data(FsearchThreadPool *pool,
     g_mutex_unlock(&ctx->mutex);
     return true;
 }
-

@@ -1,8 +1,10 @@
 
 #pragma once
 
+#define PCRE2_CODE_UNIT_WIDTH 8
+
 #include <pango/pango-attributes.h>
-#include <pcre.h>
+#include <pcre2.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <unicode/ucasemap.h>
@@ -12,8 +14,6 @@
 #include "fsearch_query_flags.h"
 #include "fsearch_query_match_context.h"
 #include "fsearch_utf.h"
-
-#define OVECCOUNT 18
 
 typedef struct FsearchQueryNode FsearchQueryNode;
 typedef struct FsearchQueryNodeHighlight FsearchQueryNodeHighlight;
@@ -68,12 +68,13 @@ struct FsearchQueryNode {
 
     uint32_t fold_options;
 
-    pcre *regex;
-    pcre_extra *regex_study;
-    int *ovector;
-    int oveccount;
-
-    int32_t wildcard_flags;
+    // Using the pcre2_code with multiple threads is safe.
+    // However, pcre2_match_data can't be shared across threads.
+    // So to avoid frequent calls to pcre2_match_data_create_from_pattern during the matching process,
+    // we simply generate an array which holds a unique instance for each thread per regex node.
+    pcre2_code *regex;
+    GPtrArray *regex_match_data_for_threads;
+    bool regex_jit_available;
 
     FsearchQueryFlags flags;
 };
