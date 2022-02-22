@@ -2,7 +2,7 @@
 
 Name:    fsearch
 Summary: A fast file search utility for Unix-like systems based on GTK 3
-Version: master
+Version: 0.2alpha
 Release: %(date +%%Y%%m%%d)%{?dist}
 License: GPLv2+
 URL:     https://github.com/cboxdoerfer/fsearch
@@ -22,7 +22,7 @@ BuildRequires: desktop-file-utils
 FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK 3.
 
 %prep
-%setup -q -n fsearch-%{version} -c
+%setup -q -n fsearch-master -c
 
 mv fsearch-%{version} build
 
