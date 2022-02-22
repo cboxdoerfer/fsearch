@@ -24,7 +24,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 %prep
 %setup -q -n fsearch-master -c
 
-mv fsearch-mastedr build
+mv fsearch-master build
 
 %build
 export LDFLAGS="%{?__global_ldflags} -pthread"
