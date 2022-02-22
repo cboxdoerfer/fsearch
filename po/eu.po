@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2022-02-20 09:58+0000\n"
+"PO-Revision-Date: 2022-02-22 14:58+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -1001,7 +1001,7 @@ msgstr "Hautatutako fitxategi kopurua"
 
 #: src/fsearch_statusbar.ui:256 src/fsearch_window.ui:102
 msgid "Cancel database update"
-msgstr "Utzi datu-basearen eguneraketa"
+msgstr "Gelditu datu-basearen eguneraketa"
 
 #: src/fsearch_statusbar.ui:297
 msgid "Number of database items"
@@ -1187,7 +1187,7 @@ msgstr "Eguneratu datu-basea"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr "Utzi eguneraketa"
+msgstr "Gelditu eguneraketa"
 
 #: src/menus.ui:42
 msgid "Close Window"
