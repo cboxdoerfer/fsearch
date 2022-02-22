@@ -1,10 +1,10 @@
 %global giturl  https://github.com/cboxdoerfer/fsearch
+%define version %(git describe --long --tags | sed 's/^v//;s/\([^-]*-g\)/r\1/;s/-/./g')
 
 Name:    fsearch
 Summary: A fast file search utility for Unix-like systems based on GTK 3
-Epoch:   1
-Version: master
-Release: 4%{?dist}
+Version: %{version}
+Release: 1%{?dist}
 License: GPLv2+
 URL:     https://github.com/cboxdoerfer/fsearch
 Source0: %{giturl}/archive/%{version}/%{name}-%{version}.tar.gz
