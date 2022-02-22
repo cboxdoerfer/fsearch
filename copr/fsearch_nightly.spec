@@ -7,7 +7,7 @@ Version: %{version}
 Release: 1%{?dist}
 License: GPLv2+
 URL:     https://github.com/cboxdoerfer/fsearch
-Source0: %{giturl}/archive/%{version}/%{name}-%{version}.tar.gz
+Source0: %{giturl}/archive/master/%{name}-master.tar.gz
 
 
 BuildRequires: meson
