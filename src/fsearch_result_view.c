@@ -160,7 +160,7 @@ draw_row_ctx_destroy(DrawRowContext *ctx) {
     g_clear_pointer(&ctx->extension, g_free);
     g_clear_pointer(&ctx->type, g_free);
     g_clear_pointer(&ctx->size, g_free);
-    for (uint32_t i; i < NUM_DATABASE_INDEX_TYPES; i++) {
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
         if (ctx->highlights[i]) {
             g_clear_pointer(&ctx->highlights[i], pango_attr_list_unref);
         }
