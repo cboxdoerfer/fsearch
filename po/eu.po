@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: christian.boxdoerfer@posteo.de\n"
 "POT-Creation-Date: 2021-09-30 19:08+0200\n"
-"PO-Revision-Date: 2022-02-22 14:58+0000\n"
+"PO-Revision-Date: 2022-02-23 15:58+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -344,7 +344,7 @@ msgstr "Emaitzak:"
 
 #: src/fsearch_preferences.ui:470
 msgid "Show database indexing status"
-msgstr "Erakutsi datu-basearen indexatzearen egoera"
+msgstr "Erakutsi datu-basearen indexatze-egoera"
 
 #: src/fsearch_preferences.ui:491
 msgid "Statusbar:"
