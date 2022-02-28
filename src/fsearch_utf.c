@@ -1,7 +1,9 @@
 #include "fsearch_utf.h"
 
 #include <glib.h>
+#include <locale.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include <unicode/ustring.h>
 
@@ -11,6 +13,21 @@ fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters) {
         return;
     }
     builder->initialized = true;
+
+    builder->fold_options = U_FOLD_CASE_DEFAULT;
+    const char *current_locale = setlocale(LC_CTYPE, NULL);
+    if (current_locale && (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2))) {
+        // Use special case mapping for Turkic languages
+        builder->fold_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
+    }
+
+    UErrorCode status = U_ZERO_ERROR;
+    builder->case_map = ucasemap_open(current_locale, builder->fold_options, &status);
+    g_assert(U_SUCCESS(status));
+
+    builder->normalizer = unorm2_getNFDInstance(&status);
+    g_assert(U_SUCCESS(status));
+
     builder->string_utf8_is_folded = false;
     builder->string_is_folded_and_normalized = false;
     builder->num_characters = num_characters;
@@ -28,6 +45,7 @@ fsearch_utf_builder_clear(FsearchUtfBuilder *builder) {
         return;
     }
     builder->initialized = false;
+    g_clear_pointer(&builder->case_map, ucasemap_close);
     g_clear_pointer(&builder->string, free);
     g_clear_pointer(&builder->string_utf8_folded, free);
     g_clear_pointer(&builder->string_folded, free);
@@ -56,8 +74,6 @@ fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfBuilder *builder, const
 
 bool
 fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
-                                            UCaseMap *case_map,
-                                            const UNormalizer2 *normalizer,
                                             const char *string) {
     g_assert(builder != NULL);
     if (!builder->initialized) {
@@ -69,7 +85,7 @@ fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
     builder->string = g_strdup(string);
     // first perform case folding (this can be done while our string is still in UTF8 form)
     builder->string_utf8_folded_len =
-        ucasemap_utf8FoldCase(case_map, builder->string_utf8_folded, builder->num_characters, string, -1, &status);
+        ucasemap_utf8FoldCase(builder->case_map, builder->string_utf8_folded, builder->num_characters, string, -1, &status);
     if (G_UNLIKELY(U_FAILURE(status))) {
         goto fail;
     }
@@ -88,7 +104,7 @@ fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
 
     // check how much of the string needs to be normalized (if anything at all)
     const int32_t span_end =
-        unorm2_spanQuickCheckYes(normalizer, builder->string_folded, builder->string_folded_len, &status);
+        unorm2_spanQuickCheckYes(builder->normalizer, builder->string_folded, builder->string_folded_len, &status);
     if (G_UNLIKELY(U_FAILURE(status))) {
         goto fail;
     }
@@ -103,7 +119,7 @@ fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
         // the string isn't fully normalized
         // normalize everything after string_folded + span_end
         u_strncpy(builder->string_normalized_folded, builder->string_folded, span_end);
-        builder->string_normalized_folded_len = unorm2_normalizeSecondAndAppend(normalizer,
+        builder->string_normalized_folded_len = unorm2_normalizeSecondAndAppend(builder->normalizer,
                                                                                 builder->string_normalized_folded,
                                                                                 span_end,
                                                                                 builder->num_characters,

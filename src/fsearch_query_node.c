@@ -10,7 +10,6 @@
 #include "fsearch_utf.h"
 #include <assert.h>
 #include <glib.h>
-#include <locale.h>
 #include <stdbool.h>
 #include <string.h>
 
@@ -144,25 +143,10 @@ node_init_needle(FsearchQueryNode *node, const char *needle) {
     node->needle = g_strdup(needle);
     node->needle_len = strlen(needle);
 
-    node->fold_options = U_FOLD_CASE_DEFAULT;
-    const char *current_locale = setlocale(LC_CTYPE, NULL);
-    if (current_locale && (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2))) {
-        // Use special case mapping for Turkic languages
-        node->fold_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
-    }
-
-    UErrorCode status = U_ZERO_ERROR;
-    node->case_map = ucasemap_open(current_locale, node->fold_options, &status);
-    assert(U_SUCCESS(status));
-
-    node->normalizer = unorm2_getNFDInstance(&status);
-    assert(U_SUCCESS(status));
-
     // set up case folded needle in UTF16 format
     node->needle_builder = calloc(1, sizeof(FsearchUtfBuilder));
     fsearch_utf_builder_init(node->needle_builder, 8 * node->needle_len);
-    const bool utf_ready =
-        fsearch_utf_builder_normalize_and_fold_case(node->needle_builder, node->case_map, node->normalizer, needle);
+    const bool utf_ready = fsearch_utf_builder_normalize_and_fold_case(node->needle_builder, needle);
     assert(utf_ready == true);
 }
 
@@ -505,7 +489,6 @@ fsearch_query_node_free(void *data) {
     }
     g_clear_pointer(&node->search_term_list, g_strfreev);
     g_clear_pointer(&node->needle_builder, free);
-    g_clear_pointer(&node->case_map, ucasemap_close);
     g_clear_pointer(&node->needle, g_free);
 
     if (node->regex_match_data_for_threads) {

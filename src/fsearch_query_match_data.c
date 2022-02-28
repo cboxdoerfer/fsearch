@@ -16,10 +16,6 @@ struct FsearchQueryMatchData {
     GString *path_buffer;
     GString *parent_path_buffer;
 
-    UCaseMap *case_map;
-    const UNormalizer2 *normalizer;
-    uint32_t fold_options;
-
     PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
 
     int32_t thread_id;
@@ -37,8 +33,6 @@ fsearch_query_match_data_get_utf_parent_path_builder(FsearchQueryMatchData *matc
     if (!match_data->utf_parent_path_ready) {
         match_data->utf_parent_path_ready =
             fsearch_utf_builder_normalize_and_fold_case(match_data->utf_parent_path_builder,
-                                                        match_data->case_map,
-                                                        match_data->normalizer,
                                                         fsearch_query_match_data_get_parent_path_str(match_data));
     }
     return match_data->utf_parent_path_builder;
@@ -49,8 +43,6 @@ fsearch_query_match_data_get_utf_name_builder(FsearchQueryMatchData *match_data)
     if (!match_data->utf_name_ready) {
         match_data->utf_name_ready =
             fsearch_utf_builder_normalize_and_fold_case(match_data->utf_name_builder,
-                                                        match_data->case_map,
-                                                        match_data->normalizer,
                                                         db_entry_get_name_raw_for_display(match_data->entry));
     }
     return match_data->utf_name_builder;
@@ -61,8 +53,6 @@ fsearch_query_match_data_get_utf_path_builder(FsearchQueryMatchData *match_data)
     if (!match_data->utf_path_ready) {
         match_data->utf_path_ready =
             fsearch_utf_builder_normalize_and_fold_case(match_data->utf_path_builder,
-                                                        match_data->case_map,
-                                                        match_data->normalizer,
                                                         fsearch_query_match_data_get_path_str(match_data));
     }
     return match_data->utf_path_builder;
@@ -130,20 +120,6 @@ fsearch_query_match_data_new(void) {
     match_data->path_ready = false;
     match_data->parent_path_ready = false;
 
-    match_data->fold_options = U_FOLD_CASE_DEFAULT;
-    const char *current_locale = setlocale(LC_CTYPE, NULL);
-    if (current_locale && (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2))) {
-        // Use special case mapping for Turkic languages
-        match_data->fold_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
-    }
-
-    UErrorCode status = U_ZERO_ERROR;
-    match_data->case_map = ucasemap_open(current_locale, match_data->fold_options, &status);
-    assert(U_SUCCESS(status));
-
-    match_data->normalizer = unorm2_getNFDInstance(&status);
-    assert(U_SUCCESS(status));
-
     return match_data;
 }
 
@@ -173,8 +149,6 @@ fsearch_query_match_data_free(FsearchQueryMatchData *match_data) {
     g_clear_pointer(&match_data->utf_path_builder, free);
     fsearch_utf_builder_clear(match_data->utf_parent_path_builder);
     g_clear_pointer(&match_data->utf_parent_path_builder, free);
-
-    g_clear_pointer(&match_data->case_map, ucasemap_close);
 
     g_string_free(g_steal_pointer(&match_data->path_buffer), TRUE);
     g_string_free(g_steal_pointer(&match_data->parent_path_buffer), TRUE);

@@ -62,9 +62,6 @@ struct FsearchQueryNode {
     FsearchQueryNodeSearchFunc *search_func;
     FsearchQueryNodeHighlightFunc *highlight_func;
 
-    UCaseMap *case_map;
-    const UNormalizer2 *normalizer;
-
     FsearchUtfBuilder *needle_builder;
 
     uint32_t fold_options;
