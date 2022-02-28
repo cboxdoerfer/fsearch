@@ -762,6 +762,9 @@ parse_field_size(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFl
     FsearchTokenComparisonType comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
     FsearchQueryNode *result = NULL;
     switch (token) {
+    case FSEARCH_QUERY_TOKEN_EQUAL:
+        comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
+        break;
     case FSEARCH_QUERY_TOKEN_SMALLER:
         comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER;
         break;
@@ -776,22 +779,21 @@ parse_field_size(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFl
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
         result = parse_size_with_optional_range(token_value, flags, comp_type);
-        break;
+        goto out;
     default:
         g_debug("[size:] invalid or missing argument");
         goto out;
     }
 
-    if (comp_type != FSEARCH_TOKEN_COMPARISON_EQUAL) {
-        GString *next_token_value = NULL;
-        FsearchQueryToken next_token = fsearch_query_parser_get_next_token(parser, &next_token_value);
-        if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
-            result = parse_size(next_token_value, flags, comp_type);
-        }
-        if (next_token_value) {
-            g_string_free(g_steal_pointer(&next_token_value), TRUE);
-        }
+    GString *next_token_value = NULL;
+    FsearchQueryToken next_token = fsearch_query_parser_get_next_token(parser, &next_token_value);
+    if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
+        result = parse_size(next_token_value, flags, comp_type);
     }
+    if (next_token_value) {
+        g_string_free(g_steal_pointer(&next_token_value), TRUE);
+    }
+
 out:
     if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
