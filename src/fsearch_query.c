@@ -97,7 +97,7 @@ fsearch_query_matches_everything(FsearchQuery *query) {
 }
 
 static bool
-highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, FsearchDatabaseEntryType type) {
+highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, FsearchDatabaseEntryType type) {
     if (!node) {
         return true;
     }
@@ -110,13 +110,13 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *ma
         assert(left != NULL);
         GNode *right = left->next;
         if (n->operator== FSEARCH_TOKEN_OPERATOR_AND) {
-            return highlight(left, entry, matcher, type) && highlight(right, entry, matcher, type);
+            return highlight(left, entry, match_data, type) && highlight(right, entry, match_data, type);
         }
         else if (n->operator== FSEARCH_TOKEN_OPERATOR_OR) {
-            return highlight(left, entry, matcher, type) || highlight(right, entry, matcher, type);
+            return highlight(left, entry, match_data, type) || highlight(right, entry, match_data, type);
         }
         else {
-            return !highlight(left, entry, matcher, type);
+            return !highlight(left, entry, match_data, type);
         }
     }
     else {
@@ -127,12 +127,12 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *ma
             return false;
         }
 
-        return n->highlight_func ? n->highlight_func(n, matcher) : false;
+        return n->highlight_func ? n->highlight_func(n, match_data) : false;
     }
 }
 
 static bool
-matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, FsearchDatabaseEntryType type) {
+matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, FsearchDatabaseEntryType type) {
     if (!node) {
         return true;
     }
@@ -145,13 +145,13 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matc
         assert(left != NULL);
         GNode *right = left->next;
         if (n->operator== FSEARCH_TOKEN_OPERATOR_AND) {
-            return matches(left, entry, matcher, type) && matches(right, entry, matcher, type);
+            return matches(left, entry, match_data, type) && matches(right, entry, match_data, type);
         }
         else if (n->operator== FSEARCH_TOKEN_OPERATOR_OR) {
-            return matches(left, entry, matcher, type) || matches(right, entry, matcher, type);
+            return matches(left, entry, match_data, type) || matches(right, entry, match_data, type);
         }
         else {
-            return !matches(left, entry, matcher, type);
+            return !matches(left, entry, match_data, type);
         }
     }
     else {
@@ -162,12 +162,12 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matc
             return false;
         }
 
-        return n->search_func(n, matcher);
+        return n->search_func(n, match_data);
     }
 }
 
 static bool
-filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, FsearchQuery *query) {
+filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, FsearchQuery *query) {
     if (!query->filter) {
         return true;
     }
@@ -184,41 +184,41 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchContext *matcher, Fse
         return false;
     }
     if (query->filter_token) {
-        return matches(query->filter_token, entry, matcher, type);
+        return matches(query->filter_token, entry, match_data, type);
     }
     return true;
 }
 
 bool
-fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchContext *matcher) {
-    FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
-    if (G_UNLIKELY(!matcher || !entry)) {
+fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchData *match_data) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    if (G_UNLIKELY(!match_data || !entry)) {
         return false;
     }
 
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
     GNode *token = query->token;
 
-    if (!filter_entry(entry, matcher, query)) {
+    if (!filter_entry(entry, match_data, query)) {
         return false;
     }
 
-    return highlight(token, entry, matcher, type);
+    return highlight(token, entry, match_data, type);
 }
 
 bool
-fsearch_query_match(FsearchQuery *query, FsearchQueryMatchContext *matcher) {
-    FsearchDatabaseEntry *entry = fsearch_query_match_context_get_entry(matcher);
-    if (G_UNLIKELY(!matcher || !entry)) {
+fsearch_query_match(FsearchQuery *query, FsearchQueryMatchData *match_data) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    if (G_UNLIKELY(!match_data || !entry)) {
         return false;
     }
 
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
     GNode *token = query->token;
 
-    if (!filter_entry(entry, matcher, query)) {
+    if (!filter_entry(entry, match_data, query)) {
         return false;
     }
 
-    return matches(token, entry, matcher, type);
+    return matches(token, entry, match_data, type);
 }

@@ -71,7 +71,7 @@ get_icon_surface(GdkWindow *win,
 typedef struct {
     char *display_name;
 
-    FsearchQueryMatchContext *matcher;
+    FsearchQueryMatchData *match_data;
     PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
 
     cairo_surface_t *icon_surface;
@@ -115,10 +115,10 @@ draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window
     FsearchQuery *query = db_view_get_query(view);
     if (query) {
         FsearchDatabaseEntry *entry = db_view_entry_get_for_idx(view, row);
-        ctx->matcher = fsearch_query_match_context_new();
-        fsearch_query_match_context_set_entry(ctx->matcher, entry);
+        ctx->match_data = fsearch_query_match_data_new();
+        fsearch_query_match_data_set_entry(ctx->match_data, entry);
 
-        fsearch_query_highlight(query, ctx->matcher);
+        fsearch_query_highlight(query, ctx->match_data);
 
         g_clear_pointer(&query, fsearch_query_unref);
     }
@@ -155,7 +155,7 @@ out:
 
 static void
 draw_row_ctx_destroy(DrawRowContext *ctx) {
-    g_clear_pointer(&ctx->matcher, fsearch_query_match_context_free);
+    g_clear_pointer(&ctx->match_data, fsearch_query_match_data_free);
     g_clear_pointer(&ctx->display_name, g_free);
     g_clear_pointer(&ctx->extension, g_free);
     g_clear_pointer(&ctx->type, g_free);
@@ -258,9 +258,9 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
 }
 
 static void
-set_attributes(PangoLayout *layout, FsearchQueryMatchContext *matcher, FsearchDatabaseIndexType idx) {
+set_attributes(PangoLayout *layout, FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx) {
     assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
-    PangoAttrList *attrs = fsearch_query_match_get_highlight(matcher, idx);
+    PangoAttrList *attrs = fsearch_query_match_get_highlight(match_data, idx);
     if (attrs) {
         pango_layout_set_attributes(layout, attrs);
     }
@@ -367,7 +367,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         default:
             text = NULL;
         }
-        set_attributes(layout, ctx.matcher, column->type);
+        set_attributes(layout, ctx.match_data, column->type);
         pango_layout_set_text(layout, text ? text : _("Invalid row data"), text_len);
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);

@@ -12,13 +12,13 @@
 
 #include "fsearch_database_index.h"
 #include "fsearch_query_flags.h"
-#include "fsearch_query_match_context.h"
+#include "fsearch_query_match_data.h"
 #include "fsearch_utf.h"
 
 typedef struct FsearchQueryNode FsearchQueryNode;
 typedef struct FsearchQueryNodeHighlight FsearchQueryNodeHighlight;
-typedef uint32_t(FsearchQueryNodeSearchFunc)(FsearchQueryNode *, FsearchQueryMatchContext *);
-typedef bool(FsearchQueryNodeHighlightFunc)(FsearchQueryNode *, FsearchQueryMatchContext *);
+typedef uint32_t(FsearchQueryNodeSearchFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
+typedef bool(FsearchQueryNodeHighlightFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
 
 typedef enum FsearchQueryNodeType {
     FSEARCH_QUERY_NODE_TYPE_OPERATOR,

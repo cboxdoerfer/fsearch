@@ -15,12 +15,12 @@ test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFla
     db_entry_set_name(entry, haystack);
     db_entry_set_size(entry, size);
 
-    FsearchQueryMatchContext *matcher = fsearch_query_match_context_new();
-    fsearch_query_match_context_set_entry(matcher, entry);
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+    fsearch_query_match_data_set_entry(match_data, entry);
 
-    found = fsearch_query_match(q, matcher);
+    found = fsearch_query_match(q, match_data);
     g_clear_pointer(&q, fsearch_query_unref);
-    g_clear_pointer(&matcher, fsearch_query_match_context_free);
+    g_clear_pointer(&match_data, fsearch_query_match_data_free);
     db_entry_destroy(entry);
     g_clear_pointer(&entry, free);
 

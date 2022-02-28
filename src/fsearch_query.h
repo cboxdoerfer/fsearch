@@ -27,7 +27,7 @@
 #include "fsearch_database.h"
 #include "fsearch_filter.h"
 #include "fsearch_list_view.h"
-#include "fsearch_query_match_context.h"
+#include "fsearch_query_match_data.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_thread_pool.h"
 #include "fsearch_query_node.h"
@@ -78,7 +78,7 @@ bool
 fsearch_query_matches_everything(FsearchQuery *query);
 
 bool
-fsearch_query_match(FsearchQuery *queyr, FsearchQueryMatchContext *matcher);
+fsearch_query_match(FsearchQuery *queyr, FsearchQueryMatchData *match_data);
 
 bool
-fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchContext *matcher);
+fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchData *match_data);

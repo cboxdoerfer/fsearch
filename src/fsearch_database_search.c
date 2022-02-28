@@ -27,7 +27,7 @@
 #include <string.h>
 
 #include "fsearch_array.h"
-#include "fsearch_query_match_context.h"
+#include "fsearch_query_match_data.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_task.h"
 #include "fsearch_task_ids.h"
@@ -190,9 +190,9 @@ db_search_worker(void *data) {
     assert(ctx != NULL);
     assert(ctx->results != NULL);
 
-    FsearchQueryMatchContext *matcher = fsearch_query_match_context_new();
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
 
-    fsearch_query_match_context_set_thread_id(matcher, ctx->thread_id);
+    fsearch_query_match_data_set_thread_id(match_data, ctx->thread_id);
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
@@ -211,12 +211,12 @@ db_search_worker(void *data) {
             break;
         }
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        fsearch_query_match_context_set_entry(matcher, entry);
-        if (fsearch_query_match(query, matcher)) {
+        fsearch_query_match_data_set_entry(match_data, entry);
+        if (fsearch_query_match(query, match_data)) {
             results[num_results++] = entry;
         }
     }
-    g_clear_pointer(&matcher, fsearch_query_match_context_free);
+    g_clear_pointer(&match_data, fsearch_query_match_data_free);
 
     ctx->num_results = num_results;
 }
