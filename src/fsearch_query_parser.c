@@ -143,7 +143,14 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
         else if (strchr(reserved_chars, c)) {
             if (c == ':') {
                 // field: detected
-                token = FSEARCH_QUERY_TOKEN_FIELD;
+                c = get_next_char(parser);
+                if (g_ascii_isspace(c)) {
+                    token = FSEARCH_QUERY_TOKEN_FIELD_EMPTY;
+                }
+                else {
+                    give_back_char(parser, c);
+                    token = FSEARCH_QUERY_TOKEN_FIELD;
+                }
                 goto out;
             }
             // word broken by reserved character

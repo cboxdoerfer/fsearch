@@ -15,43 +15,43 @@
 #include <string.h>
 
 static FsearchQueryNode *
-parse_field(FsearchQueryParser *parser, GString *field_name, FsearchQueryFlags flags);
+parse_field(FsearchQueryParser *parser, GString *field_name, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_modifier(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_exact(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_exact(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_size(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_extension(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_extension(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_regex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_path(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_path(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_case(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_case(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_nocase(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_nocase(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_noregex(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_noregex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_nopath(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_nopath(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_folder(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_folder(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static FsearchQueryNode *
-parse_field_file(FsearchQueryParser *parser, FsearchQueryFlags flags);
+parse_field_file(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
 
 static gboolean
 free_tree_node(GNode *node, gpointer data);
@@ -62,7 +62,7 @@ free_tree(GNode *root);
 static FsearchQueryNode *
 get_empty_query_node(FsearchQueryFlags flags);
 
-typedef FsearchQueryNode *(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryFlags);
+typedef FsearchQueryNode *(FsearchTokenFieldParser)(FsearchQueryParser *, bool, FsearchQueryFlags);
 
 typedef struct FsearchTokenField {
     const char *name;
@@ -753,7 +753,10 @@ parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType 
 }
 
 static FsearchQueryNode *
-parse_field_size(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+parse_field_size(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
     FsearchTokenComparisonType comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
@@ -800,7 +803,7 @@ out:
 }
 
 static FsearchQueryNode *
-parse_field_extension(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+parse_field_extension(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
     FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
@@ -808,7 +811,7 @@ parse_field_extension(FsearchQueryParser *parser, FsearchQueryFlags flags) {
     result->search_func = fsearch_search_func_extension;
     result->highlight_func = fsearch_highlight_func_extension;
     result->flags = flags;
-    if (token == FSEARCH_QUERY_TOKEN_WORD) {
+    if (!is_empty_field && token == FSEARCH_QUERY_TOKEN_WORD) {
         result->search_term_list = g_strsplit(token_value->str, ";", -1);
     }
     else {
@@ -827,7 +830,7 @@ parse_field_extension(FsearchQueryParser *parser, FsearchQueryFlags flags) {
 }
 
 static FsearchQueryNode *
-parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+parse_modifier(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
     FsearchQueryNode *result = NULL;
@@ -835,7 +838,10 @@ parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
         result = fsearch_query_node_new(token_value->str, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD) {
-        result = parse_field(parser, token_value, flags);
+        result = parse_field(parser, token_value, false, flags);
+    }
+    else if (token == FSEARCH_QUERY_TOKEN_FIELD_EMPTY) {
+        result = parse_field(parser, token_value, true, flags);
     }
     else {
         result = get_empty_query_node(flags);
@@ -849,56 +855,77 @@ parse_modifier(FsearchQueryParser *parser, FsearchQueryFlags flags) {
 }
 
 static FsearchQueryNode *
-parse_field_exact(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags | QUERY_FLAG_EXACT_MATCH);
+parse_field_exact(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
+    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_EXACT_MATCH);
 }
 
 static FsearchQueryNode *
-parse_field_path(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags | QUERY_FLAG_SEARCH_IN_PATH);
+parse_field_path(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
+    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_SEARCH_IN_PATH);
 }
 
 static FsearchQueryNode *
-parse_field_nopath(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags & ~QUERY_FLAG_SEARCH_IN_PATH);
+parse_field_nopath(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
+    return parse_modifier(parser, is_empty_field, flags & ~QUERY_FLAG_SEARCH_IN_PATH);
 }
 
 static FsearchQueryNode *
-parse_field_case(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags | QUERY_FLAG_MATCH_CASE);
+parse_field_case(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
+    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_MATCH_CASE);
 }
 
 static FsearchQueryNode *
-parse_field_nocase(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags & ~QUERY_FLAG_MATCH_CASE);
+parse_field_nocase(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
+    return parse_modifier(parser, is_empty_field, flags & ~QUERY_FLAG_MATCH_CASE);
 }
 
 static FsearchQueryNode *
-parse_field_regex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags | QUERY_FLAG_REGEX);
+parse_field_regex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
+    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_REGEX);
 }
 
 static FsearchQueryNode *
-parse_field_noregex(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags & ~QUERY_FLAG_REGEX);
+parse_field_noregex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return NULL;
+    }
+    return parse_modifier(parser, is_empty_field, flags & ~QUERY_FLAG_REGEX);
 }
 
 static FsearchQueryNode *
-parse_field_folder(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags | QUERY_FLAG_FOLDERS_ONLY);
+parse_field_folder(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_FOLDERS_ONLY);
 }
 
 static FsearchQueryNode *
-parse_field_file(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    return parse_modifier(parser, flags | QUERY_FLAG_FILES_ONLY);
+parse_field_file(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_FILES_ONLY);
 }
 
 static FsearchQueryNode *
-parse_field(FsearchQueryParser *parser, GString *field_name, FsearchQueryFlags flags) {
+parse_field(FsearchQueryParser *parser, GString *field_name, bool is_empty_field, FsearchQueryFlags flags) {
     // g_debug("[field] detected: [%s:]", field_name->str);
     for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
         if (!strcmp(supported_fields[i].name, field_name->str)) {
-            return supported_fields[i].parser(parser, flags);
+            return supported_fields[i].parser(parser, is_empty_field, flags);
         }
     }
     return get_empty_query_node(flags);
@@ -1031,6 +1058,7 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
     while (true) {
         GString *token_value = NULL;
         FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
+        FsearchQueryNode *node = NULL;
 
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
@@ -1067,7 +1095,16 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             postfix_query = g_list_append(postfix_query, fsearch_query_node_new(token_value->str, flags));
             break;
         case FSEARCH_QUERY_TOKEN_FIELD:
-            postfix_query = g_list_append(postfix_query, parse_field(parser, token_value, flags));
+            node = parse_field(parser, token_value, false, flags);
+            if (node) {
+                postfix_query = g_list_append(postfix_query, node);
+            }
+            break;
+        case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
+            node = parse_field(parser, token_value, true, flags);
+            if (node) {
+                postfix_query = g_list_append(postfix_query, node);
+            }
             break;
         default:
             g_debug("[infix-postfix] ignoring unexpected token: %d", token);
@@ -1119,7 +1156,7 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
     }
     GNode *root = g_queue_pop_tail(query_stack);
     if (!g_queue_is_empty(query_stack)) {
-        g_debug("[builder_tree] query stack still has nodes left!!");
+        g_critical("[builder_tree] query stack still has nodes left!!");
     }
 
     g_queue_free_full(g_steal_pointer(&query_stack), (GDestroyNotify)free_tree);
