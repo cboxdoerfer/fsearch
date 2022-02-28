@@ -1194,11 +1194,17 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
 
 GNode *
 fsearch_query_node_tree_new(const char *search_term, FsearchQueryFlags flags) {
+    char *query = g_strdup(search_term);
+    char *query_stripped = g_strstrip(query);
+    GNode *res = NULL;
     if (flags & QUERY_FLAG_REGEX) {
-        // If we're in regex mode we're passing the whole search term to the regex engine
+        // If we're in regex mode we're passing the whole query to the regex engine
         // i.e. there's only one query node
-        return g_node_new(fsearch_query_node_new(search_term, flags));
+        res = g_node_new(fsearch_query_node_new(query_stripped, flags));
     }
-
-    return get_nodes(search_term, flags);
+    else {
+        res = get_nodes(query_stripped, flags);
+    }
+    g_clear_pointer(&query, free);
+    return res;
 }
