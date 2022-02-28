@@ -1095,7 +1095,7 @@ static gboolean
 free_tree_node(GNode *node, gpointer data) {
     FsearchQueryNode *n = node->data;
     g_clear_pointer(&n, fsearch_query_node_free);
-    return TRUE;
+    return FALSE;
 }
 
 static void
