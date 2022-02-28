@@ -20,9 +20,6 @@
 #include <stdbool.h>
 #include <unistd.h>
 
-int
-fs_str_is_regex(const char *str);
-
 bool
 fs_str_is_empty(const char *str);
 
@@ -34,12 +31,6 @@ fs_str_get_extension(const char *file_name);
 
 bool
 fs_str_utf8_has_upper(const char *str);
-
-char *
-fs_str_copy(char *dest, char *end, const char *src);
-
-char **
-fs_str_split(const char *str);
 
 bool
 fs_str_case_is_ascii(const char *str);
