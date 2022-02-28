@@ -14,44 +14,100 @@
 #include <stdbool.h>
 #include <string.h>
 
-static FsearchQueryNode *
-parse_field(FsearchQueryParser *parser, GString *field_name, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_expression(FsearchQueryParser *parser, GList *postfix_query, GQueue *operator_stack, FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_modifier(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field(FsearchQueryParser *parser,
+            GList *postfix_query,
+            GQueue *operator_stack,
+            GString *field_name,
+            bool is_empty_field,
+            FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_exact(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_modifier(FsearchQueryParser *parser,
+               GList *postfix_query,
+               GQueue *operator_stack,
+               bool is_empty_field,
+               FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_size(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_exact(FsearchQueryParser *parser,
+                  GList *postfix_query,
+                  GQueue *operator_stack,
+                  bool is_empty_field,
+                  FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_extension(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_size(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_regex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_extension(FsearchQueryParser *parser,
+                      GList *postfix_query,
+                      GQueue *operator_stack,
+                      bool is_empty_field,
+                      FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_path(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_regex(FsearchQueryParser *parser,
+                  GList *postfix_query,
+                  GQueue *operator_stack,
+                  bool is_empty_field,
+                  FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_case(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_path(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_nocase(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_case(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_noregex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_nocase(FsearchQueryParser *parser,
+                   GList *postfix_query,
+                   GQueue *operator_stack,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_nopath(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_noregex(FsearchQueryParser *parser,
+                    GList *postfix_query,
+                    GQueue *operator_stack,
+                    bool is_empty_field,
+                    FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_folder(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_nopath(FsearchQueryParser *parser,
+                   GList *postfix_query,
+                   GQueue *operator_stack,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags);
 
-static FsearchQueryNode *
-parse_field_file(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags);
+static GList *
+parse_field_folder(FsearchQueryParser *parser,
+                   GList *postfix_query,
+                   GQueue *operator_stack,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags);
+
+static GList *
+parse_field_file(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags);
 
 static gboolean
 free_tree_node(GNode *node, gpointer data);
@@ -59,7 +115,11 @@ free_tree_node(GNode *node, gpointer data);
 static void
 free_tree(GNode *root);
 
-typedef FsearchQueryNode *(FsearchTokenFieldParser)(FsearchQueryParser *, bool, FsearchQueryFlags);
+typedef GList *(FsearchTokenFieldParser)(FsearchQueryParser *,
+                                         GList *postfix_query,
+                                         GQueue *operator_stack,
+                                         bool,
+                                         FsearchQueryFlags);
 
 typedef struct FsearchTokenField {
     const char *name;
@@ -750,8 +810,12 @@ parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType 
     return NULL;
 }
 
-static FsearchQueryNode *
-parse_field_size(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_size(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
@@ -796,13 +860,20 @@ out:
     if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
     }
-    return result;
+    if (result) {
+        return g_list_append(postfix_query, result);
+    }
+    return postfix_query;
 }
 
-static FsearchQueryNode *
-parse_field_extension(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_extension(FsearchQueryParser *parser,
+                      GList *postfix_query,
+                      GQueue *operator_stack,
+                      bool is_empty_field,
+                      FsearchQueryFlags flags) {
     if (!is_empty_field && fsearch_query_parser_peek_next_token(parser, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
-        return NULL;
+        return postfix_query;
     }
     FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
     result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
@@ -825,109 +896,156 @@ parse_field_extension(FsearchQueryParser *parser, bool is_empty_field, FsearchQu
     }
     result->num_search_term_list_entries = result->search_term_list ? g_strv_length(result->search_term_list) : 0;
 
-    return result;
+    return g_list_append(postfix_query, result);
 }
 
-static FsearchQueryNode *
-parse_modifier(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_modifier(FsearchQueryParser *parser,
+               GList *postfix_query,
+               GQueue *operator_stack,
+               bool is_empty_field,
+               FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return fsearch_query_node_new_match_everything(flags);
+        return g_list_append(postfix_query, fsearch_query_node_new_match_everything(flags));
     }
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-    FsearchQueryNode *result = NULL;
     if (token == FSEARCH_QUERY_TOKEN_WORD) {
-        result = fsearch_query_node_new(token_value->str, flags);
+        postfix_query = g_list_append(postfix_query, fsearch_query_node_new(token_value->str, flags));
+    }
+    else if (token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+        postfix_query = parse_expression(parser, postfix_query, operator_stack, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD) {
-        result = parse_field(parser, token_value, false, flags);
+        postfix_query = parse_field(parser, postfix_query, operator_stack, token_value, false, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD_EMPTY) {
-        result = parse_field(parser, token_value, true, flags);
+        postfix_query = parse_field(parser, postfix_query, operator_stack, token_value, true, flags);
     }
     else {
-        result = fsearch_query_node_new_match_everything(flags);
+        postfix_query = g_list_append(postfix_query, fsearch_query_node_new_match_everything(flags));
     }
 
     if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
     }
 
-    return result;
+    return postfix_query;
 }
 
-static FsearchQueryNode *
-parse_field_exact(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_exact(FsearchQueryParser *parser,
+                  GList *postfix_query,
+                  GQueue *operator_stack,
+                  bool is_empty_field,
+                  FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
-    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_EXACT_MATCH);
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags | QUERY_FLAG_EXACT_MATCH);
 }
 
-static FsearchQueryNode *
-parse_field_path(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_path(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
-    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_SEARCH_IN_PATH);
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags | QUERY_FLAG_SEARCH_IN_PATH);
 }
 
-static FsearchQueryNode *
-parse_field_nopath(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_nopath(FsearchQueryParser *parser,
+                   GList *postfix_query,
+                   GQueue *operator_stack,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
-    return parse_modifier(parser, is_empty_field, flags & ~QUERY_FLAG_SEARCH_IN_PATH);
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags & ~QUERY_FLAG_SEARCH_IN_PATH);
 }
 
-static FsearchQueryNode *
-parse_field_case(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_case(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
-    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_MATCH_CASE);
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags | QUERY_FLAG_MATCH_CASE);
 }
 
-static FsearchQueryNode *
-parse_field_nocase(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_nocase(FsearchQueryParser *parser,
+                   GList *postfix_query,
+                   GQueue *operator_stack,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
-    return parse_modifier(parser, is_empty_field, flags & ~QUERY_FLAG_MATCH_CASE);
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags & ~QUERY_FLAG_MATCH_CASE);
 }
 
-static FsearchQueryNode *
-parse_field_regex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_regex(FsearchQueryParser *parser,
+                  GList *postfix_query,
+                  GQueue *operator_stack,
+                  bool is_empty_field,
+                  FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
-    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_REGEX);
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags | QUERY_FLAG_REGEX);
 }
 
-static FsearchQueryNode *
-parse_field_noregex(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field_noregex(FsearchQueryParser *parser,
+                    GList *postfix_query,
+                    GQueue *operator_stack,
+                    bool is_empty_field,
+                    FsearchQueryFlags flags) {
     if (is_empty_field) {
         return NULL;
     }
-    return parse_modifier(parser, is_empty_field, flags & ~QUERY_FLAG_REGEX);
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags & ~QUERY_FLAG_REGEX);
 }
 
-static FsearchQueryNode *
-parse_field_folder(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_FOLDERS_ONLY);
+static GList *
+parse_field_folder(FsearchQueryParser *parser,
+                   GList *postfix_query,
+                   GQueue *operator_stack,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags) {
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags | QUERY_FLAG_FOLDERS_ONLY);
 }
 
-static FsearchQueryNode *
-parse_field_file(FsearchQueryParser *parser, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parser, is_empty_field, flags | QUERY_FLAG_FILES_ONLY);
+static GList *
+parse_field_file(FsearchQueryParser *parser,
+                 GList *postfix_query,
+                 GQueue *operator_stack,
+                 bool is_empty_field,
+                 FsearchQueryFlags flags) {
+    return parse_modifier(parser, postfix_query, operator_stack, is_empty_field, flags | QUERY_FLAG_FILES_ONLY);
 }
 
-static FsearchQueryNode *
-parse_field(FsearchQueryParser *parser, GString *field_name, bool is_empty_field, FsearchQueryFlags flags) {
+static GList *
+parse_field(FsearchQueryParser *parser,
+            GList *postfix_query,
+            GQueue *operator_stack,
+            GString *field_name,
+            bool is_empty_field,
+            FsearchQueryFlags flags) {
     // g_debug("[field] detected: [%s:]", field_name->str);
     for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
         if (!strcmp(supported_fields[i].name, field_name->str)) {
-            return supported_fields[i].parser(parser, is_empty_field, flags);
+            return supported_fields[i].parser(parser, postfix_query, operator_stack, is_empty_field, flags);
         }
     }
     return NULL;
@@ -1052,22 +1170,18 @@ uneven_number_of_consecutive_not_tokens(FsearchQueryParser *parser, FsearchQuery
 }
 
 static GList *
-convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlags flags) {
-    GQueue *operator_stack = g_queue_new();
-    GList *postfix_query = NULL;
-
+parse_expression(FsearchQueryParser *parser, GList *postfix_query, GQueue *operator_stack, FsearchQueryFlags flags) {
     uint32_t num_open_brackets = 0;
     uint32_t num_close_brackets = 0;
 
     while (true) {
         GString *token_value = NULL;
         FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-        FsearchQueryNode *node = NULL;
         bool invalid_field_found = false;
 
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
-            goto out;
+            return postfix_query;
         case FSEARCH_QUERY_TOKEN_NOT:
             if (uneven_number_of_consecutive_not_tokens(parser, token)) {
                 // We want to support consecutive NOT operators (i.e. `NOT NOT a`)
@@ -1083,6 +1197,7 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
         case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
             num_open_brackets++;
             push_token(operator_stack, token);
+            // postfix_query = parse_expression(parser, postfix_query, operator_stack, flags);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
             if (num_open_brackets > num_close_brackets) {
@@ -1095,27 +1210,18 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
                 }
                 num_close_brackets++;
             }
+            else {
+                return postfix_query;
+            }
             break;
         case FSEARCH_QUERY_TOKEN_WORD:
             postfix_query = g_list_append(postfix_query, fsearch_query_node_new(token_value->str, flags));
             break;
         case FSEARCH_QUERY_TOKEN_FIELD:
-            node = parse_field(parser, token_value, false, flags);
-            if (node) {
-                postfix_query = g_list_append(postfix_query, node);
-            }
-            else {
-                invalid_field_found = true;
-            }
+            postfix_query = parse_field(parser, postfix_query, operator_stack, token_value, false, flags);
             break;
         case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
-            node = parse_field(parser, token_value, true, flags);
-            if (node) {
-                postfix_query = g_list_append(postfix_query, node);
-            }
-            else {
-                invalid_field_found = true;
-            }
+            postfix_query = parse_field(parser, postfix_query, operator_stack, token_value, true, flags);
             break;
         default:
             g_debug("[infix-postfix] ignoring unexpected token: %d", token);
@@ -1131,8 +1237,16 @@ convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlag
             g_string_free(g_steal_pointer(&token_value), TRUE);
         }
     }
+    return postfix_query;
+}
 
-out:
+static GList *
+convert_query_from_infix_to_postfix(FsearchQueryParser *parser, FsearchQueryFlags flags) {
+    GQueue *operator_stack = g_queue_new();
+    GList *postfix_query = NULL;
+
+    postfix_query = parse_expression(parser, postfix_query, operator_stack, flags);
+
     while (!g_queue_is_empty(operator_stack)) {
         postfix_query = append_operator(postfix_query, pop_token(operator_stack));
     }
