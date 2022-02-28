@@ -143,7 +143,7 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
             if (c == ':') {
                 // field: detected
                 c = get_next_char(parser);
-                if (g_ascii_isspace(c)) {
+                if (g_ascii_isspace(c) || c == '\0') {
                     token = FSEARCH_QUERY_TOKEN_FIELD_EMPTY;
                 }
                 else {
