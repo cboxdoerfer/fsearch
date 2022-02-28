@@ -48,8 +48,8 @@ struct FsearchQueryNode {
 
     FsearchQueryNodeOperator operator;
 
-    char *search_term;
-    size_t search_term_len;
+    char *needle;
+    size_t needle_len;
 
     char **search_term_list;
     uint32_t num_search_term_list_entries;

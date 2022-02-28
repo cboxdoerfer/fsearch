@@ -133,6 +133,39 @@ add_query_to_parse_context(FsearchQueryParseContext *parse_ctx, FsearchQueryNode
     parse_ctx->last_token = token;
 }
 
+static void
+node_init_needle(FsearchQueryNode *node, const char *needle) {
+    assert(node != NULL);
+    assert(needle != NULL);
+    // node->needle must not be set already
+    assert(node->needle == NULL);
+    assert(node->needle_builder == NULL);
+
+    node->needle = g_strdup(needle);
+    node->needle_len = strlen(needle);
+
+    node->fold_options = U_FOLD_CASE_DEFAULT;
+    const char *current_locale = setlocale(LC_CTYPE, NULL);
+    if (current_locale && (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2))) {
+        // Use special case mapping for Turkic languages
+        node->fold_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
+    }
+
+    UErrorCode status = U_ZERO_ERROR;
+    node->case_map = ucasemap_open(current_locale, node->fold_options, &status);
+    assert(U_SUCCESS(status));
+
+    node->normalizer = unorm2_getNFDInstance(&status);
+    assert(U_SUCCESS(status));
+
+    // set up case folded needle in UTF16 format
+    node->needle_builder = calloc(1, sizeof(FsearchUtfBuilder));
+    fsearch_utf_builder_init(node->needle_builder, 8 * node->needle_len);
+    const bool utf_ready =
+        fsearch_utf_builder_normalize_and_fold_case(node->needle_builder, node->case_map, node->normalizer, needle);
+    assert(utf_ready == true);
+}
+
 typedef void(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
 
 typedef struct FsearchTokenField {
@@ -165,21 +198,6 @@ fsearch_highlight_func_none(FsearchQueryNode *node, FsearchQueryMatchData *match
 static u_int32_t
 fsearch_search_func_true(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     return 1;
-}
-
-static uint32_t
-fsearch_search_func_parent(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    const char *parent_path = fsearch_query_match_data_get_parent_path_str(match_data);
-    const bool match_case = node->flags & QUERY_FLAG_MATCH_CASE;
-    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        const int res = match_case ? strcmp(parent_path, node->search_term) : strcasecmp(parent_path, node->search_term);
-        return res == 0 ? 1 : 0;
-    }
-    else {
-        const char *res = match_case ? strstr(parent_path, node->search_term)
-                                     : strcasestr(parent_path, node->search_term);
-        return res ? 1 : 0;
-    }
 }
 
 static uint32_t
@@ -302,10 +320,10 @@ fsearch_highlight_func_size(FsearchQueryNode *node, FsearchQueryMatchData *match
 }
 
 static bool
-fsearch_highlight_func_regex(FsearchQueryMatchData *match_data,
-                             const char *haystack,
-                             FsearchQueryNode *node,
-                             FsearchDatabaseIndexType idx) {
+fsearch_highlight_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
+    const char *haystack = search_in_path ? fsearch_query_match_data_get_path_str(match_data)
+                                          : fsearch_query_match_data_get_name_str(match_data);
     int32_t thread_id = fsearch_query_match_data_get_thread_id(match_data);
     const size_t haystack_len = strlen(haystack);
     pcre2_match_data *regex_match_data = g_ptr_array_index(node->regex_match_data_for_threads, thread_id);
@@ -322,11 +340,11 @@ fsearch_highlight_func_regex(FsearchQueryMatchData *match_data,
     for (int i = 0; i < num_matches; i++) {
         const uint32_t start_idx = ovector[2 * i];
         const uint32_t end_idx = ovector[2 * i + 1];
-        if (idx == DATABASE_INDEX_TYPE_NAME) {
+        if (!search_in_path) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
             pa->start_index = start_idx;
             pa->end_index = end_idx;
-            fsearch_query_match_data_add_highlight(match_data, pa, idx);
+            fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
         }
         else {
             add_path_highlight(match_data, start_idx, end_idx - start_idx);
@@ -335,24 +353,10 @@ fsearch_highlight_func_regex(FsearchQueryMatchData *match_data,
     return true;
 }
 
-static bool
-fsearch_highlight_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return fsearch_highlight_func_regex(match_data,
-                                        fsearch_query_match_data_get_name_str(match_data),
-                                        node,
-                                        DATABASE_INDEX_TYPE_NAME);
-}
-
-static bool
-fsearch_highlight_func_regex_path(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return fsearch_highlight_func_regex(match_data,
-                                        fsearch_query_match_data_get_path_str(match_data),
-                                        node,
-                                        DATABASE_INDEX_TYPE_PATH);
-}
-
 static uint32_t
-fsearch_search_func_regex(FsearchQueryMatchData *match_data, const char *haystack, FsearchQueryNode *node) {
+fsearch_search_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    const char *haystack = node->flags & QUERY_FLAG_SEARCH_IN_PATH ? fsearch_query_match_data_get_path_str(match_data)
+                                                                   : fsearch_query_match_data_get_name_str(match_data);
     const size_t haystack_len = strlen(haystack);
     if (!node->regex) {
         return 0;
@@ -374,18 +378,6 @@ fsearch_search_func_regex(FsearchQueryMatchData *match_data, const char *haystac
     return num_matches > 0 ? 1 : 0;
 }
 
-static uint32_t
-fsearch_search_func_regex_path(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    const char *haystack = fsearch_query_match_data_get_path_str(match_data);
-    return fsearch_search_func_regex(match_data, haystack, node);
-}
-
-static uint32_t
-fsearch_search_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    const char *haystack = fsearch_query_match_data_get_name_str(match_data);
-    return fsearch_search_func_regex(match_data, haystack, node);
-}
-
 // static uint32_t
 // fsearch_search_func_normal_icase_u8_fast(FsearchToken *token, FsearchQueryMatcher *match_data) {
 //     FsearchUtfConversionBuffer *builder = token->get_haystack(match_data);
@@ -400,11 +392,9 @@ fsearch_search_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchData *ma
 // }
 
 static uint32_t
-fsearch_search_func_normal_icase_u8(FsearchUtfBuilder *haystack_builder,
-                                    FsearchUtfBuilder *needle_builder,
-                                    bool exact_match) {
+comp_func_utf(FsearchUtfBuilder *haystack_builder, FsearchUtfBuilder *needle_builder, FsearchQueryFlags flags) {
     if (G_LIKELY(haystack_builder->string_is_folded_and_normalized)) {
-        if (exact_match) {
+        if (flags & QUERY_FLAG_EXACT_MATCH) {
             return !u_strCompare(haystack_builder->string_normalized_folded,
                                  haystack_builder->string_normalized_folded_len,
                                  needle_builder->string_normalized_folded,
@@ -423,7 +413,7 @@ fsearch_search_func_normal_icase_u8(FsearchUtfBuilder *haystack_builder,
     else {
         // failed to fold case, fall back to fast but not accurate ascii search
         g_warning("[utf8_search] failed to lower case: %s", haystack_builder->string);
-        if (exact_match) {
+        if (flags & QUERY_FLAG_EXACT_MATCH) {
             return !strcasecmp(haystack_builder->string, needle_builder->string) ? 1 : 0;
         }
         return strcasestr(haystack_builder->string, needle_builder->string) ? 1 : 0;
@@ -431,124 +421,77 @@ fsearch_search_func_normal_icase_u8(FsearchUtfBuilder *haystack_builder,
 }
 
 static uint32_t
-fsearch_search_func_normal_icase_u8_path(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchUtfBuilder *haystack_builder = fsearch_query_match_data_get_utf_path_builder(match_data);
-    FsearchUtfBuilder *needle_builder = node->needle_builder;
-    return fsearch_search_func_normal_icase_u8(haystack_builder, needle_builder, node->flags & QUERY_FLAG_EXACT_MATCH);
+fsearch_search_func_utf(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    return comp_func_utf(node->flags & QUERY_FLAG_SEARCH_IN_PATH
+                             ? fsearch_query_match_data_get_utf_path_builder(match_data)
+                             : fsearch_query_match_data_get_utf_name_builder(match_data),
+                         node->needle_builder,
+                         node->flags);
 }
 
 static uint32_t
-fsearch_search_func_normal_icase_u8_name(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchUtfBuilder *haystack_builder = fsearch_query_match_data_get_utf_name_builder(match_data);
-    FsearchUtfBuilder *needle_builder = node->needle_builder;
-    return fsearch_search_func_normal_icase_u8(haystack_builder, needle_builder, node->flags & QUERY_FLAG_EXACT_MATCH);
+fsearch_search_func_parent_utf(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    return comp_func_utf(node->flags & QUERY_FLAG_SEARCH_IN_PATH
+                             ? fsearch_query_match_data_get_utf_parent_path_builder(match_data)
+                             : fsearch_query_match_data_get_utf_name_builder(match_data),
+                         node->needle_builder,
+                         node->flags);
 }
 
-typedef int(FsearchStringCompFunc)(const char *, const char *);
-typedef char *(FsearchStringStringFunc)(const char *, const char *);
-
 static bool
-fsearch_highlight_func_path(FsearchQueryNode *node,
-                            FsearchQueryMatchData *match_data,
-                            FsearchStringCompFunc *comp_func,
-                            FsearchStringStringFunc strstr_func) {
-    const char *haystack = fsearch_query_match_data_get_path_str(match_data);
+fsearch_highlight_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
+    const char *haystack = search_in_path ? fsearch_query_match_data_get_path_str(match_data)
+                                          : fsearch_query_match_data_get_name_str(match_data);
     if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        if (!comp_func(haystack, node->search_term)) {
-            PangoAttribute *pa_path = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-            fsearch_query_match_data_add_highlight(match_data, pa_path, DATABASE_INDEX_TYPE_PATH);
-
-            PangoAttribute *pa_name = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-            fsearch_query_match_data_add_highlight(match_data, pa_name, DATABASE_INDEX_TYPE_NAME);
-            return true;
-        }
-        return false;
-    }
-
-    char *dest = strstr_func(haystack, node->search_term);
-    if (!dest) {
-        return false;
-    }
-    const size_t needle_len = strlen(node->search_term);
-    add_path_highlight(match_data, dest - haystack, needle_len);
-    return true;
-}
-
-static bool
-fsearch_highlight_func_normal_icase_path(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return fsearch_highlight_func_path(node, match_data, strcasecmp, strcasestr);
-}
-
-static bool
-fsearch_highlight_func_normal_path(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return fsearch_highlight_func_path(node, match_data, strcmp, strstr);
-}
-
-static bool
-fsearch_highlight_func_name(FsearchQueryNode *node,
-                            FsearchQueryMatchData *match_data,
-                            FsearchStringCompFunc comp_func,
-                            FsearchStringStringFunc strstr_func) {
-    const char *haystack = fsearch_query_match_data_get_name_str(match_data);
-    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        if (!comp_func(haystack, node->search_term)) {
+        if (node->flags & QUERY_FLAG_MATCH_CASE ? !strcmp(haystack, node->needle) : !strcasecmp(haystack, node->needle)) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
             fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
+            if (search_in_path) {
+                PangoAttribute *pa_path = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+                fsearch_query_match_data_add_highlight(match_data, pa_path, DATABASE_INDEX_TYPE_PATH);
+            }
             return true;
         }
         return false;
     }
-    char *dest = strstr_func(haystack, node->search_term);
+    char *dest = node->flags & QUERY_FLAG_MATCH_CASE ? strstr(haystack, node->needle)
+                                                     : strcasestr(haystack, node->needle);
     if (!dest) {
         return false;
     }
-    PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-    pa->start_index = dest - haystack;
-    pa->end_index = pa->start_index + strlen(node->search_term);
-    fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
+    if (search_in_path) {
+        const size_t needle_len = strlen(node->needle);
+        add_path_highlight(match_data, dest - haystack, needle_len);
+    }
+    else {
+        PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
+        pa->start_index = dest - haystack;
+        pa->end_index = pa->start_index + strlen(node->needle);
+        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
+    }
     return true;
 }
 
-static bool
-fsearch_highlight_func_normal_icase_name(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return fsearch_highlight_func_name(node, match_data, strcasecmp, strcasestr);
-}
-
-static bool
-fsearch_highlight_func_normal_name(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return fsearch_highlight_func_name(node, match_data, strcmp, strstr);
+static uint32_t
+comp_func_ascii(const char *haystack, const char *needle, FsearchQueryFlags flags) {
+    if (G_UNLIKELY(flags & QUERY_FLAG_EXACT_MATCH)) {
+        return !(flags & QUERY_FLAG_MATCH_CASE ? strcmp(haystack, needle) : strcasecmp(haystack, needle)) ? 1 : 0;
+    }
+    return (flags & QUERY_FLAG_MATCH_CASE ? strstr(haystack, needle) : strcasestr(haystack, needle)) ? 1 : 0;
 }
 
 static uint32_t
-fsearch_search_func_normal_icase_path(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        return !strcasecmp(fsearch_query_match_data_get_path_str(match_data), node->search_term) ? 1 : 0;
-    }
-    return strcasestr(fsearch_query_match_data_get_path_str(match_data), node->search_term) ? 1 : 0;
+fsearch_search_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    const char *haystack = node->flags & QUERY_FLAG_SEARCH_IN_PATH ? fsearch_query_match_data_get_path_str(match_data)
+                                                                   : fsearch_query_match_data_get_name_str(match_data);
+    return comp_func_ascii(haystack, node->needle, node->flags);
 }
 
 static uint32_t
-fsearch_search_func_normal_icase_name(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        return !strcasecmp(fsearch_query_match_data_get_name_str(match_data), node->search_term) ? 1 : 0;
-    }
-    return strcasestr(fsearch_query_match_data_get_name_str(match_data), node->search_term) ? 1 : 0;
-}
-
-static uint32_t
-fsearch_search_func_normal_path(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        return !strcmp(fsearch_query_match_data_get_path_str(match_data), node->search_term) ? 1 : 0;
-    }
-    return strstr(fsearch_query_match_data_get_path_str(match_data), node->search_term) ? 1 : 0;
-}
-
-static uint32_t
-fsearch_search_func_normal_name(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        return !strcmp(fsearch_query_match_data_get_name_str(match_data), node->search_term) ? 1 : 0;
-    }
-    return strstr(fsearch_query_match_data_get_name_str(match_data), node->search_term) ? 1 : 0;
+fsearch_search_func_parent_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    const char *haystack = fsearch_query_match_data_get_parent_path_str(match_data);
+    return comp_func_ascii(haystack, node->needle, node->flags);
 }
 
 static void
@@ -563,7 +506,7 @@ fsearch_query_node_free(void *data) {
     g_clear_pointer(&node->search_term_list, g_strfreev);
     g_clear_pointer(&node->needle_builder, free);
     g_clear_pointer(&node->case_map, ucasemap_close);
-    g_clear_pointer(&node->search_term, g_free);
+    g_clear_pointer(&node->needle, g_free);
 
     if (node->regex_match_data_for_threads) {
         g_ptr_array_free(g_steal_pointer(&node->regex_match_data_for_threads), TRUE);
@@ -590,22 +533,22 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     assert(new != NULL);
 
     if (comp_type == FSEARCH_TOKEN_COMPARISON_EQUAL) {
-        new->search_term = g_strdup_printf("=%ld", size_start);
+        new->needle = g_strdup_printf("=%ld", size_start);
     }
     else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER_EQ) {
-        new->search_term = g_strdup_printf(">=%ld", size_start);
+        new->needle = g_strdup_printf(">=%ld", size_start);
     }
     else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER) {
-        new->search_term = g_strdup_printf(">%ld", size_start);
+        new->needle = g_strdup_printf(">%ld", size_start);
     }
     else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER_EQ) {
-        new->search_term = g_strdup_printf("<=%ld", size_start);
+        new->needle = g_strdup_printf("<=%ld", size_start);
     }
     else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER) {
-        new->search_term = g_strdup_printf("<%ld", size_start);
+        new->needle = g_strdup_printf("<%ld", size_start);
     }
     else if (comp_type == FSEARCH_TOKEN_COMPARISON_RANGE) {
-        new->search_term = g_strdup_printf("%ld..%ld", size_start, size_end);
+        new->needle = g_strdup_printf("%ld..%ld", size_start, size_end);
     }
     new->query_description = g_string_new("size");
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
@@ -664,7 +607,7 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
     assert(new != NULL);
 
     new->query_description = g_string_new("regex");
-    new->search_term = g_strdup(search_term);
+    new->needle = g_strdup(search_term);
     new->regex = regex;
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     new->flags = flags;
@@ -682,11 +625,8 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
         g_ptr_array_add(new->regex_match_data_for_threads, pcre2_match_data_create_from_pattern(new->regex, NULL));
     }
 
-    const bool search_in_path = flags & QUERY_FLAG_SEARCH_IN_PATH
-                             || (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && new->has_separator);
-
-    new->search_func = search_in_path ? fsearch_search_func_regex_path : fsearch_search_func_regex_name;
-    new->highlight_func = search_in_path ? fsearch_highlight_func_regex_path : fsearch_highlight_func_regex_name;
+    new->search_func = fsearch_search_func_regex;
+    new->highlight_func = fsearch_highlight_func_regex;
     return new;
 }
 
@@ -727,46 +667,17 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     assert(new != NULL);
 
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    new->search_term = g_strdup(search_term);
-    new->search_term_len = strlen(search_term);
-
     new->flags = flags;
+    node_init_needle(new, search_term);
 
-    new->fold_options = U_FOLD_CASE_DEFAULT;
-    const char *current_locale = setlocale(LC_CTYPE, NULL);
-    if (current_locale && (!strncmp(current_locale, "tr", 2) || !strncmp(current_locale, "az", 2))) {
-        // Use special case mapping for Turkic languages
-        new->fold_options = U_FOLD_CASE_EXCLUDE_SPECIAL_I;
-    }
-
-    UErrorCode status = U_ZERO_ERROR;
-    new->case_map = ucasemap_open(current_locale, new->fold_options, &status);
-    assert(U_SUCCESS(status));
-
-    new->normalizer = unorm2_getNFDInstance(&status);
-    assert(U_SUCCESS(status));
-
-    // set up case folded needle in UTF16 format
-    new->needle_builder = calloc(1, sizeof(FsearchUtfBuilder));
-    fsearch_utf_builder_init(new->needle_builder, 8 * new->search_term_len);
-    const bool utf_ready =
-        fsearch_utf_builder_normalize_and_fold_case(new->needle_builder, new->case_map, new->normalizer, search_term);
-    assert(utf_ready == true);
-
-    if (flags & QUERY_FLAG_MATCH_CASE) {
-        new->search_func = search_in_path ? fsearch_search_func_normal_path : fsearch_search_func_normal_name;
-        new->highlight_func = search_in_path ? fsearch_highlight_func_normal_path : fsearch_highlight_func_normal_name;
-        new->query_description = g_string_new("normal_case");
-    }
-    else if (fs_str_case_is_ascii(search_term)) {
-        new->search_func = search_in_path ? fsearch_search_func_normal_icase_path : fsearch_search_func_normal_icase_name;
-        new->highlight_func = search_in_path ? fsearch_highlight_func_normal_icase_path
-                                             : fsearch_highlight_func_normal_icase_name;
+    if (fs_str_case_is_ascii(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
+        new->search_func = fsearch_search_func_ascii;
+        new->highlight_func = fsearch_highlight_func_ascii;
         new->query_description = g_string_new("ascii_icase");
     }
     else {
-        new->search_func = search_in_path ? fsearch_search_func_normal_icase_u8_path
-                                          : fsearch_search_func_normal_icase_u8_name;
+        new->search_func = fsearch_search_func_utf;
+        new->highlight_func = NULL;
         new->query_description = g_string_new("utf_icase");
     }
     return new;
@@ -935,7 +846,7 @@ parse_field_extension(FsearchQueryParser *parser,
     result->flags = flags;
     if (is_empty_field) {
         // Show all files with no extension
-        result->search_term = g_strdup("");
+        result->needle = g_strdup("");
         result->search_term_list = calloc(2, sizeof(char *));
         result->search_term_list[0] = g_strdup("");
         result->search_term_list[1] = NULL;
@@ -943,7 +854,7 @@ parse_field_extension(FsearchQueryParser *parser,
     else {
         GString *token_value = NULL;
         fsearch_query_parser_get_next_token(parser, &token_value);
-        result->search_term = g_strdup(token_value->str);
+        result->needle = g_strdup(token_value->str);
         result->search_term_list = g_strsplit(token_value->str, ";", -1);
         if (token_value) {
             g_string_free(g_steal_pointer(&token_value), TRUE);
@@ -970,11 +881,19 @@ parse_field_parent(FsearchQueryParser *parser,
     FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
     result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     result->query_description = g_string_new("parent");
-    result->search_func = fsearch_search_func_parent;
+    node_init_needle(result, token_value->str);
+
     result->highlight_func = NULL;
     result->flags = flags;
+    if (fs_str_case_is_ascii(result->needle) || flags & QUERY_FLAG_MATCH_CASE) {
+        result->search_func = fsearch_search_func_parent_ascii;
+        result->query_description = g_string_new("parent_ascii");
+    }
+    else {
+        result->search_func = fsearch_search_func_parent_utf;
+        result->query_description = g_string_new("parent_utf");
+    }
 
-    result->search_term = g_strdup(token_value->str);
     g_string_free(g_steal_pointer(&token_value), TRUE);
 
     return add_query_to_parse_context(parse_ctx, result, FSEARCH_QUERY_TOKEN_FIELD);
@@ -1411,7 +1330,7 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
             char *flag_string = query_flags_to_string(node->flags);
             g_print("[%s:'%s':%s] ",
                     node->query_description ? node->query_description->str : "unknown query",
-                    node->search_term ? node->search_term : "",
+                    node->needle ? node->needle : "",
                     flag_string);
             g_free(flag_string);
         }
