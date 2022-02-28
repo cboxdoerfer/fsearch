@@ -66,6 +66,12 @@ parse_field_regex(FsearchQueryParser *parser,
                   FsearchQueryFlags flags);
 
 static void
+parse_field_parent(FsearchQueryParser *parser,
+                   FsearchQueryParseContext *parse_ctx,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags);
+
+static void
 parse_field_path(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
@@ -145,6 +151,7 @@ FsearchTokenField supported_fields[] = {
     {"nocase", parse_field_nocase},
     {"nopath", parse_field_nopath},
     {"noregex", parse_field_noregex},
+    {"parent", parse_field_parent},
     {"path", parse_field_path},
     {"regex", parse_field_regex},
     {"size", parse_field_size},
@@ -158,6 +165,21 @@ fsearch_highlight_func_none(FsearchQueryNode *node, FsearchQueryMatchData *match
 static u_int32_t
 fsearch_search_func_true(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     return 1;
+}
+
+static uint32_t
+fsearch_search_func_parent(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    const char *parent_path = fsearch_query_match_data_get_parent_path_str(match_data);
+    const bool match_case = node->flags & QUERY_FLAG_MATCH_CASE;
+    if (node->flags & QUERY_FLAG_EXACT_MATCH) {
+        const int res = match_case ? strcmp(parent_path, node->search_term) : strcasecmp(parent_path, node->search_term);
+        return res == 0 ? 1 : 0;
+    }
+    else {
+        const char *res = match_case ? strstr(parent_path, node->search_term)
+                                     : strcasestr(parent_path, node->search_term);
+        return res ? 1 : 0;
+    }
 }
 
 static uint32_t
@@ -932,6 +954,30 @@ parse_field_extension(FsearchQueryParser *parser,
     return add_query_to_parse_context(parse_ctx,
                                       result,
                                       is_empty_field ? FSEARCH_QUERY_TOKEN_FIELD_EMPTY : FSEARCH_QUERY_TOKEN_FIELD);
+}
+
+static void
+parse_field_parent(FsearchQueryParser *parser,
+                   FsearchQueryParseContext *parse_ctx,
+                   bool is_empty_field,
+                   FsearchQueryFlags flags) {
+    if (is_empty_field || fsearch_query_parser_peek_next_token(parser, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
+        return;
+    }
+    GString *token_value = NULL;
+    fsearch_query_parser_get_next_token(parser, &token_value);
+
+    FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
+    result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    result->query_description = g_string_new("parent");
+    result->search_func = fsearch_search_func_parent;
+    result->highlight_func = NULL;
+    result->flags = flags;
+
+    result->search_term = g_strdup(token_value->str);
+    g_string_free(g_steal_pointer(&token_value), TRUE);
+
+    return add_query_to_parse_context(parse_ctx, result, FSEARCH_QUERY_TOKEN_FIELD);
 }
 
 static void

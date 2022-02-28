@@ -12,7 +12,9 @@ struct FsearchQueryMatchData {
 
     FsearchUtfBuilder *utf_name_builder;
     FsearchUtfBuilder *utf_path_builder;
+    FsearchUtfBuilder *utf_parent_path_builder;
     GString *path_buffer;
+    GString *parent_path_buffer;
 
     UCaseMap *case_map;
     const UNormalizer2 *normalizer;
@@ -24,9 +26,23 @@ struct FsearchQueryMatchData {
 
     bool utf_name_ready;
     bool utf_path_ready;
+    bool utf_parent_path_ready;
     bool path_ready;
+    bool parent_path_ready;
     bool matches;
 };
+
+FsearchUtfBuilder *
+fsearch_query_match_data_get_utf_parent_path_builder(FsearchQueryMatchData *match_data) {
+    if (!match_data->utf_parent_path_ready) {
+        match_data->utf_parent_path_ready =
+            fsearch_utf_builder_normalize_and_fold_case(match_data->utf_parent_path_builder,
+                                                        match_data->case_map,
+                                                        match_data->normalizer,
+                                                        fsearch_query_match_data_get_parent_path_str(match_data));
+    }
+    return match_data->utf_parent_path_builder;
+}
 
 FsearchUtfBuilder *
 fsearch_query_match_data_get_utf_name_builder(FsearchQueryMatchData *match_data) {
@@ -58,6 +74,22 @@ fsearch_query_match_data_get_name_str(FsearchQueryMatchData *match_data) {
 }
 
 const char *
+fsearch_query_match_data_get_parent_path_str(FsearchQueryMatchData *match_data) {
+    if (!match_data->entry) {
+        return NULL;
+    }
+    if (!match_data->parent_path_ready) {
+        g_string_truncate(match_data->parent_path_buffer, 0);
+        db_entry_append_path(match_data->entry, match_data->parent_path_buffer);
+        g_string_append_c(match_data->parent_path_buffer, G_DIR_SEPARATOR);
+
+        match_data->parent_path_ready = true;
+    }
+
+    return match_data->parent_path_buffer->str;
+}
+
+const char *
 fsearch_query_match_data_get_path_str(FsearchQueryMatchData *match_data) {
     if (!match_data->entry) {
         return NULL;
@@ -85,13 +117,18 @@ fsearch_query_match_data_new(void) {
     assert(match_data != NULL);
     match_data->utf_name_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
+    match_data->utf_parent_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
     fsearch_utf_builder_init(match_data->utf_name_builder, 4 * PATH_MAX);
     fsearch_utf_builder_init(match_data->utf_path_builder, 4 * PATH_MAX);
+    fsearch_utf_builder_init(match_data->utf_parent_path_builder, 4 * PATH_MAX);
     match_data->path_buffer = g_string_sized_new(PATH_MAX);
+    match_data->parent_path_buffer = g_string_sized_new(PATH_MAX);
 
     match_data->utf_name_ready = false;
     match_data->utf_path_ready = false;
+    match_data->utf_parent_path_ready = false;
     match_data->path_ready = false;
+    match_data->parent_path_ready = false;
 
     match_data->fold_options = U_FOLD_CASE_DEFAULT;
     const char *current_locale = setlocale(LC_CTYPE, NULL);
@@ -134,10 +171,13 @@ fsearch_query_match_data_free(FsearchQueryMatchData *match_data) {
     g_clear_pointer(&match_data->utf_name_builder, free);
     fsearch_utf_builder_clear(match_data->utf_path_builder);
     g_clear_pointer(&match_data->utf_path_builder, free);
+    fsearch_utf_builder_clear(match_data->utf_parent_path_builder);
+    g_clear_pointer(&match_data->utf_parent_path_builder, free);
 
     g_clear_pointer(&match_data->case_map, ucasemap_close);
 
     g_string_free(g_steal_pointer(&match_data->path_buffer), TRUE);
+    g_string_free(g_steal_pointer(&match_data->parent_path_buffer), TRUE);
 
     g_clear_pointer(&match_data, free);
 }
@@ -152,7 +192,9 @@ fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDat
     free_highlights(match_data);
     match_data->utf_name_ready = false;
     match_data->utf_path_ready = false;
+    match_data->utf_parent_path_ready = false;
     match_data->path_ready = false;
+    match_data->parent_path_ready = false;
 
     match_data->entry = entry;
 }
