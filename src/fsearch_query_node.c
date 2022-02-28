@@ -578,41 +578,12 @@ fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags
     // We convert the wildcard pattern to a regex pattern
     // The regex engine is not only faster than fnmatch, but it also handles utf8 strings better
     // and it provides matching information, which are useful for the highlighting engine
-    GString *new = g_string_sized_new(strlen(search_term));
-    g_string_append_c(new, '^');
-    const char *s = search_term;
-    while (*s != '\0') {
-        switch (*s) {
-        case '.':
-        case '^':
-        case '$':
-        case '+':
-        case '(':
-        case ')':
-        case '[':
-        case ']':
-        case '{':
-        case '\\':
-        case '|':
-            g_string_append_c(new, '\\');
-            g_string_append_c(new, *s);
-            break;
-        case '*':
-            g_string_append_c(new, '.');
-            g_string_append_c(new, '*');
-            break;
-        case '?':
-            g_string_append_c(new, '.');
-            break;
-        default:
-            g_string_append_c(new, *s);
-            break;
-        }
-        s++;
+    char *regex_search_term = fs_str_convert_wildcard_to_regex_expression(search_term);
+    if (!regex_search_term) {
+        return NULL;
     }
-    g_string_append_c(new, '$');
-    FsearchQueryNode *res = fsearch_query_node_new_regex(new->str, flags);
-    g_string_free(g_steal_pointer(&new), TRUE);
+    FsearchQueryNode *res = fsearch_query_node_new_regex(regex_search_term, flags);
+    g_clear_pointer(&regex_search_term, free);
     return res;
 }
 

@@ -101,3 +101,45 @@ fs_str_get_extension(const char *file_name) {
     }
     return ext + 1;
 }
+
+char *
+fs_str_convert_wildcard_to_regex_expression(const char *str) {
+    if (!str) {
+        return NULL;
+    }
+    GString *regex_epxression = g_string_sized_new(strlen(str));
+    g_string_append_c(regex_epxression, '^');
+    const char *s = str;
+    while (*s != '\0') {
+        switch (*s) {
+        case '.':
+        case '^':
+        case '$':
+        case '+':
+        case '(':
+        case ')':
+        case '[':
+        case ']':
+        case '{':
+        case '\\':
+        case '|':
+            g_string_append_c(regex_epxression, '\\');
+            g_string_append_c(regex_epxression, *s);
+            break;
+        case '*':
+            g_string_append_c(regex_epxression, '.');
+            g_string_append_c(regex_epxression, '*');
+            break;
+        case '?':
+            g_string_append_c(regex_epxression, '.');
+            break;
+        default:
+            g_string_append_c(regex_epxression, *s);
+            break;
+        }
+        s++;
+    }
+    g_string_append_c(regex_epxression, '$');
+
+    return g_string_free(regex_epxression, FALSE);
+}

@@ -34,3 +34,6 @@ fs_str_utf8_has_upper(const char *str);
 
 bool
 fs_str_case_is_ascii(const char *str);
+
+char *
+fs_str_convert_wildcard_to_regex_expression(const char *str);
