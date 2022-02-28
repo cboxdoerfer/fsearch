@@ -153,6 +153,15 @@ main(int argc, char *argv[]) {
             {"case:exact:Ȁ", "ȁ", 0, 0, false},
             {"case:exact:Ȁ", "Ȁ", 0, 0, true},
             {"exact:Ȁ", "Ȁb", 0, 0, false},
+            {"case:(A (b || c)) d", "AbD", 0, 0, true},
+            {"D case:(A (b || c))", "Acd", 0, 0, true},
+            {"case:(A (b || c)) d", "ab", 0, 0, false},
+            {"case:(A (b || c)) d", "AC", 0, 0, false},
+            {"ext:pdf;jpg", "test.pdf", 0, 0, true},
+            {"ext:pdf;jpg", "test.jpg", 0, 0, true},
+            {"ext:pdf;jpg", "test.c", 0, 0, false},
+            {"ext:", "test.c", 0, 0, false},
+            {"ext:", "test", 0, 0, true},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {
