@@ -44,6 +44,7 @@ typedef enum FsearchQueryNodeOperator {
 
 struct FsearchQueryNode {
     FsearchQueryNodeType type;
+    GString *query_description;
 
     FsearchQueryNodeOperator operator;
 

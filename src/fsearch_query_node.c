@@ -527,6 +527,9 @@ fsearch_query_node_free(void *data) {
     assert(node != NULL);
 
     fsearch_utf_conversion_buffer_clear(node->needle_buffer);
+    if (node->query_description) {
+        g_string_free(g_steal_pointer(&node->query_description), TRUE);
+    }
     g_clear_pointer(&node->search_term_list, g_strfreev);
     g_clear_pointer(&node->needle_buffer, free);
     g_clear_pointer(&node->case_map, ucasemap_close);
@@ -556,6 +559,25 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
+    if (comp_type == FSEARCH_TOKEN_COMPARISON_EQUAL) {
+        new->search_term = g_strdup_printf("=%ld", size_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER_EQ) {
+        new->search_term = g_strdup_printf(">=%ld", size_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER) {
+        new->search_term = g_strdup_printf(">%ld", size_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER_EQ) {
+        new->search_term = g_strdup_printf("<=%ld", size_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER) {
+        new->search_term = g_strdup_printf("<%ld", size_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_RANGE) {
+        new->search_term = g_strdup_printf("%ld..%ld", size_start, size_end);
+    }
+    new->query_description = g_string_new("size");
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     new->size = size_start;
     new->size_upper_limit = size_end;
@@ -611,6 +633,8 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
+    new->query_description = g_string_new("regex");
+    new->search_term = g_strdup(search_term);
     new->regex = regex;
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     new->flags = flags;
@@ -704,15 +728,18 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     if (flags & QUERY_FLAG_MATCH_CASE) {
         new->search_func = search_in_path ? fsearch_search_func_normal_path : fsearch_search_func_normal_name;
         new->highlight_func = search_in_path ? fsearch_highlight_func_normal_path : fsearch_highlight_func_normal_name;
+        new->query_description = g_string_new("normal_case");
     }
     else if (fs_str_case_is_ascii(search_term)) {
         new->search_func = search_in_path ? fsearch_search_func_normal_icase_path : fsearch_search_func_normal_icase_name;
         new->highlight_func = search_in_path ? fsearch_highlight_func_normal_icase_path
                                              : fsearch_highlight_func_normal_icase_name;
+        new->query_description = g_string_new("ascii_icase");
     }
     else {
         new->search_func = search_in_path ? fsearch_search_func_normal_icase_u8_path
                                           : fsearch_search_func_normal_icase_u8_name;
+        new->query_description = g_string_new("utf_icase");
     }
     return new;
 }
@@ -1291,6 +1318,36 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
     return root;
 }
 
+static char *
+query_flags_to_string(FsearchQueryFlags flags) {
+    GString *flag_string = g_string_sized_new(10);
+    if (flags & QUERY_FLAG_EXACT_MATCH) {
+        g_string_append_c(flag_string, 'e');
+    }
+    if (flags & QUERY_FLAG_AUTO_MATCH_CASE) {
+        g_string_append_c(flag_string, 'C');
+    }
+    if (flags & QUERY_FLAG_MATCH_CASE) {
+        g_string_append_c(flag_string, 'c');
+    }
+    if (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH) {
+        g_string_append_c(flag_string, 'P');
+    }
+    if (flags & QUERY_FLAG_SEARCH_IN_PATH) {
+        g_string_append_c(flag_string, 'p');
+    }
+    if (flags & QUERY_FLAG_REGEX) {
+        g_string_append_c(flag_string, 'r');
+    }
+    if (flags & QUERY_FLAG_FOLDERS_ONLY) {
+        g_string_append_c(flag_string, 'F');
+    }
+    if (flags & QUERY_FLAG_FILES_ONLY) {
+        g_string_append_c(flag_string, 'f');
+    }
+    return g_string_free(flag_string, FALSE);
+}
+
 static GNode *
 get_nodes(const char *src, FsearchQueryFlags flags) {
     assert(src != NULL);
@@ -1299,19 +1356,26 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
     GList *query_postfix = convert_query_from_infix_to_postfix(parser, flags);
     GNode *root = build_query_tree(query_postfix, flags);
 
-    // g_print("Postfix representation of query:\n");
-    // g_print("================================\n");
-    // for (GList *q = query_postfix; q != NULL; q = q->next) {
-    //     FsearchQueryNode *node = q->data;
-    //     if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-    //         g_print("%s ", node->operator== FSEARCH_TOKEN_OPERATOR_AND ? "AND" : node->operator ==
-    //         FSEARCH_TOKEN_OPERATOR_OR ? "OR" : "NOT");
-    //     }
-    //     else {
-    //         g_print("%s ", node->search_term ? node->search_term : "[empty query]");
-    //     }
-    // }
-    // g_print("\n");
+    g_print("Postfix representation of query:\n");
+    g_print("================================\n");
+    for (GList *q = query_postfix; q != NULL; q = q->next) {
+        FsearchQueryNode *node = q->data;
+        if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
+            g_print("%s ",
+                    node->operator== FSEARCH_TOKEN_OPERATOR_AND  ? "AND"
+                    : node->operator== FSEARCH_TOKEN_OPERATOR_OR ? "OR"
+                                                                 : "NOT");
+        }
+        else {
+            char *flag_string = query_flags_to_string(node->flags);
+            g_print("[%s:%s:%s] ",
+                    node->query_description ? node->query_description->str : "unknown query",
+                    node->search_term ? node->search_term : "",
+                    flag_string);
+            g_free(flag_string);
+        }
+    }
+    g_print("\n");
     g_list_free(g_steal_pointer(&query_postfix));
 
     g_clear_pointer(&parser, fsearch_query_parser_free);
