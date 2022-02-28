@@ -86,11 +86,10 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
         continue;
     }
 
-    if (c == '\0')
-        return FSEARCH_QUERY_TOKEN_EOS;
-
     // field-term relations, and ranges
     switch (c) {
+    case '\0':
+        return FSEARCH_QUERY_TOKEN_EOS;
     case '=':
         return FSEARCH_QUERY_TOKEN_EQUAL;
     case ':':
