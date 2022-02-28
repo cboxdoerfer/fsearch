@@ -5,7 +5,7 @@
 #include <unicode/unorm2.h>
 #include <unicode/utypes.h>
 
-typedef struct FsearchUtfConversionBuffer {
+typedef struct FsearchUtfBuilder {
     char *string;
     char *string_utf8_folded;
     UChar *string_folded;
@@ -19,19 +19,19 @@ typedef struct FsearchUtfConversionBuffer {
     bool initialized;
     bool string_is_folded_and_normalized;
     bool string_utf8_is_folded;
-} FsearchUtfConversionBuffer;
+} FsearchUtfBuilder;
 
 void
-fsearch_utf_conversion_buffer_init(FsearchUtfConversionBuffer *buffer, int32_t num_characters);
+fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters);
 
 void
-fsearch_utf_conversion_buffer_clear(FsearchUtfConversionBuffer *buffer);
+fsearch_utf_builder_clear(FsearchUtfBuilder *builder);
 
 bool
-fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfConversionBuffer *buffer, const char *string);
+fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfBuilder *builder, const char *string);
 
 bool
-fsearch_utf_converion_buffer_normalize_and_fold_case(FsearchUtfConversionBuffer *buffer,
-                                                     UCaseMap *case_map,
-                                                     const UNormalizer2 *normalizer,
-                                                     const char *string);
+fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
+                                            UCaseMap *case_map,
+                                            const UNormalizer2 *normalizer,
+                                            const char *string);

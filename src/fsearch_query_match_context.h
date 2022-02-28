@@ -45,11 +45,11 @@ fsearch_query_match_context_get_name_str(FsearchQueryMatchContext *matcher);
 const char *
 fsearch_query_match_context_get_path_str(FsearchQueryMatchContext *matcher);
 
-FsearchUtfConversionBuffer *
-fsearch_query_match_context_get_utf_path_buffer(FsearchQueryMatchContext *matcher);
+FsearchUtfBuilder *
+fsearch_query_match_context_get_utf_path_builder(FsearchQueryMatchContext *matcher);
 
-FsearchUtfConversionBuffer *
-fsearch_query_match_context_get_utf_name_buffer(FsearchQueryMatchContext *matcher);
+FsearchUtfBuilder *
+fsearch_query_match_context_get_utf_name_builder(FsearchQueryMatchContext *matcher);
 
 FsearchDatabaseEntry *
 fsearch_query_match_context_get_entry(FsearchQueryMatchContext *matcher);

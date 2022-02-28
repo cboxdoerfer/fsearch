@@ -10,8 +10,8 @@
 struct FsearchQueryMatchContext {
     FsearchDatabaseEntry *entry;
 
-    FsearchUtfConversionBuffer *utf_name_buffer;
-    FsearchUtfConversionBuffer *utf_path_buffer;
+    FsearchUtfBuilder *utf_name_builder;
+    FsearchUtfBuilder *utf_path_builder;
     GString *path_buffer;
 
     UCaseMap *case_map;
@@ -28,28 +28,28 @@ struct FsearchQueryMatchContext {
     bool matches;
 };
 
-FsearchUtfConversionBuffer *
-fsearch_query_match_context_get_utf_name_buffer(FsearchQueryMatchContext *matcher) {
+FsearchUtfBuilder *
+fsearch_query_match_context_get_utf_name_builder(FsearchQueryMatchContext *matcher) {
     if (!matcher->utf_name_ready) {
         matcher->utf_name_ready =
-            fsearch_utf_converion_buffer_normalize_and_fold_case(matcher->utf_name_buffer,
-                                                                 matcher->case_map,
-                                                                 matcher->normalizer,
-                                                                 db_entry_get_name_raw_for_display(matcher->entry));
+            fsearch_utf_builder_normalize_and_fold_case(matcher->utf_name_builder,
+                                                        matcher->case_map,
+                                                        matcher->normalizer,
+                                                        db_entry_get_name_raw_for_display(matcher->entry));
     }
-    return matcher->utf_name_buffer;
+    return matcher->utf_name_builder;
 }
 
-FsearchUtfConversionBuffer *
-fsearch_query_match_context_get_utf_path_buffer(FsearchQueryMatchContext *matcher) {
+FsearchUtfBuilder *
+fsearch_query_match_context_get_utf_path_builder(FsearchQueryMatchContext *matcher) {
     if (!matcher->utf_path_ready) {
         matcher->utf_path_ready =
-            fsearch_utf_converion_buffer_normalize_and_fold_case(matcher->utf_path_buffer,
-                                                                 matcher->case_map,
-                                                                 matcher->normalizer,
-                                                                 fsearch_query_match_context_get_path_str(matcher));
+            fsearch_utf_builder_normalize_and_fold_case(matcher->utf_path_builder,
+                                                        matcher->case_map,
+                                                        matcher->normalizer,
+                                                        fsearch_query_match_context_get_path_str(matcher));
     }
-    return matcher->utf_path_buffer;
+    return matcher->utf_path_builder;
 }
 
 const char *
@@ -83,10 +83,10 @@ FsearchQueryMatchContext *
 fsearch_query_match_context_new(void) {
     FsearchQueryMatchContext *matcher = calloc(1, sizeof(FsearchQueryMatchContext));
     assert(matcher != NULL);
-    matcher->utf_name_buffer = calloc(1, sizeof(FsearchUtfConversionBuffer));
-    matcher->utf_path_buffer = calloc(1, sizeof(FsearchUtfConversionBuffer));
-    fsearch_utf_conversion_buffer_init(matcher->utf_name_buffer, 4 * PATH_MAX);
-    fsearch_utf_conversion_buffer_init(matcher->utf_path_buffer, 4 * PATH_MAX);
+    matcher->utf_name_builder = calloc(1, sizeof(FsearchUtfBuilder));
+    matcher->utf_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
+    fsearch_utf_builder_init(matcher->utf_name_builder, 4 * PATH_MAX);
+    fsearch_utf_builder_init(matcher->utf_path_builder, 4 * PATH_MAX);
     matcher->path_buffer = g_string_sized_new(PATH_MAX);
 
     matcher->utf_name_ready = false;
@@ -130,10 +130,10 @@ fsearch_query_match_context_free(FsearchQueryMatchContext *matcher) {
 
     free_highlights(matcher);
 
-    fsearch_utf_conversion_buffer_clear(matcher->utf_name_buffer);
-    g_clear_pointer(&matcher->utf_name_buffer, free);
-    fsearch_utf_conversion_buffer_clear(matcher->utf_path_buffer);
-    g_clear_pointer(&matcher->utf_path_buffer, free);
+    fsearch_utf_builder_clear(matcher->utf_name_builder);
+    g_clear_pointer(&matcher->utf_name_builder, free);
+    fsearch_utf_builder_clear(matcher->utf_path_builder);
+    g_clear_pointer(&matcher->utf_path_builder, free);
 
     g_clear_pointer(&matcher->case_map, ucasemap_close);
 

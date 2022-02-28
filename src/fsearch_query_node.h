@@ -65,7 +65,7 @@ struct FsearchQueryNode {
     UCaseMap *case_map;
     const UNormalizer2 *normalizer;
 
-    FsearchUtfConversionBuffer *needle_buffer;
+    FsearchUtfBuilder *needle_builder;
 
     uint32_t fold_options;
 

@@ -366,9 +366,9 @@ fsearch_search_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchContext 
 
 // static uint32_t
 // fsearch_search_func_normal_icase_u8_fast(FsearchToken *token, FsearchQueryMatcher *matcher) {
-//     FsearchUtfConversionBuffer *buffer = token->get_haystack(matcher);
-//     if (G_LIKELY(buffer->string_utf8_is_folded)) {
-//         return strstr(buffer->string_utf8_folded, token->needle_buffer->string_utf8_folded) ? 1 : 0;
+//     FsearchUtfConversionBuffer *builder = token->get_haystack(matcher);
+//     if (G_LIKELY(builder->string_utf8_is_folded)) {
+//         return strstr(builder->string_utf8_folded, token->needle_buffer->string_utf8_folded) ? 1 : 0;
 //     }
 //     else {
 //         // failed to fold case, fall back to fast but not accurate ascii search
@@ -378,48 +378,48 @@ fsearch_search_func_regex_name(FsearchQueryNode *node, FsearchQueryMatchContext 
 // }
 
 static uint32_t
-fsearch_search_func_normal_icase_u8(FsearchUtfConversionBuffer *haystack_buffer,
-                                    FsearchUtfConversionBuffer *needle_buffer,
+fsearch_search_func_normal_icase_u8(FsearchUtfBuilder *haystack_builder,
+                                    FsearchUtfBuilder *needle_builder,
                                     bool exact_match) {
-    if (G_LIKELY(haystack_buffer->string_is_folded_and_normalized)) {
+    if (G_LIKELY(haystack_builder->string_is_folded_and_normalized)) {
         if (exact_match) {
-            return !u_strCompare(haystack_buffer->string_normalized_folded,
-                                 haystack_buffer->string_normalized_folded_len,
-                                 needle_buffer->string_normalized_folded,
-                                 needle_buffer->string_normalized_folded_len,
+            return !u_strCompare(haystack_builder->string_normalized_folded,
+                                 haystack_builder->string_normalized_folded_len,
+                                 needle_builder->string_normalized_folded,
+                                 needle_builder->string_normalized_folded_len,
                                  false)
                      ? 1
                      : 0;
         }
-        return u_strFindFirst(haystack_buffer->string_normalized_folded,
-                              haystack_buffer->string_normalized_folded_len,
-                              needle_buffer->string_normalized_folded,
-                              needle_buffer->string_normalized_folded_len)
+        return u_strFindFirst(haystack_builder->string_normalized_folded,
+                              haystack_builder->string_normalized_folded_len,
+                              needle_builder->string_normalized_folded,
+                              needle_builder->string_normalized_folded_len)
                  ? 1
                  : 0;
     }
     else {
         // failed to fold case, fall back to fast but not accurate ascii search
-        g_warning("[utf8_search] failed to lower case: %s", haystack_buffer->string);
+        g_warning("[utf8_search] failed to lower case: %s", haystack_builder->string);
         if (exact_match) {
-            return !strcasecmp(haystack_buffer->string, needle_buffer->string) ? 1 : 0;
+            return !strcasecmp(haystack_builder->string, needle_builder->string) ? 1 : 0;
         }
-        return strcasestr(haystack_buffer->string, needle_buffer->string) ? 1 : 0;
+        return strcasestr(haystack_builder->string, needle_builder->string) ? 1 : 0;
     }
 }
 
 static uint32_t
 fsearch_search_func_normal_icase_u8_path(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
-    FsearchUtfConversionBuffer *haystack_buffer = fsearch_query_match_context_get_utf_path_buffer(matcher);
-    FsearchUtfConversionBuffer *needle_buffer = node->needle_buffer;
-    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer, node->flags & QUERY_FLAG_EXACT_MATCH);
+    FsearchUtfBuilder *haystack_builder = fsearch_query_match_context_get_utf_path_builder(matcher);
+    FsearchUtfBuilder *needle_builder = node->needle_builder;
+    return fsearch_search_func_normal_icase_u8(haystack_builder, needle_builder, node->flags & QUERY_FLAG_EXACT_MATCH);
 }
 
 static uint32_t
 fsearch_search_func_normal_icase_u8_name(FsearchQueryNode *node, FsearchQueryMatchContext *matcher) {
-    FsearchUtfConversionBuffer *haystack_buffer = fsearch_query_match_context_get_utf_name_buffer(matcher);
-    FsearchUtfConversionBuffer *needle_buffer = node->needle_buffer;
-    return fsearch_search_func_normal_icase_u8(haystack_buffer, needle_buffer, node->flags & QUERY_FLAG_EXACT_MATCH);
+    FsearchUtfBuilder *haystack_builder = fsearch_query_match_context_get_utf_name_builder(matcher);
+    FsearchUtfBuilder *needle_builder = node->needle_builder;
+    return fsearch_search_func_normal_icase_u8(haystack_builder, needle_builder, node->flags & QUERY_FLAG_EXACT_MATCH);
 }
 
 typedef int(FsearchStringCompFunc)(const char *, const char *);
@@ -534,12 +534,12 @@ fsearch_query_node_free(void *data) {
     FsearchQueryNode *node = data;
     assert(node != NULL);
 
-    fsearch_utf_conversion_buffer_clear(node->needle_buffer);
+    fsearch_utf_builder_clear(node->needle_builder);
     if (node->query_description) {
         g_string_free(g_steal_pointer(&node->query_description), TRUE);
     }
     g_clear_pointer(&node->search_term_list, g_strfreev);
-    g_clear_pointer(&node->needle_buffer, free);
+    g_clear_pointer(&node->needle_builder, free);
     g_clear_pointer(&node->case_map, ucasemap_close);
     g_clear_pointer(&node->search_term, g_free);
 
@@ -725,12 +725,10 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     assert(U_SUCCESS(status));
 
     // set up case folded needle in UTF16 format
-    new->needle_buffer = calloc(1, sizeof(FsearchUtfConversionBuffer));
-    fsearch_utf_conversion_buffer_init(new->needle_buffer, 8 * new->search_term_len);
-    const bool utf_ready = fsearch_utf_converion_buffer_normalize_and_fold_case(new->needle_buffer,
-                                                                                new->case_map,
-                                                                                new->normalizer,
-                                                                                search_term);
+    new->needle_builder = calloc(1, sizeof(FsearchUtfBuilder));
+    fsearch_utf_builder_init(new->needle_builder, 8 * new->search_term_len);
+    const bool utf_ready =
+        fsearch_utf_builder_normalize_and_fold_case(new->needle_builder, new->case_map, new->normalizer, search_term);
     assert(utf_ready == true);
 
     if (flags & QUERY_FLAG_MATCH_CASE) {
