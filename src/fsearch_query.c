@@ -37,7 +37,6 @@ fsearch_query_new(const char *search_term,
     assert(q != NULL);
 
     q->search_term = search_term ? strdup(search_term) : "";
-    q->has_separator = strchr(q->search_term, G_DIR_SEPARATOR) ? 1 : 0;
 
     q->db = db_ref(db);
 

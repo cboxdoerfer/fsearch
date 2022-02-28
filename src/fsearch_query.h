@@ -48,8 +48,6 @@ typedef struct FsearchQuery {
 
     FsearchQueryFlags flags;
 
-    bool has_separator;
-
     char *query_id;
 
     gpointer data;
