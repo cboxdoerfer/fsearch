@@ -909,11 +909,13 @@ parse_field_extension(FsearchQueryParser *parser,
     }
     FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
     result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    result->query_description = g_string_new("ext");
     result->search_func = fsearch_search_func_extension;
     result->highlight_func = fsearch_highlight_func_extension;
     result->flags = flags;
     if (is_empty_field) {
         // Show all files with no extension
+        result->search_term = g_strdup("");
         result->search_term_list = calloc(2, sizeof(char *));
         result->search_term_list[0] = g_strdup("");
         result->search_term_list[1] = NULL;
@@ -921,6 +923,7 @@ parse_field_extension(FsearchQueryParser *parser,
     else {
         GString *token_value = NULL;
         fsearch_query_parser_get_next_token(parser, &token_value);
+        result->search_term = g_strdup(token_value->str);
         result->search_term_list = g_strsplit(token_value->str, ";", -1);
         if (token_value) {
             g_string_free(g_steal_pointer(&token_value), TRUE);
@@ -1362,7 +1365,7 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
         }
         else {
             char *flag_string = query_flags_to_string(node->flags);
-            g_print("[%s:%s:%s] ",
+            g_print("[%s:'%s':%s] ",
                     node->query_description ? node->query_description->str : "unknown query",
                     node->search_term ? node->search_term : "",
                     flag_string);
