@@ -7,6 +7,7 @@
 #include "fsearch_query_match_data.h"
 #include "fsearch_query_parser.h"
 #include "fsearch_string_utils.h"
+#include "fsearch_time_utils.h"
 #include "fsearch_utf.h"
 #include <assert.h>
 #include <glib.h>
@@ -45,6 +46,12 @@ parse_field_exact(FsearchQueryParser *parser,
                   FsearchQueryParseContext *parse_ctx,
                   bool is_empty_field,
                   FsearchQueryFlags flags);
+
+static void
+parse_field_date_modified(FsearchQueryParser *parser,
+                          FsearchQueryParseContext *parse_ctx,
+                          bool is_empty_field,
+                          FsearchQueryFlags flags);
 
 static void
 parse_field_size(FsearchQueryParser *parser,
@@ -159,6 +166,8 @@ typedef struct FsearchTokenField {
 
 FsearchTokenField supported_fields[] = {
     {"case", parse_field_case},
+    {"dm", parse_field_date_modified},
+    {"datemodified", parse_field_date_modified},
     {"exact", parse_field_exact},
     {"ext", parse_field_extension},
     {"file", parse_field_file},
@@ -235,11 +244,34 @@ fsearch_highlight_func_extension(FsearchQueryNode *node, FsearchQueryMatchData *
 }
 
 static uint32_t
+fsearch_search_func_date_modified(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    if (entry) {
+        time_t time = db_entry_get_mtime(entry);
+        switch (node->comparison_type) {
+        case FSEARCH_TOKEN_COMPARISON_EQUAL:
+            return time == node->time;
+        case FSEARCH_TOKEN_COMPARISON_GREATER:
+            return time > node->time;
+        case FSEARCH_TOKEN_COMPARISON_SMALLER:
+            return time < node->time;
+        case FSEARCH_TOKEN_COMPARISON_GREATER_EQ:
+            return time >= node->time;
+        case FSEARCH_TOKEN_COMPARISON_SMALLER_EQ:
+            return time <= node->time;
+        case FSEARCH_TOKEN_COMPARISON_RANGE:
+            return node->time <= time && time < node->time_upper_limit;
+        }
+    }
+    return 0;
+}
+
+static uint32_t
 fsearch_search_func_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
         int64_t size = db_entry_get_size(entry);
-        switch (node->size_comparison_type) {
+        switch (node->comparison_type) {
         case FSEARCH_TOKEN_COMPARISON_EQUAL:
             return size == node->size;
         case FSEARCH_TOKEN_COMPARISON_GREATER:
@@ -251,7 +283,7 @@ fsearch_search_func_size(FsearchQueryNode *node, FsearchQueryMatchData *match_da
         case FSEARCH_TOKEN_COMPARISON_SMALLER_EQ:
             return size <= node->size;
         case FSEARCH_TOKEN_COMPARISON_RANGE:
-            return node->size <= size && size <= node->size_upper_limit;
+            return node->size <= size && size < node->size_upper_limit;
         }
     }
     return 0;
@@ -508,6 +540,43 @@ fsearch_query_node_tree_free(GNode *node) {
 }
 
 static FsearchQueryNode *
+fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
+                                     time_t dm_start,
+                                     time_t dm_end,
+                                     FsearchTokenComparisonType comp_type) {
+    FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
+    assert(new != NULL);
+
+    if (comp_type == FSEARCH_TOKEN_COMPARISON_EQUAL) {
+        new->needle = g_strdup_printf("=%ld", dm_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER_EQ) {
+        new->needle = g_strdup_printf(">=%ld", dm_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER) {
+        new->needle = g_strdup_printf(">%ld", dm_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER_EQ) {
+        new->needle = g_strdup_printf("<=%ld", dm_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER) {
+        new->needle = g_strdup_printf("<%ld", dm_start);
+    }
+    else if (comp_type == FSEARCH_TOKEN_COMPARISON_RANGE) {
+        new->needle = g_strdup_printf("%ld..%ld", dm_start, dm_end);
+    }
+    new->query_description = g_string_new("date-modified");
+    new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    new->time = dm_start;
+    new->time_upper_limit = dm_end;
+    new->comparison_type = comp_type;
+    new->search_func = fsearch_search_func_date_modified;
+    new->highlight_func = NULL;
+    new->flags = flags;
+    return new;
+}
+
+static FsearchQueryNode *
 fsearch_query_node_new_size(FsearchQueryFlags flags,
                             int64_t size_start,
                             int64_t size_end,
@@ -537,7 +606,7 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     new->size = size_start;
     new->size_upper_limit = size_end;
-    new->size_comparison_type = comp_type;
+    new->comparison_type = comp_type;
     new->search_func = fsearch_search_func_size;
     new->highlight_func = fsearch_highlight_func_size;
     new->flags = flags;
@@ -799,6 +868,97 @@ parse_field_size(FsearchQueryParser *parser,
     FsearchQueryToken next_token = fsearch_query_parser_get_next_token(parser, &next_token_value);
     if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
         result = parse_size(next_token_value, flags, comp_type);
+    }
+    if (next_token_value) {
+        g_string_free(g_steal_pointer(&next_token_value), TRUE);
+    }
+
+out:
+    if (token_value) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
+    }
+    if (result) {
+        add_query_to_parse_context(parse_ctx, result, FSEARCH_QUERY_TOKEN_FIELD);
+    }
+}
+
+static FsearchQueryNode *
+parse_date_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
+    char *end_ptr = NULL;
+    time_t time_start = 0;
+    time_t time_end = 0;
+    if (fsearch_time_parse_range(string->str, &time_start, &time_end, &end_ptr)) {
+        if (string_starts_with_range(end_ptr, &end_ptr)) {
+            if (end_ptr && *end_ptr == '\0') {
+                // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
+                comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
+            }
+            else if (fsearch_time_parse_range(end_ptr, NULL, &time_end, &end_ptr)) {
+                comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+            }
+        }
+        else {
+            comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+        }
+        return fsearch_query_node_new_date_modified(flags, time_start, time_end, comp_type);
+    }
+    g_debug("[date-modified:] invalid argument: %s", string->str);
+    return NULL;
+}
+
+static FsearchQueryNode *
+parse_date(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
+    char *end_ptr = NULL;
+    time_t date = 0;
+    time_t date_end = 0;
+    if (fsearch_time_parse_range(string->str, &date, &date_end, &end_ptr)) {
+        g_print("ds: %ld, de: %ld\n", date, date_end);
+        return fsearch_query_node_new_date_modified(flags, date, date_end, FSEARCH_TOKEN_COMPARISON_RANGE);
+    }
+    g_debug("[date:] invalid argument: %s", string->str);
+    return NULL;
+}
+
+static void
+parse_field_date_modified(FsearchQueryParser *parser,
+                          FsearchQueryParseContext *parse_ctx,
+                          bool is_empty_field,
+                          FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return;
+    }
+    GString *token_value = NULL;
+    FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
+    FsearchTokenComparisonType comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
+    FsearchQueryNode *result = NULL;
+    switch (token) {
+    case FSEARCH_QUERY_TOKEN_EQUAL:
+        comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
+        break;
+    case FSEARCH_QUERY_TOKEN_SMALLER:
+        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER;
+        break;
+    case FSEARCH_QUERY_TOKEN_SMALLER_EQ:
+        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER_EQ;
+        break;
+    case FSEARCH_QUERY_TOKEN_GREATER:
+        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER;
+        break;
+    case FSEARCH_QUERY_TOKEN_GREATER_EQ:
+        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
+        break;
+    case FSEARCH_QUERY_TOKEN_WORD:
+        result = parse_date_with_optional_range(token_value, flags, comp_type);
+        goto out;
+    default:
+        g_debug("[size:] invalid or missing argument");
+        goto out;
+    }
+
+    GString *next_token_value = NULL;
+    FsearchQueryToken next_token = fsearch_query_parser_get_next_token(parser, &next_token_value);
+    if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
+        result = parse_date(next_token_value, flags, comp_type);
     }
     if (next_token_value) {
         g_string_free(g_steal_pointer(&next_token_value), TRUE);
