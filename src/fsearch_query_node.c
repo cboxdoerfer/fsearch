@@ -6,6 +6,7 @@
 #include "fsearch_limits.h"
 #include "fsearch_query_match_data.h"
 #include "fsearch_query_parser.h"
+#include "fsearch_size_utils.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_time_utils.h"
 #include "fsearch_utf.h"
@@ -736,54 +737,6 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
 }
 
 static bool
-string_prefix_to_size(const char *str, int64_t *size_out, char **end_ptr) {
-    assert(size_out != NULL);
-    char *size_suffix = NULL;
-    int64_t size = strtoll(str, &size_suffix, 10);
-    if (size_suffix == str) {
-        return false;
-    }
-    if (size_suffix && *size_suffix != '\0') {
-        switch (*size_suffix) {
-        case 'k':
-        case 'K':
-            size *= 1000;
-            break;
-        case 'm':
-        case 'M':
-            size *= 1000 * 1000;
-            break;
-        case 'g':
-        case 'G':
-            size *= 1000 * 1000 * 1000;
-            break;
-        case 't':
-        case 'T':
-            size *= (int64_t)1000 * 1000 * 1000 * 1000;
-            break;
-        default:
-            goto out;
-        }
-        size_suffix++;
-
-        switch (*size_suffix) {
-        case 'b':
-        case 'B':
-            size_suffix++;
-            break;
-        default:
-            goto out;
-        }
-    }
-out:
-    if (end_ptr) {
-        *end_ptr = size_suffix;
-    }
-    *size_out = size;
-    return true;
-}
-
-static bool
 string_starts_with_range(char *str, char **end_ptr) {
     if (g_str_has_prefix(str, "..")) {
         *end_ptr = str + 2;
@@ -801,13 +754,13 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
     char *end_ptr = NULL;
     int64_t size_start = 0;
     int64_t size_end = 0;
-    if (string_prefix_to_size(string->str, &size_start, &end_ptr)) {
+    if (fsearch_size_parse(string->str, &size_start, &end_ptr)) {
         if (string_starts_with_range(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
                 comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
             }
-            else if (string_prefix_to_size(end_ptr, &size_end, &end_ptr)) {
+            else if (fsearch_size_parse(end_ptr, &size_end, &end_ptr)) {
                 comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
             }
         }
@@ -821,7 +774,7 @@ static FsearchQueryNode *
 parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
     char *end_ptr = NULL;
     int64_t size = 0;
-    if (string_prefix_to_size(string->str, &size, &end_ptr)) {
+    if (fsearch_size_parse(string->str, &size, &end_ptr)) {
         return fsearch_query_node_new_size(flags, size, size, comp_type);
     }
     g_debug("[size:] invalid argument: %s", string->str);
