@@ -865,8 +865,28 @@ parse_date(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType 
     time_t date = 0;
     time_t date_end = 0;
     if (fsearch_time_parse_range(string->str, &date, &date_end, &end_ptr)) {
-        g_print("ds: %ld, de: %ld\n", date, date_end);
-        return fsearch_query_node_new_date_modified(flags, date, date_end, FSEARCH_TOKEN_COMPARISON_RANGE);
+        time_t dm_start = date;
+        time_t dm_end = date_end;
+        switch (comp_type) {
+        case FSEARCH_TOKEN_COMPARISON_EQUAL:
+            // Equal actually refers to a time range. E.g. dm:today is the time range from 0:00:00 to 23:59:59
+            comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+            dm_start = date;
+            dm_end = date_end;
+            break;
+        case FSEARCH_TOKEN_COMPARISON_GREATER_EQ:
+        case FSEARCH_TOKEN_COMPARISON_SMALLER:
+            dm_start = date;
+            break;
+        case FSEARCH_TOKEN_COMPARISON_GREATER:
+        case FSEARCH_TOKEN_COMPARISON_SMALLER_EQ:
+            dm_start = date_end;
+            break;
+        default:
+            break;
+        }
+
+        return fsearch_query_node_new_date_modified(flags, dm_start, dm_end, comp_type);
     }
     g_debug("[date:] invalid argument: %s", string->str);
     return NULL;
