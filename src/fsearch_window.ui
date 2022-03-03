@@ -311,7 +311,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
   <template class="FsearchApplicationWindow" parent="GtkApplicationWindow">
     <property name="name">application_window</property>
     <property name="can-focus">False</property>
-    <property name="default-width">800</property>
+    <property name="default-width">850</property>
     <property name="default-height">600</property>
     <property name="icon-name">io.github.cboxdoerfer.FSearch</property>
     <signal name="delete-event" handler="on_fsearch_window_delete_event" swapped="no"/>

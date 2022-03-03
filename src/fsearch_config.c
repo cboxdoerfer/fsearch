@@ -210,7 +210,7 @@ config_load(FsearchConfig *config) {
 
         // Window
         config->restore_window_size = config_load_boolean(key_file, "Interface", "restore_window_size", false);
-        config->window_width = config_load_integer(key_file, "Interface", "window_width", 800);
+        config->window_width = config_load_integer(key_file, "Interface", "window_width", 850);
         config->window_height = config_load_integer(key_file, "Interface", "window_height", 600);
 
         // Columns
@@ -361,7 +361,7 @@ config_load_default(FsearchConfig *config) {
 
     // Window
     config->restore_window_size = false;
-    config->window_width = 800;
+    config->window_width = 850;
     config->window_height = 600;
 
     // Database

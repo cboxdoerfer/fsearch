@@ -1196,7 +1196,7 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
 
-    gint width = 800;
+    gint width = 850;
     gint height = 800;
     gtk_window_get_size(GTK_WINDOW(self), &width, &height);
     config->window_width = width;
