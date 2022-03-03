@@ -1136,7 +1136,7 @@ static FsearchDatabaseIndexType
 get_sort_type_for_name(const char *name) {
     if (!name) {
         g_warning("[get_sort_type_for_name] name is nullptr");
-        return 0;
+        return DATABASE_INDEX_TYPE_NAME;
     }
     if (!strcmp(name, DATABASE_INDEX_TYPE_NAME_STRING)) {
         return DATABASE_INDEX_TYPE_NAME;
