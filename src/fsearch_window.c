@@ -65,6 +65,8 @@ struct _FsearchApplicationWindow {
 
     GtkWidget *statusbar;
 
+    char *active_filter_name;
+
     FsearchResultView *result_view;
 
     guint sort_overlay_timeout_id;
@@ -87,6 +89,9 @@ perform_search(FsearchApplicationWindow *win);
 
 static void
 show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
+
+static void
+on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data);
 
 static void
 sort_overlay_remove_timeout(FsearchApplicationWindow *win) {
@@ -227,6 +232,30 @@ fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
 }
 
 static void
+apply_filter_config(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    g_signal_handlers_block_by_func(win->filter_combobox, on_filter_combobox_changed, win);
+    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(win->filter_combobox));
+
+    uint32_t active_filter = 0;
+    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(config->filters); ++i) {
+        FsearchFilter *filter = fsearch_filter_manager_get_filter(config->filters, i);
+        if (filter && filter->name) {
+            if (win->active_filter_name && !strcmp(win->active_filter_name, filter->name)) {
+                // in order to restore the previously active filter we remember the index of the filter which matches
+                // the active filter name
+                active_filter = i;
+            }
+            gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(win->filter_combobox), NULL, filter->name);
+            g_clear_pointer(&filter, fsearch_filter_unref);
+        }
+    }
+    g_signal_handlers_unblock_by_func(win->filter_combobox, on_filter_combobox_changed, win);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(win->filter_combobox), (int32_t)active_filter);
+}
+
+static void
 fsearch_window_apply_config(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -237,16 +266,7 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     }
     fsearch_application_window_apply_search_revealer_config(self);
     fsearch_application_window_apply_statusbar_revealer_config(self);
-
-    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(self->filter_combobox));
-    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(config->filters); ++i) {
-        FsearchFilter *filter = fsearch_filter_manager_get_filter(config->filters, i);
-        if (filter && filter->name) {
-            gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(self->filter_combobox), NULL, filter->name);
-            g_clear_pointer(&filter, fsearch_filter_unref);
-        }
-    }
-    gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), 0);
+    apply_filter_config(self);
 
     fsearch_window_set_overlay_for_database_state(self);
 }
@@ -283,6 +303,7 @@ fsearch_application_window_finalize(GObject *object) {
     FsearchApplicationWindow *self = (FsearchApplicationWindow *)object;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
+    g_clear_pointer(&self->active_filter_name, free);
     g_clear_pointer(&self->result_view->database_view, db_view_unref);
     g_clear_pointer(&self->result_view, fsearch_result_view_free);
 
@@ -833,11 +854,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     add_columns(list_view, config);
 
     g_signal_connect_object(list_view, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), win, G_CONNECT_AFTER);
-    g_signal_connect_object(list_view,
-                            "row-activated",
-                            G_CALLBACK(on_fsearch_list_view_row_activated),
-                            win,
-                            G_CONNECT_AFTER);
+    g_signal_connect_object(list_view, "row-activated", G_CALLBACK(on_fsearch_list_view_row_activated), win, G_CONNECT_AFTER);
     g_signal_connect(list_view, "key-press-event", G_CALLBACK(on_listview_key_press_event), win);
 
     win->result_view->list_view = list_view;
@@ -900,11 +917,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     g_signal_connect_object(app, "database-scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(app,
-                            "database-update-finished",
-                            G_CALLBACK(on_database_update_finished),
-                            self,
-                            G_CONNECT_AFTER);
+    g_signal_connect_object(app, "database-update-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(app, "database-load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
 }
 
@@ -915,6 +928,10 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
 
     int active = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
     char *active_filter_name = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
+    if (active_filter_name) {
+        g_clear_pointer(&win->active_filter_name, free);
+        win->active_filter_name = g_strdup(active_filter_name);
+    }
     fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar), active ? active_filter_name : NULL);
     g_clear_pointer(&active_filter_name, g_free);
 
@@ -1132,18 +1149,8 @@ fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow
 void
 fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    FsearchConfig *config = fsearch_application_get_config(app);
-    g_signal_handlers_block_by_func(win->filter_combobox, on_filter_combobox_changed, win);
-    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(win->filter_combobox));
-    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(config->filters); ++i) {
-        FsearchFilter *filter = fsearch_filter_manager_get_filter(config->filters, i);
-        if (filter && filter->name) {
-            gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(win->filter_combobox), NULL, filter->name);
-            g_clear_pointer(&filter, fsearch_filter_unref);
-        }
-    }
-    g_signal_handlers_unblock_by_func(win->filter_combobox, on_filter_combobox_changed, win);
-    gtk_combo_box_set_active(GTK_COMBO_BOX(win->filter_combobox), 0);
+
+    apply_filter_config(win);
 
     db_view_set_query_flags(win->result_view->database_view, get_query_flags());
 }
