@@ -90,7 +90,7 @@ fsearch_query_unref(FsearchQuery *query) {
 bool
 fsearch_query_matches_everything(FsearchQuery *query) {
     const bool empty_query = fs_str_is_empty(query->search_term);
-    if (empty_query && (!query->filter || query->filter->type == FSEARCH_FILTER_NONE)) {
+    if (empty_query && (!query->filter || !query->filter->name || fs_str_is_empty(query->filter->name))) {
         return true;
     }
     return false;
@@ -171,18 +171,10 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, Fse
     if (!query->filter) {
         return true;
     }
-    if (query->filter->type == FSEARCH_FILTER_NONE && query->filter->query == NULL) {
+    if (query->filter->query == NULL || fs_str_is_empty(query->filter->query)) {
         return true;
     }
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
-    bool is_dir = type == DATABASE_ENTRY_TYPE_FOLDER ? true : false;
-    bool is_file = type == DATABASE_ENTRY_TYPE_FILE ? true : false;
-    if (query->filter->type != FSEARCH_FILTER_FILES && is_file) {
-        return false;
-    }
-    if (query->filter->type != FSEARCH_FILTER_FOLDERS && is_dir) {
-        return false;
-    }
     if (query->filter_token) {
         return matches(query->filter_token, entry, match_data, type);
     }

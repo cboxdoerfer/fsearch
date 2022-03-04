@@ -5,14 +5,7 @@
 
 #include "fsearch_query_flags.h"
 
-typedef enum FsearchFilterFileType {
-    FSEARCH_FILTER_NONE,
-    FSEARCH_FILTER_FOLDERS,
-    FSEARCH_FILTER_FILES,
-} FsearchFilterFileType;
-
 typedef struct FsearchFilter {
-    FsearchFilterFileType type;
     char *name;
     char *query;
     FsearchQueryFlags flags;
@@ -21,7 +14,7 @@ typedef struct FsearchFilter {
 } FsearchFilter;
 
 FsearchFilter *
-fsearch_filter_new(FsearchFilterFileType type, const char *name, const char *query, FsearchQueryFlags flags);
+fsearch_filter_new(const char *name, const char *query, FsearchQueryFlags flags);
 
 FsearchFilter *
 fsearch_filter_ref(FsearchFilter *filter);

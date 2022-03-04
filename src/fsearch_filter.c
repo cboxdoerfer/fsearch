@@ -8,17 +8,13 @@
 #include <string.h>
 
 FsearchFilter *
-fsearch_filter_new(FsearchFilterFileType type, const char *name, const char *query, FsearchQueryFlags flags) {
+fsearch_filter_new(const char *name, const char *query, FsearchQueryFlags flags) {
     FsearchFilter *filter = calloc(1, sizeof(FsearchFilter));
     assert(filter != NULL);
+    assert(name != NULL);
 
-    filter->type = type;
-    if (name) {
-        filter->name = strdup(name);
-    }
-    if (query) {
-        filter->query = strdup(query);
-    }
+    filter->name = strdup(name);
+    filter->query = strdup(query ? query : "");
     filter->flags = flags;
     filter->ref_count = 1;
     return filter;
@@ -50,6 +46,8 @@ fsearch_filter_unref(FsearchFilter *filter) {
     }
 }
 
+static const char *file_filter = "file:";
+static const char *folder_filter = "folder:";
 static const char *application_filter = "\\.(desktop|DESKTOP)$";
 static const char *document_filter = "\\.(c|chm|cpp|csv|cxx|doc|docm|docx|dot|dotm|dotx|h|hpp|htm|html|hxx|ini|java|"
                                      "lua|mht|mhtml|"
@@ -93,31 +91,22 @@ static const char *archive_filter = "\\.(7z|ace|arj|bz2|cab|gz|gzip|jar|r00|r01|
 GList *
 fsearch_filter_get_default() {
     GList *filters = NULL;
-    filters = g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_NONE, _("All"), NULL, 0));
-    filters = g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_FOLDERS, _("Folders"), NULL, 0));
-    filters = g_list_append(filters, fsearch_filter_new(FSEARCH_FILTER_FILES, _("Files"), NULL, 0));
+    filters = g_list_append(filters, fsearch_filter_new(_("All"), NULL, 0));
+    filters = g_list_append(filters, fsearch_filter_new(_("Folders"), folder_filter, 0));
+    filters = g_list_append(filters, fsearch_filter_new(_("Files"), file_filter, 0));
+    filters = g_list_append(
+        filters,
+        fsearch_filter_new(_("Applications"), application_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
     filters = g_list_append(filters,
-                            fsearch_filter_new(FSEARCH_FILTER_FILES,
-                                               _("Applications"),
-                                               application_filter,
-                                               QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Archives"), archive_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Audio"), audio_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
+                            fsearch_filter_new(_("Archives"), archive_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
     filters = g_list_append(filters,
-                            fsearch_filter_new(FSEARCH_FILTER_FILES,
-                                               _("Documents"),
-                                               document_filter,
-                                               QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Pictures"), image_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
-    filters = g_list_append(
-        filters,
-        fsearch_filter_new(FSEARCH_FILTER_FILES, _("Videos"), video_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
+                            fsearch_filter_new(_("Audio"), audio_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
+    filters = g_list_append(filters,
+                            fsearch_filter_new(_("Documents"), document_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
+    filters = g_list_append(filters,
+                            fsearch_filter_new(_("Pictures"), image_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
+    filters = g_list_append(filters,
+                            fsearch_filter_new(_("Videos"), video_filter, QUERY_FLAG_MATCH_CASE | QUERY_FLAG_REGEX));
 
     return filters;
 }
