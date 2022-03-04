@@ -99,10 +99,9 @@ sort_overlay_remove_timeout(FsearchApplicationWindow *win) {
 static FsearchFilter *
 get_active_filter(FsearchApplicationWindow *win) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
     const uint32_t active_filter = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
-    GList *filter_element = g_list_nth(fsearch_application_get_filters(app), active_filter);
-    FsearchFilter *filter = filter_element->data;
-    return filter;
+    return fsearch_filter_manager_get_filter(config->filters, active_filter);
 }
 
 static FsearchQueryFlags
@@ -240,10 +239,11 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     fsearch_application_window_apply_statusbar_revealer_config(self);
 
     gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(self->filter_combobox));
-    for (GList *f = fsearch_application_get_filters(app); f != NULL; f = f->next) {
-        FsearchFilter *filter = f->data;
+    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(config->filters); ++i) {
+        FsearchFilter *filter = fsearch_filter_manager_get_filter(config->filters, i);
         if (filter && filter->name) {
             gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(self->filter_combobox), NULL, filter->name);
+            g_clear_pointer(&filter, fsearch_filter_unref);
         }
     }
     gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), 0);
@@ -918,7 +918,9 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar), active ? active_filter_name : NULL);
     g_clear_pointer(&active_filter_name, g_free);
 
-    db_view_set_filter(win->result_view->database_view, get_active_filter(win));
+    FsearchFilter *filter = get_active_filter(win);
+    db_view_set_filter(win->result_view->database_view, filter);
+    g_clear_pointer(&filter, fsearch_filter_unref);
 }
 
 static gboolean
@@ -1129,6 +1131,20 @@ fsearch_application_window_apply_search_revealer_config(FsearchApplicationWindow
 
 void
 fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+    g_signal_handlers_block_by_func(win->filter_combobox, on_filter_combobox_changed, win);
+    gtk_combo_box_text_remove_all(GTK_COMBO_BOX_TEXT(win->filter_combobox));
+    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(config->filters); ++i) {
+        FsearchFilter *filter = fsearch_filter_manager_get_filter(config->filters, i);
+        if (filter && filter->name) {
+            gtk_combo_box_text_append(GTK_COMBO_BOX_TEXT(win->filter_combobox), NULL, filter->name);
+            g_clear_pointer(&filter, fsearch_filter_unref);
+        }
+    }
+    g_signal_handlers_unblock_by_func(win->filter_combobox, on_filter_combobox_changed, win);
+    gtk_combo_box_set_active(GTK_COMBO_BOX(win->filter_combobox), 0);
+
     db_view_set_query_flags(win->result_view->database_view, get_query_flags());
 }
 
@@ -1260,12 +1276,14 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
         sort_order = DATABASE_INDEX_TYPE_NAME;
     }
 
+    FsearchFilter *filter = get_active_filter(win);
     win->result_view->database_view = db_view_new(get_query_text(win),
                                                   get_query_flags(),
-                                                  get_active_filter(win),
+                                                  filter,
                                                   sort_order,
                                                   fsearch_window_db_view_notify,
                                                   GUINT_TO_POINTER(win_id));
+    g_clear_pointer(&filter, fsearch_filter_unref);
 
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
     if (db) {

@@ -109,6 +109,52 @@ config_load_string(GKeyFile *key_file, const char *group_name, const char *key, 
     return result;
 }
 
+static FsearchFilterManager *
+config_load_filters(GKeyFile *key_file) {
+    if (!g_key_file_has_group(key_file, "Filters")) {
+        return fsearch_filter_manager_new_with_defaults();
+    }
+
+    uint32_t pos = 1;
+    FsearchFilterManager *filters = fsearch_filter_manager_new();
+    while (true) {
+        char key[100] = "";
+        snprintf(key, sizeof(key), "filter_%d_name", pos);
+        char *name = config_load_string(key_file, "Filters", key, NULL);
+        snprintf(key, sizeof(key), "filter_%d_query", pos);
+        char *query = config_load_string(key_file, "Filters", key, NULL);
+        snprintf(key, sizeof(key), "filter_%d_match_case", pos);
+        bool match_case = config_load_boolean(key_file, "Filters", key, 0);
+        snprintf(key, sizeof(key), "filter_%d_search_in_path", pos);
+        bool search_in_path = config_load_boolean(key_file, "Filters", key, true);
+        snprintf(key, sizeof(key), "filter_%d_enable_regex", pos);
+        bool enable_regex = config_load_boolean(key_file, "Filters", key, false);
+
+        FsearchQueryFlags flags = 0;
+        if (match_case) {
+            flags |= QUERY_FLAG_MATCH_CASE;
+        }
+        if (search_in_path) {
+            flags |= QUERY_FLAG_SEARCH_IN_PATH;
+        }
+        if (enable_regex) {
+            flags |= QUERY_FLAG_REGEX;
+        }
+
+        if (!name) {
+            break;
+        }
+        FsearchFilter *f = fsearch_filter_new(name, query, flags);
+        fsearch_filter_manager_append_filter(filters, f);
+        g_clear_pointer(&f, fsearch_filter_unref);
+        g_clear_pointer(&name, free);
+        g_clear_pointer(&query, free);
+
+        pos++;
+    }
+    return filters;
+}
+
 static GList *
 config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
     uint32_t pos = 1;
@@ -125,8 +171,7 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
 
         pos++;
         if (path) {
-            FsearchIndex *index =
-                fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, 0);
+            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, 0);
             indexes = g_list_append(indexes, index);
             g_clear_pointer(&path, free);
         }
@@ -202,8 +247,7 @@ config_load(FsearchConfig *config) {
         config->show_indexing_status = config_load_boolean(key_file, "Interface", "show_indexing_status", true);
 
         // Warning Dialogs
-        config->show_dialog_failed_opening =
-            config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
+        config->show_dialog_failed_opening = config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
 
         // Applications
         config->folder_open_cmd = config_load_string(key_file, "Applications", "folder_open_cmd", NULL);
@@ -261,11 +305,9 @@ config_load(FsearchConfig *config) {
             config_load_boolean(key_file, "Search", "hide_results_on_empty_search", false);
 
         // Database
-        config->update_database_on_launch =
-            config_load_boolean(key_file, "Database", "update_database_on_launch", true);
+        config->update_database_on_launch = config_load_boolean(key_file, "Database", "update_database_on_launch", true);
         config->update_database_every = config_load_boolean(key_file, "Database", "update_database_every", false);
-        config->update_database_every_hours =
-            config_load_integer(key_file, "Database", "update_database_every_hours", 0);
+        config->update_database_every_hours = config_load_integer(key_file, "Database", "update_database_every_hours", 0);
         config->update_database_every_minutes =
             config_load_integer(key_file, "Database", "update_database_every_minutes", 15);
         config->exclude_hidden_items =
@@ -279,8 +321,9 @@ config_load(FsearchConfig *config) {
         }
 
         config->indexes = config_load_indexes(key_file, config->indexes, "location");
-        config->exclude_locations =
-            config_load_exclude_locations(key_file, config->exclude_locations, "exclude_location");
+        config->exclude_locations = config_load_exclude_locations(key_file, config->exclude_locations, "exclude_location");
+
+        config->filters = config_load_filters(key_file);
 
         result = true;
         debug_message = "[config] loaded in %f ms";
@@ -377,8 +420,40 @@ config_load_default(FsearchConfig *config) {
     FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, g_get_home_dir(), true, true, false, 0);
     config->indexes = g_list_append(config->indexes, index);
     config->exclude_locations = NULL;
+    config->filters = fsearch_filter_manager_new_with_defaults();
 
     return true;
+}
+
+static void
+config_save_filters(GKeyFile *key_file, FsearchFilterManager *filters) {
+    if (!filters) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(filters); ++i) {
+        FsearchFilter *filter = fsearch_filter_manager_get_filter(filters, i);
+        if (!filter) {
+            g_assert_not_reached();
+        }
+
+        const uint32_t pos = i + 1;
+        char key[100] = "";
+        snprintf(key, sizeof(key), "filter_%d_name", pos);
+        g_key_file_set_string(key_file, "Filters", key, filter->name);
+
+        snprintf(key, sizeof(key), "filter_%d_query", pos);
+        g_key_file_set_string(key_file, "Filters", key, filter->query);
+
+        snprintf(key, sizeof(key), "filter_%d_match_case", pos);
+        g_key_file_set_boolean(key_file, "Filters", key, filter->flags & QUERY_FLAG_MATCH_CASE ? true : false);
+
+        snprintf(key, sizeof(key), "filter_%d_search_in_path", pos);
+        g_key_file_set_boolean(key_file, "Filters", key, filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? true : false);
+
+        snprintf(key, sizeof(key), "filter_%d_enable_regex", pos);
+        g_key_file_set_boolean(key_file, "Filters", key, filter->flags & QUERY_FLAG_REGEX ? true : false);
+    }
 }
 
 static void
@@ -524,12 +599,11 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Database", "update_database_on_launch", config->update_database_on_launch);
     g_key_file_set_boolean(key_file, "Database", "update_database_every", config->update_database_every);
     g_key_file_set_integer(key_file, "Database", "update_database_every_hours", config->update_database_every_hours);
-    g_key_file_set_integer(key_file,
-                           "Database",
-                           "update_database_every_minutes",
-                           config->update_database_every_minutes);
+    g_key_file_set_integer(key_file, "Database", "update_database_every_minutes", config->update_database_every_minutes);
     g_key_file_set_boolean(key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
     g_key_file_set_boolean(key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
+
+    config_save_filters(key_file, config->filters);
 
     config_save_indexes(key_file, config->indexes, "location");
     config_save_exclude_locations(key_file, config->exclude_locations, "exclude_location");
@@ -662,6 +736,9 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
         || c1->enable_regex != c2->enable_regex || c1->match_case != c2->match_case) {
         result.search_config_changed = true;
     }
+    if (!fsearch_filter_manager_cmp(c1->filters, c2->filters)) {
+        result.search_config_changed = true;
+    }
     if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons
         || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips) {
         result.listview_config_changed = true;
@@ -705,11 +782,13 @@ config_copy(FsearchConfig *config) {
         copy->indexes = g_list_copy_deep(config->indexes, (GCopyFunc)fsearch_index_copy, NULL);
     }
     if (config->exclude_locations) {
-        copy->exclude_locations =
-            g_list_copy_deep(config->exclude_locations, (GCopyFunc)fsearch_exclude_path_copy, NULL);
+        copy->exclude_locations = g_list_copy_deep(config->exclude_locations, (GCopyFunc)fsearch_exclude_path_copy, NULL);
     }
     if (config->exclude_files) {
         copy->exclude_files = g_strdupv(config->exclude_files);
+    }
+    if (config->filters) {
+        copy->filters = fsearch_filter_manager_copy(config->filters);
     }
     return copy;
 }
@@ -720,6 +799,7 @@ config_free(FsearchConfig *config) {
 
     g_clear_pointer(&config->folder_open_cmd, free);
     g_clear_pointer(&config->sort_by, free);
+    g_clear_pointer(&config->filters, fsearch_filter_manager_free);
     if (config->indexes) {
         g_list_free_full(g_steal_pointer(&config->indexes), (GDestroyNotify)fsearch_index_free);
     }

@@ -24,6 +24,8 @@ libfsearch_sources = [
     'fsearch_exclude_path.c',
     'fsearch_file_utils.c',
     'fsearch_filter.c',
+    'fsearch_filter_editor.c',
+    'fsearch_filter_manager.c',
     'fsearch_index.c',
     'fsearch_list_view.c',
     'fsearch_listview_popup.c',

@@ -22,6 +22,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "fsearch_filter_manager.h"
+
 typedef struct _FsearchConfig FsearchConfig;
 
 typedef enum FsearchConfigActionAfterOpen {
@@ -112,6 +114,7 @@ struct _FsearchConfig {
     bool exclude_hidden_items;
     bool follow_symlinks;
 
+    FsearchFilterManager *filters;
     GList *indexes;
     GList *exclude_locations;
     char **exclude_files;

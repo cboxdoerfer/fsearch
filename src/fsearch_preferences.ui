@@ -32,6 +32,26 @@
     <property name="can-focus">False</property>
     <property name="icon-name">list-remove-symbolic</property>
   </object>
+  <object class="GtkImage" id="image5">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-add-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image6">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-remove-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image7">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">document-edit-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image8">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">document-revert-symbolic</property>
+  </object>
   <object class="GtkAdjustment" id="minute_adjustment">
     <property name="upper">59</property>
     <property name="value">30</property>
@@ -609,7 +629,7 @@
               </packing>
             </child>
             <child>
-              <!-- n-columns=1 n-rows=4 -->
+              <!-- n-columns=1 n-rows=5 -->
               <object class="GtkGrid">
                 <property name="visible">True</property>
                 <property name="can-focus">False</property>
@@ -673,6 +693,152 @@
                   <packing>
                     <property name="left-attach">0</property>
                     <property name="top-attach">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkFrame">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="margin-top">6</property>
+                    <property name="hexpand">True</property>
+                    <property name="label-xalign">0</property>
+                    <property name="shadow-type">none</property>
+                    <child>
+                      <object class="GtkBox">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="hexpand">True</property>
+                        <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-start">6</property>
+                            <property name="margin-end">6</property>
+                            <property name="margin-top">6</property>
+                            <property name="margin-bottom">6</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <object class="GtkScrolledWindow">
+                                <property name="width-request">200</property>
+                                <property name="height-request">200</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="vexpand">True</property>
+                                <property name="shadow-type">in</property>
+                                <child>
+                                  <object class="GtkTreeView" id="filter_list">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="has-tooltip">True</property>
+                                    <child internal-child="selection">
+                                      <object class="GtkTreeSelection"/>
+                                    </child>
+                                  </object>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <child>
+                                  <object class="GtkButton" id="filter_add_button">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Add new filter</property>
+                                    <property name="image">image5</property>
+                                    <property name="always-show-image">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="filter_remove_button">
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Remove selected filter</property>
+                                    <property name="image">image6</property>
+                                    <property name="always-show-image">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="filter_edit_button">
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Edit selected filter</property>
+                                    <property name="image">image7</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="filter_revert_button">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Restore default filters</property>
+                                    <property name="image">image8</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">3</property>
+                                  </packing>
+                                </child>
+                                <style>
+                                  <class name="inline-toolbar"/>
+                                </style>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">True</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                      </object>
+                    </child>
+                    <child type="label">
+                      <object class="GtkLabel">
+                        <property name="visible">True</property>
+                        <property name="can-focus">False</property>
+                        <property name="label" translatable="yes">Filter:</property>
+                        <attributes>
+                          <attribute name="weight" value="bold"/>
+                        </attributes>
+                      </object>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="left-attach">0</property>
+                    <property name="top-attach">4</property>
                   </packing>
                 </child>
               </object>
@@ -1662,7 +1828,11 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Launch desktop files:&lt;/b&gt;
 
-If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the application defined within that file. This way FSearch can act like an application launcher. Otherwise the &lt;i&gt;.desktop&lt;/i&gt; file will be opened with the default handler for this type of files, which is usually a text editor.</property>
+                      If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the application defined
+                      within that file. This way FSearch can act like an application launcher. Otherwise the &lt;i&gt;.desktop&lt;/i&gt;
+                      file will be opened with the default handler for this type of files, which is usually a text
+                      editor.
+                    </property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1671,6 +1841,101 @@ If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the applic
                     <property name="name">page30</property>
                     <property name="title" translatable="yes">page30</property>
                     <property name="position">29</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_filter_list">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Filters:&lt;/b&gt;
+
+                      This is a list of all available filters. A filter is a predefined search.
+
+                      • &lt;b&gt;Name:&lt;/b&gt; A unique and descriptive identifier for the filter
+                      • &lt;b&gt;Query:&lt;/b&gt; The search term by which the database should be filtered
+                    </property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page18</property>
+                    <property name="title" translatable="yes">page18</property>
+                    <property name="position">30</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_filter_add">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Add a new filter:&lt;/b&gt;
+
+                      This button opens a dialog where you can edit a new filter.
+                    </property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page31</property>
+                    <property name="title" translatable="yes">page31</property>
+                    <property name="position">31</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_filter_remove">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Remove selected filter:&lt;/b&gt;
+
+                      This button removes the currently selected filter.
+                    </property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page32</property>
+                    <property name="title" translatable="yes">page32</property>
+                    <property name="position">32</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_filter_edit">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Edit selected filter:&lt;/b&gt;
+
+                      This button opens a dialog where you can edit the selected filter.
+                    </property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page33</property>
+                    <property name="title" translatable="yes">page33</property>
+                    <property name="position">33</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_filter_revert">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Restore default filters:&lt;/b&gt;
+
+                      This button restores the default filter configuration.
+
+                      ⚠ All filters which were created or edited by the user will be lost! ⚠
+                    </property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page34</property>
+                    <property name="title" translatable="yes">page34</property>
+                    <property name="position">34</property>
                   </packing>
                 </child>
               </object>

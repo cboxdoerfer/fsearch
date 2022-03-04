@@ -20,6 +20,7 @@
 
 #include "fsearch_preferences_ui.h"
 #include "fsearch_exclude_path.h"
+#include "fsearch_filter_editor.h"
 #include "fsearch_index.h"
 #include "fsearch_preferences_widgets.h"
 #include <glib.h>
@@ -63,6 +64,14 @@ typedef struct {
     GtkToggleButton *auto_match_case_button;
     GtkToggleButton *search_as_you_type_button;
     GtkToggleButton *hide_results_button;
+
+    GtkTreeView *filter_list;
+    GtkTreeModel *filter_model;
+    GtkWidget *filter_add_button;
+    GtkWidget *filter_edit_button;
+    GtkWidget *filter_remove_button;
+    GtkWidget *filter_revert_button;
+    GtkTreeSelection *filter_selection;
 
     // Database page
     GtkToggleButton *update_db_at_start_button;
@@ -203,6 +212,107 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
 #endif
 }
 
+void
+on_filter_editor_edit_finished(FsearchFilter *old_filter, char *name, char *query, FsearchQueryFlags flags, gpointer data) {
+    FsearchPreferencesInterface *ui = data;
+    fsearch_filter_manager_edit(ui->new_config->filters, old_filter, name, query, flags);
+    g_clear_pointer(&name, g_free);
+    g_clear_pointer(&query, g_free);
+    pref_filter_treeview_update(ui->filter_model, ui->new_config->filters);
+}
+
+void
+on_filter_editor_add_finished(FsearchFilter *old_filter, char *name, char *query, FsearchQueryFlags flags, gpointer data) {
+    FsearchPreferencesInterface *ui = data;
+    if (!name) {
+        return;
+    }
+
+    FsearchFilter *filter = fsearch_filter_new(name, query, flags);
+    g_clear_pointer(&name, g_free);
+    g_clear_pointer(&query, g_free);
+
+    fsearch_filter_manager_append_filter(ui->new_config->filters, filter);
+    pref_filter_treeview_row_add(ui->filter_model, filter);
+    g_clear_pointer(&filter, fsearch_filter_unref);
+}
+
+static FsearchFilter *
+get_selected_filter(FsearchPreferencesInterface *ui) {
+    GtkTreeIter iter = {0};
+    GtkTreeModel *model = NULL;
+    gboolean selected = gtk_tree_selection_get_selected(ui->filter_selection, &model, &iter);
+    if (!selected) {
+        return NULL;
+    }
+
+    char *name = NULL;
+    gtk_tree_model_get(model, &iter, 0, &name, -1);
+    g_assert(name != NULL);
+
+    FsearchFilter *filter = fsearch_filter_manager_get_filter_for_name(ui->new_config->filters, name);
+    g_clear_pointer(&name, g_free);
+
+    return filter;
+}
+
+static void
+on_filter_revert_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    g_clear_pointer(&ui->new_config->filters, fsearch_filter_manager_free);
+    ui->new_config->filters = fsearch_filter_manager_new_with_defaults();
+    pref_filter_treeview_update(ui->filter_model, ui->new_config->filters);
+}
+
+static void
+on_filter_remove_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    FsearchFilter *filter = get_selected_filter(ui);
+    if (filter) {
+        fsearch_filter_manager_remove(ui->new_config->filters, filter);
+        g_clear_pointer(&filter, fsearch_filter_unref);
+        gtk_tree_selection_selected_foreach(ui->filter_selection, pref_treeview_row_remove, NULL);
+    }
+}
+
+static void
+on_filter_edit_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+
+    fsearch_filter_editor_run(_("Edit filter"),
+                              GTK_WINDOW(ui->dialog),
+                              get_selected_filter(ui),
+                              on_filter_editor_edit_finished,
+                              ui);
+}
+
+void
+on_filter_model_reordered(GtkTreeModel *tree_model,
+                          GtkTreePath *path,
+                          GtkTreeIter *iter,
+                          gpointer new_order,
+                          gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    guint n_filters = gtk_tree_model_iter_n_children(tree_model, NULL);
+    fsearch_filter_manager_reorder(ui->new_config->filters, new_order, n_filters);
+}
+
+void
+on_filter_list_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    gboolean selected = gtk_tree_selection_get_selected(ui->filter_selection, NULL, NULL);
+    if (!selected) {
+        return;
+    }
+    on_filter_edit_button_clicked(GTK_BUTTON(ui->filter_edit_button), ui);
+}
+
+static void
+on_filter_add_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+}
+
 static void
 on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
     GtkTreeModel *model = user_data;
@@ -219,6 +329,15 @@ on_index_add_button_clicked(GtkButton *button, gpointer user_data) {
     ctx->model = model;
     ctx->add_path_cb = pref_index_treeview_row_add;
     run_file_chooser_dialog(button, ctx);
+}
+
+static void
+on_filter_list_selection_changed(GtkTreeSelection *sel, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    gboolean selected = gtk_tree_selection_get_selected(sel, NULL, NULL);
+    gtk_widget_set_sensitive(GTK_WIDGET(ui->filter_remove_button), selected);
+    gtk_widget_set_sensitive(GTK_WIDGET(ui->filter_edit_button), selected);
+    return;
 }
 
 static void
@@ -302,10 +421,10 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
     new_config->update_database_on_launch = gtk_toggle_button_get_active(ui->update_db_at_start_button);
     new_config->update_database_every = gtk_toggle_button_get_active(ui->auto_update_checkbox);
-    new_config->update_database_every_hours =
-        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button));
-    new_config->update_database_every_minutes =
-        gtk_spin_button_get_value_as_int(GTK_SPIN_BUTTON(ui->auto_update_minutes_spin_button));
+    new_config->update_database_every_hours = gtk_spin_button_get_value_as_int(
+        GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button));
+    new_config->update_database_every_minutes = gtk_spin_button_get_value_as_int(
+        GTK_SPIN_BUTTON(ui->auto_update_minutes_spin_button));
     new_config->show_base_2_units = gtk_toggle_button_get_active(ui->show_base_2_units);
     new_config->action_after_file_open = gtk_combo_box_get_active(ui->action_after_file_open);
     new_config->action_after_file_open_keyboard = gtk_toggle_button_get_active(ui->action_after_file_open_keyboard);
@@ -393,8 +512,7 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     ui->enable_dark_theme_button =
         toggle_button_get(ui->builder, "enable_dark_theme_button", "help_dark_theme", new_config->enable_dark_theme);
 
-    ui->show_menubar_button =
-        toggle_button_get(ui->builder, "show_menubar_button", "help_csd", !new_config->show_menubar);
+    ui->show_menubar_button = toggle_button_get(ui->builder, "show_menubar_button", "help_csd", !new_config->show_menubar);
 
     ui->show_tooltips_button =
         toggle_button_get(ui->builder, "show_tooltips_button", "help_show_tooltips", new_config->enable_list_tooltips);
@@ -423,10 +541,9 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                      new_config->single_click_open);
 
     ui->launch_desktop_files_button = toggle_button_get(ui->builder,
-                                                     "launch_desktop_files_button",
-                                                     "help_launch_desktop_files",
-                                                     new_config->launch_desktop_files);
-
+                                                        "launch_desktop_files_button",
+                                                        "help_launch_desktop_files",
+                                                        new_config->launch_desktop_files);
 
     ui->show_icons_button =
         toggle_button_get(ui->builder, "show_icons_button", "help_show_icons", new_config->show_listview_icons);
@@ -439,11 +556,11 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     ui->show_base_2_units =
         toggle_button_get(ui->builder, "show_base_2_units", "help_units", new_config->show_base_2_units);
 
-    ui->action_after_file_open_frame =
-        GTK_FRAME(builder_init_widget(ui->builder, "action_after_file_open_frame", "help_action_after_open"));
+    ui->action_after_file_open_frame = GTK_FRAME(
+        builder_init_widget(ui->builder, "action_after_file_open_frame", "help_action_after_open"));
     ui->action_after_file_open_box = GTK_BOX(gtk_builder_get_object(ui->builder, "action_after_file_open_box"));
-    ui->action_after_file_open =
-        GTK_COMBO_BOX(builder_init_widget(ui->builder, "action_after_file_open", "help_action_after_open"));
+    ui->action_after_file_open = GTK_COMBO_BOX(
+        builder_init_widget(ui->builder, "action_after_file_open", "help_action_after_open"));
     gtk_combo_box_set_active(ui->action_after_file_open, new_config->action_after_file_open);
 
     g_signal_connect(ui->action_after_file_open,
@@ -490,6 +607,27 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                 "help_hide_results",
                                                 new_config->hide_results_on_empty_search);
 
+    ui->filter_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "filter_list", "help_filter_list"));
+    g_signal_connect(ui->filter_list, "row-activated", G_CALLBACK(on_filter_list_row_activated), ui);
+
+    ui->filter_model = pref_filter_treeview_init(ui->filter_list, new_config->filters);
+    g_signal_connect(ui->filter_model, "rows-reordered", G_CALLBACK(on_filter_model_reordered), ui);
+
+    ui->filter_add_button = builder_init_widget(ui->builder, "filter_add_button", "help_filter_add");
+    g_signal_connect(ui->filter_add_button, "clicked", G_CALLBACK(on_filter_add_button_clicked), ui);
+
+    ui->filter_edit_button = builder_init_widget(ui->builder, "filter_edit_button", "help_filter_edit");
+    g_signal_connect(ui->filter_edit_button, "clicked", G_CALLBACK(on_filter_edit_button_clicked), ui);
+
+    ui->filter_remove_button = builder_init_widget(ui->builder, "filter_remove_button", "help_filter_remove");
+    g_signal_connect(ui->filter_remove_button, "clicked", G_CALLBACK(on_filter_remove_button_clicked), ui);
+
+    ui->filter_revert_button = builder_init_widget(ui->builder, "filter_revert_button", "help_filter_revert");
+    g_signal_connect(ui->filter_revert_button, "clicked", G_CALLBACK(on_filter_revert_button_clicked), ui);
+
+    ui->filter_selection = gtk_tree_view_get_selection(ui->filter_list);
+    g_signal_connect(ui->filter_selection, "changed", G_CALLBACK(on_filter_list_selection_changed), ui);
+
     // Database page
     ui->update_db_at_start_button = toggle_button_get(ui->builder,
                                                       "update_db_at_start_button",
@@ -504,10 +642,7 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     ui->auto_update_box = GTK_BOX(builder_init_widget(ui->builder, "auto_update_box", "help_update_database_every"));
     ui->auto_update_spin_box = GTK_BOX(gtk_builder_get_object(ui->builder, "auto_update_spin_box"));
     gtk_widget_set_sensitive(GTK_WIDGET(ui->auto_update_spin_box), new_config->update_database_every);
-    g_signal_connect(ui->auto_update_checkbox,
-                     "toggled",
-                     G_CALLBACK(on_toggle_set_sensitive),
-                     ui->auto_update_spin_box);
+    g_signal_connect(ui->auto_update_checkbox, "toggled", G_CALLBACK(on_toggle_set_sensitive), ui->auto_update_spin_box);
 
     ui->auto_update_hours_spin_button =
         builder_init_widget(ui->builder, "auto_update_hours_spin_button", "help_update_database_every");
@@ -558,10 +693,7 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     g_signal_connect(ui->exclude_remove_button, "clicked", G_CALLBACK(on_remove_button_clicked), ui->exclude_list);
 
     ui->exclude_selection = gtk_tree_view_get_selection(ui->exclude_list);
-    g_signal_connect(ui->exclude_selection,
-                     "changed",
-                     G_CALLBACK(on_list_selection_changed),
-                     ui->exclude_remove_button);
+    g_signal_connect(ui->exclude_selection, "changed", G_CALLBACK(on_list_selection_changed), ui->exclude_remove_button);
 
     ui->exclude_hidden_items_button = toggle_button_get(ui->builder,
                                                         "exclude_hidden_items_button",

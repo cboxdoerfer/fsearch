@@ -2,6 +2,7 @@
 
 #include <gtk/gtk.h>
 
+#include "fsearch_filter.h"
 #include "fsearch_preferences_ui.h"
 
 GList *
@@ -12,6 +13,12 @@ pref_exclude_treeview_data_get(GtkTreeView *view);
 
 void
 pref_treeview_row_remove(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer userdata);
+
+void
+pref_filter_treeview_update(GtkTreeModel *filter_model, FsearchFilterManager *filters);
+
+void
+pref_filter_treeview_row_add(GtkTreeModel *index_model, FsearchFilter *filter);
 
 void
 pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path);
@@ -25,3 +32,5 @@ pref_index_treeview_init(GtkTreeView *view, GList *locations);
 GtkTreeModel *
 pref_exclude_treeview_init(GtkTreeView *view, GList *locations);
 
+GtkTreeModel *
+pref_filter_treeview_init(GtkTreeView *view, FsearchFilterManager *filters);

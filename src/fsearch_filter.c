@@ -20,6 +20,31 @@ fsearch_filter_new(const char *name, const char *query, FsearchQueryFlags flags)
     return filter;
 }
 
+bool
+fsearch_filter_cmp(FsearchFilter *filter_1, FsearchFilter *filter_2) {
+    assert(filter_1 != NULL);
+    assert(filter_2 != NULL);
+
+    if (strcmp(filter_1->name, filter_2->name) != 0) {
+        return false;
+    }
+    if (strcmp(filter_1->query, filter_2->query) != 0) {
+        return false;
+    }
+    if (filter_1->flags != filter_2->flags) {
+        return false;
+    }
+    return true;
+}
+
+FsearchFilter *
+fsearch_filter_copy(FsearchFilter *filter) {
+    if (!filter) {
+        return NULL;
+    }
+    return fsearch_filter_new(filter->name, filter->query, filter->flags);
+}
+
 static void
 fsearch_filter_free(FsearchFilter *filter) {
     g_clear_pointer(&filter->name, free);

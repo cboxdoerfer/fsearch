@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
     <gresource prefix="/io/github/cboxdoerfer/fsearch/ui">
+        <file compressed="true">fsearch_filter_editor.ui</file>
         <file compressed="true">fsearch_overlay.ui</file>
         <file compressed="true">fsearch_preferences.ui</file>
         <file compressed="true">fsearch_statusbar.ui</file>
