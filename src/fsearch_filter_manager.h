@@ -41,6 +41,7 @@ void
 fsearch_filter_manager_edit(FsearchFilterManager *manager,
                             FsearchFilter *filter,
                             const char *name,
+                            const char *macro,
                             const char *query,
                             FsearchQueryFlags flags);
 

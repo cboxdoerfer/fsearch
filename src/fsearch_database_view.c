@@ -35,6 +35,7 @@ struct FsearchDatabaseView {
 
     char *query_text;
     FsearchFilter *filter;
+    FsearchFilterManager *filters;
     FsearchQueryFlags query_flags;
     uint32_t query_id;
 
@@ -65,6 +66,7 @@ db_view_free(FsearchDatabaseView *view) {
     db_view_lock(view);
 
     g_clear_pointer(&view->filter, fsearch_filter_unref);
+    g_clear_pointer(&view->filters, fsearch_filter_manager_free);
     g_clear_pointer(&view->query_text, free);
     g_clear_pointer(&view->task_queue, fsearch_task_queue_free);
     g_clear_pointer(&view->query, fsearch_query_unref);
@@ -143,6 +145,7 @@ FsearchDatabaseView *
 db_view_new(const char *query_text,
             FsearchQueryFlags flags,
             FsearchFilter *filter,
+            FsearchFilterManager *filters,
             FsearchDatabaseIndexType sort_order,
             FsearchDatabaseViewNotifyFunc notify_func,
             gpointer notify_func_data) {
@@ -156,6 +159,7 @@ db_view_new(const char *query_text,
     view->query_text = strdup(query_text ? query_text : "");
     view->query_flags = flags;
     view->filter = fsearch_filter_ref(filter);
+    view->filters = fsearch_filter_manager_copy(filters);
     view->sort_order = sort_order;
 
     view->notify_func = notify_func;
@@ -388,6 +392,7 @@ db_view_search(FsearchDatabaseView *view) {
                                         view->db,
                                         view->sort_order,
                                         view->filter,
+                                        view->filters,
                                         view->pool,
                                         view->query_flags,
                                         query_id->str,
@@ -395,6 +400,21 @@ db_view_search(FsearchDatabaseView *view) {
     g_string_free(g_steal_pointer(&query_id), TRUE);
 
     db_search_queue(view->task_queue, g_steal_pointer(&q), db_view_search_task_finished, db_view_search_task_cancelled);
+}
+
+void
+db_view_set_filters(FsearchDatabaseView *view, FsearchFilterManager *filters) {
+    if (!view) {
+        return;
+    }
+    db_view_lock(view);
+
+    g_clear_pointer(&view->filters, fsearch_filter_manager_free);
+    view->filters = fsearch_filter_manager_copy(filters);
+
+    db_view_search(view);
+
+    db_view_unlock(view);
 }
 
 void

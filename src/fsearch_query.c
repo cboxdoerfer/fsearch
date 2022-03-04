@@ -29,6 +29,7 @@ fsearch_query_new(const char *search_term,
                   FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,
+                  FsearchFilterManager *filters,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
                   const char *query_id,
@@ -44,10 +45,10 @@ fsearch_query_new(const char *search_term,
 
     q->pool = pool;
 
-    q->token = fsearch_query_node_tree_new(q->search_term, flags);
+    q->token = fsearch_query_node_tree_new(q->search_term, filters, flags);
 
     if (filter && filter->query) {
-        q->filter_token = fsearch_query_node_tree_new(filter->query, filter->flags);
+        q->filter_token = fsearch_query_node_tree_new(filter->query, filters, filter->flags);
     }
 
     q->filter = fsearch_filter_ref(filter);

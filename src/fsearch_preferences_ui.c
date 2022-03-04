@@ -213,23 +213,35 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
 }
 
 void
-on_filter_editor_edit_finished(FsearchFilter *old_filter, char *name, char *query, FsearchQueryFlags flags, gpointer data) {
+on_filter_editor_edit_finished(FsearchFilter *old_filter,
+                               char *name,
+                               char *macro,
+                               char *query,
+                               FsearchQueryFlags flags,
+                               gpointer data) {
     FsearchPreferencesInterface *ui = data;
-    fsearch_filter_manager_edit(ui->new_config->filters, old_filter, name, query, flags);
+    fsearch_filter_manager_edit(ui->new_config->filters, old_filter, name, macro, query, flags);
     g_clear_pointer(&name, g_free);
+    g_clear_pointer(&macro, g_free);
     g_clear_pointer(&query, g_free);
     pref_filter_treeview_update(ui->filter_model, ui->new_config->filters);
 }
 
 void
-on_filter_editor_add_finished(FsearchFilter *old_filter, char *name, char *query, FsearchQueryFlags flags, gpointer data) {
+on_filter_editor_add_finished(FsearchFilter *old_filter,
+                              char *name,
+                              char *macro,
+                              char *query,
+                              FsearchQueryFlags flags,
+                              gpointer data) {
     FsearchPreferencesInterface *ui = data;
     if (!name) {
         return;
     }
 
-    FsearchFilter *filter = fsearch_filter_new(name, query, flags);
+    FsearchFilter *filter = fsearch_filter_new(name, macro, query, flags);
     g_clear_pointer(&name, g_free);
+    g_clear_pointer(&macro, g_free);
     g_clear_pointer(&query, g_free);
 
     fsearch_filter_manager_append_filter(ui->new_config->filters, filter);

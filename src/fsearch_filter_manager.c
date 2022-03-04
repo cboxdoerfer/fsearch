@@ -109,6 +109,7 @@ void
 fsearch_filter_manager_edit(FsearchFilterManager *manager,
                             FsearchFilter *filter,
                             const char *name,
+                            const char *macro,
                             const char *query,
                             FsearchQueryFlags flags) {
     if (!name) {
@@ -118,6 +119,7 @@ fsearch_filter_manager_edit(FsearchFilterManager *manager,
     g_clear_pointer(&filter->query, g_free);
     filter->name = g_strdup(name);
     filter->query = g_strdup(query ? query : "");
+    filter->macro = g_strdup(macro ? macro : "");
     filter->flags = flags;
     update_filter_to_unique_name(manager->filters, filter);
 }

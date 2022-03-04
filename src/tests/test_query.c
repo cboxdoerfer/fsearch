@@ -9,7 +9,7 @@ static void
 test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFlags flags, bool result) {
     bool found = true;
 
-    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, flags, "debug_query", NULL);
+    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, NULL, flags, "debug_query", NULL);
 
     FsearchDatabaseEntry *entry = calloc(1, db_entry_get_sizeof_file_entry());
     db_entry_set_name(entry, haystack);

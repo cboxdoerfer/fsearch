@@ -1,15 +1,22 @@
 #include <assert.h>
 #include <glib.h>
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include "fsearch_query_parser.h"
+
+struct FsearchQueryParserMacro {
+    char *name;
+    char *text;
+};
 
 struct FsearchQueryParser {
     GString *input;
     GQueue *char_stack;
 
     uint32_t input_pos;
+
+    GPtrArray *macros;
 };
 
 static const char *reserved_chars = ":=<>()";
@@ -72,6 +79,26 @@ parse_quoted_string(FsearchQueryParser *parser, GString *string) {
             g_string_append_c(string, c);
         }
     }
+}
+
+static gboolean
+handle_macro(FsearchQueryParser *parser, GString *name) {
+    if (!parser->macros) {
+        return FALSE;
+    }
+    for (uint32_t i = 0; i < parser->macros->len; ++i) {
+        FsearchQueryParserMacro *macro = g_ptr_array_index(parser->macros, i);
+        if (macro && !strcmp(macro->name, name->str) && macro->text) {
+            size_t macro_text_len = strlen(macro->text);
+            give_back_char(parser, ' ');
+            for (int32_t j = 0; j < macro_text_len; ++j) {
+                give_back_char(parser, macro->text[macro_text_len - 1 - j]);
+            }
+            give_back_char(parser, ' ');
+            return TRUE;
+        }
+    }
+    return FALSE;
 }
 
 FsearchQueryToken
@@ -142,15 +169,21 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
         else if (strchr(reserved_chars, c)) {
             if (c == ':') {
                 // field: detected
-                c = get_next_char(parser);
-                if (g_ascii_isspace(c) || c == '\0') {
-                    token = FSEARCH_QUERY_TOKEN_FIELD_EMPTY;
+                if (!handle_macro(parser, token_value)) {
+                    c = get_next_char(parser);
+                    if (g_ascii_isspace(c) || c == '\0') {
+                        token = FSEARCH_QUERY_TOKEN_FIELD_EMPTY;
+                    }
+                    else {
+                        give_back_char(parser, c);
+                        token = FSEARCH_QUERY_TOKEN_FIELD;
+                    }
+                    goto out;
                 }
                 else {
-                    give_back_char(parser, c);
-                    token = FSEARCH_QUERY_TOKEN_FIELD;
+                    token = FSEARCH_QUERY_TOKEN_MACRO;
+                    goto out;
                 }
-                goto out;
             }
             // word broken by reserved character
             give_back_char(parser, c);
@@ -202,7 +235,7 @@ fsearch_query_parser_peek_next_token(FsearchQueryParser *parser, GString **word)
 }
 
 FsearchQueryParser *
-fsearch_query_parser_new(const char *input) {
+fsearch_query_parser_new(const char *input, GPtrArray *macros) {
     assert(input != NULL);
 
     FsearchQueryParser *parser = calloc(1, sizeof(FsearchQueryParser));
@@ -210,6 +243,8 @@ fsearch_query_parser_new(const char *input) {
 
     parser->input = g_string_new(input);
     parser->input_pos = 0;
+
+    parser->macros = macros;
 
     parser->char_stack = g_queue_new();
     return parser;
@@ -223,4 +258,24 @@ fsearch_query_parser_free(FsearchQueryParser *parser) {
     g_string_free(g_steal_pointer(&parser->input), TRUE);
     g_clear_pointer(&parser->char_stack, g_queue_free);
     g_clear_pointer(&parser, free);
+}
+
+void
+fsearch_query_parser_macro_free(FsearchQueryParserMacro *macro) {
+    if (!macro) {
+        return;
+    }
+    g_clear_pointer(&macro->name, free);
+    g_clear_pointer(&macro->text, free);
+    g_clear_pointer(&macro, free);
+}
+
+FsearchQueryParserMacro *
+fsearch_query_parser_macro_new(const char *name, const char *text) {
+    FsearchQueryParserMacro *macro = calloc(1, sizeof(FsearchQueryParserMacro));
+    assert(macro != NULL);
+
+    macro->name = g_strdup(name ? name : "");
+    macro->text = g_strdup(text ? text : "");
+    return macro;
 }

@@ -25,7 +25,7 @@
 
 #include "fsearch_array.h"
 #include "fsearch_database.h"
-#include "fsearch_filter.h"
+#include "fsearch_filter_manager.h"
 #include "fsearch_list_view.h"
 #include "fsearch_query_match_data.h"
 #include "fsearch_query_flags.h"
@@ -42,6 +42,7 @@ typedef struct FsearchQuery {
     FsearchThreadPool *pool;
 
     FsearchFilter *filter;
+    FsearchFilterManager *filters;
 
     GNode *token;
     GNode *filter_token;
@@ -60,6 +61,7 @@ fsearch_query_new(const char *search_term,
                   FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,
+                  FsearchFilterManager *filters,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
                   const char *query_id,

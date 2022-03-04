@@ -123,6 +123,8 @@ config_load_filters(GKeyFile *key_file) {
         char *name = config_load_string(key_file, "Filters", key, NULL);
         snprintf(key, sizeof(key), "filter_%d_query", pos);
         char *query = config_load_string(key_file, "Filters", key, NULL);
+        snprintf(key, sizeof(key), "filter_%d_macro", pos);
+        char *macro = config_load_string(key_file, "Filters", key, NULL);
         snprintf(key, sizeof(key), "filter_%d_match_case", pos);
         bool match_case = config_load_boolean(key_file, "Filters", key, 0);
         snprintf(key, sizeof(key), "filter_%d_search_in_path", pos);
@@ -144,10 +146,11 @@ config_load_filters(GKeyFile *key_file) {
         if (!name) {
             break;
         }
-        FsearchFilter *f = fsearch_filter_new(name, query, flags);
+        FsearchFilter *f = fsearch_filter_new(name, macro, query, flags);
         fsearch_filter_manager_append_filter(filters, f);
         g_clear_pointer(&f, fsearch_filter_unref);
         g_clear_pointer(&name, free);
+        g_clear_pointer(&macro, free);
         g_clear_pointer(&query, free);
 
         pos++;
@@ -441,6 +444,9 @@ config_save_filters(GKeyFile *key_file, FsearchFilterManager *filters) {
         char key[100] = "";
         snprintf(key, sizeof(key), "filter_%d_name", pos);
         g_key_file_set_string(key_file, "Filters", key, filter->name);
+
+        snprintf(key, sizeof(key), "filter_%d_macro", pos);
+        g_key_file_set_string(key_file, "Filters", key, filter->macro);
 
         snprintf(key, sizeof(key), "filter_%d_query", pos);
         g_key_file_set_string(key_file, "Filters", key, filter->query);

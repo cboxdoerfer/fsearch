@@ -9,6 +9,7 @@ struct FsearchFilterEditor {
     GtkBuilder *builder;
     GtkWidget *dialog;
     GtkEntry *name_entry;
+    GtkEntry *macro_entry;
     GtkTextBuffer *query_text_buffer;
     GtkToggleButton *search_in_path;
     GtkToggleButton *enable_regex;
@@ -31,12 +32,15 @@ on_editor_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user
 
     char *name = NULL;
     char *query = NULL;
+    char *macro = NULL;
     FsearchQueryFlags flags = 0;
 
     const char *name_str = gtk_entry_get_text(editor->name_entry);
     if (response == GTK_RESPONSE_OK && !fs_str_is_empty(name_str)) {
         name = g_strdup(name_str);
 
+        macro = g_strdup(gtk_entry_get_text(editor->macro_entry));
+        g_print("Macro name: %s\n", macro);
         GtkTextIter start, end;
         gtk_text_buffer_get_bounds(editor->query_text_buffer, &start, &end);
         query = gtk_text_buffer_get_text(editor->query_text_buffer, &start, &end, FALSE);
@@ -55,7 +59,7 @@ on_editor_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user
     }
 
     if (editor->callback) {
-        editor->callback(editor->filter, name, query, flags, editor->data);
+        editor->callback(editor->filter, name, macro, query, flags, editor->data);
     }
 
     fsearch_filter_editor_free(editor);
@@ -80,6 +84,7 @@ fsearch_filter_editor_run(const char *title,
     editor->enable_regex = GTK_TOGGLE_BUTTON(gtk_builder_get_object(editor->builder, "filter_regex"));
     editor->match_case = GTK_TOGGLE_BUTTON(gtk_builder_get_object(editor->builder, "filter_match_case"));
     editor->name_entry = GTK_ENTRY(gtk_builder_get_object(editor->builder, "filter_name"));
+    editor->macro_entry = GTK_ENTRY(gtk_builder_get_object(editor->builder, "filter_macro"));
     editor->query_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(editor->builder, "filter_query_buffer"));
 
     if (title) {
@@ -88,6 +93,7 @@ fsearch_filter_editor_run(const char *title,
 
     if (filter) {
         gtk_entry_set_text(editor->name_entry, filter->name);
+        gtk_entry_set_text(editor->macro_entry, filter->macro);
         gtk_text_buffer_set_text(editor->query_text_buffer, filter->query, -1);
         gtk_toggle_button_set_active(editor->search_in_path, filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? TRUE : FALSE);
         gtk_toggle_button_set_active(editor->match_case, filter->flags & QUERY_FLAG_MATCH_CASE ? TRUE : FALSE);

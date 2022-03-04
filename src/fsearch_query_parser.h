@@ -17,13 +17,22 @@ typedef enum FsearchQueryToken {
     FSEARCH_QUERY_TOKEN_EQUAL,
     FSEARCH_QUERY_TOKEN_BRACKET_OPEN,
     FSEARCH_QUERY_TOKEN_BRACKET_CLOSE,
+    FSEARCH_QUERY_TOKEN_MACRO,
     NUM_FSEARCH_QUERY_TOKENS,
 } FsearchQueryToken;
 
 typedef struct FsearchQueryParser FsearchQueryParser;
 
+typedef struct FsearchQueryParserMacro FsearchQueryParserMacro;
+
+void
+fsearch_query_parser_macro_free(FsearchQueryParserMacro *macro);
+
+FsearchQueryParserMacro *
+fsearch_query_parser_macro_new(const char *name, const char *text);
+
 FsearchQueryParser *
-fsearch_query_parser_new(const char *input);
+fsearch_query_parser_new(const char *input, GPtrArray *macros);
 
 void
 fsearch_query_parser_free(FsearchQueryParser *parser);

@@ -19,6 +19,7 @@ typedef struct FsearchQueryParseContext {
     GList *suffix_list;
     GQueue *operator_stack;
     FsearchQueryToken last_token;
+    FsearchFilterManager *filters;
 } FsearchQueryParseContext;
 
 static FsearchQueryNode *fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
@@ -1157,7 +1158,6 @@ parse_field(FsearchQueryParser *parser,
             return;
         }
     }
-    return;
 }
 
 static GNode *
@@ -1421,15 +1421,50 @@ query_flags_to_string(FsearchQueryFlags flags) {
     return g_string_free(flag_string, FALSE);
 }
 
+static GPtrArray *
+get_filter_macros(FsearchFilterManager *manager) {
+    GPtrArray *macros = g_ptr_array_sized_new(10);
+    g_ptr_array_set_free_func(macros, (GDestroyNotify)fsearch_query_parser_macro_free);
+
+    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(manager); ++i) {
+        FsearchFilter *filter = fsearch_filter_manager_get_filter(manager, i);
+        if (filter && filter->macro && !fs_str_is_empty(filter->macro)) {
+            GString *macro_text = g_string_new(filter->query);
+            int32_t n_flags = 0;
+            if (filter->flags & QUERY_FLAG_SEARCH_IN_PATH) {
+                g_string_prepend(macro_text, "path:(");
+                n_flags++;
+            }
+            if (filter->flags & QUERY_FLAG_MATCH_CASE) {
+                g_string_prepend(macro_text, "case:(");
+                n_flags++;
+            }
+            if (filter->flags & QUERY_FLAG_REGEX) {
+                g_string_prepend(macro_text, "regex:(");
+                n_flags++;
+            }
+            for (uint32_t n = 0; n < n_flags; ++n) {
+                g_string_append_c(macro_text, ')');
+            }
+            FsearchQueryParserMacro *macro = fsearch_query_parser_macro_new(filter->macro, macro_text->str);
+            g_string_free(macro_text, TRUE);
+            g_ptr_array_add(macros, macro);
+        }
+    }
+    return macros;
+}
+
 static GNode *
-get_nodes(const char *src, FsearchQueryFlags flags) {
+get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flags) {
     assert(src != NULL);
 
-    FsearchQueryParser *parser = fsearch_query_parser_new(src);
+    GPtrArray *macros = get_filter_macros(filters);
+    FsearchQueryParser *parser = fsearch_query_parser_new(src, macros);
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
     assert(parse_context != NULL);
     parse_context->last_token = FSEARCH_QUERY_TOKEN_NONE;
     parse_context->operator_stack = g_queue_new();
+    parse_context->filters = filters;
     parse_expression(parser, parse_context, flags);
 
     g_print("Postfix representation of query:\n");
@@ -1455,6 +1490,7 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
 
     GNode *root = build_query_tree(parse_context->suffix_list, flags);
 
+    g_ptr_array_free(g_steal_pointer(&macros), TRUE);
     g_list_free(g_steal_pointer(&parse_context->suffix_list));
     g_queue_free_full(g_steal_pointer(&parse_context->operator_stack), (GDestroyNotify)fsearch_query_node_free);
     g_clear_pointer(&parse_context, free);
@@ -1463,7 +1499,7 @@ get_nodes(const char *src, FsearchQueryFlags flags) {
 }
 
 GNode *
-fsearch_query_node_tree_new(const char *search_term, FsearchQueryFlags flags) {
+fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filters, FsearchQueryFlags flags) {
     char *query = g_strdup(search_term);
     char *query_stripped = g_strstrip(query);
     GNode *res = NULL;
@@ -1473,7 +1509,7 @@ fsearch_query_node_tree_new(const char *search_term, FsearchQueryFlags flags) {
         res = g_node_new(fsearch_query_node_new(query_stripped, flags));
     }
     else {
-        res = get_nodes(query_stripped, flags);
+        res = get_nodes(query_stripped, filters, flags);
     }
     g_clear_pointer(&query, free);
     return res;

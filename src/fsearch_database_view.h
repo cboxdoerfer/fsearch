@@ -2,7 +2,7 @@
 
 #include "fsearch_database.h"
 #include "fsearch_database_entry.h"
-#include "fsearch_filter.h"
+#include "fsearch_filter_manager.h"
 #include "fsearch_query.h"
 #include "fsearch_query_flags.h"
 
@@ -17,9 +17,7 @@ typedef enum {
 
 typedef struct FsearchDatabaseView FsearchDatabaseView;
 
-typedef void (*FsearchDatabaseViewNotifyFunc)(FsearchDatabaseView *view,
-                                              FsearchDatabaseViewNotify id,
-                                              gpointer user_data);
+typedef void (*FsearchDatabaseViewNotifyFunc)(FsearchDatabaseView *view, FsearchDatabaseViewNotify id, gpointer user_data);
 
 void
 db_view_unref(FsearchDatabaseView *view);
@@ -31,6 +29,7 @@ FsearchDatabaseView *
 db_view_new(const char *query_text,
             FsearchQueryFlags flags,
             FsearchFilter *filter,
+            FsearchFilterManager *filters,
             FsearchDatabaseIndexType sort_order,
             FsearchDatabaseViewNotifyFunc notify_func,
             gpointer notify_func_data);
@@ -40,6 +39,9 @@ db_view_set_thread_pool(FsearchDatabaseView *view, FsearchThreadPool *pool);
 
 void
 db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter);
+
+void
+db_view_set_filters(FsearchDatabaseView *view, FsearchFilterManager *filters);
 
 void
 db_view_set_query_flags(FsearchDatabaseView *view, FsearchQueryFlags query_flags);

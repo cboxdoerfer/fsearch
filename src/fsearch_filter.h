@@ -7,6 +7,7 @@
 
 typedef struct FsearchFilter {
     char *name;
+    char *macro;
     char *query;
     FsearchQueryFlags flags;
 
@@ -14,7 +15,7 @@ typedef struct FsearchFilter {
 } FsearchFilter;
 
 FsearchFilter *
-fsearch_filter_new(const char *name, const char *query, FsearchQueryFlags flags);
+fsearch_filter_new(const char *name, const char *macro, const char *query, FsearchQueryFlags flags);
 
 FsearchFilter *
 fsearch_filter_ref(FsearchFilter *filter);

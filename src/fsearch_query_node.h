@@ -12,6 +12,7 @@
 #include <unicode/unorm2.h>
 
 #include "fsearch_database_index.h"
+#include "fsearch_filter_manager.h"
 #include "fsearch_query_flags.h"
 #include "fsearch_query_match_data.h"
 #include "fsearch_utf.h"
@@ -81,7 +82,7 @@ struct FsearchQueryNode {
 };
 
 GNode *
-fsearch_query_node_tree_new(const char *search_term, FsearchQueryFlags flags);
+fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filters, FsearchQueryFlags flags);
 
 void
 fsearch_query_node_tree_free(GNode *node);

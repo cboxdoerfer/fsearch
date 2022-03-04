@@ -5,7 +5,7 @@
 #include "fsearch_filter.h"
 
 typedef struct FsearchFilterEditor FsearchFilterEditor;
-typedef void(FsearchFilterEditorResponse)(FsearchFilter *, char *, char *, FsearchQueryFlags, gpointer);
+typedef void(FsearchFilterEditorResponse)(FsearchFilter *, char *, char *, char *, FsearchQueryFlags, gpointer);
 
 void
 fsearch_filter_editor_run(const char *title,
