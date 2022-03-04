@@ -10,7 +10,7 @@ enum { COL_INDEX_ENABLE, COL_INDEX_PATH, COL_INDEX_UPDATE, COL_INDEX_ONE_FS, NUM
 
 enum { COL_EXCLUDE_ENABLE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
 
-enum { COL_FILTER_NAME, COL_FILTER_QUERY, NUM_FILTER_COLUMNS };
+enum { COL_FILTER_NAME, COL_FILTER_MACRO, COL_FILTER_QUERY, NUM_FILTER_COLUMNS };
 
 static void
 column_text_append(GtkTreeView *view, const char *name, gboolean expand, int id) {
@@ -169,6 +169,8 @@ pref_filter_treeview_row_add(GtkTreeModel *filter_model, FsearchFilter *filter) 
                        &iter,
                        COL_FILTER_NAME,
                        filter->name,
+                       COL_FILTER_MACRO,
+                       filter->macro,
                        COL_FILTER_QUERY,
                        filter->query,
                        -1);
@@ -284,16 +286,25 @@ pref_exclude_treeview_init(GtkTreeView *view, GList *locations) {
 
 GtkTreeModel *
 pref_filter_treeview_init(GtkTreeView *view, FsearchFilterManager *filters) {
-    GtkListStore *store = gtk_list_store_new(NUM_FILTER_COLUMNS, G_TYPE_STRING, G_TYPE_STRING);
+    GtkListStore *store = gtk_list_store_new(NUM_FILTER_COLUMNS, G_TYPE_STRING, G_TYPE_STRING, G_TYPE_STRING);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(store));
     column_text_append(view, _("Name"), FALSE, COL_FILTER_NAME);
+    column_text_append(view, _("Macro"), TRUE, COL_FILTER_MACRO);
     column_text_append(view, _("Query"), TRUE, COL_FILTER_QUERY);
 
     for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(filters); ++i) {
         GtkTreeIter iter = {};
         FsearchFilter *filter = fsearch_filter_manager_get_filter(filters, i);
         gtk_list_store_append(store, &iter);
-        gtk_list_store_set(store, &iter, COL_FILTER_NAME, filter->name, COL_FILTER_QUERY, filter->query, -1);
+        gtk_list_store_set(store,
+                           &iter,
+                           COL_FILTER_NAME,
+                           filter->name,
+                           COL_FILTER_MACRO,
+                           filter->macro,
+                           COL_FILTER_QUERY,
+                           filter->query,
+                           -1);
         g_clear_pointer(&filter, fsearch_filter_unref);
     }
 

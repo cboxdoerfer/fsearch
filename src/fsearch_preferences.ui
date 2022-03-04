@@ -1849,10 +1849,12 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Filters:&lt;/b&gt;
 
-                      This is a list of all available filters. A filter is a predefined search.
+                        This is a list of all available filters. A filter is a predefined search.
 
-                      • &lt;b&gt;Name:&lt;/b&gt; A unique and descriptive identifier for the filter
-                      • &lt;b&gt;Query:&lt;/b&gt; The search term by which the database should be filtered
+                        • &lt;b&gt;Name:&lt;/b&gt; A unique and descriptive identifier for the filter
+                        • &lt;b&gt;Macro:&lt;/b&gt; By typing the macro text followed by a ':' you can enable the filter
+                        on demand
+                        • &lt;b&gt;Query:&lt;/b&gt; The search term by which the database should be filtered
                     </property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
