@@ -1467,10 +1467,12 @@ get_filters_with_macros(FsearchFilterManager *manager) {
     GPtrArray *macros = g_ptr_array_sized_new(10);
     g_ptr_array_set_free_func(macros, (GDestroyNotify)fsearch_filter_unref);
 
-    for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(manager); ++i) {
-        FsearchFilter *filter = fsearch_filter_manager_get_filter(manager, i);
-        if (filter && filter->macro && !fs_str_is_empty(filter->macro)) {
-            g_ptr_array_add(macros, fsearch_filter_ref(filter));
+    if (manager) {
+        for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(manager); ++i) {
+            FsearchFilter *filter = fsearch_filter_manager_get_filter(manager, i);
+            if (filter && filter->macro && !fs_str_is_empty(filter->macro)) {
+                g_ptr_array_add(macros, fsearch_filter_ref(filter));
+            }
         }
     }
     return macros;

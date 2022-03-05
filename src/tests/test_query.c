@@ -9,7 +9,8 @@ static void
 test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFlags flags, bool result) {
     bool found = true;
 
-    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, NULL, NULL, flags, "debug_query", NULL);
+    FsearchFilterManager *manager = fsearch_filter_manager_new_with_defaults();
+    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, manager, NULL, flags, "debug_query", NULL);
 
     FsearchDatabaseEntry *entry = calloc(1, db_entry_get_sizeof_file_entry());
     db_entry_set_name(entry, haystack);
@@ -19,6 +20,7 @@ test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFla
     fsearch_query_match_data_set_entry(match_data, entry);
 
     found = fsearch_query_match(q, match_data);
+    g_clear_pointer(&manager, fsearch_filter_manager_free);
     g_clear_pointer(&q, fsearch_query_unref);
     g_clear_pointer(&match_data, fsearch_query_match_data_free);
     db_entry_destroy(entry);
