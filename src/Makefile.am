@@ -1,4 +1,5 @@
 EXTRA_DIST = fsearch_window.ui \
+	     fsearch_filter_editor.ui \
 	     fsearch_overlay.ui \
 	     fsearch_preferences.ui \
          fsearch_statusbar.ui \
