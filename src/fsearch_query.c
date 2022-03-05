@@ -91,7 +91,7 @@ fsearch_query_unref(FsearchQuery *query) {
 bool
 fsearch_query_matches_everything(FsearchQuery *query) {
     const bool empty_query = fs_str_is_empty(query->search_term);
-    if (empty_query && (!query->filter || !query->filter->name || fs_str_is_empty(query->filter->name))) {
+    if (empty_query && (!query->filter || !query->filter->query || fs_str_is_empty(query->filter->query))) {
         return true;
     }
     return false;
