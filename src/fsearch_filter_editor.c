@@ -1,6 +1,7 @@
 #include "fsearch_filter_editor.h"
 
 #include <glib/gi18n.h>
+#include <stdlib.h>
 
 #include "fsearch_string_utils.h"
 
