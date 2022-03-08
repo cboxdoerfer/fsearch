@@ -45,10 +45,10 @@ fsearch_query_new(const char *search_term,
 
     q->pool = pool;
 
-    q->token = fsearch_query_node_tree_new(q->search_term, filters, flags);
+    q->query_tree = fsearch_query_node_tree_new(q->search_term, filters, flags);
 
     if (filter && filter->query) {
-        q->filter_token = fsearch_query_node_tree_new(filter->query, filters, filter->flags);
+        q->filter_tree = fsearch_query_node_tree_new(filter->query, filters, filter->flags);
     }
 
     q->filter = fsearch_filter_ref(filter);
@@ -65,7 +65,7 @@ fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->db, db_unref);
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->search_term, free);
-    g_clear_pointer(&query->token, fsearch_query_node_tree_free);
+    g_clear_pointer(&query->query_tree, fsearch_query_node_tree_free);
     g_clear_pointer(&query, free);
 }
 
@@ -176,8 +176,8 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, Fse
         return true;
     }
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
-    if (query->filter_token) {
-        return matches(query->filter_token, entry, match_data, type);
+    if (query->filter_tree) {
+        return matches(query->filter_tree, entry, match_data, type);
     }
     return true;
 }
@@ -190,7 +190,7 @@ fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchData *match_data) 
     }
 
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
-    GNode *token = query->token;
+    GNode *token = query->query_tree;
 
     if (!filter_entry(entry, match_data, query)) {
         return false;
@@ -207,7 +207,7 @@ fsearch_query_match(FsearchQuery *query, FsearchQueryMatchData *match_data) {
     }
 
     FsearchDatabaseEntryType type = db_entry_get_type(entry);
-    GNode *token = query->token;
+    GNode *token = query->query_tree;
 
     if (!filter_entry(entry, match_data, query)) {
         return false;

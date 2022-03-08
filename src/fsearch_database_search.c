@@ -240,7 +240,7 @@ db_search_entries(FsearchQuery *q,
     uint32_t start_pos = 0;
     uint32_t end_pos = num_items_per_thread - 1;
 
-    if (!q->token) {
+    if (!q->query_tree) {
         g_assert_not_reached();
     }
 

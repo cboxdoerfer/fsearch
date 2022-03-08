@@ -44,8 +44,8 @@ typedef struct FsearchQuery {
     FsearchFilter *filter;
     FsearchFilterManager *filters;
 
-    GNode *token;
-    GNode *filter_token;
+    GNode *query_tree;
+    GNode *filter_tree;
 
     FsearchQueryFlags flags;
 
