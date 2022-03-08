@@ -179,7 +179,7 @@ void
 darray_add_item(DynamicArray *array, void *data) {
     assert(array != NULL);
     assert(array->data != NULL);
-    assert(data != NULL);
+    // assert(data != NULL);
 
     if (array->num_items >= array->max_items) {
         darray_expand(array, array->num_items + 1);
@@ -191,7 +191,6 @@ darray_add_item(DynamicArray *array, void *data) {
 bool
 darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index) {
     assert(array != NULL);
-    assert(item != NULL);
     assert(index != NULL);
 
     if (compare_func) {
@@ -216,7 +215,6 @@ darray_get_item_next(DynamicArray *array,
                      void *data,
                      uint32_t *next_idx) {
     assert(array != NULL);
-    assert(item != NULL);
     uint32_t index = 0;
     if (!darray_get_item_idx(array, item, compare_func, data, &index)) {
         return NULL;
@@ -394,7 +392,7 @@ darray_binary_search_with_data(DynamicArray *array,
     while (left <= right) {
         middle = left + (right - left) / 2;
 
-        int32_t match = comp_func(array->data[middle], item, data);
+        int32_t match = comp_func(&array->data[middle], &item, data);
         if (match == 0) {
             result = true;
             break;
