@@ -1430,7 +1430,6 @@ parse_expression(FsearchQueryParser *parser,
 
 out:
     while (!g_queue_is_empty(parse_ctx->operator_stack)) {
-        g_print("add operator!!\n");
         append_operator(parse_ctx, pop_token(parse_ctx->operator_stack));
     }
 }
