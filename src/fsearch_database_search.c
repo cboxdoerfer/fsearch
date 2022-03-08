@@ -241,7 +241,7 @@ db_search_entries(FsearchQuery *q,
     uint32_t end_pos = num_items_per_thread - 1;
 
     if (!q->token) {
-        return NULL;
+        g_assert_not_reached();
     }
 
     GList *threads = fsearch_thread_pool_get_threads(q->pool);
