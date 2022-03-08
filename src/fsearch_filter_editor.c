@@ -9,6 +9,7 @@ struct FsearchFilterEditor {
     FsearchFilter *filter;
     GtkBuilder *builder;
     GtkWidget *dialog;
+    GtkWidget *ok_button;
     GtkEntry *name_entry;
     GtkEntry *macro_entry;
     GtkTextBuffer *query_text_buffer;
@@ -66,6 +67,21 @@ on_editor_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user
     fsearch_filter_editor_free(editor);
 }
 
+static void
+on_macro_entry_changed(GtkEntry *entry, gpointer user_data) {
+    FsearchFilterEditor *editor = user_data;
+    const char *macro_text = gtk_entry_get_text(entry);
+    if (macro_text && strchr(macro_text, ':')) {
+        gtk_widget_set_sensitive(editor->ok_button, FALSE);
+        g_object_set(entry, "secondary-icon-name", "dialog-warning-symbolic", NULL);
+        g_object_set(entry, "secondary-icon-tooltip-text", _("Macro names must not contain `:` characters."), NULL);
+    }
+    else if (!gtk_widget_get_sensitive(editor->ok_button)) {
+        gtk_widget_set_sensitive(editor->ok_button, TRUE);
+        g_object_set(entry, "secondary-icon-name", NULL, NULL);
+    }
+}
+
 void
 fsearch_filter_editor_run(const char *title,
                           GtkWindow *parent_window,
@@ -86,6 +102,7 @@ fsearch_filter_editor_run(const char *title,
     editor->match_case = GTK_TOGGLE_BUTTON(gtk_builder_get_object(editor->builder, "filter_match_case"));
     editor->name_entry = GTK_ENTRY(gtk_builder_get_object(editor->builder, "filter_name"));
     editor->macro_entry = GTK_ENTRY(gtk_builder_get_object(editor->builder, "filter_macro"));
+    g_signal_connect(editor->macro_entry, "changed", G_CALLBACK(on_macro_entry_changed), editor);
     editor->query_text_buffer = GTK_TEXT_BUFFER(gtk_builder_get_object(editor->builder, "filter_query_buffer"));
 
     if (title) {
@@ -102,7 +119,7 @@ fsearch_filter_editor_run(const char *title,
     }
     gtk_window_set_transient_for(GTK_WINDOW(editor->dialog), parent_window);
     gtk_dialog_add_button(GTK_DIALOG(editor->dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
-    gtk_dialog_add_button(GTK_DIALOG(editor->dialog), _("_OK"), GTK_RESPONSE_OK);
+    editor->ok_button = gtk_dialog_add_button(GTK_DIALOG(editor->dialog), _("_OK"), GTK_RESPONSE_OK);
     g_signal_connect(editor->dialog, "response", G_CALLBACK(on_editor_ui_response), editor);
 
     gtk_widget_show(editor->dialog);

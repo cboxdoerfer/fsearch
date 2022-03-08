@@ -58,10 +58,10 @@
               <object class="GtkEntry" id="filter_name">
                 <property name="visible">True</property>
                 <property name="can-focus">True</property>
-                  <property name="tooltip-text" translatable="yes">The unique name of this filter</property>
+                <property name="tooltip-text" translatable="yes">The unique name of this filter</property>
                 <property name="halign">start</property>
                 <property name="hexpand">True</property>
-                  <property name="placeholder-text" translatable="yes">Unique filter name</property>
+                <property name="placeholder-text" translatable="yes">Unique filter name</property>
               </object>
               <packing>
                 <property name="left-attach">1</property>
@@ -78,7 +78,7 @@
               </object>
               <packing>
                 <property name="left-attach">0</property>
-                  <property name="top-attach">2</property>
+                <property name="top-attach">2</property>
                 <property name="width">2</property>
               </packing>
             </child>
@@ -92,7 +92,7 @@
               </object>
               <packing>
                 <property name="left-attach">0</property>
-                  <property name="top-attach">4</property>
+                <property name="top-attach">4</property>
                 <property name="width">2</property>
               </packing>
             </child>
@@ -106,7 +106,7 @@
               </object>
               <packing>
                 <property name="left-attach">0</property>
-                  <property name="top-attach">3</property>
+                <property name="top-attach">3</property>
                 <property name="width">2</property>
               </packing>
             </child>
@@ -141,45 +141,45 @@
                 </child>
                 <child type="label">
                   <object class="GtkLabel">
-                      <property name="visible">True</property>
-                      <property name="can-focus">False</property>
-                      <property name="label" translatable="yes">Query:</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">Query:</property>
                   </object>
                 </child>
               </object>
-                <packing>
-                    <property name="left-attach">0</property>
-                    <property name="top-attach">5</property>
-                    <property name="width">2</property>
-                </packing>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">5</property>
+                <property name="width">2</property>
+              </packing>
             </child>
-              <child>
-                  <object class="GtkLabel">
-                      <property name="visible">True</property>
-                      <property name="can-focus">False</property>
-                      <property name="label" translatable="yes">Macro:</property>
-                  </object>
-                  <packing>
-                      <property name="left-attach">0</property>
-                      <property name="top-attach">1</property>
-                  </packing>
-              </child>
-              <child>
-                  <object class="GtkEntry" id="filter_macro">
-                      <property name="visible">True</property>
-                      <property name="can-focus">True</property>
-                      <property name="tooltip-text" translatable="yes">The macro for this filter. A macro allows you to
-                          access this filter from the search entry by typing its text followed by ':'
-                      </property>
-                      <property name="halign">start</property>
-                      <property name="hexpand">True</property>
-                      <property name="input-purpose">alpha</property>
-                  </object>
-                  <packing>
-                      <property name="left-attach">1</property>
-                      <property name="top-attach">1</property>
-                  </packing>
-              </child>
+            <child>
+              <object class="GtkLabel">
+                <property name="visible">True</property>
+                <property name="can-focus">False</property>
+                <property name="label" translatable="yes">Macro:</property>
+              </object>
+              <packing>
+                <property name="left-attach">0</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkEntry" id="filter_macro">
+                <property name="visible">True</property>
+                <property name="can-focus">True</property>
+                <property name="tooltip-text" translatable="yes">The macro for this filter. A macro allows you to access this filter from the search entry by typing its text followed by ':'
+                </property>
+                <property name="halign">start</property>
+                <property name="hexpand">True</property>
+                <property name="secondary-icon-activatable">False</property>
+                <property name="input-purpose">alpha</property>
+              </object>
+              <packing>
+                <property name="left-attach">1</property>
+                <property name="top-attach">1</property>
+              </packing>
+            </child>
           </object>
           <packing>
             <property name="expand">True</property>
