@@ -26,10 +26,16 @@ typedef struct FsearchQueryParseContext {
 static FsearchQueryNode *fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
 
 static void
+handle_open_bracket_token(FsearchQueryParseContext *parse_ctx);
+
+static void
 handle_operator_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token);
 
 static void
-parse_expression(FsearchQueryParser *parser, FsearchQueryParseContext *parse_ctx, FsearchQueryFlags flags);
+parse_expression(FsearchQueryParser *parser,
+                 FsearchQueryParseContext *parse_ctx,
+                 bool in_open_bracket,
+                 FsearchQueryFlags flags);
 
 static void
 parse_field(FsearchQueryParser *parser,
@@ -1033,7 +1039,8 @@ parse_modifier(FsearchQueryParser *parser,
         add_query_to_parse_context(parse_ctx, fsearch_query_node_new(token_value->str, flags), FSEARCH_QUERY_TOKEN_FIELD);
     }
     else if (token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-        parse_expression(parser, parse_ctx, flags);
+        handle_open_bracket_token(parse_ctx);
+        parse_expression(parser, parse_ctx, true, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD) {
         parse_field(parser, parse_ctx, token_value, false, flags);
@@ -1174,7 +1181,14 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
         FsearchQueryParser *macro_parser = fsearch_query_parser_new(filter->query);
 
         g_queue_push_tail(parse_ctx->macro_stack, filter);
-        parse_expression(macro_parser, parse_ctx, flags);
+        GQueue *main_operator_stack = parse_ctx->operator_stack;
+        parse_ctx->operator_stack = g_queue_new();
+        parse_expression(macro_parser, parse_ctx, false, flags);
+        if (!g_queue_is_empty(parse_ctx->operator_stack)) {
+            g_warning("[parse_macro] operator stack not empty after parsing!\n");
+        }
+        g_queue_free_full(g_steal_pointer(&parse_ctx->operator_stack), (GDestroyNotify)fsearch_query_node_free);
+        parse_ctx->operator_stack = main_operator_stack;
         g_queue_pop_tail(parse_ctx->macro_stack);
 
         g_clear_pointer(&macro_parser, fsearch_query_parser_free);
@@ -1226,11 +1240,17 @@ free_tree(GNode *root) {
 
 static FsearchQueryToken
 top_token(GQueue *stack) {
+    if (g_queue_is_empty(stack)) {
+        return FSEARCH_QUERY_TOKEN_NONE;
+    }
     return (FsearchQueryToken)GPOINTER_TO_UINT(g_queue_peek_tail(stack));
 }
 
 static FsearchQueryToken
 pop_token(GQueue *stack) {
+    if (g_queue_is_empty(stack)) {
+        return FSEARCH_QUERY_TOKEN_NONE;
+    }
     return (FsearchQueryToken)(GPOINTER_TO_UINT(g_queue_pop_tail(stack)));
 }
 
@@ -1323,8 +1343,18 @@ uneven_number_of_consecutive_not_tokens(FsearchQueryParser *parser, FsearchQuery
 }
 
 static void
-parse_expression(FsearchQueryParser *parser, FsearchQueryParseContext *parse_ctx, FsearchQueryFlags flags) {
-    uint32_t num_open_brackets = 0;
+handle_open_bracket_token(FsearchQueryParseContext *parse_ctx) {
+    add_implicit_and_if_necessary(parse_ctx, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
+    parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_OPEN;
+    push_token(parse_ctx->operator_stack, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
+}
+
+static void
+parse_expression(FsearchQueryParser *parser,
+                 FsearchQueryParseContext *parse_ctx,
+                 bool in_open_bracket,
+                 FsearchQueryFlags flags) {
+    uint32_t num_open_brackets = in_open_bracket ? 1 : 0;
     uint32_t num_close_brackets = 0;
 
     while (true) {
@@ -1349,14 +1379,20 @@ parse_expression(FsearchQueryParser *parser, FsearchQueryParseContext *parse_ctx
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
             num_open_brackets++;
-            add_implicit_and_if_necessary(parse_ctx, token);
-            parse_ctx->last_token = token;
-            push_token(parse_ctx->operator_stack, token);
+            handle_open_bracket_token(parse_ctx);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
             if (num_open_brackets > num_close_brackets) {
                 // only add closing bracket if there's at least one matching open bracket
-                while (top_token(parse_ctx->operator_stack) != FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+                while (true) {
+                    FsearchQueryToken t = top_token(parse_ctx->operator_stack);
+                    if (t == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+                        break;
+                    }
+                    if (t == FSEARCH_QUERY_TOKEN_NONE) {
+                        g_warning("[infix-postfix] Matching open bracket not found!\n");
+                        g_assert_not_reached();
+                    }
                     append_operator(parse_ctx, pop_token(parse_ctx->operator_stack));
                 }
                 if (top_token(parse_ctx->operator_stack) == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
@@ -1364,8 +1400,12 @@ parse_expression(FsearchQueryParser *parser, FsearchQueryParseContext *parse_ctx
                 }
                 parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_CLOSE;
                 num_close_brackets++;
+                if (in_open_bracket && num_close_brackets == num_open_brackets) {
+                    return;
+                }
             }
             else {
+                g_debug("[infix-postfix] closing bracket found without a corresponding open bracket, abort parsing!\n");
                 goto out;
             }
             break;
@@ -1390,10 +1430,9 @@ parse_expression(FsearchQueryParser *parser, FsearchQueryParseContext *parse_ctx
 
 out:
     while (!g_queue_is_empty(parse_ctx->operator_stack)) {
+        g_print("add operator!!\n");
         append_operator(parse_ctx, pop_token(parse_ctx->operator_stack));
     }
-
-    return;
 }
 
 static GNode *
@@ -1484,6 +1523,7 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
 
     FsearchQueryParser *parser = fsearch_query_parser_new(src);
 
+    g_debug("[parser] input: %s\n", src);
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
     assert(parse_context != NULL);
     parse_context->macro_filters = get_filters_with_macros(filters);
@@ -1491,7 +1531,7 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
 
     parse_context->last_token = FSEARCH_QUERY_TOKEN_NONE;
     parse_context->operator_stack = g_queue_new();
-    parse_expression(parser, parse_context, flags);
+    parse_expression(parser, parse_context, false, flags);
 
     g_print("Postfix representation of query:\n");
     g_print("================================\n");

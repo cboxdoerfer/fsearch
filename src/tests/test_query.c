@@ -176,6 +176,19 @@ main(int argc, char *argv[]) {
             {"ext:pdf;jpg", "test.c", 0, 0, false},
             {"ext:", "test.c", 0, 0, false},
             {"ext:", "test", 0, 0, true},
+            {"case:(TE || AB) cd", "TEcd", 0, 0, true},
+            {"case:(TE || AB) cd", "ABcd", 0, 0, true},
+            {"case:(TE || AB) cd", "AB", 0, 0, false},
+            {"case:(TE || AB) cd", "TE", 0, 0, false},
+            {"case:(TE || AB) cd", "ABTE", 0, 0, false},
+            {"case:(TE || AB) cd", "cd", 0, 0, false},
+            // macros
+            {"test || (pic: video:)", "test.jpg", 0, 0, true},
+            {"test || (pic: video:)", "test.mp4", 0, 0, true},
+            {"test || (pic: video:)", "test.mp4", 0, 0, true},
+            {"test || (pic: video:)", "test.doc", 0, 0, true},
+            {"test || (pic: video:)", "test.doc", 0, 0, true},
+
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {
