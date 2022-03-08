@@ -16,11 +16,11 @@
 #include <string.h>
 
 typedef struct FsearchQueryParseContext {
-    GList *suffix_list;
-    GQueue *operator_stack;
-    FsearchQueryToken last_token;
     GPtrArray *macro_filters;
+    GPtrArray *suffix_list;
+    GQueue *operator_stack;
     GQueue *macro_stack;
+    FsearchQueryToken last_token;
 } FsearchQueryParseContext;
 
 static FsearchQueryNode *fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
@@ -144,7 +144,7 @@ add_query_to_parse_context(FsearchQueryParseContext *parse_ctx, FsearchQueryNode
     }
     add_implicit_and_if_necessary(parse_ctx, token);
 
-    parse_ctx->suffix_list = g_list_append(parse_ctx->suffix_list, node);
+    g_ptr_array_add(parse_ctx->suffix_list, node);
     parse_ctx->last_token = token;
 }
 
@@ -1289,7 +1289,7 @@ append_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
     default:
         return;
     }
-    parse_ctx->suffix_list = g_list_append(parse_ctx->suffix_list, fsearch_query_node_new_operator(op));
+    g_ptr_array_add(parse_ctx->suffix_list, fsearch_query_node_new_operator(op));
     return;
 }
 
@@ -1436,17 +1436,17 @@ out:
 }
 
 static GNode *
-build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
-    if (!postfix_query) {
+build_query_tree(GPtrArray *postfix_query, FsearchQueryFlags flags) {
+    if (!postfix_query || !postfix_query->len) {
         return get_empty_node(flags);
     }
 
     GQueue *query_stack = g_queue_new();
 
-    for (GList *q = postfix_query; q != NULL; q = q->next) {
-        FsearchQueryNode *node = q->data;
+    for (uint32_t i = 0; i < postfix_query->len; i++) {
+        FsearchQueryNode *node = g_ptr_array_index(postfix_query, i);
         if (!node) {
-            continue;
+            g_assert_not_reached();
         }
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             GNode *op_node = get_operator_node(node->operator);
@@ -1526,6 +1526,7 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
     g_debug("[parser] input: %s\n", src);
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
     assert(parse_context != NULL);
+    parse_context->suffix_list = g_ptr_array_sized_new(16);
     parse_context->macro_filters = get_filters_with_macros(filters);
     parse_context->macro_stack = g_queue_new();
 
@@ -1535,8 +1536,8 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
 
     g_print("Postfix representation of query:\n");
     g_print("================================\n");
-    for (GList *q = parse_context->suffix_list; q != NULL; q = q->next) {
-        FsearchQueryNode *node = q->data;
+    for (uint32_t i = 0; i < parse_context->suffix_list->len; i++) {
+        FsearchQueryNode *node = g_ptr_array_index(parse_context->suffix_list, i);
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             g_print("%s ",
                     node->operator== FSEARCH_TOKEN_OPERATOR_AND  ? "AND"
@@ -1558,8 +1559,8 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
 
     g_clear_pointer(&parse_context->macro_stack, g_queue_free);
     g_queue_free_full(g_steal_pointer(&parse_context->operator_stack), (GDestroyNotify)fsearch_query_node_free);
-    g_ptr_array_free(g_steal_pointer(&parse_context->macro_filters), TRUE);
-    g_list_free(g_steal_pointer(&parse_context->suffix_list));
+    g_clear_pointer(&parse_context->macro_filters, g_ptr_array_unref);
+    g_clear_pointer(&parse_context->suffix_list, g_ptr_array_unref);
     g_clear_pointer(&parse_context, free);
     g_clear_pointer(&parser, fsearch_query_parser_free);
     return root;
