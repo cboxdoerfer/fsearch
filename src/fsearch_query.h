@@ -73,9 +73,6 @@ fsearch_query_ref(FsearchQuery *query);
 void
 fsearch_query_unref(FsearchQuery *query);
 
-PangoAttrList *
-fsearch_query_highlight_match(FsearchQuery *q, const char *input);
-
 bool
 fsearch_query_matches_everything(FsearchQuery *query);
 
