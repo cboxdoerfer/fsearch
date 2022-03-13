@@ -7,7 +7,6 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_query.h"
 
-#include <assert.h>
 #include <glib/gi18n.h>
 #include <gtk/gtk.h>
 #include <math.h>
@@ -35,9 +34,7 @@ get_icon_surface(GdkWindow *win,
                  int32_t icon_size,
                  int32_t scale_factor) {
     GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
-    if (!icon_theme) {
-        return NULL;
-    }
+    g_return_val_if_fail(icon_theme, NULL);
 
     g_autoptr(GIcon) icon = fsearch_file_utils_guess_icon(name, path, type == DATABASE_ENTRY_TYPE_FOLDER);
     const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
@@ -227,9 +224,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
 
     db_view_unlock(view);
 
-    if (!text) {
-        return NULL;
-    }
+    g_return_val_if_fail(text, NULL);
 
     pango_layout_set_text(layout, text, -1);
 
@@ -245,7 +240,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
 
 static void
 set_attributes(PangoLayout *layout, FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx) {
-    assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
+    g_assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
     PangoAttrList *attrs = fsearch_query_match_get_highlight(match_data, idx);
     if (attrs) {
         pango_layout_set_attributes(layout, attrs);
@@ -371,7 +366,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
 FsearchResultView *
 fsearch_result_view_new(void) {
     FsearchResultView *result_view = calloc(1, sizeof(FsearchResultView));
-    assert(result_view != NULL);
+    g_assert_nonnull(result_view);
     return result_view;
 }
 

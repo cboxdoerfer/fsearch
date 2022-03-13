@@ -20,7 +20,6 @@
 #include "fsearch_query.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_string_utils.h"
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -35,7 +34,7 @@ fsearch_query_new(const char *search_term,
                   const char *query_id,
                   gpointer data) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
-    assert(q != NULL);
+    g_assert_nonnull(q);
 
     q->search_term = search_term ? strdup(search_term) : "";
 
@@ -108,7 +107,7 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match
     }
     if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
         GNode *left = node->children;
-        assert(left != NULL);
+        g_assert_nonnull(left);
         GNode *right = left->next;
         if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
             return highlight(left, entry, match_data, type) && highlight(right, entry, match_data, type);
@@ -143,7 +142,7 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_d
     }
     if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
         GNode *left = node->children;
-        assert(left != NULL);
+        g_assert_nonnull(left);
         GNode *right = left->next;
         if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
             return matches(left, entry, match_data, type) && matches(right, entry, match_data, type);

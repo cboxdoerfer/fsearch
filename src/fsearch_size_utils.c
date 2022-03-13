@@ -1,11 +1,12 @@
 #include "fsearch_size_utils.h"
 
-#include <assert.h>
+#include <glib.h>
 #include <stdlib.h>
 
 bool
 fsearch_size_parse(const char *str, int64_t *size_out, char **end_ptr) {
-    assert(size_out != NULL);
+    g_assert_nonnull(str);
+    g_assert_nonnull(size_out);
     char *size_suffix = NULL;
     int64_t size = strtoll(str, &size_suffix, 10);
     if (size_suffix == str) {

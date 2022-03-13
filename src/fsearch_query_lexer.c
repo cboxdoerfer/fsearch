@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <glib.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -197,10 +196,10 @@ fsearch_query_lexer_peek_next_token(FsearchQueryLexer *lexer, GString **result) 
 
 FsearchQueryLexer *
 fsearch_query_lexer_new(const char *input) {
-    assert(input != NULL);
+    g_assert_nonnull(input);
 
     FsearchQueryLexer *lexer = calloc(1, sizeof(FsearchQueryLexer));
-    assert(lexer != NULL);
+    g_assert_nonnull(lexer);
 
     lexer->input = g_string_new(input);
     lexer->input_pos = 0;

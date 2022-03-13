@@ -1,5 +1,4 @@
 #define _GNU_SOURCE
-#include <assert.h>
 #include <glib.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -10,7 +9,7 @@
 FsearchExcludePath *
 fsearch_exclude_path_new(const char *path, bool enabled) {
     FsearchExcludePath *fs_path = calloc(1, sizeof(FsearchExcludePath));
-    assert(fs_path != NULL);
+    g_assert_nonnull(fs_path);
 
     if (path) {
         fs_path->path = strdup(path);

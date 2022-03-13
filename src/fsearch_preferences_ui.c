@@ -258,7 +258,7 @@ get_selected_filter(FsearchPreferencesInterface *ui) {
 
     g_autofree char *name = NULL;
     gtk_tree_model_get(model, &iter, 0, &name, -1);
-    g_assert(name != NULL);
+    g_assert_nonnull(name);
 
     return fsearch_filter_manager_get_filter_for_name(ui->new_config->filters, name);
 }

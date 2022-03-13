@@ -75,9 +75,7 @@ fsearch_thread_pool_thread(gpointer user_data) {
 
 static void
 thread_context_free(FsearchThreadPoolContext *ctx) {
-    if (!ctx) {
-        return;
-    }
+    g_return_if_fail(ctx);
 
     g_mutex_lock(&ctx->mutex);
     if (ctx->thread_data) {
@@ -100,9 +98,8 @@ thread_context_free(FsearchThreadPoolContext *ctx) {
 static FsearchThreadPoolContext *
 thread_context_new(void) {
     FsearchThreadPoolContext *ctx = g_new0(FsearchThreadPoolContext, 1);
-    if (!ctx) {
-        return NULL;
-    }
+    g_assert_nonnull(ctx);
+
     ctx->thread_data = NULL;
     ctx->thread_func = NULL;
     ctx->terminate = false;
@@ -135,18 +132,15 @@ fsearch_thread_pool_init(void) {
 
 void
 fsearch_thread_pool_free(FsearchThreadPool *pool) {
-    if (!pool) {
-        return;
-    }
+    g_return_if_fail(pool);
+
     g_list_free_full(g_steal_pointer(&pool->threads), (GDestroyNotify)thread_context_free);
     g_clear_pointer(&pool, g_free);
 }
 
 GList *
 fsearch_thread_pool_get_threads(FsearchThreadPool *pool) {
-    if (!pool) {
-        return NULL;
-    }
+    g_return_val_if_fail(pool, NULL);
     return pool->threads;
 }
 
@@ -212,9 +206,7 @@ fsearch_thread_pool_wait_for_thread(FsearchThreadPool *pool, GList *thread) {
 
 uint32_t
 fsearch_thread_pool_get_num_threads(FsearchThreadPool *pool) {
-    if (!pool) {
-        return 0;
-    }
+    g_return_val_if_fail(pool, 0);
     return pool->num_threads;
 }
 

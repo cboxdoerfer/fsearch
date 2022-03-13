@@ -19,7 +19,6 @@
 #define G_LOG_DOMAIN "fsearch-dynamic-array"
 
 #include "fsearch_array.h"
-#include <assert.h>
 #include <glib.h>
 #include <math.h>
 #include <stdlib.h>
@@ -133,13 +132,13 @@ merge_thread(gpointer data, gpointer user_data) {
 DynamicArray *
 darray_new(size_t num_items) {
     DynamicArray *new = calloc(1, sizeof(DynamicArray));
-    assert(new != NULL);
+    g_assert_nonnull(new);
 
     new->max_items = num_items;
     new->num_items = 0;
 
     new->data = calloc(num_items, sizeof(void *));
-    assert(new->data != NULL);
+    g_assert_nonnull(new->data);
 
     new->ref_count = 1;
 
@@ -148,24 +147,24 @@ darray_new(size_t num_items) {
 
 static void
 darray_expand(DynamicArray *array, size_t min) {
-    assert(array != NULL);
-    assert(array->data != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
 
     const size_t old_max_items = array->max_items;
     const size_t expand_rate = MAX(array->max_items / 2, min - old_max_items);
     array->max_items += expand_rate;
 
     void *new_data = realloc(array->data, array->max_items * sizeof(void *));
-    assert(new_data != NULL);
+    g_assert_nonnull(new_data);
     array->data = new_data;
     memset(array->data + old_max_items, 0, expand_rate + 1);
 }
 
 void
 darray_add_items(DynamicArray *array, void **items, uint32_t num_items) {
-    assert(array != NULL);
-    assert(array->data != NULL);
-    assert(items != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
+    g_assert_nonnull(items);
 
     if (array->num_items + num_items > array->max_items) {
         darray_expand(array, array->num_items + num_items);
@@ -177,9 +176,9 @@ darray_add_items(DynamicArray *array, void **items, uint32_t num_items) {
 
 void
 darray_add_item(DynamicArray *array, void *data) {
-    assert(array != NULL);
-    assert(array->data != NULL);
-    // assert(data != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
+    // g_assert_nonnull(data );
 
     if (array->num_items >= array->max_items) {
         darray_expand(array, array->num_items + 1);
@@ -190,8 +189,8 @@ darray_add_item(DynamicArray *array, void *data) {
 
 bool
 darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index) {
-    assert(array != NULL);
-    assert(index != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(index);
 
     if (compare_func) {
         return darray_binary_search_with_data(array, item, compare_func, data, index);
@@ -214,7 +213,7 @@ darray_get_item_next(DynamicArray *array,
                      DynamicArrayCompareDataFunc compare_func,
                      void *data,
                      uint32_t *next_idx) {
-    assert(array != NULL);
+    g_assert_nonnull(array);
     uint32_t index = 0;
     if (!darray_get_item_idx(array, item, compare_func, data, &index)) {
         return NULL;
@@ -230,8 +229,8 @@ darray_get_item_next(DynamicArray *array,
 
 void *
 darray_get_item(DynamicArray *array, uint32_t idx) {
-    assert(array != NULL);
-    assert(array->data != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
 
     if (idx >= array->num_items) {
         return NULL;
@@ -242,16 +241,16 @@ darray_get_item(DynamicArray *array, uint32_t idx) {
 
 uint32_t
 darray_get_num_items(DynamicArray *array) {
-    assert(array != NULL);
-    assert(array->data != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
 
     return array->num_items;
 }
 
 uint32_t
 darray_get_size(DynamicArray *array) {
-    assert(array != NULL);
-    assert(array->data != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
 
     return array->max_items;
 }
@@ -358,9 +357,9 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
 
 void
 darray_sort(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
-    assert(array != NULL);
-    assert(array->data != NULL);
-    assert(comp_func != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
+    g_assert_nonnull(comp_func);
 
     g_qsort_with_data(array->data, (int)array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, NULL);
 }
@@ -371,10 +370,9 @@ darray_binary_search_with_data(DynamicArray *array,
                                DynamicArrayCompareDataFunc comp_func,
                                void *data,
                                uint32_t *matched_index) {
-
-    assert(array != NULL);
-    assert(array->data != NULL);
-    assert(comp_func != NULL);
+    g_assert_nonnull(array);
+    g_assert_nonnull(array->data);
+    g_assert_nonnull(comp_func);
 
     if (array->num_items <= 0) {
         return false;
@@ -417,13 +415,13 @@ darray_copy(DynamicArray *array) {
         return NULL;
     }
     DynamicArray *new = calloc(1, sizeof(DynamicArray));
-    assert(new != NULL);
+    g_assert_nonnull(new);
 
     new->max_items = array->max_items;
     new->num_items = array->num_items;
 
     new->data = calloc(new->max_items, sizeof(void *));
-    assert(new->data != NULL);
+    g_assert_nonnull(new->data);
 
     new->ref_count = 1;
 

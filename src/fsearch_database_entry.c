@@ -31,9 +31,7 @@ struct FsearchDatabaseEntryFolder {
 
 static void
 build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
-    if (!folder) {
-        return;
-    }
+    g_return_if_fail(folder);
     FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
     if (entry->parent) {
         build_path_recursively(entry->parent, str);

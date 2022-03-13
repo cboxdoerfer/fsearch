@@ -2,16 +2,16 @@
 
 #include "fsearch_filter.h"
 
-#include <assert.h>
 #include <glib/gi18n.h>
 #include <stdlib.h>
 #include <string.h>
 
 FsearchFilter *
 fsearch_filter_new(const char *name, const char *macro, const char *query, FsearchQueryFlags flags) {
+    g_assert_nonnull(name);
+
     FsearchFilter *filter = calloc(1, sizeof(FsearchFilter));
-    assert(filter != NULL);
-    assert(name != NULL);
+    g_assert_nonnull(filter);
 
     filter->name = strdup(name);
     filter->macro = strdup(macro ? macro : "");
@@ -23,8 +23,8 @@ fsearch_filter_new(const char *name, const char *macro, const char *query, Fsear
 
 bool
 fsearch_filter_cmp(FsearchFilter *filter_1, FsearchFilter *filter_2) {
-    assert(filter_1 != NULL);
-    assert(filter_2 != NULL);
+    g_assert_nonnull(filter_1);
+    g_assert_nonnull(filter_2);
 
     if (strcmp(filter_1->name, filter_2->name) != 0) {
         return false;

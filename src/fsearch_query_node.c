@@ -15,11 +15,11 @@
 
 static void
 node_init_needle(FsearchQueryNode *node, const char *needle) {
-    g_assert(node != NULL);
-    g_assert(needle != NULL);
+    g_assert_nonnull(node);
+    g_assert_nonnull(needle);
     // node->needle must not be set already
-    g_assert(node->needle == NULL);
-    g_assert(node->needle_builder == NULL);
+    g_assert_null(node->needle);
+    g_assert_null(node->needle_builder);
 
     node->needle = g_strdup(needle);
     node->needle_len = strlen(needle);
@@ -33,7 +33,7 @@ node_init_needle(FsearchQueryNode *node, const char *needle) {
 
 void
 fsearch_query_node_free(FsearchQueryNode *node) {
-    g_assert(node != NULL);
+    g_assert_nonnull(node);
 
     fsearch_utf_builder_clear(node->needle_builder);
     if (node->description) {
@@ -57,7 +57,7 @@ fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
                                      time_t dm_end,
                                      FsearchQueryNodeComparison comp_type) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
-    g_assert(qnode != NULL);
+    g_assert_nonnull(qnode);
 
     if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL) {
         qnode->needle = g_strdup_printf("=%ld", dm_start);
@@ -94,7 +94,7 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
                             int64_t size_end,
                             FsearchQueryNodeComparison comp_type) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
-    g_assert(qnode != NULL);
+    g_assert_nonnull(qnode);
 
     if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL) {
         qnode->needle = g_strdup_printf("=%ld", size_start);
@@ -130,7 +130,7 @@ fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
     g_assert(operator== FSEARCH_QUERY_NODE_OPERATOR_AND || operator== FSEARCH_QUERY_NODE_OPERATOR_OR ||
              operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
-    g_assert(qnode != NULL);
+    g_assert_nonnull(qnode);
     qnode->description = g_string_new(operator== FSEARCH_QUERY_NODE_OPERATOR_AND
                                           ? "AND"
                                           :(operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
@@ -142,7 +142,7 @@ fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
 FsearchQueryNode *
 fsearch_query_node_new_match_nothing(void) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
-    g_assert(qnode != NULL);
+    g_assert_nonnull(qnode);
 
     qnode->description = g_string_new("match_nothing");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
@@ -155,7 +155,7 @@ fsearch_query_node_new_match_nothing(void) {
 FsearchQueryNode *
 fsearch_query_node_new_match_everything(FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
-    g_assert(qnode != NULL);
+    g_assert_nonnull(qnode);
 
     qnode->description = g_string_new("match_everything");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
@@ -185,7 +185,7 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
     }
 
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
-    g_assert(qnode != NULL);
+    g_assert_nonnull(qnode);
 
     qnode->description = g_string_new("regex");
     qnode->needle = g_strdup(search_term);
@@ -214,6 +214,7 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
 FsearchQueryNode *
 fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
+    g_assert_nonnull(qnode);
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->description = g_string_new("parent");
     node_init_needle(qnode, search_term);
@@ -250,6 +251,7 @@ cmp_strcmp(gconstpointer a, gconstpointer b) {
 FsearchQueryNode *
 fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
+    g_assert_nonnull(qnode);
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->description = g_string_new("ext");
     qnode->search_func = fsearch_query_matcher_func_extension;
@@ -307,7 +309,7 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     }
 
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
-    g_assert(qnode != NULL);
+    g_assert_nonnull(qnode);
 
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->flags = flags;

@@ -246,9 +246,7 @@ fsearch_list_view_get_font_height(FsearchListView *view) {
     GtkWidget *widget = GTK_WIDGET(view);
 
     g_autoptr(PangoLayout) layout = gtk_widget_create_pango_layout(widget, NULL);
-    if (!layout) {
-        return TEXT_HEIGHT_FALLBACK;
-    }
+    g_return_val_if_fail(layout, TEXT_HEIGHT_FALLBACK);
 
     gint text_height;
     pango_layout_get_pixel_size(layout, NULL, &text_height);
@@ -2067,7 +2065,7 @@ fsearch_list_view_column_new(int type,
                              gboolean expand,
                              uint32_t width) {
     FsearchListViewColumn *col = calloc(1, sizeof(FsearchListViewColumn));
-    g_assert(col != NULL);
+    g_assert_nonnull(col);
 
     col->button = gtk_button_new();
     gtk_widget_show(col->button);

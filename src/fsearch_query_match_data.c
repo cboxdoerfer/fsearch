@@ -1,4 +1,3 @@
-#include <assert.h>
 #include <glib.h>
 #include <locale.h>
 #include <stdlib.h>
@@ -104,7 +103,7 @@ fsearch_query_match_data_get_entry(FsearchQueryMatchData *match_data) {
 FsearchQueryMatchData *
 fsearch_query_match_data_new(void) {
     FsearchQueryMatchData *match_data = calloc(1, sizeof(FsearchQueryMatchData));
-    assert(match_data != NULL);
+    g_assert_nonnull(match_data);
     match_data->utf_name_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_parent_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
@@ -195,7 +194,7 @@ fsearch_query_match_data_get_thread_id(FsearchQueryMatchData *match_data) {
 
 PangoAttrList *
 fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx) {
-    assert(idx < NUM_DATABASE_INDEX_TYPES);
+    g_assert(idx < NUM_DATABASE_INDEX_TYPES);
     return match_data->highlights[idx];
 }
 
@@ -203,7 +202,7 @@ void
 fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
                                        PangoAttribute *attribute,
                                        FsearchDatabaseIndexType idx) {
-    assert(idx < NUM_DATABASE_INDEX_TYPES);
+    g_assert(idx < NUM_DATABASE_INDEX_TYPES);
     if (!match_data->highlights[idx]) {
         match_data->highlights[idx] = pango_attr_list_new();
     }

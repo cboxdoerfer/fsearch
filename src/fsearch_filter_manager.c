@@ -19,7 +19,7 @@ fsearch_filter_manager_free(FsearchFilterManager *manager) {
 FsearchFilterManager *
 fsearch_filter_manager_new(void) {
     FsearchFilterManager *manager = calloc(1, sizeof(FsearchFilterManager));
-    g_assert(manager != NULL);
+    g_assert_nonnull(manager);
 
     manager->filters = NULL;
     return manager;
@@ -126,11 +126,11 @@ fsearch_filter_manager_edit(FsearchFilterManager *manager,
 
 FsearchFilter *
 fsearch_filter_manager_get_filter_for_name(FsearchFilterManager *manager, const char *name) {
-    g_assert(name != NULL);
+    g_assert_nonnull(name);
 
     for (GList *l = manager->filters; l != NULL; l = l->next) {
         FsearchFilter *filter = l->data;
-        g_assert(filter != NULL);
+        g_assert_nonnull(filter);
         if (!strcmp(filter->name, name)) {
             return fsearch_filter_ref(filter);
         }
@@ -155,8 +155,8 @@ fsearch_filter_manager_get_filter(FsearchFilterManager *manager, guint idx) {
 
 bool
 fsearch_filter_manager_cmp(FsearchFilterManager *manager_1, FsearchFilterManager *manager_2) {
-    g_assert(manager_1 != NULL);
-    g_assert(manager_2 != NULL);
+    g_assert_nonnull(manager_1);
+    g_assert_nonnull(manager_2);
 
     guint len1 = g_list_length(manager_1->filters);
     guint len2 = g_list_length(manager_2->filters);

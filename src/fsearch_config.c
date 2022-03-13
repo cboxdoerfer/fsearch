@@ -34,7 +34,7 @@ const char *config_folder_name = "fsearch";
 
 void
 config_build_dir(char *path, size_t len) {
-    g_assert(path != NULL);
+    g_assert_nonnull(path);
 
     const gchar *xdg_conf_dir = g_get_user_config_dir();
     snprintf(path, len, "%s/%s", xdg_conf_dir, config_folder_name);
@@ -43,7 +43,7 @@ config_build_dir(char *path, size_t len) {
 
 static void
 config_build_path(char *path, size_t len) {
-    g_assert(path != NULL);
+    g_assert_nonnull(path);
 
     const gchar *xdg_conf_dir = g_get_user_config_dir();
     snprintf(path, len, "%s/%s/%s", xdg_conf_dir, config_folder_name, config_file_name);
@@ -59,9 +59,8 @@ config_make_dir(void) {
 
 static void
 config_load_handle_error(GError *error) {
-    if (!error) {
-        return;
-    }
+    g_return_if_fail(error);
+
     switch (error->code) {
     case G_KEY_FILE_ERROR_INVALID_VALUE:
         fprintf(stderr, "load_config: invalid value: %s\n", error->message);
@@ -209,7 +208,7 @@ config_load(FsearchConfig *config) {
 
     bool result = false;
     g_autoptr(GKeyFile) key_file = g_key_file_new();
-    g_assert(key_file != NULL);
+    g_assert_nonnull(key_file);
 
     g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
@@ -339,7 +338,7 @@ config_load(FsearchConfig *config) {
 
 bool
 config_load_default(FsearchConfig *config) {
-    g_assert(config != NULL);
+    g_assert_nonnull(config);
 
     // Search
     config->auto_search_in_path = true;
@@ -510,11 +509,11 @@ config_save_exclude_locations(GKeyFile *key_file, GList *locations, const char *
 
 bool
 config_save(FsearchConfig *config) {
-    g_assert(config != NULL);
+    g_assert_nonnull(config);
 
     bool result = false;
     g_autoptr(GKeyFile) key_file = g_key_file_new();
-    g_assert(key_file != NULL);
+    g_assert_nonnull(key_file);
 
     GTimer *timer = g_timer_new();
     g_timer_start(timer);
@@ -765,7 +764,7 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
 FsearchConfig *
 config_copy(FsearchConfig *config) {
     FsearchConfig *copy = calloc(1, sizeof(FsearchConfig));
-    g_assert(copy != NULL);
+    g_assert_nonnull(copy);
 
     memcpy(copy, config, sizeof(*config));
 
@@ -792,7 +791,7 @@ config_copy(FsearchConfig *config) {
 
 void
 config_free(FsearchConfig *config) {
-    g_assert(config != NULL);
+    g_assert_nonnull(config);
 
     g_clear_pointer(&config->folder_open_cmd, free);
     g_clear_pointer(&config->sort_by, free);

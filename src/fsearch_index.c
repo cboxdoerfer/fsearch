@@ -1,5 +1,4 @@
 #define _GNU_SOURCE
-#include <assert.h>
 #include <glib.h>
 #include <stddef.h>
 #include <stdlib.h>
@@ -15,7 +14,7 @@ fsearch_index_new(FsearchIndexType type,
                   bool one_filesystem,
                   time_t last_updated) {
     FsearchIndex *index = calloc(1, sizeof(FsearchIndex));
-    assert(index != NULL);
+    g_assert_nonnull(index);
 
     index->type = type;
     index->path = path ? strdup(path) : strdup("");

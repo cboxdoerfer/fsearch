@@ -9,9 +9,8 @@
 
 void
 fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters) {
-    if (!builder) {
-        return;
-    }
+    g_return_if_fail(builder);
+
     builder->initialized = true;
 
     builder->fold_options = U_FOLD_CASE_DEFAULT;
@@ -75,7 +74,7 @@ fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfBuilder *builder, const
 bool
 fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
                                             const char *string) {
-    g_assert(builder != NULL);
+    g_assert_nonnull(builder);
     if (!builder->initialized) {
         goto fail;
     }

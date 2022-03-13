@@ -26,9 +26,7 @@ ui_utils_run_gtk_dialog_async(GtkWidget *parent,
                               const gchar *sec_text,
                               GCallback response_cb,
                               gpointer response_cb_data) {
-    if (!primary_text) {
-        return;
-    }
+    g_return_if_fail(primary_text);
 
     GtkWidget *dialog =
         gtk_message_dialog_new(GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT, type, buttons, primary_text, NULL);

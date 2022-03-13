@@ -22,16 +22,15 @@
 
 #include "fsearch_database_search.h"
 
-#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
 #include "fsearch_array.h"
 #include "fsearch_query_match_data.h"
+#include "fsearch_query_node.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_task.h"
 #include "fsearch_task_ids.h"
-#include "fsearch_query_node.h"
 #include "fsearch_utf.h"
 
 #define THRESHOLD_FOR_PARALLEL_SEARCH 1000
@@ -66,7 +65,7 @@ db_search_empty(FsearchQuery *q);
 static DatabaseSearchResult *
 db_search_result_new(void) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
-    assert(result_ctx != NULL);
+    g_assert_nonnull(result_ctx);
     result_ctx->ref_count = 1;
     return result_ctx;
 }
@@ -167,13 +166,13 @@ db_search_worker_context_new(FsearchQuery *query,
                              uint32_t start_pos,
                              uint32_t end_pos) {
     DatabaseSearchWorkerContext *ctx = calloc(1, sizeof(DatabaseSearchWorkerContext));
-    assert(ctx != NULL);
-    assert(end_pos >= start_pos);
+    g_assert_nonnull(ctx);
+    g_assert(end_pos >= start_pos);
 
     ctx->query = query;
     ctx->cancellable = cancellable;
     ctx->results = calloc(end_pos - start_pos + 1, sizeof(void *));
-    assert(ctx->results != NULL);
+    g_assert_nonnull(ctx->results);
 
     ctx->num_results = 0;
     ctx->entries = darray_ref(entries);
@@ -186,8 +185,8 @@ db_search_worker_context_new(FsearchQuery *query,
 static void
 db_search_worker(void *data) {
     DatabaseSearchWorkerContext *ctx = data;
-    assert(ctx != NULL);
-    assert(ctx->results != NULL);
+    g_assert_nonnull(ctx);
+    g_assert_nonnull(ctx->results);
 
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
 
@@ -221,16 +220,14 @@ db_search_worker(void *data) {
 }
 
 static DynamicArray *
-db_search_entries(FsearchQuery *q,
-                  GCancellable *cancellable,
-                  DynamicArray *entries,
-                  FsearchThreadPoolFunc search_func) {
+db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entries, FsearchThreadPoolFunc search_func) {
     const uint32_t num_entries = darray_get_num_items(entries);
     if (num_entries == 0) {
         return NULL;
     }
-    const uint32_t num_threads =
-        num_entries < THRESHOLD_FOR_PARALLEL_SEARCH ? 1 : fsearch_thread_pool_get_num_threads(q->pool);
+    const uint32_t num_threads = num_entries < THRESHOLD_FOR_PARALLEL_SEARCH
+                                   ? 1
+                                   : fsearch_thread_pool_get_num_threads(q->pool);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     DatabaseSearchWorkerContext *thread_data[num_threads];

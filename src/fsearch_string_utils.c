@@ -19,7 +19,6 @@
 #define G_LOG_DOMAIN "fsearch-string-utils"
 
 #include "fsearch_string_utils.h"
-#include <assert.h>
 #include <ctype.h>
 #include <glib.h>
 #include <string.h>
@@ -29,6 +28,7 @@ fs_str_is_empty(const char *str) {
     // query is considered empty if:
     // - fist character is null terminator
     // - or it has only space characters
+    g_assert_nonnull(str);
     while (*str != '\0') {
         if (!isspace(*str)) {
             return false;
@@ -40,6 +40,7 @@ fs_str_is_empty(const char *str) {
 
 bool
 fs_str_case_is_ascii(const char *str) {
+    g_assert_nonnull(str);
     const gssize str_len = (gssize)strlen(str);
     if (str_len == 0) {
         return true;
@@ -58,6 +59,7 @@ fs_str_case_is_ascii(const char *str) {
 
 bool
 fs_str_utf8_has_upper(const char *str) {
+    g_assert_nonnull(str);
     char *p = (char *)str;
     if (!g_utf8_validate(p, -1, NULL)) {
         return false;
@@ -73,9 +75,9 @@ fs_str_utf8_has_upper(const char *str) {
 }
 
 bool
-fs_str_has_upper(const char *strc) {
-    assert(strc != NULL);
-    const char *ptr = strc;
+fs_str_has_upper(const char *str) {
+    g_assert_nonnull(str);
+    const char *ptr = str;
     while (*ptr != '\0') {
         if (isupper(*ptr)) {
             return true;
@@ -99,9 +101,8 @@ fs_str_get_extension(const char *file_name) {
 
 char *
 fs_str_convert_wildcard_to_regex_expression(const char *str) {
-    if (!str) {
-        return NULL;
-    }
+    g_assert_nonnull(str);
+
     GString *regex_epxression = g_string_sized_new(strlen(str));
     g_string_append_c(regex_epxression, '^');
     const char *s = str;
@@ -141,6 +142,8 @@ fs_str_convert_wildcard_to_regex_expression(const char *str) {
 
 bool
 fs_str_starts_with_range(char *str, char **end_ptr) {
+    g_assert_nonnull(str);
+    g_assert_nonnull(end_ptr);
     if (g_str_has_prefix(str, "..")) {
         *end_ptr = str + 2;
         return true;

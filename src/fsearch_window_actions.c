@@ -91,16 +91,13 @@ confirm_file_open_action(GtkWidget *parent, int num_files) {
 
 static void
 prepend_path_uri_to_array(gpointer key, gpointer value, gpointer user_data) {
-    if (!value) {
-        return;
-    }
+    g_return_if_fail(value);
 
     GPtrArray **file_array = (GPtrArray **)user_data;
     FsearchDatabaseEntry *entry = value;
     GString *path_full = db_entry_get_path_full(entry);
-    if (!path_full) {
-        return;
-    }
+    g_return_if_fail(path_full);
+
     char *file_uri = g_filename_to_uri(g_string_free(g_steal_pointer(&path_full), FALSE), NULL, NULL);
     if (file_uri) {
         g_ptr_array_add(*file_array, file_uri);
@@ -356,11 +353,11 @@ fsearch_window_action_copy_name(GSimpleAction *action, GVariant *variant, gpoint
 
 static void
 open_cb(gpointer key, gpointer value, gpointer data) {
-    if (!value) {
-        return;
-    }
+    g_return_if_fail(value);
+
     FsearchDatabaseEntry *entry = value;
     g_autoptr(GString) path_full = db_entry_get_path_full(entry);
+    g_return_if_fail(path_full);
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (!fsearch_file_utils_launch(path_full, config->launch_desktop_files)) {
@@ -371,15 +368,13 @@ open_cb(gpointer key, gpointer value, gpointer data) {
 
 static void
 append_file_to_list(gpointer key, gpointer value, gpointer data) {
-    if (!value) {
-        return;
-    }
+    g_return_if_fail(value);
+
     FsearchDatabaseEntry *entry = value;
 
     g_autoptr(GString) path_full = db_entry_get_path_full(entry);
-    if (!path_full) {
-        return;
-    }
+    g_return_if_fail(path_full);
+
     GList **list = data;
     *list = g_list_append(*list, g_file_new_for_path(path_full->str));
 }
@@ -401,9 +396,8 @@ fsearch_window_action_after_file_open(bool action_mouse) {
 
 static void
 launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info) {
-    if (!app_info) {
-        return;
-    }
+    g_return_if_fail(win);
+    g_return_if_fail(app_info);
 
     const guint selected_rows = fsearch_application_window_get_num_selected(win);
     if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
@@ -492,13 +486,14 @@ fsearch_window_action_open(GSimpleAction *action, GVariant *variant, gpointer us
 
 static void
 open_folder_cb(gpointer key, gpointer value, gpointer data) {
-    if (!value) {
-        return;
-    }
+    g_return_if_fail(value);
+
     FsearchDatabaseEntry *entry = value;
 
     g_autoptr(GString) path = db_entry_get_path(entry);
+    g_return_if_fail(path);
     g_autoptr(GString) path_full = db_entry_get_path_full(entry);
+    g_return_if_fail(path_full);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (!fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
         GString *open_failed_string = data;

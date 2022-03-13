@@ -92,7 +92,7 @@ fsearch_filter_editor_run(const char *title,
                           FsearchFilterEditorResponse callback,
                           gpointer data) {
     FsearchFilterEditor *editor = calloc(1, sizeof(FsearchFilterEditor));
-    g_assert(editor != NULL);
+    g_assert_nonnull(editor);
 
     editor->filter = filter;
     editor->callback = callback;

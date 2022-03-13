@@ -122,9 +122,7 @@ database_auto_update_init(FsearchApplication *fsearch) {
 static gboolean
 on_database_update_status(gpointer user_data) {
     g_autofree char *text = user_data;
-    if (!text) {
-        return G_SOURCE_REMOVE;
-    }
+    g_return_val_if_fail(text, G_SOURCE_REMOVE);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
@@ -233,7 +231,7 @@ database_update_add(bool scan) {
     app->num_database_update_active++;
 
     DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
-    g_assert(ctx != NULL);
+    g_assert_nonnull(ctx);
 
     if (scan) {
         ctx->rescan = true;
@@ -307,9 +305,7 @@ static void
 database_pool_func(gpointer data, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION(user_data);
     g_autofree DatabaseUpdateContext *ctx = data;
-    if (!ctx) {
-        return;
-    }
+    g_return_if_fail(ctx);
 
     if (ctx->started_cb) {
         ctx->started_cb(ctx->started_cb_data);
@@ -328,9 +324,7 @@ move_search_term_to_window(FsearchApplication *app, FsearchApplicationWindow *wi
         return;
     }
     GtkEntry *entry = fsearch_application_window_get_search_entry(win);
-    if (!entry) {
-        return;
-    }
+    g_return_if_fail(entry);
 
     gtk_entry_set_text(entry, app->option_search_term);
     g_clear_pointer(&app->option_search_term, g_free);
@@ -461,9 +455,8 @@ action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer
 static void
 action_set_enabled(const char *action_name, gboolean enabled) {
     GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
-    if (!action) {
-        return;
-    }
+    g_return_if_fail(action);
+
     g_debug(enabled ? "[app] enabled action: %s" : "[app] disabled action: %s", action_name);
     g_simple_action_set_enabled(G_SIMPLE_ACTION(action), enabled);
 }
@@ -519,18 +512,14 @@ fsearch_application_finalize(GObject *object) {
 static void
 on_file_manager_name_appeared(GDBusConnection *connection, const gchar *name, const gchar *name_owner, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    if (!app) {
-        return;
-    }
+    g_return_if_fail(app);
     app->has_file_manager_on_bus = true;
 }
 
 static void
 on_file_manager_name_vanished(GDBusConnection *connection, const gchar *name, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    if (!app) {
-        return;
-    }
+    g_return_if_fail(app);
     app->has_file_manager_on_bus = false;
 }
 
@@ -574,7 +563,7 @@ fsearch_application_startup(GApplication *app) {
 
     fsearch->db_thread_cancellable = g_cancellable_new();
     fsearch->config = calloc(1, sizeof(FsearchConfig));
-    g_assert(fsearch->config != NULL);
+    g_assert_nonnull(fsearch->config);
     if (!config_load(fsearch->config)) {
         config_load_default(fsearch->config);
     }
@@ -765,7 +754,7 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 static int
 database_update_in_local_instance() {
     FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
-    g_assert(config != NULL);
+    g_assert_nonnull(config);
 
     if (!config_load(config)) {
         if (!config_load_default(config)) {

@@ -114,9 +114,7 @@ intersect_supported_appliations(gpointer key, gpointer value, gpointer user_data
     }
 
     g_autoptr(GString) name = db_entry_get_name_for_display(entry);
-    if (!name) {
-        return;
-    }
+    g_return_if_fail(name);
 
     g_autofree char *content_type = g_content_type_guess(name->str, NULL, 0, NULL);
 

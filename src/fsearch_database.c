@@ -24,7 +24,6 @@
 
 #define G_LOG_DOMAIN "fsearch-database"
 
-#include <assert.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <fnmatch.h>
@@ -143,7 +142,7 @@ db_sort_entries(FsearchDatabase *db, DynamicArray *entries, DynamicArray **sorte
 
 static void
 db_sort(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
 
     g_autoptr(GTimer) timer = g_timer_new();
 
@@ -177,7 +176,7 @@ db_sort(FsearchDatabase *db) {
 
 static void
 db_update_timestamp(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     db->timestamp = time(NULL);
 }
 
@@ -379,7 +378,7 @@ db_load_folders(FILE *fp,
     g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
 
     g_autofree uint8_t *folder_block = calloc(folder_block_size + 1, sizeof(uint8_t));
-    assert(folder_block != NULL);
+    g_assert_nonnull(folder_block);
 
     if (fread(folder_block, sizeof(uint8_t), folder_block_size, fp) != folder_block_size) {
         g_debug("[db_load] failed to read file block");
@@ -439,7 +438,7 @@ db_load_files(FILE *fp,
               uint64_t file_block_size) {
     g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
     g_autofree uint8_t *file_block = calloc(file_block_size + 1, sizeof(uint8_t));
-    assert(file_block != NULL);
+    g_assert_nonnull(file_block);
 
     if (fread(file_block, sizeof(uint8_t), file_block_size, fp) != file_block_size) {
         g_debug("[db_load] failed to read file block");
@@ -483,7 +482,7 @@ static bool
 db_load_sorted_entries(FILE *fp, DynamicArray *src, uint32_t num_src_entries, DynamicArray *dest) {
 
     g_autofree uint32_t *indexes = calloc(num_src_entries + 1, sizeof(uint32_t));
-    assert(indexes != NULL);
+    g_assert_nonnull(indexes);
 
     if (fread(indexes, 4, num_src_entries, fp) != num_src_entries) {
         return false;
@@ -545,8 +544,8 @@ db_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, DynamicArray **so
 
 bool
 db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char *)) {
-    assert(file_path != NULL);
-    assert(db != NULL);
+    g_assert_nonnull(file_path);
+    g_assert_nonnull(db);
 
     FILE *fp = db_file_open_locked(file_path, "rb");
     if (!fp) {
@@ -809,7 +808,7 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
         return NULL;
     }
     uint32_t *indexes = calloc(num_entries + 1, sizeof(uint32_t));
-    assert(indexes != NULL);
+    g_assert_nonnull(indexes);
 
     for (int i = 0; i < num_entries; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
@@ -961,8 +960,8 @@ db_save_exclude_pattern(FILE *fp, FsearchDatabase *db, bool *write_failed) {
 
 bool
 db_save(FsearchDatabase *db, const char *path) {
-    assert(path != NULL);
-    assert(db != NULL);
+    g_assert_nonnull(path);
+    g_assert_nonnull(db);
 
     g_debug("[db_save] saving database to file...");
 
@@ -974,7 +973,7 @@ db_save(FsearchDatabase *db, const char *path) {
     g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
-    g_autoptr (GString) path_full = g_string_new(path);
+    g_autoptr(GString) path_full = g_string_new(path);
     g_string_append_c(path_full, G_DIR_SEPARATOR);
     g_string_append(path_full, "fsearch.db");
 
@@ -1280,8 +1279,8 @@ db_scan_folder(FsearchDatabase *db,
                bool one_filesystem,
                GCancellable *cancellable,
                void (*status_cb)(const char *)) {
-    assert(dname != NULL);
-    assert(dname[0] == G_DIR_SEPARATOR);
+    g_assert_nonnull(dname);
+    g_assert(dname[0] == G_DIR_SEPARATOR);
     g_debug("[db_scan] scan path: %s", dname);
 
     if (!g_file_test(dname, G_FILE_TEST_IS_DIR)) {
@@ -1352,7 +1351,7 @@ compare_exclude_path(FsearchExcludePath *p1, FsearchExcludePath *p2) {
 FsearchDatabase *
 db_new(GList *indexes, GList *excludes, char **exclude_files, bool exclude_hidden) {
     FsearchDatabase *db = g_new0(FsearchDatabase, 1);
-    g_assert(db != NULL);
+    g_assert_nonnull(db);
     g_mutex_init(&db->mutex);
     if (indexes) {
         db->indexes = g_list_copy_deep(indexes, (GCopyFunc)fsearch_index_copy, NULL);
@@ -1387,7 +1386,7 @@ db_new(GList *indexes, GList *excludes, char **exclude_files, bool exclude_hidde
 
 static void
 db_free(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
 
     g_debug("[db_free] freeing...");
     db_lock(db);
@@ -1425,43 +1424,43 @@ db_free(FsearchDatabase *db) {
 
 time_t
 db_get_timestamp(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return db->timestamp;
 }
 
 uint32_t
 db_get_num_files(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return db->num_files;
 }
 
 uint32_t
 db_get_num_folders(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return db->num_folders;
 }
 
 uint32_t
 db_get_num_entries(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return db->num_entries;
 }
 
 void
 db_unlock(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     g_mutex_unlock(&db->mutex);
 }
 
 void
 db_lock(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     g_mutex_lock(&db->mutex);
 }
 
 bool
 db_try_lock(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return g_mutex_trylock(&db->mutex);
 }
 
@@ -1475,7 +1474,7 @@ is_valid_sort_type(FsearchDatabaseIndexType sort_type) {
 
 bool
 db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
 
     if (is_valid_sort_type(sort_type)) {
         return db->sorted_folders[sort_type] ? true : false;
@@ -1485,7 +1484,7 @@ db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort
 
 DynamicArray *
 db_get_folders_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     if (!is_valid_sort_type(sort_type)) {
         return NULL;
     }
@@ -1495,7 +1494,7 @@ db_get_folders_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_ty
 
 DynamicArray *
 db_get_files_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     if (!is_valid_sort_type(sort_type)) {
         return NULL;
     }
@@ -1519,10 +1518,10 @@ db_get_entries_sorted(FsearchDatabase *db,
                       FsearchDatabaseIndexType *returned_sort_type,
                       DynamicArray **folders,
                       DynamicArray **files) {
-    assert(db != NULL);
-    assert(returned_sort_type != NULL);
-    assert(folders != NULL);
-    assert(files != NULL);
+    g_assert_nonnull(db);
+    g_assert_nonnull(returned_sort_type);
+    g_assert_nonnull(folders);
+    g_assert_nonnull(files);
     if (!is_valid_sort_type(requested_sort_type)) {
         return false;
     }
@@ -1544,7 +1543,7 @@ db_get_entries_sorted(FsearchDatabase *db,
 
 DynamicArray *
 db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     if (!is_valid_sort_type(sort_type)) {
         return NULL;
     }
@@ -1555,7 +1554,7 @@ db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
 
 DynamicArray *
 db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     if (!is_valid_sort_type(sort_type)) {
         return NULL;
     }
@@ -1566,25 +1565,25 @@ db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type) {
 
 DynamicArray *
 db_get_files(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return db_get_files_sorted(db, DATABASE_INDEX_TYPE_NAME);
 }
 
 DynamicArray *
 db_get_folders(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return db_get_folders_sorted(db, DATABASE_INDEX_TYPE_NAME);
 }
 
 FsearchThreadPool *
 db_get_thread_pool(FsearchDatabase *db) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
     return db->thread_pool;
 }
 
 bool
 db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *)) {
-    assert(db != NULL);
+    g_assert_nonnull(db);
 
     bool ret = false;
 

@@ -148,10 +148,10 @@ get_filters_with_macros(FsearchFilterManager *manager) {
 
 static GNode *
 get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flags) {
-    g_assert(src != NULL);
+    g_assert_nonnull(src);
 
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
-    g_assert(parse_context != NULL);
+    g_assert_nonnull(parse_context);
     parse_context->lexer = fsearch_query_lexer_new(src);
     parse_context->macro_filters = get_filters_with_macros(filters);
     parse_context->macro_stack = g_queue_new();

@@ -1,6 +1,5 @@
 #include "fsearch_memory_pool.h"
 
-#include <assert.h>
 #include <glib.h>
 #include <stdio.h>
 
@@ -25,10 +24,10 @@ struct FsearchMemoryPool {
 void
 fsearch_memory_pool_new_block(FsearchMemoryPool *pool) {
     FsearchMemoryPoolBlock *block = calloc(1, sizeof(FsearchMemoryPoolBlock));
-    assert(block != NULL);
+    g_assert_nonnull(block);
 
     block->items = calloc(pool->block_size + 1, pool->item_size);
-    assert(block->items != NULL);
+    g_assert_nonnull(block->items);
 
     block->num_used = 0;
     block->capacity = pool->block_size;
@@ -38,7 +37,7 @@ fsearch_memory_pool_new_block(FsearchMemoryPool *pool) {
 FsearchMemoryPool *
 fsearch_memory_pool_new(uint32_t block_size, size_t item_size, GDestroyNotify item_free_func) {
     FsearchMemoryPool *pool = calloc(1, sizeof(FsearchMemoryPool));
-    assert(pool != NULL);
+    g_assert_nonnull(pool);
     pool->item_free_func = item_free_func;
     pool->block_size = block_size;
     pool->item_size = MAX(item_size, sizeof(FsearchMemoryPoolFreed));
@@ -69,7 +68,7 @@ fsearch_memory_pool_free_pool(FsearchMemoryPool *pool) {
     }
     for (GList *b = pool->blocks; b != NULL; b = b->next) {
         FsearchMemoryPoolBlock *block = b->data;
-        assert(block != NULL);
+        g_assert_nonnull(block);
         fsearch_memory_pool_free_block(pool, g_steal_pointer(&block));
     }
     pool->freed_items = NULL;
@@ -81,7 +80,7 @@ fsearch_memory_pool_free_pool(FsearchMemoryPool *pool) {
 bool
 fsearch_memory_pool_is_block_full(FsearchMemoryPool *pool) {
     FsearchMemoryPoolBlock *block = pool->blocks->data;
-    assert(block != NULL);
+    g_assert_nonnull(block);
     if (block->num_used < block->capacity) {
         return false;
     }
@@ -116,7 +115,7 @@ fsearch_memory_pool_malloc(FsearchMemoryPool *pool) {
         fsearch_memory_pool_new_block(pool);
     }
     FsearchMemoryPoolBlock *block = pool->blocks->data;
-    assert(block != NULL);
+    g_assert_nonnull(block);
 
     return block->items + block->num_used++ * pool->item_size;
 }
