@@ -145,13 +145,40 @@ get_filters_with_macros(FsearchFilterManager *manager) {
     return macros;
 }
 
+static void
+print_parser_result(const char *input, FsearchQueryFlags flags, GList *result) {
+    if (!result) {
+        return;
+    }
+    char esc = 27;
+    g_print("%c[1m[QueryParser]%c[0m\n", esc, esc);
+    g_print(" %c[1m* global_flags:%c[0m %s\n", esc, esc, query_flags_to_string_expressive(flags));
+    g_print(" %c[1m* input:%c[0m %s\n", esc, esc, input);
+    g_print(" %c[1m* output:%c[0m ", esc, esc);
+    for (GList *n = result; n != NULL; n = n->next) {
+        FsearchQueryNode *node = n->data;
+        g_assert_nonnull(node);
+        if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
+            g_print("%s ", node->description->str);
+        }
+        else {
+            g_autofree char *flag_string = query_flags_to_string(node->flags);
+            g_print("[%s:'%s':%s] ",
+                    node->description ? node->description->str : "unknown query",
+                    node->needle ? node->needle : "",
+                    flag_string);
+        }
+    }
+    g_print("\n");
+}
+
 static GNode *
-get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flags) {
-    g_assert_nonnull(src);
+get_query_tree(const char *input, FsearchFilterManager *filters, FsearchQueryFlags flags) {
+    g_assert_nonnull(input);
 
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
     g_assert_nonnull(parse_context);
-    parse_context->lexer = fsearch_query_lexer_new(src);
+    parse_context->lexer = fsearch_query_lexer_new(input);
     parse_context->macro_filters = get_filters_with_macros(filters);
     parse_context->macro_stack = g_queue_new();
 
@@ -159,28 +186,7 @@ get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags
     parse_context->operator_stack = g_queue_new();
     GList *suffix_list = fsearch_query_parser_parse_expression(parse_context, false, flags);
 
-    if (suffix_list) {
-        char esc = 27;
-        g_print("%c[1m[QueryParser]%c[0m\n", esc, esc);
-        g_print(" %c[1m* global_flags:%c[0m %s\n", esc, esc, query_flags_to_string_expressive(flags));
-        g_print(" %c[1m* input:%c[0m %s\n", esc, esc, src);
-        g_print(" %c[1m* output:%c[0m ", esc, esc);
-        for (GList *n = suffix_list; n != NULL; n = n->next) {
-            FsearchQueryNode *node = n->data;
-            g_assert_nonnull(node);
-            if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-                g_print("%s ", node->description->str);
-            }
-            else {
-                g_autofree char *flag_string = query_flags_to_string(node->flags);
-                g_print("[%s:'%s':%s] ",
-                        node->description ? node->description->str : "unknown query",
-                        node->needle ? node->needle : "",
-                        flag_string);
-            }
-        }
-        g_print("\n");
-    }
+    print_parser_result(input, flags, suffix_list);
 
     GNode *root = build_query_tree_from_suffix_list(suffix_list, flags);
 
