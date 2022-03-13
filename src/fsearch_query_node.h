@@ -79,8 +79,34 @@ struct FsearchQueryNode {
     FsearchQueryFlags flags;
 };
 
-GNode *
-fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filters, FsearchQueryFlags flags);
-
 void
-fsearch_query_node_tree_free(GNode *node);
+fsearch_query_node_free(FsearchQueryNode *node);
+
+FsearchQueryNode *
+fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
+                                     time_t dm_start,
+                                     time_t dm_end,
+                                     FsearchQueryNodeComparison comp_type);
+
+FsearchQueryNode *
+fsearch_query_node_new_size(FsearchQueryFlags flags,
+                            int64_t size_start,
+                            int64_t size_end,
+                            FsearchQueryNodeComparison comp_type);
+
+FsearchQueryNode *fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
+
+FsearchQueryNode *
+fsearch_query_node_new_match_nothing(void);
+
+FsearchQueryNode *
+fsearch_query_node_new_match_everything(FsearchQueryFlags flags);
+
+FsearchQueryNode *
+fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags);
+
+FsearchQueryNode *
+fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags);
+
+FsearchQueryNode *
+fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags);

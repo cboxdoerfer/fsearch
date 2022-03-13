@@ -37,11 +37,13 @@ fsearch_NOINST_H_FILES = fsearch.h \
 			 fsearch_preferences_ui.h \
 			 fsearch_preferences_widgets.h \
 			 fsearch_query.h \
+			 fsearch_query_flags.h \
 			 fsearch_query_match_data.h \
 			 fsearch_query_matchers.h \
 			 fsearch_query_node.h \
 		     fsearch_query_lexer.h \
-			 fsearch_query_flags.h \
+		     fsearch_query_parser.h \
+		     fsearch_query_tree.h \
              fsearch_result_view.h \
 			 fsearch_selection.h \
 			 fsearch_size_utils.h \
@@ -82,6 +84,8 @@ fsearch_SOURCES = main.c \
 		  fsearch_query_matchers.c \
 		  fsearch_query_node.c \
 		  fsearch_query_lexer.c \
+		  fsearch_query_parser.c \
+		  fsearch_query_tree.c \
           fsearch_result_view.c \
           fsearch_selection.c \
           fsearch_size_utils.c \
