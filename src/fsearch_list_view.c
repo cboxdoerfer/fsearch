@@ -245,11 +245,12 @@ static gint
 fsearch_list_view_get_font_height(FsearchListView *view) {
     GtkWidget *widget = GTK_WIDGET(view);
 
-    g_autoptr(PangoLayout) layout = gtk_widget_create_pango_layout(widget, NULL);
+    PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
     g_return_val_if_fail(layout, TEXT_HEIGHT_FALLBACK);
 
     gint text_height;
     pango_layout_get_pixel_size(layout, NULL, &text_height);
+    g_clear_object(&layout);
 
     return text_height;
 }
@@ -417,7 +418,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
 
     gtk_widget_get_allocation(widget, &alloc);
 
-    g_autoptr(PangoLayout) layout = gtk_widget_create_pango_layout(widget, NULL);
+    PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
 
     cairo_rectangle_int_t view_rect;
     view_rect.x = 0;
@@ -555,6 +556,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
     }
 
     cairo_restore(cr);
+    g_clear_object(&layout);
 }
 
 static gboolean
@@ -1086,7 +1088,7 @@ fsearch_list_view_query_tooltip(GtkWidget *widget, int x, int y, gboolean keyboa
         return FALSE;
     }
 
-    g_autoptr(PangoLayout) layout = gtk_widget_create_pango_layout(widget, NULL);
+    PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
     if (!layout) {
         return FALSE;
     }
@@ -1096,6 +1098,8 @@ fsearch_list_view_query_tooltip(GtkWidget *widget, int x, int y, gboolean keyboa
                                                              get_row_idx_for_sort_type(view, row_idx),
                                                              col,
                                                              view->query_tooltip_func_data);
+    g_clear_object(&layout);
+
     if (tooltip_text) {
         gtk_tooltip_set_text(tooltip, tooltip_text);
         return TRUE;
