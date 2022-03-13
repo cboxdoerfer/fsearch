@@ -15,6 +15,7 @@ test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFla
     FsearchDatabaseEntry *entry = calloc(1, db_entry_get_sizeof_file_entry());
     db_entry_set_name(entry, haystack);
     db_entry_set_size(entry, size);
+    db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
 
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
     fsearch_query_match_data_set_entry(match_data, entry);

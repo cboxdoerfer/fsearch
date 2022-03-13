@@ -39,7 +39,7 @@ fsearch_query_node_free(FsearchQueryNode *node) {
     if (node->description) {
         g_string_free(g_steal_pointer(&node->description), TRUE);
     }
-    g_clear_pointer(&node->search_term_list, g_strfreev);
+    g_clear_pointer(&node->search_term_list, g_ptr_array_unref);
     g_clear_pointer(&node->needle_builder, free);
     g_clear_pointer(&node->needle, g_free);
 
@@ -128,10 +128,12 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
 FsearchQueryNode *
 fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
     g_assert(operator== FSEARCH_QUERY_NODE_OPERATOR_AND || operator== FSEARCH_QUERY_NODE_OPERATOR_OR ||
-           operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
+             operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
-    qnode->description = g_string_new(operator == FSEARCH_QUERY_NODE_OPERATOR_AND ? "AND" : (operator == FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
+    qnode->description = g_string_new(operator== FSEARCH_QUERY_NODE_OPERATOR_AND
+                                          ? "AND"
+                                          :(operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
     qnode->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
     qnode->operator= operator;
     return qnode;
@@ -229,6 +231,22 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
     return qnode;
 }
 
+static int32_t
+cmp_strcasecmp(gconstpointer a, gconstpointer b) {
+    const char *aa = *(char **)a;
+    const char *bb = *(char **)b;
+
+    return strcasecmp(aa, bb);
+}
+
+static int32_t
+cmp_strcmp(gconstpointer a, gconstpointer b) {
+    const char *aa = *(char **)a;
+    const char *bb = *(char **)b;
+
+    return strcmp(aa, bb);
+}
+
 FsearchQueryNode *
 fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
@@ -236,19 +254,24 @@ fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flag
     qnode->description = g_string_new("ext");
     qnode->search_func = fsearch_query_matcher_func_extension;
     qnode->highlight_func = fsearch_query_matcher_highlight_func_extension;
-    qnode->flags = flags;
+    qnode->flags = flags | QUERY_FLAG_FILES_ONLY;
+    qnode->search_term_list = g_ptr_array_new_full(16, g_free);
     if (!search_term) {
         // Show all files with no extension
         qnode->needle = g_strdup("");
-        qnode->search_term_list = calloc(2, sizeof(char *));
-        qnode->search_term_list[0] = g_strdup("");
-        qnode->search_term_list[1] = NULL;
+        g_ptr_array_add(qnode->search_term_list, g_strdup(""));
     }
     else {
         qnode->needle = g_strdup(search_term);
-        qnode->search_term_list = g_strsplit(search_term, ";", -1);
+        gchar **search_terms = g_strsplit(search_term, ";", -1);
+        const uint32_t num_search_terms = g_strv_length(search_terms);
+        for (uint32_t i = 0; i < num_search_terms; ++i) {
+            g_ptr_array_add(qnode->search_term_list, g_strdup(search_terms[i]));
+        }
+        g_ptr_array_sort(qnode->search_term_list,
+                         (qnode->flags & QUERY_FLAG_MATCH_CASE) ? cmp_strcmp : cmp_strcasecmp);
+        g_clear_pointer(&search_terms, g_strfreev);
     }
-    qnode->num_search_term_list_entries = qnode->search_term_list ? g_strv_length(qnode->search_term_list) : 0;
     return qnode;
 }
 

@@ -52,8 +52,7 @@ struct FsearchQueryNode {
     char *needle;
     size_t needle_len;
 
-    char **search_term_list;
-    uint32_t num_search_term_list_entries;
+    GPtrArray *search_term_list;
 
     int64_t size;
     int64_t size_upper_limit;

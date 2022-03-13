@@ -24,14 +24,19 @@ fsearch_query_matcher_func_extension(FsearchQueryNode *node, FsearchQueryMatchDa
     if (!ext) {
         return 0;
     }
-    for (uint32_t i = 0; i < node->num_search_term_list_entries; i++) {
+    for (uint32_t i = 0; i < node->search_term_list->len; i++) {
+        int32_t res = 0;
         if (node->flags & QUERY_FLAG_MATCH_CASE) {
-            if (!strcmp(ext, node->search_term_list[i])) {
-                return 1;
-            }
+            res = strcmp(ext, g_ptr_array_index(node->search_term_list, i));
         }
-        else if (!strcasecmp(ext, node->search_term_list[i])) {
+        else {
+            res = strcasecmp(ext, g_ptr_array_index(node->search_term_list, i));
+        }
+        if (res == 0) {
             return 1;
+        }
+        else if (res < 0) {
+            return 0;
         }
     }
     return 0;
