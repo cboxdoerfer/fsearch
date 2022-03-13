@@ -34,9 +34,8 @@ build_query_tree_from_suffix_list(GList *postfix_query, FsearchQueryFlags flags)
 
     for (GList *n = postfix_query; n != NULL; n = n->next) {
         FsearchQueryNode *node = n->data;
-        if (!node) {
-            g_assert_not_reached();
-        }
+        g_assert_nonnull(node);
+
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             GNode *op_node = g_node_new(fsearch_query_node_new_operator(node->operator));
             GNode *right = g_queue_pop_tail(query_stack);
@@ -168,6 +167,7 @@ get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags
         g_print(" %c[1m* output:%c[0m ", esc, esc);
         for (GList *n = suffix_list; n != NULL; n = n->next) {
             FsearchQueryNode *node = n->data;
+            g_assert_nonnull(node);
             if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
                 g_print("%s ", node->description->str);
             }
