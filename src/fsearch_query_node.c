@@ -1314,7 +1314,7 @@ add_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryT
         handle_operator_token(parse_ctx, FSEARCH_QUERY_TOKEN_AND);
         return;
     default:
-        return;
+        g_assert_not_reached();
     }
 }
 
@@ -1332,7 +1332,7 @@ handle_operator_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken tok
 static bool
 uneven_number_of_consecutive_not_tokens(FsearchQueryParser *parser, FsearchQueryToken current_token) {
     if (current_token != FSEARCH_QUERY_TOKEN_NOT) {
-        return false;
+        g_assert_not_reached();
     }
     bool uneven_number_of_not_tokens = true;
     while (fsearch_query_parser_peek_next_token(parser, NULL) == FSEARCH_QUERY_TOKEN_NOT) {
