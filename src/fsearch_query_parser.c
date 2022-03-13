@@ -124,10 +124,9 @@ parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsear
     if (is_empty_field) {
         return NULL;
     }
-    GString *token_value = NULL;
+    g_autoptr(GString) token_value = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
     FsearchQueryNodeComparison comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
-    FsearchQueryNode *result = NULL;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_EQUAL:
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
@@ -145,27 +144,19 @@ parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsear
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        result = parse_size_with_optional_range(token_value, flags, comp_type);
-        goto out;
+        return g_list_append(NULL, parse_size_with_optional_range(token_value, flags, comp_type));
     default:
         g_debug("[size:] invalid or missing argument");
-        goto out;
+        return NULL;
     }
 
-    GString *next_token_value = NULL;
+    g_autoptr(GString) next_token_value = NULL;
     FsearchQueryToken next_token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &next_token_value);
     if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
-        result = parse_size(next_token_value, flags, comp_type);
-    }
-    if (next_token_value) {
-        g_string_free(g_steal_pointer(&next_token_value), TRUE);
+        return g_list_append(NULL, parse_size(next_token_value, flags, comp_type));
     }
 
-out:
-    if (token_value) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
-    }
-    return g_list_append(NULL, result);
+    return NULL;
 }
 
 static FsearchQueryNode *
@@ -230,10 +221,9 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
     if (is_empty_field) {
         return NULL;
     }
-    GString *token_value = NULL;
+    g_autoptr(GString) token_value = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
     FsearchQueryNodeComparison comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
-    FsearchQueryNode *result = NULL;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_EQUAL:
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
@@ -251,27 +241,19 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        result = parse_date_with_optional_range(token_value, flags, comp_type);
-        goto out;
+        return g_list_append(NULL, parse_date_with_optional_range(token_value, flags, comp_type));
     default:
         g_debug("[size:] invalid or missing argument");
-        goto out;
+        return NULL;
     }
 
-    GString *next_token_value = NULL;
+    g_autoptr(GString) next_token_value = NULL;
     FsearchQueryToken next_token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &next_token_value);
     if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
-        result = parse_date_modified(next_token_value, flags, comp_type);
-    }
-    if (next_token_value) {
-        g_string_free(g_steal_pointer(&next_token_value), TRUE);
+        return g_list_append(NULL, parse_date_modified(next_token_value, flags, comp_type));
     }
 
-out:
-    if (token_value) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
-    }
-    return g_list_append(NULL, result);
+    return NULL;
 }
 
 static GList *
@@ -279,17 +261,11 @@ parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, 
     if (!is_empty_field && fsearch_query_lexer_peek_next_token(parse_ctx->lexer, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
         return NULL;
     }
-    FsearchQueryNode *result = NULL;
-    GString *token_value = NULL;
+    g_autoptr(GString) token_value = NULL;
     if (!is_empty_field) {
         fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
     }
-    result = fsearch_query_node_new_extension(token_value ? token_value->str : NULL, flags);
-    if (token_value) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
-    }
-
-    return g_list_append(NULL, result);
+    return g_list_append(NULL, fsearch_query_node_new_extension(token_value ? token_value->str : NULL, flags));
 }
 
 static GList *
@@ -297,14 +273,10 @@ parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fse
     if (is_empty_field || fsearch_query_lexer_peek_next_token(parse_ctx->lexer, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
         return NULL;
     }
-    GString *token_value = NULL;
+    g_autoptr(GString) token_value = NULL;
     fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
 
-    FsearchQueryNode *result = fsearch_query_node_new_parent(token_value->str, flags);
-
-    g_string_free(g_steal_pointer(&token_value), TRUE);
-
-    return g_list_append(NULL, result);
+    return g_list_append(NULL, fsearch_query_node_new_parent(token_value->str, flags));
 }
 
 static GList *
@@ -312,32 +284,22 @@ parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsearch
     if (is_empty_field) {
         return g_list_append(NULL, fsearch_query_node_new_match_everything(flags));
     }
-    GList *res = NULL;
-    GString *token_value = NULL;
+    g_autoptr(GString) token_value = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
     if (token == FSEARCH_QUERY_TOKEN_WORD) {
-        res = g_list_append(NULL, fsearch_query_node_new(token_value->str, flags));
+        return g_list_append(NULL, fsearch_query_node_new(token_value->str, flags));
     }
     else if (token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-        res = process_open_bracket_token(parse_ctx);
-        res = g_list_concat(res, fsearch_query_parser_parse_expression(parse_ctx, true, flags));
+        GList *res = process_open_bracket_token(parse_ctx);
+        return g_list_concat(res, fsearch_query_parser_parse_expression(parse_ctx, true, flags));
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD) {
-        res = parse_field(parse_ctx, token_value, false, flags);
+        return parse_field(parse_ctx, token_value, false, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD_EMPTY) {
-        res = parse_field(parse_ctx, token_value, true, flags);
+        return parse_field(parse_ctx, token_value, true, flags);
     }
-    // else {
-    //      //add_query_to_parse_context(parse_ctx, fsearch_query_node_new_match_everything(flags),
-    //      FSEARCH_QUERY_TOKEN_FIELD_EMPTY);
-    // }
-
-    if (token_value) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
-    }
-
-    return res;
+    return NULL;
 }
 
 static GList *
@@ -589,7 +551,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
     uint32_t num_close_brackets = 0;
 
     while (true) {
-        GString *token_value = NULL;
+        g_autoptr(GString) token_value = NULL;
         FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
 
         GList *to_append = NULL;
@@ -670,10 +632,6 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
             res = g_list_concat(res, get_implicit_and_if_necessary(parse_ctx, token));
             parse_ctx->last_token = token;
             res = g_list_concat(res, to_append);
-        }
-
-        if (token_value) {
-            g_string_free(g_steal_pointer(&token_value), TRUE);
         }
     }
 
