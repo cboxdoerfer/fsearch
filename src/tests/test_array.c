@@ -16,8 +16,8 @@ sort_int_ascending(void **a, void **b, void *data) {
     return -1 * sort_int_descending(a, b, data);
 }
 
-int
-main(int argc, char *argv[]) {
+static void
+test_main(void) {
     DynamicArray *array = darray_new(10);
     g_assert_true(darray_get_size(array) == 10);
 
@@ -96,4 +96,11 @@ main(int argc, char *argv[]) {
     }
 
     g_clear_pointer(&array, darray_unref);
+}
+
+int
+main(int argc, char *argv[]) {
+    g_test_init(&argc, &argv, NULL);
+    g_test_add_func("/FSearch/array/main", test_main);
+    return g_test_run();
 }

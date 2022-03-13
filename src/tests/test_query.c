@@ -56,10 +56,10 @@ typedef struct QueryTest {
     bool result;
 } QueryTest;
 
-int
-main(int argc, char *argv[]) {
+static void
+test_main(void) {
     if (set_locale("en_US.UTF-8")) {
-        QueryTest us_tests[] = {
+        QueryTest main_tests[] = {
             // Mismatches
             {"i j l", "I J K", 0, 0, false},
             {"i", "j", 0, 0, false},
@@ -197,12 +197,15 @@ main(int argc, char *argv[]) {
 
         };
 
-        for (uint32_t i = 0; i < G_N_ELEMENTS(us_tests); i++) {
-            QueryTest *t = &us_tests[i];
+        for (uint32_t i = 0; i < G_N_ELEMENTS(main_tests); i++) {
+            QueryTest *t = &main_tests[i];
             test_query(t->needle, t->haystack, t->size, t->flags, t->result);
         }
     }
+}
 
+static void
+test_turkic_case_mapping(void) {
     if (set_locale("tr_TR.UTF-8")) {
         QueryTest tr_tests[] = {
             // Mismatches
@@ -218,8 +221,6 @@ main(int argc, char *argv[]) {
             // Matches
             {"ı", "I", 0, true},
             {"i", "İ", 0, true},
-            {"I", "ı", 0, true},
-            {"İ", "i", 0, true},
             // trigger 0, wildcard search
             //{"ı*", "I", 0, true},
             //{"i*", "İ", 0, true},
@@ -230,9 +231,14 @@ main(int argc, char *argv[]) {
         for (uint32_t i = 0; i < G_N_ELEMENTS(tr_tests); i++) {
             QueryTest *t = &tr_tests[i];
             test_query(t->needle, t->haystack, t->size, t->flags, t->result);
+            // the tests still need to pass if haystack and needle are swapped, since they're all single characters
+            test_query(t->haystack, t->needle, t->size, t->flags, t->result);
         }
     }
+}
 
+static void
+test_german_case_mapping(void) {
     if (set_locale("de_DE.UTF-8")) {
         QueryTest de_tests[] = {
             // Mismatches
@@ -249,19 +255,6 @@ main(int argc, char *argv[]) {
             {"u", "Ü", 0, 0, false},
             {"U", "Ü", 0, 0, false},
 
-            {"ä", "a", 0, 0, false},
-            {"ä", "A", 0, 0, false},
-            {"Ä", "a", 0, 0, false},
-            {"Ä", "A", 0, 0, false},
-            {"ö", "o", 0, 0, false},
-            {"ö", "O", 0, 0, false},
-            {"Ö", "o", 0, 0, false},
-            {"Ö", "O", 0, 0, false},
-            {"ü", "u", 0, 0, false},
-            {"ü", "U", 0, 0, false},
-            {"Ü", "u", 0, 0, false},
-            {"Ü", "U", 0, 0, false},
-
             // Matches
             {"ä", "ä", 0, 0, true},
             {"ö", "ö", 0, 0, true},
@@ -269,9 +262,6 @@ main(int argc, char *argv[]) {
             {"Ä", "ä", 0, 0, true},
             {"Ö", "ö", 0, 0, true},
             {"Ü", "ü", 0, 0, true},
-            {"ä", "Ä", 0, 0, true},
-            {"ö", "Ö", 0, 0, true},
-            {"ü", "Ü", 0, 0, true},
 
             {"ß", "ẞ", 0, 0, true},
         };
@@ -279,6 +269,17 @@ main(int argc, char *argv[]) {
         for (uint32_t i = 0; i < G_N_ELEMENTS(de_tests); i++) {
             QueryTest *t = &de_tests[i];
             test_query(t->needle, t->haystack, t->size, t->flags, t->result);
+            // the tests still need to pass if haystack and needle are swapped, since they're all single characters
+            test_query(t->haystack, t->needle, t->size, t->flags, t->result);
         }
     }
+}
+
+int
+main(int argc, char *argv[]) {
+    g_test_init(&argc, &argv, NULL);
+    g_test_add_func("/FSearch/query/main", test_main);
+    g_test_add_func("/FSearch/query/mappings_turkic", test_turkic_case_mapping);
+    g_test_add_func("/FSearch/query/mappings_german", test_german_case_mapping);
+    return g_test_run();
 }
