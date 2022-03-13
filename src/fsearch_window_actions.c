@@ -131,9 +131,7 @@ append_line(GString *str, const char *text) {
 }
 
 static void
-append_line_to_string(GString *buffer,
-                      FsearchDatabaseEntry *entry,
-                      GString *(*get_string_func)(FsearchDatabaseEntry *)) {
+append_line_to_string(GString *buffer, FsearchDatabaseEntry *entry, GString *(*get_string_func)(FsearchDatabaseEntry *)) {
     if (!entry || !buffer || !get_string_func) {
         return;
     }
@@ -248,7 +246,7 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     if (file_uris) {
         GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
         if (connection) {
-            GError *error = NULL;
+            g_autoptr(GError) error = NULL;
             g_dbus_connection_call_sync(connection,
                                         "org.freedesktop.FileManager1",
                                         "/org/freedesktop/FileManager1",
@@ -262,7 +260,6 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
                                         &error);
             if (error) {
                 g_debug("[file_properties] %s", error->message);
-                g_clear_pointer(&error, g_error_free);
             }
         }
         g_clear_pointer(&file_uris, g_strfreev);
@@ -457,7 +454,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GHFunc open_fu
         return;
     }
 
-    GString *open_failed_string = g_string_sized_new(8192);
+    g_autoptr(GString) open_failed_string = g_string_sized_new(8192);
     fsearch_application_window_selection_for_each(win, open_func, open_failed_string);
     if (open_failed_string->len == 0) {
         // open succeeded
@@ -476,7 +473,6 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, GHFunc open_fu
                                           NULL);
         }
     }
-    g_string_free(g_steal_pointer(&open_failed_string), TRUE);
 }
 
 static void
@@ -718,8 +714,7 @@ fsearch_window_action_show_modified_column(GSimpleAction *action, GVariant *vari
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col =
-        fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_MODIFICATION_TIME);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_MODIFICATION_TIME);
     if (!col) {
         return;
     }

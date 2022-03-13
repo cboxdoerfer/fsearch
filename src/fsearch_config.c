@@ -161,7 +161,7 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
     while (true) {
         char key[100] = "";
         snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        char *path = config_load_string(key_file, "Database", key, NULL);
+        g_autofree char *path = config_load_string(key_file, "Database", key, NULL);
         snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
         bool enabled = config_load_boolean(key_file, "Database", key, true);
         snprintf(key, sizeof(key), "%s_update_%d", prefix, pos);
@@ -173,7 +173,6 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
         if (path) {
             FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, 0);
             indexes = g_list_append(indexes, index);
-            g_clear_pointer(&path, free);
         }
         else {
             break;
@@ -220,7 +219,7 @@ config_load(FsearchConfig *config) {
 
     const char *debug_message = NULL;
 
-    GError *error = NULL;
+    g_autoptr(GError) error = NULL;
     if (g_key_file_load_from_file(key_file, config_path, G_KEY_FILE_NONE, &error)) {
         g_debug("[config] loading...");
         // Interface
@@ -329,7 +328,6 @@ config_load(FsearchConfig *config) {
     }
     else {
         debug_message = "[config] loading failed (%f ms)";
-        g_clear_pointer(&error, g_error_free);
     }
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
@@ -515,7 +513,7 @@ config_save(FsearchConfig *config) {
     g_assert(config != NULL);
 
     bool result = false;
-    GKeyFile *key_file = g_key_file_new();
+    g_autoptr(GKeyFile) key_file = g_key_file_new();
     g_assert(key_file != NULL);
 
     GTimer *timer = g_timer_new();
@@ -618,7 +616,7 @@ config_save(FsearchConfig *config) {
     config_build_path(config_path, sizeof(config_path));
 
     const char *debug_message = NULL;
-    GError *error = NULL;
+    g_autoptr(GError) error = NULL;
     if (g_key_file_save_to_file(key_file, config_path, &error)) {
         debug_message = "[config] saved in %f ms";
         result = true;
@@ -634,7 +632,6 @@ config_save(FsearchConfig *config) {
 
     g_debug(debug_message, seconds * 1000);
 
-    g_clear_pointer(&key_file, g_key_file_free);
     return result;
 }
 

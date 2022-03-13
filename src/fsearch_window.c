@@ -563,19 +563,13 @@ on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexTy
         launch_folder = true;
     }
 
-    GString *path = NULL;
-    GString *path_full = NULL;
-
     db_view_lock(self->result_view->database_view);
-    path = db_view_entry_get_path_for_idx(self->result_view->database_view, row_idx);
-    path_full = db_view_entry_get_path_full_for_idx(self->result_view->database_view, row_idx);
+    g_autoptr(GString) path = db_view_entry_get_path_for_idx(self->result_view->database_view, row_idx);
+    g_autoptr(GString) path_full = db_view_entry_get_path_full_for_idx(self->result_view->database_view, row_idx);
     db_view_unlock(self->result_view->database_view);
 
-    if (!path) {
-        goto out;
-    }
-    if (!path_full) {
-        goto out;
+    if (!path || !path_full) {
+        return;
     }
 
     if (!launch_folder ? fsearch_file_utils_launch(path_full, config->launch_desktop_files)
@@ -593,14 +587,6 @@ on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexTy
                                       G_CALLBACK(on_file_open_failed_response),
                                       path_full);
         path_full = NULL;
-    }
-
-out:
-    if (path) {
-        g_string_free(g_steal_pointer(&path), TRUE);
-    }
-    if (path_full) {
-        g_string_free(g_steal_pointer(&path_full), TRUE);
     }
 }
 
@@ -933,7 +919,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     char *active_filter_name = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
     if (active_filter_name) {
         g_clear_pointer(&win->active_filter_name, free);
-        win->active_filter_name = g_strdup(active_filter_name);
+        win->active_filter_name = active_filter_name;
     }
     fsearch_statusbar_set_filter(FSEARCH_STATUSBAR(win->statusbar), active ? active_filter_name : NULL);
 

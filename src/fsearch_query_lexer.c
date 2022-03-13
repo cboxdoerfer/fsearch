@@ -77,7 +77,6 @@ parse_quoted_string(FsearchQueryLexer *lexer, GString *string) {
 FsearchQueryToken
 fsearch_query_lexer_get_next_token(FsearchQueryLexer *lexer, GString **result) {
     FsearchQueryToken token = FSEARCH_QUERY_TOKEN_NONE;
-    GString *token_value = NULL;
 
     char c = '\0';
 
@@ -125,7 +124,8 @@ fsearch_query_lexer_get_next_token(FsearchQueryLexer *lexer, GString **result) {
     give_back_char(lexer, c);
 
     // Other chars start a term or field name or reserved word
-    token_value = g_string_sized_new(1024);
+    g_autoptr(GString) token_value = g_string_sized_new(1024);
+
     while ((c = get_next_char(lexer))) {
         if (g_ascii_isspace(c)) {
             // word broken by whitespace
@@ -162,15 +162,12 @@ fsearch_query_lexer_get_next_token(FsearchQueryLexer *lexer, GString **result) {
     }
 
     if (!strcmp(token_value->str, "NOT")) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
         return FSEARCH_QUERY_TOKEN_NOT;
     }
     if (!strcmp(token_value->str, "AND") || !strcmp(token_value->str, "&&")) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
         return FSEARCH_QUERY_TOKEN_AND;
     }
     else if (!strcmp(token_value->str, "OR") || !strcmp(token_value->str, "||")) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
         return FSEARCH_QUERY_TOKEN_OR;
     }
 
@@ -178,10 +175,7 @@ fsearch_query_lexer_get_next_token(FsearchQueryLexer *lexer, GString **result) {
 
 out:
     if (result) {
-        *result = token_value;
-    }
-    else if (token_value) {
-        g_string_free(g_steal_pointer(&token_value), TRUE);
+        *result = g_steal_pointer(&token_value);
     }
     return token;
 }

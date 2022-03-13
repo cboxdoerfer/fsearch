@@ -126,14 +126,13 @@ pref_exclude_treeview_data_get(GtkTreeView *view) {
     gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
 
     while (valid) {
-        gchar *path = NULL;
+        g_autofree gchar *path = NULL;
         gboolean enable = FALSE;
         gtk_tree_model_get(model, &iter, COL_EXCLUDE_PATH, &path, COL_EXCLUDE_ENABLE, &enable, -1);
 
         if (path) {
             FsearchExcludePath *fs_path = fsearch_exclude_path_new(path, enable);
             data = g_list_append(data, fs_path);
-            g_clear_pointer(&path, g_free);
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);

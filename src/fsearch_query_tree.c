@@ -195,7 +195,7 @@ get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags
 
 GNode *
 fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filters, FsearchQueryFlags flags) {
-    char *query = g_strdup(search_term);
+    g_autofree char *query = g_strdup(search_term);
     char *query_stripped = g_strstrip(query);
     GNode *res = NULL;
     if (flags & QUERY_FLAG_REGEX) {
@@ -206,7 +206,6 @@ fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filte
     else {
         res = get_query_tree(query_stripped, filters, flags);
     }
-    g_clear_pointer(&query, free);
     return res;
 }
 

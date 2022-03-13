@@ -301,7 +301,6 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
             g_clear_pointer(&c->dest, darray_free);
         }
     }
-    g_array_free(g_steal_pointer(&merge_me), TRUE);
 
     return darray_merge_sorted(merged_data, comp_func);
 }
@@ -329,7 +328,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
     const int num_items_per_thread = (int)(array->num_items / num_threads);
     GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_threads, FALSE, NULL);
 
-    GArray *sort_ctx_array = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
+    g_autoptr(GArray) sort_ctx_array = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
 
     int start = 0;
     for (int i = 0; i < num_threads; ++i) {
@@ -343,7 +342,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
     }
     g_thread_pool_free(g_steal_pointer(&sort_pool), FALSE, TRUE);
 
-    GArray *result = darray_merge_sorted(sort_ctx_array, comp_func);
+    g_autoptr(GArray) result = darray_merge_sorted(sort_ctx_array, comp_func);
 
     if (result) {
         g_clear_pointer(&array->data, free);
@@ -354,8 +353,6 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
         array->max_items = c->dest->max_items;
 
         g_clear_pointer(&c->dest, free);
-
-        g_array_free(g_steal_pointer(&result), TRUE);
     }
 }
 

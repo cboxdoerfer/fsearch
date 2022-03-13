@@ -108,13 +108,12 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
 
 static bool
 open_with_cmd(GString *path, GString *path_full, const char *cmd) {
-    char *cmd_res = build_folder_open_cmd(path, path_full, cmd);
+    g_autofree char *cmd_res = build_folder_open_cmd(path, path_full, cmd);
     if (!cmd_res) {
         return false;
     }
 
-    bool result = true;
-    GError *error = NULL;
+    g_autoptr(GError) error = NULL;
     if (!g_spawn_command_line_async(cmd_res, &error)) {
 
         fprintf(stderr, "open: error: %s\n", error->message);
@@ -125,13 +124,10 @@ open_with_cmd(GString *path, GString *path_full, const char *cmd) {
                                       error->message,
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
-        g_clear_pointer(&error, g_error_free);
-        result = false;
+        return false;
     }
 
-    g_clear_pointer(&cmd_res, g_free);
-
-    return result;
+    return true;
 }
 
 static bool
@@ -147,12 +143,11 @@ open_application(const char *uri) {
 
     g_autoptr(GAppLaunchContext) context = (GAppLaunchContext *)gdk_display_get_app_launch_context(display);
 
-    GError *error = NULL;
+    g_autoptr(GError) error = NULL;
     g_app_info_launch(info, NULL, context, &error);
 
     if (error) {
         g_warning("Failed to launch app: %s", error->message);
-        g_clear_pointer(&error, g_error_free);
         return false;
     }
 
@@ -172,7 +167,7 @@ open_uri(const char *uri, bool launch_desktop_files) {
         }
     }
 
-    GError *error = NULL;
+    g_autoptr(GError) error = NULL;
     const char *argv[3];
     argv[0] = "xdg-open";
     argv[1] = uri;
@@ -188,7 +183,6 @@ open_uri(const char *uri, bool launch_desktop_files) {
                                       error->message,
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
-        g_clear_pointer(&error, g_error_free);
 
         return false;
     }
@@ -335,14 +329,12 @@ fsearch_file_utils_guess_icon(const char *name, const char *path, bool is_dir) {
         return get_desktop_file_icon(path);
     }
 
-    gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
+    g_autofree gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
     if (!content_type) {
         return g_themed_icon_new(DEFAULT_FILE_ICON_NAME);
     }
 
     GIcon *icon = g_content_type_get_icon(content_type);
-
-    g_clear_pointer(&content_type, g_free);
 
     return icon ? icon : g_themed_icon_new(DEFAULT_FILE_ICON_NAME);
 }

@@ -12,7 +12,7 @@ test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFla
     FsearchFilterManager *manager = fsearch_filter_manager_new_with_defaults();
     FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, manager, NULL, flags, "debug_query", NULL);
 
-    FsearchDatabaseEntry *entry = calloc(1, db_entry_get_sizeof_file_entry());
+    g_autofree FsearchDatabaseEntry *entry = calloc(1, db_entry_get_sizeof_file_entry());
     db_entry_set_name(entry, haystack);
     db_entry_set_size(entry, size);
     db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
@@ -25,7 +25,6 @@ test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFla
     g_clear_pointer(&q, fsearch_query_unref);
     g_clear_pointer(&match_data, fsearch_query_match_data_free);
     db_entry_destroy(entry);
-    g_clear_pointer(&entry, free);
 
     if (found != result) {
         g_printerr("[%s] should%s match [name:%s, size:%ld]\n", needle, result ? "" : " NOT", haystack, size);

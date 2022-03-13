@@ -182,7 +182,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
     }
 
     int32_t width = col->effective_width - 2 * ROW_PADDING_X;
-    char *text = NULL;
+    g_autofree char *text = NULL;
 
     switch (col->type) {
     case DATABASE_INDEX_TYPE_NAME:
@@ -238,11 +238,8 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
     width -= layout_width;
 
     if (width < 0) {
-        return text;
+        return g_steal_pointer(&text);
     }
-
-    g_clear_pointer(&text, g_free);
-
     return NULL;
 }
 
