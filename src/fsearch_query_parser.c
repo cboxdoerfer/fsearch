@@ -521,6 +521,31 @@ get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryT
     }
 }
 
+static bool
+is_operator_token(FsearchQueryToken token) {
+    if (token == FSEARCH_QUERY_TOKEN_AND || token == FSEARCH_QUERY_TOKEN_OR) {
+        return true;
+    }
+    return false;
+}
+
+static bool
+is_operator_token_followed_by_operand(FsearchQueryLexer *lexer, FsearchQueryToken token) {
+    FsearchQueryToken next_token = fsearch_query_lexer_peek_next_token(lexer, NULL);
+    if (is_operator_token(token) && next_token == FSEARCH_QUERY_TOKEN_NOT) {
+        return true;
+    }
+    switch (next_token) {
+    case FSEARCH_QUERY_TOKEN_WORD:
+    case FSEARCH_QUERY_TOKEN_FIELD:
+    case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
+    case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
+        return true;
+    default:
+        return false;
+    }
+}
+
 static GList *
 parse_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
     parse_ctx->last_token = token;
@@ -537,13 +562,20 @@ parse_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
 }
 
 static bool
-consume_not_token(FsearchQueryLexer *lexer) {
+consume_consecutive_not_token(FsearchQueryLexer *lexer) {
     bool uneven_number_of_not_tokens = true;
     while (fsearch_query_lexer_peek_next_token(lexer, NULL) == FSEARCH_QUERY_TOKEN_NOT) {
         fsearch_query_lexer_get_next_token(lexer, NULL);
         uneven_number_of_not_tokens = !uneven_number_of_not_tokens;
     }
     return uneven_number_of_not_tokens;
+}
+
+static void
+discard_operator_tokens(FsearchQueryLexer *lexer) {
+    while (is_operator_token(fsearch_query_lexer_peek_next_token(lexer, NULL))) {
+        fsearch_query_lexer_get_next_token(lexer, NULL);
+    }
 }
 
 static GList *
@@ -558,8 +590,7 @@ parse_close_bracket(FsearchQueryParseContext *parse_ctx) {
             g_warning("[infix-postfix] Matching open bracket not found!\n");
             g_assert_not_reached();
         }
-        FsearchQueryNode *op_node = get_operator_node_for_query_token(
-            pop_query_token(parse_ctx->operator_stack));
+        FsearchQueryNode *op_node = get_operator_node_for_query_token(pop_query_token(parse_ctx->operator_stack));
         if (op_node) {
             res = g_list_append(res, op_node);
         }
@@ -595,21 +626,27 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
         case FSEARCH_QUERY_TOKEN_EOS:
             goto out;
         case FSEARCH_QUERY_TOKEN_NOT:
-            if (consume_not_token(parse_ctx->lexer)) {
+            if (consume_consecutive_not_token(parse_ctx->lexer)) {
                 // We want to support consecutive NOT operators (i.e. `NOT NOT a`)
                 // so even numbers of NOT operators get ignored and for uneven numbers
                 // we simply add a single one
                 // to_append = add_implicit_and_if_necessary(parse_ctx, token);
-                to_append = parse_operator(parse_ctx, token);
+                if (is_operator_token_followed_by_operand(parse_ctx->lexer, token)) {
+                    to_append = parse_operator(parse_ctx, token);
+                }
             }
+            // discard_operator_tokens(parse_ctx->lexer);
             break;
         case FSEARCH_QUERY_TOKEN_AND:
         case FSEARCH_QUERY_TOKEN_OR:
-            to_append = parse_operator(parse_ctx, token);
+            if (is_operator_token_followed_by_operand(parse_ctx->lexer, token)) {
+                to_append = parse_operator(parse_ctx, token);
+            }
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
             num_open_brackets++;
             to_append = parse_open_bracket(parse_ctx);
+            discard_operator_tokens(parse_ctx->lexer);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
             // only add closing bracket if there's a matching open bracket
@@ -628,9 +665,9 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
                 }
             }
             else {
-                g_list_free_full(g_steal_pointer(&res), (GDestroyNotify)fsearch_query_node_free);
                 g_debug("[infix-postfix] closing bracket found without a corresponding open bracket, abort parsing!\n");
-                return g_list_append(res, fsearch_query_node_new_match_nothing());
+                g_list_free_full(g_steal_pointer(&res), (GDestroyNotify)fsearch_query_node_free);
+                return g_list_append(NULL, fsearch_query_node_new_match_nothing());
             }
             break;
         case FSEARCH_QUERY_TOKEN_WORD:
