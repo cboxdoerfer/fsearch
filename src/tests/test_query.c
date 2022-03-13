@@ -158,6 +158,8 @@ main(int argc, char *argv[]) {
             {"size:>1MB", "test", 1000001, 0, true},
             {"size:>1MB", "test", 1000000, 0, false},
             {"size:abc", "test", 1000000, 0, true},
+            {"size:abc test", "test", 1000000, 0, true},
+            {"size:abc abc", "test", 1000000, 0, false},
 
             {"regex:suffix$", "suffix prefix", 0, 0, false},
             {"regex:suffix$", "prefix suffix", 0, 0, true},
