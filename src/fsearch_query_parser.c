@@ -133,6 +133,7 @@ parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsear
     g_autoptr(GString) token_value = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
     FsearchQueryNodeComparison comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
+    FsearchQueryNode *node = NULL;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_EQUAL:
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
@@ -150,7 +151,8 @@ parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsear
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        return g_list_append(NULL, parse_size_with_optional_range(token_value, flags, comp_type));
+        node = parse_size_with_optional_range(token_value, flags, comp_type);
+        return node ? g_list_append(NULL, node) : NULL;
     default:
         g_debug("[size:] invalid or missing argument");
         return NULL;
@@ -159,7 +161,8 @@ parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsear
     g_autoptr(GString) next_token_value = NULL;
     FsearchQueryToken next_token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &next_token_value);
     if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
-        return g_list_append(NULL, parse_size(next_token_value, flags, comp_type));
+        node = parse_size(next_token_value, flags, comp_type);
+        return node ? g_list_append(NULL, node) : NULL;
     }
 
     return NULL;
@@ -228,6 +231,7 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
         return NULL;
     }
     g_autoptr(GString) token_value = NULL;
+    FsearchQueryNode *node = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
     FsearchQueryNodeComparison comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
     switch (token) {
@@ -247,7 +251,8 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        return g_list_append(NULL, parse_date_with_optional_range(token_value, flags, comp_type));
+        node = parse_date_with_optional_range(token_value, flags, comp_type);
+        return node ? g_list_append(NULL, node) : NULL;
     default:
         g_debug("[size:] invalid or missing argument");
         return NULL;
@@ -256,7 +261,8 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
     g_autoptr(GString) next_token_value = NULL;
     FsearchQueryToken next_token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &next_token_value);
     if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
-        return g_list_append(NULL, parse_date_modified(next_token_value, flags, comp_type));
+        node = parse_date_modified(next_token_value, flags, comp_type);
+        return node ? g_list_append(NULL, node) : NULL;
     }
 
     return NULL;
