@@ -213,10 +213,10 @@ config_load(FsearchConfig *config) {
     g_assert(config != NULL);
 
     bool result = false;
-    GKeyFile *key_file = g_key_file_new();
+    g_autoptr(GKeyFile) key_file = g_key_file_new();
     g_assert(key_file != NULL);
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
     gchar config_path[PATH_MAX] = "";
@@ -339,11 +339,8 @@ config_load(FsearchConfig *config) {
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
 
-    g_clear_pointer(&timer, g_timer_destroy);
-
     g_debug(debug_message, seconds * 1000);
 
-    g_clear_pointer(&key_file, g_key_file_free);
     return result;
 }
 

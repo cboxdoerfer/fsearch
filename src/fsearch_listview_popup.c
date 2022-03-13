@@ -114,13 +114,12 @@ intersect_supported_appliations(gpointer key, gpointer value, gpointer user_data
         return;
     }
 
-    GString *name = db_entry_get_name_for_display(entry);
+    g_autoptr(GString) name = db_entry_get_name_for_display(entry);
     if (!name) {
         return;
     }
 
-    char *content_type = g_content_type_guess(name->str, NULL, 0, NULL);
-    g_string_free(g_steal_pointer(&name), TRUE);
+    g_autofree char *content_type = g_content_type_guess(name->str, NULL, 0, NULL);
 
     if (!g_hash_table_contains(ctx->content_types, content_type)) {
         // a new content type, add it
@@ -129,8 +128,6 @@ intersect_supported_appliations(gpointer key, gpointer value, gpointer user_data
         refresh_applications_for_content_type(ctx->applications, g_steal_pointer(&content_type), ctx->first_run);
         ctx->first_run = false;
     }
-
-    g_clear_pointer(&content_type, g_free);
 }
 
 static void
@@ -143,10 +140,9 @@ append_application_to_menu(gpointer key, gpointer value, gpointer user_data) {
     char detailed_action[1024] = "";
     snprintf(detailed_action, sizeof(detailed_action), "win.open_with('%s')", app_id);
 
-    GMenuItem *menu_item = g_menu_item_new(display_name, detailed_action);
+    g_autoptr(GMenuItem) menu_item = g_menu_item_new(display_name, detailed_action);
     g_menu_item_set_icon(menu_item, g_app_info_get_icon(app_info));
     g_menu_append_item(menu_mime, menu_item);
-    g_clear_object(&menu_item);
 }
 
 static void
@@ -173,9 +169,8 @@ fill_open_with_menu(GtkBuilder *builder, FsearchDatabaseView *db_view) {
     // add the "Open with -> Other Application" entry
     char detailed_action[1024] = "";
     snprintf(detailed_action, sizeof(detailed_action), "win.open_with_other('%s')", "");
-    GMenuItem *open_with_item = g_menu_item_new(_("Other Application…"), detailed_action);
+    g_autoptr(GMenuItem) open_with_item = g_menu_item_new(_("Other Application…"), detailed_action);
     g_menu_append_item(menu_mime, open_with_item);
-    g_clear_object(&open_with_item);
 }
 
 gboolean

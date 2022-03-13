@@ -158,18 +158,15 @@ static void
 on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType response, gpointer user_data) {
 #endif
     FsearchPreferencesFileChooserContext *ctx = user_data;
-    char *path = NULL;
     if (response == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-        char *uri = gtk_file_chooser_get_uri(chooser);
-        path = g_filename_from_uri(uri, NULL, NULL);
-        g_clear_pointer(&uri, g_free);
+        g_autofree char *uri = gtk_file_chooser_get_uri(chooser);
+        g_autofree char *path = g_filename_from_uri(uri, NULL, NULL);
 
         if (path) {
             if (ctx->add_path_cb) {
                 ctx->add_path_cb(ctx->model, path);
             }
-            g_clear_pointer(&path, g_free);
         }
     }
 
@@ -259,14 +256,11 @@ get_selected_filter(FsearchPreferencesInterface *ui) {
         return NULL;
     }
 
-    char *name = NULL;
+    g_autofree char *name = NULL;
     gtk_tree_model_get(model, &iter, 0, &name, -1);
     g_assert(name != NULL);
 
-    FsearchFilter *filter = fsearch_filter_manager_get_filter_for_name(ui->new_config->filters, name);
-    g_clear_pointer(&name, g_free);
-
-    return filter;
+    return fsearch_filter_manager_get_filter_for_name(ui->new_config->filters, name);
 }
 
 static void

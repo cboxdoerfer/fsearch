@@ -91,7 +91,7 @@ draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window
     bool ret = true;
     db_view_lock(view);
 
-    GString *name = NULL;
+    g_autoptr(GString) name = NULL;
 
     const uint32_t num_items = db_view_get_num_entries(view);
     if (row >= num_items) {
@@ -146,9 +146,6 @@ draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window
              localtime(&mtime));
 
 out:
-    if (name) {
-        g_string_free(g_steal_pointer(&name), TRUE);
-    }
     db_view_unlock(view);
     return ret;
 }
@@ -183,7 +180,7 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     db_view_lock(view);
-    GString *name = db_view_entry_get_name_for_idx(view, row);
+    g_autoptr(GString) name = db_view_entry_get_name_for_idx(view, row);
     if (!name) {
         db_view_unlock(view);
         return NULL;
@@ -201,9 +198,8 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
         text = g_filename_display_name(name->str);
         break;
     case DATABASE_INDEX_TYPE_PATH: {
-        GString *path = db_view_entry_get_path_for_idx(view, row);
+        g_autoptr(GString) path = db_view_entry_get_path_for_idx(view, row);
         text = g_filename_display_name(path->str);
-        g_string_free(g_steal_pointer(&path), TRUE);
         break;
     }
     case DATABASE_INDEX_TYPE_EXTENSION: {
@@ -235,8 +231,6 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
     }
 
     db_view_unlock(view);
-
-    g_string_free(g_steal_pointer(&name), TRUE);
 
     if (!text) {
         return NULL;

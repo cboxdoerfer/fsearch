@@ -44,21 +44,16 @@ fs_str_case_is_ascii(const char *str) {
     if (str_len == 0) {
         return true;
     }
-    char *down = g_utf8_strdown(str, str_len);
-    char *up = g_utf8_strup(str, str_len);
+    g_autofree char *down = g_utf8_strdown(str, str_len);
+    g_autofree char *up = g_utf8_strup(str, str_len);
 
-    bool ret = false;
     if (g_str_is_ascii(down) && g_str_is_ascii(up)) {
-        ret = true;
+        return true;
     }
     else {
         g_debug("[non_ascii_string] \"%s\" (down: \"%s\", up: \"%s\")", str, down, up);
-        ret = false;
+        return false;
     }
-
-    g_clear_pointer(&down, g_free);
-    g_clear_pointer(&up, g_free);
-    return ret;
 }
 
 bool

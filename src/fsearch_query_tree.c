@@ -172,12 +172,11 @@ get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags
                 g_print("%s ", node->description->str);
             }
             else {
-                char *flag_string = query_flags_to_string(node->flags);
+                g_autofree char *flag_string = query_flags_to_string(node->flags);
                 g_print("[%s:'%s':%s] ",
                         node->description ? node->description->str : "unknown query",
                         node->needle ? node->needle : "",
                         flag_string);
-                g_free(flag_string);
             }
         }
         g_print("\n");

@@ -274,7 +274,7 @@ database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
 
 static FsearchDatabase *
 database_update(FsearchApplication *app, bool rescan) {
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
     fsearch_application_state_lock(app);
@@ -288,20 +288,18 @@ database_update(FsearchApplication *app, bool rescan) {
         database_update_scan_and_save(app, db);
     }
     else {
-        char *db_file_path = fsearch_application_get_database_file_path();
+        g_autofree char *db_file_path = fsearch_application_get_database_file_path();
         if (db_file_path) {
             if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_update_status_cb : NULL)
                 && !app->config->update_database_on_launch) {
                 // load failed -> trigger rescan
                 g_idle_add(on_database_scan_add, NULL);
             }
-            g_clear_pointer(&db_file_path, free);
         }
     }
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug("[app] database update finished in %.2f ms", seconds * 1000);
 
@@ -311,7 +309,7 @@ database_update(FsearchApplication *app, bool rescan) {
 static void
 database_pool_func(gpointer data, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION(user_data);
-    DatabaseUpdateContext *ctx = data;
+    g_autofree DatabaseUpdateContext *ctx = data;
     if (!ctx) {
         return;
     }
@@ -325,8 +323,6 @@ database_pool_func(gpointer data, gpointer user_data) {
     if (ctx->finished_cb) {
         ctx->finished_cb(db);
     }
-
-    g_clear_pointer(&ctx, g_free);
 }
 
 static void
@@ -784,7 +780,7 @@ database_update_in_local_instance() {
         }
     }
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
     FsearchDatabase *db =
@@ -805,7 +801,6 @@ database_update_in_local_instance() {
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-    g_clear_pointer(&timer, g_timer_destroy);
 
     if (res == EXIT_SUCCESS) {
         g_print("[fsearch] database update finished successfully in %.2f seconds\n", seconds);

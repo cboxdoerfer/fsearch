@@ -1091,24 +1091,21 @@ fsearch_list_view_query_tooltip(GtkWidget *widget, int x, int y, gboolean keyboa
         return FALSE;
     }
 
-    PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
+    g_autoptr(PangoLayout) layout = gtk_widget_create_pango_layout(widget, NULL);
     if (!layout) {
         return FALSE;
     }
 
-    gboolean ret_val = FALSE;
-    char *tooltip_text = view->query_tooltip_func(layout,
-                                                  view->row_height,
-                                                  get_row_idx_for_sort_type(view, row_idx),
-                                                  col,
-                                                  view->query_tooltip_func_data);
+    g_autofree char *tooltip_text = view->query_tooltip_func(layout,
+                                                             view->row_height,
+                                                             get_row_idx_for_sort_type(view, row_idx),
+                                                             col,
+                                                             view->query_tooltip_func_data);
     if (tooltip_text) {
         gtk_tooltip_set_text(tooltip, tooltip_text);
-        g_clear_pointer(&tooltip_text, g_free);
-        ret_val = TRUE;
+        return TRUE;
     }
-    g_clear_object(&layout);
-    return ret_val;
+    return FALSE;
 }
 
 static gboolean

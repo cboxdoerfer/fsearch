@@ -8,10 +8,16 @@
 #include <stdbool.h>
 
 static GList *
-process_open_bracket_token(FsearchQueryParseContext *parse_ctx);
+parse_open_bracket(FsearchQueryParseContext *parse_ctx);
 
 static GList *
-process_operator_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token);
+parse_close_bracket(FsearchQueryParseContext *parse_ctx);
+
+static GList *
+parse_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token);
+
+static GList *
+parse_word(GString *field_name, FsearchQueryFlags flags);
 
 static GList *
 parse_field(FsearchQueryParseContext *parse_ctx, GString *field_name, bool is_empty_field, FsearchQueryFlags flags);
@@ -287,10 +293,10 @@ parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsearch
     g_autoptr(GString) token_value = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
     if (token == FSEARCH_QUERY_TOKEN_WORD) {
-        return g_list_append(NULL, fsearch_query_node_new(token_value->str, flags));
+        return parse_word(token_value, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-        GList *res = process_open_bracket_token(parse_ctx);
+        GList *res = parse_open_bracket(parse_ctx);
         return g_list_concat(res, fsearch_query_parser_parse_expression(parse_ctx, true, flags));
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD) {
@@ -429,6 +435,14 @@ parse_field(FsearchQueryParseContext *parse_ctx, GString *field_name, bool is_em
     return res;
 }
 
+static GList *
+parse_word(GString *field_name, FsearchQueryFlags flags) {
+    if (!field_name) {
+        return NULL;
+    }
+    return g_list_append(NULL, fsearch_query_node_new(field_name->str, flags));
+}
+
 static FsearchQueryToken
 top_query_token(GQueue *stack) {
     if (g_queue_is_empty(stack)) {
@@ -501,14 +515,14 @@ get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryT
     case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
     case FSEARCH_QUERY_TOKEN_NOT:
     case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
-        return process_operator_token(parse_ctx, FSEARCH_QUERY_TOKEN_AND);
+        return parse_operator(parse_ctx, FSEARCH_QUERY_TOKEN_AND);
     default:
         return NULL;
     }
 }
 
 static GList *
-process_operator_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
+parse_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
     parse_ctx->last_token = token;
     GList *res = NULL;
     while (!g_queue_is_empty(parse_ctx->operator_stack)
@@ -536,7 +550,32 @@ consume_not_token(FsearchQueryLexer *lexer, FsearchQueryToken current_token) {
 }
 
 static GList *
-process_open_bracket_token(FsearchQueryParseContext *parse_ctx) {
+parse_close_bracket(FsearchQueryParseContext *parse_ctx) {
+    GList *res = NULL;
+    while (true) {
+        FsearchQueryToken t = top_query_token(parse_ctx->operator_stack);
+        if (t == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+            break;
+        }
+        if (t == FSEARCH_QUERY_TOKEN_NONE) {
+            g_warning("[infix-postfix] Matching open bracket not found!\n");
+            g_assert_not_reached();
+        }
+        FsearchQueryNode *op_node = get_operator_node_for_query_token(
+            pop_query_token(parse_ctx->operator_stack));
+        if (op_node) {
+            res = g_list_append(res, op_node);
+        }
+    }
+    if (top_query_token(parse_ctx->operator_stack) == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
+        pop_query_token(parse_ctx->operator_stack);
+    }
+    parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_CLOSE;
+    return res;
+}
+
+static GList *
+parse_open_bracket(FsearchQueryParseContext *parse_ctx) {
     GList *res = get_implicit_and_if_necessary(parse_ctx, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
     parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_OPEN;
     push_query_token(parse_ctx->operator_stack, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
@@ -564,41 +603,25 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
                 // so even numbers of NOT operators get ignored and for uneven numbers
                 // we simply add a single one
                 // to_append = add_implicit_and_if_necessary(parse_ctx, token);
-                to_append = process_operator_token(parse_ctx, token);
+                to_append = parse_operator(parse_ctx, token);
             }
             break;
         case FSEARCH_QUERY_TOKEN_AND:
         case FSEARCH_QUERY_TOKEN_OR:
-            to_append = process_operator_token(parse_ctx, token);
+            to_append = parse_operator(parse_ctx, token);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
             num_open_brackets++;
-            to_append = process_open_bracket_token(parse_ctx);
+            to_append = parse_open_bracket(parse_ctx);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
+            // only add closing bracket if there's a matching open bracket
             if (num_open_brackets > num_close_brackets) {
-                // only add closing bracket if there's at least one matching open bracket
-                while (true) {
-                    FsearchQueryToken t = top_query_token(parse_ctx->operator_stack);
-                    if (t == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-                        break;
-                    }
-                    if (t == FSEARCH_QUERY_TOKEN_NONE) {
-                        g_warning("[infix-postfix] Matching open bracket not found!\n");
-                        g_assert_not_reached();
-                    }
-                    FsearchQueryNode *op_node = get_operator_node_for_query_token(
-                        pop_query_token(parse_ctx->operator_stack));
-                    if (op_node) {
-                        to_append = g_list_append(to_append, op_node);
-                    }
-                }
-                if (top_query_token(parse_ctx->operator_stack) == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-                    pop_query_token(parse_ctx->operator_stack);
-                }
-                parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_CLOSE;
                 num_close_brackets++;
+                to_append = parse_close_bracket(parse_ctx);
+
                 if (in_open_bracket && num_close_brackets == num_open_brackets) {
+                    // We found the matching closing bracket which marks the end of this expression, return.
                     if (to_append) {
                         return g_list_concat(res, to_append);
                     }
@@ -614,8 +637,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
             }
             break;
         case FSEARCH_QUERY_TOKEN_WORD:
-            to_append = g_list_append(to_append, fsearch_query_node_new(token_value->str, flags));
-            g_print("Token word: %s\n", to_append ? token_value->str : "empty");
+            to_append = parse_word(token_value, flags);
             break;
         case FSEARCH_QUERY_TOKEN_FIELD:
             to_append = parse_field(parse_ctx, token_value, false, flags);

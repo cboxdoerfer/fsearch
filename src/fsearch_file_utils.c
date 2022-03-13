@@ -57,7 +57,7 @@ is_desktop_file(const char *path) {
 
 static gboolean
 keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
-    gchar *match = g_match_info_fetch(info, 0);
+    g_autofree gchar *match = g_match_info_fetch(info, 0);
     if (!match) {
         return FALSE;
     }
@@ -65,7 +65,6 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
     if (r) {
         g_string_append(res, r);
     }
-    g_clear_pointer(&match, g_free);
 
     return FALSE;
 }
@@ -75,8 +74,8 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
     if (!path || !path_full) {
         return NULL;
     }
-    char *path_quoted = g_shell_quote(path->str);
-    char *path_full_quoted = g_shell_quote(path_full->str);
+    g_autofree char *path_quoted = g_shell_quote(path->str);
+    g_autofree char *path_full_quoted = g_shell_quote(path_full->str);
 
     // The following code is mostly based on the example code found here:
     // https://developer.gnome.org/glib/stable/glib-Perl-compatible-regular-expressions.html#g-regex-replace-eval
@@ -94,7 +93,7 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
     //     properly escaped and quoted for the usage in shells. E.g. /foo/'bar
     //     becomes '/foo/'\''bar'
 
-    GHashTable *keywords = g_hash_table_new(g_str_hash, g_str_equal);
+    g_autoptr(GHashTable) keywords = g_hash_table_new(g_str_hash, g_str_equal);
     g_hash_table_insert(keywords, "{path_raw}", path->str);
     g_hash_table_insert(keywords, "{path_full_raw}", path_full->str);
     g_hash_table_insert(keywords, "{path}", path_quoted);
@@ -102,16 +101,9 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
 
     // Regular expression which matches multiple words (and underscores)
     // surrounded with {}
-    GRegex *reg = g_regex_new("{[\\w]+}", 0, 0, NULL);
+    g_autoptr(GRegex) reg = g_regex_new("{[\\w]+}", 0, 0, NULL);
     // Replace all the matched keywords
-    char *cmd_res = g_regex_replace_eval(reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL);
-
-    g_clear_pointer(&reg, g_regex_unref);
-    g_clear_pointer(&keywords, g_hash_table_destroy);
-    g_clear_pointer(&path_quoted, g_free);
-    g_clear_pointer(&path_full_quoted, g_free);
-
-    return cmd_res;
+    return g_regex_replace_eval(reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL);
 }
 
 static bool
@@ -269,15 +261,11 @@ get_mimetype(const gchar *name) {
     if (!name) {
         return NULL;
     }
-    gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
+    g_autofree gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
     if (!content_type) {
         return NULL;
     }
-    gchar *mimetype = g_content_type_get_description(content_type);
-
-    g_clear_pointer(&content_type, g_free);
-
-    return mimetype;
+    return g_content_type_get_description(content_type);
 }
 
 gchar *

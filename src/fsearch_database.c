@@ -145,7 +145,7 @@ static void
 db_sort(FsearchDatabase *db) {
     assert(db != NULL);
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
 
     // first we sort all the files
     DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
@@ -173,8 +173,6 @@ db_sort(FsearchDatabase *db) {
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
     }
-
-    g_clear_pointer(&timer, g_timer_destroy);
 }
 
 static void
@@ -378,16 +376,14 @@ db_load_folders(FILE *fp,
                 DynamicArray *folders,
                 uint32_t num_folders,
                 uint64_t folder_block_size) {
-    bool res = true;
+    g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
 
-    GString *previous_entry_name = g_string_sized_new(256);
-
-    uint8_t *folder_block = calloc(folder_block_size + 1, sizeof(uint8_t));
+    g_autofree uint8_t *folder_block = calloc(folder_block_size + 1, sizeof(uint8_t));
     assert(folder_block != NULL);
 
     if (fread(folder_block, sizeof(uint8_t), folder_block_size, fp) != folder_block_size) {
         g_debug("[db_load] failed to read file block");
-        goto out;
+        return false;
     }
 
     const uint8_t *fb = folder_block;
@@ -421,22 +417,16 @@ db_load_folders(FILE *fp,
     // fail if we didn't read the correct number of bytes
     if (fb - folder_block != folder_block_size) {
         g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - folder_block, folder_block_size);
-        res = false;
-        goto out;
+        return false;
     }
 
     // fail if we didn't read the correct number of folders
     if (idx != num_folders) {
         g_debug("[db_load] failed to read folders (read %d of %d)", idx, num_folders);
-        res = false;
+        return false;
     }
 
-out:
-    g_clear_pointer(&folder_block, free);
-
-    g_string_free(g_steal_pointer(&previous_entry_name), TRUE);
-
-    return res;
+    return true;
 }
 
 static bool
@@ -447,15 +437,13 @@ db_load_files(FILE *fp,
               DynamicArray *files,
               uint32_t num_files,
               uint64_t file_block_size) {
-    bool result = true;
-    GString *previous_entry_name = g_string_sized_new(256);
-
-    uint8_t *file_block = calloc(file_block_size + 1, sizeof(uint8_t));
+    g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
+    g_autofree uint8_t *file_block = calloc(file_block_size + 1, sizeof(uint8_t));
     assert(file_block != NULL);
 
     if (fread(file_block, sizeof(uint8_t), file_block_size, fp) != file_block_size) {
         g_debug("[db_load] failed to read file block");
-        goto out;
+        return false;
     }
 
     const uint8_t *fb = file_block;
@@ -479,33 +467,26 @@ db_load_files(FILE *fp,
     }
     if (fb - file_block != file_block_size) {
         g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - file_block, file_block_size);
-        goto out;
+        return false;
     }
 
     // fail if we didn't read the correct number of files
     if (idx != num_files) {
         g_debug("[db_load] failed to read files (read %d of %d)", idx, num_files);
-        result = false;
+        return false;
     }
 
-out:
-    g_clear_pointer(&file_block, free);
-
-    g_string_free(g_steal_pointer(&previous_entry_name), TRUE);
-
-    return result;
+    return true;
 }
 
 static bool
 db_load_sorted_entries(FILE *fp, DynamicArray *src, uint32_t num_src_entries, DynamicArray *dest) {
 
-    uint32_t *indexes = calloc(num_src_entries + 1, sizeof(uint32_t));
+    g_autofree uint32_t *indexes = calloc(num_src_entries + 1, sizeof(uint32_t));
     assert(indexes != NULL);
 
-    bool res = true;
-
     if (fread(indexes, 4, num_src_entries, fp) != num_src_entries) {
-        res = false;
+        return false;
     }
     else {
         for (uint32_t i = 0; i < num_src_entries; i++) {
@@ -517,10 +498,7 @@ db_load_sorted_entries(FILE *fp, DynamicArray *src, uint32_t num_src_entries, Dy
             darray_add_item(dest, entry);
         }
     }
-
-    g_clear_pointer(&indexes, free);
-
-    return res;
+    return true;
 }
 
 static bool
@@ -806,8 +784,8 @@ static size_t
 db_save_files(FILE *fp, FsearchDatabaseIndexFlags index_flags, DynamicArray *files, uint32_t num_files, bool *write_failed) {
     size_t bytes_written = 0;
 
-    GString *name_prev = g_string_sized_new(256);
-    GString *name_new = g_string_sized_new(256);
+    g_autoptr(GString) name_prev = g_string_sized_new(256);
+    g_autoptr(GString) name_new = g_string_sized_new(256);
 
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(files, i);
@@ -820,13 +798,8 @@ db_save_files(FILE *fp, FsearchDatabaseIndexFlags index_flags, DynamicArray *fil
         const uint32_t parent_idx = db_entry_get_idx((FsearchDatabaseEntry *)parent);
         bytes_written += db_save_entry_shared(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true)
-            goto out;
+            return bytes_written;
     }
-
-out:
-    g_string_free(g_steal_pointer(&name_prev), TRUE);
-    g_string_free(g_steal_pointer(&name_new), TRUE);
-
     return bytes_written;
 }
 
@@ -847,28 +820,22 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
 
 static size_t
 db_save_sorted_entries(FILE *fp, DynamicArray *entries, uint32_t num_entries, bool *write_failed) {
-    size_t bytes_written = 0;
-    uint32_t *sorted_entry_index_list = NULL;
     if (num_entries < 1) {
         // nothing to write, we're done here
-        goto out;
+        return 0;
     }
 
-    sorted_entry_index_list = build_sorted_entry_index_list(entries, num_entries);
+    g_autofree uint32_t *sorted_entry_index_list = build_sorted_entry_index_list(entries, num_entries);
     if (!sorted_entry_index_list) {
         *write_failed = true;
         g_debug("[db_save] failed to create sorted index list");
-        goto out;
+        return 0;
     }
 
-    bytes_written += write_data_to_file(fp, sorted_entry_index_list, 4, num_entries, write_failed);
+    size_t bytes_written = write_data_to_file(fp, sorted_entry_index_list, 4, num_entries, write_failed);
     if (*write_failed == true) {
         g_debug("[db_save] failed to save sorted index list");
-        goto out;
     }
-
-out:
-    g_clear_pointer(&sorted_entry_index_list, free);
 
     return bytes_written;
 }
@@ -931,8 +898,8 @@ db_save_folders(FILE *fp,
                 bool *write_failed) {
     size_t bytes_written = 0;
 
-    GString *name_prev = g_string_sized_new(256);
-    GString *name_new = g_string_sized_new(256);
+    g_autoptr(GString) name_prev = g_string_sized_new(256);
+    g_autoptr(GString) name_new = g_string_sized_new(256);
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
@@ -942,20 +909,16 @@ db_save_folders(FILE *fp,
         bytes_written += write_data_to_file(fp, &db_index, 2, 1, write_failed);
         if (*write_failed == true) {
             g_debug("[db_save] failed to save folder's database index: %d", db_index);
-            goto out;
+            return bytes_written;
         }
 
         FsearchDatabaseEntryFolder *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_idx((FsearchDatabaseEntry *)parent) : db_entry_get_idx(entry);
         bytes_written += db_save_entry_shared(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true) {
-            goto out;
+            return bytes_written;
         }
     }
-
-out:
-    g_string_free(g_steal_pointer(&name_prev), TRUE);
-    g_string_free(g_steal_pointer(&name_new), TRUE);
 
     return bytes_written;
 }
@@ -1008,14 +971,14 @@ db_save(FsearchDatabase *db, const char *path) {
         return false;
     }
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
-    GString *path_full = g_string_new(path);
+    g_autoptr (GString) path_full = g_string_new(path);
     g_string_append_c(path_full, G_DIR_SEPARATOR);
     g_string_append(path_full, "fsearch.db");
 
-    GString *path_full_temp = g_string_new(path_full->str);
+    g_autoptr(GString) path_full_temp = g_string_new(path_full->str);
     g_string_append(path_full_temp, ".tmp");
 
     g_debug("[db_save] trying to open temporary database file: %s", path_full_temp->str);
@@ -1138,14 +1101,8 @@ db_save(FsearchDatabase *db, const char *path) {
         goto save_fail;
     }
 
-    g_string_free(g_steal_pointer(&path_full), TRUE);
-
-    g_string_free(g_steal_pointer(&path_full_temp), TRUE);
-
     const double seconds = g_timer_elapsed(timer, NULL);
     g_timer_stop(timer);
-
-    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug("[db_save] database file saved in: %f ms", seconds * 1000);
 
@@ -1158,11 +1115,6 @@ save_fail:
 
     // remove temporary fsearch.db.tmp file
     unlink(path_full_temp->str);
-
-    g_string_free(g_steal_pointer(&path_full), TRUE);
-    g_string_free(g_steal_pointer(&path_full_temp), TRUE);
-
-    g_clear_pointer(&timer, g_timer_destroy);
 
     return false;
 }
@@ -1337,13 +1289,13 @@ db_scan_folder(FsearchDatabase *db,
         return false;
     }
 
-    GString *path = g_string_new(dname);
+    g_autoptr(GString) path = g_string_new(dname);
     // remove leading path separator '/' for root directory
     if (strcmp(path->str, G_DIR_SEPARATOR_S) == 0) {
         g_string_erase(path, 0, 1);
     }
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
     struct stat root_st;
@@ -1372,10 +1324,6 @@ db_scan_folder(FsearchDatabase *db,
     db->num_entries++;
 
     uint32_t res = db_folder_scan_recursive(&walk_context, (FsearchDatabaseEntryFolder *)entry);
-
-    g_string_free(g_steal_pointer(&path), TRUE);
-
-    g_clear_pointer(&timer, g_timer_destroy);
 
     if (res == WALK_OK) {
         g_debug("[db_scan] scanned: %d files, %d folders -> %d total", db->num_files, db->num_folders, db->num_entries);
@@ -1408,6 +1356,7 @@ db_new(GList *indexes, GList *excludes, char **exclude_files, bool exclude_hidde
     g_mutex_init(&db->mutex);
     if (indexes) {
         db->indexes = g_list_copy_deep(indexes, (GCopyFunc)fsearch_index_copy, NULL);
+
         db->indexes = g_list_sort(db->indexes, (GCompareFunc)compare_index_path);
     }
     if (excludes) {

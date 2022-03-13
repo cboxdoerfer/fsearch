@@ -138,13 +138,11 @@ append_line_to_string(GString *buffer,
         return;
     }
 
-    GString *string = get_string_func(entry);
+    g_autoptr(GString) string = get_string_func(entry);
     if (!string) {
         return;
     }
     append_line(buffer, string->str);
-
-    g_string_free(g_steal_pointer(&string), TRUE);
 }
 
 static void
@@ -188,14 +186,13 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
     fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
 
     if (delete || num_selected_rows > 20) {
-        GString *warning_message = g_string_new(NULL);
+        g_autoptr(GString) warning_message = g_string_new(NULL);
         g_string_printf(warning_message, _("Do you really want to remove %d file(s)?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
                                                 delete ? _("Deleting files…") : _("Moving files to trash…"),
                                                 warning_message->str);
-        g_string_free(g_steal_pointer(&warning_message), TRUE);
 
         if (response != GTK_RESPONSE_OK) {
             goto save_fail;
@@ -231,14 +228,13 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     fsearch_application_window_selection_for_each(self, prepend_path_uri_to_array, &file_array);
 
     if (num_selected_rows > 20) {
-        GString *warning_message = g_string_new(NULL);
+        g_autoptr(GString) warning_message = g_string_new(NULL);
         g_string_printf(warning_message, _("Do you really want to open %d file property windows?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
                                                 _("Opening file properties…"),
                                                 warning_message->str);
-        g_string_free(g_steal_pointer(&warning_message), TRUE);
 
         if (response != GTK_RESPONSE_OK) {
             goto save_fail;
@@ -336,13 +332,11 @@ fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer us
 
 static void
 copy_selection_as_text(FsearchApplicationWindow *win, GHFunc text_copy_func) {
-    GString *file_list_buffer = g_string_sized_new(8192);
+    g_autoptr(GString) file_list_buffer = g_string_sized_new(8192);
     fsearch_application_window_selection_for_each(win, text_copy_func, file_list_buffer);
 
     GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
     gtk_clipboard_set_text(clip, file_list_buffer->str, (gint)file_list_buffer->len);
-
-    g_string_free(g_steal_pointer(&file_list_buffer), TRUE);
 }
 
 static void
@@ -369,14 +363,13 @@ open_cb(gpointer key, gpointer value, gpointer data) {
         return;
     }
     FsearchDatabaseEntry *entry = value;
-    GString *path_full = db_entry_get_path_full(entry);
+    g_autoptr(GString) path_full = db_entry_get_path_full(entry);
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (!fsearch_file_utils_launch(path_full, config->launch_desktop_files)) {
         GString *open_failed_string = data;
         append_line(open_failed_string, path_full->str);
     }
-    g_string_free(g_steal_pointer(&path_full), TRUE);
 }
 
 static void
@@ -386,13 +379,12 @@ append_file_to_list(gpointer key, gpointer value, gpointer data) {
     }
     FsearchDatabaseEntry *entry = value;
 
-    GString *path_full = db_entry_get_path_full(entry);
+    g_autoptr(GString) path_full = db_entry_get_path_full(entry);
     if (!path_full) {
         return;
     }
     GList **list = data;
     *list = g_list_append(*list, g_file_new_for_path(path_full->str));
-    g_string_free(g_steal_pointer(&path_full), TRUE);
 }
 
 void
@@ -511,15 +503,13 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
     }
     FsearchDatabaseEntry *entry = value;
 
-    GString *path = db_entry_get_path(entry);
-    GString *path_full = db_entry_get_path_full(entry);
+    g_autoptr(GString) path = db_entry_get_path(entry);
+    g_autoptr(GString) path_full = db_entry_get_path_full(entry);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (!fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
         GString *open_failed_string = data;
         append_line(open_failed_string, path_full->str);
     }
-    g_string_free(g_steal_pointer(&path), TRUE);
-    g_string_free(g_steal_pointer(&path_full), TRUE);
 }
 
 static void

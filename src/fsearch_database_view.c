@@ -292,7 +292,7 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
         view->notify_func(view, DATABASE_VIEW_NOTIFY_SORT_STARTED, view->notify_func_data);
     }
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
     db_view_lock(view);
@@ -336,8 +336,6 @@ out:
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-
-    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug("[sort] finished in %2.fms", seconds * 1000);
 
@@ -386,7 +384,7 @@ db_view_search(FsearchDatabaseView *view) {
         view->notify_func(view, DATABASE_VIEW_NOTIFY_SEARCH_STARTED, view->notify_func_data);
     }
 
-    GString *query_id = g_string_new(NULL);
+    g_autoptr(GString) query_id = g_string_new(NULL);
     g_string_printf(query_id, "query:%02d.%04d", view->id, view->query_id++);
     FsearchQuery *q = fsearch_query_new(view->query_text,
                                         view->db,
@@ -397,7 +395,6 @@ db_view_search(FsearchDatabaseView *view) {
                                         view->query_flags,
                                         query_id->str,
                                         db_view_ref(view));
-    g_string_free(g_steal_pointer(&query_id), TRUE);
 
     db_search_queue(view->task_queue, g_steal_pointer(&q), db_view_search_task_finished, db_view_search_task_cancelled);
 }

@@ -47,7 +47,7 @@ clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, gu
         return;
     }
 
-    GString *list = g_string_sized_new(8192);
+    g_autoptr(GString) list = g_string_sized_new(8192);
 
     if (info == GNOME_COPIED_FILES) {
         g_debug("[get_data] GNOME_COPIED_FILES");
@@ -65,13 +65,12 @@ clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, gu
     }
     else {
         g_debug("[get_data] unknown format: %d", info);
-        goto out;
+        return;
     }
 
     for (GList *l = clipboard_file_list; l; l = l->next) {
-        gchar *file_name = g_filename_to_uri((char *)l->data, NULL, NULL);
+        g_autofree gchar *file_name = g_filename_to_uri((char *)l->data, NULL, NULL);
         g_string_append(list, file_name);
-        g_clear_pointer(&file_name, g_free);
 
         if (l->next != NULL) {
             if (info == URI_LIST) {
@@ -91,10 +90,6 @@ clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, gu
                            8,
                            (guchar *)list->str,
                            (gint)list->len + 1);
-
-out:
-
-    g_string_free(g_steal_pointer(&list), TRUE);
 }
 
 void

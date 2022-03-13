@@ -122,7 +122,7 @@ static gpointer
 db_search_task(gpointer data, GCancellable *cancellable) {
     FsearchQuery *query = data;
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
     DatabaseSearchResult *result = NULL;
@@ -142,7 +142,6 @@ db_search_task(gpointer data, GCancellable *cancellable) {
         debug_message = "[%s] aborted after %.2f ms";
     }
     g_timer_stop(timer);
-    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug(debug_message, query->query_id, seconds * 1000);
 

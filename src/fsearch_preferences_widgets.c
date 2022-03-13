@@ -87,7 +87,7 @@ pref_index_treeview_data_get(GtkTreeView *view) {
     gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
 
     while (valid) {
-        gchar *path = NULL;
+        g_autofree gchar *path = NULL;
         gboolean update = FALSE;
         gboolean enable = FALSE;
         gboolean one_filesystem = FALSE;
@@ -106,7 +106,6 @@ pref_index_treeview_data_get(GtkTreeView *view) {
         if (path) {
             FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enable, update, one_filesystem, 0);
             data = g_list_append(data, index);
-            g_clear_pointer(&path, g_free);
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
