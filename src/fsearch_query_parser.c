@@ -95,10 +95,7 @@ FsearchTokenField supported_fields[] = {
 
 static GList *
 append_node_to_list_if_nonnull(GList *list, FsearchQueryNode *node) {
-    if (!node) {
-        return list;
-    }
-    return g_list_append(list, node);
+    return node ? g_list_append(list, node) : list;
 }
 
 static FsearchQueryNode *
