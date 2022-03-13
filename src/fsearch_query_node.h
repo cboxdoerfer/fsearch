@@ -18,9 +18,7 @@
 #include "fsearch_utf.h"
 
 typedef struct FsearchQueryNode FsearchQueryNode;
-typedef struct FsearchQueryNodeHighlight FsearchQueryNodeHighlight;
-typedef uint32_t(FsearchQueryNodeSearchFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
-typedef bool(FsearchQueryNodeHighlightFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
+typedef uint32_t(FsearchQueryNodeMatchFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
 
 typedef enum FsearchQueryNodeType {
     FSEARCH_QUERY_NODE_TYPE_OPERATOR,
@@ -63,8 +61,8 @@ struct FsearchQueryNode {
     time_t time_upper_limit;
     FsearchQueryNodeComparison comparison_type;
 
-    FsearchQueryNodeSearchFunc *search_func;
-    FsearchQueryNodeHighlightFunc *highlight_func;
+    FsearchQueryNodeMatchFunc *search_func;
+    FsearchQueryNodeMatchFunc *highlight_func;
 
     FsearchUtfBuilder *needle_builder;
 

@@ -225,24 +225,24 @@ fsearch_query_matcher_func_parent_ascii(FsearchQueryNode *node, FsearchQueryMatc
     return comp_func_ascii(haystack, node->needle, node->flags);
 }
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_none(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return true;
+    return 1;
 }
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_extension(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     if (!node->search_term_list) {
-        return false;
+        return 0;
     }
     if (!fsearch_query_matcher_func_extension(node, match_data)) {
-        return false;
+        return 0;
     }
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     const char *ext = db_entry_get_extension(entry);
     const char *name = fsearch_query_match_data_get_name_str(match_data);
     if (!name) {
-        return false;
+        return 0;
     }
     size_t name_len = strlen(name);
     size_t ext_len = strlen(ext);
@@ -254,20 +254,20 @@ fsearch_query_matcher_highlight_func_extension(FsearchQueryNode *node, FsearchQu
 
     PangoAttribute *pa_ext = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
     fsearch_query_match_data_add_highlight(match_data, pa_ext, DATABASE_INDEX_TYPE_EXTENSION);
-    return true;
+    return 1;
 }
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     if (fsearch_query_matcher_func_size(node, match_data)) {
         PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
         fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_SIZE);
-        return true;
+        return 1;
     }
-    return false;
+    return 0;
 }
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
     const char *haystack = search_in_path ? fsearch_query_match_data_get_path_str(match_data)
@@ -276,12 +276,12 @@ fsearch_query_matcher_highlight_func_regex(FsearchQueryNode *node, FsearchQueryM
     const size_t haystack_len = strlen(haystack);
     pcre2_match_data *regex_match_data = g_ptr_array_index(node->regex_match_data_for_threads, thread_id);
     if (!regex_match_data) {
-        return false;
+        return 0;
     }
     int num_matches =
         pcre2_match(node->regex, (PCRE2_SPTR)haystack, (PCRE2_SIZE)haystack_len, 0, 0, regex_match_data, NULL);
     if (num_matches <= 0) {
-        return false;
+        return 0;
     }
 
     PCRE2_SIZE *ovector = pcre2_get_ovector_pointer(regex_match_data);
@@ -298,10 +298,10 @@ fsearch_query_matcher_highlight_func_regex(FsearchQueryNode *node, FsearchQueryM
             add_path_highlight(match_data, start_idx, end_idx - start_idx);
         }
     }
-    return true;
+    return 1;
 }
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
     const char *haystack = search_in_path ? fsearch_query_match_data_get_path_str(match_data)
@@ -314,14 +314,14 @@ fsearch_query_matcher_highlight_func_ascii(FsearchQueryNode *node, FsearchQueryM
                 PangoAttribute *pa_path = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
                 fsearch_query_match_data_add_highlight(match_data, pa_path, DATABASE_INDEX_TYPE_PATH);
             }
-            return true;
+            return 1;
         }
-        return false;
+        return 0;
     }
     char *dest = node->flags & QUERY_FLAG_MATCH_CASE ? strstr(haystack, node->needle)
                                                      : strcasestr(haystack, node->needle);
     if (!dest) {
-        return false;
+        return 0;
     }
     if (search_in_path) {
         const size_t needle_len = strlen(node->needle);
@@ -333,5 +333,5 @@ fsearch_query_matcher_highlight_func_ascii(FsearchQueryNode *node, FsearchQueryM
         pa->end_index = pa->start_index + strlen(node->needle);
         fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
     }
-    return true;
+    return 1;
 }

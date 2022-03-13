@@ -36,17 +36,17 @@ fsearch_query_matcher_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *
 uint32_t
 fsearch_query_matcher_func_parent_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_none(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_extension(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
-bool
+uint32_t
 fsearch_query_matcher_highlight_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
