@@ -19,7 +19,7 @@ sort_int_ascending(void **a, void **b, void *data) {
 int
 main(int argc, char *argv[]) {
     DynamicArray *array = darray_new(10);
-    g_assert(darray_get_size(array) == 10);
+    g_assert_true(darray_get_size(array) == 10);
 
     const int32_t upper_limit = 42;
     for (int32_t i = 0; i < upper_limit; ++i) {
@@ -27,9 +27,9 @@ main(int argc, char *argv[]) {
     }
     for (int32_t i = 0; i < upper_limit; ++i) {
         int32_t j = GPOINTER_TO_INT(darray_get_item(array, i));
-        g_assert(i == j);
+        g_assert_true(i == j);
     }
-    g_assert(darray_get_num_items(array) == upper_limit);
+    g_assert_true(darray_get_num_items(array) == upper_limit);
 
     darray_sort(array, (DynamicArrayCompareFunc)sort_int_descending);
     for (int32_t i = 0; i < upper_limit; ++i) {
@@ -38,7 +38,7 @@ main(int argc, char *argv[]) {
         if (expected_val != j) {
             g_print("[sort] Expect %d at index %d. Result: %d\n", expected_val, i, j);
         }
-        g_assert(expected_val == j);
+        g_assert_true(expected_val == j);
         uint32_t matched_idx = 0;
         if (darray_binary_search_with_data(array,
                                            GINT_TO_POINTER(i),
@@ -48,7 +48,7 @@ main(int argc, char *argv[]) {
             if (matched_idx != expected_val) {
                 g_print("[bin_search] Expect %d to be at idx %d\n", i, expected_val);
             }
-            g_assert(matched_idx == expected_val);
+            g_assert_true(matched_idx == expected_val);
         }
         else {
             g_print("[bin_search] Didn't find %d!\n", i);
@@ -67,7 +67,7 @@ main(int argc, char *argv[]) {
         if (expected_val != j) {
             g_print("[threaded_sort] Expect %d at index %d. Result: %d\n", expected_val, i, j);
         }
-        g_assert(expected_val == j);
+        g_assert_true(expected_val == j);
         uint32_t matched_idx = 0;
         if (darray_binary_search_with_data(array,
                                            GINT_TO_POINTER(i),
@@ -77,7 +77,7 @@ main(int argc, char *argv[]) {
             if (expected_val != matched_idx) {
                 g_print("[bin_search] Expect %d to be at idx %d\n", i, expected_val);
             }
-            g_assert(matched_idx == expected_val);
+            g_assert_true(matched_idx == expected_val);
         }
         else {
             g_print("[bin_search] Didn't find %d!\n", i);
@@ -87,12 +87,12 @@ main(int argc, char *argv[]) {
 
     for (uint32_t i = 0; i < upper_limit - 1; ++i) {
         int32_t i1 = GPOINTER_TO_INT(darray_get_item(array, i));
-        g_assert(i1 == i);
+        g_assert_true(i1 == i);
         uint32_t i2_idx = 0;
         int32_t i2 = GPOINTER_TO_INT(
             darray_get_item_next(array, GINT_TO_POINTER(i1), (DynamicArrayCompareDataFunc)sort_int_ascending, NULL, &i2_idx));
-        g_assert(i2 == i1 + 1);
-        g_assert(i2_idx == i1 + 1);
+        g_assert_true(i2 == i1 + 1);
+        g_assert_true(i2_idx == i1 + 1);
     }
 
     g_clear_pointer(&array, darray_unref);

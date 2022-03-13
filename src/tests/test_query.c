@@ -29,7 +29,7 @@ test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFla
     if (found != result) {
         g_printerr("[%s] should%s match [name:%s, size:%ld]\n", needle, result ? "" : " NOT", haystack, size);
     }
-    g_assert(found == result);
+    g_assert_true(found == result);
 }
 
 static bool
