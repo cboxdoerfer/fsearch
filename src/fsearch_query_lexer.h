@@ -22,16 +22,16 @@ typedef enum FsearchQueryToken {
     NUM_FSEARCH_QUERY_TOKENS,
 } FsearchQueryToken;
 
-typedef struct FsearchQueryParser FsearchQueryParser;
+typedef struct FsearchQueryLexer FsearchQueryLexer;
 
-FsearchQueryParser *
-fsearch_query_parser_new(const char *input);
+FsearchQueryLexer *
+fsearch_query_lexer_new(const char *input);
 
 void
-fsearch_query_parser_free(FsearchQueryParser *parser);
+fsearch_query_lexer_free(FsearchQueryLexer *lexer);
 
 FsearchQueryToken
-fsearch_query_parser_peek_next_token(FsearchQueryParser *parser, GString **result);
+fsearch_query_lexer_peek_next_token(FsearchQueryLexer *lexer, GString **result);
 
 FsearchQueryToken
-fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **result);
+fsearch_query_lexer_get_next_token(FsearchQueryLexer *lexer, GString **result);

@@ -3,9 +3,9 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-#include "fsearch_query_parser.h"
+#include "fsearch_query_lexer.h"
 
-struct FsearchQueryParser {
+struct FsearchQueryLexer {
     GString *input;
     GQueue *char_stack;
 
@@ -15,9 +15,9 @@ struct FsearchQueryParser {
 static const char *reserved_chars = ":=<>()";
 
 static char
-get_next_input_char(FsearchQueryParser *parser) {
-    if (parser->input && parser->input_pos < parser->input->len) {
-        return parser->input->str[parser->input_pos++];
+get_next_input_char(FsearchQueryLexer *lexer) {
+    if (lexer->input && lexer->input_pos < lexer->input->len) {
+        return lexer->input->str[lexer->input_pos++];
     }
     return '\0';
 }
@@ -38,28 +38,28 @@ push_char(GQueue *stack, char c) {
 }
 
 static char
-get_next_char(FsearchQueryParser *parser) {
-    GQueue *stack = parser->char_stack;
+get_next_char(FsearchQueryLexer *lexer) {
+    GQueue *stack = lexer->char_stack;
     if (!g_queue_is_empty(stack)) {
         return pop_char(stack);
     }
-    return get_next_input_char(parser);
+    return get_next_input_char(lexer);
 }
 
 static void
-give_back_char(FsearchQueryParser *parser, char c) {
-    push_char(parser->char_stack, c);
+give_back_char(FsearchQueryLexer *lexer, char c) {
+    push_char(lexer->char_stack, c);
 }
 
 // parse_string() assumes that the first double quote was already read
 static void
-parse_quoted_string(FsearchQueryParser *parser, GString *string) {
+parse_quoted_string(FsearchQueryLexer *lexer, GString *string) {
     char c = '\0';
-    while ((c = get_next_char(parser))) {
+    while ((c = get_next_char(lexer))) {
         switch (c) {
         case '\\':
             // escape: get next char
-            c = get_next_char(parser);
+            c = get_next_char(lexer);
             g_string_append_c(string, c);
             if (c == '\0') {
                 return;
@@ -75,14 +75,14 @@ parse_quoted_string(FsearchQueryParser *parser, GString *string) {
 }
 
 FsearchQueryToken
-fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) {
+fsearch_query_lexer_get_next_token(FsearchQueryLexer *lexer, GString **result) {
     FsearchQueryToken token = FSEARCH_QUERY_TOKEN_NONE;
     GString *token_value = NULL;
 
     char c = '\0';
 
     /* Skip white space.  */
-    while ((c = get_next_char(parser)) && g_ascii_isspace(c)) {
+    while ((c = get_next_char(lexer)) && g_ascii_isspace(c)) {
         continue;
     }
 
@@ -95,22 +95,22 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
     case ':':
         return FSEARCH_QUERY_TOKEN_CONTAINS;
     case '<': {
-        char c1 = get_next_char(parser);
+        char c1 = get_next_char(lexer);
         if (c1 == '=') {
             return FSEARCH_QUERY_TOKEN_SMALLER_EQ;
         }
         else {
-            give_back_char(parser, c1);
+            give_back_char(lexer, c1);
             return FSEARCH_QUERY_TOKEN_SMALLER;
         }
     }
     case '>': {
-        char c1 = get_next_char(parser);
+        char c1 = get_next_char(lexer);
         if (c1 == '=') {
             return FSEARCH_QUERY_TOKEN_GREATER_EQ;
         }
         else {
-            give_back_char(parser, c1);
+            give_back_char(lexer, c1);
             return FSEARCH_QUERY_TOKEN_GREATER;
         }
     }
@@ -122,38 +122,38 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
         return FSEARCH_QUERY_TOKEN_BRACKET_CLOSE;
     }
 
-    give_back_char(parser, c);
+    give_back_char(lexer, c);
 
     // Other chars start a term or field name or reserved word
     token_value = g_string_sized_new(1024);
-    while ((c = get_next_char(parser))) {
+    while ((c = get_next_char(lexer))) {
         if (g_ascii_isspace(c)) {
             // word broken by whitespace
             break;
         }
         else if (c == '"') {
-            parse_quoted_string(parser, token_value);
+            parse_quoted_string(lexer, token_value);
         }
         else if (c == '\\') {
             // escape: get next char
-            c = get_next_char(parser);
+            c = get_next_char(lexer);
             g_string_append_c(token_value, c);
         }
         else if (strchr(reserved_chars, c)) {
             if (c == ':') {
                 // field: detected
-                c = get_next_char(parser);
+                c = get_next_char(lexer);
                 if (g_ascii_isspace(c) || c == '\0') {
                     token = FSEARCH_QUERY_TOKEN_FIELD_EMPTY;
                 }
                 else {
-                    give_back_char(parser, c);
+                    give_back_char(lexer, c);
                     token = FSEARCH_QUERY_TOKEN_FIELD;
                 }
                 goto out;
             }
             // word broken by reserved character
-            give_back_char(parser, c);
+            give_back_char(lexer, c);
             break;
         }
         else {
@@ -177,8 +177,8 @@ fsearch_query_parser_get_next_token(FsearchQueryParser *parser, GString **word) 
     token = FSEARCH_QUERY_TOKEN_WORD;
 
 out:
-    if (word) {
-        *word = token_value;
+    if (result) {
+        *result = token_value;
     }
     else if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
@@ -187,40 +187,40 @@ out:
 }
 
 FsearchQueryToken
-fsearch_query_parser_peek_next_token(FsearchQueryParser *parser, GString **word) {
+fsearch_query_lexer_peek_next_token(FsearchQueryLexer *lexer, GString **result) {
     // remember old lexing state
-    size_t old_input_pos = parser->input_pos;
-    GQueue *old_char_stack = g_queue_copy(parser->char_stack);
+    size_t old_input_pos = lexer->input_pos;
+    GQueue *old_char_stack = g_queue_copy(lexer->char_stack);
 
-    FsearchQueryToken res = fsearch_query_parser_get_next_token(parser, word);
+    FsearchQueryToken res = fsearch_query_lexer_get_next_token(lexer, result);
 
     // restore old lexing state
-    parser->input_pos = old_input_pos;
-    g_clear_pointer(&parser->char_stack, g_queue_free);
-    parser->char_stack = old_char_stack;
+    lexer->input_pos = old_input_pos;
+    g_clear_pointer(&lexer->char_stack, g_queue_free);
+    lexer->char_stack = old_char_stack;
     return res;
 }
 
-FsearchQueryParser *
-fsearch_query_parser_new(const char *input) {
+FsearchQueryLexer *
+fsearch_query_lexer_new(const char *input) {
     assert(input != NULL);
 
-    FsearchQueryParser *parser = calloc(1, sizeof(FsearchQueryParser));
-    assert(parser != NULL);
+    FsearchQueryLexer *lexer = calloc(1, sizeof(FsearchQueryLexer));
+    assert(lexer != NULL);
 
-    parser->input = g_string_new(input);
-    parser->input_pos = 0;
+    lexer->input = g_string_new(input);
+    lexer->input_pos = 0;
 
-    parser->char_stack = g_queue_new();
-    return parser;
+    lexer->char_stack = g_queue_new();
+    return lexer;
 }
 
 void
-fsearch_query_parser_free(FsearchQueryParser *parser) {
-    if (parser == NULL) {
+fsearch_query_lexer_free(FsearchQueryLexer *lexer) {
+    if (lexer == NULL) {
         return;
     }
-    g_string_free(g_steal_pointer(&parser->input), TRUE);
-    g_clear_pointer(&parser->char_stack, g_queue_free);
-    g_clear_pointer(&parser, free);
+    g_string_free(g_steal_pointer(&lexer->input), TRUE);
+    g_clear_pointer(&lexer->char_stack, g_queue_free);
+    g_clear_pointer(&lexer, free);
 }
