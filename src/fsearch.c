@@ -90,6 +90,9 @@ database_update(FsearchApplication *app, bool rescan);
 static void
 action_set_enabled(const char *action_name, gboolean enabled);
 
+static void
+set_accels_for_escape(GApplication *app);
+
 static gboolean
 on_database_auto_update(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
@@ -421,6 +424,8 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
             fsearch_application_window_update_listview_config(window);
         }
     }
+
+    set_accels_for_escape(G_APPLICATION(app));
 }
 
 static void
@@ -542,6 +547,25 @@ set_accel_for_action(GApplication *app, const char *action, const char *accel) {
 }
 
 static void
+set_accels_for_action(GApplication *app, const char *action, const gchar* const* accels) {
+    gtk_application_set_accels_for_action(GTK_APPLICATION(app), action, accels);
+}
+
+static void
+set_accels_for_escape(GApplication *app) {
+    FsearchApplication *fsearch = FSEARCH_APPLICATION(app);
+
+    if (fsearch->config->exit_on_escape) {
+        set_accels_for_action(app, "win.hide_window", (const gchar *const[]){NULL});
+        set_accels_for_action(app, "app.quit", (const gchar *const[]){"<control>q", "Escape", NULL});
+    }
+    else {
+        set_accel_for_action(app, "win.hide_window", "Escape");
+        set_accel_for_action(app, "app.quit", "<control>q");
+    }
+}
+
+static void
 fsearch_application_startup(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     G_APPLICATION_CLASS(fsearch_application_parent_class)->startup(app);
@@ -593,14 +617,13 @@ fsearch_application_startup(GApplication *app) {
     set_accel_for_action(app, "win.focus_search", "<control>f");
     set_accel_for_action(app, "app.new_window", "<control>n");
     set_accel_for_action(app, "win.select_all", "<control>a");
-    set_accel_for_action(app, "win.hide_window", "Escape");
     set_accel_for_action(app, "win.match_case", "<control>i");
     set_accel_for_action(app, "win.search_mode", "<control>r");
     set_accel_for_action(app, "win.search_in_path", "<control>u");
     set_accel_for_action(app, "app.update_database", "<control><shift>r");
     set_accel_for_action(app, "app.preferences(uint32 0)", "<control>p");
     set_accel_for_action(app, "win.close_window", "<control>w");
-    set_accel_for_action(app, "app.quit", "<control>q");
+    set_accels_for_escape(app);
 
     fsearch->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
     fsearch->is_shutting_down = false;

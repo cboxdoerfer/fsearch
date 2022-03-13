@@ -189,6 +189,21 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkCheckButton" id="exit_on_escape_button">
+                                <property name="label" translatable="yes">Exit on Escape</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="draw-indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">4</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkFrame" id="action_after_file_open_frame">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -288,7 +303,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">4</property>
+                                <property name="position">5</property>
                               </packing>
                             </child>
                           </object>
@@ -1938,6 +1953,23 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="name">page34</property>
                     <property name="title" translatable="yes">page34</property>
                     <property name="position">34</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_exit_on_escape">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Exit on Escape:&lt;/b&gt;
+
+If enabled, FSearch exits when the Escape key is pressed instead of the window being minimized.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page35</property>
+                    <property name="title" translatable="yes">page35</property>
+                    <property name="position">35</property>
                   </packing>
                 </child>
               </object>
