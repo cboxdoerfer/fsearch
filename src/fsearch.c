@@ -121,7 +121,7 @@ database_auto_update_init(FsearchApplication *fsearch) {
 
 static gboolean
 on_database_update_status(gpointer user_data) {
-    char *text = user_data;
+    g_autofree char *text = user_data;
     if (!text) {
         return G_SOURCE_REMOVE;
     }
@@ -135,8 +135,6 @@ on_database_update_status(gpointer user_data) {
             fsearch_application_window_set_database_index_text((FsearchApplicationWindow *)window, text);
         }
     }
-
-    g_clear_pointer(&text, free);
 
     return G_SOURCE_REMOVE;
 }
@@ -261,13 +259,12 @@ database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
     const bool scan_successful =
         db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_update_status_cb : NULL);
     if (scan_successful && !g_cancellable_is_cancelled(app->db_thread_cancellable)) {
-        char *db_path = fsearch_application_get_database_dir();
+        g_autofree gchar *db_path = fsearch_application_get_database_dir();
         if (db_path) {
             if (app->config->show_indexing_status) {
                 database_update_status_cb(_("Saving…"));
             }
             db_save(db, db_path);
-            g_clear_pointer(&db_path, free);
         }
     }
 }
@@ -593,12 +590,11 @@ fsearch_application_startup(GApplication *app) {
                                                       NULL,
                                                       NULL);
 
-    GtkCssProvider *provider = gtk_css_provider_new();
+    g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
     gtk_css_provider_load_from_resource(provider, "/io/github/cboxdoerfer/fsearch/ui/shared.css");
     gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
                                               GTK_STYLE_PROVIDER(provider),
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
-    g_clear_object(&provider);
 
     g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", fsearch->config->enable_dark_theme, NULL);
 
@@ -721,7 +717,7 @@ static void
 on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_data) {
     FsearchApplicationDatabaseWorker *worker_ctx = user_data;
 
-    GDBusActionGroup *dbus_group = g_dbus_action_group_get(connection, fsearch_bus_name, fsearch_object_path);
+    g_autoptr(GDBusActionGroup) dbus_group = g_dbus_action_group_get(connection, fsearch_bus_name, fsearch_object_path);
 
     const guint signal_id = g_dbus_connection_signal_subscribe(connection,
                                                                fsearch_bus_name,
@@ -734,23 +730,22 @@ on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_d
                                                                NULL,
                                                                NULL);
 
-    GVariant *reply = g_dbus_connection_call_sync(connection,
-                                                  fsearch_bus_name,
-                                                  fsearch_object_path,
-                                                  "org.gtk.Actions",
-                                                  "DescribeAll",
-                                                  NULL,
-                                                  G_VARIANT_TYPE("(a{s(bgav)})"),
-                                                  G_DBUS_CALL_FLAGS_NO_AUTO_START,
-                                                  -1,
-                                                  NULL,
-                                                  NULL);
+    g_autoptr(GVariant) reply = g_dbus_connection_call_sync(connection,
+                                                            fsearch_bus_name,
+                                                            fsearch_object_path,
+                                                            "org.gtk.Actions",
+                                                            "DescribeAll",
+                                                            NULL,
+                                                            G_VARIANT_TYPE("(a{s(bgav)})"),
+                                                            G_DBUS_CALL_FLAGS_NO_AUTO_START,
+                                                            -1,
+                                                            NULL,
+                                                            NULL);
     g_dbus_connection_signal_unsubscribe(connection, signal_id);
 
     if (dbus_group && reply) {
         g_debug("[app] trigger database update in primary instance");
         g_action_group_activate_action(G_ACTION_GROUP(dbus_group), "update_database", NULL);
-        g_clear_object(&dbus_group);
 
         worker_ctx->update_called_on_primary = true;
     }
@@ -788,11 +783,9 @@ database_update_in_local_instance() {
 
     int res = EXIT_FAILURE;
     if (db_scan(db, NULL, NULL)) {
-        char *db_path = fsearch_application_get_database_dir();
+        g_autofree char *db_path = fsearch_application_get_database_dir();
         if (db_path) {
             res = db_save(db, db_path) ? EXIT_SUCCESS : EXIT_FAILURE;
-
-            g_clear_pointer(&db_path, free);
         }
     }
 

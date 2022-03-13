@@ -120,11 +120,11 @@ config_load_filters(GKeyFile *key_file) {
     while (true) {
         char key[100] = "";
         snprintf(key, sizeof(key), "filter_%d_name", pos);
-        char *name = config_load_string(key_file, "Filters", key, NULL);
+        g_autofree char *name = config_load_string(key_file, "Filters", key, NULL);
         snprintf(key, sizeof(key), "filter_%d_query", pos);
-        char *query = config_load_string(key_file, "Filters", key, NULL);
+        g_autofree char *query = config_load_string(key_file, "Filters", key, NULL);
         snprintf(key, sizeof(key), "filter_%d_macro", pos);
-        char *macro = config_load_string(key_file, "Filters", key, NULL);
+        g_autofree char *macro = config_load_string(key_file, "Filters", key, NULL);
         snprintf(key, sizeof(key), "filter_%d_match_case", pos);
         bool match_case = config_load_boolean(key_file, "Filters", key, 0);
         snprintf(key, sizeof(key), "filter_%d_search_in_path", pos);
@@ -149,9 +149,6 @@ config_load_filters(GKeyFile *key_file) {
         FsearchFilter *f = fsearch_filter_new(name, macro, query, flags);
         fsearch_filter_manager_append_filter(filters, f);
         g_clear_pointer(&f, fsearch_filter_unref);
-        g_clear_pointer(&name, free);
-        g_clear_pointer(&macro, free);
-        g_clear_pointer(&query, free);
 
         pos++;
     }
@@ -191,7 +188,7 @@ config_load_exclude_locations(GKeyFile *key_file, GList *locations, const char *
     while (true) {
         char key[100] = "";
         snprintf(key, sizeof(key), "%s_%d", prefix, pos);
-        char *path = config_load_string(key_file, "Database", key, NULL);
+        g_autofree char *path = config_load_string(key_file, "Database", key, NULL);
         snprintf(key, sizeof(key), "%s_enabled_%d", prefix, pos);
         bool enabled = config_load_boolean(key_file, "Database", key, true);
 
@@ -199,7 +196,6 @@ config_load_exclude_locations(GKeyFile *key_file, GList *locations, const char *
         if (path) {
             FsearchExcludePath *fs_path = fsearch_exclude_path_new(path, enabled);
             locations = g_list_append(locations, fs_path);
-            g_clear_pointer(&path, free);
         }
         else {
             break;
@@ -318,10 +314,9 @@ config_load(FsearchConfig *config) {
             config_load_boolean(key_file, "Database", "exclude_hidden_files_and_folders", false);
         config->follow_symlinks = config_load_boolean(key_file, "Database", "follow_symbolic_links", false);
 
-        char *exclude_files_str = config_load_string(key_file, "Database", "exclude_files", NULL);
+        g_autofree char *exclude_files_str = config_load_string(key_file, "Database", "exclude_files", NULL);
         if (exclude_files_str) {
             config->exclude_files = g_strsplit(exclude_files_str, ";", -1);
-            g_clear_pointer(&exclude_files_str, free);
         }
 
         config->indexes = config_load_indexes(key_file, config->indexes, "location");
@@ -615,9 +610,8 @@ config_save(FsearchConfig *config) {
     config_save_exclude_locations(key_file, config->exclude_locations, "exclude_location");
 
     if (config->exclude_files) {
-        char *exclude_files_str = g_strjoinv(";", config->exclude_files);
+        g_autofree char *exclude_files_str = g_strjoinv(";", config->exclude_files);
         g_key_file_set_string(key_file, "Database", "exclude_files", exclude_files_str);
-        g_clear_pointer(&exclude_files_str, free);
     }
 
     gchar config_path[PATH_MAX] = "";

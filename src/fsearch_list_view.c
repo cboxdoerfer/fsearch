@@ -245,14 +245,13 @@ static gint
 fsearch_list_view_get_font_height(FsearchListView *view) {
     GtkWidget *widget = GTK_WIDGET(view);
 
-    PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
+    g_autoptr(PangoLayout) layout = gtk_widget_create_pango_layout(widget, NULL);
     if (!layout) {
         return TEXT_HEIGHT_FALLBACK;
     }
 
     gint text_height;
     pango_layout_get_pixel_size(layout, NULL, &text_height);
-    g_clear_object(&layout);
 
     return text_height;
 }
@@ -420,7 +419,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
 
     gtk_widget_get_allocation(widget, &alloc);
 
-    PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
+    g_autoptr(PangoLayout) layout = gtk_widget_create_pango_layout(widget, NULL);
 
     cairo_rectangle_int_t view_rect;
     view_rect.x = 0;
@@ -558,8 +557,6 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
     }
 
     cairo_restore(cr);
-
-    g_clear_object(&layout);
 }
 
 static gboolean
@@ -1452,9 +1449,8 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
         view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, (int)(event->y));
 
         if (view->single_click_activate && view->hovered_idx >= 0) {
-            GdkCursor *cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
+            g_autoptr(GdkCursor) cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
             gdk_window_set_cursor(event->window, cursor);
-            g_clear_object(&cursor);
         }
         else {
             gdk_window_set_cursor(event->window, NULL);
@@ -1847,7 +1843,7 @@ on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data
 static gboolean
 on_fsearch_list_view_header_button_pressed(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     if (gdk_event_triggers_context_menu(event)) {
-        GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
+        g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(builder, "fsearch_listview_column_popup_menu"));
 
         FsearchListViewColumn *col = user_data;
@@ -1863,7 +1859,6 @@ on_fsearch_list_view_header_button_pressed(GtkWidget *widget, GdkEvent *event, g
 #else
         gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif
-        g_clear_object(&builder);
         return TRUE;
     }
     return FALSE;

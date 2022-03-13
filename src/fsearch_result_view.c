@@ -39,33 +39,28 @@ get_icon_surface(GdkWindow *win,
         return NULL;
     }
 
-    cairo_surface_t *icon_surface = NULL;
-    GIcon *icon = fsearch_file_utils_guess_icon(name, path, type == DATABASE_ENTRY_TYPE_FOLDER);
+    g_autoptr(GIcon) icon = fsearch_file_utils_guess_icon(name, path, type == DATABASE_ENTRY_TYPE_FOLDER);
     const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
 
     if (!names) {
-        g_clear_object(&icon);
         return NULL;
     }
 
-    GtkIconInfo *icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
-                                                                  (const char **)names,
-                                                                  icon_size,
-                                                                  scale_factor,
-                                                                  GTK_ICON_LOOKUP_FORCE_SIZE);
+    g_autoptr(GtkIconInfo) icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
+                                                                            (const char **)names,
+                                                                            icon_size,
+                                                                            scale_factor,
+                                                                            GTK_ICON_LOOKUP_FORCE_SIZE);
     if (!icon_info) {
         return NULL;
     }
 
-    GdkPixbuf *pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
-    if (pixbuf) {
-        icon_surface = gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
+    g_autoptr(GdkPixbuf) pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
+    if (!pixbuf) {
+        return NULL;
     }
-    g_clear_object(&pixbuf);
-    g_clear_object(&icon);
-    g_clear_object(&icon_info);
 
-    return icon_surface;
+    return gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
 }
 
 typedef struct {

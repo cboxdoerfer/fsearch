@@ -791,7 +791,8 @@ static void
 fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
-    GtkBuilder *builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/fsearch_overlay.ui");
+    g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
+                                                                  "fsearch_overlay.ui");
 
     win->main_database_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_database_overlay_stack"));
     win->main_search_overlay_stack = GTK_WIDGET(gtk_builder_get_object(builder, "main_search_overlay_stack"));
@@ -821,8 +822,6 @@ fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
     gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_database_overlay_stack);
 
     gtk_widget_show_all(win->main_stack);
-
-    g_clear_object(&builder);
 }
 
 static void
@@ -931,7 +930,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
     int active = gtk_combo_box_get_active(GTK_COMBO_BOX(win->filter_combobox));
-    g_autofree char *active_filter_name = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
+    char *active_filter_name = gtk_combo_box_text_get_active_text(GTK_COMBO_BOX_TEXT(win->filter_combobox));
     if (active_filter_name) {
         g_clear_pointer(&win->active_filter_name, free);
         win->active_filter_name = g_strdup(active_filter_name);

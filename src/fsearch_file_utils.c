@@ -140,16 +140,15 @@ open_application(const char *uri) {
     if (!display) {
         return false;
     }
-    GAppInfo *info = (GAppInfo *)g_desktop_app_info_new_from_filename(uri);
+    g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(uri);
     if (!info) {
         return false;
     }
 
-    GAppLaunchContext *context = (GAppLaunchContext *)gdk_display_get_app_launch_context(display);
+    g_autoptr(GAppLaunchContext) context = (GAppLaunchContext *)gdk_display_get_app_launch_context(display);
+
     GError *error = NULL;
     g_app_info_launch(info, NULL, context, &error);
-    g_clear_object(&context);
-    g_clear_object(&info);
 
     if (error) {
         g_warning("Failed to launch app: %s", error->message);
@@ -302,31 +301,27 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 
 GIcon *
 get_desktop_file_icon(const char *path) {
-    GAppInfo *info = NULL;
     GdkDisplay *display = gdk_display_get_default();
     if (!display) {
-        goto fail;
+        return NULL;
     }
-
-    info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
+    g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
     if (!info) {
-        goto fail;
+        goto default_icon;
     }
 
     GIcon *icon = g_app_info_get_icon(info);
     if (!icon) {
-        goto fail;
+        goto default_icon;
     }
     if (!G_IS_THEMED_ICON(icon)) {
-        goto fail;
+        goto default_icon;
     }
 
     g_object_ref(icon);
-    g_clear_object(&info);
     return icon;
 
-fail:
-    g_clear_object(&info);
+default_icon:
     return g_themed_icon_new("application-x-executable");
 }
 
@@ -354,22 +349,18 @@ fsearch_file_utils_guess_icon(const char *name, const char *path, bool is_dir) {
 
 GIcon *
 fsearch_file_utils_get_icon_for_path(const char *path) {
-    GFile *g_file = g_file_new_for_path(path);
+    g_autoptr(GFile) g_file = g_file_new_for_path(path);
     if (!g_file) {
         return g_themed_icon_new("edit-delete");
     }
 
-    GFileInfo *file_info = g_file_query_info(g_file, "standard::icon", 0, NULL, NULL);
+    g_autoptr(GFileInfo) file_info = g_file_query_info(g_file, "standard::icon", 0, NULL, NULL);
     if (!file_info) {
-        g_clear_object(&g_file);
         return g_themed_icon_new("edit-delete");
     }
 
     GIcon *icon = g_file_info_get_icon(file_info);
     g_object_ref(icon);
-
-    g_clear_object(&file_info);
-    g_clear_object(&g_file);
 
     return icon;
 }

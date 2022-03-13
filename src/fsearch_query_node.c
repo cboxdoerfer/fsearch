@@ -280,13 +280,11 @@ fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags
     // We convert the wildcard pattern to a regex pattern
     // The regex engine is not only faster than fnmatch, but it also handles utf8 strings better
     // and it provides matching information, which are useful for the highlighting engine
-    char *regex_search_term = fs_str_convert_wildcard_to_regex_expression(search_term);
+    g_autofree char *regex_search_term = fs_str_convert_wildcard_to_regex_expression(search_term);
     if (!regex_search_term) {
         return NULL;
     }
-    FsearchQueryNode *res = fsearch_query_node_new_regex(regex_search_term, flags);
-    g_clear_pointer(&regex_search_term, free);
-    return res;
+    return fsearch_query_node_new_regex(regex_search_term, flags);
 }
 
 FsearchQueryNode *

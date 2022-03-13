@@ -414,7 +414,7 @@ launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info)
     }
 
     GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
-    GdkAppLaunchContext *launch_context = gdk_display_get_app_launch_context(display);
+    g_autoptr(GdkAppLaunchContext) launch_context = gdk_display_get_app_launch_context(display);
     if (!launch_context) {
         return;
     }
@@ -425,8 +425,6 @@ launch_selection_for_app_info(FsearchApplicationWindow *win, GAppInfo *app_info)
         g_app_info_launch(app_info, file_list, G_APP_LAUNCH_CONTEXT(launch_context), NULL);
         g_list_free_full(g_steal_pointer(&file_list), g_object_unref);
     }
-
-    g_clear_object(&launch_context);
 }
 
 static void
@@ -526,12 +524,10 @@ on_fsearch_window_action_open_with_response(GtkDialog *dialog, gint response_id,
     }
 
     FsearchApplicationWindow *self = user_data;
-    GAppInfo *app_info = gtk_app_chooser_get_app_info(GTK_APP_CHOOSER(dialog));
+    g_autoptr(GAppInfo) app_info = gtk_app_chooser_get_app_info(GTK_APP_CHOOSER(dialog));
     gtk_widget_destroy(GTK_WIDGET(dialog));
 
     launch_selection_for_app_info(self, app_info);
-
-    g_clear_object(&app_info);
 }
 
 static void
