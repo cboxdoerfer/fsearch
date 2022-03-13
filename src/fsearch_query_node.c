@@ -258,17 +258,17 @@ fsearch_search_func_date_modified(FsearchQueryNode *node, FsearchQueryMatchData 
     if (entry) {
         time_t time = db_entry_get_mtime(entry);
         switch (node->comparison_type) {
-        case FSEARCH_TOKEN_COMPARISON_EQUAL:
+        case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
             return time == node->time;
-        case FSEARCH_TOKEN_COMPARISON_GREATER:
+        case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
             return time > node->time;
-        case FSEARCH_TOKEN_COMPARISON_SMALLER:
+        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
             return time < node->time;
-        case FSEARCH_TOKEN_COMPARISON_GREATER_EQ:
+        case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
             return time >= node->time;
-        case FSEARCH_TOKEN_COMPARISON_SMALLER_EQ:
+        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
             return time <= node->time;
-        case FSEARCH_TOKEN_COMPARISON_RANGE:
+        case FSEARCH_QUERY_NODE_COMPARISON_RANGE:
             return node->time <= time && time < node->time_upper_limit;
         }
     }
@@ -281,17 +281,17 @@ fsearch_search_func_size(FsearchQueryNode *node, FsearchQueryMatchData *match_da
     if (entry) {
         int64_t size = db_entry_get_size(entry);
         switch (node->comparison_type) {
-        case FSEARCH_TOKEN_COMPARISON_EQUAL:
+        case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
             return size == node->size;
-        case FSEARCH_TOKEN_COMPARISON_GREATER:
+        case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
             return size > node->size;
-        case FSEARCH_TOKEN_COMPARISON_SMALLER:
+        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
             return size < node->size;
-        case FSEARCH_TOKEN_COMPARISON_GREATER_EQ:
+        case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
             return size >= node->size;
-        case FSEARCH_TOKEN_COMPARISON_SMALLER_EQ:
+        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
             return size <= node->size;
-        case FSEARCH_TOKEN_COMPARISON_RANGE:
+        case FSEARCH_QUERY_NODE_COMPARISON_RANGE:
             return node->size <= size && size < node->size_upper_limit;
         }
     }
@@ -552,26 +552,26 @@ static FsearchQueryNode *
 fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
                                      time_t dm_start,
                                      time_t dm_end,
-                                     FsearchTokenComparisonType comp_type) {
+                                     FsearchQueryNodeComparison comp_type) {
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
-    if (comp_type == FSEARCH_TOKEN_COMPARISON_EQUAL) {
+    if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL) {
         new->needle = g_strdup_printf("=%ld", dm_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER_EQ) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ) {
         new->needle = g_strdup_printf(">=%ld", dm_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER) {
         new->needle = g_strdup_printf(">%ld", dm_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER_EQ) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ) {
         new->needle = g_strdup_printf("<=%ld", dm_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER) {
         new->needle = g_strdup_printf("<%ld", dm_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_RANGE) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_RANGE) {
         new->needle = g_strdup_printf("%ld..%ld", dm_start, dm_end);
     }
     new->query_description = g_string_new("date-modified");
@@ -589,26 +589,26 @@ static FsearchQueryNode *
 fsearch_query_node_new_size(FsearchQueryFlags flags,
                             int64_t size_start,
                             int64_t size_end,
-                            FsearchTokenComparisonType comp_type) {
+                            FsearchQueryNodeComparison comp_type) {
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
 
-    if (comp_type == FSEARCH_TOKEN_COMPARISON_EQUAL) {
+    if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL) {
         new->needle = g_strdup_printf("=%ld", size_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER_EQ) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ) {
         new->needle = g_strdup_printf(">=%ld", size_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_GREATER) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER) {
         new->needle = g_strdup_printf(">%ld", size_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER_EQ) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ) {
         new->needle = g_strdup_printf("<=%ld", size_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_SMALLER) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER) {
         new->needle = g_strdup_printf("<%ld", size_start);
     }
-    else if (comp_type == FSEARCH_TOKEN_COMPARISON_RANGE) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_RANGE) {
         new->needle = g_strdup_printf("%ld..%ld", size_start, size_end);
     }
     new->query_description = g_string_new("size");
@@ -624,8 +624,8 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
 
 static FsearchQueryNode *
 fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
-    assert(operator== FSEARCH_TOKEN_OPERATOR_AND || operator== FSEARCH_TOKEN_OPERATOR_OR ||
-           operator== FSEARCH_TOKEN_OPERATOR_NOT);
+    assert(operator== FSEARCH_QUERY_NODE_OPERATOR_AND || operator== FSEARCH_QUERY_NODE_OPERATOR_OR ||
+           operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
     new->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
@@ -758,7 +758,7 @@ string_starts_with_range(char *str, char **end_ptr) {
 }
 
 static FsearchQueryNode *
-parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
+parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     int64_t size_start = 0;
     int64_t size_end = 0;
@@ -766,10 +766,10 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
         if (string_starts_with_range(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
-                comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
             }
             else if (fsearch_size_parse(end_ptr, &size_end, &end_ptr)) {
-                comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
             }
         }
         return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
@@ -779,7 +779,7 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
 }
 
 static FsearchQueryNode *
-parse_size(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
+parse_size(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     int64_t size = 0;
     if (fsearch_size_parse(string->str, &size, &end_ptr)) {
@@ -799,23 +799,23 @@ parse_field_size(FsearchQueryParser *parser,
     }
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-    FsearchTokenComparisonType comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
+    FsearchQueryNodeComparison comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
     FsearchQueryNode *result = NULL;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_EQUAL:
-        comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
         break;
     case FSEARCH_QUERY_TOKEN_SMALLER:
-        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_SMALLER;
         break;
     case FSEARCH_QUERY_TOKEN_SMALLER_EQ:
-        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER_EQ;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_GREATER:
-        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER;
         break;
     case FSEARCH_QUERY_TOKEN_GREATER_EQ:
-        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
         result = parse_size_with_optional_range(token_value, flags, comp_type);
@@ -844,7 +844,7 @@ out:
 }
 
 static FsearchQueryNode *
-parse_date_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
+parse_date_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     time_t time_start = 0;
     time_t time_end = 0;
@@ -852,14 +852,14 @@ parse_date_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
         if (string_starts_with_range(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
-                comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
             }
             else if (fsearch_time_parse_range(end_ptr, NULL, &time_end, &end_ptr)) {
-                comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
             }
         }
         else {
-            comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+            comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
         }
         return fsearch_query_node_new_date_modified(flags, time_start, time_end, comp_type);
     }
@@ -868,7 +868,7 @@ parse_date_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
 }
 
 static FsearchQueryNode *
-parse_date(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType comp_type) {
+parse_date(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     time_t date = 0;
     time_t date_end = 0;
@@ -876,18 +876,18 @@ parse_date(GString *string, FsearchQueryFlags flags, FsearchTokenComparisonType 
         time_t dm_start = date;
         time_t dm_end = date_end;
         switch (comp_type) {
-        case FSEARCH_TOKEN_COMPARISON_EQUAL:
+        case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
             // Equal actually refers to a time range. E.g. dm:today is the time range from 0:00:00 to 23:59:59
-            comp_type = FSEARCH_TOKEN_COMPARISON_RANGE;
+            comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
             dm_start = date;
             dm_end = date_end;
             break;
-        case FSEARCH_TOKEN_COMPARISON_GREATER_EQ:
-        case FSEARCH_TOKEN_COMPARISON_SMALLER:
+        case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
+        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
             dm_start = date;
             break;
-        case FSEARCH_TOKEN_COMPARISON_GREATER:
-        case FSEARCH_TOKEN_COMPARISON_SMALLER_EQ:
+        case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
+        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
             dm_start = date_end;
             break;
         default:
@@ -910,23 +910,23 @@ parse_field_date_modified(FsearchQueryParser *parser,
     }
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
-    FsearchTokenComparisonType comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
+    FsearchQueryNodeComparison comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
     FsearchQueryNode *result = NULL;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_EQUAL:
-        comp_type = FSEARCH_TOKEN_COMPARISON_EQUAL;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
         break;
     case FSEARCH_QUERY_TOKEN_SMALLER:
-        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_SMALLER;
         break;
     case FSEARCH_QUERY_TOKEN_SMALLER_EQ:
-        comp_type = FSEARCH_TOKEN_COMPARISON_SMALLER_EQ;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_GREATER:
-        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER;
         break;
     case FSEARCH_QUERY_TOKEN_GREATER_EQ:
-        comp_type = FSEARCH_TOKEN_COMPARISON_GREATER_EQ;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
         result = parse_date_with_optional_range(token_value, flags, comp_type);
@@ -1278,13 +1278,13 @@ append_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
     FsearchQueryNodeOperator op = 0;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_AND:
-        op = FSEARCH_TOKEN_OPERATOR_AND;
+        op = FSEARCH_QUERY_NODE_OPERATOR_AND;
         break;
     case FSEARCH_QUERY_TOKEN_OR:
-        op = FSEARCH_TOKEN_OPERATOR_OR;
+        op = FSEARCH_QUERY_NODE_OPERATOR_OR;
         break;
     case FSEARCH_QUERY_TOKEN_NOT:
-        op = FSEARCH_TOKEN_OPERATOR_NOT;
+        op = FSEARCH_QUERY_NODE_OPERATOR_NOT;
         break;
     default:
         return;
@@ -1450,7 +1450,7 @@ build_query_tree(GPtrArray *postfix_query, FsearchQueryFlags flags) {
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             GNode *op_node = get_operator_node(node->operator);
             GNode *right = g_queue_pop_tail(query_stack);
-            if (node->operator!= FSEARCH_TOKEN_OPERATOR_NOT) {
+            if (node->operator!= FSEARCH_QUERY_NODE_OPERATOR_NOT) {
                 GNode *left = g_queue_pop_tail(query_stack);
                 g_node_append(op_node, left ? left : get_empty_node(flags));
             }
@@ -1539,8 +1539,8 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
         FsearchQueryNode *node = g_ptr_array_index(parse_context->suffix_list, i);
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             g_print("%s ",
-                    node->operator== FSEARCH_TOKEN_OPERATOR_AND  ? "AND"
-                    : node->operator== FSEARCH_TOKEN_OPERATOR_OR ? "OR"
+                    node->operator== FSEARCH_QUERY_NODE_OPERATOR_AND ? "AND"
+                    : node->operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR"
                                                                  : "NOT");
         }
         else {

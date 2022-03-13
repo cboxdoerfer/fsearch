@@ -110,10 +110,10 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match
         GNode *left = node->children;
         assert(left != NULL);
         GNode *right = left->next;
-        if (n->operator== FSEARCH_TOKEN_OPERATOR_AND) {
+        if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
             return highlight(left, entry, match_data, type) && highlight(right, entry, match_data, type);
         }
-        else if (n->operator== FSEARCH_TOKEN_OPERATOR_OR) {
+        else if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_OR) {
             return highlight(left, entry, match_data, type) || highlight(right, entry, match_data, type);
         }
         else {
@@ -145,10 +145,10 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_d
         GNode *left = node->children;
         assert(left != NULL);
         GNode *right = left->next;
-        if (n->operator== FSEARCH_TOKEN_OPERATOR_AND) {
+        if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
             return matches(left, entry, match_data, type) && matches(right, entry, match_data, type);
         }
-        else if (n->operator== FSEARCH_TOKEN_OPERATOR_OR) {
+        else if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_OR) {
             return matches(left, entry, match_data, type) || matches(right, entry, match_data, type);
         }
         else {

@@ -28,20 +28,21 @@ typedef enum FsearchQueryNodeType {
     NUM_FSEARCH_QUERY_NODE_TYPES,
 } FsearchQueryNodeType;
 
-typedef enum FsearchTokenComparisonType {
-    FSEARCH_TOKEN_COMPARISON_EQUAL,
-    FSEARCH_TOKEN_COMPARISON_GREATER,
-    FSEARCH_TOKEN_COMPARISON_GREATER_EQ,
-    FSEARCH_TOKEN_COMPARISON_SMALLER,
-    FSEARCH_TOKEN_COMPARISON_SMALLER_EQ,
-    FSEARCH_TOKEN_COMPARISON_RANGE,
-} FsearchTokenComparisonType;
+typedef enum FsearchQueryNodeComparison {
+    FSEARCH_QUERY_NODE_COMPARISON_EQUAL,
+    FSEARCH_QUERY_NODE_COMPARISON_GREATER,
+    FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ,
+    FSEARCH_QUERY_NODE_COMPARISON_SMALLER,
+    FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ,
+    FSEARCH_QUERY_NODE_COMPARISON_RANGE,
+    NUM_FSEARCH_QUERY_NODE_COMPARISONS,
+} FsearchQueryNodeComparison;
 
 typedef enum FsearchQueryNodeOperator {
-    FSEARCH_TOKEN_OPERATOR_AND,
-    FSEARCH_TOKEN_OPERATOR_OR,
-    FSEARCH_TOKEN_OPERATOR_NOT,
-    NUM_FSEARCH_TOKEN_OPERATORS,
+    FSEARCH_QUERY_NODE_OPERATOR_AND,
+    FSEARCH_QUERY_NODE_OPERATOR_OR,
+    FSEARCH_QUERY_NODE_OPERATOR_NOT,
+    NUM_FSEARCH_QUERY_NODE_OPERATORS,
 } FsearchQueryNodeOperator;
 
 struct FsearchQueryNode {
@@ -60,9 +61,8 @@ struct FsearchQueryNode {
     int64_t size_upper_limit;
     time_t time;
     time_t time_upper_limit;
-    FsearchTokenComparisonType comparison_type;
+    FsearchQueryNodeComparison comparison_type;
 
-    uint32_t has_separator;
     FsearchQueryNodeSearchFunc *search_func;
     FsearchQueryNodeHighlightFunc *highlight_func;
 
