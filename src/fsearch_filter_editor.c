@@ -42,7 +42,6 @@ on_editor_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user
         name = g_strdup(name_str);
 
         macro = g_strdup(gtk_entry_get_text(editor->macro_entry));
-        g_print("Macro name: %s\n", macro);
         GtkTextIter start, end;
         gtk_text_buffer_get_bounds(editor->query_text_buffer, &start, &end);
         query = gtk_text_buffer_get_text(editor->query_text_buffer, &start, &end, FALSE);
