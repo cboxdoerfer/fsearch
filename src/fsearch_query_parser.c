@@ -503,7 +503,7 @@ get_operator_precedence(FsearchQueryToken operator) {
 }
 
 static FsearchQueryNode *
-get_operator_node_for_query_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
+get_operator_node_for_query_token(FsearchQueryToken token) {
     FsearchQueryNodeOperator op = 0;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_AND:
@@ -551,8 +551,7 @@ process_operator_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken to
     GList *res = NULL;
     while (!g_queue_is_empty(parse_ctx->operator_stack)
            && get_operator_precedence(token) <= get_operator_precedence(top_query_token(parse_ctx->operator_stack))) {
-        FsearchQueryNode *op_node = get_operator_node_for_query_token(parse_ctx,
-                                                                      pop_query_token(parse_ctx->operator_stack));
+        FsearchQueryNode *op_node = get_operator_node_for_query_token(pop_query_token(parse_ctx->operator_stack));
         if (op_node) {
             res = g_list_append(res, op_node);
         }
@@ -626,8 +625,8 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
                         g_warning("[infix-postfix] Matching open bracket not found!\n");
                         g_assert_not_reached();
                     }
-                    FsearchQueryNode *op_node =
-                        get_operator_node_for_query_token(parse_ctx, pop_query_token(parse_ctx->operator_stack));
+                    FsearchQueryNode *op_node = get_operator_node_for_query_token(
+                        pop_query_token(parse_ctx->operator_stack));
                     if (op_node) {
                         to_append = g_list_append(to_append, op_node);
                     }
@@ -680,8 +679,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
 
 out:
     while (!g_queue_is_empty(parse_ctx->operator_stack)) {
-        FsearchQueryNode *op_node = get_operator_node_for_query_token(parse_ctx,
-                                                                      pop_query_token(parse_ctx->operator_stack));
+        FsearchQueryNode *op_node = get_operator_node_for_query_token(pop_query_token(parse_ctx->operator_stack));
         if (op_node) {
             res = g_list_append(res, op_node);
         }
