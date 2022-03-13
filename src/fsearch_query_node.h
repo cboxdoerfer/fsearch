@@ -109,4 +109,10 @@ FsearchQueryNode *
 fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags);
 
 FsearchQueryNode *
+fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags);
+
+FsearchQueryNode *
+fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flags);
+
+FsearchQueryNode *
 fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags);

@@ -208,6 +208,49 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
 }
 
 FsearchQueryNode *
+fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) {
+    FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
+    qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    qnode->query_description = g_string_new("parent");
+    node_init_needle(qnode, search_term);
+
+    qnode->highlight_func = NULL;
+    qnode->flags = flags;
+    if (fs_str_case_is_ascii(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
+        qnode->search_func = fsearch_query_matcher_func_parent_ascii;
+        qnode->query_description = g_string_new("parent_ascii");
+    }
+    else {
+        qnode->search_func = fsearch_query_matcher_func_parent_utf;
+        qnode->query_description = g_string_new("parent_utf");
+    }
+    return qnode;
+}
+
+FsearchQueryNode *
+fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flags) {
+    FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
+    qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    qnode->query_description = g_string_new("ext");
+    qnode->search_func = fsearch_query_matcher_func_extension;
+    qnode->highlight_func = fsearch_query_matcher_highlight_func_extension;
+    qnode->flags = flags;
+    if (!search_term) {
+        // Show all files with no extension
+        qnode->needle = g_strdup("");
+        qnode->search_term_list = calloc(2, sizeof(char *));
+        qnode->search_term_list[0] = g_strdup("");
+        qnode->search_term_list[1] = NULL;
+    }
+    else {
+        qnode->needle = g_strdup(search_term);
+        qnode->search_term_list = g_strsplit(search_term, ";", -1);
+    }
+    qnode->num_search_term_list_entries = qnode->search_term_list ? g_strv_length(qnode->search_term_list) : 0;
+    return qnode;
+}
+
+FsearchQueryNode *
 fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags) {
     // We convert the wildcard pattern to a regex pattern
     // The regex engine is not only faster than fnmatch, but it also handles utf8 strings better

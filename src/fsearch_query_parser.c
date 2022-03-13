@@ -369,29 +369,15 @@ parse_field_extension(FsearchQueryLexer *lexer,
     if (!is_empty_field && fsearch_query_lexer_peek_next_token(lexer, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
         return NULL;
     }
-    FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
-    result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    result->query_description = g_string_new("ext");
-    result->search_func = fsearch_query_matcher_func_extension;
-    result->highlight_func = fsearch_query_matcher_highlight_func_extension;
-    result->flags = flags;
-    if (is_empty_field) {
-        // Show all files with no extension
-        result->needle = g_strdup("");
-        result->search_term_list = calloc(2, sizeof(char *));
-        result->search_term_list[0] = g_strdup("");
-        result->search_term_list[1] = NULL;
-    }
-    else {
-        GString *token_value = NULL;
+    FsearchQueryNode *result = NULL;
+    GString *token_value = NULL;
+    if (!is_empty_field) {
         fsearch_query_lexer_get_next_token(lexer, &token_value);
-        result->needle = g_strdup(token_value->str);
-        result->search_term_list = g_strsplit(token_value->str, ";", -1);
-        if (token_value) {
-            g_string_free(g_steal_pointer(&token_value), TRUE);
-        }
     }
-    result->num_search_term_list_entries = result->search_term_list ? g_strv_length(result->search_term_list) : 0;
+    result = fsearch_query_node_new_extension(token_value ? token_value->str : NULL, flags);
+    if (token_value) {
+        g_string_free(g_steal_pointer(&token_value), TRUE);
+    }
 
     return g_list_append(NULL, result);
 }
@@ -407,21 +393,7 @@ parse_field_parent(FsearchQueryLexer *lexer,
     GString *token_value = NULL;
     fsearch_query_lexer_get_next_token(lexer, &token_value);
 
-    FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
-    result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    result->query_description = g_string_new("parent");
-    node_init_needle(result, token_value->str);
-
-    result->highlight_func = NULL;
-    result->flags = flags;
-    if (fs_str_case_is_ascii(result->needle) || flags & QUERY_FLAG_MATCH_CASE) {
-        result->search_func = fsearch_query_matcher_func_parent_ascii;
-        result->query_description = g_string_new("parent_ascii");
-    }
-    else {
-        result->search_func = fsearch_query_matcher_func_parent_utf;
-        result->query_description = g_string_new("parent_utf");
-    }
+    FsearchQueryNode *result = fsearch_query_node_new_parent(token_value->str, flags);
 
     g_string_free(g_steal_pointer(&token_value), TRUE);
 
