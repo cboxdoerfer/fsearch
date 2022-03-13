@@ -8,10 +8,10 @@
 
 FsearchFilter *
 fsearch_filter_new(const char *name, const char *macro, const char *query, FsearchQueryFlags flags) {
-    g_assert_nonnull(name);
+    g_assert(name);
 
     FsearchFilter *filter = calloc(1, sizeof(FsearchFilter));
-    g_assert_nonnull(filter);
+    g_assert(filter);
 
     filter->name = strdup(name);
     filter->macro = strdup(macro ? macro : "");
@@ -23,8 +23,8 @@ fsearch_filter_new(const char *name, const char *macro, const char *query, Fsear
 
 bool
 fsearch_filter_cmp(FsearchFilter *filter_1, FsearchFilter *filter_2) {
-    g_assert_nonnull(filter_1);
-    g_assert_nonnull(filter_2);
+    g_assert(filter_1);
+    g_assert(filter_2);
 
     if (strcmp(filter_1->name, filter_2->name) != 0) {
         return false;

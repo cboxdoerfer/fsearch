@@ -9,7 +9,7 @@
 FsearchExcludePath *
 fsearch_exclude_path_new(const char *path, bool enabled) {
     FsearchExcludePath *fs_path = calloc(1, sizeof(FsearchExcludePath));
-    g_assert_nonnull(fs_path);
+    g_assert(fs_path);
 
     if (path) {
         fs_path->path = strdup(path);

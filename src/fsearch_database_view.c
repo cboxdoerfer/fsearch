@@ -101,7 +101,7 @@ db_view_unref(FsearchDatabaseView *view) {
 
 void
 db_view_unregister(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     db_view_lock(view);
     if (view->selection) {
@@ -120,8 +120,8 @@ db_view_unregister(FsearchDatabaseView *view) {
 
 void
 db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
-    g_assert_nonnull(db);
+    g_assert(view);
+    g_assert(db);
 
     if (!db_register_view(db, view)) {
         return;
@@ -149,7 +149,7 @@ db_view_new(const char *query_text,
             FsearchDatabaseViewNotifyFunc notify_func,
             gpointer notify_func_data) {
     FsearchDatabaseView *view = calloc(1, sizeof(struct FsearchDatabaseView));
-    g_assert_nonnull(view);
+    g_assert(view);
 
     view->task_queue = fsearch_task_queue_new("fsearch_db_task_queue");
 
@@ -359,7 +359,7 @@ db_view_sort_task_finished(gpointer result, gpointer data) {
 static void
 db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order) {
     FsearchSortContext *ctx = calloc(1, sizeof(FsearchSortContext));
-    g_assert_nonnull(ctx);
+    g_assert(ctx);
 
     ctx->view = view;
     ctx->sort_order = sort_order;
@@ -480,25 +480,25 @@ db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_
 
 uint32_t
 db_view_get_num_folders(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     return view->folders ? darray_get_num_items(view->folders) : 0;
 }
 
 uint32_t
 db_view_get_num_files(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     return view->files ? darray_get_num_items(view->files) : 0;
 }
 
 uint32_t
 db_view_get_num_entries(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     return db_view_get_num_folders(view) + db_view_get_num_files(view);
 }
 
 FsearchDatabaseIndexType
 db_view_get_sort_order(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     return view->sort_order;
 }
 
@@ -518,7 +518,7 @@ db_view_get_entry_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 GString *
 db_view_entry_get_path_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     GString *res = NULL;
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
@@ -530,14 +530,14 @@ db_view_entry_get_path_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 GString *
 db_view_entry_get_path_full_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     return entry ? db_entry_get_path_full(entry) : NULL;
 }
 
 void
 db_view_entry_append_path_for_idx(FsearchDatabaseView *view, uint32_t idx, GString *str) {
-    g_assert_nonnull(view);
+    g_assert(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     if (entry) {
         db_entry_append_path(entry, str);
@@ -546,7 +546,7 @@ db_view_entry_append_path_for_idx(FsearchDatabaseView *view, uint32_t idx, GStri
 
 time_t
 db_view_entry_get_mtime_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     return entry ? db_entry_get_mtime(entry) : 0;
@@ -554,7 +554,7 @@ db_view_entry_get_mtime_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 off_t
 db_view_entry_get_size_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     return entry ? db_entry_get_size(entry) : 0;
@@ -562,7 +562,7 @@ db_view_entry_get_size_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 char *
 db_view_entry_get_extension_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     if (!entry) {
@@ -574,7 +574,7 @@ db_view_entry_get_extension_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 GString *
 db_view_entry_get_name_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     return entry ? g_string_new(db_entry_get_name_raw_for_display(entry)) : NULL;
@@ -587,7 +587,7 @@ db_view_entry_get_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 GString *
 db_view_entry_get_name_raw_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     return entry ? g_string_new(db_entry_get_name_raw(entry)) : NULL;
@@ -595,7 +595,7 @@ db_view_entry_get_name_raw_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 int32_t
 db_view_entry_get_parent_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     if (!entry) {
@@ -607,7 +607,7 @@ db_view_entry_get_parent_for_idx(FsearchDatabaseView *view, uint32_t idx) {
 
 FsearchDatabaseEntryType
 db_view_entry_get_type_for_idx(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
 
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     return entry ? db_entry_get_type(entry) : DATABASE_ENTRY_TYPE_NONE;
@@ -622,7 +622,7 @@ notify_selection_changed(FsearchDatabaseView *view) {
 
 void
 db_view_select_toggle(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     if (entry) {
@@ -635,7 +635,7 @@ db_view_select_toggle(FsearchDatabaseView *view, uint32_t idx) {
 
 void
 db_view_select(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
     if (entry) {
@@ -648,7 +648,7 @@ db_view_select(FsearchDatabaseView *view, uint32_t idx) {
 
 bool
 db_view_is_selected(FsearchDatabaseView *view, uint32_t idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
     bool is_selected = false;
     db_view_lock(view);
     FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, idx);
@@ -661,7 +661,7 @@ db_view_is_selected(FsearchDatabaseView *view, uint32_t idx) {
 
 void
 db_view_select_range(FsearchDatabaseView *view, uint32_t start_idx, uint32_t end_idx) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     for (uint32_t i = start_idx; i <= end_idx; i++) {
         FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, i);
@@ -676,7 +676,7 @@ db_view_select_range(FsearchDatabaseView *view, uint32_t start_idx, uint32_t end
 
 void
 db_view_select_all(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     fsearch_selection_select_all(view->selection, view->folders);
     fsearch_selection_select_all(view->selection, view->files);
@@ -687,7 +687,7 @@ db_view_select_all(FsearchDatabaseView *view) {
 
 void
 db_view_unselect_all(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     fsearch_selection_unselect_all(view->selection);
     db_view_unlock(view);
@@ -697,7 +697,7 @@ db_view_unselect_all(FsearchDatabaseView *view) {
 
 void
 db_view_invert_selection(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     fsearch_selection_invert(view->selection, view->folders);
     fsearch_selection_invert(view->selection, view->files);
@@ -708,7 +708,7 @@ db_view_invert_selection(FsearchDatabaseView *view) {
 
 uint32_t
 db_view_get_num_selected(FsearchDatabaseView *view) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     const uint32_t num_selected = fsearch_selection_get_num_selected(view->selection);
     db_view_unlock(view);
@@ -717,7 +717,7 @@ db_view_get_num_selected(FsearchDatabaseView *view) {
 
 void
 db_view_selection_for_each(FsearchDatabaseView *view, GHFunc func, gpointer user_data) {
-    g_assert_nonnull(view);
+    g_assert(view);
     db_view_lock(view);
     g_hash_table_foreach(view->selection, func, user_data);
     db_view_unlock(view);

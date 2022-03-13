@@ -34,7 +34,7 @@ build_query_tree_from_suffix_list(GList *postfix_query, FsearchQueryFlags flags)
 
     for (GList *n = postfix_query; n != NULL; n = n->next) {
         FsearchQueryNode *node = n->data;
-        g_assert_nonnull(node);
+        g_assert(node);
 
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             GNode *op_node = g_node_new(fsearch_query_node_new_operator(node->operator));
@@ -157,7 +157,7 @@ print_parser_result(const char *input, FsearchQueryFlags flags, GList *result) {
     g_print(" %c[1m* output:%c[0m ", esc, esc);
     for (GList *n = result; n != NULL; n = n->next) {
         FsearchQueryNode *node = n->data;
-        g_assert_nonnull(node);
+        g_assert(node);
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
             g_print("%s ", node->description->str);
         }
@@ -174,10 +174,10 @@ print_parser_result(const char *input, FsearchQueryFlags flags, GList *result) {
 
 static GNode *
 get_query_tree(const char *input, FsearchFilterManager *filters, FsearchQueryFlags flags) {
-    g_assert_nonnull(input);
+    g_assert(input);
 
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
-    g_assert_nonnull(parse_context);
+    g_assert(parse_context);
     parse_context->lexer = fsearch_query_lexer_new(input);
     parse_context->macro_filters = get_filters_with_macros(filters);
     parse_context->macro_stack = g_queue_new();

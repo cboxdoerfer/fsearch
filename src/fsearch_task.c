@@ -38,7 +38,7 @@ fsearch_task_new(int id,
                  FsearchTaskCancelledFunc task_cancelled_func,
                  gpointer data) {
     FsearchTask *task = calloc(1, sizeof(FsearchTask));
-    g_assert_nonnull(task);
+    g_assert(task);
     task->type = FSEARCH_TASK_TYPE_NORMAL;
     task->task_cancellable = g_cancellable_new();
     task->task_func = task_func;
@@ -136,14 +136,14 @@ fsearch_task_queue_clear(FsearchTaskQueue *queue, FsearchTaskQueueClearPolicy cl
 
 void
 fsearch_task_queue_free(FsearchTaskQueue *queue) {
-    g_assert_nonnull(queue);
+    g_assert(queue);
 
     fsearch_task_queue_clear(queue, FSEARCH_TASK_CLEAR_ALL, -1);
 
     fsearch_task_queue_cancel_current(queue);
 
     FsearchTask *task = calloc(1, sizeof(FsearchTask));
-    g_assert_nonnull(task);
+    g_assert(task);
     task->type = FSEARCH_TASK_TYPE_QUIT;
     g_async_queue_push(queue->queue, g_steal_pointer(&task));
 
@@ -158,7 +158,7 @@ fsearch_task_queue_free(FsearchTaskQueue *queue) {
 FsearchTaskQueue *
 fsearch_task_queue_new(const char *name) {
     FsearchTaskQueue *queue = calloc(1, sizeof(FsearchTaskQueue));
-    g_assert_nonnull(queue);
+    g_assert(queue);
 
     queue->queue = g_async_queue_new();
     queue->queue_thread = g_thread_new(name, (GThreadFunc)fsearch_task_queue_thread, queue);

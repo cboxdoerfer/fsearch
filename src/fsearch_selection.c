@@ -4,7 +4,7 @@
 
 void
 fsearch_selection_free(GHashTable *selection) {
-    g_assert_nonnull(selection);
+    g_assert(selection);
     g_clear_pointer(&selection, g_hash_table_destroy);
 }
 
@@ -15,8 +15,8 @@ fsearch_selection_new(void) {
 
 void
 fsearch_selection_select_toggle(GHashTable *selection, gpointer item) {
-    g_assert_nonnull(selection);
-    g_assert_nonnull(item);
+    g_assert(selection);
+    g_assert(item);
 
     if (g_hash_table_steal(selection, item)) {
         return;
@@ -26,24 +26,24 @@ fsearch_selection_select_toggle(GHashTable *selection, gpointer item) {
 
 void
 fsearch_selection_select(GHashTable *selection, gpointer item) {
-    g_assert_nonnull(selection);
-    g_assert_nonnull(item);
+    g_assert(selection);
+    g_assert(item);
 
     g_hash_table_add(selection, item);
 }
 
 bool
 fsearch_selection_is_selected(GHashTable *selection, gpointer item) {
-    g_assert_nonnull(selection);
-    g_assert_nonnull(item);
+    g_assert(selection);
+    g_assert(item);
 
     return g_hash_table_contains(selection, item);
 }
 
 void
 fsearch_selection_select_all(GHashTable *selection, DynamicArray *items) {
-    g_assert_nonnull(selection);
-    g_assert_nonnull(items);
+    g_assert(selection);
+    g_assert(items);
 
     const uint32_t num_items = darray_get_num_items(items);
 
@@ -58,14 +58,14 @@ fsearch_selection_select_all(GHashTable *selection, DynamicArray *items) {
 
 void
 fsearch_selection_unselect_all(GHashTable *selection) {
-    g_assert_nonnull(selection);
+    g_assert(selection);
     g_hash_table_remove_all(selection);
 }
 
 void
 fsearch_selection_invert(GHashTable *selection, DynamicArray *items) {
-    g_assert_nonnull(selection);
-    g_assert_nonnull(items);
+    g_assert(selection);
+    g_assert(items);
 
     const uint32_t num_items = darray_get_num_items(items);
 
@@ -83,11 +83,11 @@ fsearch_selection_invert(GHashTable *selection, DynamicArray *items) {
 
 uint32_t
 fsearch_selection_get_num_selected(GHashTable *selection) {
-    g_assert_nonnull(selection);
+    g_assert(selection);
     return g_hash_table_size(selection);
 }
 void
 fsearch_selection_for_each(GHashTable *selection, GHFunc func, gpointer user_data) {
-    g_assert_nonnull(selection);
+    g_assert(selection);
     g_hash_table_foreach(selection, func, user_data);
 }

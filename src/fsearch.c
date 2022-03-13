@@ -231,7 +231,7 @@ database_update_add(bool scan) {
     app->num_database_update_active++;
 
     DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
-    g_assert_nonnull(ctx);
+    g_assert(ctx);
 
     if (scan) {
         ctx->rescan = true;
@@ -529,7 +529,7 @@ set_accel_for_action(GApplication *app, const char *action, const char *accel) {
 }
 
 static void
-set_accels_for_action(GApplication *app, const char *action, const gchar* const* accels) {
+set_accels_for_action(GApplication *app, const char *action, const gchar *const *accels) {
     gtk_application_set_accels_for_action(GTK_APPLICATION(app), action, accels);
 }
 
@@ -563,7 +563,7 @@ fsearch_application_startup(GApplication *app) {
 
     fsearch->db_thread_cancellable = g_cancellable_new();
     fsearch->config = calloc(1, sizeof(FsearchConfig));
-    g_assert_nonnull(fsearch->config);
+    g_assert(fsearch->config);
     if (!config_load(fsearch->config)) {
         config_load_default(fsearch->config);
     }
@@ -754,7 +754,7 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 static int
 database_update_in_local_instance() {
     FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
-    g_assert_nonnull(config);
+    g_assert(config);
 
     if (!config_load(config)) {
         if (!config_load_default(config)) {

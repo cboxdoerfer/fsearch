@@ -74,7 +74,7 @@ fsearch_utf_fold_case_utf8(UCaseMap *case_map, FsearchUtfBuilder *builder, const
 bool
 fsearch_utf_builder_normalize_and_fold_case(FsearchUtfBuilder *builder,
                                             const char *string) {
-    g_assert_nonnull(builder);
+    g_assert(builder);
     if (!builder->initialized) {
         goto fail;
     }

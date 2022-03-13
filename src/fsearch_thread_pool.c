@@ -98,7 +98,7 @@ thread_context_free(FsearchThreadPoolContext *ctx) {
 static FsearchThreadPoolContext *
 thread_context_new(void) {
     FsearchThreadPoolContext *ctx = g_new0(FsearchThreadPoolContext, 1);
-    g_assert_nonnull(ctx);
+    g_assert(ctx);
 
     ctx->thread_data = NULL;
     ctx->thread_func = NULL;

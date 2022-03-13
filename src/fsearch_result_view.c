@@ -366,7 +366,7 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
 FsearchResultView *
 fsearch_result_view_new(void) {
     FsearchResultView *result_view = calloc(1, sizeof(FsearchResultView));
-    g_assert_nonnull(result_view);
+    g_assert(result_view);
     return result_view;
 }
 

@@ -2069,7 +2069,7 @@ fsearch_list_view_column_new(int type,
                              gboolean expand,
                              uint32_t width) {
     FsearchListViewColumn *col = calloc(1, sizeof(FsearchListViewColumn));
-    g_assert_nonnull(col);
+    g_assert(col);
 
     col->button = gtk_button_new();
     gtk_widget_show(col->button);

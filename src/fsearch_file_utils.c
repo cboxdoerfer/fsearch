@@ -34,7 +34,7 @@ const char *data_folder_name = "fsearch";
 
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
-    g_assert_nonnull(path);
+    g_assert(path);
     g_assert(len >= 0);
 
     const gchar *xdg_data_dir = g_get_user_data_dir();

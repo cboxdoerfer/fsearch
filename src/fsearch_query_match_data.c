@@ -103,7 +103,7 @@ fsearch_query_match_data_get_entry(FsearchQueryMatchData *match_data) {
 FsearchQueryMatchData *
 fsearch_query_match_data_new(void) {
     FsearchQueryMatchData *match_data = calloc(1, sizeof(FsearchQueryMatchData));
-    g_assert_nonnull(match_data);
+    g_assert(match_data);
     match_data->utf_name_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_parent_path_builder = calloc(1, sizeof(FsearchUtfBuilder));

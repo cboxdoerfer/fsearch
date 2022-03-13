@@ -14,7 +14,7 @@ fsearch_index_new(FsearchIndexType type,
                   bool one_filesystem,
                   time_t last_updated) {
     FsearchIndex *index = calloc(1, sizeof(FsearchIndex));
-    g_assert_nonnull(index);
+    g_assert(index);
 
     index->type = type;
     index->path = path ? strdup(path) : strdup("");

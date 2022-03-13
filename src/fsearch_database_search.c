@@ -65,7 +65,7 @@ db_search_empty(FsearchQuery *q);
 static DatabaseSearchResult *
 db_search_result_new(void) {
     DatabaseSearchResult *result_ctx = calloc(1, sizeof(DatabaseSearchResult));
-    g_assert_nonnull(result_ctx);
+    g_assert(result_ctx);
     result_ctx->ref_count = 1;
     return result_ctx;
 }
@@ -166,13 +166,13 @@ db_search_worker_context_new(FsearchQuery *query,
                              uint32_t start_pos,
                              uint32_t end_pos) {
     DatabaseSearchWorkerContext *ctx = calloc(1, sizeof(DatabaseSearchWorkerContext));
-    g_assert_nonnull(ctx);
+    g_assert(ctx);
     g_assert(end_pos >= start_pos);
 
     ctx->query = query;
     ctx->cancellable = cancellable;
     ctx->results = calloc(end_pos - start_pos + 1, sizeof(void *));
-    g_assert_nonnull(ctx->results);
+    g_assert(ctx->results);
 
     ctx->num_results = 0;
     ctx->entries = darray_ref(entries);
@@ -185,8 +185,8 @@ db_search_worker_context_new(FsearchQuery *query,
 static void
 db_search_worker(void *data) {
     DatabaseSearchWorkerContext *ctx = data;
-    g_assert_nonnull(ctx);
-    g_assert_nonnull(ctx->results);
+    g_assert(ctx);
+    g_assert(ctx->results);
 
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
 

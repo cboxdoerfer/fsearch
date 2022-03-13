@@ -34,7 +34,7 @@ fsearch_query_new(const char *search_term,
                   const char *query_id,
                   gpointer data) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
-    g_assert_nonnull(q);
+    g_assert(q);
 
     q->search_term = search_term ? strdup(search_term) : "";
 
@@ -107,7 +107,7 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match
     }
     if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
         GNode *left = node->children;
-        g_assert_nonnull(left);
+        g_assert(left);
         GNode *right = left->next;
         if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
             return highlight(left, entry, match_data, type) && highlight(right, entry, match_data, type);
@@ -142,7 +142,7 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_d
     }
     if (n->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
         GNode *left = node->children;
-        g_assert_nonnull(left);
+        g_assert(left);
         GNode *right = left->next;
         if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
             return matches(left, entry, match_data, type) && matches(right, entry, match_data, type);

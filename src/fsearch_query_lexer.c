@@ -196,10 +196,10 @@ fsearch_query_lexer_peek_next_token(FsearchQueryLexer *lexer, GString **result) 
 
 FsearchQueryLexer *
 fsearch_query_lexer_new(const char *input) {
-    g_assert_nonnull(input);
+    g_assert(input);
 
     FsearchQueryLexer *lexer = calloc(1, sizeof(FsearchQueryLexer));
-    g_assert_nonnull(lexer);
+    g_assert(lexer);
 
     lexer->input = g_string_new(input);
     lexer->input_pos = 0;
