@@ -10,3 +10,4 @@ Version 0.2 Alpha
 * Add .odp and .ods files to document filter
 * "Open with" menu now only shows applications which can handle the selected files
 * Improve support for non-Linux systems
+* Add option to exit FSearch when Escape is pressed instead of minimizing the window
