@@ -36,8 +36,8 @@ fsearch_query_node_free(FsearchQueryNode *node) {
     g_assert(node != NULL);
 
     fsearch_utf_builder_clear(node->needle_builder);
-    if (node->query_description) {
-        g_string_free(g_steal_pointer(&node->query_description), TRUE);
+    if (node->description) {
+        g_string_free(g_steal_pointer(&node->description), TRUE);
     }
     g_clear_pointer(&node->search_term_list, g_strfreev);
     g_clear_pointer(&node->needle_builder, free);
@@ -77,7 +77,7 @@ fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
     else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_RANGE) {
         qnode->needle = g_strdup_printf("%ld..%ld", dm_start, dm_end);
     }
-    qnode->query_description = g_string_new("date-modified");
+    qnode->description = g_string_new("date-modified");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->time = dm_start;
     qnode->time_upper_limit = dm_end;
@@ -114,7 +114,7 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_RANGE) {
         qnode->needle = g_strdup_printf("%ld..%ld", size_start, size_end);
     }
-    qnode->query_description = g_string_new("size");
+    qnode->description = g_string_new("size");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->size = size_start;
     qnode->size_upper_limit = size_end;
@@ -131,7 +131,7 @@ fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
            operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
-    qnode->query_description = g_string_new(operator == FSEARCH_QUERY_NODE_OPERATOR_AND ? "AND" : (operator == FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
+    qnode->description = g_string_new(operator == FSEARCH_QUERY_NODE_OPERATOR_AND ? "AND" : (operator == FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
     qnode->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
     qnode->operator= operator;
     return qnode;
@@ -142,7 +142,7 @@ fsearch_query_node_new_match_nothing(void) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
 
-    qnode->query_description = g_string_new("match_nothing");
+    qnode->description = g_string_new("match_nothing");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->search_func = fsearch_query_matcher_func_false;
     qnode->highlight_func = fsearch_query_matcher_highlight_func_none;
@@ -155,7 +155,7 @@ fsearch_query_node_new_match_everything(FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
 
-    qnode->query_description = g_string_new("match_everything");
+    qnode->description = g_string_new("match_everything");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->search_func = fsearch_query_matcher_func_true;
     qnode->highlight_func = fsearch_query_matcher_highlight_func_none;
@@ -185,7 +185,7 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
 
-    qnode->query_description = g_string_new("regex");
+    qnode->description = g_string_new("regex");
     qnode->needle = g_strdup(search_term);
     qnode->regex = regex;
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
@@ -213,18 +213,18 @@ FsearchQueryNode *
 fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->query_description = g_string_new("parent");
+    qnode->description = g_string_new("parent");
     node_init_needle(qnode, search_term);
 
     qnode->highlight_func = NULL;
     qnode->flags = flags;
     if (fs_str_case_is_ascii(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
         qnode->search_func = fsearch_query_matcher_func_parent_ascii;
-        qnode->query_description = g_string_new("parent_ascii");
+        qnode->description = g_string_new("parent_ascii");
     }
     else {
         qnode->search_func = fsearch_query_matcher_func_parent_utf;
-        qnode->query_description = g_string_new("parent_utf");
+        qnode->description = g_string_new("parent_utf");
     }
     return qnode;
 }
@@ -233,7 +233,7 @@ FsearchQueryNode *
 fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->query_description = g_string_new("ext");
+    qnode->description = g_string_new("ext");
     qnode->search_func = fsearch_query_matcher_func_extension;
     qnode->highlight_func = fsearch_query_matcher_highlight_func_extension;
     qnode->flags = flags;
@@ -295,12 +295,12 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     if (fs_str_case_is_ascii(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
         qnode->search_func = fsearch_query_matcher_func_ascii;
         qnode->highlight_func = fsearch_query_matcher_highlight_func_ascii;
-        qnode->query_description = g_string_new("ascii_icase");
+        qnode->description = g_string_new("ascii_icase");
     }
     else {
         qnode->search_func = fsearch_query_matcher_func_utf;
         qnode->highlight_func = NULL;
-        qnode->query_description = g_string_new("utf_icase");
+        qnode->description = g_string_new("utf_icase");
     }
     return qnode;
 }

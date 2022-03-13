@@ -45,7 +45,7 @@ typedef enum FsearchQueryNodeOperator {
 
 struct FsearchQueryNode {
     FsearchQueryNodeType type;
-    GString *query_description;
+    GString *description;
 
     FsearchQueryNodeOperator operator;
 
@@ -65,8 +65,6 @@ struct FsearchQueryNode {
     FsearchQueryNodeMatchFunc *highlight_func;
 
     FsearchUtfBuilder *needle_builder;
-
-    uint32_t fold_options;
 
     // Using the pcre2_code with multiple threads is safe.
     // However, pcre2_match_data can't be shared across threads.

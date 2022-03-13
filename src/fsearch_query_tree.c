@@ -169,12 +169,12 @@ get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags
         for (GList *n = suffix_list; n != NULL; n = n->next) {
             FsearchQueryNode *node = n->data;
             if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-                g_print("%s ", node->query_description->str);
+                g_print("%s ", node->description->str);
             }
             else {
                 char *flag_string = query_flags_to_string(node->flags);
                 g_print("[%s:'%s':%s] ",
-                        node->query_description ? node->query_description->str : "unknown query",
+                        node->description ? node->description->str : "unknown query",
                         node->needle ? node->needle : "",
                         flag_string);
                 g_free(flag_string);
