@@ -537,10 +537,7 @@ parse_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
 }
 
 static bool
-consume_not_token(FsearchQueryLexer *lexer, FsearchQueryToken current_token) {
-    if (current_token != FSEARCH_QUERY_TOKEN_NOT) {
-        g_assert_not_reached();
-    }
+consume_not_token(FsearchQueryLexer *lexer) {
     bool uneven_number_of_not_tokens = true;
     while (fsearch_query_lexer_peek_next_token(lexer, NULL) == FSEARCH_QUERY_TOKEN_NOT) {
         fsearch_query_lexer_get_next_token(lexer, NULL);
@@ -598,7 +595,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
         case FSEARCH_QUERY_TOKEN_EOS:
             goto out;
         case FSEARCH_QUERY_TOKEN_NOT:
-            if (consume_not_token(parse_ctx->lexer, token)) {
+            if (consume_not_token(parse_ctx->lexer)) {
                 // We want to support consecutive NOT operators (i.e. `NOT NOT a`)
                 // so even numbers of NOT operators get ignored and for uneven numbers
                 // we simply add a single one
