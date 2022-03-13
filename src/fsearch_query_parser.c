@@ -103,15 +103,20 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
     char *end_ptr = NULL;
     int64_t size_start = 0;
     int64_t size_end = 0;
-    if (fsearch_size_parse(string->str, &size_start, &end_ptr)) {
+    int64_t plus = 0;
+    if (fsearch_size_parse(string->str, &size_start, &plus, &end_ptr)) {
         if (fs_str_starts_with_range(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
                 comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
             }
-            else if (fsearch_size_parse(end_ptr, &size_end, &end_ptr)) {
+            else if (fsearch_size_parse(end_ptr, &size_end, NULL, &end_ptr)) {
                 comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
             }
+        }
+        else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL && plus != 0) {
+            comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
+            size_end = size_start + plus;
         }
         return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
     }
@@ -123,7 +128,7 @@ static FsearchQueryNode *
 parse_size(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     int64_t size = 0;
-    if (fsearch_size_parse(string->str, &size, &end_ptr)) {
+    if (fsearch_size_parse(string->str, &size, NULL, &end_ptr)) {
         return fsearch_query_node_new_size(flags, size, size, comp_type);
     }
     g_debug("[size:] invalid argument: %s", string->str);
