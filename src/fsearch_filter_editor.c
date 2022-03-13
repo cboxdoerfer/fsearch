@@ -70,6 +70,9 @@ on_editor_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user
 static void
 on_macro_entry_changed(GtkEntry *entry, gpointer user_data) {
     FsearchFilterEditor *editor = user_data;
+    if (!editor->ok_button) {
+        return;
+    }
     const char *macro_text = gtk_entry_get_text(entry);
     if (macro_text && strchr(macro_text, ':')) {
         gtk_widget_set_sensitive(editor->ok_button, FALSE);
@@ -96,7 +99,13 @@ fsearch_filter_editor_run(const char *title,
     editor->data = data;
 
     editor->builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/fsearch_filter_editor.ui");
+
     editor->dialog = GTK_WIDGET(gtk_builder_get_object(editor->builder, "FsearchFilterEditorWindow"));
+    gtk_window_set_transient_for(GTK_WINDOW(editor->dialog), parent_window);
+    gtk_dialog_add_button(GTK_DIALOG(editor->dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
+    editor->ok_button = gtk_dialog_add_button(GTK_DIALOG(editor->dialog), _("_OK"), GTK_RESPONSE_OK);
+    g_signal_connect(editor->dialog, "response", G_CALLBACK(on_editor_ui_response), editor);
+
     editor->search_in_path = GTK_TOGGLE_BUTTON(gtk_builder_get_object(editor->builder, "filter_search_in_path"));
     editor->enable_regex = GTK_TOGGLE_BUTTON(gtk_builder_get_object(editor->builder, "filter_regex"));
     editor->match_case = GTK_TOGGLE_BUTTON(gtk_builder_get_object(editor->builder, "filter_match_case"));
@@ -117,10 +126,5 @@ fsearch_filter_editor_run(const char *title,
         gtk_toggle_button_set_active(editor->match_case, filter->flags & QUERY_FLAG_MATCH_CASE ? TRUE : FALSE);
         gtk_toggle_button_set_active(editor->enable_regex, filter->flags & QUERY_FLAG_REGEX ? TRUE : FALSE);
     }
-    gtk_window_set_transient_for(GTK_WINDOW(editor->dialog), parent_window);
-    gtk_dialog_add_button(GTK_DIALOG(editor->dialog), _("_Cancel"), GTK_RESPONSE_CANCEL);
-    editor->ok_button = gtk_dialog_add_button(GTK_DIALOG(editor->dialog), _("_OK"), GTK_RESPONSE_OK);
-    g_signal_connect(editor->dialog, "response", G_CALLBACK(on_editor_ui_response), editor);
-
     gtk_widget_show(editor->dialog);
 }
