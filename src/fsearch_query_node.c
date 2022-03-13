@@ -131,6 +131,7 @@ fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
            operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
+    qnode->query_description = g_string_new(operator == FSEARCH_QUERY_NODE_OPERATOR_AND ? "AND" : (operator == FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
     qnode->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
     qnode->operator= operator;
     return qnode;
@@ -141,6 +142,7 @@ fsearch_query_node_new_match_nothing(void) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
 
+    qnode->query_description = g_string_new("match_nothing");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->search_func = fsearch_query_matcher_func_false;
     qnode->highlight_func = fsearch_query_matcher_highlight_func_none;
@@ -153,6 +155,7 @@ fsearch_query_node_new_match_everything(FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode != NULL);
 
+    qnode->query_description = g_string_new("match_everything");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->search_func = fsearch_query_matcher_func_true;
     qnode->highlight_func = fsearch_query_matcher_highlight_func_none;

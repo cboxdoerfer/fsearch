@@ -169,10 +169,7 @@ get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags
         for (GList *n = suffix_list; n != NULL; n = n->next) {
             FsearchQueryNode *node = n->data;
             if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-                g_print("%s ",
-                        node->operator== FSEARCH_QUERY_NODE_OPERATOR_AND  ? "AND"
-                        : node->operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR"
-                                                                          : "NOT");
+                g_print("%s ", node->query_description->str);
             }
             else {
                 char *flag_string = query_flags_to_string(node->flags);
