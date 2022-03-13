@@ -17,7 +17,6 @@
 
 typedef struct FsearchQueryParseContext {
     GPtrArray *macro_filters;
-    GPtrArray *suffix_list;
     GQueue *operator_stack;
     GQueue *macro_stack;
     FsearchQueryToken last_token;
@@ -25,104 +24,104 @@ typedef struct FsearchQueryParseContext {
 
 static FsearchQueryNode *fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
 
-static void
+static GList *
 handle_open_bracket_token(FsearchQueryParseContext *parse_ctx);
 
-static void
+static GList *
 handle_operator_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token);
 
-static void
+static GList *
 parse_expression(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool in_open_bracket,
                  FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field(FsearchQueryParser *parser,
             FsearchQueryParseContext *parse_ctx,
             GString *field_name,
             bool is_empty_field,
             FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_modifier(FsearchQueryParser *parser,
                FsearchQueryParseContext *parse_ctx,
                bool is_empty_field,
                FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_exact(FsearchQueryParser *parser,
                   FsearchQueryParseContext *parse_ctx,
                   bool is_empty_field,
                   FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_date_modified(FsearchQueryParser *parser,
                           FsearchQueryParseContext *parse_ctx,
                           bool is_empty_field,
                           FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_size(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
                  FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_extension(FsearchQueryParser *parser,
                       FsearchQueryParseContext *parse_ctx,
                       bool is_empty_field,
                       FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_regex(FsearchQueryParser *parser,
                   FsearchQueryParseContext *parse_ctx,
                   bool is_empty_field,
                   FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_parent(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
                    FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_path(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
                  FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_case(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
                  FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_nocase(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
                    FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_noregex(FsearchQueryParser *parser,
                     FsearchQueryParseContext *parse_ctx,
                     bool is_empty_field,
                     FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_nopath(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
                    FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_folder(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
                    FsearchQueryFlags flags);
 
-static void
+static GList *
 parse_field_file(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
@@ -134,19 +133,8 @@ free_tree_node(GNode *node, gpointer data);
 static void
 free_tree(GNode *root);
 
-static void
+static GList *
 add_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryToken next_token);
-
-static void
-add_query_to_parse_context(FsearchQueryParseContext *parse_ctx, FsearchQueryNode *node, FsearchQueryToken token) {
-    if (!node) {
-        return;
-    }
-    add_implicit_and_if_necessary(parse_ctx, token);
-
-    g_ptr_array_add(parse_ctx->suffix_list, node);
-    parse_ctx->last_token = token;
-}
 
 static void
 node_init_needle(FsearchQueryNode *node, const char *needle) {
@@ -166,7 +154,7 @@ node_init_needle(FsearchQueryNode *node, const char *needle) {
     assert(utf_ready == true);
 }
 
-typedef void(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
+typedef GList *(FsearchTokenFieldParser)(FsearchQueryParser *, FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
 
 typedef struct FsearchTokenField {
     const char *name;
@@ -195,6 +183,11 @@ FsearchTokenField supported_fields[] = {
 static bool
 fsearch_highlight_func_none(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     return true;
+}
+
+static u_int32_t
+fsearch_search_func_false(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    return 0;
 }
 
 static u_int32_t
@@ -634,6 +627,18 @@ fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
 }
 
 static FsearchQueryNode *
+fsearch_query_node_new_match_nothing(void) {
+    FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
+    assert(new != NULL);
+
+    new->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    new->search_func = fsearch_search_func_false;
+    new->highlight_func = fsearch_highlight_func_none;
+    new->flags = 0;
+    return new;
+}
+
+static FsearchQueryNode *
 fsearch_query_node_new_match_everything(FsearchQueryFlags flags) {
     FsearchQueryNode *new = calloc(1, sizeof(FsearchQueryNode));
     assert(new != NULL);
@@ -789,13 +794,13 @@ parse_size(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison 
     return NULL;
 }
 
-static void
+static GList *
 parse_field_size(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
                  FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
@@ -838,9 +843,7 @@ out:
     if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
     }
-    if (result) {
-        add_query_to_parse_context(parse_ctx, result, FSEARCH_QUERY_TOKEN_FIELD);
-    }
+    return g_list_append(NULL, result);
 }
 
 static FsearchQueryNode *
@@ -900,13 +903,13 @@ parse_date(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison 
     return NULL;
 }
 
-static void
+static GList *
 parse_field_date_modified(FsearchQueryParser *parser,
                           FsearchQueryParseContext *parse_ctx,
                           bool is_empty_field,
                           FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
@@ -949,18 +952,16 @@ out:
     if (token_value) {
         g_string_free(g_steal_pointer(&token_value), TRUE);
     }
-    if (result) {
-        add_query_to_parse_context(parse_ctx, result, FSEARCH_QUERY_TOKEN_FIELD);
-    }
+    return g_list_append(NULL, result);
 }
 
-static void
+static GList *
 parse_field_extension(FsearchQueryParser *parser,
                       FsearchQueryParseContext *parse_ctx,
                       bool is_empty_field,
                       FsearchQueryFlags flags) {
     if (!is_empty_field && fsearch_query_parser_peek_next_token(parser, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
-        return;
+        return NULL;
     }
     FsearchQueryNode *result = calloc(1, sizeof(FsearchQueryNode));
     result->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
@@ -986,18 +987,16 @@ parse_field_extension(FsearchQueryParser *parser,
     }
     result->num_search_term_list_entries = result->search_term_list ? g_strv_length(result->search_term_list) : 0;
 
-    return add_query_to_parse_context(parse_ctx,
-                                      result,
-                                      is_empty_field ? FSEARCH_QUERY_TOKEN_FIELD_EMPTY : FSEARCH_QUERY_TOKEN_FIELD);
+    return g_list_append(NULL, result);
 }
 
-static void
+static GList *
 parse_field_parent(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
                    FsearchQueryFlags flags) {
     if (is_empty_field || fsearch_query_parser_peek_next_token(parser, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
-        return;
+        return NULL;
     }
     GString *token_value = NULL;
     fsearch_query_parser_get_next_token(parser, &token_value);
@@ -1020,33 +1019,32 @@ parse_field_parent(FsearchQueryParser *parser,
 
     g_string_free(g_steal_pointer(&token_value), TRUE);
 
-    return add_query_to_parse_context(parse_ctx, result, FSEARCH_QUERY_TOKEN_FIELD);
+    return g_list_append(NULL, result);
 }
 
-static void
+static GList *
 parse_modifier(FsearchQueryParser *parser,
                FsearchQueryParseContext *parse_ctx,
                bool is_empty_field,
                FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return add_query_to_parse_context(parse_ctx,
-                                          fsearch_query_node_new_match_everything(flags),
-                                          FSEARCH_QUERY_TOKEN_FIELD_EMPTY);
+        return g_list_append(NULL, fsearch_query_node_new_match_everything(flags));
     }
+    GList *res = NULL;
     GString *token_value = NULL;
     FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
     if (token == FSEARCH_QUERY_TOKEN_WORD) {
-        add_query_to_parse_context(parse_ctx, fsearch_query_node_new(token_value->str, flags), FSEARCH_QUERY_TOKEN_FIELD);
+        res = g_list_append(NULL, fsearch_query_node_new(token_value->str, flags));
     }
     else if (token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
-        handle_open_bracket_token(parse_ctx);
-        parse_expression(parser, parse_ctx, true, flags);
+        res = handle_open_bracket_token(parse_ctx);
+        res = g_list_concat(res, parse_expression(parser, parse_ctx, true, flags));
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD) {
-        parse_field(parser, parse_ctx, token_value, false, flags);
+        res = parse_field(parser, parse_ctx, token_value, false, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD_EMPTY) {
-        parse_field(parser, parse_ctx, token_value, true, flags);
+        res = parse_field(parser, parse_ctx, token_value, true, flags);
     }
     // else {
     //      //add_query_to_parse_context(parse_ctx, fsearch_query_node_new_match_everything(flags),
@@ -1057,87 +1055,87 @@ parse_modifier(FsearchQueryParser *parser,
         g_string_free(g_steal_pointer(&token_value), TRUE);
     }
 
-    return;
+    return res;
 }
 
-static void
+static GList *
 parse_field_exact(FsearchQueryParser *parser,
                   FsearchQueryParseContext *parse_ctx,
                   bool is_empty_field,
                   FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     return parse_modifier(parser, parse_ctx, is_empty_field, flags | QUERY_FLAG_EXACT_MATCH);
 }
 
-static void
+static GList *
 parse_field_path(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
                  FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     return parse_modifier(parser, parse_ctx, is_empty_field, flags | QUERY_FLAG_SEARCH_IN_PATH);
 }
 
-static void
+static GList *
 parse_field_nopath(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
                    FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     return parse_modifier(parser, parse_ctx, is_empty_field, flags & ~QUERY_FLAG_SEARCH_IN_PATH);
 }
 
-static void
+static GList *
 parse_field_case(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
                  FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     return parse_modifier(parser, parse_ctx, is_empty_field, flags | QUERY_FLAG_MATCH_CASE);
 }
 
-static void
+static GList *
 parse_field_nocase(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
                    FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     return parse_modifier(parser, parse_ctx, is_empty_field, flags & ~QUERY_FLAG_MATCH_CASE);
 }
 
-static void
+static GList *
 parse_field_regex(FsearchQueryParser *parser,
                   FsearchQueryParseContext *parse_ctx,
                   bool is_empty_field,
                   FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     return parse_modifier(parser, parse_ctx, is_empty_field, flags | QUERY_FLAG_REGEX);
 }
 
-static void
+static GList *
 parse_field_noregex(FsearchQueryParser *parser,
                     FsearchQueryParseContext *parse_ctx,
                     bool is_empty_field,
                     FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return;
+        return NULL;
     }
     return parse_modifier(parser, parse_ctx, is_empty_field, flags & ~QUERY_FLAG_REGEX);
 }
 
-static void
+static GList *
 parse_field_folder(FsearchQueryParser *parser,
                    FsearchQueryParseContext *parse_ctx,
                    bool is_empty_field,
@@ -1145,7 +1143,7 @@ parse_field_folder(FsearchQueryParser *parser,
     return parse_modifier(parser, parse_ctx, is_empty_field, flags | QUERY_FLAG_FOLDERS_ONLY);
 }
 
-static void
+static GList *
 parse_field_file(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool is_empty_field,
@@ -1153,8 +1151,9 @@ parse_field_file(FsearchQueryParser *parser,
     return parse_modifier(parser, parse_ctx, is_empty_field, flags | QUERY_FLAG_FILES_ONLY);
 }
 
-static bool
+static GList *
 parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQueryFlags flags) {
+    GList *res = NULL;
     for (uint32_t i = 0; i < parse_ctx->macro_filters->len; ++i) {
         FsearchFilter *filter = g_ptr_array_index(parse_ctx->macro_filters, i);
         if (strcmp(name->str, filter->macro) != 0) {
@@ -1162,11 +1161,11 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
         }
         if (g_queue_find(parse_ctx->macro_stack, filter)) {
             g_debug("[expand_filter_macros] nested macro detected. Stop parsing of macro.");
-            return true;
+            break;
         }
         if (fs_str_is_empty(filter->query)) {
             // We don't need to process an empty macro query
-            return true;
+            break;
         }
 
         if (filter->flags & QUERY_FLAG_SEARCH_IN_PATH) {
@@ -1183,46 +1182,42 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
         g_queue_push_tail(parse_ctx->macro_stack, filter);
         GQueue *main_operator_stack = parse_ctx->operator_stack;
         parse_ctx->operator_stack = g_queue_new();
-        parse_expression(macro_parser, parse_ctx, false, flags);
+        res = parse_expression(macro_parser, parse_ctx, false, flags);
         if (!g_queue_is_empty(parse_ctx->operator_stack)) {
             g_warning("[parse_macro] operator stack not empty after parsing!\n");
         }
-        g_queue_free_full(g_steal_pointer(&parse_ctx->operator_stack), (GDestroyNotify)fsearch_query_node_free);
+        g_clear_pointer(&parse_ctx->operator_stack, g_queue_free);
         parse_ctx->operator_stack = main_operator_stack;
         g_queue_pop_tail(parse_ctx->macro_stack);
 
         g_clear_pointer(&macro_parser, fsearch_query_parser_free);
 
-        return true;
+        break;
     }
-    return false;
+    return res;
 }
 
-static void
+static GList *
 parse_field(FsearchQueryParser *parser,
             FsearchQueryParseContext *parse_ctx,
             GString *field_name,
             bool is_empty_field,
             FsearchQueryFlags flags) {
     // g_debug("[field] detected: [%s:]", field_name->str);
-    if (!parse_filter_macros(parse_ctx, field_name, flags)) {
+    GList *res = parse_filter_macros(parse_ctx, field_name, flags);
+    if (!res) {
         for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
             if (!strcmp(supported_fields[i].name, field_name->str)) {
-                supported_fields[i].parser(parser, parse_ctx, is_empty_field, flags);
-                return;
+                return supported_fields[i].parser(parser, parse_ctx, is_empty_field, flags);
             }
         }
     }
+    return res;
 }
 
 static GNode *
 get_empty_node(FsearchQueryFlags flags) {
     return g_node_new(fsearch_query_node_new_match_everything(flags));
-}
-
-static GNode *
-get_operator_node(FsearchQueryNodeOperator operator) {
-    return g_node_new(fsearch_query_node_new_operator(operator));
 }
 
 static gboolean
@@ -1273,8 +1268,8 @@ get_operator_precedence(FsearchQueryToken operator) {
     }
 }
 
-static void
-append_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
+static FsearchQueryNode *
+get_operator_node(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
     FsearchQueryNodeOperator op = 0;
     switch (token) {
     case FSEARCH_QUERY_TOKEN_AND:
@@ -1287,13 +1282,12 @@ append_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
         op = FSEARCH_QUERY_NODE_OPERATOR_NOT;
         break;
     default:
-        return;
+        return NULL;
     }
-    g_ptr_array_add(parse_ctx->suffix_list, fsearch_query_node_new_operator(op));
-    return;
+    return fsearch_query_node_new_operator(op);
 }
 
-static void
+static GList *
 add_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryToken next_token) {
     switch (parse_ctx->last_token) {
     case FSEARCH_QUERY_TOKEN_WORD:
@@ -1302,7 +1296,7 @@ add_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryT
     case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
         break;
     default:
-        return;
+        return NULL;
     }
 
     switch (next_token) {
@@ -1311,22 +1305,25 @@ add_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryT
     case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
     case FSEARCH_QUERY_TOKEN_NOT:
     case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
-        handle_operator_token(parse_ctx, FSEARCH_QUERY_TOKEN_AND);
-        return;
+        return handle_operator_token(parse_ctx, FSEARCH_QUERY_TOKEN_AND);
     default:
-        g_assert_not_reached();
+        return NULL;
     }
 }
 
-static void
+static GList *
 handle_operator_token(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
     parse_ctx->last_token = token;
+    GList *res = NULL;
     while (!g_queue_is_empty(parse_ctx->operator_stack)
            && get_operator_precedence(token) <= get_operator_precedence(top_token(parse_ctx->operator_stack))) {
-        append_operator(parse_ctx, pop_token(parse_ctx->operator_stack));
+        FsearchQueryNode *op_node = get_operator_node(parse_ctx, pop_token(parse_ctx->operator_stack));
+        if (op_node) {
+            res = g_list_append(res, op_node);
+        }
     }
     push_token(parse_ctx->operator_stack, token);
-    return;
+    return res;
 }
 
 static bool
@@ -1342,18 +1339,21 @@ uneven_number_of_consecutive_not_tokens(FsearchQueryParser *parser, FsearchQuery
     return uneven_number_of_not_tokens;
 }
 
-static void
+static GList *
 handle_open_bracket_token(FsearchQueryParseContext *parse_ctx) {
-    add_implicit_and_if_necessary(parse_ctx, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
+    GList *res = add_implicit_and_if_necessary(parse_ctx, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
     parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_OPEN;
     push_token(parse_ctx->operator_stack, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
+    return res;
 }
 
-static void
+static GList *
 parse_expression(FsearchQueryParser *parser,
                  FsearchQueryParseContext *parse_ctx,
                  bool in_open_bracket,
                  FsearchQueryFlags flags) {
+    GList *res = NULL;
+
     uint32_t num_open_brackets = in_open_bracket ? 1 : 0;
     uint32_t num_close_brackets = 0;
 
@@ -1361,6 +1361,7 @@ parse_expression(FsearchQueryParser *parser,
         GString *token_value = NULL;
         FsearchQueryToken token = fsearch_query_parser_get_next_token(parser, &token_value);
 
+        GList *to_append = NULL;
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
             goto out;
@@ -1369,17 +1370,17 @@ parse_expression(FsearchQueryParser *parser,
                 // We want to support consecutive NOT operators (i.e. `NOT NOT a`)
                 // so even numbers of NOT operators get ignored and for uneven numbers
                 // we simply add a single one
-                add_implicit_and_if_necessary(parse_ctx, token);
-                handle_operator_token(parse_ctx, token);
+                // to_append = add_implicit_and_if_necessary(parse_ctx, token);
+                to_append = handle_operator_token(parse_ctx, token);
             }
             break;
         case FSEARCH_QUERY_TOKEN_AND:
         case FSEARCH_QUERY_TOKEN_OR:
-            handle_operator_token(parse_ctx, token);
+            to_append = handle_operator_token(parse_ctx, token);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
             num_open_brackets++;
-            handle_open_bracket_token(parse_ctx);
+            to_append = handle_open_bracket_token(parse_ctx);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
             if (num_open_brackets > num_close_brackets) {
@@ -1393,7 +1394,10 @@ parse_expression(FsearchQueryParser *parser,
                         g_warning("[infix-postfix] Matching open bracket not found!\n");
                         g_assert_not_reached();
                     }
-                    append_operator(parse_ctx, pop_token(parse_ctx->operator_stack));
+                    FsearchQueryNode *op_node = get_operator_node(parse_ctx, pop_token(parse_ctx->operator_stack));
+                    if (op_node) {
+                        to_append = g_list_append(to_append, op_node);
+                    }
                 }
                 if (top_token(parse_ctx->operator_stack) == FSEARCH_QUERY_TOKEN_BRACKET_OPEN) {
                     pop_token(parse_ctx->operator_stack);
@@ -1401,26 +1405,39 @@ parse_expression(FsearchQueryParser *parser,
                 parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_CLOSE;
                 num_close_brackets++;
                 if (in_open_bracket && num_close_brackets == num_open_brackets) {
-                    return;
+                    if (to_append) {
+                        return g_list_concat(res, to_append);
+                    }
+                    else {
+                        return res;
+                    }
                 }
             }
             else {
+                g_list_free_full(g_steal_pointer(&res), fsearch_query_node_free);
                 g_debug("[infix-postfix] closing bracket found without a corresponding open bracket, abort parsing!\n");
-                goto out;
+                return g_list_append(res, fsearch_query_node_new_match_nothing());
             }
             break;
         case FSEARCH_QUERY_TOKEN_WORD:
-            add_query_to_parse_context(parse_ctx, fsearch_query_node_new(token_value->str, flags), token);
+            to_append = g_list_append(to_append, fsearch_query_node_new(token_value->str, flags));
+            g_print("Token word: %s\n", to_append ? token_value->str : "empty");
             break;
         case FSEARCH_QUERY_TOKEN_FIELD:
-            parse_field(parser, parse_ctx, token_value, false, flags);
+            to_append = parse_field(parser, parse_ctx, token_value, false, flags);
             break;
         case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
-            parse_field(parser, parse_ctx, token_value, true, flags);
+            to_append = parse_field(parser, parse_ctx, token_value, true, flags);
             break;
         default:
             g_debug("[infix-postfix] ignoring unexpected token: %d", token);
             break;
+        }
+
+        if (to_append) {
+            res = g_list_concat(res, add_implicit_and_if_necessary(parse_ctx, token));
+            parse_ctx->last_token = token;
+            res = g_list_concat(res, to_append);
         }
 
         if (token_value) {
@@ -1430,25 +1447,29 @@ parse_expression(FsearchQueryParser *parser,
 
 out:
     while (!g_queue_is_empty(parse_ctx->operator_stack)) {
-        append_operator(parse_ctx, pop_token(parse_ctx->operator_stack));
+        FsearchQueryNode *op_node = get_operator_node(parse_ctx, pop_token(parse_ctx->operator_stack));
+        if (op_node) {
+            res = g_list_append(res, op_node);
+        }
     }
+    return res;
 }
 
 static GNode *
-build_query_tree(GPtrArray *postfix_query, FsearchQueryFlags flags) {
-    if (!postfix_query || !postfix_query->len) {
+build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
+    if (!postfix_query) {
         return get_empty_node(flags);
     }
 
     GQueue *query_stack = g_queue_new();
 
-    for (uint32_t i = 0; i < postfix_query->len; i++) {
-        FsearchQueryNode *node = g_ptr_array_index(postfix_query, i);
+    for (GList *n = postfix_query; n != NULL; n = n->next) {
+        FsearchQueryNode *node = n->data;
         if (!node) {
             g_assert_not_reached();
         }
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-            GNode *op_node = get_operator_node(node->operator);
+            GNode *op_node = g_node_new(fsearch_query_node_new_operator(node->operator));
             GNode *right = g_queue_pop_tail(query_stack);
             if (node->operator!= FSEARCH_QUERY_NODE_OPERATOR_NOT) {
                 GNode *left = g_queue_pop_tail(query_stack);
@@ -1468,6 +1489,46 @@ build_query_tree(GPtrArray *postfix_query, FsearchQueryFlags flags) {
 
     g_queue_free_full(g_steal_pointer(&query_stack), (GDestroyNotify)free_tree);
     return root;
+}
+
+static char *
+query_flags_to_string_expressive(FsearchQueryFlags flags) {
+    GString *flag_string = g_string_sized_new(10);
+    uint32_t num_flags = 0;
+    const char *sep = ", ";
+    if (flags & QUERY_FLAG_EXACT_MATCH) {
+        g_string_append_printf(flag_string, "%sExact Match", num_flags ? sep : "");
+        num_flags++;
+    }
+    if (flags & QUERY_FLAG_AUTO_MATCH_CASE) {
+        g_string_append_printf(flag_string, "%sAuto Match Case", num_flags ? sep : "");
+        num_flags++;
+    }
+    if (flags & QUERY_FLAG_MATCH_CASE) {
+        g_string_append_printf(flag_string, "%sMatch Case", num_flags ? sep : "");
+        num_flags++;
+    }
+    if (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH) {
+        g_string_append_printf(flag_string, "%sAuto Search in Path", num_flags ? sep : "");
+        num_flags++;
+    }
+    if (flags & QUERY_FLAG_SEARCH_IN_PATH) {
+        g_string_append_printf(flag_string, "%sSearch in Path", num_flags ? sep : "");
+        num_flags++;
+    }
+    if (flags & QUERY_FLAG_REGEX) {
+        g_string_append_printf(flag_string, "%sRegex", num_flags ? sep : "");
+        num_flags++;
+    }
+    if (flags & QUERY_FLAG_FOLDERS_ONLY) {
+        g_string_append_printf(flag_string, "%sFolders only", num_flags ? sep : "");
+        num_flags++;
+    }
+    if (flags & QUERY_FLAG_FILES_ONLY) {
+        g_string_append_printf(flag_string, "%sFiles only", num_flags ? sep : "");
+        num_flags++;
+    }
+    return g_string_free(flag_string, FALSE);
 }
 
 static char *
@@ -1522,44 +1583,47 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
 
     FsearchQueryParser *parser = fsearch_query_parser_new(src);
 
-    g_debug("[parser] input: %s\n", src);
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
     assert(parse_context != NULL);
-    parse_context->suffix_list = g_ptr_array_sized_new(16);
     parse_context->macro_filters = get_filters_with_macros(filters);
     parse_context->macro_stack = g_queue_new();
 
     parse_context->last_token = FSEARCH_QUERY_TOKEN_NONE;
     parse_context->operator_stack = g_queue_new();
-    parse_expression(parser, parse_context, false, flags);
+    GList *suffix_list = parse_expression(parser, parse_context, false, flags);
 
-    g_print("Postfix representation of query:\n");
-    g_print("================================\n");
-    for (uint32_t i = 0; i < parse_context->suffix_list->len; i++) {
-        FsearchQueryNode *node = g_ptr_array_index(parse_context->suffix_list, i);
-        if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-            g_print("%s ",
-                    node->operator== FSEARCH_QUERY_NODE_OPERATOR_AND ? "AND"
-                    : node->operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR"
-                                                                 : "NOT");
+    if (suffix_list) {
+        char esc = 27;
+        g_print("%c[1m[QueryParser]%c[0m\n", esc, esc);
+        g_print(" %c[1m* global_flags:%c[0m %s\n", esc, esc, query_flags_to_string_expressive(flags));
+        g_print(" %c[1m* input:%c[0m %s\n", esc, esc, src);
+        g_print(" %c[1m* output:%c[0m ", esc, esc);
+        for (GList *n = suffix_list; n != NULL; n = n->next) {
+            FsearchQueryNode *node = n->data;
+            if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
+                g_print("%s ",
+                        node->operator== FSEARCH_QUERY_NODE_OPERATOR_AND  ? "AND"
+                        : node->operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR"
+                                                                          : "NOT");
+            }
+            else {
+                char *flag_string = query_flags_to_string(node->flags);
+                g_print("[%s:'%s':%s] ",
+                        node->query_description ? node->query_description->str : "unknown query",
+                        node->needle ? node->needle : "",
+                        flag_string);
+                g_free(flag_string);
+            }
         }
-        else {
-            char *flag_string = query_flags_to_string(node->flags);
-            g_print("[%s:'%s':%s] ",
-                    node->query_description ? node->query_description->str : "unknown query",
-                    node->needle ? node->needle : "",
-                    flag_string);
-            g_free(flag_string);
-        }
+        g_print("\n");
     }
-    g_print("\n");
 
-    GNode *root = build_query_tree(parse_context->suffix_list, flags);
+    GNode *root = build_query_tree(suffix_list, flags);
 
+    g_clear_pointer(&suffix_list, g_list_free);
     g_clear_pointer(&parse_context->macro_stack, g_queue_free);
-    g_queue_free_full(g_steal_pointer(&parse_context->operator_stack), (GDestroyNotify)fsearch_query_node_free);
+    g_clear_pointer(&parse_context->operator_stack, g_queue_free);
     g_clear_pointer(&parse_context->macro_filters, g_ptr_array_unref);
-    g_clear_pointer(&parse_context->suffix_list, g_ptr_array_unref);
     g_clear_pointer(&parse_context, free);
     g_clear_pointer(&parser, fsearch_query_parser_free);
     return root;

@@ -137,9 +137,11 @@ main(int argc, char *argv[]) {
             {"a (b || c)", "b", 0, 0, false},
             {"a (b || c)", "c", 0, 0, false},
             {"a (b || c)", "bc", 0, 0, false},
-            {"a !b || c)", "ad", 0, 0, true},
-            {"a !b || c)", "c", 0, 0, true},
-            {"a !b || c)", "ac", 0, 0, true},
+            // Closing bracket without corresponding open bracket
+            //{"a)", "a", 0, 0, false},
+            {"a !b || c)", "ad", 0, 0, false},
+            {"a !b || c)", "c", 0, 0, false},
+            {"a !b || c)", "ac", 0, 0, false},
             {"a !b || c)", "ab", 0, 0, false},
             {"a !b || c)", "b", 0, 0, false},
 
