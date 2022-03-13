@@ -37,3 +37,6 @@ fs_str_case_is_ascii(const char *str);
 
 char *
 fs_str_convert_wildcard_to_regex_expression(const char *str);
+
+bool
+fs_str_starts_with_range(char *str, char **end_ptr);

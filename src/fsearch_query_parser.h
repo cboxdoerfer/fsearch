@@ -7,6 +7,7 @@
 #include <stdbool.h>
 
 typedef struct FsearchQueryParseContext {
+    FsearchQueryLexer *lexer;
     GPtrArray *macro_filters;
     GQueue *operator_stack;
     GQueue *macro_stack;
@@ -14,7 +15,4 @@ typedef struct FsearchQueryParseContext {
 } FsearchQueryParseContext;
 
 GList *
-fsearch_query_parser_parse_expression(FsearchQueryLexer *lexer,
-                                      FsearchQueryParseContext *parse_ctx,
-                                      bool in_open_bracket,
-                                      FsearchQueryFlags flags);
+fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool in_open_bracket, FsearchQueryFlags flags);

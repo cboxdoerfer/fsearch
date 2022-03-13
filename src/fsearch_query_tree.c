@@ -1,5 +1,5 @@
-#include "fsearch_query_node.h"
 #include "fsearch_query_tree.h"
+#include "fsearch_query_node.h"
 #include "fsearch_query_parser.h"
 #include "fsearch_string_utils.h"
 
@@ -12,14 +12,6 @@ free_tree(GNode *root) {
     g_clear_pointer(&root, g_node_destroy);
 }
 
-void
-fsearch_query_node_tree_free(GNode *node) {
-    if (!node) {
-        return;
-    }
-    g_clear_pointer(&node, free_tree);
-}
-
 static gboolean
 free_tree_node(GNode *node, gpointer data) {
     FsearchQueryNode *n = node->data;
@@ -28,14 +20,14 @@ free_tree_node(GNode *node, gpointer data) {
 }
 
 static GNode *
-get_empty_node(FsearchQueryFlags flags) {
+get_everything_matching_node(FsearchQueryFlags flags) {
     return g_node_new(fsearch_query_node_new_match_everything(flags));
 }
 
 static GNode *
-build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
+build_query_tree_from_suffix_list(GList *postfix_query, FsearchQueryFlags flags) {
     if (!postfix_query) {
-        return get_empty_node(flags);
+        return get_everything_matching_node(flags);
     }
 
     GQueue *query_stack = g_queue_new();
@@ -50,9 +42,9 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
             GNode *right = g_queue_pop_tail(query_stack);
             if (node->operator!= FSEARCH_QUERY_NODE_OPERATOR_NOT) {
                 GNode *left = g_queue_pop_tail(query_stack);
-                g_node_append(op_node, left ? left : get_empty_node(flags));
+                g_node_append(op_node, left ? left : get_everything_matching_node(flags));
             }
-            g_node_append(op_node, right ? right : get_empty_node(flags));
+            g_node_append(op_node, right ? right : get_everything_matching_node(flags));
             g_queue_push_tail(query_stack, op_node);
         }
         else {
@@ -61,7 +53,7 @@ build_query_tree(GList *postfix_query, FsearchQueryFlags flags) {
     }
     GNode *root = g_queue_pop_tail(query_stack);
     if (!g_queue_is_empty(query_stack)) {
-        g_critical("[builder_tree] query stack still has nodes left!!");
+        g_critical("[get_query_tree] query stack still has nodes left!!");
     }
 
     g_queue_free_full(g_steal_pointer(&query_stack), (GDestroyNotify)free_tree);
@@ -155,19 +147,18 @@ get_filters_with_macros(FsearchFilterManager *manager) {
 }
 
 static GNode *
-get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flags) {
+get_query_tree(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flags) {
     g_assert(src != NULL);
-
-    FsearchQueryLexer *lexer = fsearch_query_lexer_new(src);
 
     FsearchQueryParseContext *parse_context = calloc(1, sizeof(FsearchQueryParseContext));
     g_assert(parse_context != NULL);
+    parse_context->lexer = fsearch_query_lexer_new(src);
     parse_context->macro_filters = get_filters_with_macros(filters);
     parse_context->macro_stack = g_queue_new();
 
     parse_context->last_token = FSEARCH_QUERY_TOKEN_NONE;
     parse_context->operator_stack = g_queue_new();
-    GList *suffix_list = fsearch_query_parser_parse_expression(lexer, parse_context, false, flags);
+    GList *suffix_list = fsearch_query_parser_parse_expression(parse_context, false, flags);
 
     if (suffix_list) {
         char esc = 27;
@@ -195,14 +186,14 @@ get_nodes(const char *src, FsearchFilterManager *filters, FsearchQueryFlags flag
         g_print("\n");
     }
 
-    GNode *root = build_query_tree(suffix_list, flags);
+    GNode *root = build_query_tree_from_suffix_list(suffix_list, flags);
 
     g_clear_pointer(&suffix_list, g_list_free);
+    g_clear_pointer(&parse_context->lexer, fsearch_query_lexer_free);
     g_clear_pointer(&parse_context->macro_stack, g_queue_free);
     g_clear_pointer(&parse_context->operator_stack, g_queue_free);
     g_clear_pointer(&parse_context->macro_filters, g_ptr_array_unref);
     g_clear_pointer(&parse_context, free);
-    g_clear_pointer(&lexer, fsearch_query_lexer_free);
     return root;
 }
 
@@ -217,8 +208,16 @@ fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filte
         res = g_node_new(fsearch_query_node_new(query_stripped, flags));
     }
     else {
-        res = get_nodes(query_stripped, filters, flags);
+        res = get_query_tree(query_stripped, filters, flags);
     }
     g_clear_pointer(&query, free);
     return res;
+}
+
+void
+fsearch_query_node_tree_free(GNode *node) {
+    if (!node) {
+        return;
+    }
+    g_clear_pointer(&node, free_tree);
 }

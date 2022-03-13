@@ -143,3 +143,16 @@ fs_str_convert_wildcard_to_regex_expression(const char *str) {
 
     return g_string_free(regex_epxression, FALSE);
 }
+
+bool
+fs_str_starts_with_range(char *str, char **end_ptr) {
+    if (g_str_has_prefix(str, "..")) {
+        *end_ptr = str + 2;
+        return true;
+    }
+    else if (g_str_has_prefix(str, "-")) {
+        *end_ptr = str + 1;
+        return true;
+    }
+    return false;
+}
