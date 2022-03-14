@@ -47,7 +47,6 @@ struct _FsearchApplication {
     FsearchThreadPool *pool;
 
     GThreadPool *db_pool;
-    GList *filters;
 
     char *option_search_term;
     bool new_window;
@@ -492,10 +491,6 @@ fsearch_application_shutdown(GApplication *app) {
 
     g_clear_pointer(&fsearch->option_search_term, g_free);
 
-    if (fsearch->filters) {
-        g_list_free_full(g_steal_pointer(&fsearch->filters), (GDestroyNotify)fsearch_filter_unref);
-    }
-
     config_save(fsearch->config);
     g_clear_pointer(&fsearch->config, config_free);
 
@@ -569,7 +564,6 @@ fsearch_application_startup(GApplication *app) {
     }
     fsearch->db = NULL;
     fsearch->db_state = FSEARCH_DATABASE_STATE_IDLE;
-    fsearch->filters = fsearch_filter_get_default();
 
     fsearch->file_manager_watch_id = g_bus_watch_name(G_BUS_TYPE_SESSION,
                                                       "org.freedesktop.FileManager1",
@@ -920,12 +914,6 @@ void
 fsearch_application_state_unlock(FsearchApplication *fsearch) {
     g_assert(FSEARCH_IS_APPLICATION(fsearch));
     g_mutex_unlock(&fsearch->mutex);
-}
-
-GList *
-fsearch_application_get_filters(FsearchApplication *fsearch) {
-    g_assert(FSEARCH_IS_APPLICATION(fsearch));
-    return fsearch->filters;
 }
 
 FsearchDatabaseState
