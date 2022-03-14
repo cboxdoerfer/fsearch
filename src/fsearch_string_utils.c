@@ -117,6 +117,7 @@ fs_str_convert_wildcard_to_regex_expression(const char *str) {
         case '[':
         case ']':
         case '{':
+        case '}':
         case '\\':
         case '|':
             g_string_append_c(regex_epxression, '\\');
