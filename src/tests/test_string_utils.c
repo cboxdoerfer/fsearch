@@ -167,6 +167,36 @@ test_str_icase_is_ascii(void) {
     }
 }
 
+void
+test_str_wildcard_to_regex(void) {
+    typedef struct {
+        const char *wildcard_expression;
+        const char *expected_regex_expression;
+    } FsearchTestWildcardToRegexContext;
+
+    FsearchTestWildcardToRegexContext strings[] = {
+        {"", "^$"},
+        {"abc", "^abc$"},
+        {"?bc", "^.bc$"},
+        {"ab?", "^ab.$"},
+        {"ab.", "^ab\\.$"},
+        {"abc*", "^abc.*$"},
+        {"*abc*", "^.*abc.*$"},
+        {"(abc)", "^\\(abc\\)$"},
+        {"[abc]", "^\\[abc\\]$"},
+        {"{abc}", "^\\{abc\\}$"},
+        {"^abc$", "^\\^abc\\$$"},
+        {"+abc.", "^\\+abc\\.$"},
+        {"|abc|", "^\\|abc\\|$"},
+    };
+
+    for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
+        FsearchTestWildcardToRegexContext *ctx = &strings[i];
+        g_autofree char *regex = fs_str_convert_wildcard_to_regex_expression(ctx->wildcard_expression);
+        g_assert_cmpstr(regex, ==, ctx->expected_regex_expression);
+    }
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
@@ -175,5 +205,6 @@ main(int argc, char *argv[]) {
     g_test_add_func("/FSearch/string_utils/has_upper", test_str_has_upper);
     g_test_add_func("/FSearch/string_utils/has_upper_utf8", test_str_utf8_has_upper);
     g_test_add_func("/FSearch/string_utils/is_ascii_icase", test_str_icase_is_ascii);
+    g_test_add_func("/FSearch/string_utils/convert_wildcard_to_regex", test_str_wildcard_to_regex);
     return g_test_run();
 }
