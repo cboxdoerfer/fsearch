@@ -27,16 +27,24 @@ bool
 fs_str_has_upper(const char *str);
 
 const char *
-fs_str_get_extension(const char *file_name);
+fs_str_get_extension(const char *str);
 
 bool
 fs_str_utf8_has_upper(const char *str);
 
+// Detect if str is pure ascii characters in both its lower and upper case form.
 bool
 fs_str_case_is_ascii(const char *str);
 
+// Converts a wildcard expression to a regular expression, i.e.
+// `*` becomes `.*`
+// `?` becomes `.`
+// and properly escapes other valid regular expression tokens
 char *
 fs_str_convert_wildcard_to_regex_expression(const char *str);
 
+// Detect if str starts with a range identifier (i.e. `..` or `-`).
+// At success end_ptr will point to the first character after the range.
+// If no range was detected end_ptr will point to str.
 bool
 fs_str_starts_with_range(char *str, char **end_ptr);

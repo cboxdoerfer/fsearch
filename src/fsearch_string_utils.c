@@ -88,9 +88,9 @@ fs_str_has_upper(const char *str) {
 }
 
 const char *
-fs_str_get_extension(const char *file_name) {
-    const char *ext = strrchr(file_name, '.');
-    if (!ext || ext == file_name || ext[1] == '\0') {
+fs_str_get_extension(const char *str) {
+    const char *ext = strrchr(str, '.');
+    if (!ext || ext == str || ext[1] == '\0') {
         // filename has no dot
         // OR filename starts with dot (i.e. hidden file)
         // OR filename ends with dot
@@ -152,5 +152,6 @@ fs_str_starts_with_range(char *str, char **end_ptr) {
         *end_ptr = str + 1;
         return true;
     }
+    *end_ptr = str;
     return false;
 }
