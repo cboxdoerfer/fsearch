@@ -67,6 +67,41 @@ test_str_is_empty(void) {
 }
 
 void
+test_str_utf8_has_upper(void) {
+    set_locale("en_US.UTF-8");
+
+    typedef struct {
+        const char *string;
+        gboolean string_has_upper;
+    } FsearchTestHasUpperContext;
+
+    FsearchTestHasUpperContext strings[] = {
+        {"has_no_upper_character", FALSE},
+        {"  ", FALSE},
+        {"123abc", FALSE},
+        {"", FALSE},
+        {"ä", FALSE},
+        {"ı", FALSE},
+        {"Ä", TRUE},
+        {"İ", TRUE},
+        {"ABC", TRUE},
+        {"aBc", TRUE},
+        {"  B  ", TRUE},
+        {"  B", TRUE},
+        {"A   ", TRUE},
+    };
+
+    for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
+        FsearchTestHasUpperContext *ctx = &strings[i];
+        const gboolean has_upper = fs_str_utf8_has_upper(ctx->string);
+        if (has_upper != ctx->string_has_upper) {
+            g_print("Expected '%s' to%s have upper case characters!\n", ctx->string, has_upper ? "" : " not");
+        }
+        g_assert_true(has_upper == ctx->string_has_upper);
+    }
+}
+
+void
 test_str_has_upper(void) {
     set_locale("en_US.UTF-8");
 
@@ -107,5 +142,6 @@ main(int argc, char *argv[]) {
     g_test_add_func("/FSearch/string_utils/get_extension", test_str_get_extension);
     g_test_add_func("/FSearch/string_utils/is_empty", test_str_is_empty);
     g_test_add_func("/FSearch/string_utils/has_upper", test_str_has_upper);
+    g_test_add_func("/FSearch/string_utils/has_upper_utf8", test_str_utf8_has_upper);
     return g_test_run();
 }
