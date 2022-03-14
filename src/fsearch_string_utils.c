@@ -39,7 +39,7 @@ fs_str_is_empty(const char *str) {
 }
 
 bool
-fs_str_case_is_ascii(const char *str) {
+fs_str_icase_is_ascii(const char *str) {
     g_assert(str);
     const gssize str_len = (gssize)strlen(str);
     if (str_len == 0) {

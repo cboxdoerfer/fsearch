@@ -221,7 +221,7 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
 
     qnode->highlight_func = NULL;
     qnode->flags = flags;
-    if (fs_str_case_is_ascii(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
+    if (fs_str_icase_is_ascii(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
         qnode->search_func = fsearch_query_matcher_func_parent_ascii;
         qnode->description = g_string_new("parent_ascii");
     }
@@ -315,7 +315,7 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     qnode->flags = flags;
     node_init_needle(qnode, search_term);
 
-    if (fs_str_case_is_ascii(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
+    if (fs_str_icase_is_ascii(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
         qnode->search_func = fsearch_query_matcher_func_ascii;
         qnode->highlight_func = fsearch_query_matcher_highlight_func_ascii;
         qnode->description = g_string_new("ascii_icase");

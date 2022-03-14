@@ -136,6 +136,37 @@ test_str_has_upper(void) {
     }
 }
 
+void
+test_str_icase_is_ascii(void) {
+    set_locale("en_US.UTF-8");
+
+    typedef struct {
+        const char *string;
+        gboolean is_ascii;
+    } FsearchTestIsAsciiContext;
+
+    FsearchTestIsAsciiContext strings[] = {
+        {"is_ascii_string", TRUE},
+        {"IS_ALSO_ASCII_STRING", TRUE},
+        {"  ", TRUE},
+        {"123abc", TRUE},
+        {"", TRUE},
+        {"aäA", FALSE}, // non-ascii
+        {"aÄA", FALSE}, // non-ascii
+        {"iıI", FALSE}, // non-ascii
+        {"iİI", FALSE}, // non-ascii
+    };
+
+    for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
+        FsearchTestIsAsciiContext *ctx = &strings[i];
+        const gboolean is_ascii = fs_str_icase_is_ascii(ctx->string);
+        if (is_ascii != ctx->is_ascii) {
+            g_print("Expected '%s' to be an %s string!\n", ctx->string, is_ascii ? "ascii" : "non-ascii");
+        }
+        g_assert_true(is_ascii == ctx->is_ascii);
+    }
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
@@ -143,5 +174,6 @@ main(int argc, char *argv[]) {
     g_test_add_func("/FSearch/string_utils/is_empty", test_str_is_empty);
     g_test_add_func("/FSearch/string_utils/has_upper", test_str_has_upper);
     g_test_add_func("/FSearch/string_utils/has_upper_utf8", test_str_utf8_has_upper);
+    g_test_add_func("/FSearch/string_utils/is_ascii_icase", test_str_icase_is_ascii);
     return g_test_run();
 }

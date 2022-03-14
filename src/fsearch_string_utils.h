@@ -34,7 +34,7 @@ fs_str_utf8_has_upper(const char *str);
 
 // Detect if str is pure ascii characters in both its lower and upper case form.
 bool
-fs_str_case_is_ascii(const char *str);
+fs_str_icase_is_ascii(const char *str);
 
 // Converts a wildcard expression to a regular expression, i.e.
 // `*` becomes `.*`
