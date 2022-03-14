@@ -197,6 +197,37 @@ test_str_wildcard_to_regex(void) {
     }
 }
 
+void
+test_str_starts_with_range(void) {
+    typedef struct {
+        const char *string;
+        gboolean starts_with_range;
+        int end_idx;
+    } FsearchTestStartsWithRangeContext;
+
+    FsearchTestStartsWithRangeContext strings[] = {
+        {"does_not_start_with_range", FALSE, 0},
+        {".does_not_start_with_range", FALSE, 0},
+        {"does-not-start-with-range-", FALSE, 0},
+        {"does..not..start..with..range..", FALSE, 0},
+        {"-does-start-with-range", TRUE, 1},
+        {"--does-start-with-range", TRUE, 1},
+        {"..does..start..with..range", TRUE, 2},
+        {"....does..start..with..range", TRUE, 2},
+    };
+
+    for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
+        FsearchTestStartsWithRangeContext *ctx = &strings[i];
+        char *end_ptr = NULL;
+        const gboolean starts_with_range = fs_str_starts_with_range((char *)ctx->string, &end_ptr);
+        if (starts_with_range != ctx->starts_with_range) {
+            g_print("Expected '%s' to%s start with a range!\n", ctx->string, starts_with_range ? "" : " not");
+        }
+        g_assert_true(starts_with_range == ctx->starts_with_range);
+        g_assert_cmpstr(end_ptr, ==, ctx->string + ctx->end_idx);
+    }
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
@@ -206,5 +237,6 @@ main(int argc, char *argv[]) {
     g_test_add_func("/FSearch/string_utils/has_upper_utf8", test_str_utf8_has_upper);
     g_test_add_func("/FSearch/string_utils/is_ascii_icase", test_str_icase_is_ascii);
     g_test_add_func("/FSearch/string_utils/convert_wildcard_to_regex", test_str_wildcard_to_regex);
+    g_test_add_func("/FSearch/string_utils/starts_with_range", test_str_starts_with_range);
     return g_test_run();
 }
