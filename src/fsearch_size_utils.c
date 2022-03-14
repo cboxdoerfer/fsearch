@@ -10,6 +10,9 @@ fsearch_size_parse(const char *str, int64_t *size_out, int64_t *plus_out, char *
     char *size_suffix = NULL;
     int64_t size = strtoll(str, &size_suffix, 10);
     if (size_suffix == str) {
+        if (end_ptr) {
+            *end_ptr = (char *)str;
+        }
         return false;
     }
     int64_t plus = 0;
