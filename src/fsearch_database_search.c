@@ -324,16 +324,17 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
 
     const uint32_t num_folders = folders_in ? darray_get_num_items(folders_in) : 0;
     folders_res = num_folders > 0 ? db_search_entries(q, cancellable, folders_in, db_search_worker) : NULL;
-    g_clear_pointer(&folders_in, darray_unref);
     if (g_cancellable_is_cancelled(cancellable)) {
         goto search_was_cancelled;
     }
     const uint32_t num_files = files_in ? darray_get_num_items(files_in) : 0;
     files_res = num_files > 0 ? db_search_entries(q, cancellable, files_in, db_search_worker) : NULL;
-    g_clear_pointer(&files_in, darray_unref);
     if (g_cancellable_is_cancelled(cancellable)) {
         goto search_was_cancelled;
     }
+
+    g_clear_pointer(&folders_in, darray_unref);
+    g_clear_pointer(&files_in, darray_unref);
 
     DatabaseSearchResult *result = db_search_result_new();
     result->files = files_res;
@@ -345,6 +346,9 @@ db_search(FsearchQuery *q, GCancellable *cancellable) {
     return result;
 
 search_was_cancelled:
+    g_clear_pointer(&folders_in, darray_unref);
+    g_clear_pointer(&files_in, darray_unref);
+
     g_clear_pointer(&folders_res, darray_unref);
     g_clear_pointer(&files_res, darray_unref);
 
