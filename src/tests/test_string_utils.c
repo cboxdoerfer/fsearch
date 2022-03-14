@@ -68,7 +68,9 @@ test_str_is_empty(void) {
 
 void
 test_str_utf8_has_upper(void) {
-    set_locale("en_US.UTF-8");
+    if (!set_locale("en_US.UTF-8")) {
+        return;
+    }
 
     typedef struct {
         const char *string;
@@ -103,7 +105,9 @@ test_str_utf8_has_upper(void) {
 
 void
 test_str_has_upper(void) {
-    set_locale("en_US.UTF-8");
+    if (!set_locale("en_US.UTF-8")) {
+        return;
+    }
 
     typedef struct {
         const char *string;
@@ -138,7 +142,9 @@ test_str_has_upper(void) {
 
 void
 test_str_icase_is_ascii(void) {
-    set_locale("en_US.UTF-8");
+    if (!set_locale("en_US.UTF-8")) {
+        return;
+    }
 
     typedef struct {
         const char *string;
