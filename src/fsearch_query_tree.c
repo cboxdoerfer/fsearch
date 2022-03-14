@@ -1,3 +1,5 @@
+#define G_LOG_DOMAIN "fsearch-query-tree"
+
 #include "fsearch_query_tree.h"
 #include "fsearch_query_node.h"
 #include "fsearch_query_parser.h"
@@ -150,26 +152,27 @@ print_parser_result(const char *input, FsearchQueryFlags flags, GList *result) {
     if (!result) {
         return;
     }
-    char esc = 27;
-    g_print("%c[1m[QueryParser]%c[0m\n", esc, esc);
-    g_print(" %c[1m* global_flags:%c[0m %s\n", esc, esc, query_flags_to_string_expressive(flags));
-    g_print(" %c[1m* input:%c[0m %s\n", esc, esc, input);
-    g_print(" %c[1m* output:%c[0m ", esc, esc);
+    g_debug("[QueryParser]");
+    g_debug(" * global_flags: %s", query_flags_to_string_expressive(flags));
+    g_debug(" * input: %s", input);
+    g_autoptr(GString) result_str = g_string_new(" * output: ");
     for (GList *n = result; n != NULL; n = n->next) {
         FsearchQueryNode *node = n->data;
         g_assert(node);
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-            g_print("%s ", node->description->str);
+            g_string_append(result_str, node->description->str);
+            g_string_append_c(result_str, ' ');
         }
         else {
             g_autofree char *flag_string = query_flags_to_string(node->flags);
-            g_print("[%s:'%s':%s] ",
-                    node->description ? node->description->str : "unknown query",
-                    node->needle ? node->needle : "",
-                    flag_string);
+            g_string_append_printf(result_str,
+                                   "[%s:'%s':%s] ",
+                                   node->description ? node->description->str : "unknown query",
+                                   node->needle ? node->needle : "",
+                                   flag_string);
         }
     }
-    g_print("\n");
+    g_debug("%s", result_str->str);
 }
 
 static GNode *
