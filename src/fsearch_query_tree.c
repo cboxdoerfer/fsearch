@@ -39,7 +39,7 @@ build_query_tree_from_suffix_list(GList *postfix_query, FsearchQueryFlags flags)
         g_assert(node);
 
         if (node->type == FSEARCH_QUERY_NODE_TYPE_OPERATOR) {
-            GNode *op_node = g_node_new(fsearch_query_node_new_operator(node->operator));
+            GNode *op_node = g_node_new(node);
             GNode *right = g_queue_pop_tail(query_stack);
             if (node->operator!= FSEARCH_QUERY_NODE_OPERATOR_NOT) {
                 GNode *left = g_queue_pop_tail(query_stack);
