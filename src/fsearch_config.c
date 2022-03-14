@@ -450,6 +450,8 @@ config_save_filters(GKeyFile *key_file, FsearchFilterManager *filters) {
 
         snprintf(key, sizeof(key), "filter_%d_enable_regex", pos);
         g_key_file_set_boolean(key_file, "Filters", key, filter->flags & QUERY_FLAG_REGEX ? true : false);
+
+        g_clear_pointer(&filter, fsearch_filter_unref);
     }
 }
 

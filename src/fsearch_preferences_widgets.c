@@ -152,6 +152,7 @@ pref_filter_treeview_update(GtkTreeModel *filter_model, FsearchFilterManager *fi
     for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(filters); ++i) {
         FsearchFilter *filter = fsearch_filter_manager_get_filter(filters, i);
         pref_filter_treeview_row_add(filter_model, filter);
+        g_clear_pointer(&filter, fsearch_filter_unref);
     }
 }
 

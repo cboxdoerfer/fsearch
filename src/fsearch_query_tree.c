@@ -142,6 +142,7 @@ get_filters_with_macros(FsearchFilterManager *manager) {
             if (filter && filter->macro && !fs_str_is_empty(filter->macro)) {
                 g_ptr_array_add(macros, fsearch_filter_ref(filter));
             }
+            g_clear_pointer(&filter, fsearch_filter_unref);
         }
     }
     return macros;
