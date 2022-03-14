@@ -60,7 +60,9 @@ parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_o
     if (time_end_out) {
         *time_end_out = time_end_res;
     }
-    *end_ptr = (char *)(str + prefix_len);
+    if (end_ptr) {
+        *end_ptr = (char *)(str + prefix_len);
+    }
     return true;
 }
 
@@ -134,6 +136,9 @@ fsearch_time_parse_range(const char *str, time_t *time_start_out, time_t *time_e
             *end_ptr = date_suffix;
         }
         return true;
+    }
+    if (end_ptr) {
+        *end_ptr = (char *)str;
     }
     return false;
 }
