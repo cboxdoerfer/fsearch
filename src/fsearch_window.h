@@ -65,7 +65,7 @@ void
 fsearch_application_window_remove_model(FsearchApplicationWindow *self);
 
 void
-fsearch_application_window_set_database_index_text(FsearchApplicationWindow *self, const char *text);
+fsearch_application_window_set_database_index_progress(FsearchApplicationWindow *self, const char *text);
 
 uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self);

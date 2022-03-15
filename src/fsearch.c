@@ -84,7 +84,7 @@ static guint fsearch_signals[NUM_SIGNALS];
 G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
 static FsearchDatabase *
-database_update(FsearchApplication *app, bool rescan);
+database_load_or_scan(FsearchApplication *app, bool rescan);
 
 static void
 action_set_enabled(const char *action_name, gboolean enabled);
@@ -119,7 +119,7 @@ database_auto_update_init(FsearchApplication *fsearch) {
 }
 
 static gboolean
-on_database_update_status(gpointer user_data) {
+on_database_notify_status(gpointer user_data) {
     g_autofree char *text = user_data;
     g_return_val_if_fail(text, G_SOURCE_REMOVE);
 
@@ -129,7 +129,7 @@ on_database_update_status(gpointer user_data) {
     for (; windows; windows = windows->next) {
         GtkWindow *window = windows->data;
         if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
-            fsearch_application_window_set_database_index_text((FsearchApplicationWindow *)window, text);
+            fsearch_application_window_set_database_index_progress((FsearchApplicationWindow *)window, text);
         }
     }
 
@@ -137,9 +137,9 @@ on_database_update_status(gpointer user_data) {
 }
 
 static void
-database_update_status_cb(const char *text) {
+database_notify_status_cb(const char *text) {
     if (text) {
-        g_idle_add(on_database_update_status, g_strdup(text));
+        g_idle_add(on_database_notify_status, g_strdup(text));
     }
 }
 
@@ -221,7 +221,7 @@ database_scan_started_cb(gpointer user_data) {
 }
 
 static void
-database_update_add(bool scan) {
+database_scan_or_load_enqueue(bool scan) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     action_set_enabled("update_database", FALSE);
     action_set_enabled("cancel_update_database", TRUE);
@@ -246,20 +246,20 @@ database_update_add(bool scan) {
 }
 
 static gboolean
-on_database_scan_add(gpointer data) {
-    database_update_add(true);
+on_database_scan_enqueue(gpointer data) {
+    database_scan_or_load_enqueue(true);
     return G_SOURCE_REMOVE;
 }
 
 static void
-database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
+database_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
     const bool scan_successful =
-        db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_update_status_cb : NULL);
+        db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_notify_status_cb : NULL);
     if (scan_successful && !g_cancellable_is_cancelled(app->db_thread_cancellable)) {
         g_autofree gchar *db_path = fsearch_application_get_database_dir();
         if (db_path) {
             if (app->config->show_indexing_status) {
-                database_update_status_cb(_("Saving…"));
+                database_notify_status_cb(_("Saving…"));
             }
             db_save(db, db_path);
         }
@@ -267,7 +267,7 @@ database_update_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
 }
 
 static FsearchDatabase *
-database_update(FsearchApplication *app, bool rescan) {
+database_load_or_scan(FsearchApplication *app, bool rescan) {
     g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
@@ -279,15 +279,15 @@ database_update(FsearchApplication *app, bool rescan) {
     fsearch_application_state_unlock(app);
 
     if (rescan) {
-        database_update_scan_and_save(app, db);
+        database_scan_and_save(app, db);
     }
     else {
         g_autofree char *db_file_path = fsearch_application_get_database_file_path();
         if (db_file_path) {
-            if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_update_status_cb : NULL)
+            if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_notify_status_cb : NULL)
                 && !app->config->update_database_on_launch) {
                 // load failed -> trigger rescan
-                g_idle_add(on_database_scan_add, NULL);
+                g_idle_add(on_database_scan_enqueue, NULL);
             }
         }
     }
@@ -310,7 +310,7 @@ database_pool_func(gpointer data, gpointer user_data) {
         ctx->started_cb(ctx->started_cb_data);
     }
 
-    FsearchDatabase *db = database_update(app, ctx->rescan);
+    FsearchDatabase *db = database_load_or_scan(app, ctx->rescan);
 
     if (ctx->finished_cb) {
         ctx->finished_cb(db);
@@ -397,7 +397,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
     database_auto_update_init(app);
 
     if (config_diff.database_config_changed) {
-        database_update_add(true);
+        database_scan_or_load_enqueue(true);
     }
 
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
@@ -437,7 +437,7 @@ action_cancel_update_database_activated(GSimpleAction *action, GVariant *paramet
 
 static void
 action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
-    database_update_add(true);
+    database_scan_or_load_enqueue(true);
 }
 
 static void
@@ -640,9 +640,9 @@ fsearch_application_activate(GApplication *app) {
     database_auto_update_init(self);
 
     g_cancellable_reset(self->db_thread_cancellable);
-    database_update_add(false);
+    database_scan_or_load_enqueue(false);
     if (self->config->update_database_on_launch) {
-        database_update_add(true);
+        database_scan_or_load_enqueue(true);
     }
 }
 
@@ -746,7 +746,7 @@ on_name_lost(GDBusConnection *connection, const gchar *name, gpointer user_data)
 }
 
 static int
-database_update_in_local_instance() {
+database_scan_in_local_instance() {
     FsearchConfig *config = calloc(1, sizeof(FsearchConfig));
     g_assert(config);
 
@@ -789,7 +789,7 @@ database_update_in_local_instance() {
 }
 
 static int
-fsearch_application_local_database_update() {
+fsearch_application_local_database_scan() {
     // First detect if the another instance of fsearch is already registered
     // If yes, trigger update there, so the UI is aware of the update and can display its progress
     FsearchApplicationDatabaseWorker worker_ctx = {};
@@ -811,14 +811,14 @@ fsearch_application_local_database_update() {
     }
     else {
         // no primary instance found, perform update
-        return database_update_in_local_instance();
+        return database_scan_in_local_instance();
     }
 }
 
 static gint
 fsearch_application_handle_local_options(GApplication *application, GVariantDict *options) {
     if (g_variant_dict_contains(options, "update-database")) {
-        return fsearch_application_local_database_update();
+        return fsearch_application_local_database_scan();
     }
     if (g_variant_dict_contains(options, "version")) {
         g_print("FSearch %s\n", PACKAGE_VERSION);
