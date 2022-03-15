@@ -66,8 +66,9 @@ typedef struct {
     FsearchQueryMatchData *match_data;
     PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
 
-    cairo_surface_t *icon_surface;
+    FsearchDatabaseEntryType entry_type;
 
+    GString *name;
     GString *path;
     GString *full_path;
     char *size;
@@ -76,8 +77,35 @@ typedef struct {
     char time[100];
 } DrawRowContext;
 
-static bool
-draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window, int32_t icon_size, DrawRowContext *ctx) {
+static void
+draw_row_ctx_free(DrawRowContext *ctx) {
+    g_clear_pointer(&ctx->match_data, fsearch_query_match_data_free);
+    g_clear_pointer(&ctx->display_name, g_free);
+    g_clear_pointer(&ctx->extension, g_free);
+    g_clear_pointer(&ctx->type, g_free);
+    g_clear_pointer(&ctx->size, g_free);
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        if (ctx->highlights[i]) {
+            g_clear_pointer(&ctx->highlights[i], pango_attr_list_unref);
+        }
+    }
+    if (ctx->name) {
+        g_string_free(g_steal_pointer(&ctx->name), TRUE);
+    }
+    if (ctx->path) {
+        g_string_free(g_steal_pointer(&ctx->path), TRUE);
+    }
+    if (ctx->full_path) {
+        g_string_free(g_steal_pointer(&ctx->full_path), TRUE);
+    }
+    g_clear_pointer(&ctx, free);
+}
+
+static DrawRowContext *
+draw_row_ctx_new(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window, int32_t icon_size) {
+    DrawRowContext *ctx = calloc(1, sizeof(DrawRowContext));
+    g_assert(ctx);
+
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     bool ret = true;
@@ -92,13 +120,13 @@ draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window
         goto out;
     }
 
-    name = db_view_entry_get_name_for_idx(view, row);
-    if (!name) {
+    ctx->name = db_view_entry_get_name_for_idx(view, row);
+    if (!ctx->name) {
         g_debug("[draw_row] failed to get entry name");
         ret = false;
         goto out;
     }
-    ctx->display_name = g_filename_display_name(name->str);
+    ctx->display_name = g_filename_display_name(ctx->name->str);
 
     ctx->extension = db_view_entry_get_extension_for_idx(view, row);
 
@@ -117,16 +145,9 @@ draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window
 
     ctx->full_path = db_view_entry_get_path_full_for_idx(view, row);
 
-    FsearchDatabaseEntryType type = db_view_entry_get_type_for_idx(view, row);
-    ctx->type = fsearch_file_utils_get_file_type(name->str, type == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
-
-    ctx->icon_surface = config->show_listview_icons ? get_icon_surface(bin_window,
-                                                                       name->str,
-                                                                       ctx->full_path->str,
-                                                                       type,
-                                                                       icon_size,
-                                                                       gdk_window_get_scale_factor(bin_window))
-                                                    : NULL;
+    ctx->entry_type = db_view_entry_get_type_for_idx(view, row);
+    ctx->type = fsearch_file_utils_get_file_type(ctx->name->str,
+                                                 ctx->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
 
     off_t size = db_view_entry_get_size_for_idx(view, row);
     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
@@ -139,28 +160,33 @@ draw_row_ctx_init(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window
 
 out:
     db_view_unlock(view);
-    return ret;
+    if (ret) {
+        return ctx;
+    }
+    g_clear_pointer(&ctx, draw_row_ctx_free);
+    return NULL;
 }
 
-static void
-draw_row_ctx_destroy(DrawRowContext *ctx) {
-    g_clear_pointer(&ctx->match_data, fsearch_query_match_data_free);
-    g_clear_pointer(&ctx->display_name, g_free);
-    g_clear_pointer(&ctx->extension, g_free);
-    g_clear_pointer(&ctx->type, g_free);
-    g_clear_pointer(&ctx->size, g_free);
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
-        if (ctx->highlights[i]) {
-            g_clear_pointer(&ctx->highlights[i], pango_attr_list_unref);
-        }
+static DrawRowContext *
+draw_row_ctx_get(FsearchResultView *result_view, uint32_t row, GdkWindow *bin_window, int32_t icon_size) {
+    g_return_val_if_fail(result_view, NULL);
+
+    if (g_hash_table_size(result_view->row_cache) > 100) {
+        fsearch_result_view_row_cache_reset(result_view);
     }
-    g_clear_pointer(&ctx->icon_surface, cairo_surface_destroy);
-    if (ctx->path) {
-        g_string_free(g_steal_pointer(&ctx->path), TRUE);
+
+    DrawRowContext *ctx = g_hash_table_lookup(result_view->row_cache, GINT_TO_POINTER(row + 1));
+    if (ctx) {
+        static int x = 0;
+        return ctx;
     }
-    if (ctx->full_path) {
-        g_string_free(g_steal_pointer(&ctx->full_path), TRUE);
+    static int x = 0;
+    ctx = draw_row_ctx_new(result_view->database_view, row, bin_window, icon_size);
+    if (!ctx) {
+        return NULL;
     }
+    g_hash_table_insert(result_view->row_cache, GINT_TO_POINTER(row + 1), ctx);
+    return ctx;
 }
 
 char *
@@ -248,7 +274,7 @@ set_attributes(PangoLayout *layout, FsearchQueryMatchData *match_data, FsearchDa
 }
 
 void
-fsearch_result_view_draw_row(FsearchDatabaseView *view,
+fsearch_result_view_draw_row(FsearchResultView *result_view,
                              cairo_t *cr,
                              GdkWindow *bin_window,
                              PangoLayout *layout,
@@ -264,10 +290,11 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         return;
     }
 
+    FsearchDatabaseView *view = result_view->database_view;
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
-    DrawRowContext ctx = {};
-    if (!draw_row_ctx_init(view, row, bin_window, icon_size, &ctx)) {
+    DrawRowContext *ctx = draw_row_ctx_get(result_view, row, bin_window, icon_size);
+    if (!ctx) {
         return;
     }
 
@@ -311,44 +338,55 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         switch (column->type) {
         case DATABASE_INDEX_TYPE_NAME: {
             FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-            if (config->show_listview_icons && ctx.icon_surface) {
-                int32_t x_icon = x;
-                if (right_to_left_text) {
-                    x_icon += column->effective_width - icon_size - ROW_PADDING_X;
+            if (config->show_listview_icons) {
+                cairo_surface_t *icon_surface = config->show_listview_icons
+                                                  ? get_icon_surface(bin_window,
+                                                                     ctx->name->str,
+                                                                     ctx->full_path->str,
+                                                                     ctx->entry_type,
+                                                                     icon_size,
+                                                                     gdk_window_get_scale_factor(bin_window))
+                                                  : NULL;
+                if (icon_surface) {
+                    int32_t x_icon = x;
+                    if (right_to_left_text) {
+                        x_icon += column->effective_width - icon_size - ROW_PADDING_X;
+                    }
+                    else {
+                        x_icon += ROW_PADDING_X;
+                        dx += icon_size + 2 * ROW_PADDING_X;
+                    }
+                    dw += icon_size + 2 * ROW_PADDING_X;
+                    gtk_render_icon_surface(context,
+                                            cr,
+                                            icon_surface,
+                                            x_icon,
+                                            rect->y + floor((rect->height - icon_size) / 2.0));
+                    g_clear_pointer(&icon_surface, cairo_surface_destroy);
                 }
-                else {
-                    x_icon += ROW_PADDING_X;
-                    dx += icon_size + 2 * ROW_PADDING_X;
-                }
-                dw += icon_size + 2 * ROW_PADDING_X;
-                gtk_render_icon_surface(context,
-                                        cr,
-                                        ctx.icon_surface,
-                                        x_icon,
-                                        rect->y + floor((rect->height - icon_size) / 2.0));
             }
-            text = ctx.display_name;
+            text = ctx->display_name;
         } break;
         case DATABASE_INDEX_TYPE_PATH:
-            text = ctx.path->str;
-            text_len = (int32_t)ctx.path->len;
+            text = ctx->path->str;
+            text_len = (int32_t)ctx->path->len;
             break;
         case DATABASE_INDEX_TYPE_SIZE:
-            text = ctx.size;
+            text = ctx->size;
             break;
         case DATABASE_INDEX_TYPE_EXTENSION:
-            text = ctx.extension;
+            text = ctx->extension;
             break;
         case DATABASE_INDEX_TYPE_FILETYPE:
-            text = ctx.type;
+            text = ctx->type;
             break;
         case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
-            text = ctx.time;
+            text = ctx->time;
             break;
         default:
             text = NULL;
         }
-        set_attributes(layout, ctx.match_data, column->type);
+        set_attributes(layout, ctx->match_data, column->type);
         pango_layout_set_text(layout, text ? text : _("Invalid row data"), text_len);
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);
@@ -359,18 +397,25 @@ fsearch_result_view_draw_row(FsearchDatabaseView *view,
         cairo_restore(cr);
     }
     gtk_style_context_restore(context);
+}
 
-    draw_row_ctx_destroy(&ctx);
+void
+fsearch_result_view_row_cache_reset(FsearchResultView *result_view) {
+    g_return_if_fail(result_view);
+    g_hash_table_remove_all(result_view->row_cache);
 }
 
 FsearchResultView *
 fsearch_result_view_new(void) {
     FsearchResultView *result_view = calloc(1, sizeof(FsearchResultView));
     g_assert(result_view);
+
+    result_view->row_cache = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)draw_row_ctx_free);
     return result_view;
 }
 
 void
 fsearch_result_view_free(FsearchResultView *result_view) {
+    g_clear_pointer(&result_view->row_cache, g_hash_table_unref);
     g_clear_pointer(&result_view, free);
 }

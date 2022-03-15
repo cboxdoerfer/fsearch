@@ -354,6 +354,7 @@ fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
     win->result_view->sort_order = db_view_get_sort_order(win->result_view->database_view);
     db_view_unlock(win->result_view->database_view);
 
+    fsearch_result_view_row_cache_reset(win->result_view);
     win->result_view->sort_type = fsearch_list_view_get_sort_type(win->result_view->list_view);
     fsearch_list_view_set_config(win->result_view->list_view,
                                  num_rows,
@@ -638,7 +639,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
         return;
     }
 
-    fsearch_result_view_draw_row(win->result_view->database_view,
+    fsearch_result_view_draw_row(win->result_view,
                                  cr,
                                  bin_window,
                                  layout,
