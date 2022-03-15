@@ -15,7 +15,7 @@ struct FsearchQueryMatchData {
     GString *path_buffer;
     GString *parent_path_buffer;
 
-    PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
+    PangoAttrList **highlights;
 
     int32_t thread_id;
 
@@ -25,6 +25,7 @@ struct FsearchQueryMatchData {
     bool path_ready;
     bool parent_path_ready;
     bool matches;
+    bool has_highlights;
 };
 
 FsearchUtfBuilder *
@@ -113,6 +114,9 @@ fsearch_query_match_data_new(void) {
     match_data->path_buffer = g_string_sized_new(PATH_MAX);
     match_data->parent_path_buffer = g_string_sized_new(PATH_MAX);
 
+    match_data->highlights = calloc(NUM_DATABASE_INDEX_TYPES, sizeof(PangoAttrList *));
+    match_data->has_highlights = false;
+
     match_data->utf_name_ready = false;
     match_data->utf_path_ready = false;
     match_data->utf_parent_path_ready = false;
@@ -124,7 +128,7 @@ fsearch_query_match_data_new(void) {
 
 static void
 free_highlights(FsearchQueryMatchData *match_data) {
-    if (!match_data) {
+    if (!match_data->has_highlights) {
         return;
     }
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
@@ -132,6 +136,7 @@ free_highlights(FsearchQueryMatchData *match_data) {
             g_clear_pointer(&match_data->highlights[i], pango_attr_list_unref);
         }
     }
+    match_data->has_highlights = false;
 }
 
 void
@@ -141,6 +146,7 @@ fsearch_query_match_data_free(FsearchQueryMatchData *match_data) {
     }
 
     free_highlights(match_data);
+    g_clear_pointer(&match_data->highlights, free);
 
     fsearch_utf_builder_clear(match_data->utf_name_builder);
     g_clear_pointer(&match_data->utf_name_builder, free);
@@ -207,4 +213,5 @@ fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
         match_data->highlights[idx] = pango_attr_list_new();
     }
     pango_attr_list_change(match_data->highlights[idx], attribute);
+    match_data->has_highlights = true;
 }
