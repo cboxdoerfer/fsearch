@@ -35,11 +35,11 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
         return;
     }
     FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
-    if (entry->parent) {
+    if (G_LIKELY(entry->parent)) {
         build_path_recursively(entry->parent, str);
         g_string_append_c(str, G_DIR_SEPARATOR);
     }
-    if (strcmp(entry->name, "") != 0) {
+    if (G_LIKELY(strcmp(entry->name, "") != 0)) {
         g_string_append(str, entry->name);
     }
 }
