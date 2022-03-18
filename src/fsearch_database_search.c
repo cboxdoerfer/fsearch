@@ -367,5 +367,5 @@ db_search_queue(FsearchTaskQueue *queue,
                        finished_func,
                        cancelled_func,
                        FSEARCH_TASK_CLEAR_SAME_ID,
-                       query);
+                       g_steal_pointer(&query));
 }
