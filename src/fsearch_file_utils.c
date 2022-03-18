@@ -46,8 +46,8 @@ fsearch_file_utils_create_dir(const char *path) {
     return !g_mkdir_with_parents(path, 0700);
 }
 
-static bool
-is_desktop_file(const char *path) {
+bool
+fsearch_file_utils_is_desktop_file(const char *path) {
     const char *uri_extension = fs_str_get_extension(path);
     if (uri_extension && !strcmp(uri_extension, "desktop")) {
         return true;
@@ -162,7 +162,7 @@ open_uri(const char *uri, bool launch_desktop_files) {
 
     if (launch_desktop_files) {
         // if uri points to a desktop file we try to launch it
-        if (is_desktop_file(uri) && g_file_test(uri, G_FILE_TEST_IS_REGULAR) && open_application(uri)) {
+        if (fsearch_file_utils_is_desktop_file(uri) && g_file_test(uri, G_FILE_TEST_IS_REGULAR) && open_application(uri)) {
             return true;
         }
     }
@@ -294,7 +294,7 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 #define DEFAULT_FILE_ICON_NAME "application-octet-stream"
 
 GIcon *
-get_desktop_file_icon(const char *path) {
+fsearch_file_utils_get_desktop_file_icon(const char *path) {
     GdkDisplay *display = gdk_display_get_default();
     if (!display) {
         return NULL;
@@ -308,12 +308,8 @@ get_desktop_file_icon(const char *path) {
     if (!icon) {
         goto default_icon;
     }
-    if (!G_IS_THEMED_ICON(icon)) {
-        goto default_icon;
-    }
 
-    g_object_ref(icon);
-    return icon;
+    return g_object_ref(icon);
 
 default_icon:
     return g_themed_icon_new("application-x-executable");
@@ -325,8 +321,8 @@ fsearch_file_utils_guess_icon(const char *name, const char *path, bool is_dir) {
         return g_themed_icon_new("folder");
     }
 
-    if (is_desktop_file(name)) {
-        return get_desktop_file_icon(path);
+    if (fsearch_file_utils_is_desktop_file(name)) {
+        return fsearch_file_utils_get_desktop_file_icon(path);
     }
 
     g_autofree gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
@@ -352,9 +348,7 @@ fsearch_file_utils_get_icon_for_path(const char *path) {
     }
 
     GIcon *icon = g_file_info_get_icon(file_info);
-    g_object_ref(icon);
-
-    return icon;
+    return g_object_ref(icon);
 }
 
 char *

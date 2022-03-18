@@ -26,33 +26,86 @@ get_icon_size_for_height(int32_t height) {
     return 48;
 }
 
+static void
+maybe_reset_icon_caches(FsearchResultView *result_view) {
+    const uint32_t cached_icon_limit = 200;
+    if (g_hash_table_size(result_view->pixbuf_cache) > cached_icon_limit) {
+        g_hash_table_remove_all(result_view->pixbuf_cache);
+    }
+    if (g_hash_table_size(result_view->app_gicon_cache) > cached_icon_limit) {
+        g_hash_table_remove_all(result_view->app_gicon_cache);
+    }
+}
+
+static GIcon *
+get_desktop_file_icon(FsearchResultView *result_view, const char *path) {
+    GIcon *icon = g_hash_table_lookup(result_view->app_gicon_cache, path);
+    if (!icon) {
+        icon = fsearch_file_utils_get_desktop_file_icon(path);
+        g_hash_table_insert(result_view->app_gicon_cache, g_strdup(path), icon);
+    }
+    return g_object_ref(icon);
+}
+
+static GdkPixbuf *
+get_pixbuf_from_gicon(FsearchResultView *result_view, GIcon *icon, int32_t icon_size, int32_t scale_factor) {
+    GdkPixbuf *pixbuf = g_hash_table_lookup(result_view->pixbuf_cache, icon);
+    if (pixbuf) {
+        return pixbuf;
+    }
+
+    GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
+    g_return_val_if_fail(icon_theme, NULL);
+
+    if (G_IS_THEMED_ICON(icon)) {
+        const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
+        if (!names) {
+            return NULL;
+        }
+
+        g_autoptr(GtkIconInfo) icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
+                                                                                (const char **)names,
+                                                                                icon_size,
+                                                                                scale_factor,
+                                                                                GTK_ICON_LOOKUP_FORCE_SIZE);
+        if (!icon_info) {
+            return NULL;
+        }
+
+        pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
+    }
+    else if (G_IS_LOADABLE_ICON(icon)) {
+        g_autoptr(GInputStream) stream = g_loadable_icon_load(G_LOADABLE_ICON(icon), icon_size, NULL, NULL, NULL);
+        if (stream) {
+            pixbuf = gdk_pixbuf_new_from_stream_at_scale(stream, icon_size, icon_size, TRUE, NULL, NULL);
+        }
+    }
+
+    if (pixbuf) {
+        g_hash_table_insert(result_view->pixbuf_cache, g_object_ref(icon), pixbuf);
+    }
+    return pixbuf;
+}
+
 static cairo_surface_t *
-get_icon_surface(GdkWindow *win,
+get_icon_surface(FsearchResultView *result_view,
+                 GdkWindow *win,
                  const char *name,
                  const char *path,
                  FsearchDatabaseEntryType type,
                  int32_t icon_size,
                  int32_t scale_factor) {
-    GtkIconTheme *icon_theme = gtk_icon_theme_get_default();
-    g_return_val_if_fail(icon_theme, NULL);
+    maybe_reset_icon_caches(result_view);
 
-    g_autoptr(GIcon) icon = fsearch_file_utils_guess_icon(name, path, type == DATABASE_ENTRY_TYPE_FOLDER);
-    const char *const *names = g_themed_icon_get_names(G_THEMED_ICON(icon));
-
-    if (!names) {
-        return NULL;
+    g_autoptr(GIcon) icon = NULL;
+    if (type == DATABASE_ENTRY_TYPE_FOLDER && fsearch_file_utils_is_desktop_file(path)) {
+        icon = get_desktop_file_icon(result_view, path);
+    }
+    else {
+        icon = fsearch_file_utils_guess_icon(name, path, type == DATABASE_ENTRY_TYPE_FOLDER);
     }
 
-    g_autoptr(GtkIconInfo) icon_info = gtk_icon_theme_choose_icon_for_scale(icon_theme,
-                                                                            (const char **)names,
-                                                                            icon_size,
-                                                                            scale_factor,
-                                                                            GTK_ICON_LOOKUP_FORCE_SIZE);
-    if (!icon_info) {
-        return NULL;
-    }
-
-    g_autoptr(GdkPixbuf) pixbuf = gtk_icon_info_load_icon(icon_info, NULL);
+    GdkPixbuf *pixbuf = get_pixbuf_from_gicon(result_view, icon, icon_size, scale_factor);
     if (!pixbuf) {
         return NULL;
     }
@@ -177,10 +230,8 @@ draw_row_ctx_get(FsearchResultView *result_view, uint32_t row, GdkWindow *bin_wi
 
     DrawRowContext *ctx = g_hash_table_lookup(result_view->row_cache, GINT_TO_POINTER(row + 1));
     if (ctx) {
-        static int x = 0;
         return ctx;
     }
-    static int x = 0;
     ctx = draw_row_ctx_new(result_view->database_view, row, bin_window, icon_size);
     if (!ctx) {
         return NULL;
@@ -340,7 +391,8 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
             FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
             if (config->show_listview_icons) {
                 cairo_surface_t *icon_surface = config->show_listview_icons
-                                                  ? get_icon_surface(bin_window,
+                                                  ? get_icon_surface(result_view,
+                                                                     bin_window,
                                                                      ctx->name->str,
                                                                      ctx->full_path->str,
                                                                      ctx->entry_type,
@@ -411,11 +463,16 @@ fsearch_result_view_new(void) {
     g_assert(result_view);
 
     result_view->row_cache = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)draw_row_ctx_free);
+    result_view->pixbuf_cache =
+        g_hash_table_new_full(g_icon_hash, (GEqualFunc)g_icon_equal, g_object_unref, g_object_unref);
+    result_view->app_gicon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
     return result_view;
 }
 
 void
 fsearch_result_view_free(FsearchResultView *result_view) {
+    g_clear_pointer(&result_view->pixbuf_cache, g_hash_table_unref);
+    g_clear_pointer(&result_view->app_gicon_cache, g_hash_table_unref);
     g_clear_pointer(&result_view->row_cache, g_hash_table_unref);
     g_clear_pointer(&result_view, free);
 }

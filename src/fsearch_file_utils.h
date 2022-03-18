@@ -53,3 +53,9 @@ fsearch_file_utils_guess_icon(const char *name, const char *path, bool is_dir);
 
 char *
 fsearch_file_utils_get_size_formatted(off_t size, bool show_base_2_units);
+
+bool
+fsearch_file_utils_is_desktop_file(const char *path);
+
+GIcon *
+fsearch_file_utils_get_desktop_file_icon(const char *path);

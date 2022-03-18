@@ -8,6 +8,8 @@ typedef struct {
     FsearchListView *list_view;
 
     GHashTable *row_cache;
+    GHashTable *pixbuf_cache;
+    GHashTable *app_gicon_cache;
 
     FsearchDatabaseIndexType sort_order;
     GtkSortType sort_type;
