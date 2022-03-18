@@ -2043,7 +2043,7 @@ fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean valu
 
 FsearchListViewColumn *
 fsearch_list_view_column_ref(FsearchListViewColumn *col) {
-    if (!col || col->ref_count <= 0) {
+    if (!col || g_atomic_int_get(&col->ref_count) <= 0) {
         return NULL;
     }
     g_atomic_int_inc(&col->ref_count);
@@ -2052,7 +2052,7 @@ fsearch_list_view_column_ref(FsearchListViewColumn *col) {
 
 void
 fsearch_list_view_column_unref(FsearchListViewColumn *col) {
-    if (!col || col->ref_count <= 0) {
+    if (!col || g_atomic_int_get(&col->ref_count) <= 0) {
         return;
     }
     if (g_atomic_int_dec_and_test(&col->ref_count)) {
