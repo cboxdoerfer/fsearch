@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2021-09-30 16:49+0000\n"
+"PO-Revision-Date: 2022-03-20 00:58+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -171,10 +171,8 @@ msgid "Files"
 msgstr "Bestanden"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Andere toepassing…"
+msgstr "Toepassingen"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -207,47 +205,39 @@ msgstr "_Oké"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "Filter aanpassen"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Naam"
+msgstr "Naam:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "De unieke naam van dit filter"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Unieke filternaam"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Locatie doorzoeken"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "Reguliere uitdrukkingen"
+msgstr "Reguliere uitdrukkingen gebruiken"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Hoofdlettergevoelig"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Zoekopdracht:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Macro:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -256,6 +246,10 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"De macro van dit filter. Met een macro kan een\n"
+"                          filter worden gebruikt in het zoekvak door de "
+"tekst te typen, gevolgd door ':'\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -401,7 +395,7 @@ msgstr "Eénmaal klikken om te openen"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Desktop-bestanden starten"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -450,32 +444,24 @@ msgstr ""
 "bevat"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Mappen toevoegen"
+msgstr "Filter toevoegen"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Geselecteerde locatie verwijderen"
+msgstr "Geselecteerd filter verwijderen"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Aantal geselecteerde bestanden"
+msgstr "Geselecteerd filter aanpassen"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "Standaardfilters herstellen"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Filter tonen"
+msgstr "Filter:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -1013,6 +999,7 @@ msgstr ""
 "<i><tt>fsearch --update-database</tt></i>"
 
 #: src/fsearch_preferences.ui:1829
+#, fuzzy
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1025,14 +1012,23 @@ msgid ""
 "                      editor.\n"
 "                    "
 msgstr ""
+"<b>Launch desktop files:</b>\n"
+"\n"
+"                      If enabled, activating a <i>.desktop</i> file will "
+"launch the application defined\n"
+"                      within that file. This way FSearch can act like an "
+"application launcher. Otherwise the <i>.desktop</i>\n"
+"                      file will be opened with the default handler for this "
+"type of files, which is usually a text\n"
+"                      editor.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page3"
 msgid "page30"
-msgstr "pagina3"
+msgstr "pagina30"
 
 #: src/fsearch_preferences.ui:1850
+#, fuzzy
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1047,20 +1043,24 @@ msgid ""
 "should be filtered\n"
 "                    "
 msgstr ""
+"<b>Filters:</b>\n"
+"\n"
+"                      This is a list of all available filters. A filter is a "
+"predefined search.\n"
+"\n"
+"                      • <b>Name:</b> A unique and descriptive identifier for "
+"the filter\n"
+"                      • <b>Macro:</b> By typing the macro text followed by a "
+"':' you can enable the filter on demand\n"
+"                      • <b>Query:</b> The search term by which the database "
+"should be filtered\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1864
 msgid "page18"
 msgstr "pagina18"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1068,43 +1068,30 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>Map toevoegen aan databank:</b>\n"
+"<b>Filter toevoegen:</b>\n"
 "\n"
-"Met deze knop open je een venster waar je een map kunt kiezen die je wilt "
-"toevoegen aan de databank.\n"
+"Met deze knop open je een venster waar je een nieuw filter kunt bewerken.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page3"
 msgid "page31"
-msgstr "pagina3"
+msgstr "pagina31"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>Geselecteerde rij verwijderen:</b>\n"
+"<b>Geselecteerd filter verwijderen:</b>\n"
 "\n"
-"Hiermee verwijder je de geselecteerde map van de lijst met opgenomen "
-"mappen.\n"
+"Hiermee verwijder je het geselecteerde filter.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page3"
 msgid "page32"
-msgstr "pagina3"
+msgstr "pagina32"
 
 #: src/fsearch_preferences.ui:1908
 #, fuzzy
