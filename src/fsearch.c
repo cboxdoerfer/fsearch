@@ -242,7 +242,7 @@ database_scan_or_load_enqueue(bool scan) {
     ctx->started_cb_data = app;
     ctx->finished_cb = database_update_finished_cb;
 
-    g_thread_pool_push(app->db_pool, ctx, NULL);
+    g_thread_pool_push(app->db_pool, g_steal_pointer(&ctx), NULL);
 }
 
 static gboolean
