@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2022-03-18 12:58+0000\n"
+"PO-Revision-Date: 2022-03-20 00:58+0000\n"
 "Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -173,10 +173,8 @@ msgid "Files"
 msgstr "Файли"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Інші програми…"
+msgstr "Програми"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -209,47 +207,39 @@ msgstr "_Прийняти"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "Змінити фільтр"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Назва"
+msgstr "Назва:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Унікальна назва фільтру"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Унікальна назва фільтру"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Шукати в назві шляху"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "Регулярні вирази"
+msgstr "Дозволити регулярні вирази"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Враховувати регістр"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Запит:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Макрос:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -258,6 +248,10 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"Макрос для цього фільтру. Макрос дозволяє отримати\n"
+"                          доступ до фільтру з поля пошуку, ввівши його текст "
+"перед знаком ':'\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -403,7 +397,7 @@ msgstr "Відкривати одним клацанням"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Запускати файли стільниці"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -450,32 +444,24 @@ msgid "Match case when query contains at least one upper case character"
 msgstr "Враховувати регістр, якщо запит містить принаймні одну велику літеру"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Додати каталоги"
+msgstr "Додати новий фільтр"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Вилучити вибраний шлях"
+msgstr "Вилучити вибраний фільтр"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Кількість вибраних файлів"
+msgstr "Змінити вибраний фільтр"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "Відновити типові фільтри"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Показувати фільтр"
+msgstr "Фільтр:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -1021,12 +1007,20 @@ msgid ""
 "                      editor.\n"
 "                    "
 msgstr ""
+"<b>Запускати файли стільниці:</b>\n"
+"\n"
+"                      Якщо дозволено, активувавши файл <i>.desktop</i> "
+"запуститься програма визначена\n"
+"                      у цьому файлі. Таким чином FSearch може працювати як "
+"запускач програм. В іншому випадку файл\n"
+"                       <i>.desktop</i> оброблятиметься типово для типів "
+"цього файлу, зазвичай через текстовий\n"
+"                      редактор.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page0"
 msgid "page30"
-msgstr "сторінка0"
+msgstr "сторінка30"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1043,22 +1037,24 @@ msgid ""
 "should be filtered\n"
 "                    "
 msgstr ""
+"<b>Фільтри:</b>\n"
+"\n"
+"                      Це список усіх доступних фільтрів. Фільтр — це "
+"попередньо визначений пошук.\n"
+"\n"
+"                      • <b>Назва:</b> Унікальний і описовий ідентифікатор "
+"фільтру\n"
+"                      • <b>Макрос:</b> Ввівши текст макросу перед ':', можна "
+"увімкнути потрібний фільтр\n"
+"                      • <b>Запит:</b> Пошуковий запит, за яким "
+"фільтруватиметься база даних\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1864
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "сторінка1"
+msgstr "сторінка18"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1066,53 +1062,33 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>Додати каталог до бази даних:</b>\n"
+"<b>Додати новий фільтр:</b>\n"
 "\n"
-"                      Ця кнопка відкриває вікно, в якому потрібно обрати "
-"каталог, який бажаєте додати\n"
-"                       до бази даних пошуку.\n"
+"                      Ця кнопка відкриває вікно, в якому можна редагувати "
+"новий фільтр.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page0"
 msgid "page31"
-msgstr "сторінка0"
+msgstr "сторінка31"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>Вилучити вибраний рядок:</b>\n"
+"<b>Вилучити вибраний фільтр:</b>\n"
 "\n"
-"                      Вилучає вибраний каталог зі списку доданих каталогів.\n"
+"                      Ця кнопка вилучає вибраний фільтр.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page0"
 msgid "page32"
-msgstr "сторінка0"
+msgstr "сторінка32"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1120,18 +1096,15 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>Додати каталог до бази даних:</b>\n"
+"<b>Змінити вибраний фільтр:</b>\n"
 "\n"
-"                      Ця кнопка відкриває вікно, в якому потрібно обрати "
-"каталог, який бажаєте додати\n"
-"                       до бази даних пошуку.\n"
+"                      Ця кнопка відкриває вікно, в якому можна редагувати "
+"вибраний фільтр.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page0"
 msgid "page33"
-msgstr "сторінка0"
+msgstr "сторінка33"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1144,12 +1117,17 @@ msgid ""
 "will be lost! ⚠\n"
 "                    "
 msgstr ""
+"<b>Відновити типовий фільтр:</b>\n"
+"\n"
+"                      Ця кнопка відновить типове налаштування фільтру.\n"
+"\n"
+"                      ⚠ Усі фільтри, створені або редаговані користувачем, "
+"буде втрачено! ⚠\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page0"
 msgid "page34"
-msgstr "сторінка0"
+msgstr "сторінка34"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1164,10 +1142,8 @@ msgid "_Select"
 msgstr "_Вибрати"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Додати каталоги"
+msgstr "Додати фільтр"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1189,13 +1165,11 @@ msgstr "Назва"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "Макрос"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Порожній запит"
+msgstr "Запит"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
