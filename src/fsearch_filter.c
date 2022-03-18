@@ -59,7 +59,7 @@ fsearch_filter_free(FsearchFilter *filter) {
 
 FsearchFilter *
 fsearch_filter_ref(FsearchFilter *filter) {
-    if (!filter || filter->ref_count <= 0) {
+    if (!filter || g_atomic_int_get(&filter->ref_count) <= 0) {
         return NULL;
     }
     g_atomic_int_inc(&filter->ref_count);
@@ -68,7 +68,7 @@ fsearch_filter_ref(FsearchFilter *filter) {
 
 void
 fsearch_filter_unref(FsearchFilter *filter) {
-    if (!filter || filter->ref_count <= 0) {
+    if (!filter || g_atomic_int_get(&filter->ref_count) <= 0) {
         return;
     }
     if (g_atomic_int_dec_and_test(&filter->ref_count)) {

@@ -80,7 +80,7 @@ db_search_result_free(DatabaseSearchResult *result) {
 
 DatabaseSearchResult *
 db_search_result_ref(DatabaseSearchResult *result) {
-    if (!result || result->ref_count <= 0) {
+    if (!result || g_atomic_int_get(&result->ref_count) <= 0) {
         return NULL;
     }
     g_atomic_int_inc(&result->ref_count);
@@ -89,7 +89,7 @@ db_search_result_ref(DatabaseSearchResult *result) {
 
 void
 db_search_result_unref(DatabaseSearchResult *result) {
-    if (!result || result->ref_count <= 0) {
+    if (!result || g_atomic_int_get(&result->ref_count) <= 0) {
         return;
     }
     if (g_atomic_int_dec_and_test(&result->ref_count)) {

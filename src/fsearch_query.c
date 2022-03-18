@@ -70,7 +70,7 @@ fsearch_query_free(FsearchQuery *query) {
 
 FsearchQuery *
 fsearch_query_ref(FsearchQuery *query) {
-    if (!query || query->ref_count <= 0) {
+    if (!query || g_atomic_int_get(&query->ref_count) <= 0) {
         return NULL;
     }
     g_atomic_int_inc(&query->ref_count);
@@ -79,7 +79,7 @@ fsearch_query_ref(FsearchQuery *query) {
 
 void
 fsearch_query_unref(FsearchQuery *query) {
-    if (!query || query->ref_count <= 0) {
+    if (!query || g_atomic_int_get(&query->ref_count) <= 0) {
         return;
     }
     if (g_atomic_int_dec_and_test(&query->ref_count)) {

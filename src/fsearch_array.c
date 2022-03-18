@@ -52,7 +52,7 @@ darray_free(DynamicArray *array) {
 
 DynamicArray *
 darray_ref(DynamicArray *array) {
-    if (!array || array->ref_count <= 0) {
+    if (!array || g_atomic_int_get(&array->ref_count) <= 0) {
         return NULL;
     }
     g_atomic_int_inc(&array->ref_count);
@@ -62,7 +62,7 @@ darray_ref(DynamicArray *array) {
 
 void
 darray_unref(DynamicArray *array) {
-    if (!array || array->ref_count <= 0) {
+    if (!array || g_atomic_int_get(&array->ref_count) <= 0) {
         return;
     }
     // g_debug("[darray_unref] dropped to: %d", array->ref_count - 1);

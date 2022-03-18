@@ -1620,7 +1620,7 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
 
 FsearchDatabase *
 db_ref(FsearchDatabase *db) {
-    if (!db || db->ref_count <= 0) {
+    if (!db || g_atomic_int_get(&db->ref_count) <= 0) {
         return NULL;
     }
     g_atomic_int_inc(&db->ref_count);
@@ -1630,7 +1630,7 @@ db_ref(FsearchDatabase *db) {
 
 void
 db_unref(FsearchDatabase *db) {
-    if (!db || db->ref_count <= 0) {
+    if (!db || g_atomic_int_get(&db->ref_count) <= 0) {
         return;
     }
     g_debug("[db_unref] dropped to: %d", db->ref_count - 1);

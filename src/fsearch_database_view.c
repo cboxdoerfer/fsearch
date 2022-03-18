@@ -82,7 +82,7 @@ db_view_free(FsearchDatabaseView *view) {
 
 FsearchDatabaseView *
 db_view_ref(FsearchDatabaseView *view) {
-    if (!view || view->ref_count <= 0) {
+    if (!view || g_atomic_int_get(&view->ref_count) <= 0) {
         return NULL;
     }
     g_atomic_int_inc(&view->ref_count);
@@ -91,7 +91,7 @@ db_view_ref(FsearchDatabaseView *view) {
 
 void
 db_view_unref(FsearchDatabaseView *view) {
-    if (!view || view->ref_count <= 0) {
+    if (!view || g_atomic_int_get(&view->ref_count) <= 0) {
         return;
     }
     if (g_atomic_int_dec_and_test(&view->ref_count)) {
