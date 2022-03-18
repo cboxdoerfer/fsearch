@@ -273,7 +273,7 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
     g_debug("[sort] merge with %d thread(s)", num_threads);
 
     GArray *merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
-    GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, num_threads, FALSE, NULL);
+    GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, (gint)num_threads, FALSE, NULL);
 
     for (int i = 0; i < num_threads; ++i) {
         DynamicArraySortContext *c1 = &g_array_index(merge_me, DynamicArraySortContext, 2 * i);
