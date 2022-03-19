@@ -293,7 +293,8 @@ parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fse
     g_autoptr(GString) token_value = NULL;
     fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
 
-    return append_node_to_list_if_nonnull(NULL, fsearch_query_node_new_parent(token_value->str, flags));
+    return append_node_to_list_if_nonnull(NULL,
+                                          fsearch_query_node_new_parent(token_value->str, flags | QUERY_FLAG_EXACT_MATCH));
 }
 
 static GList *
