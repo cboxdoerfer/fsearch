@@ -54,6 +54,9 @@ db_entry_get_path_full(FsearchDatabaseEntry *entry);
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);
 
+void
+db_entry_append_full_path(FsearchDatabaseEntry *entry, GString *str);
+
 time_t
 db_entry_get_mtime(FsearchDatabaseEntry *entry);
 

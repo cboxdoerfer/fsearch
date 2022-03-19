@@ -37,11 +37,11 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
     FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
     if (G_LIKELY(entry->parent)) {
         build_path_recursively(entry->parent, str);
-        g_string_append_c(str, G_DIR_SEPARATOR);
     }
     if (G_LIKELY(strcmp(entry->name, "") != 0)) {
         g_string_append(str, entry->name);
     }
+    g_string_append_c(str, G_DIR_SEPARATOR);
 }
 
 size_t
@@ -57,26 +57,29 @@ db_entry_get_sizeof_file_entry() {
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry) {
     GString *path = g_string_new(NULL);
-    build_path_recursively(entry->parent, path);
+    db_entry_append_path(entry, path);
     return path;
 }
 
 GString *
 db_entry_get_path_full(FsearchDatabaseEntry *entry) {
-    GString *path_full = db_entry_get_path(entry);
-    if (!path_full) {
-        return NULL;
-    }
-    if (entry->name[0] != G_DIR_SEPARATOR) {
-        g_string_append_c(path_full, G_DIR_SEPARATOR);
-    }
-    g_string_append(path_full, entry->name);
+    GString *path_full = g_string_new(NULL);
+    db_entry_append_full_path(entry, path_full);
     return path_full;
 }
 
 void
 db_entry_append_path(FsearchDatabaseEntry *entry, GString *str) {
     build_path_recursively(entry->parent, str);
+    if (str->len > 1) {
+        g_string_set_size(str, str->len - 1);
+    }
+}
+
+void
+db_entry_append_full_path(FsearchDatabaseEntry *entry, GString *str) {
+    build_path_recursively(entry->parent, str);
+    g_string_append(str, entry->name[0] == '\0' ? G_DIR_SEPARATOR_S : entry->name);
 }
 
 time_t

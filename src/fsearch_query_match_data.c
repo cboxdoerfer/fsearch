@@ -71,7 +71,6 @@ fsearch_query_match_data_get_parent_path_str(FsearchQueryMatchData *match_data) 
     if (!match_data->parent_path_ready) {
         g_string_truncate(match_data->parent_path_buffer, 0);
         db_entry_append_path(match_data->entry, match_data->parent_path_buffer);
-        g_string_append_c(match_data->parent_path_buffer, G_DIR_SEPARATOR);
 
         match_data->parent_path_ready = true;
     }
@@ -86,9 +85,7 @@ fsearch_query_match_data_get_path_str(FsearchQueryMatchData *match_data) {
     }
     if (!match_data->path_ready) {
         g_string_truncate(match_data->path_buffer, 0);
-        db_entry_append_path(match_data->entry, match_data->path_buffer);
-        g_string_append_c(match_data->path_buffer, G_DIR_SEPARATOR);
-        g_string_append(match_data->path_buffer, db_entry_get_name_raw(match_data->entry));
+        db_entry_append_full_path(match_data->entry, match_data->path_buffer);
 
         match_data->path_ready = true;
     }
