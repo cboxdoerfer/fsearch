@@ -287,14 +287,18 @@ parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, 
 
 static GList *
 parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    if (is_empty_field || fsearch_query_lexer_peek_next_token(parse_ctx->lexer, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
+    FsearchQueryFlags parent_flags = flags | QUERY_FLAG_EXACT_MATCH;
+    if (is_empty_field) {
+        return append_node_to_list_if_nonnull(NULL, fsearch_query_node_new_parent("", parent_flags));
+    }
+
+    if (fsearch_query_lexer_peek_next_token(parse_ctx->lexer, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
         return NULL;
     }
     g_autoptr(GString) token_value = NULL;
     fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
 
-    return append_node_to_list_if_nonnull(NULL,
-                                          fsearch_query_node_new_parent(token_value->str, flags | QUERY_FLAG_EXACT_MATCH));
+    return append_node_to_list_if_nonnull(NULL, fsearch_query_node_new_parent(token_value->str, parent_flags));
 }
 
 static GList *
