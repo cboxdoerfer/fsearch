@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2021-11-15 19:53+0000\n"
+"PO-Revision-Date: 2022-03-22 13:55+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.9.1-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -168,10 +168,8 @@ msgid "Files"
 msgstr "קבצים"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "יישום אחר…"
+msgstr "יישומים"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -204,47 +202,39 @@ msgstr "_אישור"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "עריכת מסנן"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "שם"
+msgstr "שם:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "השם הייחודי של המסנן הזה"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "שם ייחודי למסנן"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "חיפוש בנתיב"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "ביטויים רגולריים"
+msgstr "הפעלת ביטויים רגולריים"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "התאמת רישיות"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "שאילתה:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "מאקרו:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -398,7 +388,7 @@ msgstr "לחיצה בודדת לפתיחה"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "הפעלת קובצי desktop"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -445,32 +435,24 @@ msgid "Match case when query contains at least one upper case character"
 msgstr "להתאים רישיות כשהשאילתה מכילה לפחות אות אחת לטינית גדולה"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "הוספת תיקיות"
+msgstr "הוספת מסנן חדש"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "הסרת הנתיב הנבחר"
+msgstr "הסרת המסנן הנבחר"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "מספר הקבצים שנבחרו"
+msgstr "עריכת המסנן הנבחר"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "שחזור מסנני ברירת המחדל"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "הצגת מסנן"
+msgstr "מסנן:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -1003,10 +985,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page0"
 msgid "page30"
-msgstr "עמוד0"
+msgstr "עמוד30"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1025,20 +1005,10 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1864
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "עמוד1"
+msgstr "עמוד18"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1046,52 +1016,32 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>הוספת תיקייה למסד הנתונים:</b>\n"
+"<b>הוספת מסנן חדש:</b>\n"
 "\n"
-"                      כפתור זה פותח חלונית בה ניתן לבחור תיקייה שתיכלל במסד "
-"הנתונים לצורכי חיפוש.\n"
+"                      כפתור זה פותח חלונית בה ניתן לערוך מסנן חדש.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page1"
 msgid "page31"
-msgstr "עמוד1"
+msgstr "עמוד31"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>הסרת השורה הנבחרת:</b>\n"
+"<b>הסרת המסנן הנבחר:</b>\n"
 "\n"
-"                      מסירה את התיקייה הנבחרת מרשימת התיקיות שנכללות.\n"
+"                      כפתור זה מסיר את המסנן הנבחר.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page2"
 msgid "page32"
-msgstr "עמוד2"
+msgstr "עמוד32"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1099,17 +1049,14 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>הוספת תיקייה למסד הנתונים:</b>\n"
+"<b>עריכת המסנן הנבחר:</b>\n"
 "\n"
-"                      כפתור זה פותח חלונית בה ניתן לבחור תיקייה שתיכלל במסד "
-"הנתונים לצורכי חיפוש.\n"
+"                      כפתור זה פותח חלונית בה ניתן לערוך את המסנן הנבחר.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page0"
 msgid "page33"
-msgstr "עמוד0"
+msgstr "עמוד33"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1124,10 +1071,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page0"
 msgid "page34"
-msgstr "עמוד0"
+msgstr "עמוד34"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1142,10 +1087,8 @@ msgid "_Select"
 msgstr "ב_חירה"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "הוספת תיקיות"
+msgstr "הוספת מסנן"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1167,13 +1110,11 @@ msgstr "שם"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "מאקרו"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "שאילתה ריקה"
+msgstr "שאילתה"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
