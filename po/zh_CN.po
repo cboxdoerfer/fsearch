@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2022-02-14 14:54+0000\n"
+"PO-Revision-Date: 2022-03-20 00:58+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -164,10 +164,8 @@ msgid "Files"
 msgstr "文件"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "其他应用程序…"
+msgstr "应用程序"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -200,47 +198,39 @@ msgstr "_确定"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "编辑筛选器"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "名称"
+msgstr "名称："
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "此筛选器的唯一名称"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "唯一的筛选器名"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "搜索路径"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "正则表达式"
+msgstr "启用正则表达式"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
-msgstr "区分大小写"
+msgstr "匹配大小写"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "查询："
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "宏："
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -249,6 +239,9 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"此筛选器的宏。宏允许你\n"
+"                          通过在其文本后面加上“:”从搜索条目访问这个筛选器。\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -394,7 +387,7 @@ msgstr "单击打开"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "启动桌面文件"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -441,32 +434,24 @@ msgid "Match case when query contains at least one upper case character"
 msgstr "当查询包含至少一个大写字符时匹配大小写"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "添加文件夹"
+msgstr "添加新筛选器"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "删除所选路径"
+msgstr "删除所选筛选器"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "选定的文件数量"
+msgstr "编辑所选的筛选器"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "还原默认筛选器"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "显示筛选器"
+msgstr "筛选器："
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -983,12 +968,18 @@ msgid ""
 "                      editor.\n"
 "                    "
 msgstr ""
+"<b>启动桌面文件：</b>\n"
+"\n"
+"                      如启用,，激活 <i>.desktop</i> 文件将启动\n"
+"                      那个文件中定义的程序。如此一来， FSearch "
+"可以作为一个应用程序启动器。 不然， <i>.desktop</i>\n"
+"                      文件将由此文件类型的默认处理程序打开。通常是\n"
+"                      文本编辑器。\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page0"
 msgid "page30"
-msgstr "页0"
+msgstr "页30"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1005,22 +996,21 @@ msgid ""
 "should be filtered\n"
 "                    "
 msgstr ""
+"<b>筛选器：</b>\n"
+"\n"
+"                      这是所有可用筛选器的列表。筛选器是预定义的搜索。\n"
+"\n"
+"                      • <b>名称：</b> 筛选器唯一和描述性的标识符\n"
+"                      • <b>宏：</b> 通过输入宏文本后加上':'，"
+"你可以根据需要启用筛选器\n"
+"                      • <b>查询：</b> 过滤数据库的检索项\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1864
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "页1"
+msgstr "页18"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1028,53 +1018,32 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>将文件夹添加到数据库：</b>\n"
+"<b>添加新筛选器：</b>\n"
 "\n"
-"                       此按钮会打开一个对话框，您可以在其中选择要包含在数据库"
-"中的文件夹\n"
-"                       搜索。\n"
+"                      这个按钮打开一个对话框，你可以在其中编辑新筛选器。.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page0"
 msgid "page31"
-msgstr "页0"
+msgstr "页31"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>删除选定的行：</b>\n"
+"<b>删除所选的筛选器：</b>\n"
 "\n"
-"                       这将从包含的文件夹列表中删除选定的文件夹。\n"
+"                      这个按钮删除当前选中的筛选器。\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page0"
 msgid "page32"
-msgstr "页0"
+msgstr "页32"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1082,18 +1051,15 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>将文件夹添加到数据库：</b>\n"
+"<b>编辑所选的筛选器：</b>\n"
 "\n"
-"                       此按钮会打开一个对话框，您可以在其中选择要包含在数据库"
-"中的文件夹\n"
-"                       搜索。\n"
+"                      这个按钮打开一个对话框，你可以在其中编辑选中的筛选器。"
+"\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page0"
 msgid "page33"
-msgstr "页0"
+msgstr "页33"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1106,12 +1072,16 @@ msgid ""
 "will be lost! ⚠\n"
 "                    "
 msgstr ""
+"<b>还原默认筛选器：</b>\n"
+"\n"
+"                      这个按钮还原默认的筛选器配置。\n"
+"\n"
+"                      ⚠ 该用户编辑或创建的所有筛选器都将丢失！⚠\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page0"
 msgid "page34"
-msgstr "页0"
+msgstr "页34"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1126,10 +1096,8 @@ msgid "_Select"
 msgstr "选择"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "添加文件夹"
+msgstr "添加筛选器"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1151,13 +1119,11 @@ msgstr "名称"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "宏"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "空的查询"
+msgstr "查询"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"

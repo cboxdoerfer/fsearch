@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2021-10-11 22:05+0000\n"
+"PO-Revision-Date: 2022-03-20 00:58+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -216,7 +216,7 @@ msgstr "Gotowe"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "Edytuj filtr"
 
 #: src/fsearch_filter_editor.ui:50
 #, fuzzy
@@ -226,11 +226,11 @@ msgstr "Nazwa"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Unikalna nazwa tego filtra"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Unikalna nazwa filtra"
 
 #: src/fsearch_filter_editor.ui:73
 #, fuzzy
@@ -252,11 +252,11 @@ msgstr "Uwzględniaj wielkość liter"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Zapytanie:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Makro:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -265,6 +265,10 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"Makro dla tego filtra. Makro pozwala na używanie\n"
+"                           tego filtra w polu wyszukiwania poprzez wpisanie "
+"makra a następnie ':'\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -410,7 +414,7 @@ msgstr "Pojedyncze kliknięcie otwiera"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Uruchamiaj pliki desktop"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -477,7 +481,7 @@ msgstr "Ilość zaznaczonych plików"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "Przywróć domyślne filtry"
 
 #: src/fsearch_preferences.ui:832
 #, fuzzy
@@ -1211,7 +1215,7 @@ msgstr "Nazwa"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "Makro"
 
 #: src/fsearch_preferences_widgets.c:293
 #, fuzzy

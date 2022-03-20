@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2021-09-30 16:49+0000\n"
-"Last-Translator: Oğuz Ersen <oguzersen@protonmail.com>\n"
+"PO-Revision-Date: 2022-03-20 00:58+0000\n"
+"Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
 "Language: tr\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -174,10 +174,8 @@ msgid "Files"
 msgstr "Dosyalar"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Diğer Uygulama…"
+msgstr "Uygulamalar"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -210,47 +208,39 @@ msgstr "_Tamam"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "Filtreyi düzenle"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Ad"
+msgstr "Ad:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Bu filtrenin benzersiz adı"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Benzersiz filtre adı"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
-msgstr "Dosya Yolunda Ara"
+msgstr "Yol içinde ara"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "Düzenli ifadeler"
+msgstr "Düzenli ifadeleri etkinleştir"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
-msgstr "Büyük/Küçük Harfe Duyarlı"
+msgstr "Büyük/küçük harfe duyarlı"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Sorgu:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Makro:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -259,6 +249,10 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"Bu filtre için makro. Bir makro, metnini ve ardından\n"
+"                          ':' yazarak arama girdisinden bu filtreye "
+"erişmenizi sağlar.\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -404,7 +398,7 @@ msgstr "Açmak için tek tıklama"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Masaüstü dosyalarını başlat"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -453,32 +447,24 @@ msgstr ""
 "eşleştir"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Klasör ekle"
+msgstr "Yeni filtre ekle"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Seçili yolu kaldır"
+msgstr "Seçili filtreyi kaldır"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Seçili dosya sayısı"
+msgstr "Seçili filtreyi düzenle"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "Öntanımlı filtreleri geri yükle"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Filtreyi Göster"
+msgstr "Filtre:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -1031,12 +1017,20 @@ msgid ""
 "                      editor.\n"
 "                    "
 msgstr ""
+"<b>.desktop dosyalarını başlat:</b>\n"
+"\n"
+"                      Etkinleştirilirse, bir <i>.desktop</i> dosyasını "
+"seçmek, o dosyada tanımlanan uygulamayı\n"
+"                      başlatacaktır. Bu şekilde FSearch bir uygulama "
+"başlatıcısı gibi davranabilir. Diğer türlü,\n"
+"                      <i>.desktop</i> dosyası genellikle bir metin "
+"düzenleyici olan bu tür dosyalar için öntanımlı\n"
+"                      işleyici ile açılacaktır.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page3"
 msgid "page30"
-msgstr "sayfa3"
+msgstr "sayfa30"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1053,20 +1047,24 @@ msgid ""
 "should be filtered\n"
 "                    "
 msgstr ""
+"<b>Filtreler:</b>\n"
+"\n"
+"                      Bu, kullanılabilir tüm filtrelerin bir listesidir. "
+"Filtre, önceden tanımlanan bir aramadır.\n"
+"\n"
+"                      • <b>Ad:</b> Filtre için benzersiz ve açıklayıcı bir "
+"tanımlayıcı\n"
+"                      • <b>Makro:</b> Makro metnini ve ardından ':' yazarak "
+"filtreyi istendiğinde etkinleştirebilirsiniz\n"
+"                      • <b>Sorgu:</b> Veri tabanının filtrelenmesi gereken "
+"arama terimi\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1864
 msgid "page18"
 msgstr "sayfa18"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1074,54 +1072,33 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>Veri tabanına klasör ekle:</b>\n"
+"<b>Yeni filtre ekle:</b>\n"
 "\n"
-"                      Bu düğme, aramak için veri tabanına dahil etmek "
-"istediğiniz bir klasörü seçebileceğiniz bir iletişim\n"
-"                      kutusu açar.\n"
+"                      Bu düğme, yeni bir filtre düzenleyebileceğiniz bir "
+"iletişim kutusu açar.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page3"
 msgid "page31"
-msgstr "sayfa3"
+msgstr "sayfa31"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>Seçili satırı kaldır:</b>\n"
+"<b>Seçili filtreyi kaldır:</b>\n"
 "\n"
-"                      Bu, seçilen klasörü dahil edilen klasörler listesinden "
-"kaldırır.\n"
+"                      Bu düğme o anda seçili olan filtreyi kaldırır.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page3"
 msgid "page32"
-msgstr "sayfa3"
+msgstr "sayfa32"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1129,18 +1106,15 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>Veri tabanına klasör ekle:</b>\n"
+"<b>Seçili filtreyi düzenle:</b>\n"
 "\n"
-"                      Bu düğme, aramak için veri tabanına dahil etmek "
-"istediğiniz bir klasörü seçebileceğiniz bir iletişim\n"
-"                      kutusu açar.\n"
+"                      Bu düğme, seçili filtreyi düzenleyebileceğiniz bir "
+"iletişim kutusu açar.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page3"
 msgid "page33"
-msgstr "sayfa3"
+msgstr "sayfa33"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1153,12 +1127,18 @@ msgid ""
 "will be lost! ⚠\n"
 "                    "
 msgstr ""
+"<b>Öntanımlı filtreleri geri yükle:</b>\n"
+"\n"
+"                      Bu düğme, öntanımlı filtre yapılandırmasını geri "
+"yükler.\n"
+"\n"
+"                      ⚠ Kullanıcı tarafından oluşturulan veya düzenlenen tüm "
+"filtreler kaybolacaktır! ⚠\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page3"
 msgid "page34"
-msgstr "sayfa3"
+msgstr "sayfa34"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1173,10 +1153,8 @@ msgid "_Select"
 msgstr "_Seç"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Klasör ekle"
+msgstr "Filtre ekle"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1198,13 +1176,11 @@ msgstr "Ad"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "Makro"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Boş Sorgu"
+msgstr "Sorgu"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
