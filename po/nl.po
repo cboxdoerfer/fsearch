@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2022-03-20 00:58+0000\n"
+"PO-Revision-Date: 2022-03-22 13:55+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -999,7 +999,6 @@ msgstr ""
 "<i><tt>fsearch --update-database</tt></i>"
 
 #: src/fsearch_preferences.ui:1829
-#, fuzzy
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1028,7 +1027,6 @@ msgid "page30"
 msgstr "pagina30"
 
 #: src/fsearch_preferences.ui:1850
-#, fuzzy
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1094,14 +1092,6 @@ msgid "page32"
 msgstr "pagina32"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1109,17 +1099,14 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>Map toevoegen aan databank:</b>\n"
+"<b>Geselecteerd filter bewerken:</b>\n"
 "\n"
-"Met deze knop open je een venster waar je een map kunt kiezen die je wilt "
-"toevoegen aan de databank.\n"
+"Met deze knop open je een venster waar je een filter kunt bewerken.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page3"
 msgid "page33"
-msgstr "pagina3"
+msgstr "pagina33"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1132,12 +1119,18 @@ msgid ""
 "will be lost! ⚠\n"
 "                    "
 msgstr ""
+"<b>Standaardfilters herstellen:</b>\n"
+"\n"
+"                      Met deze knop herstel je de standaard "
+"filterconfiguratie.\n"
+"\n"
+"                      ⚠ Alle door de zelfgemaakte of -bewerkte filters "
+"worden gewist! ⚠\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page3"
 msgid "page34"
-msgstr "pagina3"
+msgstr "pagina34"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1152,10 +1145,8 @@ msgid "_Select"
 msgstr "_Selecteren"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Mappen toevoegen"
+msgstr "Filter toevoegen"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1177,13 +1168,11 @@ msgstr "Naam"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "Macro"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Blanco zoekopdracht"
+msgstr "Zoekopdracht"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
