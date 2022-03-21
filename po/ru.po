@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2021-10-05 08:08+0000\n"
+"PO-Revision-Date: 2022-03-22 13:55+0000\n"
 "Last-Translator: Сергей <sw@atrus.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -177,10 +177,8 @@ msgid "Files"
 msgstr "Файлы"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Другая программа…"
+msgstr "Приложения"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -213,47 +211,39 @@ msgstr "_Принять"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "Редактор фильтра"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Имя"
+msgstr "Имя:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Уникальное имя для этого фильтра"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Уникальное имя фильтра"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Искать в пути к файлу/папке"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "Регулярные выражения"
+msgstr "Включить регулярные выражения"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Учитывать регистр"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Запрос:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Макрос:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -262,6 +252,10 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"Макрос для данного фильтра. Макрос позволяет вам\n"
+"                          получить доступ к данному фильтру из строки "
+"поиска, установив ':' в конце поискового запроса\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -407,7 +401,7 @@ msgstr "Открывать одним щелчком мыши"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Запускать .desktop файлы"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -456,32 +450,24 @@ msgstr ""
 "регистра"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Добавить папки"
+msgstr "Добавить новый фильтр"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Убрать выбранный путь"
+msgstr "Убрать выбранный фильтр"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Количество выбранных файлов"
+msgstr "Редактировать выбранный фильтр"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "Восстановить фильтры по умолчанию"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Показать фильтр"
+msgstr "Фильтр:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -1042,12 +1028,20 @@ msgid ""
 "                      editor.\n"
 "                    "
 msgstr ""
+"<b>Запускать .desktop файлы:</b>\n"
+"\n"
+"                      Если включено, активация файла <i>.desktop</i> "
+"запустит приложение, прописанное внутри\n"
+"                      этого файла. Таким образом FSearch может действовать "
+"как средство запуска приложений. Иначе <i>.desktop</i>\n"
+"                      файл будет открыт приложением, установленным по "
+"умолчанию для этого типа файлов, обычно это\n"
+"                      текстовый редактор.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page0"
 msgid "page30"
-msgstr "страница3"
+msgstr "страница30"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1064,22 +1058,24 @@ msgid ""
 "should be filtered\n"
 "                    "
 msgstr ""
+"<b>Фильтры:</b>\n"
+"\n"
+"                      Список всех доступных фильтров. Фильтр - это "
+"определённый заранее поисковый запрос.\n"
+"\n"
+"                      • <b>Имя:</b> Уникальный и наглядный идентификатор "
+"фильтра\n"
+"                      • <b>Макрос:</b> Введя текстовое обозначение макроса с "
+"':' в конце, вы можете включить необходимый фильтр.\n"
+"                      • <b>Запрос:</b> Критерий поиска, по которому следует "
+"фильтровать базу данных\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1864
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
 msgstr "страница18"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1087,53 +1083,33 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>Добавить папку в базу данных:</b>\n"
+"<b>Добавить новый фильтр:</b>\n"
 "\n"
-"\tЭта кнопка открывает диалоговое окно, в котором вы можете выбрать папку, "
-"которую хотите включить в базу данных\n"
-"\tдля поиска.\n"
+"                      Эта кнопка открывает диалоговое окно, в котором вы "
+"можете отредактировать новый фильтр.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page0"
 msgid "page31"
-msgstr "страница3"
+msgstr "страница31"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>Удалить выбранный вариант:</b>\n"
+"<b>Удалить выбранный фильтр:</b>\n"
 "\n"
-"Это действие удаляет выбранную папку из списка включенных папок.\n"
+"                      Это кнопка удаляет выбранный в данный момент фильтр.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page0"
 msgid "page32"
-msgstr "страница3"
+msgstr "страница32"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1141,18 +1117,15 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>Добавить папку в базу данных:</b>\n"
+"<b>Редактировать выбранный фильтр:</b>\n"
 "\n"
-"\tЭта кнопка открывает диалоговое окно, в котором вы можете выбрать папку, "
-"которую хотите включить в базу данных\n"
-"\tдля поиска.\n"
+"\tЭта кнопка открывает диалоговое окно, в котором вы можете редактировать "
+"выбранный фильтр.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page0"
 msgid "page33"
-msgstr "страница3"
+msgstr "страница33"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1165,12 +1138,18 @@ msgid ""
 "will be lost! ⚠\n"
 "                    "
 msgstr ""
+"<b>Восстановить фильтры по умолчанию:</b>\n"
+"\n"
+"                      Эта кнопка восстановит конфигурацию фильтров, "
+"установленную по умолчанию.\n"
+"\n"
+"                      ⚠ Все фильтры, созданные или изменённые пользователем, "
+"будут потеряны! ⚠\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page0"
 msgid "page34"
-msgstr "страница3"
+msgstr "страница34"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1185,10 +1164,8 @@ msgid "_Select"
 msgstr "_Выбрать"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Добавить папки"
+msgstr "Добавить фильтр"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1210,13 +1187,11 @@ msgstr "Имя"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "Макрос"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Пустой запрос"
+msgstr "Запрос"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
