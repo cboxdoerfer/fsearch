@@ -338,8 +338,8 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
         goto out;
     }
     else {
-        files = db_get_files_copy(view->db);
-        folders = db_get_folders_copy(view->db);
+        files = darray_ref(view->files);
+        folders = darray_ref(view->folders);
     }
 
     DynamicArrayCompareDataFunc func = get_sort_func(ctx->sort_order);
