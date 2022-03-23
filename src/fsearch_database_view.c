@@ -296,6 +296,16 @@ get_entries_sorted_from_reference_list(DynamicArray *old_list, DynamicArray *sor
     return new;
 }
 
+static bool
+sort_order_affects_folders(FsearchDatabaseIndexType sort_order) {
+    if (sort_order == DATABASE_INDEX_TYPE_EXTENSION || sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
+        // Folders are stored in a different array than files, so they all have the same sort_type and extension (none),
+        // therefore we don't need to sort them in such cases.
+        return false;
+    }
+    return true;
+}
+
 static gpointer
 db_view_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
@@ -360,7 +370,9 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
     g_debug("[sort] started: %d", ctx->sort_order);
 
     db_view_unlock(view);
-    sort_array(folders, func, parallel_sort, comp_ctx);
+    if (sort_order_affects_folders(ctx->sort_order)) {
+        sort_array(folders, func, parallel_sort, comp_ctx);
+    }
     sort_array(files, func, parallel_sort, comp_ctx);
     db_view_lock(view);
 
