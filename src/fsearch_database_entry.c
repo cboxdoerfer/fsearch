@@ -16,6 +16,7 @@ struct FsearchDatabaseEntry {
     // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
     uint32_t idx;
     uint8_t type;
+    uint8_t mark;
 };
 
 struct FsearchDatabaseEntryFile {
@@ -133,6 +134,11 @@ db_entry_get_parent(FsearchDatabaseEntry *entry) {
 FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry) {
     return entry ? entry->type : DATABASE_ENTRY_TYPE_NONE;
+}
+
+uint8_t
+db_entry_get_mark(FsearchDatabaseEntry *entry) {
+    return entry ? entry->mark : 0;
 }
 
 uint32_t
@@ -301,6 +307,11 @@ db_entry_set_type(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type) {
 void
 db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx) {
     entry->idx = idx;
+}
+
+void
+db_entry_set_mark(FsearchDatabaseEntry *entry, uint8_t mark) {
+    entry->mark = mark;
 }
 
 void

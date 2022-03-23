@@ -275,6 +275,27 @@ get_sort_func(FsearchDatabaseIndexType sort_order) {
     return func;
 }
 
+static DynamicArray *
+get_entries_sorted_from_reference_list(DynamicArray *old_list, DynamicArray *sorted_reference_list) {
+    const uint32_t num_items = darray_get_num_items(old_list);
+    DynamicArray *new = darray_new(num_items);
+    for (uint32_t i = 0; i < num_items; ++i) {
+        FsearchDatabaseEntry *entry = darray_get_item(old_list, i);
+        db_entry_set_mark(entry, 1);
+    }
+    uint32_t num_marked_found = 0;
+    const uint32_t num_items_in_sorted_reference_list = darray_get_num_items(sorted_reference_list);
+    for (uint32_t i = 0; i < num_items_in_sorted_reference_list && num_marked_found < num_items; ++i) {
+        FsearchDatabaseEntry *entry = darray_get_item(sorted_reference_list, i);
+        if (db_entry_get_mark(entry)) {
+            db_entry_set_mark(entry, 0);
+            darray_add_item(new, entry);
+            num_marked_found++;
+        }
+    }
+    return new;
+}
+
 static gpointer
 db_view_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
@@ -297,22 +318,28 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
     db_view_lock(view);
     db_lock(view->db);
 
-    if (!view->query || fsearch_query_matches_everything(view->query)) {
-        // we're matching everything, so if the database has the entries already sorted we don't need
-        // to sort again
-        if (db_has_entries_sorted_by_type(view->db, ctx->sort_order)) {
+    if (db_has_entries_sorted_by_type(view->db, ctx->sort_order)) {
+        if (!view->query || fsearch_query_matches_everything(view->query)) {
+            // We're matching everything, and we have the entries already sorted in our index.
+            // So we can just return references to the sorted indices.
             files = db_get_files_sorted(view->db, ctx->sort_order);
             folders = db_get_folders_sorted(view->db, ctx->sort_order);
-            goto out;
         }
         else {
-            files = db_get_files_copy(view->db);
-            folders = db_get_folders_copy(view->db);
+            // Another fast path. First we mark all entries we have currently in the view, then we walk the sorted
+            // index in order and add all marked entries to a new array.
+            DynamicArray *sorted_folders = db_get_folders_sorted(view->db, ctx->sort_order);
+            DynamicArray *sorted_files = db_get_files_sorted(view->db, ctx->sort_order);
+            folders = get_entries_sorted_from_reference_list(view->folders, sorted_folders);
+            files = get_entries_sorted_from_reference_list(view->files, sorted_files);
+            g_clear_pointer(&sorted_folders, darray_unref);
+            g_clear_pointer(&sorted_files, darray_unref);
         }
+        goto out;
     }
     else {
-        folders = darray_ref(view->folders);
-        files = darray_ref(view->files);
+        files = db_get_files_copy(view->db);
+        folders = db_get_folders_copy(view->db);
     }
 
     DynamicArrayCompareDataFunc func = get_sort_func(ctx->sort_order);

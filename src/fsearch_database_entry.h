@@ -31,6 +31,9 @@ void
 db_entry_set_size(FsearchDatabaseEntry *entry, off_t size);
 
 void
+db_entry_set_mark(FsearchDatabaseEntry *entry, uint8_t mark);
+
+void
 db_entry_set_name(FsearchDatabaseEntry *entry, const char *name);
 
 void
@@ -41,6 +44,9 @@ db_entry_set_type(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type);
 
 void
 db_entry_update_parent_size(FsearchDatabaseEntry *entry);
+
+uint8_t
+db_entry_get_mark(FsearchDatabaseEntry *entry);
 
 uint32_t
 db_entry_get_idx(FsearchDatabaseEntry *entry);
