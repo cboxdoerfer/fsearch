@@ -123,6 +123,8 @@ db_view_register_database(FsearchDatabaseView *view, FsearchDatabase *db) {
     g_assert(view);
     g_assert(db);
 
+    db_view_unregister_database(view);
+
     if (!db_register_view(db, view)) {
         return;
     }

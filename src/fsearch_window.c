@@ -868,7 +868,6 @@ on_database_update_finished(gpointer data, gpointer user_data) {
 
     FsearchDatabase *db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
 
-    db_view_unregister_database(win->result_view->database_view);
     db_view_register_database(win->result_view->database_view, db);
 
     g_clear_pointer(&db, db_unref);
