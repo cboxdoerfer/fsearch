@@ -310,7 +310,6 @@ static gpointer
 db_view_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
     FsearchDatabaseView *view = ctx->view;
-    FsearchDatabaseEntryCompareContext *comp_ctx = NULL;
 
     if (!view->db) {
         return NULL;
@@ -355,6 +354,8 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
 
     DynamicArrayCompareDataFunc func = get_sort_func(ctx->sort_order);
     bool parallel_sort = true;
+
+    FsearchDatabaseEntryCompareContext *comp_ctx = NULL;
     if (ctx->sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
         // Sorting by type can be really slow, because it accesses the filesystem to determine the type of files
         // To mitigate that issue to a certain degree we cache the filetype for each file
@@ -376,12 +377,13 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
     sort_array(files, func, parallel_sort, comp_ctx);
     db_view_lock(view);
 
-out:
     if (comp_ctx) {
         g_clear_pointer(&comp_ctx->entry_to_file_type_table, g_hash_table_unref);
         g_clear_pointer(&comp_ctx->file_type_table, g_hash_table_unref);
         g_clear_pointer(&comp_ctx, free);
     }
+
+out:
     g_clear_pointer(&view->folders, darray_unref);
     g_clear_pointer(&view->files, darray_unref);
     view->folders = g_steal_pointer(&folders);
