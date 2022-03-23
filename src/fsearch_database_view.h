@@ -99,10 +99,10 @@ FsearchDatabaseEntryType
 db_view_entry_get_type_for_idx(FsearchDatabaseView *view, uint32_t idx);
 
 void
-db_view_register(FsearchDatabase *db, FsearchDatabaseView *view);
+db_view_register_database(FsearchDatabaseView *view, FsearchDatabase *db);
 
 void
-db_view_unregister(FsearchDatabaseView *view);
+db_view_unregister_database(FsearchDatabaseView *view);
 
 FsearchQueryFlags
 db_view_get_query_flags(FsearchDatabaseView *view);

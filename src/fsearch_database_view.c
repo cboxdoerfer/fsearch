@@ -73,7 +73,7 @@ db_view_free(FsearchDatabaseView *view) {
 
     db_view_unlock(view);
 
-    db_view_unregister(view);
+    db_view_unregister_database(view);
 
     g_mutex_clear(&view->mutex);
 
@@ -100,7 +100,7 @@ db_view_unref(FsearchDatabaseView *view) {
 }
 
 void
-db_view_unregister(FsearchDatabaseView *view) {
+db_view_unregister_database(FsearchDatabaseView *view) {
     g_assert(view);
 
     db_view_lock(view);
@@ -119,7 +119,7 @@ db_view_unregister(FsearchDatabaseView *view) {
 }
 
 void
-db_view_register(FsearchDatabase *db, FsearchDatabaseView *view) {
+db_view_register_database(FsearchDatabaseView *view, FsearchDatabase *db) {
     g_assert(view);
     g_assert(db);
 
