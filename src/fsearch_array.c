@@ -83,7 +83,11 @@ typedef struct {
 void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
-    g_qsort_with_data(ctx->dest->data, (int)ctx->dest->num_items, sizeof(void *), (GCompareDataFunc)ctx->comp_func, NULL);
+    g_qsort_with_data(ctx->dest->data,
+                      (int)ctx->dest->num_items,
+                      sizeof(void *),
+                      (GCompareDataFunc)ctx->comp_func,
+                      ctx->user_data);
     // qsort(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareFunc)ctx->comp_func);
 }
 
@@ -315,11 +319,11 @@ darray_get_ideal_thread_count() {
 }
 
 void
-darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
+darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
 
     const int num_threads = darray_get_ideal_thread_count();
     if (array->num_items <= 100000 || num_threads < 2) {
-        return darray_sort(array, comp_func);
+        return darray_sort(array, comp_func, data);
     }
 
     g_debug("[sort] sorting with %d threads", num_threads);
@@ -335,6 +339,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
         sort_ctx.dest = darray_new_from_data(array->data + start,
                                              i == num_threads - 1 ? array->num_items - start : num_items_per_thread);
         sort_ctx.comp_func = comp_func;
+        sort_ctx.user_data = data;
         start += num_items_per_thread;
         g_array_insert_val(sort_ctx_array, i, sort_ctx);
         g_thread_pool_push(sort_pool, &g_array_index(sort_ctx_array, DynamicArraySortContext, i), NULL);
@@ -356,12 +361,12 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_fun
 }
 
 void
-darray_sort(DynamicArray *array, DynamicArrayCompareFunc comp_func) {
+darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
     g_assert(array);
     g_assert(array->data);
     g_assert(comp_func);
 
-    g_qsort_with_data(array->data, (int)array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, NULL);
+    g_qsort_with_data(array->data, (int)array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, data);
 }
 
 bool

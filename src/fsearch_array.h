@@ -35,10 +35,10 @@ darray_binary_search_with_data(DynamicArray *array,
                                uint32_t *matched_index);
 
 void
-darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareFunc comp_func);
+darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data);
 
 void
-darray_sort(DynamicArray *array, DynamicArrayCompareFunc comp_func);
+darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data);
 
 uint32_t
 darray_get_size(DynamicArray *array);
@@ -57,11 +57,7 @@ darray_get_item_next(DynamicArray *array,
                      uint32_t *next_idx);
 
 bool
-darray_get_item_idx(DynamicArray *array,
-                    void *item,
-                    DynamicArrayCompareDataFunc compare_func,
-                    void *data,
-                    uint32_t *index);
+darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index);
 
 void
 darray_add_items(DynamicArray *array, void **items, uint32_t num_items);

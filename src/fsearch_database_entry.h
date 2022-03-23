@@ -15,6 +15,11 @@ typedef struct FsearchDatabaseEntry FsearchDatabaseEntry;
 typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
 typedef struct FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
 
+typedef struct FsearchDatabaseEntryCompareContext {
+    GHashTable *file_type_table;
+    GHashTable *entry_to_file_type_table;
+} FsearchDatabaseEntryCompareContext;
+
 size_t
 db_entry_get_sizeof_folder_entry();
 
@@ -97,7 +102,7 @@ int
 db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
 
 int
-db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
+db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, gpointer data);
 
 int
 db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);

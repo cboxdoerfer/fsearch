@@ -194,19 +194,33 @@ db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     return (size_a > size_b) ? 1 : -1;
 }
 
-int
-db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const FsearchDatabaseEntryType type_a = db_entry_get_type(*a);
-    const FsearchDatabaseEntryType type_b = db_entry_get_type(*b);
-    if (type_a == DATABASE_ENTRY_TYPE_FOLDER && type_b == DATABASE_ENTRY_TYPE_FOLDER) {
-        return 0;
+static const char *
+get_file_type(FsearchDatabaseEntry *entry, GHashTable *file_type_table, GHashTable *entry_table) {
+    const FsearchDatabaseEntryType type_a = db_entry_get_type(entry);
+
+    const char *name = db_entry_get_name_raw_for_display(entry);
+    g_autofree char *type =
+        fsearch_file_utils_get_file_type_non_localized(name, type_a == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+    char *cached_type = g_hash_table_lookup(file_type_table, type);
+    if (!cached_type) {
+        g_hash_table_add(file_type_table, type);
+        cached_type = g_steal_pointer(&type);
     }
+    g_hash_table_insert(entry_table, entry, cached_type);
+    return cached_type;
+}
 
-    const char *name_a = db_entry_get_name_raw_for_display(*a);
-    const char *name_b = db_entry_get_name_raw_for_display(*b);
-    g_autofree char *file_type_a = fsearch_file_utils_get_file_type_non_localized(name_a, FALSE);
-    g_autofree char *file_type_b = fsearch_file_utils_get_file_type_non_localized(name_b, FALSE);
-
+int
+db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, gpointer data) {
+    FsearchDatabaseEntryCompareContext *comp_ctx = data;
+    const char *file_type_a = g_hash_table_lookup(comp_ctx->entry_to_file_type_table, *a);
+    const char *file_type_b = g_hash_table_lookup(comp_ctx->entry_to_file_type_table, *b);
+    if (!file_type_a) {
+        file_type_a = get_file_type(*a, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
+    }
+    if (!file_type_b) {
+        file_type_b = get_file_type(*b, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
+    }
     return strcmp(file_type_a, file_type_b);
 }
 

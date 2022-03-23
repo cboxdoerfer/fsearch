@@ -235,15 +235,15 @@ typedef struct {
 } FsearchSortContext;
 
 static void
-sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool parallel_sort) {
+sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool parallel_sort, void *data) {
     if (!array) {
         return;
     }
     if (parallel_sort) {
-        darray_sort_multi_threaded(array, (DynamicArrayCompareFunc)sort_func);
+        darray_sort_multi_threaded(array, sort_func, data);
     }
     else {
-        darray_sort(array, (DynamicArrayCompareFunc)sort_func);
+        darray_sort(array, sort_func, data);
     }
 }
 
@@ -300,6 +300,7 @@ static gpointer
 db_view_sort_task(gpointer data, GCancellable *cancellable) {
     FsearchSortContext *ctx = data;
     FsearchDatabaseView *view = ctx->view;
+    FsearchDatabaseEntryCompareContext *comp_ctx = NULL;
 
     if (!view->db) {
         return NULL;
@@ -338,19 +339,37 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
         goto out;
     }
     else {
-        files = darray_ref(view->files);
-        folders = darray_ref(view->folders);
+        files = darray_copy(view->files);
+        folders = darray_copy(view->folders);
     }
 
     DynamicArrayCompareDataFunc func = get_sort_func(ctx->sort_order);
-    const bool parallel_sort = ctx->sort_order == DATABASE_INDEX_TYPE_FILETYPE ? false : true;
+    bool parallel_sort = true;
+    if (ctx->sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
+        // Sorting by type can be really slow, because it accesses the filesystem to determine the type of files
+        // To mitigate that issue to a certain degree we cache the filetype for each file
+        // To avoid duplicating the filetype in memory for each file, we also store each filetype only once in
+        // a separate hash table.
+        // We also disable parallel sorting.
+        comp_ctx = calloc(1, sizeof(FsearchDatabaseEntryCompareContext));
+        comp_ctx->file_type_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+        comp_ctx->entry_to_file_type_table = g_hash_table_new(NULL, NULL);
+        parallel_sort = false;
+    }
 
     g_debug("[sort] started: %d", ctx->sort_order);
 
-    sort_array(folders, func, parallel_sort);
-    sort_array(files, func, parallel_sort);
+    db_view_unlock(view);
+    sort_array(folders, func, parallel_sort, comp_ctx);
+    sort_array(files, func, parallel_sort, comp_ctx);
+    db_view_lock(view);
 
 out:
+    if (comp_ctx) {
+        g_clear_pointer(&comp_ctx->entry_to_file_type_table, g_hash_table_unref);
+        g_clear_pointer(&comp_ctx->file_type_table, g_hash_table_unref);
+        g_clear_pointer(&comp_ctx, free);
+    }
     g_clear_pointer(&view->folders, darray_unref);
     g_clear_pointer(&view->files, darray_unref);
     view->folders = g_steal_pointer(&folders);

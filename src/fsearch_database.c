@@ -120,23 +120,25 @@ db_sorted_entries_free(FsearchDatabase *db) {
 static void
 db_sort_entries(FsearchDatabase *db, DynamicArray *entries, DynamicArray **sorted_entries) {
     // first sort by path
-    darray_sort_multi_threaded(entries, (DynamicArrayCompareFunc)db_entry_compare_entries_by_path);
+    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
     sorted_entries[DATABASE_INDEX_TYPE_PATH] = darray_copy(entries);
 
     // then by name
-    darray_sort(entries, (DynamicArrayCompareFunc)db_entry_compare_entries_by_name);
+    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, NULL);
 
     // now build individual lists sorted by all of the indexed metadata
     if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
         sorted_entries[DATABASE_INDEX_TYPE_SIZE] = darray_copy(entries);
         darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_SIZE],
-                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_size);
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
+                                   NULL);
     }
 
     if ((db->index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
         sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(entries);
         darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
-                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_modification_time);
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
+                                   NULL);
     }
 }
 
@@ -154,7 +156,8 @@ db_sort(FsearchDatabase *db) {
         // now build extension sort array
         db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION] = darray_copy(files);
         darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION],
-                                   (DynamicArrayCompareFunc)db_entry_compare_entries_by_extension);
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
+                                   NULL);
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
