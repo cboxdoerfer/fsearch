@@ -178,7 +178,7 @@ sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabas
     if (G_UNLIKELY(!entry_a || !entry_b)) {
         return;
     }
-    if (entry_a->super.parent && entry_a->super.parent != entry_b->super.parent) {
+    if (entry_a->super.parent) {
         sort_entry_by_path_recursive(entry_a->super.parent, entry_b->super.parent, res);
     }
     if (*res != 0) {

@@ -857,8 +857,6 @@ on_database_update_finished(gpointer data, gpointer user_data) {
 
     fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), "");
 
-    fsearch_application_window_unselect_all(win);
-
     GtkWidget *update_database_button = gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack),
                                                                     "update_database");
     if (update_database_button) {

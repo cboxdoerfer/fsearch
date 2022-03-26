@@ -32,6 +32,7 @@ fsearch_query_new(const char *search_term,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
                   const char *query_id,
+                  bool reset_selection,
                   gpointer data) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     g_assert(q);
@@ -53,6 +54,7 @@ fsearch_query_new(const char *search_term,
     q->filter = fsearch_filter_ref(filter);
     q->flags = flags;
     q->query_id = strdup(query_id ? query_id : "[missing_id]");
+    q->reset_selection = reset_selection;
     q->data = data;
     q->ref_count = 1;
     return q;

@@ -52,6 +52,8 @@ typedef struct FsearchQuery {
 
     char *query_id;
 
+    bool reset_selection;
+
     gpointer data;
 
     volatile int ref_count;
@@ -66,6 +68,7 @@ fsearch_query_new(const char *search_term,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
                   const char *query_id,
+                  bool reset_selection,
                   gpointer data);
 
 FsearchQuery *

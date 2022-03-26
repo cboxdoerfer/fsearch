@@ -49,7 +49,7 @@ struct FsearchDatabaseView {
 };
 
 static void
-db_view_search(FsearchDatabaseView *view);
+db_view_search(FsearchDatabaseView *view, bool reset_selection);
 
 static void
 db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
@@ -118,25 +118,112 @@ db_view_unregister_database(FsearchDatabaseView *view) {
     db_view_unlock(view);
 }
 
+static int32_t
+cmp_entries_by_name_and_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, void *data) {
+    const int res = db_entry_compare_entries_by_name(a, b);
+    if (res == 0) {
+        return db_entry_compare_entries_by_path(a, b);
+    }
+    return res;
+}
+
+static void
+copy_selection(DynamicArray *old_entries, DynamicArray *new_entries, GHashTable *old_selection, GHashTable *new_selection) {
+    if (!fsearch_selection_get_num_selected(old_selection) || darray_get_num_items(old_entries) == 0
+        || darray_get_num_items(new_entries) == 0) {
+        goto out;
+    }
+
+    uint32_t num_selected = 0;
+    const uint32_t num_new_entries = darray_get_num_items(new_entries);
+
+    for (uint32_t i = 0; i < darray_get_num_items(old_entries); ++i) {
+        FsearchDatabaseEntry *entry = darray_get_item(old_entries, i);
+        if (fsearch_selection_is_selected(old_selection, entry)) {
+            uint32_t found_idx = 0;
+            // We have to perform a binary search to find the matching item in the new database.
+            // That's not a huge issue for small selections, but when millions of items have been selected
+            // in the old database, it can take quite a few seconds.
+            // We should consider running this in a non-blocking way for the main thread.
+            if (darray_binary_search_with_data(new_entries,
+                                               entry,
+                                               (DynamicArrayCompareDataFunc)cmp_entries_by_name_and_path,
+                                               NULL,
+                                               &found_idx)) {
+                FsearchDatabaseEntry *entry_to_be_selected = darray_get_item(new_entries, found_idx);
+                fsearch_selection_select(new_selection, entry_to_be_selected);
+                num_selected++;
+
+                if (num_selected >= num_new_entries) {
+                    // This should almost never happen, but we've selected every element in new_entries,
+                    // so we're done here. Even when there are still more selected items in old_entries.
+                    break;
+                }
+            }
+        }
+    }
+out:
+    g_clear_pointer(&old_entries, darray_unref);
+    g_clear_pointer(&new_entries, darray_unref);
+}
+
+static GHashTable *
+migrate_selection(FsearchDatabase *db_old, FsearchDatabase *db_new, GHashTable *old_selection) {
+    db_lock(db_old);
+    db_lock(db_new);
+
+    GHashTable *new_selection = fsearch_selection_new();
+    copy_selection(db_get_files(db_old), db_get_files(db_new), old_selection, new_selection);
+    copy_selection(db_get_folders(db_old), db_get_folders(db_new), old_selection, new_selection);
+
+    db_unlock(db_old);
+    db_unlock(db_new);
+
+    return new_selection;
+}
+
 void
 db_view_register_database(FsearchDatabaseView *view, FsearchDatabase *db) {
     g_assert(view);
     g_assert(db);
 
-    db_view_unregister_database(view);
+    if (db == view->db) {
+        return;
+    }
 
     if (!db_register_view(db, view)) {
         return;
     }
 
+    g_autoptr(GTimer) timer = g_timer_new();
+    g_timer_start(timer);
+    GHashTable *new_selection = NULL;
+    if (view->db) {
+        db_view_lock(view);
+        new_selection = migrate_selection(view->db, db, view->selection);
+        db_view_unlock(view);
+        g_debug("[db_view_register_database] old_selection_count: %d",
+                fsearch_selection_get_num_selected(view->selection));
+        g_debug("[db_view_register_database] new_selection_count: %d", fsearch_selection_get_num_selected(new_selection));
+    }
+    const double seconds = g_timer_elapsed(timer, NULL);
+    g_timer_reset(timer);
+    g_debug("[db_view_register_database] migrated selection in %f seconds", seconds);
+
+    db_view_unregister_database(view);
+
     db_view_lock(view);
 
     view->db = db_ref(db);
+    if (new_selection) {
+        g_clear_pointer(&view->selection, fsearch_selection_free);
+        view->selection = new_selection;
+    }
     view->pool = db_get_thread_pool(db);
     view->files = db_get_files(db);
     view->folders = db_get_folders(db);
 
-    db_view_search(view);
+    db_view_search(view, false);
     db_view_sort(view, view->sort_order);
 
     db_view_unlock(view);
@@ -204,7 +291,7 @@ db_view_search_task_finished(gpointer result, gpointer data) {
 
         FsearchDatabase *db = db_search_result_get_db(res);
         if (view->db == db) {
-            if (view->selection) {
+            if (view->selection && view->query->reset_selection) {
                 fsearch_selection_unselect_all(view->selection);
             }
             g_clear_pointer(&view->files, darray_unref);
@@ -436,7 +523,7 @@ db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order) {
 }
 
 static void
-db_view_search(FsearchDatabaseView *view) {
+db_view_search(FsearchDatabaseView *view, bool reset_selection) {
     if (!view->db || !view->pool) {
         return;
     }
@@ -455,6 +542,7 @@ db_view_search(FsearchDatabaseView *view) {
                                         view->pool,
                                         view->query_flags,
                                         query_id->str,
+                                        reset_selection,
                                         db_view_ref(view));
 
     db_search_queue(view->task_queue, g_steal_pointer(&q), db_view_search_task_finished, db_view_search_task_cancelled);
@@ -470,7 +558,7 @@ db_view_set_filters(FsearchDatabaseView *view, FsearchFilterManager *filters) {
     g_clear_pointer(&view->filters, fsearch_filter_manager_free);
     view->filters = fsearch_filter_manager_copy(filters);
 
-    db_view_search(view);
+    db_view_search(view, true);
 
     db_view_unlock(view);
 }
@@ -485,7 +573,7 @@ db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter) {
     g_clear_pointer(&view->filter, fsearch_filter_unref);
     view->filter = fsearch_filter_ref(filter);
 
-    db_view_search(view);
+    db_view_search(view, true);
 
     db_view_unlock(view);
 }
@@ -508,7 +596,7 @@ db_view_set_query_flags(FsearchDatabaseView *view, FsearchQueryFlags query_flags
     db_view_lock(view);
     view->query_flags = query_flags;
 
-    db_view_search(view);
+    db_view_search(view, true);
 
     db_view_unlock(view);
 }
@@ -523,7 +611,7 @@ db_view_set_query_text(FsearchDatabaseView *view, const char *query_text) {
     g_clear_pointer(&view->query_text, free);
     view->query_text = strdup(query_text ? query_text : "");
 
-    db_view_search(view);
+    db_view_search(view, true);
 
     db_view_unlock(view);
 }
