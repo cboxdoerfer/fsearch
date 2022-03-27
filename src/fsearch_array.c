@@ -80,7 +80,7 @@ typedef struct {
 
 } DynamicArraySortContext;
 
-void
+static void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
     g_qsort_with_data(ctx->dest->data,
@@ -91,7 +91,7 @@ sort_thread(gpointer data, gpointer user_data) {
     // qsort(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareFunc)ctx->comp_func);
 }
 
-void
+static void
 merge_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
     int i = 0;
@@ -260,14 +260,14 @@ darray_get_size(DynamicArray *array) {
 }
 
 static DynamicArray *
-darray_new_from_data(void **data, uint32_t num_items) {
+new_array_from_data(void **data, uint32_t num_items) {
     DynamicArray *array = darray_new(num_items);
     darray_add_items(array, data, num_items);
     return array;
 }
 
 static GArray *
-darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
+merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
 
     if (merge_me->len == 1) {
         return merge_me;
@@ -305,11 +305,11 @@ darray_merge_sorted(GArray *merge_me, DynamicArrayCompareFunc comp_func) {
         }
     }
 
-    return darray_merge_sorted(merged_data, comp_func);
+    return merge_sorted(merged_data, comp_func);
 }
 
 static int
-darray_get_ideal_thread_count() {
+get_ideal_thread_count() {
     // int num_processors = 1;
     const int num_processors = (int)g_get_num_processors();
 
@@ -321,7 +321,7 @@ darray_get_ideal_thread_count() {
 void
 darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
 
-    const int num_threads = darray_get_ideal_thread_count();
+    const int num_threads = get_ideal_thread_count();
     if (array->num_items <= 100000 || num_threads < 2) {
         return darray_sort(array, comp_func, data);
     }
@@ -336,8 +336,8 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp
     int start = 0;
     for (int i = 0; i < num_threads; ++i) {
         DynamicArraySortContext sort_ctx;
-        sort_ctx.dest = darray_new_from_data(array->data + start,
-                                             i == num_threads - 1 ? array->num_items - start : num_items_per_thread);
+        sort_ctx.dest = new_array_from_data(array->data + start,
+                                            i == num_threads - 1 ? array->num_items - start : num_items_per_thread);
         sort_ctx.comp_func = comp_func;
         sort_ctx.user_data = data;
         start += num_items_per_thread;
@@ -346,7 +346,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp
     }
     g_thread_pool_free(g_steal_pointer(&sort_pool), FALSE, TRUE);
 
-    g_autoptr(GArray) result = darray_merge_sorted(sort_ctx_array, comp_func);
+    g_autoptr(GArray) result = merge_sorted(sort_ctx_array, comp_func);
 
     if (result) {
         g_clear_pointer(&array->data, free);
