@@ -65,7 +65,9 @@ static GList *
 parse_field_file(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryToken next_token);
+get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx,
+                              FsearchQueryToken last_token,
+                              FsearchQueryToken next_token);
 
 typedef GList *(FsearchTokenFieldParser)(FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
 
@@ -514,8 +516,10 @@ get_operator_node_for_query_token(FsearchQueryToken token) {
 }
 
 static GList *
-get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx, FsearchQueryToken next_token) {
-    switch (parse_ctx->last_token) {
+get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx,
+                              FsearchQueryToken last_token,
+                              FsearchQueryToken next_token) {
+    switch (last_token) {
     case FSEARCH_QUERY_TOKEN_WORD:
     case FSEARCH_QUERY_TOKEN_FIELD:
     case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
@@ -618,7 +622,7 @@ parse_close_bracket(FsearchQueryParseContext *parse_ctx) {
 
 static GList *
 parse_open_bracket(FsearchQueryParseContext *parse_ctx) {
-    GList *res = get_implicit_and_if_necessary(parse_ctx, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
+    GList *res = get_implicit_and_if_necessary(parse_ctx, parse_ctx->last_token, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
     parse_ctx->last_token = FSEARCH_QUERY_TOKEN_BRACKET_OPEN;
     push_query_token(parse_ctx->operator_stack, FSEARCH_QUERY_TOKEN_BRACKET_OPEN);
     return res;
@@ -634,6 +638,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
     while (true) {
         g_autoptr(GString) token_value = NULL;
         FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
+        FsearchQueryToken last_token = parse_ctx->last_token;
 
         GList *to_append = NULL;
         switch (token) {
@@ -699,7 +704,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
         }
 
         if (to_append) {
-            res = g_list_concat(res, get_implicit_and_if_necessary(parse_ctx, token));
+            res = g_list_concat(res, get_implicit_and_if_necessary(parse_ctx, last_token, token));
             parse_ctx->last_token = token;
             res = g_list_concat(res, to_append);
         }
