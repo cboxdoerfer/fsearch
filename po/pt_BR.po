@@ -13,7 +13,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2021-11-20 17:52+0000\n"
+"PO-Revision-Date: 2022-03-28 13:27+0000\n"
 "Last-Translator: Gustavo Costa <xfgusta@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.9.1\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -39,7 +39,7 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
 "busca;fsearch;arquivos;pastas;músicas;vídeos;documentos;encontrar;ferramenta;"
-"tudo;"
+"everything;"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
@@ -184,10 +184,8 @@ msgid "Files"
 msgstr "Arquivos"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Outro aplicativo…"
+msgstr "Aplicações"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -220,47 +218,39 @@ msgstr "_OK"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "Editar filtro"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Nome"
+msgstr "Nome:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "O nome exclusivo deste filtro"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Nome do filtro exclusivo"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Pesquisar no caminho"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "Expressões regulares"
+msgstr "Habilitar expressões regulares"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Coincidir maiúsculas e minúsculas"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Consulta:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Macro:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -269,6 +259,10 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"A macro para este filtro. Uma macro permite\n"
+"                          acessar este filtro a partir da entrada de "
+"pesquisa digitando seu texto seguido de ':'\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -414,7 +408,7 @@ msgstr "Clique único para abrir"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Iniciar arquivos desktop"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -463,32 +457,24 @@ msgstr ""
 "caractere maiúsculo"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Adicionar pastas"
+msgstr "Adicionar novo filtro"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Remover o caminho selecionado"
+msgstr "Remover o filtro selecionado"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Número de arquivos selecionados"
+msgstr "Editar filtro selecionado"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "Restaurar filtros padrão"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Mostrar filtro"
+msgstr "Filtro:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -1046,12 +1032,21 @@ msgid ""
 "                      editor.\n"
 "                    "
 msgstr ""
+"<b>Iniciar arquivos desktop:</b>\n"
+"\n"
+"                      Se habilitado, a ativação de um arquivo <i>.desktop</"
+"i> iniciará o aplicativo definido\n"
+"                      dentro do arquivo. Dessa forma, o FSearch pode atuar "
+"como um inicializador de aplicativos. Caso contrário, o arquivo <i>."
+"desktop</i>\n"
+"                      será aberto com o manipulador padrão para este tipo de "
+"arquivos, que geralmente é um editor\n"
+"                      de texto.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page3"
 msgid "page30"
-msgstr "página3"
+msgstr "página30"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1068,20 +1063,24 @@ msgid ""
 "should be filtered\n"
 "                    "
 msgstr ""
+"<b>Filtros:</b>\n"
+"\n"
+"                      Esta é uma lista de todos os filtros disponíveis. Um "
+"filtro é uma pesquisa predefinida.\n"
+"\n"
+"                      • <b>Nome:</b> Um identificador exclusivo e descritivo "
+"para o filtro\n"
+"                      • <b>Macro:</b> Ao digitar o texto da macro seguido "
+"por um ':' você pode habilitar o filtro sob demanda\n"
+"                      • <b>Consulta:</b> O termo de pesquisa pelo qual a "
+"base de dados deve ser filtrado\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1864
 msgid "page18"
 msgstr "página18"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1089,54 +1088,33 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>Adicionar pasta a base de dados:</b>\n"
+"<b>Adicionar um novo filtro:</b>\n"
 "\n"
 "                      Este botão abre uma caixa de diálogo onde você pode "
-"selecionar uma pasta que deseja incluir na base de dados para\n"
-"                      pesquisa.\n"
+"editar um novo filtro.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page3"
 msgid "page31"
-msgstr "página3"
+msgstr "página31"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>Remover linha selecionada:</b>\n"
+"<b>Remover filtro selecionado:</b>\n"
 "\n"
-"                      Isso remove a pasta selecionada da lista de pastas "
-"incluídas.\n"
+"                      Este botão remove o filtro selecionado.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page3"
 msgid "page32"
-msgstr "página3"
+msgstr "página32"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1144,18 +1122,15 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>Adicionar pasta a base de dados:</b>\n"
+"<b>Editar filtro selecionado:</b>\n"
 "\n"
 "                      Este botão abre uma caixa de diálogo onde você pode "
-"selecionar uma pasta que deseja incluir na base de dados para\n"
-"                      pesquisa.\n"
+"editar o filtro selecionado.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page3"
 msgid "page33"
-msgstr "página3"
+msgstr "página33"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1168,12 +1143,17 @@ msgid ""
 "will be lost! ⚠\n"
 "                    "
 msgstr ""
+"<b>Restaurar filtros padrão:</b>\n"
+"\n"
+"                      Este botão restaura a configuração de filtro padrão.\n"
+"\n"
+"                      ⚠ Todos os filtros que foram criados ou editados pelo "
+"usuário serão perdidos! ⚠\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page3"
 msgid "page34"
-msgstr "página3"
+msgstr "página34"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1188,10 +1168,8 @@ msgid "_Select"
 msgstr "_Selecionar"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Adicionar pastas"
+msgstr "Adicionar filtro"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1213,13 +1191,11 @@ msgstr "Nome"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "Macro"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Consulta vazia"
+msgstr "Consulta"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
