@@ -120,17 +120,18 @@ db_sorted_entries_free(FsearchDatabase *db) {
 static void
 db_sort_entries(FsearchDatabase *db, DynamicArray *entries, DynamicArray **sorted_entries) {
     // first sort by path
-    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
+    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL, NULL);
     sorted_entries[DATABASE_INDEX_TYPE_PATH] = darray_copy(entries);
 
     // then by name
-    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, NULL);
+    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, NULL, NULL);
 
     // now build individual lists sorted by all of the indexed metadata
     if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
         sorted_entries[DATABASE_INDEX_TYPE_SIZE] = darray_copy(entries);
         darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_SIZE],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
+                                   NULL,
                                    NULL);
     }
 
@@ -138,6 +139,7 @@ db_sort_entries(FsearchDatabase *db, DynamicArray *entries, DynamicArray **sorte
         sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(entries);
         darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
+                                   NULL,
                                    NULL);
     }
 }
@@ -157,6 +159,7 @@ db_sort(FsearchDatabase *db) {
         db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION] = darray_copy(files);
         darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
+                                   NULL,
                                    NULL);
 
         const double seconds = g_timer_elapsed(timer, NULL);

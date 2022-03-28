@@ -1829,17 +1829,12 @@ on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data
     GtkSortType current_sort_type = col->view->sort_type;
     int current_sort_order = col->view->sort_order;
 
-    if (current_sort_order == col->type) {
-        // clicked the same column, just change sort type and redraw
-        fsearch_list_view_set_sort_type(col->view, !current_sort_type);
-    }
-    else if (col->view->sort_func) {
-        // clicked different column, resort
-        col->view->sort_func(col->type, col->view->sort_func_data);
+    if (col->view->sort_func) {
+        col->view->sort_func(col->type,
+                             (current_sort_order == col->type) ? !current_sort_type : current_sort_type,
+                             col->view->sort_func_data);
         col->view->sort_order = col->type;
-        fsearch_list_view_set_sort_type(col->view, GTK_SORT_ASCENDING);
     }
-    fsearch_list_view_update_sort_indicator(col->view);
 }
 
 static gboolean

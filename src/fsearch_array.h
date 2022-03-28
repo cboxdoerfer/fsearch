@@ -18,6 +18,7 @@
 
 #pragma once
 
+#include <gio/gio.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdlib.h>
@@ -35,10 +36,13 @@ darray_binary_search_with_data(DynamicArray *array,
                                uint32_t *matched_index);
 
 void
-darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data);
+darray_sort_multi_threaded(DynamicArray *array,
+                           DynamicArrayCompareDataFunc comp_func,
+                           GCancellable *cancellable,
+                           void *data);
 
 void
-darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data);
+darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancellable *cancellable, void *data);
 
 uint32_t
 darray_get_size(DynamicArray *array);

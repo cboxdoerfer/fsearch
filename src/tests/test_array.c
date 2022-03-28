@@ -31,7 +31,7 @@ test_main(void) {
     }
     g_assert_true(darray_get_num_items(array) == upper_limit);
 
-    darray_sort(array, (DynamicArrayCompareDataFunc)sort_int_descending, NULL);
+    darray_sort(array, (DynamicArrayCompareDataFunc)sort_int_descending, NULL, NULL);
     for (int32_t i = 0; i < upper_limit; ++i) {
         int32_t j = GPOINTER_TO_INT(darray_get_item(array, i));
         int32_t expected_val = upper_limit - i - 1;
@@ -56,7 +56,7 @@ test_main(void) {
         }
     }
 
-    darray_sort_multi_threaded(array, (DynamicArrayCompareDataFunc)sort_int_ascending, NULL);
+    darray_sort_multi_threaded(array, (DynamicArrayCompareDataFunc)sort_int_ascending, NULL, NULL);
     for (int32_t i = 0; i < upper_limit; ++i) {
         int32_t j = GPOINTER_TO_INT(darray_get_item(array, i));
         g_print("%d:%d\n", i, j);

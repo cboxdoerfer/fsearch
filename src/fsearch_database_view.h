@@ -31,6 +31,7 @@ db_view_new(const char *query_text,
             FsearchFilter *filter,
             FsearchFilterManager *filters,
             FsearchDatabaseIndexType sort_order,
+            GtkSortType sort_type,
             FsearchDatabaseViewNotifyFunc notify_func,
             gpointer notify_func_data);
 
@@ -50,7 +51,7 @@ void
 db_view_set_query_text(FsearchDatabaseView *view, const char *query_text);
 
 void
-db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
+db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order, GtkSortType sort_type);
 
 // NOTE: Getters are not thread save, they need to be wrapped with db_view_lock/db_view_unlock
 uint32_t
@@ -61,6 +62,9 @@ db_view_get_num_files(FsearchDatabaseView *view);
 
 uint32_t
 db_view_get_num_entries(FsearchDatabaseView *view);
+
+GtkSortType
+db_view_get_sort_type(FsearchDatabaseView *view);
 
 FsearchDatabaseIndexType
 db_view_get_sort_order(FsearchDatabaseView *view);

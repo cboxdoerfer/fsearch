@@ -19,7 +19,6 @@
 #define G_LOG_DOMAIN "fsearch-dynamic-array"
 
 #include "fsearch_array.h"
-#include <gio/gio.h>
 #include <glib.h>
 #include <math.h>
 #include <stdlib.h>
@@ -156,7 +155,7 @@ static void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
     DynamicArray *src = darray_copy(ctx->dest);
-    merge_sort(src, ctx->dest, NULL, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
+    merge_sort(src, ctx->dest, user_data, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
     darray_unref(src);
     // g_qsort_with_data(ctx->dest->data,
     //                   (int)ctx->dest->num_items,
@@ -342,8 +341,11 @@ new_array_from_data(void **data, uint32_t num_items) {
 }
 
 static GArray *
-merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func) {
+merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellable *cancellable) {
     if (merge_me->len == 1) {
+        return merge_me;
+    }
+    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
         return merge_me;
     }
     const uint32_t num_threads = merge_me->len / 2;
@@ -379,7 +381,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func) {
         }
     }
 
-    return merge_sorted(merged_data, comp_func);
+    return merge_sorted(merged_data, comp_func, cancellable);
 }
 
 static int
@@ -393,16 +395,19 @@ get_ideal_thread_count() {
 }
 
 void
-darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
+darray_sort_multi_threaded(DynamicArray *array,
+                           DynamicArrayCompareDataFunc comp_func,
+                           GCancellable *cancellable,
+                           void *data) {
     const int num_threads = get_ideal_thread_count();
     if (array->num_items <= 100000 || num_threads < 2) {
-        return darray_sort(array, comp_func, data);
+        return darray_sort(array, comp_func, NULL, data);
     }
 
     g_debug("[sort] sorting with %d threads", num_threads);
 
     const int num_items_per_thread = (int)(array->num_items / num_threads);
-    GThreadPool *sort_pool = g_thread_pool_new(sort_thread, NULL, num_threads, FALSE, NULL);
+    GThreadPool *sort_pool = g_thread_pool_new(sort_thread, cancellable, num_threads, FALSE, NULL);
 
     g_autoptr(GArray) sort_ctx_array = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
 
@@ -419,7 +424,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp
     }
     g_thread_pool_free(g_steal_pointer(&sort_pool), FALSE, TRUE);
 
-    g_autoptr(GArray) result = merge_sorted(sort_ctx_array, comp_func);
+    g_autoptr(GArray) result = merge_sorted(sort_ctx_array, comp_func, cancellable);
 
     if (result) {
         g_clear_pointer(&array->data, free);
@@ -434,7 +439,7 @@ darray_sort_multi_threaded(DynamicArray *array, DynamicArrayCompareDataFunc comp
 }
 
 void
-darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
+darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancellable *cancellable, void *data) {
     g_assert(array);
     g_assert(array->data);
     g_assert(comp_func);
@@ -446,7 +451,6 @@ darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *da
     else {
         g_debug("[sort] merge sort: %d\n", array->num_items);
         DynamicArray *src = darray_copy(array);
-        g_autoptr(GCancellable) cancellable = g_cancellable_new();
         merge_sort(src, array, cancellable, comp_func, data);
         darray_unref(src);
     }

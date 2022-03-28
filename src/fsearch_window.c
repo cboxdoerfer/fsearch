@@ -69,7 +69,6 @@ struct _FsearchApplicationWindow {
 
     FsearchResultView *result_view;
 
-    guint sort_overlay_timeout_id;
 };
 
 typedef enum {
@@ -92,14 +91,6 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
 
 static void
 on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data);
-
-static void
-sort_overlay_remove_timeout(FsearchApplicationWindow *win) {
-    if (win->sort_overlay_timeout_id) {
-        g_source_remove(win->sort_overlay_timeout_id);
-        win->sort_overlay_timeout_id = 0;
-    }
-}
 
 static FsearchFilter *
 get_active_filter(FsearchApplicationWindow *win) {
@@ -352,10 +343,10 @@ fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
     db_view_lock(win->result_view->database_view);
     const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->result_view->database_view);
     win->result_view->sort_order = db_view_get_sort_order(win->result_view->database_view);
+    win->result_view->sort_type = db_view_get_sort_type(win->result_view->database_view);
     db_view_unlock(win->result_view->database_view);
 
     fsearch_result_view_row_cache_reset(win->result_view);
-    win->result_view->sort_type = fsearch_list_view_get_sort_type(win->result_view->list_view);
     fsearch_list_view_set_config(win->result_view->list_view,
                                  num_rows,
                                  win->result_view->sort_order,
@@ -368,23 +359,9 @@ fsearch_window_db_view_sort_finished_cb(gpointer data) {
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
     if (win) {
-        sort_overlay_remove_timeout(win);
-        fsearch_window_set_overlay_for_database_state(win);
-
         fsearch_window_db_view_apply_changes(win);
     }
 
-    return G_SOURCE_REMOVE;
-}
-
-static gboolean
-on_sort_overlay_show(gpointer data) {
-    const guint win_id = GPOINTER_TO_UINT(data);
-    FsearchApplicationWindow *win = get_window_for_id(win_id);
-    if (win) {
-        show_overlay(win, OVERLAY_RESULTS_SORTING);
-        win->sort_overlay_timeout_id = 0;
-    }
     return G_SOURCE_REMOVE;
 }
 
@@ -393,11 +370,6 @@ fsearch_window_db_view_sort_started_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    if (win) {
-        fsearch_window_listview_set_empty(win);
-        sort_overlay_remove_timeout(win);
-        win->sort_overlay_timeout_id = g_timeout_add(100, on_sort_overlay_show, data);
-    }
     return G_SOURCE_REMOVE;
 }
 
@@ -654,15 +626,15 @@ fsearch_list_view_draw_row(cairo_t *cr,
 }
 
 static void
-fsearch_results_sort_func(int sort_order, gpointer user_data) {
+fsearch_results_sort_func(int sort_order, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (!win->result_view->database_view) {
         return;
     }
-    win->result_view->sort_type = fsearch_list_view_get_sort_type(win->result_view->list_view);
-    win->result_view->sort_order = sort_order;
+    // win->result_view->sort_type = fsearch_list_view_get_sort_type(win->result_view->list_view);
+    // win->result_view->sort_order = sort_order;
 
-    db_view_set_sort_order(win->result_view->database_view, win->result_view->sort_order);
+    db_view_set_sort_order(win->result_view->database_view, sort_order, sort_type);
 }
 
 static void
@@ -1272,6 +1244,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
                                                   filter,
                                                   config->filters,
                                                   sort_order,
+                                                  GTK_SORT_ASCENDING,
                                                   fsearch_window_db_view_notify,
                                                   GUINT_TO_POINTER(win_id));
     g_clear_pointer(&filter, fsearch_filter_unref);

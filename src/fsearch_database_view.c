@@ -31,6 +31,7 @@ struct FsearchDatabaseView {
     GHashTable *selection;
 
     FsearchDatabaseIndexType sort_order;
+    GtkSortType sort_type;
 
     char *query_text;
     FsearchFilter *filter;
@@ -52,7 +53,7 @@ static void
 db_view_search(FsearchDatabaseView *view, bool reset_selection);
 
 static void
-db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order);
+db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order, GtkSortType sort_type);
 
 // Implementation
 
@@ -224,7 +225,7 @@ db_view_register_database(FsearchDatabaseView *view, FsearchDatabase *db) {
     view->folders = db_get_folders(db);
 
     db_view_search(view, false);
-    db_view_sort(view, view->sort_order);
+    db_view_sort(view, view->sort_order, view->sort_type);
 
     db_view_unlock(view);
 }
@@ -235,6 +236,7 @@ db_view_new(const char *query_text,
             FsearchFilter *filter,
             FsearchFilterManager *filters,
             FsearchDatabaseIndexType sort_order,
+            GtkSortType sort_type,
             FsearchDatabaseViewNotifyFunc notify_func,
             gpointer notify_func_data) {
     FsearchDatabaseView *view = calloc(1, sizeof(struct FsearchDatabaseView));
@@ -249,6 +251,7 @@ db_view_new(const char *query_text,
     view->filter = fsearch_filter_ref(filter);
     view->filters = fsearch_filter_manager_copy(filters);
     view->sort_order = sort_order;
+    view->sort_type = sort_type;
 
     view->notify_func = notify_func;
     view->notify_func_data = notify_func_data;
@@ -321,18 +324,23 @@ db_view_search_task_finished(gpointer result, gpointer data) {
 typedef struct {
     FsearchDatabaseView *view;
     FsearchDatabaseIndexType sort_order;
+    GtkSortType sort_type;
 } FsearchSortContext;
 
 static void
-sort_array(DynamicArray *array, DynamicArrayCompareDataFunc sort_func, bool parallel_sort, void *data) {
+sort_array(DynamicArray *array,
+           DynamicArrayCompareDataFunc sort_func,
+           GCancellable *cancellable,
+           bool parallel_sort,
+           void *data) {
     if (!array) {
         return;
     }
     if (parallel_sort) {
-        darray_sort_multi_threaded(array, sort_func, data);
+        darray_sort_multi_threaded(array, sort_func, cancellable, data);
     }
     else {
-        darray_sort(array, sort_func, data);
+        darray_sort(array, sort_func, cancellable, data);
     }
 }
 
@@ -461,9 +469,9 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
 
     db_view_unlock(view);
     if (sort_order_affects_folders(ctx->sort_order)) {
-        sort_array(folders, func, parallel_sort, comp_ctx);
+        sort_array(folders, func, cancellable, parallel_sort, comp_ctx);
     }
-    sort_array(files, func, parallel_sort, comp_ctx);
+    sort_array(files, func, cancellable, parallel_sort, comp_ctx);
     db_view_lock(view);
 
     if (comp_ctx) {
@@ -473,19 +481,25 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
     }
 
 out:
-    g_clear_pointer(&view->folders, darray_unref);
-    g_clear_pointer(&view->files, darray_unref);
-    view->folders = g_steal_pointer(&folders);
-    view->files = g_steal_pointer(&files);
-    view->sort_order = ctx->sort_order;
-
-    db_unlock(view->db);
-    db_view_unlock(view);
-
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
 
-    g_debug("[sort] finished in %2.fms", seconds * 1000);
+    if (!g_cancellable_is_cancelled(cancellable)) {
+        g_clear_pointer(&view->folders, darray_unref);
+        g_clear_pointer(&view->files, darray_unref);
+        view->folders = g_steal_pointer(&folders);
+        view->files = g_steal_pointer(&files);
+        view->sort_order = ctx->sort_order;
+        view->sort_type = ctx->sort_type;
+        g_debug("[sort] finished in %2.fms", seconds * 1000);
+    }
+    else {
+        g_clear_pointer(&folders, darray_unref);
+        g_clear_pointer(&files, darray_unref);
+        g_debug("[sort] cancelled after %2.fms", seconds * 1000);
+    }
+    db_unlock(view->db);
+    db_view_unlock(view);
 
     if (view->notify_func) {
         view->notify_func(view, DATABASE_VIEW_NOTIFY_SORT_FINISHED, view->notify_func_data);
@@ -506,12 +520,13 @@ db_view_sort_task_finished(gpointer result, gpointer data) {
 }
 
 static void
-db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order) {
+db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order, GtkSortType sort_type) {
     FsearchSortContext *ctx = calloc(1, sizeof(FsearchSortContext));
     g_assert(ctx);
 
     ctx->view = view;
     ctx->sort_order = sort_order;
+    ctx->sort_type = sort_type;
 
     fsearch_task_queue(view->task_queue,
                        FSEARCH_TASK_ID_SORT,
@@ -617,13 +632,13 @@ db_view_set_query_text(FsearchDatabaseView *view, const char *query_text) {
 }
 
 void
-db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order) {
+db_view_set_sort_order(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order, GtkSortType sort_type) {
     if (!view) {
         return;
     }
     db_view_lock(view);
-    if (view->sort_order != sort_order) {
-        db_view_sort(view, sort_order);
+    if (view->sort_order != sort_order || view->sort_type != sort_type) {
+        db_view_sort(view, sort_order, sort_type);
     }
     db_view_unlock(view);
 }
@@ -644,6 +659,12 @@ uint32_t
 db_view_get_num_entries(FsearchDatabaseView *view) {
     g_assert(view);
     return db_view_get_num_folders(view) + db_view_get_num_files(view);
+}
+
+GtkSortType
+db_view_get_sort_type(FsearchDatabaseView *view) {
+    g_assert(view);
+    return view->sort_type;
 }
 
 FsearchDatabaseIndexType
