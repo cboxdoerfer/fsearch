@@ -425,6 +425,13 @@ db_view_sort_task(gpointer data, GCancellable *cancellable) {
     db_view_lock(view);
     db_lock(view->db);
 
+    if (view->sort_order == ctx->sort_order) {
+        // Sort order didn't change, use the old results
+        files = darray_ref(view->files);
+        folders = darray_ref(view->folders);
+        goto out;
+    }
+
     if (db_has_entries_sorted_by_type(view->db, ctx->sort_order)) {
         if (!view->query || fsearch_query_matches_everything(view->query)) {
             // We're matching everything, and we have the entries already sorted in our index.
