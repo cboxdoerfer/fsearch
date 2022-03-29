@@ -68,7 +68,6 @@ struct _FsearchApplicationWindow {
     char *active_filter_name;
 
     FsearchResultView *result_view;
-
 };
 
 typedef enum {
@@ -342,9 +341,14 @@ static void
 fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
     db_view_lock(win->result_view->database_view);
     const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->result_view->database_view);
+
     win->result_view->sort_order = db_view_get_sort_order(win->result_view->database_view);
     win->result_view->sort_type = db_view_get_sort_type(win->result_view->database_view);
     db_view_unlock(win->result_view->database_view);
+
+    gchar sb_text[100] = "";
+    snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
+    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), sb_text);
 
     fsearch_result_view_row_cache_reset(win->result_view);
     fsearch_list_view_set_config(win->result_view->list_view,
@@ -369,6 +373,9 @@ static gboolean
 fsearch_window_db_view_sort_started_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
+    if (win) {
+        fsearch_statusbar_set_sort_status_delayed(FSEARCH_STATUSBAR(win->statusbar));
+    }
 
     return G_SOURCE_REMOVE;
 }
@@ -690,8 +697,7 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), size_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
     fsearch_list_view_column_set_tooltip(type_col,
-                                         _("Sorting by <b>Type</b> can be very slow with many results and it can't be "
-                                           "aborted.\n\n"
+                                         _("Sorting by <b>Type</b> can take a vew seconds with many results.\n\n"
                                            "This sort order is not persistent, it will be reset when the search term "
                                            "changes."));
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
@@ -978,10 +984,6 @@ fsearch_window_db_view_content_changed_cb(gpointer data) {
     db_view_lock(win->result_view->database_view);
     const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->result_view->database_view);
     db_view_unlock(win->result_view->database_view);
-
-    gchar sb_text[100] = "";
-    snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
-    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), sb_text);
 
     if (is_empty_search(win)) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);

@@ -1830,10 +1830,12 @@ on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data
     int current_sort_order = col->view->sort_order;
 
     if (col->view->sort_func) {
-        col->view->sort_func(col->type,
-                             (current_sort_order == col->type) ? !current_sort_type : current_sort_type,
-                             col->view->sort_func_data);
-        col->view->sort_order = col->type;
+        if (current_sort_order == col->type) {
+            col->view->sort_func(col->type, !current_sort_type, col->view->sort_func_data);
+        }
+        else {
+            col->view->sort_func(col->type, GTK_SORT_ASCENDING, col->view->sort_func_data);
+        }
     }
 }
 

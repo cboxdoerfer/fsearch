@@ -38,6 +38,9 @@ void
 fsearch_statusbar_set_query_status_delayed(FsearchStatusbar *sb);
 
 void
+fsearch_statusbar_set_sort_status_delayed(FsearchStatusbar *sb);
+
+void
 fsearch_statusbar_set_revealer_visibility(FsearchStatusbar *sb, FsearchStatusbarRevealer revealer, gboolean visible);
 
 void

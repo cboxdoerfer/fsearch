@@ -34,7 +34,7 @@ struct _FsearchStatusbar {
 G_DEFINE_TYPE(FsearchStatusbar, fsearch_statusbar, GTK_TYPE_REVEALER)
 
 static void
-statusbar_remove_query_status_update_timeout(FsearchStatusbar *sb) {
+statusbar_remove_status_update_timeout(FsearchStatusbar *sb) {
     if (sb->statusbar_timeout_id) {
         g_source_remove(sb->statusbar_timeout_id);
         sb->statusbar_timeout_id = 0;
@@ -43,8 +43,16 @@ statusbar_remove_query_status_update_timeout(FsearchStatusbar *sb) {
 
 void
 fsearch_statusbar_set_query_text(FsearchStatusbar *sb, const char *text) {
-    statusbar_remove_query_status_update_timeout(sb);
+    statusbar_remove_status_update_timeout(sb);
     gtk_label_set_text(GTK_LABEL(sb->statusbar_search_label), text);
+}
+
+static gboolean
+on_statusbar_set_sort_status(gpointer user_data) {
+    FsearchStatusbar *sb = user_data;
+    gtk_label_set_text(GTK_LABEL(sb->statusbar_search_label), _("Sorting…"));
+    sb->statusbar_timeout_id = 0;
+    return G_SOURCE_REMOVE;
 }
 
 static gboolean
@@ -56,8 +64,14 @@ on_statusbar_set_query_status(gpointer user_data) {
 }
 
 void
+fsearch_statusbar_set_sort_status_delayed(FsearchStatusbar *sb) {
+    statusbar_remove_status_update_timeout(sb);
+    sb->statusbar_timeout_id = g_timeout_add(100, on_statusbar_set_sort_status, sb);
+}
+
+void
 fsearch_statusbar_set_query_status_delayed(FsearchStatusbar *sb) {
-    statusbar_remove_query_status_update_timeout(sb);
+    statusbar_remove_status_update_timeout(sb);
     sb->statusbar_timeout_id = g_timeout_add(200, on_statusbar_set_query_status, sb);
 }
 
