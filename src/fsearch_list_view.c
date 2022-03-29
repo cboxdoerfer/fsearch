@@ -2002,27 +2002,9 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
     fsearch_list_view_scroll_row_into_view(view, row_idx);
 }
 
-void
-fsearch_list_view_set_sort_order(FsearchListView *view, int sort_order) {
-    if (!view) {
-        return;
-    }
-    view->sort_order = sort_order;
-    gtk_widget_queue_draw(GTK_WIDGET(view));
-}
-
 int
 fsearch_list_view_get_sort_order(FsearchListView *view) {
     return view->sort_order;
-}
-
-void
-fsearch_list_view_set_sort_type(FsearchListView *view, GtkSortType sort_type) {
-    if (!view) {
-        return;
-    }
-    view->sort_type = sort_type;
-    gtk_widget_queue_draw(GTK_WIDGET(view));
 }
 
 GtkSortType

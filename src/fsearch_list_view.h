@@ -120,14 +120,8 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx);
 void
 fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean value);
 
-void
-fsearch_list_view_set_sort_order(FsearchListView *view, int sort_order);
-
 int
 fsearch_list_view_get_sort_order(FsearchListView *view);
-
-void
-fsearch_list_view_set_sort_type(FsearchListView *view, GtkSortType sort_type);
 
 GtkSortType
 fsearch_list_view_get_sort_type(FsearchListView *view);

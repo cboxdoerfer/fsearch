@@ -813,10 +813,6 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
                                              on_listview_row_num_selected,
                                              win);
     fsearch_list_view_set_single_click_activate(list_view, config->single_click_open);
-    fsearch_list_view_set_sort_type(list_view,
-                                    config->restore_column_config
-                                        ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
-                                        : GTK_SORT_ASCENDING);
     gtk_widget_set_has_tooltip(GTK_WIDGET(list_view), config->enable_list_tooltips);
 
     add_columns(list_view, config);
