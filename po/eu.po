@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2022-02-23 15:58+0000\n"
+"PO-Revision-Date: 2022-03-30 14:06+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.11-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -106,7 +106,7 @@ msgstr "GNOMEren jarraibideak hurbilagotik jarraitzen duen diseinua"
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
 msgid "Christian Boxdörfer"
-msgstr "Christian Boxdörfer"
+msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
 msgid "Initial release."
@@ -177,10 +177,8 @@ msgid "Files"
 msgstr "Fitxategiak"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Beste aplikazio bat…"
+msgstr "Aplikazioak"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -213,47 +211,39 @@ msgstr "Ados"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
 msgid "Edit filter"
-msgstr ""
+msgstr "Editatu iragazkia"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Izena"
+msgstr "Izena:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Iragazki honen izen bakarra"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Iragazkiaren izen esklusiboa"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Bilatu bidean"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "Adierazpen erregularrak"
+msgstr "Gaitu adierazpen erregularrak"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Bereizi maiuskulak eta minuskulak"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Kontsulta:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Makroa:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -262,6 +252,10 @@ msgid ""
 "its text followed by ':'\n"
 "                      "
 msgstr ""
+"Iragazki honen makroa. Makro batek aukera ematen dizu\n"
+"                          erabiltzeko iragazki hau bilaketa-sarreratik bere "
+"testua idatzita eta ondoren ':'\n"
+"                      "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -407,7 +401,7 @@ msgstr "Ireki klik bakarra egitean"
 
 #: src/fsearch_preferences.ui:443
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Abiarazi mahaigaineko fitxategiak"
 
 #: src/fsearch_preferences.ui:464
 msgid "Results:"
@@ -456,32 +450,24 @@ msgstr ""
 "maiuskula bat duenean"
 
 #: src/fsearch_preferences.ui:754
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Gehitu karpetak"
+msgstr "Gehitu iragazki berria"
 
 #: src/fsearch_preferences.ui:770
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Kendu hautatutako bidea"
+msgstr "Kendu hautatutako iragazkia"
 
 #: src/fsearch_preferences.ui:786
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Hautatutako fitxategi kopurua"
+msgstr "Editatu hautatutako iragazkia"
 
 #: src/fsearch_preferences.ui:800
 msgid "Restore default filters"
-msgstr ""
+msgstr "Leheneratu iragazki lehenetsiak"
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Erakutsi iragazkiak"
+msgstr "Iragazkia:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -1036,12 +1022,20 @@ msgid ""
 "                      editor.\n"
 "                    "
 msgstr ""
+"<b>Abiarazi mahaigaineko fitxategiak:</b>\n"
+"\n"
+"                      Gaituta badago, <i>.mahaigaineko</i> fitxategi bat "
+"aktibatzeak definitutako aplikazioa abiaraziko du\n"
+"                      fitxategi horren barruan. Horrela, FSearch-ek "
+"aplikazioen abiarazle gisa jardun dezake. Bestela, <i>.mahaigaineko</i>\n"
+"                      fitxategia mota honetako fitxategien kudeatzaile "
+"lehenetsiarekin irekiko da, normalean testu- \n"
+"                      editorea.\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page0"
 msgid "page30"
-msgstr "0 orria"
+msgstr "30 orria"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1058,22 +1052,24 @@ msgid ""
 "should be filtered\n"
 "                    "
 msgstr ""
+"<b>Iragazkiak:</b>\n"
+"\n"
+"                      Hau da erabilgarri dauden iragazki guztien zerrenda. "
+"Iragazkia aurrez zehaztutako bilaketa bat da.\n"
+"\n"
+"                      • <b>Izena:</b> iragazkiaren identifikatzaile "
+"esklusibo eta deskribatzailea\n"
+"                      • <b>Makroa:</b> makro testua ':' baten ondoren "
+"idatziz gero, iragazkia gaitu dezakezu.\n"
+"                      • <b>Kontsulta:</b> datu-basean iragazi behar den "
+"bilaketa-terminoa\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1864
-#, fuzzy
-#| msgid "page1"
 msgid "page18"
-msgstr "1 orria"
+msgstr "18. orria"
 
 #: src/fsearch_preferences.ui:1872
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1081,54 +1077,34 @@ msgid ""
 "filter.\n"
 "                    "
 msgstr ""
-"<b>Gehitu karpeta datu-basean:</b>\n"
+"<b>Gehitu iragazki berria:</b>\n"
 "\n"
 "                      Botoi honek elkarrizketa-koadro bat irekitzen du, non "
-"datu-basean sartu nahi duzun karpeta bat hauta dezakezun\n"
-"                      bilatzeko.\n"
+"iragazki berri bat editatu dezakezu.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1882
-#, fuzzy
-#| msgid "page1"
 msgid "page31"
-msgstr "1 orria"
+msgstr "31. orria"
 
 #: src/fsearch_preferences.ui:1890
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "                      This removes the selected folder from the list of "
-#| "included folders.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
 "                      This button removes the currently selected filter.\n"
 "                    "
 msgstr ""
-"<b>Kendu hautatutako lerroa:</b>\n"
+"<b>Kendu hautatutako iragazkia:</b>\n"
 "\n"
-"                      Honek hautatutako karpeta sartzen diren karpeten "
-"zerrendatik kentzen du.\n"
+"                      Botoi honek une honetan hautatutako iragazkia kentzen "
+"du.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1900
-#, fuzzy
-#| msgid "page2"
 msgid "page32"
-msgstr "2 orria"
+msgstr "32. orria"
 
 #: src/fsearch_preferences.ui:1908
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1136,18 +1112,15 @@ msgid ""
 "selected filter.\n"
 "                    "
 msgstr ""
-"<b>Gehitu karpeta datu-basean:</b>\n"
+"<b>Editatu hautatutako iragazkia:</b>\n"
 "\n"
 "                      Botoi honek elkarrizketa-koadro bat irekitzen du, non "
-"datu-basean sartu nahi duzun karpeta bat hauta dezakezun\n"
-"                      bilatzeko.\n"
+"editatu dezakezun hautatutako iragazkia.\n"
 "                    "
 
 #: src/fsearch_preferences.ui:1918
-#, fuzzy
-#| msgid "page0"
 msgid "page33"
-msgstr "0 orria"
+msgstr "33. orria"
 
 #: src/fsearch_preferences.ui:1926
 msgid ""
@@ -1160,12 +1133,18 @@ msgid ""
 "will be lost! ⚠\n"
 "                    "
 msgstr ""
+"<b>Berrezarri iragazki lehenetsiak:</b>\n"
+"\n"
+"                      Botoi honek iragazkien konfigurazio lehenetsia "
+"berrezartzen du.\n"
+"\n"
+"                      ⚠ Erabiltzaileak sortu edo editatu dituen iragazki "
+"guztiak galduko dira! ⚠\n"
+"                    "
 
 #: src/fsearch_preferences.ui:1938
-#, fuzzy
-#| msgid "page0"
 msgid "page34"
-msgstr "0 orria"
+msgstr "34. orria"
 
 #: src/fsearch_preferences.ui:1948
 msgid "Help"
@@ -1180,10 +1159,8 @@ msgid "_Select"
 msgstr "Hautatu"
 
 #: src/fsearch_preferences_ui.c:325
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Gehitu karpetak"
+msgstr "Gehitu iragazkia"
 
 #: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
 msgid "Active"
@@ -1205,13 +1182,11 @@ msgstr "Izena"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Macro"
-msgstr ""
+msgstr "Makroa"
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Emaitzarik ez"
+msgstr "Kontsulta"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
