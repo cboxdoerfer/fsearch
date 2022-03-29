@@ -63,6 +63,9 @@ vgdump
 compile_commands.json
 *.ycm_extra_conf*
 
+# Debug scripts
+/run_*.sh
+
 #idea
 .idea
 
