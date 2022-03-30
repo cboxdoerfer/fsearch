@@ -170,7 +170,6 @@ merge_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
     int i = 0;
     int j = 0;
-    g_print("merge: %d, %d\n", ctx->m1->num_items, ctx->m2->num_items);
     while (true) {
         void *d1 = darray_get_item(ctx->m1, i);
         void *d2 = darray_get_item(ctx->m2, j);
@@ -194,12 +193,12 @@ merge_thread(gpointer data, gpointer user_data) {
         }
         else {
             if (d1) {
-                darray_add_item(ctx->dest, d1);
-                i++;
+                darray_add_items(ctx->dest, &ctx->m1->data[i], ctx->m1->num_items - i);
+                return;
             }
             else if (d2) {
-                darray_add_item(ctx->dest, d2);
-                j++;
+                darray_add_items(ctx->dest, &ctx->m2->data[j], ctx->m2->num_items - j);
+                return;
             }
             else {
                 return;
