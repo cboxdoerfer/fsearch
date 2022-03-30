@@ -94,8 +94,8 @@ insertion_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void 
 }
 
 static void
-merge(DynamicArray *a,
-      DynamicArray *b,
+merge(DynamicArray *src,
+      DynamicArray *dest,
       uint32_t start_idx,
       uint32_t center_idx,
       uint32_t end_idx,
@@ -110,20 +110,20 @@ merge(DynamicArray *a,
     uint32_t j = center_idx;
 
     for (uint32_t k = start_idx; k < end_idx; k++) {
-        if (i < center_idx && (j >= end_idx || comp_func(&a->data[i], &a->data[j], comp_data) < 1)) {
-            b->data[k] = a->data[i];
+        if (i < center_idx && (j >= end_idx || comp_func(&src->data[i], &src->data[j], comp_data) < 1)) {
+            dest->data[k] = src->data[i];
             i = i + 1;
         }
         else {
-            b->data[k] = a->data[j];
+            dest->data[k] = src->data[j];
             j = j + 1;
         }
     }
 }
 
 static void
-split_merge(DynamicArray *b,
-            DynamicArray *a,
+split_merge(DynamicArray *src,
+            DynamicArray *dest,
             uint32_t start_idx,
             uint32_t end_idx,
             GCancellable *cancellable,
@@ -137,26 +137,26 @@ split_merge(DynamicArray *b,
     }
 
     uint32_t center_idx = (end_idx + start_idx) / 2;
-    split_merge(a, b, start_idx, center_idx, cancellable, comp_func, comp_data);
-    split_merge(a, b, center_idx, end_idx, cancellable, comp_func, comp_data);
-    merge(b, a, start_idx, center_idx, end_idx, cancellable, comp_func, comp_data);
+    split_merge(dest, src, start_idx, center_idx, cancellable, comp_func, comp_data);
+    split_merge(dest, src, center_idx, end_idx, cancellable, comp_func, comp_data);
+    merge(src, dest, start_idx, center_idx, end_idx, cancellable, comp_func, comp_data);
 }
 
 static void
-merge_sort(DynamicArray *a,
-           DynamicArray *b,
+merge_sort(DynamicArray *to_sort,
+           DynamicArray *tmp,
            GCancellable *cancellable,
            DynamicArrayCompareDataFunc comp_func,
            gpointer comp_data) {
-    split_merge(b, a, 0, b->num_items, cancellable, comp_func, comp_data);
+    split_merge(tmp, to_sort, 0, to_sort->num_items, cancellable, comp_func, comp_data);
 }
 
 static void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
-    DynamicArray *src = darray_copy(ctx->dest);
-    merge_sort(src, ctx->dest, user_data, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
-    darray_unref(src);
+    DynamicArray *tmp = darray_copy(ctx->dest);
+    merge_sort(ctx->dest, tmp, user_data, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
+    darray_unref(tmp);
     // g_qsort_with_data(ctx->dest->data,
     //                   (int)ctx->dest->num_items,
     //                   sizeof(void *),
@@ -170,6 +170,7 @@ merge_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
     int i = 0;
     int j = 0;
+    g_print("merge: %d, %d\n", ctx->m1->num_items, ctx->m2->num_items);
     while (true) {
         void *d1 = darray_get_item(ctx->m1, i);
         void *d2 = darray_get_item(ctx->m2, j);
