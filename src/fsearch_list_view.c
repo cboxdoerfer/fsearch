@@ -1805,6 +1805,7 @@ fsearch_list_view_reset_sort_indicator(FsearchListView *view) {
     for (GList *col = view->columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
         gtk_widget_hide(column->arrow);
+        gtk_widget_set_sensitive(column->button, TRUE);
     }
 }
 
@@ -1837,6 +1838,9 @@ on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data
             col->view->sort_func(col->type, GTK_SORT_ASCENDING, col->view->sort_func_data);
         }
     }
+    gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "content-loading-symbolic", GTK_ICON_SIZE_BUTTON);
+    gtk_widget_show(col->arrow);
+    gtk_widget_set_sensitive(col->button, FALSE);
 }
 
 static gboolean
