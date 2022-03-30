@@ -619,6 +619,12 @@ fsearch_window_action_search_mode(GSimpleAction *action, GVariant *variant, gpoi
 }
 
 static void
+fsearch_window_action_cancel_current_task(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+    fsearch_application_window_cancel_current_task(self);
+}
+
+static void
 fsearch_window_action_match_case(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     g_simple_action_set_state(action, variant);
@@ -748,6 +754,7 @@ static GActionEntry FsearchWindowActions[] = {
     {"toggle_focus", fsearch_window_action_toggle_focus},
     {"focus_search", fsearch_window_action_focus_search},
     {"hide_window", fsearch_window_action_hide_window},
+    {"cancel_task", action_toggle_state_cb, NULL, "true", fsearch_window_action_cancel_current_task},
     // Column popup
     {"show_path_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_path_column},
     {"show_type_column", action_toggle_state_cb, NULL, "true", fsearch_window_action_show_type_column},

@@ -86,6 +86,9 @@ void
 fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app);
 
 void
+fsearch_application_window_cancel_current_task(FsearchApplicationWindow *win);
+
+void
 fsearch_application_window_invert_selection(FsearchApplicationWindow *self);
 
 void

@@ -17,6 +17,11 @@ struct _FsearchStatusbar {
     GtkWidget *statusbar_match_case_revealer;
     GtkWidget *statusbar_scan_label;
     GtkWidget *statusbar_scan_status_label;
+    GtkWidget *statusbar_search_stack;
+    GtkWidget *statusbar_search_status_box;
+    GtkWidget *statusbar_search_task_box;
+    GtkWidget *statusbar_search_task_spinner;
+    GtkWidget *statusbar_search_task_label;
     GtkWidget *statusbar_search_filter_revealer;
     GtkWidget *statusbar_search_in_path_revealer;
     GtkWidget *statusbar_search_filter_label;
@@ -42,24 +47,35 @@ statusbar_remove_status_update_timeout(FsearchStatusbar *sb) {
 }
 
 void
-fsearch_statusbar_set_query_text(FsearchStatusbar *sb, const char *text) {
+fsearch_statusbar_set_num_search_results(FsearchStatusbar *sb, uint32_t num_results) {
     statusbar_remove_status_update_timeout(sb);
-    gtk_label_set_text(GTK_LABEL(sb->statusbar_search_label), text);
+    gtk_stack_set_visible_child(GTK_STACK(sb->statusbar_search_stack), sb->statusbar_search_status_box);
+    gtk_spinner_stop(GTK_SPINNER(sb->statusbar_search_task_spinner));
+
+    gchar sb_text[100] = "";
+    snprintf(sb_text, sizeof(sb_text), num_results == 1 ? _("%'d Item") : _("%'d Items"), num_results);
+    gtk_label_set_text(GTK_LABEL(sb->statusbar_search_label), sb_text);
+}
+
+static void
+set_task_status(FsearchStatusbar *sb, const char *label) {
+    gtk_label_set_text(GTK_LABEL(sb->statusbar_search_task_label), label);
+    gtk_spinner_start(GTK_SPINNER(sb->statusbar_search_task_spinner));
+    gtk_stack_set_visible_child(GTK_STACK(sb->statusbar_search_stack), sb->statusbar_search_task_box);
+    sb->statusbar_timeout_id = 0;
 }
 
 static gboolean
 on_statusbar_set_sort_status(gpointer user_data) {
     FsearchStatusbar *sb = user_data;
-    gtk_label_set_text(GTK_LABEL(sb->statusbar_search_label), _("Sorting…"));
-    sb->statusbar_timeout_id = 0;
+    set_task_status(sb, _("Sorting…"));
     return G_SOURCE_REMOVE;
 }
 
 static gboolean
 on_statusbar_set_query_status(gpointer user_data) {
     FsearchStatusbar *sb = user_data;
-    gtk_label_set_text(GTK_LABEL(sb->statusbar_search_label), _("Querying…"));
-    sb->statusbar_timeout_id = 0;
+    set_task_status(sb, _("Querying…"));
     return G_SOURCE_REMOVE;
 }
 
@@ -161,7 +177,7 @@ fsearch_statusbar_set_database_scanning(FsearchStatusbar *sb) {
 
 static void
 fsearch_statusbar_set_database_idle(FsearchStatusbar *sb) {
-    fsearch_statusbar_set_query_text(sb, "");
+    fsearch_statusbar_set_num_search_results(sb, 0);
 
     gtk_spinner_stop(GTK_SPINNER(sb->statusbar_database_updating_spinner));
     gtk_widget_hide(sb->statusbar_scan_label);
@@ -282,11 +298,7 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
     fsearch_statusbar_set_selection(self, 0, 0, 0, 0);
 
     g_signal_connect_object(app, "database-scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(app,
-                            "database-update-finished",
-                            G_CALLBACK(on_database_update_finished),
-                            self,
-                            G_CONNECT_AFTER);
+    g_signal_connect_object(app, "database-update-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(app, "database-load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
 }
 
@@ -307,6 +319,11 @@ fsearch_statusbar_class_init(FsearchStatusbarClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_filter_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_filter_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_in_path_revealer);
+    gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_stack);
+    gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_status_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_task_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_task_spinner);
+    gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_task_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_label);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_search_mode_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchStatusbar, statusbar_selection_num_files_label);

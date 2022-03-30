@@ -35,6 +35,9 @@ void
 fsearch_statusbar_set_query_text(FsearchStatusbar *sb, const char *text);
 
 void
+fsearch_statusbar_set_num_search_results(FsearchStatusbar *sb, uint32_t num_results);
+
+void
 fsearch_statusbar_set_query_status_delayed(FsearchStatusbar *sb);
 
 void

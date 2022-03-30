@@ -600,6 +600,14 @@ db_view_set_filter(FsearchDatabaseView *view, FsearchFilter *filter) {
     db_view_unlock(view);
 }
 
+void
+db_view_cancel_current_task(FsearchDatabaseView *view) {
+    if (!view) {
+        return;
+    }
+    fsearch_task_queue_cancel_current(view->task_queue);
+}
+
 FsearchQuery *
 db_view_get_query(FsearchDatabaseView *view) {
     return fsearch_query_ref(view->query);

@@ -346,9 +346,7 @@ fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
     win->result_view->sort_type = db_view_get_sort_type(win->result_view->database_view);
     db_view_unlock(win->result_view->database_view);
 
-    gchar sb_text[100] = "";
-    snprintf(sb_text, sizeof(sb_text), _("%'d Items"), num_rows);
-    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), sb_text);
+    fsearch_statusbar_set_num_search_results(FSEARCH_STATUSBAR(win->statusbar), num_rows);
 
     fsearch_result_view_row_cache_reset(win->result_view);
     fsearch_list_view_set_config(win->result_view->list_view,
@@ -829,7 +827,7 @@ on_database_update_finished(gpointer data, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
-    fsearch_statusbar_set_query_text(FSEARCH_STATUSBAR(win->statusbar), "");
+    fsearch_statusbar_set_num_search_results(FSEARCH_STATUSBAR(win->statusbar), 0);
 
     GtkWidget *update_database_button = gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack),
                                                                     "update_database");
@@ -1251,6 +1249,14 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
     if (db) {
         db_view_register_database(win->result_view->database_view, db);
         g_clear_pointer(&db, db_unref);
+    }
+}
+
+void
+fsearch_application_window_cancel_current_task(FsearchApplicationWindow *win) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+    if (win->result_view && win->result_view->database_view) {
+        db_view_cancel_current_task(win->result_view->database_view);
     }
 }
 

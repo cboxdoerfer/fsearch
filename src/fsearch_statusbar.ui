@@ -1,17 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Generated with glade 3.38.2 -->
 <interface>
-  <requires lib="gtk+" version="3.18"/>
-  <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">process-stop-symbolic</property>
-  </object>
-  <template class="FsearchStatusbar" parent="GtkRevealer">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="transition-type">slide-up</property>
-    <property name="reveal-child">True</property>
+    <requires lib="gtk+" version="3.18"/>
+    <object class="GtkImage" id="image1">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="icon-name">process-stop-symbolic</property>
+    </object>
+    <object class="GtkImage" id="image9">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="icon-name">process-stop-symbolic</property>
+    </object>
+    <template class="FsearchStatusbar" parent="GtkRevealer">
+        <property name="visible">True</property>
+        <property name="can-focus">False</property>
+        <property name="transition-type">slide-up</property>
+        <property name="reveal-child">True</property>
     <child>
       <object class="GtkBox" id="statusbar">
         <property name="visible">True</property>
@@ -19,46 +24,113 @@
         <property name="margin-start">3</property>
         <property name="margin-end">3</property>
         <property name="spacing">6</property>
-        <child>
-          <object class="GtkBox" id="statusbar_search_status_box">
-            <property name="visible">True</property>
-            <property name="can-focus">False</property>
-            <property name="spacing">6</property>
-            <child>
-              <object class="GtkImage" id="statusbar_search_icon">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="icon-name">edit-find-symbolic</property>
+          <child>
+              <object class="GtkStack" id="statusbar_search_stack">
+                  <property name="visible">True</property>
+                  <property name="can-focus">False</property>
+                  <child>
+                      <object class="GtkBox" id="statusbar_search_status_box">
+                          <property name="visible">True</property>
+                          <property name="can-focus">False</property>
+                          <property name="spacing">6</property>
+                          <child>
+                              <object class="GtkImage" id="statusbar_search_icon">
+                                  <property name="visible">True</property>
+                                  <property name="can-focus">False</property>
+                                  <property name="icon-name">edit-find-symbolic</property>
+                              </object>
+                              <packing>
+                                  <property name="expand">False</property>
+                                  <property name="fill">True</property>
+                                  <property name="position">0</property>
+                              </packing>
+                          </child>
+                          <child>
+                              <object class="GtkLabel" id="statusbar_search_label">
+                                  <property name="visible">True</property>
+                                  <property name="can-focus">False</property>
+                                  <property name="tooltip-text" translatable="yes">Number of Search Results</property>
+                                  <property name="label" translatable="yes">0 Items</property>
+                                  <property name="ellipsize">end</property>
+                                  <property name="single-line-mode">True</property>
+                                  <property name="track-visited-links">False</property>
+                              </object>
+                              <packing>
+                                  <property name="expand">False</property>
+                                  <property name="fill">True</property>
+                                  <property name="position">1</property>
+                              </packing>
+                          </child>
+                      </object>
+                      <packing>
+                          <property name="name">page0</property>
+                          <property name="title" translatable="yes">page0</property>
+                      </packing>
+                  </child>
+                  <child>
+                      <object class="GtkBox" id="statusbar_search_task_box">
+                          <property name="visible">True</property>
+                          <property name="can-focus">False</property>
+                          <property name="spacing">6</property>
+                          <child>
+                              <object class="GtkSpinner" id="statusbar_search_task_spinner">
+                                  <property name="visible">True</property>
+                                  <property name="can-focus">False</property>
+                              </object>
+                              <packing>
+                                  <property name="expand">False</property>
+                                  <property name="fill">True</property>
+                                  <property name="position">0</property>
+                              </packing>
+                          </child>
+                          <child>
+                              <object class="GtkLabel" id="statusbar_search_task_label">
+                                  <property name="visible">True</property>
+                                  <property name="can-focus">False</property>
+                                  <property name="label" translatable="yes">Sorting…</property>
+                                  <property name="ellipsize">end</property>
+                                  <property name="max-width-chars">30</property>
+                                  <property name="track-visited-links">False</property>
+                              </object>
+                              <packing>
+                                  <property name="expand">False</property>
+                                  <property name="fill">True</property>
+                                  <property name="position">1</property>
+                              </packing>
+                          </child>
+                          <child>
+                              <object class="GtkButton" id="statusbar_search_task_cancel_button">
+                                  <property name="visible">True</property>
+                                  <property name="can-focus">True</property>
+                                  <property name="receives-default">True</property>
+                                  <property name="tooltip-text" translatable="yes">Cancel database update</property>
+                                  <property name="action-name">win.cancel_task</property>
+                                  <property name="image">image1</property>
+                                  <property name="relief">none</property>
+                                  <style>
+                                      <class name="fsearch-statusbar-cancel-update-button"/>
+                                  </style>
+                              </object>
+                              <packing>
+                                  <property name="expand">False</property>
+                                  <property name="fill">True</property>
+                                  <property name="position">2</property>
+                              </packing>
+                          </child>
+                      </object>
+                      <packing>
+                          <property name="name">page1</property>
+                          <property name="title" translatable="yes">page1</property>
+                          <property name="position">1</property>
+                      </packing>
+                  </child>
               </object>
               <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">0</property>
+                  <property name="expand">False</property>
+                  <property name="fill">True</property>
+                  <property name="position">0</property>
               </packing>
-            </child>
-            <child>
-              <object class="GtkLabel" id="statusbar_search_label">
-                <property name="visible">True</property>
-                <property name="can-focus">False</property>
-                <property name="tooltip-text" translatable="yes">Number of Search Results</property>
-                <property name="label" translatable="yes">0 Items</property>
-                <property name="ellipsize">end</property>
-                <property name="single-line-mode">True</property>
-                <property name="track-visited-links">False</property>
-              </object>
-              <packing>
-                <property name="expand">False</property>
-                <property name="fill">True</property>
-                <property name="position">1</property>
-              </packing>
-            </child>
-          </object>
-          <packing>
-            <property name="expand">False</property>
-            <property name="fill">True</property>
-            <property name="position">0</property>
-          </packing>
-        </child>
+          </child>
         <child>
           <object class="GtkBox" id="statusbar_scan_status_box">
             <property name="visible">True</property>

@@ -36,6 +36,9 @@ db_view_new(const char *query_text,
             gpointer notify_func_data);
 
 void
+db_view_cancel_current_task(FsearchDatabaseView *view);
+
+void
 db_view_set_thread_pool(FsearchDatabaseView *view, FsearchThreadPool *pool);
 
 void
