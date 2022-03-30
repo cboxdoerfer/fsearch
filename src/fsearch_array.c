@@ -451,7 +451,7 @@ darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancell
     else {
         g_debug("[sort] merge sort: %d\n", array->num_items);
         DynamicArray *src = darray_copy(array);
-        merge_sort(src, array, cancellable, comp_func, data);
+        merge_sort(array, src, cancellable, comp_func, data);
         darray_unref(src);
     }
     // g_qsort_with_data(array->data, (int)array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, data);
