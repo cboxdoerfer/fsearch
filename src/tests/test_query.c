@@ -10,7 +10,7 @@ test_query(const char *needle, const char *haystack, off_t size, FsearchQueryFla
     bool found = true;
 
     FsearchFilterManager *manager = fsearch_filter_manager_new_with_defaults();
-    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, manager, NULL, flags, "debug_query", true, NULL);
+    FsearchQuery *q = fsearch_query_new(needle, NULL, 0, NULL, manager, NULL, flags, "debug_query", true);
 
     g_autofree FsearchDatabaseEntry *entry = calloc(1, db_entry_get_sizeof_file_entry());
     db_entry_set_name(entry, haystack);

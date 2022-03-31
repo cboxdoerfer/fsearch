@@ -22,10 +22,8 @@
 #include "fsearch_database_entry.h"
 #include "fsearch_filter.h"
 #include "fsearch_query.h"
-#include "fsearch_task.h"
 
 #include <gio/gio.h>
-#include <stdint.h>
 
 typedef struct DatabaseSearchResult DatabaseSearchResult;
 
@@ -47,8 +45,8 @@ db_search_result_ref(DatabaseSearchResult *result);
 void
 db_search_result_unref(DatabaseSearchResult *result);
 
-void
-db_search_queue(FsearchTaskQueue *queue,
-                FsearchQuery *query,
-                FsearchTaskFinishedFunc finished_func,
-                FsearchTaskCancelledFunc cancelled_func);
+DatabaseSearchResult *
+db_search_empty(FsearchQuery *q);
+
+DatabaseSearchResult *
+db_search(FsearchQuery *q, GCancellable *cancellable);

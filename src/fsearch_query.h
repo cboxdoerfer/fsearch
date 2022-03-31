@@ -27,11 +27,11 @@
 #include "fsearch_database.h"
 #include "fsearch_filter_manager.h"
 #include "fsearch_list_view.h"
-#include "fsearch_query_match_data.h"
 #include "fsearch_query_flags.h"
+#include "fsearch_query_match_data.h"
+#include "fsearch_query_node.h"
 #include "fsearch_query_tree.h"
 #include "fsearch_thread_pool.h"
-#include "fsearch_query_node.h"
 
 typedef struct FsearchQuery {
     char *search_term;
@@ -54,8 +54,6 @@ typedef struct FsearchQuery {
 
     bool reset_selection;
 
-    gpointer data;
-
     volatile int ref_count;
 } FsearchQuery;
 
@@ -68,8 +66,7 @@ fsearch_query_new(const char *search_term,
                   FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
                   const char *query_id,
-                  bool reset_selection,
-                  gpointer data);
+                  bool reset_selection);
 
 FsearchQuery *
 fsearch_query_ref(FsearchQuery *query);

@@ -49,6 +49,11 @@ struct FsearchDatabaseView {
     volatile int ref_count;
 };
 
+typedef struct {
+    FsearchDatabaseView *view;
+    FsearchQuery *query;
+} FsearchSearchContext;
+
 static void
 db_view_search(FsearchDatabaseView *view, bool reset_selection);
 
@@ -268,57 +273,57 @@ db_view_new(const char *query_text,
 
 static void
 db_view_search_task_cancelled(gpointer data) {
-    FsearchQuery *query = data;
-    FsearchDatabaseView *view = query->data;
+    FsearchSearchContext *ctx = data;
 
-    if (view->notify_func) {
-        view->notify_func(view, DATABASE_VIEW_NOTIFY_SEARCH_FINISHED, view->notify_func_data);
+    if (ctx->view->notify_func) {
+        ctx->view->notify_func(ctx->view, DATABASE_VIEW_NOTIFY_SEARCH_FINISHED, ctx->view->notify_func_data);
     }
 
-    g_clear_pointer(&view, db_view_unref);
-    g_clear_pointer(&query, fsearch_query_unref);
+    g_clear_pointer(&ctx->view, db_view_unref);
+    g_clear_pointer(&ctx->query, fsearch_query_unref);
+    g_clear_pointer(&ctx, free);
 }
 
 static void
 db_view_search_task_finished(gpointer result, gpointer data) {
-    FsearchQuery *query = data;
-    FsearchDatabaseView *view = query->data;
+    FsearchSearchContext *ctx = data;
 
-    db_view_lock(view);
+    db_view_lock(ctx->view);
 
-    g_clear_pointer(&view->query, fsearch_query_unref);
-    view->query = g_steal_pointer(&query);
+    g_clear_pointer(&ctx->view->query, fsearch_query_unref);
+    ctx->view->query = g_steal_pointer(&ctx->query);
 
     if (result) {
         DatabaseSearchResult *res = result;
 
         FsearchDatabase *db = db_search_result_get_db(res);
-        if (view->db == db) {
-            if (view->selection && view->query->reset_selection) {
-                fsearch_selection_unselect_all(view->selection);
+        if (ctx->view->db == db) {
+            if (ctx->view->selection && ctx->view->query->reset_selection) {
+                fsearch_selection_unselect_all(ctx->view->selection);
             }
-            g_clear_pointer(&view->files, darray_unref);
-            view->files = db_search_result_get_files(res);
+            g_clear_pointer(&ctx->view->files, darray_unref);
+            ctx->view->files = db_search_result_get_files(res);
 
-            g_clear_pointer(&view->folders, darray_unref);
-            view->folders = db_search_result_get_folders(res);
+            g_clear_pointer(&ctx->view->folders, darray_unref);
+            ctx->view->folders = db_search_result_get_folders(res);
 
-            view->sort_order = db_search_result_get_sort_type(res);
+            ctx->view->sort_order = db_search_result_get_sort_type(res);
         }
 
         g_clear_pointer(&db, db_unref);
         g_clear_pointer(&res, db_search_result_unref);
     }
 
-    db_view_unlock(view);
+    db_view_unlock(ctx->view);
 
-    if (view->notify_func) {
-        view->notify_func(view, DATABASE_VIEW_NOTIFY_SEARCH_FINISHED, view->notify_func_data);
-        view->notify_func(view, DATABASE_VIEW_NOTIFY_CONTENT_CHANGED, view->notify_func_data);
-        view->notify_func(view, DATABASE_VIEW_NOTIFY_SELECTION_CHANGED, view->notify_func_data);
+    if (ctx->view->notify_func) {
+        ctx->view->notify_func(ctx->view, DATABASE_VIEW_NOTIFY_SEARCH_FINISHED, ctx->view->notify_func_data);
+        ctx->view->notify_func(ctx->view, DATABASE_VIEW_NOTIFY_CONTENT_CHANGED, ctx->view->notify_func_data);
+        ctx->view->notify_func(ctx->view, DATABASE_VIEW_NOTIFY_SELECTION_CHANGED, ctx->view->notify_func_data);
     }
 
-    g_clear_pointer(&view, db_view_unref);
+    g_clear_pointer(&ctx->view, db_view_unref);
+    g_clear_pointer(&ctx, free);
 }
 
 typedef struct {
@@ -544,30 +549,71 @@ db_view_sort(FsearchDatabaseView *view, FsearchDatabaseIndexType sort_order, Gtk
                        g_steal_pointer(&ctx));
 }
 
+static gpointer
+db_view_search_task(gpointer data, GCancellable *cancellable) {
+    FsearchSearchContext *ctx = data;
+
+    if (ctx->view->notify_func) {
+        ctx->view->notify_func(ctx->view, DATABASE_VIEW_NOTIFY_SEARCH_STARTED, ctx->view->notify_func_data);
+    }
+
+    g_autoptr(GTimer) timer = g_timer_new();
+    g_timer_start(timer);
+
+    DatabaseSearchResult *result = NULL;
+    if (fsearch_query_matches_everything(ctx->query)) {
+        result = db_search_empty(ctx->query);
+    }
+    else {
+        result = db_search(ctx->query, cancellable);
+    }
+
+    const char *debug_message = NULL;
+    const double seconds = g_timer_elapsed(timer, NULL);
+    if (!g_cancellable_is_cancelled(cancellable)) {
+        debug_message = "[%s] finished in %.2f ms";
+    }
+    else {
+        debug_message = "[%s] aborted after %.2f ms";
+    }
+    g_timer_stop(timer);
+
+    g_debug(debug_message, ctx->query->query_id, seconds * 1000);
+
+    return result;
+}
+
 static void
 db_view_search(FsearchDatabaseView *view, bool reset_selection) {
     if (!view->db || !view->pool) {
         return;
     }
 
-    if (view->notify_func) {
-        view->notify_func(view, DATABASE_VIEW_NOTIFY_SEARCH_STARTED, view->notify_func_data);
-    }
+    FsearchSearchContext *ctx = calloc(1, sizeof(FsearchSearchContext));
+    g_assert(ctx);
+
+    ctx->view = db_view_ref(view);
 
     g_autoptr(GString) query_id = g_string_new(NULL);
     g_string_printf(query_id, "query:%02d.%04d", view->id, view->query_id++);
-    FsearchQuery *q = fsearch_query_new(view->query_text,
-                                        view->db,
-                                        view->sort_order,
-                                        view->filter,
-                                        view->filters,
-                                        view->pool,
-                                        view->query_flags,
-                                        query_id->str,
-                                        reset_selection,
-                                        db_view_ref(view));
+    ctx->query = fsearch_query_new(view->query_text,
+                                   view->db,
+                                   view->sort_order,
+                                   view->filter,
+                                   view->filters,
+                                   view->pool,
+                                   view->query_flags,
+                                   query_id->str,
+                                   reset_selection);
+    g_assert(ctx->query);
 
-    db_search_queue(view->task_queue, g_steal_pointer(&q), db_view_search_task_finished, db_view_search_task_cancelled);
+    fsearch_task_queue(view->task_queue,
+                       FSEARCH_TASK_ID_SEARCH,
+                       db_view_search_task,
+                       db_view_search_task_finished,
+                       db_view_search_task_cancelled,
+                       FSEARCH_TASK_CLEAR_SAME_ID,
+                       g_steal_pointer(&ctx));
 }
 
 void

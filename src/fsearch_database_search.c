@@ -23,14 +23,11 @@
 #include "fsearch_database_search.h"
 
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 
 #include "fsearch_array.h"
 #include "fsearch_query_match_data.h"
-#include "fsearch_query_node.h"
-#include "fsearch_string_utils.h"
-#include "fsearch_task.h"
-#include "fsearch_task_ids.h"
 #include "fsearch_utf.h"
 
 #define THRESHOLD_FOR_PARALLEL_SEARCH 1000
@@ -55,12 +52,6 @@ typedef struct DatabaseSearchWorkerContext {
     uint32_t start_pos;
     uint32_t end_pos;
 } DatabaseSearchWorkerContext;
-
-static DatabaseSearchResult *
-db_search(FsearchQuery *q, GCancellable *cancellable);
-
-static DatabaseSearchResult *
-db_search_empty(FsearchQuery *q);
 
 static DatabaseSearchResult *
 db_search_result_new(void) {
@@ -115,36 +106,6 @@ db_search_result_get_files(DatabaseSearchResult *result) {
 DynamicArray *
 db_search_result_get_folders(DatabaseSearchResult *result) {
     return darray_ref(result->folders);
-}
-
-static gpointer
-db_search_task(gpointer data, GCancellable *cancellable) {
-    FsearchQuery *query = data;
-
-    g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
-
-    DatabaseSearchResult *result = NULL;
-    if (fsearch_query_matches_everything(query)) {
-        result = db_search_empty(query);
-    }
-    else {
-        result = db_search(query, cancellable);
-    }
-
-    const char *debug_message = NULL;
-    const double seconds = g_timer_elapsed(timer, NULL);
-    if (!g_cancellable_is_cancelled(cancellable)) {
-        debug_message = "[%s] finished in %.2f ms";
-    }
-    else {
-        debug_message = "[%s] aborted after %.2f ms";
-    }
-    g_timer_stop(timer);
-
-    g_debug(debug_message, query->query_id, seconds * 1000);
-
-    return result;
 }
 
 static void
@@ -291,7 +252,7 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
     return results;
 }
 
-static DatabaseSearchResult *
+DatabaseSearchResult *
 db_search_empty(FsearchQuery *q) {
     DatabaseSearchResult *result = db_search_result_new();
     DynamicArray *files = NULL;
@@ -309,7 +270,7 @@ db_search_empty(FsearchQuery *q) {
     return result;
 }
 
-static DatabaseSearchResult *
+DatabaseSearchResult *
 db_search(FsearchQuery *q, GCancellable *cancellable) {
     DynamicArray *files_in = NULL;
     DynamicArray *folders_in = NULL;
@@ -354,18 +315,4 @@ search_was_cancelled:
 
     db_unlock(q->db);
     return NULL;
-}
-
-void
-db_search_queue(FsearchTaskQueue *queue,
-                FsearchQuery *query,
-                FsearchTaskFinishedFunc finished_func,
-                FsearchTaskCancelledFunc cancelled_func) {
-    fsearch_task_queue(queue,
-                       FSEARCH_TASK_ID_SEARCH,
-                       db_search_task,
-                       finished_func,
-                       cancelled_func,
-                       FSEARCH_TASK_CLEAR_SAME_ID,
-                       g_steal_pointer(&query));
 }
