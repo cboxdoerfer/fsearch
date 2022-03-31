@@ -156,13 +156,7 @@ sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
     DynamicArray *tmp = darray_copy(ctx->dest);
     merge_sort(ctx->dest, tmp, user_data, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
-    darray_unref(tmp);
-    // g_qsort_with_data(ctx->dest->data,
-    //                   (int)ctx->dest->num_items,
-    //                   sizeof(void *),
-    //                   (GCompareDataFunc)ctx->comp_func,
-    //                   ctx->user_data);
-    //  qsort(ctx->dest->data, ctx->dest->num_items, sizeof(void *), (GCompareFunc)ctx->comp_func);
+    g_clear_pointer(&tmp, darray_unref);
 }
 
 static void
@@ -452,9 +446,8 @@ darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancell
         g_debug("[sort] merge sort: %d\n", array->num_items);
         DynamicArray *src = darray_copy(array);
         merge_sort(array, src, cancellable, comp_func, data);
-        darray_unref(src);
+        g_clear_pointer(&src, darray_unref);
     }
-    // g_qsort_with_data(array->data, (int)array->num_items, sizeof(void *), (GCompareDataFunc)comp_func, data);
 }
 
 bool
