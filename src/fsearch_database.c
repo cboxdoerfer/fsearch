@@ -117,35 +117,55 @@ db_sorted_entries_free(FsearchDatabase *db) {
     }
 }
 
+static bool
+is_cancelled(GCancellable *cancellable) {
+    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
+        return true;
+    }
+    return false;
+}
+
 static void
-db_sort_entries(FsearchDatabase *db, DynamicArray *entries, DynamicArray **sorted_entries) {
+db_sort_entries(FsearchDatabase *db, DynamicArray *entries, DynamicArray **sorted_entries, GCancellable *cancellable) {
     // first sort by path
-    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL, NULL);
+    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, cancellable, NULL);
+    if (is_cancelled(cancellable)) {
+        return;
+    }
     sorted_entries[DATABASE_INDEX_TYPE_PATH] = darray_copy(entries);
 
     // then by name
-    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, NULL, NULL);
+    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, cancellable, NULL);
+    if (is_cancelled(cancellable)) {
+        return;
+    }
 
     // now build individual lists sorted by all of the indexed metadata
     if ((db->index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
         sorted_entries[DATABASE_INDEX_TYPE_SIZE] = darray_copy(entries);
         darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_SIZE],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
-                                   NULL,
+                                   cancellable,
                                    NULL);
+        if (is_cancelled(cancellable)) {
+            return;
+        }
     }
 
     if ((db->index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
         sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(entries);
         darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
-                                   NULL,
+                                   cancellable,
                                    NULL);
+        if (is_cancelled(cancellable)) {
+            return;
+        }
     }
 }
 
 static void
-db_sort(FsearchDatabase *db) {
+db_sort(FsearchDatabase *db, GCancellable *cancellable) {
     g_assert(db);
 
     g_autoptr(GTimer) timer = g_timer_new();
@@ -153,14 +173,20 @@ db_sort(FsearchDatabase *db) {
     // first we sort all the files
     DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
     if (files) {
-        db_sort_entries(db, files, db->sorted_files);
+        db_sort_entries(db, files, db->sorted_files, cancellable);
+        if (is_cancelled(cancellable)) {
+            return;
+        }
 
         // now build extension sort array
         db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION] = darray_copy(files);
         darray_sort_multi_threaded(db->sorted_files[DATABASE_INDEX_TYPE_EXTENSION],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
-                                   NULL,
+                                   cancellable,
                                    NULL);
+        if (is_cancelled(cancellable)) {
+            return;
+        }
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_timer_reset(timer);
@@ -170,7 +196,10 @@ db_sort(FsearchDatabase *db) {
     // then we sort all the folders
     DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
     if (folders) {
-        db_sort_entries(db, folders, db->sorted_folders);
+        db_sort_entries(db, folders, db->sorted_folders, cancellable);
+        if (is_cancelled(cancellable)) {
+            return;
+        }
 
         // Folders don't have a file extension -> use the name array instead
         db->sorted_folders[DATABASE_INDEX_TYPE_EXTENSION] = darray_ref(folders);
@@ -1613,14 +1642,17 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
         if (fs_path->update) {
             ret = db_scan_folder(db, fs_path->path, fs_path->one_filesystem, cancellable, status_cb) || ret;
         }
-        if (g_cancellable_is_cancelled(cancellable)) {
+        if (is_cancelled(cancellable)) {
             return false;
         }
     }
     if (status_cb) {
         status_cb(_("Sorting…"));
     }
-    db_sort(db);
+    db_sort(db, cancellable);
+    if (is_cancelled(cancellable)) {
+        return false;
+    }
     return ret;
 }
 
