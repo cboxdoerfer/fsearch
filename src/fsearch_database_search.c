@@ -28,7 +28,6 @@
 
 #include "fsearch_array.h"
 #include "fsearch_query_match_data.h"
-#include "fsearch_utf.h"
 
 #define THRESHOLD_FOR_PARALLEL_SEARCH 1000
 
