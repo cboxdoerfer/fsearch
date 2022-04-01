@@ -1796,6 +1796,11 @@ fsearch_list_view_column_set_visible(FsearchListView *view, FsearchListViewColum
         gtk_widget_show(col->button);
         view->min_list_width += col->width;
     }
+
+    if (gtk_widget_get_realized(GTK_WIDGET(view))) {
+        gdk_window_raise(col->window);
+    }
+
     col->visible = visible;
     gtk_widget_queue_resize(GTK_WIDGET(view));
 }
@@ -1806,6 +1811,10 @@ fsearch_list_view_reset_sort_indicator(FsearchListView *view) {
         FsearchListViewColumn *column = col->data;
         gtk_widget_hide(column->arrow);
         gtk_widget_set_sensitive(column->button, TRUE);
+
+        if (gtk_widget_get_realized(GTK_WIDGET(view))) {
+            gdk_window_raise(column->window);
+        }
     }
 }
 
