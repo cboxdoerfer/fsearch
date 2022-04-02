@@ -640,6 +640,8 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
         FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
         FsearchQueryToken last_token = parse_ctx->last_token;
 
+        bool skip_implicit_and_check = false;
+
         GList *to_append = NULL;
         switch (token) {
         case FSEARCH_QUERY_TOKEN_EOS:
@@ -651,6 +653,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
                 // we simply add a single one
                 // to_append = add_implicit_and_if_necessary(parse_ctx, token);
                 if (is_operator_token_followed_by_operand(parse_ctx->lexer, token)) {
+                    skip_implicit_and_check = true;
                     to_append = get_implicit_and_if_necessary(parse_ctx, last_token, token);
                     to_append = g_list_concat(to_append, parse_operator(parse_ctx, token));
                 }
@@ -705,7 +708,9 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
         }
 
         if (to_append) {
-            res = g_list_concat(res, get_implicit_and_if_necessary(parse_ctx, last_token, token));
+            if (!skip_implicit_and_check) {
+                res = g_list_concat(res, get_implicit_and_if_necessary(parse_ctx, last_token, token));
+            }
             parse_ctx->last_token = token;
             res = g_list_concat(res, to_append);
         }
