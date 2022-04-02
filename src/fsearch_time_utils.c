@@ -45,11 +45,11 @@ parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_o
         return false;
     }
 
-    time_t time_start_res = mktime(&time_start);
+    time_t time_start_res = mktime(&time_start) - timezone;
     if (time_start_res < 0) {
         return false;
     }
-    time_t time_end_res = mktime(&time_end);
+    time_t time_end_res = mktime(&time_end) - timezone;
     if (time_end_res < 0) {
         return false;
     }
@@ -87,8 +87,9 @@ fsearch_time_parse_range(const char *str, time_t *time_start_out, time_t *time_e
         if (!date_suffix) {
             continue;
         }
+        g_print("Found date: %d\n", i);
         tm_start.tm_sec = tm_start.tm_min = tm_start.tm_hour = 0;
-        tm_start.tm_isdst = -1;
+        tm_start.tm_isdst = 0;
         struct tm tm_end = tm_start;
 
         switch (formats[i].dtime) {
@@ -116,12 +117,12 @@ fsearch_time_parse_range(const char *str, time_t *time_start_out, time_t *time_e
         default:
             continue;
         }
-        time_t time_start = mktime(&tm_start);
+        time_t time_start = mktime(&tm_start) - timezone;
         if (time_start < 0) {
             // invalid start time, try different format
             continue;
         }
-        time_t time_end = mktime(&tm_end);
+        time_t time_end = mktime(&tm_end) - timezone;
         if (time_end < 0) {
             // invalid end time, set it to a reasonably large value
             time_end = INT32_MAX;
