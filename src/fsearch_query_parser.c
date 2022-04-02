@@ -651,7 +651,8 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
                 // we simply add a single one
                 // to_append = add_implicit_and_if_necessary(parse_ctx, token);
                 if (is_operator_token_followed_by_operand(parse_ctx->lexer, token)) {
-                    to_append = parse_operator(parse_ctx, token);
+                    to_append = get_implicit_and_if_necessary(parse_ctx, last_token, token);
+                    to_append = g_list_concat(to_append, parse_operator(parse_ctx, token));
                 }
             }
             // discard_operator_tokens(parse_ctx->lexer);

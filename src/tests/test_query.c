@@ -137,6 +137,9 @@ test_main(void) {
             {"a (b || c)", "b", 0, 0, false},
             {"a (b || c)", "c", 0, 0, false},
             {"a (b || c)", "bc", 0, 0, false},
+            {"a !b", "ac", 0, 0, true},
+            {"a !b", "ab", 0, 0, false},
+            {"a !b", "cd", 0, 0, false},
             // Closing bracket without corresponding open bracket
             //{"a)", "a", 0, 0, false},
             {"a !b || c)", "ad", 0, 0, false},
