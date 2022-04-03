@@ -1,9 +1,10 @@
-#define _XOPEN_SOURCE 700
+#define _GNU_SOURCE
 
 #include "fsearch_time_utils.h"
 
 #include <glib.h>
 #include <stdint.h>
+#include <time.h>
 
 typedef enum FsearchTimeRangeType {
     FSEARCH_TIME_RANGE_DAY,
@@ -17,48 +18,61 @@ typedef struct FsearchTimeFormat {
     FsearchTimeRangeType dtime;
 } FsearchTimeFormat;
 
+static time_t
+get_unix_time_for_timezone(struct tm *tm) {
+    time_t res = timegm(tm);
+    if (res < 0) {
+        // tm refers to a point in time before 1970-01-01 00:00 UTC
+        // that's not a valid time
+        return -1;
+    }
+    // adjust for the timezone, but don't go below zero
+    return MAX(0, res + timezone);
+}
+
 static bool
 parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
     time_t t = time(NULL);
-    struct tm time_start = *localtime(&t);
-    struct tm time_end = time_start;
+    struct tm tm_start = *localtime(&t);
+    struct tm tm_end = tm_start;
     size_t prefix_len = 0;
     const char *today = "today";
     const char *yesterday = "yesterday";
     if (g_str_has_prefix(str, today)) {
-        time_start.tm_sec = time_start.tm_min = time_start.tm_hour = 0;
-        time_end.tm_sec = 59;
-        time_end.tm_min = 59;
-        time_end.tm_hour = 23;
+        tm_start.tm_sec = tm_start.tm_min = tm_start.tm_hour = 0;
+        tm_end.tm_sec = 59;
+        tm_end.tm_min = 59;
+        tm_end.tm_hour = 23;
         prefix_len = strlen(today);
     }
     else if (g_str_has_prefix(str, yesterday)) {
-        time_start.tm_mday--;
-        time_start.tm_sec = time_start.tm_min = time_start.tm_hour = 0;
-        time_end.tm_mday--;
-        time_end.tm_sec = 59;
-        time_end.tm_min = 59;
-        time_end.tm_hour = 23;
+        tm_start.tm_mday--;
+        tm_start.tm_sec = tm_start.tm_min = tm_start.tm_hour = 0;
+        tm_end.tm_mday--;
+        tm_end.tm_sec = 59;
+        tm_end.tm_min = 59;
+        tm_end.tm_hour = 23;
         prefix_len = strlen(yesterday);
     }
     else {
         return false;
     }
 
-    time_t time_start_res = mktime(&time_start) - timezone;
-    if (time_start_res < 0) {
+    const time_t time_start = get_unix_time_for_timezone(&tm_start);
+    if (time_start < 0) {
         return false;
     }
-    time_t time_end_res = mktime(&time_end) - timezone;
-    if (time_end_res < 0) {
+
+    const time_t time_end = get_unix_time_for_timezone(&tm_end);
+    if (time_end < 0) {
         return false;
     }
 
     if (time_start_out) {
-        *time_start_out = time_start_res;
+        *time_start_out = time_start;
     }
     if (time_end_out) {
-        *time_end_out = time_end_res;
+        *time_end_out = time_end;
     }
     if (end_ptr) {
         *end_ptr = (char *)(str + prefix_len);
@@ -117,12 +131,12 @@ fsearch_time_parse_range(const char *str, time_t *time_start_out, time_t *time_e
         default:
             continue;
         }
-        time_t time_start = mktime(&tm_start) - timezone;
+        const time_t time_start = get_unix_time_for_timezone(&tm_start);
         if (time_start < 0) {
             // invalid start time, try different format
             continue;
         }
-        time_t time_end = mktime(&tm_end) - timezone;
+        time_t time_end = get_unix_time_for_timezone(&tm_end);
         if (time_end < 0) {
             // invalid end time, set it to a reasonably large value
             time_end = INT32_MAX;
