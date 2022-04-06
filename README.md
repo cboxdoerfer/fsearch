@@ -62,6 +62,11 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 * Development Builds:
   <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/>
+  
+### FreeBSD
+
+* Release Builds:
+  <https://www.freshports.org/sysutils/fsearch>
 
 ### NixOS (unofficial)
 
