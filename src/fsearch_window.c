@@ -1239,8 +1239,8 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 
     FsearchConfig *config = fsearch_application_get_config(app);
 
-    FsearchDatabaseIndexType sort_order = config->restore_column_config ? get_sort_type_for_name(config->sort_by)
-                                                                        : DATABASE_INDEX_TYPE_NAME;
+    FsearchDatabaseIndexType sort_order = config->restore_sort_order ? get_sort_type_for_name(config->sort_by)
+                                                                     : DATABASE_INDEX_TYPE_NAME;
     if (sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
         // -> fall back to sort by name instead
