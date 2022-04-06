@@ -1176,33 +1176,46 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
     config->window_width = width;
     config->window_height = height;
 
-    if (win->result_view && win->result_view->list_view) {
-        config->sort_ascending = fsearch_list_view_get_sort_type(win->result_view->list_view) == GTK_SORT_ASCENDING
-                                   ? true
-                                   : false;
+    if (win->result_view) {
+        if (win->result_view->database_view) {
+            FsearchDatabaseView *db_view = win->result_view->database_view;
+            db_view_lock(db_view);
+            config->sort_ascending = db_view_get_sort_type(db_view) == GTK_SORT_ASCENDING ? true : false;
 
-        if (config->sort_by) {
-            g_clear_pointer(&config->sort_by, g_free);
+            if (config->sort_by) {
+                g_clear_pointer(&config->sort_by, g_free);
+            }
+            config->sort_by = get_sort_name_for_type(db_view_get_sort_order(db_view));
+            db_view_unlock(db_view);
         }
-        config->sort_by = get_sort_name_for_type(fsearch_list_view_get_sort_order(win->result_view->list_view));
 
-        // update the config with the widths of all columns whose width we can store
-        const struct {
-            int type;
-            uint32_t *width;
-        } columns[] = {
-            {DATABASE_INDEX_TYPE_NAME, &config->name_column_width},
-            {DATABASE_INDEX_TYPE_PATH, &config->path_column_width},
-            {DATABASE_INDEX_TYPE_FILETYPE, &config->type_column_width},
-            {DATABASE_INDEX_TYPE_EXTENSION, &config->extension_column_width},
-            {DATABASE_INDEX_TYPE_SIZE, &config->size_column_width},
-            {DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width},
-        };
-        for (int i = 0; i < G_N_ELEMENTS(columns); i++) {
-            const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(win->result_view->list_view,
-                                                                                           columns[i].type);
-            if (col) {
-                *columns[i].width = col->width;
+        if (win->result_view->list_view) {
+            FsearchListView *list_view = win->result_view->list_view;
+            config->sort_ascending = fsearch_list_view_get_sort_type(list_view) == GTK_SORT_ASCENDING ? true : false;
+
+            if (config->sort_by) {
+                g_clear_pointer(&config->sort_by, g_free);
+            }
+            config->sort_by = get_sort_name_for_type(fsearch_list_view_get_sort_order(list_view));
+
+            // update the config with the widths of all columns whose width we can store
+            const struct {
+                int type;
+                uint32_t *width;
+            } columns[] = {
+                {DATABASE_INDEX_TYPE_NAME, &config->name_column_width},
+                {DATABASE_INDEX_TYPE_PATH, &config->path_column_width},
+                {DATABASE_INDEX_TYPE_FILETYPE, &config->type_column_width},
+                {DATABASE_INDEX_TYPE_EXTENSION, &config->extension_column_width},
+                {DATABASE_INDEX_TYPE_SIZE, &config->size_column_width},
+                {DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width},
+            };
+            for (int i = 0; i < G_N_ELEMENTS(columns); i++) {
+                const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list_view,
+                                                                                               columns[i].type);
+                if (col) {
+                    *columns[i].width = col->width;
+                }
             }
         }
     }
