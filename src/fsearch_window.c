@@ -1233,6 +1233,9 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
         // -> fall back to sort by name instead
         sort_order = DATABASE_INDEX_TYPE_NAME;
     }
+    GtkSortType sort_type = config->restore_sort_order
+                              ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
+                              : GTK_SORT_ASCENDING;
 
     FsearchFilter *filter = get_active_filter(win);
     win->result_view->database_view = db_view_new(get_query_text(win),
@@ -1240,7 +1243,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
                                                   filter,
                                                   config->filters,
                                                   sort_order,
-                                                  GTK_SORT_ASCENDING,
+                                                  sort_type,
                                                   fsearch_window_db_view_notify,
                                                   GUINT_TO_POINTER(win_id));
     g_clear_pointer(&filter, fsearch_filter_unref);
