@@ -126,8 +126,7 @@ add_path_highlight(FsearchQueryMatchData *match_data, uint32_t start_idx, uint32
 
 uint32_t
 fsearch_query_matcher_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    const char *haystack = node->flags & QUERY_FLAG_SEARCH_IN_PATH ? fsearch_query_match_data_get_path_str(match_data)
-                                                                   : fsearch_query_match_data_get_name_str(match_data);
+    const char *haystack = node->haystack_func(match_data);
     const size_t haystack_len = strlen(haystack);
     if (!node->regex) {
         return 0;
@@ -186,20 +185,7 @@ comp_func_utf(FsearchUtfBuilder *haystack_builder, FsearchUtfBuilder *needle_bui
 
 uint32_t
 fsearch_query_matcher_func_utf(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return comp_func_utf(node->flags & QUERY_FLAG_SEARCH_IN_PATH
-                             ? fsearch_query_match_data_get_utf_path_builder(match_data)
-                             : fsearch_query_match_data_get_utf_name_builder(match_data),
-                         node->needle_builder,
-                         node->flags);
-}
-
-uint32_t
-fsearch_query_matcher_func_parent_utf(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return comp_func_utf(node->flags & QUERY_FLAG_SEARCH_IN_PATH
-                             ? fsearch_query_match_data_get_utf_parent_path_builder(match_data)
-                             : fsearch_query_match_data_get_utf_name_builder(match_data),
-                         node->needle_builder,
-                         node->flags);
+    return comp_func_utf(node->haystack_func(match_data), node->needle_builder, node->flags);
 }
 
 static uint32_t
@@ -212,15 +198,7 @@ comp_func_ascii(const char *haystack, const char *needle, FsearchQueryFlags flag
 
 uint32_t
 fsearch_query_matcher_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    const char *haystack = node->flags & QUERY_FLAG_SEARCH_IN_PATH ? fsearch_query_match_data_get_path_str(match_data)
-                                                                   : fsearch_query_match_data_get_name_str(match_data);
-    return comp_func_ascii(haystack, node->needle, node->flags);
-}
-
-uint32_t
-fsearch_query_matcher_func_parent_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    const char *haystack = fsearch_query_match_data_get_parent_path_str(match_data);
-    return comp_func_ascii(haystack, node->needle, node->flags);
+    return comp_func_ascii(node->haystack_func(match_data), node->needle, node->flags);
 }
 
 uint32_t
@@ -268,8 +246,7 @@ fsearch_query_matcher_highlight_func_size(FsearchQueryNode *node, FsearchQueryMa
 uint32_t
 fsearch_query_matcher_highlight_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
-    const char *haystack = search_in_path ? fsearch_query_match_data_get_path_str(match_data)
-                                          : fsearch_query_match_data_get_name_str(match_data);
+    const char *haystack = node->haystack_func(match_data);
     int32_t thread_id = fsearch_query_match_data_get_thread_id(match_data);
     const size_t haystack_len = strlen(haystack);
     pcre2_match_data *regex_match_data = g_ptr_array_index(node->regex_match_data_for_threads, thread_id);
@@ -302,8 +279,7 @@ fsearch_query_matcher_highlight_func_regex(FsearchQueryNode *node, FsearchQueryM
 uint32_t
 fsearch_query_matcher_highlight_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
-    const char *haystack = search_in_path ? fsearch_query_match_data_get_path_str(match_data)
-                                          : fsearch_query_match_data_get_name_str(match_data);
+    const char *haystack = node->haystack_func(match_data);
     if (node->flags & QUERY_FLAG_EXACT_MATCH) {
         if (node->flags & QUERY_FLAG_MATCH_CASE ? !strcmp(haystack, node->needle) : !strcasecmp(haystack, node->needle)) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);

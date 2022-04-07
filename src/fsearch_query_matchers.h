@@ -28,13 +28,7 @@ uint32_t
 fsearch_query_matcher_func_utf(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
 uint32_t
-fsearch_query_matcher_func_parent_utf(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
-
-uint32_t
 fsearch_query_matcher_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
-
-uint32_t
-fsearch_query_matcher_func_parent_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
 uint32_t
 fsearch_query_matcher_highlight_func_none(FsearchQueryNode *node, FsearchQueryMatchData *match_data);

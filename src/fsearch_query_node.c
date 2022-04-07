@@ -207,6 +207,9 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
     }
 
     qnode->search_func = fsearch_query_matcher_func_regex;
+    qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
+                                                                ? fsearch_query_match_data_get_path_str
+                                                                : fsearch_query_match_data_get_name_str);
     qnode->highlight_func = fsearch_query_matcher_highlight_func_regex;
     return qnode;
 }
@@ -222,11 +225,13 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
     qnode->highlight_func = NULL;
     qnode->flags = flags;
     if (fs_str_icase_is_ascii(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
-        qnode->search_func = fsearch_query_matcher_func_parent_ascii;
+        qnode->search_func = fsearch_query_matcher_func_ascii;
+        qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_parent_path_str;
         qnode->description = g_string_new("parent_ascii");
     }
     else {
-        qnode->search_func = fsearch_query_matcher_func_parent_utf;
+        qnode->search_func = fsearch_query_matcher_func_utf;
+        qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_utf_parent_path_builder;
         qnode->description = g_string_new("parent_utf");
     }
     return qnode;
@@ -270,8 +275,7 @@ fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flag
         for (uint32_t i = 0; i < num_search_terms; ++i) {
             g_ptr_array_add(qnode->search_term_list, g_strdup(search_terms[i]));
         }
-        g_ptr_array_sort(qnode->search_term_list,
-                         (qnode->flags & QUERY_FLAG_MATCH_CASE) ? cmp_strcmp : cmp_strcasecmp);
+        g_ptr_array_sort(qnode->search_term_list, (qnode->flags & QUERY_FLAG_MATCH_CASE) ? cmp_strcmp : cmp_strcasecmp);
         g_clear_pointer(&search_terms, g_strfreev);
     }
     return qnode;
@@ -317,11 +321,17 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
 
     if (fs_str_icase_is_ascii(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
         qnode->search_func = fsearch_query_matcher_func_ascii;
+        qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
+                                                                    ? fsearch_query_match_data_get_path_str
+                                                                    : fsearch_query_match_data_get_name_str);
         qnode->highlight_func = fsearch_query_matcher_highlight_func_ascii;
         qnode->description = g_string_new("ascii_icase");
     }
     else {
         qnode->search_func = fsearch_query_matcher_func_utf;
+        qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
+                                                                    ? fsearch_query_match_data_get_utf_path_builder
+                                                                    : fsearch_query_match_data_get_utf_name_builder);
         qnode->highlight_func = NULL;
         qnode->description = g_string_new("utf_icase");
     }

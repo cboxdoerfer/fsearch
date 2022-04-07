@@ -19,6 +19,7 @@
 
 typedef struct FsearchQueryNode FsearchQueryNode;
 typedef uint32_t(FsearchQueryNodeMatchFunc)(FsearchQueryNode *, FsearchQueryMatchData *);
+typedef void *(FsearchQueryNodeHaystackFunc)(FsearchQueryMatchData *);
 
 typedef enum FsearchQueryNodeType {
     FSEARCH_QUERY_NODE_TYPE_OPERATOR,
@@ -62,6 +63,7 @@ struct FsearchQueryNode {
 
     FsearchQueryNodeMatchFunc *search_func;
     FsearchQueryNodeMatchFunc *highlight_func;
+    FsearchQueryNodeHaystackFunc *haystack_func;
 
     FsearchUtfBuilder *needle_builder;
 
