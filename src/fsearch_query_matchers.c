@@ -128,16 +128,16 @@ uint32_t
 fsearch_query_matcher_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     const char *haystack = node->haystack_func(match_data);
     const size_t haystack_len = strlen(haystack);
-    if (!node->regex) {
+    if (G_UNLIKELY(!node->regex)) {
         return 0;
     }
     const int32_t thread_id = fsearch_query_match_data_get_thread_id(match_data);
     pcre2_match_data *regex_match_data = g_ptr_array_index(node->regex_match_data_for_threads, thread_id);
-    if (!regex_match_data) {
+    if (G_UNLIKELY(!regex_match_data)) {
         return 0;
     }
     int num_matches = 0;
-    if (node->regex_jit_available) {
+    if (G_LIKELY(node->regex_jit_available)) {
         num_matches =
             pcre2_jit_match(node->regex, (PCRE2_SPTR)haystack, (PCRE2_SIZE)haystack_len, 0, 0, regex_match_data, NULL);
     }
