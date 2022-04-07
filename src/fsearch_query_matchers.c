@@ -181,14 +181,7 @@ comp_func_utf(FsearchUtfBuilder *haystack_builder, FsearchUtfBuilder *needle_bui
                  ? 1
                  : 0;
     }
-    else {
-        // failed to fold case, fall back to fast but not accurate ascii search
-        g_warning("[utf8_search] failed to lower case: %s", haystack_builder->string);
-        if (flags & QUERY_FLAG_EXACT_MATCH) {
-            return !strcasecmp(haystack_builder->string, needle_builder->string) ? 1 : 0;
-        }
-        return strcasestr(haystack_builder->string, needle_builder->string) ? 1 : 0;
-    }
+    return 0;
 }
 
 uint32_t
