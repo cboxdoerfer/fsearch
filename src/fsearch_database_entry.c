@@ -101,7 +101,7 @@ db_entry_get_extension(FsearchDatabaseEntry *entry) {
     if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
         return NULL;
     }
-    return fs_str_get_extension(entry->name);
+    return fsearch_string_get_extension(entry->name);
 }
 
 const char *

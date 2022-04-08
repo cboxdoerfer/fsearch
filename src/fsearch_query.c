@@ -89,8 +89,8 @@ fsearch_query_unref(FsearchQuery *query) {
 
 bool
 fsearch_query_matches_everything(FsearchQuery *query) {
-    const bool empty_query = fs_str_is_empty(query->search_term);
-    if (empty_query && (!query->filter || !query->filter->query || fs_str_is_empty(query->filter->query))) {
+    const bool empty_query = fsearch_string_is_empty(query->search_term);
+    if (empty_query && (!query->filter || !query->filter->query || fsearch_string_is_empty(query->filter->query))) {
         return true;
     }
     return false;
@@ -171,7 +171,7 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, Fse
     if (!query->filter) {
         return true;
     }
-    if (query->filter->query == NULL || fs_str_is_empty(query->filter->query)) {
+    if (query->filter->query == NULL || fsearch_string_is_empty(query->filter->query)) {
         return true;
     }
     FsearchDatabaseEntryType type = db_entry_get_type(entry);

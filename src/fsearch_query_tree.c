@@ -139,7 +139,7 @@ get_filters_with_macros(FsearchFilterManager *manager) {
     if (manager) {
         for (uint32_t i = 0; i < fsearch_filter_manager_get_num_filters(manager); ++i) {
             FsearchFilter *filter = fsearch_filter_manager_get_filter(manager, i);
-            if (filter && filter->macro && !fs_str_is_empty(filter->macro)) {
+            if (filter && filter->macro && !fsearch_string_is_empty(filter->macro)) {
                 g_ptr_array_add(macros, fsearch_filter_ref(filter));
             }
             g_clear_pointer(&filter, fsearch_filter_unref);

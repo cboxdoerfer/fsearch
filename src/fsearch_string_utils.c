@@ -24,7 +24,7 @@
 #include <string.h>
 
 bool
-fs_str_is_empty(const char *str) {
+fsearch_string_is_empty(const char *str) {
     // query is considered empty if:
     // - fist character is null terminator
     // - or it has only space characters
@@ -39,7 +39,7 @@ fs_str_is_empty(const char *str) {
 }
 
 bool
-fs_str_icase_is_ascii(const char *str) {
+fsearch_string_is_ascii_icase(const char *str) {
     g_assert(str);
     const gssize str_len = (gssize)strlen(str);
     if (str_len == 0) {
@@ -58,7 +58,7 @@ fs_str_icase_is_ascii(const char *str) {
 }
 
 bool
-fs_str_utf8_has_upper(const char *str) {
+fsearch_string_utf8_has_upper(const char *str) {
     g_assert(str);
     char *p = (char *)str;
     if (!g_utf8_validate(p, -1, NULL)) {
@@ -75,7 +75,7 @@ fs_str_utf8_has_upper(const char *str) {
 }
 
 bool
-fs_str_has_upper(const char *str) {
+fsearch_string_has_upper(const char *str) {
     g_assert(str);
     const char *ptr = str;
     while (*ptr != '\0') {
@@ -88,7 +88,7 @@ fs_str_has_upper(const char *str) {
 }
 
 const char *
-fs_str_get_extension(const char *str) {
+fsearch_string_get_extension(const char *str) {
     const char *ext = strrchr(str, '.');
     if (!ext || ext == str || ext[1] == '\0') {
         // filename has no dot
@@ -100,7 +100,7 @@ fs_str_get_extension(const char *str) {
 }
 
 char *
-fs_str_convert_wildcard_to_regex_expression(const char *str) {
+fsearch_string_convert_wildcard_to_regex_expression(const char *str) {
     g_assert(str);
 
     GString *regex_epxression = g_string_sized_new(strlen(str));
@@ -142,7 +142,7 @@ fs_str_convert_wildcard_to_regex_expression(const char *str) {
 }
 
 bool
-fs_str_starts_with_range(char *str, char **end_ptr) {
+fsearch_string_starts_with_range(char *str, char **end_ptr) {
     g_assert(str);
     g_assert(end_ptr);
     if (g_str_has_prefix(str, "..")) {

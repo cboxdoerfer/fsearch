@@ -38,7 +38,7 @@ on_editor_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user
     FsearchQueryFlags flags = 0;
 
     const char *name_str = gtk_entry_get_text(editor->name_entry);
-    if (response == GTK_RESPONSE_OK && !fs_str_is_empty(name_str)) {
+    if (response == GTK_RESPONSE_OK && !fsearch_string_is_empty(name_str)) {
         name = g_strdup(name_str);
 
         macro = g_strdup(gtk_entry_get_text(editor->macro_entry));

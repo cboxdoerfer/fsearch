@@ -48,7 +48,7 @@ fsearch_file_utils_create_dir(const char *path) {
 
 bool
 fsearch_file_utils_is_desktop_file(const char *path) {
-    const char *uri_extension = fs_str_get_extension(path);
+    const char *uri_extension = fsearch_string_get_extension(path);
     if (uri_extension && !strcmp(uri_extension, "desktop")) {
         return true;
     }

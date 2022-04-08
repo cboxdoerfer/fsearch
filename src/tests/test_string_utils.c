@@ -39,7 +39,7 @@ test_str_get_extension(void) {
 
     for (gint i = 0; i < G_N_ELEMENTS(file_names); ++i) {
         FsearchTestExtensionContext *ctx = &file_names[i];
-        const char *ext = fs_str_get_extension(ctx->file_name);
+        const char *ext = fsearch_string_get_extension(ctx->file_name);
         g_assert_cmpstr(ext, ==, ctx->extension);
     }
 }
@@ -61,7 +61,7 @@ test_str_is_empty(void) {
 
     for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
         FsearchTestIsEmptyContext *ctx = &strings[i];
-        const gboolean is_empty = fs_str_is_empty(ctx->string);
+        const gboolean is_empty = fsearch_string_is_empty(ctx->string);
         g_assert_true(is_empty == ctx->string_is_empty);
     }
 }
@@ -95,7 +95,7 @@ test_str_utf8_has_upper(void) {
 
     for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
         FsearchTestHasUpperContext *ctx = &strings[i];
-        const gboolean has_upper = fs_str_utf8_has_upper(ctx->string);
+        const gboolean has_upper = fsearch_string_utf8_has_upper(ctx->string);
         if (has_upper != ctx->string_has_upper) {
             g_print("Expected '%s' to%s have upper case characters!\n", ctx->string, has_upper ? "" : " not");
         }
@@ -132,7 +132,7 @@ test_str_has_upper(void) {
 
     for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
         FsearchTestHasUpperContext *ctx = &strings[i];
-        const gboolean has_upper = fs_str_has_upper(ctx->string);
+        const gboolean has_upper = fsearch_string_has_upper(ctx->string);
         if (has_upper != ctx->string_has_upper) {
             g_print("Expected '%s' to%s have upper case characters!\n", ctx->string, has_upper ? "" : " not");
         }
@@ -165,7 +165,7 @@ test_str_icase_is_ascii(void) {
 
     for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
         FsearchTestIsAsciiContext *ctx = &strings[i];
-        const gboolean is_ascii = fs_str_icase_is_ascii(ctx->string);
+        const gboolean is_ascii = fsearch_string_is_ascii_icase(ctx->string);
         if (is_ascii != ctx->is_ascii) {
             g_print("Expected '%s' to be an %s string!\n", ctx->string, is_ascii ? "ascii" : "non-ascii");
         }
@@ -198,7 +198,7 @@ test_str_wildcard_to_regex(void) {
 
     for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
         FsearchTestWildcardToRegexContext *ctx = &strings[i];
-        g_autofree char *regex = fs_str_convert_wildcard_to_regex_expression(ctx->wildcard_expression);
+        g_autofree char *regex = fsearch_string_convert_wildcard_to_regex_expression(ctx->wildcard_expression);
         g_assert_cmpstr(regex, ==, ctx->expected_regex_expression);
     }
 }
@@ -225,7 +225,7 @@ test_str_starts_with_range(void) {
     for (gint i = 0; i < G_N_ELEMENTS(strings); ++i) {
         FsearchTestStartsWithRangeContext *ctx = &strings[i];
         char *end_ptr = NULL;
-        const gboolean starts_with_range = fs_str_starts_with_range((char *)ctx->string, &end_ptr);
+        const gboolean starts_with_range = fsearch_string_starts_with_range((char *)ctx->string, &end_ptr);
         if (starts_with_range != ctx->starts_with_range) {
             g_print("Expected '%s' to%s start with a range!\n", ctx->string, starts_with_range ? "" : " not");
         }

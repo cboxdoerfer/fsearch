@@ -411,9 +411,9 @@ perform_search(FsearchApplicationWindow *win) {
 
     bool reveal_smart_case = false;
     bool reveal_smart_path = false;
-    if (!fs_str_is_empty(text)) {
+    if (!fsearch_string_is_empty(text)) {
         const bool has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
-        const bool has_upper_text = fs_str_has_upper(text) ? 1 : 0;
+        const bool has_upper_text = fsearch_string_has_upper(text) ? 1 : 0;
         FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
         FsearchConfig *config = fsearch_application_get_config(app);
         reveal_smart_case = config->auto_match_case && !config->match_case && has_upper_text;

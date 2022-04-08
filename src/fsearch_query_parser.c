@@ -107,7 +107,7 @@ parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
     int64_t size_end = 0;
     int64_t plus = 0;
     if (fsearch_size_parse(string->str, &size_start, &plus, &end_ptr)) {
-        if (fs_str_starts_with_range(end_ptr, &end_ptr)) {
+        if (fsearch_string_starts_with_range(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
                 comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
@@ -195,7 +195,7 @@ parse_date_with_optional_range(GString *string, FsearchQueryFlags flags, Fsearch
     time_t time_start = 0;
     time_t time_end = 0;
     if (fsearch_time_parse_range(string->str, &time_start, &time_end, &end_ptr)) {
-        if (fs_str_starts_with_range(end_ptr, &end_ptr)) {
+        if (fsearch_string_starts_with_range(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
                 comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
@@ -386,7 +386,7 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
             g_debug("[expand_filter_macros] nested macro detected. Stop parsing of macro.");
             break;
         }
-        if (fs_str_is_empty(filter->query)) {
+        if (fsearch_string_is_empty(filter->query)) {
             // We don't need to process an empty macro query
             break;
         }
