@@ -231,8 +231,7 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
         qnode->description = g_string_new("parent_ascii");
     }
     else {
-        qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_utf_strcasecmp
-                                                           : fsearch_query_matcher_func_utf_strcasestr;
+        qnode->search_func = fsearch_query_matcher_func_utf_strcasecmp;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_utf_parent_path_builder;
         qnode->description = g_string_new("parent_utf");
     }
