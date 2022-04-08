@@ -225,12 +225,14 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
     qnode->highlight_func = NULL;
     qnode->flags = flags;
     if (fs_str_icase_is_ascii(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
-        qnode->search_func = fsearch_query_matcher_func_ascii;
+        qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_strcmp
+                                                           : fsearch_query_matcher_func_strcasecmp;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_parent_path_str;
         qnode->description = g_string_new("parent_ascii");
     }
     else {
-        qnode->search_func = fsearch_query_matcher_func_utf;
+        qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_utf_strcasecmp
+                                                           : fsearch_query_matcher_func_utf_strcasestr;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_utf_parent_path_builder;
         qnode->description = g_string_new("parent_utf");
     }
@@ -320,7 +322,14 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     node_init_needle(qnode, search_term);
 
     if (fs_str_icase_is_ascii(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
-        qnode->search_func = fsearch_query_matcher_func_ascii;
+        if (flags & QUERY_FLAG_EXACT_MATCH) {
+            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_strcmp
+                                                               : fsearch_query_matcher_func_strcasecmp;
+        }
+        else {
+            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_strstr
+                                                               : fsearch_query_matcher_func_strcasestr;
+        }
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
                                                                     ? fsearch_query_match_data_get_path_str
                                                                     : fsearch_query_match_data_get_name_str);
@@ -328,7 +337,8 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
         qnode->description = g_string_new("ascii_icase");
     }
     else {
-        qnode->search_func = fsearch_query_matcher_func_utf;
+        qnode->search_func = flags & QUERY_FLAG_EXACT_MATCH ? fsearch_query_matcher_func_utf_strcasecmp
+                                                            : fsearch_query_matcher_func_utf_strcasestr;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
                                                                     ? fsearch_query_match_data_get_utf_path_builder
                                                                     : fsearch_query_match_data_get_utf_name_builder);

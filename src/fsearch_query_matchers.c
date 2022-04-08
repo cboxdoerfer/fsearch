@@ -148,31 +148,11 @@ fsearch_query_matcher_func_regex(FsearchQueryNode *node, FsearchQueryMatchData *
     return num_matches > 0 ? 1 : 0;
 }
 
-//  uint32_t
-// fsearch_search_func_normal_icase_u8_fast(FsearchToken *token, FsearchQueryMatcher *match_data) {
-//     FsearchUtfConversionBuffer *builder = token->get_haystack(match_data);
-//     if (G_LIKELY(builder->string_utf8_is_folded)) {
-//         return strstr(builder->string_utf8_folded, token->needle_buffer->string_utf8_folded) ? 1 : 0;
-//     }
-//     else {
-//         // failed to fold case, fall back to fast but not accurate ascii search
-//         // g_warning("[utf8_search] failed to lower case: %s", haystack);
-//         // return strcasestr(haystack, needle) ? 1 : 0;
-//     }
-// }
-
-static uint32_t
-comp_func_utf(FsearchUtfBuilder *haystack_builder, FsearchUtfBuilder *needle_builder, FsearchQueryFlags flags) {
+uint32_t
+fsearch_query_matcher_func_utf_strcasestr(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    FsearchUtfBuilder *haystack_builder = node->haystack_func(match_data);
+    FsearchUtfBuilder *needle_builder = node->needle_builder;
     if (G_LIKELY(haystack_builder->string_is_folded_and_normalized)) {
-        if (flags & QUERY_FLAG_EXACT_MATCH) {
-            return !u_strCompare(haystack_builder->string_normalized_folded,
-                                 haystack_builder->string_normalized_folded_len,
-                                 needle_builder->string_normalized_folded,
-                                 needle_builder->string_normalized_folded_len,
-                                 false)
-                     ? 1
-                     : 0;
-        }
         return u_strFindFirst(haystack_builder->string_normalized_folded,
                               haystack_builder->string_normalized_folded_len,
                               needle_builder->string_normalized_folded,
@@ -184,21 +164,39 @@ comp_func_utf(FsearchUtfBuilder *haystack_builder, FsearchUtfBuilder *needle_bui
 }
 
 uint32_t
-fsearch_query_matcher_func_utf(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return comp_func_utf(node->haystack_func(match_data), node->needle_builder, node->flags);
-}
-
-static uint32_t
-comp_func_ascii(const char *haystack, const char *needle, FsearchQueryFlags flags) {
-    if (G_UNLIKELY(flags & QUERY_FLAG_EXACT_MATCH)) {
-        return !(flags & QUERY_FLAG_MATCH_CASE ? strcmp(haystack, needle) : strcasecmp(haystack, needle)) ? 1 : 0;
+fsearch_query_matcher_func_utf_strcasecmp(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    FsearchUtfBuilder *haystack_builder = node->haystack_func(match_data);
+    FsearchUtfBuilder *needle_builder = node->needle_builder;
+    if (G_LIKELY(haystack_builder->string_is_folded_and_normalized)) {
+        return !u_strCompare(haystack_builder->string_normalized_folded,
+                             haystack_builder->string_normalized_folded_len,
+                             needle_builder->string_normalized_folded,
+                             needle_builder->string_normalized_folded_len,
+                             false)
+                 ? 1
+                 : 0;
     }
-    return (flags & QUERY_FLAG_MATCH_CASE ? strstr(haystack, needle) : strcasestr(haystack, needle)) ? 1 : 0;
+    return 0;
 }
 
 uint32_t
-fsearch_query_matcher_func_ascii(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    return comp_func_ascii(node->haystack_func(match_data), node->needle, node->flags);
+fsearch_query_matcher_func_strstr(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    return strstr(node->haystack_func(match_data), node->needle) ? 1 : 0;
+}
+
+uint32_t
+fsearch_query_matcher_func_strcasestr(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    return strcasestr(node->haystack_func(match_data), node->needle) ? 1 : 0;
+}
+
+uint32_t
+fsearch_query_matcher_func_strcmp(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    return !strcmp(node->haystack_func(match_data), node->needle) ? 1 : 0;
+}
+
+uint32_t
+fsearch_query_matcher_func_strcasecmp(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    return !strcasecmp(node->haystack_func(match_data), node->needle) ? 1 : 0;
 }
 
 uint32_t
