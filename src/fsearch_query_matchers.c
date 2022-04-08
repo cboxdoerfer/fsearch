@@ -58,7 +58,7 @@ fsearch_query_matcher_func_date_modified(FsearchQueryNode *node, FsearchQueryMat
             return time >= node->time;
         case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
             return time <= node->time;
-        case FSEARCH_QUERY_NODE_COMPARISON_RANGE:
+        case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
             return node->time <= time && time < node->time_upper_limit;
         }
     }
@@ -81,7 +81,7 @@ fsearch_query_matcher_func_size(FsearchQueryNode *node, FsearchQueryMatchData *m
             return size >= node->size;
         case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
             return size <= node->size;
-        case FSEARCH_QUERY_NODE_COMPARISON_RANGE:
+        case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
             return node->size <= size && size < node->size_upper_limit;
         }
     }

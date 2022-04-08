@@ -74,7 +74,7 @@ fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
     else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER) {
         qnode->needle = g_strdup_printf("<%ld", dm_start);
     }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_RANGE) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_INTERVAL) {
         qnode->needle = g_strdup_printf("%ld..%ld", dm_start, dm_end);
     }
     qnode->description = g_string_new("date-modified");
@@ -111,7 +111,7 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER) {
         qnode->needle = g_strdup_printf("<%ld", size_start);
     }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_RANGE) {
+    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_INTERVAL) {
         qnode->needle = g_strdup_printf("%ld..%ld", size_start, size_end);
     }
     qnode->description = g_string_new("size");

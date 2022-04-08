@@ -101,23 +101,23 @@ append_node_to_list_if_nonnull(GList *list, FsearchQueryNode *node) {
 }
 
 static FsearchQueryNode *
-parse_size_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
+parse_size_with_optional_interval(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     int64_t size_start = 0;
     int64_t size_end = 0;
     int64_t plus = 0;
     if (fsearch_size_parse(string->str, &size_start, &plus, &end_ptr)) {
-        if (fsearch_string_starts_with_range(end_ptr, &end_ptr)) {
+        if (fsearch_string_starts_with_interval(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
                 comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
             }
             else if (fsearch_size_parse(end_ptr, &size_end, NULL, &end_ptr)) {
-                comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
             }
         }
         else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL && plus != 0) {
-            comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
+            comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
             size_end = size_start + plus;
         }
         return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
@@ -145,7 +145,7 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
                FsearchQueryFlags flags,
                const char *field_name,
                FsearchQueryComparisonParserFunc parse_func,
-               FsearchQueryComparisonParserFunc parse_range_func) {
+               FsearchQueryComparisonParserFunc parse_interval_func) {
     if (is_empty_field) {
         return NULL;
     }
@@ -169,7 +169,7 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        return append_node_to_list_if_nonnull(NULL, parse_range_func(token_value, flags, comp_type));
+        return append_node_to_list_if_nonnull(NULL, parse_interval_func(token_value, flags, comp_type));
     default:
         g_debug("[%s:] invalid or missing argument", field_name);
         return NULL;
@@ -186,26 +186,26 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
 
 static GList *
 parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_interval(parse_ctx, is_empty_field, flags, "size", parse_size, parse_size_with_optional_range);
+    return parse_interval(parse_ctx, is_empty_field, flags, "size", parse_size, parse_size_with_optional_interval);
 }
 
 static FsearchQueryNode *
-parse_date_with_optional_range(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
+parse_date_with_optional_interval(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     time_t time_start = 0;
     time_t time_end = 0;
-    if (fsearch_time_parse_range(string->str, &time_start, &time_end, &end_ptr)) {
-        if (fsearch_string_starts_with_range(end_ptr, &end_ptr)) {
+    if (fsearch_time_parse_interval(string->str, &time_start, &time_end, &end_ptr)) {
+        if (fsearch_string_starts_with_interval(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
                 comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
             }
-            else if (fsearch_time_parse_range(end_ptr, NULL, &time_end, &end_ptr)) {
-                comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
+            else if (fsearch_time_parse_interval(end_ptr, NULL, &time_end, &end_ptr)) {
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
             }
         }
         else {
-            comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
+            comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
         }
         return fsearch_query_node_new_date_modified(flags, time_start, time_end, comp_type);
     }
@@ -218,13 +218,13 @@ parse_date_modified(GString *string, FsearchQueryFlags flags, FsearchQueryNodeCo
     char *end_ptr = NULL;
     time_t date = 0;
     time_t date_end = 0;
-    if (fsearch_time_parse_range(string->str, &date, &date_end, &end_ptr)) {
+    if (fsearch_time_parse_interval(string->str, &date, &date_end, &end_ptr)) {
         time_t dm_start = date;
         time_t dm_end = date_end;
         switch (comp_type) {
         case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
-            // Equal actually refers to a time range. E.g. dm:today is the time range from 0:00:00 to 23:59:59
-            comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
+            // Equal actually refers to a time interval. E.g. dm:today is the time interval from 0:00:00 to 23:59:59
+            comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
             dm_start = date;
             dm_end = date_end;
             break;
@@ -253,7 +253,7 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
                           flags,
                           "date-modified",
                           parse_date_modified,
-                          parse_date_with_optional_range);
+                          parse_date_with_optional_interval);
 }
 
 static GList *

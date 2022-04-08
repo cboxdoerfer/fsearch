@@ -6,16 +6,16 @@
 #include <stdint.h>
 #include <time.h>
 
-typedef enum FsearchTimeRangeType {
-    FSEARCH_TIME_RANGE_DAY,
-    FSEARCH_TIME_RANGE_MONTH,
-    FSEARCH_TIME_RANGE_YEAR,
-    NUM_FSEARCH_TIME_RANGES,
-} FsearchTimeRangeType;
+typedef enum FsearchTimeIntervalType {
+    FSEARCH_TIME_INTERVAL_DAY,
+    FSEARCH_TIME_INTERVAL_MONTH,
+    FSEARCH_TIME_INTERVAL_YEAR,
+    NUM_FSEARCH_TIME_INTERVALS,
+} FsearchTimeIntervalType;
 
 typedef struct FsearchTimeFormat {
     const char *format;
-    FsearchTimeRangeType dtime;
+    FsearchTimeIntervalType dtime;
 } FsearchTimeFormat;
 
 static time_t
@@ -81,18 +81,18 @@ parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_o
 }
 
 bool
-fsearch_time_parse_range(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
+fsearch_time_parse_interval(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
     if (parse_time_constants(str, time_start_out, time_end_out, end_ptr)) {
         return true;
     }
 
     FsearchTimeFormat formats[] = {
-        {"%Y-%m-%d", FSEARCH_TIME_RANGE_DAY},
-        {"%y-%m-%d", FSEARCH_TIME_RANGE_DAY},
-        {"%Y-%m", FSEARCH_TIME_RANGE_MONTH},
-        {"%y-%m", FSEARCH_TIME_RANGE_MONTH},
-        {"%Y", FSEARCH_TIME_RANGE_YEAR},
-        {"%y", FSEARCH_TIME_RANGE_YEAR},
+        {"%Y-%m-%d", FSEARCH_TIME_INTERVAL_DAY},
+        {"%y-%m-%d", FSEARCH_TIME_INTERVAL_DAY},
+        {"%Y-%m", FSEARCH_TIME_INTERVAL_MONTH},
+        {"%y-%m", FSEARCH_TIME_INTERVAL_MONTH},
+        {"%Y", FSEARCH_TIME_INTERVAL_YEAR},
+        {"%y", FSEARCH_TIME_INTERVAL_YEAR},
     };
 
     for (uint32_t i = 0; i < G_N_ELEMENTS(formats); ++i) {
@@ -107,7 +107,7 @@ fsearch_time_parse_range(const char *str, time_t *time_start_out, time_t *time_e
         struct tm tm_end = tm_start;
 
         switch (formats[i].dtime) {
-        case FSEARCH_TIME_RANGE_YEAR:
+        case FSEARCH_TIME_INTERVAL_YEAR:
             // start from first day and month of the parsed year
             tm_start.tm_mday = 1;
             tm_start.tm_mon = 0;
@@ -116,14 +116,14 @@ fsearch_time_parse_range(const char *str, time_t *time_start_out, time_t *time_e
             tm_end.tm_mon = 0;
             tm_end.tm_year++;
             break;
-        case FSEARCH_TIME_RANGE_MONTH:
+        case FSEARCH_TIME_INTERVAL_MONTH:
             // start at the first day of the parse month
             tm_start.tm_mday = 1;
             // end at the first day of the following month
             tm_end.tm_mday = 1;
             tm_end.tm_mon++;
             break;
-        case FSEARCH_TIME_RANGE_DAY:
+        case FSEARCH_TIME_INTERVAL_DAY:
             // start at 0:00 of the parsed day
             // end at 0:00 of the following day
             tm_end.tm_mday++;

@@ -43,8 +43,8 @@ fsearch_string_is_ascii_icase(const char *str);
 char *
 fsearch_string_convert_wildcard_to_regex_expression(const char *str);
 
-// Detect if str starts with a range identifier (i.e. `..` or `-`).
-// At success end_ptr will point to the first character after the range.
-// If no range was detected end_ptr will point to str.
+// Detect if str starts with a interval identifier (i.e. `..` or `-`).
+// At success end_ptr will point to the first character after the interval.
+// If no interval was detected end_ptr will point to str.
 bool
-fsearch_string_starts_with_range(char *str, char **end_ptr);
+fsearch_string_starts_with_interval(char *str, char **end_ptr);

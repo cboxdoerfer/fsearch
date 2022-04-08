@@ -142,7 +142,7 @@ fsearch_string_convert_wildcard_to_regex_expression(const char *str) {
 }
 
 bool
-fsearch_string_starts_with_range(char *str, char **end_ptr) {
+fsearch_string_starts_with_interval(char *str, char **end_ptr) {
     g_assert(str);
     g_assert(end_ptr);
     if (g_str_has_prefix(str, "..")) {
