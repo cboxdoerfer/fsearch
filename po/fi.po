@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2021-09-29 11:35+0000\n"
+"PO-Revision-Date: 2022-04-10 18:08+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
 "translations/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -35,13 +35,16 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Graafinen tiedostojen hakusovellus"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch auttaa sinua löytämään tiedostoja ja kansioita mahdollisimman "
+"helposti ja nopeasti. Kirjoita vain muutama kirjain, ja hakutulokset tulevat "
+"näkyviin lähes välittömästi."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
@@ -53,10 +56,12 @@ msgstr ""
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Ei huomioi isoja ja pieniä kirjaimia (esim. haku \"fsearch\" vastaa myös "
+"\"FSearch\" hakua)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
-msgstr ""
+msgstr "Säännölliset lausekkeet"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
 msgid "Wildcard support"
@@ -64,13 +69,11 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Suodatintuki (esim. vain äänitiedostojen haku)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Ohita piilotetut tiedostot ja kansiot"
+msgstr "Ohita tietyt tiedostot ja kansiot"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
@@ -84,7 +87,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:35
 msgid "The default UI layout"
-msgstr ""
+msgstr "Käyttöliittymän oletusasettelu"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
@@ -93,16 +96,15 @@ msgstr ""
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
 msgid "Initial release."
-msgstr ""
+msgstr "Ensimmäinen julkaisu."
 
 #: src/fsearch.c:264
-#, fuzzy
 msgid "Saving…"
-msgstr "Lajitellaan…"
+msgstr "Tallennetaan…"
 
 #: src/fsearch.c:376
 msgid "translator-credits"
@@ -113,28 +115,24 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "Suorituskykyyn ja lisäominaisuuksiin keskittyvä hakutyökalu"
 
 #: src/fsearch.c:840
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Avaa muussa sovelluksessa"
+msgstr "Avaa uusi sovellusikkuna"
 
 #: src/fsearch.c:841
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Näytä sovelluksen asetukset"
 
 #: src/fsearch.c:842
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Näytä Etsi-painike"
+msgstr "Aseta hakukuvio"
 
 #: src/fsearch.c:843
 msgid "Update the database and exit"
 msgstr "Päivitä tietokanta ja poistu"
 
 #: src/fsearch.c:844
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Näytä versiotiedot"
+msgstr "Näytä versiotiedot ja poistu"
 
 #: src/fsearch_database.c:640
 msgid "Loading folders…"
@@ -170,10 +168,8 @@ msgid "Files"
 msgstr "Tiedostot"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Muu sovellus…"
+msgstr "Sovellukset"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -209,10 +205,8 @@ msgid "Edit filter"
 msgstr ""
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Nimi"
+msgstr "Nimi:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
@@ -469,10 +463,8 @@ msgid "Restore default filters"
 msgstr ""
 
 #: src/fsearch_preferences.ui:832
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Näytä suodatin"
+msgstr "Suodatin:"
 
 #: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
 msgid "Search"
@@ -980,10 +972,8 @@ msgid "Macro"
 msgstr ""
 
 #: src/fsearch_preferences_widgets.c:293
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Tyhjä haku"
+msgstr "Haku"
 
 #: src/fsearch_statusbar.c:53
 msgid "Querying…"
@@ -1068,10 +1058,8 @@ msgid "REGEX"
 msgstr "SÄÄNNÖLLINEN LAUSEKE"
 
 #: src/fsearch_window.c:591 src/fsearch_window_actions.c:483
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Tiedoston avaaminen epäonnistui"
+msgstr "Avaaminen epäonnistui:"
 
 #: src/fsearch_window.c:699 src/menus.ui:247
 msgid "Size"
@@ -1203,9 +1191,8 @@ msgid "Cancel Update"
 msgstr "Peruuta päivitys"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Uusi ikkuna"
+msgstr "Sulje ikkuna"
 
 #: src/menus.ui:54
 msgid "_Edit"
