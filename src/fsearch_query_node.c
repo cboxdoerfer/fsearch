@@ -82,7 +82,7 @@ fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
     qnode->time = dm_start;
     qnode->time_upper_limit = dm_end;
     qnode->comparison_type = comp_type;
-    qnode->search_func = fsearch_query_matcher_func_date_modified;
+    qnode->search_func = fsearch_query_matcher_date_modified;
     qnode->highlight_func = NULL;
     qnode->flags = flags;
     return qnode;
@@ -119,8 +119,8 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     qnode->size = size_start;
     qnode->size_upper_limit = size_end;
     qnode->comparison_type = comp_type;
-    qnode->search_func = fsearch_query_matcher_func_size;
-    qnode->highlight_func = fsearch_query_matcher_highlight_func_size;
+    qnode->search_func = fsearch_query_matcher_size;
+    qnode->highlight_func = fsearch_query_matcher_highlight_size;
     qnode->flags = flags;
     return qnode;
 }
@@ -146,8 +146,8 @@ fsearch_query_node_new_match_nothing(void) {
 
     qnode->description = g_string_new("match_nothing");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->search_func = fsearch_query_matcher_func_false;
-    qnode->highlight_func = fsearch_query_matcher_highlight_func_none;
+    qnode->search_func = fsearch_query_matcher_false;
+    qnode->highlight_func = fsearch_query_matcher_highlight_none;
     qnode->flags = 0;
     return qnode;
 }
@@ -159,8 +159,8 @@ fsearch_query_node_new_match_everything(FsearchQueryFlags flags) {
 
     qnode->description = g_string_new("match_everything");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->search_func = fsearch_query_matcher_func_true;
-    qnode->highlight_func = fsearch_query_matcher_highlight_func_none;
+    qnode->search_func = fsearch_query_matcher_true;
+    qnode->highlight_func = fsearch_query_matcher_highlight_none;
     qnode->flags = flags;
     return qnode;
 }
@@ -206,11 +206,11 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
         g_ptr_array_add(qnode->regex_match_data_for_threads, pcre2_match_data_create_from_pattern(qnode->regex, NULL));
     }
 
-    qnode->search_func = fsearch_query_matcher_func_regex;
+    qnode->search_func = fsearch_query_matcher_regex;
     qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
                                                                 ? fsearch_query_match_data_get_path_str
                                                                 : fsearch_query_match_data_get_name_str);
-    qnode->highlight_func = fsearch_query_matcher_highlight_func_regex;
+    qnode->highlight_func = fsearch_query_matcher_highlight_regex;
     return qnode;
 }
 
@@ -225,13 +225,13 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
     qnode->highlight_func = NULL;
     qnode->flags = flags;
     if (fsearch_string_is_ascii_icase(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
-        qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_strcmp
-                                                           : fsearch_query_matcher_func_strcasecmp;
+        qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_strcmp
+                                                           : fsearch_query_matcher_strcasecmp;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_parent_path_str;
         qnode->description = g_string_new("parent_ascii");
     }
     else {
-        qnode->search_func = fsearch_query_matcher_func_utf_strcasecmp;
+        qnode->search_func = fsearch_query_matcher_utf_strcasecmp;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_utf_parent_path_builder;
         qnode->description = g_string_new("parent_utf");
     }
@@ -260,8 +260,8 @@ fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flag
     g_assert(qnode);
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->description = g_string_new("ext");
-    qnode->search_func = fsearch_query_matcher_func_extension;
-    qnode->highlight_func = fsearch_query_matcher_highlight_func_extension;
+    qnode->search_func = fsearch_query_matcher_extension;
+    qnode->highlight_func = fsearch_query_matcher_highlight_extension;
     qnode->flags = flags | QUERY_FLAG_FILES_ONLY;
     qnode->search_term_list = g_ptr_array_new_full(16, g_free);
     if (!search_term) {
@@ -322,22 +322,22 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
 
     if (fsearch_string_is_ascii_icase(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
         if (flags & QUERY_FLAG_EXACT_MATCH) {
-            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_strcmp
-                                                               : fsearch_query_matcher_func_strcasecmp;
+            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_strcmp
+                                                               : fsearch_query_matcher_strcasecmp;
         }
         else {
-            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_func_strstr
-                                                               : fsearch_query_matcher_func_strcasestr;
+            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_strstr
+                                                               : fsearch_query_matcher_strcasestr;
         }
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
                                                                     ? fsearch_query_match_data_get_path_str
                                                                     : fsearch_query_match_data_get_name_str);
-        qnode->highlight_func = fsearch_query_matcher_highlight_func_ascii;
+        qnode->highlight_func = fsearch_query_matcher_highlight_ascii;
         qnode->description = g_string_new("ascii_icase");
     }
     else {
-        qnode->search_func = flags & QUERY_FLAG_EXACT_MATCH ? fsearch_query_matcher_func_utf_strcasecmp
-                                                            : fsearch_query_matcher_func_utf_strcasestr;
+        qnode->search_func = flags & QUERY_FLAG_EXACT_MATCH ? fsearch_query_matcher_utf_strcasecmp
+                                                            : fsearch_query_matcher_utf_strcasestr;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
                                                                     ? fsearch_query_match_data_get_utf_path_builder
                                                                     : fsearch_query_match_data_get_utf_name_builder);
