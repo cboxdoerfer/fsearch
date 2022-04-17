@@ -46,7 +46,7 @@ uint32_t
 fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
-        time_t time = db_entry_get_mtime(entry);
+        const time_t time = db_entry_get_mtime(entry);
         switch (node->comparison_type) {
         case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
             return time == node->time;
@@ -69,7 +69,7 @@ uint32_t
 fsearch_query_matcher_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
-        int64_t size = db_entry_get_size(entry);
+        const int64_t size = db_entry_get_size(entry);
         switch (node->comparison_type) {
         case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
             return size == node->size;
@@ -218,8 +218,8 @@ fsearch_query_matcher_highlight_extension(FsearchQueryNode *node, FsearchQueryMa
     if (!name) {
         return 0;
     }
-    size_t name_len = strlen(name);
-    size_t ext_len = strlen(ext);
+    const size_t name_len = strlen(name);
+    const size_t ext_len = strlen(ext);
 
     PangoAttribute *pa_name = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
     pa_name->start_index = name_len - ext_len;
@@ -245,13 +245,13 @@ uint32_t
 fsearch_query_matcher_highlight_regex(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
     const char *haystack = node->haystack_func(match_data);
-    int32_t thread_id = fsearch_query_match_data_get_thread_id(match_data);
+    const int32_t thread_id = fsearch_query_match_data_get_thread_id(match_data);
     const size_t haystack_len = strlen(haystack);
     pcre2_match_data *regex_match_data = g_ptr_array_index(node->regex_match_data_for_threads, thread_id);
     if (!regex_match_data) {
         return 0;
     }
-    int num_matches =
+    const int num_matches =
         pcre2_match(node->regex, (PCRE2_SPTR)haystack, (PCRE2_SIZE)haystack_len, 0, 0, regex_match_data, NULL);
     if (num_matches <= 0) {
         return 0;
