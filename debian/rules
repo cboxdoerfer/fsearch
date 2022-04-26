@@ -7,7 +7,6 @@ export DH_VERBOSE = 1
 %:
 	dh $@
 
-# This is example for Cmake (See https://bugs.debian.org/641051 )
-#override_dh_auto_configure:
-#	dh_auto_configure -- \
-#	-DCMAKE_LIBRARY_PATH=$(DEB_HOST_MULTIARCH)
+override_dh_auto_configure:
+	dh_auto_configure -- \
+	-Dchannel=PPA-nightly

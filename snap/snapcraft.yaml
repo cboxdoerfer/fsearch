@@ -24,6 +24,7 @@ parts:
     plugin: meson
     source: https://github.com/cboxdoerfer/fsearch.git
     meson-parameters:
+      - -Dchannel=snap-nightly
       - --buildtype=release
       - --prefix=/snap/fsearch/current/usr
     build-packages:

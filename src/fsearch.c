@@ -340,6 +340,19 @@ get_first_application_window(FsearchApplication *app) {
     return FSEARCH_APPLICATION_WINDOW(windows->data);
 }
 
+static GString *
+get_application_version(void) {
+    GString *version = g_string_new(PACKAGE_VERSION);
+#ifdef BUILD_CHANNEL
+    if (g_strcmp0(BUILD_CHANNEL, "other") != 0) {
+        g_string_append(version, " (");
+        g_string_append(version, BUILD_CHANNEL);
+        g_string_append(version, ")");
+    }
+#endif
+    return version;
+}
+
 static void
 action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
@@ -347,6 +360,8 @@ action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app)
     if (!window) {
         return;
     }
+
+    g_autoptr(GString) version = get_application_version();
 
     gtk_show_about_dialog(GTK_WINDOW(window),
                           "program-name",
@@ -360,7 +375,7 @@ action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app)
                           "website",
                           "https://github.com/cboxdoerfer/fsearch",
                           "version",
-                          PACKAGE_VERSION,
+                          version->str,
                           "translator-credits",
                           _("translator-credits"),
                           "comments",
@@ -821,7 +836,8 @@ fsearch_application_handle_local_options(GApplication *application, GVariantDict
         return fsearch_application_local_database_scan();
     }
     if (g_variant_dict_contains(options, "version")) {
-        g_print("FSearch %s\n", PACKAGE_VERSION);
+        g_autoptr(GString) version = get_application_version();
+        g_print("FSearch %s\n", version->str);
         return 0;
     }
 
