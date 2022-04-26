@@ -13,14 +13,10 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: install build dependencies
-      run: sudo apt-get -qq update && sudo apt-get install -y build-essential meson automake autopoint autoconf libtool autoconf-archive pkg-config intltool libicu-dev libpcre3-dev libglib2.0-dev libgtk-3-dev libxml2-utils
+      run: sudo apt-get -qq update && sudo apt-get install -y build-essential meson libtool pkg-config intltool libicu-dev libpcre3-dev libglib2.0-dev libgtk-3-dev libxml2-utils
     - name: setup meson build config
       run: meson build
-    - name: setup autoconf build
-      run: ./autogen.sh && ./configure --enable-debug
     - name: run meson build
       run: ninja -C build
-    - name: run autoconf build
-      run: make && make distcheck
     - name: run tests
       run: ninja -C build test
