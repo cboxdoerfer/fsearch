@@ -3,19 +3,15 @@ Section: utils
 Priority: optional
 Maintainer: Christian Boxdörfer <christian.boxdoerfer@posteo.de>
 Build-Depends: debhelper (>=9),
-    autotools-dev,
     build-essential,
-    automake,
-    autoconf,
     libtool,
     pkg-config,
-    autopoint,
-    autoconf-archive,
     libicu-dev,
     libpcre2-dev,
     libglib2.0-dev,
     libgtk-3-dev,
-    libxml2-utils
+    libxml2-utils,
+    meson
 Standards-Version: 3.9.6
 Homepage: https://cboxdoerfer.github.io/fsearch/
 
