@@ -7,7 +7,6 @@
 #include <pcre2.h>
 #include <stdbool.h>
 #include <stdint.h>
-#include <time.h>
 #include <unicode/ucasemap.h>
 #include <unicode/unorm2.h>
 
@@ -55,10 +54,8 @@ struct FsearchQueryNode {
 
     GPtrArray *search_term_list;
 
-    int64_t size;
-    int64_t size_upper_limit;
-    time_t time;
-    time_t time_upper_limit;
+    int64_t num_start;
+    int64_t num_end;
     FsearchQueryNodeComparison comparison_type;
 
     FsearchQueryNodeMatchFunc *search_func;

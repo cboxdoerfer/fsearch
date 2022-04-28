@@ -42,47 +42,34 @@ fsearch_query_matcher_extension(FsearchQueryNode *node, FsearchQueryMatchData *m
     return 0;
 }
 
+static inline uint32_t
+cmp_num(int64_t num, FsearchQueryNode *node) {
+    switch (node->comparison_type) {
+    case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
+        return num == node->num_start;
+    case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
+        return num > node->num_start;
+    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
+        return num < node->num_start;
+    case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
+        return num >= node->num_start;
+    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
+        return num <= node->num_start;
+    case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
+        return node->num_start <= num && num < node->num_end;
+    default:
+        return 0;
+    }
+}
+
 uint32_t
 fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
         const time_t time = db_entry_get_mtime(entry);
-        switch (node->comparison_type) {
-        case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
-            return time == node->time;
-        case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
-            return time > node->time;
-        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
-            return time < node->time;
-        case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
-            return time >= node->time;
-        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
-            return time <= node->time;
-        case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
-            return node->time <= time && time < node->time_upper_limit;
-        }
+        return cmp_num(time, node);
     }
     return 0;
-}
-
-static inline uint32_t
-cmp_num(int64_t num, FsearchQueryNode *node) {
-    switch (node->comparison_type) {
-    case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
-        return num == node->size;
-    case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
-        return num > node->size;
-    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
-        return num < node->size;
-    case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
-        return num >= node->size;
-    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
-        return num <= node->size;
-    case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
-        return node->size <= num && num < node->size_upper_limit;
-    default:
-        return 0;
-    }
 }
 
 uint32_t

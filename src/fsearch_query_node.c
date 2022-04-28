@@ -7,7 +7,6 @@
 #include "fsearch_query_matchers.h"
 #include "fsearch_size_utils.h"
 #include "fsearch_string_utils.h"
-#include "fsearch_time_utils.h"
 #include "fsearch_utf.h"
 #include <glib.h>
 #include <stdbool.h>
@@ -82,8 +81,8 @@ fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
     qnode->needle = get_needle_description_for_comparison_type(dm_start, dm_end, comp_type);
     qnode->description = g_string_new("date-modified");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->time = dm_start;
-    qnode->time_upper_limit = dm_end;
+    qnode->num_start = dm_start;
+    qnode->num_end = dm_end;
     qnode->comparison_type = comp_type;
     qnode->search_func = fsearch_query_matcher_date_modified;
     qnode->highlight_func = NULL;
@@ -102,8 +101,8 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     qnode->needle = get_needle_description_for_comparison_type(size_start, size_end, comp_type);
     qnode->description = g_string_new("size");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->size = size_start;
-    qnode->size_upper_limit = size_end;
+    qnode->num_start = size_start;
+    qnode->num_end = size_end;
     qnode->comparison_type = comp_type;
     qnode->search_func = fsearch_query_matcher_size;
     qnode->highlight_func = fsearch_query_matcher_highlight_size;
@@ -122,8 +121,8 @@ fsearch_query_node_new_childcount(FsearchQueryFlags flags,
     qnode->needle = get_needle_description_for_comparison_type(child_count_start, child_count_end, comp_type);
     qnode->description = g_string_new("childcount");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->size = child_count_start;
-    qnode->size_upper_limit = child_count_end;
+    qnode->num_start = child_count_start;
+    qnode->num_end = child_count_end;
     qnode->comparison_type = comp_type;
     qnode->search_func = fsearch_query_matcher_childcount;
     qnode->highlight_func = fsearch_query_matcher_highlight_none;
@@ -142,8 +141,8 @@ fsearch_query_node_new_childfilecount(FsearchQueryFlags flags,
     qnode->needle = get_needle_description_for_comparison_type(child_file_count_start, child_file_count_end, comp_type);
     qnode->description = g_string_new("childfilecount");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->size = child_file_count_start;
-    qnode->size_upper_limit = child_file_count_end;
+    qnode->num_start = child_file_count_start;
+    qnode->num_end = child_file_count_end;
     qnode->comparison_type = comp_type;
     qnode->search_func = fsearch_query_matcher_childfilecount;
     qnode->highlight_func = fsearch_query_matcher_highlight_none;
@@ -162,8 +161,8 @@ fsearch_query_node_new_childfoldercount(FsearchQueryFlags flags,
         get_needle_description_for_comparison_type(child_folder_count_start, child_folder_count_end, comp_type);
     qnode->description = g_string_new("childfoldercount");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->size = child_folder_count_start;
-    qnode->size_upper_limit = child_folder_count_end;
+    qnode->num_start = child_folder_count_start;
+    qnode->num_end = child_folder_count_end;
     qnode->comparison_type = comp_type;
     qnode->search_func = fsearch_query_matcher_childfoldercount;
     qnode->highlight_func = fsearch_query_matcher_highlight_none;
