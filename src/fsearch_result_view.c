@@ -341,7 +341,6 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         return;
     }
 
-    FsearchDatabaseView *view = result_view->database_view;
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
 
     DrawRowContext *ctx = draw_row_ctx_get(result_view, row, bin_window, icon_size);
