@@ -28,6 +28,8 @@ struct FsearchDatabaseEntryFolder {
 
     // db_idx: the database index this folder belongs to
     uint32_t db_idx;
+    uint32_t num_files;
+    uint32_t num_folders;
 };
 
 static void
@@ -43,6 +45,34 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
         g_string_append(str, entry->name);
     }
     g_string_append_c(str, G_DIR_SEPARATOR);
+}
+
+bool
+db_entry_is_folder(FsearchDatabaseEntry *entry) {
+    return entry->type == DATABASE_ENTRY_TYPE_FOLDER;
+}
+
+bool
+db_entry_is_file(FsearchDatabaseEntry *entry) {
+    return entry->type == DATABASE_ENTRY_TYPE_FILE;
+}
+
+uint32_t
+db_entry_folder_get_num_children(FsearchDatabaseEntryFolder *entry) {
+    g_assert(entry->super.type == DATABASE_ENTRY_TYPE_FOLDER);
+    return entry->num_files + entry->num_folders;
+}
+
+uint32_t
+db_entry_folder_get_num_files(FsearchDatabaseEntryFolder *entry) {
+    g_assert(entry->super.type == DATABASE_ENTRY_TYPE_FOLDER);
+    return entry->num_files;
+}
+
+uint32_t
+db_entry_folder_get_num_folders(FsearchDatabaseEntryFolder *entry) {
+    g_assert(entry->super.type == DATABASE_ENTRY_TYPE_FOLDER);
+    return entry->num_folders;
 }
 
 size_t
@@ -311,6 +341,15 @@ db_entry_set_name(FsearchDatabaseEntry *entry, const char *name) {
 void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *parent) {
     entry->parent = parent;
+    if (parent) {
+        g_assert(parent->super.type == DATABASE_ENTRY_TYPE_FOLDER);
+        if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+            parent->num_folders++;
+        }
+        else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
+            parent->num_files++;
+        }
+    }
 }
 
 void

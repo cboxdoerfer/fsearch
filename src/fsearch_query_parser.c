@@ -7,6 +7,15 @@
 
 #include <stdbool.h>
 
+typedef FsearchQueryNode *(FsearchQueryComparisonNewNodeFunc)(FsearchQueryFlags,
+                                                              int64_t,
+                                                              int64_t,
+                                                              FsearchQueryNodeComparison);
+typedef FsearchQueryNode *(FsearchQueryComparisonParserFunc)(FsearchQueryComparisonNewNodeFunc,
+                                                             GString *,
+                                                             FsearchQueryFlags,
+                                                             FsearchQueryNodeComparison);
+
 static GList *
 parse_open_bracket(FsearchQueryParseContext *parse_ctx);
 
@@ -33,6 +42,18 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
 
 static GList *
 parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+
+static GList *
+parse_field_empty(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+
+static GList *
+parse_field_childcount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+
+static GList *
+parse_field_childfilecount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+
+static GList *
+parse_field_childfoldercount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
 parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
@@ -78,8 +99,12 @@ typedef struct FsearchTokenField {
 
 FsearchTokenField supported_fields[] = {
     {"case", parse_field_case},
+    {"childcount", parse_field_childcount},
+    {"childfilecount", parse_field_childfilecount},
+    {"childfoldercount", parse_field_childfoldercount},
     {"dm", parse_field_date_modified},
     {"datemodified", parse_field_date_modified},
+    {"empty", parse_field_empty},
     {"exact", parse_field_exact},
     {"ext", parse_field_extension},
     {"file", parse_field_file},
@@ -101,7 +126,10 @@ append_node_to_list_if_nonnull(GList *list, FsearchQueryNode *node) {
 }
 
 static FsearchQueryNode *
-parse_size_with_optional_interval(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
+parse_size_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_func,
+                                  GString *string,
+                                  FsearchQueryFlags flags,
+                                  FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     int64_t size_start = 0;
     int64_t size_end = 0;
@@ -120,30 +148,84 @@ parse_size_with_optional_interval(GString *string, FsearchQueryFlags flags, Fsea
             comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
             size_end = size_start + plus;
         }
-        return fsearch_query_node_new_size(flags, size_start, size_end, comp_type);
+        return new_node_func(flags, size_start, size_end, comp_type);
     }
     g_debug("[size:] invalid argument: %s", string->str);
     return NULL;
 }
 
 static FsearchQueryNode *
-parse_size(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
+parse_size(FsearchQueryComparisonNewNodeFunc new_node_func,
+           GString *string,
+           FsearchQueryFlags flags,
+           FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     int64_t size = 0;
     if (fsearch_size_parse(string->str, &size, NULL, &end_ptr)) {
-        return fsearch_query_node_new_size(flags, size, size, comp_type);
+        return new_node_func(flags, size, size, comp_type);
     }
     g_debug("[size:] invalid argument: %s", string->str);
     return NULL;
 }
 
-typedef FsearchQueryNode *(FsearchQueryComparisonParserFunc)(GString *, FsearchQueryFlags, FsearchQueryNodeComparison);
+static bool
+num_parse(const char *str, int64_t *num_out, char **end_ptr) {
+    char *num_suffix = NULL;
+    int64_t num = strtoll(str, &num_suffix, 10);
+    if (num_suffix == str) {
+        if (end_ptr) {
+            *end_ptr = (char *)str;
+        }
+        return false;
+    }
+    if (end_ptr) {
+        *end_ptr = num_suffix;
+    }
+    *num_out = num;
+    return true;
+}
+
+static FsearchQueryNode *
+parse_num_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_func,
+                                 GString *string,
+                                 FsearchQueryFlags flags,
+                                 FsearchQueryNodeComparison comp_type) {
+    char *end_ptr = NULL;
+    int64_t num_start = 0;
+    int64_t num_end = 0;
+    if (num_parse(string->str, &num_start, &end_ptr)) {
+        if (fsearch_string_starts_with_interval(end_ptr, &end_ptr)) {
+            if (end_ptr && *end_ptr == '\0') {
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
+            }
+            else if (num_parse(end_ptr, &num_end, &end_ptr)) {
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
+            }
+        }
+        return new_node_func(flags, num_start, num_end, comp_type);
+    }
+    return NULL;
+}
+
+static FsearchQueryNode *
+parse_num(FsearchQueryComparisonNewNodeFunc new_node_func,
+          GString *string,
+          FsearchQueryFlags flags,
+          FsearchQueryNodeComparison comp_type) {
+    char *end_ptr = NULL;
+    int64_t num = 0;
+    if (num_parse(string->str, &num, &end_ptr)) {
+        return new_node_func(flags, num, num, comp_type);
+    }
+    return NULL;
+}
 
 static GList *
 parse_interval(FsearchQueryParseContext *parse_ctx,
                bool is_empty_field,
                FsearchQueryFlags flags,
                const char *field_name,
+               FsearchQueryComparisonNewNodeFunc new_node_func,
                FsearchQueryComparisonParserFunc parse_func,
                FsearchQueryComparisonParserFunc parse_interval_func) {
     if (is_empty_field) {
@@ -169,7 +251,7 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
-        return append_node_to_list_if_nonnull(NULL, parse_interval_func(token_value, flags, comp_type));
+        return append_node_to_list_if_nonnull(NULL, parse_interval_func(new_node_func, token_value, flags, comp_type));
     default:
         g_debug("[%s:] invalid or missing argument", field_name);
         return NULL;
@@ -178,7 +260,7 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
     g_autoptr(GString) next_token_value = NULL;
     FsearchQueryToken next_token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &next_token_value);
     if (next_token == FSEARCH_QUERY_TOKEN_WORD) {
-        return append_node_to_list_if_nonnull(NULL, parse_func(next_token_value, flags, comp_type));
+        return append_node_to_list_if_nonnull(NULL, parse_func(new_node_func, next_token_value, flags, comp_type));
     }
 
     return NULL;
@@ -186,11 +268,60 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
 
 static GList *
 parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_interval(parse_ctx, is_empty_field, flags, "size", parse_size, parse_size_with_optional_interval);
+    return parse_interval(parse_ctx,
+                          is_empty_field,
+                          flags,
+                          "size",
+                          fsearch_query_node_new_size,
+                          parse_size,
+                          parse_size_with_optional_interval);
+}
+
+static GList *
+parse_field_empty(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return append_node_to_list_if_nonnull(
+        NULL,
+        fsearch_query_node_new_childcount(flags, 0, 0, FSEARCH_QUERY_NODE_COMPARISON_EQUAL));
+}
+
+static GList *
+parse_field_childcount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_interval(parse_ctx,
+                          is_empty_field,
+                          flags,
+                          "childcount",
+                          fsearch_query_node_new_childcount,
+                          parse_num,
+                          parse_num_with_optional_interval);
+}
+
+static GList *
+parse_field_childfilecount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_interval(parse_ctx,
+                          is_empty_field,
+                          flags,
+                          "childfilecount",
+                          fsearch_query_node_new_childfilecount,
+                          parse_num,
+                          parse_num_with_optional_interval);
+}
+
+static GList *
+parse_field_childfoldercount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_interval(parse_ctx,
+                          is_empty_field,
+                          flags,
+                          "childfoldercount",
+                          fsearch_query_node_new_childfoldercount,
+                          parse_num,
+                          parse_num_with_optional_interval);
 }
 
 static FsearchQueryNode *
-parse_date_with_optional_interval(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
+parse_date_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_func,
+                                  GString *string,
+                                  FsearchQueryFlags flags,
+                                  FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     time_t time_start = 0;
     time_t time_end = 0;
@@ -207,14 +338,17 @@ parse_date_with_optional_interval(GString *string, FsearchQueryFlags flags, Fsea
         else {
             comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
         }
-        return fsearch_query_node_new_date_modified(flags, time_start, time_end, comp_type);
+        return new_node_func(flags, time_start, time_end, comp_type);
     }
     g_debug("[date-modified:] invalid argument: %s", string->str);
     return NULL;
 }
 
 static FsearchQueryNode *
-parse_date_modified(GString *string, FsearchQueryFlags flags, FsearchQueryNodeComparison comp_type) {
+parse_date_modified(FsearchQueryComparisonNewNodeFunc new_node_func,
+                    GString *string,
+                    FsearchQueryFlags flags,
+                    FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     time_t date = 0;
     time_t date_end = 0;
@@ -240,7 +374,7 @@ parse_date_modified(GString *string, FsearchQueryFlags flags, FsearchQueryNodeCo
             break;
         }
 
-        return fsearch_query_node_new_date_modified(flags, dm_start, dm_end, comp_type);
+        return new_node_func(flags, dm_start, dm_end, comp_type);
     }
     g_debug("[date:] invalid argument: %s", string->str);
     return NULL;
@@ -252,6 +386,7 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
                           is_empty_field,
                           flags,
                           "date-modified",
+                          fsearch_query_node_new_date_modified,
                           parse_date_modified,
                           parse_date_with_optional_interval);
 }

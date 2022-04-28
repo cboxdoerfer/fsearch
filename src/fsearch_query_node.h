@@ -83,8 +83,8 @@ fsearch_query_node_free(FsearchQueryNode *node);
 
 FsearchQueryNode *
 fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
-                                     time_t dm_start,
-                                     time_t dm_end,
+                                     int64_t dm_start,
+                                     int64_t dm_end,
                                      FsearchQueryNodeComparison comp_type);
 
 FsearchQueryNode *
@@ -92,6 +92,24 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
                             int64_t size_start,
                             int64_t size_end,
                             FsearchQueryNodeComparison comp_type);
+
+FsearchQueryNode *
+fsearch_query_node_new_childcount(FsearchQueryFlags flags,
+                                  int64_t child_folder_count_start,
+                                  int64_t child_folder_count_end,
+                                  FsearchQueryNodeComparison comp_type);
+
+FsearchQueryNode *
+fsearch_query_node_new_childfoldercount(FsearchQueryFlags flags,
+                                        int64_t child_folder_count_start,
+                                        int64_t child_folder_count_end,
+                                        FsearchQueryNodeComparison comp_type);
+
+FsearchQueryNode *
+fsearch_query_node_new_childfilecount(FsearchQueryFlags flags,
+                                      int64_t child_file_count_start,
+                                      int64_t child_file_count_end,
+                                      FsearchQueryNodeComparison comp_type);
 
 FsearchQueryNode *fsearch_query_node_new_operator(FsearchQueryNodeOperator operator);
 

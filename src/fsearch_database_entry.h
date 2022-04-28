@@ -20,11 +20,26 @@ typedef struct FsearchDatabaseEntryCompareContext {
     GHashTable *entry_to_file_type_table;
 } FsearchDatabaseEntryCompareContext;
 
+bool
+db_entry_is_folder(FsearchDatabaseEntry *entry);
+
+bool
+db_entry_is_file(FsearchDatabaseEntry *entry);
+
 size_t
 db_entry_get_sizeof_folder_entry();
 
 size_t
 db_entry_get_sizeof_file_entry();
+
+uint32_t
+db_entry_folder_get_num_children(FsearchDatabaseEntryFolder *entry);
+
+uint32_t
+db_entry_folder_get_num_files(FsearchDatabaseEntryFolder *entry);
+
+uint32_t
+db_entry_folder_get_num_folders(FsearchDatabaseEntryFolder *entry);
 
 void
 db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx);

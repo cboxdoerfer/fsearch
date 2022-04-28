@@ -19,6 +19,15 @@ uint32_t
 fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
 uint32_t
+fsearch_query_matcher_childcount(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
+
+uint32_t
+fsearch_query_matcher_childfilecount(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
+
+uint32_t
+fsearch_query_matcher_childfoldercount(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
+
+uint32_t
 fsearch_query_matcher_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
 uint32_t

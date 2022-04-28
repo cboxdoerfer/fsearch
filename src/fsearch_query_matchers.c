@@ -65,25 +65,62 @@ fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchDat
     return 0;
 }
 
+static inline uint32_t
+cmp_num(int64_t num, FsearchQueryNode *node) {
+    switch (node->comparison_type) {
+    case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
+        return num == node->size;
+    case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
+        return num > node->size;
+    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
+        return num < node->size;
+    case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
+        return num >= node->size;
+    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
+        return num <= node->size;
+    case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
+        return node->size <= num && num < node->size_upper_limit;
+    default:
+        return 0;
+    }
+}
+
+uint32_t
+fsearch_query_matcher_childcount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    if (entry && db_entry_is_folder(entry)) {
+        const int64_t num_children = db_entry_folder_get_num_children((FsearchDatabaseEntryFolder *)entry);
+        return cmp_num(num_children, node);
+    }
+    return 0;
+}
+
+uint32_t
+fsearch_query_matcher_childfilecount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    if (entry && db_entry_is_folder(entry)) {
+        const int64_t num_files = db_entry_folder_get_num_files((FsearchDatabaseEntryFolder *)entry);
+        return cmp_num(num_files, node);
+    }
+    return 0;
+}
+
+uint32_t
+fsearch_query_matcher_childfoldercount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    if (entry && db_entry_is_folder(entry)) {
+        const int64_t num_folders = db_entry_folder_get_num_folders((FsearchDatabaseEntryFolder *)entry);
+        return cmp_num(num_folders, node);
+    }
+    return 0;
+}
+
 uint32_t
 fsearch_query_matcher_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
         const int64_t size = db_entry_get_size(entry);
-        switch (node->comparison_type) {
-        case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
-            return size == node->size;
-        case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
-            return size > node->size;
-        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
-            return size < node->size;
-        case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
-            return size >= node->size;
-        case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
-            return size <= node->size;
-        case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
-            return node->size <= size && size < node->size_upper_limit;
-        }
+        return cmp_num(size, node);
     }
     return 0;
 }

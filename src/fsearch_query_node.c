@@ -51,32 +51,35 @@ fsearch_query_node_free(FsearchQueryNode *node) {
     g_clear_pointer(&node, g_free);
 }
 
+static char *
+get_needle_description_for_comparison_type(int64_t start, int64_t end, FsearchQueryNodeComparison comp_type) {
+    switch (comp_type) {
+    case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
+        return g_strdup_printf("=%ld", start);
+    case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
+        return g_strdup_printf(">=%ld", start);
+    case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
+        return g_strdup_printf(">%ld", start);
+    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
+        return g_strdup_printf("<=%ld", start);
+    case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
+        return g_strdup_printf("<%ld", start);
+    case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
+        return g_strdup_printf("%ld..%ld", start, end);
+    default:
+        return g_strdup("invalid");
+    }
+}
+
 FsearchQueryNode *
 fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
-                                     time_t dm_start,
-                                     time_t dm_end,
+                                     int64_t dm_start,
+                                     int64_t dm_end,
                                      FsearchQueryNodeComparison comp_type) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
 
-    if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL) {
-        qnode->needle = g_strdup_printf("=%ld", dm_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ) {
-        qnode->needle = g_strdup_printf(">=%ld", dm_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER) {
-        qnode->needle = g_strdup_printf(">%ld", dm_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ) {
-        qnode->needle = g_strdup_printf("<=%ld", dm_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER) {
-        qnode->needle = g_strdup_printf("<%ld", dm_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_INTERVAL) {
-        qnode->needle = g_strdup_printf("%ld..%ld", dm_start, dm_end);
-    }
+    qnode->needle = get_needle_description_for_comparison_type(dm_start, dm_end, comp_type);
     qnode->description = g_string_new("date-modified");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->time = dm_start;
@@ -96,24 +99,7 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
 
-    if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_EQUAL) {
-        qnode->needle = g_strdup_printf("=%ld", size_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ) {
-        qnode->needle = g_strdup_printf(">=%ld", size_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_GREATER) {
-        qnode->needle = g_strdup_printf(">%ld", size_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ) {
-        qnode->needle = g_strdup_printf("<=%ld", size_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_SMALLER) {
-        qnode->needle = g_strdup_printf("<%ld", size_start);
-    }
-    else if (comp_type == FSEARCH_QUERY_NODE_COMPARISON_INTERVAL) {
-        qnode->needle = g_strdup_printf("%ld..%ld", size_start, size_end);
-    }
+    qnode->needle = get_needle_description_for_comparison_type(size_start, size_end, comp_type);
     qnode->description = g_string_new("size");
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
     qnode->size = size_start;
@@ -126,6 +112,66 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
 }
 
 FsearchQueryNode *
+fsearch_query_node_new_childcount(FsearchQueryFlags flags,
+                                  int64_t child_count_start,
+                                  int64_t child_count_end,
+                                  FsearchQueryNodeComparison comp_type) {
+    FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
+    g_assert(qnode);
+
+    qnode->needle = get_needle_description_for_comparison_type(child_count_start, child_count_end, comp_type);
+    qnode->description = g_string_new("childcount");
+    qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    qnode->size = child_count_start;
+    qnode->size_upper_limit = child_count_end;
+    qnode->comparison_type = comp_type;
+    qnode->search_func = fsearch_query_matcher_childcount;
+    qnode->highlight_func = fsearch_query_matcher_highlight_none;
+    qnode->flags = flags;
+    return qnode;
+}
+
+FsearchQueryNode *
+fsearch_query_node_new_childfilecount(FsearchQueryFlags flags,
+                                      int64_t child_file_count_start,
+                                      int64_t child_file_count_end,
+                                      FsearchQueryNodeComparison comp_type) {
+    FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
+    g_assert(qnode);
+
+    qnode->needle = get_needle_description_for_comparison_type(child_file_count_start, child_file_count_end, comp_type);
+    qnode->description = g_string_new("childfilecount");
+    qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    qnode->size = child_file_count_start;
+    qnode->size_upper_limit = child_file_count_end;
+    qnode->comparison_type = comp_type;
+    qnode->search_func = fsearch_query_matcher_childfilecount;
+    qnode->highlight_func = fsearch_query_matcher_highlight_none;
+    qnode->flags = flags;
+    return qnode;
+}
+FsearchQueryNode *
+fsearch_query_node_new_childfoldercount(FsearchQueryFlags flags,
+                                        int64_t child_folder_count_start,
+                                        int64_t child_folder_count_end,
+                                        FsearchQueryNodeComparison comp_type) {
+    FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
+    g_assert(qnode);
+
+    qnode->needle =
+        get_needle_description_for_comparison_type(child_folder_count_start, child_folder_count_end, comp_type);
+    qnode->description = g_string_new("childfoldercount");
+    qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
+    qnode->size = child_folder_count_start;
+    qnode->size_upper_limit = child_folder_count_end;
+    qnode->comparison_type = comp_type;
+    qnode->search_func = fsearch_query_matcher_childfoldercount;
+    qnode->highlight_func = fsearch_query_matcher_highlight_none;
+    qnode->flags = flags;
+    return qnode;
+}
+
+FsearchQueryNode *
 fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
     g_assert(operator== FSEARCH_QUERY_NODE_OPERATOR_AND || operator== FSEARCH_QUERY_NODE_OPERATOR_OR ||
              operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
@@ -133,7 +179,7 @@ fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
     g_assert(qnode);
     qnode->description = g_string_new(operator== FSEARCH_QUERY_NODE_OPERATOR_AND
                                           ? "AND"
-                                          :(operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
+                                          : (operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
     qnode->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
     qnode->operator= operator;
     return qnode;
