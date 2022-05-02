@@ -1663,9 +1663,7 @@ If enabled, the database will be updated automatically in the background when yo
 
                       • &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will included in the database to be searched in.
                       • &lt;b&gt;Path:&lt;/b&gt; The full path to be included.
-                      • &lt;b&gt;Update:&lt;/b&gt; This setting is useful if you want to exclude certain paths from
-                      being
-                      updated &lt;i&gt;(e.g. a path to a slow USB drive which doesn't change often)&lt;/i&gt;
+                      • &lt;b&gt;One Filesystem:&lt;/b&gt; If enabled, FSearch won't cross filesystem boundraries.
                     </property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
