@@ -1387,7 +1387,6 @@ Note that some window managers ignore this request and force the window to have 
 When a file/folder was succesfully opened one of the following actions can be performed:
 	• &lt;b&gt;Nothing:&lt;/b&gt; Nothing happens.
 	• &lt;b&gt;Minimize:&lt;/b&gt; The currently selected FSearch window becomes minimized. 
-		Note that not all systems allow windows to be minimized.
 	• &lt;b&gt;Close:&lt;/b&gt; Quit FSearch.
 
 You can configure if those actions should be triggered when the file was opened with
@@ -1411,8 +1410,8 @@ You can configure if those actions should be triggered when the file was opened 
 
 If enabled, the search terms will be highlighted in the results view. For example when you search for "foo" all appearances of &lt;i&gt;foo&lt;/i&gt; in file/folder names will be highlighted with bold characters:
 
-		&lt;b&gt;foo&lt;/b&gt;bar.txt
-		file.&lt;b&gt;foo&lt;/b&gt;
+	&lt;b&gt;foo&lt;/b&gt;bar.txt
+	file.&lt;b&gt;foo&lt;/b&gt;
 
 This also works for regular expressions and wildcard expressions starting or ending with an asterisk. </property>
                     <property name="use-markup">True</property>
@@ -1550,10 +1549,7 @@ If enabled, the path that is currently being indexed is displayed in the statusb
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Show warning dialogs:&lt;/b&gt;
 
-If enabled, a warning dialog is displayed when:
-
-	•  a file or folder failed to open
-</property>
+If enabled, a warning dialog is displayed when a file or folder failed to open.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1659,12 +1655,11 @@ If enabled, the database will be updated automatically in the background when yo
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Included folders:&lt;/b&gt;
 
-                      This list contains all folders you want to include in the database.
+This list contains all folders you want to include in the database.
 
-                      • &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will included in the database to be searched in.
-                      • &lt;b&gt;Path:&lt;/b&gt; The full path to be included.
-                      • &lt;b&gt;One Filesystem:&lt;/b&gt; If enabled, FSearch won't cross filesystem boundraries.
-                    </property>
+	• &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will included in the database to be searched in.
+	• &lt;b&gt;Path:&lt;/b&gt; The full path to be included.
+	• &lt;b&gt;One Filesystem:&lt;/b&gt; If enabled, FSearch won't cross filesystem boundraries for this folder</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1681,9 +1676,7 @@ If enabled, the database will be updated automatically in the background when yo
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Add folder to database:&lt;/b&gt;
 
-                      This button opens a dialog where you can select a folder you want to include in the database for
-                      searching.
-                    </property>
+This button opens a dialog where you can select a folder you want to include in the database for searching.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1700,8 +1693,7 @@ If enabled, the database will be updated automatically in the background when yo
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remove selected row:&lt;/b&gt;
 
-                      This removes the selected folder from the list of included folders.
-                    </property>
+This removes the selected folder from the list of included folders.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1720,8 +1712,7 @@ If enabled, the database will be updated automatically in the background when yo
 
 This list contains all folders you want to exclude from the database.
 
-	• &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will excluded from the database
-		 and can't be searched in.
+	• &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will excluded from the database and can't be searched in.
 	• &lt;b&gt;Path:&lt;/b&gt; The full path to be excluded.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
@@ -1841,11 +1832,7 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Launch desktop files:&lt;/b&gt;
 
-                      If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the application defined
-                      within that file. This way FSearch can act like an application launcher. Otherwise the &lt;i&gt;.desktop&lt;/i&gt;
-                      file will be opened with the default handler for this type of files, which is usually a text
-                      editor.
-                    </property>
+If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the application defined within that file. This way FSearch can act like an application launcher. Otherwise the &lt;i&gt;.desktop&lt;/i&gt; file will be opened with the default handler for this type of files, which is usually a text editor.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1862,13 +1849,11 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Filters:&lt;/b&gt;
 
-                        This is a list of all available filters. A filter is a predefined search.
+This is a list of all available filters. A filter is a predefined search.
 
-                        • &lt;b&gt;Name:&lt;/b&gt; A unique and descriptive identifier for the filter
-                        • &lt;b&gt;Macro:&lt;/b&gt; By typing the macro text followed by a ':' you can enable the filter
-                        on demand
-                        • &lt;b&gt;Query:&lt;/b&gt; The search term by which the database should be filtered
-                    </property>
+	• &lt;b&gt;Name:&lt;/b&gt; A unique and descriptive identifier for the filter
+	• &lt;b&gt;Macro:&lt;/b&gt; By typing the macro text followed by a ':' you can enable the filter on demand
+	• &lt;b&gt;Query:&lt;/b&gt; The search term by which the database should be filtered</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1885,8 +1870,7 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Add a new filter:&lt;/b&gt;
 
-                      This button opens a dialog where you can edit a new filter.
-                    </property>
+This button opens a dialog where you can edit a new filter.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1903,8 +1887,7 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remove selected filter:&lt;/b&gt;
 
-                      This button removes the currently selected filter.
-                    </property>
+This button removes the currently selected filter.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1921,8 +1904,7 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Edit selected filter:&lt;/b&gt;
 
-                      This button opens a dialog where you can edit the selected filter.
-                    </property>
+This button opens a dialog where you can edit the selected filter.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1939,10 +1921,9 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Restore default filters:&lt;/b&gt;
 
-                      This button restores the default filter configuration.
+This button restores the default filter configuration.
 
-                      ⚠ All filters which were created or edited by the user will be lost! ⚠
-                    </property>
+⚠ All filters which were created or edited by the user will be lost! ⚠</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
