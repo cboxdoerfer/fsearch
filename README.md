@@ -31,14 +31,6 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ## Download
 
-### Flatpak
-
-* Release Builds:
-  <https://flathub.org/apps/details/io.github.cboxdoerfer.FSearch>
-  
-### Snap
-* Development Builds: <https://snapcraft.io/fsearch>
-  
 ### Ubuntu
 
 * Release Builds:
@@ -67,6 +59,15 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 * Release Builds:
   <https://www.freshports.org/sysutils/fsearch>
+  
+### Flatpak (limited in functionality)
+
+* Release Builds:
+  <https://flathub.org/apps/details/io.github.cboxdoerfer.FSearch>
+  
+### Snap (limited in functionality)
+* Development Builds: <https://snapcraft.io/fsearch>
+  
 
 ### NixOS (unofficial)
 
