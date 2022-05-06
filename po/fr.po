@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-03-04 22:32+0100\n"
-"PO-Revision-Date: 2022-05-03 08:29+0000\n"
+"PO-Revision-Date: 2022-05-06 08:14+0000\n"
 "Last-Translator: Mathieu B. <perso@mathieu-bousquet.fr>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
@@ -120,7 +120,10 @@ msgstr "Enregistrement…"
 
 #: src/fsearch.c:376
 msgid "translator-credits"
-msgstr "Traducteurs : Pierre-Louis K., Roxfr, Mathieu B. (mbousq)"
+msgstr ""
+"Traducteurs :\n"
+"Pierre-Louis K., Roxfr,\n"
+"Mathieu B., mbousq,"
 
 #: src/fsearch.c:378
 msgid "A search utility focusing on performance and advanced features"
@@ -138,7 +141,7 @@ msgstr "Afficher les préférences de l'application"
 
 #: src/fsearch.c:842
 msgid "Set the search pattern"
-msgstr "Définir le schéma de recherche"
+msgstr "Définir le modèle de recherche"
 
 #: src/fsearch.c:843
 msgid "Update the database and exit"
