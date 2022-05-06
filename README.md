@@ -91,7 +91,7 @@ The localization of FSearch is managed with Weblate.
 
 <https://hosted.weblate.org/projects/fsearch/>
 
-If you want to contribute translations please submit them there, instead of opening pull requets on GitHub. Instructions
+If you want to contribute translations please submit them there, instead of opening pull requests on GitHub. Instructions
 can be found here:
 <https://docs.weblate.org/en/latest/user/basic.html>
 
@@ -104,7 +104,7 @@ And of course: Thank you for taking the time to translate FSearch!
 * Sorting can't be aborted. This is usually not an issue, because it's very fast for all columns except the *Type*
   column.
 * Using the *Move to Trash* option doesn't update the database index, so trashed files/folders show up in the result
-  list as if nothing happend to them.
+  list as if nothing happened to them.
 
 ## Why yet another search utility?
 
