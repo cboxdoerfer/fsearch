@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-03-04 22:32+0100\n"
+"POT-Creation-Date: 2022-05-04 14:56+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: akash rao <akash.rao.ind@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/fsearch/"
@@ -99,67 +99,68 @@ msgstr ""
 msgid "Initial release."
 msgstr ""
 
-#: src/fsearch.c:264
+#: src/fsearch.c:262
 #, fuzzy
 msgid "Saving…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"
 
-#: src/fsearch.c:376
+#: src/fsearch.c:380
 msgid "translator-credits"
 msgstr ""
 "మీ సేవలు కొనియాడుటకు ఈ వాక్యం కలదు. అనువాదకులలో ఒకరిగా మీరు గుర్తింపు పొందదలచిన యెడల, మీ పేరుని "
 "అనువాదిత వాక్యములో చేర్చండి. వేరువేరు పేర్ల నడుమ కొత్త లైను సంజ్ఞ ఉండవలెను."
 
-#: src/fsearch.c:378
+#: src/fsearch.c:382
 msgid "A search utility focusing on performance and advanced features"
 msgstr "పనిచేయు తత్వము మరియు ఆధునిక ఫీచర్ లు గల అన్వేషణా పనిముట్టు"
 
-#: src/fsearch.c:840
+#: src/fsearch.c:850
 #, fuzzy
 msgid "Open a new application window"
 msgstr "మరొక అప్లికేషను తో తెరువుము"
 
-#: src/fsearch.c:841
+#: src/fsearch.c:851
 msgid "Show the application preferences"
 msgstr ""
 
-#: src/fsearch.c:842
+#: src/fsearch.c:852
 #, fuzzy
 #| msgid "Show Search Button"
 msgid "Set the search pattern"
 msgstr "వెతుకు బటన్ ని చూపుము"
 
-#: src/fsearch.c:843
+#: src/fsearch.c:853
 #, fuzzy
 msgid "Update the database and exit"
 msgstr "డేటాబేస్ ని ఆధునికీకరణ చేయుము"
 
-#: src/fsearch.c:844
+#: src/fsearch.c:854
 #, fuzzy
 msgid "Print version information and exit"
 msgstr "వర్షన్ సమాచారము చూపించుము"
 
-#: src/fsearch_database.c:640
+#: src/fsearch_database.c:652
 #, fuzzy
 msgid "Loading folders…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"
 
-#: src/fsearch_database.c:648
+#: src/fsearch_database.c:660
 #, fuzzy
 msgid "Loading files…"
 msgstr "ఫైల్ లని తీసివేస్తున్నాము…"
 
-#: src/fsearch_database.c:1667
+#: src/fsearch_database.c:1650 src/fsearch_statusbar.c:71
+#: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"
 
-#: src/fsearch_file_utils.c:302
+#: src/fsearch_file_utils.c:283
 #, fuzzy
 msgid "Folder"
 msgstr "ఫోల్డరులు"
 
-#: src/fsearch_file_utils.c:308
+#: src/fsearch_file_utils.c:289
 msgid "Unknown Type"
 msgstr ""
 
@@ -199,17 +200,21 @@ msgstr ""
 msgid "Videos"
 msgstr ""
 
-#: src/fsearch_filter_editor.c:103 src/fsearch_preferences_ui.c:194
-#: src/fsearch_preferences_ui.c:206 src/fsearch_preferences_ui.c:512
+#: src/fsearch_filter_editor.c:79
+msgid "Macro names must not contain `:` characters."
+msgstr ""
+
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
+#: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
 #, fuzzy
 msgid "_Cancel"
 msgstr "అప్డేట్"
 
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:513
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:509
 msgid "_OK"
 msgstr ""
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:294
+#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
 msgid "Edit filter"
 msgstr ""
 
@@ -253,17 +258,16 @@ msgstr ""
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
-"The macro for this filter. A macro allows you to\n"
-"                          access this filter from the search entry by typing "
-"its text followed by ':'\n"
-"                      "
+"The macro for this filter. A macro allows you to access this filter from the "
+"search entry by typing its text followed by ':'\n"
+"                "
 msgstr ""
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
 msgstr ""
 
-#: src/fsearch_listview_popup.c:176
+#: src/fsearch_listview_popup.c:169
 msgid "Other Application…"
 msgstr ""
 
@@ -277,7 +281,7 @@ msgid "Add folders"
 msgstr "ఫోల్డరులు"
 
 #: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
-#: src/fsearch_statusbar.ui:273
+#: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
 msgid "page0"
 msgstr "పేజీ0"
 
@@ -290,11 +294,11 @@ msgid "This won't take long."
 msgstr "ఇందుకు ఎక్కువ సమయం పట్టదు."
 
 #: src/fsearch_overlay.ui:139 src/fsearch_overlay.ui:335
-#: src/fsearch_statusbar.ui:309
+#: src/fsearch_statusbar.ui:123 src/fsearch_statusbar.ui:381
 msgid "page1"
 msgstr "పేజీ1"
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:240
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
 msgstr "డేటాబేస్ ని అప్డేట్ చేస్తున్నాము…"
 
@@ -347,211 +351,215 @@ msgstr "డెసిమల్ యూనిట్ ల బదులుగా బ�
 msgid "Remember window size"
 msgstr "కిటికీ కొలతలని గుర్తు పెట్టుకొనుము"
 
-#: src/fsearch_preferences.ui:215
+#: src/fsearch_preferences.ui:193
+msgid "Exit on Escape"
+msgstr ""
+
+#: src/fsearch_preferences.ui:230
 msgid "with keyboard shortcuts or menu entries"
 msgstr "కీబోర్డు షార్టుకట్ లు లేక మెన్యూ లోని విషయము ల తో"
 
-#: src/fsearch_preferences.ui:230
+#: src/fsearch_preferences.ui:245
 msgid "with double click"
 msgstr "డబుల్ క్లిక్ తో"
 
-#: src/fsearch_preferences.ui:258
+#: src/fsearch_preferences.ui:273
 msgid "Behaviour after successfully opening a file:"
 msgstr "ఫైల్ ని విజయవంతముగా తెరిచిన పిమ్మట ప్రవర్తన:"
 
-#: src/fsearch_preferences.ui:274
+#: src/fsearch_preferences.ui:289
 msgid "Nothing"
 msgstr ""
 
-#: src/fsearch_preferences.ui:275
+#: src/fsearch_preferences.ui:290
 msgid "Minimize"
 msgstr "చిన్నదిగా చేయుము"
 
-#: src/fsearch_preferences.ui:276
+#: src/fsearch_preferences.ui:291
 msgid "Close"
 msgstr "మూయుము"
 
-#: src/fsearch_preferences.ui:302
+#: src/fsearch_preferences.ui:317
 msgid "General:"
 msgstr ""
 
-#: src/fsearch_preferences.ui:337
+#: src/fsearch_preferences.ui:352
 msgid "Show highlighted search terms"
 msgstr "కాంతివంతముగా చేసిన వెతికే టర్మ్ లని చూపించుము"
 
-#: src/fsearch_preferences.ui:353
+#: src/fsearch_preferences.ui:368
 msgid "Show tooltips"
 msgstr "పనిముట్టు సలహాలని చూపించుము"
 
-#: src/fsearch_preferences.ui:368
+#: src/fsearch_preferences.ui:383
 msgid "Show icons in name column"
 msgstr "పేరు అను నిలువు వరస లో ఐకాన్ లని చూపించుము"
 
-#: src/fsearch_preferences.ui:383
+#: src/fsearch_preferences.ui:398
 msgid "Remember column configuration"
 msgstr "నిలువు వరస కాంఫిగరేషన్ ని గుర్తు పెట్టుకొనుము"
 
-#: src/fsearch_preferences.ui:398
+#: src/fsearch_preferences.ui:413
 msgid "Remember sort order"
 msgstr "వరుసలో పేర్చు క్రమమును గుర్తు పెట్టుకొనుము"
 
-#: src/fsearch_preferences.ui:413
+#: src/fsearch_preferences.ui:428
 msgid "Open path with double click in path column"
 msgstr "దారి యొక్క నిలువు వరస లో డబుల్ క్లిక్ చేసి దారి ని తెరువుము"
 
-#: src/fsearch_preferences.ui:428
+#: src/fsearch_preferences.ui:443
 msgid "Single click to open"
 msgstr "ఒక క్లిక్ చేసి తెరువుము"
 
-#: src/fsearch_preferences.ui:443
+#: src/fsearch_preferences.ui:458
 msgid "Launch desktop files"
 msgstr ""
 
-#: src/fsearch_preferences.ui:464
+#: src/fsearch_preferences.ui:479
 msgid "Results:"
 msgstr ""
 
-#: src/fsearch_preferences.ui:505
+#: src/fsearch_preferences.ui:520
 #, fuzzy
 msgid "Show database indexing status"
 msgstr "ఆరంభములో డేటాబేస్ ని ఆధునికీకరించుము"
 
-#: src/fsearch_preferences.ui:526
+#: src/fsearch_preferences.ui:541
 #, fuzzy
 msgid "Statusbar:"
 msgstr "స్టాటస్ బార్ ని చూపుము"
 
-#: src/fsearch_preferences.ui:567
+#: src/fsearch_preferences.ui:582
 msgid "Show warning dialogs when:"
 msgstr "ఇలాంటి చోట వార్నింగ్ సూచనలు చూపుము:"
 
-#: src/fsearch_preferences.ui:577
+#: src/fsearch_preferences.ui:592
 msgid "file / folder failed to open"
 msgstr "ఫైల్ / ఫోల్డరు ని తెరవలేకున్నాము"
 
-#: src/fsearch_preferences.ui:600
+#: src/fsearch_preferences.ui:615
 #, fuzzy
 msgid "Dialogs:"
 msgstr "సూచనలు"
 
-#: src/fsearch_preferences.ui:625
+#: src/fsearch_preferences.ui:640
 msgid "Interface"
 msgstr "ఇంటర్ఫేస్"
 
-#: src/fsearch_preferences.ui:644
+#: src/fsearch_preferences.ui:659
 msgid "Search in path when query contains path separators"
 msgstr "ప్రశ్నలో దారులను విడదీయు సూచికలు ఉన్నపుడు దారిలో వెతుకుము"
 
-#: src/fsearch_preferences.ui:658
+#: src/fsearch_preferences.ui:673
 msgid "Search as you type"
 msgstr "టైపు చేస్తూ వెతకండి"
 
-#: src/fsearch_preferences.ui:672
+#: src/fsearch_preferences.ui:687
 msgid "Hide results when search is empty"
 msgstr "వెతుకులాట ఖాళీగా ఉన్నపుడు ఫలితాలను మరుగు పరచుము"
 
-#: src/fsearch_preferences.ui:686
+#: src/fsearch_preferences.ui:701
 #, fuzzy
 msgid "Match case when query contains at least one upper case character"
 msgstr "ప్రశ్నలో కనీసం ఒక్క పెద్ద అక్షరమైననూ ఉన్నయెడల మిగతా అన్నీ అందులోకి మార్చుము"
 
-#: src/fsearch_preferences.ui:754
+#: src/fsearch_preferences.ui:769
 #, fuzzy
 msgid "Add new filter"
 msgstr "ఫోల్డరులు"
 
-#: src/fsearch_preferences.ui:770
+#: src/fsearch_preferences.ui:785
 #, fuzzy
 msgid "Remove selected filter"
 msgstr "వెతుకులాట ఫలితాల సంఖ్య"
 
-#: src/fsearch_preferences.ui:786
+#: src/fsearch_preferences.ui:801
 #, fuzzy
 msgid "Edit selected filter"
 msgstr "వెతుకులాట ఫలితాల సంఖ్య"
 
-#: src/fsearch_preferences.ui:800
+#: src/fsearch_preferences.ui:815
 msgid "Restore default filters"
 msgstr ""
 
-#: src/fsearch_preferences.ui:832
+#: src/fsearch_preferences.ui:847
 #, fuzzy
 #| msgid "Show Filter"
 msgid "Filter:"
 msgstr "వడపోతని చూపుము"
 
-#: src/fsearch_preferences.ui:853 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
 msgid "Search"
 msgstr "వెతుకులాట"
 
-#: src/fsearch_preferences.ui:872
+#: src/fsearch_preferences.ui:887
 msgid "Update database on start"
 msgstr "ఆరంభములో డేటాబేస్ ని ఆధునికీకరించుము"
 
-#: src/fsearch_preferences.ui:892
+#: src/fsearch_preferences.ui:907
 #, fuzzy
 msgid "Update every"
 msgstr "అప్డేట్"
 
-#: src/fsearch_preferences.ui:914
+#: src/fsearch_preferences.ui:929
 msgid "0"
 msgstr ""
 
-#: src/fsearch_preferences.ui:931
+#: src/fsearch_preferences.ui:946
 msgid "hour(s) and"
 msgstr ""
 
-#: src/fsearch_preferences.ui:943
+#: src/fsearch_preferences.ui:958
 msgid "30"
 msgstr ""
 
-#: src/fsearch_preferences.ui:961
+#: src/fsearch_preferences.ui:976
 msgid "minute(s)"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1033
+#: src/fsearch_preferences.ui:1048
 msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1149
+#: src/fsearch_preferences.ui:1065 src/fsearch_preferences.ui:1164
 msgid "Remove selected path"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1076
+#: src/fsearch_preferences.ui:1091
 msgid "Include"
 msgstr "చేర్చుము"
 
-#: src/fsearch_preferences.ui:1133
+#: src/fsearch_preferences.ui:1148
 msgid "Add path to be excluded from database"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1185 src/fsearch_preferences.ui:1198
+#: src/fsearch_preferences.ui:1200 src/fsearch_preferences.ui:1213
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
 msgstr "వైల్డుకార్డు లని సపోర్ట్ చేస్తుంది. చాలా విషయాలని ';' తో విడదీయండి"
 
-#: src/fsearch_preferences.ui:1186
+#: src/fsearch_preferences.ui:1201
 msgid "Exclude files:"
 msgstr "ఈ ఫైల్ లని చేర్చకుము:"
 
-#: src/fsearch_preferences.ui:1199
+#: src/fsearch_preferences.ui:1214
 msgid "e.g. \".git;*.tmp\""
 msgstr "ఉదా. \".git;*.tmp\""
 
-#: src/fsearch_preferences.ui:1216
+#: src/fsearch_preferences.ui:1231
 msgid "Exclude hidden files and folders"
 msgstr "కనపడని ఫైల్ లనీ ఫోల్డర్ లనీ చేర్చకుము"
 
-#: src/fsearch_preferences.ui:1238
+#: src/fsearch_preferences.ui:1253
 msgid "Exclude"
 msgstr "చేర్చకుము"
 
-#: src/fsearch_preferences.ui:1261
+#: src/fsearch_preferences.ui:1276
 msgid "Database"
 msgstr "డేటాబేస్"
 
-#: src/fsearch_preferences.ui:1293
+#: src/fsearch_preferences.ui:1308
 msgid ""
 "<b>Enable dark theme:</b>\n"
 "\n"
@@ -562,7 +570,7 @@ msgid ""
 "enabling this setting might not have an effect."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1311
+#: src/fsearch_preferences.ui:1326
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -574,7 +582,7 @@ msgid ""
 "This resembles a more traditonal UI layout and takes a little bit more space."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1331
+#: src/fsearch_preferences.ui:1346
 msgid ""
 "<b>Use binary units instead of decimal units:</b>\n"
 "\n"
@@ -586,7 +594,7 @@ msgid ""
 "= 1000 bytes)</i>"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1351
+#: src/fsearch_preferences.ui:1366
 msgid ""
 "<b>Remember window size:</b>\n"
 "\n"
@@ -597,7 +605,7 @@ msgid ""
 "have a different size."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1370
+#: src/fsearch_preferences.ui:1385
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -606,7 +614,6 @@ msgid ""
 "\t• <b>Nothing:</b> Nothing happens.\n"
 "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
 "minimized. \n"
-"\t\tNote that not all systems allow windows to be minimized.\n"
 "\t• <b>Close:</b> Quit FSearch.\n"
 "\n"
 "You can configure if those actions should be triggered when the file was "
@@ -615,7 +622,7 @@ msgid ""
 "\t• <b>mouse click</b>"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1395
+#: src/fsearch_preferences.ui:1409
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -623,14 +630,14 @@ msgid ""
 "example when you search for \"foo\" all appearances of <i>foo</i> in file/"
 "folder names will be highlighted with bold characters:\n"
 "\n"
-"\t\t<b>foo</b>bar.txt\n"
-"\t\tfile.<b>foo</b>\n"
+"\t<b>foo</b>bar.txt\n"
+"\tfile.<b>foo</b>\n"
 "\n"
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1417
+#: src/fsearch_preferences.ui:1431
 msgid ""
 "<b>Show tooltips:</b>\n"
 "\n"
@@ -638,14 +645,14 @@ msgid ""
 "folder in a small tooltip window."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1434
+#: src/fsearch_preferences.ui:1448
 msgid ""
 "<b>Show icons in name column:</b>\n"
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1451
+#: src/fsearch_preferences.ui:1465
 msgid ""
 "<b>Remember column configuration:</b>\n"
 "\n"
@@ -654,7 +661,7 @@ msgid ""
 "size and visibility of all columns."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1468
+#: src/fsearch_preferences.ui:1482
 msgid ""
 "<b>Remember sort order:</b>\n"
 "\n"
@@ -662,14 +669,14 @@ msgid ""
 "will be restored when you open an FSearch window."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1485
+#: src/fsearch_preferences.ui:1499
 msgid ""
 "<b>Open path with double click in path column:</b>\n"
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1502
+#: src/fsearch_preferences.ui:1516
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -678,7 +685,7 @@ msgid ""
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1519
+#: src/fsearch_preferences.ui:1533
 msgid ""
 "<b>Show database indexing status:</b>\n"
 "\n"
@@ -686,16 +693,15 @@ msgid ""
 "statusbar."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1536
+#: src/fsearch_preferences.ui:1550
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
-"If enabled, a warning dialog is displayed when:\n"
-"\n"
-"\t•  a file or folder failed to open\n"
+"If enabled, a warning dialog is displayed when a file or folder failed to "
+"open."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1556
+#: src/fsearch_preferences.ui:1567
 msgid ""
 "<b>Search in path when query contains path separators:</b>\n"
 "\n"
@@ -703,7 +709,7 @@ msgid ""
 "automatically matched against the full path of a file or folder."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1573
+#: src/fsearch_preferences.ui:1584
 msgid ""
 "<b>Match case when query contains at least one upper case character:</b>\n"
 "\n"
@@ -712,7 +718,7 @@ msgid ""
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1590
+#: src/fsearch_preferences.ui:1601
 msgid ""
 "<b>Hide results when search is empty:</b>\n"
 "\n"
@@ -722,7 +728,7 @@ msgid ""
 "is empty."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1609
+#: src/fsearch_preferences.ui:1620
 msgid ""
 "<b>Search as you type:</b>\n"
 "\n"
@@ -732,7 +738,7 @@ msgid ""
 "the search button. "
 msgstr ""
 
-#: src/fsearch_preferences.ui:1628
+#: src/fsearch_preferences.ui:1639
 msgid ""
 "<b>Update database on start:</b>\n"
 "\n"
@@ -740,55 +746,46 @@ msgid ""
 "when you start FSearch."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1645
+#: src/fsearch_preferences.ui:1656
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
-"                      This list contains all folders you want to include in "
-"the database.\n"
+"This list contains all folders you want to include in the database.\n"
 "\n"
-"                      • <b>Active:</b> If enabled, the path will included in "
-"the database to be searched in.\n"
-"                      • <b>Path:</b> The full path to be included.\n"
-"                      • <b>Update:</b> This setting is useful if you want to "
-"exclude certain paths from\n"
-"                      being\n"
-"                      updated <i>(e.g. a path to a slow USB drive which "
-"doesn't change often)</i>\n"
-"                    "
+"\t• <b>Active:</b> If enabled, the path will included in the database to be "
+"searched in.\n"
+"\t• <b>Path:</b> The full path to be included.\n"
+"\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
+"boundraries for this folder"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1669
+#: src/fsearch_preferences.ui:1677
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
-"                      This button opens a dialog where you can select a "
-"folder you want to include in the database for\n"
-"                      searching.\n"
-"                    "
+"This button opens a dialog where you can select a folder you want to include "
+"in the database for searching."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1688
+#: src/fsearch_preferences.ui:1694
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
-"                      This removes the selected folder from the list of "
-"included folders.\n"
-"                    "
+"This removes the selected folder from the list of included folders."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1706
+#: src/fsearch_preferences.ui:1711
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
 "This list contains all folders you want to exclude from the database.\n"
 "\n"
-"\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
-"\t\t and can't be searched in.\n"
+"\t• <b>Active:</b> If enabled, the path will excluded from the database and "
+"can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1727
+#: src/fsearch_preferences.ui:1731
 msgid ""
 "<b>Exclude folder from database:</b>\n"
 "\n"
@@ -796,14 +793,14 @@ msgid ""
 "from the database."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1744
+#: src/fsearch_preferences.ui:1748
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1761
+#: src/fsearch_preferences.ui:1765
 msgid ""
 "<b>Exclude files and folders from database:</b>\n"
 "\n"
@@ -813,7 +810,7 @@ msgid ""
 "end with <i>.swp</i>."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1778
+#: src/fsearch_preferences.ui:1782
 msgid ""
 "<b>Exclude hidden files and folders:</b>\n"
 "\n"
@@ -821,11 +818,11 @@ msgid ""
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1795
+#: src/fsearch_preferences.ui:1799
 msgid "Focus a setting to get a detailed description of what it does."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1808
+#: src/fsearch_preferences.ui:1812
 msgid ""
 "<b>Periodically update database at a specific time interval:</b>\n"
 "\n"
@@ -839,18 +836,14 @@ msgid ""
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1829
+#: src/fsearch_preferences.ui:1833
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
-"                      If enabled, activating a <i>.desktop</i> file will "
-"launch the application defined\n"
-"                      within that file. This way FSearch can act like an "
-"application launcher. Otherwise the <i>.desktop</i>\n"
-"                      file will be opened with the default handler for this "
-"type of files, which is usually a text\n"
-"                      editor.\n"
-"                    "
+"If enabled, activating a <i>.desktop</i> file will launch the application "
+"defined within that file. This way FSearch can act like an application "
+"launcher. Otherwise the <i>.desktop</i> file will be opened with the default "
+"handler for this type of files, which is usually a text editor."
 msgstr ""
 
 #: src/fsearch_preferences.ui:1842
@@ -863,243 +856,251 @@ msgstr "పేజీ0"
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
-"                      This is a list of all available filters. A filter is a "
-"predefined search.\n"
+"This is a list of all available filters. A filter is a predefined search.\n"
 "\n"
-"                      • <b>Name:</b> A unique and descriptive identifier for "
-"the filter\n"
-"                      • <b>Macro:</b> By typing the macro text followed by a "
-"':' you can enable the filter on demand\n"
-"                      • <b>Query:</b> The search term by which the database "
-"should be filtered\n"
-"                    "
+"\t• <b>Name:</b> A unique and descriptive identifier for the filter\n"
+"\t• <b>Macro:</b> By typing the macro text followed by a ':' you can enable "
+"the filter on demand\n"
+"\t• <b>Query:</b> The search term by which the database should be filtered"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1864
+#: src/fsearch_preferences.ui:1863
 #, fuzzy
 #| msgid "page1"
 msgid "page18"
 msgstr "పేజీ1"
 
-#: src/fsearch_preferences.ui:1872
+#: src/fsearch_preferences.ui:1871
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
-"                      This button opens a dialog where you can edit a new "
-"filter.\n"
-"                    "
+"This button opens a dialog where you can edit a new filter."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1882
+#: src/fsearch_preferences.ui:1880
 #, fuzzy
 #| msgid "page0"
 msgid "page31"
 msgstr "పేజీ0"
 
-#: src/fsearch_preferences.ui:1890
+#: src/fsearch_preferences.ui:1888
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
-"                      This button removes the currently selected filter.\n"
-"                    "
+"This button removes the currently selected filter."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1900
+#: src/fsearch_preferences.ui:1897
 #, fuzzy
 #| msgid "page0"
 msgid "page32"
 msgstr "పేజీ0"
 
-#: src/fsearch_preferences.ui:1908
+#: src/fsearch_preferences.ui:1905
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
-"                      This button opens a dialog where you can edit the "
-"selected filter.\n"
-"                    "
+"This button opens a dialog where you can edit the selected filter."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1918
+#: src/fsearch_preferences.ui:1914
 #, fuzzy
 #| msgid "page0"
 msgid "page33"
 msgstr "పేజీ0"
 
-#: src/fsearch_preferences.ui:1926
+#: src/fsearch_preferences.ui:1922
 msgid ""
 "<b>Restore default filters:</b>\n"
 "\n"
-"                      This button restores the default filter "
-"configuration.\n"
+"This button restores the default filter configuration.\n"
 "\n"
-"                      ⚠ All filters which were created or edited by the user "
-"will be lost! ⚠\n"
-"                    "
+"⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1938
+#: src/fsearch_preferences.ui:1933
 #, fuzzy
 #| msgid "page0"
 msgid "page34"
 msgstr "పేజీ0"
 
-#: src/fsearch_preferences.ui:1948
+#: src/fsearch_preferences.ui:1941
+msgid ""
+"<b>Exit on Escape:</b>\n"
+"\n"
+"If enabled, FSearch exits when the Escape key is pressed instead of the "
+"window being minimized."
+msgstr ""
+
+#: src/fsearch_preferences.ui:1950
+#, fuzzy
+#| msgid "page0"
+msgid "page35"
+msgstr "పేజీ0"
+
+#: src/fsearch_preferences.ui:1960
 #, fuzzy
 msgid "Help"
 msgstr "_సహాయం"
 
-#: src/fsearch_preferences_ui.c:191 src/fsearch_preferences_ui.c:206
+#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:204
 #, fuzzy
 msgid "Select folder"
 msgstr "వడపోతని ఎంచుకొనుము"
 
-#: src/fsearch_preferences_ui.c:196 src/fsearch_preferences_ui.c:206
+#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:204
 #, fuzzy
 msgid "_Select"
 msgstr "అన్ని ఎంపికలూ తీసివేయుము"
 
-#: src/fsearch_preferences_ui.c:325
+#: src/fsearch_preferences_ui.c:320
 #, fuzzy
 msgid "Add filter"
 msgstr "ఫోల్డరులు"
 
-#: src/fsearch_preferences_widgets.c:221 src/fsearch_preferences_widgets.c:268
+#: src/fsearch_preferences_widgets.c:220 src/fsearch_preferences_widgets.c:267
 msgid "Active"
 msgstr "పనిచేస్తోంది"
 
-#: src/fsearch_preferences_widgets.c:225 src/fsearch_preferences_widgets.c:272
-#: src/fsearch_window.c:692 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
+#: src/fsearch_window.c:656 src/menus.ui:187 src/menus.ui:235
 msgid "Path"
 msgstr "పథము"
 
-#: src/fsearch_preferences_widgets.c:228
+#: src/fsearch_preferences_widgets.c:227
 #, fuzzy
 #| msgid "Open File(s)"
 msgid "One Filesystem"
 msgstr "ఫైల్ (ల) ని తెరువుము"
 
-#: src/fsearch_preferences_widgets.c:291 src/fsearch_window.c:685
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:649
 #: src/menus.ui:183 src/menus.ui:231
 msgid "Name"
 msgstr "పేరు"
 
-#: src/fsearch_preferences_widgets.c:292
+#: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
 msgstr ""
 
-#: src/fsearch_preferences_widgets.c:293
+#: src/fsearch_preferences_widgets.c:292
 #, fuzzy
 #| msgid "Empty Query"
 msgid "Query"
 msgstr "ఖాళీ ప్రశ్న"
 
-#: src/fsearch_statusbar.c:53
-msgid "Querying…"
-msgstr ""
+#: src/fsearch_statusbar.c:56
+#, fuzzy, c-format
+#| msgid "%'d Items"
+msgid "%'d Item"
+msgstr "%'d విషయములు"
 
-#: src/fsearch_statusbar.c:140
-#, fuzzy
-msgid "Loading…"
-msgstr "డేటాబేస్ ని తెస్తున్నాము…"
-
-#: src/fsearch_statusbar.c:145
-msgid "Scanning…"
-msgstr ""
-
-#: src/fsearch_statusbar.c:162 src/fsearch_window.c:1029
+#: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
 #, c-format
 msgid "%'d Items"
 msgstr "%'d విషయములు"
 
-#: src/fsearch_statusbar.ui:43
+#: src/fsearch_statusbar.c:78
+msgid "Querying…"
+msgstr ""
+
+#: src/fsearch_statusbar.c:170
+#, fuzzy
+msgid "Loading…"
+msgstr "డేటాబేస్ ని తెస్తున్నాము…"
+
+#: src/fsearch_statusbar.c:175
+msgid "Scanning…"
+msgstr ""
+
+#: src/fsearch_statusbar.ui:52
 msgid "Number of Search Results"
 msgstr "వెతుకులాట ఫలితాల సంఖ్య"
 
-#: src/fsearch_statusbar.ui:44
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 వస్తువులు"
 
-#: src/fsearch_statusbar.ui:81
-msgid "Index:"
-msgstr ""
-
-#: src/fsearch_statusbar.ui:156
-#, fuzzy
-msgid "Number of selected folders"
-msgstr "వెతుకులాట ఫలితాల సంఖ్య"
-
-#: src/fsearch_statusbar.ui:157 src/fsearch_statusbar.ui:182
-msgid "0/0"
-msgstr "0/0"
-
-#: src/fsearch_statusbar.ui:181
-#, fuzzy
-msgid "Number of selected files"
-msgstr "వెతుకులాట ఫలితాల సంఖ్య"
-
-#: src/fsearch_statusbar.ui:256 src/fsearch_window.ui:102
+#: src/fsearch_statusbar.ui:106 src/fsearch_statusbar.ui:328
+#: src/fsearch_window.ui:102
 #, fuzzy
 msgid "Cancel database update"
 msgstr "ఆరంభములో డేటాబేస్ ని ఆధునికీకరించుము"
 
-#: src/fsearch_statusbar.ui:297
+#: src/fsearch_statusbar.ui:153
+msgid "Index:"
+msgstr ""
+
+#: src/fsearch_statusbar.ui:228
+#, fuzzy
+msgid "Number of selected folders"
+msgstr "వెతుకులాట ఫలితాల సంఖ్య"
+
+#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
+msgid "0/0"
+msgstr "0/0"
+
+#: src/fsearch_statusbar.ui:253
+#, fuzzy
+msgid "Number of selected files"
+msgstr "వెతుకులాట ఫలితాల సంఖ్య"
+
+#: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
 msgstr ""
 
-#: src/fsearch_statusbar.ui:298
+#: src/fsearch_statusbar.ui:370
 msgid "(empty)"
 msgstr "(ఖాళీ)"
 
-#: src/fsearch_statusbar.ui:335
+#: src/fsearch_statusbar.ui:407
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:366 src/fsearch_statusbar.ui:419
+#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "పెద్ద లేక చిన్న అక్షరం"
 
-#: src/fsearch_statusbar.ui:442
+#: src/fsearch_statusbar.ui:514
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:473 src/fsearch_statusbar.ui:526
+#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
 msgstr "దారి"
 
-#: src/fsearch_statusbar.ui:579
+#: src/fsearch_statusbar.ui:651
 msgid "REGEX"
 msgstr "రెజ్ ఎక్స్"
 
-#: src/fsearch_window.c:591 src/fsearch_window_actions.c:483
+#: src/fsearch_window.c:563 src/fsearch_window_actions.c:464
 #, fuzzy
 #| msgid "Failed to open file"
 msgid "Failed to open:"
 msgstr "ఫైల్ తెరవలేకపోయాము"
 
-#: src/fsearch_window.c:699 src/menus.ui:247
+#: src/fsearch_window.c:663 src/menus.ui:247
 msgid "Size"
 msgstr "పరిమాణము"
 
-#: src/fsearch_window.c:706 src/menus.ui:243
+#: src/fsearch_window.c:670 src/menus.ui:243
 msgid "Type"
 msgstr "రకము"
 
-#: src/fsearch_window.c:713 src/menus.ui:239
+#: src/fsearch_window.c:677 src/menus.ui:239
 msgid "Extension"
 msgstr ""
 
-#: src/fsearch_window.c:720 src/menus.ui:251
+#: src/fsearch_window.c:684 src/menus.ui:251
 msgid "Date Modified"
 msgstr "మార్చిన తేదీ"
 
-#: src/fsearch_window.c:734
+#: src/fsearch_window.c:698
 msgid ""
-"Sorting by <b>Type</b> can be very slow with many results and it can't be "
-"aborted.\n"
+"Sorting by <b>Type</b> can take a vew seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
@@ -1162,25 +1163,25 @@ msgstr "మీరు నిజంగా %d ఫైల్ (ల) ని తెర�
 msgid "Opening Files…"
 msgstr "ఫైల్ లని తెరుస్తున్నాము…"
 
-#: src/fsearch_window_actions.c:192
+#: src/fsearch_window_actions.c:185
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "మీరు నిజంగా %d ఫైల్ (ల) ని తీసివేయాలని అనుకుంటున్నారా?"
 
-#: src/fsearch_window_actions.c:196
+#: src/fsearch_window_actions.c:189
 msgid "Deleting files…"
 msgstr "ఫైల్ లని తీసివేస్తున్నాము…"
 
-#: src/fsearch_window_actions.c:196
+#: src/fsearch_window_actions.c:189
 msgid "Moving files to trash…"
 msgstr "ఫైల్ లని చెత్తబుట్టలో వేస్తున్నాము…"
 
-#: src/fsearch_window_actions.c:235
+#: src/fsearch_window_actions.c:227
 #, fuzzy, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "మీరు నిజంగా %d ఫైల్ (ల) ని తెరవాలని అనుకుంటున్నారా?"
 
-#: src/fsearch_window_actions.c:239
+#: src/fsearch_window_actions.c:231
 #, fuzzy
 msgid "Opening file properties…"
 msgstr "ఫైల్ లని తెరుస్తున్నాము…"
@@ -1317,11 +1318,6 @@ msgstr "_చెత్తబుట్ట లో వేయుము"
 #, fuzzy
 #~| msgid "page0"
 #~ msgid "page4"
-#~ msgstr "పేజీ0"
-
-#, fuzzy
-#~| msgid "page0"
-#~ msgid "page5"
 #~ msgstr "పేజీ0"
 
 #, fuzzy
