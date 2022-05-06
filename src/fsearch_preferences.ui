@@ -1328,7 +1328,7 @@ Note that not all system themes provide such a darker variant, therefore enablin
 If enabled, the search entry and main menu are displayed in the window title bar.
 
 If disabled, the main menu is displayed as a menu bar with the search entry below it.
-This resembles a more traditonal UI layout and takes a little bit more space.</property>
+This resembles a more traditional UI layout and takes a little bit more space.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
@@ -1384,7 +1384,7 @@ Note that some window managers ignore this request and force the window to have 
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Behaviour after successfully opening a file:&lt;/b&gt;
 
-When a file/folder was succesfully opened one of the following actions can be performed:
+When a file/folder was successfully opened one of the following actions can be performed:
 	• &lt;b&gt;Nothing:&lt;/b&gt; Nothing happens.
 	• &lt;b&gt;Minimize:&lt;/b&gt; The currently selected FSearch window becomes minimized. 
 	• &lt;b&gt;Close:&lt;/b&gt; Quit FSearch.
@@ -1659,7 +1659,7 @@ This list contains all folders you want to include in the database.
 
 	• &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will included in the database to be searched in.
 	• &lt;b&gt;Path:&lt;/b&gt; The full path to be included.
-	• &lt;b&gt;One Filesystem:&lt;/b&gt; If enabled, FSearch won't cross filesystem boundraries for this folder</property>
+	• &lt;b&gt;One Filesystem:&lt;/b&gt; If enabled, FSearch won't cross filesystem boundaries for this folder</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>

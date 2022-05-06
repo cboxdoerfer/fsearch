@@ -695,7 +695,7 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), size_col);
     fsearch_list_view_append_column(FSEARCH_LIST_VIEW(view), changed_col);
     fsearch_list_view_column_set_tooltip(type_col,
-                                         _("Sorting by <b>Type</b> can take a vew seconds with many results.\n\n"
+                                         _("Sorting by <b>Type</b> can take a few seconds with many results.\n\n"
                                            "This sort order is not persistent, it will be reset when the search term "
                                            "changes."));
     fsearch_list_view_column_set_emblem(type_col, "emblem-important-symbolic", TRUE);
