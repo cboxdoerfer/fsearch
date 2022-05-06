@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-04 14:56+0200\n"
-"PO-Revision-Date: 2022-03-22 13:55+0000\n"
+"PO-Revision-Date: 2022-05-08 23:15+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.12.1\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -194,7 +194,7 @@ msgstr "סרטונים"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "שמות המאקרואים לא יכולים להכיל תווי `:`."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
 #: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
@@ -247,6 +247,9 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
+"המאקרו למסנן הזה. מאקרו מאפשר לך לגשת למסנן הזה מרשומת החיפוש על ידי הקלדת "
+"הטקסט ולאחריו ‚:’:\n"
+"                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -336,7 +339,7 @@ msgstr "לזכור את גודל החלון"
 
 #: src/fsearch_preferences.ui:193
 msgid "Exit on Escape"
-msgstr ""
+msgstr "יציאה עם Escape"
 
 #: src/fsearch_preferences.ui:230
 msgid "with keyboard shortcuts or menu entries"
@@ -480,7 +483,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:946
 msgid "hour(s) and"
-msgstr ""
+msgstr "שעות ו־"
 
 #: src/fsearch_preferences.ui:958
 msgid "30"
@@ -608,22 +611,6 @@ msgstr ""
 "נא לשים לב שחלק ממנהלי החלונות מתעלמים מהבקשה הזאת וכופים גודל שונה על החלון."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t\tNote that not all systems allow windows to be minimized.\n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -643,8 +630,7 @@ msgstr ""
 "\n"
 "כאשר קובץ/תיקייה נפתחו בהצלחה ניתן לבצע את הפעולות הבאות:\n"
 "\t• <b>כלום:</b> לא קורה שום דבר.\n"
-"\t• <b>מזעור:</b> החלון הנוכחי הנבחר של FSearch יתמזער. \n"
-"\t\tנא לשים לב שלא כל המערכות מאפשרות מזעור חלונות.\n"
+"\t• <b>מזעור:</b> החלון הנוכחי הנבחר של FSearch יתמזער.\n"
 "\t• <b>סגירה:</b> יציאה מ־FSearch.\n"
 "\n"
 "אפשר להגדיר אם הפעולות האלו תופעלנה כאשר קובץ נפתח עם\n"
@@ -652,19 +638,6 @@ msgstr ""
 "\t• <b>לחיצה עם העכבר</b>"
 
 #: src/fsearch_preferences.ui:1409
-#, fuzzy
-#| msgid ""
-#| "<b>Show highlighted search terms:</b>\n"
-#| "\n"
-#| "If enabled, the search terms will be highlighted in the results view. For "
-#| "example when you search for \"foo\" all appearances of <i>foo</i> in file/"
-#| "folder names will be highlighted with bold characters:\n"
-#| "\n"
-#| "\t\t<b>foo</b>bar.txt\n"
-#| "\t\tfile.<b>foo</b>\n"
-#| "\n"
-#| "This also works for regular expressions and wildcard expressions starting "
-#| "or ending with an asterisk. "
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -683,8 +656,8 @@ msgstr ""
 "אם האפשרות פעילה, ביטויי החיפוש יודגשו בתצוגת התוצאות. למשל: חיפוש אחר „foo” "
 "ידגיש את כל המופעים של <i>foo</i> בשמות קבצים/תיקיות באותיות בולטות:\n"
 "\n"
-"\t\t<b>foo</b>bar.txt\n"
-"\t\tfile.<b>foo</b>\n"
+"<b>foo</b>bar.txt\n"
+"file.<b>foo</b>\n"
 "\n"
 "עובד גם עם ביטויים רגולריים וביטויים עם תווי הכללה שמתחילים או מסתיימים "
 "בכוכבית. "
@@ -772,13 +745,6 @@ msgstr ""
 "אם האפשרות פעילה, הנתיב שכרגע מסודר באינדקס מוצג בשורת המצב."
 
 #: src/fsearch_preferences.ui:1550
-#, fuzzy
-#| msgid ""
-#| "<b>Show warning dialogs:</b>\n"
-#| "\n"
-#| "If enabled, a warning dialog is displayed when:\n"
-#| "\n"
-#| "\t•  a file or folder failed to open\n"
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -787,9 +753,7 @@ msgid ""
 msgstr ""
 "<b>הצגת חלוניות אזהרה:</b>\n"
 "\n"
-"אם האפשרות פעילה, חלונית אזהרה תוצג כאשר:\n"
-"\n"
-"\t•  פתיחה של קובץ או תיקייה נכשלה\n"
+"אם האפשרות פעילה, חלונית אזהרה תוצג כאשר פתיחה של קובץ או תיקייה נכשלה."
 
 #: src/fsearch_preferences.ui:1567
 msgid ""
@@ -889,28 +853,17 @@ msgstr ""
 "\t• <b>נתיב:</b> הנתיב המלא להחרגה."
 
 #: src/fsearch_preferences.ui:1677
-#, fuzzy
-#| msgid ""
-#| "<b>Exclude folder from database:</b>\n"
-#| "\n"
-#| "This button opens a dialog where you can select a folder you want to "
-#| "exclude from the database."
 msgid ""
 "<b>Add folder to database:</b>\n"
 "\n"
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
-"<b>החרגת תיקייה ממסד הנתונים:</b>\n"
+"<b>הוספת תיקייה למסד הנתונים:</b>\n"
 "\n"
-"כפתור זה פותח חלונית בה ניתן לבחור תיקייה להחרגה ממסד הנתונים."
+"כפתור זה פותח חלונית בה ניתן לבחור תיקייה להכללה במסד הנתונים לחיפוש."
 
 #: src/fsearch_preferences.ui:1694
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected row:</b>\n"
-#| "\n"
-#| "This removes the selected folder from the list of excluded folders."
 msgid ""
 "<b>Remove selected row:</b>\n"
 "\n"
@@ -918,18 +871,9 @@ msgid ""
 msgstr ""
 "<b>הסרת השורה הנבחרת:</b>\n"
 "\n"
-"מסירה את התיקייה הנבחרת מרשימת התיקיות המוחרגות."
+"מסירה את התיקייה הנבחרת מרשימת התיקיות המוכללות."
 
 #: src/fsearch_preferences.ui:1711
-#, fuzzy
-#| msgid ""
-#| "<b>Excluded folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to exclude from the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
-#| "\t\t and can't be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be excluded."
 msgid ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -943,8 +887,7 @@ msgstr ""
 "\n"
 "רשימה זו מכילה את כל התיקיות להחרגה ממסד הנתונים.\n"
 "\n"
-"\t• <b>פעיל:</b> אם פעיל, הנתיב יוחרג ממסד הנתונים\n"
-"\t\t ולא ניתן לחפש אחריו.\n"
+"\t• <b>פעיל:</b> אם פעיל, הנתיב יוחרג ממסד הנתונים ולא ניתן לחפש אחריו.\n"
 "\t• <b>נתיב:</b> הנתיב המלא להחרגה."
 
 #: src/fsearch_preferences.ui:1731
@@ -1047,19 +990,20 @@ msgid ""
 "the filter on demand\n"
 "\t• <b>Query:</b> The search term by which the database should be filtered"
 msgstr ""
+"<b>מסננים:</b>\n"
+"\n"
+"זאת רשימת כל המסננים הזמינים. מסנן הוא חיפוש מוגדר מראש.\n"
+"\n"
+"\t• <b>שם:</b> מזהה ייחודי ומפורט על המסנן\n"
+"\t• <b>מאקרו:</b> על ידי הקלטת מאקרו שלאחריו ‚:’ אפשר להפעיל סינון לפי "
+"דרישה\n"
+"\t• <b>שאילתה:</b> ביטוי החיפוש שלפיו יסונן מסד הנתונים"
 
 #: src/fsearch_preferences.ui:1863
 msgid "page18"
 msgstr "עמוד18"
 
 #: src/fsearch_preferences.ui:1871
-#, fuzzy
-#| msgid ""
-#| "<b>Add a new filter:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can edit a new "
-#| "filter.\n"
-#| "                    "
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
@@ -1067,20 +1011,13 @@ msgid ""
 msgstr ""
 "<b>הוספת מסנן חדש:</b>\n"
 "\n"
-"                      כפתור זה פותח חלונית בה ניתן לערוך מסנן חדש.\n"
-"                    "
+"כפתור זה פותח חלונית בה ניתן לערוך מסנן חדש."
 
 #: src/fsearch_preferences.ui:1880
 msgid "page31"
 msgstr "עמוד31"
 
 #: src/fsearch_preferences.ui:1888
-#, fuzzy
-#| msgid ""
-#| "<b>Remove selected filter:</b>\n"
-#| "\n"
-#| "                      This button removes the currently selected filter.\n"
-#| "                    "
 msgid ""
 "<b>Remove selected filter:</b>\n"
 "\n"
@@ -1088,21 +1025,13 @@ msgid ""
 msgstr ""
 "<b>הסרת המסנן הנבחר:</b>\n"
 "\n"
-"                      כפתור זה מסיר את המסנן הנבחר.\n"
-"                    "
+"כפתור זה מסיר את המסנן הנבחר."
 
 #: src/fsearch_preferences.ui:1897
 msgid "page32"
 msgstr "עמוד32"
 
 #: src/fsearch_preferences.ui:1905
-#, fuzzy
-#| msgid ""
-#| "<b>Edit selected filter:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can edit the "
-#| "selected filter.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1110,8 +1039,7 @@ msgid ""
 msgstr ""
 "<b>עריכת המסנן הנבחר:</b>\n"
 "\n"
-"                      כפתור זה פותח חלונית בה ניתן לערוך את המסנן הנבחר.\n"
-"                    "
+"כפתור זה פותח חלונית בה ניתן לערוך את המסנן הנבחר."
 
 #: src/fsearch_preferences.ui:1914
 msgid "page33"
@@ -1125,6 +1053,11 @@ msgid ""
 "\n"
 "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
+"<b>שחזור מסנני ברירת המחדל:</b>\n"
+"\n"
+"כפתור זה משחזר את הגדרת ברירת המחדל של המסננים.\n"
+"\n"
+"⚠ כל המסננים שנוצרו או נערכו על ידי המשתמש יאבדו לעד! ⚠"
 
 #: src/fsearch_preferences.ui:1933
 msgid "page34"
@@ -1137,12 +1070,14 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>יציאה עם Escape:</b>\n"
+"\n"
+"אם האפשרות פעילה, FSearch ייסגר עם לחיצה על כפתור ה־Escape במקום רק מזעור "
+"החלון."
 
 #: src/fsearch_preferences.ui:1950
-#, fuzzy
-#| msgid "page30"
 msgid "page35"
-msgstr "עמוד30"
+msgstr "עמוד35"
 
 #: src/fsearch_preferences.ui:1960
 msgid "Help"
@@ -1187,10 +1122,9 @@ msgid "Query"
 msgstr "שאילתה"
 
 #: src/fsearch_statusbar.c:56
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "%'d Item"
-msgstr "%'d פריטים"
+msgstr "פריט %'d"
 
 #: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
 #, c-format
@@ -1295,21 +1229,13 @@ msgid "Date Modified"
 msgstr "מועד השינוי"
 
 #: src/fsearch_window.c:698
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can be very slow with many results and it can't be "
-#| "aborted.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"מיון לפי <b>סוג</b> עלול להיות תהליך איטי מאוד עם תוצאות מרובות ולא ניתן "
-"לבטל אותו.\n"
+"מיון לפי <b>סוג</b> עלול לארוך זמן רב כשיש הרבה תוצאות.\n"
 "\n"
 "בנוסף, סדר המיון הזה אינו קבוע והוא יאופס כשתנאי החיפוש ישתנו."
 
