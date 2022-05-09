@@ -102,7 +102,7 @@ And of course: Thank you for taking the time to translate FSearch!
 * Sorting lots of results by *Type* can be very slow, since gathering that information is expensive, and the data isn't
   indexed. This also means that when the view is sorted by *Type*, searching will reset the sort order to *Name*.
 * Sorting can't be aborted. This is usually not an issue, because it's very fast for all columns except the *Type*
-  column.
+  column. (Fixed in >=0.2alpha)
 * Using the *Move to Trash* option doesn't update the database index, so trashed files/folders show up in the result
   list as if nothing happened to them.
 
