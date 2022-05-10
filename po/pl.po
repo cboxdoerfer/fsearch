@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-04 14:56+0200\n"
-"PO-Revision-Date: 2022-05-10 11:17+0000\n"
+"PO-Revision-Date: 2022-05-11 12:16+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -181,10 +181,8 @@ msgid "Files"
 msgstr "Pliki"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Inna aplikacja…"
+msgstr "Aplikacje"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -208,7 +206,7 @@ msgstr "Wideo"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "Nazwy makr nie mogą zawierać znaków `:`."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
 #: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
@@ -224,10 +222,8 @@ msgid "Edit filter"
 msgstr "Edytuj filtr"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Nazwa"
+msgstr "Nazwa:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
