@@ -344,6 +344,18 @@ fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win) {
 
     win->result_view->sort_order = db_view_get_sort_order(win->result_view->database_view);
     win->result_view->sort_type = db_view_get_sort_type(win->result_view->database_view);
+
+    FsearchQuery *query = db_view_get_query(win->result_view->database_view);
+    if (query) {
+        fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
+                                                  FSEARCH_STATUSBAR_REVEALER_SMART_MATCH_CASE,
+                                                  query->triggers_auto_match_case);
+        fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
+                                                  FSEARCH_STATUSBAR_REVEALER_SMART_SEARCH_IN_PATH,
+                                                  query->triggers_auto_match_path);
+        g_clear_pointer(&query, fsearch_query_unref);
+    }
+
     db_view_unlock(win->result_view->database_view);
 
     fsearch_statusbar_set_num_search_results(FSEARCH_STATUSBAR(win->statusbar), num_rows);
@@ -408,24 +420,6 @@ perform_search(FsearchApplicationWindow *win) {
 
     const gchar *text = get_query_text(win);
     db_view_set_query_text(win->result_view->database_view, text);
-
-    bool reveal_smart_case = false;
-    bool reveal_smart_path = false;
-    if (!fsearch_string_is_empty(text)) {
-        const bool has_separator = strchr(text, G_DIR_SEPARATOR) ? 1 : 0;
-        const bool has_upper_text = fsearch_string_has_upper(text) ? 1 : 0;
-        FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-        FsearchConfig *config = fsearch_application_get_config(app);
-        reveal_smart_case = config->auto_match_case && !config->match_case && has_upper_text;
-        reveal_smart_path = config->auto_search_in_path && !config->search_in_path && has_separator;
-    }
-
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
-                                              FSEARCH_STATUSBAR_REVEALER_SMART_MATCH_CASE,
-                                              reveal_smart_case);
-    fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
-                                              FSEARCH_STATUSBAR_REVEALER_SMART_SEARCH_IN_PATH,
-                                              reveal_smart_path);
 }
 
 typedef struct {

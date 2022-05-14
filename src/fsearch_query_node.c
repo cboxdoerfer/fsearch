@@ -325,25 +325,8 @@ fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags
     return fsearch_query_node_new_regex(regex_search_term, flags);
 }
 
-FsearchQueryNode *
-fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
-    bool has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
-    const bool search_in_path = flags & QUERY_FLAG_SEARCH_IN_PATH
-                             || (flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && has_separator);
-    if (search_in_path) {
-        flags |= QUERY_FLAG_SEARCH_IN_PATH;
-    }
-    if ((flags & QUERY_FLAG_AUTO_MATCH_CASE) && fsearch_string_utf8_has_upper(search_term)) {
-        flags |= QUERY_FLAG_MATCH_CASE;
-    }
-
-    if (flags & QUERY_FLAG_REGEX) {
-        return fsearch_query_node_new_regex(search_term, flags);
-    }
-    else if (strchr(search_term, '*') || strchr(search_term, '?')) {
-        return fsearch_query_node_new_wildcard(search_term, flags);
-    }
-
+static FsearchQueryNode *
+query_node_new_simple(const char *search_term, FsearchQueryFlags flags) {
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
 
@@ -376,4 +359,43 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
         qnode->description = g_string_new("utf_icase");
     }
     return qnode;
+}
+
+static bool
+is_wildcard_expression(const char *expression) {
+    if (strchr(expression, '*') || strchr(expression, '?')) {
+        return true;
+    }
+    return false;
+}
+
+FsearchQueryNode *
+fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
+    bool has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
+
+    bool triggers_auto_match_case = flags & QUERY_FLAG_AUTO_MATCH_CASE && fsearch_string_utf8_has_upper(search_term);
+    bool triggers_auto_match_path = flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && has_separator;
+
+    if (triggers_auto_match_path) {
+        flags |= QUERY_FLAG_SEARCH_IN_PATH;
+    }
+    if (triggers_auto_match_case) {
+        flags |= QUERY_FLAG_MATCH_CASE;
+    }
+
+    FsearchQueryNode *res = NULL;
+    if (flags & QUERY_FLAG_REGEX) {
+        res = fsearch_query_node_new_regex(search_term, flags);
+    }
+    else if (is_wildcard_expression(search_term)) {
+        res = fsearch_query_node_new_wildcard(search_term, flags);
+    }
+    else {
+        res = query_node_new_simple(search_term, flags);
+    }
+    if (res) {
+        res->triggers_auto_match_case = triggers_auto_match_case;
+        res->triggers_auto_match_path = triggers_auto_match_path;
+    }
+    return res;
 }

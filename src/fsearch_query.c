@@ -45,6 +45,10 @@ fsearch_query_new(const char *search_term,
     q->pool = pool;
 
     q->query_tree = fsearch_query_node_tree_new(q->search_term, filters, flags);
+    if (q->query_tree) {
+        q->triggers_auto_match_case = fsearch_query_node_tree_triggers_auto_match_case(q->query_tree);
+        q->triggers_auto_match_path = fsearch_query_node_tree_triggers_auto_match_path(q->query_tree);
+    }
 
     if (filter && filter->query) {
         q->filter_tree = fsearch_query_node_tree_new(filter->query, filters, filter->flags);

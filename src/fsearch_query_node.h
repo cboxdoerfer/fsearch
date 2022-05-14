@@ -73,6 +73,9 @@ struct FsearchQueryNode {
     bool regex_jit_available;
 
     FsearchQueryFlags flags;
+
+    bool triggers_auto_match_case;
+    bool triggers_auto_match_path;
 };
 
 void

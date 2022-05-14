@@ -53,6 +53,8 @@ typedef struct FsearchQuery {
     char *query_id;
 
     bool reset_selection;
+    bool triggers_auto_match_case;
+    bool triggers_auto_match_path;
 
     volatile int ref_count;
 } FsearchQuery;

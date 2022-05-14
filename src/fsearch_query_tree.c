@@ -203,6 +203,44 @@ get_query_tree(const char *input, FsearchFilterManager *filters, FsearchQueryFla
     return root;
 }
 
+static gboolean
+node_triggers_auto_match_path(GNode *node, gpointer data) {
+    g_assert(data);
+    FsearchQueryNode *n = node->data;
+    bool *triggers_auto_match_path = data;
+    *triggers_auto_match_path = n->triggers_auto_match_path;
+    return FALSE;
+}
+
+bool
+fsearch_query_node_tree_triggers_auto_match_path(GNode *tree) {
+    g_assert(tree);
+    bool triggers_auto_match_path = false;
+
+    g_node_traverse(tree, G_IN_ORDER, G_TRAVERSE_ALL, -1, node_triggers_auto_match_path, &triggers_auto_match_path);
+
+    return triggers_auto_match_path;
+}
+
+static gboolean
+node_triggers_auto_match_case(GNode *node, gpointer data) {
+    g_assert(data);
+    FsearchQueryNode *n = node->data;
+    bool *triggers_auto_match_case = data;
+    *triggers_auto_match_case = n->triggers_auto_match_case;
+    return FALSE;
+}
+
+bool
+fsearch_query_node_tree_triggers_auto_match_case(GNode *tree) {
+    g_assert(tree);
+    bool triggers_auto_match_case = false;
+
+    g_node_traverse(tree, G_IN_ORDER, G_TRAVERSE_ALL, -1, node_triggers_auto_match_case, &triggers_auto_match_case);
+
+    return triggers_auto_match_case;
+}
+
 GNode *
 fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filters, FsearchQueryFlags flags) {
     g_autofree char *query = g_strdup(search_term);
