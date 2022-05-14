@@ -241,6 +241,25 @@ fsearch_query_node_tree_triggers_auto_match_case(GNode *tree) {
     return triggers_auto_match_case;
 }
 
+static gboolean
+node_wants_single_threaded_search(GNode *node, gpointer data) {
+    g_assert(data);
+    FsearchQueryNode *n = node->data;
+    bool *wants_single_threaded_search = data;
+    *wants_single_threaded_search = n->wants_single_threaded_search;
+    return FALSE;
+}
+
+bool
+fsearch_query_node_tree_wants_single_threaded_search(GNode *tree) {
+    g_assert(tree);
+    bool wants_single_threaded_search = false;
+
+    g_node_traverse(tree, G_IN_ORDER, G_TRAVERSE_ALL, -1, node_wants_single_threaded_search, &wants_single_threaded_search);
+
+    return wants_single_threaded_search;
+}
+
 GNode *
 fsearch_query_node_tree_new(const char *search_term, FsearchFilterManager *filters, FsearchQueryFlags flags) {
     g_autofree char *query = g_strdup(search_term);

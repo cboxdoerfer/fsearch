@@ -76,6 +76,7 @@ struct FsearchQueryNode {
 
     bool triggers_auto_match_case;
     bool triggers_auto_match_path;
+    bool wants_single_threaded_search;
 };
 
 void

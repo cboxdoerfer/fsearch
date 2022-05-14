@@ -48,6 +48,7 @@ fsearch_query_new(const char *search_term,
     if (q->query_tree) {
         q->triggers_auto_match_case = fsearch_query_node_tree_triggers_auto_match_case(q->query_tree);
         q->triggers_auto_match_path = fsearch_query_node_tree_triggers_auto_match_path(q->query_tree);
+        q->wants_single_threaded_search = fsearch_query_node_tree_wants_single_threaded_search(q->query_tree);
     }
 
     if (filter && filter->query) {

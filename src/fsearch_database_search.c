@@ -22,8 +22,8 @@
 
 #include "fsearch_database_search.h"
 
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "fsearch_array.h"
@@ -185,7 +185,7 @@ db_search_entries(FsearchQuery *q, GCancellable *cancellable, DynamicArray *entr
     if (num_entries == 0) {
         return NULL;
     }
-    const uint32_t num_threads = num_entries < THRESHOLD_FOR_PARALLEL_SEARCH
+    const uint32_t num_threads = (num_entries < THRESHOLD_FOR_PARALLEL_SEARCH || q->wants_single_threaded_search)
                                    ? 1
                                    : fsearch_thread_pool_get_num_threads(q->pool);
     const uint32_t num_items_per_thread = num_entries / num_threads;
