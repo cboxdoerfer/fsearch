@@ -373,8 +373,10 @@ FsearchQueryNode *
 fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     bool has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
 
-    bool triggers_auto_match_case = flags & QUERY_FLAG_AUTO_MATCH_CASE && fsearch_string_utf8_has_upper(search_term);
-    bool triggers_auto_match_path = flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH && has_separator;
+    bool triggers_auto_match_case = !(flags & QUERY_FLAG_MATCH_CASE) && flags & QUERY_FLAG_AUTO_MATCH_CASE
+                                 && fsearch_string_utf8_has_upper(search_term);
+    bool triggers_auto_match_path = !(flags & QUERY_FLAG_SEARCH_IN_PATH) && flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH
+                                 && has_separator;
 
     if (triggers_auto_match_path) {
         flags |= QUERY_FLAG_SEARCH_IN_PATH;
