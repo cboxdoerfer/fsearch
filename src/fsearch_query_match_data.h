@@ -48,6 +48,9 @@ fsearch_query_match_data_get_parent_path_str(FsearchQueryMatchData *match_data);
 const char *
 fsearch_query_match_data_get_path_str(FsearchQueryMatchData *match_data);
 
+const char *
+fsearch_query_match_data_get_content_type_str(FsearchQueryMatchData *match_data);
+
 FsearchUtfBuilder *
 fsearch_query_match_data_get_utf_parent_path_builder(FsearchQueryMatchData *match_data);
 

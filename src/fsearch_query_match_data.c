@@ -14,6 +14,7 @@ struct FsearchQueryMatchData {
     FsearchUtfBuilder *utf_parent_path_builder;
     GString *path_buffer;
     GString *parent_path_buffer;
+    GString *content_type_buffer;
 
     PangoAttrList **highlights;
 
@@ -24,6 +25,7 @@ struct FsearchQueryMatchData {
     bool utf_parent_path_ready;
     bool path_ready;
     bool parent_path_ready;
+    bool content_type_ready;
     bool matches;
     bool has_highlights;
 };
@@ -93,6 +95,21 @@ fsearch_query_match_data_get_path_str(FsearchQueryMatchData *match_data) {
     return match_data->path_buffer->str;
 }
 
+const char *
+fsearch_query_match_data_get_content_type_str(FsearchQueryMatchData *match_data) {
+    if (!match_data->entry) {
+        return NULL;
+    }
+    if (!match_data->content_type_ready) {
+        g_string_truncate(match_data->content_type_buffer, 0);
+        db_entry_append_content_type(match_data->entry, match_data->content_type_buffer);
+
+        match_data->content_type_ready = true;
+    }
+
+    return match_data->content_type_buffer->str;
+}
+
 FsearchDatabaseEntry *
 fsearch_query_match_data_get_entry(FsearchQueryMatchData *match_data) {
     return match_data->entry;
@@ -110,6 +127,7 @@ fsearch_query_match_data_new(void) {
     fsearch_utf_builder_init(match_data->utf_parent_path_builder, 4 * PATH_MAX);
     match_data->path_buffer = g_string_sized_new(PATH_MAX);
     match_data->parent_path_buffer = g_string_sized_new(PATH_MAX);
+    match_data->content_type_buffer = g_string_sized_new(PATH_MAX);
 
     match_data->highlights = calloc(NUM_DATABASE_INDEX_TYPES, sizeof(PangoAttrList *));
     match_data->has_highlights = false;
@@ -119,6 +137,7 @@ fsearch_query_match_data_new(void) {
     match_data->utf_parent_path_ready = false;
     match_data->path_ready = false;
     match_data->parent_path_ready = false;
+    match_data->content_type_ready = false;
 
     return match_data;
 }
@@ -154,6 +173,7 @@ fsearch_query_match_data_free(FsearchQueryMatchData *match_data) {
 
     g_string_free(g_steal_pointer(&match_data->path_buffer), TRUE);
     g_string_free(g_steal_pointer(&match_data->parent_path_buffer), TRUE);
+    g_string_free(g_steal_pointer(&match_data->content_type_buffer), TRUE);
 
     g_clear_pointer(&match_data, free);
 }
@@ -171,6 +191,7 @@ fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDat
     match_data->utf_parent_path_ready = false;
     match_data->path_ready = false;
     match_data->parent_path_ready = false;
+    match_data->content_type_ready = false;
 
     match_data->entry = entry;
 }
