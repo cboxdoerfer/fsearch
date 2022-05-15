@@ -4,6 +4,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_string_utils.h"
 
+#include <gio/gio.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -164,6 +165,20 @@ db_entry_get_parent(FsearchDatabaseEntry *entry) {
 FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry) {
     return entry ? entry->type : DATABASE_ENTRY_TYPE_NONE;
+}
+
+void
+db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
+    g_autoptr(GString) path = db_entry_get_path_full(entry);
+    g_autoptr(GFile) file = g_file_new_for_path(path->str);
+    g_autoptr(GError) error = NULL;
+    g_autoptr(GFileInfo)
+        info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, &error);
+    const char *content_type = NULL;
+    if (info) {
+        content_type = g_file_info_get_content_type(info);
+    }
+    g_string_append(str, content_type ? content_type : "unknown");
 }
 
 uint8_t

@@ -108,6 +108,9 @@ FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry);
 
 void
+db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str);
+
+void
 db_entry_destroy(FsearchDatabaseEntry *entry);
 
 int
