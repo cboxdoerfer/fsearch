@@ -370,6 +370,29 @@ is_wildcard_expression(const char *expression) {
 }
 
 FsearchQueryNode *
+fsearch_query_node_new_contenttype(const char *search_term, FsearchQueryFlags flags) {
+    FsearchQueryNode *res = NULL;
+    if (flags & QUERY_FLAG_REGEX) {
+        res = fsearch_query_node_new_regex(search_term, flags);
+    }
+    else if (is_wildcard_expression(search_term)) {
+        res = fsearch_query_node_new_wildcard(search_term, flags);
+    }
+    else {
+        res = query_node_new_simple(search_term, flags);
+    }
+
+    if (res) {
+        g_string_prepend(res->description, "contenttype_");
+        res->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_content_type_str;
+        res->highlight_func = fsearch_query_matcher_highlight_none;
+        res->wants_single_threaded_search = true;
+    }
+
+    return res;
+}
+
+FsearchQueryNode *
 fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     bool has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
 

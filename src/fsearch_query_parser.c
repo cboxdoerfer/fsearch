@@ -56,6 +56,9 @@ static GList *
 parse_field_childfoldercount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
+parse_field_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+
+static GList *
 parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
@@ -102,6 +105,7 @@ FsearchTokenField supported_fields[] = {
     {"childcount", parse_field_childcount},
     {"childfilecount", parse_field_childfilecount},
     {"childfoldercount", parse_field_childfoldercount},
+    {"contenttype", parse_field_contenttype},
     {"dm", parse_field_date_modified},
     {"datemodified", parse_field_date_modified},
     {"empty", parse_field_empty},
@@ -402,6 +406,21 @@ parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, 
     }
     return append_node_to_list_if_nonnull(NULL,
                                           fsearch_query_node_new_extension(token_value ? token_value->str : NULL, flags));
+}
+
+static GList *
+parse_field_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    if (is_empty_field) {
+        return append_node_to_list_if_nonnull(NULL, fsearch_query_node_new_match_everything(flags));
+    }
+
+    if (fsearch_query_lexer_peek_next_token(parse_ctx->lexer, NULL) != FSEARCH_QUERY_TOKEN_WORD) {
+        return NULL;
+    }
+    g_autoptr(GString) token_value = NULL;
+    fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
+
+    return append_node_to_list_if_nonnull(NULL, fsearch_query_node_new_contenttype(token_value->str, flags));
 }
 
 static GList *
