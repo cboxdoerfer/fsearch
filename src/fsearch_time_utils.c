@@ -85,18 +85,20 @@ get_weekday_from_gdate(GDate *date) {
     case G_DATE_SUNDAY:
         return 7;
     }
+    return 0;
 }
 
 static bool
 parse_relative_day_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
     for (uint32_t i = 0; i < G_N_ELEMENTS(relative_day_constants); ++i) {
         if (g_str_has_prefix(str, relative_day_constants[i].format)) {
-            g_autoptr(GDate) date = g_date_new();
+            GDate *date = g_date_new();
             g_date_set_time_t(date, time(NULL));
             g_date_subtract_days(date, relative_day_constants[i].val);
             g_date_to_struct_tm(date, start);
             g_date_add_days(date, 1);
             g_date_to_struct_tm(date, end);
+            g_clear_pointer(&date, g_date_free);
             *end_ptr = (char *)(str + strlen(relative_day_constants[i].format));
             return true;
         }
@@ -108,7 +110,7 @@ static bool
 parse_weekday_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
     for (uint32_t i = 0; i < G_N_ELEMENTS(weekday_constants); ++i) {
         if (g_str_has_prefix(str, weekday_constants[i].format)) {
-            g_autoptr(GDate) date = g_date_new();
+            GDate *date = g_date_new();
             g_date_set_time_t(date, time(NULL));
             // The amount of days which have passed since the requested weekday
             int32_t days_diff = get_weekday_from_gdate(date) - weekday_constants[i].val;
@@ -119,6 +121,7 @@ parse_weekday_constants(const char *str, struct tm *start, struct tm *end, char 
             g_date_to_struct_tm(date, start);
             g_date_add_days(date, 1);
             g_date_to_struct_tm(date, end);
+            g_clear_pointer(&date, g_date_free);
             *end_ptr = (char *)(str + strlen(weekday_constants[i].format));
             return true;
         }
@@ -130,7 +133,7 @@ static bool
 parse_month_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
     for (uint32_t i = 0; i < G_N_ELEMENTS(month_constants); ++i) {
         if (g_str_has_prefix(str, month_constants[i].format)) {
-            g_autoptr(GDate) date = g_date_new();
+            GDate *date = g_date_new();
             g_date_set_time_t(date, time(NULL));
             g_date_subtract_days(date, date->day - 1);
             // The amount of months which have passed since the requested month
@@ -142,6 +145,7 @@ parse_month_constants(const char *str, struct tm *start, struct tm *end, char **
             g_date_to_struct_tm(date, start);
             g_date_add_months(date, 1);
             g_date_to_struct_tm(date, end);
+            g_clear_pointer(&date, g_date_free);
             *end_ptr = (char *)(str + strlen(month_constants[i].format));
             return true;
         }
