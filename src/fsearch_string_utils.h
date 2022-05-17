@@ -36,6 +36,9 @@ fsearch_string_utf8_has_upper(const char *str);
 bool
 fsearch_string_is_ascii_icase(const char *str);
 
+bool
+fsearch_string_has_wildcards(const char *str);
+
 // Converts a wildcard expression to a regular expression, i.e.
 // `*` becomes `.*`
 // `?` becomes `.`

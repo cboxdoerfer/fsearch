@@ -99,6 +99,14 @@ fsearch_string_get_extension(const char *str) {
     return ext + 1;
 }
 
+bool
+fsearch_string_has_wildcards(const char *str) {
+    if (strchr(str, '*') || strchr(str, '?')) {
+        return true;
+    }
+    return false;
+}
+
 char *
 fsearch_string_convert_wildcard_to_regex_expression(const char *str) {
     g_assert(str);
