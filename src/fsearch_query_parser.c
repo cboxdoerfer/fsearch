@@ -182,7 +182,7 @@ parse_size(FsearchQueryComparisonNewNodeFunc new_node_func,
         return new_node_func(flags, size, size, comp_type);
     }
     g_debug("[size:] invalid argument: %s", string->str);
-    return NULL;
+    return fsearch_query_node_new_match_nothing();
 }
 
 static bool
@@ -271,7 +271,7 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
         return new_list(parse_interval_func(new_node_func, token_value, flags, comp_type));
     default:
         g_debug("[%s:] invalid or missing argument", field_name);
-        return NULL;
+        return new_list(fsearch_query_node_new_match_nothing());
     }
 
     g_autoptr(GString) next_token_value = NULL;
@@ -279,7 +279,7 @@ parse_interval(FsearchQueryParseContext *parse_ctx,
         return new_list(parse_func(new_node_func, next_token_value, flags, comp_type));
     }
 
-    return NULL;
+    return new_list(fsearch_query_node_new_match_nothing());
 }
 
 static GList *
@@ -355,7 +355,7 @@ parse_date_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_fun
         return new_node_func(flags, time_start, time_end, comp_type);
     }
     g_debug("[date-modified:] invalid argument: %s", string->str);
-    return NULL;
+    return fsearch_query_node_new_match_nothing();
 }
 
 static FsearchQueryNode *
@@ -391,7 +391,7 @@ parse_date_modified(FsearchQueryComparisonNewNodeFunc new_node_func,
         return new_node_func(flags, dm_start, dm_end, comp_type);
     }
     g_debug("[date:] invalid argument: %s", string->str);
-    return NULL;
+    return fsearch_query_node_new_match_nothing();
 }
 
 static GList *
@@ -415,7 +415,7 @@ parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, 
     if (expect_word(parse_ctx->lexer, &token_value)) {
         return new_list(fsearch_query_node_new_extension(token_value->str, flags));
     }
-    return NULL;
+    return new_list(fsearch_query_node_new_match_nothing());
 }
 
 static GList *
@@ -428,7 +428,7 @@ parse_field_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field
     if (expect_word(parse_ctx->lexer, &token_value)) {
         return new_list(fsearch_query_node_new_contenttype(token_value->str, flags));
     }
-    return NULL;
+    return new_list(fsearch_query_node_new_match_nothing());
 }
 
 static GList *
@@ -442,7 +442,7 @@ parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fse
     if (expect_word(parse_ctx->lexer, &token_value)) {
         return new_list(fsearch_query_node_new_parent(token_value->str, parent_flags));
     }
-    return NULL;
+    return new_list(fsearch_query_node_new_match_nothing());
 }
 
 static GList *
@@ -465,7 +465,7 @@ parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsearch
     else if (token == FSEARCH_QUERY_TOKEN_FIELD_EMPTY) {
         return parse_field(parse_ctx, token_value, true, flags);
     }
-    return NULL;
+    return new_list(fsearch_query_node_new_match_nothing());
 }
 
 static GList *
@@ -571,7 +571,7 @@ parse_field(FsearchQueryParseContext *parse_ctx, GString *field_name, bool is_em
             }
         }
     }
-    return res;
+    return res ? res : new_list(fsearch_query_node_new_match_nothing());
 }
 
 static GList *
