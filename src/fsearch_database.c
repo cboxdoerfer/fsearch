@@ -268,10 +268,10 @@ copy_bytes_and_return_new_src(void *dest, const uint8_t *src, size_t len) {
 }
 
 static const uint8_t *
-db_load_entry_shared_from_memory(const uint8_t *data_block,
-                                 FsearchDatabaseIndexFlags index_flags,
-                                 FsearchDatabaseEntry *entry,
-                                 GString *previous_entry_name) {
+db_load_entry_super_elements_from_memory(const uint8_t *data_block,
+                                         FsearchDatabaseIndexFlags index_flags,
+                                         FsearchDatabaseEntry *entry,
+                                         GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint8_t name_offset = *data_block++;
 
@@ -317,7 +317,7 @@ read_element_from_file(void *restrict ptr, size_t size, FILE *restrict stream) {
 }
 
 static bool
-db_load_entry_shared(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_entry_name) {
+db_load_entry_super_elements(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint8_t name_offset = 0;
     if (!read_element_from_file(&name_offset, 1, fp)) {
@@ -432,7 +432,7 @@ db_load_folders(FILE *fp,
         uint16_t db_index = 0;
         fb = copy_bytes_and_return_new_src(&db_index, fb, 2);
 
-        fb = db_load_entry_shared_from_memory(fb, index_flags, entry, previous_entry_name);
+        fb = db_load_entry_super_elements_from_memory(fb, index_flags, entry, previous_entry_name);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -488,7 +488,7 @@ db_load_files(FILE *fp,
         db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
         db_entry_set_idx(entry, idx);
 
-        fb = db_load_entry_shared_from_memory(fb, index_flags, entry, previous_entry_name);
+        fb = db_load_entry_super_elements_from_memory(fb, index_flags, entry, previous_entry_name);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -712,13 +712,13 @@ write_data_to_file(FILE *fp, const void *data, size_t data_size, size_t num_elem
 }
 
 static size_t
-db_save_entry_shared(FILE *fp,
-                     FsearchDatabaseIndexFlags index_flags,
-                     FsearchDatabaseEntry *entry,
-                     uint32_t parent_idx,
-                     GString *previous_entry_name,
-                     GString *new_entry_name,
-                     bool *write_failed) {
+db_save_entry_super_elements(FILE *fp,
+                             FsearchDatabaseIndexFlags index_flags,
+                             FsearchDatabaseEntry *entry,
+                             uint32_t parent_idx,
+                             GString *previous_entry_name,
+                             GString *new_entry_name,
+                             bool *write_failed) {
     // init new_entry_name with the name of the current entry
     g_string_erase(new_entry_name, 0, -1);
     g_string_append(new_entry_name, db_entry_get_name_raw(entry));
@@ -830,7 +830,8 @@ db_save_files(FILE *fp, FsearchDatabaseIndexFlags index_flags, DynamicArray *fil
 
         FsearchDatabaseEntryFolder *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = db_entry_get_idx((FsearchDatabaseEntry *)parent);
-        bytes_written += db_save_entry_shared(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
+        bytes_written +=
+            db_save_entry_super_elements(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true)
             return bytes_written;
     }
@@ -948,7 +949,8 @@ db_save_folders(FILE *fp,
 
         FsearchDatabaseEntryFolder *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_idx((FsearchDatabaseEntry *)parent) : db_entry_get_idx(entry);
-        bytes_written += db_save_entry_shared(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
+        bytes_written +=
+            db_save_entry_super_elements(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true) {
             return bytes_written;
         }
