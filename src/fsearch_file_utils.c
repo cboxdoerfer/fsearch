@@ -250,7 +250,7 @@ fsearch_file_utils_launch_with_command(GString *path, GString *path_full, const 
 }
 
 static gchar *
-get_mimetype(const gchar *name) {
+get_content_type_description(const gchar *name) {
     if (!name) {
         return NULL;
     }
@@ -268,7 +268,7 @@ fsearch_file_utils_get_file_type_non_localized(const char *name, gboolean is_dir
         type = g_strdup("Folder");
     }
     else {
-        type = get_mimetype(name);
+        type = get_content_type_description(name);
     }
     if (type == NULL) {
         type = g_strdup("Unknown Type");
@@ -283,7 +283,7 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
         type = g_strdup(_("Folder"));
     }
     else {
-        type = get_mimetype(name);
+        type = get_content_type_description(name);
     }
     if (type == NULL) {
         type = g_strdup(_("Unknown Type"));
