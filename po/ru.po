@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-04 14:56+0200\n"
-"PO-Revision-Date: 2022-03-22 13:55+0000\n"
+"PO-Revision-Date: 2022-05-21 12:17+0000\n"
 "Last-Translator: Сергей <sw@atrus.ru>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -203,7 +203,7 @@ msgstr "Видео"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "Имена макросов не должны содержать символ «:»."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
 #: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
@@ -251,21 +251,14 @@ msgid "Macro:"
 msgstr "Макрос:"
 
 #: src/fsearch_filter_editor.ui:171
-#, fuzzy
-#| msgid ""
-#| "The macro for this filter. A macro allows you to\n"
-#| "                          access this filter from the search entry by "
-#| "typing its text followed by ':'\n"
-#| "                      "
 msgid ""
 "The macro for this filter. A macro allows you to access this filter from the "
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
-"Макрос для данного фильтра. Макрос позволяет вам\n"
-"                          получить доступ к данному фильтру из строки "
-"поиска, установив ':' в конце поискового запроса\n"
-"                      "
+"Макрос для данного фильтра. Макрос позволяет вам получить доступ к данному "
+"фильтру из строки поиска, установив «:» в конце поискового запроса\n"
+"                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
