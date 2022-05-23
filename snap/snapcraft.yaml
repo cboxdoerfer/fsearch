@@ -2,7 +2,7 @@ name: fsearch
 version: '0.2alpha'
 grade: devel
 adopt-info: fsearch
-base: core18
+base: core20
 confinement: strict
 license: GPL-2.0+
 compression: lzo
