@@ -2,7 +2,7 @@ name: fsearch
 version: '0.2alpha'
 grade: devel
 adopt-info: fsearch
-base: core20
+base: core18
 confinement: strict
 license: GPL-2.0+
 compression: lzo
@@ -10,7 +10,7 @@ compression: lzo
 apps:
   fsearch:
     command: usr/bin/fsearch
-    extensions: [ gnome-3-34 ]
+    extensions: [ gnome-3-28 ]
     plugs:
       - home
       - removable-media
