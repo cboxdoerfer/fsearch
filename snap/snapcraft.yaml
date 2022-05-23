@@ -10,7 +10,7 @@ compression: lzo
 apps:
   fsearch:
     command: usr/bin/fsearch
-    extensions: [ gnome-3-38 ]
+    extensions: [ gnome-3-34 ]
     plugs:
       - home
       - removable-media
