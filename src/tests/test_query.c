@@ -209,6 +209,9 @@ test_main(void) {
             {"test || (pic: video:)", "test.doc", 0, 0, true},
             {"test || (pic: video:)", "test.doc", 0, 0, true},
 
+            // bug reports:
+            // #360
+            {"(", "test", 0, QUERY_FLAG_REGEX, false},
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(main_tests); i++) {
