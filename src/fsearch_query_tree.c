@@ -207,9 +207,11 @@ static gboolean
 node_triggers_auto_match_path(GNode *node, gpointer data) {
     g_assert(data);
     FsearchQueryNode *n = node->data;
-    bool *triggers_auto_match_path = data;
-    if (*triggers_auto_match_path == false) {
-        *triggers_auto_match_path = n->triggers_auto_match_path;
+    if (n) {
+        bool *triggers_auto_match_path = data;
+        if (*triggers_auto_match_path == false) {
+            *triggers_auto_match_path = n->triggers_auto_match_path;
+        }
     }
     return FALSE;
 }
@@ -228,9 +230,11 @@ static gboolean
 node_triggers_auto_match_case(GNode *node, gpointer data) {
     g_assert(data);
     FsearchQueryNode *n = node->data;
-    bool *triggers_auto_match_case = data;
-    if (*triggers_auto_match_case == false) {
-        *triggers_auto_match_case = n->triggers_auto_match_case;
+    if (n) {
+        bool *triggers_auto_match_case = data;
+        if (*triggers_auto_match_case == false) {
+            *triggers_auto_match_case = n->triggers_auto_match_case;
+        }
     }
     return FALSE;
 }
@@ -249,9 +253,11 @@ static gboolean
 node_wants_single_threaded_search(GNode *node, gpointer data) {
     g_assert(data);
     FsearchQueryNode *n = node->data;
-    bool *wants_single_threaded_search = data;
-    if (*wants_single_threaded_search == false) {
-        *wants_single_threaded_search = n->wants_single_threaded_search;
+    if (n) {
+        bool *wants_single_threaded_search = data;
+        if (*wants_single_threaded_search == false) {
+            *wants_single_threaded_search = n->wants_single_threaded_search;
+        }
     }
     return FALSE;
 }
