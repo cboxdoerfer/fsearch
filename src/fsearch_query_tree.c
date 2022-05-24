@@ -205,13 +205,13 @@ get_query_tree(const char *input, FsearchFilterManager *filters, FsearchQueryFla
 
 static gboolean
 node_triggers_auto_match_path(GNode *node, gpointer data) {
-    g_assert(data);
     FsearchQueryNode *n = node->data;
-    if (n) {
-        bool *triggers_auto_match_path = data;
-        if (*triggers_auto_match_path == false) {
-            *triggers_auto_match_path = n->triggers_auto_match_path;
-        }
+    g_assert(data);
+    g_assert(n);
+
+    bool *triggers_auto_match_path = data;
+    if (n && *triggers_auto_match_path == false) {
+        *triggers_auto_match_path = n->triggers_auto_match_path;
     }
     return FALSE;
 }
@@ -228,13 +228,13 @@ fsearch_query_node_tree_triggers_auto_match_path(GNode *tree) {
 
 static gboolean
 node_triggers_auto_match_case(GNode *node, gpointer data) {
-    g_assert(data);
     FsearchQueryNode *n = node->data;
-    if (n) {
-        bool *triggers_auto_match_case = data;
-        if (*triggers_auto_match_case == false) {
-            *triggers_auto_match_case = n->triggers_auto_match_case;
-        }
+    g_assert(data);
+    g_assert(n);
+
+    bool *triggers_auto_match_case = data;
+    if (n && *triggers_auto_match_case == false) {
+        *triggers_auto_match_case = n->triggers_auto_match_case;
     }
     return FALSE;
 }
@@ -251,13 +251,13 @@ fsearch_query_node_tree_triggers_auto_match_case(GNode *tree) {
 
 static gboolean
 node_wants_single_threaded_search(GNode *node, gpointer data) {
-    g_assert(data);
     FsearchQueryNode *n = node->data;
-    if (n) {
-        bool *wants_single_threaded_search = data;
-        if (*wants_single_threaded_search == false) {
-            *wants_single_threaded_search = n->wants_single_threaded_search;
-        }
+    g_assert(data);
+    g_assert(n);
+
+    bool *wants_single_threaded_search = data;
+    if (n && *wants_single_threaded_search == false) {
+        *wants_single_threaded_search = n->wants_single_threaded_search;
     }
     return FALSE;
 }
