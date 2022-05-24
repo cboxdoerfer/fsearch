@@ -212,7 +212,7 @@ fsearch_query_node_new_regex(const char *search_term, FsearchQueryFlags flags) {
         PCRE2_UCHAR buffer[256] = "";
         pcre2_get_error_message(error_code, buffer, sizeof(buffer));
         g_debug("[regex] PCRE2 compilation failed at offset %d. Error message: %s", (int)erroroffset, buffer);
-        return NULL;
+        return fsearch_query_node_new_match_nothing();
     }
 
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
@@ -320,7 +320,7 @@ fsearch_query_node_new_wildcard(const char *search_term, FsearchQueryFlags flags
     // and it provides matching information, which are useful for the highlighting engine
     g_autofree char *regex_search_term = fsearch_string_convert_wildcard_to_regex_expression(search_term);
     if (!regex_search_term) {
-        return NULL;
+        return fsearch_query_node_new_match_nothing();
     }
     return fsearch_query_node_new_regex(regex_search_term, flags);
 }
