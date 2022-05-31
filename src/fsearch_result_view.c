@@ -355,9 +355,6 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     if (row_focused) {
         flags |= GTK_STATE_FLAG_FOCUSED;
     }
-    if (row_hovered) {
-        flags |= GTK_STATE_FLAG_PRELIGHT;
-    }
 
     gtk_style_context_save(context);
     gtk_style_context_set_state(context, flags);
@@ -365,7 +362,15 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     // Render row background
     gtk_render_background(context, cr, rect->x, rect->y, rect->width, rect->height);
     if (row_hovered) {
-        gtk_render_focus(context, cr, rect->x, rect->y, rect->width, rect->height);
+        GdkRGBA color = {};
+        gtk_style_context_get_color(context, flags, &color);
+        color.alpha = 0.05;
+
+        cairo_save(cr);
+        gdk_cairo_set_source_rgba(cr, &color);
+        cairo_rectangle(cr, rect->x, rect->y, rect->width, rect->height);
+        cairo_fill(cr);
+        cairo_restore(cr);
     }
 
     // Render row foreground
