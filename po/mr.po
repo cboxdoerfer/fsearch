@@ -8,48 +8,57 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-04 14:56+0200\n"
-"PO-Revision-Date: 2022-02-08 11:28+0100\n"
-"Last-Translator: Christian <christian.boxdoerfer@posteo.de>\n"
-"Language-Team: Marathi <sshedmak@redhat.com>\n"
+"PO-Revision-Date: 2022-06-06 07:15+0000\n"
+"Last-Translator: Prachi Joshi <josprachi@yahoo.com>\n"
+"Language-Team: Marathi <https://hosted.weblate.org/projects/fsearch/"
+"translations/mr/>\n"
 "Language: mr\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=n != 1;\n"
+"X-Generator: Weblate 4.13-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
 msgid "FSearch"
-msgstr ""
+msgstr "FSearch"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
+"कार्यप्रदर्शन आणि प्रगत वैशिष्ट्यांवर लक्ष केंद्रित करणारे फाइल शोध अप्लिकेशन"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"शोधा;fsearch;फाइल्स;फोल्डर्स;संगीत;व्हिडिओ;कागदपत्रे;शोधा;साधन;सर्वकाही;"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "ग्राफिकल फाइल शोध अप्लिकेशन"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch तुम्हाला फाइल्स आणि फोल्डर्स शक्य तितक्या सहज आणि जलद शोधण्यात मदत "
+"करते. फक्त काही अक्षरे टाइप करा आणि शोध परिणाम जवळजवळ त्वरित दिसून येतील."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"अशी बरीच वैशिष्ट्ये आहेत जी शोध शक्य तितक्या कार्यक्षम आणि शक्तिशाली बनवतात. "
+"जसे:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
-msgstr ""
+msgstr "केसकडे दुर्लक्ष करा (उदा. \"fsearch\" शोधणे \"FSearch\" शी देखील जुळेल)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
