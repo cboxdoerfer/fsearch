@@ -67,10 +67,6 @@ struct FsearchDatabase {
 
     FsearchDatabaseIndexFlags index_flags;
 
-    uint32_t num_entries;
-    uint32_t num_folders;
-    uint32_t num_files;
-
     GList *indexes;
     GList *excludes;
     char **exclude_files;
@@ -677,9 +673,6 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
         db->sorted_folders[i] = sorted_folders[i];
     }
 
-    db->num_entries = num_files + num_folders;
-    db->num_files = num_files;
-    db->num_folders = num_folders;
     db->index_flags = index_flags;
 
     g_clear_pointer(&fp, fclose);
@@ -1285,8 +1278,6 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
             darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], entry);
 
-            db->num_folders++;
-
             db_folder_scan_recursive(walk_context, (FsearchDatabaseEntryFolder *)entry);
         }
         else {
@@ -1299,11 +1290,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             db_entry_update_parent_size(file_entry);
 
             darray_add_item(db->sorted_files[DATABASE_INDEX_TYPE_NAME], file_entry);
-
-            db->num_files++;
         }
-
-        db->num_entries++;
     }
 
     g_clear_pointer(&dir, closedir);
@@ -1356,13 +1343,14 @@ db_scan_folder(FsearchDatabase *db,
     db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
 
     darray_add_item(db->sorted_folders[DATABASE_INDEX_TYPE_NAME], entry);
-    db->num_folders++;
-    db->num_entries++;
 
     uint32_t res = db_folder_scan_recursive(&walk_context, (FsearchDatabaseEntryFolder *)entry);
 
     if (res == WALK_OK) {
-        g_debug("[db_scan] scanned: %d files, %d folders -> %d total", db->num_files, db->num_folders, db->num_entries);
+        g_debug("[db_scan] scanned: %d files, %d folders -> %d total",
+                db_get_num_files(db),
+                db_get_num_folders(db),
+                db_get_num_entries(db));
         return true;
     }
 
@@ -1468,19 +1456,22 @@ db_get_timestamp(FsearchDatabase *db) {
 uint32_t
 db_get_num_files(FsearchDatabase *db) {
     g_assert(db);
-    return db->num_files;
+    return db->sorted_files[DATABASE_INDEX_TYPE_NAME] ? darray_get_num_items(db->sorted_files[DATABASE_INDEX_TYPE_NAME])
+                                                      : 0;
 }
 
 uint32_t
 db_get_num_folders(FsearchDatabase *db) {
     g_assert(db);
-    return db->num_folders;
+    return db->sorted_folders[DATABASE_INDEX_TYPE_NAME]
+             ? darray_get_num_items(db->sorted_folders[DATABASE_INDEX_TYPE_NAME])
+             : 0;
 }
 
 uint32_t
 db_get_num_entries(FsearchDatabase *db) {
     g_assert(db);
-    return db->num_entries;
+    return db_get_num_files(db) + db_get_num_folders(db);
 }
 
 void
