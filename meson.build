@@ -1,7 +1,9 @@
 project('fsearch', 'c',
     version: '0.1.2',
     meson_version: '>= 0.45.0',
-    default_options: ['c_std=c11'],
+    default_options: ['c_std=c11',
+                      'channel=other',
+                      ],
     )
 app_id = 'io.github.cboxdoerfer.FSearch'
 
@@ -19,6 +21,7 @@ config_h.set_quoted('LOCALEDIR', join_paths(get_option('prefix'), get_option('lo
 config_h.set_quoted('PACKAGE_WEBSITE', 'https://github.com/cboxdoerfer/fsearch')
 config_h.set_quoted('PACKAGE_ICON_NAME', app_id)
 config_h.set_quoted('PACKAGE_NAME', 'FSearch')
+config_h.set_quoted('BUILD_CHANNEL', get_option('channel'))
 
 add_project_arguments('-DHAVE_CONFIG_H', language : 'c')
 # ensure off_t is 64bit

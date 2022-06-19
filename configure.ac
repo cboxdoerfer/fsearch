@@ -30,6 +30,27 @@ AC_ARG_ENABLE(debug,
 
 AM_CONDITIONAL(DEBUG, test x"$debug" = x"true")
 
+AC_ARG_WITH(build-channel,
+              AS_HELP_STRING([--with-build-channel=channel],
+                             [specify build channel, default: other]),
+                             [case "${withval}" in
+                              other) with_build_channel=other;;
+                              AUR-stable) with_build_channel=AUR-stable;;
+                              AUR-devel) with_build_channel=AUR-devel;;
+                              PPA-stable) with_build_channel=PPA-stable;;
+                              PPA-nightly) with_build_channel=PPA-nightly;;
+                              copr-stable) with_build_channel=copr-stable;;
+                              copr-nightly) with_build_channel=copr-nightly;;
+                              snap-stable) with_build_channel=snap-stable;;
+                              snap-nightly) with_build_channel=snap-nightly;;
+                              flathub-stable) with_build_channel=flathub-stable;;
+                              flathub-nightly) with_build_channel=flathub-nightly;;
+                              *) AC_MSG_ERROR([bad value ${withval} for --with-build-channel]) ;;
+                          esac],
+                          [with_build_channel=other])
+
+AC_DEFINE_UNQUOTED([BUILD_CHANNEL], ["$with_build_channel"], [Build channel])
+
 CFLAGS+=" -Os"
 
 AX_CHECK_COMPILE_FLAG([-std=c11], [CFLAGS+=" -std=c11" ],

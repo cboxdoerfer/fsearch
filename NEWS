@@ -1,7 +1,10 @@
 =================
 Version 0.1.3alpha
 =================
+
 * Fix unresponsive column headers when an overlay is shown (e.g. when no results are found)
+* Fix restoring of column widths from previous session
+* Add build option to specify build channel
 
 =================
 Version 0.1.2

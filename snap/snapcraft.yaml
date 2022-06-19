@@ -25,6 +25,7 @@ parts:
     source: https://github.com/cboxdoerfer/fsearch.git
     source-branch: fsearch_0.1
     meson-parameters:
+      - -Dchannel=snap-stable
       - --buildtype=release
       - --prefix=/snap/fsearch/current/usr
     build-packages:

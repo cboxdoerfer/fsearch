@@ -30,7 +30,7 @@ mv fsearch-%{version} build
 %build
 export LDFLAGS="%{?__global_ldflags} -pthread"
 pushd build
-%meson
+%meson -Dchannel=copr-nightly
 %meson_build -v
 popd
 

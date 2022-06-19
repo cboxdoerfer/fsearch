@@ -21,7 +21,7 @@ export DH_VERBOSE = 1
 # dh_make generated override targets
 override_dh_auto_configure:
 	./autogen.sh
-	./configure --enable-debug --prefix=/usr
+	./configure --enable-debug --with-build-channel="PPA-stable" --prefix=/usr
 
 # This is example for Cmake (See https://bugs.debian.org/641051 )
 #override_dh_auto_configure:
