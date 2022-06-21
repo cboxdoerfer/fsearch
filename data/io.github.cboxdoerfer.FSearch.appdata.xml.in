@@ -51,6 +51,15 @@
     <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.appdata.xml.in`. -->
     <content_rating type="oars-1.0"/>
     <releases>
+        <release date="2022-06-21" version="0.1.3">
+            <description>
+                <ul>
+                    <li>Fix unresponsive column headers when an overlay is shown (e.g. when no results are found)</li>
+                    <li>Fix restoring of column widths from previous session</li>
+                    <li>Add build option to specify build channel</li>
+                </ul>
+            </description>
+        </release>
         <release date="2022-01-29" version="0.1.2">
             <description>
                 <ul>
