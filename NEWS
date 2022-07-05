@@ -1,4 +1,10 @@
 =================
+Version 0.1.4
+=================
+
+* Fix bug that prevents the "Open Failed" dialog from getting closed
+
+=================
 Version 0.1.3
 =================
 

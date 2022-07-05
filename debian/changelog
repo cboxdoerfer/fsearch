@@ -1,3 +1,9 @@
+fsearch (0.1.4) unstable; urgency=medium
+
+  *  New upstream release: 0.1.4
+
+ -- Christian Boxdörfer <christian.boxdoerfer@posteo.de>  Tue, 05 Jul 2022 17:30:53 +0200
+
 fsearch (0.1.3) unstable; urgency=medium
 
   * New upstream release: 0.1.3
