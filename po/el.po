@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-04 14:56+0200\n"
-"PO-Revision-Date: 2021-02-23 14:50+0000\n"
-"Last-Translator: Michalis <michalisntovas@yahoo.gr>\n"
+"PO-Revision-Date: 2022-06-20 18:14+0000\n"
+"Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
 "translations/el/>\n"
 "Language: el\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.5\n"
+"X-Generator: Weblate 4.13.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -37,24 +37,31 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Μια εφαρμογή αναζήτησης αρχείων με γραφικό περιβάλλον"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"To FSearch σας βοηθά να βρείτε αρχεία και φακέλους με όσο το δυνατόν πιο "
+"εύκολα και γρήγορα. Απλώς πληκτρολογείστε μερικά γράμματα και τα "
+"αποτελέσματα της αναζήτησης θα εμφανιστούν σχεδόν ακαριαία."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr ""
+"Υπάρχουν πολλά χαρακτηριστικά που κάνουν την αναζήτηση όσο το δυνατόν "
+"αποτελεσματική και ισχυρή. Όπως:"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
+"Αγνόηση πεζών-κεφαλαίων (π.χ. κάνοντας αναζήτηση για \"fsearch\" θα "
+"ταιριάξει και το \"FSearch\" επίσης)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
 msgid "Regular expressions"
@@ -66,23 +73,25 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Υποστήριξη φίλτρων (π.χ. αναζήτηση μόνο για αρχεία ήχου)"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Αποκλεισμός κρυφών αρχείων και φακέλων"
+msgstr "Αποκλεισμός συγκεκριμένων αρχείων και φακέλων"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
+"Γρήγορη ταξινόμηση κατά όνομα, διαδρομή, μέγεθος, χρόνο τροποποίησης και "
+"επέκταση"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Σημείωση: Εξαιτίας του sandboxing του Flatpak, το FSearch δεν είναι δυνατό "
+"να βρει κάθε αρχείο στο σύστημά σας."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:35
 msgid "The default UI layout"
@@ -90,7 +99,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Μια διαρρύθμιση που ακολουθεί πιο πιστά το στυλ του GNOME"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
@@ -102,13 +111,12 @@ msgid "Initial release."
 msgstr ""
 
 #: src/fsearch.c:262
-#, fuzzy
 msgid "Saving…"
-msgstr "Ταξινόμηση..."
+msgstr "Αποθήκευση…"
 
 #: src/fsearch.c:380
 msgid "translator-credits"
-msgstr ""
+msgstr "Ευχαριστίες στον μεταφραστή"
 
 #: src/fsearch.c:382
 msgid "A search utility focusing on performance and advanced features"
@@ -117,54 +125,45 @@ msgstr ""
 "χαρακτηριστικά"
 
 #: src/fsearch.c:850
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Άνοιγμα με άλλη εφαρμογή"
+msgstr "Άνοιγμα νέου παραθύρου εφαρμογής"
 
 #: src/fsearch.c:851
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Εμφάνιση των προτιμήσεων της εφαρμογής"
 
 #: src/fsearch.c:852
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Εμφάνιση κουμπιού αναζήτησης"
+msgstr "Ορισμός μοτίβου (pattern) αναζήτησης"
 
 #: src/fsearch.c:853
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Ενημέρωση της βάσης δεδομένων"
+msgstr "Ενημέρωση της βάσης δεδομένων και έξοδος"
 
 #: src/fsearch.c:854
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Εμφάνιση πληροφοριών έκδοσης"
+msgstr "Εμφάνιση πληροφοριών έκδοσης και έξοδος"
 
 #: src/fsearch_database.c:652
-#, fuzzy
 msgid "Loading folders…"
-msgstr "Φόρτωση βάσης δεδομένων…"
+msgstr "Φόρτωση φακέλων…"
 
 #: src/fsearch_database.c:660
-#, fuzzy
 msgid "Loading files…"
-msgstr "Διαγραφή αρχείων…"
+msgstr "Φόρτωση αρχείων…"
 
 #: src/fsearch_database.c:1650 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
-#, fuzzy
 msgid "Sorting…"
-msgstr "Ταξινόμηση..."
+msgstr "Ταξινόμηση…"
 
 #: src/fsearch_file_utils.c:283
-#, fuzzy
 msgid "Folder"
-msgstr "Φάκελοι"
+msgstr "Φάκελος"
 
 #: src/fsearch_file_utils.c:289
 msgid "Unknown Type"
-msgstr ""
+msgstr "Άγνωστος τύπος"
 
 #: src/fsearch_filter.c:131
 msgid "All"
@@ -179,9 +178,8 @@ msgid "Files"
 msgstr "Αρχεία"
 
 #: src/fsearch_filter.c:135
-#, fuzzy
 msgid "Applications"
-msgstr "Άλλη εφαρμογή"
+msgstr "Εφαρμογές"
 
 #: src/fsearch_filter.c:136
 msgid "Archives"
@@ -205,7 +203,7 @@ msgstr "Βίντεο"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "Τα ονόματα μακροεντολών δεν επιτρέπεται να περιέχουν τον χαρακτήρα `:`."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
 #: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
@@ -218,25 +216,21 @@ msgstr "_OK"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
 msgid "Edit filter"
-msgstr ""
+msgstr "Τροποποίηση φίλτρου"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Όνομα"
+msgstr "Όνομα:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Το μοναδικό όνομα αυτού του φίλτρου"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Μοναδικό όνομα φίλτρου"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Αναζήτηση στη διαδρομή"
 
@@ -245,18 +239,16 @@ msgid "Enable regular expressions"
 msgstr ""
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Ταίριασμα πεζών-κεφαλαίων"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Ερώτημα:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Μακροεντολή:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -264,24 +256,26 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
+"Η μακροεντολή για αυτό το φίλτρο. Μια μακροεντολή σας επιτρέπει την πρόσβαση "
+"σε αυτό το φίλτρο από την είσοδο αναζήτησης πληκτρολογώντας το κείμενό της "
+"ακολουθούμενο από ':'\n"
+"                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr ""
+msgstr "Ιδιότητες…"
 
 #: src/fsearch_listview_popup.c:169
-#, fuzzy
 msgid "Other Application…"
-msgstr "Άλλη εφαρμογή"
+msgstr "Άλλη Εφαρμογή…"
 
 #: src/fsearch_overlay.ui:44
 msgid "Empty Database"
 msgstr "Κενή βάση δεδομένων"
 
 #: src/fsearch_overlay.ui:60
-#, fuzzy
 msgid "Add folders"
-msgstr "Φάκελοι"
+msgstr "Προσθήκη φακέλων"
 
 #: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
 #: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
@@ -303,7 +297,7 @@ msgstr "σελίδα1"
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
-msgstr "Ενημέρωση βάσης δεδομένων…"
+msgstr "Η βάση δεδομένων ενημερώνεται…"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
@@ -330,9 +324,8 @@ msgid "Try a different search"
 msgstr "Δοκίμασε διαφορετική αναζήτηση"
 
 #: src/fsearch_overlay.ui:368
-#, fuzzy
 msgid "Sorting results…"
-msgstr "Ταξινόμηση..."
+msgstr "Ταξινόμηση αποτελεσμάτων…"
 
 #: src/fsearch_preferences.ui:63 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -345,6 +338,8 @@ msgstr "Ενεργοποίηση σκοτεινού θέματος"
 #: src/fsearch_preferences.ui:147
 msgid "Enable client-side decorations (requires restart)"
 msgstr ""
+"Ενεργοποίηση διακοσμήσεων παραθύρου από την πλευρά του πελάτη (client-side "
+"decorations) (απαιτείται επανεκκίνηση)"
 
 #: src/fsearch_preferences.ui:162
 msgid "Use binary units instead of decimal units"
@@ -356,7 +351,7 @@ msgstr "Απομνημόνευση μεγέθους παραθύρου"
 
 #: src/fsearch_preferences.ui:193
 msgid "Exit on Escape"
-msgstr ""
+msgstr "Έξοδος στο Escape"
 
 #: src/fsearch_preferences.ui:230
 msgid "with keyboard shortcuts or menu entries"
@@ -459,38 +454,30 @@ msgid "Hide results when search is empty"
 msgstr "Απόκρυψη αποτελεσμάτων όταν η αναζήτηση είναι κενή"
 
 #: src/fsearch_preferences.ui:701
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
 "Ταίριασμα πεζών-κεφαλαίων όταν το ερώτημα περιέχει τουλάχιστον έναν κεφαλαίο "
 "χαρακτήρα"
 
 #: src/fsearch_preferences.ui:769
-#, fuzzy
 msgid "Add new filter"
-msgstr "Φάκελοι"
+msgstr "Προσθήκη νέου φίλτρου"
 
 #: src/fsearch_preferences.ui:785
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Αφαίρεση επιλεγμένης διαδρομής"
+msgstr "Αφαίρεση επιλεγμένου φίλτρου"
 
 #: src/fsearch_preferences.ui:801
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Αριθμός επιλεγμένων αρχείων"
+msgstr "Επεξεργασία επιλεγμένου φίλτρου"
 
 #: src/fsearch_preferences.ui:815
 msgid "Restore default filters"
-msgstr ""
+msgstr "Επαναφορά προεπιλεγμένων φίλτρων"
 
 #: src/fsearch_preferences.ui:847
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Εμφάνιση φίλτρου"
+msgstr "Φίλτρο:"
 
 #: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
 msgid "Search"
@@ -501,32 +488,32 @@ msgid "Update database on start"
 msgstr "Ενημέρωση της βάσης δεδομένων κατά την εκκίνηση"
 
 #: src/fsearch_preferences.ui:907
-#, fuzzy
 msgid "Update every"
-msgstr "Ενημέρωση"
+msgstr "Ενημέρωση κάθε"
 
 #: src/fsearch_preferences.ui:929
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/fsearch_preferences.ui:946
 msgid "hour(s) and"
-msgstr ""
+msgstr "ώρα(ες) και"
 
 #: src/fsearch_preferences.ui:958
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/fsearch_preferences.ui:976
 msgid "minute(s)"
-msgstr ""
+msgstr "λεπτό(ά)"
 
 #: src/fsearch_preferences.ui:1048
-#, fuzzy
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Προσθήκη διαδρομής που θα συμπεριληφθεί στη βάση δεδομένων"
+msgstr ""
+"Προσθήκη διαδρομής που θα συμπεριληφθεί στη βάση δεδομένων\n"
+"                                "
 
 #: src/fsearch_preferences.ui:1065 src/fsearch_preferences.ui:1164
 msgid "Remove selected path"
@@ -721,13 +708,6 @@ msgstr ""
 "ευρετήριο εμφανίζεται στη γραμμή κατάστασης."
 
 #: src/fsearch_preferences.ui:1550
-#, fuzzy
-#| msgid ""
-#| "<b>Show warning dialogs:</b>\n"
-#| "\n"
-#| "If enabled, a warning dialog is displayed when:\n"
-#| "\n"
-#| "\t•  a file or folder failed to open\n"
 msgid ""
 "<b>Show warning dialogs:</b>\n"
 "\n"
@@ -736,9 +716,8 @@ msgid ""
 msgstr ""
 "<b> Εμφάνιση παραθύρων προειδοποίησης:</b>\n"
 "\n"
-"Εάν είναι ενεργοποιημένο, εμφανίζεται ένα παράθυρο προειδοποίησης όταν:\n"
-"\n"
-"\t• ένα αρχείο ή φάκελος απέτυχε να ανοίξει\n"
+"Εάν είναι ενεργοποιημένο, εμφανίζεται ένα παράθυρο προειδοποίησης όταν ένα "
+"αρχείο ή φάκελος απέτυχε να ανοίξει."
 
 #: src/fsearch_preferences.ui:1567
 msgid ""
@@ -887,10 +866,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page3"
 msgid "page30"
-msgstr "σελίδα3"
+msgstr "σελίδα30"
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -916,10 +893,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1880
-#, fuzzy
-#| msgid "page3"
 msgid "page31"
-msgstr "σελίδα3"
+msgstr "σελίδα31"
 
 #: src/fsearch_preferences.ui:1888
 msgid ""
@@ -929,10 +904,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1897
-#, fuzzy
-#| msgid "page3"
 msgid "page32"
-msgstr "σελίδα3"
+msgstr "σελίδα32"
 
 #: src/fsearch_preferences.ui:1905
 msgid ""
@@ -942,10 +915,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1914
-#, fuzzy
-#| msgid "page3"
 msgid "page33"
-msgstr "σελίδα3"
+msgstr "σελίδα33"
 
 #: src/fsearch_preferences.ui:1922
 msgid ""
@@ -957,10 +928,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1933
-#, fuzzy
-#| msgid "page3"
 msgid "page34"
-msgstr "σελίδα3"
+msgstr "σελίδα34"
 
 #: src/fsearch_preferences.ui:1941
 msgid ""
@@ -971,10 +940,8 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_preferences.ui:1950
-#, fuzzy
-#| msgid "page5"
 msgid "page35"
-msgstr "σελίδα5"
+msgstr "σελίδα35"
 
 #: src/fsearch_preferences.ui:1960
 msgid "Help"
@@ -989,9 +956,8 @@ msgid "_Select"
 msgstr "_Επιλογή"
 
 #: src/fsearch_preferences_ui.c:320
-#, fuzzy
 msgid "Add filter"
-msgstr "Φάκελοι"
+msgstr "Προσθήκη φίλτρου"
 
 #: src/fsearch_preferences_widgets.c:220 src/fsearch_preferences_widgets.c:267
 msgid "Active"
@@ -1003,10 +969,8 @@ msgid "Path"
 msgstr "Διαδρομή"
 
 #: src/fsearch_preferences_widgets.c:227
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Άνοιγμα αρχείου(ων)"
+msgstr "Ένα σύστημα αρχείων"
 
 #: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:649
 #: src/menus.ui:183 src/menus.ui:231
@@ -1018,16 +982,13 @@ msgid "Macro"
 msgstr ""
 
 #: src/fsearch_preferences_widgets.c:292
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Κενό ερώτημα"
+msgstr "Eρώτημα"
 
 #: src/fsearch_statusbar.c:56
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "%'d Item"
-msgstr "%'d Αντικείμενα"
+msgstr "%'d Αντικείμενο"
 
 #: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
 #, c-format
@@ -1039,14 +1000,12 @@ msgid "Querying…"
 msgstr ""
 
 #: src/fsearch_statusbar.c:170
-#, fuzzy
 msgid "Loading…"
-msgstr "Ταξινόμηση..."
+msgstr "Φόρτωση…"
 
 #: src/fsearch_statusbar.c:175
-#, fuzzy
 msgid "Scanning…"
-msgstr "Ταξινόμηση..."
+msgstr "Σάρωση…"
 
 #: src/fsearch_statusbar.ui:52
 msgid "Number of Search Results"
@@ -1079,7 +1038,7 @@ msgstr "Αριθμός επιλεγμένων αρχείων"
 
 #: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
-msgstr "Αριθμός στοιχείων βάσης δεδομένων"
+msgstr "Αριθμός αντικειμένων από τη βάση δεδομένων"
 
 #: src/fsearch_statusbar.ui:370
 msgid "(empty)"
@@ -1115,10 +1074,8 @@ msgid "REGEX"
 msgstr "REGEX"
 
 #: src/fsearch_window.c:563 src/fsearch_window_actions.c:464
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to open:"
-msgstr "Αποτυχία ανοίγματος αρχείου"
+msgstr "Αποτυχία ανοίγματος:"
 
 #: src/fsearch_window.c:663 src/menus.ui:247
 msgid "Size"
@@ -1215,14 +1172,13 @@ msgid "Moving files to trash…"
 msgstr "Μετακίνηση αρχείων στον κάδο απορριμμάτων…"
 
 #: src/fsearch_window_actions.c:227
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Θέλετε πραγματικά να ανοίξετε %d αρχείο(α);"
+msgstr "Θέλετε πραγματικά να ανοίξετε %d παράθυρα ιδιοτήτων αρχείου;"
 
 #: src/fsearch_window_actions.c:231
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Άνοιγμα αρχείου(ων)…"
+msgstr "Άνοιγμα ιδιοτήτων αρχείου…"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -1249,9 +1205,8 @@ msgid "Cancel Update"
 msgstr "Ακύρωση ενημέρωσης"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Νέο παράθυρο"
+msgstr "Κλείσιμο Παραθύρου"
 
 #: src/menus.ui:54
 msgid "_Edit"
