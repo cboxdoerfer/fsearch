@@ -212,6 +212,8 @@ test_main(void) {
             // bug reports:
             // #360
             {"(", "test", 0, QUERY_FLAG_REGEX, false},
+            {"folder:", "", 0, 0, false},
+
         };
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(main_tests); i++) {

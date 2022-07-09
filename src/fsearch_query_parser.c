@@ -448,7 +448,7 @@ parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fse
 static GList *
 parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return NULL;
+        return new_list(fsearch_query_node_new_match_everything(flags));
     }
     g_autoptr(GString) token_value = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
@@ -463,8 +463,10 @@ parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsearch
         return parse_field(parse_ctx, token_value, false, flags);
     }
     else if (token == FSEARCH_QUERY_TOKEN_FIELD_EMPTY) {
+        g_print("Parse empty field\n");
         return parse_field(parse_ctx, token_value, true, flags);
     }
+    g_print("match nothing\n");
     return new_list(fsearch_query_node_new_match_nothing());
 }
 
