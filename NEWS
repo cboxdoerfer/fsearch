@@ -1,4 +1,10 @@
 =================
+Version 0.1.5alpha
+=================
+
+* Don't index the user's home directory by default
+
+=================
 Version 0.1.4
 =================
 

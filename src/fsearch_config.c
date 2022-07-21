@@ -373,8 +373,6 @@ config_load_default(FsearchConfig *config) {
 
     // Locations
     config->indexes = NULL;
-    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, g_get_home_dir(), true, true, false, 0);
-    config->indexes = g_list_append(config->indexes, index);
     config->exclude_locations = NULL;
 
     return true;
