@@ -26,10 +26,11 @@
 static GdkDragAction clipboard_action = GDK_ACTION_DEFAULT;
 static GList *clipboard_file_list = NULL;
 
-enum { URI_LIST = 1, NAUTILUS_WORKAROUND, GNOME_COPIED_FILES, N_CLIPBOARD_TARGETS };
+enum { URI_LIST = 1, NAUTILUS_WORKAROUND, GNOME_COPIED_FILES, KDE_CUT_SELECTION, N_CLIPBOARD_TARGETS };
 
 static GtkTargetEntry targets[] = {{"text/uri-list", 0, URI_LIST},
                                    {"text/plain;charset=utf-8", 0, NAUTILUS_WORKAROUND},
+                                   {"application/x-kde-cutselection", 0, KDE_CUT_SELECTION},
                                    {"x-special/gnome-copied-files", 0, GNOME_COPIED_FILES}};
 
 static void
@@ -44,6 +45,14 @@ clipboard_clean_data(GtkClipboard *clipboard, gpointer user_data) {
 static void
 clipboard_get_data(GtkClipboard *clipboard, GtkSelectionData *selection_data, guint info, gpointer user_data) {
     if (!clipboard_file_list) {
+        return;
+    }
+
+    if (info == KDE_CUT_SELECTION) {
+        // Tell KDE that the selection data should be cut
+        g_debug("[get_data] KDE_CUT_SELECTION");
+        if (clipboard_action == GDK_ACTION_MOVE)
+            gtk_selection_data_set(selection_data, gtk_selection_data_get_target(selection_data), 8, (guchar *)"1", 2);
         return;
     }
 
