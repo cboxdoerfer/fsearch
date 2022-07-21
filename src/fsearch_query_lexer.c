@@ -55,19 +55,10 @@ static void
 parse_quoted_string(FsearchQueryLexer *lexer, GString *string) {
     char c = '\0';
     while ((c = get_next_char(lexer))) {
-        switch (c) {
-        case '\\':
-            // escape: get next char
-            c = get_next_char(lexer);
-            g_string_append_c(string, c);
-            if (c == '\0') {
-                return;
-            }
-            break;
-        case '"':
-            // end of string reached
+        if (c == '"') {
             return;
-        default:
+        }
+        else {
             g_string_append_c(string, c);
         }
     }
