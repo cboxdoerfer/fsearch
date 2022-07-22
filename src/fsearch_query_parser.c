@@ -340,7 +340,7 @@ parse_date_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_fun
     time_t time_start = 0;
     time_t time_end = 0;
     if (fsearch_time_parse_interval(string->str, &time_start, &time_end, &end_ptr)) {
-        if (fsearch_string_starts_with_interval(end_ptr, &end_ptr)) {
+        if (fsearch_string_starts_with_date_interval(end_ptr, &end_ptr)) {
             if (end_ptr && *end_ptr == '\0') {
                 // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
                 comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
@@ -359,10 +359,10 @@ parse_date_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_fun
 }
 
 static FsearchQueryNode *
-parse_date_modified(FsearchQueryComparisonNewNodeFunc new_node_func,
-                    GString *string,
-                    FsearchQueryFlags flags,
-                    FsearchQueryNodeComparison comp_type) {
+parse_date(FsearchQueryComparisonNewNodeFunc new_node_func,
+           GString *string,
+           FsearchQueryFlags flags,
+           FsearchQueryNodeComparison comp_type) {
     char *end_ptr = NULL;
     time_t date = 0;
     time_t date_end = 0;
@@ -401,7 +401,7 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
                           flags,
                           "date-modified",
                           fsearch_query_node_new_date_modified,
-                          parse_date_modified,
+                          parse_date,
                           parse_date_with_optional_interval);
 }
 

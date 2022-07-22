@@ -7,6 +7,9 @@
 #include <time.h>
 
 typedef enum FsearchTimeIntervalType {
+    FSEARCH_TIME_INTERVAL_SECOND,
+    FSEARCH_TIME_INTERVAL_MINUTE,
+    FSEARCH_TIME_INTERVAL_HOUR,
     FSEARCH_TIME_INTERVAL_DAY,
     FSEARCH_TIME_INTERVAL_MONTH,
     FSEARCH_TIME_INTERVAL_YEAR,
@@ -54,14 +57,7 @@ FsearchTimeConstant month_constants[] = {
 
 static time_t
 get_unix_time_for_timezone(struct tm *tm) {
-    time_t res = timegm(tm);
-    if (res < 0) {
-        // tm refers to a point in time before 1970-01-01 00:00 UTC
-        // that's not a valid time
-        return -1;
-    }
-    // adjust for the timezone, but don't go below zero
-    return MAX(0, res + timezone);
+    return MAX(0, mktime(tm));
 }
 
 static int32_t
@@ -195,6 +191,62 @@ found_constant:
     return true;
 }
 
+static int
+cmp_int(int64_t i1, int64_t i2) {
+    if (i1 < i2) {
+        return -1;
+    }
+    else if (i1 > i2) {
+        return 1;
+    }
+    return 0;
+}
+
+static int
+cmp_tm(struct tm *tm1, struct tm *tm2, FsearchTimeIntervalType interval) {
+    g_assert(tm1);
+    g_assert(tm2);
+
+    int res = cmp_int(tm1->tm_year, tm2->tm_year);
+    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_YEAR) {
+        return res;
+    }
+    res = cmp_int(tm1->tm_mon, tm2->tm_mon);
+    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_MONTH) {
+        return res;
+    }
+    res = cmp_int(tm1->tm_mday, tm2->tm_mday);
+    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_DAY) {
+        return res;
+    }
+    res = cmp_int(tm1->tm_hour, tm2->tm_hour);
+    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_HOUR) {
+        return res;
+    }
+    res = cmp_int(tm1->tm_min, tm2->tm_min);
+    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_MINUTE) {
+        return res;
+    }
+    return cmp_int(tm1->tm_sec, tm2->tm_sec);
+}
+
+static void
+lower_clamp_tm(struct tm *tm_to_clamp, struct tm *tm_lower_bound) {
+    g_return_if_fail(tm_to_clamp);
+    g_return_if_fail(tm_lower_bound);
+
+    int cmp_res = cmp_tm(tm_to_clamp, tm_lower_bound, FSEARCH_TIME_INTERVAL_SECOND);
+    if (cmp_res >= 0) {
+        return;
+    }
+    tm_to_clamp->tm_year = tm_lower_bound->tm_year;
+    tm_to_clamp->tm_mon = tm_lower_bound->tm_mon;
+    tm_to_clamp->tm_mday = tm_lower_bound->tm_mday;
+    tm_to_clamp->tm_hour = tm_lower_bound->tm_hour;
+    tm_to_clamp->tm_min = tm_lower_bound->tm_min;
+    tm_to_clamp->tm_sec = tm_lower_bound->tm_sec;
+}
+
 bool
 fsearch_time_parse_interval(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
     if (parse_time_constants(str, time_start_out, time_end_out, end_ptr)) {
@@ -202,6 +254,12 @@ fsearch_time_parse_interval(const char *str, time_t *time_start_out, time_t *tim
     }
 
     FsearchTimeFormat formats[] = {
+        {"%Y-%m-%d %H:%M:%S", FSEARCH_TIME_INTERVAL_SECOND},
+        {"%y-%m-%d %H:%M:%S", FSEARCH_TIME_INTERVAL_SECOND},
+        {"%Y-%m-%d %H:%M", FSEARCH_TIME_INTERVAL_MINUTE},
+        {"%y-%m-%d %H:%M", FSEARCH_TIME_INTERVAL_MINUTE},
+        {"%Y-%m-%d %H", FSEARCH_TIME_INTERVAL_HOUR},
+        {"%y-%m-%d %H", FSEARCH_TIME_INTERVAL_HOUR},
         {"%Y-%m-%d", FSEARCH_TIME_INTERVAL_DAY},
         {"%y-%m-%d", FSEARCH_TIME_INTERVAL_DAY},
         {"%Y-%m", FSEARCH_TIME_INTERVAL_MONTH},
@@ -210,52 +268,81 @@ fsearch_time_parse_interval(const char *str, time_t *time_start_out, time_t *tim
         {"%y", FSEARCH_TIME_INTERVAL_YEAR},
     };
 
+    // Get a struct tm of timestamp 0
+    // This is used to determine if our parsed time would result in a timestamp < 0
+    time_t time_zero = 0;
+    struct tm *tm_zero = localtime(&time_zero);
+
     for (uint32_t i = 0; i < G_N_ELEMENTS(formats); ++i) {
         struct tm tm_start = {0};
+        tm_start.tm_mday = 1;
         char *date_suffix = strptime(str, formats[i].format, &tm_start);
         if (!date_suffix) {
             continue;
         }
-        g_print("Found date: %d\n", i);
-        tm_start.tm_sec = tm_start.tm_min = tm_start.tm_hour = 0;
-        tm_start.tm_isdst = 0;
+
+        if (tm_start.tm_year < tm_zero->tm_year) {
+            // Try again with a different format.
+            // This is necessary to handle cases like the following:
+            // dm:14 will be successfully parsed by %Y, with tm_year set to -1886
+            // But we want tm_year to be 2014, so we'll let the next format (%y) handle this case,
+            // which will parse the year as expect.
+            continue;
+        }
+
+        tm_start.tm_isdst = -1;
         struct tm tm_end = tm_start;
+
+        bool invalid_start_time = false;
+        bool invalid_end_time = false;
+
+        const int start_zero_cmp_result = cmp_tm(&tm_start, tm_zero, formats[i].dtime);
+        if (start_zero_cmp_result == 0) {
+            // make sure tm_start is not less than tm_zero
+            lower_clamp_tm(&tm_start, tm_zero);
+        }
+        else if (start_zero_cmp_result < 0) {
+            invalid_start_time = true;
+        }
 
         switch (formats[i].dtime) {
         case FSEARCH_TIME_INTERVAL_YEAR:
-            // start from first day and month of the parsed year
-            tm_start.tm_mday = 1;
-            tm_start.tm_mon = 0;
-            // end at the first day and month of the following year
-            tm_end.tm_mday = 1;
-            tm_end.tm_mon = 0;
             tm_end.tm_year++;
             break;
         case FSEARCH_TIME_INTERVAL_MONTH:
-            // start at the first day of the parse month
-            tm_start.tm_mday = 1;
-            // end at the first day of the following month
-            tm_end.tm_mday = 1;
             tm_end.tm_mon++;
             break;
         case FSEARCH_TIME_INTERVAL_DAY:
-            // start at 0:00 of the parsed day
-            // end at 0:00 of the following day
             tm_end.tm_mday++;
+            break;
+        case FSEARCH_TIME_INTERVAL_HOUR:
+            tm_end.tm_hour++;
+            break;
+        case FSEARCH_TIME_INTERVAL_MINUTE:
+            tm_end.tm_min++;
+            break;
+        case FSEARCH_TIME_INTERVAL_SECOND:
+            tm_end.tm_sec++;
             break;
         default:
             continue;
         }
+
+        const int end_zero_cmp_result = cmp_tm(&tm_end, tm_zero, formats[i].dtime);
+        if (end_zero_cmp_result == 0) {
+            lower_clamp_tm(&tm_end, tm_zero);
+        }
+        else if (end_zero_cmp_result < 0) {
+            invalid_end_time = true;
+        }
+
+        if (invalid_start_time && invalid_end_time) {
+            goto out;
+        }
+
         const time_t time_start = get_unix_time_for_timezone(&tm_start);
-        if (time_start < 0) {
-            // invalid start time, try different format
-            continue;
-        }
-        time_t time_end = get_unix_time_for_timezone(&tm_end);
-        if (time_end < 0) {
-            // invalid end time, set it to a reasonably large value
-            time_end = INT32_MAX;
-        }
+        const time_t time_end = get_unix_time_for_timezone(&tm_end);
+
         if (time_start_out) {
             *time_start_out = time_start;
         }
@@ -266,6 +353,14 @@ fsearch_time_parse_interval(const char *str, time_t *time_start_out, time_t *tim
             *end_ptr = date_suffix;
         }
         return true;
+    }
+
+out:
+    if (time_start_out) {
+        *time_start_out = 0;
+    }
+    if (time_end_out) {
+        *time_end_out = 0;
     }
     if (end_ptr) {
         *end_ptr = (char *)str;

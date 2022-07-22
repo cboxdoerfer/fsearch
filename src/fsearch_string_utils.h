@@ -51,3 +51,6 @@ fsearch_string_convert_wildcard_to_regex_expression(const char *str);
 // If no interval was detected end_ptr will point to str.
 bool
 fsearch_string_starts_with_interval(char *str, char **end_ptr);
+
+bool
+fsearch_string_starts_with_date_interval(char *str, char **end_ptr);
