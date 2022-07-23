@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-05-04 14:56+0200\n"
-"PO-Revision-Date: 2022-04-10 18:08+0000\n"
+"PO-Revision-Date: 2022-07-23 05:21+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
 "translations/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12-dev\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -84,6 +84,8 @@ msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr ""
+"Huomautus: Flatpakin hiekkalaatikon vuoksi FSearch ei löydä kaikkia "
+"järjestelmäsi tiedostoja."
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:35
 msgid "The default UI layout"
@@ -144,7 +146,6 @@ msgstr "Ladataan tiedostoja…"
 
 #: src/fsearch_database.c:1650 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
-#, fuzzy
 msgid "Sorting…"
 msgstr "Lajitellaan…"
 
@@ -194,7 +195,7 @@ msgstr "Videot"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "Makrojen nimet eivät saa sisältää `:`-merkkejä."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
 #: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
@@ -207,7 +208,7 @@ msgstr "_OK"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
 msgid "Edit filter"
-msgstr ""
+msgstr "Muokkaa suodatinta"
 
 #: src/fsearch_filter_editor.ui:50
 msgid "Name:"
@@ -215,35 +216,31 @@ msgstr "Nimi:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Tämän suodattimen yksilöllinen nimi"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Yksilöllinen suodattimen nimi"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Etsi polusta"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Ota säännölliset lausekkeet käyttöön"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Sama kirjainkoko"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Kysely:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Makro:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -254,7 +251,7 @@ msgstr ""
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr ""
+msgstr "Ominaisuudet…"
 
 #: src/fsearch_listview_popup.c:169
 msgid "Other Application…"
@@ -449,26 +446,20 @@ msgid "Match case when query contains at least one upper case character"
 msgstr "Sama kirjainkoko, kun kysely sisältää vähintään yhden ison kirjaimen"
 
 #: src/fsearch_preferences.ui:769
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Lisää kansioita"
+msgstr "Lisää uusi suodatin"
 
 #: src/fsearch_preferences.ui:785
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Poista valittu polku"
+msgstr "Poista valittu suodatin"
 
 #: src/fsearch_preferences.ui:801
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Valittujen tiedostojen määrä"
+msgstr "Muokkaa valittua suodatinta"
 
 #: src/fsearch_preferences.ui:815
 msgid "Restore default filters"
-msgstr ""
+msgstr "Palauta oletussuodattimet"
 
 #: src/fsearch_preferences.ui:847
 msgid "Filter:"
@@ -503,11 +494,12 @@ msgid "minute(s)"
 msgstr "minuutti(a)"
 
 #: src/fsearch_preferences.ui:1048
-#, fuzzy
 msgid ""
 "Add path to be included in database\n"
 "                                "
-msgstr "Lisää tietokantaan sisällytettävä polku"
+msgstr ""
+"Lisää tietokantaan sisällytettävä polku\n"
+"                                "
 
 #: src/fsearch_preferences.ui:1065 src/fsearch_preferences.ui:1164
 msgid "Remove selected path"
