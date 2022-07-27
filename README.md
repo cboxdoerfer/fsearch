@@ -65,8 +65,8 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 * Release Builds:
   <https://flathub.org/apps/details/io.github.cboxdoerfer.FSearch>
   
-### Snap (limited in functionality)
-* Development Builds: <https://snapcraft.io/fsearch>
+### Snap (limited in functionality, not recommended)
+* Release and Development Builds: <https://snapcraft.io/fsearch>
   
 
 ### NixOS (unofficial)
