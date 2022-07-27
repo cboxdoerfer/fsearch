@@ -10,50 +10,23 @@ typedef enum FsearchTimeIntervalType {
     FSEARCH_TIME_INTERVAL_SECOND,
     FSEARCH_TIME_INTERVAL_MINUTE,
     FSEARCH_TIME_INTERVAL_HOUR,
+    FSEARCH_TIME_INTERVAL_WEEK,
     FSEARCH_TIME_INTERVAL_DAY,
     FSEARCH_TIME_INTERVAL_MONTH,
     FSEARCH_TIME_INTERVAL_YEAR,
     NUM_FSEARCH_TIME_INTERVALS,
 } FsearchTimeIntervalType;
 
-typedef struct FsearchTimeFormat {
+typedef struct FsearchDateTimeFormat {
     const char *format;
     FsearchTimeIntervalType dtime;
-} FsearchTimeFormat;
+} FsearchDateTimeFormat;
 
-typedef struct FsearchTimeConstant {
+typedef struct FsearchDateConstant {
     const char *format;
     int32_t val;
-} FsearchTimeConstant;
-
-FsearchTimeConstant relative_day_constants[] = {
-    {"today", 0},
-    {"yesterday", 1},
-};
-
-FsearchTimeConstant weekday_constants[] = {
-    {"monday", 1},
-    {"mon", 1},
-    {"tuesday", 2},
-    {"tue", 2},
-    {"wednesday", 3},
-    {"wed", 3},
-    {"thursday", 4},
-    {"thu", 4},
-    {"friday", 5},
-    {"fri", 5},
-    {"saturday", 6},
-    {"sat", 6},
-    {"sunday", 7},
-    {"sun", 7},
-};
-
-FsearchTimeConstant month_constants[] = {
-    {"january", 1}, {"jan", 1},       {"february", 2}, {"feb", 2},       {"march", 3}, {"mar", 3},
-    {"april", 4},   {"apr", 4},       {"may", 5},      {"june", 6},      {"jun", 6},   {"july", 7},
-    {"jul", 7},     {"august", 8},    {"aug", 8},      {"september", 9}, {"sep", 9},   {"october", 10},
-    {"oct", 10},    {"november", 11}, {"nov", 11},     {"december", 12}, {"dec", 12},
-};
+    FsearchTimeIntervalType dtime;
+} FsearchDateConstant;
 
 static time_t
 get_unix_time_for_timezone(struct tm *tm) {
@@ -84,111 +57,341 @@ get_weekday_from_gdate(GDate *date) {
     return 0;
 }
 
+FsearchDateConstant date_constants[] = {
+    // relative to today
+    {"today", 0, FSEARCH_TIME_INTERVAL_DAY},
+    {"yesterday", 1, FSEARCH_TIME_INTERVAL_DAY},
+    // weekdays
+    {"monday", 1, FSEARCH_TIME_INTERVAL_WEEK},
+    {"mon", 1, FSEARCH_TIME_INTERVAL_WEEK},
+    {"tuesday", 2, FSEARCH_TIME_INTERVAL_WEEK},
+    {"tue", 2, FSEARCH_TIME_INTERVAL_WEEK},
+    {"wednesday", 3, FSEARCH_TIME_INTERVAL_WEEK},
+    {"wed", 3, FSEARCH_TIME_INTERVAL_WEEK},
+    {"thursday", 4, FSEARCH_TIME_INTERVAL_WEEK},
+    {"thu", 4, FSEARCH_TIME_INTERVAL_WEEK},
+    {"friday", 5, FSEARCH_TIME_INTERVAL_WEEK},
+    {"fri", 5, FSEARCH_TIME_INTERVAL_WEEK},
+    {"saturday", 6, FSEARCH_TIME_INTERVAL_WEEK},
+    {"sat", 6, FSEARCH_TIME_INTERVAL_WEEK},
+    {"sunday", 7, FSEARCH_TIME_INTERVAL_WEEK},
+    {"sun", 7, FSEARCH_TIME_INTERVAL_WEEK},
+    // months
+    {"january", 1, FSEARCH_TIME_INTERVAL_MONTH},
+    {"jan", 1, FSEARCH_TIME_INTERVAL_MONTH},
+    {"february", 2, FSEARCH_TIME_INTERVAL_MONTH},
+    {"feb", 2, FSEARCH_TIME_INTERVAL_MONTH},
+    {"march", 3, FSEARCH_TIME_INTERVAL_MONTH},
+    {"mar", 3, FSEARCH_TIME_INTERVAL_MONTH},
+    {"april", 4, FSEARCH_TIME_INTERVAL_MONTH},
+    {"apr", 4, FSEARCH_TIME_INTERVAL_MONTH},
+    {"may", 5, FSEARCH_TIME_INTERVAL_MONTH},
+    {"june", 6, FSEARCH_TIME_INTERVAL_MONTH},
+    {"jun", 6, FSEARCH_TIME_INTERVAL_MONTH},
+    {"july", 7, FSEARCH_TIME_INTERVAL_MONTH},
+    {"jul", 7, FSEARCH_TIME_INTERVAL_MONTH},
+    {"august", 8, FSEARCH_TIME_INTERVAL_MONTH},
+    {"aug", 8, FSEARCH_TIME_INTERVAL_MONTH},
+    {"september", 9, FSEARCH_TIME_INTERVAL_MONTH},
+    {"sep", 9, FSEARCH_TIME_INTERVAL_MONTH},
+    {"october", 10, FSEARCH_TIME_INTERVAL_MONTH},
+    {"oct", 10, FSEARCH_TIME_INTERVAL_MONTH},
+    {"november", 11, FSEARCH_TIME_INTERVAL_MONTH},
+    {"nov", 11, FSEARCH_TIME_INTERVAL_MONTH},
+    {"december", 12, FSEARCH_TIME_INTERVAL_MONTH},
+    {"dec", 12, FSEARCH_TIME_INTERVAL_MONTH},
+};
+
 static bool
-parse_relative_day_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
-    for (uint32_t i = 0; i < G_N_ELEMENTS(relative_day_constants); ++i) {
-        if (g_str_has_prefix(str, relative_day_constants[i].format)) {
+parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
+    const time_t t_now = time(NULL);
+    for (uint32_t i = 0; i < G_N_ELEMENTS(date_constants); ++i) {
+        if (g_str_has_prefix(str, date_constants[i].format)) {
             GDate *date = g_date_new();
-            g_date_set_time_t(date, time(NULL));
-            g_date_subtract_days(date, relative_day_constants[i].val);
-            g_date_to_struct_tm(date, start);
-            g_date_add_days(date, 1);
-            g_date_to_struct_tm(date, end);
+            g_date_set_time_t(date, t_now);
+
+            int32_t diff = 0;
+            switch (date_constants[i].dtime) {
+            case FSEARCH_TIME_INTERVAL_WEEK: {
+                // The amount of days which have passed since the requested weekday
+                diff = get_weekday_from_gdate(date) - date_constants[i].val;
+                if (diff < 0) {
+                    diff += 7;
+                }
+                g_date_subtract_days(date, diff);
+                g_date_to_struct_tm(date, start);
+
+                g_date_add_days(date, 1);
+                g_date_to_struct_tm(date, end);
+            } break;
+            case FSEARCH_TIME_INTERVAL_DAY:
+                g_date_subtract_days(date, date_constants[i].val);
+                g_date_to_struct_tm(date, start);
+
+                g_date_add_days(date, 1);
+                g_date_to_struct_tm(date, end);
+                break;
+            case FSEARCH_TIME_INTERVAL_MONTH:
+                g_date_subtract_days(date, date->day - 1);
+                // The amount of months which have passed since the requested month
+                diff = date->month - date_constants[i].val;
+                if (diff < 0) {
+                    diff += 12;
+                }
+                g_date_subtract_months(date, diff);
+                g_date_to_struct_tm(date, start);
+
+                g_date_add_months(date, 1);
+                g_date_to_struct_tm(date, end);
+                break;
+            default:
+                return false;
+            }
+
             g_clear_pointer(&date, g_date_free);
-            *end_ptr = (char *)(str + strlen(relative_day_constants[i].format));
+            *end_ptr = (char *)(str + strlen(date_constants[i].format));
             return true;
         }
     }
     return false;
 }
 
-static bool
-parse_weekday_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
-    for (uint32_t i = 0; i < G_N_ELEMENTS(weekday_constants); ++i) {
-        if (g_str_has_prefix(str, weekday_constants[i].format)) {
-            GDate *date = g_date_new();
-            g_date_set_time_t(date, time(NULL));
-            // The amount of days which have passed since the requested weekday
-            int32_t days_diff = get_weekday_from_gdate(date) - weekday_constants[i].val;
-            if (days_diff < 0) {
-                days_diff += 7;
-            }
-            g_date_subtract_days(date, days_diff);
-            g_date_to_struct_tm(date, start);
-            g_date_add_days(date, 1);
-            g_date_to_struct_tm(date, end);
-            g_clear_pointer(&date, g_date_free);
-            *end_ptr = (char *)(str + strlen(weekday_constants[i].format));
-            return true;
-        }
+static struct tm
+subtract_from_tm(struct tm tm, FsearchTimeIntervalType type, gint num) {
+    struct tm tm_res = tm;
+
+    mktime(&tm);
+
+    switch (type) {
+    case FSEARCH_TIME_INTERVAL_YEAR:
+        tm_res.tm_year -= num;
+        break;
+    case FSEARCH_TIME_INTERVAL_MONTH:
+        tm_res.tm_mon -= num;
+        break;
+    case FSEARCH_TIME_INTERVAL_WEEK:
+        tm_res.tm_mday -= 7 * num;
+        break;
+    case FSEARCH_TIME_INTERVAL_DAY:
+        tm_res.tm_mday -= num;
+        break;
+    case FSEARCH_TIME_INTERVAL_HOUR:
+        tm_res.tm_hour -= num;
+        break;
+    case FSEARCH_TIME_INTERVAL_MINUTE:
+        tm_res.tm_min -= num;
+        break;
+    default:
+        break;
     }
-    return false;
+
+    mktime(&tm_res);
+
+    return tm_res;
+}
+
+static struct tm
+round_down_tm(struct tm tm, FsearchTimeIntervalType type) {
+    struct tm tm_res = {};
+    tm_res.tm_mday = 1;
+    tm_res.tm_isdst = tm.tm_isdst;
+
+    mktime(&tm);
+
+    switch (type) {
+    case FSEARCH_TIME_INTERVAL_MINUTE:
+        tm_res.tm_min = tm.tm_min;
+    case FSEARCH_TIME_INTERVAL_HOUR:
+        tm_res.tm_hour = tm.tm_hour;
+    case FSEARCH_TIME_INTERVAL_DAY:
+        tm_res.tm_mday = tm.tm_mday;
+    case FSEARCH_TIME_INTERVAL_MONTH:
+        tm_res.tm_mon = tm.tm_mon;
+    case FSEARCH_TIME_INTERVAL_YEAR:
+        tm_res.tm_year = tm.tm_year;
+        break;
+    case FSEARCH_TIME_INTERVAL_WEEK:
+        // tm_wday starts with 0 for Sunday
+        // shift one to the left to have 0 start at Monday instead
+        tm_res.tm_mday = tm.tm_mday - (tm.tm_wday == 0 ? 6 : tm.tm_wday - 1);
+        tm_res.tm_mon = tm.tm_mon;
+        tm_res.tm_year = tm.tm_year;
+        break;
+    default:
+        break;
+    }
+
+    mktime(&tm_res);
+    return tm_res;
+}
+
+FsearchDateConstant num_constants[] = {
+    {"one", 1},
+    {"two", 2},
+    {"three", 3},
+    {"four", 4},
+    {"five", 5},
+    {"six", 6},
+    {"seven", 7},
+    {"eight", 8},
+    {"nine", 9},
+    {"ten", 10},
+    {"dozen", 12},
+    {"hundred", 100},
+};
+
+enum {
+    // when it's 14 August, then ...
+    FSEARCH_DATE_REFERS_TO_PAST_FINAL, // "last month" means July (1-31)
+    FSEARCH_DATE_REFERS_TO_PAST,       // "past month" means 14 July - 14 August
+    FSEARCH_DATE_REFERS_TO_NOW,        // "this month" means August (1-14)
+};
+
+FsearchDateConstant prefix_constants[] = {
+    {"last", FSEARCH_DATE_REFERS_TO_PAST_FINAL},
+    {"inthelast", FSEARCH_DATE_REFERS_TO_PAST_FINAL},
+    {"past", FSEARCH_DATE_REFERS_TO_PAST},
+    {"previous", FSEARCH_DATE_REFERS_TO_PAST_FINAL},
+    {"prev", FSEARCH_DATE_REFERS_TO_PAST_FINAL},
+    {"this", FSEARCH_DATE_REFERS_TO_NOW},
+};
+
+FsearchDateTimeFormat suffix_singular_constants[] = {
+    {"year", FSEARCH_TIME_INTERVAL_YEAR},
+    {"month", FSEARCH_TIME_INTERVAL_MONTH},
+    {"week", FSEARCH_TIME_INTERVAL_WEEK},
+    {"day", FSEARCH_TIME_INTERVAL_DAY},
+    {"hour", FSEARCH_TIME_INTERVAL_HOUR},
+    {"minute", FSEARCH_TIME_INTERVAL_MINUTE},
+    {"second", FSEARCH_TIME_INTERVAL_SECOND},
+};
+
+FsearchDateTimeFormat suffix_plural_constants[] = {
+    {"years", FSEARCH_TIME_INTERVAL_YEAR},
+    {"months", FSEARCH_TIME_INTERVAL_MONTH},
+    {"weeks", FSEARCH_TIME_INTERVAL_WEEK},
+    {"days", FSEARCH_TIME_INTERVAL_DAY},
+    {"hours", FSEARCH_TIME_INTERVAL_HOUR},
+    {"minutes", FSEARCH_TIME_INTERVAL_MINUTE},
+    {"seconds", FSEARCH_TIME_INTERVAL_SECOND},
+};
+
+static void
+print_tm(struct tm *tm) {
+    if (!tm) {
+        return;
+    }
+    g_print("%04d/%02d/%02d %02d:%02d:%02d (%d)\n",
+            tm->tm_year + 1900,
+            tm->tm_mon,
+            tm->tm_mday,
+            tm->tm_hour,
+            tm->tm_min,
+            tm->tm_sec,
+            tm->tm_isdst);
 }
 
 static bool
-parse_month_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
-    for (uint32_t i = 0; i < G_N_ELEMENTS(month_constants); ++i) {
-        if (g_str_has_prefix(str, month_constants[i].format)) {
-            GDate *date = g_date_new();
-            g_date_set_time_t(date, time(NULL));
-            g_date_subtract_days(date, date->day - 1);
-            // The amount of months which have passed since the requested month
-            int32_t months_diff = date->month - month_constants[i].val;
-            if (months_diff < 0) {
-                months_diff += 12;
-            }
-            g_date_subtract_months(date, months_diff);
-            g_date_to_struct_tm(date, start);
-            g_date_add_months(date, 1);
-            g_date_to_struct_tm(date, end);
-            g_clear_pointer(&date, g_date_free);
-            *end_ptr = (char *)(str + strlen(month_constants[i].format));
-            return true;
+parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
+    g_assert(start);
+    g_assert(end);
+
+    const char *s = str;
+    int32_t date_type = FSEARCH_DATE_REFERS_TO_PAST;
+
+    // Check if there's a prefix (e.g. last, this)
+    for (uint32_t i = 0; i < G_N_ELEMENTS(prefix_constants); ++i) {
+        if (g_str_has_prefix(s, prefix_constants[i].format)) {
+            date_type = prefix_constants[i].val;
+            s += strlen(prefix_constants[i].format);
         }
+    }
+
+    // Check if there's a number
+    FsearchTimeIntervalType type = NUM_FSEARCH_TIME_INTERVALS;
+    int64_t num = 1;
+    if (date_type != FSEARCH_DATE_REFERS_TO_NOW) {
+        char *end_of_num = (char *)s;
+        num = strtoll(s, &end_of_num, 10);
+        if (end_of_num == s) {
+            num = 1;
+            for (uint32_t i = 0; i < G_N_ELEMENTS(num_constants); ++i) {
+                if (g_str_has_prefix(s, num_constants[i].format)) {
+                    num = num_constants[i].val;
+                    end_of_num += strlen(num_constants[i].format);
+                }
+            }
+        }
+        s = end_of_num;
+    }
+
+    if (num > 1) {
+        for (uint32_t i = 0; i < G_N_ELEMENTS(suffix_plural_constants); ++i) {
+            if (g_str_has_prefix(s, suffix_plural_constants[i].format)) {
+                type = suffix_plural_constants[i].dtime;
+                s += strlen(suffix_plural_constants[i].format);
+            }
+        }
+    }
+    else if (num == 1) {
+        for (uint32_t i = 0; i < G_N_ELEMENTS(suffix_singular_constants); ++i) {
+            if (g_str_has_prefix(s, suffix_singular_constants[i].format)) {
+                type = suffix_singular_constants[i].dtime;
+                s += strlen(suffix_singular_constants[i].format);
+            }
+        }
+    }
+    else {
+        return false;
+    }
+
+    if (type != NUM_FSEARCH_TIME_INTERVALS) {
+        const time_t t_now = time(NULL);
+        struct tm tm_now = *localtime(&t_now);
+
+        struct tm tm_start = {};
+        struct tm tm_end = {};
+
+        if (date_type == FSEARCH_DATE_REFERS_TO_NOW) {
+            // this...
+            tm_start = round_down_tm(tm_now, type);
+            tm_end = tm_now;
+        }
+        else {
+            if (date_type == FSEARCH_DATE_REFERS_TO_PAST_FINAL) {
+                tm_end = round_down_tm(tm_now, type);
+            }
+            else {
+                tm_end = tm_now;
+            }
+            tm_start = subtract_from_tm(tm_end, type, (gint)num);
+        }
+
+        *start = tm_start;
+        *end = tm_end;
+
+        *end_ptr = (char *)s;
+        return true;
     }
     return false;
 }
 
 static bool
 parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
-    const time_t t = time(NULL);
-    struct tm tm_start = *localtime(&t);
-    struct tm tm_end = tm_start;
+    struct tm tm_start = {};
+    struct tm tm_end = {};
 
-    time_t time_start = 0;
-    time_t time_end = 0;
-
-    if (parse_relative_day_constants(str, &tm_start, &tm_end, end_ptr)) {
-        goto found_constant;
+    if (parse_explicit_date_constants(str, &tm_start, &tm_end, end_ptr)
+        || parse_implicit_date_constants(str, &tm_start, &tm_end, end_ptr)) {
+        if (time_start_out) {
+            *time_start_out = get_unix_time_for_timezone(&tm_start);
+        }
+        if (time_end_out) {
+            *time_end_out = get_unix_time_for_timezone(&tm_end);
+        }
+        return true;
     }
-    else if (parse_weekday_constants(str, &tm_start, &tm_end, end_ptr)) {
-        goto found_constant;
-    }
-    else if (parse_month_constants(str, &tm_start, &tm_end, end_ptr)) {
-        goto found_constant;
-    }
-    else {
-        return false;
-    }
-
-found_constant:
-    time_start = get_unix_time_for_timezone(&tm_start);
-    if (time_start < 0) {
-        return false;
-    }
-
-    time_end = get_unix_time_for_timezone(&tm_end);
-    if (time_end < 0) {
-        return false;
-    }
-
-    if (time_start_out) {
-        *time_start_out = time_start;
-    }
-    if (time_end_out) {
-        *time_end_out = time_end;
-    }
-    return true;
+    return false;
 }
 
 static int
@@ -248,12 +451,12 @@ lower_clamp_tm(struct tm *tm_to_clamp, struct tm *tm_lower_bound) {
 }
 
 bool
-fsearch_time_parse_interval(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
+fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
     if (parse_time_constants(str, time_start_out, time_end_out, end_ptr)) {
         return true;
     }
 
-    FsearchTimeFormat formats[] = {
+    FsearchDateTimeFormat formats[] = {
         {"%Y-%m-%d %H:%M:%S", FSEARCH_TIME_INTERVAL_SECOND},
         {"%y-%m-%d %H:%M:%S", FSEARCH_TIME_INTERVAL_SECOND},
         {"%Y-%m-%d %H:%M", FSEARCH_TIME_INTERVAL_MINUTE},
@@ -340,14 +543,11 @@ fsearch_time_parse_interval(const char *str, time_t *time_start_out, time_t *tim
             goto out;
         }
 
-        const time_t time_start = get_unix_time_for_timezone(&tm_start);
-        const time_t time_end = get_unix_time_for_timezone(&tm_end);
-
         if (time_start_out) {
-            *time_start_out = time_start;
+            *time_start_out = get_unix_time_for_timezone(&tm_start);
         }
         if (time_end_out) {
-            *time_end_out = time_end;
+            *time_end_out = get_unix_time_for_timezone(&tm_end);
         }
         if (end_ptr) {
             *end_ptr = date_suffix;
