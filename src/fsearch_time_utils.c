@@ -24,7 +24,7 @@ typedef struct FsearchDateConstant {
 } FsearchDateConstant;
 
 static time_t
-get_unix_time_for_timezone(struct tm *tm) {
+get_unix_time_from_tm(struct tm *tm) {
     return MAX(0, mktime(tm));
 }
 
@@ -379,10 +379,10 @@ parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_o
     if (parse_explicit_date_constants(str, &tm_start, &tm_end, end_ptr)
         || parse_implicit_date_constants(str, &tm_start, &tm_end, end_ptr)) {
         if (time_start_out) {
-            *time_start_out = get_unix_time_for_timezone(&tm_start);
+            *time_start_out = get_unix_time_from_tm(&tm_start);
         }
         if (time_end_out) {
-            *time_end_out = get_unix_time_for_timezone(&tm_end);
+            *time_end_out = get_unix_time_from_tm(&tm_end);
         }
         return true;
     }
@@ -539,10 +539,10 @@ fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t
         }
 
         if (time_start_out) {
-            *time_start_out = get_unix_time_for_timezone(&tm_start);
+            *time_start_out = get_unix_time_from_tm(&tm_start);
         }
         if (time_end_out) {
-            *time_end_out = get_unix_time_for_timezone(&tm_end);
+            *time_end_out = get_unix_time_from_tm(&tm_end);
         }
         if (end_ptr) {
             *end_ptr = date_suffix;
