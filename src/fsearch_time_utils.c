@@ -17,11 +17,6 @@ typedef enum FsearchTimeIntervalType {
     NUM_FSEARCH_TIME_INTERVALS,
 } FsearchTimeIntervalType;
 
-typedef struct FsearchDateTimeFormat {
-    const char *format;
-    FsearchTimeIntervalType dtime;
-} FsearchDateTimeFormat;
-
 typedef struct FsearchDateConstant {
     const char *format;
     int32_t val;
@@ -256,24 +251,24 @@ FsearchDateConstant prefix_constants[] = {
     {"this", FSEARCH_DATE_REFERS_TO_NOW},
 };
 
-FsearchDateTimeFormat suffix_singular_constants[] = {
-    {"year", FSEARCH_TIME_INTERVAL_YEAR},
-    {"month", FSEARCH_TIME_INTERVAL_MONTH},
-    {"week", FSEARCH_TIME_INTERVAL_WEEK},
-    {"day", FSEARCH_TIME_INTERVAL_DAY},
-    {"hour", FSEARCH_TIME_INTERVAL_HOUR},
-    {"minute", FSEARCH_TIME_INTERVAL_MINUTE},
-    {"second", FSEARCH_TIME_INTERVAL_SECOND},
+FsearchDateConstant suffix_singular_constants[] = {
+    {"year", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
+    {"month", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
+    {"week", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
+    {"day", .dtime = FSEARCH_TIME_INTERVAL_DAY},
+    {"hour", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
+    {"minute", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"second", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
 };
 
-FsearchDateTimeFormat suffix_plural_constants[] = {
-    {"years", FSEARCH_TIME_INTERVAL_YEAR},
-    {"months", FSEARCH_TIME_INTERVAL_MONTH},
-    {"weeks", FSEARCH_TIME_INTERVAL_WEEK},
-    {"days", FSEARCH_TIME_INTERVAL_DAY},
-    {"hours", FSEARCH_TIME_INTERVAL_HOUR},
-    {"minutes", FSEARCH_TIME_INTERVAL_MINUTE},
-    {"seconds", FSEARCH_TIME_INTERVAL_SECOND},
+FsearchDateConstant suffix_plural_constants[] = {
+    {"years", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
+    {"months", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
+    {"weeks", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
+    {"days", .dtime = FSEARCH_TIME_INTERVAL_DAY},
+    {"hours", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
+    {"minutes", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"seconds", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
 };
 
 static void
@@ -456,19 +451,19 @@ fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t
         return true;
     }
 
-    FsearchDateTimeFormat formats[] = {
-        {"%Y-%m-%d %H:%M:%S", FSEARCH_TIME_INTERVAL_SECOND},
-        {"%y-%m-%d %H:%M:%S", FSEARCH_TIME_INTERVAL_SECOND},
-        {"%Y-%m-%d %H:%M", FSEARCH_TIME_INTERVAL_MINUTE},
-        {"%y-%m-%d %H:%M", FSEARCH_TIME_INTERVAL_MINUTE},
-        {"%Y-%m-%d %H", FSEARCH_TIME_INTERVAL_HOUR},
-        {"%y-%m-%d %H", FSEARCH_TIME_INTERVAL_HOUR},
-        {"%Y-%m-%d", FSEARCH_TIME_INTERVAL_DAY},
-        {"%y-%m-%d", FSEARCH_TIME_INTERVAL_DAY},
-        {"%Y-%m", FSEARCH_TIME_INTERVAL_MONTH},
-        {"%y-%m", FSEARCH_TIME_INTERVAL_MONTH},
-        {"%Y", FSEARCH_TIME_INTERVAL_YEAR},
-        {"%y", FSEARCH_TIME_INTERVAL_YEAR},
+    FsearchDateConstant formats[] = {
+        {"%Y-%m-%d %H:%M:%S", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
+        {"%y-%m-%d %H:%M:%S", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
+        {"%Y-%m-%d %H:%M", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+        {"%y-%m-%d %H:%M", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+        {"%Y-%m-%d %H", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
+        {"%y-%m-%d %H", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
+        {"%Y-%m-%d", .dtime = FSEARCH_TIME_INTERVAL_DAY},
+        {"%y-%m-%d", .dtime = FSEARCH_TIME_INTERVAL_DAY},
+        {"%Y-%m", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
+        {"%y-%m", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
+        {"%Y", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
+        {"%y", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
     };
 
     // Get a struct tm of timestamp 0
