@@ -98,10 +98,10 @@ FsearchDateConstant date_constants[] = {
 };
 
 static bool
-parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
+parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end) {
     const time_t t_now = time(NULL);
     for (uint32_t i = 0; i < G_N_ELEMENTS(date_constants); ++i) {
-        if (g_str_has_prefix(str, date_constants[i].format)) {
+        if (g_strcmp0(str, date_constants[i].format) == 0) {
             GDate *date = g_date_new();
             g_date_set_time_t(date, t_now);
 
@@ -140,11 +140,10 @@ parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end,
                 g_date_to_struct_tm(date, end);
                 break;
             default:
-                return false;
+                break;
             }
 
             g_clear_pointer(&date, g_date_free);
-            *end_ptr = (char *)(str + strlen(date_constants[i].format));
             return true;
         }
     }
@@ -257,7 +256,7 @@ FsearchDateConstant suffix_singular_constants[] = {
     {"week", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
     {"day", .dtime = FSEARCH_TIME_INTERVAL_DAY},
     {"hour", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-    {"minute", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"minuet", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
     {"second", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
 };
 
@@ -267,7 +266,7 @@ FsearchDateConstant suffix_plural_constants[] = {
     {"weeks", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
     {"days", .dtime = FSEARCH_TIME_INTERVAL_DAY},
     {"hours", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-    {"minutes", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"minuets", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
     {"seconds", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
 };
 
@@ -287,7 +286,7 @@ print_tm(struct tm *tm) {
 }
 
 static bool
-parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end, char **end_ptr) {
+parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end) {
     g_assert(start);
     g_assert(end);
 
@@ -322,17 +321,15 @@ parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end,
 
     if (num > 1) {
         for (uint32_t i = 0; i < G_N_ELEMENTS(suffix_plural_constants); ++i) {
-            if (g_str_has_prefix(s, suffix_plural_constants[i].format)) {
+            if (g_strcmp0(s, suffix_plural_constants[i].format) == 0) {
                 type = suffix_plural_constants[i].dtime;
-                s += strlen(suffix_plural_constants[i].format);
             }
         }
     }
     else if (num == 1) {
         for (uint32_t i = 0; i < G_N_ELEMENTS(suffix_singular_constants); ++i) {
-            if (g_str_has_prefix(s, suffix_singular_constants[i].format)) {
+            if (g_strcmp0(s, suffix_singular_constants[i].format) == 0) {
                 type = suffix_singular_constants[i].dtime;
-                s += strlen(suffix_singular_constants[i].format);
             }
         }
     }
@@ -365,19 +362,17 @@ parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end,
         *start = tm_start;
         *end = tm_end;
 
-        *end_ptr = (char *)s;
         return true;
     }
     return false;
 }
 
 static bool
-parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
+parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_out) {
     struct tm tm_start = {};
     struct tm tm_end = {};
 
-    if (parse_explicit_date_constants(str, &tm_start, &tm_end, end_ptr)
-        || parse_implicit_date_constants(str, &tm_start, &tm_end, end_ptr)) {
+    if (parse_explicit_date_constants(str, &tm_start, &tm_end) || parse_implicit_date_constants(str, &tm_start, &tm_end)) {
         if (time_start_out) {
             *time_start_out = get_unix_time_from_tm(&tm_start);
         }
@@ -446,8 +441,8 @@ lower_clamp_tm(struct tm *tm_to_clamp, struct tm *tm_lower_bound) {
 }
 
 bool
-fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t *time_end_out, char **end_ptr) {
-    if (parse_time_constants(str, time_start_out, time_end_out, end_ptr)) {
+fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t *time_end_out) {
+    if (parse_time_constants(str, time_start_out, time_end_out)) {
         return true;
     }
 
@@ -475,7 +470,7 @@ fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t
         struct tm tm_start = {0};
         tm_start.tm_mday = 1;
         char *date_suffix = strptime(str, formats[i].format, &tm_start);
-        if (!date_suffix) {
+        if (!date_suffix || date_suffix[0] != '\0') {
             continue;
         }
 
@@ -544,9 +539,6 @@ fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t
         if (time_end_out) {
             *time_end_out = get_unix_time_from_tm(&tm_end);
         }
-        if (end_ptr) {
-            *end_ptr = date_suffix;
-        }
         return true;
     }
 
@@ -556,9 +548,6 @@ out:
     }
     if (time_end_out) {
         *time_end_out = 0;
-    }
-    if (end_ptr) {
-        *end_ptr = (char *)str;
     }
     return false;
 }

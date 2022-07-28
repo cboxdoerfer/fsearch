@@ -336,26 +336,51 @@ parse_date_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_fun
                                   GString *string,
                                   FsearchQueryFlags flags,
                                   FsearchQueryNodeComparison comp_type) {
-    char *end_ptr = NULL;
     time_t time_start = 0;
     time_t time_end = 0;
-    if (fsearch_date_time_parse_interval(string->str, &time_start, &time_end, &end_ptr)) {
-        if (fsearch_string_starts_with_date_interval(end_ptr, &end_ptr)) {
-            if (end_ptr && *end_ptr == '\0') {
-                // interpret size:SIZE.. or size:SIZE- with a missing upper bound as size:>=SIZE
-                comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
-            }
-            else if (fsearch_date_time_parse_interval(end_ptr, NULL, &time_end, &end_ptr)) {
-                comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
-            }
-        }
-        else {
+
+    char **dates = g_strsplit(string->str, "..", 2);
+    if (!dates || !dates[0]) {
+        goto fail;
+    }
+
+    if (fsearch_string_is_empty(dates[0])) {
+        // query starts with ..
+        // e.g. dm:..january
+        time_start = 0;
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
+    }
+    else {
+        if (fsearch_date_time_parse_interval(dates[0], &time_start, &time_end)) {
             comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
         }
-        if (end_ptr && *end_ptr == '\0') {
-            return new_node_func(flags, time_start, time_end, comp_type);
+        else {
+            goto fail;
         }
     }
+
+    if (dates[1]) {
+        if (fsearch_string_is_empty(dates[1])) {
+            // query ends with ..
+            // e.g. dm:january..
+            time_end = INT32_MAX;
+            comp_type = FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ;
+        }
+        else {
+            if (fsearch_date_time_parse_interval(dates[1], NULL, &time_end)) {
+                comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
+            }
+            else {
+                goto fail;
+            }
+        }
+    }
+
+    g_clear_pointer(&dates, g_strfreev);
+    return new_node_func(flags, time_start, time_end, comp_type);
+
+fail:
+    g_clear_pointer(&dates, g_strfreev);
     g_debug("[date-modified:] invalid argument: %s", string->str);
     return fsearch_query_node_new_match_nothing();
 }
@@ -365,10 +390,9 @@ parse_date(FsearchQueryComparisonNewNodeFunc new_node_func,
            GString *string,
            FsearchQueryFlags flags,
            FsearchQueryNodeComparison comp_type) {
-    char *end_ptr = NULL;
     time_t date = 0;
     time_t date_end = 0;
-    if (fsearch_date_time_parse_interval(string->str, &date, &date_end, &end_ptr)) {
+    if (fsearch_date_time_parse_interval(string->str, &date, &date_end)) {
         time_t dm_start = date;
         time_t dm_end = date_end;
         switch (comp_type) {
@@ -390,9 +414,7 @@ parse_date(FsearchQueryComparisonNewNodeFunc new_node_func,
             break;
         }
 
-        if (end_ptr && *end_ptr == '\0') {
-            return new_node_func(flags, dm_start, dm_end, comp_type);
-        }
+        return new_node_func(flags, dm_start, dm_end, comp_type);
     }
     g_debug("[date:] invalid argument: %s", string->str);
     return fsearch_query_node_new_match_nothing();
@@ -813,7 +835,8 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
                 }
             }
             else {
-                g_debug("[infix-postfix] closing bracket found without a corresponding open bracket, abort parsing!\n");
+                g_debug("[infix-postfix] closing bracket found without a corresponding open bracket, abort "
+                        "parsing!\n");
                 g_list_free_full(g_steal_pointer(&res), (GDestroyNotify)fsearch_query_node_free);
                 return new_list(fsearch_query_node_new_match_nothing());
             }

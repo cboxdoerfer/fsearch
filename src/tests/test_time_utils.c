@@ -29,11 +29,11 @@ test_parse_time_interval(void) {
         time_t time_start = 0;
         time_t time_end = 0;
         char *end_ptr = NULL;
-        gboolean res = fsearch_date_time_parse_interval(ctx->string, &time_start, &time_end, &end_ptr);
+        gboolean res = fsearch_date_time_parse_interval(ctx->string, &time_start, &time_end);
         g_assert_true(res == ctx->expected_success);
         // g_assert_cmpint(time_start, ==, ctx->expected_time_start);
         // g_assert_cmpint(time_end, ==, ctx->expected_time_end);
-        g_assert_cmpstr(end_ptr, ==, ctx->string + ctx->expected_end_idx);
+        // g_assert_cmpstr(end_ptr, ==, ctx->string + ctx->expected_end_idx);
     }
 }
 
