@@ -200,9 +200,11 @@ parse_integer(const char *str, int64_t *num_out, int64_t *num_2_out) {
     char *num_suffix = NULL;
     int64_t num = strtoll(str, &num_suffix, 10);
     if (num_suffix == str) {
+        // Failed to parse a number
         return false;
     }
     if (num_suffix && num_suffix[0] != '\0') {
+        // We don't accept numbers followed by non-digit characters
         return false;
     }
     if (num_out) {
@@ -222,6 +224,7 @@ parse_numeric_field(FsearchQueryParseContext *parse_ctx,
                     FsearchQueryComparisonNewNodeFunc new_node_func,
                     FsearchQueryIntegerParserFunc parse_value_func) {
     if (is_empty_field) {
+        // we want to match every entry for an empty numeric field
         return NULL;
     }
     g_autoptr(GString) token_value = NULL;
@@ -321,6 +324,7 @@ parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_fie
 static GList *
 parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     if (is_empty_field) {
+        // an empty field means that we want to match all files which lack file extensions
         return new_list(fsearch_query_node_new_extension(NULL, flags));
     }
 
@@ -348,6 +352,7 @@ static GList *
 parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     FsearchQueryFlags parent_flags = flags | QUERY_FLAG_EXACT_MATCH;
     if (is_empty_field) {
+        // an empty field means that we want to match all entries without a parent
         return new_list(fsearch_query_node_new_parent("", parent_flags));
     }
 
@@ -434,6 +439,8 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
         if (strcmp(name->str, filter->macro) != 0) {
             continue;
         }
+
+        // Make sure that macros don't call themselves, which would end up in an endless loop
         if (g_queue_find(parse_ctx->macro_stack, filter)) {
             g_debug("[expand_filter_macros] nested macro detected. Stop parsing of macro.");
             break;
@@ -443,6 +450,7 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
             break;
         }
 
+        // Apply the filter flags
         if (filter->flags & QUERY_FLAG_SEARCH_IN_PATH) {
             flags |= QUERY_FLAG_SEARCH_IN_PATH;
         }
@@ -454,8 +462,13 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
         }
 
         g_queue_push_tail(parse_ctx->macro_stack, filter);
+
+        // The process of parsing macros gets its own lexer and operator stack
+        // to make sure that they're not affected by the current parsing state
+        // and vice versa
         GQueue *main_operator_stack = parse_ctx->operator_stack;
         FsearchQueryLexer *main_lexer = parse_ctx->lexer;
+
         parse_ctx->lexer = fsearch_query_lexer_new(filter->query);
         parse_ctx->operator_stack = g_queue_new();
         res = fsearch_query_parser_parse_expression(parse_ctx, false, flags);
@@ -464,6 +477,7 @@ parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQ
         }
         g_clear_pointer(&parse_ctx->lexer, fsearch_query_lexer_free);
         g_clear_pointer(&parse_ctx->operator_stack, g_queue_free);
+
         parse_ctx->operator_stack = main_operator_stack;
         parse_ctx->lexer = main_lexer;
         g_queue_pop_tail(parse_ctx->macro_stack);
