@@ -352,7 +352,9 @@ parse_date_with_optional_interval(FsearchQueryComparisonNewNodeFunc new_node_fun
         else {
             comp_type = FSEARCH_QUERY_NODE_COMPARISON_INTERVAL;
         }
-        return new_node_func(flags, time_start, time_end, comp_type);
+        if (end_ptr && *end_ptr == '\0') {
+            return new_node_func(flags, time_start, time_end, comp_type);
+        }
     }
     g_debug("[date-modified:] invalid argument: %s", string->str);
     return fsearch_query_node_new_match_nothing();
@@ -388,7 +390,9 @@ parse_date(FsearchQueryComparisonNewNodeFunc new_node_func,
             break;
         }
 
-        return new_node_func(flags, dm_start, dm_end, comp_type);
+        if (end_ptr && *end_ptr == '\0') {
+            return new_node_func(flags, dm_start, dm_end, comp_type);
+        }
     }
     g_debug("[date:] invalid argument: %s", string->str);
     return fsearch_query_node_new_match_nothing();
