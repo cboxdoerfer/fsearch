@@ -11,10 +11,6 @@ typedef FsearchQueryNode *(FsearchQueryComparisonNewNodeFunc)(FsearchQueryFlags,
                                                               int64_t,
                                                               int64_t,
                                                               FsearchQueryNodeComparison);
-typedef FsearchQueryNode *(FsearchQueryComparisonParserFunc)(FsearchQueryComparisonNewNodeFunc,
-                                                             GString *,
-                                                             FsearchQueryFlags,
-                                                             FsearchQueryNodeComparison);
 typedef bool(FsearchQueryIntegerParserFunc)(const char *, int64_t *, int64_t *);
 
 static GList *
