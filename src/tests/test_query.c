@@ -154,8 +154,7 @@ test_main(void) {
 
             // fields
             {"size:300..", "test", 1000, 0, true},
-            {"size:300-", "test", 1000, 0, true},
-            {"size:300-", "test", 200, 0, false},
+            {"size:300..", "test", 200, 0, false},
             {"size:>300", "test", 301, 0, true},
             {"size:>300", "test", 300, 0, false},
             {"size:>=300", "test", 300, 0, true},
@@ -164,8 +163,8 @@ test_main(void) {
             {"size:>300 size:<400", "test", 450, 0, false},
             {"size:>1MB", "test", 1000001, 0, true},
             {"size:>1MB", "test", 1000000, 0, false},
-            {"size:abc", "test", 1000000, 0, true},
-            {"size:abc test", "test", 1000000, 0, true},
+            {"size:abc", "test", 1000000, 0, false},
+            {"size:abc test", "test", 1000000, 0, false},
             {"size:abc abc", "test", 1000000, 0, false},
 
             {"regex:suffix$", "suffix prefix", 0, 0, false},

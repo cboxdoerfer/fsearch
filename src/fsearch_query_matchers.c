@@ -55,7 +55,7 @@ cmp_num(int64_t num, FsearchQueryNode *node) {
         return num >= node->num_start;
     case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
         return num <= node->num_start;
-    case FSEARCH_QUERY_NODE_COMPARISON_INTERVAL:
+    case FSEARCH_QUERY_NODE_COMPARISON_RANGE:
         return node->num_start <= num && num < node->num_end;
     default:
         return 0;

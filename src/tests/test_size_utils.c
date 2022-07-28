@@ -28,7 +28,7 @@ test_parse_size(void) {
         {"mb", FALSE, 0, 0, 0},
         {"0m", TRUE, 0, pmb, 2},
         {"100", TRUE, 100, 0, 3},
-        {"100abc", TRUE, 100, 0, 3},
+        {"100abc", FALSE, 100, 0, 3},
         {"100k", TRUE, 100 * fkb, pkb, 4},
         {"100K", TRUE, 100 * fkb, pkb, 4},
         {"12mb", TRUE, 12 * fmb, pmb, 4},
@@ -44,11 +44,14 @@ test_parse_size(void) {
         int64_t size = 0;
         int64_t plus = 0;
         char *end_ptr = NULL;
-        gboolean res = fsearch_size_parse(ctx->string, &size, &plus, &end_ptr);
+        g_print("%s\n", ctx->string);
+        gboolean res = fsearch_size_parse(ctx->string, &size, &plus);
         g_assert_true(res == ctx->expected_success);
-        g_assert_cmpint(size, ==, ctx->expected_size);
-        g_assert_cmpint(plus, ==, ctx->expected_plus);
-        g_assert_cmpstr(end_ptr, ==, ctx->string + ctx->expected_end_idx);
+        if (res == TRUE) {
+            g_assert_cmpint(size, ==, ctx->expected_size);
+            g_assert_cmpint(plus, ==, ctx->expected_size + ctx->expected_plus);
+        }
+        // g_assert_cmpstr(end_ptr, ==, ctx->string + ctx->expected_end_idx);
     }
 }
 
