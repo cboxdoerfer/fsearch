@@ -256,7 +256,9 @@ FsearchDateConstant suffix_singular_constants[] = {
     {"week", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
     {"day", .dtime = FSEARCH_TIME_INTERVAL_DAY},
     {"hour", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-    {"minuet", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"min", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"minute", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"sec", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
     {"second", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
 };
 
@@ -266,7 +268,9 @@ FsearchDateConstant suffix_plural_constants[] = {
     {"weeks", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
     {"days", .dtime = FSEARCH_TIME_INTERVAL_DAY},
     {"hours", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-    {"minuets", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"min", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"minutes", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
+    {"sec", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
     {"seconds", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
 };
 

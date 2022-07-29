@@ -30,7 +30,8 @@ test_parse_time_interval(void) {
         {"inthelastday", TRUE, -1, -1},
         {"4months", TRUE, -1, -1},
         {"4month", FALSE, -1, -1},
-        {"3minuets", TRUE, -1, -1},
+        {"3min", TRUE, -1, -1},
+        {"3minutes", TRUE, -1, -1},
 
         {"2022", TRUE, 1640991600, 1672527600},
         {"22", TRUE, 1640991600, 1672527600},
