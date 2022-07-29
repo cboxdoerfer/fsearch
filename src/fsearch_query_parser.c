@@ -225,7 +225,7 @@ parse_numeric_field(FsearchQueryParseContext *parse_ctx,
                     FsearchQueryIntegerParserFunc parse_value_func) {
     if (is_empty_field) {
         // we want to match every entry for an empty numeric field
-        return NULL;
+        return new_list(fsearch_query_node_new_match_everything(flags));
     }
     g_autoptr(GString) token_value = NULL;
     FsearchQueryToken token = fsearch_query_lexer_get_next_token(parse_ctx->lexer, &token_value);
@@ -338,7 +338,7 @@ parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, 
 static GList *
 parse_field_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     if (is_empty_field) {
-        return NULL;
+        return new_list(fsearch_query_node_new_match_everything(flags));
     }
 
     g_autoptr(GString) token_value = NULL;
