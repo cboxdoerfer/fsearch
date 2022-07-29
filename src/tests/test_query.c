@@ -153,6 +153,7 @@ test_main(void) {
             {"a !b || c)", "b", 0, 0, false},
 
             // fields
+            {"size:1", "test", 1, 0, true},
             {"size:300..", "test", 1000, 0, true},
             {"size:300..", "test", 200, 0, false},
             {"size:>300", "test", 301, 0, true},

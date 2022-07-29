@@ -186,6 +186,10 @@ parse_numeric_field_with_optional_range(const char *field_name,
         }
     }
 
+    if (start == end) {
+        comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
+    }
+
     g_clear_pointer(&elements, g_strfreev);
     return new_node_func(flags, start, end, comp_type);
 
