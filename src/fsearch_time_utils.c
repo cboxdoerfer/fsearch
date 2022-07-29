@@ -6,22 +6,22 @@
 #include <stdint.h>
 #include <time.h>
 
-typedef enum FsearchTimeIntervalType {
-    FSEARCH_TIME_INTERVAL_SECOND,
-    FSEARCH_TIME_INTERVAL_MINUTE,
-    FSEARCH_TIME_INTERVAL_HOUR,
-    FSEARCH_TIME_INTERVAL_WEEK,
-    FSEARCH_TIME_INTERVAL_DAY,
-    FSEARCH_TIME_INTERVAL_MONTH,
-    FSEARCH_TIME_INTERVAL_YEAR,
-    NUM_FSEARCH_TIME_INTERVALS,
-} FsearchTimeIntervalType;
+typedef enum FsearchDateTimeType {
+    FSEARCH_DATE_TIME_TYPE_SECOND,
+    FSEARCH_DATE_TIME_TYPE_MINUTE,
+    FSEARCH_DATE_TIME_TYPE_HOUR,
+    FSEARCH_DATE_TIME_TYPE_WEEK,
+    FSEARCH_DATE_TIME_TYPE_DAY,
+    FSEARCH_DATE_TIME_TYPE_MONTH,
+    FSEARCH_DATE_TIME_TYPE_YEAR,
+    NUM_FSEARCH_DATE_TIME_TYPES,
+} FsearchDateTimeType;
 
-typedef struct FsearchDateConstant {
+typedef struct FsearchDateTimeConstant {
     const char *format;
     int32_t val;
-    FsearchTimeIntervalType dtime;
-} FsearchDateConstant;
+    FsearchDateTimeType type;
+} FsearchDateTimeConstant;
 
 static time_t
 get_unix_time_from_tm(struct tm *tm) {
@@ -52,53 +52,53 @@ get_weekday_from_gdate(GDate *date) {
     return 0;
 }
 
-FsearchDateConstant date_constants[] = {
+FsearchDateTimeConstant date_constants[] = {
     // relative to today
-    {"today", 0, FSEARCH_TIME_INTERVAL_DAY},
-    {"yesterday", 1, FSEARCH_TIME_INTERVAL_DAY},
+    {"today", 0, FSEARCH_DATE_TIME_TYPE_DAY},
+    {"yesterday", 1, FSEARCH_DATE_TIME_TYPE_DAY},
     // weekdays
-    {"monday", 1, FSEARCH_TIME_INTERVAL_WEEK},
-    {"mon", 1, FSEARCH_TIME_INTERVAL_WEEK},
-    {"tuesday", 2, FSEARCH_TIME_INTERVAL_WEEK},
-    {"tue", 2, FSEARCH_TIME_INTERVAL_WEEK},
-    {"wednesday", 3, FSEARCH_TIME_INTERVAL_WEEK},
-    {"wed", 3, FSEARCH_TIME_INTERVAL_WEEK},
-    {"thursday", 4, FSEARCH_TIME_INTERVAL_WEEK},
-    {"thu", 4, FSEARCH_TIME_INTERVAL_WEEK},
-    {"friday", 5, FSEARCH_TIME_INTERVAL_WEEK},
-    {"fri", 5, FSEARCH_TIME_INTERVAL_WEEK},
-    {"saturday", 6, FSEARCH_TIME_INTERVAL_WEEK},
-    {"sat", 6, FSEARCH_TIME_INTERVAL_WEEK},
-    {"sunday", 7, FSEARCH_TIME_INTERVAL_WEEK},
-    {"sun", 7, FSEARCH_TIME_INTERVAL_WEEK},
+    {"monday", 1, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"mon", 1, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"tuesday", 2, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"tue", 2, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"wednesday", 3, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"wed", 3, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"thursday", 4, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"thu", 4, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"friday", 5, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"fri", 5, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"saturday", 6, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"sat", 6, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"sunday", 7, FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"sun", 7, FSEARCH_DATE_TIME_TYPE_WEEK},
     // months
-    {"january", 1, FSEARCH_TIME_INTERVAL_MONTH},
-    {"jan", 1, FSEARCH_TIME_INTERVAL_MONTH},
-    {"february", 2, FSEARCH_TIME_INTERVAL_MONTH},
-    {"feb", 2, FSEARCH_TIME_INTERVAL_MONTH},
-    {"march", 3, FSEARCH_TIME_INTERVAL_MONTH},
-    {"mar", 3, FSEARCH_TIME_INTERVAL_MONTH},
-    {"april", 4, FSEARCH_TIME_INTERVAL_MONTH},
-    {"apr", 4, FSEARCH_TIME_INTERVAL_MONTH},
-    {"may", 5, FSEARCH_TIME_INTERVAL_MONTH},
-    {"june", 6, FSEARCH_TIME_INTERVAL_MONTH},
-    {"jun", 6, FSEARCH_TIME_INTERVAL_MONTH},
-    {"july", 7, FSEARCH_TIME_INTERVAL_MONTH},
-    {"jul", 7, FSEARCH_TIME_INTERVAL_MONTH},
-    {"august", 8, FSEARCH_TIME_INTERVAL_MONTH},
-    {"aug", 8, FSEARCH_TIME_INTERVAL_MONTH},
-    {"september", 9, FSEARCH_TIME_INTERVAL_MONTH},
-    {"sep", 9, FSEARCH_TIME_INTERVAL_MONTH},
-    {"october", 10, FSEARCH_TIME_INTERVAL_MONTH},
-    {"oct", 10, FSEARCH_TIME_INTERVAL_MONTH},
-    {"november", 11, FSEARCH_TIME_INTERVAL_MONTH},
-    {"nov", 11, FSEARCH_TIME_INTERVAL_MONTH},
-    {"december", 12, FSEARCH_TIME_INTERVAL_MONTH},
-    {"dec", 12, FSEARCH_TIME_INTERVAL_MONTH},
+    {"january", 1, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"jan", 1, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"february", 2, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"feb", 2, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"march", 3, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"mar", 3, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"april", 4, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"apr", 4, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"may", 5, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"june", 6, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"jun", 6, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"july", 7, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"jul", 7, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"august", 8, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"aug", 8, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"september", 9, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"sep", 9, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"october", 10, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"oct", 10, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"november", 11, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"nov", 11, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"december", 12, FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"dec", 12, FSEARCH_DATE_TIME_TYPE_MONTH},
 };
 
 static bool
-parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end) {
+parse_explicit_date_time_constants(const char *str, struct tm *start, struct tm *end) {
     const time_t t_now = time(NULL);
     for (uint32_t i = 0; i < G_N_ELEMENTS(date_constants); ++i) {
         if (g_strcmp0(str, date_constants[i].format) == 0) {
@@ -106,8 +106,8 @@ parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end)
             g_date_set_time_t(date, t_now);
 
             int32_t diff = 0;
-            switch (date_constants[i].dtime) {
-            case FSEARCH_TIME_INTERVAL_WEEK: {
+            switch (date_constants[i].type) {
+            case FSEARCH_DATE_TIME_TYPE_WEEK: {
                 // The amount of days which have passed since the requested weekday
                 diff = get_weekday_from_gdate(date) - date_constants[i].val;
                 if (diff < 0) {
@@ -119,14 +119,14 @@ parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end)
                 g_date_add_days(date, 1);
                 g_date_to_struct_tm(date, end);
             } break;
-            case FSEARCH_TIME_INTERVAL_DAY:
+            case FSEARCH_DATE_TIME_TYPE_DAY:
                 g_date_subtract_days(date, date_constants[i].val);
                 g_date_to_struct_tm(date, start);
 
                 g_date_add_days(date, 1);
                 g_date_to_struct_tm(date, end);
                 break;
-            case FSEARCH_TIME_INTERVAL_MONTH:
+            case FSEARCH_DATE_TIME_TYPE_MONTH:
                 g_date_subtract_days(date, date->day - 1);
                 // The amount of months which have passed since the requested month
                 diff = date->month - date_constants[i].val;
@@ -151,28 +151,28 @@ parse_explicit_date_constants(const char *str, struct tm *start, struct tm *end)
 }
 
 static struct tm
-subtract_from_tm(struct tm tm, FsearchTimeIntervalType type, gint num) {
+subtract_from_tm(struct tm tm, FsearchDateTimeType type, gint num) {
     struct tm tm_res = tm;
 
     mktime(&tm);
 
     switch (type) {
-    case FSEARCH_TIME_INTERVAL_YEAR:
+    case FSEARCH_DATE_TIME_TYPE_YEAR:
         tm_res.tm_year -= num;
         break;
-    case FSEARCH_TIME_INTERVAL_MONTH:
+    case FSEARCH_DATE_TIME_TYPE_MONTH:
         tm_res.tm_mon -= num;
         break;
-    case FSEARCH_TIME_INTERVAL_WEEK:
+    case FSEARCH_DATE_TIME_TYPE_WEEK:
         tm_res.tm_mday -= 7 * num;
         break;
-    case FSEARCH_TIME_INTERVAL_DAY:
+    case FSEARCH_DATE_TIME_TYPE_DAY:
         tm_res.tm_mday -= num;
         break;
-    case FSEARCH_TIME_INTERVAL_HOUR:
+    case FSEARCH_DATE_TIME_TYPE_HOUR:
         tm_res.tm_hour -= num;
         break;
-    case FSEARCH_TIME_INTERVAL_MINUTE:
+    case FSEARCH_DATE_TIME_TYPE_MINUTE:
         tm_res.tm_min -= num;
         break;
     default:
@@ -185,7 +185,7 @@ subtract_from_tm(struct tm tm, FsearchTimeIntervalType type, gint num) {
 }
 
 static struct tm
-round_down_tm(struct tm tm, FsearchTimeIntervalType type) {
+round_down_tm_with_date_time_accuracy(struct tm tm, FsearchDateTimeType type) {
     struct tm tm_res = {};
     tm_res.tm_mday = 1;
     tm_res.tm_isdst = tm.tm_isdst;
@@ -193,18 +193,18 @@ round_down_tm(struct tm tm, FsearchTimeIntervalType type) {
     mktime(&tm);
 
     switch (type) {
-    case FSEARCH_TIME_INTERVAL_MINUTE:
+    case FSEARCH_DATE_TIME_TYPE_MINUTE:
         tm_res.tm_min = tm.tm_min;
-    case FSEARCH_TIME_INTERVAL_HOUR:
+    case FSEARCH_DATE_TIME_TYPE_HOUR:
         tm_res.tm_hour = tm.tm_hour;
-    case FSEARCH_TIME_INTERVAL_DAY:
+    case FSEARCH_DATE_TIME_TYPE_DAY:
         tm_res.tm_mday = tm.tm_mday;
-    case FSEARCH_TIME_INTERVAL_MONTH:
+    case FSEARCH_DATE_TIME_TYPE_MONTH:
         tm_res.tm_mon = tm.tm_mon;
-    case FSEARCH_TIME_INTERVAL_YEAR:
+    case FSEARCH_DATE_TIME_TYPE_YEAR:
         tm_res.tm_year = tm.tm_year;
         break;
-    case FSEARCH_TIME_INTERVAL_WEEK:
+    case FSEARCH_DATE_TIME_TYPE_WEEK:
         // tm_wday starts with 0 for Sunday
         // shift one to the left to have 0 start at Monday instead
         tm_res.tm_mday = tm.tm_mday - (tm.tm_wday == 0 ? 6 : tm.tm_wday - 1);
@@ -219,7 +219,7 @@ round_down_tm(struct tm tm, FsearchTimeIntervalType type) {
     return tm_res;
 }
 
-FsearchDateConstant num_constants[] = {
+FsearchDateTimeConstant num_constants[] = {
     {"one", 1},
     {"two", 2},
     {"three", 3},
@@ -241,7 +241,7 @@ enum {
     FSEARCH_DATE_REFERS_TO_NOW,        // "this month" means August (1-14)
 };
 
-FsearchDateConstant prefix_constants[] = {
+FsearchDateTimeConstant prefix_constants[] = {
     {"last", FSEARCH_DATE_REFERS_TO_PAST_FINAL},
     {"inthelast", FSEARCH_DATE_REFERS_TO_PAST_FINAL},
     {"past", FSEARCH_DATE_REFERS_TO_PAST},
@@ -250,28 +250,28 @@ FsearchDateConstant prefix_constants[] = {
     {"this", FSEARCH_DATE_REFERS_TO_NOW},
 };
 
-FsearchDateConstant suffix_singular_constants[] = {
-    {"year", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
-    {"month", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
-    {"week", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
-    {"day", .dtime = FSEARCH_TIME_INTERVAL_DAY},
-    {"hour", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-    {"min", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
-    {"minute", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
-    {"sec", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
-    {"second", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
+FsearchDateTimeConstant suffix_singular_constants[] = {
+    {"year", .type = FSEARCH_DATE_TIME_TYPE_YEAR},
+    {"month", .type = FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"week", .type = FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"day", .type = FSEARCH_DATE_TIME_TYPE_DAY},
+    {"hour", .type = FSEARCH_DATE_TIME_TYPE_HOUR},
+    {"min", .type = FSEARCH_DATE_TIME_TYPE_MINUTE},
+    {"minute", .type = FSEARCH_DATE_TIME_TYPE_MINUTE},
+    {"sec", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
+    {"second", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
 };
 
-FsearchDateConstant suffix_plural_constants[] = {
-    {"years", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
-    {"months", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
-    {"weeks", .dtime = FSEARCH_TIME_INTERVAL_WEEK},
-    {"days", .dtime = FSEARCH_TIME_INTERVAL_DAY},
-    {"hours", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-    {"min", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
-    {"minutes", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
-    {"sec", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
-    {"seconds", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
+FsearchDateTimeConstant suffix_plural_constants[] = {
+    {"years", .type = FSEARCH_DATE_TIME_TYPE_YEAR},
+    {"months", .type = FSEARCH_DATE_TIME_TYPE_MONTH},
+    {"weeks", .type = FSEARCH_DATE_TIME_TYPE_WEEK},
+    {"days", .type = FSEARCH_DATE_TIME_TYPE_DAY},
+    {"hours", .type = FSEARCH_DATE_TIME_TYPE_HOUR},
+    {"min", .type = FSEARCH_DATE_TIME_TYPE_MINUTE},
+    {"minutes", .type = FSEARCH_DATE_TIME_TYPE_MINUTE},
+    {"sec", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
+    {"seconds", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
 };
 
 static void
@@ -290,7 +290,7 @@ print_tm(struct tm *tm) {
 }
 
 static bool
-parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end) {
+parse_implicit_date_time_constants(const char *str, struct tm *start, struct tm *end) {
     g_assert(start);
     g_assert(end);
 
@@ -306,7 +306,7 @@ parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end)
     }
 
     // Check if there's a number
-    FsearchTimeIntervalType type = NUM_FSEARCH_TIME_INTERVALS;
+    FsearchDateTimeType type = NUM_FSEARCH_DATE_TIME_TYPES;
     int64_t num = 1;
     if (date_type != FSEARCH_DATE_REFERS_TO_NOW) {
         char *end_of_num = (char *)s;
@@ -326,14 +326,14 @@ parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end)
     if (num > 1) {
         for (uint32_t i = 0; i < G_N_ELEMENTS(suffix_plural_constants); ++i) {
             if (g_strcmp0(s, suffix_plural_constants[i].format) == 0) {
-                type = suffix_plural_constants[i].dtime;
+                type = suffix_plural_constants[i].type;
             }
         }
     }
     else if (num == 1) {
         for (uint32_t i = 0; i < G_N_ELEMENTS(suffix_singular_constants); ++i) {
             if (g_strcmp0(s, suffix_singular_constants[i].format) == 0) {
-                type = suffix_singular_constants[i].dtime;
+                type = suffix_singular_constants[i].type;
             }
         }
     }
@@ -341,42 +341,48 @@ parse_implicit_date_constants(const char *str, struct tm *start, struct tm *end)
         return false;
     }
 
-    if (type != NUM_FSEARCH_TIME_INTERVALS) {
-        const time_t t_now = time(NULL);
-        struct tm tm_now = *localtime(&t_now);
-
-        struct tm tm_start = {};
-        struct tm tm_end = {};
-
-        if (date_type == FSEARCH_DATE_REFERS_TO_NOW) {
-            // this...
-            tm_start = round_down_tm(tm_now, type);
-            tm_end = tm_now;
-        }
-        else {
-            if (date_type == FSEARCH_DATE_REFERS_TO_PAST_FINAL) {
-                tm_end = round_down_tm(tm_now, type);
-            }
-            else {
-                tm_end = tm_now;
-            }
-            tm_start = subtract_from_tm(tm_end, type, (gint)num);
-        }
-
-        *start = tm_start;
-        *end = tm_end;
-
-        return true;
+    if (type == NUM_FSEARCH_DATE_TIME_TYPES) {
+        // No date/time type was specified
+        return false;
     }
-    return false;
-}
 
-static bool
-parse_time_constants(const char *str, time_t *time_start_out, time_t *time_end_out) {
+    const time_t t_now = time(NULL);
+    struct tm tm_now = *localtime(&t_now);
+
     struct tm tm_start = {};
     struct tm tm_end = {};
 
-    if (parse_explicit_date_constants(str, &tm_start, &tm_end) || parse_implicit_date_constants(str, &tm_start, &tm_end)) {
+    if (date_type == FSEARCH_DATE_REFERS_TO_NOW) {
+        // start of the current year/month/... until now
+        tm_start = round_down_tm_with_date_time_accuracy(tm_now, type);
+        tm_end = tm_now;
+    }
+    else {
+        if (date_type == FSEARCH_DATE_REFERS_TO_PAST_FINAL) {
+            // end at the beginning of the current year/month/...
+            tm_end = round_down_tm_with_date_time_accuracy(tm_now, type);
+        }
+        else {
+            // end at now
+            tm_end = tm_now;
+        }
+        // start num * years/months/... before tm_end
+        tm_start = subtract_from_tm(tm_end, type, (gint)num);
+    }
+
+    *start = tm_start;
+    *end = tm_end;
+
+    return true;
+}
+
+static bool
+parse_date_time_constants(const char *str, time_t *time_start_out, time_t *time_end_out) {
+    struct tm tm_start = {};
+    struct tm tm_end = {};
+
+    if (parse_explicit_date_time_constants(str, &tm_start, &tm_end)
+        || parse_implicit_date_time_constants(str, &tm_start, &tm_end)) {
         if (time_start_out) {
             *time_start_out = get_unix_time_from_tm(&tm_start);
         }
@@ -400,28 +406,28 @@ cmp_int(int64_t i1, int64_t i2) {
 }
 
 static int
-cmp_tm(struct tm *tm1, struct tm *tm2, FsearchTimeIntervalType interval) {
+cmp_tm(struct tm *tm1, struct tm *tm2, FsearchDateTimeType interval) {
     g_assert(tm1);
     g_assert(tm2);
 
     int res = cmp_int(tm1->tm_year, tm2->tm_year);
-    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_YEAR) {
+    if (res != 0 || interval == FSEARCH_DATE_TIME_TYPE_YEAR) {
         return res;
     }
     res = cmp_int(tm1->tm_mon, tm2->tm_mon);
-    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_MONTH) {
+    if (res != 0 || interval == FSEARCH_DATE_TIME_TYPE_MONTH) {
         return res;
     }
     res = cmp_int(tm1->tm_mday, tm2->tm_mday);
-    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_DAY) {
+    if (res != 0 || interval == FSEARCH_DATE_TIME_TYPE_DAY) {
         return res;
     }
     res = cmp_int(tm1->tm_hour, tm2->tm_hour);
-    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_HOUR) {
+    if (res != 0 || interval == FSEARCH_DATE_TIME_TYPE_HOUR) {
         return res;
     }
     res = cmp_int(tm1->tm_min, tm2->tm_min);
-    if (res != 0 || interval == FSEARCH_TIME_INTERVAL_MINUTE) {
+    if (res != 0 || interval == FSEARCH_DATE_TIME_TYPE_MINUTE) {
         return res;
     }
     return cmp_int(tm1->tm_sec, tm2->tm_sec);
@@ -432,7 +438,7 @@ lower_clamp_tm(struct tm *tm_to_clamp, struct tm *tm_lower_bound) {
     g_return_if_fail(tm_to_clamp);
     g_return_if_fail(tm_lower_bound);
 
-    int cmp_res = cmp_tm(tm_to_clamp, tm_lower_bound, FSEARCH_TIME_INTERVAL_SECOND);
+    int cmp_res = cmp_tm(tm_to_clamp, tm_lower_bound, FSEARCH_DATE_TIME_TYPE_SECOND);
     if (cmp_res >= 0) {
         return;
     }
@@ -444,25 +450,43 @@ lower_clamp_tm(struct tm *tm_to_clamp, struct tm *tm_lower_bound) {
     tm_to_clamp->tm_sec = tm_lower_bound->tm_sec;
 }
 
+static bool
+round_down_tm_to_reference_with_date_time_accuracy(struct tm *tm, struct tm *tm_reference, FsearchDateTimeType type) {
+    const int cmp_result = cmp_tm(tm, tm_reference, type);
+    if (cmp_result < 0) {
+        // tm is smaller than tm_reference and can't be represented with unix time
+        return false;
+    }
+
+    if (cmp_result == 0) {
+        // Even though they're reported as equal, tm can still point to a date before tm_reference.
+        // That's because we're only comparing tm up to the specified accuracy of type
+        // E.g. a query like `dm:1970` might translate to tm referring to 1969-12-31 23:00:00 UTC
+        // due to the current timezone being one hour ahead of UTC.
+        lower_clamp_tm(tm, tm_reference);
+    }
+    return true;
+}
+
 bool
 fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t *time_end_out) {
-    if (parse_time_constants(str, time_start_out, time_end_out)) {
+    if (parse_date_time_constants(str, time_start_out, time_end_out)) {
         return true;
     }
 
-    FsearchDateConstant formats[] = {
-        {"%Y-%m-%d %H:%M:%S", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
-        {"%y-%m-%d %H:%M:%S", .dtime = FSEARCH_TIME_INTERVAL_SECOND},
-        {"%Y-%m-%d %H:%M", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
-        {"%y-%m-%d %H:%M", .dtime = FSEARCH_TIME_INTERVAL_MINUTE},
-        {"%Y-%m-%d %H", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-        {"%y-%m-%d %H", .dtime = FSEARCH_TIME_INTERVAL_HOUR},
-        {"%Y-%m-%d", .dtime = FSEARCH_TIME_INTERVAL_DAY},
-        {"%y-%m-%d", .dtime = FSEARCH_TIME_INTERVAL_DAY},
-        {"%Y-%m", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
-        {"%y-%m", .dtime = FSEARCH_TIME_INTERVAL_MONTH},
-        {"%Y", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
-        {"%y", .dtime = FSEARCH_TIME_INTERVAL_YEAR},
+    FsearchDateTimeConstant formats[] = {
+        {"%Y-%m-%d %H:%M:%S", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
+        {"%y-%m-%d %H:%M:%S", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
+        {"%Y-%m-%d %H:%M", .type = FSEARCH_DATE_TIME_TYPE_MINUTE},
+        {"%y-%m-%d %H:%M", .type = FSEARCH_DATE_TIME_TYPE_MINUTE},
+        {"%Y-%m-%d %H", .type = FSEARCH_DATE_TIME_TYPE_HOUR},
+        {"%y-%m-%d %H", .type = FSEARCH_DATE_TIME_TYPE_HOUR},
+        {"%Y-%m-%d", .type = FSEARCH_DATE_TIME_TYPE_DAY},
+        {"%y-%m-%d", .type = FSEARCH_DATE_TIME_TYPE_DAY},
+        {"%Y-%m", .type = FSEARCH_DATE_TIME_TYPE_MONTH},
+        {"%y-%m", .type = FSEARCH_DATE_TIME_TYPE_MONTH},
+        {"%Y", .type = FSEARCH_DATE_TIME_TYPE_YEAR},
+        {"%y", .type = FSEARCH_DATE_TIME_TYPE_YEAR},
     };
 
     // Get a struct tm of timestamp 0
@@ -490,51 +514,34 @@ fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t
         tm_start.tm_isdst = -1;
         struct tm tm_end = tm_start;
 
-        bool invalid_start_time = false;
-        bool invalid_end_time = false;
-
-        const int start_zero_cmp_result = cmp_tm(&tm_start, tm_zero, formats[i].dtime);
-        if (start_zero_cmp_result == 0) {
-            // make sure tm_start is not less than tm_zero
-            lower_clamp_tm(&tm_start, tm_zero);
-        }
-        else if (start_zero_cmp_result < 0) {
-            invalid_start_time = true;
-        }
-
-        switch (formats[i].dtime) {
-        case FSEARCH_TIME_INTERVAL_YEAR:
+        switch (formats[i].type) {
+        case FSEARCH_DATE_TIME_TYPE_YEAR:
             tm_end.tm_year++;
             break;
-        case FSEARCH_TIME_INTERVAL_MONTH:
+        case FSEARCH_DATE_TIME_TYPE_MONTH:
             tm_end.tm_mon++;
             break;
-        case FSEARCH_TIME_INTERVAL_DAY:
+        case FSEARCH_DATE_TIME_TYPE_DAY:
             tm_end.tm_mday++;
             break;
-        case FSEARCH_TIME_INTERVAL_HOUR:
+        case FSEARCH_DATE_TIME_TYPE_HOUR:
             tm_end.tm_hour++;
             break;
-        case FSEARCH_TIME_INTERVAL_MINUTE:
+        case FSEARCH_DATE_TIME_TYPE_MINUTE:
             tm_end.tm_min++;
             break;
-        case FSEARCH_TIME_INTERVAL_SECOND:
+        case FSEARCH_DATE_TIME_TYPE_SECOND:
             tm_end.tm_sec++;
             break;
         default:
             continue;
         }
 
-        const int end_zero_cmp_result = cmp_tm(&tm_end, tm_zero, formats[i].dtime);
-        if (end_zero_cmp_result == 0) {
-            lower_clamp_tm(&tm_end, tm_zero);
-        }
-        else if (end_zero_cmp_result < 0) {
-            invalid_end_time = true;
-        }
-
-        if (invalid_start_time && invalid_end_time) {
-            goto out;
+        if (!round_down_tm_to_reference_with_date_time_accuracy(&tm_start, tm_zero, formats[i].type)
+            && !round_down_tm_to_reference_with_date_time_accuracy(&tm_end, tm_zero, formats[i].type)) {
+            // both tm_start and tm_end can't be represented with unix time
+            // e.g. dm:1965
+            return false;
         }
 
         if (time_start_out) {
@@ -546,12 +553,5 @@ fsearch_date_time_parse_interval(const char *str, time_t *time_start_out, time_t
         return true;
     }
 
-out:
-    if (time_start_out) {
-        *time_start_out = 0;
-    }
-    if (time_end_out) {
-        *time_end_out = 0;
-    }
     return false;
 }
