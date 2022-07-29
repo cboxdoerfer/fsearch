@@ -9,7 +9,6 @@ test_parse_size(void) {
         gboolean expected_success;
         int64_t expected_size;
         int64_t expected_plus;
-        int64_t expected_end_idx;
     } FsearchTestSizeParseContext;
 
     // size factors
@@ -24,34 +23,32 @@ test_parse_size(void) {
     const int64_t ptb = fgb * (1000 - 50) - 1;
 
     FsearchTestSizeParseContext file_names[] = {
-        {"abc", FALSE, 0, 0, 0},
-        {"mb", FALSE, 0, 0, 0},
-        {"0m", TRUE, 0, pmb, 2},
-        {"100", TRUE, 100, 0, 3},
-        {"100abc", FALSE, 100, 0, 3},
-        {"100k", TRUE, 100 * fkb, pkb, 4},
-        {"100K", TRUE, 100 * fkb, pkb, 4},
-        {"12mb", TRUE, 12 * fmb, pmb, 4},
-        {"12Mb", TRUE, 12 * fmb, pmb, 4},
-        {"12mB", TRUE, 12 * fmb, pmb, 4},
-        {"123MB", TRUE, 123 * fmb, pmb, 5},
-        {"1234GB", TRUE, 1234 * fgb, pgb, 6},
-        {"12345TB", TRUE, 12345 * ftb, ptb, 7},
+        {"abc", FALSE, 0, 0},
+        {"mb", FALSE, 0, 0},
+        {"0m", TRUE, 0, pmb},
+        {"100", TRUE, 100, 0},
+        {"100abc", FALSE, 100, 0},
+        {"100k", TRUE, 100 * fkb, pkb},
+        {"100K", TRUE, 100 * fkb, pkb},
+        {"12mb", TRUE, 12 * fmb, pmb},
+        {"12Mb", TRUE, 12 * fmb, pmb},
+        {"12mB", TRUE, 12 * fmb, pmb},
+        {"123MB", TRUE, 123 * fmb, pmb},
+        {"1234GB", TRUE, 1234 * fgb, pgb},
+        {"12345TB", TRUE, 12345 * ftb, ptb},
     };
 
     for (gint i = 0; i < G_N_ELEMENTS(file_names); ++i) {
         FsearchTestSizeParseContext *ctx = &file_names[i];
-        int64_t size = 0;
-        int64_t plus = 0;
-        char *end_ptr = NULL;
-        g_print("%s\n", ctx->string);
-        gboolean res = fsearch_size_parse(ctx->string, &size, &plus);
+        int64_t size_start = 0;
+        int64_t size_end = 0;
+
+        gboolean res = fsearch_size_parse(ctx->string, &size_start, &size_end);
         g_assert_true(res == ctx->expected_success);
         if (res == TRUE) {
-            g_assert_cmpint(size, ==, ctx->expected_size);
-            g_assert_cmpint(plus, ==, ctx->expected_size + ctx->expected_plus);
+            g_assert_cmpint(size_start, ==, ctx->expected_size);
+            g_assert_cmpint(size_end, ==, ctx->expected_size + ctx->expected_plus);
         }
-        // g_assert_cmpstr(end_ptr, ==, ctx->string + ctx->expected_end_idx);
     }
 }
 
