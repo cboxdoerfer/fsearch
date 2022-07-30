@@ -202,6 +202,7 @@ test_main(void) {
             {"case:(TE || AB) cd", "TE", 0, 0, false},
             {"case:(TE || AB) cd", "ABTE", 0, 0, false},
             {"case:(TE || AB) cd", "cd", 0, 0, false},
+            {"nocase:a", "A", 0, QUERY_FLAG_MATCH_CASE, true},
             // macros
             {"test || (pic: video:)", "test.jpg", 0, 0, true},
             {"test || (pic: video:)", "test.mp4", 0, 0, true},
