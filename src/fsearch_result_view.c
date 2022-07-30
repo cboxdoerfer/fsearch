@@ -164,8 +164,6 @@ draw_row_ctx_new(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window,
     bool ret = true;
     db_view_lock(view);
 
-    g_autoptr(GString) name = NULL;
-
     const uint32_t num_items = db_view_get_num_entries(view);
     if (row >= num_items) {
         g_debug("[draw_row] row idx out of bound");
