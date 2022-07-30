@@ -567,54 +567,12 @@ get_operator_node_for_query_token(FsearchQueryToken token) {
     return fsearch_query_node_new_operator(op);
 }
 
-static GList *
-get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx,
-                              FsearchQueryToken last_token,
-                              FsearchQueryToken next_token) {
-    // An implicit AND only between operands (and between an operand and a NOT token)
-    switch (last_token) {
-    case FSEARCH_QUERY_TOKEN_WORD:
-    case FSEARCH_QUERY_TOKEN_FIELD:
-    case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
-    case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
-        break;
-    default:
-        return NULL;
-    }
-
-    switch (next_token) {
-    case FSEARCH_QUERY_TOKEN_WORD:
-    case FSEARCH_QUERY_TOKEN_FIELD:
-    case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
-    case FSEARCH_QUERY_TOKEN_NOT:
-    case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
-        return parse_operator(parse_ctx, FSEARCH_QUERY_TOKEN_AND);
-    default:
-        return NULL;
-    }
-}
-
 static bool
-is_operator_token(FsearchQueryToken token) {
-    if (token == FSEARCH_QUERY_TOKEN_AND || token == FSEARCH_QUERY_TOKEN_OR) {
-        return true;
-    }
-    return false;
-}
-
-static bool
-is_operator_token_followed_by_operand(FsearchQueryLexer *lexer, FsearchQueryToken token) {
-    FsearchQueryToken next_token = fsearch_query_lexer_peek_next_token(lexer, NULL);
-    // FIXME: while a NOT operator usually is followed directly by an operand this assumption might cause some bugs
-    if (is_operator_token(token) && next_token == FSEARCH_QUERY_TOKEN_NOT) {
-        return true;
-    }
-    // an operand is either a word, field, empty field or open bracket
-    switch (next_token) {
+is_operand_token(FsearchQueryToken token) {
+    switch (token) {
     case FSEARCH_QUERY_TOKEN_WORD:
     case FSEARCH_QUERY_TOKEN_FIELD:
     case FSEARCH_QUERY_TOKEN_FIELD_EMPTY:
-    case FSEARCH_QUERY_TOKEN_BRACKET_OPEN:
         return true;
     default:
         return false;
@@ -622,7 +580,52 @@ is_operator_token_followed_by_operand(FsearchQueryLexer *lexer, FsearchQueryToke
 }
 
 static GList *
+get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx,
+                              FsearchQueryToken last_token,
+                              FsearchQueryToken next_token) {
+    // Before an implicit and there must either be an operand or a closing bracket
+    if (is_operand_token(last_token) || last_token == FSEARCH_QUERY_TOKEN_BRACKET_CLOSE) {
+        // After an implicit AND there must either be an operand or an opening bracket or a NOT operator
+        if (is_operand_token(next_token) || next_token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN
+            || next_token == FSEARCH_QUERY_TOKEN_NOT) {
+            return parse_operator(parse_ctx, FSEARCH_QUERY_TOKEN_AND);
+        }
+    }
+    return NULL;
+}
+
+static bool
+is_binary_operator_token(FsearchQueryToken token) {
+    if (token == FSEARCH_QUERY_TOKEN_AND || token == FSEARCH_QUERY_TOKEN_OR) {
+        return true;
+    }
+    return false;
+}
+
+static bool
+is_operator_token(FsearchQueryToken token) {
+    if (is_binary_operator_token(token) || token == FSEARCH_QUERY_TOKEN_NOT) {
+        return true;
+    }
+    return false;
+}
+
+static bool
+is_operator_token_followed_by_operand(FsearchQueryLexer *lexer, FsearchQueryToken op_token) {
+    g_assert(is_operator_token(op_token));
+
+    FsearchQueryToken next_token = fsearch_query_lexer_peek_next_token(lexer, NULL);
+    // FIXME: while a NOT operator usually is followed directly by an operand this assumption might cause some bugs
+    if (is_binary_operator_token(op_token) && next_token == FSEARCH_QUERY_TOKEN_NOT) {
+        return true;
+    }
+    return is_operand_token(next_token) || next_token == FSEARCH_QUERY_TOKEN_BRACKET_OPEN;
+}
+
+static GList *
 parse_operator(FsearchQueryParseContext *parse_ctx, FsearchQueryToken token) {
+    g_assert(is_operator_token(token));
+
     parse_ctx->last_token = token;
     GList *res = NULL;
     // Before we can add the operator token to the operator stack we first have to pop and handle all operators on the
@@ -647,9 +650,9 @@ consume_consecutive_not_token(FsearchQueryLexer *lexer) {
 }
 
 static void
-discard_consecutive_operator_tokens(FsearchQueryLexer *lexer) {
+discard_consecutive_binary_operator_tokens(FsearchQueryLexer *lexer) {
     // discard all consecutive AND and OR operators until we find a different token
-    while (is_operator_token(fsearch_query_lexer_peek_next_token(lexer, NULL))) {
+    while (is_binary_operator_token(fsearch_query_lexer_peek_next_token(lexer, NULL))) {
         fsearch_query_lexer_get_next_token(lexer, NULL);
     }
 }
@@ -734,7 +737,7 @@ fsearch_query_parser_parse_expression(FsearchQueryParseContext *parse_ctx, bool 
             // We discard any operator tokens directly after an open bracket (excluding NOT operators),
             // because there's no left-hand side operand they could act on.
             // It's safe to assume that queries like `( OR abc OR efg)` should be interpreted as `(abc OR efg)` anyway
-            discard_consecutive_operator_tokens(parse_ctx->lexer);
+            discard_consecutive_binary_operator_tokens(parse_ctx->lexer);
             break;
         case FSEARCH_QUERY_TOKEN_BRACKET_CLOSE:
             // only add closing bracket if there's a matching open bracket
