@@ -32,9 +32,6 @@ static GList *
 parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_exact(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
 parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
@@ -59,46 +56,46 @@ static GList *
 parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_regex(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
 parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
-parse_field_path(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
-parse_field_case(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
-parse_field_nocase(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
-parse_field_noregex(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
-parse_field_nopath(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
-parse_field_folder(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
-
-static GList *
-parse_field_file(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
 get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx,
                               FsearchQueryToken last_token,
                               FsearchQueryToken next_token);
 
-typedef GList *(FsearchTokenFieldParser)(FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
+typedef GList *(FsearchTokenFunctionParser)(FsearchQueryParseContext *parse_ctx, bool, FsearchQueryFlags);
 
-typedef struct FsearchTokenField {
+typedef enum {
+    ADD_FLAG,
+    REMOVE_FLAG,
+} FsearchQueryFlagOperation;
+
+typedef struct FsearchTokenModifier {
     const char *name;
-    FsearchTokenFieldParser *parser;
-} FsearchTokenField;
+    FsearchQueryFlags flag;
+    FsearchQueryFlagOperation flag_operation;
+} FsearchTokenModifier;
 
-FsearchTokenField supported_fields[] = {
-    {"case", parse_field_case},
+typedef struct FsearchTokenFunction {
+    const char *name;
+    FsearchTokenFunctionParser *parser;
+} FsearchTokenFunction;
+
+FsearchTokenModifier supported_modifiers[] = {
+    {"case", QUERY_FLAG_MATCH_CASE, ADD_FLAG},
+    {"nocase", QUERY_FLAG_MATCH_CASE, REMOVE_FLAG},
+    {"exact", QUERY_FLAG_EXACT_MATCH, ADD_FLAG},
+    {"file", QUERY_FLAG_FILES_ONLY, ADD_FLAG},
+    {"files", QUERY_FLAG_FILES_ONLY, ADD_FLAG},
+    {"folder", QUERY_FLAG_FOLDERS_ONLY, ADD_FLAG},
+    {"folders", QUERY_FLAG_FOLDERS_ONLY, ADD_FLAG},
+    {"path", QUERY_FLAG_SEARCH_IN_PATH, ADD_FLAG},
+    {"nopath", QUERY_FLAG_SEARCH_IN_PATH, REMOVE_FLAG},
+    {"regex", QUERY_FLAG_REGEX, ADD_FLAG},
+    {"noregex", QUERY_FLAG_REGEX, REMOVE_FLAG},
+};
+
+FsearchTokenFunction supported_functions[] = {
     {"childcount", parse_field_childcount},
     {"childfilecount", parse_field_childfilecount},
     {"childfoldercount", parse_field_childfoldercount},
@@ -106,18 +103,8 @@ FsearchTokenField supported_fields[] = {
     {"dm", parse_field_date_modified},
     {"datemodified", parse_field_date_modified},
     {"empty", parse_field_empty},
-    {"exact", parse_field_exact},
     {"ext", parse_field_extension},
-    {"file", parse_field_file},
-    {"files", parse_field_file},
-    {"folder", parse_field_folder},
-    {"folders", parse_field_folder},
-    {"nocase", parse_field_nocase},
-    {"nopath", parse_field_nopath},
-    {"noregex", parse_field_noregex},
     {"parent", parse_field_parent},
-    {"path", parse_field_path},
-    {"regex", parse_field_regex},
     {"size", parse_field_size},
 };
 
@@ -391,51 +378,6 @@ parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, Fsearch
 }
 
 static GList *
-parse_field_exact(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags | QUERY_FLAG_EXACT_MATCH);
-}
-
-static GList *
-parse_field_path(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags | QUERY_FLAG_SEARCH_IN_PATH);
-}
-
-static GList *
-parse_field_nopath(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags & ~QUERY_FLAG_SEARCH_IN_PATH);
-}
-
-static GList *
-parse_field_case(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags | QUERY_FLAG_MATCH_CASE);
-}
-
-static GList *
-parse_field_nocase(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags & ~QUERY_FLAG_MATCH_CASE);
-}
-
-static GList *
-parse_field_regex(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags | QUERY_FLAG_REGEX);
-}
-
-static GList *
-parse_field_noregex(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags & ~QUERY_FLAG_REGEX);
-}
-
-static GList *
-parse_field_folder(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags | QUERY_FLAG_FOLDERS_ONLY);
-}
-
-static GList *
-parse_field_file(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_modifier(parse_ctx, is_empty_field, flags | QUERY_FLAG_FILES_ONLY);
-}
-
-static GList *
 parse_filter_macros(FsearchQueryParseContext *parse_ctx, GString *name, FsearchQueryFlags flags) {
     GList *res = NULL;
     for (uint32_t i = 0; i < parse_ctx->macro_filters->len; ++i) {
@@ -496,9 +438,22 @@ parse_field(FsearchQueryParseContext *parse_ctx, GString *field_name, bool is_em
     // Macros have precedence over native fields
     GList *res = parse_filter_macros(parse_ctx, field_name, flags);
     if (!res) {
-        for (uint32_t i = 0; i < G_N_ELEMENTS(supported_fields); ++i) {
-            if (!strcmp(supported_fields[i].name, field_name->str)) {
-                return supported_fields[i].parser(parse_ctx, is_empty_field, flags);
+        for (uint32_t i = 0; i < G_N_ELEMENTS(supported_modifiers); ++i) {
+            FsearchTokenModifier *modifier = &supported_modifiers[i];
+            if (!strcmp(modifier->name, field_name->str)) {
+                if (modifier->flag_operation == ADD_FLAG) {
+                    flags |= modifier->flag;
+                }
+                else {
+                    flags &= ~modifier->flag;
+                }
+                return parse_modifier(parse_ctx, is_empty_field, flags);
+            }
+        }
+        for (uint32_t i = 0; i < G_N_ELEMENTS(supported_functions); ++i) {
+            FsearchTokenFunction *function = &supported_functions[i];
+            if (!strcmp(function->name, field_name->str)) {
+                return function->parser(parse_ctx, is_empty_field, flags);
             }
         }
     }
