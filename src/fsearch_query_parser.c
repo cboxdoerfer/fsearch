@@ -131,15 +131,15 @@ parse_numeric_field_with_optional_range(const char *field_name,
                                         FsearchQueryIntegerParserFunc parse_value_func,
                                         FsearchQueryComparisonNewNodeFunc new_node_func,
                                         GString *string,
-                                        FsearchQueryFlags flags,
-                                        FsearchQueryNodeComparison comp_type) {
-    int64_t start = 0;
-    int64_t end = 0;
-
+                                        FsearchQueryFlags flags) {
     char **elements = g_strsplit(string->str, "..", 2);
     if (!elements || !elements[0]) {
         goto fail;
     }
+
+    int64_t start = 0;
+    int64_t end = 0;
+    FsearchQueryNodeComparison comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
 
     if (fsearch_string_is_empty(elements[0])) {
         // query starts with ..
@@ -239,12 +239,8 @@ parse_numeric_field(FsearchQueryParseContext *parse_ctx,
         break;
     case FSEARCH_QUERY_TOKEN_WORD:
         // query has the form of field:<val> or field:<opt_val_1>..<opt_val_2>
-        return new_list(parse_numeric_field_with_optional_range(field_name,
-                                                                parse_value_func,
-                                                                new_node_func,
-                                                                token_value,
-                                                                flags,
-                                                                comp_type));
+        return new_list(
+            parse_numeric_field_with_optional_range(field_name, parse_value_func, new_node_func, token_value, flags));
     default:
         g_debug("[%s:] invalid or missing argument", field_name);
         return new_list(fsearch_query_node_new_match_nothing());
