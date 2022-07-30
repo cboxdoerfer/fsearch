@@ -32,31 +32,31 @@ static GList *
 parse_modifier(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_empty(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_empty(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_childcount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_childcount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_childfilecount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_childfilecount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_childfoldercount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_childfoldercount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
-parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
+parse_function_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags);
 
 static GList *
 get_implicit_and_if_necessary(FsearchQueryParseContext *parse_ctx,
@@ -96,16 +96,16 @@ FsearchTokenModifier supported_modifiers[] = {
 };
 
 FsearchTokenFunction supported_functions[] = {
-    {"childcount", parse_field_childcount},
-    {"childfilecount", parse_field_childfilecount},
-    {"childfoldercount", parse_field_childfoldercount},
-    {"contenttype", parse_field_contenttype},
-    {"dm", parse_field_date_modified},
-    {"datemodified", parse_field_date_modified},
-    {"empty", parse_field_empty},
-    {"ext", parse_field_extension},
-    {"parent", parse_field_parent},
-    {"size", parse_field_size},
+    {"childcount", parse_function_childcount},
+    {"childfilecount", parse_function_childfilecount},
+    {"childfoldercount", parse_function_childfoldercount},
+    {"contenttype", parse_function_contenttype},
+    {"dm", parse_function_date_modified},
+    {"datemodified", parse_function_date_modified},
+    {"empty", parse_function_empty},
+    {"ext", parse_function_extension},
+    {"parent", parse_function_parent},
+    {"size", parse_function_size},
 };
 
 static GList *
@@ -208,12 +208,12 @@ parse_integer(const char *str, int64_t *num_out, int64_t *num_2_out) {
 }
 
 static GList *
-parse_numeric_field(FsearchQueryParseContext *parse_ctx,
-                    bool is_empty_field,
-                    FsearchQueryFlags flags,
-                    const char *field_name,
-                    FsearchQueryComparisonNewNodeFunc new_node_func,
-                    FsearchQueryIntegerParserFunc parse_value_func) {
+parse_numeric_function(FsearchQueryParseContext *parse_ctx,
+                       bool is_empty_field,
+                       FsearchQueryFlags flags,
+                       const char *field_name,
+                       FsearchQueryComparisonNewNodeFunc new_node_func,
+                       FsearchQueryIntegerParserFunc parse_value_func) {
     if (is_empty_field) {
         // we want to match every entry for an empty numeric field
         return new_list(fsearch_query_node_new_match_everything(flags));
@@ -259,57 +259,57 @@ parse_numeric_field(FsearchQueryParseContext *parse_ctx,
 }
 
 static GList *
-parse_field_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_numeric_field(parse_ctx, is_empty_field, flags, "size", fsearch_query_node_new_size, fsearch_size_parse);
+parse_function_size(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_numeric_function(parse_ctx, is_empty_field, flags, "size", fsearch_query_node_new_size, fsearch_size_parse);
 }
 
 static GList *
-parse_field_empty(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+parse_function_empty(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     return new_list(fsearch_query_node_new_childcount(flags, 0, 0, FSEARCH_QUERY_NODE_COMPARISON_EQUAL));
 }
 
 static GList *
-parse_field_childcount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_numeric_field(parse_ctx,
-                               is_empty_field,
-                               flags,
-                               "childcount",
-                               fsearch_query_node_new_childcount,
-                               parse_integer);
+parse_function_childcount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_numeric_function(parse_ctx,
+                                  is_empty_field,
+                                  flags,
+                                  "childcount",
+                                  fsearch_query_node_new_childcount,
+                                  parse_integer);
 }
 
 static GList *
-parse_field_childfilecount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_numeric_field(parse_ctx,
-                               is_empty_field,
-                               flags,
-                               "childfilecount",
-                               fsearch_query_node_new_childfilecount,
-                               parse_integer);
+parse_function_childfilecount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_numeric_function(parse_ctx,
+                                  is_empty_field,
+                                  flags,
+                                  "childfilecount",
+                                  fsearch_query_node_new_childfilecount,
+                                  parse_integer);
 }
 
 static GList *
-parse_field_childfoldercount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_numeric_field(parse_ctx,
-                               is_empty_field,
-                               flags,
-                               "childfoldercount",
-                               fsearch_query_node_new_childfoldercount,
-                               parse_integer);
+parse_function_childfoldercount(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_numeric_function(parse_ctx,
+                                  is_empty_field,
+                                  flags,
+                                  "childfoldercount",
+                                  fsearch_query_node_new_childfoldercount,
+                                  parse_integer);
 }
 
 static GList *
-parse_field_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
-    return parse_numeric_field(parse_ctx,
-                               is_empty_field,
-                               flags,
-                               "date-modified",
-                               fsearch_query_node_new_date_modified,
-                               fsearch_date_time_parse_interval);
+parse_function_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+    return parse_numeric_function(parse_ctx,
+                                  is_empty_field,
+                                  flags,
+                                  "date-modified",
+                                  fsearch_query_node_new_date_modified,
+                                  fsearch_date_time_parse_interval);
 }
 
 static GList *
-parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+parse_function_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     if (is_empty_field) {
         // an empty field means that we want to match all files which lack file extensions
         return new_list(fsearch_query_node_new_extension(NULL, flags));
@@ -323,7 +323,7 @@ parse_field_extension(FsearchQueryParseContext *parse_ctx, bool is_empty_field, 
 }
 
 static GList *
-parse_field_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+parse_function_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     if (is_empty_field) {
         return new_list(fsearch_query_node_new_match_everything(flags));
     }
@@ -336,7 +336,7 @@ parse_field_contenttype(FsearchQueryParseContext *parse_ctx, bool is_empty_field
 }
 
 static GList *
-parse_field_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
+parse_function_parent(FsearchQueryParseContext *parse_ctx, bool is_empty_field, FsearchQueryFlags flags) {
     FsearchQueryFlags parent_flags = flags | QUERY_FLAG_EXACT_MATCH;
     if (is_empty_field) {
         // an empty field means that we want to match all entries without a parent
