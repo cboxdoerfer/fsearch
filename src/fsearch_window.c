@@ -443,7 +443,7 @@ count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
 }
 
 static gboolean
-on_fsearch_list_view_popup(FsearchListView *view, int row_idx, gpointer user_data) {
+on_fsearch_list_view_popup(FsearchListView *view, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
     if (!win->result_view->database_view) {
         return FALSE;

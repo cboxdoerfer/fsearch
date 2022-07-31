@@ -790,7 +790,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
             fsearch_list_view_selection_toggle_silent(view, row_idx);
             fsearch_list_view_selection_changed(view);
         }
-        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0, get_row_idx_for_sort_type(view, row_idx));
+        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
     }
 
     view->focused_idx = -1;
@@ -1027,7 +1027,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         break;
     case GDK_KEY_Menu:
         // TODO: Popup menu at the last selected item, instead of the mouse pointer position (scroll to it if necessary)
-        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0, get_row_idx_for_sort_type(view, view->last_clicked_idx));
+        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
         return TRUE;
     default:
         return FALSE;
@@ -1640,7 +1640,7 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
     container_class->remove = fsearch_list_view_container_remove;
 
     signals[FSEARCH_LIST_VIEW_POPUP] =
-        g_signal_new("row-popup", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 1, G_TYPE_INT);
+        g_signal_new("row-popup", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
 
     signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED] = g_signal_new("row-activated",
                                                             G_TYPE_FROM_CLASS(klass),
