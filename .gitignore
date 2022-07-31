@@ -51,6 +51,11 @@ vgdump
 # VS Code
 *.vscode
 
+# AppImage
+AppDir
+appimage-build
+AppImageBuilder.yml
+
 # QtCreator Files
 *.config
 *.creator
