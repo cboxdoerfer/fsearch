@@ -1029,6 +1029,12 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         // TODO: Popup menu at the last selected item, instead of the mouse pointer position (scroll to it if necessary)
         g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
         return TRUE;
+    case GDK_KEY_F10:
+        if (extend_selection) {
+            // Shift + F10 -> open context menu
+            g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
+            return TRUE;
+        }
     default:
         return FALSE;
     }
