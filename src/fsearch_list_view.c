@@ -1025,6 +1025,10 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
     case GDK_KEY_End:
         d_idx = view->num_rows - view->focused_idx - 1;
         break;
+    case GDK_KEY_Menu:
+        // TODO: Popup menu at the last selected item, instead of the mouse pointer position (scroll to it if necessary)
+        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0, get_row_idx_for_sort_type(view, view->last_clicked_idx));
+        return TRUE;
     default:
         return FALSE;
     }
