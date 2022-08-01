@@ -490,12 +490,10 @@ open_folder_cb(gpointer key, gpointer value, gpointer data) {
 
     FsearchDatabaseEntry *entry = value;
 
-    g_autoptr(GString) path = db_entry_get_path(entry);
-    g_return_if_fail(path);
     g_autoptr(GString) path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    if (!fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
+    if (!fsearch_file_utils_open_parent_folder_with_optional_command(path_full, config->folder_open_cmd)) {
         GString *open_failed_string = data;
         append_line(open_failed_string, path_full->str);
     }

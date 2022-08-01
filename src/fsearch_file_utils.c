@@ -70,12 +70,12 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
 }
 
 static char *
-build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
+build_folder_open_cmd(char *path, char *path_full, const char *cmd) {
     if (!path || !path_full) {
         return NULL;
     }
-    g_autofree char *path_quoted = g_shell_quote(path->str);
-    g_autofree char *path_full_quoted = g_shell_quote(path_full->str);
+    g_autofree char *path_quoted = g_shell_quote(path);
+    g_autofree char *path_full_quoted = g_shell_quote(path_full);
 
     // The following code is mostly based on the example code found here:
     // https://developer.gnome.org/glib/stable/glib-Perl-compatible-regular-expressions.html#g-regex-replace-eval
@@ -94,8 +94,8 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
     //     becomes '/foo/'\''bar'
 
     g_autoptr(GHashTable) keywords = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(keywords, "{path_raw}", path->str);
-    g_hash_table_insert(keywords, "{path_full_raw}", path_full->str);
+    g_hash_table_insert(keywords, "{path_raw}", path);
+    g_hash_table_insert(keywords, "{path_full_raw}", path_full);
     g_hash_table_insert(keywords, "{path}", path_quoted);
     g_hash_table_insert(keywords, "{path_full}", path_full_quoted);
 
@@ -107,7 +107,7 @@ build_folder_open_cmd(GString *path, GString *path_full, const char *cmd) {
 }
 
 static bool
-open_with_cmd(GString *path, GString *path_full, const char *cmd) {
+open_with_cmd(char *path, char *path_full, const char *cmd) {
     g_autofree char *cmd_res = build_folder_open_cmd(path, path_full, cmd);
     if (!cmd_res) {
         return false;
@@ -229,7 +229,7 @@ fsearch_file_utils_trash(const char *path) {
 }
 
 bool
-fsearch_file_utils_launch(GString *path_full, bool launch_desktop_files) {
+fsearch_file_utils_launch_uri(GString *path_full, bool launch_desktop_files) {
     if (!path_full) {
         return false;
     }
@@ -237,15 +237,19 @@ fsearch_file_utils_launch(GString *path_full, bool launch_desktop_files) {
 }
 
 bool
-fsearch_file_utils_launch_with_command(GString *path, GString *path_full, const char *cmd) {
+fsearch_file_utils_open_parent_folder_with_optional_command(GString *path_full, const char *cmd) {
+    g_autoptr(GFile) file = g_file_new_for_path(path_full->str);
+    g_autofree char *path = g_file_get_path(file);
+
     if (!path) {
         return false;
     }
+
     if (cmd) {
-        return open_with_cmd(path, path_full, cmd);
+        return open_with_cmd(path, path_full->str, cmd);
     }
     else {
-        return open_uri(path->str, false);
+        return open_uri(path, false);
     }
 }
 

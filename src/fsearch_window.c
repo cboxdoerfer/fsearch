@@ -536,16 +536,15 @@ on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexTy
     }
 
     db_view_lock(self->result_view->database_view);
-    g_autoptr(GString) path = db_view_entry_get_path_for_idx(self->result_view->database_view, row_idx);
     g_autoptr(GString) path_full = db_view_entry_get_path_full_for_idx(self->result_view->database_view, row_idx);
     db_view_unlock(self->result_view->database_view);
 
-    if (!path || !path_full) {
+    if (!path_full) {
         return;
     }
 
-    if (!launch_folder ? fsearch_file_utils_launch(path_full, config->launch_desktop_files)
-                       : fsearch_file_utils_launch_with_command(path, path_full, config->folder_open_cmd)) {
+    if (!launch_folder ? fsearch_file_utils_launch_uri(path_full, config->launch_desktop_files)
+                       : fsearch_file_utils_open_parent_folder_with_optional_command(path_full, config->folder_open_cmd)) {
         // open succeeded
         fsearch_window_action_after_file_open(true);
     }
