@@ -73,7 +73,7 @@ fsearch_list_view_column_new(int type,
                              char *name,
                              PangoAlignment alignment,
                              PangoEllipsizeMode ellipsize_mode,
-                             gboolean visibile,
+                             gboolean visible,
                              gboolean expand,
                              uint32_t width);
 
