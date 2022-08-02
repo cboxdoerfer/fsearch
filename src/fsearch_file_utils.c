@@ -172,35 +172,35 @@ open_application_for_path(const char *path, GString *error_messages) {
 }
 
 static bool
-file_remove_or_trash(const char *path, bool delete) {
+file_remove_or_trash(const char *path, bool delete, GString *error_messages) {
     g_autoptr(GFile) file = g_file_new_for_path(path);
     if (!file) {
+        add_error_message_with_format(error_messages, _("Error when removing file"), path, _("Failed to get path"));
         return false;
     }
+    g_autoptr(GError) error = NULL;
     if (delete) {
-        if (g_file_delete(file, NULL, NULL)) {
-            g_debug("[file_remove] deleted file: %s", path);
-            return true;
-        }
+        g_file_delete(file, NULL, &error);
     }
     else {
-        if (g_file_trash(file, NULL, NULL)) {
-            g_debug("[file_remove] moved file to trash: %s", path);
-            return true;
-        }
+        g_file_trash(file, NULL, &error);
     }
-    g_warning(delete ? "[file_remove] failed removing: %s" : "[file_trash] failed moving file to trash: %s", path);
-    return false;
+
+    if (error) {
+        add_error_message(error_messages, error->message);
+        return false;
+    }
+    return true;
 }
 
 bool
-fsearch_file_utils_remove(const char *path) {
-    return file_remove_or_trash(path, true);
+fsearch_file_utils_remove(const char *path, GString *error_messages) {
+    return file_remove_or_trash(path, true, error_messages);
 }
 
 bool
-fsearch_file_utils_trash(const char *path) {
-    return file_remove_or_trash(path, false);
+fsearch_file_utils_trash(const char *path, GString *error_messages) {
+    return file_remove_or_trash(path, false, error_messages);
 }
 
 bool

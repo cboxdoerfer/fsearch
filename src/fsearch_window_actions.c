@@ -160,22 +160,11 @@ append_name_to_string(gpointer key, gpointer value, gpointer user_data) {
     append_line_to_string(user_data, value, db_entry_get_name_for_display);
 }
 
-static bool
-delete_file(const char *path, bool delete) {
-    if (!path) {
-        return false;
-    }
-
-    if ((delete &&fsearch_file_utils_remove(path)) || (!delete &&fsearch_file_utils_trash(path))) {
-        return true;
-    }
-    return false;
-}
-
 static void
 fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
+    g_autoptr(GString) error_message = g_string_new(NULL);
     const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
     GList *file_list = NULL;
     fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
@@ -193,19 +182,25 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
             goto save_fail;
         }
     }
-    bool removed_files = false;
-    GList *temp = file_list;
-    while (temp) {
-        if (temp->data) {
-            removed_files = delete_file(temp->data, delete) ? true : removed_files;
+
+    for (GList *f = file_list; f != NULL; f = f->next) {
+        const char *path = f->data;
+        if (delete) {
+            fsearch_file_utils_remove(path, error_message);
         }
-        temp = temp->next;
+        else {
+            fsearch_file_utils_trash(path, error_message);
+        }
     }
 
-    if (removed_files) {
-        // Files were removed, update the listview
-        FsearchListView *view = fsearch_application_window_get_listview(self);
-        gtk_widget_queue_draw(GTK_WIDGET(view));
+    if (error_message->len > 0) {
+        ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                      GTK_MESSAGE_WARNING,
+                                      GTK_BUTTONS_OK,
+                                      _("Something went wrong."),
+                                      error_message->str,
+                                      G_CALLBACK(gtk_widget_destroy),
+                                      NULL);
     }
 
 save_fail:
@@ -432,12 +427,6 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-on_failed_to_open_file_response(GtkDialog *dialog, GtkResponseType response, gpointer user_data) {
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-    dialog = NULL;
-}
-
-static void
 fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder) {
     const guint selected_rows = fsearch_application_window_get_num_selected(win);
     if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
@@ -480,7 +469,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
                                           GTK_BUTTONS_OK,
                                           _("Something went wrong."),
                                           error_message->str,
-                                          G_CALLBACK(on_failed_to_open_file_response),
+                                          G_CALLBACK(gtk_widget_destroy),
                                           NULL);
         }
     }

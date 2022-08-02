@@ -28,10 +28,10 @@ bool
 fsearch_file_utils_create_dir(const char *path);
 
 bool
-fsearch_file_utils_trash(const char *path);
+fsearch_file_utils_trash(const char *path, GString *error_messages);
 
 bool
-fsearch_file_utils_remove(const char *path);
+fsearch_file_utils_remove(const char *path, GString *error_messages);
 
 bool
 fsearch_file_utils_open_path(const char *path,
