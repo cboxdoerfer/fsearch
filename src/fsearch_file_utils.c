@@ -173,31 +173,24 @@ open_application_for_path(const char *path, GString *error_messages) {
 
 static bool
 file_remove_or_trash(const char *path, bool delete) {
-    GFile *file = g_file_new_for_path(path);
+    g_autoptr(GFile) file = g_file_new_for_path(path);
     if (!file) {
         return false;
     }
-    bool success = false;
     if (delete) {
-        success = g_file_delete(file, NULL, NULL);
-    }
-    else {
-        success = g_file_trash(file, NULL, NULL);
-    }
-    g_clear_object(&file);
-
-    if (success) {
-        if (delete) {
+        if (g_file_delete(file, NULL, NULL)) {
             g_debug("[file_remove] deleted file: %s", path);
-        }
-        else {
-            g_debug("[file_remove] moved file to trash: %s", path);
+            return true;
         }
     }
     else {
-        g_warning("[file_remove] failed removing: %s", path);
+        if (g_file_trash(file, NULL, NULL)) {
+            g_debug("[file_remove] moved file to trash: %s", path);
+            return true;
+        }
     }
-    return success;
+    g_warning(delete ? "[file_remove] failed removing: %s" : "[file_trash] failed moving file to trash: %s", path);
+    return false;
 }
 
 bool
