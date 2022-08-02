@@ -28,6 +28,7 @@
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 
 const char *data_folder_name = "fsearch";
