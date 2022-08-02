@@ -165,6 +165,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
     FsearchApplicationWindow *self = user_data;
 
     g_autoptr(GString) error_message = g_string_new(NULL);
+
     const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
     GList *file_list = NULL;
     fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
@@ -183,13 +184,18 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
         }
     }
 
+    uint32_t num_trashed_or_deleted = 0;
     for (GList *f = file_list; f != NULL; f = f->next) {
-        const char *path = f->data;
+        char *path = f->data;
         if (delete) {
-            fsearch_file_utils_remove(path, error_message);
+            if (fsearch_file_utils_remove(path, error_message)) {
+                num_trashed_or_deleted++;
+            }
         }
         else {
-            fsearch_file_utils_trash(path, error_message);
+            if (fsearch_file_utils_trash(path, error_message)) {
+                num_trashed_or_deleted++;
+            }
         }
     }
 
@@ -199,6 +205,20 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
                                       GTK_BUTTONS_OK,
                                       _("Something went wrong."),
                                       error_message->str,
+                                      G_CALLBACK(gtk_widget_destroy),
+                                      NULL);
+    }
+    if (num_trashed_or_deleted > 0) {
+        g_autoptr(GString) trashed_or_deleted_message = g_string_new(NULL);
+        g_string_printf(trashed_or_deleted_message,
+                        delete ? _("Deleted %d file(s).") : _("Moved %d file(s) to the trash."),
+                        num_trashed_or_deleted);
+        ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                      GTK_MESSAGE_INFO,
+                                      GTK_BUTTONS_OK,
+                                      trashed_or_deleted_message->str,
+                                      _("The database needs to be updated before it becomes aware of those changes! "
+                                        "This will be fixed with future updates."),
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
     }
