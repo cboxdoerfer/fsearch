@@ -32,6 +32,26 @@
 
 const char *data_folder_name = "fsearch";
 
+static void
+add_error_message_with_format(GString *error_messages, const char *description, const char *item_name, const char *reason) {
+    if (!error_messages || !description || !item_name || !reason) {
+        return;
+    }
+    g_autoptr(GString) error_message = g_string_new(NULL);
+    g_string_printf(error_message, "%s \"%s\": %s", description, item_name, reason);
+    g_string_append(error_messages, error_message->str);
+    g_string_append_c(error_messages, '\n');
+}
+
+static void
+add_error_message(GString *error_messages, const char *error_message) {
+    if (!error_messages || !error_message) {
+        return;
+    }
+    g_string_append(error_messages, error_message);
+    g_string_append_c(error_messages, '\n');
+}
+
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
     g_assert(path);
@@ -70,7 +90,7 @@ keyword_eval_cb(const GMatchInfo *info, GString *res, gpointer data) {
 }
 
 static char *
-build_folder_open_cmd(char *path, char *path_full, const char *cmd) {
+build_folder_open_cmd(const char *path, const char *path_full, const char *cmd) {
     if (!path || !path_full) {
         return NULL;
     }
@@ -94,8 +114,8 @@ build_folder_open_cmd(char *path, char *path_full, const char *cmd) {
     //     becomes '/foo/'\''bar'
 
     g_autoptr(GHashTable) keywords = g_hash_table_new(g_str_hash, g_str_equal);
-    g_hash_table_insert(keywords, "{path_raw}", path);
-    g_hash_table_insert(keywords, "{path_full_raw}", path_full);
+    g_hash_table_insert(keywords, "{path_raw}", (char *)path);
+    g_hash_table_insert(keywords, "{path_full_raw}", (char *)path_full);
     g_hash_table_insert(keywords, "{path}", path_quoted);
     g_hash_table_insert(keywords, "{path_full}", path_full_quoted);
 
@@ -107,23 +127,17 @@ build_folder_open_cmd(char *path, char *path_full, const char *cmd) {
 }
 
 static bool
-open_with_cmd(char *path, char *path_full, const char *cmd) {
+open_with_cmd(const char *path, const char *path_full, const char *cmd, GString *error_message) {
+    const char *error_description = _("Error while opening folder");
     g_autofree char *cmd_res = build_folder_open_cmd(path, path_full, cmd);
     if (!cmd_res) {
+        add_error_message_with_format(error_message, error_description, path_full, _("Failed to build open command"));
         return false;
     }
 
     g_autoptr(GError) error = NULL;
     if (!g_spawn_command_line_async(cmd_res, &error)) {
-
-        fprintf(stderr, "open: error: %s\n", error->message);
-        ui_utils_run_gtk_dialog_async(NULL,
-                                      GTK_MESSAGE_ERROR,
-                                      GTK_BUTTONS_OK,
-                                      "Error while opening file:",
-                                      error->message,
-                                      G_CALLBACK(gtk_widget_destroy),
-                                      NULL);
+        add_error_message(error_message, error->message);
         return false;
     }
 
@@ -131,13 +145,16 @@ open_with_cmd(char *path, char *path_full, const char *cmd) {
 }
 
 static bool
-open_application(const char *uri) {
+open_application_for_path(const char *path, GString *error_messages) {
     GdkDisplay *display = gdk_display_get_default();
+    const char *error_description = _("Error when launching desktop file");
     if (!display) {
+        add_error_message_with_format(error_messages, error_description, path, _("Failed to get default display"));
         return false;
     }
-    g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(uri);
+    g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
     if (!info) {
+        add_error_message_with_format(error_messages, error_description, path, _("Failed to get application information"));
         return false;
     }
 
@@ -147,45 +164,10 @@ open_application(const char *uri) {
     g_app_info_launch(info, NULL, context, &error);
 
     if (error) {
-        g_warning("Failed to launch app: %s", error->message);
+        add_error_message(error_messages, error->message);
         return false;
     }
 
-    return true;
-}
-
-static bool
-open_uri(const char *uri, bool launch_desktop_files) {
-    if (!g_file_test(uri, G_FILE_TEST_EXISTS)) {
-        return false;
-    }
-
-    if (launch_desktop_files) {
-        // if uri points to a desktop file we try to launch it
-        if (fsearch_file_utils_is_desktop_file(uri) && g_file_test(uri, G_FILE_TEST_IS_REGULAR) && open_application(uri)) {
-            return true;
-        }
-    }
-
-    g_autoptr(GError) error = NULL;
-    const char *argv[3];
-    argv[0] = "xdg-open";
-    argv[1] = uri;
-    argv[2] = NULL;
-
-    if (!g_spawn_async(NULL, (gchar **)argv, NULL, G_SPAWN_SEARCH_PATH, NULL, NULL, NULL, &error)) {
-
-        fprintf(stderr, "xdg-open: error: %s\n", error->message);
-        ui_utils_run_gtk_dialog_async(NULL,
-                                      GTK_MESSAGE_ERROR,
-                                      GTK_BUTTONS_OK,
-                                      "Error while opening file:",
-                                      error->message,
-                                      G_CALLBACK(gtk_widget_destroy),
-                                      NULL);
-
-        return false;
-    }
     return true;
 }
 
@@ -229,28 +211,159 @@ fsearch_file_utils_trash(const char *path) {
 }
 
 bool
-fsearch_file_utils_launch_uri(GString *path_full, bool launch_desktop_files) {
-    if (!path_full) {
-        return false;
+fsearch_file_utils_open_path(const char *path,
+                             bool launch_desktop_files,
+                             GAppLaunchContext *launch_context,
+                             GString *error_message) {
+    g_return_val_if_fail(path, false);
+
+    GList *list = g_list_append(NULL, g_strdup(path));
+    const bool res = fsearch_file_utils_open_path_list(list, launch_desktop_files, launch_context, error_message);
+    g_list_free_full(list, g_free);
+    return res;
+}
+
+typedef struct {
+    GHashTable *content_types;
+    GString *error_messages;
+    GAppLaunchContext *launch_context;
+    bool launch_desktop_applications;
+} FsearchFileUtilsLaunchContext;
+
+static void
+launch_for_content_type(const char *content_type, GPtrArray *files, FsearchFileUtilsLaunchContext *ctx) {
+    g_return_if_fail(content_type);
+    g_return_if_fail(files);
+
+    if (ctx->launch_desktop_applications && g_strcmp0(content_type, "application/x-desktop") == 0) {
+        // If requested, desktop files will launch their corresponding applications
+        for (uint32_t i = 0; i < files->len; ++i) {
+            GFile *file = g_ptr_array_index(files, i);
+            g_autofree char *path = g_file_get_path(file);
+            if (!path) {
+                add_error_message_with_format(ctx->error_messages,
+                                              _("Error when launching desktop file"),
+                                              path,
+                                              _("Failed to get path"));
+                continue;
+            }
+            open_application_for_path(path, ctx->error_messages);
+        }
+        return;
     }
-    return open_uri(path_full->str, launch_desktop_files);
+
+    g_autoptr(GAppInfo) info = g_app_info_get_default_for_type(content_type, TRUE);
+    if (!info) {
+        add_error_message_with_format(ctx->error_messages,
+                                      _("Error when getting information for content type"),
+                                      content_type,
+                                      _("No default application registered"));
+        return;
+    }
+
+    GList *uri_list = NULL;
+    for (uint32_t i = 0; i < files->len; ++i) {
+        GFile *file = g_ptr_array_index(files, i);
+        char *uri = g_file_get_uri(file);
+        if (uri) {
+            uri_list = g_list_append(uri_list, uri);
+        }
+    }
+
+    g_autoptr(GError) error = NULL;
+    if (!g_app_info_launch_uris(info, uri_list, ctx->launch_context, &error)) {
+        add_error_message(ctx->error_messages, error->message);
+    }
+    g_list_free_full(uri_list, g_free);
+}
+
+static void
+collect_for_content_type(GHashTable *content_types, const char *path_full, GString *error_message) {
+    g_return_if_fail(path_full);
+    g_return_if_fail(content_types);
+
+    g_autoptr(GError) error = NULL;
+    g_autofree char *content_type = fsearch_file_utils_get_content_type(path_full, &error);
+    if (!content_type) {
+        add_error_message(error_message, error->message);
+        return;
+    }
+
+    if (g_hash_table_contains(content_types, content_type)) {
+        // This content type was already added to the hash table.
+        // Add this file to the corresponding array.
+        GPtrArray *uris = g_hash_table_lookup(content_types, content_type);
+        if (uris) {
+            g_ptr_array_add(uris, g_file_new_for_path(path_full));
+        }
+    }
+    else {
+        // This content type hasn't been handled before.
+        // We create a new array to hold its files and add it to the hash table.
+        GPtrArray *uris = g_ptr_array_new_with_free_func(g_object_unref);
+        g_ptr_array_add(uris, g_file_new_for_path(path_full));
+        g_hash_table_insert(content_types, g_strdup(content_type), uris);
+    }
 }
 
 bool
-fsearch_file_utils_open_parent_folder_with_optional_command(GString *path_full, const char *cmd) {
-    g_autoptr(GFile) file = g_file_new_for_path(path_full->str);
-    g_autofree char *path = g_file_get_path(file);
+fsearch_file_utils_open_path_list(GList *paths,
+                                  bool launch_desktop_files,
+                                  GAppLaunchContext *launch_context,
+                                  GString *error_message) {
+    g_return_val_if_fail(paths, false);
 
-    if (!path) {
+    g_autoptr(GHashTable)
+        content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_ptr_array_unref);
+
+    for (GList *p = paths; p != NULL; p = p->next) {
+        char *path = p->data;
+        collect_for_content_type(content_types, path, error_message);
+    }
+    FsearchFileUtilsLaunchContext ctx = {.launch_context = launch_context,
+                                         .error_messages = error_message,
+                                         .launch_desktop_applications = launch_desktop_files};
+    g_hash_table_foreach(content_types, (GHFunc)launch_for_content_type, &ctx);
+    return error_message->len > 0 ? false : true;
+}
+
+bool
+fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
+                                                            const char *cmd,
+                                                            GAppLaunchContext *launch_context,
+                                                            GString *error_message) {
+    g_autoptr(GFile) file = g_file_new_for_path(path);
+    g_autoptr(GFile) parent = g_file_get_parent(file);
+    g_autofree char *parent_path = g_file_get_path(parent);
+
+    if (!parent_path) {
+        add_error_message_with_format(error_message,
+                                      _("Error when opening parent folder"),
+                                      path,
+                                      _("Failed to get parent path"));
         return false;
     }
 
     if (cmd) {
-        return open_with_cmd(path, path_full->str, cmd);
+        return open_with_cmd(parent_path, path, cmd, error_message);
     }
     else {
-        return open_uri(path, false);
+        return fsearch_file_utils_open_path(parent_path, false, launch_context, error_message);
     }
+}
+
+bool
+fsearch_file_utils_open_parent_folder_with_optional_command_from_path_list(GList *paths,
+                                                                           const char *cmd,
+                                                                           GAppLaunchContext *launchContext,
+                                                                           GString *error_message) {
+    g_return_val_if_fail(paths, false);
+
+    for (GList *p = paths; p != NULL; p = p->next) {
+        const char *path = p->data;
+        fsearch_file_utils_open_parent_folder_with_optional_command(path, cmd, launchContext, error_message);
+    }
+    return true;
 }
 
 static gchar *
@@ -363,4 +476,17 @@ fsearch_file_utils_get_size_formatted(off_t size, bool show_base_2_units) {
     else {
         return g_format_size_full(size, G_FORMAT_SIZE_DEFAULT);
     }
+}
+
+char *
+fsearch_file_utils_get_content_type(const char *path, GError **error) {
+    g_assert(path);
+    g_autoptr(GFile) file = g_file_new_for_path(path);
+    g_autoptr(GFileInfo)
+        info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, error);
+    if (!info) {
+        return NULL;
+    }
+    const char *content_type = g_file_info_get_content_type(info);
+    return content_type ? g_strdup(content_type) : NULL;
 }

@@ -352,18 +352,14 @@ fsearch_window_action_copy_name(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-open_cb(gpointer key, gpointer value, gpointer data) {
-    g_return_if_fail(value);
+collect_selected_entry(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
+    g_return_if_fail(paths);
+    g_return_if_fail(entry);
 
-    FsearchDatabaseEntry *entry = value;
-    g_autoptr(GString) path_full = db_entry_get_path_full(entry);
+    GString *path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    if (!fsearch_file_utils_launch(path_full, config->launch_desktop_files)) {
-        GString *open_failed_string = data;
-        append_line(open_failed_string, path_full->str);
-    }
+    *paths = g_list_append(*paths, g_string_free(path_full, FALSE));
 }
 
 static void
@@ -442,27 +438,48 @@ on_failed_to_open_file_response(GtkDialog *dialog, GtkResponseType response, gpo
 }
 
 static void
-fsearch_window_action_open_generic(FsearchApplicationWindow *win, GHFunc open_func) {
+fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder) {
     const guint selected_rows = fsearch_application_window_get_num_selected(win);
-    if (!confirm_file_open_action(GTK_WIDGET(win), selected_rows)) {
+    if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
         return;
     }
 
-    g_autoptr(GString) open_failed_string = g_string_sized_new(8192);
-    fsearch_application_window_selection_for_each(win, open_func, open_failed_string);
-    if (open_failed_string->len == 0) {
+    g_autoptr(GString) error_message = g_string_sized_new(8192);
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
+    GList *paths = NULL;
+    fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry, &paths);
+
+    GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
+    g_autoptr(GdkAppLaunchContext) launch_context = gdk_display_get_app_launch_context(display);
+
+    if (open_parent_folder) {
+        fsearch_file_utils_open_parent_folder_with_optional_command_from_path_list(paths,
+                                                                                   config->folder_open_cmd,
+                                                                                   G_APP_LAUNCH_CONTEXT(launch_context),
+                                                                                   error_message);
+    }
+    else {
+        fsearch_file_utils_open_path_list(paths,
+                                          config->launch_desktop_files,
+                                          G_APP_LAUNCH_CONTEXT(launch_context),
+                                          error_message);
+    }
+
+    g_list_free_full(paths, g_free);
+
+    if (error_message->len == 0) {
         // open succeeded
         fsearch_window_action_after_file_open(false);
     }
     else {
         // open failed
-        FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
         if (config->show_dialog_failed_opening) {
             ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
                                           GTK_MESSAGE_WARNING,
                                           GTK_BUTTONS_OK,
-                                          _("Failed to open:"),
-                                          open_failed_string->str,
+                                          _("Something went wrong."),
+                                          error_message->str,
                                           G_CALLBACK(on_failed_to_open_file_response),
                                           NULL);
         }
@@ -481,28 +498,13 @@ fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpo
 static void
 fsearch_window_action_open(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    fsearch_window_action_open_generic(self, open_cb);
-}
-
-static void
-open_folder_cb(gpointer key, gpointer value, gpointer data) {
-    g_return_if_fail(value);
-
-    FsearchDatabaseEntry *entry = value;
-
-    g_autoptr(GString) path_full = db_entry_get_path_full(entry);
-    g_return_if_fail(path_full);
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-    if (!fsearch_file_utils_open_parent_folder_with_optional_command(path_full, config->folder_open_cmd)) {
-        GString *open_failed_string = data;
-        append_line(open_failed_string, path_full->str);
-    }
+    fsearch_window_action_open_generic(self, false);
 }
 
 static void
 fsearch_window_action_open_folder(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    fsearch_window_action_open_generic(self, open_folder_cb);
+    fsearch_window_action_open_generic(self, true);
 }
 
 static void

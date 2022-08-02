@@ -34,11 +34,28 @@ bool
 fsearch_file_utils_remove(const char *path);
 
 bool
-fsearch_file_utils_launch_uri(GString *path_full, bool launch_desktop_files);
+fsearch_file_utils_open_path(const char *path,
+                             bool launch_desktop_files,
+                             GAppLaunchContext *launch_context,
+                             GString *error_message);
 
 bool
-fsearch_file_utils_open_parent_folder_with_optional_command(GString *path_full, const char *cmd);
+fsearch_file_utils_open_path_list(GList *paths,
+                                  bool launch_desktop_files,
+                                  GAppLaunchContext *launch_context,
+                                  GString *error_message);
 
+bool
+fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
+                                                            const char *cmd,
+                                                            GAppLaunchContext *launch_context,
+                                                            GString *error_message);
+
+bool
+fsearch_file_utils_open_parent_folder_with_optional_command_from_path_list(GList *paths,
+                                                                           const char *cmd,
+                                                                           GAppLaunchContext *launchContext,
+                                                                           GString *error_message);
 gchar *
 fsearch_file_utils_get_file_type(const gchar *name, gboolean is_dir);
 
@@ -59,3 +76,6 @@ fsearch_file_utils_is_desktop_file(const char *path);
 
 GIcon *
 fsearch_file_utils_get_desktop_file_icon(const char *path);
+
+char *
+fsearch_file_utils_get_content_type(const char *path, GError **error);

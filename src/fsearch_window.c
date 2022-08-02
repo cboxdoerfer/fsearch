@@ -516,13 +516,6 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
 }
 
 static void
-on_file_open_failed_response(GtkDialog *dialog, GtkResponseType response, gpointer user_data) {
-    GString *path = user_data;
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-    g_string_free(path, TRUE);
-}
-
-static void
 on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexType col, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
     if (!self->result_view->database_view) {
@@ -535,30 +528,9 @@ on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexTy
         launch_folder = true;
     }
 
-    db_view_lock(self->result_view->database_view);
-    g_autoptr(GString) path_full = db_view_entry_get_path_full_for_idx(self->result_view->database_view, row_idx);
-    db_view_unlock(self->result_view->database_view);
-
-    if (!path_full) {
-        return;
-    }
-
-    if (!launch_folder ? fsearch_file_utils_launch_uri(path_full, config->launch_desktop_files)
-                       : fsearch_file_utils_open_parent_folder_with_optional_command(path_full, config->folder_open_cmd)) {
-        // open succeeded
-        fsearch_window_action_after_file_open(true);
-    }
-    else if (config->show_dialog_failed_opening) {
-        // open failed
-        ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
-                                      GTK_MESSAGE_WARNING,
-                                      GTK_BUTTONS_OK,
-                                      _("Failed to open:"),
-                                      path_full->str,
-                                      G_CALLBACK(on_file_open_failed_response),
-                                      path_full);
-        path_full = NULL;
-    }
+    GActionGroup *group = G_ACTION_GROUP(self);
+    g_action_group_activate_action(group, launch_folder ? "open_folder" : "open", NULL);
+    return;
 }
 
 static void
