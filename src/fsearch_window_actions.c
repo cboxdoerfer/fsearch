@@ -22,6 +22,7 @@
 
 #include <gio/gdesktopappinfo.h>
 #include <glib/gi18n.h>
+#include <stdint.h>
 
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
