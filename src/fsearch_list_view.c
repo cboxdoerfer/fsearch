@@ -96,6 +96,7 @@ struct _FsearchListView {
     gpointer selection_user_data;
 };
 
+#define UNSET_ROW_IDX (-1)
 #define VIRTUAL_ROW_ABOVE_VIEW (-1)
 #define VIRTUAL_ROW_BELOW_VIEW (-2)
 
@@ -801,7 +802,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
     gtk_widget_queue_draw(GTK_WIDGET(view));
 
     if (view->extend_started_idx >= 0) {
-        view->extend_started_idx = -1;
+        view->extend_started_idx = UNSET_ROW_IDX;
     }
 }
 
@@ -836,8 +837,8 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
         view->y_bin_drag_started = -1;
         view->x_bin_drag_offset = -1;
         view->y_bin_drag_offset = -1;
-        view->rubberband_start_idx = -1;
-        view->rubberband_end_idx = -1;
+        view->rubberband_start_idx = UNSET_ROW_IDX;
+        view->rubberband_end_idx = UNSET_ROW_IDX;
         gtk_widget_queue_draw(GTK_WIDGET(view));
     }
 }
@@ -1067,7 +1068,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
             fsearch_list_view_select_range_silent(view, view->extend_started_idx, view->cursor_idx);
         }
         else if (!modify_selection) {
-            view->extend_started_idx = -1;
+            view->extend_started_idx = UNSET_ROW_IDX;
             if (num_selected > 0) {
                 fsearch_list_view_selection_clear_silent(view);
             }
@@ -1445,7 +1446,7 @@ fsearch_list_view_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event)
         gdk_window_set_cursor(view->bin_window, NULL);
         redraw_row(view, view->hovered_idx);
     }
-    view->hovered_idx = -1;
+    view->hovered_idx = UNSET_ROW_IDX;
 
     return TRUE;
 }
@@ -1457,7 +1458,7 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
     const gint old_hovered_idx = view->hovered_idx;
 
     if (event->window != view->bin_window) {
-        view->hovered_idx = -1;
+        view->hovered_idx = UNSET_ROW_IDX;
     }
     else {
         view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, (int)(event->y));
@@ -1679,10 +1680,10 @@ fsearch_list_view_init(FsearchListView *view) {
 
     view->header_height = ROW_HEIGHT_DEFAULT;
 
-    view->cursor_idx = -1;
+    view->cursor_idx = UNSET_ROW_IDX;
     view->highlight_cursor_idx = FALSE;
 
-    view->extend_started_idx = -1;
+    view->extend_started_idx = UNSET_ROW_IDX;
 
     view->scroll_timeout = 0;
 
@@ -1939,10 +1940,10 @@ fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_
     if (!view) {
         return;
     }
-    view->cursor_idx = -1;
+    view->cursor_idx = UNSET_ROW_IDX;
     view->highlight_cursor_idx = FALSE;
 
-    view->extend_started_idx = -1;
+    view->extend_started_idx = UNSET_ROW_IDX;
     view->num_rows = num_rows;
     view->list_height = num_rows * view->row_height;
     gtk_adjustment_set_value(view->vadjustment, 0);
