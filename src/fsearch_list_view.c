@@ -772,11 +772,16 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 
         if (n_press == 1) {
             if (extend_selection) {
-                if (view->cursor_idx < 0) {
+                if (view->cursor_idx == UNSET_ROW) {
+                    // The cursor index hasn't been set so far. So we start and end the extended selection
+                    // at the clicked row
                     view->cursor_idx = row_idx;
                 }
                 fsearch_list_view_selection_clear_silent(view);
+                // Select from the last cursor index to the clicked row
                 fsearch_list_view_select_range_silent(view, view->cursor_idx, row_idx);
+                // Set the cursor to the clicked row
+                view->cursor_idx = row_idx;
             }
             else if (modify_selection) {
                 view->cursor_idx = row_idx;
