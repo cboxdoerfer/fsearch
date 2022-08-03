@@ -661,9 +661,25 @@ fsearch_list_view_selection_clear(FsearchListView *view) {
     }
 }
 
+static int32_t
+fit_row_idx_in_view(FsearchListView *view, int32_t row_idx) {
+    if (row_idx == VIRTUAL_ROW_ABOVE_VIEW) {
+        return 0;
+    }
+    else if (row_idx == VIRTUAL_ROW_BELOW_VIEW) {
+        return view->num_rows - 1;
+    }
+    else {
+        return row_idx;
+    }
+}
+
 static void
-fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, guint end_idx) {
+fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, int32_t end_idx) {
     if (!view->has_selection_handlers) {
+        return;
+    }
+    if (start_idx == UNSET_ROW || end_idx == UNSET_ROW) {
         return;
     }
 
@@ -676,26 +692,12 @@ fsearch_list_view_select_range_silent(FsearchListView *view, guint start_idx, gu
     }
 
     // Translate VIRTUAL_ROW_ABOVE_VIEW to the first idx and VIRTUAL_ROW_BELOW_VIEW to the last idx
-    if (start_idx == VIRTUAL_ROW_ABOVE_VIEW) {
-        start_idx = 0;
-    }
-    if (end_idx == VIRTUAL_ROW_ABOVE_VIEW) {
-        end_idx = 0;
-    }
-    if (start_idx == VIRTUAL_ROW_BELOW_VIEW) {
-        start_idx = view->num_rows - 1;
-    }
-    if (end_idx == VIRTUAL_ROW_BELOW_VIEW) {
-        end_idx = view->num_rows - 1;
-    }
-
-    if (start_idx < 0 || end_idx < 0) {
-        return;
-    }
+    start_idx = fit_row_idx_in_view(view, start_idx);
+    end_idx = fit_row_idx_in_view(view, end_idx);
 
     start_idx = get_row_idx_for_sort_type(view, (gint)start_idx);
     end_idx = get_row_idx_for_sort_type(view, (gint)end_idx);
-    const guint temp_idx = start_idx;
+    const int32_t temp_idx = start_idx;
 
     if (start_idx > end_idx) {
         start_idx = end_idx;
@@ -764,6 +766,8 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         return;
     }
 
+    gboolean extended_selection = FALSE;
+
     if (button_pressed == GDK_BUTTON_PRIMARY) {
         gboolean modify_selection;
         gboolean extend_selection;
@@ -772,10 +776,14 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 
         if (n_press == 1) {
             if (extend_selection) {
+                extended_selection = TRUE;
                 if (view->cursor_idx == UNSET_ROW) {
                     // The cursor index hasn't been set so far. So we start and end the extended selection
                     // at the clicked row
                     view->cursor_idx = row_idx;
+                }
+                if (view->extend_started_idx == UNSET_ROW) {
+                    view->extend_started_idx = view->cursor_idx;
                 }
                 fsearch_list_view_selection_clear_silent(view);
                 // Select from the last cursor index to the clicked row
@@ -831,7 +839,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 
     gtk_widget_queue_draw(GTK_WIDGET(view));
 
-    if (view->extend_started_idx >= 0) {
+    if (!extended_selection) {
         view->extend_started_idx = UNSET_ROW;
     }
 }
@@ -897,6 +905,8 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
     int row_idx_2 = fsearch_list_view_get_row_idx_for_y_canvas(view, y2);
 
     if (row_idx_1 != view->rubberband_start_idx || row_idx_2 != view->rubberband_end_idx) {
+        view->cursor_idx = MAX(fit_row_idx_in_view(view, row_idx_1), fit_row_idx_in_view(view, row_idx_2));
+        view->extend_started_idx = MIN(fit_row_idx_in_view(view, row_idx_1), fit_row_idx_in_view(view, row_idx_2));
         view->rubberband_start_idx = row_idx_1;
         view->rubberband_end_idx = row_idx_2;
         fsearch_list_view_selection_clear_silent(view);
@@ -1070,7 +1080,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         const guint num_selected = fsearch_list_view_selection_num_selected(view);
 
         if (extend_selection) {
-            if (view->extend_started_idx < 0) {
+            if (view->extend_started_idx == UNSET_ROW) {
                 view->extend_started_idx = old_focused_idx;
             }
             if (num_selected > 0) {
