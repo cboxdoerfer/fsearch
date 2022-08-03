@@ -118,7 +118,7 @@ enum {
 };
 
 static gboolean
-is_row_idx_in_view(FsearchListView *view, int row_idx) {
+is_row_idx_valid(FsearchListView *view, int row_idx) {
     if (row_idx < 0) {
         return FALSE;
     }
@@ -141,7 +141,7 @@ get_last_row_idx(FsearchListView *view) {
 
 static inline int
 get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
-    if (!is_row_idx_in_view(view, row_idx)) {
+    if (!is_row_idx_valid(view, row_idx)) {
         return row_idx;
     }
 
@@ -212,8 +212,20 @@ fsearch_list_view_get_columns_width(FsearchListView *view) {
 }
 
 static gboolean
+is_row_idx_fully_in_view(FsearchListView *view, int row_idx) {
+    const int y_view_start = floor(get_vscroll_pos(view));
+    const int y_view_end = y_view_start + gtk_widget_get_allocated_height(GTK_WIDGET(view)) - view->header_height;
+    const int y_row = row_idx * view->row_height;
+
+    if (y_row > y_view_start && y_row + view->row_height < y_view_end) {
+        return TRUE;
+    }
+    return FALSE;
+}
+
+static gboolean
 get_row_rect_in_view(FsearchListView *view, int row_idx, cairo_rectangle_int_t *rec) {
-    if (!is_row_idx_in_view(view, row_idx)) {
+    if (!is_row_idx_valid(view, row_idx)) {
         return FALSE;
     }
 
@@ -636,7 +648,7 @@ static void
 fsearch_list_view_scroll_row_into_view(FsearchListView *view, int row_idx) {
     row_idx = fit_row_idx_in_view(view, row_idx);
 
-    if (redraw_row(view, row_idx)) {
+    if (is_row_idx_fully_in_view(view, row_idx)) {
         return;
     }
 
@@ -644,7 +656,7 @@ fsearch_list_view_scroll_row_into_view(FsearchListView *view, int row_idx) {
     int y_row = view->row_height * row_idx;
     int y_view_start = (int)floor(get_vscroll_pos(view)) + view->header_height;
 
-    if (y_view_start >= y_row) {
+    if (y_view_start >= y_row - view->row_height) {
         gtk_adjustment_set_value(view->vadjustment, y_row);
     }
     else {
@@ -787,7 +799,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
     }
 
     int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
-    if (!is_row_idx_in_view(view, row_idx)) {
+    if (!is_row_idx_valid(view, row_idx)) {
         fsearch_list_view_selection_clear(view);
         return;
     }
@@ -837,6 +849,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                 }
             }
             fsearch_list_view_selection_changed(view);
+            fsearch_list_view_scroll_row_into_view(view, view->cursor_idx);
         }
 
         if (n_press == 2 && !view->single_click_activate) {
