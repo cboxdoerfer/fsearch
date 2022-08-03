@@ -56,10 +56,13 @@ struct _FsearchListView {
 
     gboolean single_click_activate;
 
-    gint focused_idx;
+    // The cursor index should only be highlighted while the view is navigated with the keyboard
+    gboolean highlight_cursor_idx;
+    // cursor_idx is the row index which was last focused by the mouse (through a click) or keyboard
+    gint cursor_idx;
+    // hovered_idx is the row index which is currently being hovered by the mouse cursor
     gint hovered_idx;
 
-    gint last_clicked_idx;
     gint extend_started_idx;
 
     gint num_rows;
@@ -472,7 +475,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
                                 &row_rect,
                                 get_row_idx_for_sort_type(view, row_idx),
                                 fsearch_list_view_is_selected(view, row_idx),
-                                view->last_clicked_idx == row_idx ? TRUE : FALSE,
+                                view->cursor_idx == row_idx ? TRUE : FALSE,
                                 view->hovered_idx == row_idx ? TRUE : FALSE,
                                 fsearch_list_view_is_text_dir_rtl(view),
                                 view->draw_row_func_data);
@@ -480,11 +483,11 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
         }
     }
 
-    if (gtk_widget_has_focus(widget) && first_visible_row <= view->focused_idx
-        && view->focused_idx <= first_visible_row + num_rows_in_view) {
+    if (view->highlight_cursor_idx && gtk_widget_has_focus(widget) && first_visible_row <= view->cursor_idx
+        && view->cursor_idx <= first_visible_row + num_rows_in_view) {
         GtkStateFlags flags = gtk_style_context_get_state(context);
         flags |= GTK_STATE_FLAG_FOCUSED;
-        if (fsearch_list_view_is_selected(view, view->focused_idx)) {
+        if (fsearch_list_view_is_selected(view, view->cursor_idx)) {
             flags |= GTK_STATE_FLAG_SELECTED;
         }
 
@@ -493,7 +496,7 @@ fsearch_list_view_draw_list(GtkWidget *widget, GtkStyleContext *context, cairo_t
         gtk_render_focus(context,
                          cr,
                          x_offset,
-                         y_offset + (view->focused_idx - first_visible_row) * view->row_height,
+                         y_offset + (view->cursor_idx - first_visible_row) * view->row_height,
                          columns_width,
                          view->row_height);
         gtk_style_context_restore(context);
@@ -743,18 +746,18 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
 
         if (n_press == 1) {
             if (extend_selection) {
-                if (view->last_clicked_idx < 0) {
-                    view->last_clicked_idx = row_idx;
+                if (view->cursor_idx < 0) {
+                    view->cursor_idx = row_idx;
                 }
                 fsearch_list_view_selection_clear_silent(view);
-                fsearch_list_view_select_range_silent(view, view->last_clicked_idx, row_idx);
+                fsearch_list_view_select_range_silent(view, view->cursor_idx, row_idx);
             }
             else if (modify_selection) {
-                view->last_clicked_idx = row_idx;
+                view->cursor_idx = row_idx;
                 fsearch_list_view_selection_toggle_silent(view, row_idx);
             }
             else {
-                view->last_clicked_idx = row_idx;
+                view->cursor_idx = row_idx;
                 fsearch_list_view_selection_clear_silent(view);
                 fsearch_list_view_selection_toggle_silent(view, row_idx);
                 if (view->single_click_activate) {
@@ -784,7 +787,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
     }
 
     if (button_pressed == GDK_BUTTON_SECONDARY && n_press == 1) {
-        view->last_clicked_idx = row_idx;
+        view->cursor_idx = row_idx;
         if (!fsearch_list_view_is_selected(view, row_idx)) {
             fsearch_list_view_selection_clear_silent(view);
             fsearch_list_view_selection_toggle_silent(view, row_idx);
@@ -793,7 +796,8 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
     }
 
-    view->focused_idx = -1;
+    view->highlight_cursor_idx = FALSE;
+
     gtk_widget_queue_draw(GTK_WIDGET(view));
 
     if (view->extend_started_idx >= 0) {
@@ -1020,10 +1024,10 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         d_idx = fsearch_list_view_num_rows_for_view_height(view);
         break;
     case GDK_KEY_Home:
-        d_idx = -view->focused_idx;
+        d_idx = -view->cursor_idx;
         break;
     case GDK_KEY_End:
-        d_idx = view->num_rows - view->focused_idx - 1;
+        d_idx = view->num_rows - view->cursor_idx - 1;
         break;
     case GDK_KEY_Menu:
         // TODO: Popup menu at the last selected item, instead of the mouse pointer position (scroll to it if necessary)
@@ -1040,18 +1044,16 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
     }
 
     if (d_idx != 0) {
-        int old_focused_idx = view->focused_idx;
-        if (view->focused_idx >= 0) {
-            old_focused_idx = view->focused_idx;
-        }
-        else if (view->last_clicked_idx >= 0) {
-            old_focused_idx = view->last_clicked_idx;
+        int old_focused_idx = view->cursor_idx;
+        if (view->cursor_idx >= 0) {
+            old_focused_idx = view->cursor_idx;
         }
         else {
             old_focused_idx = 0;
         }
-        view->last_clicked_idx = -1;
-        view->focused_idx = CLAMP(old_focused_idx + d_idx, 0, view->num_rows - 1);
+
+        view->highlight_cursor_idx = TRUE;
+        view->cursor_idx = CLAMP(old_focused_idx + d_idx, 0, view->num_rows - 1);
 
         const guint num_selected = fsearch_list_view_selection_num_selected(view);
 
@@ -1062,18 +1064,18 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
             if (num_selected > 0) {
                 fsearch_list_view_selection_clear_silent(view);
             }
-            fsearch_list_view_select_range_silent(view, view->extend_started_idx, view->focused_idx);
+            fsearch_list_view_select_range_silent(view, view->extend_started_idx, view->cursor_idx);
         }
         else if (!modify_selection) {
             view->extend_started_idx = -1;
             if (num_selected > 0) {
                 fsearch_list_view_selection_clear_silent(view);
             }
-            fsearch_list_view_selection_toggle_silent(view, view->focused_idx);
+            fsearch_list_view_selection_toggle_silent(view, view->cursor_idx);
         }
 
         fsearch_list_view_selection_changed(view);
-        fsearch_list_view_scroll_row_into_view(view, view->focused_idx);
+        fsearch_list_view_scroll_row_into_view(view, view->cursor_idx);
         return TRUE;
     }
     return FALSE;
@@ -1082,7 +1084,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 static gint
 fsearch_list_view_focus_out_event(GtkWidget *widget, GdkEventFocus *event) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
-    redraw_row(view, view->focused_idx);
+    redraw_row(view, view->cursor_idx);
     return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->focus_out_event(widget, event);
 }
 
@@ -1677,8 +1679,9 @@ fsearch_list_view_init(FsearchListView *view) {
 
     view->header_height = ROW_HEIGHT_DEFAULT;
 
-    view->focused_idx = -1;
-    view->last_clicked_idx = -1;
+    view->cursor_idx = -1;
+    view->highlight_cursor_idx = FALSE;
+
     view->extend_started_idx = -1;
 
     view->scroll_timeout = 0;
@@ -1936,8 +1939,9 @@ fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_
     if (!view) {
         return;
     }
-    view->focused_idx = -1;
-    view->last_clicked_idx = -1;
+    view->cursor_idx = -1;
+    view->highlight_cursor_idx = FALSE;
+
     view->extend_started_idx = -1;
     view->num_rows = num_rows;
     view->list_height = num_rows * view->row_height;
@@ -2012,7 +2016,7 @@ fsearch_list_view_get_cursor(FsearchListView *view) {
     if (!view) {
         return 0;
     }
-    return view->focused_idx;
+    return view->cursor_idx;
 }
 
 void
@@ -2020,8 +2024,9 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
     if (!view) {
         return;
     }
-    view->focused_idx = CLAMP(row_idx, 0, view->num_rows);
-    fsearch_list_view_selection_add(view, view->focused_idx);
+    view->highlight_cursor_idx = TRUE;
+    view->cursor_idx = CLAMP(row_idx, 0, view->num_rows);
+    fsearch_list_view_selection_add(view, view->cursor_idx);
     fsearch_list_view_scroll_row_into_view(view, row_idx);
 }
 
