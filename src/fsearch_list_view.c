@@ -787,7 +787,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
     }
 
     int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
-    if (row_idx < 0) {
+    if (!is_row_idx_in_view(view, row_idx)) {
         fsearch_list_view_selection_clear(view);
         return;
     }
