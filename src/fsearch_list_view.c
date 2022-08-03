@@ -356,53 +356,6 @@ fsearch_list_view_get_rubberband_points(FsearchListView *view, double *x1, doubl
     *y2 = view->y_bin_drag_started + view->y_bin_drag_offset - y_drag_start_diff;
 }
 
-static gboolean
-vertical_autoscroll(gpointer data) {
-    FsearchListView *view = data;
-    if (!gtk_gesture_is_recognized(view->bin_drag_gesture)) {
-        goto out;
-    }
-    double y_drag_start = 0;
-    if (!gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->bin_drag_gesture), NULL, &y_drag_start)) {
-        goto out;
-    }
-    double y_drag_offset = 0;
-    if (!gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->bin_drag_gesture), NULL, &y_drag_offset)) {
-        goto out;
-    }
-
-    const double y_drag_point = y_drag_start + y_drag_offset;
-    const double view_height = gtk_widget_get_allocated_height(GTK_WIDGET(view));
-
-    double scroll_offset = 0;
-    if (y_drag_point < view->header_height) {
-        // the cursor is above the view -> scroll up
-        scroll_offset = y_drag_point - view->header_height;
-    }
-    else if (y_drag_point > view_height) {
-        // the cursor is below the view -> scroll down
-        scroll_offset = y_drag_point - view_height;
-    }
-
-    if (scroll_offset == 0) {
-        goto out;
-    }
-
-    gtk_adjustment_set_value(view->vadjustment, MAX(get_vscroll_pos(view) + scroll_offset, 0.0));
-    return G_SOURCE_CONTINUE;
-
-out:
-    view->scroll_timeout = 0;
-    return G_SOURCE_REMOVE;
-}
-
-static void
-add_vertical_autoscroll_timeout(FsearchListView *view) {
-    if (view->scroll_timeout == 0) {
-        view->scroll_timeout = g_timeout_add(33, vertical_autoscroll, view);
-    }
-}
-
 static void
 fsearch_list_view_draw_column_header(GtkWidget *widget, GtkStyleContext *context, cairo_t *cr) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
@@ -921,19 +874,13 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
 }
 
 static void
-on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
-                                             gdouble offset_x,
-                                             gdouble offset_y,
-                                             FsearchListView *view) {
-    GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
-
-    // if (gtk_gesture_get_sequence_state(GTK_GESTURE(gesture), sequence) != GTK_EVENT_SEQUENCE_CLAIMED) {
-    //     return;
-    // }
-
+update_rubberband_selection(FsearchListView *view) {
     if (!view->bin_drag_mode) {
         return;
     }
+    gdouble offset_x;
+    gdouble offset_y;
+    gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->bin_drag_gesture), &offset_x, &offset_y);
     view->highlight_cursor_idx = FALSE;
     view->rubberband_state = RUBBERBAND_SELECT_ACTIVE;
     view->x_bin_drag_offset = offset_x;
@@ -954,6 +901,70 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
         fsearch_list_view_selection_changed(view);
         return;
     }
+}
+
+static gboolean
+vertical_autoscroll(gpointer data) {
+    FsearchListView *view = data;
+    if (!gtk_gesture_is_recognized(view->bin_drag_gesture)) {
+        goto out;
+    }
+    double y_drag_start = 0;
+    if (!gtk_gesture_drag_get_start_point(GTK_GESTURE_DRAG(view->bin_drag_gesture), NULL, &y_drag_start)) {
+        goto out;
+    }
+    double y_drag_offset = 0;
+    if (!gtk_gesture_drag_get_offset(GTK_GESTURE_DRAG(view->bin_drag_gesture), NULL, &y_drag_offset)) {
+        goto out;
+    }
+
+    const double y_drag_point = y_drag_start + y_drag_offset;
+    const double view_height = gtk_widget_get_allocated_height(GTK_WIDGET(view));
+
+    double scroll_offset = 0;
+    if (y_drag_point < view->header_height) {
+        // the cursor is above the view -> scroll up
+        scroll_offset = y_drag_point - view->header_height;
+    }
+    else if (y_drag_point > view_height) {
+        // the cursor is below the view -> scroll down
+        scroll_offset = y_drag_point - view_height;
+    }
+
+    if (scroll_offset == 0) {
+        goto out;
+    }
+
+    // Make sure the rubberband selection gets updated while scrolling
+    update_rubberband_selection(view);
+
+    gtk_adjustment_set_value(view->vadjustment, MAX(get_vscroll_pos(view) + scroll_offset, 0.0));
+    return G_SOURCE_CONTINUE;
+
+out:
+    view->scroll_timeout = 0;
+    return G_SOURCE_REMOVE;
+}
+
+static void
+add_vertical_autoscroll_timeout(FsearchListView *view) {
+    if (view->scroll_timeout == 0) {
+        view->scroll_timeout = g_timeout_add(33, vertical_autoscroll, view);
+    }
+}
+
+static void
+on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
+                                             gdouble offset_x,
+                                             gdouble offset_y,
+                                             FsearchListView *view) {
+    GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
+
+    // if (gtk_gesture_get_sequence_state(GTK_GESTURE(gesture), sequence) != GTK_EVENT_SEQUENCE_CLAIMED) {
+    //     return;
+    // }
+
+    update_rubberband_selection(view);
     add_vertical_autoscroll_timeout(view);
     gtk_widget_queue_draw(GTK_WIDGET(view));
 }
