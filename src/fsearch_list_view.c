@@ -117,6 +117,17 @@ enum {
     PROP_VSCROLL_POLICY,
 };
 
+static gboolean
+is_row_idx_in_view(FsearchListView *view, int row_idx) {
+    if (row_idx < 0) {
+        return FALSE;
+    }
+    if (row_idx >= view->num_rows) {
+        return FALSE;
+    }
+    return TRUE;
+}
+
 static int
 get_last_row_idx(FsearchListView *view) {
     int last_row = view->num_rows - 1;
@@ -130,9 +141,10 @@ get_last_row_idx(FsearchListView *view) {
 
 static inline int
 get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
-    if (row_idx < 0) {
+    if (!is_row_idx_in_view(view, row_idx)) {
         return row_idx;
     }
+
     if (view->sort_type == GTK_SORT_ASCENDING) {
         return row_idx;
     }
@@ -201,7 +213,7 @@ fsearch_list_view_get_columns_width(FsearchListView *view) {
 
 static gboolean
 get_row_rect_in_view(FsearchListView *view, int row_idx, cairo_rectangle_int_t *rec) {
-    if (row_idx < 0) {
+    if (!is_row_idx_in_view(view, row_idx)) {
         return FALSE;
     }
 
@@ -607,9 +619,22 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
     return FALSE;
 }
 
+static int32_t
+fit_row_idx_in_view(FsearchListView *view, int32_t row_idx) {
+    if (row_idx == VIRTUAL_ROW_ABOVE_VIEW) {
+        return 0;
+    }
+    else if (row_idx == VIRTUAL_ROW_BELOW_VIEW) {
+        return get_last_row_idx(view);
+    }
+    else {
+        return CLAMP(row_idx, 0, get_last_row_idx(view));
+    }
+}
+
 static void
 fsearch_list_view_scroll_row_into_view(FsearchListView *view, int row_idx) {
-    row_idx = CLAMP(row_idx, 0, get_last_row_idx(view));
+    row_idx = fit_row_idx_in_view(view, row_idx);
 
     if (redraw_row(view, row_idx)) {
         return;
@@ -672,19 +697,6 @@ fsearch_list_view_selection_clear(FsearchListView *view) {
     if (view->has_selection_handlers) {
         view->unselect_func(view->selection_user_data);
         fsearch_list_view_selection_changed(view);
-    }
-}
-
-static int32_t
-fit_row_idx_in_view(FsearchListView *view, int32_t row_idx) {
-    if (row_idx == VIRTUAL_ROW_ABOVE_VIEW) {
-        return 0;
-    }
-    else if (row_idx == VIRTUAL_ROW_BELOW_VIEW) {
-        return get_last_row_idx(view);
-    }
-    else {
-        return row_idx;
     }
 }
 
