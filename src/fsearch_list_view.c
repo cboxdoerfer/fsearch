@@ -117,13 +117,27 @@ enum {
     PROP_VSCROLL_POLICY,
 };
 
+static int
+get_last_row_idx(FsearchListView *view) {
+    int last_row = view->num_rows - 1;
+    if (last_row < 0) {
+        return UNSET_ROW;
+    }
+    else {
+        return last_row;
+    }
+}
+
 static inline int
 get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
+    if (row_idx < 0) {
+        return row_idx;
+    }
     if (view->sort_type == GTK_SORT_ASCENDING) {
         return row_idx;
     }
     else {
-        return view->num_rows - row_idx - 1;
+        return get_last_row_idx(view) - row_idx;
     }
 }
 
@@ -595,7 +609,7 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
 
 static void
 fsearch_list_view_scroll_row_into_view(FsearchListView *view, int row_idx) {
-    row_idx = CLAMP(row_idx, 0, view->num_rows - 1);
+    row_idx = CLAMP(row_idx, 0, get_last_row_idx(view));
 
     if (redraw_row(view, row_idx)) {
         return;
@@ -667,7 +681,7 @@ fit_row_idx_in_view(FsearchListView *view, int32_t row_idx) {
         return 0;
     }
     else if (row_idx == VIRTUAL_ROW_BELOW_VIEW) {
-        return view->num_rows - 1;
+        return get_last_row_idx(view);
     }
     else {
         return row_idx;
@@ -704,7 +718,7 @@ fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, 
         end_idx = temp_idx;
     }
 
-    end_idx = MIN(view->num_rows - 1, end_idx);
+    end_idx = MIN(get_last_row_idx(view), end_idx);
 
     view->select_range_func((gint)start_idx, (gint)end_idx, view->selection_user_data);
 }
@@ -1049,7 +1063,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         d_idx = -view->cursor_idx;
         break;
     case GDK_KEY_End:
-        d_idx = view->num_rows - view->cursor_idx - 1;
+        d_idx = get_last_row_idx(view) - view->cursor_idx;
         break;
     case GDK_KEY_Menu:
         // TODO: Popup menu at the last selected item, instead of the mouse pointer position (scroll to it if necessary)
@@ -1075,7 +1089,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         }
 
         view->highlight_cursor_idx = TRUE;
-        view->cursor_idx = CLAMP(old_focused_idx + d_idx, 0, view->num_rows - 1);
+        view->cursor_idx = CLAMP(old_focused_idx + d_idx, 0, get_last_row_idx(view));
 
         const guint num_selected = fsearch_list_view_selection_num_selected(view);
 
@@ -2047,7 +2061,7 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
         return;
     }
     view->highlight_cursor_idx = TRUE;
-    view->cursor_idx = CLAMP(row_idx, 0, view->num_rows);
+    view->cursor_idx = CLAMP(row_idx, 0, get_last_row_idx(view));
     fsearch_list_view_selection_add(view, view->cursor_idx);
     fsearch_list_view_scroll_row_into_view(view, row_idx);
 }
