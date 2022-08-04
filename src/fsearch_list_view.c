@@ -1719,6 +1719,8 @@ fsearch_list_view_destroy(GtkWidget *widget) {
     g_clear_object(&view->multi_press_gesture);
     g_clear_object(&view->bin_drag_gesture);
     g_clear_object(&view->header_drag_gesture);
+
+    GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->destroy(widget);
 }
 
 static void
