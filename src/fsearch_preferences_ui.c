@@ -365,16 +365,16 @@ help_reset(gpointer user_data) {
 static gboolean
 on_help_reset(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     if (help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(help_expander))) {
-        return FALSE;
+        return GDK_EVENT_PROPAGATE;
     }
     help_reset_timeout_id = g_timeout_add(200, help_reset, NULL);
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 }
 
 static gboolean
 on_help_show(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip *tooltip, gpointer user_data) {
     if (help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(help_expander))) {
-        return FALSE;
+        return GDK_EVENT_PROPAGATE;
     }
 
     if (help_reset_timeout_id != 0) {
@@ -384,7 +384,7 @@ on_help_show(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip
     if (help_stack != NULL) {
         gtk_stack_set_visible_child(GTK_STACK(help_stack), GTK_WIDGET(user_data));
     }
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 }
 
 static GtkWidget *

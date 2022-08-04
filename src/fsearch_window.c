@@ -469,9 +469,9 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
         switch (keyval) {
         case GDK_KEY_C:
             g_action_group_activate_action(group, "copy_filepath_clipboard", NULL);
-            return TRUE;
+            return GDK_EVENT_STOP;
         default:
-            return FALSE;
+            return GDK_EVENT_PROPAGATE;
         }
     }
     else if ((state & default_modifiers) == GDK_CONTROL_MASK) {
@@ -479,40 +479,40 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
             g_action_group_activate_action(group, "open_folder", NULL);
-            return TRUE;
+            return GDK_EVENT_STOP;
         case GDK_KEY_c:
             g_action_group_activate_action(group, "copy_clipboard", NULL);
-            return TRUE;
+            return GDK_EVENT_STOP;
         case GDK_KEY_x:
             g_action_group_activate_action(group, "cut_clipboard", NULL);
-            return TRUE;
+            return GDK_EVENT_STOP;
         default:
-            return FALSE;
+            return GDK_EVENT_PROPAGATE;
         }
     }
     else if ((state & default_modifiers) == GDK_SHIFT_MASK) {
         switch (keyval) {
         case GDK_KEY_Delete:
             g_action_group_activate_action(group, "delete_selection", NULL);
-            return TRUE;
+            return GDK_EVENT_STOP;
         default:
-            return FALSE;
+            return GDK_EVENT_PROPAGATE;
         }
     }
     else {
         switch (keyval) {
         case GDK_KEY_Delete:
             g_action_group_activate_action(group, "move_to_trash", NULL);
-            return TRUE;
+            return GDK_EVENT_STOP;
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
             g_action_group_activate_action(group, "open", NULL);
-            return TRUE;
+            return GDK_EVENT_STOP;
         default:
-            return FALSE;
+            return GDK_EVENT_PROPAGATE;
         }
     }
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 }
 
 static void
