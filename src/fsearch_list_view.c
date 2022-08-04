@@ -1224,10 +1224,42 @@ fsearch_list_view_get_property(GObject *object, guint prop_id, GValue *value, GP
 }
 
 static void
+update_hovered_idx_for_current_cursor_position(FsearchListView *view) {
+#if GTK_CHECK_VERSION(3, 20, 0)
+    GdkSeat *seat = gdk_display_get_default_seat(gdk_display_get_default());
+    if (!seat) {
+        return;
+    }
+    GdkDevice *pointer_device = gdk_seat_get_pointer(seat);
+#else
+    GdkDeviceManager *device_manager = gdk_display_get_device_manager(gdk_display_get_default());
+    if (!device_manager) {
+        return;
+    }
+    GdkDevice *pointer_device = gdk_device_manager_get_client_pointer(device_manager);
+#endif
+    if (!pointer_device) {
+        return;
+    }
+    gint x_pointer = 0;
+    gint y_pointer = 0;
+    const int view_width = gtk_widget_get_allocated_width(GTK_WIDGET(view));
+    const int x_view_in_bin_window = get_hscroll_pos(view);
+    gdk_window_get_device_position(view->bin_window, pointer_device, &x_pointer, &y_pointer, NULL);
+    if (x_pointer >= x_view_in_bin_window && x_pointer <= view_width) {
+        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, y_pointer);
+    }
+}
+
+static void
 on_fsearch_list_view_adjustment_changed(GtkAdjustment *adjustment, FsearchListView *view) {
     if (gtk_widget_get_realized(GTK_WIDGET(view))) {
         gdk_window_move(view->bin_window, -get_hscroll_pos(view), -get_vscroll_pos(view) + view->header_height);
         gdk_window_move(view->header_window, -get_hscroll_pos(view), 0);
+
+        // We don't receive motion events while scrolling, because the mouse cursor usually doesn't move,
+        // but we still need to update the hovered index, since the content below the cursor moves.
+        update_hovered_idx_for_current_cursor_position(view);
     }
 }
 
