@@ -563,7 +563,7 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
 
     GdkRectangle clip_rec = {};
     if (!gdk_cairo_get_clip_rectangle(cr, &clip_rec)) {
-        return FALSE;
+        return GDK_EVENT_PROPAGATE;
     }
 
     const int width = gtk_widget_get_allocated_width(widget);
@@ -581,7 +581,7 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
         fsearch_list_view_draw_column_header(widget, context, cr);
     }
 
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 }
 
 static int32_t
@@ -1111,10 +1111,10 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         if (extend_selection) {
             // Shift + F10 -> open context menu
             g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
-            return TRUE;
+            return GDK_EVENT_STOP;
         }
     default:
-        return FALSE;
+        return GDK_EVENT_PROPAGATE;
     }
 
     if (d_idx != 0) {
@@ -1150,9 +1150,9 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 
         fsearch_list_view_selection_changed(view);
         fsearch_list_view_scroll_row_into_view(view, view->cursor_idx);
-        return TRUE;
+        return GDK_EVENT_STOP;
     }
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 }
 
 static gint
@@ -1553,7 +1553,7 @@ fsearch_list_view_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event)
     }
     view->hovered_idx = UNSET_ROW;
 
-    return TRUE;
+    return GDK_EVENT_PROPAGATE;
 }
 
 static gboolean
@@ -1992,9 +1992,9 @@ on_fsearch_list_view_header_button_pressed(GtkWidget *widget, GdkEvent *event, g
 #else
         gtk_menu_popup_at_pointer(GTK_MENU(menu_widget), NULL);
 #endif
-        return TRUE;
+        return GDK_EVENT_STOP;
     }
-    return FALSE;
+    return GDK_EVENT_PROPAGATE;
 }
 
 FsearchListViewColumn *
