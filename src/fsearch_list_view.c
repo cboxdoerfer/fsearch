@@ -937,6 +937,7 @@ vertical_autoscroll(gpointer data) {
 
     // Make sure the rubberband selection gets updated while scrolling
     update_rubberband_selection(view);
+    view->hovered_idx = UNSET_ROW;
 
     gtk_adjustment_set_value(view->vadjustment, MAX(get_vscroll_pos(view) + scroll_offset, 0.0));
     return G_SOURCE_CONTINUE;
