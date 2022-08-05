@@ -158,15 +158,20 @@ static void
 on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType response, gpointer user_data) {
 #endif
     FsearchPreferencesFileChooserContext *ctx = user_data;
+    g_assert(ctx);
+    g_assert(ctx->add_path_cb);
+
     if (response == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-        g_autofree char *uri = gtk_file_chooser_get_uri(chooser);
-        g_autofree char *path = g_filename_from_uri(uri, NULL, NULL);
-
-        if (path) {
-            if (ctx->add_path_cb) {
-                ctx->add_path_cb(ctx->model, path);
+        GSList *filenames = gtk_file_chooser_get_filenames(chooser);
+        if (filenames) {
+            for (GSList *f = filenames; f != NULL; f = f->next) {
+                gchar *filename = f->data;
+                if (filename) {
+                    ctx->add_path_cb(ctx->model, filename);
+                }
             }
+            g_slist_free_full(g_steal_pointer(&filenames), g_free);
         }
     }
 
@@ -208,6 +213,7 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     gtk_native_dialog_set_modal(GTK_NATIVE_DIALOG(dialog), true);
     gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
 #endif
+    gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
 }
 
 void
