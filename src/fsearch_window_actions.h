@@ -27,4 +27,4 @@ void
 fsearch_window_actions_update(FsearchApplicationWindow *self);
 
 void
-fsearch_window_action_after_file_open(bool action_mouse);
+fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse);

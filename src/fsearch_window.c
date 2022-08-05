@@ -528,8 +528,7 @@ on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexTy
         launch_folder = true;
     }
 
-    GActionGroup *group = G_ACTION_GROUP(self);
-    g_action_group_activate_action(group, launch_folder ? "open_folder" : "open", NULL);
+    fsearch_window_action_open_generic(self, launch_folder ? true : false, true);
     return;
 }
 

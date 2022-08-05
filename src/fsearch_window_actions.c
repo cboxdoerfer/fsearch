@@ -391,8 +391,8 @@ append_file_to_list(gpointer key, gpointer value, gpointer data) {
     *list = g_list_append(*list, g_file_new_for_path(path_full->str));
 }
 
-void
-fsearch_window_action_after_file_open(bool action_mouse) {
+static void
+action_after_open(bool action_mouse) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     if ((config->action_after_file_open_keyboard && !action_mouse)
@@ -447,8 +447,8 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     g_clear_object(&app_info);
 }
 
-static void
-fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder) {
+void
+fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse) {
     const guint selected_rows = fsearch_application_window_get_num_selected(win);
     if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
         return;
@@ -480,7 +480,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
 
     if (error_message->len == 0) {
         // open succeeded
-        fsearch_window_action_after_file_open(false);
+        action_after_open(triggered_with_mouse);
     }
     else {
         // open failed
@@ -508,13 +508,13 @@ fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpo
 static void
 fsearch_window_action_open(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    fsearch_window_action_open_generic(self, false);
+    fsearch_window_action_open_generic(self, false, false);
 }
 
 static void
 fsearch_window_action_open_folder(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    fsearch_window_action_open_generic(self, true);
+    fsearch_window_action_open_generic(self, true, false);
 }
 
 static void
