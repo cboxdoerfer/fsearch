@@ -1057,7 +1057,6 @@ vertical_autoscroll(gpointer data) {
     }
 
     // Make sure the rubberband selection gets updated while scrolling
-    update_rubberband_selection(view);
     view->hovered_idx = UNSET_ROW;
 
     gtk_adjustment_set_value(view->vadjustment, MAX(get_vscroll_pos(view) + scroll_offset, 0.0));
@@ -1387,6 +1386,7 @@ on_fsearch_list_view_adjustment_changed(GtkAdjustment *adjustment, FsearchListVi
         // We don't receive motion events while scrolling, because the mouse cursor usually doesn't move,
         // but we still need to update the hovered index, since the content below the cursor moves.
         update_hovered_idx_for_current_cursor_position(view);
+        update_rubberband_selection(view);
     }
 }
 
