@@ -1095,7 +1095,7 @@ on_fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
                                             gdouble start_x,
                                             gdouble start_y,
                                             FsearchListView *view) {
-    if (start_y > view->header_height) {
+    if (start_y > view->header_height && !view->single_click_activate) {
         if (!gtk_widget_has_focus(GTK_WIDGET(view))) {
             gtk_widget_grab_focus(GTK_WIDGET(view));
         }
@@ -1384,7 +1384,7 @@ on_fsearch_list_view_adjustment_changed(GtkAdjustment *adjustment, FsearchListVi
         gdk_window_move(view->header_window, -get_hscroll_pos(view), 0);
 
         // We don't receive motion events while scrolling, because the mouse cursor usually doesn't move,
-        // but we still need to update the hovered index, since the content below the cursor moves.
+        // but we still need to update the hovered index and rubberband, since the content below the cursor moves.
         update_hovered_idx_for_current_cursor_position(view);
         update_rubberband_selection(view);
     }
