@@ -1197,6 +1197,11 @@ static gboolean
 fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
+    if (view->rubberband_state == RUBBERBAND_SELECT_ACTIVE) {
+        // Don't support key press events while rubber band selection is active
+        return GDK_EVENT_STOP;
+    }
+
     gboolean modify_selection;
     gboolean extend_selection;
 
