@@ -86,6 +86,7 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
                                          FsearchListViewSelectFunc select_func,
                                          FsearchListViewSelectToggleFunc select_toggle_func,
                                          FsearchListViewSelectRangeFunc select_range_func,
+                                         FsearchListViewSelectRangeFunc toggle_range_func,
                                          FsearchListViewUnselectAllFunc unselect_func,
                                          FsearchListViewNumSelectedFunc num_selected_func,
                                          gpointer user_data);

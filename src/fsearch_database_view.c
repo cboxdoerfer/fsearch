@@ -892,6 +892,21 @@ db_view_is_selected(FsearchDatabaseView *view, uint32_t idx) {
 }
 
 void
+db_view_toggle_range(FsearchDatabaseView *view, uint32_t start_idx, uint32_t end_idx) {
+    g_assert(view);
+    db_view_lock(view);
+    for (uint32_t i = start_idx; i <= end_idx; i++) {
+        FsearchDatabaseEntry *entry = db_view_get_entry_for_idx(view, i);
+        if (entry) {
+            fsearch_selection_select_toggle(view->selection, entry);
+        }
+    }
+    db_view_unlock(view);
+
+    notify_selection_changed(view);
+}
+
+void
 db_view_select_range(FsearchDatabaseView *view, uint32_t start_idx, uint32_t end_idx) {
     g_assert(view);
     db_view_lock(view);

@@ -680,6 +680,14 @@ on_listview_row_unselect_all(gpointer user_data) {
 }
 
 static void
+on_listview_row_toggle_range(int start_row, int end_row, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
+    if (win->result_view->database_view) {
+        db_view_toggle_range(win->result_view->database_view, start_row, end_row);
+    }
+}
+
+static void
 on_listview_row_select_range(int start_row, int end_row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     if (win->result_view->database_view) {
@@ -771,6 +779,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
                                              on_listview_row_select,
                                              on_listview_row_select_toggle,
                                              on_listview_row_select_range,
+                                             on_listview_row_toggle_range,
                                              on_listview_row_unselect_all,
                                              on_listview_row_num_selected,
                                              win);

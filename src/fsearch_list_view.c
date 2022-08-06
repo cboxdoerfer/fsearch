@@ -53,6 +53,8 @@ struct _FsearchListView {
 
     gint rubberband_start_idx;
     gint rubberband_end_idx;
+    gboolean rubberband_extend;
+    gboolean rubberband_modify;
 
     gboolean single_click_activate;
 
@@ -90,6 +92,7 @@ struct _FsearchListView {
     FsearchListViewIsSelectedFunc is_selected_func;
     FsearchListViewSelectFunc select_func;
     FsearchListViewSelectRangeFunc select_range_func;
+    FsearchListViewSelectRangeFunc toggle_range_func;
     FsearchListViewSelectToggleFunc select_toggle_func;
     FsearchListViewUnselectAllFunc unselect_func;
     FsearchListViewNumSelectedFunc num_selected_func;
@@ -666,7 +669,7 @@ fsearch_list_view_selection_clear(FsearchListView *view) {
 }
 
 static void
-fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, int32_t end_idx) {
+fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, int32_t end_idx, gboolean toggle) {
     if (!view->has_selection_handlers) {
         return;
     }
@@ -697,7 +700,12 @@ fsearch_list_view_select_range_silent(FsearchListView *view, int32_t start_idx, 
 
     end_idx = MIN(get_last_row_idx(view), end_idx);
 
-    view->select_range_func((gint)start_idx, (gint)end_idx, view->selection_user_data);
+    if (toggle) {
+        view->toggle_range_func((gint)start_idx, (gint)end_idx, view->selection_user_data);
+    }
+    else {
+        view->select_range_func((gint)start_idx, (gint)end_idx, view->selection_user_data);
+    }
 }
 
 static void
@@ -751,8 +759,15 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
         return;
     }
 
+    gboolean modify_selection;
+    gboolean extend_selection;
+
+    fsearch_list_view_get_selection_modifiers(view, &modify_selection, &extend_selection);
+
     int row_idx = fsearch_list_view_get_row_idx_for_y_view(view, y);
-    if (!is_row_idx_valid(view, row_idx)) {
+
+    // In modify selection mode (i.e. while Ctrl is pressed) the selection must not be cleared
+    if (!is_row_idx_valid(view, row_idx) && !modify_selection) {
         fsearch_list_view_selection_clear(view);
         return;
     }
@@ -760,11 +775,6 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
     gboolean extended_selection = FALSE;
 
     if (button_pressed == GDK_BUTTON_PRIMARY) {
-        gboolean modify_selection;
-        gboolean extend_selection;
-
-        fsearch_list_view_get_selection_modifiers(view, &modify_selection, &extend_selection);
-
         if (n_press == 1) {
             if (extend_selection) {
                 extended_selection = TRUE;
@@ -778,7 +788,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                 }
                 fsearch_list_view_selection_clear_silent(view);
                 // Select from the last cursor index to the clicked row
-                fsearch_list_view_select_range_silent(view, view->cursor_idx, row_idx);
+                fsearch_list_view_select_range_silent(view, view->cursor_idx, row_idx, FALSE);
                 // Set the cursor to the clicked row
                 view->cursor_idx = row_idx;
             }
@@ -869,7 +879,100 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
         view->y_bin_drag_offset = -1;
         view->rubberband_start_idx = UNSET_ROW;
         view->rubberband_end_idx = UNSET_ROW;
+        view->rubberband_extend = FALSE;
+        view->rubberband_modify = FALSE;
         gtk_widget_queue_draw(GTK_WIDGET(view));
+    }
+}
+
+static int
+cmp_row_idx(int i1, int i2) {
+    g_assert(i1 != UNSET_ROW);
+    g_assert(i2 != UNSET_ROW);
+
+    if (i1 == i2) {
+        return 0;
+    }
+
+    if (i1 == VIRTUAL_ROW_BELOW_VIEW || i2 == VIRTUAL_ROW_ABOVE_VIEW) {
+        return 1;
+    }
+    if (i2 == VIRTUAL_ROW_BELOW_VIEW || i1 == VIRTUAL_ROW_ABOVE_VIEW) {
+        return -1;
+    }
+    return i1 - i2;
+}
+
+static void
+rubberband_toggle_range(FsearchListView *view, int start_idx, int end_idx, int prev_end_idx) {
+    int cmp_old_new_res = cmp_row_idx(prev_end_idx, end_idx);
+    int cmp_start_end_res = cmp_row_idx(start_idx, end_idx);
+    int cmp_start_old_end_res = cmp_row_idx(start_idx, prev_end_idx);
+    if (cmp_old_new_res == 0) {
+        g_assert_not_reached();
+    }
+    else if (cmp_old_new_res > 0) {
+        // end < old_end
+        if (cmp_start_old_end_res >= 0) {
+            // end < old_end <= start
+            // selection grows upwards
+            fsearch_list_view_select_range_silent(view,
+                                                  end_idx,
+                                                  prev_end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view)
+                                                                                         : prev_end_idx - 1,
+                                                  TRUE);
+        }
+        else {
+            // start < old_end
+            if (cmp_start_end_res > 0) {
+                // end < start < old_end
+                // toggle everything from end_idx to old_end_idx, except start_idx
+                fsearch_list_view_select_range_silent(view, end_idx, prev_end_idx, TRUE);
+                fsearch_list_view_selection_toggle_silent(view, start_idx);
+            }
+            else {
+                // start <= end < old_end
+                // toggle everything after end_idx til old_end
+                if (end_idx + 1 <= get_last_row_idx(view)) {
+                    fsearch_list_view_select_range_silent(view,
+                                                          end_idx + 1,
+                                                          prev_end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view)
+                                                                                                 : prev_end_idx,
+                                                          TRUE);
+                }
+            }
+        }
+    }
+    else {
+        // old_end < end
+        if (cmp_start_old_end_res > 0) {
+            // old_end < start
+            if (cmp_start_end_res >= 0) {
+                // old_end < end <= start
+                // toggle everything from old_end to the row before end
+                fsearch_list_view_select_range_silent(view,
+                                                      prev_end_idx,
+                                                      end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view)
+                                                                                        : end_idx - 1,
+                                                      TRUE);
+            }
+            else {
+                // old_end < start < end
+                // toggle everything from old_end to end, except start_idx
+                fsearch_list_view_select_range_silent(view, prev_end_idx, end_idx, TRUE);
+                fsearch_list_view_selection_toggle_silent(view, start_idx);
+            }
+        }
+        else {
+            // start <= old_end < end
+            // toggle everything after old_end til end
+            if (prev_end_idx + 1 <= get_last_row_idx(view)) {
+                fsearch_list_view_select_range_silent(view,
+                                                      prev_end_idx + 1,
+                                                      end_idx == VIRTUAL_ROW_BELOW_VIEW ? get_last_row_idx(view) : end_idx,
+                                                      TRUE);
+            }
+        }
     }
 }
 
@@ -888,19 +991,37 @@ update_rubberband_selection(FsearchListView *view) {
 
     double x1, y1, x2, y2;
     fsearch_list_view_get_rubberband_points(view, &x1, &y1, &x2, &y2);
-    int row_idx_1 = fsearch_list_view_get_row_idx_for_y_canvas(view, y1);
-    int row_idx_2 = fsearch_list_view_get_row_idx_for_y_canvas(view, y2);
+    int start_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, y1);
+    int end_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, y2);
+    int prev_start_idx = view->rubberband_start_idx;
+    int prev_end_idx = view->rubberband_end_idx;
 
-    if (row_idx_1 != view->rubberband_start_idx || row_idx_2 != view->rubberband_end_idx) {
-        view->cursor_idx = MAX(fit_row_idx_in_view(view, row_idx_1), fit_row_idx_in_view(view, row_idx_2));
-        view->extend_started_idx = MIN(fit_row_idx_in_view(view, row_idx_1), fit_row_idx_in_view(view, row_idx_2));
-        view->rubberband_start_idx = row_idx_1;
-        view->rubberband_end_idx = row_idx_2;
-        fsearch_list_view_selection_clear_silent(view);
-        fsearch_list_view_select_range_silent(view, row_idx_1, row_idx_2);
-        fsearch_list_view_selection_changed(view);
+    view->rubberband_start_idx = start_idx;
+    view->rubberband_end_idx = end_idx;
+
+    // Only update selection when our end_idx changed to last time
+    if (end_idx == prev_end_idx) {
         return;
     }
+    // The start index should always stay the same while the rubber band is moved
+    // only in the very first call of each rubber band selection are they different
+    if (start_idx != prev_start_idx) {
+        return;
+    }
+
+    view->cursor_idx = MAX(fit_row_idx_in_view(view, start_idx), fit_row_idx_in_view(view, end_idx));
+    view->extend_started_idx = MIN(fit_row_idx_in_view(view, start_idx), fit_row_idx_in_view(view, end_idx));
+    if (view->rubberband_modify) {
+        // rubber band selection while Ctrl key is pressed
+        rubberband_toggle_range(view, start_idx, end_idx, prev_end_idx);
+    }
+    else {
+        // Normal ranged selection
+        fsearch_list_view_selection_clear_silent(view);
+        fsearch_list_view_select_range_silent(view, start_idx, end_idx, FALSE);
+    }
+    fsearch_list_view_selection_changed(view);
+    return;
 }
 
 static gboolean
@@ -984,6 +1105,7 @@ on_fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
         view->y_bin_drag_started = start_y + get_vscroll_pos(view) - view->header_height;
         view->bin_drag_mode = TRUE;
         view->rubberband_state = RUBBERBAND_SELECT_WAITING;
+        fsearch_list_view_get_selection_modifiers(view, &view->rubberband_modify, &view->rubberband_extend);
         gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
     }
 }
@@ -1138,7 +1260,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
             if (num_selected > 0) {
                 fsearch_list_view_selection_clear_silent(view);
             }
-            fsearch_list_view_select_range_silent(view, view->extend_started_idx, view->cursor_idx);
+            fsearch_list_view_select_range_silent(view, view->extend_started_idx, view->cursor_idx, FALSE);
         }
         else if (!modify_selection) {
             view->extend_started_idx = UNSET_ROW;
@@ -2097,6 +2219,7 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
                                          FsearchListViewSelectFunc select_func,
                                          FsearchListViewSelectToggleFunc select_toggle_func,
                                          FsearchListViewSelectRangeFunc select_range_func,
+                                         FsearchListViewSelectRangeFunc toggle_range_func,
                                          FsearchListViewUnselectAllFunc unselect_func,
                                          FsearchListViewNumSelectedFunc num_selected_func,
                                          gpointer user_data) {
@@ -2107,6 +2230,7 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
     view->select_func = select_func;
     view->select_toggle_func = select_toggle_func;
     view->select_range_func = select_range_func;
+    view->toggle_range_func = toggle_range_func;
     view->unselect_func = unselect_func;
     view->num_selected_func = num_selected_func;
     view->selection_user_data = user_data;
