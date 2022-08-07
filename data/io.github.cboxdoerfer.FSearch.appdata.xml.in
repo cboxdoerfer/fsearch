@@ -43,6 +43,7 @@
     </screenshots>
     <url type="homepage">https://github.com/cboxdoerfer/fsearch</url>
     <url type="bugtracker">https://github.com/cboxdoerfer/fsearch/issues</url>
+    <url type="donation">https://github.com/sponsors/cboxdoerfer</url>
     <url type="help">https://github.com/cboxdoerfer/fsearch/wiki</url>
     <!-- Translators: please do NOT translate this. -->
     <developer_name>Christian Boxdörfer</developer_name>
