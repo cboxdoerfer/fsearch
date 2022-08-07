@@ -246,7 +246,7 @@ launch_for_content_type(const char *content_type, GPtrArray *files, FsearchFileU
         return;
     }
 
-    g_autoptr(GAppInfo) info = g_app_info_get_default_for_type(content_type, TRUE);
+    g_autoptr(GAppInfo) info = g_app_info_get_default_for_type(content_type, FALSE);
     if (!info) {
         add_error_message_with_format(ctx->error_messages,
                                       _("Error when getting information for content type"),
