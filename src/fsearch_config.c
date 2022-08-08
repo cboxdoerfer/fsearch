@@ -411,7 +411,10 @@ config_load_default(FsearchConfig *config) {
 
     // Locations
     config->indexes = NULL;
-    config->exclude_locations = NULL;
+    FsearchExcludePath *exclude_proc = fsearch_exclude_path_new("/proc", true);
+    FsearchExcludePath *exclude_sys = fsearch_exclude_path_new("/sys", true);
+    config->exclude_locations = g_list_append(config->exclude_locations, exclude_proc);
+    config->exclude_locations = g_list_append(config->exclude_locations, exclude_sys);
     config->filters = fsearch_filter_manager_new_with_defaults();
 
     return true;
