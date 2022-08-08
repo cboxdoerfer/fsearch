@@ -77,9 +77,14 @@ static const char *fsearch_bus_name = "io.github.cboxdoerfer.FSearch";
 static const char *fsearch_db_worker_bus_name = "io.github.cboxdoerfer.FSearchDatabaseWorker";
 static const char *fsearch_object_path = "/io/github/cboxdoerfer/FSearch";
 
-enum { DATABASE_SCAN_STARTED, DATABASE_UPDATE_FINISHED, DATABASE_LOAD_STARTED, NUM_SIGNALS };
+enum {
+    FSEARCH_SIGNAL_DATABASE_SCAN_STARTED,
+    FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED,
+    FSEARCH_SIGNAL_DATABASE_LOAD_STARTED,
+    NUM_FSEARCH_SIGNALS
+};
 
-static guint fsearch_signals[NUM_SIGNALS];
+static guint fsearch_signals[NUM_FSEARCH_SIGNALS];
 
 G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
@@ -181,7 +186,7 @@ on_database_update_finished(gpointer user_data) {
         action_set_enabled("cancel_update_database", FALSE);
     }
     fsearch_application_state_unlock(self);
-    g_signal_emit(self, fsearch_signals[DATABASE_UPDATE_FINISHED], 0);
+    g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED], 0);
     return G_SOURCE_REMOVE;
 }
 
@@ -195,14 +200,14 @@ database_update_finished_cb(gpointer user_data) {
 static gboolean
 on_database_load_started(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
-    g_signal_emit(self, fsearch_signals[DATABASE_LOAD_STARTED], 0);
+    g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_LOAD_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
 static gboolean
 on_database_scan_started(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
-    g_signal_emit(self, fsearch_signals[DATABASE_SCAN_STARTED], 0);
+    g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_SCAN_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
 
@@ -888,34 +893,34 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
     gtk_app_class->window_added = fsearch_application_win_added;
     gtk_app_class->window_removed = fsearch_application_win_removed;
 
-    fsearch_signals[DATABASE_SCAN_STARTED] = g_signal_new("database-scan-started",
-                                                          G_TYPE_FROM_CLASS(klass),
-                                                          G_SIGNAL_RUN_LAST,
-                                                          0,
-                                                          NULL,
-                                                          NULL,
-                                                          NULL,
-                                                          G_TYPE_NONE,
-                                                          0);
+    fsearch_signals[FSEARCH_SIGNAL_DATABASE_SCAN_STARTED] = g_signal_new("database-scan-started",
+                                                                         G_TYPE_FROM_CLASS(klass),
+                                                                         G_SIGNAL_RUN_LAST,
+                                                                         0,
+                                                                         NULL,
+                                                                         NULL,
+                                                                         NULL,
+                                                                         G_TYPE_NONE,
+                                                                         0);
 
-    fsearch_signals[DATABASE_UPDATE_FINISHED] = g_signal_new("database-update-finished",
-                                                             G_TYPE_FROM_CLASS(klass),
-                                                             G_SIGNAL_RUN_LAST,
-                                                             0,
-                                                             NULL,
-                                                             NULL,
-                                                             NULL,
-                                                             G_TYPE_NONE,
-                                                             0);
-    fsearch_signals[DATABASE_LOAD_STARTED] = g_signal_new("database-load-started",
-                                                          G_TYPE_FROM_CLASS(klass),
-                                                          G_SIGNAL_RUN_LAST,
-                                                          0,
-                                                          NULL,
-                                                          NULL,
-                                                          NULL,
-                                                          G_TYPE_NONE,
-                                                          0);
+    fsearch_signals[FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED] = g_signal_new("database-update-finished",
+                                                                            G_TYPE_FROM_CLASS(klass),
+                                                                            G_SIGNAL_RUN_LAST,
+                                                                            0,
+                                                                            NULL,
+                                                                            NULL,
+                                                                            NULL,
+                                                                            G_TYPE_NONE,
+                                                                            0);
+    fsearch_signals[FSEARCH_SIGNAL_DATABASE_LOAD_STARTED] = g_signal_new("database-load-started",
+                                                                         G_TYPE_FROM_CLASS(klass),
+                                                                         G_SIGNAL_RUN_LAST,
+                                                                         0,
+                                                                         NULL,
+                                                                         NULL,
+                                                                         NULL,
+                                                                         G_TYPE_NONE,
+                                                                         0);
 }
 
 // Public functions
