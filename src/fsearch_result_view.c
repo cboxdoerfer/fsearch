@@ -27,6 +27,12 @@ get_icon_size_for_height(int32_t height) {
 }
 
 static void
+reset_icon_caches(FsearchResultView *result_view) {
+    g_hash_table_remove_all(result_view->pixbuf_cache);
+    g_hash_table_remove_all(result_view->app_gicon_cache);
+}
+
+static void
 maybe_reset_icon_caches(FsearchResultView *result_view) {
     const uint32_t cached_icon_limit = 200;
     if (g_hash_table_size(result_view->pixbuf_cache) > cached_icon_limit) {
@@ -340,6 +346,11 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     }
 
     const int32_t icon_size = get_icon_size_for_height(rect->height - ROW_PADDING_X);
+
+    if (result_view->row_height != rect->height) {
+        reset_icon_caches(result_view);
+    }
+    result_view->row_height = rect->height;
 
     DrawRowContext *ctx = draw_row_ctx_get(result_view, row, bin_window, icon_size);
     if (!ctx) {
