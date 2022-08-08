@@ -1,6 +1,6 @@
 | State | Task                                                                          | Importance | Complexity | Difficulty |
 |-------|-------------------------------------------------------------------------------|------------|------------|------------|
-|       | Invalidate icon cache when font size changes                                  | High       | Low        | Low        |
+| Done  | Invalidate icon cache when font size changes                                  | High       | Low        | Low        |
 | Done  | Make the behavior of the `Open` action consistent with the `Open with` action | High       | Low        | Low        |
 |       | Custom file property indexing                                                 | High       | Medium     | Medium     |
 |       | Option to index and search for creation and access time                       | High       | Medium     | Low        |
