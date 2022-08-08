@@ -289,9 +289,7 @@ fsearch_list_view_convert_view_to_canvas_coords(FsearchListView *view, int x_vie
 }
 
 static gint
-fsearch_list_view_get_font_height(FsearchListView *view) {
-    GtkWidget *widget = GTK_WIDGET(view);
-
+get_font_height_for_widget(GtkWidget *widget) {
     PangoLayout *layout = gtk_widget_create_pango_layout(widget, NULL);
     g_return_val_if_fail(layout, TEXT_HEIGHT_FALLBACK);
 
@@ -1539,7 +1537,23 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
 
     view->min_list_width = 0;
 
+    int header_font_height = 0;
+
     GList *columns = fsearch_list_view_get_columns_for_text_direction(view);
+
+    // the header height is determined by the font size of the columns
+    // they're probably the same size, so only looking at the first one would suffice,
+    // but just to be sure we'll look for the maximum
+    for (GList *col = columns; col != NULL; col = col->next) {
+        FsearchListViewColumn *column = col->data;
+        if (!column->visible) {
+            continue;
+        }
+        header_font_height = MAX(header_font_height, get_font_height_for_widget(column->button));
+    }
+
+    view->header_height = header_font_height + 2 * ROW_PADDING_Y;
+
     for (GList *col = columns; col != NULL; col = col->next) {
         FsearchListViewColumn *column = col->data;
         if (!column->visible) {
@@ -1574,7 +1588,7 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
     }
 
     if (gtk_widget_get_realized(widget)) {
-        int font_height = fsearch_list_view_get_font_height(view);
+        int font_height = get_font_height_for_widget(GTK_WIDGET(view));
         view->row_height = font_height + 2 * ROW_PADDING_Y;
         view->list_height = view->row_height * view->num_rows;
         gdk_window_move_resize(gtk_widget_get_window(widget),
