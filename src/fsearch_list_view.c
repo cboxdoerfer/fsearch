@@ -105,9 +105,9 @@ enum {
     UNSET_ROW = -3,
 };
 
-enum { FSEARCH_LIST_VIEW_ROW_ACTIVATED, FSEARCH_LIST_VIEW_POPUP, NUM_SIGNALS };
+enum { FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED, FSEARCH_LIST_VIEW_SIGNAL_POPUP, NUM_FSEARCH_LIST_VIEW_SIGNALS };
 
-static guint signals[NUM_SIGNALS];
+static guint signals[NUM_FSEARCH_LIST_VIEW_SIGNALS];
 
 /* Properties */
 enum {
@@ -802,7 +802,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
                     FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x);
                     if (col) {
                         g_signal_emit(view,
-                                      signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED],
+                                      signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
                                       0,
                                       col->type,
                                       get_row_idx_for_sort_type(view, row_idx));
@@ -817,7 +817,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
             FsearchListViewColumn *col = fsearch_list_view_get_col_for_x_view(view, x);
             if (col) {
                 g_signal_emit(view,
-                              signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED],
+                              signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED],
                               0,
                               col->type,
                               get_row_idx_for_sort_type(view, row_idx));
@@ -832,7 +832,7 @@ on_fsearch_list_view_multi_press_gesture_pressed(GtkGestureMultiPress *gesture,
             fsearch_list_view_selection_toggle_silent(view, row_idx);
             fsearch_list_view_selection_changed(view);
         }
-        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
+        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_SIGNAL_POPUP], 0);
     }
 
     view->highlight_cursor_idx = FALSE;
@@ -1229,12 +1229,12 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
         break;
     case GDK_KEY_Menu:
         // TODO: Popup menu at the last selected item, instead of the mouse pointer position (scroll to it if necessary)
-        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
+        g_signal_emit(view, signals[FSEARCH_LIST_VIEW_SIGNAL_POPUP], 0);
         return TRUE;
     case GDK_KEY_F10:
         if (extend_selection) {
             // Shift + F10 -> open context menu
-            g_signal_emit(view, signals[FSEARCH_LIST_VIEW_POPUP], 0);
+            g_signal_emit(view, signals[FSEARCH_LIST_VIEW_SIGNAL_POPUP], 0);
             return GDK_EVENT_STOP;
         }
     default:
@@ -1896,20 +1896,20 @@ fsearch_list_view_class_init(FsearchListViewClass *klass) {
     container_class->forall = fsearch_list_view_container_for_all;
     container_class->remove = fsearch_list_view_container_remove;
 
-    signals[FSEARCH_LIST_VIEW_POPUP] =
+    signals[FSEARCH_LIST_VIEW_SIGNAL_POPUP] =
         g_signal_new("row-popup", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
 
-    signals[FSEARCH_LIST_VIEW_ROW_ACTIVATED] = g_signal_new("row-activated",
-                                                            G_TYPE_FROM_CLASS(klass),
-                                                            G_SIGNAL_RUN_LAST,
-                                                            0,
-                                                            NULL,
-                                                            NULL,
-                                                            NULL,
-                                                            G_TYPE_NONE,
-                                                            2,
-                                                            G_TYPE_INT,
-                                                            G_TYPE_INT);
+    signals[FSEARCH_LIST_VIEW_SIGNAL_ROW_ACTIVATED] = g_signal_new("row-activated",
+                                                                   G_TYPE_FROM_CLASS(klass),
+                                                                   G_SIGNAL_RUN_LAST,
+                                                                   0,
+                                                                   NULL,
+                                                                   NULL,
+                                                                   NULL,
+                                                                   G_TYPE_NONE,
+                                                                   2,
+                                                                   G_TYPE_INT,
+                                                                   G_TYPE_INT);
 
 #if GTK_CHECK_VERSION(3, 20, 0)
     gtk_widget_class_set_css_name(widget_class, "treeview");
