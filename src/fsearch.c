@@ -64,15 +64,6 @@ struct _FsearchApplication {
     bool is_shutting_down;
 };
 
-typedef struct {
-    bool rescan;
-    void (*started_cb)(void *);
-    void *started_cb_data;
-    void (*finished_cb)(void *);
-    void (*cancelled_cb)(void *);
-    void *cancelled_cb_data;
-} DatabaseUpdateContext;
-
 static const char *fsearch_bus_name = "io.github.cboxdoerfer.FSearch";
 static const char *fsearch_db_worker_bus_name = "io.github.cboxdoerfer.FSearchDatabaseWorker";
 static const char *fsearch_object_path = "/io/github/cboxdoerfer/FSearch";
@@ -84,15 +75,31 @@ enum {
     NUM_FSEARCH_SIGNALS
 };
 
+typedef enum FsearchDatabaseActionType {
+    FSEARCH_DATABASE_ACTION_SCAN,
+    FSEARCH_DATABASE_ACTION_LOAD,
+    NUM_FSEARCH_DATABASE_ACTION_TYPES,
+} FsearchDatabaseActionType;
+
+typedef struct {
+    FsearchDatabaseActionType action;
+    void (*update_func)(FsearchApplication *, FsearchDatabase *);
+    void (*started_cb)(void *);
+    void *started_cb_data;
+    void (*finished_cb)(void *);
+    void (*cancelled_cb)(void *);
+    void *cancelled_cb_data;
+} DatabaseUpdateContext;
+
 static guint fsearch_signals[NUM_FSEARCH_SIGNALS];
 
 G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
-static FsearchDatabase *
-database_load_or_scan(FsearchApplication *app, bool rescan);
-
 static void
 action_set_enabled(const char *action_name, gboolean enabled);
+
+static gboolean
+on_database_scan_enqueue(gpointer data);
 
 static void
 set_accels_for_escape(GApplication *app);
@@ -226,37 +233,6 @@ database_scan_started_cb(gpointer user_data) {
 }
 
 static void
-database_scan_or_load_enqueue(bool scan) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    action_set_enabled("update_database", FALSE);
-    action_set_enabled("cancel_update_database", TRUE);
-
-    g_cancellable_reset(app->db_thread_cancellable);
-    app->num_database_update_active++;
-
-    DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
-    g_assert(ctx);
-
-    if (scan) {
-        ctx->rescan = true;
-        ctx->started_cb = database_scan_started_cb;
-    }
-    else {
-        ctx->started_cb = database_load_started_cb;
-    }
-    ctx->started_cb_data = app;
-    ctx->finished_cb = database_update_finished_cb;
-
-    g_thread_pool_push(app->db_pool, g_steal_pointer(&ctx), NULL);
-}
-
-static gboolean
-on_database_scan_enqueue(gpointer data) {
-    database_scan_or_load_enqueue(true);
-    return G_SOURCE_REMOVE;
-}
-
-static void
 database_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
     const bool scan_successful =
         db_scan(db, app->db_thread_cancellable, app->config->show_indexing_status ? database_notify_status_cb : NULL);
@@ -271,38 +247,54 @@ database_scan_and_save(FsearchApplication *app, FsearchDatabase *db) {
     }
 }
 
-static FsearchDatabase *
-database_load_or_scan(FsearchApplication *app, bool rescan) {
-    g_autoptr(GTimer) timer = g_timer_new();
-    g_timer_start(timer);
-
-    fsearch_application_state_lock(app);
-    FsearchDatabase *db = db_new(app->config->indexes,
-                                 app->config->exclude_locations,
-                                 app->config->exclude_files,
-                                 app->config->exclude_hidden_items);
-    fsearch_application_state_unlock(app);
-
-    if (rescan) {
-        database_scan_and_save(app, db);
+static void
+database_load(FsearchApplication *app, FsearchDatabase *db) {
+    g_autofree char *db_file_path = fsearch_application_get_database_file_path();
+    if (!db_file_path) {
+        return;
     }
-    else {
-        g_autofree char *db_file_path = fsearch_application_get_database_file_path();
-        if (db_file_path) {
-            if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_notify_status_cb : NULL)
-                && !app->config->update_database_on_launch) {
-                // load failed -> trigger rescan
-                g_idle_add(on_database_scan_enqueue, NULL);
-            }
-        }
+    if (!db_load(db, db_file_path, app->config->show_indexing_status ? database_notify_status_cb : NULL)
+        && !app->config->update_database_on_launch) {
+        // load failed -> trigger rescan
+        g_idle_add(on_database_scan_enqueue, NULL);
+    }
+}
+
+static void
+database_scan_or_load_enqueue(FsearchDatabaseActionType action) {
+    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    action_set_enabled("update_database", FALSE);
+    action_set_enabled("cancel_update_database", TRUE);
+
+    g_cancellable_reset(app->db_thread_cancellable);
+    app->num_database_update_active++;
+
+    DatabaseUpdateContext *ctx = calloc(1, sizeof(DatabaseUpdateContext));
+    g_assert(ctx);
+
+    switch (action) {
+    case FSEARCH_DATABASE_ACTION_SCAN:
+        ctx->update_func = database_scan_and_save;
+        ctx->started_cb = database_scan_started_cb;
+        break;
+    case FSEARCH_DATABASE_ACTION_LOAD:
+        ctx->update_func = database_load;
+        ctx->started_cb = database_load_started_cb;
+        break;
+    default:
+        g_assert_not_reached();
     }
 
-    g_timer_stop(timer);
-    const double seconds = g_timer_elapsed(timer, NULL);
+    ctx->started_cb_data = app;
+    ctx->finished_cb = database_update_finished_cb;
 
-    g_debug("[app] database update finished in %.2f ms", seconds * 1000);
+    g_thread_pool_push(app->db_pool, g_steal_pointer(&ctx), NULL);
+}
 
-    return db;
+static gboolean
+on_database_scan_enqueue(gpointer data) {
+    database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
+    return G_SOURCE_REMOVE;
 }
 
 static void
@@ -315,7 +307,22 @@ database_pool_func(gpointer data, gpointer user_data) {
         ctx->started_cb(ctx->started_cb_data);
     }
 
-    FsearchDatabase *db = database_load_or_scan(app, ctx->rescan);
+    g_autoptr(GTimer) timer = g_timer_new();
+    g_timer_start(timer);
+
+    fsearch_application_state_lock(app);
+    FsearchDatabase *db = db_new(app->config->indexes,
+                                 app->config->exclude_locations,
+                                 app->config->exclude_files,
+                                 app->config->exclude_hidden_items);
+    fsearch_application_state_unlock(app);
+
+    ctx->update_func(app, db);
+
+    g_timer_stop(timer);
+    const double seconds = g_timer_elapsed(timer, NULL);
+
+    g_debug("[app] database update finished in %.2f ms", seconds * 1000);
 
     if (ctx->finished_cb) {
         ctx->finished_cb(db);
@@ -417,7 +424,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
     database_auto_update_init(app);
 
     if (config_diff.database_config_changed) {
-        database_scan_or_load_enqueue(true);
+        database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
     }
 
     GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
@@ -457,7 +464,7 @@ action_cancel_update_database_activated(GSimpleAction *action, GVariant *paramet
 
 static void
 action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
-    database_scan_or_load_enqueue(true);
+    database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
 }
 
 static void
@@ -660,9 +667,9 @@ fsearch_application_activate(GApplication *app) {
     database_auto_update_init(self);
 
     g_cancellable_reset(self->db_thread_cancellable);
-    database_scan_or_load_enqueue(false);
+    database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_LOAD);
     if (self->config->update_database_on_launch) {
-        database_scan_or_load_enqueue(true);
+        database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
     }
 }
 
