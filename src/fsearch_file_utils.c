@@ -147,15 +147,16 @@ open_with_cmd(const char *path, const char *path_full, const char *cmd, GString 
 
 static bool
 open_application_for_path(const char *path, GString *error_messages) {
-    GdkDisplay *display = gdk_display_get_default();
     const char *error_description = _("Error when launching desktop file");
-    if (!display) {
-        add_error_message_with_format(error_messages, error_description, path, _("Failed to get default display"));
-        return false;
-    }
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
     if (!info) {
         add_error_message_with_format(error_messages, error_description, path, _("Failed to get application information"));
+        return false;
+    }
+
+    GdkDisplay *display = gdk_display_get_default();
+    if (!display) {
+        add_error_message_with_format(error_messages, error_description, path, _("Failed to get default display"));
         return false;
     }
 
