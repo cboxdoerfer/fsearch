@@ -406,10 +406,6 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 
 GIcon *
 fsearch_file_utils_get_desktop_file_icon(const char *path) {
-    GdkDisplay *display = gdk_display_get_default();
-    if (!display) {
-        return NULL;
-    }
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
     if (!info) {
         goto default_icon;
