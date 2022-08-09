@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-05 17:31+0200\n"
-"PO-Revision-Date: 2022-05-08 23:15+0000\n"
-"Last-Translator: Andrij Mizyk <andmizyk@gmail.com>\n"
+"PO-Revision-Date: 2022-08-09 19:40+0000\n"
+"Last-Translator: Andrij Mizyk <andmzk@proton.me>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -155,61 +155,49 @@ msgstr "Сортування…"
 
 #: src/fsearch_file_utils.c:132
 msgid "Error while opening folder"
-msgstr ""
+msgstr "Помилка під час відкривання теки"
 
 #: src/fsearch_file_utils.c:135
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "Не вдалося відкрити:"
+msgstr "Не вдалося збудувати відкриту команду"
 
 #: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
-#, fuzzy
-#| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
-msgstr "Запускати файли стільниці"
+msgstr "Помилка під час запуску стільничного файлу"
 
 #: src/fsearch_file_utils.c:153
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "Не вдалося відкрити файл"
+msgstr "Не вдалося отримати типовий екран"
 
 #: src/fsearch_file_utils.c:158
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Відкрити нове вікно програми"
+msgstr "Не вдалося отримати інформацію про програму"
 
 #: src/fsearch_file_utils.c:179
 msgid "Error when removing file"
-msgstr ""
+msgstr "Помилка під час вилучення файлу"
 
 #: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Не вдалося відкрити:"
+msgstr "Помилка отримання шляху"
 
 #: src/fsearch_file_utils.c:252
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Помилка під час отримання інформації про тип вмісту"
 
 #: src/fsearch_file_utils.c:254
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Показати параметри програми"
+msgstr "Не зареєстровано типової програми"
 
 #: src/fsearch_file_utils.c:335
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "Помилка під час відкривання батьківської теки"
 
 #: src/fsearch_file_utils.c:337
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Не вдалося відкрити:"
+msgstr "Не вдалося отримати батьківський шлях"
 
 #: src/fsearch_file_utils.c:394
 msgid "Folder"
@@ -619,17 +607,6 @@ msgstr ""
 "параметра може не мати ефекту."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -689,21 +666,6 @@ msgstr ""
 "розмір вікна."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -925,17 +887,6 @@ msgstr ""
 "час запускання FSearch."
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1340,19 +1291,13 @@ msgid "Date Modified"
 msgstr "Дата зміни"
 
 #: src/fsearch_window.c:663
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"Сортування за <b>Типом</b> з великою кількістю результатів може зайняти "
+"Сортування за <b>Типом</b> із великою кількістю результатів може зайняти "
 "кілька секунд.\n"
 "\n"
 "Цей порядок сортування не є постійним, він скидається коли змінюється "
@@ -1430,25 +1375,25 @@ msgstr "Переміщення файлів у смітник…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
 msgid "Something went wrong."
-msgstr ""
+msgstr "Щось пішло не так."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Видалення файлів…"
+msgstr "Видалено %d файл(ів)."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Переміщення файлів у смітник…"
+msgstr "Переміщено %d файл(ів) у смітник."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"Базу даних потрібно оновити, до того, як вона дізнається про ці зміни! Це "
+"буде виправлено в майбутніх оновленнях."
 
 #: src/fsearch_window_actions.c:243
 #, c-format
