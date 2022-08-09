@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-05 17:31+0200\n"
-"PO-Revision-Date: 2022-05-08 23:15+0000\n"
+"PO-Revision-Date: 2022-08-09 19:40+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -156,61 +156,47 @@ msgstr "Sıralanıyor…"
 
 #: src/fsearch_file_utils.c:132
 msgid "Error while opening folder"
-msgstr ""
+msgstr "Klasör açılırken hata oluştu"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "Açılamadı:"
+msgstr "Aç komutu oluşturulamadı"
 
 #: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
-#, fuzzy
-#| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
-msgstr "Masaüstü dosyalarını başlat"
+msgstr "Masaüstü dosyası başlatılırken hata oluştu"
 
 #: src/fsearch_file_utils.c:153
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "Dosya açılamadı"
+msgstr "Öntanımlı ekran alınamadı"
 
 #: src/fsearch_file_utils.c:158
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Yeni bir uygulama penceresi aç"
+msgstr "Uygulama bilgileri alınamadı"
 
 #: src/fsearch_file_utils.c:179
 msgid "Error when removing file"
-msgstr ""
+msgstr "Dosya kaldırılırken hata oluştu"
 
 #: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Açılamadı:"
+msgstr "Yol alınamadı"
 
 #: src/fsearch_file_utils.c:252
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "İçerik türü için bilgi alınırken hata oluştu"
 
 #: src/fsearch_file_utils.c:254
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Uygulama tercihlerini göster"
+msgstr "Kayıtlı öntanımlı uygulama yok"
 
 #: src/fsearch_file_utils.c:335
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "Üst klasör açılırken hata oluştu"
 
 #: src/fsearch_file_utils.c:337
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Açılamadı:"
+msgstr "Üst yol alınamadı"
 
 #: src/fsearch_file_utils.c:394
 msgid "Folder"
@@ -623,17 +609,6 @@ msgstr ""
 "ayarın etkinleştirilmesinin bir etkisi olmayabileceğini unutmayın."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -694,21 +669,6 @@ msgstr ""
 "boyuta sahip olmaya zorladığını unutmayın."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -932,17 +892,6 @@ msgstr ""
 "olarak güncellenecektir."
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1356,20 +1305,14 @@ msgid "Date Modified"
 msgstr "Değiştirilme Tarihi"
 
 #: src/fsearch_window.c:663
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"<b>Tür</b>'e göre sıralama, birçok sonuçla birlikte birkaç saniye "
-"sürebilir.\n"
+"<b>Tür</b>'e göre sıralama, birçok sonuçla birlikte birkaç saniye sürebilir."
+"\n"
 "\n"
 "Bu sıralama düzeni kalıcı değildir, arama terimi değiştiğinde "
 "sıfırlanacaktır."
@@ -1446,25 +1389,25 @@ msgstr "Dosyalar çöp kutusuna taşınıyor…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
 msgid "Something went wrong."
-msgstr ""
+msgstr "Bir şeyler yanlış gitti."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Dosyalar siliniyor…"
+msgstr "%d dosya silindi."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Dosyalar çöp kutusuna taşınıyor…"
+msgstr "%d dosya çöp kutusuna taşındı."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"Veri tabanının bu değişikliklerden haberi olması için güncellenmesi "
+"gerekiyor! Bu durum gelecekteki güncellemelerle düzeltilecektir."
 
 #: src/fsearch_window_actions.c:243
 #, c-format
