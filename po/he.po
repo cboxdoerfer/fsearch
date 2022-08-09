@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-05 17:31+0200\n"
-"PO-Revision-Date: 2022-05-08 23:15+0000\n"
+"PO-Revision-Date: 2022-08-09 19:40+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -150,61 +150,47 @@ msgstr "מתבצע מיון…"
 
 #: src/fsearch_file_utils.c:132
 msgid "Error while opening folder"
-msgstr ""
+msgstr "שגיאה בפתיחת התיקייה"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "פתיחה נכשלה:"
+msgstr "בניית פקודת הפתיחה נכשלה"
 
 #: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
-#, fuzzy
-#| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
-msgstr "הפעלת קובצי desktop"
+msgstr "שגיאה בהפעלת קובץ desktop"
 
 #: src/fsearch_file_utils.c:153
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "פתיחת הקובץ נכשלה"
+msgstr "קבלת תצוגת ברירת המחדל נכשלה"
 
 #: src/fsearch_file_utils.c:158
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "פתיחת חלון יישום חדש"
+msgstr "קבלת פרטי היישום נכשלה"
 
 #: src/fsearch_file_utils.c:179
 msgid "Error when removing file"
-msgstr ""
+msgstr "שגיאה בהסרת קובץ"
 
 #: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "פתיחה נכשלה:"
+msgstr "קבלת הנתיב נכשלה"
 
 #: src/fsearch_file_utils.c:252
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "שגיאה בקבלת מידע על סוג התוכן"
 
 #: src/fsearch_file_utils.c:254
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "הצגת העדפות היישום"
+msgstr "לא נרשם יישומון ברירת מחדל"
 
 #: src/fsearch_file_utils.c:335
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "שגיאה בפתיחת תיקיית ההורה"
 
 #: src/fsearch_file_utils.c:337
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "פתיחה נכשלה:"
+msgstr "שגיאה בקבלת נתיב ההורה"
 
 #: src/fsearch_file_utils.c:394
 msgid "Folder"
@@ -537,7 +523,7 @@ msgstr "עדכון בכל"
 
 #: src/fsearch_preferences.ui:929
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/fsearch_preferences.ui:946
 msgid "hour(s) and"
@@ -545,7 +531,7 @@ msgstr "שעות ו־"
 
 #: src/fsearch_preferences.ui:958
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/fsearch_preferences.ui:976
 msgid "minute(s)"
@@ -614,17 +600,6 @@ msgstr ""
 "הזאת עשויה לא להשפיע כלל."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -681,21 +656,6 @@ msgstr ""
 "נא לשים לב שחלק ממנהלי החלונות מתעלמים מהבקשה הזאת וכופים גודל שונה על החלון."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1310,19 +1270,13 @@ msgid "Date Modified"
 msgstr "מועד השינוי"
 
 #: src/fsearch_window.c:663
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"מיון לפי <b>סוג</b> עלול לארוך זמן רב כשיש הרבה תוצאות.\n"
+"מיון לפי <b>סוג</b> עלול לארוך מספר שניות כשיש הרבה תוצאות.\n"
 "\n"
 "בנוסף, סדר המיון הזה אינו קבוע והוא יאופס כשתנאי החיפוש ישתנו."
 
@@ -1398,25 +1352,25 @@ msgstr "קבצים מועברים לאשפה…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
 msgid "Something went wrong."
-msgstr ""
+msgstr "משהו השתבש."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "הקבצים נמחקים…"
+msgstr "נמחקו %d קבצים."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "קבצים מועברים לאשפה…"
+msgstr "%d קבצים הועברו לאשפה."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"יש לעדכן את מסד הנתונים בטרם הוא יהיה מודע לשינויים האלה! יתוקן בעדכונים "
+"העתידיים."
 
 #: src/fsearch_window_actions.c:243
 #, c-format
