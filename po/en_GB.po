@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-04 14:56+0200\n"
+"POT-Creation-Date: 2022-08-05 17:31+0200\n"
 "PO-Revision-Date: 2021-06-03 15:33+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -136,63 +136,119 @@ msgstr "Update the database and exit"
 msgid "Print version information and exit"
 msgstr "Print version information and exit"
 
-#: src/fsearch_database.c:652
+#: src/fsearch_database.c:648
 msgid "Loading folders…"
 msgstr "Loading folders…"
 
-#: src/fsearch_database.c:660
+#: src/fsearch_database.c:656
 msgid "Loading files…"
 msgstr "Loading files…"
 
-#: src/fsearch_database.c:1650 src/fsearch_statusbar.c:71
+#: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"
 msgstr "Sorting results…"
 
-#: src/fsearch_file_utils.c:283
+#: src/fsearch_file_utils.c:132
+msgid "Error while opening folder"
+msgstr ""
+
+#: src/fsearch_file_utils.c:135
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to build open command"
+msgstr "Failed to open file"
+
+#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+msgid "Error when launching desktop file"
+msgstr ""
+
+#: src/fsearch_file_utils.c:153
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get default display"
+msgstr "Failed to open file"
+
+#: src/fsearch_file_utils.c:158
+#, fuzzy
+#| msgid "Open a new application window"
+msgid "Failed to get application information"
+msgstr "Open a new application window"
+
+#: src/fsearch_file_utils.c:179
+msgid "Error when removing file"
+msgstr ""
+
+#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get path"
+msgstr "Failed to open file"
+
+#: src/fsearch_file_utils.c:252
+msgid "Error when getting information for content type"
+msgstr ""
+
+#: src/fsearch_file_utils.c:254
+#, fuzzy
+#| msgid "Show the application preferences"
+msgid "No default application registered"
+msgstr "Show the application preferences"
+
+#: src/fsearch_file_utils.c:335
+msgid "Error when opening parent folder"
+msgstr ""
+
+#: src/fsearch_file_utils.c:337
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get parent path"
+msgstr "Failed to open file"
+
+#: src/fsearch_file_utils.c:394
 msgid "Folder"
 msgstr "Folder"
 
-#: src/fsearch_file_utils.c:289
+#: src/fsearch_file_utils.c:400
 msgid "Unknown Type"
 msgstr "Unknown Type"
 
-#: src/fsearch_filter.c:131
+#: src/fsearch_filter.c:111
 msgid "All"
 msgstr "All"
 
-#: src/fsearch_filter.c:132
+#: src/fsearch_filter.c:112
 msgid "Folders"
 msgstr "Folders"
 
-#: src/fsearch_filter.c:133
+#: src/fsearch_filter.c:113
 msgid "Files"
 msgstr "Files"
 
-#: src/fsearch_filter.c:135
+#: src/fsearch_filter.c:115
 #, fuzzy
 #| msgid "Other Application…"
 msgid "Applications"
 msgstr "Other Application…"
 
-#: src/fsearch_filter.c:136
+#: src/fsearch_filter.c:116
 msgid "Archives"
 msgstr "Archives"
 
-#: src/fsearch_filter.c:137
+#: src/fsearch_filter.c:117
 msgid "Audio"
 msgstr "Audio"
 
-#: src/fsearch_filter.c:138
+#: src/fsearch_filter.c:118
 msgid "Documents"
 msgstr "Documents"
 
-#: src/fsearch_filter.c:139
+#: src/fsearch_filter.c:119
 msgid "Pictures"
 msgstr "Pictures"
 
-#: src/fsearch_filter.c:140
+#: src/fsearch_filter.c:120
 msgid "Videos"
 msgstr "Videos"
 
@@ -572,6 +628,17 @@ msgstr ""
 "enabling this setting might not have an effect."
 
 #: src/fsearch_preferences.ui:1326
+#, fuzzy
+#| msgid ""
+#| "<b>Enable client-side decorations:</b>\n"
+#| "\n"
+#| "If enabled, the search entry and main menu are displayed in the window "
+#| "title bar.\n"
+#| "\n"
+#| "If disabled, the main menu is displayed as a menu bar with the search "
+#| "entry below it.\n"
+#| "This resembles a more traditonal UI layout and takes a little bit more "
+#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -580,7 +647,8 @@ msgid ""
 "\n"
 "If disabled, the main menu is displayed as a menu bar with the search entry "
 "below it.\n"
-"This resembles a more traditonal UI layout and takes a little bit more space."
+"This resembles a more traditional UI layout and takes a little bit more "
+"space."
 msgstr ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -649,7 +717,7 @@ msgstr ""
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
-"When a file/folder was succesfully opened one of the following actions can "
+"When a file/folder was successfully opened one of the following actions can "
 "be performed:\n"
 "\t• <b>Nothing:</b> Nothing happens.\n"
 "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
@@ -908,7 +976,7 @@ msgid ""
 "searched in.\n"
 "\t• <b>Path:</b> The full path to be included.\n"
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-"boundraries for this folder"
+"boundaries for this folder"
 msgstr ""
 "<b>Excluded folders:</b>\n"
 "\n"
@@ -1215,7 +1283,7 @@ msgid "Active"
 msgstr "Active"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:656 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
 msgid "Path"
 msgstr "Path"
 
@@ -1225,7 +1293,7 @@ msgstr "Path"
 msgid "One Filesystem"
 msgstr "Open File(s)"
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:649
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
 #: src/menus.ui:183 src/menus.ui:231
 msgid "Name"
 msgstr "Name"
@@ -1328,29 +1396,23 @@ msgstr "PATH"
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch_window.c:563 src/fsearch_window_actions.c:464
-#, fuzzy
-#| msgid "Failed to open file"
-msgid "Failed to open:"
-msgstr "Failed to open file"
-
-#: src/fsearch_window.c:663 src/menus.ui:247
+#: src/fsearch_window.c:628 src/menus.ui:247
 msgid "Size"
 msgstr "Size"
 
-#: src/fsearch_window.c:670 src/menus.ui:243
+#: src/fsearch_window.c:635 src/menus.ui:243
 msgid "Type"
 msgstr "Type"
 
-#: src/fsearch_window.c:677 src/menus.ui:239
+#: src/fsearch_window.c:642 src/menus.ui:239
 msgid "Extension"
 msgstr ""
 
-#: src/fsearch_window.c:684 src/menus.ui:251
+#: src/fsearch_window.c:649 src/menus.ui:251
 msgid "Date Modified"
 msgstr "Date Modified"
 
-#: src/fsearch_window.c:698
+#: src/fsearch_window.c:663
 #, fuzzy
 #| msgid ""
 #| "Sorting by <b>Type</b> can be very slow with many results and it can't be "
@@ -1359,7 +1421,7 @@ msgstr "Date Modified"
 #| "This sort order is not persistent, it will be reset when the search term "
 #| "changes."
 msgid ""
-"Sorting by <b>Type</b> can take a vew seconds with many results.\n"
+"Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
@@ -1418,34 +1480,56 @@ msgstr "Search…"
 msgid "Select a Filter"
 msgstr "Select a filter"
 
-#: src/fsearch_window_actions.c:87
+#: src/fsearch_window_actions.c:88
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "Do you really want to open %d file(s)?"
 
-#: src/fsearch_window_actions.c:89
+#: src/fsearch_window_actions.c:90
 msgid "Opening Files…"
 msgstr "Opening Files…"
 
-#: src/fsearch_window_actions.c:185
+#: src/fsearch_window_actions.c:176
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Do you really want to remove %d file(s)?"
 
-#: src/fsearch_window_actions.c:189
+#: src/fsearch_window_actions.c:180
 msgid "Deleting files…"
 msgstr "Deleting files…"
 
-#: src/fsearch_window_actions.c:189
+#: src/fsearch_window_actions.c:180
 msgid "Moving files to trash…"
 msgstr "Moving files to trash…"
 
-#: src/fsearch_window_actions.c:227
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+msgid "Something went wrong."
+msgstr ""
+
+#: src/fsearch_window_actions.c:215
+#, fuzzy, c-format
+#| msgid "Deleting files…"
+msgid "Deleted %d file(s)."
+msgstr "Deleting files…"
+
+#: src/fsearch_window_actions.c:215
+#, fuzzy, c-format
+#| msgid "Moving files to trash…"
+msgid "Moved %d file(s) to the trash."
+msgstr "Moving files to trash…"
+
+#: src/fsearch_window_actions.c:221
+msgid ""
+"The database needs to be updated before it becomes aware of those changes! "
+"This will be fixed with future updates."
+msgstr ""
+
+#: src/fsearch_window_actions.c:243
 #, fuzzy, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "Do you really want to open %d file(s)?"
 
-#: src/fsearch_window_actions.c:231
+#: src/fsearch_window_actions.c:247
 #, fuzzy
 msgid "Opening file properties…"
 msgstr "Opening Files…"
@@ -1593,9 +1677,6 @@ msgstr "Move to _Trash"
 #~ "                      This removes the selected folder from the list of "
 #~ "included folders.\n"
 #~ "                    "
-
-#~ msgid "Failed to open file"
-#~ msgstr "Failed to open file"
 
 #~ msgid "Do you want to keep the window open?"
 #~ msgstr "Do you want to keep the window open?"

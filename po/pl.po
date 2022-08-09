@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-04 14:56+0200\n"
+"POT-Creation-Date: 2022-08-05 17:31+0200\n"
 "PO-Revision-Date: 2022-05-11 12:16+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
@@ -147,60 +147,118 @@ msgstr "Uaktualnij bazę danych i wyjdź"
 msgid "Print version information and exit"
 msgstr "Pokaż informacje o wersji i wyjdź"
 
-#: src/fsearch_database.c:652
+#: src/fsearch_database.c:648
 msgid "Loading folders…"
 msgstr "Ładowanie katalogów…"
 
-#: src/fsearch_database.c:660
+#: src/fsearch_database.c:656
 msgid "Loading files…"
 msgstr "Ładowanie plików…"
 
-#: src/fsearch_database.c:1650 src/fsearch_statusbar.c:71
+#: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Sortowanie…"
 
-#: src/fsearch_file_utils.c:283
+#: src/fsearch_file_utils.c:132
+msgid "Error while opening folder"
+msgstr ""
+
+#: src/fsearch_file_utils.c:135
+#, fuzzy
+#| msgid "Failed to open:"
+msgid "Failed to build open command"
+msgstr "Nie udało się otworzyć:"
+
+#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+#, fuzzy
+#| msgid "Launch desktop files"
+msgid "Error when launching desktop file"
+msgstr "Uruchamiaj pliki desktop"
+
+#: src/fsearch_file_utils.c:153
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get default display"
+msgstr "Nie udało się otworzyć pliku"
+
+#: src/fsearch_file_utils.c:158
+#, fuzzy
+#| msgid "Open a new application window"
+msgid "Failed to get application information"
+msgstr "Otwórz nowe okno aplikacji"
+
+#: src/fsearch_file_utils.c:179
+msgid "Error when removing file"
+msgstr ""
+
+#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#, fuzzy
+#| msgid "Failed to open:"
+msgid "Failed to get path"
+msgstr "Nie udało się otworzyć:"
+
+#: src/fsearch_file_utils.c:252
+msgid "Error when getting information for content type"
+msgstr ""
+
+#: src/fsearch_file_utils.c:254
+#, fuzzy
+#| msgid "Show the application preferences"
+msgid "No default application registered"
+msgstr "Pokaż ustawienia aplikacji"
+
+#: src/fsearch_file_utils.c:335
+msgid "Error when opening parent folder"
+msgstr ""
+
+#: src/fsearch_file_utils.c:337
+#, fuzzy
+#| msgid "Failed to open:"
+msgid "Failed to get parent path"
+msgstr "Nie udało się otworzyć:"
+
+#: src/fsearch_file_utils.c:394
 msgid "Folder"
 msgstr "Katalog"
 
-#: src/fsearch_file_utils.c:289
+#: src/fsearch_file_utils.c:400
 msgid "Unknown Type"
 msgstr "Nieznany typ"
 
-#: src/fsearch_filter.c:131
+#: src/fsearch_filter.c:111
 msgid "All"
 msgstr "Wszystkie"
 
-#: src/fsearch_filter.c:132
+#: src/fsearch_filter.c:112
 msgid "Folders"
 msgstr "Katalogi"
 
-#: src/fsearch_filter.c:133
+#: src/fsearch_filter.c:113
 msgid "Files"
 msgstr "Pliki"
 
-#: src/fsearch_filter.c:135
+#: src/fsearch_filter.c:115
 msgid "Applications"
 msgstr "Aplikacje"
 
-#: src/fsearch_filter.c:136
+#: src/fsearch_filter.c:116
 msgid "Archives"
 msgstr "Archiwa"
 
-#: src/fsearch_filter.c:137
+#: src/fsearch_filter.c:117
 msgid "Audio"
 msgstr "Dźwiękowe"
 
-#: src/fsearch_filter.c:138
+#: src/fsearch_filter.c:118
 msgid "Documents"
 msgstr "Dokumenty"
 
-#: src/fsearch_filter.c:139
+#: src/fsearch_filter.c:119
 msgid "Pictures"
 msgstr "Obrazy"
 
-#: src/fsearch_filter.c:140
+#: src/fsearch_filter.c:120
 msgid "Videos"
 msgstr "Wideo"
 
@@ -570,6 +628,17 @@ msgstr ""
 "wariant, dlatego włączenie tego ustawienia może nie przynieść efektu."
 
 #: src/fsearch_preferences.ui:1326
+#, fuzzy
+#| msgid ""
+#| "<b>Enable client-side decorations:</b>\n"
+#| "\n"
+#| "If enabled, the search entry and main menu are displayed in the window "
+#| "title bar.\n"
+#| "\n"
+#| "If disabled, the main menu is displayed as a menu bar with the search "
+#| "entry below it.\n"
+#| "This resembles a more traditonal UI layout and takes a little bit more "
+#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -578,7 +647,8 @@ msgid ""
 "\n"
 "If disabled, the main menu is displayed as a menu bar with the search entry "
 "below it.\n"
-"This resembles a more traditonal UI layout and takes a little bit more space."
+"This resembles a more traditional UI layout and takes a little bit more "
+"space."
 msgstr ""
 "<b>Włącz dekoracje client-side:</b>\n"
 "\n"
@@ -629,10 +699,25 @@ msgstr ""
 "okno miało inny rozmiar."
 
 #: src/fsearch_preferences.ui:1385
+#, fuzzy
+#| msgid ""
+#| "<b>Behaviour after successfully opening a file:</b>\n"
+#| "\n"
+#| "When a file/folder was succesfully opened one of the following actions "
+#| "can be performed:\n"
+#| "\t• <b>Nothing:</b> Nothing happens.\n"
+#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
+#| "minimized. \n"
+#| "\t• <b>Close:</b> Quit FSearch.\n"
+#| "\n"
+#| "You can configure if those actions should be triggered when the file was "
+#| "opened with\n"
+#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
+#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
-"When a file/folder was succesfully opened one of the following actions can "
+"When a file/folder was successfully opened one of the following actions can "
 "be performed:\n"
 "\t• <b>Nothing:</b> Nothing happens.\n"
 "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
@@ -862,6 +947,17 @@ msgstr ""
 "uruchomieniu FSearch."
 
 #: src/fsearch_preferences.ui:1656
+#, fuzzy
+#| msgid ""
+#| "<b>Included folders:</b>\n"
+#| "\n"
+#| "This list contains all folders you want to include in the database.\n"
+#| "\n"
+#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
+#| "be searched in.\n"
+#| "\t• <b>Path:</b> The full path to be included.\n"
+#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
+#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -871,7 +967,7 @@ msgid ""
 "searched in.\n"
 "\t• <b>Path:</b> The full path to be included.\n"
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-"boundraries for this folder"
+"boundaries for this folder"
 msgstr ""
 "<b>Dołączone katalogi:</b>\n"
 "\n"
@@ -1147,7 +1243,7 @@ msgid "Active"
 msgstr "Aktywna"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:656 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
 msgid "Path"
 msgstr "Ścieżka"
 
@@ -1155,7 +1251,7 @@ msgstr "Ścieżka"
 msgid "One Filesystem"
 msgstr "Jeden system plików"
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:649
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
 #: src/menus.ui:183 src/menus.ui:231
 msgid "Name"
 msgstr "Nazwa"
@@ -1255,29 +1351,31 @@ msgstr "ŚCIEŻKA"
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch_window.c:563 src/fsearch_window_actions.c:464
-msgid "Failed to open:"
-msgstr "Nie udało się otworzyć:"
-
-#: src/fsearch_window.c:663 src/menus.ui:247
+#: src/fsearch_window.c:628 src/menus.ui:247
 msgid "Size"
 msgstr "Rozmiar"
 
-#: src/fsearch_window.c:670 src/menus.ui:243
+#: src/fsearch_window.c:635 src/menus.ui:243
 msgid "Type"
 msgstr "Typ"
 
-#: src/fsearch_window.c:677 src/menus.ui:239
+#: src/fsearch_window.c:642 src/menus.ui:239
 msgid "Extension"
 msgstr "Rozszerzenie"
 
-#: src/fsearch_window.c:684 src/menus.ui:251
+#: src/fsearch_window.c:649 src/menus.ui:251
 msgid "Date Modified"
 msgstr "Data modyfikacji"
 
-#: src/fsearch_window.c:698
+#: src/fsearch_window.c:663
+#, fuzzy
+#| msgid ""
+#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
+#| "\n"
+#| "This sort order is not persistent, it will be reset when the search term "
+#| "changes."
 msgid ""
-"Sorting by <b>Type</b> can take a vew seconds with many results.\n"
+"Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
@@ -1335,34 +1433,56 @@ msgstr "Szukaj…"
 msgid "Select a Filter"
 msgstr "Wybierz filtr"
 
-#: src/fsearch_window_actions.c:87
+#: src/fsearch_window_actions.c:88
 #, c-format
 msgid "Do you really want to open %d file(s)?"
 msgstr "Na pewno chcesz otworzyć %d plik(i)?"
 
-#: src/fsearch_window_actions.c:89
+#: src/fsearch_window_actions.c:90
 msgid "Opening Files…"
 msgstr "Otwieranie plików…"
 
-#: src/fsearch_window_actions.c:185
+#: src/fsearch_window_actions.c:176
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
 msgstr "Na pewno chcesz usunąć %d plik(i)?"
 
-#: src/fsearch_window_actions.c:189
+#: src/fsearch_window_actions.c:180
 msgid "Deleting files…"
 msgstr "Usuwanie plików…"
 
-#: src/fsearch_window_actions.c:189
+#: src/fsearch_window_actions.c:180
 msgid "Moving files to trash…"
 msgstr "Przenoszenie plików do kosza…"
 
-#: src/fsearch_window_actions.c:227
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+msgid "Something went wrong."
+msgstr ""
+
+#: src/fsearch_window_actions.c:215
+#, fuzzy, c-format
+#| msgid "Deleting files…"
+msgid "Deleted %d file(s)."
+msgstr "Usuwanie plików…"
+
+#: src/fsearch_window_actions.c:215
+#, fuzzy, c-format
+#| msgid "Moving files to trash…"
+msgid "Moved %d file(s) to the trash."
+msgstr "Przenoszenie plików do kosza…"
+
+#: src/fsearch_window_actions.c:221
+msgid ""
+"The database needs to be updated before it becomes aware of those changes! "
+"This will be fixed with future updates."
+msgstr ""
+
+#: src/fsearch_window_actions.c:243
 #, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "Na pewno chcesz otworzyć okno właściwości pliku %d?"
 
-#: src/fsearch_window_actions.c:231
+#: src/fsearch_window_actions.c:247
 msgid "Opening file properties…"
 msgstr "Otwieranie okna właściwości plików…"
 
@@ -1508,9 +1628,6 @@ msgstr "Przenieś do kosza"
 #~ "                       Spowoduje to usunięcie wybranego katalogu z listy "
 #~ "dołączonych katalogów.\n"
 #~ "                    "
-
-#~ msgid "Failed to open file"
-#~ msgstr "Nie udało się otworzyć pliku"
 
 #~ msgid "Do you want to keep the window open?"
 #~ msgstr "Czy chcesz aby okno pozostało widoczne?"
