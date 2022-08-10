@@ -233,9 +233,13 @@ save_fail:
 static void
 fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
+    GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
+    if (!connection) {
+        g_debug("[file_properties] failed to get bus connection");
+    }
 
     const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
-    GPtrArray *file_array = g_ptr_array_sized_new(num_selected_rows);
+    GPtrArray *file_array = g_ptr_array_new_full(num_selected_rows, g_free);
     fsearch_application_window_selection_for_each(self, prepend_path_uri_to_array, &file_array);
 
     if (num_selected_rows > 20) {
@@ -248,42 +252,32 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
                                                 warning_message->str);
 
         if (response != GTK_RESPONSE_OK) {
-            goto save_fail;
+            g_clear_pointer(&file_array, g_ptr_array_unref);
+            return;
         }
     }
 
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
 
-    char **file_uris = (char **)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
-    if (file_uris) {
-        GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
-        if (connection) {
-            g_autoptr(GError) error = NULL;
-            g_dbus_connection_call_sync(connection,
-                                        "org.freedesktop.FileManager1",
-                                        "/org/freedesktop/FileManager1",
-                                        "org.freedesktop.FileManager1",
-                                        "ShowItemProperties",
-                                        g_variant_new("(^ass)", file_uris, ""),
-                                        NULL,
-                                        G_DBUS_CALL_FLAGS_NONE,
-                                        -1,
-                                        NULL,
-                                        &error);
-            if (error) {
-                g_debug("[file_properties] %s", error->message);
-            }
-        }
-        g_clear_pointer(&file_uris, g_strfreev);
+    g_auto(GStrv) file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
+    if (!file_uris) {
+        return;
     }
-
-    return;
-
-save_fail:
-    if (file_array) {
-        g_ptr_array_set_free_func(file_array, (GDestroyNotify)g_free);
-        g_ptr_array_free(g_steal_pointer(&file_array), TRUE);
+    g_autoptr(GError) error = NULL;
+    g_dbus_connection_call_sync(connection,
+                                "org.freedesktop.FileManager1",
+                                "/org/freedesktop/FileManager1",
+                                "org.freedesktop.FileManager1",
+                                "ShowItemProperties",
+                                g_variant_new("(^ass)", file_uris, ""),
+                                NULL,
+                                G_DBUS_CALL_FLAGS_NONE,
+                                -1,
+                                NULL,
+                                &error);
+    if (error) {
+        g_debug("[file_properties] %s", error->message);
     }
 }
 

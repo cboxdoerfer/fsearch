@@ -136,7 +136,7 @@ parse_numeric_field_with_optional_range(const char *field_name,
                                         FsearchQueryComparisonNewNodeFunc new_node_func,
                                         GString *string,
                                         FsearchQueryFlags flags) {
-    char **elements = g_strsplit(string->str, "..", 2);
+    g_auto(GStrv) elements = g_strsplit(string->str, "..", 2);
     if (!elements || !elements[0]) {
         goto fail;
     }
@@ -181,11 +181,9 @@ parse_numeric_field_with_optional_range(const char *field_name,
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_EQUAL;
     }
 
-    g_clear_pointer(&elements, g_strfreev);
     return new_node_func(flags, start, end, comp_type);
 
 fail:
-    g_clear_pointer(&elements, g_strfreev);
     g_debug("[%s:] invalid argument: %s", field_name, string->str);
     return fsearch_query_node_new_match_nothing();
 }

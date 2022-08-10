@@ -307,13 +307,12 @@ fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flag
     }
     else {
         qnode->needle = g_strdup(search_term);
-        gchar **search_terms = g_strsplit(search_term, ";", -1);
+        g_auto(GStrv) search_terms = g_strsplit(search_term, ";", -1);
         const uint32_t num_search_terms = g_strv_length(search_terms);
         for (uint32_t i = 0; i < num_search_terms; ++i) {
             g_ptr_array_add(qnode->search_term_list, g_strdup(search_terms[i]));
         }
         g_ptr_array_sort(qnode->search_term_list, (qnode->flags & QUERY_FLAG_MATCH_CASE) ? cmp_strcmp : cmp_strcasecmp);
-        g_clear_pointer(&search_terms, g_strfreev);
     }
     return qnode;
 }
