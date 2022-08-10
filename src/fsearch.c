@@ -609,10 +609,10 @@ fsearch_application_startup(GApplication *app) {
     g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", fsearch->config->enable_dark_theme, NULL);
 
     if (fsearch->config->show_menubar) {
-        GtkBuilder *menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
+        g_autoptr(GtkBuilder) menu_builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/"
+                                                                           "menus.ui");
         GMenuModel *menu_model = G_MENU_MODEL(gtk_builder_get_object(menu_builder, "fsearch_main_menu"));
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
-        g_clear_object(&menu_builder);
     }
 
     set_accel_for_action(app, "win.toggle_focus", "Tab");

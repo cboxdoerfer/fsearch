@@ -518,7 +518,7 @@ config_save(FsearchConfig *config) {
     g_autoptr(GKeyFile) key_file = g_key_file_new();
     g_assert(key_file);
 
-    GTimer *timer = g_timer_new();
+    g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
     g_debug("[config] saving...");
@@ -629,8 +629,6 @@ config_save(FsearchConfig *config) {
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);
-
-    g_clear_pointer(&timer, g_timer_destroy);
 
     g_debug(debug_message, seconds * 1000);
 

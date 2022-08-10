@@ -239,7 +239,7 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     }
 
     const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
-    GPtrArray *file_array = g_ptr_array_new_full(num_selected_rows, g_free);
+    g_autoptr(GPtrArray) file_array = g_ptr_array_new_full(num_selected_rows, g_free);
     fsearch_application_window_selection_for_each(self, prepend_path_uri_to_array, &file_array);
 
     if (num_selected_rows > 20) {
@@ -252,7 +252,6 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
                                                 warning_message->str);
 
         if (response != GTK_RESPONSE_OK) {
-            g_clear_pointer(&file_array, g_ptr_array_unref);
             return;
         }
     }
@@ -432,13 +431,11 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     if (!app_id) {
         return;
     }
-    GDesktopAppInfo *app_info = g_desktop_app_info_new(app_id);
+    g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
     if (!app_info) {
         return;
     }
     launch_selection_for_app_info(self, G_APP_INFO(app_info));
-
-    g_clear_object(&app_info);
 }
 
 void
@@ -733,9 +730,8 @@ static void
 action_toggle_state_cb(GSimpleAction *saction, GVariant *parameter, gpointer user_data) {
     GAction *action = G_ACTION(saction);
 
-    GVariant *state = g_action_get_state(action);
+    g_autoptr(GVariant) state = g_action_get_state(action);
     g_action_change_state(action, g_variant_new_boolean(!g_variant_get_boolean(state)));
-    g_clear_pointer(&state, g_variant_unref);
 }
 
 static GActionEntry FsearchWindowActions[] = {
