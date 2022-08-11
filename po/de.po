@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-05 17:31+0200\n"
-"PO-Revision-Date: 2022-08-09 19:40+0000\n"
+"PO-Revision-Date: 2022-08-12 20:15+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -270,25 +270,21 @@ msgstr "Name:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr "Der eindeutige Name des Filters"
+msgstr "Der eindeutige Name dieses Filters"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr "Eindeutiger Filter-Name"
+msgstr "Eindeutiger Name des Filters"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Suche in Pfad"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
-msgstr "Aktiviere reguläre Ausdrücke"
+msgstr "Reguläre Ausdrücke"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Beachte Groß- und Kleinschreibung"
 
@@ -459,7 +455,7 @@ msgstr "Einfach-Klick zum Öffnen"
 
 #: src/fsearch_preferences.ui:458
 msgid "Launch desktop files"
-msgstr "Desktop-Dateien ausführen"
+msgstr "Desktop-Dateien aufrufen"
 
 #: src/fsearch_preferences.ui:479
 msgid "Results:"
@@ -508,7 +504,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:769
 msgid "Add new filter"
-msgstr "Neuen Filter hinzufügen"
+msgstr "Filter hinzufügen"
 
 #: src/fsearch_preferences.ui:785
 msgid "Remove selected filter"
@@ -516,11 +512,11 @@ msgstr "Gewählten Filter entfernen"
 
 #: src/fsearch_preferences.ui:801
 msgid "Edit selected filter"
-msgstr "Gewählten Filter bearbeiten"
+msgstr "Ausgewählten Filter bearbeiten"
 
 #: src/fsearch_preferences.ui:815
 msgid "Restore default filters"
-msgstr "Standard-Filter wiederherstellen"
+msgstr "Standardfilter wiederherstellen"
 
 #: src/fsearch_preferences.ui:847
 msgid "Filter:"
@@ -617,17 +613,6 @@ msgstr ""
 "Verfügung, deshalb wird diese Option eventuell keinen Effekt haben."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -639,7 +624,7 @@ msgid ""
 "This resembles a more traditional UI layout and takes a little bit more "
 "space."
 msgstr ""
-"<b>Klient-seitige Dekorationen aktivieren:</b>\n"
+"<b>Kombinierte Titel-/Menüleiste (CSD) aktivieren:</b>\n"
 "\n"
 "Wenn aktiviert werden die Suchleiste und das Menü in der Fenster-Titelleiste "
 "angezeigt.\n"
@@ -688,22 +673,6 @@ msgstr ""
 "eine andere Fenstergröße erzwingen."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t\tNote that not all systems allow windows to be minimized.\n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -725,8 +694,6 @@ msgstr ""
 "folgenden Aktionen durchgeführt werden:\n"
 "\t• <b>Nichts:</b> Nichts unternehmen.\n"
 "\t• <b>Minimieren:</b> Das aktuelle FSearch-Fenster wird minimiert.\n"
-"\t\tBeachten Sie, dass nicht alle Systeme das Minimieren von Fenstern "
-"erlauben.\n"
 "\t• <b>Schließen:</b> FSearch beenden.\n"
 "\n"
 "Sie können auswählen, ob diese Aktion ausgelöst werden soll wenn die Datei "
@@ -735,19 +702,6 @@ msgstr ""
 "\t• <b>Mausklick</b>"
 
 #: src/fsearch_preferences.ui:1409
-#, fuzzy
-#| msgid ""
-#| "<b>Show highlighted search terms:</b>\n"
-#| "\n"
-#| "If enabled, the search terms will be highlighted in the results view. For "
-#| "example when you search for \"foo\" all appearances of <i>foo</i> in file/"
-#| "folder names will be highlighted with bold characters:\n"
-#| "\n"
-#| "\t\t<b>foo</b>bar.txt\n"
-#| "\t\tfile.<b>foo</b>\n"
-#| "\n"
-#| "This also works for regular expressions and wildcard expressions starting "
-#| "or ending with an asterisk. "
 msgid ""
 "<b>Show highlighted search terms:</b>\n"
 "\n"
@@ -956,14 +910,15 @@ msgid ""
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
 "boundaries for this folder"
 msgstr ""
-"<b>Ausgeschlossene Ordner:</b>\n"
+"<b>Einbezogene Ordner:</b>\n"
 "\n"
-"Liste der Ordner, die von der Suche ausgenommen werden sollen.\n"
+"Liste der Ordner, die in die Datenbank aufgenommen werden sollen.\n"
 "\n"
-"\t• <b>Aktiv:</b> Falls aktiviert, wird der Ordner nicht in die Datenbank\n"
-"\t\taufgenommen und kann nicht durchsucht werden.\n"
-"\t• <b>Pfad:</b> Der vollständige Pfad der ausgenommen werden soll.\n"
-"\t• <b>Ein-Dateisystem:</b> Falls aktiviert, wird FSearch Ordnern die auf "
+"\t• <b>Aktiv:</b> Falls aktiviert, wird der Ordner in die Datenbank "
+"aufgenommen und kann durchsucht werden.\n"
+"\t• <b>Pfad:</b> Der vollständige Pfad der in die Datenbank aufgenommen "
+"werden soll.\n"
+"\t• <b>Ein-Dateisystem:</b> Falls aktiviert, wird FSearch Ordner die auf "
 "einem anderen Dateisystem liegen ignorieren"
 
 #: src/fsearch_preferences.ui:1677
@@ -1250,7 +1205,7 @@ msgstr "Makro"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Query"
-msgstr "Suchanfrage"
+msgstr "Suche"
 
 #: src/fsearch_statusbar.c:56
 #, c-format
@@ -1448,7 +1403,7 @@ msgstr "Lösche %d Datei(en)."
 #: src/fsearch_window_actions.c:215
 #, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Verschiebe %d Datei(en) in den Papierkorb"
+msgstr "Verschiebe %d Datei(en) in den Papierkorb."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
