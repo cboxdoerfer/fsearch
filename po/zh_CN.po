@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-05 17:31+0200\n"
-"PO-Revision-Date: 2022-05-08 23:15+0000\n"
+"PO-Revision-Date: 2022-08-11 16:16+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -146,61 +146,47 @@ msgstr "排序中…"
 
 #: src/fsearch_file_utils.c:132
 msgid "Error while opening folder"
-msgstr ""
+msgstr "打开文件夹时出错"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "打开失败："
+msgstr "构建打开命令失败"
 
 #: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
-#, fuzzy
-#| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
-msgstr "启动桌面文件"
+msgstr "启动桌面文件时出错"
 
 #: src/fsearch_file_utils.c:153
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "打开文件失败"
+msgstr "未能获取默认显示"
 
 #: src/fsearch_file_utils.c:158
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "开启新窗口"
+msgstr "获取应用信息失败"
 
 #: src/fsearch_file_utils.c:179
 msgid "Error when removing file"
-msgstr ""
+msgstr "删除文件时出错"
 
 #: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "打开失败："
+msgstr "获取路径失败"
 
 #: src/fsearch_file_utils.c:252
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "获取内容类型信息时出错"
 
 #: src/fsearch_file_utils.c:254
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "显示首选项"
+msgstr "未注册默认应用程序"
 
 #: src/fsearch_file_utils.c:335
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "打开主文件夹时出错"
 
 #: src/fsearch_file_utils.c:337
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "打开失败："
+msgstr "获取主路径失败"
 
 #: src/fsearch_file_utils.c:394
 msgid "Folder"
@@ -608,17 +594,6 @@ msgstr ""
 "请注意，并非所有系统主题都提供这种较暗的变体，因此启用此设置可能没有效果。"
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -672,21 +647,6 @@ msgstr ""
 "请注意，某些窗口管理器会忽略此请求并强制窗口具有不同的大小。"
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -893,17 +853,6 @@ msgstr ""
 "如果启用，数据库将在您启动 FSearch 时在后台自动更新。"
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1297,12 +1246,6 @@ msgid "Date Modified"
 msgstr "修改日期"
 
 #: src/fsearch_window.c:663
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1385,25 +1328,23 @@ msgstr "正在移动文件到回收站…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
 msgid "Something went wrong."
-msgstr ""
+msgstr "出问题了。"
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "删除文件中…"
+msgstr "删除了 %d 个文件。"
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "正在移动文件到回收站…"
+msgstr "移动了 %d 个文件至回收站。"
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
-msgstr ""
+msgstr "需要更新数据库才能显示这些更改！ 这将在未来的更新中得到修复。"
 
 #: src/fsearch_window_actions.c:243
 #, c-format

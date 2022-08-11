@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-05 17:31+0200\n"
-"PO-Revision-Date: 2022-08-09 19:40+0000\n"
+"PO-Revision-Date: 2022-08-11 16:16+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -160,52 +160,40 @@ msgid "Failed to build open command"
 msgstr "De openen-opdracht kan niet worden aangeropen"
 
 #: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
-#, fuzzy
-#| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
-msgstr "Desktop-bestanden starten"
+msgstr "Het desktopbestand kan niet worden geopend"
 
 #: src/fsearch_file_utils.c:153
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "Kan bestand niet openen"
+msgstr "Het standaard beeldscherm kan niet worden opgevraagd"
 
 #: src/fsearch_file_utils.c:158
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Nieuw toepassingsvenster openen"
+msgstr "Er kan geen toepassingsinformatie worden getoond"
 
 #: src/fsearch_file_utils.c:179
 msgid "Error when removing file"
-msgstr ""
+msgstr "Het bestand kan niet worden verwijderd"
 
 #: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Openen mislukt:"
+msgstr "De locatie kan niet worden opgevraagd"
 
 #: src/fsearch_file_utils.c:252
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Er kan geen bestandsinformatie worden opgevraagd"
 
 #: src/fsearch_file_utils.c:254
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Toepassingsvoorkeuren openen"
+msgstr "Er is geen standaardtoepassing ingesteld"
 
 #: src/fsearch_file_utils.c:335
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "De bovenliggende map kan niet worden geopend"
 
 #: src/fsearch_file_utils.c:337
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Openen mislukt:"
+msgstr "De bovenliggende locatie kan niet worden geopend"
 
 #: src/fsearch_file_utils.c:394
 msgid "Folder"
@@ -617,17 +605,6 @@ msgstr ""
 "instelling kan ook géén effect hebben."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -643,8 +620,8 @@ msgstr ""
 "\n"
 "Schakel in om het zoekvak en hoofdmenu op de titelbalk te tonen.\n"
 "\n"
-"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak "
-"daaronder.\n"
+"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak daaronder."
+"\n"
 "Dit laatste zorgt voor een traditionelere vormgeving, maar neem iets meer "
 "ruimte in beslag."
 
@@ -688,21 +665,6 @@ msgstr ""
 "afmetingen af."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -929,17 +891,6 @@ msgstr ""
 "je FSearch opent."
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -1378,12 +1329,6 @@ msgid "Date Modified"
 msgstr "Aangepast op"
 
 #: src/fsearch_window.c:663
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1467,25 +1412,25 @@ msgstr "Bezig met verplaatsen naar prullenbak…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
 msgid "Something went wrong."
-msgstr ""
+msgstr "Er is iets misgegaan."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Bezig met verwijderen…"
+msgstr "Er is/zijn %d bestan(en) verwijderd."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Bezig met verplaatsen naar prullenbak…"
+msgstr "Er is/zijn %d bestan(en) naar de prullenbak verplaatst."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"De databank dient te worden bijgewerkt voordat de wijzigingen worden "
+"getoond. Dit wordt in een toekomstige versie opgelost."
 
 #: src/fsearch_window_actions.c:243
 #, c-format
