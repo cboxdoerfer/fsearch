@@ -25,10 +25,30 @@ test_query(QueryTest *t) {
 
     FsearchQuery *q = fsearch_query_new(t->needle, NULL, 0, NULL, manager, NULL, t->flags, "debug_query", true);
 
-    FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(file_pool);
-    db_entry_set_name(entry, t->haystack);
-    db_entry_set_size(entry, t->size);
-    db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
+    FsearchDatabaseEntry *entry = NULL;
+    if (strchr(t->haystack, '/')) {
+        g_auto(GStrv) names = g_strsplit(t->haystack, "/", -1);
+        const guint names_len = g_strv_length(names);
+        for (int i = 0; i < names_len - 1; i++) {
+            FsearchDatabaseEntry *old = entry;
+            entry = fsearch_memory_pool_malloc(folder_pool);
+            db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
+            db_entry_set_name(entry, names[i]);
+            db_entry_set_parent(entry, (FsearchDatabaseEntryFolder *)old);
+        }
+        FsearchDatabaseEntry *old = entry;
+        entry = fsearch_memory_pool_malloc(t->is_dir ? folder_pool : file_pool);
+        db_entry_set_name(entry, names[names_len - 1]);
+        db_entry_set_type(entry, t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
+        db_entry_set_size(entry, t->size);
+        db_entry_set_parent(entry, (FsearchDatabaseEntryFolder *)old);
+    }
+    else {
+        entry = fsearch_memory_pool_malloc(t->is_dir ? folder_pool : file_pool);
+        db_entry_set_name(entry, t->haystack);
+        db_entry_set_size(entry, t->size);
+        db_entry_set_type(entry, t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
+    }
 
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
     fsearch_query_match_data_set_entry(match_data, entry);
