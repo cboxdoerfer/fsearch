@@ -199,7 +199,7 @@ db_entry_destroy(FsearchDatabaseEntry *entry) {
     g_clear_pointer(&entry->name, free);
 }
 
-static uint32_t
+uint32_t
 db_entry_get_depth(FsearchDatabaseEntry *entry) {
     uint32_t depth = 0;
     while (entry && entry->parent) {

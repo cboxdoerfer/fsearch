@@ -19,6 +19,9 @@ uint32_t
 fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
 uint32_t
+fsearch_query_matcher_depth(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
+
+uint32_t
 fsearch_query_matcher_childcount(FsearchQueryNode *node, FsearchQueryMatchData *match_data);
 
 uint32_t

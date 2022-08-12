@@ -71,6 +71,9 @@ db_entry_get_mark(FsearchDatabaseEntry *entry);
 uint32_t
 db_entry_get_idx(FsearchDatabaseEntry *entry);
 
+uint32_t
+db_entry_get_depth(FsearchDatabaseEntry *entry);
+
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry);
 

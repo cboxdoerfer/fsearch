@@ -121,6 +121,14 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
 }
 
 FsearchQueryNode *
+fsearch_query_node_new_depth(FsearchQueryFlags flags,
+                             int64_t child_count_start,
+                             int64_t child_count_end,
+                             FsearchQueryNodeComparison comp_type) {
+    return new_numeric_node(child_count_start, child_count_end, comp_type, "depth", fsearch_query_matcher_depth, NULL, flags);
+}
+
+FsearchQueryNode *
 fsearch_query_node_new_childcount(FsearchQueryFlags flags,
                                   int64_t child_count_start,
                                   int64_t child_count_end,

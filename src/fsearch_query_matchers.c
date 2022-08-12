@@ -73,6 +73,16 @@ fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchDat
 }
 
 uint32_t
+fsearch_query_matcher_depth(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    if (entry) {
+        const int64_t depth = db_entry_get_depth(entry);
+        return cmp_num(depth, node);
+    }
+    return 0;
+}
+
+uint32_t
 fsearch_query_matcher_childcount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry && db_entry_is_folder(entry)) {

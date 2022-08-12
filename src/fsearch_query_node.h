@@ -95,6 +95,12 @@ fsearch_query_node_new_size(FsearchQueryFlags flags,
                             FsearchQueryNodeComparison comp_type);
 
 FsearchQueryNode *
+fsearch_query_node_new_depth(FsearchQueryFlags flags,
+                             int64_t child_folder_count_start,
+                             int64_t child_folder_count_end,
+                             FsearchQueryNodeComparison comp_type);
+
+FsearchQueryNode *
 fsearch_query_node_new_childcount(FsearchQueryFlags flags,
                                   int64_t child_folder_count_start,
                                   int64_t child_folder_count_end,
