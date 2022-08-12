@@ -26,22 +26,30 @@ test_query(QueryTest *t) {
     FsearchQuery *q = fsearch_query_new(t->needle, NULL, 0, NULL, manager, NULL, t->flags, "debug_query", true);
 
     FsearchDatabaseEntry *entry = NULL;
-    if (strchr(t->haystack, '/')) {
-        g_auto(GStrv) names = g_strsplit(t->haystack, "/", -1);
+    if (g_str_has_prefix(t->haystack, "/")) {
+        const char *haystack = t->haystack + 1;
+        g_auto(GStrv) names = g_strsplit(haystack, "/", -1);
         const guint names_len = g_strv_length(names);
-        for (int i = 0; i < names_len - 1; i++) {
+
+        entry = fsearch_memory_pool_malloc(folder_pool);
+        db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
+        db_entry_set_name(entry, "");
+
+        if (names_len > 0) {
+            for (int i = 0; i < names_len - 1; i++) {
+                FsearchDatabaseEntry *old = entry;
+                entry = fsearch_memory_pool_malloc(folder_pool);
+                db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
+                db_entry_set_name(entry, names[i]);
+                db_entry_set_parent(entry, (FsearchDatabaseEntryFolder *)old);
+            }
             FsearchDatabaseEntry *old = entry;
-            entry = fsearch_memory_pool_malloc(folder_pool);
-            db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
-            db_entry_set_name(entry, names[i]);
+            entry = fsearch_memory_pool_malloc(t->is_dir ? folder_pool : file_pool);
+            db_entry_set_name(entry, names[names_len - 1]);
+            db_entry_set_type(entry, t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
+            db_entry_set_size(entry, t->size);
             db_entry_set_parent(entry, (FsearchDatabaseEntryFolder *)old);
         }
-        FsearchDatabaseEntry *old = entry;
-        entry = fsearch_memory_pool_malloc(t->is_dir ? folder_pool : file_pool);
-        db_entry_set_name(entry, names[names_len - 1]);
-        db_entry_set_type(entry, t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
-        db_entry_set_size(entry, t->size);
-        db_entry_set_parent(entry, (FsearchDatabaseEntryFolder *)old);
     }
     else {
         entry = fsearch_memory_pool_malloc(t->is_dir ? folder_pool : file_pool);
@@ -230,6 +238,23 @@ test_main(void) {
             {"case:(TE || AB) cd", "ABTE", false, 0, 0, false},
             {"case:(TE || AB) cd", "cd", false, 0, 0, false},
             {"nocase:a", "A", false, 0, QUERY_FLAG_MATCH_CASE, true},
+
+            {"depth:0", "/", false, 0, 0, true},
+            {"depth:2", "/1/2/3", false, 0, 0, false},
+            {"depth:3", "/1/2/3", false, 0, 0, true},
+
+            {"path:d", "/a/b/c", false, 0, 0, false},
+            {"path:a", "/a/b/c", false, 0, 0, true},
+            {"path:b", "/a/b/c", false, 0, 0, true},
+            {"path:c", "/a/b/c", false, 0, 0, true},
+            {"path:/", "/a/b/c", false, 0, 0, true},
+            {"path:/a/b/c", "/a/b/c", false, 0, 0, true},
+            {"path:(a && b && c && d)", "/a/b/c", false, 0, 0, false},
+            {"path:(a && b && c)", "/a/b/c", false, 0, 0, true},
+
+            {"parent:/b/a", "/a/b/c", false, 0, 0, false},
+            {"parent:/a/b", "/a/b/c", false, 0, 0, true},
+
             // macros
             {"test || (pic: video:)", "test.jpg", false, 0, 0, true},
             {"test || (pic: video:)", "test.mp4", false, 0, 0, true},
