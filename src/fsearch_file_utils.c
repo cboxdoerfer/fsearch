@@ -262,6 +262,12 @@ launch_for_content_type(const char *content_type, GPtrArray *files, FsearchFileU
         char *uri = g_file_get_uri(file);
         if (uri) {
             uri_list = g_list_append(uri_list, uri);
+            g_debug("[open] opening file/folder:\nuri: \"%s\"\ncontent type: \"%s\"\napplication: \"%s\"\ncmd: "
+                    "\"%s\"",
+                    uri,
+                    content_type,
+                    g_app_info_get_display_name(info),
+                    g_app_info_get_commandline(info));
         }
     }
 
