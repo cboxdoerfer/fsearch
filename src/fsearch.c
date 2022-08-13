@@ -366,6 +366,17 @@ get_application_version(void) {
 }
 
 static void
+action_help_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    g_assert(FSEARCH_IS_APPLICATION(app));
+    FsearchApplicationWindow *window = get_first_application_window(app);
+    if (!window) {
+        return;
+    }
+
+    gtk_show_uri_on_window(GTK_WINDOW(window), "https://github.com/cboxdoerfer/fsearch/wiki/", GDK_CURRENT_TIME, NULL);
+}
+
+static void
 action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     FsearchApplicationWindow *window = get_first_application_window(app);
@@ -634,6 +645,7 @@ fsearch_application_startup(GApplication *app) {
 static GActionEntry fsearch_app_entries[] = {
     {"new_window", action_new_window_activated, NULL, NULL, NULL},
     {"about", action_about_activated, NULL, NULL, NULL},
+    {"help", action_help_activated, NULL, NULL, NULL},
     {"update_database", action_update_database_activated, NULL, NULL, NULL},
     {"cancel_update_database", action_cancel_update_database_activated, NULL, NULL, NULL},
     {"preferences", action_preferences_activated, "u", NULL, NULL},
