@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 12:19+0200\n"
+"POT-Creation-Date: 2022-08-13 13:47+0200\n"
 "PO-Revision-Date: 2022-06-20 18:14+0000\n"
 "Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
@@ -1087,39 +1087,47 @@ msgstr ""
 "Προσθήκη διαδρομής που θα συμπεριληφθεί στη βάση δεδομένων\n"
 "                                "
 
-#: src/fsearch_statusbar.ui:332
+#: src/fsearch_statusbar.ui:333
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
 msgid ""
-"Cancel database\n"
-"                                                    update\n"
+"Cancel database update\n"
 "                                                "
 msgstr ""
+"Προσθήκη διαδρομής που θα συμπεριληφθεί στη βάση δεδομένων\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:375
+#: src/fsearch_statusbar.ui:376
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
 msgid ""
-"Number of database\n"
-"                                                    items\n"
+"Number of database items\n"
 "                                                "
 msgstr ""
+"Προσθήκη διαδρομής που θα συμπεριληφθεί στη βάση δεδομένων\n"
+"                                "
 
 #: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(κενό)"
 
-#: src/fsearch_statusbar.ui:415
+#: src/fsearch_statusbar.ui:416
 #, fuzzy
 #| msgid ""
-#| "Search term contains upper case characters.\n"
-#| "<b>Match Case</b> was temporarily activated for this term."
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case\n"
-"                                    characters.\n"
+"Search term contains upper case characters.\n"
 "                                    <b>Match Case</b> was temporarily "
 "activated for this term.\n"
 "                                "
 msgstr ""
-"Ο όρος αναζήτησης περιέχει κεφαλαίους χαρακτήρες.\n"
-"Το <b>Ταίριασμα πεζών/κεφαλαίων</b> ενεργοποιήθηκε προσωρινά για αυτόν τον "
-"όρο."
+"Ο όρος αναζήτησης περιέχει διαχωριστικά διαδρομής.\n"
+"Η <b>Αναζήτηση σε Διαδρομή</b> ενεργοποιήθηκε προσωρινά για αυτόν τον όρο."
 
 #: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
@@ -1395,6 +1403,21 @@ msgstr ""
 #: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "Μετακίνηση στα απορρίματα"
+
+#, fuzzy
+#~| msgid ""
+#~| "Search term contains upper case characters.\n"
+#~| "<b>Match Case</b> was temporarily activated for this term."
+#~ msgid ""
+#~ "Search term contains upper case\n"
+#~ "                                    characters.\n"
+#~ "                                    <b>Match Case</b> was temporarily "
+#~ "activated for this term.\n"
+#~ "                                "
+#~ msgstr ""
+#~ "Ο όρος αναζήτησης περιέχει κεφαλαίους χαρακτήρες.\n"
+#~ "Το <b>Ταίριασμα πεζών/κεφαλαίων</b> ενεργοποιήθηκε προσωρινά για αυτόν "
+#~ "τον όρο."
 
 #~ msgid "page0"
 #~ msgstr "σελίδα0"

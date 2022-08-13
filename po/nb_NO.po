@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 12:19+0200\n"
+"POT-Creation-Date: 2022-08-13 13:47+0200\n"
 "PO-Revision-Date: 2020-10-20 16:26+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -1056,17 +1056,15 @@ msgid ""
 "                                        "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:332
+#: src/fsearch_statusbar.ui:333
 msgid ""
-"Cancel database\n"
-"                                                    update\n"
+"Cancel database update\n"
 "                                                "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:375
+#: src/fsearch_statusbar.ui:376
 msgid ""
-"Number of database\n"
-"                                                    items\n"
+"Number of database items\n"
 "                                                "
 msgstr ""
 
@@ -1074,21 +1072,16 @@ msgstr ""
 msgid "(empty)"
 msgstr "(tom)"
 
-#: src/fsearch_statusbar.ui:415
+#: src/fsearch_statusbar.ui:416
 #, fuzzy
-#| msgid ""
-#| "Search term contains upper case characters.\n"
-#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case\n"
-"                                    characters.\n"
+"Search term contains upper case characters.\n"
 "                                    <b>Match Case</b> was temporarily "
 "activated for this term.\n"
 "                                "
 msgstr ""
-"Søket inneholder store bokstaver.\n"
-"<b>Skill mellom store og små bokstaver</b> ble midlertidig påslått for dette "
-"søket."
+"Søket inneholder stiinndelere.\n"
+"<b>Søk i sti</b> ble midlertidig påslått for dette søket."
 
 #: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 #, fuzzy
@@ -1364,6 +1357,21 @@ msgstr ""
 #: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "Flytt til _papirkurv"
+
+#, fuzzy
+#~| msgid ""
+#~| "Search term contains upper case characters.\n"
+#~| "<b>Match Case</b> was temporarily activated for this term."
+#~ msgid ""
+#~ "Search term contains upper case\n"
+#~ "                                    characters.\n"
+#~ "                                    <b>Match Case</b> was temporarily "
+#~ "activated for this term.\n"
+#~ "                                "
+#~ msgstr ""
+#~ "Søket inneholder store bokstaver.\n"
+#~ "<b>Skill mellom store og små bokstaver</b> ble midlertidig påslått for "
+#~ "dette søket."
 
 #, fuzzy
 #~ msgid "page0"

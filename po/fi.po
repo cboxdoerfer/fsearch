@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 12:19+0200\n"
+"POT-Creation-Date: 2022-08-13 13:47+0200\n"
 "PO-Revision-Date: 2022-07-23 05:21+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
@@ -1053,38 +1053,47 @@ msgstr ""
 "Lisää tietokantaan sisällytettävä polku\n"
 "                                "
 
-#: src/fsearch_statusbar.ui:332
+#: src/fsearch_statusbar.ui:333
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
 msgid ""
-"Cancel database\n"
-"                                                    update\n"
+"Cancel database update\n"
 "                                                "
 msgstr ""
+"Lisää tietokantaan sisällytettävä polku\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:375
+#: src/fsearch_statusbar.ui:376
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
 msgid ""
-"Number of database\n"
-"                                                    items\n"
+"Number of database items\n"
 "                                                "
 msgstr ""
+"Lisää tietokantaan sisällytettävä polku\n"
+"                                "
 
 #: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(tyhjä)"
 
-#: src/fsearch_statusbar.ui:415
+#: src/fsearch_statusbar.ui:416
 #, fuzzy
 #| msgid ""
-#| "Search term contains upper case characters.\n"
-#| "<b>Match Case</b> was temporarily activated for this term."
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case\n"
-"                                    characters.\n"
+"Search term contains upper case characters.\n"
 "                                    <b>Match Case</b> was temporarily "
 "activated for this term.\n"
 "                                "
 msgstr ""
-"Hakusana sisältää isoja kirjaimia.\n"
-"<b>Sama kirjainkoko</b> aktivoitiin väliaikaisesti tälle hakusanalle."
+"Hakusana sisältää polkuerottimia\n"
+"<b>Etsi polusta</b> aktivoitiin väliaikaisesti tälle hakusanalle."
 
 #: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
@@ -1361,6 +1370,20 @@ msgstr ""
 #: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "Siirrä _roskakoriin"
+
+#, fuzzy
+#~| msgid ""
+#~| "Search term contains upper case characters.\n"
+#~| "<b>Match Case</b> was temporarily activated for this term."
+#~ msgid ""
+#~ "Search term contains upper case\n"
+#~ "                                    characters.\n"
+#~ "                                    <b>Match Case</b> was temporarily "
+#~ "activated for this term.\n"
+#~ "                                "
+#~ msgstr ""
+#~ "Hakusana sisältää isoja kirjaimia.\n"
+#~ "<b>Sama kirjainkoko</b> aktivoitiin väliaikaisesti tälle hakusanalle."
 
 #~ msgid "page0"
 #~ msgstr "sivu0"

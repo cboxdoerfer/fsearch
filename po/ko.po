@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 12:19+0200\n"
+"POT-Creation-Date: 2022-08-13 13:47+0200\n"
 "PO-Revision-Date: 2022-04-29 18:12+0000\n"
 "Last-Translator: 이정희 <daemul72@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -1054,17 +1054,15 @@ msgid ""
 "                                        "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:332
+#: src/fsearch_statusbar.ui:333
 msgid ""
-"Cancel database\n"
-"                                                    update\n"
+"Cancel database update\n"
 "                                                "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:375
+#: src/fsearch_statusbar.ui:376
 msgid ""
-"Number of database\n"
-"                                                    items\n"
+"Number of database items\n"
 "                                                "
 msgstr ""
 
@@ -1072,10 +1070,9 @@ msgstr ""
 msgid "(empty)"
 msgstr "(비어있음)"
 
-#: src/fsearch_statusbar.ui:415
+#: src/fsearch_statusbar.ui:416
 msgid ""
-"Search term contains upper case\n"
-"                                    characters.\n"
+"Search term contains upper case characters.\n"
 "                                    <b>Match Case</b> was temporarily "
 "activated for this term.\n"
 "                                "

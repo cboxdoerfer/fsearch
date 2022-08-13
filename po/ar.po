@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 12:19+0200\n"
+"POT-Creation-Date: 2022-08-13 13:47+0200\n"
 "PO-Revision-Date: 2021-01-13 10:23+0300\n"
 "Last-Translator: Mubarak AlQahtani <mubarak.qahtani@outlook.sa>\n"
 "Language-Team: Arabic <mubarak.qahtani@outlook.sa>\n"
@@ -1263,43 +1263,37 @@ msgid ""
 "                                        "
 msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
 
-#: src/fsearch_statusbar.ui:332
-msgid ""
-"Cancel database\n"
-"                                                    update\n"
-"                                                "
-msgstr ""
-
-#: src/fsearch_statusbar.ui:375
+#: src/fsearch_statusbar.ui:333
 #, fuzzy
 msgid ""
-"Number of database\n"
-"                                                    items\n"
+"Cancel database update\n"
 "                                                "
-msgstr ""
-"<b> إضافة مجلد إلى قاعدة البيانات: </b>\n"
-"\n"
-"يفتح هذا الزر مربع حوار حيث يمكنك تحديد المجلد الذي تريد تضمينه في قاعدة "
-"البيانات للبحث."
+msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
+
+#: src/fsearch_statusbar.ui:376
+#, fuzzy
+msgid ""
+"Number of database items\n"
+"                                                "
+msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
 
 #: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(فارغ)"
 
-#: src/fsearch_statusbar.ui:415
+#: src/fsearch_statusbar.ui:416
 #, fuzzy
 #| msgid ""
-#| "Search term contains upper case characters.\n"
-#| "<b>Match Case</b> was temporarily activated for this term."
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case\n"
-"                                    characters.\n"
+"Search term contains upper case characters.\n"
 "                                    <b>Match Case</b> was temporarily "
 "activated for this term.\n"
 "                                "
 msgstr ""
-"مصطلح البحث يحتوي على أحرف كبيرة.\n"
-"تم تنشيط <b> Match Case </b> مؤقتًا لهذا المصطلح."
+"مصطلح البحث يحتوي على فواصل المسار.\n"
+"تم تنشيط <b> البحث في المسار </b> مؤقتًا لهذا المصطلح."
 
 #: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
@@ -1572,6 +1566,31 @@ msgstr ""
 #: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "ارسال الى سلة المحذوفات"
+
+#, fuzzy
+#~ msgid ""
+#~ "Number of database\n"
+#~ "                                                    items\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "<b> إضافة مجلد إلى قاعدة البيانات: </b>\n"
+#~ "\n"
+#~ "يفتح هذا الزر مربع حوار حيث يمكنك تحديد المجلد الذي تريد تضمينه في قاعدة "
+#~ "البيانات للبحث."
+
+#, fuzzy
+#~| msgid ""
+#~| "Search term contains upper case characters.\n"
+#~| "<b>Match Case</b> was temporarily activated for this term."
+#~ msgid ""
+#~ "Search term contains upper case\n"
+#~ "                                    characters.\n"
+#~ "                                    <b>Match Case</b> was temporarily "
+#~ "activated for this term.\n"
+#~ "                                "
+#~ msgstr ""
+#~ "مصطلح البحث يحتوي على أحرف كبيرة.\n"
+#~ "تم تنشيط <b> Match Case </b> مؤقتًا لهذا المصطلح."
 
 #~ msgid "page0"
 #~ msgstr "صفحة 0"
