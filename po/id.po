@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-05 17:31+0200\n"
+"POT-Creation-Date: 2022-08-13 12:19+0200\n"
 "PO-Revision-Date: 2021-10-30 00:43+0000\n"
 "Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
@@ -89,43 +89,43 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr ""
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
 msgid "Initial release."
 msgstr "Rilis awal."
 
-#: src/fsearch.c:262
+#: src/fsearch.c:243
 msgid "Saving…"
 msgstr "Menyimpan…"
 
-#: src/fsearch.c:380
+#: src/fsearch.c:430
 msgid "translator-credits"
 msgstr "Reza Almanda (rezaalmanda.github.io)"
 
-#: src/fsearch.c:382
+#: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 
-#: src/fsearch.c:850
+#: src/fsearch.c:905
 msgid "Open a new application window"
 msgstr "Buka jendela aplikasi baru"
 
-#: src/fsearch.c:851
+#: src/fsearch.c:906
 msgid "Show the application preferences"
 msgstr "Tampilkan preferensi aplikasi"
 
-#: src/fsearch.c:852
+#: src/fsearch.c:907
 msgid "Set the search pattern"
 msgstr "Atur pola pencarian"
 
-#: src/fsearch.c:853
+#: src/fsearch.c:908
 msgid "Update the database and exit"
 msgstr "Perbarui basisdata dan keluar"
 
-#: src/fsearch.c:854
+#: src/fsearch.c:909
 msgid "Print version information and exit"
 msgstr "Cetak informasi versi dan keluar"
 
@@ -138,7 +138,7 @@ msgid "Loading files…"
 msgstr "Memuat berkas…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:90
+#: src/fsearch_statusbar.ui:91
 msgid "Sorting…"
 msgstr "Penyortiran…"
 
@@ -152,57 +152,57 @@ msgstr ""
 msgid "Failed to build open command"
 msgstr "Gagal membuka:"
 
-#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
 msgid "Error when launching desktop file"
 msgstr ""
 
 #: src/fsearch_file_utils.c:153
 #, fuzzy
-#| msgid "Failed to open file"
-msgid "Failed to get default display"
-msgstr "Gagal membuka berkas"
-
-#: src/fsearch_file_utils.c:158
-#, fuzzy
 #| msgid "Open a new application window"
 msgid "Failed to get application information"
 msgstr "Buka jendela aplikasi baru"
 
-#: src/fsearch_file_utils.c:179
+#: src/fsearch_file_utils.c:159
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get default display"
+msgstr "Gagal membuka berkas"
+
+#: src/fsearch_file_utils.c:180
 msgid "Error when removing file"
 msgstr ""
 
-#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get path"
 msgstr "Gagal membuka:"
 
-#: src/fsearch_file_utils.c:252
+#: src/fsearch_file_utils.c:253
 msgid "Error when getting information for content type"
 msgstr ""
 
-#: src/fsearch_file_utils.c:254
+#: src/fsearch_file_utils.c:255
 #, fuzzy
 #| msgid "Show the application preferences"
 msgid "No default application registered"
 msgstr "Tampilkan preferensi aplikasi"
 
-#: src/fsearch_file_utils.c:335
+#: src/fsearch_file_utils.c:342
 msgid "Error when opening parent folder"
 msgstr ""
 
-#: src/fsearch_file_utils.c:337
+#: src/fsearch_file_utils.c:344
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get parent path"
 msgstr "Gagal membuka:"
 
-#: src/fsearch_file_utils.c:394
+#: src/fsearch_file_utils.c:401
 msgid "Folder"
 msgstr "Folder"
 
-#: src/fsearch_file_utils.c:400
+#: src/fsearch_file_utils.c:407
 msgid "Unknown Type"
 msgstr "Tipe Tidak Diketahui"
 
@@ -248,16 +248,16 @@ msgstr "Video"
 msgid "Macro names must not contain `:` characters."
 msgstr ""
 
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
-#: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
+#: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
 msgstr "_Batal"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:509
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
 msgstr "_Ok"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
+#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:295
 msgid "Edit filter"
 msgstr ""
 
@@ -324,11 +324,6 @@ msgstr "Basis Data Kosong"
 msgid "Add folders"
 msgstr "Tambah folder"
 
-#: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
-#: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
-msgid "page0"
-msgstr "page0"
-
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
 msgstr "Memuat database…"
@@ -337,44 +332,39 @@ msgstr "Memuat database…"
 msgid "This won't take long."
 msgstr "Ini tidak akan lama."
 
-#: src/fsearch_overlay.ui:139 src/fsearch_overlay.ui:335
-#: src/fsearch_statusbar.ui:123 src/fsearch_statusbar.ui:381
-msgid "page1"
-msgstr "page1"
-
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
 msgid "Updating Database…"
 msgstr "Memperbarui Basisdata…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
 msgid "This may take a while."
 msgstr "Ini mungkin memakan waktu cukup lama."
-
-#: src/fsearch_overlay.ui:202
-msgid "page2"
-msgstr "halaman2"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
 msgstr "Kueri Kosong"
 
 #: src/fsearch_overlay.ui:256
-msgid "Press <b>Ctrl + F</b> and start typing"
+#, fuzzy
+#| msgid "Press <b>Ctrl + F</b> and start typing"
+msgid ""
+"Press <b>Ctrl + F</b> and start typing\n"
+"                        "
 msgstr "Tekan <b>Ctrl + F</b> dan mulai mengetik"
 
-#: src/fsearch_overlay.ui:304
+#: src/fsearch_overlay.ui:305
 msgid "No Results Found"
 msgstr "Tidak ada hasil yang ditemukan"
 
-#: src/fsearch_overlay.ui:319
+#: src/fsearch_overlay.ui:320
 msgid "Try a different search"
 msgstr "Coba pencarian lain"
 
-#: src/fsearch_overlay.ui:368
+#: src/fsearch_overlay.ui:369
 msgid "Sorting results…"
 msgstr "Menyortir hasil…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:250 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
 msgid "Preferences"
 msgstr "Preferensi"
 
@@ -532,7 +522,7 @@ msgstr ""
 msgid "Filter:"
 msgstr "Tampilkan Filter"
 
-#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:868
 msgid "Search"
 msgstr "Cari"
 
@@ -902,12 +892,6 @@ msgid ""
 "handler for this type of files, which is usually a text editor."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1842
-#, fuzzy
-#| msgid "page0"
-msgid "page30"
-msgstr "page0"
-
 #: src/fsearch_preferences.ui:1850
 msgid ""
 "<b>Filters:</b>\n"
@@ -920,24 +904,12 @@ msgid ""
 "\t• <b>Query:</b> The search term by which the database should be filtered"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1863
-#, fuzzy
-#| msgid "page1"
-msgid "page18"
-msgstr "page1"
-
 #: src/fsearch_preferences.ui:1871
 msgid ""
 "<b>Add a new filter:</b>\n"
 "\n"
 "This button opens a dialog where you can edit a new filter."
 msgstr ""
-
-#: src/fsearch_preferences.ui:1880
-#, fuzzy
-#| msgid "page1"
-msgid "page31"
-msgstr "page1"
 
 #: src/fsearch_preferences.ui:1888
 msgid ""
@@ -946,24 +918,12 @@ msgid ""
 "This button removes the currently selected filter."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1897
-#, fuzzy
-#| msgid "page2"
-msgid "page32"
-msgstr "halaman2"
-
 #: src/fsearch_preferences.ui:1905
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
 "This button opens a dialog where you can edit the selected filter."
 msgstr ""
-
-#: src/fsearch_preferences.ui:1914
-#, fuzzy
-#| msgid "page0"
-msgid "page33"
-msgstr "page0"
 
 #: src/fsearch_preferences.ui:1922
 msgid ""
@@ -974,12 +934,6 @@ msgid ""
 "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
 
-#: src/fsearch_preferences.ui:1933
-#, fuzzy
-#| msgid "page0"
-msgid "page34"
-msgstr "page0"
-
 #: src/fsearch_preferences.ui:1941
 msgid ""
 "<b>Exit on Escape:</b>\n"
@@ -988,25 +942,19 @@ msgid ""
 "window being minimized."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1950
-#, fuzzy
-#| msgid "page0"
-msgid "page35"
-msgstr "page0"
-
-#: src/fsearch_preferences.ui:1960
+#: src/fsearch_preferences.ui:1960 src/fsearch_window.ui:117 src/menus.ui:150
 msgid "Help"
 msgstr "Bantuan"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:209
 msgid "Select folder"
 msgstr "Pilih folder"
 
-#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:199 src/fsearch_preferences_ui.c:209
 msgid "_Select"
 msgstr "_Pilih"
 
-#: src/fsearch_preferences_ui.c:320
+#: src/fsearch_preferences_ui.c:326
 #, fuzzy
 #| msgid "Add folders"
 msgid "Add filter"
@@ -1017,7 +965,7 @@ msgid "Active"
 msgstr "Aktif"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:620 src/menus.ui:213 src/menus.ui:261
 msgid "Path"
 msgstr "Jalur"
 
@@ -1025,8 +973,8 @@ msgstr "Jalur"
 msgid "One Filesystem"
 msgstr ""
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
-#: src/menus.ui:183 src/menus.ui:231
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
+#: src/menus.ui:209 src/menus.ui:257
 msgid "Name"
 msgstr "Nama"
 
@@ -1064,83 +1012,105 @@ msgid "Scanning…"
 msgstr "Memindai…"
 
 #: src/fsearch_statusbar.ui:52
-msgid "Number of Search Results"
-msgstr "Jumlah hasil pencarian"
+msgid ""
+"Number of Search Results\n"
+"                                        "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:53
+#: src/fsearch_statusbar.ui:54
 msgid "0 Items"
 msgstr "0 Item"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_statusbar.ui:328
-#: src/fsearch_window.ui:102
-msgid "Cancel database update"
-msgstr "Batalkan pembaruan database"
+#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+msgid ""
+"Cancel database update\n"
+"                                        "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:153
+#: src/fsearch_statusbar.ui:155
 msgid "Index:"
 msgstr "Indeks:"
 
-#: src/fsearch_statusbar.ui:228
-msgid "Number of selected folders"
-msgstr "Jumlah folder yang dipilih"
+#: src/fsearch_statusbar.ui:230
+msgid ""
+"Number of selected folders\n"
+"                                        "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:253
-msgid "Number of selected files"
-msgstr "Jumlah berkas yang dipilih"
+#: src/fsearch_statusbar.ui:256
+msgid ""
+"Number of selected files\n"
+"                                        "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:369
-msgid "Number of database items"
-msgstr "Jumlah item basisdata"
+#: src/fsearch_statusbar.ui:332
+msgid ""
+"Cancel database\n"
+"                                                    update\n"
+"                                                "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:375
+msgid ""
+"Number of database\n"
+"                                                    items\n"
+"                                                "
+msgstr ""
+
+#: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(kosong)"
 
-#: src/fsearch_statusbar.ui:407
+#: src/fsearch_statusbar.ui:415
 msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
+"Search term contains upper case\n"
+"                                    characters.\n"
+"                                    <b>Match Case</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
+#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
 msgstr ""
 
-#: src/fsearch_statusbar.ui:514
+#: src/fsearch_statusbar.ui:529
 msgid ""
 "Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
+"                                    <b>Search in Path</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
+#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
 msgid "PATH"
 msgstr "JALUR"
 
-#: src/fsearch_statusbar.ui:651
+#: src/fsearch_statusbar.ui:676
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch_window.c:628 src/menus.ui:247
+#: src/fsearch_window.c:627 src/menus.ui:273
 msgid "Size"
 msgstr "Ukuran"
 
-#: src/fsearch_window.c:635 src/menus.ui:243
+#: src/fsearch_window.c:634 src/menus.ui:269
 msgid "Type"
 msgstr "Jenis"
 
-#: src/fsearch_window.c:642 src/menus.ui:239
+#: src/fsearch_window.c:641 src/menus.ui:265
 msgid "Extension"
 msgstr "Ekstensi"
 
-#: src/fsearch_window.c:649 src/menus.ui:251
+#: src/fsearch_window.c:648 src/menus.ui:277
 msgid "Date Modified"
 msgstr "Tanggal Dimodifikasi"
 
-#: src/fsearch_window.c:663
+#: src/fsearch_window.c:662
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1148,53 +1118,87 @@ msgid ""
 "changes."
 msgstr ""
 
-#: src/fsearch_window.ui:68
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#, fuzzy
+#| msgid "FSearch"
+msgid "FSearch Online"
+msgstr "FSearch"
+
+#: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
+msgid "Donate"
+msgstr ""
+
+#: src/fsearch_window.ui:89 src/menus.ui:142
+msgid "Forum"
+msgstr ""
+
+#: src/fsearch_window.ui:103 src/menus.ui:146
+msgid "Bug Reports and Feature Requests"
+msgstr ""
+
+#: src/fsearch_window.ui:162 src/menus.ui:133
+msgid "GitHub Sponsors"
+msgstr ""
+
+#: src/fsearch_window.ui:176 src/menus.ui:137
+msgid "PayPal"
+msgstr ""
+
+#: src/fsearch_window.ui:214
 msgid "New window"
 msgstr "Jendela baru"
 
-#: src/fsearch_window.ui:88
+#: src/fsearch_window.ui:234
 msgid "Update database"
 msgstr "Memperbarui database"
 
-#: src/fsearch_window.ui:143 src/menus.ui:112
+#: src/fsearch_window.ui:290 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Cari di Jalur"
 
-#: src/fsearch_window.ui:157 src/menus.ui:116
+#: src/fsearch_window.ui:304 src/menus.ui:116
 msgid "Match Case"
 msgstr "Cocokan huruf"
 
-#: src/fsearch_window.ui:171 src/menus.ui:120
+#: src/fsearch_window.ui:318 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Aktifkan RegEx"
 
-#: src/fsearch_window.ui:196 src/menus.ui:95
+#: src/fsearch_window.ui:343 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Tampilkan Bilah status"
 
-#: src/fsearch_window.ui:210 src/menus.ui:99
+#: src/fsearch_window.ui:357 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Tampilkan Filter"
 
-#: src/fsearch_window.ui:224 src/menus.ui:103
+#: src/fsearch_window.ui:371 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Tampilkan Tombol Pencarian"
 
-#: src/fsearch_window.ui:275 src/menus.ui:129
+#: src/fsearch_window.ui:436 src/menus.ui:155
 msgid "About"
 msgstr "Tentang"
 
-#: src/fsearch_window.ui:300 src/menus.ui:47
+#: src/fsearch_window.ui:461 src/menus.ui:47
 msgid "Quit"
 msgstr "Keluar"
 
-#: src/fsearch_window.ui:408
+#: src/fsearch_window.ui:573
 msgid "Search…"
 msgstr "Cari…"
 
-#: src/fsearch_window.ui:430
-msgid "Select a Filter"
-msgstr "Pilih filter"
+#: src/fsearch_window.ui:598
+msgid ""
+"Select a Filter\n"
+"                                                "
+msgstr ""
+
+#: src/fsearch_window.ui:632
+msgid ""
+"Search\n"
+"                                                        "
+msgstr ""
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1218,7 +1222,7 @@ msgstr "Menghapus file…"
 msgid "Moving files to trash…"
 msgstr "Memindahkan file ke sampah…"
 
-#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
 msgstr ""
 
@@ -1240,12 +1244,12 @@ msgid ""
 "This will be fixed with future updates."
 msgstr ""
 
-#: src/fsearch_window_actions.c:243
+#: src/fsearch_window_actions.c:247
 #, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "Apakah Anda benar-benar ingin membuka jendela properti file %d?"
 
-#: src/fsearch_window_actions.c:247
+#: src/fsearch_window_actions.c:251
 msgid "Opening file properties…"
 msgstr "Membuka properti file…"
 
@@ -1257,7 +1261,7 @@ msgstr "_Fail"
 msgid "New Window"
 msgstr "Buka Jendela"
 
-#: src/menus.ui:16 src/menus.ui:139
+#: src/menus.ui:16 src/menus.ui:165
 msgid "_Open"
 msgstr "_Buka"
 
@@ -1281,11 +1285,11 @@ msgstr "Tutup Jendela"
 msgid "_Edit"
 msgstr "_Sunting"
 
-#: src/menus.ui:57 src/menus.ui:175
+#: src/menus.ui:57 src/menus.ui:201
 msgid "_Copy"
 msgstr "_Salin"
 
-#: src/menus.ui:62 src/menus.ui:196
+#: src/menus.ui:62 src/menus.ui:222
 msgid "Cu_t"
 msgstr "Poto_ng"
 
@@ -1313,25 +1317,87 @@ msgstr "_Cari"
 msgid "_Help"
 msgstr "_Bantuan"
 
-#: src/menus.ui:145
+#: src/menus.ui:171
 msgid "Open _With"
 msgstr "Buka_dengan"
 
-#: src/menus.ui:159
+#: src/menus.ui:185
 msgid "_Open Folder"
 msgstr "_Buka Folder"
 
-#: src/menus.ui:181
+#: src/menus.ui:207
 msgid "Copy as Text"
 msgstr "Salin sebagai Teks"
 
-#: src/menus.ui:191
+#: src/menus.ui:217
 msgid "Path + Name"
 msgstr "Path + Nama"
 
-#: src/menus.ui:204
+#: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "Pindah ke _Sampah"
+
+#~ msgid "page0"
+#~ msgstr "page0"
+
+#~ msgid "page1"
+#~ msgstr "page1"
+
+#~ msgid "page2"
+#~ msgstr "halaman2"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page30"
+#~ msgstr "page0"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page18"
+#~ msgstr "page1"
+
+#, fuzzy
+#~| msgid "page1"
+#~ msgid "page31"
+#~ msgstr "page1"
+
+#, fuzzy
+#~| msgid "page2"
+#~ msgid "page32"
+#~ msgstr "halaman2"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page33"
+#~ msgstr "page0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page34"
+#~ msgstr "page0"
+
+#, fuzzy
+#~| msgid "page0"
+#~ msgid "page35"
+#~ msgstr "page0"
+
+#~ msgid "Number of Search Results"
+#~ msgstr "Jumlah hasil pencarian"
+
+#~ msgid "Cancel database update"
+#~ msgstr "Batalkan pembaruan database"
+
+#~ msgid "Number of selected folders"
+#~ msgstr "Jumlah folder yang dipilih"
+
+#~ msgid "Number of selected files"
+#~ msgstr "Jumlah berkas yang dipilih"
+
+#~ msgid "Number of database items"
+#~ msgstr "Jumlah item basisdata"
+
+#~ msgid "Select a Filter"
+#~ msgstr "Pilih filter"
 
 #~ msgid "Do you want to keep the window open?"
 #~ msgstr "Anda mahu biar jendela terbuka?"

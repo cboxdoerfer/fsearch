@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-05 17:31+0200\n"
+"POT-Creation-Date: 2022-08-13 12:19+0200\n"
 "PO-Revision-Date: 2022-05-08 23:15+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
@@ -102,45 +102,45 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "Оформлението да наподобява изгледа на Gnome"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
 msgid "Initial release."
 msgstr "Първоначално издание."
 
-#: src/fsearch.c:262
+#: src/fsearch.c:243
 msgid "Saving…"
 msgstr "Запазване…"
 
-#: src/fsearch.c:380
+#: src/fsearch.c:430
 msgid "translator-credits"
 msgstr "cybercop (cybercop_montana@abv.bg)"
 
-#: src/fsearch.c:382
+#: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Инструмент за търсене, фокусиран върху висока производителност и разширени "
 "възможности"
 
-#: src/fsearch.c:850
+#: src/fsearch.c:905
 msgid "Open a new application window"
 msgstr "Отваряне на нов прозорец на приложението"
 
-#: src/fsearch.c:851
+#: src/fsearch.c:906
 msgid "Show the application preferences"
 msgstr "Покажи настройките на програмата"
 
-#: src/fsearch.c:852
+#: src/fsearch.c:907
 msgid "Set the search pattern"
 msgstr "Задаване на шаблон за търсене"
 
-#: src/fsearch.c:853
+#: src/fsearch.c:908
 msgid "Update the database and exit"
 msgstr "Обновяване на базата с данни и изход"
 
-#: src/fsearch.c:854
+#: src/fsearch.c:909
 msgid "Print version information and exit"
 msgstr "Показване на информация за версията и изход"
 
@@ -153,7 +153,7 @@ msgid "Loading files…"
 msgstr "Зареждане на файлове…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:90
+#: src/fsearch_statusbar.ui:91
 msgid "Sorting…"
 msgstr "Сортиране…"
 
@@ -167,7 +167,7 @@ msgstr ""
 msgid "Failed to build open command"
 msgstr "Неуспешно отваряне:"
 
-#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
 #, fuzzy
 #| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
@@ -175,51 +175,51 @@ msgstr "Стартиране на десктоп файлове"
 
 #: src/fsearch_file_utils.c:153
 #, fuzzy
-#| msgid "Failed to open file"
-msgid "Failed to get default display"
-msgstr "Файлът не може да бъде отворен"
-
-#: src/fsearch_file_utils.c:158
-#, fuzzy
 #| msgid "Open a new application window"
 msgid "Failed to get application information"
 msgstr "Отваряне на нов прозорец на приложението"
 
-#: src/fsearch_file_utils.c:179
+#: src/fsearch_file_utils.c:159
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get default display"
+msgstr "Файлът не може да бъде отворен"
+
+#: src/fsearch_file_utils.c:180
 msgid "Error when removing file"
 msgstr ""
 
-#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get path"
 msgstr "Неуспешно отваряне:"
 
-#: src/fsearch_file_utils.c:252
+#: src/fsearch_file_utils.c:253
 msgid "Error when getting information for content type"
 msgstr ""
 
-#: src/fsearch_file_utils.c:254
+#: src/fsearch_file_utils.c:255
 #, fuzzy
 #| msgid "Show the application preferences"
 msgid "No default application registered"
 msgstr "Покажи настройките на програмата"
 
-#: src/fsearch_file_utils.c:335
+#: src/fsearch_file_utils.c:342
 msgid "Error when opening parent folder"
 msgstr ""
 
-#: src/fsearch_file_utils.c:337
+#: src/fsearch_file_utils.c:344
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get parent path"
 msgstr "Неуспешно отваряне:"
 
-#: src/fsearch_file_utils.c:394
+#: src/fsearch_file_utils.c:401
 msgid "Folder"
 msgstr "Папка"
 
-#: src/fsearch_file_utils.c:400
+#: src/fsearch_file_utils.c:407
 msgid "Unknown Type"
 msgstr "Неизвестен тип"
 
@@ -263,16 +263,16 @@ msgstr "Видео"
 msgid "Macro names must not contain `:` characters."
 msgstr "Имената на макроси не трябва да съдържат символи `:`."
 
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
-#: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
+#: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
 msgstr "_Отказ"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:509
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
 msgstr "_ОК"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
+#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:295
 msgid "Edit filter"
 msgstr "Редактиране на филтър"
 
@@ -334,11 +334,6 @@ msgstr "Базата с данни е празна"
 msgid "Add folders"
 msgstr "Добавяне на папки"
 
-#: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
-#: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
-msgid "page0"
-msgstr "страница0"
-
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
 msgstr "Зареждане на базата с данни…"
@@ -347,44 +342,39 @@ msgstr "Зареждане на базата с данни…"
 msgid "This won't take long."
 msgstr "Това няма да отнеме много време."
 
-#: src/fsearch_overlay.ui:139 src/fsearch_overlay.ui:335
-#: src/fsearch_statusbar.ui:123 src/fsearch_statusbar.ui:381
-msgid "page1"
-msgstr "страница1"
-
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
 msgid "Updating Database…"
 msgstr "Обновяване на Базата с данни…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
 msgid "This may take a while."
 msgstr "Това може да отнеме известно време."
-
-#: src/fsearch_overlay.ui:202
-msgid "page2"
-msgstr "страница2"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
 msgstr "Няма задание"
 
 #: src/fsearch_overlay.ui:256
-msgid "Press <b>Ctrl + F</b> and start typing"
+#, fuzzy
+#| msgid "Press <b>Ctrl + F</b> and start typing"
+msgid ""
+"Press <b>Ctrl + F</b> and start typing\n"
+"                        "
 msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете"
 
-#: src/fsearch_overlay.ui:304
+#: src/fsearch_overlay.ui:305
 msgid "No Results Found"
 msgstr "Не са намерени резултати"
 
-#: src/fsearch_overlay.ui:319
+#: src/fsearch_overlay.ui:320
 msgid "Try a different search"
 msgstr "Опитайте с друго търсене"
 
-#: src/fsearch_overlay.ui:368
+#: src/fsearch_overlay.ui:369
 msgid "Sorting results…"
 msgstr "Сортиране на резултатите…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:250 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
 msgid "Preferences"
 msgstr "Предпочитания"
 
@@ -533,7 +523,7 @@ msgstr "Възстановяване на филтрите по подразби
 msgid "Filter:"
 msgstr "Филтър:"
 
-#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:868
 msgid "Search"
 msgstr "Търсене"
 
@@ -1113,10 +1103,6 @@ msgstr ""
 "файл ще бъде отворен с манипулатора по подразбиране за този тип файлове, "
 "който обикновено е текстов редактор."
 
-#: src/fsearch_preferences.ui:1842
-msgid "page30"
-msgstr "страница30"
-
 #: src/fsearch_preferences.ui:1850
 msgid ""
 "<b>Filters:</b>\n"
@@ -1139,10 +1125,6 @@ msgstr ""
 " • <b>Запитване:</b> Думата за търсене, по която трябва да се филтрира "
 "базата с данни"
 
-#: src/fsearch_preferences.ui:1863
-msgid "page18"
-msgstr "страница18"
-
 #: src/fsearch_preferences.ui:1871
 msgid ""
 "<b>Add a new filter:</b>\n"
@@ -1152,10 +1134,6 @@ msgstr ""
 "<b>Добавяне на нов филтър:</b>\n"
 "\n"
 "Този бутон ще отвори диалог, където ще можете да редактирате новия филтър."
-
-#: src/fsearch_preferences.ui:1880
-msgid "page31"
-msgstr "страница31"
 
 #: src/fsearch_preferences.ui:1888
 msgid ""
@@ -1167,10 +1145,6 @@ msgstr ""
 "\n"
 "Този бутон премахва текущо избрания филтър."
 
-#: src/fsearch_preferences.ui:1897
-msgid "page32"
-msgstr "страница32"
-
 #: src/fsearch_preferences.ui:1905
 msgid ""
 "<b>Edit selected filter:</b>\n"
@@ -1180,10 +1154,6 @@ msgstr ""
 "<b>Редактиране на избраният филтър:</b>\n"
 "\n"
 "Този бутон ще отвори диалог, където ще можете да редактирате избрания филтър."
-
-#: src/fsearch_preferences.ui:1914
-msgid "page33"
-msgstr "страница33"
 
 #: src/fsearch_preferences.ui:1922
 msgid ""
@@ -1200,10 +1170,6 @@ msgstr ""
 "⚠ Всички филтри, които са създадени и редактирани от потребителят ще бъдат "
 "изгубени!⚠"
 
-#: src/fsearch_preferences.ui:1933
-msgid "page34"
-msgstr "страница34"
-
 #: src/fsearch_preferences.ui:1941
 msgid ""
 "<b>Exit on Escape:</b>\n"
@@ -1216,23 +1182,19 @@ msgstr ""
 "Ако е активирано, FSearch се затваря, когато се натисне клавишът Escape, "
 "вместо прозорецът да бъде минимизиран."
 
-#: src/fsearch_preferences.ui:1950
-msgid "page35"
-msgstr "страница35"
-
-#: src/fsearch_preferences.ui:1960
+#: src/fsearch_preferences.ui:1960 src/fsearch_window.ui:117 src/menus.ui:150
 msgid "Help"
 msgstr "Помощ"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:209
 msgid "Select folder"
 msgstr "Избор на папка"
 
-#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:199 src/fsearch_preferences_ui.c:209
 msgid "_Select"
 msgstr "_Избор"
 
-#: src/fsearch_preferences_ui.c:320
+#: src/fsearch_preferences_ui.c:326
 msgid "Add filter"
 msgstr "Добавяне на филтър"
 
@@ -1241,7 +1203,7 @@ msgid "Active"
 msgstr "Активно"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:620 src/menus.ui:213 src/menus.ui:261
 msgid "Path"
 msgstr "Път"
 
@@ -1249,8 +1211,8 @@ msgstr "Път"
 msgid "One Filesystem"
 msgstr "Една файлова система"
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
-#: src/menus.ui:183 src/menus.ui:231
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
+#: src/menus.ui:209 src/menus.ui:257
 msgid "Name"
 msgstr "Име"
 
@@ -1285,87 +1247,155 @@ msgid "Scanning…"
 msgstr "Сканиране…"
 
 #: src/fsearch_statusbar.ui:52
-msgid "Number of Search Results"
-msgstr "Брой на резултатите от търсенето"
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of Search Results\n"
+"                                        "
+msgstr ""
+"Добавяне на път, който ще бъде включен в базата с данни\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:53
+#: src/fsearch_statusbar.ui:54
 msgid "0 Items"
 msgstr "0 елемента"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_statusbar.ui:328
-#: src/fsearch_window.ui:102
-msgid "Cancel database update"
-msgstr "Отказ от обновяването на базата"
+#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Cancel database update\n"
+"                                        "
+msgstr ""
+"Добавяне на път, който ще бъде включен в базата с данни\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:153
+#: src/fsearch_statusbar.ui:155
 msgid "Index:"
 msgstr "Индекс:"
 
-#: src/fsearch_statusbar.ui:228
-msgid "Number of selected folders"
-msgstr "Брой на избраните папки"
+#: src/fsearch_statusbar.ui:230
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected folders\n"
+"                                        "
+msgstr ""
+"Добавяне на път, който ще бъде включен в базата с данни\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:253
-msgid "Number of selected files"
-msgstr "Брой на избраните файлове"
+#: src/fsearch_statusbar.ui:256
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected files\n"
+"                                        "
+msgstr ""
+"Добавяне на път, който ще бъде включен в базата с данни\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:369
-msgid "Number of database items"
-msgstr "Брой на елементите в базата с данни"
+#: src/fsearch_statusbar.ui:332
+msgid ""
+"Cancel database\n"
+"                                                    update\n"
+"                                                "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:375
+#, fuzzy
+#| msgid ""
+#| "<b>Add folder to database:</b>\n"
+#| "\n"
+#| "                      This button opens a dialog where you can select a "
+#| "folder you want to include in the database for\n"
+#| "                      searching.\n"
+#| "                    "
+msgid ""
+"Number of database\n"
+"                                                    items\n"
+"                                                "
+msgstr ""
+"<b>Добавяне на папка към базата с данни:</b>\n"
+"\n"
+"                            Този бутон ще отвори диалог, където ще можете да "
+"изберете папка, която да бъде включена в базата с данни \n"
+"                            за търсене.\n"
+"                    "
+
+#: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(празно)"
 
-#: src/fsearch_statusbar.ui:407
+#: src/fsearch_statusbar.ui:415
+#, fuzzy
+#| msgid ""
+#| "Search term contains upper case characters.\n"
+#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
+"Search term contains upper case\n"
+"                                    characters.\n"
+"                                    <b>Match Case</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "Думата за търсене съдържа главни букви.\n"
 "<b>Точно съвпадение</b> е временно активирано за този израз."
 
-#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
+#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
 msgstr "Папка"
 
-#: src/fsearch_statusbar.ui:514
+#: src/fsearch_statusbar.ui:529
+#, fuzzy
+#| msgid ""
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
+"                                    <b>Search in Path</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "Търсеният израз съдържа разделители.\n"
 "<b>Търсене в пътя</b> е временно активирано за този израз."
 
-#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
+#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
 msgid "PATH"
 msgstr "Път"
 
-#: src/fsearch_statusbar.ui:651
+#: src/fsearch_statusbar.ui:676
 msgid "REGEX"
 msgstr "Регулярен израз"
 
-#: src/fsearch_window.c:628 src/menus.ui:247
+#: src/fsearch_window.c:627 src/menus.ui:273
 msgid "Size"
 msgstr "Размер"
 
-#: src/fsearch_window.c:635 src/menus.ui:243
+#: src/fsearch_window.c:634 src/menus.ui:269
 msgid "Type"
 msgstr "Тип (файлово разширение)"
 
-#: src/fsearch_window.c:642 src/menus.ui:239
+#: src/fsearch_window.c:641 src/menus.ui:265
 msgid "Extension"
 msgstr "Разширение"
 
-#: src/fsearch_window.c:649 src/menus.ui:251
+#: src/fsearch_window.c:648 src/menus.ui:277
 msgid "Date Modified"
 msgstr "Дата на последна промяна"
 
-#: src/fsearch_window.c:663
+#: src/fsearch_window.c:662
 #, fuzzy
 #| msgid ""
 #| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
@@ -1384,53 +1414,93 @@ msgstr ""
 "Този ред на сортиране не е постоянен, той ще бъде нулиран, когато думата за "
 "търсене се промени."
 
-#: src/fsearch_window.ui:68
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#, fuzzy
+#| msgid "FSearch"
+msgid "FSearch Online"
+msgstr "Търсене на файлове"
+
+#: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
+msgid "Donate"
+msgstr ""
+
+#: src/fsearch_window.ui:89 src/menus.ui:142
+msgid "Forum"
+msgstr ""
+
+#: src/fsearch_window.ui:103 src/menus.ui:146
+msgid "Bug Reports and Feature Requests"
+msgstr ""
+
+#: src/fsearch_window.ui:162 src/menus.ui:133
+msgid "GitHub Sponsors"
+msgstr ""
+
+#: src/fsearch_window.ui:176 src/menus.ui:137
+msgid "PayPal"
+msgstr ""
+
+#: src/fsearch_window.ui:214
 msgid "New window"
 msgstr "Нов прозорец"
 
-#: src/fsearch_window.ui:88
+#: src/fsearch_window.ui:234
 msgid "Update database"
 msgstr "Обновяване на базата с данни"
 
-#: src/fsearch_window.ui:143 src/menus.ui:112
+#: src/fsearch_window.ui:290 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Търсене в Пътя"
 
-#: src/fsearch_window.ui:157 src/menus.ui:116
+#: src/fsearch_window.ui:304 src/menus.ui:116
 msgid "Match Case"
 msgstr "Случай на съвпадение"
 
-#: src/fsearch_window.ui:171 src/menus.ui:120
+#: src/fsearch_window.ui:318 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Включване на регулярни изрази"
 
-#: src/fsearch_window.ui:196 src/menus.ui:95
+#: src/fsearch_window.ui:343 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Показване на лентата на състоянието"
 
-#: src/fsearch_window.ui:210 src/menus.ui:99
+#: src/fsearch_window.ui:357 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Показване на филтър"
 
-#: src/fsearch_window.ui:224 src/menus.ui:103
+#: src/fsearch_window.ui:371 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Показване на бутон за търсене"
 
-#: src/fsearch_window.ui:275 src/menus.ui:129
+#: src/fsearch_window.ui:436 src/menus.ui:155
 msgid "About"
 msgstr "Относно"
 
-#: src/fsearch_window.ui:300 src/menus.ui:47
+#: src/fsearch_window.ui:461 src/menus.ui:47
 msgid "Quit"
 msgstr "Изход"
 
-#: src/fsearch_window.ui:408
+#: src/fsearch_window.ui:573
 msgid "Search…"
 msgstr "Търсене…"
 
-#: src/fsearch_window.ui:430
-msgid "Select a Filter"
-msgstr "Избор на Филтър"
+#: src/fsearch_window.ui:598
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Select a Filter\n"
+"                                                "
+msgstr ""
+"Добавяне на път, който ще бъде включен в базата с данни\n"
+"                                "
+
+#: src/fsearch_window.ui:632
+msgid ""
+"Search\n"
+"                                                        "
+msgstr ""
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1454,7 +1524,7 @@ msgstr "Изтриване на файловете…"
 msgid "Moving files to trash…"
 msgstr "Преместване на файловете в кошчето…"
 
-#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
 msgstr ""
 
@@ -1476,12 +1546,12 @@ msgid ""
 "This will be fixed with future updates."
 msgstr ""
 
-#: src/fsearch_window_actions.c:243
+#: src/fsearch_window_actions.c:247
 #, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "Наистина ли искате да отворите %d прозореца със свойствата на файла ?"
 
-#: src/fsearch_window_actions.c:247
+#: src/fsearch_window_actions.c:251
 msgid "Opening file properties…"
 msgstr "Отваряне на свойствата на файла…"
 
@@ -1493,7 +1563,7 @@ msgstr "_Файл"
 msgid "New Window"
 msgstr "Нов прозорец"
 
-#: src/menus.ui:16 src/menus.ui:139
+#: src/menus.ui:16 src/menus.ui:165
 msgid "_Open"
 msgstr "_Отваряне"
 
@@ -1517,11 +1587,11 @@ msgstr "Затваряне на прозореца"
 msgid "_Edit"
 msgstr "_Редактиране"
 
-#: src/menus.ui:57 src/menus.ui:175
+#: src/menus.ui:57 src/menus.ui:201
 msgid "_Copy"
 msgstr "_Копиране"
 
-#: src/menus.ui:62 src/menus.ui:196
+#: src/menus.ui:62 src/menus.ui:222
 msgid "Cu_t"
 msgstr "_Отрязване"
 
@@ -1549,25 +1619,73 @@ msgstr "_Търсене"
 msgid "_Help"
 msgstr "_Помощ"
 
-#: src/menus.ui:145
+#: src/menus.ui:171
 msgid "Open _With"
 msgstr "Отваряне с"
 
-#: src/menus.ui:159
+#: src/menus.ui:185
 msgid "_Open Folder"
 msgstr "Отваряне на папка"
 
-#: src/menus.ui:181
+#: src/menus.ui:207
 msgid "Copy as Text"
 msgstr "Копиране като текст"
 
-#: src/menus.ui:191
+#: src/menus.ui:217
 msgid "Path + Name"
 msgstr "Път + Име"
 
-#: src/menus.ui:204
+#: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "Преместване в кошчето"
+
+#~ msgid "page0"
+#~ msgstr "страница0"
+
+#~ msgid "page1"
+#~ msgstr "страница1"
+
+#~ msgid "page2"
+#~ msgstr "страница2"
+
+#~ msgid "page30"
+#~ msgstr "страница30"
+
+#~ msgid "page18"
+#~ msgstr "страница18"
+
+#~ msgid "page31"
+#~ msgstr "страница31"
+
+#~ msgid "page32"
+#~ msgstr "страница32"
+
+#~ msgid "page33"
+#~ msgstr "страница33"
+
+#~ msgid "page34"
+#~ msgstr "страница34"
+
+#~ msgid "page35"
+#~ msgstr "страница35"
+
+#~ msgid "Number of Search Results"
+#~ msgstr "Брой на резултатите от търсенето"
+
+#~ msgid "Cancel database update"
+#~ msgstr "Отказ от обновяването на базата"
+
+#~ msgid "Number of selected folders"
+#~ msgstr "Брой на избраните папки"
+
+#~ msgid "Number of selected files"
+#~ msgstr "Брой на избраните файлове"
+
+#~ msgid "Number of database items"
+#~ msgstr "Брой на елементите в базата с данни"
+
+#~ msgid "Select a Filter"
+#~ msgstr "Избор на Филтър"
 
 #~ msgid ""
 #~ "<b>Included folders:</b>\n"
@@ -1598,21 +1716,6 @@ msgstr "Преместване в кошчето"
 #~ "                             от\n"
 #~ "                             обновяване <i>(напр. път към бавно USB "
 #~ "устройство, което не се променя често)</i>\n"
-#~ "                    "
-
-#~ msgid ""
-#~ "<b>Add folder to database:</b>\n"
-#~ "\n"
-#~ "                      This button opens a dialog where you can select a "
-#~ "folder you want to include in the database for\n"
-#~ "                      searching.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "<b>Добавяне на папка към базата с данни:</b>\n"
-#~ "\n"
-#~ "                            Този бутон ще отвори диалог, където ще можете "
-#~ "да изберете папка, която да бъде включена в базата с данни \n"
-#~ "                            за търсене.\n"
 #~ "                    "
 
 #~ msgid ""

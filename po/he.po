@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-05 17:31+0200\n"
+"POT-Creation-Date: 2022-08-13 12:19+0200\n"
 "PO-Revision-Date: 2022-08-09 19:40+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
@@ -95,43 +95,43 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "פריסה שיותר דומה לקווי העיצוב המנחים של GNOME"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
 msgid "Initial release."
 msgstr "מהדורה ראשונית."
 
-#: src/fsearch.c:262
+#: src/fsearch.c:243
 msgid "Saving…"
 msgstr "מתבצעת שמירה…"
 
-#: src/fsearch.c:380
+#: src/fsearch.c:430
 msgid "translator-credits"
 msgstr "Yaron Shahrabani <sh.yaron@gmail.com>"
 
-#: src/fsearch.c:382
+#: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
 msgstr "כלי חיפוש ממוקד ביצועים ותכונות מתקדמות"
 
-#: src/fsearch.c:850
+#: src/fsearch.c:905
 msgid "Open a new application window"
 msgstr "פתיחת חלון יישום חדש"
 
-#: src/fsearch.c:851
+#: src/fsearch.c:906
 msgid "Show the application preferences"
 msgstr "הצגת העדפות היישום"
 
-#: src/fsearch.c:852
+#: src/fsearch.c:907
 msgid "Set the search pattern"
 msgstr "הגדרת תבנית החיפוש"
 
-#: src/fsearch.c:853
+#: src/fsearch.c:908
 msgid "Update the database and exit"
 msgstr "עדכון מסד הנתונים ויציאה"
 
-#: src/fsearch.c:854
+#: src/fsearch.c:909
 msgid "Print version information and exit"
 msgstr "הצגת מידע על הגרסה ויציאה"
 
@@ -144,7 +144,7 @@ msgid "Loading files…"
 msgstr "קבצים נטענים…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:90
+#: src/fsearch_statusbar.ui:91
 msgid "Sorting…"
 msgstr "מתבצע מיון…"
 
@@ -156,47 +156,47 @@ msgstr "שגיאה בפתיחת התיקייה"
 msgid "Failed to build open command"
 msgstr "בניית פקודת הפתיחה נכשלה"
 
-#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
 msgid "Error when launching desktop file"
 msgstr "שגיאה בהפעלת קובץ desktop"
 
 #: src/fsearch_file_utils.c:153
-msgid "Failed to get default display"
-msgstr "קבלת תצוגת ברירת המחדל נכשלה"
-
-#: src/fsearch_file_utils.c:158
 msgid "Failed to get application information"
 msgstr "קבלת פרטי היישום נכשלה"
 
-#: src/fsearch_file_utils.c:179
+#: src/fsearch_file_utils.c:159
+msgid "Failed to get default display"
+msgstr "קבלת תצוגת ברירת המחדל נכשלה"
+
+#: src/fsearch_file_utils.c:180
 msgid "Error when removing file"
 msgstr "שגיאה בהסרת קובץ"
 
-#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
 msgid "Failed to get path"
 msgstr "קבלת הנתיב נכשלה"
 
-#: src/fsearch_file_utils.c:252
+#: src/fsearch_file_utils.c:253
 msgid "Error when getting information for content type"
 msgstr "שגיאה בקבלת מידע על סוג התוכן"
 
-#: src/fsearch_file_utils.c:254
+#: src/fsearch_file_utils.c:255
 msgid "No default application registered"
 msgstr "לא נרשם יישומון ברירת מחדל"
 
-#: src/fsearch_file_utils.c:335
+#: src/fsearch_file_utils.c:342
 msgid "Error when opening parent folder"
 msgstr "שגיאה בפתיחת תיקיית ההורה"
 
-#: src/fsearch_file_utils.c:337
+#: src/fsearch_file_utils.c:344
 msgid "Failed to get parent path"
 msgstr "שגיאה בקבלת נתיב ההורה"
 
-#: src/fsearch_file_utils.c:394
+#: src/fsearch_file_utils.c:401
 msgid "Folder"
 msgstr "תיקייה"
 
-#: src/fsearch_file_utils.c:400
+#: src/fsearch_file_utils.c:407
 msgid "Unknown Type"
 msgstr "סוג לא ידוע"
 
@@ -240,16 +240,16 @@ msgstr "סרטונים"
 msgid "Macro names must not contain `:` characters."
 msgstr "שמות המאקרואים לא יכולים להכיל תווי `:`."
 
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
-#: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
+#: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
 msgstr "_ביטול"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:509
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
 msgstr "_אישור"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
+#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:295
 msgid "Edit filter"
 msgstr "עריכת מסנן"
 
@@ -311,11 +311,6 @@ msgstr "מסד נתונים ריק"
 msgid "Add folders"
 msgstr "הוספת תיקיות"
 
-#: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
-#: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
-msgid "page0"
-msgstr "עמוד0"
-
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
 msgstr "מסד הנתונים נטען…"
@@ -324,44 +319,39 @@ msgstr "מסד הנתונים נטען…"
 msgid "This won't take long."
 msgstr "פעולה זו לא תארוך זמן רב."
 
-#: src/fsearch_overlay.ui:139 src/fsearch_overlay.ui:335
-#: src/fsearch_statusbar.ui:123 src/fsearch_statusbar.ui:381
-msgid "page1"
-msgstr "עמוד1"
-
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
 msgid "Updating Database…"
 msgstr "מסד הנתונים מתעדכן…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
 msgid "This may take a while."
 msgstr "פעולה זו עשויה לארוך זמן מה."
-
-#: src/fsearch_overlay.ui:202
-msgid "page2"
-msgstr "עמוד2"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
 msgstr "שאילתה ריקה"
 
 #: src/fsearch_overlay.ui:256
-msgid "Press <b>Ctrl + F</b> and start typing"
+#, fuzzy
+#| msgid "Press <b>Ctrl + F</b> and start typing"
+msgid ""
+"Press <b>Ctrl + F</b> and start typing\n"
+"                        "
 msgstr "יש ללחוץ <b>Ctrl + F</b> ולהתחיל להקליד"
 
-#: src/fsearch_overlay.ui:304
+#: src/fsearch_overlay.ui:305
 msgid "No Results Found"
 msgstr "לא נמצאו תוצאות"
 
-#: src/fsearch_overlay.ui:319
+#: src/fsearch_overlay.ui:320
 msgid "Try a different search"
 msgstr "כדאי לנסות חיפוש אחר"
 
-#: src/fsearch_overlay.ui:368
+#: src/fsearch_overlay.ui:369
 msgid "Sorting results…"
 msgstr "התוצאות ממוינות…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:250 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
 msgid "Preferences"
 msgstr "העדפות"
 
@@ -509,7 +499,7 @@ msgstr "שחזור מסנני ברירת המחדל"
 msgid "Filter:"
 msgstr "מסנן:"
 
-#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:868
 msgid "Search"
 msgstr "חיפוש"
 
@@ -1020,10 +1010,6 @@ msgid ""
 "handler for this type of files, which is usually a text editor."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1842
-msgid "page30"
-msgstr "עמוד30"
-
 #: src/fsearch_preferences.ui:1850
 msgid ""
 "<b>Filters:</b>\n"
@@ -1044,10 +1030,6 @@ msgstr ""
 "דרישה\n"
 "\t• <b>שאילתה:</b> ביטוי החיפוש שלפיו יסונן מסד הנתונים"
 
-#: src/fsearch_preferences.ui:1863
-msgid "page18"
-msgstr "עמוד18"
-
 #: src/fsearch_preferences.ui:1871
 msgid ""
 "<b>Add a new filter:</b>\n"
@@ -1057,10 +1039,6 @@ msgstr ""
 "<b>הוספת מסנן חדש:</b>\n"
 "\n"
 "כפתור זה פותח חלונית בה ניתן לערוך מסנן חדש."
-
-#: src/fsearch_preferences.ui:1880
-msgid "page31"
-msgstr "עמוד31"
 
 #: src/fsearch_preferences.ui:1888
 msgid ""
@@ -1072,10 +1050,6 @@ msgstr ""
 "\n"
 "כפתור זה מסיר את המסנן הנבחר."
 
-#: src/fsearch_preferences.ui:1897
-msgid "page32"
-msgstr "עמוד32"
-
 #: src/fsearch_preferences.ui:1905
 msgid ""
 "<b>Edit selected filter:</b>\n"
@@ -1085,10 +1059,6 @@ msgstr ""
 "<b>עריכת המסנן הנבחר:</b>\n"
 "\n"
 "כפתור זה פותח חלונית בה ניתן לערוך את המסנן הנבחר."
-
-#: src/fsearch_preferences.ui:1914
-msgid "page33"
-msgstr "עמוד33"
 
 #: src/fsearch_preferences.ui:1922
 msgid ""
@@ -1104,10 +1074,6 @@ msgstr ""
 "\n"
 "⚠ כל המסננים שנוצרו או נערכו על ידי המשתמש יאבדו לעד! ⚠"
 
-#: src/fsearch_preferences.ui:1933
-msgid "page34"
-msgstr "עמוד34"
-
 #: src/fsearch_preferences.ui:1941
 msgid ""
 "<b>Exit on Escape:</b>\n"
@@ -1120,23 +1086,19 @@ msgstr ""
 "אם האפשרות פעילה, FSearch ייסגר עם לחיצה על כפתור ה־Escape במקום רק מזעור "
 "החלון."
 
-#: src/fsearch_preferences.ui:1950
-msgid "page35"
-msgstr "עמוד35"
-
-#: src/fsearch_preferences.ui:1960
+#: src/fsearch_preferences.ui:1960 src/fsearch_window.ui:117 src/menus.ui:150
 msgid "Help"
 msgstr "עזרה"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:209
 msgid "Select folder"
 msgstr "בחירת תיקייה"
 
-#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:199 src/fsearch_preferences_ui.c:209
 msgid "_Select"
 msgstr "ב_חירה"
 
-#: src/fsearch_preferences_ui.c:320
+#: src/fsearch_preferences_ui.c:326
 msgid "Add filter"
 msgstr "הוספת מסנן"
 
@@ -1145,7 +1107,7 @@ msgid "Active"
 msgstr "פעיל"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:620 src/menus.ui:213 src/menus.ui:261
 msgid "Path"
 msgstr "נתיב"
 
@@ -1153,8 +1115,8 @@ msgstr "נתיב"
 msgid "One Filesystem"
 msgstr "מערכת קבצים אחת"
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
-#: src/menus.ui:183 src/menus.ui:231
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
+#: src/menus.ui:209 src/menus.ui:257
 msgid "Name"
 msgstr "שם"
 
@@ -1189,87 +1151,154 @@ msgid "Scanning…"
 msgstr "מתבצעת סריקה…"
 
 #: src/fsearch_statusbar.ui:52
-msgid "Number of Search Results"
-msgstr "מספר תוצאות החיפוש"
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of Search Results\n"
+"                                        "
+msgstr ""
+"הוספת נתיב להכללה במסד הנתונים\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:53
+#: src/fsearch_statusbar.ui:54
 msgid "0 Items"
 msgstr "0 פריטים"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_statusbar.ui:328
-#: src/fsearch_window.ui:102
-msgid "Cancel database update"
-msgstr "ביטול עדכון מסד הנתונים"
+#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Cancel database update\n"
+"                                        "
+msgstr ""
+"הוספת נתיב להכללה במסד הנתונים\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:153
+#: src/fsearch_statusbar.ui:155
 msgid "Index:"
 msgstr "אינדקס:"
 
-#: src/fsearch_statusbar.ui:228
-msgid "Number of selected folders"
-msgstr "מספר התיקיות שנבחרו"
+#: src/fsearch_statusbar.ui:230
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected folders\n"
+"                                        "
+msgstr ""
+"הוספת נתיב להכללה במסד הנתונים\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:253
-msgid "Number of selected files"
-msgstr "מספר הקבצים שנבחרו"
+#: src/fsearch_statusbar.ui:256
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected files\n"
+"                                        "
+msgstr ""
+"הוספת נתיב להכללה במסד הנתונים\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:369
-msgid "Number of database items"
-msgstr "מספר פריטי מסד הנתונים"
+#: src/fsearch_statusbar.ui:332
+msgid ""
+"Cancel database\n"
+"                                                    update\n"
+"                                                "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:375
+#, fuzzy
+#| msgid ""
+#| "<b>Add folder to database:</b>\n"
+#| "\n"
+#| "                      This button opens a dialog where you can select a "
+#| "folder you want to include in the database for\n"
+#| "                      searching.\n"
+#| "                    "
+msgid ""
+"Number of database\n"
+"                                                    items\n"
+"                                                "
+msgstr ""
+"<b>הוספת תיקייה למסד הנתונים:</b>\n"
+"\n"
+"                      כפתור זה פותח חלונית בה ניתן לבחור תיקייה שתיכלל במסד "
+"הנתונים לצורכי חיפוש.\n"
+"                    "
+
+#: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(ריק)"
 
-#: src/fsearch_statusbar.ui:407
+#: src/fsearch_statusbar.ui:415
+#, fuzzy
+#| msgid ""
+#| "Search term contains upper case characters.\n"
+#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
+"Search term contains upper case\n"
+"                                    characters.\n"
+"                                    <b>Match Case</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "ביטוי החיפוש מכיל אותיות גדולות.\n"
 "<b>התאמת רישיות</b> הופעלה זמנית עבור הביטוי הזה."
 
-#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
+#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
 msgstr "רישיות"
 
-#: src/fsearch_statusbar.ui:514
+#: src/fsearch_statusbar.ui:529
+#, fuzzy
+#| msgid ""
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
+"                                    <b>Search in Path</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "הביטוי לחיפוש מכיל מפרידי נתיב.\n"
 "<b>חיפוש בנתיב</b> הופעל זמנית עבור הביטוי הזה."
 
-#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
+#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
 msgid "PATH"
 msgstr "נתיב"
 
-#: src/fsearch_statusbar.ui:651
+#: src/fsearch_statusbar.ui:676
 msgid "REGEX"
 msgstr "ביטויים רגולריים"
 
-#: src/fsearch_window.c:628 src/menus.ui:247
+#: src/fsearch_window.c:627 src/menus.ui:273
 msgid "Size"
 msgstr "גודל"
 
-#: src/fsearch_window.c:635 src/menus.ui:243
+#: src/fsearch_window.c:634 src/menus.ui:269
 msgid "Type"
 msgstr "סוג"
 
-#: src/fsearch_window.c:642 src/menus.ui:239
+#: src/fsearch_window.c:641 src/menus.ui:265
 msgid "Extension"
 msgstr "הרחבה"
 
-#: src/fsearch_window.c:649 src/menus.ui:251
+#: src/fsearch_window.c:648 src/menus.ui:277
 msgid "Date Modified"
 msgstr "מועד השינוי"
 
-#: src/fsearch_window.c:663
+#: src/fsearch_window.c:662
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1280,53 +1309,93 @@ msgstr ""
 "\n"
 "בנוסף, סדר המיון הזה אינו קבוע והוא יאופס כשתנאי החיפוש ישתנו."
 
-#: src/fsearch_window.ui:68
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#, fuzzy
+#| msgid "FSearch"
+msgid "FSearch Online"
+msgstr "FSearch"
+
+#: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
+msgid "Donate"
+msgstr ""
+
+#: src/fsearch_window.ui:89 src/menus.ui:142
+msgid "Forum"
+msgstr ""
+
+#: src/fsearch_window.ui:103 src/menus.ui:146
+msgid "Bug Reports and Feature Requests"
+msgstr ""
+
+#: src/fsearch_window.ui:162 src/menus.ui:133
+msgid "GitHub Sponsors"
+msgstr ""
+
+#: src/fsearch_window.ui:176 src/menus.ui:137
+msgid "PayPal"
+msgstr ""
+
+#: src/fsearch_window.ui:214
 msgid "New window"
 msgstr "חלון חדש"
 
-#: src/fsearch_window.ui:88
+#: src/fsearch_window.ui:234
 msgid "Update database"
 msgstr "עדכון מסד נתונים"
 
-#: src/fsearch_window.ui:143 src/menus.ui:112
+#: src/fsearch_window.ui:290 src/menus.ui:112
 msgid "Search in Path"
 msgstr "חיפוש בנתיב"
 
-#: src/fsearch_window.ui:157 src/menus.ui:116
+#: src/fsearch_window.ui:304 src/menus.ui:116
 msgid "Match Case"
 msgstr "התאמת רישיות"
 
-#: src/fsearch_window.ui:171 src/menus.ui:120
+#: src/fsearch_window.ui:318 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "הפעלת ביטוי רגולרי"
 
-#: src/fsearch_window.ui:196 src/menus.ui:95
+#: src/fsearch_window.ui:343 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "הצגת שורת מצב"
 
-#: src/fsearch_window.ui:210 src/menus.ui:99
+#: src/fsearch_window.ui:357 src/menus.ui:99
 msgid "Show Filter"
 msgstr "הצגת מסנן"
 
-#: src/fsearch_window.ui:224 src/menus.ui:103
+#: src/fsearch_window.ui:371 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "הצגת כפתור חיפוש"
 
-#: src/fsearch_window.ui:275 src/menus.ui:129
+#: src/fsearch_window.ui:436 src/menus.ui:155
 msgid "About"
 msgstr "על אודות"
 
-#: src/fsearch_window.ui:300 src/menus.ui:47
+#: src/fsearch_window.ui:461 src/menus.ui:47
 msgid "Quit"
 msgstr "יציאה"
 
-#: src/fsearch_window.ui:408
+#: src/fsearch_window.ui:573
 msgid "Search…"
 msgstr "חיפוש…"
 
-#: src/fsearch_window.ui:430
-msgid "Select a Filter"
-msgstr "בחירת מסנן"
+#: src/fsearch_window.ui:598
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Select a Filter\n"
+"                                                "
+msgstr ""
+"הוספת נתיב להכללה במסד הנתונים\n"
+"                                "
+
+#: src/fsearch_window.ui:632
+msgid ""
+"Search\n"
+"                                                        "
+msgstr ""
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1350,7 +1419,7 @@ msgstr "הקבצים נמחקים…"
 msgid "Moving files to trash…"
 msgstr "קבצים מועברים לאשפה…"
 
-#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
 msgstr "משהו השתבש."
 
@@ -1372,12 +1441,12 @@ msgstr ""
 "יש לעדכן את מסד הנתונים בטרם הוא יהיה מודע לשינויים האלה! יתוקן בעדכונים "
 "העתידיים."
 
-#: src/fsearch_window_actions.c:243
+#: src/fsearch_window_actions.c:247
 #, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "לפתוח %d חלונות מאפייני קבצים?"
 
-#: src/fsearch_window_actions.c:247
+#: src/fsearch_window_actions.c:251
 msgid "Opening file properties…"
 msgstr "מאפייני הקובץ נפתחים…"
 
@@ -1389,7 +1458,7 @@ msgstr "_קובץ"
 msgid "New Window"
 msgstr "חלון חדש"
 
-#: src/menus.ui:16 src/menus.ui:139
+#: src/menus.ui:16 src/menus.ui:165
 msgid "_Open"
 msgstr "_פתיחה"
 
@@ -1413,11 +1482,11 @@ msgstr "סגירת החלון"
 msgid "_Edit"
 msgstr "_עריכה"
 
-#: src/menus.ui:57 src/menus.ui:175
+#: src/menus.ui:57 src/menus.ui:201
 msgid "_Copy"
 msgstr "ה_עתקה"
 
-#: src/menus.ui:62 src/menus.ui:196
+#: src/menus.ui:62 src/menus.ui:222
 msgid "Cu_t"
 msgstr "ג_זירה"
 
@@ -1445,25 +1514,73 @@ msgstr "_חיפוש"
 msgid "_Help"
 msgstr "ע_זרה"
 
-#: src/menus.ui:145
+#: src/menus.ui:171
 msgid "Open _With"
 msgstr "פתיחה _עם"
 
-#: src/menus.ui:159
+#: src/menus.ui:185
 msgid "_Open Folder"
 msgstr "פתיחת _תיקייה"
 
-#: src/menus.ui:181
+#: src/menus.ui:207
 msgid "Copy as Text"
 msgstr "העתקה כטקסט"
 
-#: src/menus.ui:191
+#: src/menus.ui:217
 msgid "Path + Name"
 msgstr "נתיב + שם"
 
-#: src/menus.ui:204
+#: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "העברה ל_אשפה"
+
+#~ msgid "page0"
+#~ msgstr "עמוד0"
+
+#~ msgid "page1"
+#~ msgstr "עמוד1"
+
+#~ msgid "page2"
+#~ msgstr "עמוד2"
+
+#~ msgid "page30"
+#~ msgstr "עמוד30"
+
+#~ msgid "page18"
+#~ msgstr "עמוד18"
+
+#~ msgid "page31"
+#~ msgstr "עמוד31"
+
+#~ msgid "page32"
+#~ msgstr "עמוד32"
+
+#~ msgid "page33"
+#~ msgstr "עמוד33"
+
+#~ msgid "page34"
+#~ msgstr "עמוד34"
+
+#~ msgid "page35"
+#~ msgstr "עמוד35"
+
+#~ msgid "Number of Search Results"
+#~ msgstr "מספר תוצאות החיפוש"
+
+#~ msgid "Cancel database update"
+#~ msgstr "ביטול עדכון מסד הנתונים"
+
+#~ msgid "Number of selected folders"
+#~ msgstr "מספר התיקיות שנבחרו"
+
+#~ msgid "Number of selected files"
+#~ msgstr "מספר הקבצים שנבחרו"
+
+#~ msgid "Number of database items"
+#~ msgstr "מספר פריטי מסד הנתונים"
+
+#~ msgid "Select a Filter"
+#~ msgstr "בחירת מסנן"
 
 #~ msgid ""
 #~ "<b>Included folders:</b>\n"
@@ -1494,20 +1611,6 @@ msgstr "העברה ל_אשפה"
 #~ "                      מעדכון\n"
 #~ "                      <i>(למשל: נתיב להתקן USB אטי שלא מתעדכן בתדירות "
 #~ "גבוהה)</i>\n"
-#~ "                    "
-
-#~ msgid ""
-#~ "<b>Add folder to database:</b>\n"
-#~ "\n"
-#~ "                      This button opens a dialog where you can select a "
-#~ "folder you want to include in the database for\n"
-#~ "                      searching.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "<b>הוספת תיקייה למסד הנתונים:</b>\n"
-#~ "\n"
-#~ "                      כפתור זה פותח חלונית בה ניתן לבחור תיקייה שתיכלל "
-#~ "במסד הנתונים לצורכי חיפוש.\n"
 #~ "                    "
 
 #~ msgid ""

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-05 17:31+0200\n"
+"POT-Creation-Date: 2022-08-13 12:19+0200\n"
 "PO-Revision-Date: 2022-06-28 22:15+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
@@ -104,44 +104,44 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "GNOMEren jarraibideak hurbilagotik jarraitzen duen diseinua"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
 #, fuzzy
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
 msgid "Initial release."
 msgstr "Hasierako bertsioa."
 
-#: src/fsearch.c:262
+#: src/fsearch.c:243
 msgid "Saving…"
 msgstr "Gordetzen…"
 
-#: src/fsearch.c:380
+#: src/fsearch.c:430
 msgid "translator-credits"
 msgstr "Alexander Gabilondo"
 
-#: src/fsearch.c:382
+#: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Errendimenduan eta funtzio aurreratuetan zentratzen den bilatze-tresna"
 
-#: src/fsearch.c:850
+#: src/fsearch.c:905
 msgid "Open a new application window"
 msgstr "Ireki aplikazioaren leiho berri bat"
 
-#: src/fsearch.c:851
+#: src/fsearch.c:906
 msgid "Show the application preferences"
 msgstr "Erakutsi aplikazioaren hobespenak"
 
-#: src/fsearch.c:852
+#: src/fsearch.c:907
 msgid "Set the search pattern"
 msgstr "Ezarri bilaketa-eredua"
 
-#: src/fsearch.c:853
+#: src/fsearch.c:908
 msgid "Update the database and exit"
 msgstr "Eguneratu datu-basea eta irten"
 
-#: src/fsearch.c:854
+#: src/fsearch.c:909
 msgid "Print version information and exit"
 msgstr "Erakutsi bertsioaren informazioa eta irten"
 
@@ -154,7 +154,7 @@ msgid "Loading files…"
 msgstr "Fitxategiak kargatzen…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:90
+#: src/fsearch_statusbar.ui:91
 msgid "Sorting…"
 msgstr "Ordenatzen…"
 
@@ -168,7 +168,7 @@ msgstr ""
 msgid "Failed to build open command"
 msgstr "Ezin izan da ireki:"
 
-#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
 #, fuzzy
 #| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
@@ -176,51 +176,51 @@ msgstr "Abiarazi mahaigaineko fitxategiak"
 
 #: src/fsearch_file_utils.c:153
 #, fuzzy
-#| msgid "Failed to open file"
-msgid "Failed to get default display"
-msgstr "Fitxategia irekitzeak huts egin du"
-
-#: src/fsearch_file_utils.c:158
-#, fuzzy
 #| msgid "Open a new application window"
 msgid "Failed to get application information"
 msgstr "Ireki aplikazioaren leiho berri bat"
 
-#: src/fsearch_file_utils.c:179
+#: src/fsearch_file_utils.c:159
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get default display"
+msgstr "Fitxategia irekitzeak huts egin du"
+
+#: src/fsearch_file_utils.c:180
 msgid "Error when removing file"
 msgstr ""
 
-#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get path"
 msgstr "Ezin izan da ireki:"
 
-#: src/fsearch_file_utils.c:252
+#: src/fsearch_file_utils.c:253
 msgid "Error when getting information for content type"
 msgstr ""
 
-#: src/fsearch_file_utils.c:254
+#: src/fsearch_file_utils.c:255
 #, fuzzy
 #| msgid "Show the application preferences"
 msgid "No default application registered"
 msgstr "Erakutsi aplikazioaren hobespenak"
 
-#: src/fsearch_file_utils.c:335
+#: src/fsearch_file_utils.c:342
 msgid "Error when opening parent folder"
 msgstr ""
 
-#: src/fsearch_file_utils.c:337
+#: src/fsearch_file_utils.c:344
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get parent path"
 msgstr "Ezin izan da ireki:"
 
-#: src/fsearch_file_utils.c:394
+#: src/fsearch_file_utils.c:401
 msgid "Folder"
 msgstr "Karpeta"
 
-#: src/fsearch_file_utils.c:400
+#: src/fsearch_file_utils.c:407
 msgid "Unknown Type"
 msgstr "Mota ezezaguna"
 
@@ -264,16 +264,16 @@ msgstr "Bideoak"
 msgid "Macro names must not contain `:` characters."
 msgstr "Makro-izenek ez dute `:` karaktererik izan behar."
 
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
-#: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
+#: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
 msgstr "Utzi"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:509
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
 msgstr "Ados"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
+#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:295
 msgid "Edit filter"
 msgstr "Editatu iragazkia"
 
@@ -335,11 +335,6 @@ msgstr "Hustu datu-basea"
 msgid "Add folders"
 msgstr "Gehitu karpetak"
 
-#: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
-#: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
-msgid "page0"
-msgstr "0 orria"
-
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
 msgstr "Datu-basea kargatzen…"
@@ -348,44 +343,39 @@ msgstr "Datu-basea kargatzen…"
 msgid "This won't take long."
 msgstr "Honek ez du luze joko."
 
-#: src/fsearch_overlay.ui:139 src/fsearch_overlay.ui:335
-#: src/fsearch_statusbar.ui:123 src/fsearch_statusbar.ui:381
-msgid "page1"
-msgstr "1 orria"
-
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
 msgid "Updating Database…"
 msgstr "Datu-basea eguneratzen…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
 msgid "This may take a while."
 msgstr "Honek denbora pixka bat beharko du."
-
-#: src/fsearch_overlay.ui:202
-msgid "page2"
-msgstr "2 orria"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
 msgstr "Emaitzarik ez"
 
 #: src/fsearch_overlay.ui:256
-msgid "Press <b>Ctrl + F</b> and start typing"
+#, fuzzy
+#| msgid "Press <b>Ctrl + F</b> and start typing"
+msgid ""
+"Press <b>Ctrl + F</b> and start typing\n"
+"                        "
 msgstr "Sakatu <b>Ctrl + F</b> eta hasi idazten"
 
-#: src/fsearch_overlay.ui:304
+#: src/fsearch_overlay.ui:305
 msgid "No Results Found"
 msgstr "Emaitzarik ez"
 
-#: src/fsearch_overlay.ui:319
+#: src/fsearch_overlay.ui:320
 msgid "Try a different search"
 msgstr "Saiatu beste bilaketa bat"
 
-#: src/fsearch_overlay.ui:368
+#: src/fsearch_overlay.ui:369
 msgid "Sorting results…"
 msgstr "Emaitzak ordenatzen…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:250 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
 msgid "Preferences"
 msgstr "Hobespenak"
 
@@ -535,7 +525,7 @@ msgstr "Leheneratu iragazki lehenetsiak"
 msgid "Filter:"
 msgstr "Iragazkia:"
 
-#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:868
 msgid "Search"
 msgstr "Bilatu"
 
@@ -1108,10 +1098,6 @@ msgstr ""
 "fitxategia mota honetako fitxategien kudeatzaile lehenetsiarekin irekiko da, "
 "normalean testu-editorea."
 
-#: src/fsearch_preferences.ui:1842
-msgid "page30"
-msgstr "30 orria"
-
 #: src/fsearch_preferences.ui:1850
 msgid ""
 "<b>Filters:</b>\n"
@@ -1133,10 +1119,6 @@ msgstr ""
 "gaitu dezakezu.\n"
 "• <b>Kontsulta:</b> datu-basean iragazi behar den bilaketa-terminoa"
 
-#: src/fsearch_preferences.ui:1863
-msgid "page18"
-msgstr "18. orria"
-
 #: src/fsearch_preferences.ui:1871
 msgid ""
 "<b>Add a new filter:</b>\n"
@@ -1148,10 +1130,6 @@ msgstr ""
 "Botoi honek elkarrizketa-koadro bat irekitzen du, non iragazki berri bat "
 "editatu dezakezu."
 
-#: src/fsearch_preferences.ui:1880
-msgid "page31"
-msgstr "31. orria"
-
 #: src/fsearch_preferences.ui:1888
 msgid ""
 "<b>Remove selected filter:</b>\n"
@@ -1161,10 +1139,6 @@ msgstr ""
 "<b>Kendu hautatutako iragazkia:</b>\n"
 "\n"
 "Botoi honek une honetan hautatutako iragazkia kentzen du."
-
-#: src/fsearch_preferences.ui:1897
-msgid "page32"
-msgstr "32. orria"
 
 #: src/fsearch_preferences.ui:1905
 msgid ""
@@ -1176,10 +1150,6 @@ msgstr ""
 "\n"
 "Botoi honek elkarrizketa-koadro bat irekitzen du, non editatu dezakezun "
 "hautatutako iragazkia."
-
-#: src/fsearch_preferences.ui:1914
-msgid "page33"
-msgstr "33. orria"
 
 #: src/fsearch_preferences.ui:1922
 msgid ""
@@ -1195,10 +1165,6 @@ msgstr ""
 "\n"
 "⚠ Erabiltzaileak sortu edo editatu dituen iragazki guztiak galduko dira! ⚠"
 
-#: src/fsearch_preferences.ui:1933
-msgid "page34"
-msgstr "34. orria"
-
 #: src/fsearch_preferences.ui:1941
 msgid ""
 "<b>Exit on Escape:</b>\n"
@@ -1211,23 +1177,19 @@ msgstr ""
 "Gaituta badago, FSearch irtengo da Esc tekla sakatzen denean leihoa "
 "minimizatu beharrean."
 
-#: src/fsearch_preferences.ui:1950
-msgid "page35"
-msgstr "35 orria"
-
-#: src/fsearch_preferences.ui:1960
+#: src/fsearch_preferences.ui:1960 src/fsearch_window.ui:117 src/menus.ui:150
 msgid "Help"
 msgstr "Laguntza"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:209
 msgid "Select folder"
 msgstr "Hautatu karpeta"
 
-#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:199 src/fsearch_preferences_ui.c:209
 msgid "_Select"
 msgstr "Hautatu"
 
-#: src/fsearch_preferences_ui.c:320
+#: src/fsearch_preferences_ui.c:326
 msgid "Add filter"
 msgstr "Gehitu iragazkia"
 
@@ -1236,7 +1198,7 @@ msgid "Active"
 msgstr "Aktibatu"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:620 src/menus.ui:213 src/menus.ui:261
 msgid "Path"
 msgstr "Bidea"
 
@@ -1244,8 +1206,8 @@ msgstr "Bidea"
 msgid "One Filesystem"
 msgstr "Fitxategi-sistema bat"
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
-#: src/menus.ui:183 src/menus.ui:231
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
+#: src/menus.ui:209 src/menus.ui:257
 msgid "Name"
 msgstr "Izena"
 
@@ -1281,88 +1243,156 @@ msgid "Scanning…"
 msgstr "Eskaneatzen…"
 
 #: src/fsearch_statusbar.ui:52
-msgid "Number of Search Results"
-msgstr "Bilaketaren emaitzen kopurua"
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of Search Results\n"
+"                                        "
+msgstr ""
+"Gehitu datu-basean sartzeko bidea\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:53
+#: src/fsearch_statusbar.ui:54
 msgid "0 Items"
 msgstr "0 elementu"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_statusbar.ui:328
-#: src/fsearch_window.ui:102
-msgid "Cancel database update"
-msgstr "Gelditu datu-basearen eguneraketa"
+#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Cancel database update\n"
+"                                        "
+msgstr ""
+"Gehitu datu-basean sartzeko bidea\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:153
+#: src/fsearch_statusbar.ui:155
 msgid "Index:"
 msgstr "Aurkibidea:"
 
-#: src/fsearch_statusbar.ui:228
-msgid "Number of selected folders"
-msgstr "Hautatutako kapeta kopurua"
+#: src/fsearch_statusbar.ui:230
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected folders\n"
+"                                        "
+msgstr ""
+"Gehitu datu-basean sartzeko bidea\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:253
-msgid "Number of selected files"
-msgstr "Hautatutako fitxategi kopurua"
+#: src/fsearch_statusbar.ui:256
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected files\n"
+"                                        "
+msgstr ""
+"Gehitu datu-basean sartzeko bidea\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:369
-msgid "Number of database items"
-msgstr "Datu-basearen elementu kopurua"
+#: src/fsearch_statusbar.ui:332
+msgid ""
+"Cancel database\n"
+"                                                    update\n"
+"                                                "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:375
+#, fuzzy
+#| msgid ""
+#| "<b>Add folder to database:</b>\n"
+#| "\n"
+#| "                      This button opens a dialog where you can select a "
+#| "folder you want to include in the database for\n"
+#| "                      searching.\n"
+#| "                    "
+msgid ""
+"Number of database\n"
+"                                                    items\n"
+"                                                "
+msgstr ""
+"<b>Gehitu karpeta datu-basean:</b>\n"
+"\n"
+"                      Botoi honek elkarrizketa-koadro bat irekitzen du, non "
+"datu-basean sartu nahi duzun karpeta bat hauta dezakezun\n"
+"                      bilatzeko.\n"
+"                    "
+
+#: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(hutsa)"
 
-#: src/fsearch_statusbar.ui:407
+#: src/fsearch_statusbar.ui:415
+#, fuzzy
+#| msgid ""
+#| "Search term contains upper case characters.\n"
+#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
+"Search term contains upper case\n"
+"                                    characters.\n"
+"                                    <b>Match Case</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "Bilaketa-terminoak letra larriak ditu.\n"
 "<b>Maiuskulak eta minuskulak</b> bereiztea termino honentzat aldi baterako "
 "aktibatu da."
 
-#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
+#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
 msgstr "MAIUSKULAK"
 
-#: src/fsearch_statusbar.ui:514
+#: src/fsearch_statusbar.ui:529
+#, fuzzy
+#| msgid ""
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
+"                                    <b>Search in Path</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "Bilaketa-terminoak bide-bereizleak ditu.\n"
 "<b>Bidean bilatzea</b> termino honentzat aldi baterako aktibatu da."
 
-#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
+#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
 msgid "PATH"
 msgstr "BIDEA"
 
-#: src/fsearch_statusbar.ui:651
+#: src/fsearch_statusbar.ui:676
 msgid "REGEX"
 msgstr "ADIERAZPEN ERREGULARRAK"
 
-#: src/fsearch_window.c:628 src/menus.ui:247
+#: src/fsearch_window.c:627 src/menus.ui:273
 msgid "Size"
 msgstr "Tamaina"
 
-#: src/fsearch_window.c:635 src/menus.ui:243
+#: src/fsearch_window.c:634 src/menus.ui:269
 msgid "Type"
 msgstr "Mota"
 
-#: src/fsearch_window.c:642 src/menus.ui:239
+#: src/fsearch_window.c:641 src/menus.ui:265
 msgid "Extension"
 msgstr "Luzapena"
 
-#: src/fsearch_window.c:649 src/menus.ui:251
+#: src/fsearch_window.c:648 src/menus.ui:277
 msgid "Date Modified"
 msgstr "Aldatze-data"
 
-#: src/fsearch_window.c:663
+#: src/fsearch_window.c:662
 #, fuzzy
 #| msgid ""
 #| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
@@ -1380,53 +1410,93 @@ msgstr ""
 "Ordena hau ez da iraunkorra, bilaketa-terminoa aldatzen denean berrezarri "
 "egingo da."
 
-#: src/fsearch_window.ui:68
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#, fuzzy
+#| msgid "FSearch"
+msgid "FSearch Online"
+msgstr "Fsearch"
+
+#: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
+msgid "Donate"
+msgstr ""
+
+#: src/fsearch_window.ui:89 src/menus.ui:142
+msgid "Forum"
+msgstr ""
+
+#: src/fsearch_window.ui:103 src/menus.ui:146
+msgid "Bug Reports and Feature Requests"
+msgstr ""
+
+#: src/fsearch_window.ui:162 src/menus.ui:133
+msgid "GitHub Sponsors"
+msgstr ""
+
+#: src/fsearch_window.ui:176 src/menus.ui:137
+msgid "PayPal"
+msgstr ""
+
+#: src/fsearch_window.ui:214
 msgid "New window"
 msgstr "Leiho berria"
 
-#: src/fsearch_window.ui:88
+#: src/fsearch_window.ui:234
 msgid "Update database"
 msgstr "Eguneratu datu-basea"
 
-#: src/fsearch_window.ui:143 src/menus.ui:112
+#: src/fsearch_window.ui:290 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Bilatu bidean"
 
-#: src/fsearch_window.ui:157 src/menus.ui:116
+#: src/fsearch_window.ui:304 src/menus.ui:116
 msgid "Match Case"
 msgstr "Bereizi maiuskulak eta minuskulak"
 
-#: src/fsearch_window.ui:171 src/menus.ui:120
+#: src/fsearch_window.ui:318 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Gaitu adierazpen erregularrak"
 
-#: src/fsearch_window.ui:196 src/menus.ui:95
+#: src/fsearch_window.ui:343 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Erakutsi egoera-barra"
 
-#: src/fsearch_window.ui:210 src/menus.ui:99
+#: src/fsearch_window.ui:357 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Erakutsi iragazkiak"
 
-#: src/fsearch_window.ui:224 src/menus.ui:103
+#: src/fsearch_window.ui:371 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Erakutsi bilatzeko botoia"
 
-#: src/fsearch_window.ui:275 src/menus.ui:129
+#: src/fsearch_window.ui:436 src/menus.ui:155
 msgid "About"
 msgstr "Honi buruz"
 
-#: src/fsearch_window.ui:300 src/menus.ui:47
+#: src/fsearch_window.ui:461 src/menus.ui:47
 msgid "Quit"
 msgstr "Irten"
 
-#: src/fsearch_window.ui:408
+#: src/fsearch_window.ui:573
 msgid "Search…"
 msgstr "Bilatu…"
 
-#: src/fsearch_window.ui:430
-msgid "Select a Filter"
-msgstr "Hautatu iragazki bat"
+#: src/fsearch_window.ui:598
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Select a Filter\n"
+"                                                "
+msgstr ""
+"Gehitu datu-basean sartzeko bidea\n"
+"                                "
+
+#: src/fsearch_window.ui:632
+msgid ""
+"Search\n"
+"                                                        "
+msgstr ""
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1450,7 +1520,7 @@ msgstr "Fitxategiak ezabatzen…"
 msgid "Moving files to trash…"
 msgstr "Fitxategiak zakarrontzira bidaltzen…"
 
-#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
 msgstr ""
 
@@ -1472,12 +1542,12 @@ msgid ""
 "This will be fixed with future updates."
 msgstr ""
 
-#: src/fsearch_window_actions.c:243
+#: src/fsearch_window_actions.c:247
 #, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "Benetan nahi al duzu %d fitxategien propietateen leihoak ireki?"
 
-#: src/fsearch_window_actions.c:247
+#: src/fsearch_window_actions.c:251
 msgid "Opening file properties…"
 msgstr "Fitxategien propietateak irekitzen…"
 
@@ -1489,7 +1559,7 @@ msgstr "_Fitxategia"
 msgid "New Window"
 msgstr "Leiho berria"
 
-#: src/menus.ui:16 src/menus.ui:139
+#: src/menus.ui:16 src/menus.ui:165
 msgid "_Open"
 msgstr "_Ireki"
 
@@ -1513,11 +1583,11 @@ msgstr "Itxi leihoa"
 msgid "_Edit"
 msgstr "_Editatu"
 
-#: src/menus.ui:57 src/menus.ui:175
+#: src/menus.ui:57 src/menus.ui:201
 msgid "_Copy"
 msgstr "_Kopiatu"
 
-#: src/menus.ui:62 src/menus.ui:196
+#: src/menus.ui:62 src/menus.ui:222
 msgid "Cu_t"
 msgstr "Ebaki"
 
@@ -1545,25 +1615,73 @@ msgstr "_Bilatu"
 msgid "_Help"
 msgstr "_Laguntza"
 
-#: src/menus.ui:145
+#: src/menus.ui:171
 msgid "Open _With"
 msgstr "Ireki _honekin"
 
-#: src/menus.ui:159
+#: src/menus.ui:185
 msgid "_Open Folder"
 msgstr "_Ireki karpeta"
 
-#: src/menus.ui:181
+#: src/menus.ui:207
 msgid "Copy as Text"
 msgstr "Kopiatu testu gisa"
 
-#: src/menus.ui:191
+#: src/menus.ui:217
 msgid "Path + Name"
 msgstr "Bidea + Izena"
 
-#: src/menus.ui:204
+#: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "Eraman _zakarrontzira"
+
+#~ msgid "page0"
+#~ msgstr "0 orria"
+
+#~ msgid "page1"
+#~ msgstr "1 orria"
+
+#~ msgid "page2"
+#~ msgstr "2 orria"
+
+#~ msgid "page30"
+#~ msgstr "30 orria"
+
+#~ msgid "page18"
+#~ msgstr "18. orria"
+
+#~ msgid "page31"
+#~ msgstr "31. orria"
+
+#~ msgid "page32"
+#~ msgstr "32. orria"
+
+#~ msgid "page33"
+#~ msgstr "33. orria"
+
+#~ msgid "page34"
+#~ msgstr "34. orria"
+
+#~ msgid "page35"
+#~ msgstr "35 orria"
+
+#~ msgid "Number of Search Results"
+#~ msgstr "Bilaketaren emaitzen kopurua"
+
+#~ msgid "Cancel database update"
+#~ msgstr "Gelditu datu-basearen eguneraketa"
+
+#~ msgid "Number of selected folders"
+#~ msgstr "Hautatutako kapeta kopurua"
+
+#~ msgid "Number of selected files"
+#~ msgstr "Hautatutako fitxategi kopurua"
+
+#~ msgid "Number of database items"
+#~ msgstr "Datu-basearen elementu kopurua"
+
+#~ msgid "Select a Filter"
+#~ msgstr "Hautatu iragazki bat"
 
 #~ msgid ""
 #~ "<b>Included folders:</b>\n"
@@ -1594,21 +1712,6 @@ msgstr "Eraman _zakarrontzira"
 #~ "                      baztertu nahi badituzu <i>(e.b. sarri aldatzen ez "
 #~ "den USB disko geldo baterako\n"
 #~ "                      bidea)</i>\n"
-#~ "                    "
-
-#~ msgid ""
-#~ "<b>Add folder to database:</b>\n"
-#~ "\n"
-#~ "                      This button opens a dialog where you can select a "
-#~ "folder you want to include in the database for\n"
-#~ "                      searching.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "<b>Gehitu karpeta datu-basean:</b>\n"
-#~ "\n"
-#~ "                      Botoi honek elkarrizketa-koadro bat irekitzen du, "
-#~ "non datu-basean sartu nahi duzun karpeta bat hauta dezakezun\n"
-#~ "                      bilatzeko.\n"
 #~ "                    "
 
 #~ msgid ""

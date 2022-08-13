@@ -12,7 +12,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-05 17:31+0200\n"
+"POT-Creation-Date: 2022-08-13 12:19+0200\n"
 "PO-Revision-Date: 2022-03-28 13:27+0000\n"
 "Last-Translator: Gustavo Costa <xfgusta@gmail.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
@@ -108,46 +108,46 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "Um layout mais semelhante ao GNOME HIGs"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
 msgid "Initial release."
 msgstr "Lançamento inicial."
 
-#: src/fsearch.c:262
+#: src/fsearch.c:243
 msgid "Saving…"
 msgstr "Salvando…"
 
-#: src/fsearch.c:380
+#: src/fsearch.c:430
 msgid "translator-credits"
 msgstr ""
 "Atílio Antônio\n"
 "inkhorn\n"
 "Gustavo Costa <xfgusta@gmail.com>"
 
-#: src/fsearch.c:382
+#: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Um utilitário de busca focado em desempenho e recursos avançados"
 
-#: src/fsearch.c:850
+#: src/fsearch.c:905
 msgid "Open a new application window"
 msgstr "Abre uma nova janela"
 
-#: src/fsearch.c:851
+#: src/fsearch.c:906
 msgid "Show the application preferences"
 msgstr "Mostra as preferências"
 
-#: src/fsearch.c:852
+#: src/fsearch.c:907
 msgid "Set the search pattern"
 msgstr "Define o padrão de pesquisa"
 
-#: src/fsearch.c:853
+#: src/fsearch.c:908
 msgid "Update the database and exit"
 msgstr "Atualiza a base de dados e sai"
 
-#: src/fsearch.c:854
+#: src/fsearch.c:909
 msgid "Print version information and exit"
 msgstr "Mostra informações da versão e sai"
 
@@ -160,7 +160,7 @@ msgid "Loading files…"
 msgstr "Carregando os arquivos…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:90
+#: src/fsearch_statusbar.ui:91
 msgid "Sorting…"
 msgstr "Ordenando…"
 
@@ -174,7 +174,7 @@ msgstr ""
 msgid "Failed to build open command"
 msgstr "Falha ao abrir:"
 
-#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
 #, fuzzy
 #| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
@@ -182,51 +182,51 @@ msgstr "Iniciar arquivos desktop"
 
 #: src/fsearch_file_utils.c:153
 #, fuzzy
-#| msgid "Failed to open file"
-msgid "Failed to get default display"
-msgstr "Falha ao abrir arquivo"
-
-#: src/fsearch_file_utils.c:158
-#, fuzzy
 #| msgid "Open a new application window"
 msgid "Failed to get application information"
 msgstr "Abre uma nova janela"
 
-#: src/fsearch_file_utils.c:179
+#: src/fsearch_file_utils.c:159
+#, fuzzy
+#| msgid "Failed to open file"
+msgid "Failed to get default display"
+msgstr "Falha ao abrir arquivo"
+
+#: src/fsearch_file_utils.c:180
 msgid "Error when removing file"
 msgstr ""
 
-#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get path"
 msgstr "Falha ao abrir:"
 
-#: src/fsearch_file_utils.c:252
+#: src/fsearch_file_utils.c:253
 msgid "Error when getting information for content type"
 msgstr ""
 
-#: src/fsearch_file_utils.c:254
+#: src/fsearch_file_utils.c:255
 #, fuzzy
 #| msgid "Show the application preferences"
 msgid "No default application registered"
 msgstr "Mostra as preferências"
 
-#: src/fsearch_file_utils.c:335
+#: src/fsearch_file_utils.c:342
 msgid "Error when opening parent folder"
 msgstr ""
 
-#: src/fsearch_file_utils.c:337
+#: src/fsearch_file_utils.c:344
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get parent path"
 msgstr "Falha ao abrir:"
 
-#: src/fsearch_file_utils.c:394
+#: src/fsearch_file_utils.c:401
 msgid "Folder"
 msgstr "Pasta"
 
-#: src/fsearch_file_utils.c:400
+#: src/fsearch_file_utils.c:407
 msgid "Unknown Type"
 msgstr "Tipo desconhecido"
 
@@ -270,16 +270,16 @@ msgstr "Vídeos"
 msgid "Macro names must not contain `:` characters."
 msgstr ""
 
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
-#: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
+#: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
 msgstr "Cancelar"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:509
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
 msgstr "_OK"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
+#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:295
 msgid "Edit filter"
 msgstr "Editar filtro"
 
@@ -348,11 +348,6 @@ msgstr "Base de dados vazia"
 msgid "Add folders"
 msgstr "Adicionar pastas"
 
-#: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
-#: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
-msgid "page0"
-msgstr "página0"
-
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
 msgstr "Carregando a base de dados…"
@@ -361,44 +356,39 @@ msgstr "Carregando a base de dados…"
 msgid "This won't take long."
 msgstr "Isso não vai demorar muito."
 
-#: src/fsearch_overlay.ui:139 src/fsearch_overlay.ui:335
-#: src/fsearch_statusbar.ui:123 src/fsearch_statusbar.ui:381
-msgid "page1"
-msgstr "página1"
-
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
 msgid "Updating Database…"
 msgstr "Atualizando a base de dados…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
 msgid "This may take a while."
 msgstr "Isso pode demorar um pouco."
-
-#: src/fsearch_overlay.ui:202
-msgid "page2"
-msgstr "página2"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
 msgstr "Consulta vazia"
 
 #: src/fsearch_overlay.ui:256
-msgid "Press <b>Ctrl + F</b> and start typing"
+#, fuzzy
+#| msgid "Press <b>Ctrl + F</b> and start typing"
+msgid ""
+"Press <b>Ctrl + F</b> and start typing\n"
+"                        "
 msgstr "Pressione <b>Ctrl + F</b> e comece a digitar"
 
-#: src/fsearch_overlay.ui:304
+#: src/fsearch_overlay.ui:305
 msgid "No Results Found"
 msgstr "Nenhum resultado encontrado"
 
-#: src/fsearch_overlay.ui:319
+#: src/fsearch_overlay.ui:320
 msgid "Try a different search"
 msgstr "Tente uma pesquisa diferente"
 
-#: src/fsearch_overlay.ui:368
+#: src/fsearch_overlay.ui:369
 msgid "Sorting results…"
 msgstr "Ordenando os resultados…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:250 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
 msgid "Preferences"
 msgstr "Preferências"
 
@@ -548,7 +538,7 @@ msgstr "Restaurar filtros padrão"
 msgid "Filter:"
 msgstr "Filtro:"
 
-#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:868
 msgid "Search"
 msgstr "Pesquisar"
 
@@ -1179,10 +1169,6 @@ msgstr ""
 "                      de texto.\n"
 "                    "
 
-#: src/fsearch_preferences.ui:1842
-msgid "page30"
-msgstr "página30"
-
 #: src/fsearch_preferences.ui:1850
 #, fuzzy
 #| msgid ""
@@ -1221,10 +1207,6 @@ msgstr ""
 "base de dados deve ser filtrado\n"
 "                    "
 
-#: src/fsearch_preferences.ui:1863
-msgid "page18"
-msgstr "página18"
-
 #: src/fsearch_preferences.ui:1871
 #, fuzzy
 #| msgid ""
@@ -1244,10 +1226,6 @@ msgstr ""
 "editar um novo filtro.\n"
 "                    "
 
-#: src/fsearch_preferences.ui:1880
-msgid "page31"
-msgstr "página31"
-
 #: src/fsearch_preferences.ui:1888
 #, fuzzy
 #| msgid ""
@@ -1264,10 +1242,6 @@ msgstr ""
 "\n"
 "                      Este botão remove o filtro selecionado.\n"
 "                    "
-
-#: src/fsearch_preferences.ui:1897
-msgid "page32"
-msgstr "página32"
 
 #: src/fsearch_preferences.ui:1905
 #, fuzzy
@@ -1287,10 +1261,6 @@ msgstr ""
 "                      Este botão abre uma caixa de diálogo onde você pode "
 "editar o filtro selecionado.\n"
 "                    "
-
-#: src/fsearch_preferences.ui:1914
-msgid "page33"
-msgstr "página33"
 
 #: src/fsearch_preferences.ui:1922
 #, fuzzy
@@ -1318,10 +1288,6 @@ msgstr ""
 "usuário serão perdidos! ⚠\n"
 "                    "
 
-#: src/fsearch_preferences.ui:1933
-msgid "page34"
-msgstr "página34"
-
 #: src/fsearch_preferences.ui:1941
 msgid ""
 "<b>Exit on Escape:</b>\n"
@@ -1330,25 +1296,19 @@ msgid ""
 "window being minimized."
 msgstr ""
 
-#: src/fsearch_preferences.ui:1950
-#, fuzzy
-#| msgid "page5"
-msgid "page35"
-msgstr "página5"
-
-#: src/fsearch_preferences.ui:1960
+#: src/fsearch_preferences.ui:1960 src/fsearch_window.ui:117 src/menus.ui:150
 msgid "Help"
 msgstr "Ajuda"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:209
 msgid "Select folder"
 msgstr "Selecione uma pasta"
 
-#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:199 src/fsearch_preferences_ui.c:209
 msgid "_Select"
 msgstr "_Selecionar"
 
-#: src/fsearch_preferences_ui.c:320
+#: src/fsearch_preferences_ui.c:326
 msgid "Add filter"
 msgstr "Adicionar filtro"
 
@@ -1357,7 +1317,7 @@ msgid "Active"
 msgstr "Ativo"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:620 src/menus.ui:213 src/menus.ui:261
 msgid "Path"
 msgstr "Caminho"
 
@@ -1365,8 +1325,8 @@ msgstr "Caminho"
 msgid "One Filesystem"
 msgstr "Um sistema de arquivos"
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
-#: src/menus.ui:183 src/menus.ui:231
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
+#: src/menus.ui:209 src/menus.ui:257
 msgid "Name"
 msgstr "Nome"
 
@@ -1402,88 +1362,156 @@ msgid "Scanning…"
 msgstr "Procurando…"
 
 #: src/fsearch_statusbar.ui:52
-msgid "Number of Search Results"
-msgstr "Número de resultados da pesquisa"
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of Search Results\n"
+"                                        "
+msgstr ""
+"Adicionar caminho para ser incluído na base de dados\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:53
+#: src/fsearch_statusbar.ui:54
 msgid "0 Items"
 msgstr "0 Itens"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_statusbar.ui:328
-#: src/fsearch_window.ui:102
-msgid "Cancel database update"
-msgstr "Cancelar atualização da base de dados"
+#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Cancel database update\n"
+"                                        "
+msgstr ""
+"Adicionar caminho para ser incluído na base de dados\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:153
+#: src/fsearch_statusbar.ui:155
 msgid "Index:"
 msgstr "Índice:"
 
-#: src/fsearch_statusbar.ui:228
-msgid "Number of selected folders"
-msgstr "Número de pastas selecionadas"
+#: src/fsearch_statusbar.ui:230
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected folders\n"
+"                                        "
+msgstr ""
+"Adicionar caminho para ser incluído na base de dados\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:253
-msgid "Number of selected files"
-msgstr "Número de arquivos selecionados"
+#: src/fsearch_statusbar.ui:256
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected files\n"
+"                                        "
+msgstr ""
+"Adicionar caminho para ser incluído na base de dados\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:369
-msgid "Number of database items"
-msgstr "Número de itens na base de dados"
+#: src/fsearch_statusbar.ui:332
+msgid ""
+"Cancel database\n"
+"                                                    update\n"
+"                                                "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:375
+#, fuzzy
+#| msgid ""
+#| "<b>Add folder to database:</b>\n"
+#| "\n"
+#| "                      This button opens a dialog where you can select a "
+#| "folder you want to include in the database for\n"
+#| "                      searching.\n"
+#| "                    "
+msgid ""
+"Number of database\n"
+"                                                    items\n"
+"                                                "
+msgstr ""
+"<b>Adicionar pasta a base de dados:</b>\n"
+"\n"
+"                      Este botão abre uma caixa de diálogo onde você pode "
+"selecionar uma pasta que deseja incluir na base de dados para\n"
+"                      pesquisa.\n"
+"                    "
+
+#: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(vazio)"
 
-#: src/fsearch_statusbar.ui:407
+#: src/fsearch_statusbar.ui:415
+#, fuzzy
+#| msgid ""
+#| "Search term contains upper case characters.\n"
+#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
+"Search term contains upper case\n"
+"                                    characters.\n"
+"                                    <b>Match Case</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "O termo de busca contém caracteres maiúsculos.\n"
 "<b>Coincidir maiúsculas e minúsculas</b> foi temporariamente ativado para "
 "este termo."
 
-#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
+#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
 msgstr "MAIÚSCULAS•MINÚSCULAS"
 
-#: src/fsearch_statusbar.ui:514
+#: src/fsearch_statusbar.ui:529
+#, fuzzy
+#| msgid ""
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
+"                                    <b>Search in Path</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "O termo de busca contém separadores de caminho.\n"
 "<b>Pesquisar no caminho</b> foi temporariamente ativado para este termo."
 
-#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
+#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
 msgid "PATH"
 msgstr "CAMINHO"
 
-#: src/fsearch_statusbar.ui:651
+#: src/fsearch_statusbar.ui:676
 msgid "REGEX"
 msgstr "REGEX"
 
-#: src/fsearch_window.c:628 src/menus.ui:247
+#: src/fsearch_window.c:627 src/menus.ui:273
 msgid "Size"
 msgstr "Tamanho"
 
-#: src/fsearch_window.c:635 src/menus.ui:243
+#: src/fsearch_window.c:634 src/menus.ui:269
 msgid "Type"
 msgstr "Tipo"
 
-#: src/fsearch_window.c:642 src/menus.ui:239
+#: src/fsearch_window.c:641 src/menus.ui:265
 msgid "Extension"
 msgstr "Extensão"
 
-#: src/fsearch_window.c:649 src/menus.ui:251
+#: src/fsearch_window.c:648 src/menus.ui:277
 msgid "Date Modified"
 msgstr "Data de modificação"
 
-#: src/fsearch_window.c:663
+#: src/fsearch_window.c:662
 #, fuzzy
 #| msgid ""
 #| "Sorting by <b>Type</b> can be very slow with many results and it can't be "
@@ -1503,53 +1531,93 @@ msgstr ""
 "Esta ordem de classificação não é persistente, ela será redefinida quando o "
 "termo de busca mudar."
 
-#: src/fsearch_window.ui:68
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#, fuzzy
+#| msgid "FSearch"
+msgid "FSearch Online"
+msgstr "FSearch"
+
+#: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
+msgid "Donate"
+msgstr ""
+
+#: src/fsearch_window.ui:89 src/menus.ui:142
+msgid "Forum"
+msgstr ""
+
+#: src/fsearch_window.ui:103 src/menus.ui:146
+msgid "Bug Reports and Feature Requests"
+msgstr ""
+
+#: src/fsearch_window.ui:162 src/menus.ui:133
+msgid "GitHub Sponsors"
+msgstr ""
+
+#: src/fsearch_window.ui:176 src/menus.ui:137
+msgid "PayPal"
+msgstr ""
+
+#: src/fsearch_window.ui:214
 msgid "New window"
 msgstr "Nova janela"
 
-#: src/fsearch_window.ui:88
+#: src/fsearch_window.ui:234
 msgid "Update database"
 msgstr "Atualizar base de dados"
 
-#: src/fsearch_window.ui:143 src/menus.ui:112
+#: src/fsearch_window.ui:290 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Pesquisar no caminho"
 
-#: src/fsearch_window.ui:157 src/menus.ui:116
+#: src/fsearch_window.ui:304 src/menus.ui:116
 msgid "Match Case"
 msgstr "Coincidir maiúsculas e minúsculas"
 
-#: src/fsearch_window.ui:171 src/menus.ui:120
+#: src/fsearch_window.ui:318 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Habilitar RegEx"
 
-#: src/fsearch_window.ui:196 src/menus.ui:95
+#: src/fsearch_window.ui:343 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Mostrar barra de status"
 
-#: src/fsearch_window.ui:210 src/menus.ui:99
+#: src/fsearch_window.ui:357 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Mostrar filtro"
 
-#: src/fsearch_window.ui:224 src/menus.ui:103
+#: src/fsearch_window.ui:371 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Mostrar botão de pesquisa"
 
-#: src/fsearch_window.ui:275 src/menus.ui:129
+#: src/fsearch_window.ui:436 src/menus.ui:155
 msgid "About"
 msgstr "Sobre"
 
-#: src/fsearch_window.ui:300 src/menus.ui:47
+#: src/fsearch_window.ui:461 src/menus.ui:47
 msgid "Quit"
 msgstr "Sair"
 
-#: src/fsearch_window.ui:408
+#: src/fsearch_window.ui:573
 msgid "Search…"
 msgstr "Pesquisar…"
 
-#: src/fsearch_window.ui:430
-msgid "Select a Filter"
-msgstr "Selecione um filtro"
+#: src/fsearch_window.ui:598
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Select a Filter\n"
+"                                                "
+msgstr ""
+"Adicionar caminho para ser incluído na base de dados\n"
+"                                "
+
+#: src/fsearch_window.ui:632
+msgid ""
+"Search\n"
+"                                                        "
+msgstr ""
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1573,7 +1641,7 @@ msgstr "Excluindo arquivos…"
 msgid "Moving files to trash…"
 msgstr "Movendo arquivos para a lixeira…"
 
-#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
 msgstr ""
 
@@ -1595,12 +1663,12 @@ msgid ""
 "This will be fixed with future updates."
 msgstr ""
 
-#: src/fsearch_window_actions.c:243
+#: src/fsearch_window_actions.c:247
 #, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "Você realmente quer abrir janela de propriedade do arquivo %d?"
 
-#: src/fsearch_window_actions.c:247
+#: src/fsearch_window_actions.c:251
 msgid "Opening file properties…"
 msgstr "Abrindo propriedade do arquivo…"
 
@@ -1612,7 +1680,7 @@ msgstr "_Arquivo"
 msgid "New Window"
 msgstr "Nova janela"
 
-#: src/menus.ui:16 src/menus.ui:139
+#: src/menus.ui:16 src/menus.ui:165
 msgid "_Open"
 msgstr "_Abrir"
 
@@ -1636,11 +1704,11 @@ msgstr "Fechar janela"
 msgid "_Edit"
 msgstr "_Editar"
 
-#: src/menus.ui:57 src/menus.ui:175
+#: src/menus.ui:57 src/menus.ui:201
 msgid "_Copy"
 msgstr "_Copiar"
 
-#: src/menus.ui:62 src/menus.ui:196
+#: src/menus.ui:62 src/menus.ui:222
 msgid "Cu_t"
 msgstr "Cor_tar"
 
@@ -1668,25 +1736,75 @@ msgstr "_Pesquisar"
 msgid "_Help"
 msgstr "_Ajuda"
 
-#: src/menus.ui:145
+#: src/menus.ui:171
 msgid "Open _With"
 msgstr "Abrir _com"
 
-#: src/menus.ui:159
+#: src/menus.ui:185
 msgid "_Open Folder"
 msgstr "_Abrir pasta"
 
-#: src/menus.ui:181
+#: src/menus.ui:207
 msgid "Copy as Text"
 msgstr "Copiar como texto"
 
-#: src/menus.ui:191
+#: src/menus.ui:217
 msgid "Path + Name"
 msgstr "Caminho + Nome"
 
-#: src/menus.ui:204
+#: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "Mover para a lixeira"
+
+#~ msgid "page0"
+#~ msgstr "página0"
+
+#~ msgid "page1"
+#~ msgstr "página1"
+
+#~ msgid "page2"
+#~ msgstr "página2"
+
+#~ msgid "page30"
+#~ msgstr "página30"
+
+#~ msgid "page18"
+#~ msgstr "página18"
+
+#~ msgid "page31"
+#~ msgstr "página31"
+
+#~ msgid "page32"
+#~ msgstr "página32"
+
+#~ msgid "page33"
+#~ msgstr "página33"
+
+#~ msgid "page34"
+#~ msgstr "página34"
+
+#, fuzzy
+#~| msgid "page5"
+#~ msgid "page35"
+#~ msgstr "página5"
+
+#~ msgid "Number of Search Results"
+#~ msgstr "Número de resultados da pesquisa"
+
+#~ msgid "Cancel database update"
+#~ msgstr "Cancelar atualização da base de dados"
+
+#~ msgid "Number of selected folders"
+#~ msgstr "Número de pastas selecionadas"
+
+#~ msgid "Number of selected files"
+#~ msgstr "Número de arquivos selecionados"
+
+#~ msgid "Number of database items"
+#~ msgstr "Número de itens na base de dados"
+
+#~ msgid "Select a Filter"
+#~ msgstr "Selecione um filtro"
 
 #~ msgid ""
 #~ "<b>Included folders:</b>\n"
@@ -1718,21 +1836,6 @@ msgstr "Mover para a lixeira"
 #~ "                      ser\n"
 #~ "                      atualizados <i>(por exemplo, um caminho de USB "
 #~ "antigo que não muda conteúdo com freqüência)</i>\n"
-#~ "                    "
-
-#~ msgid ""
-#~ "<b>Add folder to database:</b>\n"
-#~ "\n"
-#~ "                      This button opens a dialog where you can select a "
-#~ "folder you want to include in the database for\n"
-#~ "                      searching.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "<b>Adicionar pasta a base de dados:</b>\n"
-#~ "\n"
-#~ "                      Este botão abre uma caixa de diálogo onde você pode "
-#~ "selecionar uma pasta que deseja incluir na base de dados para\n"
-#~ "                      pesquisa.\n"
 #~ "                    "
 
 #~ msgid ""

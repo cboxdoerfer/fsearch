@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-05 17:31+0200\n"
+"POT-Creation-Date: 2022-08-13 12:19+0200\n"
 "PO-Revision-Date: 2022-08-11 16:16+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -91,43 +91,43 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "一个更接近GNOME人机界面指南的布局"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:48
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:56
+#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
 msgid "Initial release."
 msgstr "首次发布。"
 
-#: src/fsearch.c:262
+#: src/fsearch.c:243
 msgid "Saving…"
 msgstr "正在保存…"
 
-#: src/fsearch.c:380
+#: src/fsearch.c:430
 msgid "translator-credits"
 msgstr "翻译人员"
 
-#: src/fsearch.c:382
+#: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
 msgstr "注重性能和高级功能的搜索工具"
 
-#: src/fsearch.c:850
+#: src/fsearch.c:905
 msgid "Open a new application window"
 msgstr "开启新窗口"
 
-#: src/fsearch.c:851
+#: src/fsearch.c:906
 msgid "Show the application preferences"
 msgstr "显示首选项"
 
-#: src/fsearch.c:852
+#: src/fsearch.c:907
 msgid "Set the search pattern"
 msgstr "设置搜索模式"
 
-#: src/fsearch.c:853
+#: src/fsearch.c:908
 msgid "Update the database and exit"
 msgstr "更新数据库并退出"
 
-#: src/fsearch.c:854
+#: src/fsearch.c:909
 msgid "Print version information and exit"
 msgstr "显示版本信息并退出"
 
@@ -140,7 +140,7 @@ msgid "Loading files…"
 msgstr "正在加载文件…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:90
+#: src/fsearch_statusbar.ui:91
 msgid "Sorting…"
 msgstr "排序中…"
 
@@ -152,47 +152,47 @@ msgstr "打开文件夹时出错"
 msgid "Failed to build open command"
 msgstr "构建打开命令失败"
 
-#: src/fsearch_file_utils.c:151 src/fsearch_file_utils.c:239
+#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
 msgid "Error when launching desktop file"
 msgstr "启动桌面文件时出错"
 
 #: src/fsearch_file_utils.c:153
-msgid "Failed to get default display"
-msgstr "未能获取默认显示"
-
-#: src/fsearch_file_utils.c:158
 msgid "Failed to get application information"
 msgstr "获取应用信息失败"
 
-#: src/fsearch_file_utils.c:179
+#: src/fsearch_file_utils.c:159
+msgid "Failed to get default display"
+msgstr "未能获取默认显示"
+
+#: src/fsearch_file_utils.c:180
 msgid "Error when removing file"
 msgstr "删除文件时出错"
 
-#: src/fsearch_file_utils.c:179 src/fsearch_file_utils.c:241
+#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
 msgid "Failed to get path"
 msgstr "获取路径失败"
 
-#: src/fsearch_file_utils.c:252
+#: src/fsearch_file_utils.c:253
 msgid "Error when getting information for content type"
 msgstr "获取内容类型信息时出错"
 
-#: src/fsearch_file_utils.c:254
+#: src/fsearch_file_utils.c:255
 msgid "No default application registered"
 msgstr "未注册默认应用程序"
 
-#: src/fsearch_file_utils.c:335
+#: src/fsearch_file_utils.c:342
 msgid "Error when opening parent folder"
 msgstr "打开主文件夹时出错"
 
-#: src/fsearch_file_utils.c:337
+#: src/fsearch_file_utils.c:344
 msgid "Failed to get parent path"
 msgstr "获取主路径失败"
 
-#: src/fsearch_file_utils.c:394
+#: src/fsearch_file_utils.c:401
 msgid "Folder"
 msgstr "文件夹"
 
-#: src/fsearch_file_utils.c:400
+#: src/fsearch_file_utils.c:407
 msgid "Unknown Type"
 msgstr "未知类型"
 
@@ -236,16 +236,16 @@ msgstr "视频"
 msgid "Macro names must not contain `:` characters."
 msgstr "宏名称必须包含 `:` 字符。"
 
-#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:192
-#: src/fsearch_preferences_ui.c:204 src/fsearch_preferences_ui.c:508
+#: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
+#: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
 msgstr "取消"
 
-#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:509
+#: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
 msgstr "_确定"
 
-#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:289
+#: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:295
 msgid "Edit filter"
 msgstr "编辑筛选器"
 
@@ -306,11 +306,6 @@ msgstr "空数据库"
 msgid "Add folders"
 msgstr "添加文件夹"
 
-#: src/fsearch_overlay.ui:77 src/fsearch_overlay.ui:273
-#: src/fsearch_statusbar.ui:67 src/fsearch_statusbar.ui:345
-msgid "page0"
-msgstr "第0页"
-
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
 msgstr "加载数据库…"
@@ -319,44 +314,39 @@ msgstr "加载数据库…"
 msgid "This won't take long."
 msgstr "不会花很长时间。"
 
-#: src/fsearch_overlay.ui:139 src/fsearch_overlay.ui:335
-#: src/fsearch_statusbar.ui:123 src/fsearch_statusbar.ui:381
-msgid "page1"
-msgstr "第1页"
-
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
 msgid "Updating Database…"
 msgstr "数据库更新中…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
 msgid "This may take a while."
 msgstr "可能需要一些时间。"
-
-#: src/fsearch_overlay.ui:202
-msgid "page2"
-msgstr "第2页"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
 msgstr "空的查询"
 
 #: src/fsearch_overlay.ui:256
-msgid "Press <b>Ctrl + F</b> and start typing"
+#, fuzzy
+#| msgid "Press <b>Ctrl + F</b> and start typing"
+msgid ""
+"Press <b>Ctrl + F</b> and start typing\n"
+"                        "
 msgstr "按 <b>Ctrl + F</b> 开始输入"
 
-#: src/fsearch_overlay.ui:304
+#: src/fsearch_overlay.ui:305
 msgid "No Results Found"
 msgstr "没有找到结果"
 
-#: src/fsearch_overlay.ui:319
+#: src/fsearch_overlay.ui:320
 msgid "Try a different search"
 msgstr "试试其他搜索条件"
 
-#: src/fsearch_overlay.ui:368
+#: src/fsearch_overlay.ui:369
 msgid "Sorting results…"
 msgstr "结果排序中…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:250 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
 msgid "Preferences"
 msgstr "选项"
 
@@ -504,7 +494,7 @@ msgstr "还原默认筛选器"
 msgid "Filter:"
 msgstr "筛选器："
 
-#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:461
+#: src/fsearch_preferences.ui:868
 msgid "Search"
 msgstr "搜索"
 
@@ -998,10 +988,6 @@ msgstr ""
 "FSearch 可以作为一个应用程序启动器。 不然， <i>.desktop</i>文件将由此文件类型"
 "的默认处理程序打开。通常是文本编辑器。"
 
-#: src/fsearch_preferences.ui:1842
-msgid "page30"
-msgstr "页30"
-
 #: src/fsearch_preferences.ui:1850
 msgid ""
 "<b>Filters:</b>\n"
@@ -1021,10 +1007,6 @@ msgstr ""
 "• <b>宏：</b> 通过输入宏文本后加上':'，你可以根据需要启用筛选器\n"
 "• <b>查询：</b> 过滤数据库的检索项"
 
-#: src/fsearch_preferences.ui:1863
-msgid "page18"
-msgstr "页18"
-
 #: src/fsearch_preferences.ui:1871
 msgid ""
 "<b>Add a new filter:</b>\n"
@@ -1034,10 +1016,6 @@ msgstr ""
 "<b>添加新筛选器：</b>\n"
 "\n"
 "这个按钮打开一个对话框，你可以在其中编辑新筛选器。"
-
-#: src/fsearch_preferences.ui:1880
-msgid "page31"
-msgstr "页31"
 
 #: src/fsearch_preferences.ui:1888
 msgid ""
@@ -1049,10 +1027,6 @@ msgstr ""
 "\n"
 "这个按钮删除当前选中的筛选器。"
 
-#: src/fsearch_preferences.ui:1897
-msgid "page32"
-msgstr "页32"
-
 #: src/fsearch_preferences.ui:1905
 msgid ""
 "<b>Edit selected filter:</b>\n"
@@ -1062,10 +1036,6 @@ msgstr ""
 "<b>编辑所选的筛选器：</b>\n"
 "\n"
 "这个按钮打开一个对话框，你可以在其中编辑选中的筛选器。"
-
-#: src/fsearch_preferences.ui:1914
-msgid "page33"
-msgstr "页33"
 
 #: src/fsearch_preferences.ui:1922
 msgid ""
@@ -1081,10 +1051,6 @@ msgstr ""
 "\n"
 "⚠ 该用户编辑或创建的所有筛选器都将丢失！⚠"
 
-#: src/fsearch_preferences.ui:1933
-msgid "page34"
-msgstr "页34"
-
 #: src/fsearch_preferences.ui:1941
 msgid ""
 "<b>Exit on Escape:</b>\n"
@@ -1096,23 +1062,19 @@ msgstr ""
 "\n"
 "如启用，FSearch 会在按下 Escape 键时而不是最小化窗口时退出。"
 
-#: src/fsearch_preferences.ui:1950
-msgid "page35"
-msgstr "页35"
-
-#: src/fsearch_preferences.ui:1960
+#: src/fsearch_preferences.ui:1960 src/fsearch_window.ui:117 src/menus.ui:150
 msgid "Help"
 msgstr "帮助"
 
-#: src/fsearch_preferences_ui.c:189 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:209
 msgid "Select folder"
 msgstr "选择文件夹"
 
-#: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:204
+#: src/fsearch_preferences_ui.c:199 src/fsearch_preferences_ui.c:209
 msgid "_Select"
 msgstr "选择"
 
-#: src/fsearch_preferences_ui.c:320
+#: src/fsearch_preferences_ui.c:326
 msgid "Add filter"
 msgstr "添加筛选器"
 
@@ -1121,7 +1083,7 @@ msgid "Active"
 msgstr "激活"
 
 #: src/fsearch_preferences_widgets.c:224 src/fsearch_preferences_widgets.c:271
-#: src/fsearch_window.c:621 src/menus.ui:187 src/menus.ui:235
+#: src/fsearch_window.c:620 src/menus.ui:213 src/menus.ui:261
 msgid "Path"
 msgstr "路径"
 
@@ -1129,8 +1091,8 @@ msgstr "路径"
 msgid "One Filesystem"
 msgstr "一个文件系统"
 
-#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:614
-#: src/menus.ui:183 src/menus.ui:231
+#: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
+#: src/menus.ui:209 src/menus.ui:257
 msgid "Name"
 msgstr "名称"
 
@@ -1165,87 +1127,155 @@ msgid "Scanning…"
 msgstr "扫描中…"
 
 #: src/fsearch_statusbar.ui:52
-msgid "Number of Search Results"
-msgstr "搜索到的数量"
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of Search Results\n"
+"                                        "
+msgstr ""
+"添加要包含在数据库中的路径\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:53
+#: src/fsearch_statusbar.ui:54
 msgid "0 Items"
 msgstr "0 项"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_statusbar.ui:328
-#: src/fsearch_window.ui:102
-msgid "Cancel database update"
-msgstr "取消更新数据库"
+#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Cancel database update\n"
+"                                        "
+msgstr ""
+"添加要包含在数据库中的路径\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:153
+#: src/fsearch_statusbar.ui:155
 msgid "Index:"
 msgstr "索引："
 
-#: src/fsearch_statusbar.ui:228
-msgid "Number of selected folders"
-msgstr "已择文件夹的数量"
+#: src/fsearch_statusbar.ui:230
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected folders\n"
+"                                        "
+msgstr ""
+"添加要包含在数据库中的路径\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:253
-msgid "Number of selected files"
-msgstr "选定的文件数量"
+#: src/fsearch_statusbar.ui:256
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Number of selected files\n"
+"                                        "
+msgstr ""
+"添加要包含在数据库中的路径\n"
+"                                "
 
-#: src/fsearch_statusbar.ui:369
-msgid "Number of database items"
-msgstr "数据库的项目数"
+#: src/fsearch_statusbar.ui:332
+msgid ""
+"Cancel database\n"
+"                                                    update\n"
+"                                                "
+msgstr ""
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:375
+#, fuzzy
+#| msgid ""
+#| "<b>Add folder to database:</b>\n"
+#| "\n"
+#| "                      This button opens a dialog where you can select a "
+#| "folder you want to include in the database for\n"
+#| "                      searching.\n"
+#| "                    "
+msgid ""
+"Number of database\n"
+"                                                    items\n"
+"                                                "
+msgstr ""
+"<b>将文件夹添加到数据库：</b>\n"
+"\n"
+"                       此按钮会打开一个对话框，您可以在其中选择要包含在数据库"
+"中的文件夹\n"
+"                       搜索。\n"
+"                    "
+
+#: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(空)"
 
-#: src/fsearch_statusbar.ui:407
+#: src/fsearch_statusbar.ui:415
+#, fuzzy
+#| msgid ""
+#| "Search term contains upper case characters.\n"
+#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
-"Search term contains upper case characters.\n"
-"<b>Match Case</b> was temporarily activated for this term."
+"Search term contains upper case\n"
+"                                    characters.\n"
+"                                    <b>Match Case</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "搜索词包含大写字符。\n"
 "<b>匹配大小写</b>在这个搜索词被暂时激活。"
 
-#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
+#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
 msgstr "实例"
 
-#: src/fsearch_statusbar.ui:514
+#: src/fsearch_statusbar.ui:529
+#, fuzzy
+#| msgid ""
+#| "Search term contains path separators.\n"
+#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
-"<b>Search in Path</b> was temporarily activated for this term."
+"                                    <b>Search in Path</b> was temporarily "
+"activated for this term.\n"
+"                                "
 msgstr ""
 "搜索关键词包含路径分隔符。\n"
 "该词暂时启用了<b>匹配路径</b>。"
 
-#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
+#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
 msgid "PATH"
 msgstr "路径"
 
-#: src/fsearch_statusbar.ui:651
+#: src/fsearch_statusbar.ui:676
 msgid "REGEX"
 msgstr "正则表达式"
 
-#: src/fsearch_window.c:628 src/menus.ui:247
+#: src/fsearch_window.c:627 src/menus.ui:273
 msgid "Size"
 msgstr "大小"
 
-#: src/fsearch_window.c:635 src/menus.ui:243
+#: src/fsearch_window.c:634 src/menus.ui:269
 msgid "Type"
 msgstr "类型"
 
-#: src/fsearch_window.c:642 src/menus.ui:239
+#: src/fsearch_window.c:641 src/menus.ui:265
 msgid "Extension"
 msgstr "扩展名"
 
-#: src/fsearch_window.c:649 src/menus.ui:251
+#: src/fsearch_window.c:648 src/menus.ui:277
 msgid "Date Modified"
 msgstr "修改日期"
 
-#: src/fsearch_window.c:663
+#: src/fsearch_window.c:662
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1256,53 +1286,93 @@ msgstr ""
 "\n"
 "此排序顺序不是持久的，它会在搜索词更改时重置。"
 
-#: src/fsearch_window.ui:68
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#, fuzzy
+#| msgid "FSearch"
+msgid "FSearch Online"
+msgstr "FSearch"
+
+#: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
+msgid "Donate"
+msgstr ""
+
+#: src/fsearch_window.ui:89 src/menus.ui:142
+msgid "Forum"
+msgstr ""
+
+#: src/fsearch_window.ui:103 src/menus.ui:146
+msgid "Bug Reports and Feature Requests"
+msgstr ""
+
+#: src/fsearch_window.ui:162 src/menus.ui:133
+msgid "GitHub Sponsors"
+msgstr ""
+
+#: src/fsearch_window.ui:176 src/menus.ui:137
+msgid "PayPal"
+msgstr ""
+
+#: src/fsearch_window.ui:214
 msgid "New window"
 msgstr "新窗口打开"
 
-#: src/fsearch_window.ui:88
+#: src/fsearch_window.ui:234
 msgid "Update database"
 msgstr "更新数据源"
 
-#: src/fsearch_window.ui:143 src/menus.ui:112
+#: src/fsearch_window.ui:290 src/menus.ui:112
 msgid "Search in Path"
 msgstr "搜索路径"
 
-#: src/fsearch_window.ui:157 src/menus.ui:116
+#: src/fsearch_window.ui:304 src/menus.ui:116
 msgid "Match Case"
 msgstr "区分大小写"
 
-#: src/fsearch_window.ui:171 src/menus.ui:120
+#: src/fsearch_window.ui:318 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "启用正则"
 
-#: src/fsearch_window.ui:196 src/menus.ui:95
+#: src/fsearch_window.ui:343 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "显示状态栏"
 
-#: src/fsearch_window.ui:210 src/menus.ui:99
+#: src/fsearch_window.ui:357 src/menus.ui:99
 msgid "Show Filter"
 msgstr "显示筛选器"
 
-#: src/fsearch_window.ui:224 src/menus.ui:103
+#: src/fsearch_window.ui:371 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "显示搜索按钮"
 
-#: src/fsearch_window.ui:275 src/menus.ui:129
+#: src/fsearch_window.ui:436 src/menus.ui:155
 msgid "About"
 msgstr "关于"
 
-#: src/fsearch_window.ui:300 src/menus.ui:47
+#: src/fsearch_window.ui:461 src/menus.ui:47
 msgid "Quit"
 msgstr "退出"
 
-#: src/fsearch_window.ui:408
+#: src/fsearch_window.ui:573
 msgid "Search…"
 msgstr "搜索…"
 
-#: src/fsearch_window.ui:430
-msgid "Select a Filter"
-msgstr "选择筛选器"
+#: src/fsearch_window.ui:598
+#, fuzzy
+#| msgid ""
+#| "Add path to be included in database\n"
+#| "                                "
+msgid ""
+"Select a Filter\n"
+"                                                "
+msgstr ""
+"添加要包含在数据库中的路径\n"
+"                                "
+
+#: src/fsearch_window.ui:632
+msgid ""
+"Search\n"
+"                                                        "
+msgstr ""
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1326,7 +1396,7 @@ msgstr "删除文件中…"
 msgid "Moving files to trash…"
 msgstr "正在移动文件到回收站…"
 
-#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:491
+#: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
 msgstr "出问题了。"
 
@@ -1346,12 +1416,12 @@ msgid ""
 "This will be fixed with future updates."
 msgstr "需要更新数据库才能显示这些更改！ 这将在未来的更新中得到修复。"
 
-#: src/fsearch_window_actions.c:243
+#: src/fsearch_window_actions.c:247
 #, c-format
 msgid "Do you really want to open %d file property windows?"
 msgstr "确认要打开%d属性窗口吗？"
 
-#: src/fsearch_window_actions.c:247
+#: src/fsearch_window_actions.c:251
 msgid "Opening file properties…"
 msgstr "打开文件属性中…"
 
@@ -1363,7 +1433,7 @@ msgstr "_文件"
 msgid "New Window"
 msgstr "新窗口"
 
-#: src/menus.ui:16 src/menus.ui:139
+#: src/menus.ui:16 src/menus.ui:165
 msgid "_Open"
 msgstr "_打开"
 
@@ -1387,11 +1457,11 @@ msgstr "关闭窗口"
 msgid "_Edit"
 msgstr "_编辑"
 
-#: src/menus.ui:57 src/menus.ui:175
+#: src/menus.ui:57 src/menus.ui:201
 msgid "_Copy"
 msgstr "_复制"
 
-#: src/menus.ui:62 src/menus.ui:196
+#: src/menus.ui:62 src/menus.ui:222
 msgid "Cu_t"
 msgstr "剪切"
 
@@ -1419,25 +1489,73 @@ msgstr "_搜索"
 msgid "_Help"
 msgstr "_帮助"
 
-#: src/menus.ui:145
+#: src/menus.ui:171
 msgid "Open _With"
 msgstr "打开方式"
 
-#: src/menus.ui:159
+#: src/menus.ui:185
 msgid "_Open Folder"
 msgstr "_打开文件夹"
 
-#: src/menus.ui:181
+#: src/menus.ui:207
 msgid "Copy as Text"
 msgstr "以文本复制"
 
-#: src/menus.ui:191
+#: src/menus.ui:217
 msgid "Path + Name"
 msgstr "路径+名称"
 
-#: src/menus.ui:204
+#: src/menus.ui:230
 msgid "Move to _Trash"
 msgstr "移动到回收站"
+
+#~ msgid "page0"
+#~ msgstr "第0页"
+
+#~ msgid "page1"
+#~ msgstr "第1页"
+
+#~ msgid "page2"
+#~ msgstr "第2页"
+
+#~ msgid "page30"
+#~ msgstr "页30"
+
+#~ msgid "page18"
+#~ msgstr "页18"
+
+#~ msgid "page31"
+#~ msgstr "页31"
+
+#~ msgid "page32"
+#~ msgstr "页32"
+
+#~ msgid "page33"
+#~ msgstr "页33"
+
+#~ msgid "page34"
+#~ msgstr "页34"
+
+#~ msgid "page35"
+#~ msgstr "页35"
+
+#~ msgid "Number of Search Results"
+#~ msgstr "搜索到的数量"
+
+#~ msgid "Cancel database update"
+#~ msgstr "取消更新数据库"
+
+#~ msgid "Number of selected folders"
+#~ msgstr "已择文件夹的数量"
+
+#~ msgid "Number of selected files"
+#~ msgstr "选定的文件数量"
+
+#~ msgid "Number of database items"
+#~ msgstr "数据库的项目数"
+
+#~ msgid "Select a Filter"
+#~ msgstr "选择筛选器"
 
 #~ msgid ""
 #~ "<b>Included folders:</b>\n"
@@ -1466,21 +1584,6 @@ msgstr "移动到回收站"
 #~ "                       存在\n"
 #~ "                       已更新<i>（例如，不经常更改的慢速 USB 驱动器的路"
 #~ "径）</i>\n"
-#~ "                    "
-
-#~ msgid ""
-#~ "<b>Add folder to database:</b>\n"
-#~ "\n"
-#~ "                      This button opens a dialog where you can select a "
-#~ "folder you want to include in the database for\n"
-#~ "                      searching.\n"
-#~ "                    "
-#~ msgstr ""
-#~ "<b>将文件夹添加到数据库：</b>\n"
-#~ "\n"
-#~ "                       此按钮会打开一个对话框，您可以在其中选择要包含在数"
-#~ "据库中的文件夹\n"
-#~ "                       搜索。\n"
 #~ "                    "
 
 #~ msgid ""
