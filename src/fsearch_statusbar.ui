@@ -103,8 +103,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
-                    <property name="tooltip-text" translatable="yes">Cancel database update
-                                        </property>
+                    <property name="tooltip-text" translatable="yes">Cancel</property>
                     <property name="action-name">win.cancel_task</property>
                     <property name="image">image1</property>
                     <property name="relief">none</property>
