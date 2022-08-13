@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 13:53+0200\n"
-"PO-Revision-Date: 2022-05-11 12:16+0000\n"
+"PO-Revision-Date: 2022-08-13 19:25+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -107,7 +107,7 @@ msgstr "Układ bardziej zbliżony do GNOME HIG"
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
 msgid "Initial release."
@@ -162,7 +162,7 @@ msgstr "Sortowanie…"
 
 #: src/fsearch_file_utils.c:132
 msgid "Error while opening folder"
-msgstr ""
+msgstr "Błąd podczas otwierania katalogu"
 
 #: src/fsearch_file_utils.c:135
 #, fuzzy
@@ -171,16 +171,12 @@ msgid "Failed to build open command"
 msgstr "Nie udało się otworzyć:"
 
 #: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
-#, fuzzy
-#| msgid "Launch desktop files"
 msgid "Error when launching desktop file"
-msgstr "Uruchamiaj pliki desktop"
+msgstr "Błąd podczas uruchamiania pliku desktop"
 
 #: src/fsearch_file_utils.c:153
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Otwórz nowe okno aplikacji"
+msgstr "Nie udało się uzyskać informacji o aplikacji"
 
 #: src/fsearch_file_utils.c:159
 #, fuzzy
@@ -190,27 +186,23 @@ msgstr "Nie udało się otworzyć pliku"
 
 #: src/fsearch_file_utils.c:180
 msgid "Error when removing file"
-msgstr ""
+msgstr "Błąd podczas usuwania pliku"
 
 #: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Nie udało się otworzyć:"
+msgstr "Nie udało się ustalić ścieżki"
 
 #: src/fsearch_file_utils.c:253
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Błąd podczas uzyskiwania informacji o typie zawartości"
 
 #: src/fsearch_file_utils.c:255
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Pokaż ustawienia aplikacji"
+msgstr "Nie ma skojarzonej domyślnej aplikacji"
 
 #: src/fsearch_file_utils.c:342
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "Błąd podczas otwierania katalogu nadrzędnego"
 
 #: src/fsearch_file_utils.c:344
 #, fuzzy
@@ -358,12 +350,12 @@ msgid "Empty Query"
 msgstr "Puste zapytanie"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid ""
 "Press <b>Ctrl + F</b> and start typing\n"
 "                        "
-msgstr "Naciśnij <b>Ctrl + F</b> i wpisz zapytanie"
+msgstr ""
+"Naciśnij <b>Ctrl + F</b> i zacznij pisać\n"
+"                        "
 
 #: src/fsearch_overlay.ui:305
 msgid "No Results Found"
@@ -1257,16 +1249,12 @@ msgid "0 Items"
 msgstr "0 wyników"
 
 #: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Cancel database update\n"
 "                                        "
 msgstr ""
-"Dodaj ścieżkę do bazy danych\n"
-"                                "
+"Anuluj aktualizacja bazy danych\n"
+"                                        "
 
 #: src/fsearch_statusbar.ui:154
 msgid "Index:"
@@ -1349,12 +1337,6 @@ msgid "Date Modified"
 msgstr "Data modyfikacji"
 
 #: src/fsearch_window.c:662
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1367,30 +1349,28 @@ msgstr ""
 "wyszukiwania."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch online"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Przekaż dotację"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Raporty o błędach i propozycje funkcjonalności"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "Sponsorzy GitHub"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"
@@ -1437,22 +1417,20 @@ msgid "Search…"
 msgstr "Szukaj…"
 
 #: src/fsearch_window.ui:598
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Select a Filter\n"
 "                                                "
 msgstr ""
-"Dodaj ścieżkę do bazy danych\n"
-"                                "
+"Wybierz Filtr\n"
+"                                                "
 
 #: src/fsearch_window.ui:632
 msgid ""
 "Search\n"
 "                                                        "
 msgstr ""
+"Szukaj\n"
+"                                                        "
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1478,25 +1456,25 @@ msgstr "Przenoszenie plików do kosza…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
-msgstr ""
+msgstr "Coś poszło nie tak."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Usuwanie plików…"
+msgstr "Usuwanięto %d plik(ów)."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Przenoszenie plików do kosza…"
+msgstr "%d plik(ów) przeniesiono do kosza."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"Baza danych musi być zaktualizowana zanim zmiany będą dla niej widoczne! To "
+"będzie naprawione w przyszłych wersjach."
 
 #: src/fsearch_window_actions.c:247
 #, c-format
