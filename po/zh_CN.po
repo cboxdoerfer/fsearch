@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 12:19+0200\n"
-"PO-Revision-Date: 2022-08-11 16:16+0000\n"
+"PO-Revision-Date: 2022-08-13 11:47+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
@@ -327,12 +327,12 @@ msgid "Empty Query"
 msgstr "空的查询"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid ""
 "Press <b>Ctrl + F</b> and start typing\n"
 "                        "
-msgstr "按 <b>Ctrl + F</b> 开始输入"
+msgstr ""
+"按 <b>Ctrl + F</b> 开始输入\n"
+"                        "
 
 #: src/fsearch_overlay.ui:305
 msgid "No Results Found"
@@ -1127,64 +1127,48 @@ msgid "Scanning…"
 msgstr "扫描中…"
 
 #: src/fsearch_statusbar.ui:52
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Number of Search Results\n"
 "                                        "
 msgstr ""
-"添加要包含在数据库中的路径\n"
-"                                "
+"搜索结果数量\n"
+"                                        "
 
 #: src/fsearch_statusbar.ui:54
 msgid "0 Items"
 msgstr "0 项"
 
 #: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Cancel database update\n"
 "                                        "
 msgstr ""
-"添加要包含在数据库中的路径\n"
-"                                "
+"取消数据库更新\n"
+"                                        "
 
 #: src/fsearch_statusbar.ui:155
 msgid "Index:"
 msgstr "索引："
 
 #: src/fsearch_statusbar.ui:230
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Number of selected folders\n"
 "                                        "
 msgstr ""
-"添加要包含在数据库中的路径\n"
-"                                "
+"选中的文件夹数\n"
+"                                        "
 
 #: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch_statusbar.ui:256
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Number of selected files\n"
 "                                        "
 msgstr ""
-"添加要包含在数据库中的路径\n"
-"                                "
+"选中的文件数\n"
+"                                        "
 
 #: src/fsearch_statusbar.ui:332
 msgid ""
@@ -1192,37 +1176,25 @@ msgid ""
 "                                                    update\n"
 "                                                "
 msgstr ""
+"取消数据库\n"
+"                                                    更新\n"
+"                                                "
 
 #: src/fsearch_statusbar.ui:375
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "Number of database\n"
 "                                                    items\n"
 "                                                "
 msgstr ""
-"<b>将文件夹添加到数据库：</b>\n"
-"\n"
-"                       此按钮会打开一个对话框，您可以在其中选择要包含在数据库"
-"中的文件夹\n"
-"                       搜索。\n"
-"                    "
+"数据库条目\n"
+"                                                    数\n"
+"                                                "
 
 #: src/fsearch_statusbar.ui:378
 msgid "(empty)"
 msgstr "(空)"
 
 #: src/fsearch_statusbar.ui:415
-#, fuzzy
-#| msgid ""
-#| "Search term contains upper case characters.\n"
-#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case\n"
 "                                    characters.\n"
@@ -1230,26 +1202,27 @@ msgid ""
 "activated for this term.\n"
 "                                "
 msgstr ""
-"搜索词包含大写字符。\n"
-"<b>匹配大小写</b>在这个搜索词被暂时激活。"
+"搜索条目包含大写\n"
+"                                    字符。\n"
+"                                    暂将<b>匹配大小写</b> "
+"选项应用于此检索项。\n"
+"                                "
 
 #: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
 msgid "CASE"
 msgstr "实例"
 
 #: src/fsearch_statusbar.ui:529
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "                                    <b>Search in Path</b> was temporarily "
 "activated for this term.\n"
 "                                "
 msgstr ""
-"搜索关键词包含路径分隔符。\n"
-"该词暂时启用了<b>匹配路径</b>。"
+"搜索项包含路径分隔符。\n"
+"                                    "
+"暂将<b>在路径中搜索</b>选项应用于此搜索项。\n"
+"                                "
 
 #: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
 msgid "PATH"
@@ -1287,30 +1260,28 @@ msgstr ""
 "此排序顺序不是持久的，它会在搜索词更改时重置。"
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch 在线"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "捐赠"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "论坛"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "缺陷报告和功能请求"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub 赞助者"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"
@@ -1357,22 +1328,20 @@ msgid "Search…"
 msgstr "搜索…"
 
 #: src/fsearch_window.ui:598
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Select a Filter\n"
 "                                                "
 msgstr ""
-"添加要包含在数据库中的路径\n"
-"                                "
+"选择筛选器\n"
+"                                                "
 
 #: src/fsearch_window.ui:632
 msgid ""
 "Search\n"
 "                                                        "
 msgstr ""
+"搜索\n"
+"                                                        "
 
 #: src/fsearch_window_actions.c:88
 #, c-format
