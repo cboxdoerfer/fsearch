@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 13:53+0200\n"
-"PO-Revision-Date: 2022-08-09 19:40+0000\n"
+"PO-Revision-Date: 2022-08-13 19:25+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -338,12 +338,12 @@ msgid "Empty Query"
 msgstr "Boş Sorgu"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid ""
 "Press <b>Ctrl + F</b> and start typing\n"
 "                        "
-msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın"
+msgstr ""
+"<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın\n"
+"                        "
 
 #: src/fsearch_overlay.ui:305
 msgid "No Results Found"
@@ -1192,16 +1192,12 @@ msgid "0 Items"
 msgstr "0 Öge"
 
 #: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Cancel database update\n"
 "                                        "
 msgstr ""
-"Veri tabanına dahil edilecek yolu ekle\n"
-"                                "
+"Veri tabanı güncellemesini iptal et\n"
+"                                        "
 
 #: src/fsearch_statusbar.ui:154
 msgid "Index:"
@@ -1232,16 +1228,12 @@ msgid "(empty)"
 msgstr "(boş)"
 
 #: src/fsearch_statusbar.ui:408
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Arama terimi yol ayırıcıları içeriyor.\n"
-"<b>Dosya Yolunda Ara</b> seçeneği bu terim için geçici olarak "
+"Arama terimi büyük harf karakterleri içeriyor.\n"
+"<b>Büyük/küçük harf duyarlılığı</b> bu terim için geçici olarak "
 "etkinleştirildi."
 
 #: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
@@ -1249,17 +1241,12 @@ msgid "CASE"
 msgstr "DURUM"
 
 #: src/fsearch_statusbar.ui:515
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "Arama terimi yol ayırıcıları içeriyor.\n"
-"<b>Dosya Yolunda Ara</b> seçeneği bu terim için geçici olarak "
-"etkinleştirildi."
+"<b>Yol içinde ara</b> bu terim için geçici olarak etkinleştirildi."
 
 #: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
@@ -1299,30 +1286,28 @@ msgstr ""
 "sıfırlanacaktır."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch Çevrim İçi"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Bağış Yap"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Hata Bildirimleri ve Özellik İstekleri"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub Sponsorları"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"
@@ -1369,22 +1354,20 @@ msgid "Search…"
 msgstr "Ara…"
 
 #: src/fsearch_window.ui:598
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Select a Filter\n"
 "                                                "
 msgstr ""
-"Veri tabanına dahil edilecek yolu ekle\n"
-"                                "
+"Bir Filtre Seç\n"
+"                                                "
 
 #: src/fsearch_window.ui:632
 msgid ""
 "Search\n"
 "                                                        "
 msgstr ""
+"Ara\n"
+"                                                        "
 
 #: src/fsearch_window_actions.c:88
 #, c-format
