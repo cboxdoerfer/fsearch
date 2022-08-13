@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 21:24+0200\n"
-"PO-Revision-Date: 2022-08-13 19:25+0000\n"
+"PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
@@ -327,14 +327,8 @@ msgid "Empty Query"
 msgstr "空的查询"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid ""
-#| "Press <b>Ctrl + F</b> and start typing\n"
-#| "                        "
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr ""
-"按 <b>Ctrl + F</b> 开始输入\n"
-"                        "
+msgstr "按 <b>Ctrl + F</b> 开始输入。"
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -1137,8 +1131,6 @@ msgid "0 Items"
 msgstr "0 项"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
 msgstr "取消"
 
