@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.4-e3cd\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:53+0200\n"
+"POT-Creation-Date: 2022-08-13 21:24+0200\n"
 "PO-Revision-Date: 2018-10-23 21:29+0000\n"
 "Last-Translator: Iván <ivanrsm1997@gmail.com>\n"
 "Language-Team: Galician <https://hosted.weblate.org/projects/fsearch/"
@@ -336,12 +336,12 @@ msgstr "Cargando a base de datos..."
 msgid "This won't take long."
 msgstr "Isto pode tardar unha miga."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 #, fuzzy
 msgid "Updating Database…"
 msgstr "Actualizando a base de datos..."
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
 msgstr "Isto pode tardar unha miga."
 
@@ -352,24 +352,22 @@ msgstr "Borrar consulta"
 #: src/fsearch_overlay.ui:256
 #, fuzzy
 #| msgid "Press <b>Ctrl + F</b> and start typing"
-msgid ""
-"Press <b>Ctrl + F</b> and start typing\n"
-"                        "
+msgid "Press <b>Ctrl + F</b> and start typing."
 msgstr "Prema <b>Ctrl + F</b> e comece a escribir"
 
-#: src/fsearch_overlay.ui:305
+#: src/fsearch_overlay.ui:304
 msgid "No Results Found"
 msgstr "Non se atoparon resultados"
 
-#: src/fsearch_overlay.ui:320
+#: src/fsearch_overlay.ui:319
 msgid "Try a different search"
 msgstr "Tentar cunha procura distinta"
 
-#: src/fsearch_overlay.ui:369
+#: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
 msgstr ""
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:396 src/menus.ui:84
 msgid "Preferences"
 msgstr "Preferencias"
 
@@ -526,7 +524,7 @@ msgstr ""
 msgid "Filter:"
 msgstr "Amosar filtro"
 
-#: src/fsearch_preferences.ui:868
+#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:625
 msgid "Search"
 msgstr "Procurar"
 
@@ -1016,65 +1014,63 @@ msgstr "Número de resultados da procura"
 msgid "0 Items"
 msgstr "0 elementos"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
-msgid ""
-"Cancel database update\n"
-"                                        "
+#: src/fsearch_statusbar.ui:106
+msgid "Cancel"
 msgstr ""
 
-#: src/fsearch_statusbar.ui:154
+#: src/fsearch_statusbar.ui:153
 msgid "Index:"
 msgstr ""
 
-#: src/fsearch_statusbar.ui:229
+#: src/fsearch_statusbar.ui:228
 #, fuzzy
 msgid "Number of selected folders"
 msgstr "Número de resultados da procura"
 
-#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
+#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:253
 #, fuzzy
 msgid "Number of selected files"
 msgstr "Número de resultados da procura"
 
-#: src/fsearch_statusbar.ui:329
+#: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:248
 #, fuzzy
 msgid "Cancel database update"
 msgstr "Actualizar a base de datos ao iniciar"
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:369
 #, fuzzy
 msgid "Number of database items"
 msgstr "Número de resultados da procura"
 
-#: src/fsearch_statusbar.ui:371
+#: src/fsearch_statusbar.ui:370
 msgid "(empty)"
 msgstr "(baleiro)"
 
-#: src/fsearch_statusbar.ui:408
+#: src/fsearch_statusbar.ui:407
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
+#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "CASO"
 
-#: src/fsearch_statusbar.ui:515
+#: src/fsearch_statusbar.ui:514
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
+#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
 msgstr "RUTA"
 
-#: src/fsearch_statusbar.ui:652
+#: src/fsearch_statusbar.ui:651
 msgid "REGEX"
 msgstr "EXPRESIÓNS REGULARES"
 
@@ -1102,7 +1098,7 @@ msgid ""
 "changes."
 msgstr ""
 
-#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
 #, fuzzy
 #| msgid "FSearch"
 msgid "FSearch Online"
@@ -1138,54 +1134,46 @@ msgstr "Nova xanela"
 msgid "Update database"
 msgstr "Actualizar base de datos"
 
-#: src/fsearch_window.ui:290 src/menus.ui:112
+#: src/fsearch_window.ui:289 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Procurar na ruta"
 
-#: src/fsearch_window.ui:304 src/menus.ui:116
+#: src/fsearch_window.ui:303 src/menus.ui:116
 msgid "Match Case"
 msgstr "Coincidencia maiúsculas e minúsculas"
 
-#: src/fsearch_window.ui:318 src/menus.ui:120
+#: src/fsearch_window.ui:317 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Activar expresións regulares"
 
-#: src/fsearch_window.ui:343 src/menus.ui:95
+#: src/fsearch_window.ui:342 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Amosar barra do estado"
 
-#: src/fsearch_window.ui:357 src/menus.ui:99
+#: src/fsearch_window.ui:356 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Amosar filtro"
 
-#: src/fsearch_window.ui:371 src/menus.ui:103
+#: src/fsearch_window.ui:370 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Amosar botón da procura"
 
-#: src/fsearch_window.ui:436 src/menus.ui:155
+#: src/fsearch_window.ui:435 src/menus.ui:155
 msgid "About"
 msgstr ""
 
-#: src/fsearch_window.ui:461 src/menus.ui:47
+#: src/fsearch_window.ui:460 src/menus.ui:47
 msgid "Quit"
 msgstr ""
 
-#: src/fsearch_window.ui:573
+#: src/fsearch_window.ui:572
 #, fuzzy
 msgid "Search…"
 msgstr "Procurar"
 
-#: src/fsearch_window.ui:598
-msgid ""
-"Select a Filter\n"
-"                                                "
-msgstr ""
-
-#: src/fsearch_window.ui:632
-msgid ""
-"Search\n"
-"                                                        "
-msgstr ""
+#: src/fsearch_window.ui:594
+msgid "Select a Filter"
+msgstr "Seleccionar un filtro"
 
 #: src/fsearch_window_actions.c:88
 #, fuzzy, c-format
@@ -1372,9 +1360,6 @@ msgstr "Mover ao _lixo"
 #~| msgid "page0"
 #~ msgid "page35"
 #~ msgstr "páxina0"
-
-#~ msgid "Select a Filter"
-#~ msgstr "Seleccionar un filtro"
 
 #~ msgid "_Copy Filepath"
 #~ msgstr "_Copiar ruta ao ficheiro"

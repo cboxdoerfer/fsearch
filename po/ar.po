@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:53+0200\n"
+"POT-Creation-Date: 2022-08-13 21:24+0200\n"
 "PO-Revision-Date: 2021-01-13 10:23+0300\n"
 "Last-Translator: Mubarak AlQahtani <mubarak.qahtani@outlook.sa>\n"
 "Language-Team: Arabic <mubarak.qahtani@outlook.sa>\n"
@@ -337,11 +337,11 @@ msgstr "تحميل قاعدة البيانات..."
 msgid "This won't take long."
 msgstr "هذا لن يستغرق وقتًا طويلاً."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
 msgstr "تحديث قاعدة البيانات"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
 msgstr "هذا قد يستغرق بعض الوقت."
 
@@ -352,25 +352,23 @@ msgstr "استعلام فارغ"
 #: src/fsearch_overlay.ui:256
 #, fuzzy
 #| msgid "Press <b>Ctrl + F</b> and start typing"
-msgid ""
-"Press <b>Ctrl + F</b> and start typing\n"
-"                        "
+msgid "Press <b>Ctrl + F</b> and start typing."
 msgstr "اضغط على <b>Ctrl + F</b> وابدأ في الكتابة"
 
-#: src/fsearch_overlay.ui:305
+#: src/fsearch_overlay.ui:304
 msgid "No Results Found"
 msgstr "لم يتم العثور على نتائج"
 
-#: src/fsearch_overlay.ui:320
+#: src/fsearch_overlay.ui:319
 msgid "Try a different search"
 msgstr "جرب بحثًا مختلفًا"
 
-#: src/fsearch_overlay.ui:369
+#: src/fsearch_overlay.ui:368
 #, fuzzy
 msgid "Sorting results…"
 msgstr "فرز..."
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:396 src/menus.ui:84
 msgid "Preferences"
 msgstr "التفضيلات"
 
@@ -526,7 +524,7 @@ msgstr ""
 msgid "Filter:"
 msgstr "أظهر التصفية"
 
-#: src/fsearch_preferences.ui:868
+#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:625
 msgid "Search"
 msgstr "بحث"
 
@@ -1231,42 +1229,41 @@ msgstr "عدد نتائج البحث"
 msgid "0 Items"
 msgstr "لا نتائج"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106
 #, fuzzy
-msgid ""
-"Cancel database update\n"
-"                                        "
-msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
+#| msgid "_Cancel"
+msgid "Cancel"
+msgstr "_ألغِ"
 
-#: src/fsearch_statusbar.ui:154
+#: src/fsearch_statusbar.ui:153
 msgid "Index:"
 msgstr "فهرس:"
 
-#: src/fsearch_statusbar.ui:229
+#: src/fsearch_statusbar.ui:228
 msgid "Number of selected folders"
 msgstr "عدد المجلدات المحددة"
 
-#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
+#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:253
 msgid "Number of selected files"
 msgstr "عدد الملفات المحددة"
 
-#: src/fsearch_statusbar.ui:329
+#: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:248
 msgid "Cancel database update"
 msgstr "إلغاء تحديث قاعدة البيانات"
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
 msgstr "عدد عناصر قاعدة البيانات"
 
-#: src/fsearch_statusbar.ui:371
+#: src/fsearch_statusbar.ui:370
 msgid "(empty)"
 msgstr "(فارغ)"
 
-#: src/fsearch_statusbar.ui:408
+#: src/fsearch_statusbar.ui:407
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
@@ -1278,11 +1275,11 @@ msgstr ""
 "مصطلح البحث يحتوي على فواصل المسار.\n"
 "تم تنشيط <b> البحث في المسار </b> مؤقتًا لهذا المصطلح."
 
-#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
+#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "حالة"
 
-#: src/fsearch_statusbar.ui:515
+#: src/fsearch_statusbar.ui:514
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
@@ -1294,11 +1291,11 @@ msgstr ""
 "مصطلح البحث يحتوي على فواصل المسار.\n"
 "تم تنشيط <b> البحث في المسار </b> مؤقتًا لهذا المصطلح."
 
-#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
+#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
 msgstr "مسار"
 
-#: src/fsearch_statusbar.ui:652
+#: src/fsearch_statusbar.ui:651
 msgid "REGEX"
 msgstr "تعابير منطقية"
 
@@ -1326,7 +1323,7 @@ msgid ""
 "changes."
 msgstr ""
 
-#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
 #, fuzzy
 #| msgid "FSearch"
 msgid "FSearch Online"
@@ -1360,54 +1357,45 @@ msgstr "نافذة جديدة"
 msgid "Update database"
 msgstr "تحديث قاعدة البيانات"
 
-#: src/fsearch_window.ui:290 src/menus.ui:112
+#: src/fsearch_window.ui:289 src/menus.ui:112
 msgid "Search in Path"
 msgstr "البحث في المسار"
 
-#: src/fsearch_window.ui:304 src/menus.ui:116
+#: src/fsearch_window.ui:303 src/menus.ui:116
 msgid "Match Case"
 msgstr "طابق حالة الأحرف"
 
-#: src/fsearch_window.ui:318 src/menus.ui:120
+#: src/fsearch_window.ui:317 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "تمكين التعابير المنطقية (RegEx)"
 
-#: src/fsearch_window.ui:343 src/menus.ui:95
+#: src/fsearch_window.ui:342 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "أظهر شريط الحالة"
 
-#: src/fsearch_window.ui:357 src/menus.ui:99
+#: src/fsearch_window.ui:356 src/menus.ui:99
 msgid "Show Filter"
 msgstr "أظهر التصفية"
 
-#: src/fsearch_window.ui:371 src/menus.ui:103
+#: src/fsearch_window.ui:370 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "اظهر زر البحث"
 
-#: src/fsearch_window.ui:436 src/menus.ui:155
+#: src/fsearch_window.ui:435 src/menus.ui:155
 msgid "About"
 msgstr "حول"
 
-#: src/fsearch_window.ui:461 src/menus.ui:47
+#: src/fsearch_window.ui:460 src/menus.ui:47
 msgid "Quit"
 msgstr "خروج"
 
-#: src/fsearch_window.ui:573
+#: src/fsearch_window.ui:572
 msgid "Search…"
 msgstr "بحث"
 
-#: src/fsearch_window.ui:598
-#, fuzzy
-msgid ""
-"Select a Filter\n"
-"                                                "
-msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
-
-#: src/fsearch_window.ui:632
-msgid ""
-"Search\n"
-"                                                        "
-msgstr ""
+#: src/fsearch_window.ui:594
+msgid "Select a Filter"
+msgstr "حدد عامل تصفية"
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1550,6 +1538,18 @@ msgstr "ارسال الى سلة المحذوفات"
 
 #, fuzzy
 #~ msgid ""
+#~ "Cancel database update\n"
+#~ "                                        "
+#~ msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
+
+#, fuzzy
+#~ msgid ""
+#~ "Select a Filter\n"
+#~ "                                                "
+#~ msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
+
+#, fuzzy
+#~ msgid ""
 #~ "Number of Search Results\n"
 #~ "                                        "
 #~ msgstr "إضافة مسار ليتم تضمينه في قاعدة البيانات"
@@ -1644,9 +1644,6 @@ msgstr "ارسال الى سلة المحذوفات"
 #~| msgid "page5"
 #~ msgid "page35"
 #~ msgstr "صفحة 5"
-
-#~ msgid "Select a Filter"
-#~ msgstr "حدد عامل تصفية"
 
 #, fuzzy
 #~ msgid ""

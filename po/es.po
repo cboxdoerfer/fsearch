@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:53+0200\n"
+"POT-Creation-Date: 2022-08-13 21:24+0200\n"
 "PO-Revision-Date: 2022-06-02 07:17+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -344,11 +344,11 @@ msgstr "Cargando la base de datos…"
 msgid "This won't take long."
 msgstr "Esta acción no llevará mucho tiempo."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
 msgstr "Actualizando la base de datos…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
 msgstr "Esta acción puede demorar un rato."
 
@@ -359,24 +359,22 @@ msgstr "Consulta vacía"
 #: src/fsearch_overlay.ui:256
 #, fuzzy
 #| msgid "Press <b>Ctrl + F</b> and start typing"
-msgid ""
-"Press <b>Ctrl + F</b> and start typing\n"
-"                        "
+msgid "Press <b>Ctrl + F</b> and start typing."
 msgstr "Presione <b>Ctrl + F</b> y comience a escribir"
 
-#: src/fsearch_overlay.ui:305
+#: src/fsearch_overlay.ui:304
 msgid "No Results Found"
 msgstr "No se ha encontrado ningún resultado"
 
-#: src/fsearch_overlay.ui:320
+#: src/fsearch_overlay.ui:319
 msgid "Try a different search"
 msgstr "Pruebe con otra búsqueda"
 
-#: src/fsearch_overlay.ui:369
+#: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
 msgstr "Ordenando los resultados…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:396 src/menus.ui:84
 msgid "Preferences"
 msgstr "Preferencias"
 
@@ -526,7 +524,7 @@ msgstr "Restaurar los filtros predeterminados"
 msgid "Filter:"
 msgstr "Filtro:"
 
-#: src/fsearch_preferences.ui:868
+#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:625
 msgid "Search"
 msgstr "Buscar"
 
@@ -1260,47 +1258,41 @@ msgstr "Cantidad de resultados"
 msgid "0 Items"
 msgstr "0 elementos"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Cancel database update\n"
-"                                        "
-msgstr ""
-"Agregar ruta para ser incluido en la base de datos\n"
-"                                "
+#| msgid "_Cancel"
+msgid "Cancel"
+msgstr "Cancelar"
 
-#: src/fsearch_statusbar.ui:154
+#: src/fsearch_statusbar.ui:153
 msgid "Index:"
 msgstr "Índice:"
 
-#: src/fsearch_statusbar.ui:229
+#: src/fsearch_statusbar.ui:228
 msgid "Number of selected folders"
 msgstr "Cantidad de carpetas seleccionadas"
 
-#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
+#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:253
 msgid "Number of selected files"
 msgstr "Cantidad de ficheros seleccionados"
 
-#: src/fsearch_statusbar.ui:329
+#: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:248
 msgid "Cancel database update"
 msgstr "Cancelar la actualización de la base de datos"
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
 msgstr "Cantidad de elementos en la base de datos"
 
-#: src/fsearch_statusbar.ui:371
+#: src/fsearch_statusbar.ui:370
 msgid "(empty)"
 msgstr "(vacío)"
 
-#: src/fsearch_statusbar.ui:408
+#: src/fsearch_statusbar.ui:407
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
@@ -1312,11 +1304,11 @@ msgstr ""
 "El término de búsqueda contiene separadores de ruta.\n"
 "<b>Buscar en la ruta</b> se activó temporalmente para este término."
 
-#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
+#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "MAYÚSCULAS"
 
-#: src/fsearch_statusbar.ui:515
+#: src/fsearch_statusbar.ui:514
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
@@ -1328,11 +1320,11 @@ msgstr ""
 "El término de búsqueda contiene separadores de ruta.\n"
 "<b>Buscar en la ruta</b> se activó temporalmente para este término."
 
-#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
+#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
 msgstr "RUTA"
 
-#: src/fsearch_statusbar.ui:652
+#: src/fsearch_statusbar.ui:651
 msgid "REGEX"
 msgstr "EXPRESIONES REGULARES"
 
@@ -1370,7 +1362,7 @@ msgstr ""
 "Este orden de clasificación no es persistente, se restablecerá cuando cambie "
 "el término de búsqueda."
 
-#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
 #, fuzzy
 #| msgid "FSearch"
 msgid "FSearch Online"
@@ -1404,59 +1396,45 @@ msgstr "Nueva ventana"
 msgid "Update database"
 msgstr "Actualizar base de datos"
 
-#: src/fsearch_window.ui:290 src/menus.ui:112
+#: src/fsearch_window.ui:289 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Buscar en la ruta"
 
-#: src/fsearch_window.ui:304 src/menus.ui:116
+#: src/fsearch_window.ui:303 src/menus.ui:116
 msgid "Match Case"
 msgstr "Distinguir mayúsculas y minúsculas"
 
-#: src/fsearch_window.ui:318 src/menus.ui:120
+#: src/fsearch_window.ui:317 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Activar expresiones regulares"
 
-#: src/fsearch_window.ui:343 src/menus.ui:95
+#: src/fsearch_window.ui:342 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Mostrar barra de estado"
 
-#: src/fsearch_window.ui:357 src/menus.ui:99
+#: src/fsearch_window.ui:356 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Mostrar filtro"
 
-#: src/fsearch_window.ui:371 src/menus.ui:103
+#: src/fsearch_window.ui:370 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Mostrar botón de busca"
 
-#: src/fsearch_window.ui:436 src/menus.ui:155
+#: src/fsearch_window.ui:435 src/menus.ui:155
 msgid "About"
 msgstr "Acerca de"
 
-#: src/fsearch_window.ui:461 src/menus.ui:47
+#: src/fsearch_window.ui:460 src/menus.ui:47
 msgid "Quit"
 msgstr "Salir"
 
-#: src/fsearch_window.ui:573
+#: src/fsearch_window.ui:572
 msgid "Search…"
 msgstr "Buscar…"
 
-#: src/fsearch_window.ui:598
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Select a Filter\n"
-"                                                "
-msgstr ""
-"Agregar ruta para ser incluido en la base de datos\n"
-"                                "
-
-#: src/fsearch_window.ui:632
-msgid ""
-"Search\n"
-"                                                        "
-msgstr ""
+#: src/fsearch_window.ui:594
+msgid "Select a Filter"
+msgstr "Seleccione un filtro"
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1600,6 +1578,28 @@ msgstr "Enviar a la _papelera"
 #~| "Add path to be included in database\n"
 #~| "                                "
 #~ msgid ""
+#~ "Cancel database update\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Agregar ruta para ser incluido en la base de datos\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Select a Filter\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Agregar ruta para ser incluido en la base de datos\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
 #~ "Number of Search Results\n"
 #~ "                                        "
 #~ msgstr ""
@@ -1714,9 +1714,6 @@ msgstr "Enviar a la _papelera"
 
 #~ msgid "page35"
 #~ msgstr "Página35"
-
-#~ msgid "Select a Filter"
-#~ msgstr "Seleccione un filtro"
 
 #~ msgid ""
 #~ "<b>Included folders:</b>\n"

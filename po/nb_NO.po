@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:53+0200\n"
+"POT-Creation-Date: 2022-08-13 21:24+0200\n"
 "PO-Revision-Date: 2020-10-20 16:26+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -338,12 +338,12 @@ msgstr "Laster database…"
 msgid "This won't take long."
 msgstr "Dette tar ikke lang tid."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 #, fuzzy
 msgid "Updating Database…"
 msgstr "Oppdaterer database…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
 msgstr "Dette kan ta sin tid."
 
@@ -354,26 +354,24 @@ msgstr "Tøm spørring"
 #: src/fsearch_overlay.ui:256
 #, fuzzy
 #| msgid "Press <b>Ctrl + F</b> and start typing"
-msgid ""
-"Press <b>Ctrl + F</b> and start typing\n"
-"                        "
+msgid "Press <b>Ctrl + F</b> and start typing."
 msgstr "Trykk <b>Ctrl + F</b> og begynn å skrive"
 
-#: src/fsearch_overlay.ui:305
+#: src/fsearch_overlay.ui:304
 #, fuzzy
 msgid "No Results Found"
 msgstr "Resultatløst"
 
-#: src/fsearch_overlay.ui:320
+#: src/fsearch_overlay.ui:319
 msgid "Try a different search"
 msgstr "Prøv et annet søk"
 
-#: src/fsearch_overlay.ui:369
+#: src/fsearch_overlay.ui:368
 #, fuzzy
 msgid "Sorting results…"
 msgstr "Sorterer…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:396 src/menus.ui:84
 msgid "Preferences"
 msgstr "Innstillinger"
 
@@ -537,7 +535,7 @@ msgstr ""
 msgid "Filter:"
 msgstr "Vis filter"
 
-#: src/fsearch_preferences.ui:868
+#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:625
 msgid "Search"
 msgstr "Søk"
 
@@ -1028,42 +1026,42 @@ msgstr "Antall søkeresultater"
 msgid "0 Items"
 msgstr "0 elementer"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
-msgid ""
-"Cancel database update\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:106
+#, fuzzy
+#| msgid "_Cancel"
+msgid "Cancel"
+msgstr "_Oppdater"
 
-#: src/fsearch_statusbar.ui:154
+#: src/fsearch_statusbar.ui:153
 msgid "Index:"
 msgstr "Indeks:"
 
-#: src/fsearch_statusbar.ui:229
+#: src/fsearch_statusbar.ui:228
 msgid "Number of selected folders"
 msgstr "Antall valgte mapper"
 
-#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
+#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:253
 msgid "Number of selected files"
 msgstr "Antall valgte filer"
 
-#: src/fsearch_statusbar.ui:329
+#: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:248
 #, fuzzy
 msgid "Cancel database update"
 msgstr "Oppdater database ved oppstart"
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
 msgstr "Antall databaseelementer"
 
-#: src/fsearch_statusbar.ui:371
+#: src/fsearch_statusbar.ui:370
 msgid "(empty)"
 msgstr "(tom)"
 
-#: src/fsearch_statusbar.ui:408
+#: src/fsearch_statusbar.ui:407
 #, fuzzy
 msgid ""
 "Search term contains upper case characters.\n"
@@ -1072,12 +1070,12 @@ msgstr ""
 "Søket inneholder stiinndelere.\n"
 "<b>Søk i sti</b> ble midlertidig påslått for dette søket."
 
-#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
+#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 #, fuzzy
 msgid "CASE"
 msgstr "VERSAL"
 
-#: src/fsearch_statusbar.ui:515
+#: src/fsearch_statusbar.ui:514
 #, fuzzy
 msgid ""
 "Search term contains path separators.\n"
@@ -1086,11 +1084,11 @@ msgstr ""
 "Søket inneholder stiinndelere.\n"
 "<b>Søk i sti</b> ble midlertidig påslått for dette søket."
 
-#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
+#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
 msgstr "STI"
 
-#: src/fsearch_statusbar.ui:652
+#: src/fsearch_statusbar.ui:651
 msgid "REGEX"
 msgstr "Regulært uttrykk"
 
@@ -1118,7 +1116,7 @@ msgid ""
 "changes."
 msgstr ""
 
-#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
 #, fuzzy
 #| msgid "FSearch"
 msgid "FSearch Online"
@@ -1154,55 +1152,47 @@ msgstr "Nytt vindu"
 msgid "Update database"
 msgstr "Oppdater database"
 
-#: src/fsearch_window.ui:290 src/menus.ui:112
+#: src/fsearch_window.ui:289 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Søk i sti"
 
-#: src/fsearch_window.ui:304 src/menus.ui:116
+#: src/fsearch_window.ui:303 src/menus.ui:116
 msgid "Match Case"
 msgstr "Skill mellom store og små bokstaver"
 
-#: src/fsearch_window.ui:318 src/menus.ui:120
+#: src/fsearch_window.ui:317 src/menus.ui:120
 #, fuzzy
 msgid "Enable RegEx"
 msgstr "Skru på regulære uttrykk"
 
-#: src/fsearch_window.ui:343 src/menus.ui:95
+#: src/fsearch_window.ui:342 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Vis statusfelt"
 
-#: src/fsearch_window.ui:357 src/menus.ui:99
+#: src/fsearch_window.ui:356 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Vis filter"
 
-#: src/fsearch_window.ui:371 src/menus.ui:103
+#: src/fsearch_window.ui:370 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Vis søkeknapp"
 
-#: src/fsearch_window.ui:436 src/menus.ui:155
+#: src/fsearch_window.ui:435 src/menus.ui:155
 msgid "About"
 msgstr "Om"
 
-#: src/fsearch_window.ui:461 src/menus.ui:47
+#: src/fsearch_window.ui:460 src/menus.ui:47
 msgid "Quit"
 msgstr "Avslutt"
 
-#: src/fsearch_window.ui:573
+#: src/fsearch_window.ui:572
 #, fuzzy
 msgid "Search…"
 msgstr "Søk"
 
-#: src/fsearch_window.ui:598
-msgid ""
-"Select a Filter\n"
-"                                                "
-msgstr ""
-
-#: src/fsearch_window.ui:632
-msgid ""
-"Search\n"
-"                                                        "
-msgstr ""
+#: src/fsearch_window.ui:594
+msgid "Select a Filter"
+msgstr "Velg et filter"
 
 #: src/fsearch_window_actions.c:88
 #, fuzzy, c-format
@@ -1399,9 +1389,6 @@ msgstr "Flytt til _papirkurv"
 #, fuzzy
 #~ msgid "page35"
 #~ msgstr "side0"
-
-#~ msgid "Select a Filter"
-#~ msgstr "Velg et filter"
 
 #~ msgid "Do you want to keep the window open?"
 #~ msgstr "Ønsker du å beholde vinduet oppe?"

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:53+0200\n"
+"POT-Creation-Date: 2022-08-13 21:24+0200\n"
 "PO-Revision-Date: 2022-08-13 19:25+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -325,11 +325,11 @@ msgstr "Veri Tabanı Yükleniyor…"
 msgid "This won't take long."
 msgstr "Bu uzun sürmeyecek."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
 msgstr "Veri Tabanı Güncelleniyor…"
 
-#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:384
+#: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
 msgstr "Bu biraz zaman alacak."
 
@@ -338,26 +338,28 @@ msgid "Empty Query"
 msgstr "Boş Sorgu"
 
 #: src/fsearch_overlay.ui:256
-msgid ""
-"Press <b>Ctrl + F</b> and start typing\n"
-"                        "
+#, fuzzy
+#| msgid ""
+#| "Press <b>Ctrl + F</b> and start typing\n"
+#| "                        "
+msgid "Press <b>Ctrl + F</b> and start typing."
 msgstr ""
 "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın\n"
 "                        "
 
-#: src/fsearch_overlay.ui:305
+#: src/fsearch_overlay.ui:304
 msgid "No Results Found"
 msgstr "Sonuç Bulunamadı"
 
-#: src/fsearch_overlay.ui:320
+#: src/fsearch_overlay.ui:319
 msgid "Try a different search"
 msgstr "Farklı bir arama deneyin"
 
-#: src/fsearch_overlay.ui:369
+#: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
 msgstr "Sonuçlar sıralanıyor…"
 
-#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:397 src/menus.ui:84
+#: src/fsearch_preferences.ui:63 src/fsearch_window.ui:396 src/menus.ui:84
 msgid "Preferences"
 msgstr "Tercihler"
 
@@ -507,7 +509,7 @@ msgstr "Öntanımlı filtreleri geri yükle"
 msgid "Filter:"
 msgstr "Filtre:"
 
-#: src/fsearch_preferences.ui:868
+#: src/fsearch_preferences.ui:868 src/fsearch_window.ui:625
 msgid "Search"
 msgstr "Ara"
 
@@ -1191,43 +1193,41 @@ msgstr "Arama Sonucu Sayısı"
 msgid "0 Items"
 msgstr "0 Öge"
 
-#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
-msgid ""
-"Cancel database update\n"
-"                                        "
-msgstr ""
-"Veri tabanı güncellemesini iptal et\n"
-"                                        "
+#: src/fsearch_statusbar.ui:106
+#, fuzzy
+#| msgid "_Cancel"
+msgid "Cancel"
+msgstr "_İptal"
 
-#: src/fsearch_statusbar.ui:154
+#: src/fsearch_statusbar.ui:153
 msgid "Index:"
 msgstr "İndeks:"
 
-#: src/fsearch_statusbar.ui:229
+#: src/fsearch_statusbar.ui:228
 msgid "Number of selected folders"
 msgstr "Seçili klasör sayısı"
 
-#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
+#: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:254
+#: src/fsearch_statusbar.ui:253
 msgid "Number of selected files"
 msgstr "Seçili dosya sayısı"
 
-#: src/fsearch_statusbar.ui:329
+#: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:248
 msgid "Cancel database update"
 msgstr "Veri tabanı güncellemesini iptal et"
 
-#: src/fsearch_statusbar.ui:370
+#: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
 msgstr "Veri tabanı ögelerinin sayısı"
 
-#: src/fsearch_statusbar.ui:371
+#: src/fsearch_statusbar.ui:370
 msgid "(empty)"
 msgstr "(boş)"
 
-#: src/fsearch_statusbar.ui:408
+#: src/fsearch_statusbar.ui:407
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -1236,11 +1236,11 @@ msgstr ""
 "<b>Büyük/küçük harf duyarlılığı</b> bu terim için geçici olarak "
 "etkinleştirildi."
 
-#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
+#: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "DURUM"
 
-#: src/fsearch_statusbar.ui:515
+#: src/fsearch_statusbar.ui:514
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -1248,11 +1248,11 @@ msgstr ""
 "Arama terimi yol ayırıcıları içeriyor.\n"
 "<b>Yol içinde ara</b> bu terim için geçici olarak etkinleştirildi."
 
-#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
+#: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
 msgstr "YOL"
 
-#: src/fsearch_statusbar.ui:652
+#: src/fsearch_statusbar.ui:651
 msgid "REGEX"
 msgstr "DÜZENLİ İFADE"
 
@@ -1285,7 +1285,7 @@ msgstr ""
 "Bu sıralama düzeni kalıcı değildir, arama terimi değiştiğinde "
 "sıfırlanacaktır."
 
-#: src/fsearch_window.ui:58 src/fsearch_window.ui:421 src/menus.ui:129
+#: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
 msgid "FSearch Online"
 msgstr "FSearch Çevrim İçi"
 
@@ -1317,57 +1317,45 @@ msgstr "Yeni pencere"
 msgid "Update database"
 msgstr "Veri tabanını güncelle"
 
-#: src/fsearch_window.ui:290 src/menus.ui:112
+#: src/fsearch_window.ui:289 src/menus.ui:112
 msgid "Search in Path"
 msgstr "Dosya Yolunda Ara"
 
-#: src/fsearch_window.ui:304 src/menus.ui:116
+#: src/fsearch_window.ui:303 src/menus.ui:116
 msgid "Match Case"
 msgstr "Büyük/Küçük Harfe Duyarlı"
 
-#: src/fsearch_window.ui:318 src/menus.ui:120
+#: src/fsearch_window.ui:317 src/menus.ui:120
 msgid "Enable RegEx"
 msgstr "Düzenli İfadeleri Etkinleştir"
 
-#: src/fsearch_window.ui:343 src/menus.ui:95
+#: src/fsearch_window.ui:342 src/menus.ui:95
 msgid "Show Statusbar"
 msgstr "Durum Çubuğunu Göster"
 
-#: src/fsearch_window.ui:357 src/menus.ui:99
+#: src/fsearch_window.ui:356 src/menus.ui:99
 msgid "Show Filter"
 msgstr "Filtreyi Göster"
 
-#: src/fsearch_window.ui:371 src/menus.ui:103
+#: src/fsearch_window.ui:370 src/menus.ui:103
 msgid "Show Search Button"
 msgstr "Arama Düğmesini Göster"
 
-#: src/fsearch_window.ui:436 src/menus.ui:155
+#: src/fsearch_window.ui:435 src/menus.ui:155
 msgid "About"
 msgstr "Hakkında"
 
-#: src/fsearch_window.ui:461 src/menus.ui:47
+#: src/fsearch_window.ui:460 src/menus.ui:47
 msgid "Quit"
 msgstr "Çık"
 
-#: src/fsearch_window.ui:573
+#: src/fsearch_window.ui:572
 msgid "Search…"
 msgstr "Ara…"
 
-#: src/fsearch_window.ui:598
-msgid ""
-"Select a Filter\n"
-"                                                "
-msgstr ""
-"Bir Filtre Seç\n"
-"                                                "
-
-#: src/fsearch_window.ui:632
-msgid ""
-"Search\n"
-"                                                        "
-msgstr ""
-"Ara\n"
-"                                                        "
+#: src/fsearch_window.ui:594
+msgid "Select a Filter"
+msgstr "Bir Filtre Seç"
 
 #: src/fsearch_window_actions.c:88
 #, c-format
@@ -1506,6 +1494,27 @@ msgstr "Yol + Ad"
 msgid "Move to _Trash"
 msgstr "_Çöp Kutusuna Taşı"
 
+#~ msgid ""
+#~ "Cancel database update\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Veri tabanı güncellemesini iptal et\n"
+#~ "                                        "
+
+#~ msgid ""
+#~ "Select a Filter\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Bir Filtre Seç\n"
+#~ "                                                "
+
+#~ msgid ""
+#~ "Search\n"
+#~ "                                                        "
+#~ msgstr ""
+#~ "Ara\n"
+#~ "                                                        "
+
 #, fuzzy
 #~| msgid ""
 #~| "Add path to be included in database\n"
@@ -1625,9 +1634,6 @@ msgstr "_Çöp Kutusuna Taşı"
 
 #~ msgid "page35"
 #~ msgstr "sayfa35"
-
-#~ msgid "Select a Filter"
-#~ msgstr "Bir Filtre Seç"
 
 #~ msgid ""
 #~ "<b>Included folders:</b>\n"
