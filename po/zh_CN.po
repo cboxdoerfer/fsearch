@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 13:53+0200\n"
-"PO-Revision-Date: 2022-08-13 11:47+0000\n"
+"PO-Revision-Date: 2022-08-13 19:25+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
@@ -1171,40 +1171,24 @@ msgid "(empty)"
 msgstr "(空)"
 
 #: src/fsearch_statusbar.ui:408
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "                                    <b>Search in Path</b> was temporarily "
-#| "activated for this term.\n"
-#| "                                "
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"搜索项包含路径分隔符。\n"
-"                                    暂将<b>在路径中搜索</b>选项应用于此搜索"
-"项。\n"
-"                                "
+"搜索项包含大写字符。\n"
+"暂将 <b>匹配大小写</b> 应用于此搜索项。"
 
 #: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 msgid "CASE"
 msgstr "实例"
 
 #: src/fsearch_statusbar.ui:515
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "                                    <b>Search in Path</b> was temporarily "
-#| "activated for this term.\n"
-#| "                                "
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "搜索项包含路径分隔符。\n"
-"                                    暂将<b>在路径中搜索</b>选项应用于此搜索"
-"项。\n"
-"                                "
+"暂将 <b>在路径中搜索</b> 应用于此搜索项。"
 
 #: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
