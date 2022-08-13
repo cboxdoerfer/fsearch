@@ -366,14 +366,41 @@ get_application_version(void) {
 }
 
 static void
-action_help_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
-    g_assert(FSEARCH_IS_APPLICATION(app));
+show_url(FsearchApplication *app, const char *url) {
+    g_return_if_fail(url);
+    g_return_if_fail(FSEARCH_IS_APPLICATION(app));
+
     FsearchApplicationWindow *window = get_first_application_window(app);
     if (!window) {
         return;
     }
 
-    gtk_show_uri_on_window(GTK_WINDOW(window), "https://github.com/cboxdoerfer/fsearch/wiki/", GDK_CURRENT_TIME, NULL);
+    gtk_show_uri_on_window(GTK_WINDOW(window), url, GDK_CURRENT_TIME, NULL);
+}
+
+static void
+action_forum_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    show_url(app, "https://github.com/cboxdoerfer/fsearch/discussions/");
+}
+
+static void
+action_bug_report_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    show_url(app, "https://github.com/cboxdoerfer/fsearch/issues/");
+}
+
+static void
+action_donate_github_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    show_url(app, "https://github.com/sponsors/cboxdoerfer");
+}
+
+static void
+action_donate_paypal_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    show_url(app, "https://www.paypal.com/donate/?hosted_button_id=TTXBUD7PMZXN2");
+}
+
+static void
+action_help_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    show_url(app, "https://github.com/cboxdoerfer/fsearch/wiki/");
 }
 
 static void
@@ -646,6 +673,10 @@ static GActionEntry fsearch_app_entries[] = {
     {"new_window", action_new_window_activated, NULL, NULL, NULL},
     {"about", action_about_activated, NULL, NULL, NULL},
     {"help", action_help_activated, NULL, NULL, NULL},
+    {"donate_paypal", action_donate_paypal_activated, NULL, NULL, NULL},
+    {"donate_github", action_donate_github_activated, NULL, NULL, NULL},
+    {"bug_report", action_bug_report_activated, NULL, NULL, NULL},
+    {"forum", action_forum_activated, NULL, NULL, NULL},
     {"update_database", action_update_database_activated, NULL, NULL, NULL},
     {"cancel_update_database", action_cancel_update_database_activated, NULL, NULL, NULL},
     {"preferences", action_preferences_activated, "u", NULL, NULL},

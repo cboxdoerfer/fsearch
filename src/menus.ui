@@ -127,10 +127,28 @@
             <section>
                 <submenu>
                     <attribute name="label" translatable="yes">FSearch Online</attribute>
+                    <submenu>
+                        <attribute name="label" translatable="yes">Donate</attribute>
+                        <item>
+                            <attribute name="label" translatable="yes">GitHub Sponsors</attribute>
+                            <attribute name="action">app.donate_github</attribute>
+                        </item>
+                        <item>
+                            <attribute name="label" translatable="yes">PayPal</attribute>
+                            <attribute name="action">app.donate_paypal</attribute>
+                        </item>
+                    </submenu>
+                    <item>
+                        <attribute name="label" translatable="yes">Forum</attribute>
+                        <attribute name="action">app.forum</attribute>
+                    </item>
+                    <item>
+                        <attribute name="label" translatable="yes">Bug Reports and Feature Requests</attribute>
+                        <attribute name="action">app.bug_report</attribute>
+                    </item>
                     <item>
                         <attribute name="label" translatable="yes">Help</attribute>
                         <attribute name="action">app.help</attribute>
-                        <attribute name="icon">help-browser-symbolic</attribute>
                     </item>
                 </submenu>
                 <item>
