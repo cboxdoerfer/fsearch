@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- Generated with glade 3.38.2 -->
+<!-- Generated with glade 3.40.0 -->
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkAdjustment" id="adjustment1">
@@ -1839,7 +1839,7 @@ If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the applic
                   </object>
                   <packing>
                     <property name="name">page30</property>
-                    <property name="title" translatable="yes">page30</property>
+                    <property name="title">page30</property>
                     <property name="position">29</property>
                   </packing>
                 </child>
@@ -1860,7 +1860,7 @@ This is a list of all available filters. A filter is a predefined search.
                   </object>
                   <packing>
                     <property name="name">page18</property>
-                    <property name="title" translatable="yes">page18</property>
+                    <property name="title">page18</property>
                     <property name="position">30</property>
                   </packing>
                 </child>
@@ -1877,7 +1877,7 @@ This button opens a dialog where you can edit a new filter.</property>
                   </object>
                   <packing>
                     <property name="name">page31</property>
-                    <property name="title" translatable="yes">page31</property>
+                    <property name="title">page31</property>
                     <property name="position">31</property>
                   </packing>
                 </child>
@@ -1894,7 +1894,7 @@ This button removes the currently selected filter.</property>
                   </object>
                   <packing>
                     <property name="name">page32</property>
-                    <property name="title" translatable="yes">page32</property>
+                    <property name="title">page32</property>
                     <property name="position">32</property>
                   </packing>
                 </child>
@@ -1911,7 +1911,7 @@ This button opens a dialog where you can edit the selected filter.</property>
                   </object>
                   <packing>
                     <property name="name">page33</property>
-                    <property name="title" translatable="yes">page33</property>
+                    <property name="title">page33</property>
                     <property name="position">33</property>
                   </packing>
                 </child>
@@ -1930,7 +1930,7 @@ This button restores the default filter configuration.
                   </object>
                   <packing>
                     <property name="name">page34</property>
-                    <property name="title" translatable="yes">page34</property>
+                    <property name="title">page34</property>
                     <property name="position">34</property>
                   </packing>
                 </child>
@@ -1947,7 +1947,7 @@ If enabled, FSearch exits when the Escape key is pressed instead of the window b
                   </object>
                   <packing>
                     <property name="name">page35</property>
-                    <property name="title" translatable="yes">page35</property>
+                    <property name="title">page35</property>
                     <property name="position">35</property>
                   </packing>
                 </child>
