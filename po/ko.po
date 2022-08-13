@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:47+0200\n"
+"POT-Creation-Date: 2022-08-13 13:53+0200\n"
 "PO-Revision-Date: 2022-04-29 18:12+0000\n"
 "Last-Translator: 이정희 <daemul72@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -150,7 +150,7 @@ msgid "Loading files…"
 msgstr "파일 삭제 중…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:91
+#: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"
 msgstr "데이터베이스 로딩중…"
@@ -344,7 +344,7 @@ msgstr "데이터베이스 로딩중…"
 msgid "This won't take long."
 msgstr "작업에 시간이 걸릴 수 있습니다"
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
 #, fuzzy
 msgid "Updating Database…"
 msgstr "데이터베이스 업데이트"
@@ -1019,82 +1019,72 @@ msgid "Scanning…"
 msgstr ""
 
 #: src/fsearch_statusbar.ui:52
-msgid ""
-"Number of Search Results\n"
-"                                        "
-msgstr ""
+msgid "Number of Search Results"
+msgstr "검색 결과 수"
 
-#: src/fsearch_statusbar.ui:54
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0개 항목"
 
-#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
 msgid ""
 "Cancel database update\n"
 "                                        "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:155
+#: src/fsearch_statusbar.ui:154
 msgid "Index:"
 msgstr ""
 
-#: src/fsearch_statusbar.ui:230
-msgid ""
-"Number of selected folders\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:229
+#, fuzzy
+msgid "Number of selected folders"
+msgstr "검색 결과 수"
 
-#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
+#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:256
-msgid ""
-"Number of selected files\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:254
+#, fuzzy
+msgid "Number of selected files"
+msgstr "검색 결과 수"
 
-#: src/fsearch_statusbar.ui:333
-msgid ""
-"Cancel database update\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:329
+#, fuzzy
+msgid "Cancel database update"
+msgstr "프로그램 시작 시 DB 업데이트"
 
-#: src/fsearch_statusbar.ui:376
-msgid ""
-"Number of database items\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:370
+#, fuzzy
+msgid "Number of database items"
+msgstr "검색 결과 수"
 
-#: src/fsearch_statusbar.ui:378
+#: src/fsearch_statusbar.ui:371
 msgid "(empty)"
 msgstr "(비어있음)"
 
-#: src/fsearch_statusbar.ui:416
+#: src/fsearch_statusbar.ui:408
 msgid ""
 "Search term contains upper case characters.\n"
-"                                    <b>Match Case</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
+#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 msgid "CASE"
 msgstr "대소문자"
 
-#: src/fsearch_statusbar.ui:529
+#: src/fsearch_statusbar.ui:515
 msgid ""
 "Search term contains path separators.\n"
-"                                    <b>Search in Path</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
+#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
 msgstr "경로"
 
-#: src/fsearch_statusbar.ui:676
+#: src/fsearch_statusbar.ui:652
 msgid "REGEX"
 msgstr "정규식"
 
@@ -1392,21 +1382,6 @@ msgstr "휴지통으로 이동(_T)"
 #~| msgid "page0"
 #~ msgid "page35"
 #~ msgstr "페이지0"
-
-#~ msgid "Number of Search Results"
-#~ msgstr "검색 결과 수"
-
-#, fuzzy
-#~ msgid "Cancel database update"
-#~ msgstr "프로그램 시작 시 DB 업데이트"
-
-#, fuzzy
-#~ msgid "Number of selected folders"
-#~ msgstr "검색 결과 수"
-
-#, fuzzy
-#~ msgid "Number of selected files"
-#~ msgstr "검색 결과 수"
 
 #~ msgid "Select a Filter"
 #~ msgstr "필터 선택"

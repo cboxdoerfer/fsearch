@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:47+0200\n"
+"POT-Creation-Date: 2022-08-13 13:53+0200\n"
 "PO-Revision-Date: 2022-08-11 16:16+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
@@ -147,7 +147,7 @@ msgid "Loading files…"
 msgstr "Bezig met laden van bestanden…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:91
+#: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Bezig met sorteren…"
 
@@ -322,7 +322,7 @@ msgstr "Bezig met laden van databank…"
 msgid "This won't take long."
 msgstr "Dit kan even duren."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
 msgid "Updating Database…"
 msgstr "Bezig met bijwerken van databank…"
 
@@ -1210,22 +1210,14 @@ msgid "Scanning…"
 msgstr "Bezig met doorzoeken…"
 
 #: src/fsearch_statusbar.ui:52
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of Search Results\n"
-"                                        "
-msgstr ""
-"Voeg doe op te nemen locatie toe\n"
-"                                "
+msgid "Number of Search Results"
+msgstr "Aantal zoekresultaten"
 
-#: src/fsearch_statusbar.ui:54
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 items"
 
-#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
 #, fuzzy
 #| msgid ""
 #| "Add path to be included in database\n"
@@ -1237,103 +1229,67 @@ msgstr ""
 "Voeg doe op te nemen locatie toe\n"
 "                                "
 
-#: src/fsearch_statusbar.ui:155
+#: src/fsearch_statusbar.ui:154
 msgid "Index:"
 msgstr "Index:"
 
-#: src/fsearch_statusbar.ui:230
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of selected folders\n"
-"                                        "
-msgstr ""
-"Voeg doe op te nemen locatie toe\n"
-"                                "
+#: src/fsearch_statusbar.ui:229
+msgid "Number of selected folders"
+msgstr "Aantal geselecteerde mappen"
 
-#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
+#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:256
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of selected files\n"
-"                                        "
-msgstr ""
-"Voeg doe op te nemen locatie toe\n"
-"                                "
+#: src/fsearch_statusbar.ui:254
+msgid "Number of selected files"
+msgstr "Aantal geselecteerde bestanden"
 
-#: src/fsearch_statusbar.ui:333
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Cancel database update\n"
-"                                                "
-msgstr ""
-"Voeg doe op te nemen locatie toe\n"
-"                                "
+#: src/fsearch_statusbar.ui:329
+msgid "Cancel database update"
+msgstr "Databank bijwerken afbreken"
 
-#: src/fsearch_statusbar.ui:376
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of database items\n"
-"                                                "
-msgstr ""
-"Voeg doe op te nemen locatie toe\n"
-"                                "
+#: src/fsearch_statusbar.ui:370
+msgid "Number of database items"
+msgstr "Aantal databankitems"
 
-#: src/fsearch_statusbar.ui:378
+#: src/fsearch_statusbar.ui:371
 msgid "(empty)"
 msgstr "(leeg)"
 
-#: src/fsearch_statusbar.ui:416
+#: src/fsearch_statusbar.ui:408
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
 #| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
-"                                    <b>Match Case</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 "De zoekterm bevat locatie-scheidingstekens.\n"
 "De optie <b>Locatie doorzoeken</b> is tijdelijk ingeschakeld."
 
-#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
+#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 msgid "CASE"
 msgstr "HOOFDLETTERS"
 
-#: src/fsearch_statusbar.ui:529
+#: src/fsearch_statusbar.ui:515
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
 #| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
-"                                    <b>Search in Path</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "De zoekterm bevat locatie-scheidingstekens.\n"
 "De optie <b>Locatie doorzoeken</b> is tijdelijk ingeschakeld."
 
-#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
+#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
 msgstr "LOCATIE"
 
-#: src/fsearch_statusbar.ui:676
+#: src/fsearch_statusbar.ui:652
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -1592,6 +1548,61 @@ msgstr "Verplaatsen naar _prullenbak"
 
 #, fuzzy
 #~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of Search Results\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Voeg doe op te nemen locatie toe\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of selected folders\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Voeg doe op te nemen locatie toe\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of selected files\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Voeg doe op te nemen locatie toe\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Cancel database update\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Voeg doe op te nemen locatie toe\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of database items\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Voeg doe op te nemen locatie toe\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
 #~| "<b>Add folder to database:</b>\n"
 #~| "\n"
 #~| "                      This button opens a dialog where you can select a "
@@ -1652,21 +1663,6 @@ msgstr "Verplaatsen naar _prullenbak"
 
 #~ msgid "page35"
 #~ msgstr "pagina35"
-
-#~ msgid "Number of Search Results"
-#~ msgstr "Aantal zoekresultaten"
-
-#~ msgid "Cancel database update"
-#~ msgstr "Databank bijwerken afbreken"
-
-#~ msgid "Number of selected folders"
-#~ msgstr "Aantal geselecteerde mappen"
-
-#~ msgid "Number of selected files"
-#~ msgstr "Aantal geselecteerde bestanden"
-
-#~ msgid "Number of database items"
-#~ msgstr "Aantal databankitems"
 
 #~ msgid "Select a Filter"
 #~ msgstr "Selecteer een filter"

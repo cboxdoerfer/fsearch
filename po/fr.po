@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:47+0200\n"
+"POT-Creation-Date: 2022-08-13 13:53+0200\n"
 "PO-Revision-Date: 2022-05-08 23:15+0000\n"
 "Last-Translator: Mathieu B. <mathieu.bousquet2@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
@@ -160,7 +160,7 @@ msgid "Loading files…"
 msgstr "Chargement des fichiers…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:91
+#: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Tri des résultats…"
 
@@ -349,7 +349,7 @@ msgstr "Chargement de la base de données…"
 msgid "This won't take long."
 msgstr "Cela ne sera pas long."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
 msgid "Updating Database…"
 msgstr "Mise à jour de la base de données…"
 
@@ -1261,22 +1261,14 @@ msgid "Scanning…"
 msgstr "Balayage…"
 
 #: src/fsearch_statusbar.ui:52
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of Search Results\n"
-"                                        "
-msgstr ""
-"Ajouter le chemin d’accès à inclure dans la base de données\n"
-"                                "
+msgid "Number of Search Results"
+msgstr "Nombre de résultats de recherche"
 
-#: src/fsearch_statusbar.ui:54
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 élément"
 
-#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
 #, fuzzy
 #| msgid ""
 #| "Add path to be included in database\n"
@@ -1288,105 +1280,69 @@ msgstr ""
 "Ajouter le chemin d’accès à inclure dans la base de données\n"
 "                                "
 
-#: src/fsearch_statusbar.ui:155
+#: src/fsearch_statusbar.ui:154
 msgid "Index:"
 msgstr "Index :"
 
-#: src/fsearch_statusbar.ui:230
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of selected folders\n"
-"                                        "
-msgstr ""
-"Ajouter le chemin d’accès à inclure dans la base de données\n"
-"                                "
+#: src/fsearch_statusbar.ui:229
+msgid "Number of selected folders"
+msgstr "Nombre de dossiers sélectionnés"
 
-#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
+#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:256
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of selected files\n"
-"                                        "
-msgstr ""
-"Ajouter le chemin d’accès à inclure dans la base de données\n"
-"                                "
+#: src/fsearch_statusbar.ui:254
+msgid "Number of selected files"
+msgstr "Nombre de fichiers sélectionnés"
 
-#: src/fsearch_statusbar.ui:333
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Cancel database update\n"
-"                                                "
-msgstr ""
-"Ajouter le chemin d’accès à inclure dans la base de données\n"
-"                                "
+#: src/fsearch_statusbar.ui:329
+msgid "Cancel database update"
+msgstr "Annuler la mise à jour de la base de données"
 
-#: src/fsearch_statusbar.ui:376
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
-msgid ""
-"Number of database items\n"
-"                                                "
-msgstr ""
-"Ajouter le chemin d’accès à inclure dans la base de données\n"
-"                                "
+#: src/fsearch_statusbar.ui:370
+msgid "Number of database items"
+msgstr "Nombre d'éléments dans la base de données"
 
-#: src/fsearch_statusbar.ui:378
+#: src/fsearch_statusbar.ui:371
 msgid "(empty)"
 msgstr "(vide)"
 
-#: src/fsearch_statusbar.ui:416
+#: src/fsearch_statusbar.ui:408
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
 #| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
-"                                    <b>Match Case</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 "Le terme de recherche contient un séparateur de chemin d'accès.\n"
 "<b>Rechercher dans le chemin d'accès</b> a été temporairement activé pour ce "
 "terme."
 
-#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
+#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 msgid "CASE"
 msgstr "CASSE"
 
-#: src/fsearch_statusbar.ui:529
+#: src/fsearch_statusbar.ui:515
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
 #| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
-"                                    <b>Search in Path</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "Le terme de recherche contient un séparateur de chemin d'accès.\n"
 "<b>Rechercher dans le chemin d'accès</b> a été temporairement activé pour ce "
 "terme."
 
-#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
+#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
 msgstr "CHEMIN"
 
-#: src/fsearch_statusbar.ui:676
+#: src/fsearch_statusbar.ui:652
 msgid "REGEX"
 msgstr "REGEX"
 
@@ -1652,6 +1608,61 @@ msgstr "Déplacer dans la _corbeille"
 
 #, fuzzy
 #~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of Search Results\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Ajouter le chemin d’accès à inclure dans la base de données\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of selected folders\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Ajouter le chemin d’accès à inclure dans la base de données\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of selected files\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "Ajouter le chemin d’accès à inclure dans la base de données\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Cancel database update\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Ajouter le chemin d’accès à inclure dans la base de données\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
+#~| "Add path to be included in database\n"
+#~| "                                "
+#~ msgid ""
+#~ "Number of database items\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "Ajouter le chemin d’accès à inclure dans la base de données\n"
+#~ "                                "
+
+#, fuzzy
+#~| msgid ""
 #~| "<b>Add folder to database:</b>\n"
 #~| "\n"
 #~| "                      This button opens a dialog where you can select a "
@@ -1714,21 +1725,6 @@ msgstr "Déplacer dans la _corbeille"
 
 #~ msgid "page35"
 #~ msgstr "page35"
-
-#~ msgid "Number of Search Results"
-#~ msgstr "Nombre de résultats de recherche"
-
-#~ msgid "Cancel database update"
-#~ msgstr "Annuler la mise à jour de la base de données"
-
-#~ msgid "Number of selected folders"
-#~ msgstr "Nombre de dossiers sélectionnés"
-
-#~ msgid "Number of selected files"
-#~ msgstr "Nombre de fichiers sélectionnés"
-
-#~ msgid "Number of database items"
-#~ msgstr "Nombre d'éléments dans la base de données"
 
 #~ msgid "Select a Filter"
 #~ msgstr "Sélectionner un filtre"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:47+0200\n"
+"POT-Creation-Date: 2022-08-13 13:53+0200\n"
 "PO-Revision-Date: 2020-07-18 03:41+0000\n"
 "Last-Translator: Doma Gergő <domag02@gmail.com>\n"
 "Language-Team: Hungarian <https://hosted.weblate.org/projects/fsearch/"
@@ -154,7 +154,7 @@ msgid "Loading files…"
 msgstr "Fájlok törlése…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:91
+#: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"
 msgstr "Adatbázis betöltése…"
@@ -347,7 +347,7 @@ msgstr "Adatbázis betöltése…"
 msgid "This won't take long."
 msgstr "Ez eltarthat egy ideig."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
 #, fuzzy
 msgid "Updating Database…"
 msgstr "Adatbázis frissítése..."
@@ -1025,82 +1025,72 @@ msgid "Scanning…"
 msgstr ""
 
 #: src/fsearch_statusbar.ui:52
-msgid ""
-"Number of Search Results\n"
-"                                        "
-msgstr ""
+msgid "Number of Search Results"
+msgstr "Keresési eredmények száma"
 
-#: src/fsearch_statusbar.ui:54
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 elem"
 
-#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
 msgid ""
 "Cancel database update\n"
 "                                        "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:155
+#: src/fsearch_statusbar.ui:154
 msgid "Index:"
 msgstr ""
 
-#: src/fsearch_statusbar.ui:230
-msgid ""
-"Number of selected folders\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:229
+#, fuzzy
+msgid "Number of selected folders"
+msgstr "Keresési eredmények száma"
 
-#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
+#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:256
-msgid ""
-"Number of selected files\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:254
+#, fuzzy
+msgid "Number of selected files"
+msgstr "Keresési eredmények száma"
 
-#: src/fsearch_statusbar.ui:333
-msgid ""
-"Cancel database update\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:329
+#, fuzzy
+msgid "Cancel database update"
+msgstr "Adatbázis frissítése indításkor"
 
-#: src/fsearch_statusbar.ui:376
-msgid ""
-"Number of database items\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:370
+#, fuzzy
+msgid "Number of database items"
+msgstr "Keresési eredmények száma"
 
-#: src/fsearch_statusbar.ui:378
+#: src/fsearch_statusbar.ui:371
 msgid "(empty)"
 msgstr "(üres)"
 
-#: src/fsearch_statusbar.ui:416
+#: src/fsearch_statusbar.ui:408
 msgid ""
 "Search term contains upper case characters.\n"
-"                                    <b>Match Case</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
+#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 msgid "CASE"
 msgstr "BETŰMÉRET"
 
-#: src/fsearch_statusbar.ui:529
+#: src/fsearch_statusbar.ui:515
 msgid ""
 "Search term contains path separators.\n"
-"                                    <b>Search in Path</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
+#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
 msgstr "ÚT"
 
-#: src/fsearch_statusbar.ui:676
+#: src/fsearch_statusbar.ui:652
 msgid "REGEX"
 msgstr "REGULÁRIS KIFEJEZÉS"
 
@@ -1398,21 +1388,6 @@ msgstr "Áthelyezés a K_ukába"
 #~| msgid "page0"
 #~ msgid "page35"
 #~ msgstr "0. lap"
-
-#~ msgid "Number of Search Results"
-#~ msgstr "Keresési eredmények száma"
-
-#, fuzzy
-#~ msgid "Cancel database update"
-#~ msgstr "Adatbázis frissítése indításkor"
-
-#, fuzzy
-#~ msgid "Number of selected folders"
-#~ msgstr "Keresési eredmények száma"
-
-#, fuzzy
-#~ msgid "Number of selected files"
-#~ msgstr "Keresési eredmények száma"
 
 #~ msgid "Select a Filter"
 #~ msgstr "Szűrő kiválasztása"

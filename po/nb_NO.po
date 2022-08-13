@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:47+0200\n"
+"POT-Creation-Date: 2022-08-13 13:53+0200\n"
 "PO-Revision-Date: 2020-10-20 16:26+0000\n"
 "Last-Translator: Allan Nordhøy <epost@anotheragency.no>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
@@ -149,7 +149,7 @@ msgid "Loading files…"
 msgstr "Sletter filer…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:91
+#: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"
 msgstr "Sorterer…"
@@ -338,7 +338,7 @@ msgstr "Laster database…"
 msgid "This won't take long."
 msgstr "Dette tar ikke lang tid."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
 #, fuzzy
 msgid "Updating Database…"
 msgstr "Oppdaterer database…"
@@ -1021,89 +1021,76 @@ msgid "Scanning…"
 msgstr "Sorterer…"
 
 #: src/fsearch_statusbar.ui:52
-msgid ""
-"Number of Search Results\n"
-"                                        "
-msgstr ""
+msgid "Number of Search Results"
+msgstr "Antall søkeresultater"
 
-#: src/fsearch_statusbar.ui:54
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 elementer"
 
-#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
 msgid ""
 "Cancel database update\n"
 "                                        "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:155
+#: src/fsearch_statusbar.ui:154
 msgid "Index:"
 msgstr "Indeks:"
 
-#: src/fsearch_statusbar.ui:230
-msgid ""
-"Number of selected folders\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:229
+msgid "Number of selected folders"
+msgstr "Antall valgte mapper"
 
-#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
+#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:256
-msgid ""
-"Number of selected files\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:254
+msgid "Number of selected files"
+msgstr "Antall valgte filer"
 
-#: src/fsearch_statusbar.ui:333
-msgid ""
-"Cancel database update\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:329
+#, fuzzy
+msgid "Cancel database update"
+msgstr "Oppdater database ved oppstart"
 
-#: src/fsearch_statusbar.ui:376
-msgid ""
-"Number of database items\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:370
+msgid "Number of database items"
+msgstr "Antall databaseelementer"
 
-#: src/fsearch_statusbar.ui:378
+#: src/fsearch_statusbar.ui:371
 msgid "(empty)"
 msgstr "(tom)"
 
-#: src/fsearch_statusbar.ui:416
+#: src/fsearch_statusbar.ui:408
 #, fuzzy
 msgid ""
 "Search term contains upper case characters.\n"
-"                                    <b>Match Case</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 "Søket inneholder stiinndelere.\n"
 "<b>Søk i sti</b> ble midlertidig påslått for dette søket."
 
-#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
+#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 #, fuzzy
 msgid "CASE"
 msgstr "VERSAL"
 
-#: src/fsearch_statusbar.ui:529
+#: src/fsearch_statusbar.ui:515
 #, fuzzy
 msgid ""
 "Search term contains path separators.\n"
-"                                    <b>Search in Path</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "Søket inneholder stiinndelere.\n"
 "<b>Søk i sti</b> ble midlertidig påslått for dette søket."
 
-#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
+#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
 msgstr "STI"
 
-#: src/fsearch_statusbar.ui:676
+#: src/fsearch_statusbar.ui:652
 msgid "REGEX"
 msgstr "Regulært uttrykk"
 
@@ -1412,22 +1399,6 @@ msgstr "Flytt til _papirkurv"
 #, fuzzy
 #~ msgid "page35"
 #~ msgstr "side0"
-
-#~ msgid "Number of Search Results"
-#~ msgstr "Antall søkeresultater"
-
-#, fuzzy
-#~ msgid "Cancel database update"
-#~ msgstr "Oppdater database ved oppstart"
-
-#~ msgid "Number of selected folders"
-#~ msgstr "Antall valgte mapper"
-
-#~ msgid "Number of selected files"
-#~ msgstr "Antall valgte filer"
-
-#~ msgid "Number of database items"
-#~ msgstr "Antall databaseelementer"
 
 #~ msgid "Select a Filter"
 #~ msgstr "Velg et filter"

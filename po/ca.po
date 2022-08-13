@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:47+0200\n"
+"POT-Creation-Date: 2022-08-13 13:53+0200\n"
 "PO-Revision-Date: 2019-10-12 12:52+0000\n"
 "Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Catalan <https://hosted.weblate.org/projects/fsearch/"
@@ -152,7 +152,7 @@ msgid "Loading files…"
 msgstr "S’estan suprimint els fitxers…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:91
+#: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"
 msgstr "S’està carregant la base de dades…"
@@ -338,7 +338,7 @@ msgstr "S’està carregant la base de dades…"
 msgid "This won't take long."
 msgstr "Això pot trigar una estona."
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
 #, fuzzy
 msgid "Updating Database…"
 msgstr "S’està actualitzant la base de dades…"
@@ -1011,82 +1011,72 @@ msgid "Scanning…"
 msgstr ""
 
 #: src/fsearch_statusbar.ui:52
-msgid ""
-"Number of Search Results\n"
-"                                        "
-msgstr ""
+msgid "Number of Search Results"
+msgstr "Nombre de resultats de la cerca"
 
-#: src/fsearch_statusbar.ui:54
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 elements"
 
-#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
 msgid ""
 "Cancel database update\n"
 "                                        "
 msgstr ""
 
-#: src/fsearch_statusbar.ui:155
+#: src/fsearch_statusbar.ui:154
 msgid "Index:"
 msgstr ""
 
-#: src/fsearch_statusbar.ui:230
-msgid ""
-"Number of selected folders\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:229
+#, fuzzy
+msgid "Number of selected folders"
+msgstr "Nombre de resultats de la cerca"
 
-#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
+#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:256
-msgid ""
-"Number of selected files\n"
-"                                        "
-msgstr ""
+#: src/fsearch_statusbar.ui:254
+#, fuzzy
+msgid "Number of selected files"
+msgstr "Nombre de resultats de la cerca"
 
-#: src/fsearch_statusbar.ui:333
-msgid ""
-"Cancel database update\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:329
+#, fuzzy
+msgid "Cancel database update"
+msgstr "Actualitza la base de dades en iniciar"
 
-#: src/fsearch_statusbar.ui:376
-msgid ""
-"Number of database items\n"
-"                                                "
-msgstr ""
+#: src/fsearch_statusbar.ui:370
+#, fuzzy
+msgid "Number of database items"
+msgstr "Nombre de resultats de la cerca"
 
-#: src/fsearch_statusbar.ui:378
+#: src/fsearch_statusbar.ui:371
 msgid "(empty)"
 msgstr "(buit)"
 
-#: src/fsearch_statusbar.ui:416
+#: src/fsearch_statusbar.ui:408
 msgid ""
 "Search term contains upper case characters.\n"
-"                                    <b>Match Case</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
+#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 msgid "CASE"
 msgstr "MAJÚSCULES"
 
-#: src/fsearch_statusbar.ui:529
+#: src/fsearch_statusbar.ui:515
 msgid ""
 "Search term contains path separators.\n"
-"                                    <b>Search in Path</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 
-#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
+#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
 msgstr "CAMÍ"
 
-#: src/fsearch_statusbar.ui:676
+#: src/fsearch_statusbar.ui:652
 msgid "REGEX"
 msgstr "EXPRESSIÓREGULAR"
 
@@ -1384,21 +1374,6 @@ msgstr "Envia a la _paperera"
 #~| msgid "page0"
 #~ msgid "page35"
 #~ msgstr "pàgina0"
-
-#~ msgid "Number of Search Results"
-#~ msgstr "Nombre de resultats de la cerca"
-
-#, fuzzy
-#~ msgid "Cancel database update"
-#~ msgstr "Actualitza la base de dades en iniciar"
-
-#, fuzzy
-#~ msgid "Number of selected folders"
-#~ msgstr "Nombre de resultats de la cerca"
-
-#, fuzzy
-#~ msgid "Number of selected files"
-#~ msgstr "Nombre de resultats de la cerca"
 
 #~ msgid "Select a Filter"
 #~ msgstr "Seleccioneu un filtre"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 13:47+0200\n"
+"POT-Creation-Date: 2022-08-13 13:53+0200\n"
 "PO-Revision-Date: 2022-08-13 11:47+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -140,7 +140,7 @@ msgid "Loading files…"
 msgstr "正在加载文件…"
 
 #: src/fsearch_database.c:1643 src/fsearch_statusbar.c:71
-#: src/fsearch_statusbar.ui:91
+#: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "排序中…"
 
@@ -314,7 +314,7 @@ msgstr "加载数据库…"
 msgid "This won't take long."
 msgstr "不会花很长时间。"
 
-#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:316
+#: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:313
 msgid "Updating Database…"
 msgstr "数据库更新中…"
 
@@ -1127,18 +1127,14 @@ msgid "Scanning…"
 msgstr "扫描中…"
 
 #: src/fsearch_statusbar.ui:52
-msgid ""
-"Number of Search Results\n"
-"                                        "
-msgstr ""
-"搜索结果数量\n"
-"                                        "
+msgid "Number of Search Results"
+msgstr "搜索到的数量"
 
-#: src/fsearch_statusbar.ui:54
+#: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 项"
 
-#: src/fsearch_statusbar.ui:107 src/fsearch_window.ui:248
+#: src/fsearch_statusbar.ui:106 src/fsearch_window.ui:248
 msgid ""
 "Cancel database update\n"
 "                                        "
@@ -1146,59 +1142,35 @@ msgstr ""
 "取消数据库更新\n"
 "                                        "
 
-#: src/fsearch_statusbar.ui:155
+#: src/fsearch_statusbar.ui:154
 msgid "Index:"
 msgstr "索引："
 
-#: src/fsearch_statusbar.ui:230
-msgid ""
-"Number of selected folders\n"
-"                                        "
-msgstr ""
-"选中的文件夹数\n"
-"                                        "
+#: src/fsearch_statusbar.ui:229
+msgid "Number of selected folders"
+msgstr "已择文件夹的数量"
 
-#: src/fsearch_statusbar.ui:232 src/fsearch_statusbar.ui:258
+#: src/fsearch_statusbar.ui:230 src/fsearch_statusbar.ui:255
 msgid "0/0"
 msgstr "0/0"
 
-#: src/fsearch_statusbar.ui:256
-msgid ""
-"Number of selected files\n"
-"                                        "
-msgstr ""
-"选中的文件数\n"
-"                                        "
+#: src/fsearch_statusbar.ui:254
+msgid "Number of selected files"
+msgstr "选定的文件数量"
 
-#: src/fsearch_statusbar.ui:333
-#, fuzzy
-#| msgid ""
-#| "Cancel database update\n"
-#| "                                        "
-msgid ""
-"Cancel database update\n"
-"                                                "
-msgstr ""
-"取消数据库更新\n"
-"                                        "
+#: src/fsearch_statusbar.ui:329
+msgid "Cancel database update"
+msgstr "取消更新数据库"
 
-#: src/fsearch_statusbar.ui:376
-#, fuzzy
-#| msgid ""
-#| "Number of selected files\n"
-#| "                                        "
-msgid ""
-"Number of database items\n"
-"                                                "
-msgstr ""
-"选中的文件数\n"
-"                                        "
+#: src/fsearch_statusbar.ui:370
+msgid "Number of database items"
+msgstr "数据库的项目数"
 
-#: src/fsearch_statusbar.ui:378
+#: src/fsearch_statusbar.ui:371
 msgid "(empty)"
 msgstr "(空)"
 
-#: src/fsearch_statusbar.ui:416
+#: src/fsearch_statusbar.ui:408
 #, fuzzy
 #| msgid ""
 #| "Search term contains path separators.\n"
@@ -1207,36 +1179,38 @@ msgstr "(空)"
 #| "                                "
 msgid ""
 "Search term contains upper case characters.\n"
-"                                    <b>Match Case</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 "搜索项包含路径分隔符。\n"
 "                                    暂将<b>在路径中搜索</b>选项应用于此搜索"
 "项。\n"
 "                                "
 
-#: src/fsearch_statusbar.ui:450 src/fsearch_statusbar.ui:506
+#: src/fsearch_statusbar.ui:439 src/fsearch_statusbar.ui:492
 msgid "CASE"
 msgstr "实例"
 
-#: src/fsearch_statusbar.ui:529
+#: src/fsearch_statusbar.ui:515
+#, fuzzy
+#| msgid ""
+#| "Search term contains path separators.\n"
+#| "                                    <b>Search in Path</b> was temporarily "
+#| "activated for this term.\n"
+#| "                                "
 msgid ""
 "Search term contains path separators.\n"
-"                                    <b>Search in Path</b> was temporarily "
-"activated for this term.\n"
-"                                "
+"<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "搜索项包含路径分隔符。\n"
 "                                    暂将<b>在路径中搜索</b>选项应用于此搜索"
 "项。\n"
 "                                "
 
-#: src/fsearch_statusbar.ui:563 src/fsearch_statusbar.ui:620
+#: src/fsearch_statusbar.ui:546 src/fsearch_statusbar.ui:599
 msgid "PATH"
 msgstr "路径"
 
-#: src/fsearch_statusbar.ui:676
+#: src/fsearch_statusbar.ui:652
 msgid "REGEX"
 msgstr "正则表达式"
 
@@ -1487,6 +1461,49 @@ msgid "Move to _Trash"
 msgstr "移动到回收站"
 
 #~ msgid ""
+#~ "Number of Search Results\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "搜索结果数量\n"
+#~ "                                        "
+
+#~ msgid ""
+#~ "Number of selected folders\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "选中的文件夹数\n"
+#~ "                                        "
+
+#~ msgid ""
+#~ "Number of selected files\n"
+#~ "                                        "
+#~ msgstr ""
+#~ "选中的文件数\n"
+#~ "                                        "
+
+#, fuzzy
+#~| msgid ""
+#~| "Cancel database update\n"
+#~| "                                        "
+#~ msgid ""
+#~ "Cancel database update\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "取消数据库更新\n"
+#~ "                                        "
+
+#, fuzzy
+#~| msgid ""
+#~| "Number of selected files\n"
+#~| "                                        "
+#~ msgid ""
+#~ "Number of database items\n"
+#~ "                                                "
+#~ msgstr ""
+#~ "选中的文件数\n"
+#~ "                                        "
+
+#~ msgid ""
 #~ "Cancel database\n"
 #~ "                                                    update\n"
 #~ "                                                "
@@ -1546,21 +1563,6 @@ msgstr "移动到回收站"
 
 #~ msgid "page35"
 #~ msgstr "页35"
-
-#~ msgid "Number of Search Results"
-#~ msgstr "搜索到的数量"
-
-#~ msgid "Cancel database update"
-#~ msgstr "取消更新数据库"
-
-#~ msgid "Number of selected folders"
-#~ msgstr "已择文件夹的数量"
-
-#~ msgid "Number of selected files"
-#~ msgstr "选定的文件数量"
-
-#~ msgid "Number of database items"
-#~ msgstr "数据库的项目数"
 
 #~ msgid "Select a Filter"
 #~ msgstr "选择筛选器"
