@@ -313,12 +313,52 @@ collect_for_content_type(GHashTable *content_types, const char *path_full, GStri
     }
 }
 
+static bool
+app_is_sandboxed(void) {
+    static bool is_sandboxed = false;
+    static gsize initialization_value = 0;
+
+    if (g_once_init_enter(&initialization_value)) {
+        g_auto(GStrv) env = g_get_environ();
+        if (g_file_test("/.flatpak-info", G_FILE_TEST_EXISTS)) {
+            is_sandboxed = true;
+        }
+        else if (g_environ_getenv(env, "SNAP")) {
+            is_sandboxed = true;
+        }
+
+        g_once_init_leave(&initialization_value, 1);
+    }
+    return is_sandboxed;
+}
+
+static bool
+launch_default_for_path(GList *paths, GAppLaunchContext *launch_context, GString *error_message) {
+    for (GList *p = paths; p != NULL; p = p->next) {
+        g_autoptr(GFile) file = g_file_new_for_path(p->data);
+        g_autofree char *uri = g_file_get_uri(file);
+        if (uri) {
+            g_autoptr(GError) error = NULL;
+            g_app_info_launch_default_for_uri(uri, launch_context, &error);
+            if (error) {
+                add_error_message(error_message, error->message);
+            }
+        }
+    }
+    return error_message->len > 0 ? false : true;
+}
+
 bool
 fsearch_file_utils_open_path_list(GList *paths,
                                   bool launch_desktop_files,
                                   GAppLaunchContext *launch_context,
                                   GString *error_message) {
     g_return_val_if_fail(paths, false);
+
+    if (app_is_sandboxed()) {
+        g_debug("[open_path_list] FSearch is sandboxed. Ask the system to open the files for us.");
+        return launch_default_for_path(paths, launch_context, error_message);
+    }
 
     g_autoptr(GHashTable)
         content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_ptr_array_unref);
@@ -345,7 +385,8 @@ fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
 
     if (!parent_path) {
         add_error_message_with_format(error_message,
-                                      C_("Will be followed by the path of the folder.", "Error when opening parent folder"),
+                                      C_("Will be followed by the path of the folder.",
+                                         "Error when opening parent folder"),
                                       path,
                                       _("Failed to get parent path"));
         return false;
