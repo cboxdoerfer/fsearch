@@ -381,7 +381,10 @@ fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
                                                             GString *error_message) {
     g_autoptr(GFile) file = g_file_new_for_path(path);
     g_autoptr(GFile) parent = g_file_get_parent(file);
-    g_autofree char *parent_path = g_file_get_path(parent);
+    // If file has no parent it means it's the root directory.
+    // We still want to open a folder, so we consider the root directory to be its own parent
+    // and open it, instead of doing nothing or failing.
+    g_autofree char *parent_path = g_file_get_path(parent ? parent : file);
 
     if (!parent_path) {
         add_error_message_with_format(error_message,
