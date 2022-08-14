@@ -129,7 +129,7 @@ build_folder_open_cmd(const char *path, const char *path_full, const char *cmd) 
 
 static bool
 open_with_cmd(const char *path, const char *path_full, const char *cmd, GString *error_message) {
-    const char *error_description = _("Error while opening folder");
+    const char *error_description = C_("Will be followed by the path of the folder.", "Error while opening folder");
     g_autofree char *cmd_res = build_folder_open_cmd(path, path_full, cmd);
     if (!cmd_res) {
         add_error_message_with_format(error_message, error_description, path_full, _("Failed to build open command"));
@@ -147,7 +147,8 @@ open_with_cmd(const char *path, const char *path_full, const char *cmd, GString 
 
 static bool
 open_application_for_path(const char *path, GString *error_messages) {
-    const char *error_description = _("Error when launching desktop file");
+    const char *error_description = C_("Will be followed by the path of the desktop file.",
+                                       "Error when launching desktop file");
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
     if (!info) {
         add_error_message_with_format(error_messages, error_description, path, _("Failed to get application information"));
@@ -177,7 +178,10 @@ static bool
 file_remove_or_trash(const char *path, bool delete, GString *error_messages) {
     g_autoptr(GFile) file = g_file_new_for_path(path);
     if (!file) {
-        add_error_message_with_format(error_messages, _("Error when removing file"), path, _("Failed to get path"));
+        add_error_message_with_format(error_messages,
+                                      C_("Will be followed by the path of the file.", "Error when removing file"),
+                                      path,
+                                      _("Failed to get path"));
         return false;
     }
     g_autoptr(GError) error = NULL;
@@ -237,7 +241,8 @@ launch_for_content_type(const char *content_type, GPtrArray *files, FsearchFileU
             g_autofree char *path = g_file_get_path(file);
             if (!path) {
                 add_error_message_with_format(ctx->error_messages,
-                                              _("Error when launching desktop file"),
+                                              C_("Will be followed by the path of the desktop file",
+                                                 "Error when launching desktop file"),
                                               path,
                                               _("Failed to get path"));
                 continue;
@@ -250,7 +255,8 @@ launch_for_content_type(const char *content_type, GPtrArray *files, FsearchFileU
     g_autoptr(GAppInfo) info = g_app_info_get_default_for_type(content_type, FALSE);
     if (!info) {
         add_error_message_with_format(ctx->error_messages,
-                                      _("Error when getting information for content type"),
+                                      C_("Will be followed by the content type string.",
+                                         "Error when getting information for content type"),
                                       content_type,
                                       _("No default application registered"));
         return;
@@ -339,7 +345,7 @@ fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
 
     if (!parent_path) {
         add_error_message_with_format(error_message,
-                                      _("Error when opening parent folder"),
+                                      C_("Will be followed by the path of the folder.", "Error when opening parent folder"),
                                       path,
                                       _("Failed to get parent path"));
         return false;
