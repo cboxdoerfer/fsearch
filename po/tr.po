@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 21:24+0200\n"
-"PO-Revision-Date: 2022-08-13 19:25+0000\n"
+"PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -338,14 +338,8 @@ msgid "Empty Query"
 msgstr "Boş Sorgu"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid ""
-#| "Press <b>Ctrl + F</b> and start typing\n"
-#| "                        "
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr ""
-"<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın\n"
-"                        "
+msgstr "<b>Ctrl+F</b> tuşlarına basarak yazmaya başlayın."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -1194,10 +1188,8 @@ msgid "0 Items"
 msgstr "0 Öge"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_İptal"
+msgstr "İptal"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
