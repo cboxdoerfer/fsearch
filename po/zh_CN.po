@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 21:24+0200\n"
+"POT-Creation-Date: 2022-08-14 10:31+0200\n"
 "PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Eric <alchemillatruth@purelymail.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
@@ -145,6 +145,9 @@ msgid "Sorting…"
 msgstr "排序中…"
 
 #: src/fsearch_file_utils.c:132
+#, fuzzy
+#| msgid "Error while opening folder"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "打开文件夹时出错"
 
@@ -152,47 +155,66 @@ msgstr "打开文件夹时出错"
 msgid "Failed to build open command"
 msgstr "构建打开命令失败"
 
-#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
+#: src/fsearch_file_utils.c:151
+#, fuzzy
+#| msgid "Error when launching desktop file"
+msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "启动桌面文件时出错"
 
-#: src/fsearch_file_utils.c:153
+#: src/fsearch_file_utils.c:154
 msgid "Failed to get application information"
 msgstr "获取应用信息失败"
 
-#: src/fsearch_file_utils.c:159
+#: src/fsearch_file_utils.c:160
 msgid "Failed to get default display"
 msgstr "未能获取默认显示"
 
-#: src/fsearch_file_utils.c:180
+#: src/fsearch_file_utils.c:182
+#, fuzzy
+#| msgid "Error when removing file"
+msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "删除文件时出错"
 
-#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
+#: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
 msgid "Failed to get path"
 msgstr "获取路径失败"
 
-#: src/fsearch_file_utils.c:253
+#: src/fsearch_file_utils.c:245
+#, fuzzy
+#| msgid "Error when launching desktop file"
+msgctxt "Will be followed by the path of the desktop file"
+msgid "Error when launching desktop file"
+msgstr "启动桌面文件时出错"
+
+#: src/fsearch_file_utils.c:259
+#, fuzzy
+#| msgid "Error when getting information for content type"
+msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr "获取内容类型信息时出错"
 
-#: src/fsearch_file_utils.c:255
+#: src/fsearch_file_utils.c:261
 msgid "No default application registered"
 msgstr "未注册默认应用程序"
 
-#: src/fsearch_file_utils.c:342
+#: src/fsearch_file_utils.c:348
+#, fuzzy
+#| msgid "Error when opening parent folder"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "打开主文件夹时出错"
 
-#: src/fsearch_file_utils.c:344
+#: src/fsearch_file_utils.c:350
 msgid "Failed to get parent path"
 msgstr "获取主路径失败"
 
-#: src/fsearch_file_utils.c:401
+#: src/fsearch_file_utils.c:407
 msgid "Folder"
 msgstr "文件夹"
 
-#: src/fsearch_file_utils.c:407
+#: src/fsearch_file_utils.c:413
 msgid "Unknown Type"
 msgstr "未知类型"
 

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 21:24+0200\n"
+"POT-Creation-Date: 2022-08-14 10:31+0200\n"
 "PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: English (United Kingdom) <https://hosted.weblate.org/projects/"
@@ -152,6 +152,9 @@ msgid "Sorting…"
 msgstr "Sorting…"
 
 #: src/fsearch_file_utils.c:132
+#, fuzzy
+#| msgid "Error while opening folder"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Error while opening folder"
 
@@ -159,47 +162,66 @@ msgstr "Error while opening folder"
 msgid "Failed to build open command"
 msgstr "Failed to build open command"
 
-#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
+#: src/fsearch_file_utils.c:151
+#, fuzzy
+#| msgid "Error when launching desktop file"
+msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "Error when launching desktop file"
 
-#: src/fsearch_file_utils.c:153
+#: src/fsearch_file_utils.c:154
 msgid "Failed to get application information"
 msgstr "Failed to get application information"
 
-#: src/fsearch_file_utils.c:159
+#: src/fsearch_file_utils.c:160
 msgid "Failed to get default display"
 msgstr "Failed to get default display"
 
-#: src/fsearch_file_utils.c:180
+#: src/fsearch_file_utils.c:182
+#, fuzzy
+#| msgid "Error when removing file"
+msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Error when removing file"
 
-#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
+#: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
 msgid "Failed to get path"
 msgstr "Failed to get path"
 
-#: src/fsearch_file_utils.c:253
+#: src/fsearch_file_utils.c:245
+#, fuzzy
+#| msgid "Error when launching desktop file"
+msgctxt "Will be followed by the path of the desktop file"
+msgid "Error when launching desktop file"
+msgstr "Error when launching desktop file"
+
+#: src/fsearch_file_utils.c:259
+#, fuzzy
+#| msgid "Error when getting information for content type"
+msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr "Error when getting information for content type"
 
-#: src/fsearch_file_utils.c:255
+#: src/fsearch_file_utils.c:261
 msgid "No default application registered"
 msgstr "No default application registered"
 
-#: src/fsearch_file_utils.c:342
+#: src/fsearch_file_utils.c:348
+#, fuzzy
+#| msgid "Error when opening parent folder"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Error when opening parent folder"
 
-#: src/fsearch_file_utils.c:344
+#: src/fsearch_file_utils.c:350
 msgid "Failed to get parent path"
 msgstr "Failed to get parent path"
 
-#: src/fsearch_file_utils.c:401
+#: src/fsearch_file_utils.c:407
 msgid "Folder"
 msgstr "Folder"
 
-#: src/fsearch_file_utils.c:407
+#: src/fsearch_file_utils.c:413
 msgid "Unknown Type"
 msgstr "Unknown Type"
 

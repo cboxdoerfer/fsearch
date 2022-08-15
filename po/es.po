@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 21:24+0200\n"
+"POT-Creation-Date: 2022-08-14 10:31+0200\n"
 "PO-Revision-Date: 2022-06-02 07:17+0000\n"
 "Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -160,8 +160,11 @@ msgid "Sorting…"
 msgstr "Ordenando…"
 
 #: src/fsearch_file_utils.c:132
+#, fuzzy
+#| msgid "Launch desktop files"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr ""
+msgstr "Iniciar archivos del escritorio"
 
 #: src/fsearch_file_utils.c:135
 #, fuzzy
@@ -169,59 +172,74 @@ msgstr ""
 msgid "Failed to build open command"
 msgstr "No se pudo abrir:"
 
-#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
+#: src/fsearch_file_utils.c:151
 #, fuzzy
 #| msgid "Launch desktop files"
+msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "Iniciar archivos del escritorio"
 
-#: src/fsearch_file_utils.c:153
+#: src/fsearch_file_utils.c:154
 #, fuzzy
 #| msgid "Open a new application window"
 msgid "Failed to get application information"
 msgstr "Abrir una ventana nueva de la aplicación"
 
-#: src/fsearch_file_utils.c:159
+#: src/fsearch_file_utils.c:160
 #, fuzzy
 #| msgid "Failed to open file"
 msgid "Failed to get default display"
 msgstr "No pudo abrirse el archivo"
 
-#: src/fsearch_file_utils.c:180
+#: src/fsearch_file_utils.c:182
+#, fuzzy
+#| msgid "Launch desktop files"
+msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr ""
+msgstr "Iniciar archivos del escritorio"
 
-#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
+#: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get path"
 msgstr "No se pudo abrir:"
 
-#: src/fsearch_file_utils.c:253
+#: src/fsearch_file_utils.c:245
+#, fuzzy
+#| msgid "Launch desktop files"
+msgctxt "Will be followed by the path of the desktop file"
+msgid "Error when launching desktop file"
+msgstr "Iniciar archivos del escritorio"
+
+#: src/fsearch_file_utils.c:259
+msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr ""
 
-#: src/fsearch_file_utils.c:255
+#: src/fsearch_file_utils.c:261
 #, fuzzy
 #| msgid "Show the application preferences"
 msgid "No default application registered"
 msgstr "Mostrar las preferencias de la aplicación"
 
-#: src/fsearch_file_utils.c:342
+#: src/fsearch_file_utils.c:348
+#, fuzzy
+#| msgid "Launch desktop files"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "Iniciar archivos del escritorio"
 
-#: src/fsearch_file_utils.c:344
+#: src/fsearch_file_utils.c:350
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get parent path"
 msgstr "No se pudo abrir:"
 
-#: src/fsearch_file_utils.c:401
+#: src/fsearch_file_utils.c:407
 msgid "Folder"
 msgstr "Carpeta"
 
-#: src/fsearch_file_utils.c:407
+#: src/fsearch_file_utils.c:413
 msgid "Unknown Type"
 msgstr "Tipo desconocido"
 

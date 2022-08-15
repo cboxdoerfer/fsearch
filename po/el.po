@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 21:24+0200\n"
+"POT-Creation-Date: 2022-08-14 10:31+0200\n"
 "PO-Revision-Date: 2022-06-20 18:14+0000\n"
 "Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
@@ -158,6 +158,7 @@ msgid "Sorting…"
 msgstr "Ταξινόμηση…"
 
 #: src/fsearch_file_utils.c:132
+msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr ""
 
@@ -167,57 +168,66 @@ msgstr ""
 msgid "Failed to build open command"
 msgstr "Αποτυχία ανοίγματος:"
 
-#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
+#: src/fsearch_file_utils.c:151
+msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr ""
 
-#: src/fsearch_file_utils.c:153
+#: src/fsearch_file_utils.c:154
 #, fuzzy
 #| msgid "Open a new application window"
 msgid "Failed to get application information"
 msgstr "Άνοιγμα νέου παραθύρου εφαρμογής"
 
-#: src/fsearch_file_utils.c:159
+#: src/fsearch_file_utils.c:160
 #, fuzzy
 #| msgid "Failed to open file"
 msgid "Failed to get default display"
 msgstr "Αποτυχία ανοίγματος αρχείου"
 
-#: src/fsearch_file_utils.c:180
+#: src/fsearch_file_utils.c:182
+msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr ""
 
-#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
+#: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get path"
 msgstr "Αποτυχία ανοίγματος:"
 
-#: src/fsearch_file_utils.c:253
+#: src/fsearch_file_utils.c:245
+msgctxt "Will be followed by the path of the desktop file"
+msgid "Error when launching desktop file"
+msgstr ""
+
+#: src/fsearch_file_utils.c:259
+msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr ""
 
-#: src/fsearch_file_utils.c:255
+#: src/fsearch_file_utils.c:261
 #, fuzzy
 #| msgid "Show the application preferences"
 msgid "No default application registered"
 msgstr "Εμφάνιση των προτιμήσεων της εφαρμογής"
 
-#: src/fsearch_file_utils.c:342
+#: src/fsearch_file_utils.c:348
+msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr ""
 
-#: src/fsearch_file_utils.c:344
+#: src/fsearch_file_utils.c:350
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get parent path"
 msgstr "Αποτυχία ανοίγματος:"
 
-#: src/fsearch_file_utils.c:401
+#: src/fsearch_file_utils.c:407
 msgid "Folder"
 msgstr "Φάκελος"
 
-#: src/fsearch_file_utils.c:407
+#: src/fsearch_file_utils.c:413
 msgid "Unknown Type"
 msgstr "Άγνωστος τύπος"
 

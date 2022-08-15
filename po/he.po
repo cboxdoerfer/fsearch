@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-08-13 21:24+0200\n"
+"POT-Creation-Date: 2022-08-14 10:31+0200\n"
 "PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
@@ -149,6 +149,9 @@ msgid "Sorting…"
 msgstr "מתבצע מיון…"
 
 #: src/fsearch_file_utils.c:132
+#, fuzzy
+#| msgid "Error while opening folder"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "שגיאה בפתיחת התיקייה"
 
@@ -156,47 +159,66 @@ msgstr "שגיאה בפתיחת התיקייה"
 msgid "Failed to build open command"
 msgstr "בניית פקודת הפתיחה נכשלה"
 
-#: src/fsearch_file_utils.c:150 src/fsearch_file_utils.c:240
+#: src/fsearch_file_utils.c:151
+#, fuzzy
+#| msgid "Error when launching desktop file"
+msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "שגיאה בהפעלת קובץ desktop"
 
-#: src/fsearch_file_utils.c:153
+#: src/fsearch_file_utils.c:154
 msgid "Failed to get application information"
 msgstr "קבלת פרטי היישום נכשלה"
 
-#: src/fsearch_file_utils.c:159
+#: src/fsearch_file_utils.c:160
 msgid "Failed to get default display"
 msgstr "קבלת תצוגת ברירת המחדל נכשלה"
 
-#: src/fsearch_file_utils.c:180
+#: src/fsearch_file_utils.c:182
+#, fuzzy
+#| msgid "Error when removing file"
+msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "שגיאה בהסרת קובץ"
 
-#: src/fsearch_file_utils.c:180 src/fsearch_file_utils.c:242
+#: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
 msgid "Failed to get path"
 msgstr "קבלת הנתיב נכשלה"
 
-#: src/fsearch_file_utils.c:253
+#: src/fsearch_file_utils.c:245
+#, fuzzy
+#| msgid "Error when launching desktop file"
+msgctxt "Will be followed by the path of the desktop file"
+msgid "Error when launching desktop file"
+msgstr "שגיאה בהפעלת קובץ desktop"
+
+#: src/fsearch_file_utils.c:259
+#, fuzzy
+#| msgid "Error when getting information for content type"
+msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr "שגיאה בקבלת מידע על סוג התוכן"
 
-#: src/fsearch_file_utils.c:255
+#: src/fsearch_file_utils.c:261
 msgid "No default application registered"
 msgstr "לא נרשם יישומון ברירת מחדל"
 
-#: src/fsearch_file_utils.c:342
+#: src/fsearch_file_utils.c:348
+#, fuzzy
+#| msgid "Error when opening parent folder"
+msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "שגיאה בפתיחת תיקיית ההורה"
 
-#: src/fsearch_file_utils.c:344
+#: src/fsearch_file_utils.c:350
 msgid "Failed to get parent path"
 msgstr "שגיאה בקבלת נתיב ההורה"
 
-#: src/fsearch_file_utils.c:401
+#: src/fsearch_file_utils.c:407
 msgid "Folder"
 msgstr "תיקייה"
 
-#: src/fsearch_file_utils.c:407
+#: src/fsearch_file_utils.c:413
 msgid "Unknown Type"
 msgstr "סוג לא ידוע"
 
