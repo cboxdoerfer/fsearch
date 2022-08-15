@@ -45,6 +45,7 @@
     <url type="bugtracker">https://github.com/cboxdoerfer/fsearch/issues</url>
     <url type="donation">https://github.com/sponsors/cboxdoerfer</url>
     <url type="help">https://github.com/cboxdoerfer/fsearch/wiki</url>
+    <url type="translate">https://hosted.weblate.org/projects/fsearch/</url>
     <!-- Translators: please do NOT translate this. -->
     <developer_name>Christian Boxdörfer</developer_name>
     <update_contact>christian.boxdoerfer_at_posteo.de</update_contact>
