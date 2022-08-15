@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-15 12:19+0000\n"
+"PO-Revision-Date: 2022-08-16 20:17+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -155,8 +155,6 @@ msgid "Sorting…"
 msgstr "Sıralanıyor…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Klasör açılırken hata oluştu"
@@ -166,8 +164,6 @@ msgid "Failed to build open command"
 msgstr "Aç komutu oluşturulamadı"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "Masaüstü dosyası başlatılırken hata oluştu"
@@ -181,8 +177,6 @@ msgid "Failed to get default display"
 msgstr "Öntanımlı ekran alınamadı"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Error when removing file"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Dosya kaldırılırken hata oluştu"
@@ -192,15 +186,11 @@ msgid "Failed to get path"
 msgstr "Yol alınamadı"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
 msgstr "Masaüstü dosyası başlatılırken hata oluştu"
 
 #: src/fsearch_file_utils.c:259
-#, fuzzy
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr "İçerik türü için bilgi alınırken hata oluştu"
@@ -210,8 +200,6 @@ msgid "No default application registered"
 msgstr "Kayıtlı öntanımlı uygulama yok"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Error when opening parent folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Üst klasör açılırken hata oluştu"
