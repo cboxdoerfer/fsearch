@@ -11,6 +11,7 @@
 #include <gtk/gtk.h>
 #include <math.h>
 #include <stdint.h>
+#include <sys/stat.h>
 
 static int32_t
 get_icon_size_for_height(int32_t height) {
@@ -104,7 +105,11 @@ get_icon_surface(FsearchResultView *result_view,
     maybe_reset_icon_caches(result_view);
 
     g_autoptr(GIcon) icon = NULL;
-    if (type == DATABASE_ENTRY_TYPE_FOLDER && fsearch_file_utils_is_desktop_file(path)) {
+    struct stat buffer;
+    if (lstat(path, &buffer)) {
+        icon = g_themed_icon_new("edit-delete");
+    }
+    else if (type == DATABASE_ENTRY_TYPE_FOLDER && fsearch_file_utils_is_desktop_file(path)) {
         icon = get_desktop_file_icon(result_view, path);
     }
     else {
