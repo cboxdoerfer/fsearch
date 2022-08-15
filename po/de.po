@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 21:24+0200\n"
-"PO-Revision-Date: 2022-08-13 19:25+0000\n"
+"PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -344,10 +344,8 @@ msgid "Empty Query"
 msgstr "Leere Suche"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Drücke <b>Strg + F</b> und tippe los"
+msgstr "Drücke <b>Strg + F</b> und tippe los."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -1198,10 +1196,8 @@ msgid "0 Items"
 msgstr "0 Einträge"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Abbrechen"
+msgstr "Abbrechen"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1232,26 +1228,19 @@ msgid "(empty)"
 msgstr "(leer)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Suche enthält Pfadseparatoren.\n"
-"<b>Suche in Pfad</b> wurde automatisch für diese Abfrage aktiviert."
+"Suche enthält Großbuchstaben.\n"
+"<b>Beachte Groß- und Kleinschreibung</b> wurde automatisch für diese Abfrage "
+"aktiviert."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "GROẞ-/Klein"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -1296,7 +1285,7 @@ msgstr ""
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
 msgid "FSearch Online"
-msgstr "FSearch Online"
+msgstr "FSearch im Internet"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
@@ -1308,7 +1297,7 @@ msgstr "Forum"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Fehlerberichte und Funktionsanfragen"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 21:24+0200\n"
-"PO-Revision-Date: 2022-08-09 19:40+0000\n"
+"PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -332,10 +332,8 @@ msgid "Empty Query"
 msgstr "שאילתה ריקה"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "יש ללחוץ <b>Ctrl + F</b> ולהתחיל להקליד"
+msgstr "יש ללחוץ <b>Ctrl + F</b> ולהתחיל להקליד."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -857,15 +855,6 @@ msgstr ""
 "אם פעילה, מסד הנתונים יעודכן ברקע אוטומטית עם הפעלת FSearch."
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Excluded folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to exclude from the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will excluded from the database\n"
-#| "\t\t and can't be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be excluded."
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -877,13 +866,14 @@ msgid ""
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
 "boundaries for this folder"
 msgstr ""
-"<b>תיקיות מוחרגות:</b>\n"
+"<b>תיקיות נכללות:</b>\n"
 "\n"
-"רשימה זו מכילה את כל התיקיות להחרגה ממסד הנתונים.\n"
+"רשימה זו מכילה את כל התיקיות להכללה במסד הנתונים.\n"
 "\n"
-"\t• <b>פעיל:</b> אם פעיל, הנתיב יוחרג ממסד הנתונים\n"
-"\t\t ולא ניתן לחפש אחריו.\n"
-"\t• <b>נתיב:</b> הנתיב המלא להחרגה."
+"\t• <b>פעיל:</b> אם פעיל, הנתיב יוכלל במסד הנתונים לחיפוש.\n"
+"\t• <b>נתיב:</b> הנתיב המלא להכללה.\n"
+"\t• <b>מערכת קבצים יחידה:</b> אם פעיל, FSearch לא יחצה גבולות בין מערכות "
+"קבצים לתיקייה הזאת"
 
 #: src/fsearch_preferences.ui:1677
 msgid ""
@@ -1007,6 +997,11 @@ msgid ""
 "launcher. Otherwise the <i>.desktop</i> file will be opened with the default "
 "handler for this type of files, which is usually a text editor."
 msgstr ""
+"<b>הפעלת קובצי desktop:</b>\n"
+"\n"
+"אם האפשרות פעילה, הפעלת קובץ ‎<i>.desktop</i> תפעיל את היישום שמוגדר בקובץ "
+"הזה. כך FSearch יכול להתנהג כמו משגר יישומים. אחרת, קובץ ה־‎<i>.desktop</i> "
+"ייפתח עם המטפל בסוג הקבצים האלה כברירת מחדל, בדרך כלל זה עורך טקסט."
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -1157,10 +1152,8 @@ msgid "0 Items"
 msgstr "0 פריטים"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_ביטול"
+msgstr "ביטול"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1191,26 +1184,18 @@ msgid "(empty)"
 msgstr "(ריק)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"הביטוי לחיפוש מכיל מפרידי נתיב.\n"
-"<b>חיפוש בנתיב</b> הופעל זמנית עבור הביטוי הזה."
+"הביטוי לחיפוש מכיל אותיות גדולות.\n"
+"<b>התאמת רישיות</b> הופעלה זמנית עבור הביטוי הזה."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "רישיות"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -1254,30 +1239,28 @@ msgstr ""
 "בנוסף, סדר המיון הזה אינו קבוע והוא יאופס כשתנאי החיפוש ישתנו."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch מקוון"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "תרומה"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "פורום"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "דיווחי תקלות ובקשות פיתוח"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "מממנים דרך GitHub"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"

@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-13 21:24+0200\n"
-"PO-Revision-Date: 2022-08-11 16:16+0000\n"
+"PO-Revision-Date: 2022-08-15 12:19+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -335,10 +335,8 @@ msgid "Empty Query"
 msgstr "Blanco zoekopdracht"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Druk op <b>Ctrl + F</b> en begin met typen"
+msgstr "Druk op <b>Ctrl + F</b> en begin met typen."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -1020,18 +1018,6 @@ msgstr ""
 "<i><tt>fsearch --update-database</tt></i>"
 
 #: src/fsearch_preferences.ui:1833
-#, fuzzy
-#| msgid ""
-#| "<b>Launch desktop files:</b>\n"
-#| "\n"
-#| "                      If enabled, activating a <i>.desktop</i> file will "
-#| "launch the application defined\n"
-#| "                      within that file. This way FSearch can act like an "
-#| "application launcher. Otherwise the <i>.desktop</i>\n"
-#| "                      file will be opened with the default handler for "
-#| "this type of files, which is usually a text\n"
-#| "                      editor.\n"
-#| "                    "
 msgid ""
 "<b>Launch desktop files:</b>\n"
 "\n"
@@ -1042,29 +1028,15 @@ msgid ""
 msgstr ""
 "<b>Launch desktop files:</b>\n"
 "\n"
-"                      If enabled, activating a <i>.desktop</i> file will "
-"launch the application defined\n"
-"                      within that file. This way FSearch can act like an "
-"application launcher. Otherwise the <i>.desktop</i>\n"
-"                      file will be opened with the default handler for this "
-"type of files, which is usually a text\n"
-"                      editor."
+" If enabled, activating a <i>.desktop</i> file will launch the application "
+"defined\n"
+" within that file. This way FSearch can act like an application launcher. "
+"Otherwise the <i>.desktop</i>\n"
+" file will be opened with the default handler for this type of files, which "
+"is usually a text\n"
+" editor."
 
 #: src/fsearch_preferences.ui:1850
-#, fuzzy
-#| msgid ""
-#| "<b>Filters:</b>\n"
-#| "\n"
-#| "                      This is a list of all available filters. A filter "
-#| "is a predefined search.\n"
-#| "\n"
-#| "                      • <b>Name:</b> A unique and descriptive identifier "
-#| "for the filter\n"
-#| "                      • <b>Macro:</b> By typing the macro text followed "
-#| "by a ':' you can enable the filter on demand\n"
-#| "                      • <b>Query:</b> The search term by which the "
-#| "database should be filtered\n"
-#| "                    "
 msgid ""
 "<b>Filters:</b>\n"
 "\n"
@@ -1077,15 +1049,12 @@ msgid ""
 msgstr ""
 "<b>Filters:</b>\n"
 "\n"
-"                      This is a list of all available filters. A filter is a "
-"predefined search.\n"
+" This is a list of all available filters. A filter is a predefined search.\n"
 "\n"
-"                      • <b>Name:</b> A unique and descriptive identifier for "
-"the filter\n"
-"                      • <b>Macro:</b> By typing the macro text followed by a "
-"':' you can enable the filter on demand\n"
-"                      • <b>Query:</b> The search term by which the database "
-"should be filtered"
+" • <b>Name:</b> A unique and descriptive identifier for the filter\n"
+" • <b>Macro:</b> By typing the macro text followed by a ':' you can enable "
+"the filter on demand\n"
+" • <b>Query:</b> The search term by which the database should be filtered"
 
 #: src/fsearch_preferences.ui:1871
 msgid ""
@@ -1216,10 +1185,8 @@ msgid "0 Items"
 msgstr "0 items"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Annuleren"
+msgstr "Annuleren"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1250,26 +1217,18 @@ msgid "(empty)"
 msgstr "(leeg)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"De zoekterm bevat locatie-scheidingstekens.\n"
-"De optie <b>Locatie doorzoeken</b> is tijdelijk ingeschakeld."
+"De zoekterm bevat hoofdletters.\n"
+"De optie <b>Hoofdlettergevoelig</b> is tijdelijk ingeschakeld."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "HOOFDLETTERS"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -1314,30 +1273,28 @@ msgstr ""
 "Deze volgorde wordt niet permanent ingesteld."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch-website"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Doneren"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Bugmeldingen- en ideeënpagina"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub-sponsoren"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"
