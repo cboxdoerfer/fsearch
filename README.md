@@ -61,7 +61,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 * Release Builds:
   <https://www.freshports.org/sysutils/fsearch>
   
-### Flatpak ([limited in functionality](https://github.com/cboxdoerfer/fsearch/wiki/Flatpak-and-Snap-version-limitations))
+### Flatpak ([limited in functionality](https://github.com/cboxdoerfer/fsearch/wiki/Flatpak-version-limitations))
 
 * Release Builds:
   <https://flathub.org/apps/details/io.github.cboxdoerfer.FSearch>
