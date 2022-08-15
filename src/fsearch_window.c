@@ -228,6 +228,33 @@ fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
 }
 
 static void
+on_snap_unsupported_warning_dialog_response(GtkDialog *dialog, int response_id, gpointer user_data) {
+    if (response_id == GTK_RESPONSE_NO) {
+        FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+        FsearchConfig *config = fsearch_application_get_config(app);
+        config->show_dialog_snap_unsupported = false;
+    }
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+}
+
+static gboolean
+show_snap_unsupported_warning_dialog(gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+
+    ui_utils_run_gtk_dialog_async(
+        GTK_WIDGET(self),
+        GTK_MESSAGE_WARNING,
+        GTK_BUTTONS_YES_NO,
+        "Snap version of FSearch is no longer supported",
+        "For more details and other ways to install FSearch see:\n<u><a "
+        "href=\"https://github.com/cboxdoerfer/fsearch/wiki/Snap-is-no-longer-officially-supported\">https://"
+        "github.com/cboxdoerfer/fsearch/wiki/Snap-is-no-longer-officially-supported</a></u>\n\nShow this dialog again?",
+        G_CALLBACK(on_snap_unsupported_warning_dialog_response),
+        NULL);
+    return G_SOURCE_REMOVE;
+}
+
+static void
 fsearch_window_apply_config(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
@@ -249,6 +276,11 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     gtk_combo_box_set_active(GTK_COMBO_BOX(self->filter_combobox), 0);
 
     fsearch_window_set_overlay_for_database_state(self);
+
+    if (config->show_dialog_snap_unsupported) {
+        // Wait 2 seconds before the warning dialog is shown
+        g_timeout_add(2000, show_snap_unsupported_warning_dialog, self);
+    }
 }
 
 G_DEFINE_TYPE(FsearchApplicationWindow, fsearch_application_window, GTK_TYPE_APPLICATION_WINDOW)
@@ -1223,17 +1255,20 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
         config->sort_by = get_sort_name_for_type(fsearch_list_view_get_sort_order(win->result_view->list_view));
 
         // update the config with the widths of all columns whose width we can store
-        const struct { int type; uint32_t *width; } columns[] = {
-            { DATABASE_INDEX_TYPE_NAME,              &config->name_column_width      },
-            { DATABASE_INDEX_TYPE_PATH,              &config->path_column_width      },
-            { DATABASE_INDEX_TYPE_FILETYPE,          &config->type_column_width      },
-            { DATABASE_INDEX_TYPE_EXTENSION,         &config->extension_column_width },
-            { DATABASE_INDEX_TYPE_SIZE,              &config->size_column_width      },
-            { DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width  },
+        const struct {
+            int type;
+            uint32_t *width;
+        } columns[] = {
+            {DATABASE_INDEX_TYPE_NAME, &config->name_column_width},
+            {DATABASE_INDEX_TYPE_PATH, &config->path_column_width},
+            {DATABASE_INDEX_TYPE_FILETYPE, &config->type_column_width},
+            {DATABASE_INDEX_TYPE_EXTENSION, &config->extension_column_width},
+            {DATABASE_INDEX_TYPE_SIZE, &config->size_column_width},
+            {DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width},
         };
         for (int i = 0; i < G_N_ELEMENTS(columns); i++) {
-            const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(
-                    win->result_view->list_view, columns[i].type);
+            const FsearchListViewColumn *col =
+                fsearch_list_view_get_first_column_for_type(win->result_view->list_view, columns[i].type);
             if (col) {
                 *columns[i].width = col->width;
             }

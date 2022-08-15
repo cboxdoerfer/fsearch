@@ -70,6 +70,7 @@ struct _FsearchConfig {
     bool show_indexing_status;
 
     // Warning Dialogs
+    bool show_dialog_snap_unsupported;
     bool show_dialog_failed_opening;
 
     // View menu

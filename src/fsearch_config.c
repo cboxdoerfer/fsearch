@@ -204,6 +204,8 @@ config_load(FsearchConfig *config) {
         // Warning Dialogs
         config->show_dialog_failed_opening =
             config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
+        config->show_dialog_snap_unsupported =
+            config_load_boolean(key_file, "Dialogs", "show_dialog_snap_unsupported", true);
 
         // Applications
         config->folder_open_cmd = config_load_string(key_file, "Applications", "folder_open_cmd", NULL);
@@ -357,6 +359,7 @@ config_load_default(FsearchConfig *config) {
 
     // Warning Dialogs
     config->show_dialog_failed_opening = true;
+    config->show_dialog_snap_unsupported = true;
 
     // Window
     config->restore_window_size = false;
@@ -468,6 +471,7 @@ config_save(FsearchConfig *config) {
 
     // Warning Dialogs
     g_key_file_set_boolean(key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);
+    g_key_file_set_boolean(key_file, "Dialogs", "show_dialog_snap_unsupported", config->show_dialog_snap_unsupported);
 
     // Window
     g_key_file_set_boolean(key_file, "Interface", "restore_window_size", config->restore_window_size);

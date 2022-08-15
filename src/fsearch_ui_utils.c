@@ -34,7 +34,7 @@ ui_utils_run_gtk_dialog_async(GtkWidget *parent,
         gtk_message_dialog_new(GTK_WINDOW(parent), GTK_DIALOG_DESTROY_WITH_PARENT, type, buttons, primary_text, NULL);
 
     if (sec_text) {
-        gtk_message_dialog_format_secondary_text(GTK_MESSAGE_DIALOG(dialog), sec_text, NULL);
+        gtk_message_dialog_format_secondary_markup(GTK_MESSAGE_DIALOG(dialog), sec_text, NULL);
     }
 
     gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);

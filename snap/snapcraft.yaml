@@ -23,7 +23,7 @@ parts:
   fsearch:
     plugin: meson
     source: https://github.com/cboxdoerfer/fsearch.git
-    source-branch: fsearch_0.1
+    source-branch: fsearch_snap_0.1
     meson-parameters:
       - -Dchannel=snap-stable
       - --buildtype=release
