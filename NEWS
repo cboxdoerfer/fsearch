@@ -2,12 +2,25 @@
 Version 0.2 Alpha
 =================
 
+* New search engine
+* Greatly improved highlighting of search terms
+* Custom filters
+* Improved sort performance
+* Improved scroll performance
+* Remember file selection after a database update
 * Automatically scroll the result list in rubberband selection mode
+* Invert selection with rubber band when **`Ctrl`** is pressed
 * Focus search entry when the main window gets activated
 * Add filter for applications (i.e. .desktop files)
 * Add option to launch applications directly instead of opening the .desktop files
 * Show application icons for .desktop files
 * Add .odp and .ods files to document filter
 * "Open with" menu now only shows applications which can handle the selected files
+* Improved opening of multiple files with the same type (they get now passed as a list to applications, instead of one by one)
+* Better support for opening files in sandboxed mode
+* Add menu items with  links to the issue tracker, forum and donation pages
 * Improve support for non-Linux systems
 * Add option to exit FSearch when Escape is pressed instead of minimizing the window
+* Exclude `/proc` and `/sys` by default
+* Open context menu when **`Menu`** key or **`Shift + F10`** are pressed
+* and tons of bug fixes, translation updates and smaller improvements
