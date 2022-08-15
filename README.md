@@ -70,10 +70,6 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 * Development Builds: <https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch>
 
-### openSUSE (unofficial)
-
-* Development Builds: <https://software.opensuse.org/download.html?project=home%3AAsterPhoenix13&package=fsearch>
-
 ## Roadmap
 
 <https://github.com/cboxdoerfer/fsearch/wiki/Roadmap>
