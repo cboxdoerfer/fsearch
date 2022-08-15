@@ -61,21 +61,12 @@
                 <p>Improved sort performance</p>
                 <p>Improved scroll performance</p>
                 <p>Remember file selection after a database update</p>
-                <p>Automatically scroll the result list in rubberband selection mode</p>
                 <p>Invert selection with rubber band when 'Ctrl' is pressed</p>
-                <p>Focus search entry when the main window gets activated</p>
                 <p>Add filter for applications (i.e. .desktop files)</p>
                 <p>Add option to launch applications directly instead of opening the .desktop files</p>
-                <p>Show application icons for .desktop files</p>
-                <p>Add .odp and .ods files to document filter</p>
-                <p>'Open with' menu now only shows applications which can handle the selected files</p>
-                <p>Improved opening of multiple files with the same type (they get now passed as a list to applications, instead of one by one)</p>
-                <p>Better support for opening files in sandboxed mode</p>
                 <p>Add menu items with  links to the issue tracker, forum and donation pages</p>
-                <p>Improve support for non-Linux systems</p>
                 <p>Add option to exit FSearch when Escape is pressed instead of minimizing the window</p>
                 <p>Exclude '/proc' and '/sys' by default</p>
-                <p>Open context menu when 'Menu' key or 'Shift + F10' are pressed</p>
                 <p>and tons of bug fixes, translation updates and smaller improvements</p>
             </description>
         </release>
