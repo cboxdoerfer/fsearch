@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-15 12:19+0000\n"
+"PO-Revision-Date: 2022-08-16 20:17+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -149,8 +149,6 @@ msgid "Sorting…"
 msgstr "מתבצע מיון…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "שגיאה בפתיחת התיקייה"
@@ -160,8 +158,6 @@ msgid "Failed to build open command"
 msgstr "בניית פקודת הפתיחה נכשלה"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "שגיאה בהפעלת קובץ desktop"
@@ -175,8 +171,6 @@ msgid "Failed to get default display"
 msgstr "קבלת תצוגת ברירת המחדל נכשלה"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Error when removing file"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "שגיאה בהסרת קובץ"
@@ -186,15 +180,11 @@ msgid "Failed to get path"
 msgstr "קבלת הנתיב נכשלה"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
 msgstr "שגיאה בהפעלת קובץ desktop"
 
 #: src/fsearch_file_utils.c:259
-#, fuzzy
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr "שגיאה בקבלת מידע על סוג התוכן"
@@ -204,8 +194,6 @@ msgid "No default application registered"
 msgstr "לא נרשם יישומון ברירת מחדל"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Error when opening parent folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "שגיאה בפתיחת תיקיית ההורה"
