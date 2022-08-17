@@ -382,6 +382,8 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         cairo_restore(cr);
     }
 
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
     // Render row foreground
     int32_t x = rect->x;
     for (GList *col = columns; col != NULL; col = col->next) {
@@ -401,7 +403,6 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
 
         switch (column->type) {
         case DATABASE_INDEX_TYPE_NAME: {
-            FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
             if (config->show_listview_icons) {
                 cairo_surface_t *icon_surface = config->show_listview_icons
                                                   ? get_icon_surface(result_view,
@@ -451,7 +452,11 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         default:
             text = NULL;
         }
-        set_attributes(layout, ctx->match_data, column->type);
+
+        if (config->highlight_search_terms) {
+            set_attributes(layout, ctx->match_data, column->type);
+        }
+
         pango_layout_set_text(layout, text ? text : _("Invalid row data"), text_len);
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);
