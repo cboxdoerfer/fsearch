@@ -53,6 +53,14 @@
     <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.appdata.xml.in`. -->
     <content_rating type="oars-1.0"/>
     <releases>
+        <release date="2022-08-17" version="0.2.1">
+            <description>
+                <ul>
+                    <li>Fix crash when parsing a size range (e.g. size:1kb..2kb)</li>
+                    <li>Fix always highlighting search terms</li>
+                </ul>
+            </description>
+        </release>
         <release date="2022-08-15" version="0.2">
             <description>
                 <ul>
