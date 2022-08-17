@@ -202,6 +202,8 @@ test_main(void) {
             {"size:abc", "test", false, 1000000, 0, false},
             {"size:abc test", "test", false, 1000000, 0, false},
             {"size:abc abc", "test", false, 1000000, 0, false},
+            // bug #388
+            {"size:1kb..2kb", "test", false, 1000, 0, true},
 
             {"regex:suffix$", "suffix prefix", false, 0, 0, false},
             {"regex:suffix$", "prefix suffix", false, 0, 0, true},

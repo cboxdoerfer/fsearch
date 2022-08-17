@@ -6,7 +6,7 @@
 bool
 fsearch_size_parse(const char *str, int64_t *size_out, int64_t *size_end_out) {
     g_assert(str);
-    g_assert(size_out);
+
     char *size_suffix = NULL;
     int64_t size = strtoll(str, &size_suffix, 10);
     if (size_suffix == str) {
@@ -57,6 +57,8 @@ out:
     if (size_end_out) {
         *size_end_out = size + plus;
     }
-    *size_out = size;
+    if (size_out) {
+        *size_out = size;
+    }
     return true;
 }
