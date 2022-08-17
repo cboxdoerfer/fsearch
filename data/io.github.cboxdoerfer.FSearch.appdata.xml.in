@@ -55,19 +55,21 @@
     <releases>
         <release date="2022-08-15" version="0.2">
             <description>
-                <p>New search engine</p>
-                <p>Greatly improved highlighting of search terms</p>
-                <p>Custom filters</p>
-                <p>Improved sort performance</p>
-                <p>Improved scroll performance</p>
-                <p>Remember file selection after a database update</p>
-                <p>Invert selection with rubber band when 'Ctrl' is pressed</p>
-                <p>Add filter for applications (i.e. .desktop files)</p>
-                <p>Add option to launch applications directly instead of opening the .desktop files</p>
-                <p>Add menu items with  links to the issue tracker, forum and donation pages</p>
-                <p>Add option to exit FSearch when Escape is pressed instead of minimizing the window</p>
-                <p>Exclude '/proc' and '/sys' by default</p>
-                <p>and tons of bug fixes, translation updates and smaller improvements</p>
+                <ul>
+                    <li>New search engine</li>
+                    <li>Greatly improved highlighting of search terms</li>
+                    <li>Custom filters</li>
+                    <li>Improved sort peliformance</li>
+                    <li>Improved scroll performance</li>
+                    <li>Remember file selection after a database update</li>
+                    <li>Invert selection with rubber band when 'Ctrl' is pressed</li>
+                    <li>Add filter for applications (i.e. .desktop files)</li>
+                    <li>Add option to launch applications directly instead of opening the .desktop files</li>
+                    <li>Add menu items with links to the issue tracker, forum and donation pages</li>
+                    <li>Add option to exit FSearch when Escape is pressed instead of minimizing the window</li>
+                    <li>Exclude '/proc' and '/sys' by default</li>
+                    <li>and tons of bug fixes, translation updates and smaller improvements</li>
+                </ul>
             </description>
         </release>
         <release date="2021-09-25" version="0.1">
