@@ -372,6 +372,19 @@ collect_selected_entry(gpointer key, FsearchDatabaseEntry *entry, GList **paths)
 }
 
 static void
+append_path_to_list(gpointer key, gpointer value, gpointer data) {
+    g_return_if_fail(value);
+
+    FsearchDatabaseEntry *entry = value;
+
+    GString *path_full = db_entry_get_path_full(entry);
+    g_return_if_fail(path_full);
+
+    GList **list = data;
+    *list = g_list_append(*list, g_string_free(path_full, FALSE));
+}
+
+static void
 append_file_to_list(gpointer key, gpointer value, gpointer data) {
     g_return_if_fail(value);
 
@@ -526,13 +539,22 @@ static void
 fsearch_window_action_open_with_other(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
-    const char *content_type = g_variant_get_string(variant, NULL);
-    if (!content_type) {
-        content_type = "";
+    // The app chooser dialog expects us to provide the content type of the file we want to open.
+    // Since we support multiple selections, it's possible that the content type isn't the same for
+    // every selected file. So we just provide the content type of the first selected file instead.
+    g_autofree char *content_type = NULL;
+    GList *file_list = NULL;
+    fsearch_application_window_selection_for_each(self, append_path_to_list, &file_list);
+    if (file_list) {
+        const char *first_selected_path = file_list->data;
+        content_type = fsearch_file_utils_get_content_type(first_selected_path, NULL);
+        g_list_free_full(g_steal_pointer(&file_list), g_free);
     }
 
-    GtkWidget *app_chooser_dlg =
-        gtk_app_chooser_dialog_new_for_content_type(GTK_WINDOW(self), GTK_DIALOG_MODAL, content_type);
+    GtkWidget *app_chooser_dlg = gtk_app_chooser_dialog_new_for_content_type(GTK_WINDOW(self),
+                                                                             GTK_DIALOG_MODAL,
+                                                                             content_type ? content_type
+                                                                                          : "application/octet-stream");
     gtk_widget_show(app_chooser_dlg);
 
     GtkWidget *widget = gtk_app_chooser_dialog_get_widget(GTK_APP_CHOOSER_DIALOG(app_chooser_dlg));
