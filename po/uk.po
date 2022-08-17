@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-13 19:25+0000\n"
+"PO-Revision-Date: 2022-08-18 08:14+0000\n"
 "Last-Translator: Andrij Mizyk <andmzk@proton.me>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
@@ -154,8 +154,6 @@ msgid "Sorting…"
 msgstr "Сортування…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Помилка під час відкривання теки"
@@ -165,8 +163,6 @@ msgid "Failed to build open command"
 msgstr "Не вдалося збудувати відкриту команду"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "Помилка під час запуску стільничного файлу"
@@ -180,8 +176,6 @@ msgid "Failed to get default display"
 msgstr "Не вдалося отримати типовий екран"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Error when removing file"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Помилка під час вилучення файлу"
@@ -191,15 +185,11 @@ msgid "Failed to get path"
 msgstr "Помилка отримання шляху"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
 msgstr "Помилка під час запуску стільничного файлу"
 
 #: src/fsearch_file_utils.c:259
-#, fuzzy
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr "Помилка під час отримання інформації про тип вмісту"
@@ -209,8 +199,6 @@ msgid "No default application registered"
 msgstr "Не зареєстровано типової програми"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Error when opening parent folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Помилка під час відкривання батьківської теки"
@@ -359,14 +347,8 @@ msgid "Empty Query"
 msgstr "Порожній запит"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid ""
-#| "Press <b>Ctrl + F</b> and start typing\n"
-#| "                        "
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr ""
-"Натисніть <b>Ctrl + F</b> і почніть набирати\n"
-"                        "
+msgstr "Натисніть <b>Ctrl + F</b> і почніть набирати."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -382,7 +364,7 @@ msgstr "Сортування результатів…"
 
 #: src/fsearch_preferences.ui:63 src/fsearch_window.ui:396 src/menus.ui:84
 msgid "Preferences"
-msgstr "Параметри"
+msgstr "Налаштування"
 
 #: src/fsearch_preferences.ui:132
 msgid "Enable dark theme"
@@ -494,7 +476,7 @@ msgstr "Інтерфейс"
 
 #: src/fsearch_preferences.ui:659
 msgid "Search in path when query contains path separators"
-msgstr "Шукати по шляху, якщо запит містить роздільники"
+msgstr "Шукати в шляху, якщо запит містить роздільники"
 
 #: src/fsearch_preferences.ui:673
 msgid "Search as you type"
@@ -506,7 +488,7 @@ msgstr "Ховати результати, якщо пошукове поле п
 
 #: src/fsearch_preferences.ui:701
 msgid "Match case when query contains at least one upper case character"
-msgstr "Враховувати регістр, якщо запит містить принаймні одну велику літеру"
+msgstr "Враховувати регістр, якщо запит містить хоча б одну велику літеру"
 
 #: src/fsearch_preferences.ui:769
 msgid "Add new filter"
@@ -832,9 +814,9 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
-"<b>Шукати по шляху, якщо запит містить роздільники:</b>\n"
+"<b>Шукати в шляху, якщо запит містить роздільники:</b>\n"
 "\n"
-"Якщо ввімкнено — пошуковий запит, який містить роздільники (як-от «/»), "
+"Якщо ввімкнено — пошуковий запит, що містить роздільники (такі як «/»), "
 "автоматично зіставлятиметься з повним шляхом файлу або теки."
 
 #: src/fsearch_preferences.ui:1584
@@ -845,12 +827,11 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
-"<b>Враховувати регістр, якщо запит містить принаймні одну велику літеру:</"
-"b>\n"
+"<b>Враховувати регістр, якщо запит містить хоча б одну велику літеру:</b>\n"
 "\n"
 "Якщо ввімкнено — пошуковий запит, що містить принаймні одну велику літеру, "
-"перемикається на чутливий до регістру пошук. Це означає, що запити на зразок "
-"<i>Foo</i> зіставлятимуться з <i>FooBar.txt</i>, але не з <i>foobar.txt</i>."
+"перемикається на чутливий до регістру пошук. Це означає, що запиту на зразок "
+"<i>Foo</i> відповідатиме <i>FooBar.txt</i>, але не <i>foobar.txt</i>."
 
 #: src/fsearch_preferences.ui:1601
 msgid ""
@@ -1202,10 +1183,8 @@ msgid "0 Items"
 msgstr "0 обʼєктів"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Скасувати"
+msgstr "Скасувати"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1294,7 +1273,7 @@ msgstr ""
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
 msgid "FSearch Online"
-msgstr "FSearch в мережі"
+msgstr "FSearch у мережі"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
@@ -1310,7 +1289,7 @@ msgstr "Звіти про недоліки і запити функцій"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr "Спонсори на GitHub"
+msgstr "Спонсорство на GitHub"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
