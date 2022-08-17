@@ -1348,6 +1348,8 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *win)
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     fsearch_list_view_set_single_click_activate(win->result_view->list_view, config->single_click_open);
     gtk_widget_set_has_tooltip(GTK_WIDGET(win->result_view->list_view), config->enable_list_tooltips);
+
+    fsearch_application_window_redraw_listview(win);
 }
 
 FsearchListView *
