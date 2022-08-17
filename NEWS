@@ -1,6 +1,7 @@
 =================
 Version 0.2.1 UNRELEASED
 =================
+* Fix crash when parsing a size range (e.g. size:1kb..2kb)
 * Fix always highlighting search terms
 
 =================
