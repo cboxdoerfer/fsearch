@@ -361,14 +361,25 @@ fsearch_window_action_copy_name(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-collect_selected_entry(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
+collect_selected_entry_parent_path(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
     g_return_if_fail(paths);
     g_return_if_fail(entry);
 
-    GString *path_full = db_entry_get_path_full(entry);
-    g_return_if_fail(path_full);
+    GString *parent_path = db_entry_get_path(entry);
+    g_return_if_fail(parent_path);
 
-    *paths = g_list_append(*paths, g_string_free(path_full, FALSE));
+    *paths = g_list_append(*paths, g_string_free(parent_path, FALSE));
+}
+
+static void
+collect_selected_entry_path(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
+    g_return_if_fail(paths);
+    g_return_if_fail(entry);
+
+    GString *path = db_entry_get_path_full(entry);
+    g_return_if_fail(path);
+
+    *paths = g_list_append(*paths, g_string_free(path, FALSE));
 }
 
 static void
@@ -449,18 +460,20 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     GList *paths = NULL;
-    fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry, &paths);
-
-    GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
-    g_autoptr(GdkAppLaunchContext) launch_context = gdk_display_get_app_launch_context(display);
-
-    if (open_parent_folder) {
-        fsearch_file_utils_open_parent_folder_with_optional_command_from_path_list(paths,
-                                                                                   config->folder_open_cmd,
-                                                                                   G_APP_LAUNCH_CONTEXT(launch_context),
-                                                                                   error_message);
+    if (open_parent_folder && !config->folder_open_cmd) {
+        fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_parent_path, &paths);
     }
     else {
+        fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_path, &paths);
+    }
+
+    if (open_parent_folder && config->folder_open_cmd) {
+        fsearch_file_utils_open_path_list_with_command(paths, config->folder_open_cmd, error_message);
+    }
+    else {
+        GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
+        g_autoptr(GdkAppLaunchContext) launch_context = gdk_display_get_app_launch_context(display);
+
         fsearch_file_utils_open_path_list(paths,
                                           config->launch_desktop_files,
                                           G_APP_LAUNCH_CONTEXT(launch_context),

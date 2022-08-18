@@ -34,28 +34,14 @@ bool
 fsearch_file_utils_remove(const char *path, GString *error_messages);
 
 bool
-fsearch_file_utils_open_path(const char *path,
-                             bool launch_desktop_files,
-                             GAppLaunchContext *launch_context,
-                             GString *error_message);
-
-bool
 fsearch_file_utils_open_path_list(GList *paths,
                                   bool launch_desktop_files,
                                   GAppLaunchContext *launch_context,
                                   GString *error_message);
 
 bool
-fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
-                                                            const char *cmd,
-                                                            GAppLaunchContext *launch_context,
-                                                            GString *error_message);
+fsearch_file_utils_open_path_list_with_command(GList *paths, const char *cmd, GString *error_message);
 
-bool
-fsearch_file_utils_open_parent_folder_with_optional_command_from_path_list(GList *paths,
-                                                                           const char *cmd,
-                                                                           GAppLaunchContext *launchContext,
-                                                                           GString *error_message);
 gchar *
 fsearch_file_utils_get_file_type(const gchar *name, gboolean is_dir);
 
