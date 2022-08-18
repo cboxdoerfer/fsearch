@@ -1,7 +1,7 @@
 project('fsearch', 'c',
     version: '0.3.alpha0',
     meson_version: '>= 0.45.0',
-    default_options: ['c_std=c11',
+    default_options: ['c_std=gnu11',
                       'channel=other',
                       ],
     )
@@ -27,7 +27,7 @@ config_h.set_quoted('PACKAGE_NAME', 'FSearch')
 config_h.set_quoted('BUILD_CHANNEL', get_option('channel'))
 
 # ensure off_t is 64bit
-add_project_arguments('-DHAVE_CONFIG_H', '-D_FILE_OFFSET_BITS=64', language : 'c')
+add_project_arguments('-DHAVE_CONFIG_H', '-D_FILE_OFFSET_BITS=64', '-D_GNU_SOURCE', language : 'c')
 
 fsearch_include_dirs = include_directories(
   '.',

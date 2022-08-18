@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-
 #include "fsearch_database_entry.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_string_utils.h"

@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-
 #include "fsearch_time_utils.h"
 
 #include <glib.h>

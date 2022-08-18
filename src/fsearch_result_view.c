@@ -1,4 +1,3 @@
-#define _GNU_SOURCE
 #define G_LOG_DOMAIN "fsearch-result-view"
 
 #include "fsearch_result_view.h"

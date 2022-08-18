@@ -18,8 +18,6 @@
 
 #define G_LOG_DOMAIN "fsearch-utils"
 
-#define _GNU_SOURCE
-
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_string_utils.h"

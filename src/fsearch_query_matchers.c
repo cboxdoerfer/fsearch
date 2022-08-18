@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-
 #include "fsearch_query_matchers.h"
 #include "fsearch_query_node.h"
 #include <string.h>

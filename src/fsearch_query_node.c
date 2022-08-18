@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-
 #define G_LOG_DOMAIN "fsearch-query-node"
 
 #include "fsearch_query_node.h"

@@ -16,7 +16,6 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#define _GNU_SOURCE
 #include "fsearch_query.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_string_utils.h"

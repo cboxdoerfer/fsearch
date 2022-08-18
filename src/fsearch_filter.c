@@ -1,5 +1,3 @@
-#define _GNU_SOURCE
-
 #include "fsearch_filter.h"
 
 #include <glib/gi18n.h>
