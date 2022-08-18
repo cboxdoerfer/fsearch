@@ -449,6 +449,36 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     launch_selection_for_app_info(self, G_APP_INFO(app_info));
 }
 
+typedef struct FsearchOpenPathContext {
+    guint win_id;
+    gboolean triggered_with_mouse;
+    gboolean show_dialog_failed_opening;
+} FsearchOpenPathContext;
+
+static void
+open_path_list_callback(gboolean result, const char *error_message, gpointer user_data) {
+    g_autofree FsearchOpenPathContext *ctx = user_data;
+    if (result) {
+        // open succeeded
+        action_after_open(ctx->triggered_with_mouse);
+    }
+    else if (error_message) {
+        // open failed
+        if (ctx->show_dialog_failed_opening) {
+            GtkWindow *win = gtk_application_get_window_by_id(GTK_APPLICATION(FSEARCH_APPLICATION_DEFAULT), ctx->win_id);
+            if (win) {
+                ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
+                                              GTK_MESSAGE_WARNING,
+                                              GTK_BUTTONS_OK,
+                                              _("Something went wrong."),
+                                              error_message,
+                                              G_CALLBACK(gtk_widget_destroy),
+                                              NULL);
+            }
+        }
+    }
+}
+
 void
 fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_parent_folder, bool triggered_with_mouse) {
     const guint selected_rows = fsearch_application_window_get_num_selected(win);
@@ -469,35 +499,41 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
 
     if (open_parent_folder && config->folder_open_cmd) {
         fsearch_file_utils_open_path_list_with_command(paths, config->folder_open_cmd, error_message);
+
+        if (error_message->len == 0) {
+            // open succeeded
+            action_after_open(triggered_with_mouse);
+        }
+        else {
+            // open failed
+            if (config->show_dialog_failed_opening) {
+                ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
+                                              GTK_MESSAGE_WARNING,
+                                              GTK_BUTTONS_OK,
+                                              _("Something went wrong."),
+                                              error_message->str,
+                                              G_CALLBACK(gtk_widget_destroy),
+                                              NULL);
+            }
+        }
     }
     else {
         GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
         g_autoptr(GdkAppLaunchContext) launch_context = gdk_display_get_app_launch_context(display);
 
+        FsearchOpenPathContext *open_ctx = g_new0(FsearchOpenPathContext, 1);
+        open_ctx->win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
+        open_ctx->triggered_with_mouse = triggered_with_mouse;
+        open_ctx->show_dialog_failed_opening = config->show_dialog_failed_opening;
+
         fsearch_file_utils_open_path_list(paths,
                                           config->launch_desktop_files,
                                           G_APP_LAUNCH_CONTEXT(launch_context),
-                                          error_message);
+                                          open_path_list_callback,
+                                          open_ctx);
     }
 
     g_list_free_full(paths, g_free);
-
-    if (error_message->len == 0) {
-        // open succeeded
-        action_after_open(triggered_with_mouse);
-    }
-    else {
-        // open failed
-        if (config->show_dialog_failed_opening) {
-            ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
-                                          GTK_MESSAGE_WARNING,
-                                          GTK_BUTTONS_OK,
-                                          _("Something went wrong."),
-                                          error_message->str,
-                                          G_CALLBACK(gtk_widget_destroy),
-                                          NULL);
-        }
-    }
 }
 
 static void

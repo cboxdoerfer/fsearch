@@ -21,6 +21,8 @@
 #include <gtk/gtk.h>
 #include <stdbool.h>
 
+typedef void (*FsearchFileUtilsOpenCallback)(gboolean result, const char *error_message, gpointer user_data);
+
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len);
 
@@ -33,11 +35,12 @@ fsearch_file_utils_trash(const char *path, GString *error_messages);
 bool
 fsearch_file_utils_remove(const char *path, GString *error_messages);
 
-bool
+void
 fsearch_file_utils_open_path_list(GList *paths,
                                   bool launch_desktop_files,
-                                  GAppLaunchContext *launch_context,
-                                  GString *error_message);
+                                  GAppLaunchContext *app_launch_context,
+                                  FsearchFileUtilsOpenCallback callback,
+                                  gpointer callback_data);
 
 bool
 fsearch_file_utils_open_path_list_with_command(GList *paths, const char *cmd, GString *error_message);
