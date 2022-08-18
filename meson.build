@@ -26,9 +26,8 @@ config_h.set_quoted('PACKAGE_ICON_NAME', app_id)
 config_h.set_quoted('PACKAGE_NAME', 'FSearch')
 config_h.set_quoted('BUILD_CHANNEL', get_option('channel'))
 
-add_project_arguments('-DHAVE_CONFIG_H', language : 'c')
 # ensure off_t is 64bit
-add_project_arguments('-D_FILE_OFFSET_BITS=64', language : 'c')
+add_project_arguments('-DHAVE_CONFIG_H', '-D_FILE_OFFSET_BITS=64', language : 'c')
 
 fsearch_include_dirs = include_directories(
   '.',
