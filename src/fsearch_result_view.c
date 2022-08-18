@@ -110,7 +110,7 @@ get_icon_surface(FsearchResultView *result_view,
     if (lstat(path, &buffer)) {
         icon = g_themed_icon_new("edit-delete");
     }
-    else if (type == DATABASE_ENTRY_TYPE_FOLDER && fsearch_file_utils_is_desktop_file(path)) {
+    else if (type == DATABASE_ENTRY_TYPE_FILE && fsearch_file_utils_is_desktop_file(path)) {
         icon = get_desktop_file_icon(result_view, path);
     }
     else {
