@@ -209,19 +209,6 @@ fsearch_file_utils_trash(const char *path, GString *error_messages) {
     return file_remove_or_trash(path, false, error_messages);
 }
 
-bool
-fsearch_file_utils_open_path(const char *path,
-                             bool launch_desktop_files,
-                             GAppLaunchContext *launch_context,
-                             GString *error_message) {
-    g_return_val_if_fail(path, false);
-
-    GList *list = g_list_append(NULL, g_strdup(path));
-    const bool res = fsearch_file_utils_open_path_list(list, launch_desktop_files, launch_context, error_message);
-    g_list_free_full(list, g_free);
-    return res;
-}
-
 typedef struct {
     GHashTable *content_types;
     GString *error_messages;
@@ -374,11 +361,8 @@ fsearch_file_utils_open_path_list(GList *paths,
     return error_message->len > 0 ? false : true;
 }
 
-bool
-fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
-                                                            const char *cmd,
-                                                            GAppLaunchContext *launch_context,
-                                                            GString *error_message) {
+static bool
+fsearch_file_utils_open_path_with_command(const char *path, const char *cmd, GString *error_message) {
     g_autoptr(GFile) file = g_file_new_for_path(path);
     g_autoptr(GFile) parent = g_file_get_parent(file);
     // If file has no parent it means it's the root directory.
@@ -395,24 +379,30 @@ fsearch_file_utils_open_parent_folder_with_optional_command(const char *path,
         return false;
     }
 
-    if (cmd) {
-        return open_with_cmd(parent_path, path, cmd, error_message);
+    const char *error_description = C_("Will be followed by the path of the folder.", "Error while opening folder");
+    g_autofree char *cmd_res = build_folder_open_cmd(path, path, cmd);
+    if (!cmd_res) {
+        add_error_message_with_format(error_message, error_description, path, _("Failed to build open command"));
+        return false;
     }
-    else {
-        return fsearch_file_utils_open_path(parent_path, false, launch_context, error_message);
+
+    g_autoptr(GError) error = NULL;
+    if (!g_spawn_command_line_async(cmd_res, &error)) {
+        add_error_message(error_message, error->message);
+        return false;
     }
+
+    return true;
 }
 
 bool
-fsearch_file_utils_open_parent_folder_with_optional_command_from_path_list(GList *paths,
-                                                                           const char *cmd,
-                                                                           GAppLaunchContext *launchContext,
-                                                                           GString *error_message) {
+fsearch_file_utils_open_path_list_with_command(GList *paths, const char *cmd, GString *error_message) {
+    g_return_val_if_fail(cmd, false);
     g_return_val_if_fail(paths, false);
 
     for (GList *p = paths; p != NULL; p = p->next) {
         const char *path = p->data;
-        fsearch_file_utils_open_parent_folder_with_optional_command(path, cmd, launchContext, error_message);
+        fsearch_file_utils_open_path_with_command(path, cmd, error_message);
     }
     return true;
 }
