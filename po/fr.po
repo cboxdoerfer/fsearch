@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-15 12:19+0000\n"
-"Last-Translator: Christian Boxdörfer <christian.boxdoerfer@posteo.de>\n"
+"PO-Revision-Date: 2022-08-19 10:22+0000\n"
+"Last-Translator: rene-coty <irenee.thirion@e.email>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
 "Language: fr\n"
@@ -165,80 +165,58 @@ msgid "Sorting…"
 msgstr "Tri des résultats…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr "Exécuter les fichiers .desktop"
+msgstr "Erreur lors de l’ouverture du dossier"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "Échec de l'ouverture :"
+msgstr "Échec de la construction de la commande d’ouverture"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
-msgstr "Exécuter les fichiers .desktop"
+msgstr "Erreur lors du lancement du fichier de bureau"
 
 #: src/fsearch_file_utils.c:154
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Ouvrir une nouvelle fenêtre d'application"
+msgstr "Échec de l’obtention des informations de l’application"
 
 #: src/fsearch_file_utils.c:160
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "Impossible d'ouvrir le fichier"
+msgstr "Échec de l’obtention de l’affichage par défaut"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr "Exécuter les fichiers .desktop"
+msgstr "Erreur lors de la suppression du fichier"
 
 #: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Échec de l'ouverture :"
+msgstr "Échec de l’obtention du chemin"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
-msgstr "Exécuter les fichiers .desktop"
+msgstr "Erreur lors du lancement du fichier de bureau"
 
 #: src/fsearch_file_utils.c:259
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Erreur lors de l’obtention des informations pour le type de contenu"
 
 #: src/fsearch_file_utils.c:261
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Afficher les préférences de l'application"
+msgstr "Aucune application par défaut enregistrée"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr "Exécuter les fichiers .desktop"
+msgstr "Erreur lors de l’ouverture du dossier parent"
 
 #: src/fsearch_file_utils.c:350
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Échec de l'ouverture :"
+msgstr "Échec de l’obtention du chemin parent"
 
 #: src/fsearch_file_utils.c:407
 msgid "Folder"
@@ -1278,17 +1256,12 @@ msgid "(empty)"
 msgstr "(vide)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Le terme de recherche contient un séparateur de chemin d'accès.\n"
-"<b>Rechercher dans le chemin d'accès</b> a été temporairement activé pour ce "
-"terme."
+"Le terme de recherche des caractères majuscules.\n"
+"<b>Correspondre à la casse</b> a été temporairement activé pour ce terme."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
@@ -1341,22 +1314,20 @@ msgstr ""
 "de recherche changera."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch en ligne"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Faire un don"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Rapports de bogues et requêtes pour de nouvelles fonctionnalités"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
@@ -1438,25 +1409,25 @@ msgstr "Déplacement des fichiers dans la corbeille…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
-msgstr ""
+msgstr "Quelque chose s’est mal passé."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Suppression des fichiers…"
+msgstr "%d fichier(s) supprimé(s)."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Déplacement des fichiers dans la corbeille…"
+msgstr "%d fichier(s) déplacé(s) dans la corbeille."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"La base de données doit être mise à jour avant de prendre connaissance de "
+"ces changements ! Ceci sera réparé dans de futures mises à jour."
 
 #: src/fsearch_window_actions.c:247
 #, c-format
