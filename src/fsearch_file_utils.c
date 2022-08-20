@@ -298,6 +298,7 @@ handle_queued_uris(FsearchFileUtilsLaunchContext *launch_ctx) {
     }
     else {
         FsearchFileUtilsLaunchUrisContext *uris_ctx = g_queue_pop_head(launch_ctx->launch_uris_ctx_queue);
+#if GLIB_CHECK_VERSION(2, 60, 0)
         g_app_info_launch_uris_async(uris_ctx->app_info,
                                      uris_ctx->uris,
                                      launch_ctx->app_launch_context,
@@ -305,9 +306,23 @@ handle_queued_uris(FsearchFileUtilsLaunchContext *launch_ctx) {
                                      launch_uris_ready,
                                      launch_ctx);
         g_clear_pointer(&uris_ctx, launch_uris_context_free);
+#else
+        g_autoptr(GError) error = NULL;
+        g_app_info_launch_uris(uris_ctx->app_info,
+                                     uris_ctx->uris,
+                                     launch_ctx->app_launch_context,
+                                     &error);
+        if (error) {
+            add_error_message(launch_ctx->error_messages, error->message);
+        }
+        g_clear_pointer(&uris_ctx, launch_uris_context_free);
+
+        handle_queued_uris(launch_ctx);
+#endif
     }
 }
 
+#if GLIB_CHECK_VERSION(2, 60, 0)
 static void
 launch_uris_ready(GObject *source_object, GAsyncResult *result, gpointer user_data) {
     FsearchFileUtilsLaunchContext *ctx = user_data;
@@ -320,6 +335,7 @@ launch_uris_ready(GObject *source_object, GAsyncResult *result, gpointer user_da
 
     handle_queued_uris(ctx);
 }
+#endif
 
 static void
 collect_for_content_type(GHashTable *content_types, const char *path_full) {
