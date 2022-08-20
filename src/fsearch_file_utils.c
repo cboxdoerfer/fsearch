@@ -306,10 +306,7 @@ handle_queued_uris(FsearchFileUtilsLaunchContext *launch_ctx) {
         g_clear_pointer(&uris_ctx, launch_uris_context_free);
 #else
         g_autoptr(GError) error = NULL;
-        g_app_info_launch_uris(uris_ctx->app_info,
-                                     uris_ctx->uris,
-                                     launch_ctx->app_launch_context,
-                                     &error);
+        g_app_info_launch_uris(uris_ctx->app_info, uris_ctx->uris, launch_ctx->app_launch_context, &error);
         if (error) {
             add_error_message(launch_ctx->error_messages, error->message);
         }
@@ -336,14 +333,14 @@ launch_uris_ready(GObject *source_object, GAsyncResult *result, gpointer user_da
 #endif
 
 static void
-collect_for_content_type(GHashTable *content_types, const char *path_full) {
+collect_for_content_type(GHashTable *content_types, const char *path_full, GString *error_messages) {
     g_return_if_fail(path_full);
     g_return_if_fail(content_types);
 
     g_autoptr(GError) error = NULL;
     g_autofree char *content_type = fsearch_file_utils_get_content_type(path_full, &error);
     if (!content_type) {
-        g_debug("[collect_for_content_type] %s", error->message);
+        add_error_message(error_messages, error->message);
         return;
     }
 
@@ -448,14 +445,19 @@ fsearch_file_utils_open_path_list(GList *paths,
     g_autoptr(GHashTable)
         content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_ptr_array_unref);
 
+    g_autoptr(GString) error_messages = g_string_new(NULL);
     // Before opening any files, we first group them by their content type
     for (GList *p = paths; p != NULL; p = p->next) {
         char *path = p->data;
-        collect_for_content_type(content_types, path);
+        collect_for_content_type(content_types, path, error_messages);
     }
 
     FsearchFileUtilsLaunchContext *launch_ctx =
         launch_context_new(app_launch_context, launch_desktop_files, callback, callback_data);
+
+    if (error_messages->len > 0) {
+        g_string_append(launch_ctx->error_messages, error_messages->str);
+    }
 
     g_hash_table_foreach(content_types, (GHFunc)create_uris_launch_context, launch_ctx);
 
