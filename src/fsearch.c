@@ -691,7 +691,6 @@ static void
 fsearch_application_activate(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
 
-    printf("activate fsearch\n");
     FsearchApplication *self = FSEARCH_APPLICATION(app);
 
     if (!self->new_window) {
