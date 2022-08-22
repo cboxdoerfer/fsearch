@@ -1,5 +1,13 @@
 =================
-Version 0.2.1 UNRELEASED
+Version 0.2.2
+=================
+* Fix applications sometimes not getting started when FSearch closes immediately after activation
+* Add OBS build channels to build options
+* Remove debug output
+* Updated translations: Dutch, Chinese (Simplified), Turkish, Hebrew, Ukrainian, French
+
+=================
+Version 0.2.1
 =================
 * Fix crash when parsing a size range (e.g. size:1kb..2kb)
 * Fix always highlighting search terms

@@ -53,6 +53,16 @@
     <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.appdata.xml.in`. -->
     <content_rating type="oars-1.0"/>
     <releases>
+        <release date="2022-08-22" version="0.2.2">
+            <description>
+                <ul>
+                    <li>Fix applications sometimes not getting started when FSearch closes immediately after activation</li>
+                    <li>Add OBS build channels to build options</li>
+                    <li>Remove debug output</li>
+                    <li>Updated translations: Dutch, Chinese (Simplified), Turkish, Hebrew, Ukrainian, French</li>
+                </ul>
+            </description>
+        </release>
         <release date="2022-08-17" version="0.2.1">
             <description>
                 <ul>
