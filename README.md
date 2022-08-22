@@ -1,18 +1,18 @@
 ![Build Status](https://github.com/cboxdoerfer/fsearch/actions/workflows/build_test.yml/badge.svg)
 [![Translation status](https://hosted.weblate.org/widgets/fsearch/-/svg-badge.svg)](https://hosted.weblate.org/engage/fsearch/?utm_source=widget)
 
-
 FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK3.
 
 * For bug reports and feature requests please use the issue tracker: <https://github.com/cboxdoerfer/fsearch/issues>
-* For discussions and questions about FSearch use the discussion forum: <https://github.com/cboxdoerfer/fsearch/discussions>
+* For discussions and questions about FSearch use the discussion
+  forum: <https://github.com/cboxdoerfer/fsearch/discussions>
 * For everything else related to FSearch you can talk to me on Matrix: <https://matrix.to/#/#fsearch:matrix.org>
 
 ![](https://raw.githubusercontent.com/cboxdoerfer/fsearch/master/data/screenshots/02-main_window_menubar.png)
 ![](https://raw.githubusercontent.com/cboxdoerfer/fsearch/master/data/screenshots/01-main_window_headerbar.png)
 
-
 ## Features
+
 - Instant (as you type) results
 - Wildcard support
 - RegEx support
@@ -32,56 +32,23 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ## Download
 
-### Ubuntu
+It is recommended to install FSearch from one of the **Stable** packages, unless you know what you're doing.
 
-* Release Builds:
-  <https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable>
+The **Development** packages are primarliy intended for testing and adventurous users.
 
-* Development Builds:
-  <https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily>
 
-### Arch Linux (AUR)
+| Distribution                                                                                          | Stable                                                                                                                     | Development                                                                            |
+|-------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------|
+| Ubuntu                                                                                                | [PPA Stable](https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-stable)                                   | [PPA Daily](https://launchpad.net/~christian-boxdoerfer/+archive/ubuntu/fsearch-daily) |
+| Arch Linux                                                                                            | [AUR](https://aur.archlinux.org/packages/fsearch/)                                                                         | [AUR (git)](https://aur.archlinux.org/packages/fsearch-git/)                           |
+| Fedora/RHEL/CentOS                                                                                    | [COPR Stable](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/)                                                | [COPR Nightly](https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/)   |
+| Debian                                                                                                | [OpenBuildService](https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualDebian)   |                                                                                        |
+| openSUSE                                                                                              | [OpenBuildService](https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualopenSUSE) |                                                                                        |
+| Flatpak ([limited features](https://github.com/cboxdoerfer/fsearch/wiki/Flatpak-version-limitations)) | [Flathub](https://flathub.org/apps/details/io.github.cboxdoerfer.FSearch)                                                  |                                                                                        |
+| Solus (*)                                                                                             | [Solus Repository](https://dev.getsol.us/source/fsearch/)                                                                  |                                                                                        |
+| FreeBSD (*)                                                                                           | [FreshPorts](https://www.freshports.org/sysutils/fsearch)                                                                  |                                                                                        |
 
-* Release Builds:
-  <https://aur.archlinux.org/packages/fsearch/>
-
-* Development Builds:
-  <https://aur.archlinux.org/packages/fsearch-git/>
-
-### Fedora/RHEL/CentOS
-
-* Release Builds:
-  <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch/>
-
-* Development Builds:
-  <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/>
-  
-### Debian
-* Release Builds:
-  <https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualDebian>
-  
-### openSUSE
-* Release Builds:
-  <https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualopenSUSE>
-  
-### FreeBSD
-
-* Release Builds:
-  <https://www.freshports.org/sysutils/fsearch>
-  
-### Flatpak ([limited in functionality](https://github.com/cboxdoerfer/fsearch/wiki/Flatpak-version-limitations))
-
-* Release Builds:
-  <https://flathub.org/apps/details/io.github.cboxdoerfer.FSearch>
-  
-### NixOS (unofficial)
-
-* Development Builds: <https://search.nixos.org/packages?channel=unstable&show=fsearch&query=fsearch>
-
-### Solus
-
-* Release Builds: 
-<https://dev.getsol.us/source/fsearch/>
+(*) Not maintained by me
 
 ## Roadmap
 
@@ -97,7 +64,8 @@ The localization of FSearch is managed with Weblate.
 
 <https://hosted.weblate.org/projects/fsearch/>
 
-If you want to contribute translations please submit them there, instead of opening pull requests on GitHub. Instructions
+If you want to contribute translations please submit them there, instead of opening pull requests on GitHub.
+Instructions
 can be found here:
 <https://docs.weblate.org/en/latest/user/basic.html>
 
@@ -121,6 +89,7 @@ remotely as fast and powerful.
 Before I started working on FSearch, I took a look at existing solutions. I tried MATE Search Tool (formerly GNOME
 Search Tool), Recoll, Krusader (locate based search), SpaceFM File Search, Nautilus, ANGRYsearch and Catfish, to find
 out whether it makes sense to improve those. However, they're not exactly what I was looking for:
+
 - standalone application (not part of a file manager)
 - written in a language with C like performance
 - no dependencies to any specific desktop environment
@@ -129,6 +98,7 @@ out whether it makes sense to improve those. However, they're not exactly what I
 - target audience: advanced users
 
 ## Looking for a command line interface?
+
 I highly recommend [fzf](https://github.com/junegunn/fzf) or the obvious tools: find and (m)locate
 
 ## Why GTK3 and not Qt5?
