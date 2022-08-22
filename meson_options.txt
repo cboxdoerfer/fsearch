@@ -1,5 +1,5 @@
 option('channel',
           type: 'combo',
-       choices: [ 'other', 'AUR-stable', 'AUR-devel', 'copr-stable', 'copr-nightly', 'PPA-stable', 'PPA-nightly', 'snap-stable', 'snap-nightly', 'flathub-stable', 'flathub-nightly' ],
+       choices: [ 'other', 'AUR-stable', 'AUR-devel', 'copr-stable', 'copr-nightly', 'PPA-stable', 'PPA-nightly', 'snap-stable', 'snap-nightly', 'flathub-stable', 'flathub-nightly', 'OBS-deb-stable', 'OBS-rpm-stable' ],
    description: 'The distribution channel for FSearch',
 )
