@@ -56,6 +56,14 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 * Development Builds:
   <https://copr.fedorainfracloud.org/coprs/cboxdoerfer/fsearch_nightly/>
   
+### Debian
+* Release Builds:
+  <https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualDebian>
+  
+### openSUSE
+* Release Builds:
+  <https://software.opensuse.org//download.html?project=home%3Acboxdoerfer&package=fsearch#manualopenSUSE>
+  
 ### FreeBSD
 
 * Release Builds:
