@@ -14,6 +14,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 ## Features
 
 - Instant (as you type) results
+- [Advanced search syntax](https://github.com/cboxdoerfer/fsearch/wiki/Search-syntax)
 - Wildcard support
 - RegEx support
 - Filter support (only search for files, folders or everything)
