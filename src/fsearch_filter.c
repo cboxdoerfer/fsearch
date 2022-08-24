@@ -79,10 +79,11 @@ static const char *folder_filter = "folder:";
 static const char *application_filter = "ext:desktop;DESKTOP";
 static const char *document_filter = "ext:c;chm;cpp;csv;cxx;doc;docm;docx;dot;dotm;dotx;h;hpp;htm;html;hxx;ini;java;"
                                      "lua;mht;mhtml;ods;odt;odp;pdf;potx;potm;ppam;ppsm;ppsx;pps;ppt;pptm;pptx;rtf;"
-                                     "sldm;sldx;thmx;txt;vsd;wpd;wps;wri;xlam;xls;xlsb;xlsm;xlsx;xltm;xltx;xml;C;CHM;"
+                                     "sldm;sldx;thmx;txt;vsd;vsdx;wpd;wps;wri;xlam;xls;xlsb;xlsm;xlsx;xltm;xltx;xml;C;"
+                                     "CHM;"
                                      "CPP;CSV;CXX;DOC;DOCM;DOCX;DOT;DOTM;DOTX;H;HPP;HTM;HTML;HXX;INI;JAVA;LUA;MHT;"
                                      "MHTML;ODS;ODT;ODP;PDF;POTX;POTM;PPAM;PPSM;PPSX;PPS;PPT;PPTM;PPTX;RTF;SLDM;SLDX;"
-                                     "THMX;TXT;VSD;WPD;WPS;WRI;XLAM;XLS;XLSB;XLSM;XLSX;XLTM;XLTX;XML";
+                                     "THMX;TXT;VSD;VSDX;WPD;WPS;WRI;XLAM;XLS;XLSB;XLSM;XLSX;XLTM;XLTX;XML";
 static const char *audio_filter = "ext:aac;ac3;aif;aifc;aiff;au;cda;dts;fla;flac;it;m1a;m2a;m3u;m4a;mid;midi;mka;mod;"
                                   "mp2;mp3;mpa;ogg;opus;ra;rmi;spc;rmi;snd;umx;voc;wav;wma;xm;AAC;AC3;AIF;AIFC;AIFF;AU;"
                                   "CDA;DTS;FLA;FLAC;IT;M1A;M2A;M3U;M4A;MID;MIDI;MKA;MOD;MP2;MP3;MPA;OGG;OPUS;RA;RMI;"
