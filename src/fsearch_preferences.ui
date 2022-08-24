@@ -926,7 +926,7 @@
                           <object class="GtkSpinButton" id="auto_update_hours_spin_button">
                             <property name="visible">True</property>
                             <property name="can-focus">True</property>
-                            <property name="text" translatable="yes">0</property>
+                            <property name="text">0</property>
                             <property name="input-purpose">digits</property>
                             <property name="adjustment">hour_adjustment</property>
                             <property name="climb-rate">1</property>
