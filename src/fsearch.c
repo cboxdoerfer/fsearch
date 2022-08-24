@@ -653,6 +653,11 @@ fsearch_application_startup(GApplication *app) {
         gtk_application_set_menubar(GTK_APPLICATION(app), menu_model);
     }
 
+    if (!fsearch->config->show_menubar) {
+        // When the menubar is shown, F10 is already set to open the first menu in the menubar.
+        // So we only want to override the F10 action when the menu bar is hidden.
+        set_accel_for_action(app, "win.toggle_app_menu", "F10");
+    }
     set_accel_for_action(app, "win.toggle_focus", "Tab");
     set_accel_for_action(app, "win.focus_search", "<control>f");
     set_accel_for_action(app, "app.new_window", "<control>n");

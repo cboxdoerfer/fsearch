@@ -1352,6 +1352,13 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *win)
     fsearch_application_window_redraw_listview(win);
 }
 
+void
+fsearch_application_window_toggle_app_menu(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+    GtkToggleButton *app_menu = GTK_TOGGLE_BUTTON(self->app_menu);
+    gtk_toggle_button_set_active(app_menu, !gtk_toggle_button_get_active(app_menu));
+}
+
 FsearchListView *
 fsearch_application_window_get_listview(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
