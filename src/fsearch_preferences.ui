@@ -1515,7 +1515,7 @@ If enabled, double clicking in the path column will open the selected path.</pro
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Single click to open:&lt;/b&gt;
 
-If enabled, a single click will open the selected file/folder. If you only want to select a file/folder while this setting is active, you need to a hold &lt;i&gt;Ctrl&lt;/i&gt; at the same time while clicking the file/folder.</property>
+If enabled, a single click will open the selected file/folder. If you only want to select a file/folder while this setting is active, you need to hold &lt;i&gt;Ctrl&lt;/i&gt; at the same time while clicking the file/folder.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
