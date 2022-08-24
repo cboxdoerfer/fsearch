@@ -65,9 +65,9 @@ The localization of FSearch is managed with Weblate.
 
 <https://hosted.weblate.org/projects/fsearch/>
 
-If you want to contribute translations please submit them there, instead of opening pull requests on GitHub.
-Instructions
-can be found here:
+If you want to contribute translations please submit them there, instead of opening pull requests on GitHub. This also includes any suggestions to the English texts — English isn't my first language, so there are likely errors and unusual wordings.
+
+Instructions can be found here:
 <https://docs.weblate.org/en/latest/user/basic.html>
 
 And of course: Thank you for taking the time to translate FSearch!
