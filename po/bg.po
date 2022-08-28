@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-05-08 23:15+0000\n"
+"PO-Revision-Date: 2022-08-29 22:19+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -158,80 +158,58 @@ msgid "Sorting…"
 msgstr "Сортиране…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr "Стартиране на десктоп файлове"
+msgstr "Грешка при отварянето на папката"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "Неуспешно отваряне:"
+msgstr "Неуспешно изграждане на командата за отваряне"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
-msgstr "Стартиране на десктоп файлове"
+msgstr "Грешка при стартиране на десктоп файл"
 
 #: src/fsearch_file_utils.c:154
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Отваряне на нов прозорец на приложението"
+msgstr "Не може да бъде взета информация за приложението"
 
 #: src/fsearch_file_utils.c:160
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "Файлът не може да бъде отворен"
+msgstr "Не може да бъде получен дисплеят по подразбиране"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr "Стартиране на десктоп файлове"
+msgstr "Грешка при премахването на файл"
 
 #: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Неуспешно отваряне:"
+msgstr "Не може да бъде получен пътя"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
-msgstr "Стартиране на десктоп файлове"
+msgstr "Грешка при стартирането на десктоп файл"
 
 #: src/fsearch_file_utils.c:259
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Грешка при получаването на информация за типа на файла"
 
 #: src/fsearch_file_utils.c:261
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Покажи настройките на програмата"
+msgstr "Не е регистрирана програма по подразбиране"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr "Стартиране на десктоп файлове"
+msgstr "Грешка при отваряне на съдържащата папка"
 
 #: src/fsearch_file_utils.c:350
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Неуспешно отваряне:"
+msgstr "Неуспешно получаване на пътя до съдържащата папка"
 
 #: src/fsearch_file_utils.c:407
 msgid "Folder"
@@ -373,10 +351,8 @@ msgid "Empty Query"
 msgstr "Няма задание"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете"
+msgstr "Натиснете <b>Ctrl + F</b> и започнете да пишете."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -632,17 +608,6 @@ msgstr ""
 "включването на тази настройка може да няма ефект."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -703,21 +668,6 @@ msgstr ""
 "принуждават прозореца да има различен размер."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -948,17 +898,6 @@ msgstr ""
 "стартирате FSearch."
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -975,11 +914,11 @@ msgstr ""
 "Този списък съдържа всички папки, които искате да изключите от базата с "
 "данни за търсене.\n"
 "\n"
-" • <b>Активно:</b> Ако е активирано, пътят ще бъде изключен от базата с "
-"данни.\n"
-" • <b>Път:</b> Пълният път ще бъде изключен.\n"
-" • <b>Една файлова система:</b> Ако е активирано, FSearch няма да пресича "
-"границата на файловата система за тази папка"
+"       • <b>Активно:</b> Ако е активирано, пътят ще бъде изключен от базата "
+"с данни.\n"
+"       • <b>Път:</b> Пълният път ще бъде изключен.\n"
+"       • <b>Една файлова система:</b> Ако е активирано, FSearch няма да "
+"пресича границата на файловата система за тази папка"
 
 #: src/fsearch_preferences.ui:1677
 msgid ""
@@ -1271,10 +1210,8 @@ msgid "0 Items"
 msgstr "0 елемента"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Отказ"
+msgstr "Отказ"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1305,16 +1242,12 @@ msgid "(empty)"
 msgstr "(празно)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Търсеният израз съдържа разделители.\n"
-"<b>Търсене в пътя</b> е временно активирано за този израз."
+"Търсеният израз съдържа главни букви.\n"
+"<b>Чувствително търсене</b> е временно активирано за този израз."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
