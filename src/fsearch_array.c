@@ -482,6 +482,9 @@ darray_binary_search_with_data(DynamicArray *array,
             left = middle + 1;
         }
         else if (middle > 0) {
+            // match > 0
+            // This means the item is to the left of middle
+            // If middle == 0 then the item is not in the array
             right = middle - 1;
         }
         else {
