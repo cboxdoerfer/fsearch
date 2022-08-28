@@ -1,6 +1,6 @@
 #include <glib.h>
-#include <stdlib.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #include <src/fsearch_array.h>
 
@@ -98,9 +98,41 @@ test_main(void) {
     g_clear_pointer(&array, darray_unref);
 }
 
+static void
+same_elements(void) {
+    DynamicArray *array = darray_new(10);
+
+    uint32_t element = 42;
+    for (int32_t i = 0; i < 10; ++i) {
+        darray_add_item(array, GINT_TO_POINTER(element));
+    }
+
+    for (uint32_t i = 0; i < element * 2; ++i) {
+        if (i == element) {
+            continue;
+        }
+        uint32_t matched_idx = 0;
+        if (darray_binary_search_with_data(array,
+                                           GINT_TO_POINTER(i),
+                                           (DynamicArrayCompareDataFunc)sort_int_ascending,
+                                           NULL,
+                                           &matched_idx)) {
+            g_assert_not_reached();
+        }
+    }
+
+    g_clear_pointer(&array, darray_unref);
+}
+
+static void
+test_search(void) {
+    same_elements();
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
     g_test_add_func("/FSearch/array/main", test_main);
+    g_test_add_func("/FSearch/array/search", test_search);
     return g_test_run();
 }
