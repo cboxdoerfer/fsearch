@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-06-02 07:17+0000\n"
-"Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
+"PO-Revision-Date: 2022-08-29 22:19+0000\n"
+"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.13-dev\n"
+"X-Generator: Weblate 4.14.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -160,80 +160,58 @@ msgid "Sorting…"
 msgstr "Ordenando…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr "Iniciar archivos del escritorio"
+msgstr "Error al abrir la carpeta"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "No se pudo abrir:"
+msgstr "No se pudo compilar la orden de apertura"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
-msgstr "Iniciar archivos del escritorio"
+msgstr "Error al iniciar el archivo .desktop"
 
 #: src/fsearch_file_utils.c:154
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Abrir una ventana nueva de la aplicación"
+msgstr "No se pudo obtener la información sobre la aplicación"
 
 #: src/fsearch_file_utils.c:160
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "No pudo abrirse el archivo"
+msgstr "No se pudo obtener la pantalla predeterminada"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr "Iniciar archivos del escritorio"
+msgstr "Error al eliminar el archivo"
 
 #: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "No se pudo abrir:"
+msgstr "No se pudo obtener la ruta"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
-msgstr "Iniciar archivos del escritorio"
+msgstr "Error al iniciar el archivo .desktop"
 
 #: src/fsearch_file_utils.c:259
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Error al obtener información sobre el tipo de contenido"
 
 #: src/fsearch_file_utils.c:261
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Mostrar las preferencias de la aplicación"
+msgstr "No se registró ninguna aplicación predeterminada"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr "Iniciar archivos del escritorio"
+msgstr "Error al abrir la carpeta contenedora"
 
 #: src/fsearch_file_utils.c:350
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "No se pudo abrir:"
+msgstr "No se pudo abrir la ruta contenedora"
 
 #: src/fsearch_file_utils.c:407
 msgid "Folder"
@@ -375,10 +353,8 @@ msgid "Empty Query"
 msgstr "Consulta vacía"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Presione <b>Ctrl + F</b> y comience a escribir"
+msgstr "Presione <b>Ctrl + F</b> y comience a escribir."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
