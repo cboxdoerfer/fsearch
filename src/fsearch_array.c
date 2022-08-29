@@ -172,19 +172,13 @@ merge_thread(gpointer data, gpointer user_data) {
         void *d2 = darray_get_item(ctx->m2, j);
 
         if (i < n1 && j < n2) {
-            int res = ctx->comp_func(&d1, &d2, user_data);
-            if (res < 0) {
+            const int res = ctx->comp_func(&d1, &d2, user_data);
+            if (res <= 0) {
                 darray_add_item(ctx->dest, d1);
                 i++;
-            }
-            else if (res > 0) {
-                darray_add_item(ctx->dest, d2);
-                j++;
             }
             else {
-                darray_add_item(ctx->dest, d1);
                 darray_add_item(ctx->dest, d2);
-                i++;
                 j++;
             }
         }
