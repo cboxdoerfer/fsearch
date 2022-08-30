@@ -391,7 +391,7 @@ darray_sort_multi_threaded(DynamicArray *array,
                            GCancellable *cancellable,
                            void *data) {
     const int num_threads = get_ideal_thread_count();
-    if (array->num_items <= 100000 || num_threads < 2) {
+    if (num_threads < 2 || num_threads > array->num_items) {
         return darray_sort(array, comp_func, NULL, data);
     }
 
