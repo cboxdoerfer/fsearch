@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-29 22:19+0000\n"
+"PO-Revision-Date: 2022-09-02 10:24+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -1254,10 +1254,6 @@ msgid "CASE"
 msgstr "Папка"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -1290,49 +1286,41 @@ msgid "Date Modified"
 msgstr "Дата на последна промяна"
 
 #: src/fsearch_window.c:662
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"Сортирането по <b> Тип </b> може да отнеме няколко секунди с много "
-"резултати.\n"
+"Сортирането по <b> Тип </b> може да отнеме няколко секунди с много резултати."
+"\n"
 "\n"
 "Този ред на сортиране не е постоянен, той ще бъде нулиран, когато думата за "
 "търсене се промени."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "Търсене на файлове"
+msgstr "FSearch онлайн"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Направете дарение"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Форум"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Докладване на грешки и заявки за функции"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub спонсори"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"
@@ -1406,25 +1394,25 @@ msgstr "Преместване на файловете в кошчето…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
-msgstr ""
+msgstr "Нещо се обърка."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Изтриване на файловете…"
+msgstr "Изтрити са %d файл (а)."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Преместване на файловете в кошчето…"
+msgstr "Преместени са %d файл (а) в кошчето."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"Базата данни трябва да се актуализира, преди да се разбере за тези промени! "
+"Това ще бъде коригирано с бъдещи актуализации."
 
 #: src/fsearch_window_actions.c:247
 #, c-format
