@@ -35,7 +35,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 It is recommended to install FSearch from one of the **Stable** packages, unless you know what you're doing.
 
-The **Development** packages are primarliy intended for testing and adventurous users.
+The **Development** packages are primarily intended for testing and adventurous users.
 
 
 | Distribution                                                                                          | Stable                                                                                                                     | Development                                                                            |
