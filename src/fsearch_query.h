@@ -24,7 +24,6 @@
 #include <stdbool.h>
 
 #include "fsearch_array.h"
-#include "fsearch_database.h"
 #include "fsearch_filter_manager.h"
 #include "fsearch_list_view.h"
 #include "fsearch_query_flags.h"
@@ -36,21 +35,17 @@
 typedef struct FsearchQuery {
     char *search_term;
 
-    FsearchDatabase *db;
-
-    int32_t sort_order;
-
-    FsearchThreadPool *pool;
-
     FsearchFilter *filter;
     FsearchFilterManager *filters;
 
     GNode *query_tree;
     GNode *filter_tree;
 
+    char *query_id;
+
     FsearchQueryFlags flags;
 
-    char *query_id;
+    int32_t sort_order;
 
     bool reset_selection;
     bool triggers_auto_match_case;
@@ -62,11 +57,9 @@ typedef struct FsearchQuery {
 
 FsearchQuery *
 fsearch_query_new(const char *search_term,
-                  FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,
                   FsearchFilterManager *filters,
-                  FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
                   const char *query_id,
                   bool reset_selection);

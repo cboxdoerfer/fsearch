@@ -23,7 +23,7 @@ test_query(QueryTest *t) {
     FsearchMemoryPool *folder_pool =
         fsearch_memory_pool_new(100, db_entry_get_sizeof_folder_entry(), (GDestroyNotify)db_entry_destroy);
 
-    FsearchQuery *q = fsearch_query_new(t->needle, NULL, 0, NULL, manager, NULL, t->flags, "debug_query", true);
+    FsearchQuery *q = fsearch_query_new(t->needle, 0, NULL, manager, t->flags, "debug_query", true);
 
     FsearchDatabaseEntry *entry = NULL;
     if (g_str_has_prefix(t->haystack, "/")) {
