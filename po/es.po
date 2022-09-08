@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-29 22:19+0000\n"
-"Last-Translator: Adolfo Jayme Barrientos <fitojb@ubuntu.com>\n"
+"PO-Revision-Date: 2022-09-09 19:16+0000\n"
+"Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -610,17 +610,6 @@ msgstr ""
 "más oscura, por lo que habilitar esta configuración podría no tener efecto."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -639,7 +628,7 @@ msgstr ""
 "\n"
 "Si está desactivado, el menú principal se muestra como una barra de menús "
 "con la entrada de búsqueda debajo de él.\n"
-"Esto se asemeja a un diseño de interfaz de usuario más traditonal y toma un "
+"Esto se asemeja a un diseño de interfaz de usuario más tradicional y toma un "
 "poco más de espacio."
 
 #: src/fsearch_preferences.ui:1346
@@ -681,21 +670,6 @@ msgstr ""
 "solicitud y fuerzan la ventana a tener un tamaño diferente."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -928,17 +902,6 @@ msgstr ""
 "segundo plano al iniciar FSearch."
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -952,8 +915,8 @@ msgid ""
 msgstr ""
 "<b>Carpetas incluidas:</b>\n"
 "\n"
-"Esta lista contiene todas las carpetas que desea incluir en la base de "
-"datos.\n"
+"Esta lista contiene todas las carpetas que desea incluir en la base de datos."
+"\n"
 "\n"
 "\t• <b>Activo:</b> Si está habilitada, la ruta de acceso se incluirá en la "
 "base de datos y se podrá buscar en ella.\n"
@@ -1253,8 +1216,6 @@ msgid "0 Items"
 msgstr "0 elementos"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1287,15 +1248,11 @@ msgid "(empty)"
 msgstr "(vacío)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"El término de búsqueda contiene separadores de ruta.\n"
+"El término de búsqueda contiene letras mayúsculas.\n"
 "<b>Buscar en la ruta</b> se activó temporalmente para este término."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
@@ -1303,10 +1260,6 @@ msgid "CASE"
 msgstr "MAYÚSCULAS"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -1339,12 +1292,6 @@ msgid "Date Modified"
 msgstr "Fecha de modificación"
 
 #: src/fsearch_window.c:662
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can take a vew seconds with many results.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
@@ -1357,30 +1304,28 @@ msgstr ""
 "el término de búsqueda."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch en línea"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Donar"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Foro"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Informes de errores y solicitud de funciones"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "Patrocinadores en GitHub"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"
@@ -1454,25 +1399,25 @@ msgstr "Enviando archivos a la papelera…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
-msgstr ""
+msgstr "Algo salió mal."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Eliminando archivos…"
+msgstr "Eliminado(s) %d archivo(s)."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Enviando archivos a la papelera…"
+msgstr "Movido %d archivo(s) a la basura."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"¡La base de datos debe actualizarse antes de que los cambios sean notados! "
+"Esto se solucionará con futuras actualizaciones."
 
 #: src/fsearch_window_actions.c:247
 #, c-format
