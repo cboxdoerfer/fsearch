@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-04-29 18:12+0000\n"
+"PO-Revision-Date: 2022-09-14 13:36+0900\n"
 "Last-Translator: 이정희 <daemul72@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
 "translations/ko/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.12.1\n"
+"X-Generator: Poedit 2.3\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -240,29 +240,28 @@ msgid "Files"
 msgstr "파일"
 
 #: src/fsearch_filter.c:115
-#, fuzzy
 msgid "Applications"
-msgstr "다른 프로그램"
+msgstr "애플리케이션"
 
 #: src/fsearch_filter.c:116
 msgid "Archives"
-msgstr ""
+msgstr "아카이브"
 
 #: src/fsearch_filter.c:117
 msgid "Audio"
-msgstr ""
+msgstr "오디오"
 
 #: src/fsearch_filter.c:118
 msgid "Documents"
-msgstr ""
+msgstr "문서"
 
 #: src/fsearch_filter.c:119
 msgid "Pictures"
-msgstr ""
+msgstr "그림"
 
 #: src/fsearch_filter.c:120
 msgid "Videos"
-msgstr ""
+msgstr "비디오"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
@@ -271,21 +270,19 @@ msgstr ""
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
 #: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
-msgstr ""
+msgstr "취소"
 
 #: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
-msgstr ""
+msgstr "확인"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:295
 msgid "Edit filter"
 msgstr ""
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "파일명"
+msgstr "이름:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
@@ -313,11 +310,11 @@ msgstr "일치하는 결과"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "쿼리:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "매크로:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -395,7 +392,7 @@ msgstr "어두운 테마 활성화"
 
 #: src/fsearch_preferences.ui:147
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "클라이언트 측 장식 활성화 (재시작 필요)"
 
 #: src/fsearch_preferences.ui:162
 msgid "Use binary units instead of decimal units"
@@ -407,7 +404,7 @@ msgstr "창 크기 기억하기"
 
 #: src/fsearch_preferences.ui:193
 msgid "Exit on Escape"
-msgstr ""
+msgstr "탈출 시 종료"
 
 #: src/fsearch_preferences.ui:230
 msgid "with keyboard shortcuts or menu entries"
@@ -418,13 +415,12 @@ msgid "with double click"
 msgstr "더블 클릭 사용"
 
 #: src/fsearch_preferences.ui:273
-#, fuzzy
 msgid "Behaviour after successfully opening a file:"
-msgstr "파일을 열고 나서 할 일"
+msgstr "파일을 성공적으로 연 후의 동작:"
 
 #: src/fsearch_preferences.ui:289
 msgid "Nothing"
-msgstr ""
+msgstr "없음"
 
 #: src/fsearch_preferences.ui:290
 msgid "Minimize"
@@ -436,11 +432,11 @@ msgstr "닫기"
 
 #: src/fsearch_preferences.ui:317
 msgid "General:"
-msgstr ""
+msgstr "일반:"
 
 #: src/fsearch_preferences.ui:352
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "강조 표시된 검색어 표시"
 
 #: src/fsearch_preferences.ui:368
 msgid "Show tooltips"
@@ -455,35 +451,32 @@ msgid "Remember column configuration"
 msgstr "열 구성 기억하기"
 
 #: src/fsearch_preferences.ui:413
-#, fuzzy
 msgid "Remember sort order"
-msgstr "현재 검색 창 크기 저장"
+msgstr "정렬 순서 기억"
 
 #: src/fsearch_preferences.ui:428
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "경로 열을 두 번 클릭하여 경로 열기"
 
 #: src/fsearch_preferences.ui:443
 msgid "Single click to open"
-msgstr ""
+msgstr "클릭 한 번으로 열기"
 
 #: src/fsearch_preferences.ui:458
 msgid "Launch desktop files"
-msgstr ""
+msgstr "데스크탑 파일 실행"
 
 #: src/fsearch_preferences.ui:479
 msgid "Results:"
-msgstr ""
+msgstr "결과:"
 
 #: src/fsearch_preferences.ui:520
-#, fuzzy
 msgid "Show database indexing status"
-msgstr "프로그램 시작 시 DB 업데이트"
+msgstr "데이터베이스 인덱싱 상태 표시"
 
 #: src/fsearch_preferences.ui:541
-#, fuzzy
 msgid "Statusbar:"
-msgstr "상태 표시줄 보이기"
+msgstr "상태 표시줄:"
 
 #: src/fsearch_preferences.ui:582
 msgid "Show warning dialogs when:"
@@ -494,9 +487,8 @@ msgid "file / folder failed to open"
 msgstr "파일 / 폴더를 열지 못했습니다"
 
 #: src/fsearch_preferences.ui:615
-#, fuzzy
 msgid "Dialogs:"
-msgstr "대화상자"
+msgstr "대화상자:"
 
 #: src/fsearch_preferences.ui:640
 msgid "Interface"
@@ -515,9 +507,8 @@ msgid "Hide results when search is empty"
 msgstr "검색 결과가 없으면 결과 숨김"
 
 #: src/fsearch_preferences.ui:701
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "검색어에 겅로를 포함하여 검색하는 경우 경로 검색"
+msgstr "쿼리에 대문자가 하나 이상 포함된 경우 대/소문자 일치"
 
 #: src/fsearch_preferences.ui:769
 #, fuzzy
@@ -539,10 +530,8 @@ msgid "Restore default filters"
 msgstr ""
 
 #: src/fsearch_preferences.ui:847
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "필터 보이기"
+msgstr "필터:"
 
 #: src/fsearch_preferences.ui:868 src/fsearch_window.ui:625
 msgid "Search"
@@ -624,6 +613,13 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>어두운 테마 활성화:</b>\n"
+"\n"
+"이 옵션을 사용하면 시스템 테마는 응용 프로그램 <i>에 대해 더 어두운 스타일을 "
+"사용하도록 요청받습니다.(즉, 밝은 텍스트에 어두운 UI 요소)</i>\n"
+"\n"
+"모든 시스템 테마가 그렇게 어두운 변형을 제공하는 것은 아니므로 이 설정을 활성"
+"화해도 효과가 없을 수 있습니다."
 
 #: src/fsearch_preferences.ui:1326
 msgid ""
@@ -637,6 +633,13 @@ msgid ""
 "This resembles a more traditional UI layout and takes a little bit more "
 "space."
 msgstr ""
+"<b>클라이언트 측 장식 활성화:</b>\n"
+"\n"
+"활성화된 경우 검색 항목과 기본 메뉴가 창 제목 표시줄에 표시됩니다.\n"
+"\n"
+"비활성화된 경우 기본 메뉴는 그 아래에 검색 항목과 함께 메뉴 표시줄로 표시됩니"
+"다.\n"
+"이것은 더 전통적인 UI 레이아웃과 비슷하며 조금 더 많은 공간을 차지합니다."
 
 #: src/fsearch_preferences.ui:1346
 msgid ""
@@ -649,6 +652,13 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>소수 단위 대신 이진 단위 사용:</b>\n"
+"\n"
+"이 설정은 파일 크기가 표시되는 방식을 제어합니다.\n"
+"\t• <b>이진 단위:</b>이진 IEC 접두사를 나타냅니다.<i>(예: 1KiB = 1024 "
+"bytes)</i>\n"
+"\t• <b>소수 단위 :</b>십진 SI 접두사를 나타냅니다.<i>(예: 1kB = 1000 bytes)</"
+"i>"
 
 #: src/fsearch_preferences.ui:1366
 msgid ""
@@ -660,6 +670,11 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>창 크기 기억:</b>\n"
+"\n"
+"활성화하면 FSearch 창을 열 때 이전 세션의 창 크기가 복원됩니다.\n"
+"\n"
+"일부 창 관리자는 이 요청을 무시하고 창 크기를 강제로 변경합니다."
 
 #: src/fsearch_preferences.ui:1385
 msgid ""
@@ -677,6 +692,17 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>파일을 성공적으로 연 후의 동작:</b>\n"
+"\n"
+"파일/폴더가 성공적으로 열리면 다음 작업 중 하나를 수행할 수 있습니다:\n"
+"\t• <b>없음:</b> 아무 반응이 없습니다.\n"
+"\t• <b>최소화:</b> 현재 선택된 FSearch 창이 최소화됩니다. \n"
+"\t• <b>닫기:</b> FSearch를 종료합니다.\n"
+"\n"
+"다음을 사용하여 파일을 열 때 해당 작업을 트리거해야 하는지 여부를 구성할 수 "
+"있습니다.\n"
+"\t• <b>키보드 단축키 또는 메뉴 항목</b> 및/또는\n"
+"\t• <b>마우스 클릭</b>"
 
 #: src/fsearch_preferences.ui:1409
 msgid ""
@@ -692,6 +718,17 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
+"<b>강조 표시된 검색어 표시:</b>\n"
+"\n"
+"이 옵션을 선택하면 검색 용어가 결과 보기에서 강조 표시됩니다. 예를 들어, "
+"\"foo\"를 검색할 때 <i>foo</i> 파일 / 폴더 이름은 굵은 문자로 강조 표시됩니"
+"다:\n"
+"\n"
+"\t<b>foo</b>bar.txt\n"
+"\tfile.<b>foo</b>\n"
+"\n"
+"이것은 별표로 시작하거나 끝나는 정규 표현식 및 와일드 카드 표현식에도 적용됩"
+"니다. "
 
 #: src/fsearch_preferences.ui:1431
 msgid ""
@@ -700,6 +737,10 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b>도구 설명 표시:</b>\n"
+"\n"
+"활성화된 경우 결과 보기는 작은 도구 설명 창에 초점이 맞춰진 파일/폴더의 전체 "
+"경로를 표시합니다."
 
 #: src/fsearch_preferences.ui:1448
 msgid ""
@@ -707,6 +748,9 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>이름 열에 아이콘 표시:</b>\n"
+"\n"
+"활성화하면 파일/폴더 아이콘이 이름 열에 표시됩니다."
 
 #: src/fsearch_preferences.ui:1465
 msgid ""
@@ -716,6 +760,10 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>열 구성 기억하기:</b>\n"
+"\n"
+"활성화된 경우 FSearch 창을 열 때 이전 세션의 결과 보기의 열 구성이 복원됩니"
+"다. 여기에는 모든 열의 크기와 가시성이 포함됩니다."
 
 #: src/fsearch_preferences.ui:1482
 msgid ""
@@ -724,6 +772,9 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>정렬 순서 기억:</b>\n"
+"\n"
+"활성화하면 FSearch 창을 열 때 이전 세션의 결과 보기 정렬 순서가 복원됩니다."
 
 #: src/fsearch_preferences.ui:1499
 msgid ""
@@ -731,15 +782,23 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>경로 열을 두 번 클릭하여 경로 열기:</b>\n"
+"\n"
+"활성화된 경우 경로 열을 두 번 클릭하면 선택한 경로가 열립니다."
 
 #: src/fsearch_preferences.ui:1516
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
 "If enabled, a single click will open the selected file/folder. If you only "
-"want to select a file/folder while this setting is active, you need to a "
+"want to select a file/folder while this setting is active, you need to "
 "hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>클릭 한 번으로 열기:</b>\n"
+"\n"
+"활성화된 경우 한 번의 클릭으로 선택한 파일/폴더가 열립니다. 이 설정이 활성화"
+"된 동안에만 파일/폴더를 선택하려면 파일/폴더를 클릭하는 동안 <i>Ctrl</i> 키"
+"를 동시에 누르고 있어야 합니다."
 
 #: src/fsearch_preferences.ui:1533
 msgid ""
@@ -748,6 +807,9 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>데이터베이스 인덱싱 상태 표시:</b>\n"
+"\n"
+"활성화된 경우 현재 인덱싱 중인 경로가 상태 표시줄에 표시됩니다."
 
 #: src/fsearch_preferences.ui:1550
 msgid ""
@@ -756,6 +818,9 @@ msgid ""
 "If enabled, a warning dialog is displayed when a file or folder failed to "
 "open."
 msgstr ""
+"<b>다음과 같은 경우 경고 대화 상자 표시:</b>\n"
+"\n"
+"활성화하면 파일이나 폴더를 열지 못했을 때 경고 대화 상자가 표시됩니다."
 
 #: src/fsearch_preferences.ui:1567
 msgid ""
@@ -764,6 +829,10 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
+"<b>쿼리에 경로 구분 기호가 포함된 경우 경로에서 검색:</b>\n"
+"\n"
+"활성화하면 경로 구분 기호(예: \"/\")가 포함된 검색어가 파일 또는 폴더의 전체 "
+"경로와 자동으로 일치됩니다."
 
 #: src/fsearch_preferences.ui:1584
 msgid ""
@@ -773,6 +842,11 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
+"<b>쿼리에 대문자가 하나 이상 포함된 경우 대/소문자 일치:</b>\n"
+"\n"
+"활성화된 경우 하나 이상의 대문자가 포함된 검색어는 대소문자를 구분하는 검색"
+"을 트리거합니다. 즉, <i>Foo</i>와 같은 검색어는 <i>FooBar.txt</i>와 일치하지"
+"만 <i>foobar.txt</i>는 일치하지 않습니다."
 
 #: src/fsearch_preferences.ui:1601
 msgid ""
@@ -783,6 +857,11 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
+"<b>검색 결과가 없으면 결과 숨김:</b>\n"
+"\n"
+"활성화하면 검색 항목이 비어 있을 때 검색 결과가 표시되지 않습니다.\n"
+"\n"
+"비활성화하면 검색 항목이 비어 있을 때 모든 파일과 폴더가 표시됩니다."
 
 #: src/fsearch_preferences.ui:1620
 msgid ""
@@ -793,6 +872,12 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>입력하면서 검색:</b>\n"
+"\n"
+"활성화하면 키를 누를 때마다 검색이 자동으로 업데이트됩니다.\n"
+"\n"
+"비활성화된 경우 <i>Enter</i> 키를 누르거나 검색 버튼을 누를 때만 검색이 업데"
+"이트됩니다. "
 
 #: src/fsearch_preferences.ui:1639
 msgid ""
@@ -801,6 +886,10 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>시작 시 데이터베이스 업데이트:</b>\n"
+"\n"
+"활성화하면 FSearch를 시작할 때 데이터베이스가 백그라운드에서 자동으로 업데이"
+"트됩니다."
 
 #: src/fsearch_preferences.ui:1656
 msgid ""
@@ -814,6 +903,14 @@ msgid ""
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
 "boundaries for this folder"
 msgstr ""
+"<b>포함된 폴더:</b>\n"
+"\n"
+"이 목록에는 데이터베이스에 포함할 모든 폴더가 포함되어 있습니다.\n"
+"\n"
+"\t• <b>Active:</b> 활성화하면 검색할 데이터베이스에 경로가 포함됩니다.\n"
+"\t• <b>경로:</b> 포함될 전체 경로입니다.\n"
+"\t• <b>One Filesystem:</b> 활성화된 경우 FSearch는 이 폴더에 대한 파일 시스"
+"템 경계를 넘지 않습니다"
 
 #: src/fsearch_preferences.ui:1677
 msgid ""
@@ -822,6 +919,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>데이터베이스에 폴더 추가:</b>\n"
+"\n"
+"이 버튼은 검색을 위해 데이터베이스에 포함할 폴더를 선택할 수 있는 대화 상자"
+"를 엽니다."
 
 #: src/fsearch_preferences.ui:1694
 msgid ""
@@ -829,6 +930,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>선택한 행 제거:</b>\n"
+"\n"
+"이렇게 하면 포함된 폴더 목록에서 선택한 폴더가 제거됩니다."
 
 #: src/fsearch_preferences.ui:1711
 msgid ""
@@ -840,6 +944,13 @@ msgid ""
 "can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
+"<b>제외된 폴더:</b>\n"
+"\n"
+"이 목록에는 데이터베이스에서 제외할 모든 폴더가 포함되어 있습니다.\n"
+"\n"
+"\t• <b>Active:</b> 활성화하면 경로가 데이터베이스에서 제외되고 검색할 수 없습"
+"니다.\n"
+"\t• <b>경로:</b> 제외할 전체 경로입니다."
 
 #: src/fsearch_preferences.ui:1731
 msgid ""
@@ -848,6 +959,9 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to exclude "
 "from the database."
 msgstr ""
+"<b>데이터베이스에서 폴더 제외:</b>\n"
+"\n"
+"이 버튼은 데이터베이스에서 제외할 폴더를 선택할 수 있는 대화 상자를 엽니다."
 
 #: src/fsearch_preferences.ui:1748
 msgid ""
@@ -855,6 +969,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
+"<b>선택한 행 제거:</b>\n"
+"\n"
+"제외된 폴더 목록에서 선택한 폴더가 제거됩니다."
 
 #: src/fsearch_preferences.ui:1765
 msgid ""
@@ -865,6 +982,11 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
+"<b>데이터베이스에서 파일 및 폴더 제외:</b>\n"
+"\n"
+"이것은 데이터베이스에서 제외할 파일(또는 폴더)의 세미콜론으로 구분된 목록입니"
+"다. 예를 들어 <i>.git;.cache;*.swp</i>는 <i>.git</i> 또는 <i>.cache</i>라고 "
+"하거나 다음으로 끝나는 모든 파일 또는 폴더를 제외합니다. <i>.swp</i>.."
 
 #: src/fsearch_preferences.ui:1782
 msgid ""
@@ -873,10 +995,14 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
+"<b>숨김 파일 및 폴더 제외하기:</b>\n"
+"\n"
+"활성화하면 숨겨진 파일 및 폴더가 데이터베이스 <i>(즉, 점 문자로 시작하는 모"
+"든 파일 또는 폴더)</i>에서 제외됩니다."
 
 #: src/fsearch_preferences.ui:1799
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr ""
+msgstr "설정에 초점을 맞추어 그것이 하는 일에 대한 자세한 설명을 얻으십시오."
 
 #: src/fsearch_preferences.ui:1812
 msgid ""
@@ -891,6 +1017,16 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>특정 시간 간격으로 주기적으로 데이터베이스 업데이트:</b>\n"
+"\n"
+"활성화되고 FSearch가 실행되는 동안 데이터베이스는 지정된 시간 간격으로 주기적"
+"으로 업데이트됩니다.\n"
+"\n"
+"백그라운드에서 데이터베이스를 업데이트하려면 FSearch가 실행되지 않는 경우에"
+"도 cron 또는 시스템 타이머와 같은 도구를 사용하여 다음을 사용하여 주기적으로 "
+"업데이트를 트리거해야 합니다:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/fsearch_preferences.ui:1833
 msgid ""
@@ -901,6 +1037,12 @@ msgid ""
 "launcher. Otherwise the <i>.desktop</i> file will be opened with the default "
 "handler for this type of files, which is usually a text editor."
 msgstr ""
+"<b>데스크탑 파일 실행:</b>\n"
+"\n"
+"활성화된 경우 <i>.desktop</i> 파일을 활성화하면 해당 파일 내에 정의된 애플리"
+"케이션이 실행됩니다. 이런 식으로 FSearch는 애플리케이션 런처처럼 작동할 수 있"
+"습니다. 그렇지 않으면 <i>.desktop</i> 파일이 이러한 유형의 파일에 대한 기본 "
+"핸들러(일반적으로 텍스트 편집기)로 열립니다."
 
 #: src/fsearch_preferences.ui:1850
 msgid ""
@@ -913,6 +1055,14 @@ msgid ""
 "the filter on demand\n"
 "\t• <b>Query:</b> The search term by which the database should be filtered"
 msgstr ""
+"<b>필터:</b>\n"
+"\n"
+"이것은 사용 가능한 모든 필터의 목록입니다. 필터는 미리 정의된 검색입니다.\n"
+"\n"
+"\t• <b>이름:</b> 필터에 대한 고유하고 설명적인 식별자\n"
+"\t• <b>매크로:</b> 매크로 텍스트 다음에 ':'를 입력하면 요청 시 필터를 활성화"
+"할 수 있습니다.\n"
+"\t• <b>쿼리:</b> 데이터베이스를 필터링해야 하는 검색어"
 
 #: src/fsearch_preferences.ui:1871
 msgid ""
@@ -920,6 +1070,9 @@ msgid ""
 "\n"
 "This button opens a dialog where you can edit a new filter."
 msgstr ""
+"<b>새로운 필터를 추가:</b>\n"
+"\n"
+"이 버튼을 누르면 새 필터를 편집할 수 있는 대화상자가 열립니다."
 
 #: src/fsearch_preferences.ui:1888
 msgid ""
@@ -927,6 +1080,9 @@ msgid ""
 "\n"
 "This button removes the currently selected filter."
 msgstr ""
+"<b>선택한 필터 제거:</b>\n"
+"\n"
+"이 버튼은 현재 선택한 필터를 제거합니다."
 
 #: src/fsearch_preferences.ui:1905
 msgid ""
@@ -934,6 +1090,9 @@ msgid ""
 "\n"
 "This button opens a dialog where you can edit the selected filter."
 msgstr ""
+"<b>선택한 필터 수정:</b>\n"
+"\n"
+"이 버튼은 선택한 필터를 편집할 수 있는 대화 상자를 엽니다."
 
 #: src/fsearch_preferences.ui:1922
 msgid ""
@@ -943,6 +1102,11 @@ msgid ""
 "\n"
 "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
+"<b>기본 필터 복원:</b>\n"
+"\n"
+"이 버튼은 기본 필터 구성을 복원합니다.\n"
+"\n"
+"⚠ 사용자가 만들거나 편집한 모든 필터는 손실됩니다! ⚠"
 
 #: src/fsearch_preferences.ui:1941
 msgid ""
@@ -951,11 +1115,13 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>탈출 시 종료:</b>\n"
+"\n"
+"활성화된 경우 FSearch는 창이 최소화되는 대신 Esc 키를 누를 때 종료됩니다."
 
 #: src/fsearch_preferences.ui:1960 src/fsearch_window.ui:117 src/menus.ui:150
-#, fuzzy
 msgid "Help"
-msgstr "도움말(_H)"
+msgstr "도움말"
 
 #: src/fsearch_preferences_ui.c:194 src/fsearch_preferences_ui.c:209
 #, fuzzy
@@ -994,13 +1160,11 @@ msgstr "이름"
 
 #: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
-msgstr ""
+msgstr "매크로"
 
 #: src/fsearch_preferences_widgets.c:292
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "검색어가 없습니다."
+msgstr "쿼리"
 
 #: src/fsearch_statusbar.c:56
 #, fuzzy, c-format
@@ -1036,7 +1200,7 @@ msgstr "0개 항목"
 
 #: src/fsearch_statusbar.ui:106
 msgid "Cancel"
-msgstr ""
+msgstr "취소"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1104,7 +1268,7 @@ msgstr "유형"
 
 #: src/fsearch_window.c:641 src/menus.ui:265
 msgid "Extension"
-msgstr ""
+msgstr "확대"
 
 #: src/fsearch_window.c:648 src/menus.ui:277
 msgid "Date Modified"
@@ -1119,30 +1283,28 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch 온라인"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "기부"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "포럼"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "버그 보고서 및 기능 요청"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub 스폰서"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "페이팔"
 
 #: src/fsearch_window.ui:214
 #, fuzzy
@@ -1180,11 +1342,11 @@ msgstr "검색 버튼 표시"
 
 #: src/fsearch_window.ui:435 src/menus.ui:155
 msgid "About"
-msgstr ""
+msgstr "프로그램 정보"
 
 #: src/fsearch_window.ui:460 src/menus.ui:47
 msgid "Quit"
-msgstr ""
+msgstr "모든 창 종료"
 
 #: src/fsearch_window.ui:572
 #, fuzzy
@@ -1272,12 +1434,11 @@ msgstr "데이터베이스 업데이트"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr ""
+msgstr "업데이트 취소"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "새 검색창"
+msgstr "창 닫기"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -1292,9 +1453,8 @@ msgid "Cu_t"
 msgstr ""
 
 #: src/menus.ui:69
-#, fuzzy
 msgid "Select All"
-msgstr "전체선택 해제"
+msgstr "모두 선택"
 
 #: src/menus.ui:74
 msgid "Deselect All"
