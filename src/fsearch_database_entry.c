@@ -6,6 +6,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef __MACH__
+int strverscmp (const char *, const char *);
+#endif
+
 struct FsearchDatabaseEntry {
     FsearchDatabaseEntryFolder *parent;
     char *name;

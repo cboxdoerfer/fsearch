@@ -53,6 +53,10 @@ libfsearch_sources = [
     'fsearch_window_actions.c',
 ]
 
+if build_machine.system()=='darwin'
+    libfsearch_sources+=['strverscmp.c']
+endif
+
 fsearch_deps = [
     cc.find_library('m', required: true),
     dependency('gio-unix-2.0', version: '>= 2.50'),

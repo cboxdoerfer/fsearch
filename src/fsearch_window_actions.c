@@ -20,7 +20,10 @@
 #include <config.h>
 #endif
 
+#ifndef __MACH__
 #include <gio/gdesktopappinfo.h>
+#endif
+
 #include <glib/gi18n.h>
 #include <stdint.h>
 
@@ -455,7 +458,12 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     if (!app_id) {
         return;
     }
+    #ifdef __MACH__
+    g_autoptr(GAppInfo) app_info=NULL;
+    #else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
+    #endif
+    
     if (!app_info) {
         return;
     }
