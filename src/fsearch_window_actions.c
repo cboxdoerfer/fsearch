@@ -459,7 +459,7 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
         return;
     }
     #ifdef __MACH__
-    g_autoptr(GAppInfo) app_info=NULL;
+    g_autoptr(GAppInfo) app_info = NULL;
     #else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
     #endif

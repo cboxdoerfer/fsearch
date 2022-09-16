@@ -241,7 +241,12 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
             if (!path) {
                 continue;
             }
-            GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open",NULL,G_APP_INFO_CREATE_NONE,NULL);
+            #ifdef __MACH__
+            GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open", NULL, G_APP_INFO_CREATE_NONE, NULL);
+            #else
+            GDesktopAppInfo *desktop_app_info = g_desktop_app_info_new_from_filename(path);
+            #endif
+            
             if (!desktop_app_info) {
                 add_error_message_with_format(ctx->error_messages,
                                               C_("Will be followed by the file path.",
