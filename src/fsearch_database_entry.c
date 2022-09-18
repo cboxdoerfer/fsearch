@@ -7,7 +7,7 @@
 #include <string.h>
 
 #ifdef __MACH__
-int strverscmp (const char *, const char *);
+#include "strverscmp.h"
 #endif
 
 struct FsearchDatabaseEntry {
