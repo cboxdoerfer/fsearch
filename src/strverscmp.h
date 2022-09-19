@@ -1,0 +1,1 @@
+int strverscmp (const char *, const char *);

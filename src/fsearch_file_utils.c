@@ -22,7 +22,11 @@
 #include "fsearch_limits.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_ui_utils.h"
+
+#ifndef __MACH__
 #include <gio/gdesktopappinfo.h>
+#endif
+
 #include <gio/gio.h>
 #include <glib/gi18n.h>
 #include <stdbool.h>
@@ -237,7 +241,12 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
             if (!path) {
                 continue;
             }
+            #ifdef __MACH__
+            GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open", NULL, G_APP_INFO_CREATE_NONE, NULL);
+            #else
             GDesktopAppInfo *desktop_app_info = g_desktop_app_info_new_from_filename(path);
+            #endif
+            
             if (!desktop_app_info) {
                 add_error_message_with_format(ctx->error_messages,
                                               C_("Will be followed by the file path.",
@@ -296,7 +305,8 @@ handle_queued_uris(FsearchFileUtilsLaunchContext *launch_ctx) {
     }
     else {
         FsearchFileUtilsLaunchUrisContext *uris_ctx = g_queue_pop_head(launch_ctx->launch_uris_ctx_queue);
-#if GLIB_CHECK_VERSION(2, 60, 0)
+
+#if GLIB_CHECK_VERSION(2, 60, 0) && !defined(__MACH__)
         g_app_info_launch_uris_async(uris_ctx->app_info,
                                      uris_ctx->uris,
                                      launch_ctx->app_launch_context,
@@ -563,7 +573,12 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 
 GIcon *
 fsearch_file_utils_get_desktop_file_icon(const char *path) {
+    #ifdef __MACH__
+    g_autoptr(GAppInfo) info = NULL;
+    #else
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
+    #endif
+
     if (!info) {
         goto default_icon;
     }
