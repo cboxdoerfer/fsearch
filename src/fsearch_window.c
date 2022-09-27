@@ -124,7 +124,8 @@ get_query_flags() {
 
 static const char *
 get_query_text(FsearchApplicationWindow *win) {
-    return gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (GTK_ENTRY(win->search_entry));
+    return gtk_entry_buffer_get_text(buffer);
 }
 
 static FsearchApplicationWindow *
@@ -135,7 +136,8 @@ get_window_for_id(uint32_t win_id) {
 
 static gboolean
 is_empty_search(FsearchApplicationWindow *win) {
-    const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (GTK_ENTRY(win->search_entry));
+    const gchar *text = gtk_entry_buffer_get_text(buffer);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);

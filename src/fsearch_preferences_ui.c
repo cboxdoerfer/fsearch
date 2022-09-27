@@ -456,7 +456,8 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
 
     g_clear_pointer(&new_config->exclude_files, g_strfreev);
-    new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (ui->exclude_files_entry);
+    new_config->exclude_files = g_strsplit(gtk_entry_buffer_get_text(buffer), ";", -1);
 
     if (new_config->indexes) {
         g_list_free_full(g_steal_pointer(&new_config->indexes), (GDestroyNotify)fsearch_index_free);
