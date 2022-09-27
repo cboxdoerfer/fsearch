@@ -163,16 +163,14 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
 
     if (response == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-        GSList *filenames = gtk_file_chooser_get_filenames(chooser);
-        if (filenames) {
-            for (GSList *f = filenames; f != NULL; f = f->next) {
-                gchar *filename = f->data;
-                if (filename) {
-                    ctx->add_path_cb(ctx->model, filename);
-                }
+        GListModel *filenames = gtk_file_chooser_get_files(chooser);
+        for (guint i = 0; i < g_list_model_get_n_items(filenames); ++i) {
+            gchar *filename = g_list_model_get_item(filenames, i);
+            if (filename) {
+                ctx->add_path_cb(ctx->model, filename);
             }
-            g_slist_free_full(g_steal_pointer(&filenames), g_free);
         }
+        g_object_unref(filenames);
     }
 
 #if !GTK_CHECK_VERSION(3, 20, 0)
