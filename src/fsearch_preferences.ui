@@ -92,13 +92,11 @@
         </child>
         <child>
           <object class="GtkNotebook" id="pref_main_notebook">
-            <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="has-tooltip">True</property>
             <child>
               <!-- n-columns=2 n-rows=2 -->
               <object class="GtkGrid">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="margin-start">6</property>
                 <property name="margin-end">6</property>
@@ -109,13 +107,11 @@
                 <property name="column-homogeneous">True</property>
                 <child>
                   <object class="GtkFrame">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
                     <property name="shadow-type">none</property>
                     <child>
                       <object class="GtkAlignment">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">12</property>
                         <property name="margin-top">4</property>
@@ -123,14 +119,12 @@
                         <property name="right-padding">6</property>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
                             <property name="spacing">2</property>
                             <child>
                               <object class="GtkCheckButton" id="enable_dark_theme_button">
                                 <property name="label" translatable="yes">Enable dark theme</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -145,7 +139,6 @@
                             <child>
                               <object class="GtkCheckButton" id="show_menubar_button">
                                 <property name="label" translatable="yes">Enable client-side decorations (requires restart)</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -160,7 +153,6 @@
                             <child>
                               <object class="GtkCheckButton" id="show_base_2_units">
                                 <property name="label" translatable="yes">Use binary units instead of decimal units</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -176,7 +168,6 @@
                             <child>
                               <object class="GtkCheckButton" id="restore_win_size_button">
                                 <property name="label" translatable="yes">Remember window size</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -191,7 +182,6 @@
                             <child>
                               <object class="GtkCheckButton" id="exit_on_escape_button">
                                 <property name="label" translatable="yes">Exit on Escape</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -205,14 +195,12 @@
                             </child>
                             <child>
                               <object class="GtkFrame" id="action_after_file_open_frame">
-                                <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="label-xalign">0</property>
                                 <property name="shadow-type">none</property>
                                 <child>
                                   <object class="GtkAlignment">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="margin-start">12</property>
                                     <property name="top-padding">6</property>
@@ -220,7 +208,6 @@
                                     <property name="right-padding">6</property>
                                     <child>
                                       <object class="GtkBox" id="action_after_file_open_box">
-                                        <property name="visible">True</property>
                                         <property name="sensitive">False</property>
                                         <property name="can-focus">False</property>
                                         <property name="orientation">vertical</property>
@@ -228,7 +215,6 @@
                                         <child>
                                           <object class="GtkCheckButton" id="action_after_file_open_keyboard">
                                             <property name="label" translatable="yes">with keyboard shortcuts or menu entries</property>
-                                            <property name="visible">True</property>
                                             <property name="can-focus">True</property>
                                             <property name="receives-default">False</property>
                                             <property name="margin-start">24</property>
@@ -243,7 +229,6 @@
                                         <child>
                                           <object class="GtkCheckButton" id="action_after_file_open_mouse">
                                             <property name="label" translatable="yes">with double click</property>
-                                            <property name="visible">True</property>
                                             <property name="can-focus">True</property>
                                             <property name="receives-default">False</property>
                                             <property name="margin-start">24</property>
@@ -261,13 +246,11 @@
                                 </child>
                                 <child type="label">
                                   <object class="GtkBox">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="margin-start">6</property>
                                     <property name="spacing">6</property>
                                     <child>
                                       <object class="GtkLabel">
-                                        <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">start</property>
                                         <property name="label" translatable="yes">Behaviour after successfully opening a file:</property>
@@ -280,7 +263,6 @@
                                     </child>
                                     <child>
                                       <object class="GtkComboBoxText" id="action_after_file_open">
-                                        <property name="visible">True</property>
                                         <property name="can-focus">False</property>
                                         <property name="halign">start</property>
                                         <property name="hexpand">True</property>
@@ -312,7 +294,6 @@
                     </child>
                     <child type="label">
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">General:</property>
                         <attributes>
@@ -329,13 +310,11 @@
                 </child>
                 <child>
                   <object class="GtkFrame">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label-xalign">0</property>
                     <property name="shadow-type">none</property>
                     <child>
                       <object class="GtkAlignment">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">12</property>
                         <property name="margin-top">4</property>
@@ -343,14 +322,12 @@
                         <property name="right-padding">6</property>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
                             <property name="spacing">2</property>
                             <child>
                               <object class="GtkCheckButton" id="highlight_search_terms">
                                 <property name="label" translatable="yes">Show highlighted search terms</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -366,7 +343,6 @@
                             <child>
                               <object class="GtkCheckButton" id="show_tooltips_button">
                                 <property name="label" translatable="yes">Show tooltips</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -381,7 +357,6 @@
                             <child>
                               <object class="GtkCheckButton" id="show_icons_button">
                                 <property name="label" translatable="yes">Show icons in name column</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -396,7 +371,6 @@
                             <child>
                               <object class="GtkCheckButton" id="restore_column_config_button">
                                 <property name="label" translatable="yes">Remember column configuration</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -411,7 +385,6 @@
                             <child>
                               <object class="GtkCheckButton" id="restore_sort_order_button">
                                 <property name="label" translatable="yes">Remember sort order</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -426,7 +399,6 @@
                             <child>
                               <object class="GtkCheckButton" id="double_click_path_button">
                                 <property name="label" translatable="yes">Open path with double click in path column</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -441,7 +413,6 @@
                             <child>
                               <object class="GtkCheckButton" id="single_click_open_button">
                                 <property name="label" translatable="yes">Single click to open</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -456,7 +427,6 @@
                             <child>
                               <object class="GtkCheckButton" id="launch_desktop_files_button">
                                 <property name="label" translatable="yes">Launch desktop files</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
@@ -474,7 +444,6 @@
                     </child>
                     <child type="label">
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Results:</property>
                         <attributes>
@@ -490,19 +459,16 @@
                 </child>
                 <child>
                   <object class="GtkBox">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="orientation">vertical</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkFrame">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label-xalign">0</property>
                         <property name="shadow-type">none</property>
                         <child>
                           <object class="GtkAlignment">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-left">12</property>
                             <property name="margin-start">12</property>
@@ -511,14 +477,12 @@
                             <property name="right-padding">6</property>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">2</property>
                                 <child>
                                   <object class="GtkCheckButton" id="show_indexing_status_button">
                                     <property name="label" translatable="yes">Show database indexing status</property>
-                                    <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="has-tooltip">True</property>
@@ -536,7 +500,6 @@
                         </child>
                         <child type="label">
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Statusbar:</property>
                             <attributes>
@@ -553,13 +516,11 @@
                     </child>
                     <child>
                       <object class="GtkFrame">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label-xalign">0</property>
                         <property name="shadow-type">none</property>
                         <child>
                           <object class="GtkAlignment">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-left">12</property>
                             <property name="margin-start">12</property>
@@ -568,13 +529,11 @@
                             <property name="right-padding">6</property>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="orientation">vertical</property>
                                 <property name="spacing">2</property>
                                 <child>
                                   <object class="GtkLabel">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">False</property>
                                     <property name="halign">start</property>
                                     <property name="margin-left">6</property>
@@ -590,7 +549,6 @@
                                 <child>
                                   <object class="GtkCheckButton" id="show_dialog_failed_opening">
                                     <property name="label" translatable="yes">file / folder failed to open</property>
-                                    <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">False</property>
                                     <property name="has-tooltip">True</property>
@@ -610,7 +568,6 @@
                         </child>
                         <child type="label">
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">Dialogs:</property>
                             <attributes>
@@ -635,7 +592,6 @@
             </child>
             <child type="tab">
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Interface</property>
               </object>
@@ -646,7 +602,6 @@
             <child>
               <!-- n-columns=1 n-rows=5 -->
               <object class="GtkGrid">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="margin-start">6</property>
                 <property name="margin-end">6</property>
@@ -657,7 +612,6 @@
                 <child>
                   <object class="GtkCheckButton" id="auto_search_in_path_button">
                     <property name="label" translatable="yes">Search in path when query contains path separators</property>
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
@@ -671,7 +625,6 @@
                 <child>
                   <object class="GtkCheckButton" id="search_as_you_type_button">
                     <property name="label" translatable="yes">Search as you type</property>
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
@@ -685,7 +638,6 @@
                 <child>
                   <object class="GtkCheckButton" id="hide_results_button">
                     <property name="label" translatable="yes">Hide results when search is empty</property>
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
@@ -699,7 +651,6 @@
                 <child>
                   <object class="GtkCheckButton" id="auto_match_case_button">
                     <property name="label" translatable="yes">Match case when query contains at least one upper case character</property>
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
@@ -712,7 +663,6 @@
                 </child>
                 <child>
                   <object class="GtkFrame">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-top">6</property>
                     <property name="hexpand">True</property>
@@ -720,12 +670,10 @@
                     <property name="shadow-type">none</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="hexpand">True</property>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="margin-start">6</property>
                             <property name="margin-end">6</property>
@@ -736,13 +684,11 @@
                               <object class="GtkScrolledWindow">
                                 <property name="width-request">200</property>
                                 <property name="height-request">200</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="shadow-type">in</property>
                                 <child>
                                   <object class="GtkTreeView" id="filter_list">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="has-tooltip">True</property>
                                     <child internal-child="selection">
@@ -759,11 +705,9 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <child>
                                   <object class="GtkButton" id="filter_add_button">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <property name="tooltip-text" translatable="yes">Add new filter</property>
@@ -778,7 +722,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="filter_remove_button">
-                                    <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
@@ -794,7 +737,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="filter_edit_button">
-                                    <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
@@ -809,7 +751,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="filter_revert_button">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <property name="tooltip-text" translatable="yes">Restore default filters</property>
@@ -842,7 +783,6 @@
                     </child>
                     <child type="label">
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Filter:</property>
                         <attributes>
@@ -863,7 +803,6 @@
             </child>
             <child type="tab">
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Search</property>
               </object>
@@ -874,7 +813,6 @@
             </child>
             <child>
               <object class="GtkBox">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="margin-start">6</property>
                 <property name="margin-end">6</property>
@@ -885,7 +823,6 @@
                 <child>
                   <object class="GtkCheckButton" id="update_db_at_start_button">
                     <property name="label" translatable="yes">Update database on start</property>
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
@@ -899,13 +836,11 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="auto_update_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="has-tooltip">True</property>
                     <child>
                       <object class="GtkCheckButton" id="auto_update_checkbox">
                         <property name="label" translatable="yes">Update every</property>
-                        <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">False</property>
                         <property name="has-tooltip">True</property>
@@ -919,12 +854,10 @@
                     </child>
                     <child>
                       <object class="GtkBox" id="auto_update_spin_box">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkSpinButton" id="auto_update_hours_spin_button">
-                            <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="text">0</property>
                             <property name="input-purpose">digits</property>
@@ -941,7 +874,6 @@
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">hour(s) and</property>
                           </object>
@@ -953,7 +885,6 @@
                         </child>
                         <child>
                           <object class="GtkSpinButton" id="auto_update_minutes_spin_button">
-                            <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="text" translatable="yes">30</property>
                             <property name="input-purpose">number</property>
@@ -971,7 +902,6 @@
                         </child>
                         <child>
                           <object class="GtkLabel">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="label" translatable="yes">minute(s)</property>
                           </object>
@@ -997,12 +927,10 @@
                 </child>
                 <child>
                   <object class="GtkNotebook">
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="tab-pos">left</property>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
@@ -1013,14 +941,12 @@
                           <object class="GtkScrolledWindow">
                             <property name="width-request">500</property>
                             <property name="height-request">250</property>
-                            <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="hexpand">True</property>
                             <property name="vexpand">True</property>
                             <property name="shadow-type">in</property>
                             <child>
                               <object class="GtkTreeView" id="index_list">
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="reorderable">True</property>
@@ -1038,11 +964,9 @@
                         </child>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <child>
                               <object class="GtkButton" id="index_add_button">
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
                                 <property name="tooltip-text" translatable="yes">Add path to be included in database
@@ -1058,7 +982,6 @@
                             </child>
                             <child>
                               <object class="GtkButton" id="index_remove_button">
-                                <property name="visible">True</property>
                                 <property name="sensitive">False</property>
                                 <property name="can-focus">True</property>
                                 <property name="receives-default">True</property>
@@ -1086,7 +1009,6 @@
                     </child>
                     <child type="tab">
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Include</property>
                       </object>
@@ -1096,7 +1018,6 @@
                     </child>
                     <child>
                       <object class="GtkBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="margin-start">6</property>
                         <property name="margin-end">6</property>
@@ -1106,21 +1027,18 @@
                         <property name="spacing">6</property>
                         <child>
                           <object class="GtkBox">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
                             <child>
                               <object class="GtkScrolledWindow">
                                 <property name="width-request">500</property>
                                 <property name="height-request">250</property>
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="hexpand">True</property>
                                 <property name="vexpand">True</property>
                                 <property name="shadow-type">in</property>
                                 <child>
                                   <object class="GtkTreeView" id="exclude_list">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="has-tooltip">True</property>
                                     <property name="reorderable">True</property>
@@ -1138,11 +1056,9 @@
                             </child>
                             <child>
                               <object class="GtkBox">
-                                <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <child>
                                   <object class="GtkButton" id="exclude_add_button">
-                                    <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
                                     <property name="tooltip-text" translatable="yes">Add path to be excluded from database</property>
@@ -1157,7 +1073,6 @@
                                 </child>
                                 <child>
                                   <object class="GtkButton" id="exclude_remove_button">
-                                    <property name="visible">True</property>
                                     <property name="sensitive">False</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
@@ -1190,12 +1105,10 @@
                         </child>
                         <child>
                           <object class="GtkBox" id="exclude_files_box">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="spacing">4</property>
                             <child>
                               <object class="GtkLabel">
-                                <property name="visible">True</property>
                                 <property name="can-focus">False</property>
                                 <property name="tooltip-text" translatable="yes">Supports wildcards. Multiple entries must be separated by ';'</property>
                                 <property name="label" translatable="yes">Exclude files:</property>
@@ -1208,7 +1121,6 @@
                             </child>
                             <child>
                               <object class="GtkEntry" id="exclude_files_entry">
-                                <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="tooltip-text" translatable="yes">Supports wildcards. Multiple entries must be separated by ';'</property>
                                 <property name="placeholder-text" translatable="yes">e.g. ".git;*.tmp"</property>
@@ -1229,7 +1141,6 @@
                         <child>
                           <object class="GtkCheckButton" id="exclude_hidden_items_button">
                             <property name="label" translatable="yes">Exclude hidden files and folders</property>
-                            <property name="visible">True</property>
                             <property name="can-focus">True</property>
                             <property name="receives-default">False</property>
                             <property name="has-tooltip">True</property>
@@ -1248,7 +1159,6 @@
                     </child>
                     <child type="tab">
                       <object class="GtkLabel">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Exclude</property>
                       </object>
@@ -1271,7 +1181,6 @@
             </child>
             <child type="tab">
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Database</property>
               </object>
@@ -1289,12 +1198,10 @@
         </child>
         <child>
           <object class="GtkExpander" id="help_expander">
-            <property name="visible">True</property>
             <property name="can-focus">True</property>
             <property name="resize-toplevel">True</property>
             <child>
               <object class="GtkStack" id="help_stack">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="margin-start">24</property>
                 <property name="margin-end">24</property>
@@ -1303,7 +1210,6 @@
                 <property name="transition-type">crossfade</property>
                 <child>
                   <object class="GtkLabel" id="help_dark_theme">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Enable dark theme:&lt;/b&gt;
 
@@ -1321,7 +1227,6 @@ Note that not all system themes provide such a darker variant, therefore enablin
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_csd">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Enable client-side decorations:&lt;/b&gt;
 
@@ -1341,7 +1246,6 @@ This resembles a more traditional UI layout and takes a little bit more space.</
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_units">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Use binary units instead of decimal units:&lt;/b&gt;
 
@@ -1361,7 +1265,6 @@ This settings controls how file sizes are displayed.
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_window_size">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remember window size:&lt;/b&gt;
 
@@ -1380,7 +1283,6 @@ Note that some window managers ignore this request and force the window to have 
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_action_after_open">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Behaviour after successfully opening a file:&lt;/b&gt;
 
@@ -1404,7 +1306,6 @@ You can configure if those actions should be triggered when the file was opened 
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_highlight_search_terms">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Show highlighted search terms:&lt;/b&gt;
 
@@ -1426,7 +1327,6 @@ This also works for regular expressions and wildcard expressions starting or end
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_show_tooltips">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Show tooltips:&lt;/b&gt;
 
@@ -1443,7 +1343,6 @@ If enabled, the results view will show the full path of the focused file/folder 
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_show_icons">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Show icons in name column:&lt;/b&gt;
 
@@ -1460,7 +1359,6 @@ If enabled, file/folder icons will be shown in the name column.</property>
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_restore_column_config">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remember column configuration:&lt;/b&gt;
 
@@ -1477,7 +1375,6 @@ If enabled, the column configuration of the results view from the previous sessi
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_restore_sort_order">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remember sort order:&lt;/b&gt;
 
@@ -1494,7 +1391,6 @@ If enabled, the sort order of the results view from the previous session will be
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_double_click_path">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Open path with double click in path column:&lt;/b&gt;
 
@@ -1511,7 +1407,6 @@ If enabled, double clicking in the path column will open the selected path.</pro
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_single_click_open">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Single click to open:&lt;/b&gt;
 
@@ -1528,7 +1423,6 @@ If enabled, a single click will open the selected file/folder. If you only want 
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_show_indexing_status">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Show database indexing status:&lt;/b&gt;
 
@@ -1545,7 +1439,6 @@ If enabled, the path that is currently being indexed is displayed in the statusb
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_warn_failed_open">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Show warning dialogs:&lt;/b&gt;
 
@@ -1562,7 +1455,6 @@ If enabled, a warning dialog is displayed when a file or folder failed to open.<
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_auto_path">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Search in path when query contains path separators:&lt;/b&gt;
 
@@ -1579,7 +1471,6 @@ If enabled, search terms containing path separators (i.e. "/") will be automatic
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_auto_case">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Match case when query contains at least one upper case character:&lt;/b&gt;
 
@@ -1596,7 +1487,6 @@ If enabled, search terms containing at least one upper case character will trigg
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_hide_results">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Hide results when search is empty:&lt;/b&gt;
 
@@ -1615,7 +1505,6 @@ If disabled, all files and folders will be displayed when the search entry is em
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_search_as_you_type">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Search as you type:&lt;/b&gt;
 
@@ -1634,7 +1523,6 @@ If disabled, the search is only updated when you hit &lt;i&gt;Enter&lt;/i&gt; or
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_update_database_on_start">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Update database on start:&lt;/b&gt;
 
@@ -1651,7 +1539,6 @@ If enabled, the database will be updated automatically in the background when yo
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_index_list">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Included folders:&lt;/b&gt;
 
@@ -1672,7 +1559,6 @@ This list contains all folders you want to include in the database.
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_index_add">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Add folder to database:&lt;/b&gt;
 
@@ -1689,7 +1575,6 @@ This button opens a dialog where you can select a folder you want to include in 
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_index_remove">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remove selected row:&lt;/b&gt;
 
@@ -1706,7 +1591,6 @@ This removes the selected folder from the list of included folders.</property>
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_exclude_list">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Excluded folders:&lt;/b&gt;
 
@@ -1726,7 +1610,6 @@ This list contains all folders you want to exclude from the database.
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_exclude_add">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Exclude folder from database:&lt;/b&gt;
 
@@ -1743,7 +1626,6 @@ This button opens a dialog where you can select a folder you want to exclude fro
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_exclude_remove">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remove selected row:&lt;/b&gt;
 
@@ -1760,7 +1642,6 @@ This removes the selected folder from the list of excluded folders.</property>
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_exclude_files">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Exclude files and folders from database:&lt;/b&gt;
 
@@ -1777,7 +1658,6 @@ This is a semi-colon separated list of files (or folders) you want to exclude fr
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_exclude_hidden">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Exclude hidden files and folders:&lt;/b&gt;
 
@@ -1794,7 +1674,6 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_help">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">Focus a setting to get a detailed description of what it does.</property>
                     <property name="selectable">True</property>
@@ -1807,7 +1686,6 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_update_database_every">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Periodically update database at a specific time interval:&lt;/b&gt;
 
@@ -1828,7 +1706,6 @@ If you want to update the database in the background, even when FSearch is not r
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_launch_desktop_files">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Launch desktop files:&lt;/b&gt;
 
@@ -1845,7 +1722,6 @@ If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the applic
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_filter_list">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Filters:&lt;/b&gt;
 
@@ -1866,7 +1742,6 @@ This is a list of all available filters. A filter is a predefined search.
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_filter_add">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Add a new filter:&lt;/b&gt;
 
@@ -1883,7 +1758,6 @@ This button opens a dialog where you can edit a new filter.</property>
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_filter_remove">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Remove selected filter:&lt;/b&gt;
 
@@ -1900,7 +1774,6 @@ This button removes the currently selected filter.</property>
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_filter_edit">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Edit selected filter:&lt;/b&gt;
 
@@ -1917,7 +1790,6 @@ This button opens a dialog where you can edit the selected filter.</property>
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_filter_revert">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Restore default filters:&lt;/b&gt;
 
@@ -1936,7 +1808,6 @@ This button restores the default filter configuration.
                 </child>
                 <child>
                   <object class="GtkLabel" id="help_exit_on_escape">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">&lt;b&gt;Exit on Escape:&lt;/b&gt;
 
@@ -1955,7 +1826,6 @@ If enabled, FSearch exits when the Escape key is pressed instead of the window b
             </child>
             <child type="label">
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Help</property>
               </object>
