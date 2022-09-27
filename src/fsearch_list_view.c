@@ -2342,7 +2342,7 @@ fsearch_list_view_column_new(int type,
     gtk_box_append(GTK_BOX(hbox), col->emblem);
     gtk_box_append(GTK_BOX(hbox), col->arrow);
 
-    gtk_container_add(GTK_CONTAINER(col->button), hbox);
+    gtk_box_set_child(GTK_BUTTON(col->button), hbox);
 
     gtk_widget_show(hbox);
     gtk_widget_show(label);

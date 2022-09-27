@@ -186,7 +186,7 @@ fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
         gtk_window_set_title(GTK_WINDOW(win), g_get_application_name());
 
         g_object_ref(G_OBJECT(win->search_box));
-        gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
+        gtk_box_remove(GTK_BOX(win->headerbar_box), win->search_box);
         gtk_box_append(GTK_BOX(win->menu_box), win->search_box);
         gtk_box_reorder_child_after(GTK_BOX(win->menu_box), win->search_box, NULL);
         g_object_unref(G_OBJECT(win->search_box));
@@ -770,7 +770,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     GtkAdjustment *hadj = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(win->listview_scrolled_window));
     GtkAdjustment *vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(win->listview_scrolled_window));
     FsearchListView *list_view = fsearch_list_view_new(hadj, vadj);
-    gtk_container_add(GTK_CONTAINER(win->listview_scrolled_window), GTK_WIDGET(list_view));
+    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(win->listview_scrolled_window), GTK_WIDGET(list_view));
 
     gtk_widget_show((GTK_WIDGET(list_view)));
     fsearch_list_view_set_query_tooltip_func(list_view, fsearch_list_view_query_tooltip, win);
