@@ -721,7 +721,8 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     ui->exclude_files_str = NULL;
     if (new_config->exclude_files) {
         ui->exclude_files_str = g_strjoinv(";", new_config->exclude_files);
-        gtk_entry_set_text(ui->exclude_files_entry, ui->exclude_files_str);
+        GtkEntryBuffer *buffer = gtk_entry_get_buffer(ui->exclude_files_entry);
+        gtk_entry_buffer_set_text(buffer, ui->exclude_files_str, -1);
     }
 }
 

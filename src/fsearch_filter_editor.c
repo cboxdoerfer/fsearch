@@ -118,8 +118,11 @@ fsearch_filter_editor_run(const char *title,
     }
 
     if (filter) {
-        gtk_entry_set_text(editor->name_entry, filter->name);
-        gtk_entry_set_text(editor->macro_entry, filter->macro);
+        GtkEntryBuffer *buffer = gtk_entry_get_buffer(editor->name_entry);
+        gtk_entry_buffer_set_text(buffer, filter->name, -1);
+        buffer = gtk_entry_get_buffer(editor->macro_entry);
+        gtk_entry_buffer_set_text(buffer, filter->macro, -1);
+
         gtk_text_buffer_set_text(editor->query_text_buffer, filter->query, -1);
         gtk_toggle_button_set_active(editor->search_in_path, filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? TRUE : FALSE);
         gtk_toggle_button_set_active(editor->match_case, filter->flags & QUERY_FLAG_MATCH_CASE ? TRUE : FALSE);
