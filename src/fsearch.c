@@ -375,7 +375,7 @@ show_url(FsearchApplication *app, const char *url) {
         return;
     }
 
-    gtk_show_uri_on_window(GTK_WINDOW(window), url, GDK_CURRENT_TIME, NULL);
+    gtk_show_uri(GTK_WINDOW(window), url, GDK_CURRENT_TIME);
 }
 
 static void
