@@ -1,7 +1,7 @@
 %global giturl  https://github.com/cboxdoerfer/fsearch
 
 Name:    fsearch
-Summary: A fast file search utility for Unix-like systems based on GTK 3
+Summary: A fast file search utility for Unix-like systems based on GTK 4
 Epoch:   2
 Version: 0.3~alpha0
 Release: %(date +%%Y%%m%%d)%{?dist}
@@ -13,14 +13,14 @@ Source0: %{giturl}/archive/master/%{name}-master.tar.gz
 BuildRequires: meson
 BuildRequires: ninja-build
 BuildRequires: gcc
-BuildRequires: gtk3-devel
+BuildRequires: gtk4-devel
 BuildRequires: glib2-devel
 BuildRequires: libappstream-glib
 BuildRequires: desktop-file-utils
 
 
 %description
-FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK 3.
+FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK 4.
 
 %prep
 %setup -q -n fsearch-master -c
