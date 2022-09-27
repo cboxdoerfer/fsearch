@@ -186,7 +186,8 @@ static void
 run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext *ctx) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
 
-    GtkWidget *window = gtk_widget_get_toplevel(GTK_WIDGET(button));
+    GtkRoot *root = gtk_widget_get_root(GTK_WIDGET(button));
+    GtkWindow *window = GTK_WINDOW(root);
 
 #if !GTK_CHECK_VERSION(3, 20, 0)
     GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select folder"),
