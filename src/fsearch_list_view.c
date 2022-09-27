@@ -2338,9 +2338,9 @@ fsearch_list_view_column_new(int type,
     GtkWidget *label = gtk_label_new(name);
     gtk_label_set_xalign(GTK_LABEL(label), 0.f);
 
-    gtk_box_pack_start(GTK_BOX(hbox), label, TRUE, TRUE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox), col->emblem, FALSE, FALSE, 0);
-    gtk_box_pack_start(GTK_BOX(hbox), col->arrow, FALSE, FALSE, 0);
+    gtk_box_append(GTK_BOX(hbox), label);
+    gtk_box_append(GTK_BOX(hbox), col->emblem);
+    gtk_box_append(GTK_BOX(hbox), col->arrow);
 
     gtk_container_add(GTK_CONTAINER(col->button), hbox);
 

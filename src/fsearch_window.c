@@ -187,8 +187,8 @@ fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
 
         g_object_ref(G_OBJECT(win->search_box));
         gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
-        gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
-        gtk_box_reorder_child(GTK_BOX(win->menu_box), win->search_box, 0);
+        gtk_box_append(GTK_BOX(win->menu_box), win->search_box);
+        gtk_box_reorder_child_after(GTK_BOX(win->menu_box), win->search_box, NULL);
         g_object_unref(G_OBJECT(win->search_box));
     }
     else {
@@ -843,7 +843,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     self->result_view = fsearch_result_view_new();
 
     self->statusbar = GTK_WIDGET(fsearch_statusbar_new());
-    gtk_box_pack_end(GTK_BOX(self->main_box), self->statusbar, FALSE, TRUE, 0);
+    gtk_box_append(GTK_BOX(self->main_box), self->statusbar);
 
     fsearch_window_actions_init(self);
     fsearch_application_window_init_listview(self);
