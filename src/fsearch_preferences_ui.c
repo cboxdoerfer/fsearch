@@ -189,21 +189,6 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     GtkRoot *root = gtk_widget_get_root(GTK_WIDGET(button));
     GtkWindow *window = GTK_WINDOW(root);
 
-#if !GTK_CHECK_VERSION(3, 20, 0)
-    GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select folder"),
-                                                    GTK_WINDOW(window),
-                                                    action,
-                                                    _("_Cancel"),
-                                                    GTK_RESPONSE_CANCEL,
-                                                    _("_Select"),
-                                                    GTK_RESPONSE_ACCEPT,
-                                                    NULL);
-
-    g_signal_connect(dialog, "response", G_CALLBACK(on_file_chooser_dialog_response), ctx);
-    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(window));
-    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
-    gtk_widget_show(dialog);
-#else
     GtkFileChooserNative *dialog =
         gtk_file_chooser_native_new(_("Select folder"), GTK_WINDOW(window), action, _("_Select"), _("_Cancel"));
 
@@ -211,7 +196,6 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     gtk_native_dialog_set_transient_for(GTK_NATIVE_DIALOG(dialog), GTK_WINDOW(window));
     gtk_native_dialog_set_modal(GTK_NATIVE_DIALOG(dialog), true);
     gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
-#endif
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
 }
 
