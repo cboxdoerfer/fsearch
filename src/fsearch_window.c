@@ -757,8 +757,6 @@ fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
 
     gtk_overlay_add_overlay(GTK_OVERLAY(win->main_result_overlay), win->main_search_overlay_stack);
     gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_database_overlay_stack);
-
-    gtk_widget_show_all(win->main_stack);
 }
 
 static void
