@@ -24,7 +24,7 @@ static void
 fsearch_filter_editor_free(FsearchFilterEditor *editor) {
     g_clear_object(&editor->builder);
     g_clear_pointer(&editor->filter, fsearch_filter_unref);
-    g_clear_pointer(&editor->dialog, gtk_widget_destroy);
+    g_clear_pointer(&editor->dialog, g_object_unref);
     g_clear_pointer(&editor, free);
 }
 

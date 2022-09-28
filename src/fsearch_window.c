@@ -899,7 +899,7 @@ static gboolean
 on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(widget);
     fsearch_application_window_prepare_shutdown(win);
-    g_clear_pointer(&widget, gtk_widget_destroy);
+    g_clear_pointer(&widget, g_object_unref);
     return TRUE;
 }
 

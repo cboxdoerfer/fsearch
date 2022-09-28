@@ -63,7 +63,7 @@ ui_utils_run_gtk_dialog(GtkWidget *parent,
 
     gint response = gtk_dialog_run(GTK_DIALOG(dialog));
 
-    g_clear_pointer(&dialog, gtk_widget_destroy);
+    g_clear_pointer(&dialog, g_object_unref);
 
     return response;
 }

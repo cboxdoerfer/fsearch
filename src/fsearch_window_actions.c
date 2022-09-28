@@ -209,7 +209,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
                                       GTK_BUTTONS_OK,
                                       _("Something went wrong."),
                                       error_message->str,
-                                      G_CALLBACK(gtk_widget_destroy),
+                                      G_CALLBACK(g_object_unref),
                                       NULL);
     }
     if (num_trashed_or_deleted > 0) {
@@ -223,7 +223,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
                                       trashed_or_deleted_message->str,
                                       _("The database needs to be updated before it becomes aware of those changes! "
                                         "This will be fixed with future updates."),
-                                      G_CALLBACK(gtk_widget_destroy),
+                                      G_CALLBACK(g_object_unref),
                                       NULL);
     }
 
@@ -493,7 +493,7 @@ open_path_list_callback(gboolean result, const char *error_message, gpointer use
                                               GTK_BUTTONS_OK,
                                               _("Something went wrong."),
                                               error_message,
-                                              G_CALLBACK(gtk_widget_destroy),
+                                              G_CALLBACK(g_object_unref),
                                               NULL);
             }
         }
@@ -533,7 +533,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
                                               GTK_BUTTONS_OK,
                                               _("Something went wrong."),
                                               error_message->str,
-                                              G_CALLBACK(gtk_widget_destroy),
+                                              G_CALLBACK(g_object_unref),
                                               NULL);
             }
         }
@@ -563,7 +563,7 @@ fsearch_window_action_close_window(GSimpleAction *action, GVariant *variant, gpo
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     fsearch_application_window_prepare_shutdown(self);
-    gtk_widget_destroy(GTK_WIDGET(self));
+    g_object_unref(self);
 }
 
 static void
@@ -587,13 +587,13 @@ fsearch_window_action_open_folder(GSimpleAction *action, GVariant *variant, gpoi
 static void
 on_fsearch_window_action_open_with_response(GtkDialog *dialog, gint response_id, gpointer user_data) {
     if (response_id != GTK_RESPONSE_OK) {
-        gtk_widget_destroy(GTK_WIDGET(dialog));
+        g_object_unref(dialog);
         return;
     }
 
     FsearchApplicationWindow *self = user_data;
     g_autoptr(GAppInfo) app_info = gtk_app_chooser_get_app_info(GTK_APP_CHOOSER(dialog));
-    gtk_widget_destroy(GTK_WIDGET(dialog));
+    g_object_unref(dialog);
 
     launch_selection_for_app_info(self, app_info);
 }

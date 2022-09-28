@@ -173,11 +173,7 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
         g_object_unref(filenames);
     }
 
-#if !GTK_CHECK_VERSION(3, 20, 0)
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-#else
     g_clear_object(&dialog);
-#endif
 
     g_slice_free(FsearchPreferencesFileChooserContext, g_steal_pointer(&ctx));
 }
@@ -465,7 +461,7 @@ preferences_ui_cleanup(FsearchPreferencesInterface *ui) {
     help_expander = NULL;
 
     g_clear_object(&ui->builder);
-    g_clear_pointer(&ui->dialog, gtk_widget_destroy);
+    g_clear_pointer(&ui->dialog, g_object_unref);
     g_clear_pointer(&ui, free);
 }
 
