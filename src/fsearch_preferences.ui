@@ -13,42 +13,34 @@
     <property name="page-increment">6</property>
   </object>
   <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">list-add-symbolic</property>
   </object>
   <object class="GtkImage" id="image2">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">list-remove-symbolic</property>
   </object>
   <object class="GtkImage" id="image3">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">list-add-symbolic</property>
   </object>
   <object class="GtkImage" id="image4">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">list-remove-symbolic</property>
   </object>
   <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">list-add-symbolic</property>
   </object>
   <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">list-remove-symbolic</property>
   </object>
   <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">document-edit-symbolic</property>
   </object>
   <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">document-revert-symbolic</property>
   </object>
