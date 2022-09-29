@@ -341,8 +341,8 @@ copy_selection_as_text(FsearchApplicationWindow *win, GHFunc text_copy_func) {
     g_autoptr(GString) file_list_buffer = g_string_sized_new(8192);
     fsearch_application_window_selection_for_each(win, text_copy_func, file_list_buffer);
 
-    GtkClipboard *clip = gtk_clipboard_get(GDK_SELECTION_CLIPBOARD);
-    gtk_clipboard_set_text(clip, file_list_buffer->str, (gint)file_list_buffer->len);
+    GdkClipboard *clipboard = gtk_widget_get_clipboard(GTK_WIDGET(win));
+    gdk_clipboard_set_text(clipboard, file_list_buffer->str);
 }
 
 static void
