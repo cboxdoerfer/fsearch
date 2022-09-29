@@ -294,22 +294,22 @@ db_view_search_task_finished(gpointer result, gpointer data) {
     if (result) {
         DatabaseSearchResult *res = result;
 
-        FsearchDatabase *db = db_search_result_get_db(res);
+        FsearchDatabase *db = res->data;
         if (ctx->view->db == db) {
             if (ctx->view->selection && ctx->view->query->reset_selection) {
                 fsearch_selection_unselect_all(ctx->view->selection);
             }
             g_clear_pointer(&ctx->view->files, darray_unref);
-            ctx->view->files = db_search_result_get_files(res);
+            ctx->view->files = g_steal_pointer(&res->files);
 
             g_clear_pointer(&ctx->view->folders, darray_unref);
-            ctx->view->folders = db_search_result_get_folders(res);
+            ctx->view->folders = g_steal_pointer(&res->folders);
 
-            ctx->view->sort_order = db_search_result_get_sort_type(res);
+            ctx->view->sort_order = res->sort_type;
         }
 
         g_clear_pointer(&db, db_unref);
-        g_clear_pointer(&res, db_search_result_unref);
+        g_clear_pointer(&res, free);
     }
 
     db_view_unlock(ctx->view);
@@ -559,12 +559,23 @@ db_view_search_task(gpointer data, GCancellable *cancellable) {
     g_timer_start(timer);
 
     DatabaseSearchResult *result = NULL;
+    FsearchDatabaseIndexType sort_type = DATABASE_INDEX_TYPE_NAME;
+    DynamicArray *files = NULL;
+    DynamicArray *folders = NULL;
+
+    db_lock(ctx->view->db);
+    db_get_entries_sorted(ctx->view->db, ctx->query->sort_order, &sort_type, &folders, &files);
+
     if (fsearch_query_matches_everything(ctx->query)) {
-        result = db_search_empty(ctx->query);
+        result = db_search_empty(ctx->query, folders, files, sort_type, db_ref(ctx->view->db));
     }
     else {
-        result = db_search(ctx->query, cancellable);
+        result = db_search(ctx->query, ctx->view->pool, folders, files, sort_type, cancellable, db_ref(ctx->view->db));
     }
+    db_unlock(ctx->view->db);
+
+    g_clear_pointer(&files, darray_unref);
+    g_clear_pointer(&folders, darray_unref);
 
     const char *debug_message = NULL;
     const double seconds = g_timer_elapsed(timer, NULL);
@@ -595,11 +606,9 @@ db_view_search(FsearchDatabaseView *view, bool reset_selection) {
     g_autoptr(GString) query_id = g_string_new(NULL);
     g_string_printf(query_id, "query:%02d.%04d", view->id, view->query_id++);
     ctx->query = fsearch_query_new(view->query_text,
-                                   view->db,
                                    view->sort_order,
                                    view->filter,
                                    view->filters,
-                                   view->pool,
                                    view->query_flags,
                                    query_id->str,
                                    reset_selection);

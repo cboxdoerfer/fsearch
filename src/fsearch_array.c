@@ -164,33 +164,30 @@ merge_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
     int i = 0;
     int j = 0;
+    const uint32_t n1 = ctx->m1->num_items;
+    const uint32_t n2 = ctx->m2->num_items;
+
     while (true) {
         void *d1 = darray_get_item(ctx->m1, i);
         void *d2 = darray_get_item(ctx->m2, j);
 
-        if (d1 && d2) {
-            int res = ctx->comp_func(&d1, &d2, user_data);
-            if (res < 0) {
+        if (i < n1 && j < n2) {
+            const int res = ctx->comp_func(&d1, &d2, user_data);
+            if (res <= 0) {
                 darray_add_item(ctx->dest, d1);
                 i++;
-            }
-            else if (res > 0) {
-                darray_add_item(ctx->dest, d2);
-                j++;
             }
             else {
-                darray_add_item(ctx->dest, d1);
                 darray_add_item(ctx->dest, d2);
-                i++;
                 j++;
             }
         }
         else {
-            if (d1) {
+            if (i < n1) {
                 darray_add_items(ctx->dest, &ctx->m1->data[i], ctx->m1->num_items - i);
                 return;
             }
-            else if (d2) {
+            else if (j < n2) {
                 darray_add_items(ctx->dest, &ctx->m2->data[j], ctx->m2->num_items - j);
                 return;
             }
@@ -394,7 +391,7 @@ darray_sort_multi_threaded(DynamicArray *array,
                            GCancellable *cancellable,
                            void *data) {
     const int num_threads = get_ideal_thread_count();
-    if (array->num_items <= 100000 || num_threads < 2) {
+    if (num_threads < 2 || num_threads > array->num_items) {
         return darray_sort(array, comp_func, NULL, data);
     }
 
@@ -482,6 +479,9 @@ darray_binary_search_with_data(DynamicArray *array,
             left = middle + 1;
         }
         else if (middle > 0) {
+            // match > 0
+            // This means the item is to the left of middle
+            // If middle == 0 then the item is not in the array
             right = middle - 1;
         }
         else {

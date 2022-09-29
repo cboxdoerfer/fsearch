@@ -25,28 +25,25 @@
 
 #include <gio/gio.h>
 
-typedef struct DatabaseSearchResult DatabaseSearchResult;
-
-DynamicArray *
-db_search_result_get_files(DatabaseSearchResult *result);
-
-DynamicArray *
-db_search_result_get_folders(DatabaseSearchResult *result);
-
-FsearchDatabaseIndexType
-db_search_result_get_sort_type(DatabaseSearchResult *result);
-
-FsearchDatabase *
-db_search_result_get_db(DatabaseSearchResult *result);
+typedef struct DatabaseSearchResult {
+    DynamicArray *folders;
+    DynamicArray *files;
+    FsearchDatabaseIndexType sort_type;
+    gpointer data;
+} DatabaseSearchResult;
 
 DatabaseSearchResult *
-db_search_result_ref(DatabaseSearchResult *result);
-
-void
-db_search_result_unref(DatabaseSearchResult *result);
-
-DatabaseSearchResult *
-db_search_empty(FsearchQuery *q);
+db_search_empty(FsearchQuery *q,
+                DynamicArray *folders,
+                DynamicArray *files,
+                FsearchDatabaseIndexType sort_type,
+                gpointer data);
 
 DatabaseSearchResult *
-db_search(FsearchQuery *q, GCancellable *cancellable);
+db_search(FsearchQuery *q,
+          FsearchThreadPool *pool,
+          DynamicArray *folders,
+          DynamicArray *files,
+          FsearchDatabaseIndexType sort_type,
+          GCancellable *cancellable,
+          gpointer data);

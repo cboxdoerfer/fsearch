@@ -24,11 +24,9 @@
 
 FsearchQuery *
 fsearch_query_new(const char *search_term,
-                  FsearchDatabase *db,
                   int32_t sort_order,
                   FsearchFilter *filter,
                   FsearchFilterManager *filters,
-                  FsearchThreadPool *pool,
                   FsearchQueryFlags flags,
                   const char *query_id,
                   bool reset_selection) {
@@ -37,11 +35,7 @@ fsearch_query_new(const char *search_term,
 
     q->search_term = search_term ? strdup(search_term) : "";
 
-    q->db = db_ref(db);
-
     q->sort_order = sort_order;
-
-    q->pool = pool;
 
     q->query_tree = fsearch_query_node_tree_new(q->search_term, filters, flags);
     if (q->query_tree) {
@@ -65,7 +59,6 @@ fsearch_query_new(const char *search_term,
 static void
 fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->query_id, free);
-    g_clear_pointer(&query->db, db_unref);
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->search_term, free);
     g_clear_pointer(&query->query_tree, fsearch_query_node_tree_free);

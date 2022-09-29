@@ -320,11 +320,7 @@ int
 db_entry_compare_entries_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     const char *ext_a = db_entry_get_extension(*a);
     const char *ext_b = db_entry_get_extension(*b);
-    int res = strcmp(ext_a ? ext_a : "", ext_b ? ext_b : "");
-    if (res == 0) {
-        return db_entry_compare_entries_by_name(a, b);
-    }
-    return res;
+    return strcmp(ext_a ? ext_a : "", ext_b ? ext_b : "");
 }
 
 int
