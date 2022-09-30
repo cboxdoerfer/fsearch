@@ -163,14 +163,13 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
 
     if (response == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-        GListModel *filenames = gtk_file_chooser_get_files(chooser);
+        g_autoptr(GListModel) filenames = gtk_file_chooser_get_files(chooser);
         for (guint i = 0; i < g_list_model_get_n_items(filenames); ++i) {
             gchar *filename = g_list_model_get_item(filenames, i);
             if (filename) {
                 ctx->add_path_cb(ctx->model, filename);
             }
         }
-        g_object_unref(filenames);
     }
 
     g_clear_object(&dialog);
