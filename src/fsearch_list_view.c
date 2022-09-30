@@ -2030,7 +2030,7 @@ fsearch_list_view_column_set_emblem(FsearchListViewColumn *col, const char *embl
     if (!col) {
         return;
     }
-    gtk_image_set_from_icon_name(GTK_IMAGE(col->emblem), emblem_name, GTK_ICON_SIZE_BUTTON);
+    gtk_image_set_from_icon_name(GTK_IMAGE(col->emblem), emblem_name);
     if (visible) {
         gtk_widget_show(col->emblem);
     }
@@ -2090,8 +2090,7 @@ fsearch_list_view_update_sort_indicator(FsearchListView *view) {
     fsearch_list_view_reset_sort_indicator(view);
 
     gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow),
-                                 view->sort_type == GTK_SORT_DESCENDING ? "pan-up-symbolic" : "pan-down-symbolic",
-                                 GTK_ICON_SIZE_BUTTON);
+                                 view->sort_type == GTK_SORT_DESCENDING ? "pan-up-symbolic" : "pan-down-symbolic");
     gtk_widget_show(col->arrow);
 }
 
@@ -2109,7 +2108,7 @@ on_fsearch_list_view_header_button_clicked(GtkButton *button, gpointer user_data
             col->view->sort_func(col->type, GTK_SORT_ASCENDING, col->view->sort_func_data);
         }
     }
-    gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "content-loading-symbolic", GTK_ICON_SIZE_BUTTON);
+    gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow), "content-loading-symbolic");
     gtk_widget_show(col->arrow);
     gtk_widget_set_sensitive(col->button, FALSE);
 }
@@ -2332,9 +2331,9 @@ fsearch_list_view_column_new(int type,
     col->button = gtk_button_new();
     gtk_widget_show(col->button);
     GtkWidget *hbox = gtk_box_new(GTK_ORIENTATION_HORIZONTAL, 2);
-    col->emblem = gtk_image_new_from_icon_name("emblem-important", GTK_ICON_SIZE_BUTTON);
+    col->emblem = gtk_image_new_from_icon_name("emblem-important");
     gtk_widget_set_opacity(col->emblem, 0.3);
-    col->arrow = gtk_image_new_from_icon_name("pan-down-symbolic", GTK_ICON_SIZE_BUTTON);
+    col->arrow = gtk_image_new_from_icon_name("pan-down-symbolic");
     GtkWidget *label = gtk_label_new(name);
     gtk_label_set_xalign(GTK_LABEL(label), 0.f);
 
