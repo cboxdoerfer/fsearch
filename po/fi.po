@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-07-23 05:21+0000\n"
+"PO-Revision-Date: 2022-10-10 21:11+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
 "translations/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.1\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -152,7 +152,7 @@ msgstr "Lajitellaan…"
 #: src/fsearch_file_utils.c:132
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr ""
+msgstr "Virhe avattaessa kansiota"
 
 #: src/fsearch_file_utils.c:135
 #, fuzzy
@@ -163,13 +163,11 @@ msgstr "Avaaminen epäonnistui:"
 #: src/fsearch_file_utils.c:151
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
-msgstr ""
+msgstr "Virhe käynnistettäessä työpöytätiedostoa"
 
 #: src/fsearch_file_utils.c:154
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Avaa uusi sovellusikkuna"
+msgstr "Sovellustietojen saaminen epäonnistui"
 
 #: src/fsearch_file_utils.c:160
 #, fuzzy
@@ -180,40 +178,34 @@ msgstr "Tiedoston avaaminen epäonnistui"
 #: src/fsearch_file_utils.c:182
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr ""
+msgstr "Virhe poistettaessa tiedostoa"
 
 #: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Avaaminen epäonnistui:"
+msgstr "Polun saaminen epäonnistui"
 
 #: src/fsearch_file_utils.c:245
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
-msgstr ""
+msgstr "Virhe käynnistettäessä työpöytätiedostoa"
 
 #: src/fsearch_file_utils.c:259
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "Virhe haettaessa sisältötyypin tietoja"
 
 #: src/fsearch_file_utils.c:261
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Näytä sovelluksen asetukset"
+msgstr "Oletussovellusta ei ole rekisteröity"
 
 #: src/fsearch_file_utils.c:348
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "Virhe avattaessa yläkansiota"
 
 #: src/fsearch_file_utils.c:350
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Avaaminen epäonnistui:"
+msgstr "Vanhemman polun hakeminen epäonnistui"
 
 #: src/fsearch_file_utils.c:407
 msgid "Folder"
@@ -352,10 +344,8 @@ msgid "Empty Query"
 msgstr "Tyhjä haku"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Paina <b>Ctrl + F</b> ja aloita kirjoittaminen"
+msgstr "Paina <b>Ctrl + F</b> ja aloita kirjoittaminen."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -452,7 +442,7 @@ msgstr "Avaa yhdellä napsautuksella"
 
 #: src/fsearch_preferences.ui:458
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Käynnistä työpöytätiedostot"
 
 #: src/fsearch_preferences.ui:479
 msgid "Results:"
@@ -944,10 +934,8 @@ msgid "_Select"
 msgstr "_Valitse"
 
 #: src/fsearch_preferences_ui.c:326
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Lisää kansioita"
+msgstr "Lisää suodatin"
 
 #: src/fsearch_preferences_widgets.c:220 src/fsearch_preferences_widgets.c:267
 msgid "Active"
@@ -959,10 +947,8 @@ msgid "Path"
 msgstr "Polku"
 
 #: src/fsearch_preferences_widgets.c:227
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Avaa tiedosto(t)"
+msgstr "Yksi tiedostojärjestelmä"
 
 #: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
 #: src/menus.ui:209 src/menus.ui:257
@@ -971,17 +957,16 @@ msgstr "Nimi"
 
 #: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
-msgstr ""
+msgstr "Makro"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Query"
 msgstr "Haku"
 
 #: src/fsearch_statusbar.c:56
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "%'d Item"
-msgstr "%'d kohdetta"
+msgstr "%'d kohde"
 
 #: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
 #, c-format
@@ -1010,10 +995,8 @@ msgid "0 Items"
 msgstr "0 kohdetta"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Peruuttaa"
+msgstr "Peruuta"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1104,30 +1087,28 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch Online"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Lahjoita"
 
 #: src/fsearch_window.ui:89 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Foorumi"
 
 #: src/fsearch_window.ui:103 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Virheraportit ja ominaisuuspyynnöt"
 
 #: src/fsearch_window.ui:162 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub-sponsorit"
 
 #: src/fsearch_window.ui:176 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:214
 msgid "New window"
@@ -1201,25 +1182,25 @@ msgstr "Siirretään tiedostoja roskakoriin…"
 
 #: src/fsearch_window_actions.c:207 src/fsearch_window_actions.c:482
 msgid "Something went wrong."
-msgstr ""
+msgstr "Jotain meni pieleen."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Poistetaan tiedostoja…"
+msgstr "Poistettu %d tiedosto(a)."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Siirretään tiedostoja roskakoriin…"
+msgstr "Siirretty %d tiedosto(t) roskakoriin."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"Tietokanta on päivitettävä ennen kuin se saa tiedon näistä muutoksista! Tämä "
+"korjataan tulevilla päivityksillä."
 
 #: src/fsearch_window_actions.c:247
 #, fuzzy, c-format
@@ -1227,9 +1208,8 @@ msgid "Do you really want to open %d file property windows?"
 msgstr "Haluatko todella avata %d tiedosto(n/a)?"
 
 #: src/fsearch_window_actions.c:251
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Avataan tiedosto(ja)…"
+msgstr "Avataan tiedoston ominaisuuksia…"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -1305,11 +1285,11 @@ msgstr "_Avaa kansio"
 
 #: src/menus.ui:207
 msgid "Copy as Text"
-msgstr ""
+msgstr "Kopioi tekstinä"
 
 #: src/menus.ui:217
 msgid "Path + Name"
-msgstr ""
+msgstr "Polku + Nimi"
 
 #: src/menus.ui:230
 msgid "Move to _Trash"
