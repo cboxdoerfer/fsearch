@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-10-10 21:11+0000\n"
+"PO-Revision-Date: 2022-10-12 06:50+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
 "translations/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -155,10 +155,8 @@ msgid "Error while opening folder"
 msgstr "Virhe avattaessa kansiota"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "Avaaminen epäonnistui:"
+msgstr "Avauskomennon rakentaminen epäonnistui"
 
 #: src/fsearch_file_utils.c:151
 msgctxt "Will be followed by the path of the desktop file."
@@ -170,10 +168,8 @@ msgid "Failed to get application information"
 msgstr "Sovellustietojen saaminen epäonnistui"
 
 #: src/fsearch_file_utils.c:160
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "Tiedoston avaaminen epäonnistui"
+msgstr "Oletusnäytön saaminen epäonnistui"
 
 #: src/fsearch_file_utils.c:182
 msgctxt "Will be followed by the path of the file."
@@ -258,7 +254,7 @@ msgstr "Makrojen nimet eivät saa sisältää `:`-merkkejä."
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
 #: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
 msgid "_Cancel"
-msgstr "_Peruuttaa"
+msgstr "_Peruuta"
 
 #: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:515
 msgid "_OK"
@@ -382,7 +378,7 @@ msgstr "Muista ikkunan koko"
 
 #: src/fsearch_preferences.ui:193
 msgid "Exit on Escape"
-msgstr ""
+msgstr "Poistu Esc-näppäimellä"
 
 #: src/fsearch_preferences.ui:230
 msgid "with keyboard shortcuts or menu entries"
@@ -485,7 +481,6 @@ msgid "Hide results when search is empty"
 msgstr "Piilota tulokset, kun haku on tyhjä"
 
 #: src/fsearch_preferences.ui:701
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
 msgstr "Sama kirjainkoko, kun kysely sisältää vähintään yhden ison kirjaimen"
 
@@ -982,9 +977,8 @@ msgid "Loading…"
 msgstr "Ladataan…"
 
 #: src/fsearch_statusbar.c:175
-#, fuzzy
 msgid "Scanning…"
-msgstr "Lajitellaan…"
+msgstr "läpikäydään…"
 
 #: src/fsearch_statusbar.ui:52
 msgid "Number of Search Results"
@@ -1027,31 +1021,23 @@ msgid "(empty)"
 msgstr "(tyhjä)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Hakusana sisältää polkuerottimia\n"
-"<b>Etsi polusta</b> aktivoitiin väliaikaisesti tälle hakusanalle."
+"Hakusana sisältää isoja kirjaimia.\n"
+"<b>Sama kirjainkoko</b> aktivoitiin väliaikaisesti tälle hakusanalle."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "KIRJAINKOKO"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
-"Hakusana sisältää polkuerottimia\n"
+"Hakusana sisältää polkuerottimia.\n"
 "<b>Etsi polusta</b> aktivoitiin väliaikaisesti tälle hakusanalle."
 
 #: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
@@ -1203,9 +1189,9 @@ msgstr ""
 "korjataan tulevilla päivityksillä."
 
 #: src/fsearch_window_actions.c:247
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Haluatko todella avata %d tiedosto(n/a)?"
+msgstr "Haluatko todella avata %d tiedoston ominaisuusikkuna(n/t)?"
 
 #: src/fsearch_window_actions.c:251
 msgid "Opening file properties…"
