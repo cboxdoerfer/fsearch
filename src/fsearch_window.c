@@ -124,7 +124,8 @@ get_query_flags() {
 
 static const char *
 get_query_text(FsearchApplicationWindow *win) {
-    return gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (GTK_ENTRY(win->search_entry));
+    return gtk_entry_buffer_get_text(buffer);
 }
 
 static FsearchApplicationWindow *
@@ -135,7 +136,8 @@ get_window_for_id(uint32_t win_id) {
 
 static gboolean
 is_empty_search(FsearchApplicationWindow *win) {
-    const gchar *text = gtk_entry_get_text(GTK_ENTRY(win->search_entry));
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (GTK_ENTRY(win->search_entry));
+    const gchar *text = gtk_entry_buffer_get_text(buffer);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -184,9 +186,9 @@ fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
         gtk_window_set_title(GTK_WINDOW(win), g_get_application_name());
 
         g_object_ref(G_OBJECT(win->search_box));
-        gtk_container_remove(GTK_CONTAINER(win->headerbar_box), win->search_box);
-        gtk_box_pack_start(GTK_BOX(win->menu_box), win->search_box, TRUE, TRUE, 0);
-        gtk_box_reorder_child(GTK_BOX(win->menu_box), win->search_box, 0);
+        gtk_box_remove(GTK_BOX(win->headerbar_box), win->search_box);
+        gtk_box_append(GTK_BOX(win->menu_box), win->search_box);
+        gtk_box_reorder_child_after(GTK_BOX(win->menu_box), win->search_box, NULL);
         g_object_unref(G_OBJECT(win->search_box));
     }
     else {
@@ -755,8 +757,6 @@ fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
 
     gtk_overlay_add_overlay(GTK_OVERLAY(win->main_result_overlay), win->main_search_overlay_stack);
     gtk_stack_set_visible_child(GTK_STACK(win->main_stack), win->main_database_overlay_stack);
-
-    gtk_widget_show_all(win->main_stack);
 }
 
 static void
@@ -768,7 +768,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     GtkAdjustment *hadj = gtk_scrolled_window_get_hadjustment(GTK_SCROLLED_WINDOW(win->listview_scrolled_window));
     GtkAdjustment *vadj = gtk_scrolled_window_get_vadjustment(GTK_SCROLLED_WINDOW(win->listview_scrolled_window));
     FsearchListView *list_view = fsearch_list_view_new(hadj, vadj);
-    gtk_container_add(GTK_CONTAINER(win->listview_scrolled_window), GTK_WIDGET(list_view));
+    gtk_scrolled_window_set_child(GTK_SCROLLED_WINDOW(win->listview_scrolled_window), GTK_WIDGET(list_view));
 
     gtk_widget_show((GTK_WIDGET(list_view)));
     fsearch_list_view_set_query_tooltip_func(list_view, fsearch_list_view_query_tooltip, win);
@@ -841,7 +841,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     self->result_view = fsearch_result_view_new();
 
     self->statusbar = GTK_WIDGET(fsearch_statusbar_new());
-    gtk_box_pack_end(GTK_BOX(self->main_box), self->statusbar, FALSE, TRUE, 0);
+    gtk_box_append(GTK_BOX(self->main_box), self->statusbar);
 
     fsearch_window_actions_init(self);
     fsearch_application_window_init_listview(self);
@@ -897,7 +897,7 @@ static gboolean
 on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(widget);
     fsearch_application_window_prepare_shutdown(win);
-    g_clear_pointer(&widget, gtk_widget_destroy);
+    g_clear_pointer(&widget, g_object_unref);
     return TRUE;
 }
 
@@ -1145,7 +1145,7 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
 
     gint width = 850;
     gint height = 800;
-    gtk_window_get_size(GTK_WINDOW(self), &width, &height);
+    gtk_window_get_default_size(GTK_WINDOW(self), &width, &height);
     config->window_width = width;
     config->window_height = height;
 

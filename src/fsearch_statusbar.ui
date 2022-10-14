@@ -3,39 +3,32 @@
 <interface>
   <requires lib="gtk+" version="3.18"/>
   <object class="GtkImage" id="image1">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">process-stop-symbolic</property>
   </object>
   <object class="GtkImage" id="image9">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">process-stop-symbolic</property>
   </object>
   <template class="FsearchStatusbar" parent="GtkRevealer">
-    <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="transition-type">slide-up</property>
     <property name="reveal-child">True</property>
     <child>
       <object class="GtkBox" id="statusbar">
-        <property name="visible">True</property>
         <property name="can-focus">False</property>
         <property name="margin-start">3</property>
         <property name="margin-end">3</property>
         <property name="spacing">6</property>
         <child>
           <object class="GtkStack" id="statusbar_search_stack">
-            <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
               <object class="GtkBox" id="statusbar_search_status_box">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkImage" id="statusbar_search_icon">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="icon-name">edit-find-symbolic</property>
                   </object>
@@ -47,7 +40,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="statusbar_search_label">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="tooltip-text" translatable="yes">Number of Search Results</property>
                     <property name="label" translatable="yes">0 Items</property>
@@ -69,12 +61,10 @@
             </child>
             <child>
               <object class="GtkBox" id="statusbar_search_task_box">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkSpinner" id="statusbar_search_task_spinner">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                   </object>
                   <packing>
@@ -85,7 +75,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="statusbar_search_task_label">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">Sorting…</property>
                     <property name="ellipsize">end</property>
@@ -100,7 +89,6 @@
                 </child>
                 <child>
                   <object class="GtkButton" id="statusbar_search_task_cancel_button">
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="receives-default">True</property>
                     <property name="tooltip-text" translatable="yes">Cancel</property>
@@ -133,12 +121,10 @@
         </child>
         <child>
           <object class="GtkBox" id="statusbar_scan_status_box">
-            <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkSeparator" id="statusbar_scan_seperator">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
               </object>
               <packing>
@@ -189,18 +175,15 @@
         </child>
         <child>
           <object class="GtkRevealer" id="statusbar_selection_revealer">
-            <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="transition-type">crossfade</property>
             <property name="reveal-child">True</property>
             <child>
               <object class="GtkBox" id="statusbar_selection_box">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="spacing">6</property>
                 <child>
                   <object class="GtkSeparator" id="statusbar_selection_separator">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                   </object>
                   <packing>
@@ -211,7 +194,6 @@
                 </child>
                 <child>
                   <object class="GtkImage" id="statusbar_selection_folder_image">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="icon-name">folder-symbolic</property>
                   </object>
@@ -223,7 +205,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="statusbar_selection_num_folders_label">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="tooltip-text" translatable="yes">Number of selected folders</property>
                     <property name="label" translatable="yes">0/0</property>
@@ -236,7 +217,6 @@
                 </child>
                 <child>
                   <object class="GtkImage" id="statusbar_selection_file_image">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="icon-name">text-x-generic-symbolic</property>
                   </object>
@@ -248,7 +228,6 @@
                 </child>
                 <child>
                   <object class="GtkLabel" id="statusbar_selection_num_files_label">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="tooltip-text" translatable="yes">Number of selected files</property>
                     <property name="label" translatable="yes">0/0</property>
@@ -270,12 +249,10 @@
         </child>
         <child>
           <object class="GtkBox" id="statusbar_database_box">
-            <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="spacing">6</property>
             <child>
               <object class="GtkSeparator" id="statusbar_database_separator">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
               </object>
               <packing>
@@ -286,17 +263,14 @@
             </child>
             <child>
               <object class="GtkStack" id="statusbar_database_stack">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="transition-type">crossfade</property>
                 <child>
                   <object class="GtkBox" id="statusbar_database_updating_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSpinner" id="statusbar_database_updating_spinner">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
                       <packing>
@@ -307,7 +281,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="statusbar_database_updating_label">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="label" translatable="yes">Updating Database…</property>
                         <property name="ellipsize">end</property>
@@ -322,7 +295,6 @@
                     </child>
                     <child>
                       <object class="GtkButton" id="statusbar_database_updating_cancel_button">
-                        <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="receives-default">True</property>
                         <property name="tooltip-text" translatable="yes">Cancel database update</property>
@@ -347,12 +319,10 @@
                 </child>
                 <child>
                   <object class="GtkBox" id="statusbar_database_status_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkImage" id="statusbar_database_status_image">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="icon-name">system-file-manager-symbolic</property>
                       </object>
@@ -364,7 +334,6 @@
                     </child>
                     <child>
                       <object class="GtkLabel" id="statusbar_database_status_label">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="tooltip-text" translatable="yes">Number of database items</property>
                         <property name="label" translatable="yes">(empty)</property>
@@ -398,11 +367,9 @@
         </child>
         <child>
           <object class="GtkBox" id="statusbar_search_flags_box">
-            <property name="visible">True</property>
             <property name="can-focus">False</property>
             <child>
               <object class="GtkRevealer" id="statusbar_smart_case_revealer">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="tooltip-markup" translatable="yes">Search term contains upper case characters.
 &lt;b&gt;Match Case&lt;/b&gt; was temporarily activated for this term.</property>
@@ -410,13 +377,11 @@
                 <property name="transition-duration">150</property>
                 <child>
                   <object class="GtkBox" id="smart_case_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-end">6</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSeparator" id="smart_case_separator">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
                       <packing>
@@ -427,11 +392,9 @@
                     </child>
                     <child>
                       <object class="GtkEventBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
                           <object class="GtkLabel" id="smart_case_label">
-                            <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="can-focus">False</property>
                             <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
@@ -456,20 +419,17 @@
             </child>
             <child>
               <object class="GtkRevealer" id="statusbar_match_case_revealer">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="transition-type">slide-left</property>
                 <property name="transition-duration">150</property>
                 <property name="reveal-child">True</property>
                 <child>
                   <object class="GtkBox" id="match_case_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-end">6</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSeparator" id="match_case_separator">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
                       <packing>
@@ -480,12 +440,10 @@
                     </child>
                     <child>
                       <object class="GtkEventBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <signal name="button-press-event" handler="on_match_case_label_button_press_event" swapped="no"/>
                         <child>
                           <object class="GtkLabel" id="match_case_label">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                             <property name="label" translatable="yes">CASE</property>
@@ -509,7 +467,6 @@
             </child>
             <child>
               <object class="GtkRevealer" id="statusbar_smart_path_revealer">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="tooltip-markup" translatable="yes">Search term contains path separators.
 &lt;b&gt;Search in Path&lt;/b&gt; was temporarily activated for this term.</property>
@@ -517,13 +474,11 @@
                 <property name="transition-duration">150</property>
                 <child>
                   <object class="GtkBox" id="smart_path_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-end">6</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSeparator" id="smart_path_separator">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
                       <packing>
@@ -534,11 +489,9 @@
                     </child>
                     <child>
                       <object class="GtkEventBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <child>
                           <object class="GtkLabel" id="smart_path_label">
-                            <property name="visible">True</property>
                             <property name="sensitive">False</property>
                             <property name="can-focus">False</property>
                             <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
@@ -563,20 +516,17 @@
             </child>
             <child>
               <object class="GtkRevealer" id="statusbar_search_in_path_revealer">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="transition-type">slide-left</property>
                 <property name="transition-duration">150</property>
                 <property name="reveal-child">True</property>
                 <child>
                   <object class="GtkBox" id="search_in_path_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-end">6</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSeparator" id="search_in_path_separator">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
                       <packing>
@@ -587,12 +537,10 @@
                     </child>
                     <child>
                       <object class="GtkEventBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <signal name="button-press-event" handler="on_search_in_path_label_button_press_event" swapped="no"/>
                         <child>
                           <object class="GtkLabel" id="search_in_path_label">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                             <property name="label" translatable="yes">PATH</property>
@@ -616,20 +564,17 @@
             </child>
             <child>
               <object class="GtkRevealer" id="statusbar_search_mode_revealer">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="transition-type">slide-left</property>
                 <property name="transition-duration">150</property>
                 <property name="reveal-child">True</property>
                 <child>
                   <object class="GtkBox" id="search_mode_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-end">6</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSeparator" id="search_mode_separator">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
                       <packing>
@@ -640,12 +585,10 @@
                     </child>
                     <child>
                       <object class="GtkEventBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <signal name="button-press-event" handler="on_search_mode_label_button_press_event" swapped="no"/>
                         <child>
                           <object class="GtkLabel" id="search_mode_label">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                             <property name="label" translatable="yes">REGEX</property>
@@ -669,20 +612,17 @@
             </child>
             <child>
               <object class="GtkRevealer" id="statusbar_search_filter_revealer">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="transition-type">slide-left</property>
                 <property name="transition-duration">150</property>
                 <property name="reveal-child">True</property>
                 <child>
                   <object class="GtkBox" id="search_filter_box">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-end">6</property>
                     <property name="spacing">6</property>
                     <child>
                       <object class="GtkSeparator" id="search_filter_separator">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                       </object>
                       <packing>
@@ -693,12 +633,10 @@
                     </child>
                     <child>
                       <object class="GtkEventBox">
-                        <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <signal name="button-press-event" handler="on_search_filter_label_button_press_event" swapped="no"/>
                         <child>
                           <object class="GtkLabel" id="statusbar_search_filter_label">
-                            <property name="visible">True</property>
                             <property name="can-focus">False</property>
                             <property name="events">GDK_BUTTON_PRESS_MASK | GDK_STRUCTURE_MASK</property>
                           </object>

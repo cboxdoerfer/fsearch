@@ -337,7 +337,9 @@ move_search_term_to_window(FsearchApplication *app, FsearchApplicationWindow *wi
     GtkEntry *entry = fsearch_application_window_get_search_entry(win);
     g_return_if_fail(entry);
 
-    gtk_entry_set_text(entry, app->option_search_term);
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer(entry);
+    gtk_entry_buffer_set_text(buffer, app->option_search_term, -1);
+
     g_clear_pointer(&app->option_search_term, g_free);
 }
 
@@ -375,7 +377,7 @@ show_url(FsearchApplication *app, const char *url) {
         return;
     }
 
-    gtk_show_uri_on_window(GTK_WINDOW(window), url, GDK_CURRENT_TIME, NULL);
+    gtk_show_uri(GTK_WINDOW(window), url, GDK_CURRENT_TIME);
 }
 
 static void
@@ -640,7 +642,7 @@ fsearch_application_startup(GApplication *app) {
 
     g_autoptr(GtkCssProvider) provider = gtk_css_provider_new();
     gtk_css_provider_load_from_resource(provider, "/io/github/cboxdoerfer/fsearch/ui/shared.css");
-    gtk_style_context_add_provider_for_screen(gdk_screen_get_default(),
+    gtk_style_context_add_provider_for_display(gdk_display_get_default(),
                                               GTK_STYLE_PROVIDER(provider),
                                               GTK_STYLE_PROVIDER_PRIORITY_APPLICATION);
 

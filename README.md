@@ -1,7 +1,7 @@
 ![Build Status](https://github.com/cboxdoerfer/fsearch/actions/workflows/build_test.yml/badge.svg)
 [![Translation status](https://hosted.weblate.org/widgets/fsearch/-/svg-badge.svg)](https://hosted.weblate.org/engage/fsearch/?utm_source=widget)
 
-FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK3.
+FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK4.
 
 * For bug reports and feature requests please use the issue tracker: <https://github.com/cboxdoerfer/fsearch/issues>
 * For discussions and questions about FSearch use the discussion
@@ -25,7 +25,7 @@ FSearch is a fast file search utility, inspired by Everything Search Engine. It'
 
 ## Requirements
 
-- GTK 3.18
+- GTK 4.6
 - GLib 2.50
 - glibc 2.19 or musl 1.1.15 (other C standard libraries might work too, those are just the ones I verified)
 - PCRE2 (libpcre2)
@@ -92,7 +92,7 @@ out whether it makes sense to improve those. However, they're not exactly what I
 - standalone application (not part of a file manager)
 - written in a language with C like performance
 - no dependencies to any specific desktop environment
-- Qt5 or GTK3 based
+- Qt5 or GTK4 based
 - small memory usage (both hard drive and RAM)
 - target audience: advanced users
 
@@ -102,8 +102,8 @@ I highly recommend [fzf](https://github.com/junegunn/fzf) or the obvious tools: 
 
 ## Why GTK3 and not Qt5?
 
-I like both of them, and my long term goal is to provide console, GTK3 and Qt5 interfaces, or at least make it easy for
-others to build those. However, for the time being it's only GTK3 because I like C more than C++, and I'm more familiar
+I like both of them, and my long term goal is to provide console, GTK4 and Qt5 interfaces, or at least make it easy for
+others to build those. However, for the time being it's only GTK4 because I like C more than C++, and I'm more familiar
 with GTK development.
 
 ## Questions?

@@ -163,23 +163,16 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
 
     if (response == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
-        GSList *filenames = gtk_file_chooser_get_filenames(chooser);
-        if (filenames) {
-            for (GSList *f = filenames; f != NULL; f = f->next) {
-                gchar *filename = f->data;
-                if (filename) {
-                    ctx->add_path_cb(ctx->model, filename);
-                }
+        g_autoptr(GListModel) filenames = gtk_file_chooser_get_files(chooser);
+        for (guint i = 0; i < g_list_model_get_n_items(filenames); ++i) {
+            gchar *filename = g_list_model_get_item(filenames, i);
+            if (filename) {
+                ctx->add_path_cb(ctx->model, filename);
             }
-            g_slist_free_full(g_steal_pointer(&filenames), g_free);
         }
     }
 
-#if !GTK_CHECK_VERSION(3, 20, 0)
-    gtk_widget_destroy(GTK_WIDGET(dialog));
-#else
     g_clear_object(&dialog);
-#endif
 
     g_slice_free(FsearchPreferencesFileChooserContext, g_steal_pointer(&ctx));
 }
@@ -188,23 +181,9 @@ static void
 run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext *ctx) {
     GtkFileChooserAction action = GTK_FILE_CHOOSER_ACTION_SELECT_FOLDER;
 
-    GtkWidget *window = gtk_widget_get_toplevel(GTK_WIDGET(button));
+    GtkRoot *root = gtk_widget_get_root(GTK_WIDGET(button));
+    GtkWindow *window = GTK_WINDOW(root);
 
-#if !GTK_CHECK_VERSION(3, 20, 0)
-    GtkWidget *dialog = gtk_file_chooser_dialog_new(_("Select folder"),
-                                                    GTK_WINDOW(window),
-                                                    action,
-                                                    _("_Cancel"),
-                                                    GTK_RESPONSE_CANCEL,
-                                                    _("_Select"),
-                                                    GTK_RESPONSE_ACCEPT,
-                                                    NULL);
-
-    g_signal_connect(dialog, "response", G_CALLBACK(on_file_chooser_dialog_response), ctx);
-    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(window));
-    gtk_window_set_modal(GTK_WINDOW(dialog), TRUE);
-    gtk_widget_show(dialog);
-#else
     GtkFileChooserNative *dialog =
         gtk_file_chooser_native_new(_("Select folder"), GTK_WINDOW(window), action, _("_Select"), _("_Cancel"));
 
@@ -212,7 +191,6 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     gtk_native_dialog_set_transient_for(GTK_NATIVE_DIALOG(dialog), GTK_WINDOW(window));
     gtk_native_dialog_set_modal(GTK_NATIVE_DIALOG(dialog), true);
     gtk_native_dialog_show(GTK_NATIVE_DIALOG(dialog));
-#endif
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
 }
 
@@ -456,7 +434,8 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
 
     g_clear_pointer(&new_config->exclude_files, g_strfreev);
-    new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (ui->exclude_files_entry);
+    new_config->exclude_files = g_strsplit(gtk_entry_buffer_get_text(buffer), ";", -1);
 
     if (new_config->indexes) {
         g_list_free_full(g_steal_pointer(&new_config->indexes), (GDestroyNotify)fsearch_index_free);
@@ -481,7 +460,7 @@ preferences_ui_cleanup(FsearchPreferencesInterface *ui) {
     help_expander = NULL;
 
     g_clear_object(&ui->builder);
-    g_clear_pointer(&ui->dialog, gtk_widget_destroy);
+    g_clear_pointer(&ui->dialog, g_object_unref);
     g_clear_pointer(&ui, free);
 }
 
@@ -721,7 +700,8 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     ui->exclude_files_str = NULL;
     if (new_config->exclude_files) {
         ui->exclude_files_str = g_strjoinv(";", new_config->exclude_files);
-        gtk_entry_set_text(ui->exclude_files_entry, ui->exclude_files_str);
+        GtkEntryBuffer *buffer = gtk_entry_get_buffer(ui->exclude_files_entry);
+        gtk_entry_buffer_set_text(buffer, ui->exclude_files_str, -1);
     }
 }
 

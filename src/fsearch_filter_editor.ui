@@ -35,7 +35,6 @@
         <child>
           <!-- n-columns=2 n-rows=6 -->
           <object class="GtkGrid">
-            <property name="visible">True</property>
             <property name="can-focus">False</property>
             <property name="margin-start">6</property>
             <property name="margin-end">6</property>
@@ -45,7 +44,6 @@
             <property name="column-spacing">6</property>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Name:</property>
               </object>
@@ -56,7 +54,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="filter_name">
-                <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="tooltip-text" translatable="yes">The unique name of this filter</property>
                 <property name="halign">start</property>
@@ -71,7 +68,6 @@
             <child>
               <object class="GtkCheckButton" id="filter_search_in_path">
                 <property name="label" translatable="yes">Search in path</property>
-                <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
                 <property name="draw-indicator">True</property>
@@ -85,7 +81,6 @@
             <child>
               <object class="GtkCheckButton" id="filter_regex">
                 <property name="label" translatable="yes">Enable regular expressions</property>
-                <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
                 <property name="draw-indicator">True</property>
@@ -99,7 +94,6 @@
             <child>
               <object class="GtkCheckButton" id="filter_match_case">
                 <property name="label" translatable="yes">Match case</property>
-                <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="receives-default">False</property>
                 <property name="draw-indicator">True</property>
@@ -112,7 +106,6 @@
             </child>
             <child>
               <object class="GtkFrame">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="hexpand">True</property>
                 <property name="vexpand">True</property>
@@ -120,12 +113,10 @@
                 <property name="shadow-type">none</property>
                 <child>
                   <object class="GtkScrolledWindow">
-                    <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="shadow-type">in</property>
                     <child>
                       <object class="GtkTextView" id="filter_query_text">
-                        <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="wrap-mode">char</property>
                         <property name="left-margin">6</property>
@@ -141,7 +132,6 @@
                 </child>
                 <child type="label">
                   <object class="GtkLabel">
-                    <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">Query:</property>
                   </object>
@@ -155,7 +145,6 @@
             </child>
             <child>
               <object class="GtkLabel">
-                <property name="visible">True</property>
                 <property name="can-focus">False</property>
                 <property name="label" translatable="yes">Macro:</property>
               </object>
@@ -166,7 +155,6 @@
             </child>
             <child>
               <object class="GtkEntry" id="filter_macro">
-                <property name="visible">True</property>
                 <property name="can-focus">True</property>
                 <property name="tooltip-text" translatable="yes">The macro for this filter. A macro allows you to access this filter from the search entry by typing its text followed by ':'
                 </property>

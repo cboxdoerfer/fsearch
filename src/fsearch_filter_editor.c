@@ -24,7 +24,7 @@ static void
 fsearch_filter_editor_free(FsearchFilterEditor *editor) {
     g_clear_object(&editor->builder);
     g_clear_pointer(&editor->filter, fsearch_filter_unref);
-    g_clear_pointer(&editor->dialog, gtk_widget_destroy);
+    g_clear_pointer(&editor->dialog, g_object_unref);
     g_clear_pointer(&editor, free);
 }
 
@@ -37,11 +37,13 @@ on_editor_ui_response(GtkDialog *dialog, GtkResponseType response, gpointer user
     char *macro = NULL;
     FsearchQueryFlags flags = 0;
 
-    const char *name_str = gtk_entry_get_text(editor->name_entry);
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (editor->name_entry);
+    const char *name_str = gtk_entry_buffer_get_text(buffer);
     if (response == GTK_RESPONSE_OK && !fsearch_string_is_empty(name_str)) {
         name = g_strdup(name_str);
 
-        macro = g_strdup(gtk_entry_get_text(editor->macro_entry));
+        buffer = gtk_entry_get_buffer (editor->macro_entry);
+        macro = g_strdup(gtk_entry_buffer_get_text(buffer));
         GtkTextIter start, end;
         gtk_text_buffer_get_bounds(editor->query_text_buffer, &start, &end);
         query = gtk_text_buffer_get_text(editor->query_text_buffer, &start, &end, FALSE);
@@ -72,7 +74,9 @@ on_macro_entry_changed(GtkEntry *entry, gpointer user_data) {
     if (!editor->ok_button) {
         return;
     }
-    const char *macro_text = gtk_entry_get_text(entry);
+
+    GtkEntryBuffer *buffer = gtk_entry_get_buffer (entry);
+    const char *macro_text = gtk_entry_buffer_get_text(buffer);
     if (macro_text && strchr(macro_text, ':')) {
         gtk_widget_set_sensitive(editor->ok_button, FALSE);
         g_object_set(entry, "secondary-icon-name", "dialog-warning-symbolic", NULL);
@@ -118,8 +122,11 @@ fsearch_filter_editor_run(const char *title,
     }
 
     if (filter) {
-        gtk_entry_set_text(editor->name_entry, filter->name);
-        gtk_entry_set_text(editor->macro_entry, filter->macro);
+        GtkEntryBuffer *buffer = gtk_entry_get_buffer(editor->name_entry);
+        gtk_entry_buffer_set_text(buffer, filter->name, -1);
+        buffer = gtk_entry_get_buffer(editor->macro_entry);
+        gtk_entry_buffer_set_text(buffer, filter->macro, -1);
+
         gtk_text_buffer_set_text(editor->query_text_buffer, filter->query, -1);
         gtk_toggle_button_set_active(editor->search_in_path, filter->flags & QUERY_FLAG_SEARCH_IN_PATH ? TRUE : FALSE);
         gtk_toggle_button_set_active(editor->match_case, filter->flags & QUERY_FLAG_MATCH_CASE ? TRUE : FALSE);
