@@ -1,5 +1,5 @@
 [Desktop Entry]
-Version=1.0
+Version=1.5
 Type=Application
 Name=FSearch
 Comment=A file search application focusing on performance and advanced features
@@ -9,3 +9,6 @@ Exec=fsearch
 Categories=GTK;Utility;Core;
 Keywords=search;fsearch;files;folders;music;video;documents;find;tool;everything;
 StartupNotify=true
+GenericName=File Search Utility
+PrefersNonDefaultGPU=false
+SingleMainWindow=false
