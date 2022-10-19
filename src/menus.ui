@@ -148,9 +148,15 @@
                     </item>
                     <item>
                         <attribute name="label" translatable="yes">Help</attribute>
-                        <attribute name="action">app.help</attribute>
+                        <attribute name="action">app.online_help</attribute>
+                        <attribute name="icon">help-browser</attribute>
                     </item>
                 </submenu>
+                <item>
+                    <attribute name="label" translatable="yes">Help</attribute>
+                    <attribute name="action">app.help</attribute>
+                    <attribute name="icon">help-browser</attribute>
+                </item>
                 <item>
                     <attribute name="label" translatable="yes">About</attribute>
                     <attribute name="action">app.about</attribute>

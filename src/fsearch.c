@@ -399,8 +399,13 @@ action_donate_paypal_activated(GSimpleAction *action, GVariant *parameter, gpoin
 }
 
 static void
-action_help_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+action_online_help_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
     show_url(app, "https://github.com/cboxdoerfer/fsearch/wiki/");
+}
+
+static void
+action_help_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
+    show_url(app, "help:fsearch");
 }
 
 static void
@@ -677,6 +682,7 @@ fsearch_application_startup(GApplication *app) {
 static GActionEntry fsearch_app_entries[] = {
     {"new_window", action_new_window_activated, NULL, NULL, NULL},
     {"about", action_about_activated, NULL, NULL, NULL},
+    {"online_help", action_online_help_activated, NULL, NULL, NULL},
     {"help", action_help_activated, NULL, NULL, NULL},
     {"donate_paypal", action_donate_paypal_activated, NULL, NULL, NULL},
     {"donate_github", action_donate_github_activated, NULL, NULL, NULL},
