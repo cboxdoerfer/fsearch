@@ -51,6 +51,9 @@ vgdump
 # VS Code
 *.vscode
 
+# GNOME Builder
+.buildconfig
+
 # AppImage
 AppDir
 appimage-build
