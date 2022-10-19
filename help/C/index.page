@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide"
+      id="index">
+    <info>
+        <credit type="copyright">
+            <name>Christian Boxdörfer</name>
+            <email>christian.boxdoerfer@posteo.de</email>
+            <years>2022</years>
+        </credit>
+        <credit type="author">
+            <name>Dawid Duma (pixel96x)</name>
+            <email>contact@pixel96x.com</email>
+            <years>2022</years>
+            <page xmlns="http://xmlns.com/foaf/0.1/">https://pixel96x.com/</page>
+        </credit>
+        <desc>A graphical file search application</desc>
+        <keywords>search, fsearch, files, folders, music, video, documents, find, tool, everything</keywords>
+        <license href="https://creativecommons.org/licenses/by-sa/4.0/">
+            <p>This work is licensed under a <link href="https://creativecommons.org/licenses/by-sa/4.0/">
+            Creative Commons Attribution 4.0 International License</link></p>
+        </license>
+    </info>
+    <title><media type="image" its:translate="no" src="figures/FSearch.png"/>FSearch</title>
+    <p>
+        <app>FSearch</app> helps you to find files and folders as easy and fast as possible.
+        Just type a few letters and search results will appear almost instantly.
+    </p>
+</page>

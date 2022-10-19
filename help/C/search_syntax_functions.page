@@ -1,0 +1,134 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="guide"
+      id="search-syntax-functions">
+    <info>
+        <credit type="author copyright">
+            <name>Christian Boxdörfer</name>
+            <email>christian.boxdoerfer@posteo.de</email>
+            <years>2022</years>
+        </credit>
+        <credit type="author">
+            <name>Dawid Duma (pixel96x)</name>
+            <email>contact@pixel96x.com</email>
+            <years>2022</years>
+            <page xmlns="http://xmlns.com/foaf/0.1/">https://pixel96x.com/</page>
+        </credit>
+        <license href="https://creativecommons.org/licenses/by-sa/4.0/">
+            <p>This work is licensed under a <link href="https://creativecommons.org/licenses/by-sa/4.0/">
+            Creative Commons Attribution 4.0 International License</link></p>
+        </license>
+        <link type="guide" xref="search-syntax"/>
+    </info>
+    <title>Functions</title>
+
+    <table frame="all" rules="all">
+        <tr>
+            <th><p>Keyword</p></th>
+            <th><p>Descritpion</p></th>
+            <th><p>Example</p></th>
+        </tr>
+        <tr>
+            <td><p><code>childcount:<var>&lt;num&gt;</var></code></p></td>
+            <td><p>Search for all folders which have <var>&lt;num&gt;</var> children</p></td>
+            <td><p><input>childcount:1</input> finds all folders which only contain one file or folder</p></td>
+        </tr>
+        <tr>
+            <td><p><code>childfilecount:<var>&lt;num&gt;</var></code></p></td>
+            <td><p>Search for all folders which have <var>&lt;num&gt;</var> files as children</p></td>
+            <td><p><input>childfilecount:&lt;=4</input> finds all folders which contain 4 files or less and any number of folders</p></td>
+        </tr>
+        <tr>
+            <td><p><code>childfoldercount:<var>&lt;num&gt;</var></code></p></td>
+            <td><p>Search for all folders which have <var>&lt;num&gt;</var> folders as children</p></td>
+            <td><p><input>childfoldercount:10..20</input> finds all folders which contain 10 to 20 folders and any number of files</p></td>
+        </tr>
+        <tr>
+            <td><p><code>contenttype:<var>&lt;string&gt;</var></code></p></td>
+            <td>
+                <p>Match the content type of files and folders. The content type is the mime type of a file</p>
+                <p><em>Note:</em> Determining the content type of a file is an expensive operation and can take a long time.
+                It's therefor advised to first narrow down the potential results (e.g. <code>path:/mnt/backup/documents contenttype:pdf</code>)</p>
+            </td>
+            <td><p><input>contenttype:text</input> finds all text files, like <output>text/plain</output> or <output>text/css</output></p></td>
+        </tr>
+        <tr>
+            <td><p><code>datemodified:<var>&lt;date&gt;</var></code>, <code>dm:<var>&lt;date&gt;</var></code></p></td>
+            <td><p>Search for all files and folders which have been modified at</p></td>
+            <td><p><input>dm:2020</input> finds all files and folders which have been modified in 2020</p></td>
+        </tr>
+        <tr>
+            <td><p><code>depth:<var>&lt;num&gt;</var></code>, <code>parents:<var>&lt;num&gt;</var></code></p></td>
+            <td><p>Search for all files and folders with the specified folder depth</p></td>
+            <td><p><input>depth:0</input> finds the root folders</p></td>
+        </tr>
+        <tr>
+            <td><p><code>empty:</code></p></td>
+            <td><p>Search for all folders which are empty</p></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><p><code>ext:<var>&lt;semicolon-seperated-list&gt;</var></code></p></td>
+            <td><p>Search for files with the specified extensions</p></td>
+            <td><p><input>ext:jpg;png;gif</input></p></td>
+        </tr>
+        <tr>
+            <td><p><code>parent:<var>&lt;path&gt;</var></code></p></td>
+            <td><p>Search for all files and folders which are stored in the folder specified by <var>&lt;path&gt;</var></p></td>
+            <td><p><input>parent:/home/user</input></p></td>
+        </tr>
+        <tr>
+            <td><p><code>size:<var>&lt;size&gt;</var></code></p></td>
+            <td><p>Search for all files and folders with the size specified by <var>&lt;size&gt;</var></p></td>
+            <td><p><input>size:1Mb</input>, <input>file:size:>20gb</input>, <input>file:size:0</input></p></td>
+        </tr>
+    </table>
+
+    <section id="parameter-formats">
+        <title>Parameter formats</title>
+        <list>
+            <title><code>&lt;num&gt;</code></title>
+            <item><p><code>function:&gt;<var>number</var></code>: greater than <var>number</var></p></item>
+            <item><p><code>function:&lt;<var>number</var></code>: less than <var>number</var></p></item>
+            <item><p><code>function:&gt;=<var>number</var></code>: greater than or equal to <var>number</var></p></item>
+            <item><p><code>function:&lt;=<var>number</var></code>: less than or equal to <var>number</var></p></item>
+            <item><p><code>function:=<var>number</var></code>: exactly equal to <var>number</var></p></item>
+            <item><p><code>function:<var>number1</var>..<var>number2</var></code>: in between <var>number1</var> and <var>number2</var></p></item>
+        </list>
+
+        <list>
+            <title><code>&lt;size&gt;</code></title>
+            <desc>Same format as <code>&lt;num&gt;</code>, but also supports size suffixes</desc>
+            <item><p><code>k</code>, <code>K</code>, <code>kb</code>, <code>KB</code>: kilobyte</p></item>
+            <item><p><code>m</code>, <code>M</code>, <code>mb</code>, <code>MB</code>: megabyte</p></item>
+            <item><p><code>g</code>, <code>G</code>, <code>gb</code>, <code>GB</code>: gigabyte</p></item>
+            <item><p><code>t</code>, <code>T</code>, <code>tb</code>, <code>TB</code>: terabyte</p></item>
+        </list>
+
+        <list>
+            <title><code>&lt;date&gt;</code></title>
+            <desc>Same format as <code>&lt;num&gt;</code>, but instead of numbers you can combine with
+            <code>=></code>, <code>></code>, <code>..</code>, etc., you need to use dates and date constants</desc>
+            <item><p><code>today</code>, <code>yesterday</code></p></item>
+            <item>
+                <p><code>mon|day</code>, <code>tue|sday</code>, <code>wed|nesday</code>, <code>thu|rsday</code>,
+                <code>fri|day</code>, <code>sat|urday</code>, <code>sun|day</code></p>
+            </item>
+            <item>
+                <p><code>jan|uary</code>, <code>feb|uary</code>, <code>mar|ch</code>, <code>apr|il</code>,
+                <code>may</code>, <code>jun|e</code>, <code>jul|y</code>, <code>aug|ust</code>,
+                <code>sep|tember</code>, <code>oct|ober</code>, <code>nov|ember</code>, <code>dec|ember</code></p>
+            </item>
+            <item>
+                <p><code>y</code>, <code>y-m</code>, <code>y-m-d</code>,
+                <code>y-m-d- H</code>, <code>y-m-d H:M</code>, <code>y-m-d H:M:S</code></p>
+            </item>
+            <item><p><code>&lt;last|inthelast|prev|previous|this&gt;&lt;year|month|week|day|hour|min|minute|sec|second&gt;</code></p></item>
+            <item>
+                <p><code>&lt;last|inthelast|prev|previous&gt;<var>&lt;number&gt;</var>&lt;years|months|weeks|days|hours|min|minutes|sec|seconds&gt;</code>
+                 - where <var>&lt;number&gt;</var> can also be spelled out: <code>one</code>...<code>ten</code>,
+                 <code>dozen</code>, <code>hundred</code></p>
+            </item>
+        </list>
+        <p>So an example would be: <code>dm:lastfiveweeks..yesterday</code></p>
+    </section>
+</page>

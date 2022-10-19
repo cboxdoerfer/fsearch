@@ -1,0 +1,81 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="search-syntax-modifiers">
+    <info>
+        <credit type="author copyright">
+            <name>Christian Boxdörfer</name>
+            <email>christian.boxdoerfer@posteo.de</email>
+            <years>2022</years>
+        </credit>
+        <credit type="author">
+            <name>Dawid Duma (pixel96x)</name>
+            <email>contact@pixel96x.com</email>
+            <years>2022</years>
+            <page xmlns="http://xmlns.com/foaf/0.1/">https://pixel96x.com/</page>
+        </credit>
+        <license href="https://creativecommons.org/licenses/by-sa/4.0/">
+            <p>This work is licensed under a <link href="https://creativecommons.org/licenses/by-sa/4.0/">
+            Creative Commons Attribution 4.0 International License</link></p>
+        </license>
+        <link type="guide" xref="search-syntax"/>
+    </info>
+    <title>Modifiers</title>
+    <table frame="all" rules="all">
+        <tr>
+            <th><p>Keyword</p></th>
+            <th><p>Descritpion</p></th>
+            <th><p>Example</p></th>
+        </tr>
+        <tr>
+            <td><p><code>case:</code></p></td>
+            <td><p>Match case</p></td>
+            <td><p><input>case:Test</input> finds <output>TestDocument.odt</output>, but not <output>testdocument.odt</output></p></td>
+        </tr>
+        <tr>
+            <td><p><code>nocase:</code></p></td>
+            <td><p>Ignore case</p></td>
+            <td><p><input>nocase:test</input> finds <output>TestDocument.odt</output> and <output>testdocument.odt</output></p></td>
+        </tr>
+        <tr>
+            <td><p><code>exact:</code></p></td>
+            <td><p>Exact match</p></td>
+            <td><p><input>exact:test</input> finds <output>Test</output> and <output>test</output>, but not <output>testdocument.odt</output></p></td>
+        </tr>
+        <tr>
+            <td><p><code>file:</code>, <code>files:</code></p></td>
+            <td><p>Match files only</p></td>
+            <td><p><input>file:test</input> finds a file named <output>test.odt</output>, but won't find the folder <output>testfolder</output></p></td>
+        </tr>
+        <tr>
+            <td><p><code>folder:</code>, <code>folders:</code></p></td>
+            <td><p>Match folders only</p></td>
+            <td><p><input>file:test</input> finds a file named <output>test.odt</output>, but won't find the folder <output>testfolder</output></p></td>
+        </tr>
+        <tr>
+            <td><p><code>path:</code></p></td>
+            <td><p>Match the full path</p></td>
+            <td><p><input>path:home</input> finds a folder named <output>home</output>, and all its children</p></td>
+        </tr>
+        <tr>
+            <td><p><code>nopath:</code></p></td>
+            <td><p>Match only the file/folder name</p></td>
+            <td></td>
+        </tr>
+        <tr>
+            <td><p><code>regex:</code></p></td>
+            <td>
+                <p>Enable regular expression</p>
+                <p>Note: All reserved characters used by the FSearch search syntax
+                (e.g. <code>(</code>, <code>)</code>, <code>\</code>) need to be
+                escaped properly when they're used in the regular expression.
+                This can be achieved by surrounding the whole expression with double quotes <code>&quot;</code>.</p>
+            </td>
+            <td><p><input>file:regex:".+\.pdf$"</input> finds all files which have the <output>pdf</output> extension</p></td>
+        </tr>
+        <tr>
+            <td><p><code>noregex:</code></p></td>
+            <td><p>Disable regular expression</p></td>
+            <td></td>
+        </tr>
+    </table>
+</page>

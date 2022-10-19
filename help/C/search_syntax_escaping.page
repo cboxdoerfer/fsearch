@@ -1,0 +1,41 @@
+<page xmlns="http://projectmallard.org/1.0/"
+      type="topic"
+      id="search-syntax-wildcards">
+    <info>
+        <credit type="author copyright">
+            <name>Christian Boxdörfer</name>
+            <email>christian.boxdoerfer@posteo.de</email>
+            <years>2022</years>
+        </credit>
+        <credit type="author">
+            <name>Dawid Duma (pixel96x)</name>
+            <email>contact@pixel96x.com</email>
+            <years>2022</years>
+            <page xmlns="http://xmlns.com/foaf/0.1/">https://pixel96x.com/</page>
+        </credit>
+        <license href="https://creativecommons.org/licenses/by-sa/4.0/">
+            <p>This work is licensed under a <link href="https://creativecommons.org/licenses/by-sa/4.0/">
+            Creative Commons Attribution 4.0 International License</link></p>
+        </license>
+        <link type="guide" xref="search-syntax"/>
+    </info>
+    <title>Escaping</title>
+    <table frame="all" rules="all">
+        <tr>
+            <th><p>Sequence</p></th>
+            <th><p>Descritpion</p></th>
+            <th><p>Example</p></th>
+        </tr>
+        <tr>
+            <td><p>Double quotes <code>&quot;&quot;</code></p></td>
+            <td><p>Everything in between <code>&quot;&quot;</code> is treated literally (like spaces)</p></td>
+            <td><p><input>&quot;/home/user/my folder&quot; *.pdf</input> &#x2192; <output>/home/user/my folder</output> and <output>*.pdf</output></p></td>
+        </tr>
+        <tr>
+            <td><p>Backslash <code>\</code></p></td>
+            <td><p>Escapes the following character (like space or <code>&quot;</code>)</p></td>
+            <td><p><input>/home/user/my\ folder \&quot;quote\&quot;.txt</input> &#x2192; <output>/home/user/my folder</output>
+and <output>&quot;quote&quot;.txt</output></p></td>
+        </tr>
+    </table>
+</page>
