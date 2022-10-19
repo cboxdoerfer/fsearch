@@ -12,3 +12,4 @@ StartupNotify=true
 GenericName=File Search Utility
 PrefersNonDefaultGPU=false
 SingleMainWindow=false
+X-Purism-FormFactor=Workstation;
