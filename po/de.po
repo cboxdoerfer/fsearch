@@ -21,7 +21,7 @@ msgstr ""
 "X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -37,11 +37,11 @@ msgid ""
 msgstr ""
 "suchen;fsearch;Dateien;Ordner;Musik;Video;Dokumente;finden;Werkzeug;alles;"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
 msgstr "Ein grafisches Datei-Suchprogramm"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
@@ -50,7 +50,7 @@ msgstr ""
 "zu finden. Die Ergebnisse aktualisieren sich umgehend mit jedem Buchstaben "
 "der eingegeben wird."
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
@@ -58,36 +58,36 @@ msgstr ""
 "Um die Suche so effizient und nützlich wie möglich zu machen, werden unter "
 "anderem folgende Funktionen unterstützt:"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
 "Groß- und Kleinschreibung ignorieren (z.B. findet man mit \"fsearch\" auch "
 "\"FSearch\")"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "Reguläre Ausdrücke"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "Wildcard-Unterstützung"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "Filter (z.B. reduziere die Ergebnisse auf Audio-Dateien)"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "Bestimmte Dateien und Ordner ausschließen"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 "Schnelles Sortieren nach Name, Pfad, Größe, Änderungsdatum und Datei-"
 "Erweiterung"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
@@ -96,20 +96,20 @@ msgstr ""
 "vollständigen Zugriff auf das Dateisystem. Daher kann FSearch nicht alle "
 "Dateien im System finden."
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:35
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
 msgstr "Die Standard-Oberfläche"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:41
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
 msgstr "Eine Oberfläche die sich am GNOME Design orientiert"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "Initial release."
 msgstr "Erste Veröffentlichung."
 

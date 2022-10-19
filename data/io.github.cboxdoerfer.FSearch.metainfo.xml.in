@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Copyright 2021 Christian Boxdörfer <christian.boxdoerfer@posteo.de> -->
+<component type="desktop-application">
+    <id>io.github.cboxdoerfer.FSearch</id>
+    <metadata_license>CC-BY-SA-4.0</metadata_license>
+    <project_license>GPL-2.0-or-later</project_license>
+    <name>FSearch</name>
+    <summary>A graphical file search application</summary>
+    <description>
+        <p>
+            FSearch helps you to find files and folders as easy and fast as possible.
+            Just type a few letters and search results will appear almost instantly.
+        </p>
+        <p>
+            There are a lot of features which make searching as efficient and powerful
+            as possible. Such as:
+            <ul>
+                <li>Ignore case (e.g. searching for "<code>fsearch</code>" will match "FSearch" as well)</li>
+                <li>Regular expressions</li>
+                <li>Wildcard support</li>
+                <li>Filter support (e.g. only search for audio files)</li>
+                <li>Exclude certain files and folders</li>
+                <li>Fast sort by name, path, size, modification time and extension</li>
+            </ul>
+        </p>
+        <p>
+            <em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on your system.
+        </p>
+    </description>
+    <screenshots>
+        <screenshot type="default">
+            <image type="source" width="848" height="477">
+                https://raw.githubusercontent.com/cboxdoerfer/fsearch/master/data/screenshots/02-main_window_menubar.png
+            </image>
+            <caption>The default UI layout</caption>
+        </screenshot>
+        <screenshot>
+            <image type="source" width="848" height="477">
+                https://raw.githubusercontent.com/cboxdoerfer/fsearch/master/data/screenshots/01-main_window_headerbar.png
+            </image>
+            <caption>A layout more closely following GNOME HIGs</caption>
+        </screenshot>
+    </screenshots>
+    <categories>
+        <category>Utility</category>
+        <category>GTK</category>
+    </categories>
+    <keywords>
+        <keyword>search</keyword>
+        <keyword>fsearch</keyword>
+        <keyword>files</keyword>
+        <keyword>folders</keyword>
+        <keyword>music</keyword>
+        <keyword>video</keyword>
+        <keyword>documents</keyword>
+        <keyword>find</keyword>
+        <keyword>tool</keyword>
+        <keyword>everything</keyword>
+    </keywords>
+    <supports>
+        <control>pointing</control>
+        <control>keyboard</control>
+    </supports>
+    <url type="homepage">https://github.com/cboxdoerfer/fsearch</url>
+    <url type="bugtracker">https://github.com/cboxdoerfer/fsearch/issues</url>
+    <url type="donation">https://github.com/sponsors/cboxdoerfer</url>
+    <url type="help">https://github.com/cboxdoerfer/fsearch/wiki</url>
+    <url type="translate">https://hosted.weblate.org/projects/fsearch/</url>
+    <url type="vcs-browser">https://github.com/cboxdoerfer/fsearch</url>
+    <url type="contribute">https://github.com/cboxdoerfer/fsearch/blob/master/CONTRIBUTING.md</url>
+    <url type="contact">https://github.com/cboxdoerfer</url>
+    <!-- Translators: please do NOT translate this. -->
+    <developer_name>Christian Boxdörfer</developer_name>
+    <update_contact>christian.boxdoerfer_at_posteo.de</update_contact>
+    <translation type="gettext">fsearch</translation>
+    <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.metainfo.xml.in`. -->
+    <content_rating type="oars-1.1" />
+    <releases>
+        <release date="2022-08-15" version="0.2">
+            <description>
+                <ul>
+                    <li>New search engine</li>
+                    <li>Greatly improved highlighting of search terms</li>
+                    <li>Custom filters</li>
+                    <li>Improved sort performance</li>
+                    <li>Improved scroll performance</li>
+                    <li>Remember file selection after a database update</li>
+                    <li>Automatically scroll the result list in rubberband selection mode</li>
+                    <li>Invert selection with rubber band when 'Ctrl' is pressed</li>
+                    <li>Focus search entry when the main window gets activated</li>
+                    <li>Add filter for applications (i.e. .desktop files)</li>
+                    <li>Add option to launch applications directly instead of opening the .desktop files</li>
+                    <li>Show application icons for .desktop files</li>
+                    <li>Add .odp and .ods files to document filter</li>
+                    <li>'Open with' menu now only shows applications which can handle the selected files</li>
+                    <li>Improved opening of multiple files with the same type (they get now passed as a list to applications, instead of one by one)</li>
+                    <li>Better support for opening files in sandboxed mode</li>
+                    <li>Add menu items with  links to the issue tracker, forum and donation pages</li>
+                    <li>Improve support for non-Linux systems</li>
+                    <li>Add option to exit FSearch when Escape is pressed instead of minimizing the window</li>
+                    <li>Exclude '/proc' and '/sys' by default</li>
+                    <li>Open context menu when 'Menu' key or 'Shift + F10' are pressed</li>
+                    <li>and tons of bug fixes, translation updates and smaller improvements</li>
+                </ul>
+            </description>
+        </release>
+        <release date="2021-09-25" version="0.1">
+            <description>
+                <p>Initial release.</p>
+            </description>
+        </release>
+    </releases>
+    <launchable type="desktop-id">io.github.cboxdoerfer.FSearch.desktop</launchable>
+    <custom>
+        <value key="Purism::form_factor">workstation</value>
+    </custom>
+</component>
