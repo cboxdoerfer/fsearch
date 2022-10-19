@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+         xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+         xmlns:foaf="http://xmlns.com/foaf/0.1/"
+         xmlns="http://usefulinc.com/ns/doap#">
+
+    <name xml:lang="en">FSearch</name>
+    <shortdesc xml:lang="en">A graphical file search application</shortdesc>
+    <description xml:lang="en">
+        FSearch helps you to find files and folders as easy and fast as possible.
+        Just type a few letters and search results will appear almost instantly.
+    </description>
+    <license rdf:resource="https://spdx.org/licenses/GPL-2.0-or-later"/>
+
+    <repository>
+        <GitRepository>
+            <location rdf:resource="https://github.com/cboxdoerfer/fsearch.git"/>
+            <browse rdf:resource="https://github.com/cboxdoerfer/fsearch"/>
+        </GitRepository>
+    </repository>
+
+    <homepage rdf:resource="https://github.com/cboxdoerfer/fsearch"/>
+    <download-page rdf:resource="https://github.com/cboxdoerfer/fsearch/-/releases"/>
+    <bug-database rdf:resource="https://github.com/cboxdoerfer/fsearch/issues"/>
+    <screenshots rdf:resource="https://github.com/cboxdoerfer/fsearch/tree/master/data/screenshots"/>
+    <support-forum rdf:resource="https://github.com/cboxdoerfer/fsearch/discussions"/>
+
+    <programming-language>C</programming-language>
+
+    <maintainer>
+        <foaf:Person>
+            <foaf:name>Christian Boxdörfer</foaf:name>
+            <foaf:mbox rdf:resource="mailto:christian.boxdoerfer@posteo.de"/>
+        </foaf:Person>
+    </maintainer>
+
+    <helper>
+        <foaf:Person>
+            <foaf:name>Dawid Duma (pixel96x)</foaf:name>
+            <foaf:firstName xml:lang="pl">Dawid</foaf:firstName>
+            <foaf:homepage rdf:resource="https://www.pixel96x.com"/>
+            <foaf:mbox rdf:resource="mailto:contact@pixel96x.com"/>
+            <foaf:nick xml:lang="en">pixel96x</foaf:nick>
+            <foaf:surname xml:lang="pl">Duma</foaf:surname>
+        </foaf:Person>
+    </helper>
+</Project>
