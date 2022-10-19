@@ -673,6 +673,7 @@ fsearch_application_startup(GApplication *app) {
     set_accel_for_action(app, "app.update_database", "<control><shift>r");
     set_accel_for_action(app, "app.preferences(uint32 0)", "<control>p");
     set_accel_for_action(app, "win.close_window", "<control>w");
+    set_accel_for_action(app, "app.help", "F1");
     set_accels_for_escape(app);
 
     fsearch->db_pool = g_thread_pool_new(database_pool_func, app, 1, TRUE, NULL);
