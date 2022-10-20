@@ -23,19 +23,14 @@ BuildRequires: desktop-file-utils
 FSearch is a fast file search utility, inspired by Everything Search Engine. It's written in C and based on GTK 3.
 
 %prep
-%setup -q -n fsearch-master -c
-
-mv fsearch-master build
+%autosetup -n fsearch-master -c
 
 %build
 export LDFLAGS="%{?__global_ldflags} -pthread"
-pushd build
 %meson -Dchannel=copr-nightly
 %meson_build -v
-popd
 
 %install
-pushd build
 %meson_install
 
 %find_lang %{name} --with-gnome
