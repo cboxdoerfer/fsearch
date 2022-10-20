@@ -38,15 +38,18 @@ popd
 pushd build
 %meson_install
 
+%find_lang %{name} --with-gnome
+
 desktop-file-install \
   --dir=%{buildroot}%{_datadir}/applications/ \
   %{buildroot}%{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
 
-%files
+%files -f %{name}.lang
 %{_bindir}/fsearch
 %{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
 %{_datadir}/icons/hicolor/scalable/apps/io.github.cboxdoerfer.FSearch.svg
 %{_datadir}/man/man1/fsearch.1.gz
 %{_datadir}/metainfo/io.github.cboxdoerfer.FSearch.appdata.xml
 %{_datadir}/locale/*/*/fsearch.mo
+%{_datadir}/help/*/*/fsearch.mo
 
