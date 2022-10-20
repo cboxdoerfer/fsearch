@@ -17,6 +17,7 @@ BuildRequires: gtk3-devel
 BuildRequires: glib2-devel
 BuildRequires: libappstream-glib
 BuildRequires: desktop-file-utils
+BuildRequires: itstool
 
 
 %description
