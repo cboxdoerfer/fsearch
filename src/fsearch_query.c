@@ -24,18 +24,14 @@
 
 FsearchQuery *
 fsearch_query_new(const char *search_term,
-                  int32_t sort_order,
                   FsearchFilter *filter,
                   FsearchFilterManager *filters,
                   FsearchQueryFlags flags,
-                  const char *query_id,
-                  bool reset_selection) {
+                  const char *query_id) {
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     g_assert(q);
 
     q->search_term = search_term ? strdup(search_term) : "";
-
-    q->sort_order = sort_order;
 
     q->query_tree = fsearch_query_node_tree_new(q->search_term, filters, flags);
     if (q->query_tree) {
@@ -51,7 +47,6 @@ fsearch_query_new(const char *search_term,
     q->filter = fsearch_filter_ref(filter);
     q->flags = flags;
     q->query_id = strdup(query_id ? query_id : "[missing_id]");
-    q->reset_selection = reset_selection;
     q->ref_count = 1;
     return q;
 }

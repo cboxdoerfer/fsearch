@@ -32,7 +32,7 @@ typedef struct DatabaseSearchResult {
 } DatabaseSearchResult;
 
 DatabaseSearchResult *
-db_search_empty(FsearchQuery *q, DynamicArray *folders, DynamicArray *files, FsearchDatabaseIndexType sort_type);
+db_search_empty(DynamicArray *folders, DynamicArray *files, FsearchDatabaseIndexType sort_type);
 
 DatabaseSearchResult *
 db_search(FsearchQuery *q,

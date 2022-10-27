@@ -45,9 +45,6 @@ typedef struct FsearchQuery {
 
     FsearchQueryFlags flags;
 
-    int32_t sort_order;
-
-    bool reset_selection;
     bool triggers_auto_match_case;
     bool triggers_auto_match_path;
     bool wants_single_threaded_search;
@@ -57,12 +54,10 @@ typedef struct FsearchQuery {
 
 FsearchQuery *
 fsearch_query_new(const char *search_term,
-                  int32_t sort_order,
                   FsearchFilter *filter,
                   FsearchFilterManager *filters,
                   FsearchQueryFlags flags,
-                  const char *query_id,
-                  bool reset_selection);
+                  const char *query_id);
 
 FsearchQuery *
 fsearch_query_ref(FsearchQuery *query);

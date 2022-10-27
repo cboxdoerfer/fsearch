@@ -113,7 +113,11 @@ db_search_worker(void *data) {
 }
 
 static DynamicArray *
-db_search_entries(FsearchQuery *q, FsearchThreadPool *pool, GCancellable *cancellable, DynamicArray *entries, FsearchThreadPoolFunc search_func) {
+db_search_entries(FsearchQuery *q,
+                  FsearchThreadPool *pool,
+                  GCancellable *cancellable,
+                  DynamicArray *entries,
+                  FsearchThreadPoolFunc search_func) {
     const uint32_t num_entries = darray_get_num_items(entries);
     if (num_entries == 0) {
         return NULL;
@@ -185,10 +189,7 @@ db_search_entries(FsearchQuery *q, FsearchThreadPool *pool, GCancellable *cancel
 }
 
 DatabaseSearchResult *
-db_search_empty(FsearchQuery *q,
-                DynamicArray *folders,
-                DynamicArray *files,
-                FsearchDatabaseIndexType sort_type) {
+db_search_empty(DynamicArray *folders, DynamicArray *files, FsearchDatabaseIndexType sort_type) {
     DatabaseSearchResult *result = calloc(1, sizeof(DatabaseSearchResult));
 
     result->folders = darray_ref(folders);

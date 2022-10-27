@@ -51,6 +51,8 @@ typedef struct {
     FsearchDatabaseView *view;
     FsearchDatabase *db;
     FsearchQuery *query;
+    FsearchDatabaseIndexType sort_order;
+    bool reset_selection;
 } FsearchSearchContext;
 
 static void
@@ -304,7 +306,7 @@ db_view_search_task_finished(gpointer result, gpointer data) {
 
         FsearchDatabase *db = ctx->db;
         if (ctx->view->db == db) {
-            if (ctx->view->selection && ctx->view->query->reset_selection) {
+            if (ctx->view->selection && ctx->reset_selection) {
                 fsearch_selection_unselect_all(ctx->view->selection);
             }
             g_clear_pointer(&ctx->view->files, darray_unref);
@@ -565,18 +567,18 @@ db_view_search_task(gpointer data, GCancellable *cancellable) {
     g_timer_start(timer);
 
     DatabaseSearchResult *result = NULL;
-    FsearchDatabaseIndexType sort_type = DATABASE_INDEX_TYPE_NAME;
+    FsearchDatabaseIndexType sort_order = DATABASE_INDEX_TYPE_NAME;
     DynamicArray *files = NULL;
     DynamicArray *folders = NULL;
 
     db_lock(ctx->db);
-    db_get_entries_sorted(ctx->db, ctx->query->sort_order, &sort_type, &folders, &files);
+    db_get_entries_sorted(ctx->db, ctx->sort_order, &sort_order, &folders, &files);
 
     if (fsearch_query_matches_everything(ctx->query)) {
-        result = db_search_empty(ctx->query, folders, files, sort_type);
+        result = db_search_empty(folders, files, sort_order);
     }
     else {
-        result = db_search(ctx->query, ctx->view->pool, folders, files, sort_type, cancellable);
+        result = db_search(ctx->query, ctx->view->pool, folders, files, sort_order, cancellable);
     }
     db_unlock(ctx->db);
 
@@ -609,16 +611,12 @@ db_view_search(FsearchDatabaseView *view, bool reset_selection) {
 
     ctx->view = db_view_ref(view);
     ctx->db = db_ref(view->db);
+    ctx->sort_order = view->sort_order;
+    ctx->reset_selection = reset_selection;
 
     g_autoptr(GString) query_id = g_string_new(NULL);
     g_string_printf(query_id, "query:%02d.%04d", view->id, view->query_id++);
-    ctx->query = fsearch_query_new(view->query_text,
-                                   view->sort_order,
-                                   view->filter,
-                                   view->filters,
-                                   view->query_flags,
-                                   query_id->str,
-                                   reset_selection);
+    ctx->query = fsearch_query_new(view->query_text, view->filter, view->filters, view->query_flags, query_id->str);
     g_assert(ctx->query);
 
     fsearch_task_queue(view->task_queue,
