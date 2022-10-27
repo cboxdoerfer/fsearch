@@ -188,13 +188,11 @@ DatabaseSearchResult *
 db_search_empty(FsearchQuery *q,
                 DynamicArray *folders,
                 DynamicArray *files,
-                FsearchDatabaseIndexType sort_type,
-                gpointer data) {
+                FsearchDatabaseIndexType sort_type) {
     DatabaseSearchResult *result = calloc(1, sizeof(DatabaseSearchResult));
 
     result->folders = darray_ref(folders);
     result->files = darray_ref(files);
-    result->data = data;
     result->sort_type = sort_type;
     return result;
 }
@@ -205,8 +203,7 @@ db_search(FsearchQuery *q,
           DynamicArray *folders,
           DynamicArray *files,
           FsearchDatabaseIndexType sort_type,
-          GCancellable *cancellable,
-          gpointer data) {
+          GCancellable *cancellable) {
     g_assert(files);
     g_assert(folders);
 
@@ -227,7 +224,6 @@ db_search(FsearchQuery *q,
     DatabaseSearchResult *result = calloc(1, sizeof(DatabaseSearchResult));
     result->files = files_res;
     result->folders = folders_res;
-    result->data = data;
     result->sort_type = sort_type;
 
     return result;

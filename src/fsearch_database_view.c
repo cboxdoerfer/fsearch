@@ -49,6 +49,7 @@ struct FsearchDatabaseView {
 
 typedef struct {
     FsearchDatabaseView *view;
+    FsearchDatabase *db;
     FsearchQuery *query;
 } FsearchSearchContext;
 
@@ -270,16 +271,23 @@ db_view_new(const char *query_text,
 }
 
 static void
+search_context_free(FsearchSearchContext *ctx) {
+    g_return_if_fail(ctx);
+
+    g_clear_pointer(&ctx->db, db_unref);
+    g_clear_pointer(&ctx->view, db_view_unref);
+    g_clear_pointer(&ctx->query, fsearch_query_unref);
+    g_clear_pointer(&ctx, free);
+}
+
+static void
 db_view_search_task_cancelled(gpointer data) {
     FsearchSearchContext *ctx = data;
 
     if (ctx->view->notify_func) {
         ctx->view->notify_func(ctx->view, DATABASE_VIEW_NOTIFY_SEARCH_FINISHED, ctx->view->notify_func_data);
     }
-
-    g_clear_pointer(&ctx->view, db_view_unref);
-    g_clear_pointer(&ctx->query, fsearch_query_unref);
-    g_clear_pointer(&ctx, free);
+    g_clear_pointer(&ctx, search_context_free);
 }
 
 static void
@@ -289,12 +297,12 @@ db_view_search_task_finished(gpointer result, gpointer data) {
     db_view_lock(ctx->view);
 
     g_clear_pointer(&ctx->view->query, fsearch_query_unref);
-    ctx->view->query = g_steal_pointer(&ctx->query);
+    ctx->view->query = fsearch_query_ref(ctx->query);
 
     if (result) {
         DatabaseSearchResult *res = result;
 
-        FsearchDatabase *db = res->data;
+        FsearchDatabase *db = ctx->db;
         if (ctx->view->db == db) {
             if (ctx->view->selection && ctx->view->query->reset_selection) {
                 fsearch_selection_unselect_all(ctx->view->selection);
@@ -308,7 +316,6 @@ db_view_search_task_finished(gpointer result, gpointer data) {
             ctx->view->sort_order = res->sort_type;
         }
 
-        g_clear_pointer(&db, db_unref);
         g_clear_pointer(&res, free);
     }
 
@@ -320,8 +327,7 @@ db_view_search_task_finished(gpointer result, gpointer data) {
         ctx->view->notify_func(ctx->view, DATABASE_VIEW_NOTIFY_SELECTION_CHANGED, ctx->view->notify_func_data);
     }
 
-    g_clear_pointer(&ctx->view, db_view_unref);
-    g_clear_pointer(&ctx, free);
+    g_clear_pointer(&ctx, search_context_free);
 }
 
 typedef struct {
@@ -563,16 +569,16 @@ db_view_search_task(gpointer data, GCancellable *cancellable) {
     DynamicArray *files = NULL;
     DynamicArray *folders = NULL;
 
-    db_lock(ctx->view->db);
-    db_get_entries_sorted(ctx->view->db, ctx->query->sort_order, &sort_type, &folders, &files);
+    db_lock(ctx->db);
+    db_get_entries_sorted(ctx->db, ctx->query->sort_order, &sort_type, &folders, &files);
 
     if (fsearch_query_matches_everything(ctx->query)) {
-        result = db_search_empty(ctx->query, folders, files, sort_type, db_ref(ctx->view->db));
+        result = db_search_empty(ctx->query, folders, files, sort_type);
     }
     else {
-        result = db_search(ctx->query, ctx->view->pool, folders, files, sort_type, cancellable, db_ref(ctx->view->db));
+        result = db_search(ctx->query, ctx->view->pool, folders, files, sort_type, cancellable);
     }
-    db_unlock(ctx->view->db);
+    db_unlock(ctx->db);
 
     g_clear_pointer(&files, darray_unref);
     g_clear_pointer(&folders, darray_unref);
@@ -602,6 +608,7 @@ db_view_search(FsearchDatabaseView *view, bool reset_selection) {
     g_assert(ctx);
 
     ctx->view = db_view_ref(view);
+    ctx->db = db_ref(view->db);
 
     g_autoptr(GString) query_id = g_string_new(NULL);
     g_string_printf(query_id, "query:%02d.%04d", view->id, view->query_id++);
