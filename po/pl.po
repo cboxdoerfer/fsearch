@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-13 19:25+0000\n"
+"PO-Revision-Date: 2022-10-30 11:10+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -161,8 +161,6 @@ msgid "Sorting…"
 msgstr "Sortowanie…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Error while opening folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
 msgstr "Błąd podczas otwierania katalogu"
@@ -174,8 +172,6 @@ msgid "Failed to build open command"
 msgstr "Nie udało się otworzyć:"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
 msgstr "Błąd podczas uruchamiania pliku desktop"
@@ -191,8 +187,6 @@ msgid "Failed to get default display"
 msgstr "Nie udało się otworzyć pliku"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Error when removing file"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
 msgstr "Błąd podczas usuwania pliku"
@@ -202,15 +196,11 @@ msgid "Failed to get path"
 msgstr "Nie udało się ustalić ścieżki"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Error when launching desktop file"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
 msgstr "Błąd podczas uruchamiania pliku desktop"
 
 #: src/fsearch_file_utils.c:259
-#, fuzzy
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
 msgstr "Błąd podczas uzyskiwania informacji o typie zawartości"
@@ -220,17 +210,13 @@ msgid "No default application registered"
 msgstr "Nie ma skojarzonej domyślnej aplikacji"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Error when opening parent folder"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
 msgstr "Błąd podczas otwierania katalogu nadrzędnego"
 
 #: src/fsearch_file_utils.c:350
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Nie udało się otworzyć:"
+msgstr "Nie udało się ustalić ścieżki"
 
 #: src/fsearch_file_utils.c:407
 msgid "Folder"
@@ -372,14 +358,8 @@ msgid "Empty Query"
 msgstr "Puste zapytanie"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid ""
-#| "Press <b>Ctrl + F</b> and start typing\n"
-#| "                        "
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr ""
-"Naciśnij <b>Ctrl + F</b> i zacznij pisać\n"
-"                        "
+msgstr "Naciśnij <b>Ctrl + F</b> i zacznij pisać"
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -634,17 +614,6 @@ msgstr ""
 "wariant, dlatego włączenie tego ustawienia może nie przynieść efektu."
 
 #: src/fsearch_preferences.ui:1326
-#, fuzzy
-#| msgid ""
-#| "<b>Enable client-side decorations:</b>\n"
-#| "\n"
-#| "If enabled, the search entry and main menu are displayed in the window "
-#| "title bar.\n"
-#| "\n"
-#| "If disabled, the main menu is displayed as a menu bar with the search "
-#| "entry below it.\n"
-#| "This resembles a more traditonal UI layout and takes a little bit more "
-#| "space."
 msgid ""
 "<b>Enable client-side decorations:</b>\n"
 "\n"
@@ -656,7 +625,7 @@ msgid ""
 "This resembles a more traditional UI layout and takes a little bit more "
 "space."
 msgstr ""
-"<b>Włącz dekoracje client-side:</b>\n"
+"<b>Włącz dekoracje client-side:</b> \n"
 "\n"
 "Jeśli opcja jest włączona, pozycja wyszukiwania i menu główne są wyświetlane "
 "na pasku tytułu okna.\n"
@@ -705,21 +674,6 @@ msgstr ""
 "okno miało inny rozmiar."
 
 #: src/fsearch_preferences.ui:1385
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was succesfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -735,19 +689,17 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
-"<b>Zachowanie po udanym otwarciu pliku:</b>\n"
+"<b>Zachowanie po udanym otwarciu pliku:</b> \n"
 "\n"
 "Po pomyślnym otwarciu pliku / katalogu można wykonać jedną z następujących "
-"czynności:\n"
-"\n"
+"czynności: \n"
 "• <b> Nie rób nic: </b> nic się nie dzieje.\n"
 "• <b> Minimalizuj: </b> Aktualnie wybrane okno FSearch zostaje "
 "zminimalizowane.\n"
 "• <b> Zamknij: </b> Zamknij FSearch.\n"
 "\n"
 "Możesz skonfigurować, czy te akcje mają być uruchamiane, gdy plik został "
-"otwarty za pomocą\n"
-"\n"
+"otwarty za pomocą \n"
 "• <b> skrótu klawiaturowego lub z menu </b> i / lub\n"
 "• <b> kliknięcia myszą </b>"
 
@@ -953,17 +905,6 @@ msgstr ""
 "uruchomieniu FSearch."
 
 #: src/fsearch_preferences.ui:1656
-#, fuzzy
-#| msgid ""
-#| "<b>Included folders:</b>\n"
-#| "\n"
-#| "This list contains all folders you want to include in the database.\n"
-#| "\n"
-#| "\t• <b>Active:</b> If enabled, the path will included in the database to "
-#| "be searched in.\n"
-#| "\t• <b>Path:</b> The full path to be included.\n"
-#| "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
-#| "boundraries for this folder"
 msgid ""
 "<b>Included folders:</b>\n"
 "\n"
@@ -975,9 +916,9 @@ msgid ""
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
 "boundaries for this folder"
 msgstr ""
-"<b>Dołączone katalogi:</b>\n"
+"<b>Dołączone katalogi:</b> \n"
 "\n"
-"Ta lista zawiera wszystkie katalogi, które chcesz dołączyć do bazy danych.\n"
+"Ta lista zawiera wszystkie katalogi, które chcesz dołączyć do bazy danych. \n"
 "\n"
 "• <b>Aktywna: </b> jeśli włączone, ścieżka zostanie dołączona do bazy "
 "danych\n"
@@ -1273,10 +1214,8 @@ msgid "0 Items"
 msgstr "0 wyników"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Anuluj"
+msgstr "Anuluj"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1307,31 +1246,23 @@ msgid "(empty)"
 msgstr "(puste)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Wyszukiwany ciąg zawiera separatory ścieżki.\n"
-"<b>Wyszukiwanie w ścieżce</b> zostało tymczasowo aktywowane."
+"Wyszukiwany ciąg zawiera wielkie litery.\n"
+"<b>Rozróżnianie wielkości liter</b> zostało tymczasowo aktywowane."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "CASE"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
-"Wyszukiwany ciąg zawiera separatory ścieżki.\n"
+"Wyszukiwany ciąg zawiera separatory ścieżki. \n"
 "<b>Wyszukiwanie w ścieżce</b> zostało tymczasowo aktywowane."
 
 #: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
