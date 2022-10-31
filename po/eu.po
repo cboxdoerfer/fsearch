@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-08-24 20:14+0000\n"
+"PO-Revision-Date: 2022-11-01 22:35+0000\n"
 "Last-Translator: Alex Gabilondo <alexgabi@disroot.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.14.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -159,56 +159,40 @@ msgid "Sorting…"
 msgstr "Ordenatzen…"
 
 #: src/fsearch_file_utils.c:132
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr "Abiarazi mahaigaineko fitxategiak"
+msgstr "Errorea karpeta irekitzean"
 
 #: src/fsearch_file_utils.c:135
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to build open command"
-msgstr "Ezin izan da ireki:"
+msgstr "Ezin izan da ireki komandoa eraiki"
 
 #: src/fsearch_file_utils.c:151
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file."
 msgid "Error when launching desktop file"
-msgstr "Abiarazi mahaigaineko fitxategiak"
+msgstr "Errorea mahaigaineko fitxategia abiarazteko orduan"
 
 #: src/fsearch_file_utils.c:154
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Failed to get application information"
-msgstr "Ireki aplikazioaren leiho berri bat"
+msgstr "Ezin izan da lortu aplikazioaren informazioa"
 
 #: src/fsearch_file_utils.c:160
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get default display"
-msgstr "Fitxategia irekitzeak huts egin du"
+msgstr "Ezin izan da pantaila lehenetsia lortu"
 
 #: src/fsearch_file_utils.c:182
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr "Abiarazi mahaigaineko fitxategiak"
+msgstr "Errore bat gertatu da fitxategia kentzean"
 
 #: src/fsearch_file_utils.c:184 src/fsearch_file_utils.c:247
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Ezin izan da ireki:"
+msgstr "Ezin izan da bidea lortu"
 
 #: src/fsearch_file_utils.c:245
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the desktop file"
 msgid "Error when launching desktop file"
-msgstr "Abiarazi mahaigaineko fitxategiak"
+msgstr "Errorea mahaigaineko fitxategia abiarazteko orduan"
 
 #: src/fsearch_file_utils.c:259
 msgctxt "Will be followed by the content type string."
@@ -216,23 +200,17 @@ msgid "Error when getting information for content type"
 msgstr "Errore bat gertatu da eduki motari buruzko informazioa eskuratzean"
 
 #: src/fsearch_file_utils.c:261
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "No default application registered"
-msgstr "Erakutsi aplikazioaren hobespenak"
+msgstr "Ez dago aplikazio lehenetsirik erregistratuta"
 
 #: src/fsearch_file_utils.c:348
-#, fuzzy
-#| msgid "Launch desktop files"
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr "Abiarazi mahaigaineko fitxategiak"
+msgstr "Errore bat gertatu da karpeta nagusia irekitzean"
 
 #: src/fsearch_file_utils.c:350
-#, fuzzy
-#| msgid "Failed to open:"
 msgid "Failed to get parent path"
-msgstr "Ezin izan da ireki:"
+msgstr "Ezin izan da lortu gurasoen bidea"
 
 #: src/fsearch_file_utils.c:407
 msgid "Folder"
@@ -1301,16 +1279,12 @@ msgid "(empty)"
 msgstr "(hutsa)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Bilaketa-terminoak bide-bereizleak ditu.\n"
-"<b>Bidean bilatzea</b> termino honentzat aldi baterako aktibatu da."
+"Bilaketa-terminoak letra larriak ditu.\n"
+"<b>Bat-etortze kasua</b> termino honentzat aldi baterako aktibatu da."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
@@ -1371,10 +1345,8 @@ msgstr ""
 "egingo da."
 
 #: src/fsearch_window.ui:58 src/fsearch_window.ui:420 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "Fsearch"
+msgstr "Lineako Fsearch"
 
 #: src/fsearch_window.ui:74 src/fsearch_window.ui:145 src/menus.ui:131
 msgid "Donate"
@@ -1471,16 +1443,14 @@ msgid "Something went wrong."
 msgstr "Zerbait gaizki joan da."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Fitxategiak ezabatzen…"
+msgstr "%d fitxategi ezabatuta."
 
 #: src/fsearch_window_actions.c:215
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Fitxategiak zakarrontzira bidaltzen…"
+msgstr "%d fitxategi zaborrontzira eraman dira."
 
 #: src/fsearch_window_actions.c:221
 msgid ""
