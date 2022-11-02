@@ -1598,7 +1598,7 @@ fsearch_list_view_size_allocate(GtkWidget *widget, GtkAllocation *allocation) {
                                allocation->height);
         gdk_window_move_resize(view->bin_window,
                                -get_hscroll_pos(view),
-                               view->header_height,
+                               view->header_height - get_vscroll_pos(view),
                                MAX(view->min_list_width, allocation->width),
                                MAX(view->list_height, allocation->height - view->header_height));
         gdk_window_move_resize(view->header_window,
