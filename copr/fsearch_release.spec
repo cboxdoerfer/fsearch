@@ -47,6 +47,6 @@ desktop-file-install \
 %{_datadir}/applications/io.github.cboxdoerfer.FSearch.desktop
 %{_datadir}/icons/hicolor/scalable/apps/io.github.cboxdoerfer.FSearch.svg
 %{_datadir}/man/man1/fsearch.1.gz
-%{_datadir}/metainfo/io.github.cboxdoerfer.FSearch.appdata.xml
+%{_datadir}/metainfo/io.github.cboxdoerfer.FSearch.metainfo.xml
 %{_datadir}/locale/*/*/fsearch.mo
 

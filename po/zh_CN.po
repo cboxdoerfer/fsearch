@@ -20,7 +20,7 @@ msgstr ""
 "X-Generator: Weblate 4.14-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -33,11 +33,11 @@ msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr "搜索;fsearch;文件;目录;音乐;视频;文档;查找;工具;everything;"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
 msgstr "一个图形化的文件搜索工具"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
@@ -45,57 +45,57 @@ msgstr ""
 "FSearch帮助你尽可能容易和快速地找到文件和文件夹。只需键入几个字母，搜索结果几"
 "乎会立即出现。"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
 msgstr "FSearch有很多功能使搜索尽可能高效和强大。比如："
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr "忽略大小写（例如：搜索“fsearch”也会匹配“FSearch”）"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "正则表达式"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "支持通配符"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "支持筛选器（例如：只搜索音频文件）"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "排除特定文件及文件夹"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr "按名称、路径、大小、修改时间和扩展名快速排序"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
 msgstr "注意：由于Flatpak的沙箱功能，FSearch无法找到你系统中的每一个文件。"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:35
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
 msgstr "默认的用户界面布局"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:41
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
 msgstr "一个更接近GNOME人机界面指南的布局"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "Initial release."
 msgstr "首次发布。"
 

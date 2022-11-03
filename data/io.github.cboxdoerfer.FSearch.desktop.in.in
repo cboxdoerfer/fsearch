@@ -1,11 +1,15 @@
 [Desktop Entry]
-Version=1.0
+Version=1.5
 Type=Application
 Name=FSearch
 Comment=A file search application focusing on performance and advanced features
 Icon=io.github.cboxdoerfer.FSearch
 TryExec=fsearch
 Exec=fsearch
-Categories=GTK;Utility;Core;
+Categories=GTK;Utility;
 Keywords=search;fsearch;files;folders;music;video;documents;find;tool;everything;
 StartupNotify=true
+GenericName=File Search Utility
+PrefersNonDefaultGPU=false
+SingleMainWindow=false
+X-Purism-FormFactor=Workstation;

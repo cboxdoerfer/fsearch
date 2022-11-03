@@ -37,7 +37,7 @@ parts:
       - libpcre2-8-0
     organize:
       snap/fsearch/current/usr: usr
-    parse-info: [ usr/share/metainfo/io.github.cboxdoerfer.FSearch.appdata.xml ]
+    parse-info: [ usr/share/metainfo/io.github.cboxdoerfer.FSearch.metainfo.xml ]
 
 slots:
   dbus-daemon:

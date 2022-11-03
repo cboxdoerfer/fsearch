@@ -1,5 +1,5 @@
 # Tradução para protuguês brasileiro efetuada por Gustavo Henrique Machado da Silva (www.linkedin.com/in/gustavohmsilva)
-# Embora o software original possa não possuir as mesmas licenças, a tradução produzida por mim está protegida sobre o 
+# Embora o software original possa não possuir as mesmas licenças, a tradução produzida por mim está protegida sobre o
 # Creative Commons, Attribution-ShareAlike 4.0 International
 # Contate-me via email no endereço gustavohmsilva@member.fsf.org
 #
@@ -25,7 +25,7 @@ msgstr ""
 "X-Generator: Weblate 4.12-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -41,11 +41,11 @@ msgstr ""
 "busca;fsearch;arquivos;pastas;músicas;vídeos;documentos;encontrar;ferramenta;"
 "everything;"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:8
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
 msgstr "Software de busca de arquivos com interface gráfica"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:10
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
@@ -54,7 +54,7 @@ msgstr ""
 "digitar algumas letras e os resultados da busca aparecerão quase "
 "instantaneamente."
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:14
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
 msgid ""
 "There are a lot of features which make searching as efficient and powerful "
 "as possible. Such as:"
@@ -62,36 +62,36 @@ msgstr ""
 "Existem muitos recursos que tornam a pesquisa o mais eficiente e poderosa "
 "possível. Tais como:"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as well)"
 msgstr ""
 "Ignorar maiúsculas e minúsculas (por exemplo, a busca por \"fsearch\" também "
 "corresponderá a \"FSearch\")"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "Expressões regulares"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "Suporte a caractere curinga"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "Suporte a filtro (por exemplo, pesquisa apenas por arquivos de áudio)"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "Excluir certos arquivos e pastas"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:24
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 "Classificação rápida por nome, localização, tamanho, tempo de modificação e "
 "extensão"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:26
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
 "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
 "system."
@@ -99,20 +99,20 @@ msgstr ""
 "Aviso: devido ao isolamento de processos do Flatpak, FSearch não consegue "
 "encontrar todos os arquivos em seu sistema."
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:35
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
 msgstr "O layout padrão da interface de usuário"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:41
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
 msgstr "Um layout mais semelhante ao GNOME HIGs"
 
 #. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:49
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
-#: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:57
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "Initial release."
 msgstr "Lançamento inicial."
 

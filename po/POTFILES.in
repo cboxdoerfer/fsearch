@@ -1,5 +1,5 @@
 data/io.github.cboxdoerfer.FSearch.desktop.in.in
-data/io.github.cboxdoerfer.FSearch.appdata.xml.in
+data/io.github.cboxdoerfer.FSearch.metainfo.xml.in
 src/fsearch.c
 src/fsearch_database.c
 src/fsearch_file_utils.c
