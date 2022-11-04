@@ -4,6 +4,7 @@ Priority: optional
 Maintainer: Christian Boxdörfer <christian.boxdoerfer@posteo.de>
 Build-Depends: debhelper (>=9),
     build-essential,
+    appstream,
     itstool,
     libtool,
     pkg-config,
