@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2021-10-10 17:04+0000\n"
-"Last-Translator: Luna Jernberg <droidbittin@gmail.com>\n"
+"PO-Revision-Date: 2022-11-06 16:07+0000\n"
+"Last-Translator: Ingemar Karlsson <po@ingk.se>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/fsearch/"
 "translations/sv/>\n"
 "Language: sv\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.9-dev\n"
+"X-Generator: Weblate 4.14.2\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.appdata.xml.in:7 src/main.c:35
@@ -99,11 +99,11 @@ msgstr ""
 
 #: src/fsearch.c:243
 msgid "Saving…"
-msgstr ""
+msgstr "Sparar…"
 
 #: src/fsearch.c:430
 msgid "translator-credits"
-msgstr ""
+msgstr "Ingemar Karlsson <po (at) ingk dot se>"
 
 #: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
