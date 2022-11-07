@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-11-07 17:07+0000\n"
+"PO-Revision-Date: 2022-11-08 18:10+0000\n"
 "Last-Translator: Ingemar Karlsson <po@ingk.se>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/fsearch/"
 "translations/sv/>\n"
@@ -295,38 +295,41 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
+"Makro för det här filtret. Med ett makro kan du komma åt filtret från "
+"sökposten genom att skriva dess text följt av ':'\n"
+"                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr ""
+msgstr "Egenskaper…"
 
 #: src/fsearch_listview_popup.c:169
 msgid "Other Application…"
-msgstr ""
+msgstr "Andra program…"
 
 #: src/fsearch_overlay.ui:44
 msgid "Empty Database"
-msgstr ""
+msgstr "Tom databas"
 
 #: src/fsearch_overlay.ui:60
 msgid "Add folders"
-msgstr ""
+msgstr "Lägg till katalog"
 
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
-msgstr ""
+msgstr "Laddar databas…"
 
 #: src/fsearch_overlay.ui:123
 msgid "This won't take long."
-msgstr ""
+msgstr "Detta tar inte lång tid."
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
-msgstr ""
+msgstr "Uppdaterar databasen…"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
-msgstr ""
+msgstr "Detta kan ta ett tag."
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
@@ -334,237 +337,239 @@ msgstr ""
 
 #: src/fsearch_overlay.ui:256
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr ""
+msgstr "Tryck <b>Ctrl + F</b> och börja skriva."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
-msgstr ""
+msgstr "Inget resultat hittades"
 
 #: src/fsearch_overlay.ui:319
 msgid "Try a different search"
-msgstr ""
+msgstr "Försök med en annan sökning"
 
 #: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
-msgstr ""
+msgstr "Sorterar resultat…"
 
 #: src/fsearch_preferences.ui:63 src/fsearch_window.ui:396 src/menus.ui:84
 msgid "Preferences"
-msgstr ""
+msgstr "Inställningar"
 
 #: src/fsearch_preferences.ui:132
 msgid "Enable dark theme"
-msgstr ""
+msgstr "Aktivera mörkt tema"
 
 #: src/fsearch_preferences.ui:147
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "Aktivera dekorationer på klientsidan (kräver omstart)"
 
 #: src/fsearch_preferences.ui:162
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "Använd binära enheter i stället för decimala enheter"
 
 #: src/fsearch_preferences.ui:178
 msgid "Remember window size"
-msgstr ""
+msgstr "Kom ihåg fönstrets storlek"
 
 #: src/fsearch_preferences.ui:193
 msgid "Exit on Escape"
-msgstr ""
+msgstr "Avsluta vid Escape"
 
 #: src/fsearch_preferences.ui:230
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "med tangentbordsgenvägar eller menyalternativ"
 
 #: src/fsearch_preferences.ui:245
 msgid "with double click"
-msgstr ""
+msgstr "med dubbelklick"
 
 #: src/fsearch_preferences.ui:273
 msgid "Behaviour after successfully opening a file:"
-msgstr ""
+msgstr "Beteende efter att en fil har öppnats:"
 
 #: src/fsearch_preferences.ui:289
 msgid "Nothing"
-msgstr ""
+msgstr "Ingenting"
 
 #: src/fsearch_preferences.ui:290
 msgid "Minimize"
-msgstr ""
+msgstr "Minimera"
 
 #: src/fsearch_preferences.ui:291
 msgid "Close"
-msgstr ""
+msgstr "Stäng"
 
 #: src/fsearch_preferences.ui:317
 msgid "General:"
-msgstr ""
+msgstr "Allmänt:"
 
 #: src/fsearch_preferences.ui:352
 msgid "Show highlighted search terms"
-msgstr ""
+msgstr "Visa markerade sökord"
 
 #: src/fsearch_preferences.ui:368
 msgid "Show tooltips"
-msgstr ""
+msgstr "Visa verktygstips"
 
 #: src/fsearch_preferences.ui:383
 msgid "Show icons in name column"
-msgstr ""
+msgstr "Visa ikoner i namnkolumnen"
 
 #: src/fsearch_preferences.ui:398
 msgid "Remember column configuration"
-msgstr ""
+msgstr "Kom ihåg kolumnkonfigurationen"
 
 #: src/fsearch_preferences.ui:413
 msgid "Remember sort order"
-msgstr ""
+msgstr "Kom ihåg sorteringsordningen"
 
 #: src/fsearch_preferences.ui:428
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "Öppna sökvägen genom att dubbelklicka i kolumnen för sökvägen"
 
 #: src/fsearch_preferences.ui:443
 msgid "Single click to open"
-msgstr ""
+msgstr "Enkelklick för att öppna"
 
 #: src/fsearch_preferences.ui:458
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Starta skrivbordsfiler"
 
 #: src/fsearch_preferences.ui:479
 msgid "Results:"
-msgstr ""
+msgstr "Resultat:"
 
 #: src/fsearch_preferences.ui:520
 msgid "Show database indexing status"
-msgstr ""
+msgstr "Visa status för databasindexering"
 
 #: src/fsearch_preferences.ui:541
 msgid "Statusbar:"
-msgstr ""
+msgstr "Statusrad:"
 
 #: src/fsearch_preferences.ui:582
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "Visa varningsdialoger när:"
 
 #: src/fsearch_preferences.ui:592
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "fil / katalog misslyckades att öppnas"
 
 #: src/fsearch_preferences.ui:615
 msgid "Dialogs:"
-msgstr ""
+msgstr "Dialoger:"
 
 #: src/fsearch_preferences.ui:640
 msgid "Interface"
-msgstr ""
+msgstr "Interface"
 
 #: src/fsearch_preferences.ui:659
 msgid "Search in path when query contains path separators"
-msgstr ""
+msgstr "Sök i sökvägen när frågan innehåller sökvägsseparatorer"
 
 #: src/fsearch_preferences.ui:673
 msgid "Search as you type"
-msgstr ""
+msgstr "Sök medan du skriver"
 
 #: src/fsearch_preferences.ui:687
 msgid "Hide results when search is empty"
-msgstr ""
+msgstr "Dölj resultaten när sökningen är tom"
 
 #: src/fsearch_preferences.ui:701
 msgid "Match case when query contains at least one upper case character"
-msgstr ""
+msgstr "Matcha skiftläge när frågan innehåller minst ett versaltecken"
 
 #: src/fsearch_preferences.ui:769
 msgid "Add new filter"
-msgstr ""
+msgstr "Lägg till nytt filter"
 
 #: src/fsearch_preferences.ui:785
 msgid "Remove selected filter"
-msgstr ""
+msgstr "Ta bort det valda filtret"
 
 #: src/fsearch_preferences.ui:801
 msgid "Edit selected filter"
-msgstr ""
+msgstr "Redigera vald filter"
 
 #: src/fsearch_preferences.ui:815
 msgid "Restore default filters"
-msgstr ""
+msgstr "Återställ standardfilter"
 
 #: src/fsearch_preferences.ui:847
 msgid "Filter:"
-msgstr ""
+msgstr "Filter:"
 
 #: src/fsearch_preferences.ui:868 src/fsearch_window.ui:625
 msgid "Search"
-msgstr ""
+msgstr "Sök"
 
 #: src/fsearch_preferences.ui:887
 msgid "Update database on start"
-msgstr ""
+msgstr "Uppdatera databasen vid start"
 
 #: src/fsearch_preferences.ui:907
 msgid "Update every"
-msgstr ""
+msgstr "Uppdatera varje"
 
 #: src/fsearch_preferences.ui:929
 msgid "0"
-msgstr ""
+msgstr "0"
 
 #: src/fsearch_preferences.ui:946
 msgid "hour(s) and"
-msgstr ""
+msgstr "timme och"
 
 #: src/fsearch_preferences.ui:958
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/fsearch_preferences.ui:976
 msgid "minute(s)"
-msgstr ""
+msgstr "minut(er)"
 
 #: src/fsearch_preferences.ui:1048
 msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
+"Lägg till en sökväg som ska ingå i databasen\n"
+"                                "
 
 #: src/fsearch_preferences.ui:1065 src/fsearch_preferences.ui:1164
 msgid "Remove selected path"
-msgstr ""
+msgstr "Ta bort vald sökväg"
 
 #: src/fsearch_preferences.ui:1091
 msgid "Include"
-msgstr ""
+msgstr "Inkludera"
 
 #: src/fsearch_preferences.ui:1148
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Lägg till en sökväg som ska uteslutas från databasen"
 
 #: src/fsearch_preferences.ui:1200 src/fsearch_preferences.ui:1213
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "Stöd för jokertecken. Flera poster måste separeras med ';'"
 
 #: src/fsearch_preferences.ui:1201
 msgid "Exclude files:"
-msgstr ""
+msgstr "Exkludera filer:"
 
 #: src/fsearch_preferences.ui:1214
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "t.ex. \".git;*.tmp\""
 
 #: src/fsearch_preferences.ui:1231
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Exkludera dolda filer och kataloger"
 
 #: src/fsearch_preferences.ui:1253
 msgid "Exclude"
-msgstr ""
+msgstr "Exkludera"
 
 #: src/fsearch_preferences.ui:1276
 msgid "Database"
-msgstr ""
+msgstr "Databas"
 
 #: src/fsearch_preferences.ui:1308
 msgid ""
@@ -576,6 +581,14 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Aktivera mörkt tema:</b>\n"
+"\n"
+"Om den är aktiverad ombeds systemtemat att använda en mörkare stil för "
+"programmet <i>(dvs. mörka gränssnittselement på ljus text)</i>.\n"
+"\n"
+"Observera att inte alla systemteman erbjuder en sådan mörk variant, och att "
+"det därför kanske inte har någon effekt om du aktiverar den här "
+"inställningen."
 
 #: src/fsearch_preferences.ui:1326
 msgid ""
