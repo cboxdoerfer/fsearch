@@ -17,6 +17,11 @@
     <property name="can-focus">False</property>
     <property name="icon-name">list-add-symbolic</property>
   </object>
+  <object class="GtkImage" id="image10">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-add-symbolic</property>
+  </object>
   <object class="GtkImage" id="image2">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -51,6 +56,11 @@
     <property name="visible">True</property>
     <property name="can-focus">False</property>
     <property name="icon-name">document-revert-symbolic</property>
+  </object>
+  <object class="GtkImage" id="image9">
+    <property name="visible">True</property>
+    <property name="can-focus">False</property>
+    <property name="icon-name">list-add-symbolic</property>
   </object>
   <object class="GtkAdjustment" id="minute_adjustment">
     <property name="upper">59</property>
@@ -1010,6 +1020,55 @@
                         <property name="margin-bottom">6</property>
                         <property name="orientation">vertical</property>
                         <child>
+                          <object class="GtkBox">
+                            <property name="visible">True</property>
+                            <property name="can-focus">False</property>
+                            <property name="margin-bottom">6</property>
+                            <child>
+                              <object class="GtkEntry" id="index_path_entry">
+                                <property name="name">path_entry</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="placeholder-text" translatable="yes">Enter path…</property>
+                                <style>
+                                  <class name="path_entry"/>
+                                </style>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
+                              <object class="GtkButton" id="index_add_path_button">
+                                <property name="name">path_add_button</property>
+                                <property name="visible">True</property>
+                                <property name="sensitive">False</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">True</property>
+                                <property name="tooltip-text" translatable="yes">Add path to be included in database
+                                </property>
+                                <property name="image">image9</property>
+                                <property name="always-show-image">True</property>
+                                <style>
+                                  <class name="path_add_button"/>
+                                </style>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">1</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">0</property>
+                          </packing>
+                        </child>
+                        <child>
                           <object class="GtkScrolledWindow">
                             <property name="width-request">500</property>
                             <property name="height-request">250</property>
@@ -1033,7 +1092,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="position">0</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                         <child>
@@ -1079,7 +1138,7 @@
                           <packing>
                             <property name="expand">False</property>
                             <property name="fill">True</property>
-                            <property name="position">1</property>
+                            <property name="position">2</property>
                           </packing>
                         </child>
                       </object>
@@ -1110,6 +1169,55 @@
                             <property name="can-focus">False</property>
                             <property name="orientation">vertical</property>
                             <child>
+                              <object class="GtkBox">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="margin-bottom">6</property>
+                                <child>
+                                  <object class="GtkEntry" id="exclude_path_entry">
+                                    <property name="name">path_entry</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="placeholder-text" translatable="yes">Enter path…</property>
+                                    <style>
+                                      <class name="path_entry"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkButton" id="exclude_add_path_button">
+                                    <property name="name">path_add_button</property>
+                                    <property name="visible">True</property>
+                                    <property name="sensitive">False</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">True</property>
+                                    <property name="tooltip-text" translatable="yes">Add path to be included in database
+                                </property>
+                                    <property name="image">image10</property>
+                                    <property name="always-show-image">True</property>
+                                    <style>
+                                      <class name="path_add_button"/>
+                                    </style>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkScrolledWindow">
                                 <property name="width-request">500</property>
                                 <property name="height-request">250</property>
@@ -1133,7 +1241,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">0</property>
+                                <property name="position">1</property>
                               </packing>
                             </child>
                             <child>
@@ -1178,7 +1286,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">1</property>
+                                <property name="position">2</property>
                               </packing>
                             </child>
                           </object>

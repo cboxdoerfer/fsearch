@@ -89,12 +89,16 @@ typedef struct {
     GtkTreeView *index_list;
     GtkTreeModel *index_model;
     GtkWidget *index_add_button;
+    GtkWidget *index_add_path_button;
+    GtkWidget *index_path_entry;
     GtkWidget *index_remove_button;
     GtkTreeSelection *sel;
 
     // Exclude model
     GtkTreeView *exclude_list;
     GtkTreeModel *exclude_model;
+    GtkWidget *exclude_add_path_button;
+    GtkWidget *exclude_path_entry;
     GtkWidget *exclude_add_button;
     GtkWidget *exclude_remove_button;
     GtkTreeSelection *exclude_selection;
@@ -145,9 +149,11 @@ on_remove_button_clicked(GtkButton *button, gpointer user_data) {
     gtk_tree_selection_selected_foreach(sel, pref_treeview_row_remove, NULL);
 }
 
+typedef void (*FsearchPreferencesRowAddFunc)(GtkTreeModel *, const char *);
+
 typedef struct {
     GtkTreeModel *model;
-    void (*add_path_cb)(GtkTreeModel *, const char *);
+    FsearchPreferencesRowAddFunc row_add_func;
 } FsearchPreferencesFileChooserContext;
 
 #if !GTK_CHECK_VERSION(3, 20, 0)
@@ -159,7 +165,7 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
 #endif
     FsearchPreferencesFileChooserContext *ctx = user_data;
     g_assert(ctx);
-    g_assert(ctx->add_path_cb);
+    g_assert(ctx->row_add_func);
 
     if (response == GTK_RESPONSE_ACCEPT) {
         GtkFileChooser *chooser = GTK_FILE_CHOOSER(dialog);
@@ -168,7 +174,7 @@ on_file_chooser_native_dialog_response(GtkNativeDialog *dialog, GtkResponseType 
             for (GSList *f = filenames; f != NULL; f = f->next) {
                 gchar *filename = f->data;
                 if (filename) {
-                    ctx->add_path_cb(ctx->model, filename);
+                    ctx->row_add_func(ctx->model, filename);
                 }
             }
             g_slist_free_full(g_steal_pointer(&filenames), g_free);
@@ -331,8 +337,53 @@ on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
     GtkTreeModel *model = user_data;
     FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
     ctx->model = model;
-    ctx->add_path_cb = pref_exclude_treeview_row_add;
+    ctx->row_add_func = pref_exclude_treeview_row_add;
     run_file_chooser_dialog(button, ctx);
+}
+
+static void
+path_entry_changed(GtkEntry *entry, GtkWidget *add_button) {
+    const char *path = gtk_entry_get_text(entry);
+    if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
+        gtk_widget_set_sensitive(add_button, TRUE);
+    }
+    else {
+        gtk_widget_set_sensitive(add_button, FALSE);
+    }
+}
+
+static void
+on_index_path_entry_changed(GtkEntry *entry, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    path_entry_changed(entry, ui->index_add_path_button);
+}
+
+static void
+on_exclude_path_entry_changed(GtkEntry *entry, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    path_entry_changed(entry, ui->exclude_add_path_button);
+}
+
+static void
+add_path(GtkEntry *entry, GtkTreeModel *model, FsearchPreferencesRowAddFunc row_add_func) {
+    const char *path = gtk_entry_get_text(entry);
+    if (path && g_file_test(path, G_FILE_TEST_IS_DIR)) {
+        g_autoptr(GFile) file = g_file_new_for_path(path);
+        g_autofree char *file_path = g_file_get_path(file);
+        row_add_func(model, file_path);
+    }
+}
+
+static void
+on_exclude_add_path_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    add_path(GTK_ENTRY(ui->exclude_path_entry), ui->exclude_model, pref_exclude_treeview_row_add);
+}
+
+static void
+on_index_add_path_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesInterface *ui = user_data;
+    add_path(GTK_ENTRY(ui->index_path_entry), ui->index_model, pref_index_treeview_row_add);
 }
 
 static void
@@ -340,7 +391,7 @@ on_index_add_button_clicked(GtkButton *button, gpointer user_data) {
     GtkTreeModel *model = user_data;
     FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
     ctx->model = model;
-    ctx->add_path_cb = pref_index_treeview_row_add;
+    ctx->row_add_func = pref_index_treeview_row_add;
     run_file_chooser_dialog(button, ctx);
 }
 
@@ -693,6 +744,12 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     ui->index_add_button = builder_init_widget(ui->builder, "index_add_button", "help_index_add");
     g_signal_connect(ui->index_add_button, "clicked", G_CALLBACK(on_index_add_button_clicked), ui->index_model);
 
+    ui->index_path_entry = builder_init_widget(ui->builder, "index_path_entry", "help_index_add");
+    g_signal_connect(ui->index_path_entry, "changed", G_CALLBACK(on_index_path_entry_changed), ui);
+
+    ui->index_add_path_button = builder_init_widget(ui->builder, "index_add_path_button", "help_index_add");
+    g_signal_connect(ui->index_add_path_button, "clicked", G_CALLBACK(on_index_add_path_button_clicked), ui);
+
     ui->index_remove_button = builder_init_widget(ui->builder, "index_remove_button", "help_index_remove");
     g_signal_connect(ui->index_remove_button, "clicked", G_CALLBACK(on_remove_button_clicked), ui->index_list);
 
@@ -702,6 +759,12 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     // Exclude model
     ui->exclude_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "exclude_list", "help_exclude_list"));
     ui->exclude_model = pref_exclude_treeview_init(ui->exclude_list, new_config->exclude_locations);
+
+    ui->exclude_add_path_button = builder_init_widget(ui->builder, "exclude_add_path_button", "help_exclude_add");
+    g_signal_connect(ui->exclude_add_path_button, "clicked", G_CALLBACK(on_exclude_add_path_button_clicked), ui);
+
+    ui->exclude_path_entry = builder_init_widget(ui->builder, "exclude_path_entry", "help_exclude_add");
+    g_signal_connect(ui->exclude_path_entry, "changed", G_CALLBACK(on_exclude_path_entry_changed), ui);
 
     ui->exclude_add_button = builder_init_widget(ui->builder, "exclude_add_button", "help_exclude_add");
     g_signal_connect(ui->exclude_add_button, "clicked", G_CALLBACK(on_exclude_add_button_clicked), ui->exclude_model);

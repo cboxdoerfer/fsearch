@@ -80,3 +80,14 @@
 .results_frame treeview button:first-child:dir(ltr) {
     border-left: 0;
 }
+
+.path_entry {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.path_add_button {
+    border-left: none;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
