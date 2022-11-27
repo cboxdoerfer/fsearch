@@ -78,7 +78,7 @@ fsearch_list_view_column_new(int type,
                              uint32_t width);
 
 FsearchListView *
-fsearch_list_view_new();
+fsearch_list_view_new(GtkAdjustment *hadjustment, GtkAdjustment *vadjustment);
 
 void
 fsearch_list_view_set_selection_handlers(FsearchListView *view,
