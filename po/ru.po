@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-09-02 10:24+0000\n"
+"PO-Revision-Date: 2022-12-04 23:56+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.15-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -40,7 +40,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr "Приложение для поиска файлов с графическим интерфейсом"
+msgstr "Приложение с графическим интерфейсом для поиска файлов"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
@@ -56,7 +56,7 @@ msgid ""
 "as possible. Such as:"
 msgstr ""
 "Существует множество функций, которые делают поиск максимально эффективным и "
-"мощным. Такие как:"
+"мощным. Такие, как:"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
@@ -84,7 +84,8 @@ msgstr "Исключать определенные файлы и папки"
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
-"Быстрая сортировка по имени, пути, размеру, времени модификации и расширению"
+"Быстрая сортировка по названию, пути, размеру, времени модификации и "
+"расширению"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
@@ -117,7 +118,9 @@ msgstr "Сохранение…"
 
 #: src/fsearch.c:430
 msgid "translator-credits"
-msgstr "Konstantin Yablochkin @yakonstb"
+msgstr ""
+"Konstantin Yablochkin @yakonstb\n"
+"Ser82-png <asvmail.as@gmail.com>"
 
 #: src/fsearch.c:432
 msgid "A search utility focusing on performance and advanced features"
@@ -130,7 +133,7 @@ msgstr "Открыть новое окно приложения"
 
 #: src/fsearch.c:906
 msgid "Show the application preferences"
-msgstr "Показать настройки программы"
+msgstr "Показать параметры приложения"
 
 #: src/fsearch.c:907
 msgid "Set the search pattern"
@@ -205,11 +208,11 @@ msgstr "Приложение по умолчанию не зарегистрир
 #: src/fsearch_file_utils.c:348
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr "Ошибка при открытии родительского каталога"
+msgstr "Ошибка при открытии родительской папки"
 
 #: src/fsearch_file_utils.c:350
 msgid "Failed to get parent path"
-msgstr "Ошибка при получении пути родителя"
+msgstr "Не удалось получить путь родителя"
 
 #: src/fsearch_file_utils.c:407
 msgid "Folder"
@@ -257,7 +260,7 @@ msgstr "Видео"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr "Имена макросов не должны содержать символ «:»."
+msgstr "Названия макросов не должны содержать символ «:»."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:197
 #: src/fsearch_preferences_ui.c:209 src/fsearch_preferences_ui.c:514
@@ -274,15 +277,15 @@ msgstr "Редактор фильтра"
 
 #: src/fsearch_filter_editor.ui:50
 msgid "Name:"
-msgstr "Имя:"
+msgstr "Название:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr "Уникальное имя для этого фильтра"
+msgstr "Уникальное название для этого фильтра"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr "Уникальное имя фильтра"
+msgstr "Уникальное название фильтра"
 
 #: src/fsearch_filter_editor.ui:73
 msgid "Search in path"
@@ -316,11 +319,11 @@ msgstr ""
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr "Характеристики…"
+msgstr "Свойства…"
 
 #: src/fsearch_listview_popup.c:169
 msgid "Other Application…"
-msgstr "Другая программа…"
+msgstr "Другое приложение…"
 
 #: src/fsearch_overlay.ui:44
 msgid "Empty Database"
@@ -420,15 +423,15 @@ msgstr "Основное:"
 
 #: src/fsearch_preferences.ui:352
 msgid "Show highlighted search terms"
-msgstr "Выделять найденный текст в списке"
+msgstr "Показывать выделением поисковые запросы"
 
 #: src/fsearch_preferences.ui:368
 msgid "Show tooltips"
-msgstr "Показывать подсказки"
+msgstr "Показывать всплывающие подсказки"
 
 #: src/fsearch_preferences.ui:383
 msgid "Show icons in name column"
-msgstr "Показывать иконки в колонке «имя»"
+msgstr "Показывать значки в колонке «Название»"
 
 #: src/fsearch_preferences.ui:398
 msgid "Remember column configuration"
@@ -448,7 +451,7 @@ msgstr "Открывать одним щелчком мыши"
 
 #: src/fsearch_preferences.ui:458
 msgid "Launch desktop files"
-msgstr "Запускать .desktop файлы"
+msgstr "Запускать .desktop-файлы"
 
 #: src/fsearch_preferences.ui:479
 msgid "Results:"
@@ -464,7 +467,7 @@ msgstr "Строка состояния:"
 
 #: src/fsearch_preferences.ui:582
 msgid "Show warning dialogs when:"
-msgstr "Открыть окно с предупреждением если:"
+msgstr "Открыть окно с предупреждением, если:"
 
 #: src/fsearch_preferences.ui:592
 msgid "file / folder failed to open"
@@ -488,7 +491,7 @@ msgstr "Искать по мере набора"
 
 #: src/fsearch_preferences.ui:687
 msgid "Hide results when search is empty"
-msgstr "Спрятать результаты, когда поиск пустой"
+msgstr "Спрятать результаты, если поле поискового запроса пусто"
 
 #: src/fsearch_preferences.ui:701
 msgid "Match case when query contains at least one upper case character"
@@ -549,7 +552,7 @@ msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
-"Добавить путь для в базу данных\n"
+"Добавить путь в базу данных\n"
 "                                "
 
 #: src/fsearch_preferences.ui:1065 src/fsearch_preferences.ui:1164
@@ -687,9 +690,9 @@ msgid ""
 msgstr ""
 "<b>Поведение после успешного открытия файла:</b>\n"
 "\n"
-"После успешного открытия файла/папки можно выполняется одно из следующих "
+"После успешного открытия файла/папки может быть выполнено одно из следующих "
 "действий:\n"
-"\t• <b>Ничего:</b> Не производится никаких действий.\n"
+"\t• <b>Ничего не делать:</b> Не будет произведено никаких действий.\n"
 "\t• <b>Свернуть:</b> Текущее выбранное окно FSearch будет свёрнуто. \n"
 "\t• <b>Закрыть:</b> Выйти из FSearch.\n"
 "\n"
@@ -860,7 +863,7 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
-"<b>Спрятать результаты, когда поиск пустой:</b>\n"
+"<b>Спрятать результаты, если поле поискового запроса пусто:</b>\n"
 "\n"
 "Если этот параметр включён, результаты поиска не будут отображаться, когда "
 "поисковая запись пуста.\n"
@@ -951,7 +954,7 @@ msgid ""
 "can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
-"<b>Исключенные папки:</b>\n"
+"<b>Исключённые папки:</b>\n"
 "\n"
 "Этот список содержит все папки, которые вы хотите исключить из базы данных.\n"
 "\n"
@@ -1011,7 +1014,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1799
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr "Наведите мышью на настройку для получения подробностей."
+msgstr "Наведите мышью на параметр для получения подробной информации."
 
 #: src/fsearch_preferences.ui:1812
 msgid ""
@@ -1071,7 +1074,7 @@ msgstr ""
 "Список всех доступных фильтров. Фильтр - это определённый заранее поисковый "
 "запрос.\n"
 "\n"
-"\t• <b>Имя:</b> Уникальный и наглядный идентификатор фильтра\n"
+"\t• <b>Название:</b> Уникальный и наглядный идентификатор фильтра\n"
 "\t• <b>Макрос:</b> Введя текстовое обозначение макроса с «:» в конце, вы "
 "можете включить необходимый фильтр.\n"
 "\t• <b>Запрос:</b> Критерий поиска, по которому следует фильтровать базу "
@@ -1094,7 +1097,7 @@ msgid ""
 "\n"
 "This button removes the currently selected filter."
 msgstr ""
-"<b>Удалить выбранный фильтр:</b>\n"
+"<b>Убрать выбранный фильтр:</b>\n"
 "\n"
 "Это кнопка удаляет выбранный в данный момент фильтр."
 
@@ -1167,7 +1170,7 @@ msgstr "Одна файловая система"
 #: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
 #: src/menus.ui:209 src/menus.ui:257
 msgid "Name"
-msgstr "Имя"
+msgstr "Название"
 
 #: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
@@ -1372,7 +1375,7 @@ msgstr "Выбрать фильтр"
 #: src/fsearch_window_actions.c:88
 #, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Вы действительно хотите открыть столько (%d) файлов?"
+msgstr "Вы действительно хотите открыть %d файл(а)(ов)?"
 
 #: src/fsearch_window_actions.c:90
 msgid "Opening Files…"
@@ -1381,7 +1384,7 @@ msgstr "Открыть файл(ы)…"
 #: src/fsearch_window_actions.c:176
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Вы действительно хотите удалить столько (%d) файлов?"
+msgstr "Вы действительно хотите удалить %d файл(а)(ов)?"
 
 #: src/fsearch_window_actions.c:180
 msgid "Deleting files…"
@@ -1500,7 +1503,7 @@ msgstr "Копировать как текст"
 
 #: src/menus.ui:217
 msgid "Path + Name"
-msgstr "Путь + Имя"
+msgstr "Путь + Название"
 
 #: src/menus.ui:230
 msgid "Move to _Trash"
