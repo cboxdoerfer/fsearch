@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2022-08-14 10:31+0200\n"
-"PO-Revision-Date: 2022-12-04 23:56+0000\n"
+"PO-Revision-Date: 2022-12-06 10:49+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -79,7 +79,7 @@ msgstr "Поддержка фильтров (например, поиск тол
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
-msgstr "Исключать определенные файлы и папки"
+msgstr "Исключить определенные файлы и папки"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
@@ -561,7 +561,7 @@ msgstr "Убрать выбранный путь"
 
 #: src/fsearch_preferences.ui:1091
 msgid "Include"
-msgstr "Включать"
+msgstr "Включить"
 
 #: src/fsearch_preferences.ui:1148
 msgid "Add path to be excluded from database"
@@ -575,7 +575,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1201
 msgid "Exclude files:"
-msgstr "Исключать файлы:"
+msgstr "Исключить файлы:"
 
 #: src/fsearch_preferences.ui:1214
 msgid "e.g. \".git;*.tmp\""
@@ -583,11 +583,11 @@ msgstr "например, «.git;*.tmp»"
 
 #: src/fsearch_preferences.ui:1231
 msgid "Exclude hidden files and folders"
-msgstr "Исключать скрытые файлы и папки"
+msgstr "Исключить скрытые файлы и папки"
 
 #: src/fsearch_preferences.ui:1253
 msgid "Exclude"
-msgstr "Исключать"
+msgstr "Исключить"
 
 #: src/fsearch_preferences.ui:1276
 msgid "Database"
@@ -1375,7 +1375,7 @@ msgstr "Выбрать фильтр"
 #: src/fsearch_window_actions.c:88
 #, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Вы действительно хотите открыть %d файл(а)(ов)?"
+msgstr "Вы действительно хотите открыть %d файл(а/ов)?"
 
 #: src/fsearch_window_actions.c:90
 msgid "Opening Files…"
@@ -1384,7 +1384,7 @@ msgstr "Открыть файл(ы)…"
 #: src/fsearch_window_actions.c:176
 #, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "Вы действительно хотите удалить %d файл(а)(ов)?"
+msgstr "Вы действительно хотите удалить %d файл(а/ов)?"
 
 #: src/fsearch_window_actions.c:180
 msgid "Deleting files…"
