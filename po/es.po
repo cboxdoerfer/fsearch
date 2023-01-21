@@ -9,8 +9,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-09-09 19:16+0000\n"
-"Last-Translator: Arturo <arturo34martinez@hotmail.com>\n"
+"PO-Revision-Date: 2023-01-24 20:50+0000\n"
+"Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
 "translations/es/>\n"
 "Language: es\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.1-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -38,10 +38,8 @@ msgstr ""
 "herramienta;todo;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "File Search Utility"
-msgstr "FSearch en línea"
+msgstr "Herramienta de búsqueda de archivos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
@@ -57,16 +55,12 @@ msgstr ""
 "de la búsqueda aparecerán casi al instante."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
-#, fuzzy
-#| msgid ""
-#| "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as "
-#| "well)"
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
-"Ignorar mayúsculas y minúsculas (p. ej., la búsqueda de «fsearch» coincidirá "
-"con «FSearch»)"
+"Ignorar mayúsculas y minúsculas (por ejemplo, la búsqueda de \""
+"<code>fsearch</code>\" también coincidirá con \"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -90,16 +84,12 @@ msgstr ""
 "Ordenación rápida por nombre, ruta, tamaño, fecha de modificación y extensión"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
-#, fuzzy
-#| msgid ""
-#| "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
-#| "system."
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
-"Nota: debido al aislamiento de Flatpak, FSearch no puede encontrar todos los "
-"archivos del sistema."
+"<em>Nota:</em> Debido al sandboxing de Flatpak, FSearch no puede encontrar "
+"todos los archivos de tu sistema."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
@@ -110,56 +100,44 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "Un diseño más cercano a las directrices de GNOME"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
-#| msgid "Search"
 msgid "search"
-msgstr "Buscar"
+msgstr "buscar"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "Buscar"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "files?"
 msgid "files"
-msgstr "¿archivos?"
+msgstr "archivos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "Carpetas"
+msgstr "carpetas"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "música"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "Vídeos"
+msgstr "vídeo"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
-msgstr "Documentos"
+msgstr "documentos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "encontrar"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "herramienta"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "todo"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -167,109 +145,118 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "New search engine"
-msgstr "FSearch en línea"
+msgstr "Nuevo motor de búsqueda"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
-#| msgid "Show highlighted search terms"
 msgid "Greatly improved highlighting of search terms"
-msgstr "Mostrar términos de búsqueda resaltado"
+msgstr "Mejor resaltado de los términos de búsqueda"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
-#, fuzzy
-#| msgid "Edit filter"
 msgid "Custom filters"
-msgstr "Editar filtro"
+msgstr "Filtros personalizados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Mejora del rendimiento de la clasificación"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Mejora del desplazamiento"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
 msgstr ""
+"Recordar la selección de los archivos tras una actualización de la base de "
+"datos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
+"Desplazamiento automático de la lista de los resultados en el modo de "
+"selección por bandas"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "Invertir selección con la rueda del ratón y al pulsar 'Ctrl'"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "Enfocar la entrada de la búsqueda cuando se activa la ventana principal"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Añadir un filtro para las aplicaciones (es decir, archivos .desktop)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
+"Agregar una opción para iniciar las aplicaciones directamente en lugar de "
+"abrir los archivos .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Mostrar las preferencias de la aplicación"
+msgstr "Mostrar iconos de las aplicaciones para los archivos .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Añadir los archivos .odp y .ods al filtro de los documentos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"El menú 'Abrir con' ahora solo muestra las aplicaciones que pueden manejar "
+"los archivos seleccionados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
+"Mejora de la apertura de varios archivos del mismo tipo (ahora se trasladan "
+"como una lista a las aplicaciones, en lugar de uno a uno)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "Mejor soporte para abrir archivos en modo protegido"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
+"Agregué elementos en el menú con enlaces a páginas de seguimiento de "
+"problemas, foros y donaciones"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Mejorar la compatibilidad con sistemas que no sean Linux"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
+"Añadida la opción de salir de FSearch al pulsar Escape en lugar de minimizar "
+"la ventana"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "Excluir '/proc' y '/sys' por defecto"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
+"Abrir el menú contextual al pulsar la tecla \"Menú\" o \"Mayúsculas + F10\""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
+"y toneladas de correcciones de errores, actualizaciones en la traducción y "
+"pequeñas mejoras"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
@@ -333,12 +320,9 @@ msgid "Failed to get path"
 msgstr "No se pudo obtener la ruta"
 
 #: src/fsearch_file_utils.c:253
-#, fuzzy
-#| msgctxt "Will be followed by the content type string."
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "Error al obtener información sobre el tipo de contenido"
+msgstr "Error al obtener información del fichero"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
@@ -702,7 +686,7 @@ msgstr "minuto(s)"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "Introduzca la ruta…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
@@ -947,13 +931,6 @@ msgstr ""
 "ruta seleccionada."
 
 #: src/fsearch_preferences.ui:1624
-#, fuzzy
-#| msgid ""
-#| "<b>Single click to open:</b>\n"
-#| "\n"
-#| "If enabled, a single click will open the selected file/folder. If you "
-#| "only want to select a file/folder while this setting is active, you need "
-#| "to a hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -961,12 +938,12 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to hold "
 "<i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
-"<b>Abrir con un clic:</b>\n"
+"<b>Un solo clic para abrir:</b>\n"
 "\n"
 "Si está habilitado, un solo clic abrirá el archivo/carpeta seleccionado. Si "
 "solo desea seleccionar un archivo/carpeta mientras esta configuración está "
-"activa, debe mantener presionada la tecla <i>Ctrl</i> al mismo tiempo "
-"mientras hace clic en el archivo/carpeta."
+"activa, debe mantener presionada <i>Ctrl</i> al mismo tiempo mientras hace "
+"clic en el archivo/carpeta."
 
 #: src/fsearch_preferences.ui:1641
 msgid ""
