@@ -2,6 +2,7 @@
 
 #include "fsearch_statusbar.h"
 #include "fsearch.h"
+#include "fsearch_database_info.h"
 
 #include <glib/gi18n.h>
 
@@ -194,7 +195,7 @@ fsearch_statusbar_set_database_idle(FsearchStatusbar *sb) {
 }
 
 static void
-on_database_scan_started(gpointer data, gpointer user_data) {
+on_database_scan_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -207,7 +208,7 @@ on_database_scan_started(gpointer data, gpointer user_data) {
 }
 
 static void
-on_database_load_started(gpointer data, gpointer user_data) {
+on_database_load_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -219,7 +220,8 @@ on_database_load_started(gpointer data, gpointer user_data) {
 }
 
 static void
-on_database_update_finished(gpointer data, gpointer user_data) {
+on_database_update_finished(FsearchDatabase2 *db, FsearchDatabaseInfo *info, gpointer user_data) {
+    g_print("statusbar: update finished\n");
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     fsearch_statusbar_set_database_idle(statusbar);
 }
@@ -297,9 +299,12 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
 
     fsearch_statusbar_set_selection(self, 0, 0, 0, 0);
 
-    g_signal_connect_object(app, "database-scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(app, "database-update-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
-    g_signal_connect_object(app, "database-load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
+    g_autoptr(FsearchDatabase2) db = fsearch_application_get_db(app);
+
+    g_signal_connect_object(db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
 }
 
 static void
