@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2020-10-19 00:26+0000\n"
-"Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
+"PO-Revision-Date: 2023-01-24 20:50+0000\n"
+"Last-Translator: ⵣⵓⵀⵉⵔ ⴰⵎⴰⵣⵉⵖ زهير أمازيغ <zouhirdehbi56@gmail.com>\n"
 "Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
 "translations/ber/>\n"
 "Language: ber\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.3.1-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -26,7 +26,7 @@ msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
-msgstr ""
+msgstr "ⵢⴰⵜ ⵜⵙⵏⵙⵉ ⵏ ⵓⵔⵣⵓ ⵅⴼ ⵉⵙⴷⴰⵡⵏ ⵏⵏⴰ ⵉⵙⴷⵉⴽⵉⵏ ⵅⴼ ⵜⵕⵡⵉ ⴷ ⵜⴱⵖⵓⵔⵉⵏ ⵉⴱⵓⵖⵍⵓⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
@@ -34,26 +34,28 @@ msgid ""
 msgstr "ⴰⵔⵣⵣⵓ;fsearch;ⵉⴼⵓⵢⵍⴰ;ⵉⵙⴷⴰⵡⵏ;ⴰⵥⴰⵡⴰⵏ;ⴰⴼⵉⴷⵢⵓ;ⵜⵉⵏⵜⴰⵎⵉⵏ;ⴰⴼ;ⵉⵎⵉⵙ;ⵎⴰⵕⵕⴰ;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch"
 msgid "File Search Utility"
-msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
+msgstr "ⵉⵎⵉⵙ ⵏ ⵓⵔⵣⵓ ⵅⴼ ⵉⵙⴷⴰⵡⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "ⵜⵉⵙⵏⵙⵉ ⵏ ⵓⵔⵣⵓ ⵅⴼ ⴽⵔⴰ ⵏ ⵓⵙⴷⴰⵡ ⴰⵡⵏⵖⴰⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"ⴰⵔ ⴰⴽ ⵉⵜⵜⴰⵡⵙ FSearch ⴰⴷ ⵜⴰⴼⴷ ⵉⵙⴷⴰⵡⵏ ⴷ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵙⵀⵡⵏ ⴷ ⵓⵙⵔⵉⵔⵔⵉ. ⵖⴰⵙ ⴰⵔⵉ "
+"ⴽⵔⴰ ⵏ ⵉⵙⴽⴽⵉⵍⵏ ⴷ ⴰⴷ ⴰⴽ ⵍⵍⵡⵓⵏⵜ ⵜⵢⴰⴼⵓⵜⵉⵏ ⴷⵖⵢⴰ."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
+"ⴱⵏⵏⵣ ⵜⵓⵣⵓⵏⵜ (ⵙ ⵓⵎⴷⵢⴰ. ⴰⵔⵣⵣⵓ ⵏ \"<code>fsearch</code>\" ⴰⴷ ⵉⵎⵙⴰⵙⴰ ⴰⵡⴷ ⴰⴽⴷ "
+"\"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -252,7 +254,7 @@ msgstr "ⴰⴼⵔⴰⵏ..."
 
 #: src/fsearch.c:435
 msgid "translator-credits"
-msgstr "ⵓⴱⵓⵄⵍⵉ ⵃⴰⴽⵉⵎ"
+msgstr "ⵣⵓⵀⵉⵔ ⴷⴷⵀⴱⵉ"
 
 #: src/fsearch.c:437
 msgid "A search utility focusing on performance and advanced features"
