@@ -73,3 +73,5 @@ fsearch_query_match(FsearchQuery *queyr, FsearchQueryMatchData *match_data);
 
 bool
 fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchData *match_data);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchQuery, fsearch_query_unref)

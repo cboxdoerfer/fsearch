@@ -19,7 +19,7 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #pragma once
 
 #include "fsearch_config.h"
-#include "fsearch_database.h"
+#include "fsearch_database2.h"
 #include "fsearch_thread_pool.h"
 #include <glib.h>
 #include <gtk/gtk.h>
@@ -51,17 +51,11 @@ fsearch_application_get_db_state(FsearchApplication *fsearch);
 uint32_t
 fsearch_application_get_num_db_entries(FsearchApplication *fsearch);
 
-FsearchDatabase *
+FsearchDatabase2 *
 fsearch_application_get_db(FsearchApplication *fsearch);
 
 FsearchConfig *
 fsearch_application_get_config(FsearchApplication *fsearch);
-
-void
-fsearch_application_state_lock(FsearchApplication *fsearch);
-
-void
-fsearch_application_state_unlock(FsearchApplication *fsearch);
 
 char *
 fsearch_application_get_database_file_path(void);

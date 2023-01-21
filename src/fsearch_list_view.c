@@ -144,16 +144,15 @@ get_last_row_idx(FsearchListView *view) {
 
 static inline int
 get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
-    if (!is_row_idx_valid(view, row_idx)) {
-        return row_idx;
-    }
+    return row_idx;
+    //}
 
-    if (view->sort_type == GTK_SORT_ASCENDING) {
-        return row_idx;
-    }
-    else {
-        return get_last_row_idx(view) - row_idx;
-    }
+    // if (view->sort_type == GTK_SORT_ASCENDING) {
+    //     return row_idx;
+    // }
+    // else {
+    //     return get_last_row_idx(view) - row_idx;
+    // }
 }
 
 static int
@@ -246,8 +245,8 @@ get_row_rect_in_view(FsearchListView *view, int row_idx, cairo_rectangle_int_t *
     return FALSE;
 }
 
-static gboolean
-redraw_row(FsearchListView *view, int row_idx) {
+gboolean
+fsearch_list_view_redraw_row(FsearchListView *view, int row_idx) {
     cairo_rectangle_int_t rec = {};
     if (get_row_rect_in_view(view, row_idx, &rec)) {
         gtk_widget_queue_draw_area(GTK_WIDGET(view), rec.x, rec.y + view->header_height, rec.width, rec.height);
@@ -639,7 +638,7 @@ static void
 fsearch_list_view_selection_add(FsearchListView *view, int row) {
     if (view->has_selection_handlers) {
         view->select_func(get_row_idx_for_sort_type(view, row), view->selection_user_data);
-        redraw_row(view, row);
+        fsearch_list_view_redraw_row(view, row);
     }
 }
 
@@ -1282,7 +1281,7 @@ fsearch_list_view_key_press_event(GtkWidget *widget, GdkEventKey *event) {
 static gint
 fsearch_list_view_focus_out_event(GtkWidget *widget, GdkEventFocus *event) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
-    redraw_row(view, view->cursor_idx);
+    fsearch_list_view_redraw_row(view, view->cursor_idx);
     return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->focus_out_event(widget, event);
 }
 
@@ -1690,7 +1689,7 @@ fsearch_list_view_leave_notify_event(GtkWidget *widget, GdkEventCrossing *event)
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     if (gtk_widget_get_realized(widget)) {
         gdk_window_set_cursor(view->bin_window, NULL);
-        redraw_row(view, view->hovered_idx);
+        fsearch_list_view_redraw_row(view, view->hovered_idx);
     }
     view->hovered_idx = UNSET_ROW;
 
@@ -1719,8 +1718,8 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
     }
 
     if (prev_hovered_idx != view->hovered_idx) {
-        redraw_row(view, prev_hovered_idx);
-        redraw_row(view, view->hovered_idx);
+        fsearch_list_view_redraw_row(view, prev_hovered_idx);
+        fsearch_list_view_redraw_row(view, view->hovered_idx);
     }
 
     return GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->motion_notify_event(widget, event);
@@ -2289,6 +2288,11 @@ fsearch_list_view_get_sort_order(FsearchListView *view) {
 GtkSortType
 fsearch_list_view_get_sort_type(FsearchListView *view) {
     return view->sort_type;
+}
+
+uint32_t
+fsearch_list_view_get_num_rows(FsearchListView *view) {
+    return view->num_rows;
 }
 
 void

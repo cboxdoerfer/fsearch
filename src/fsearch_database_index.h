@@ -1,5 +1,8 @@
 #pragma once
 
+#include "fsearch_array.h"
+#include "fsearch_memory_pool.h"
+
 #define DATABASE_INDEX_TYPE_NAME_STRING "Name"
 #define DATABASE_INDEX_TYPE_PATH_STRING "Path"
 #define DATABASE_INDEX_TYPE_SIZE_STRING "Size"
@@ -29,3 +32,19 @@ typedef enum {
     DATABASE_INDEX_TYPE_EXTENSION,
     NUM_DATABASE_INDEX_TYPES,
 } FsearchDatabaseIndexType;
+
+typedef struct {
+    FsearchMemoryPool *file_pool;
+    FsearchMemoryPool *folder_pool;
+    DynamicArray *files[NUM_DATABASE_INDEX_TYPES];
+    DynamicArray *folders[NUM_DATABASE_INDEX_TYPES];
+
+    FsearchDatabaseIndexFlags flags;
+
+    uint32_t id;
+} FsearchDatabaseIndex;
+
+void
+fsearch_database_index_free(FsearchDatabaseIndex *index);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_free)
