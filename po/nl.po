@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-08-16 20:17+0000\n"
+"PO-Revision-Date: 2023-01-24 20:50+0000\n"
 "Last-Translator: Heimen Stoffels <vistausss@fastmail.com>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -36,10 +36,8 @@ msgstr ""
 "alles;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "File Search Utility"
-msgstr "FSearch-website"
+msgstr "Bestandszoekhulpmiddel"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
@@ -54,16 +52,12 @@ msgstr ""
 "paar letters en je ziet meteen resultaat."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
-#, fuzzy
-#| msgid ""
-#| "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as "
-#| "well)"
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
-"Negeer hoofdlettergebruik (voorbeeld: zoeken naar ‘fsearch’ levert ook "
-"‘FSearch’ op als resultaat)"
+"Negeer hoofdlettergebruik (voorbeeld: zoeken naar <code>fsearch</code> "
+"levert ook ‘FSearch’ op als resultaat)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -86,16 +80,12 @@ msgid "Fast sort by name, path, size, modification time and extension"
 msgstr "Sorteer op naam, locatie, grootte, bewerkdatum en bestandsextensie"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
-#, fuzzy
-#| msgid ""
-#| "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
-#| "system."
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
-"Let op: Flatpak schermt bepaalde delen van het systeem af, waardoor FSearch "
-"niet alles kan doorzoeken."
+"<em>Let op:</em> Flatpak schermt bepaalde delen van het systeem af, waardoor "
+"FSearch niet alles kan doorzoeken."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
@@ -106,56 +96,44 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "Een vormgeving die meer overeenkomt met de GNOME-ontwerprichtlijnen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
-#| msgid "Search"
 msgid "search"
-msgstr "Zoeken"
+msgstr "zoeken"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "Zoeken"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "files?"
 msgid "files"
-msgstr "wilt verwijderen?"
+msgstr "bestanden"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "Mappen"
+msgstr "mappen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "muziek"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "Video's"
+msgstr "video's"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
-msgstr "Documenten"
+msgstr "documenten"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "zoeken"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "hulpmiddel"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "alles"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -163,34 +141,28 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "New search engine"
-msgstr "FSearch-website"
+msgstr "Nieuwe zoekmachine"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
-#| msgid "Show highlighted search terms"
 msgid "Greatly improved highlighting of search terms"
-msgstr "Zoektermen markeren"
+msgstr "Verbeterde markering van zoektermen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
-#, fuzzy
-#| msgid "Edit filter"
 msgid "Custom filters"
-msgstr "Filter aanpassen"
+msgstr "Aangepaste filters"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Verbeterde sorteerprestaties"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Verbeterde scrolprestaties"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "Bestandsselectie wordt onthouden na het bijwerken van de databank"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
