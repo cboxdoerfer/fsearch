@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-10-30 11:10+0000\n"
+"PO-Revision-Date: 2023-01-27 12:46+0000\n"
 "Last-Translator: Daniel Napora <napcok@gmail.com>\n"
 "Language-Team: Polish <https://hosted.weblate.org/projects/fsearch/"
 "translations/pl/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 "
 "|| n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.14.2-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -137,7 +137,7 @@ msgstr "Katalogi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "muzyka"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
 #, fuzzy
@@ -153,15 +153,15 @@ msgstr "Dokumenty"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "znajdź"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "narzędzie"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "wszystko"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -169,10 +169,8 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "New search engine"
-msgstr "FSearch online"
+msgstr "Nowy silnik wyszukiwania"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 #, fuzzy
@@ -181,22 +179,20 @@ msgid "Greatly improved highlighting of search terms"
 msgstr "Podświetlaj wyszukiwane na liście wyników"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
-#, fuzzy
-#| msgid "Edit filter"
 msgid "Custom filters"
-msgstr "Edytuj filtr"
+msgstr "Filtry niestandardowe"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Poprawiona wydajność sortowania"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Poprawiona wydajność przewijania"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "Zapamiętaj wybór pliku po aktualizacji bazy danych"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
@@ -221,30 +217,32 @@ msgid ""
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Pokaż ustawienia aplikacji"
+msgstr "Pokaż ikony aplikacji dla plików .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Dodaj pliki .odp i .ods do filtra dokumentów"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"Menu „Otwórz za pomocą” pokazuje teraz tylko aplikacje, które mogą obsłużyć "
+"wybrane pliki"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
+"Ulepszone otwieranie wielu plików tego samego typu (są one teraz "
+"przekazywane jako lista do aplikacji, zamiast jeden po drugim)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "Lepsza obsługa otwierania plików w trybie piaskownicy"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
