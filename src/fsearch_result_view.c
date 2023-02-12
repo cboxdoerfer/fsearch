@@ -230,9 +230,15 @@ draw_row_ctx_free(DrawRowContext *ctx) {
 //     return NULL;
 // }
 
+static gpointer
+get_key_from_row_idx(uint32_t idx) {
+    return GUINT_TO_POINTER(idx + 1);
+}
+
 static gboolean
 get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntryInfo **info) {
-    if (g_hash_table_lookup_extended(result_view->item_info_cache, GINT_TO_POINTER(row + 1), NULL, (gpointer *)info)) {
+    gpointer key = get_key_from_row_idx(row);
+    if (g_hash_table_lookup_extended(result_view->item_info_cache, key, NULL, (gpointer *)info)) {
         return TRUE;
     }
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id,
@@ -242,7 +248,7 @@ get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntr
                                                                                   NULL);
     fsearch_database2_queue_work(result_view->db, work);
     fsearch_database2_process_work_now(result_view->db);
-    g_hash_table_insert(result_view->item_info_cache, GINT_TO_POINTER(row + 1), NULL);
+    g_hash_table_insert(result_view->item_info_cache, key, NULL);
     return FALSE;
 }
 
@@ -537,14 +543,15 @@ on_item_info_ready(FsearchDatabase2 *db, guint view_id, FsearchDatabaseEntryInfo
         return;
     }
     const uint32_t row = fsearch_database_entry_info_get_index(info);
-    if (!g_hash_table_lookup(view->item_info_cache, GUINT_TO_POINTER(row + 1))) {
-        g_hash_table_insert(view->item_info_cache, GINT_TO_POINTER(row + 1), fsearch_database_entry_info_ref(info));
+    gpointer key = get_key_from_row_idx(row);
+    if (!g_hash_table_lookup(view->item_info_cache, key)) {
+        g_hash_table_insert(view->item_info_cache, key, fsearch_database_entry_info_ref(info));
         fsearch_list_view_redraw_row(view->list_view, row);
     }
 }
 
 static void
-    entry_info_free(FsearchDatabaseEntryInfo *info) {
+entry_info_free(FsearchDatabaseEntryInfo *info) {
     if (!info) {
         return;
     }

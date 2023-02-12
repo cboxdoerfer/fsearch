@@ -23,7 +23,7 @@ struct FsearchDatabaseWork {
         struct {
             guint idx;
             FsearchDatabaseEntryInfoFlags entry_info_flags;
-            gint id;
+            guint work_view_id;
         };
     };
 
@@ -149,7 +149,7 @@ fsearch_database_work_new_sort(guint view_id,
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_get_item_info(gint view_id,
+fsearch_database_work_new_get_item_info(guint view_id,
                                         guint idx,
                                         FsearchDatabaseEntryInfoFlags flags,
                                         FsearchDatabaseWorkCallback callback,
@@ -158,7 +158,7 @@ fsearch_database_work_new_get_item_info(gint view_id,
     work->kind = FSEARCH_DATABASE_WORK_GET_ITEM_INFO;
     work->entry_info_flags = flags;
     work->idx = idx;
-    work->id = view_id;
+    work->work_view_id = view_id;
 
     return work;
 }
@@ -255,11 +255,11 @@ fsearch_database_work_scan_get_flags(FsearchDatabaseWork *work) {
     return work->index_flags;
 }
 
-gint
+guint
 fsearch_database_work_item_info_get_view_id(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
-    return work->id;
+    return work->work_view_id;
 }
 
 guint

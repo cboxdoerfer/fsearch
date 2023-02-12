@@ -62,7 +62,7 @@ fsearch_database_work_new_sort(guint view_id,
                                gpointer callback_data);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_get_item_info(gint view_id,
+fsearch_database_work_new_get_item_info(guint view_id,
                                         guint index,
                                         FsearchDatabaseEntryInfoFlags flags,
                                         FsearchDatabaseWorkCallback callback,
@@ -107,7 +107,7 @@ fsearch_database_work_scan_get_exclude_manager(FsearchDatabaseWork *work);
 FsearchDatabaseIndexFlags
 fsearch_database_work_scan_get_flags(FsearchDatabaseWork *work);
 
-gint
+guint
 fsearch_database_work_item_info_get_view_id(FsearchDatabaseWork *work);
 
 guint
