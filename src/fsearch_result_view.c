@@ -535,7 +535,6 @@ on_item_info_ready(FsearchDatabase2 *db, guint view_id, FsearchDatabaseEntryInfo
         return;
     }
     if (view_id != view->view_id) {
-        g_print("view id don't match: %d/%d\n", view_id, view->view_id);
         return;
     }
     const uint32_t row = fsearch_database_entry_info_get_index(info);

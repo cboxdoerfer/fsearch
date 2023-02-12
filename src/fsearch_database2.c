@@ -9,6 +9,7 @@
 #include "fsearch_database_scan.h"
 #include "fsearch_database_search.h"
 #include "fsearch_database_search_info.h"
+#include "fsearch_database_sort.h"
 #include "fsearch_database_view2.h"
 #include "fsearch_database_work.h"
 #include "fsearch_memory_pool.h"
@@ -259,36 +260,14 @@ get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     return info;
 }
 
-static DynamicArray *
-get_entries_sorted_from_reference_list(DynamicArray *old_list, DynamicArray *sorted_reference_list) {
-    const uint32_t num_items = darray_get_num_items(old_list);
-    DynamicArray *new = darray_new(num_items);
-    for (uint32_t i = 0; i < num_items; ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(old_list, i);
-        db_entry_set_mark(entry, 1);
-    }
-    uint32_t num_marked_found = 0;
-    const uint32_t num_items_in_sorted_reference_list = darray_get_num_items(sorted_reference_list);
-    for (uint32_t i = 0; i < num_items_in_sorted_reference_list && num_marked_found < num_items; ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(sorted_reference_list, i);
-        if (db_entry_get_mark(entry)) {
-            db_entry_set_mark(entry, 0);
-            darray_add_item(new, entry);
-            num_marked_found++;
-        }
-    }
-    return new;
-}
-
 static bool
 sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
 
     const guint id = fsearch_database_work_sort_get_view_id(work);
-    emit_signal(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id));
-
-    g_print("sort database: %d\n", id);
     const FsearchDatabaseIndexType sort_order = fsearch_database_work_sort_get_sort_order(work);
+
+    emit_signal(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id));
 
     database_lock(self);
 
@@ -296,16 +275,16 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     DynamicArray *files_new = NULL;
     DynamicArray *folders_new = NULL;
     if (view) {
-        if (view->sort_order != sort_order) {
-            if (fsearch_query_matches_everything(view->query)) {
-                files_new = darray_ref(self->index->files[sort_order]);
-                folders_new = darray_ref(self->index->folders[sort_order]);
-            }
-            else {
-                files_new = get_entries_sorted_from_reference_list(view->files, self->index->files[sort_order]);
-                folders_new = get_entries_sorted_from_reference_list(view->folders, self->index->folders[sort_order]);
-            }
-        }
+        fsearch_database_sort_results(view->sort_order,
+                                      sort_order,
+                                      view->files,
+                                      view->folders,
+                                      self->index->files,
+                                      self->index->folders,
+                                      &files_new,
+                                      &folders_new,
+                                      &view->sort_order,
+                                      NULL);
     }
     if (files_new) {
         g_clear_pointer(&view->files, darray_unref);
@@ -315,7 +294,6 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         g_clear_pointer(&view->folders, darray_unref);
         view->folders = folders_new;
     }
-    view->sort_order = sort_order;
 
     FsearchDatabaseSearchInfo *info = fsearch_database_search_info_new(fsearch_query_ref(view->query),
                                                                        darray_get_num_items(view->files),
@@ -331,15 +309,30 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 }
 
 static bool
+is_valid_fast_sort_type(FsearchDatabaseIndexType sort_type) {
+    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
+        return true;
+    }
+    return false;
+}
+
+static bool
+has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexType sort_type) {
+    if (!is_valid_fast_sort_type(sort_type)) {
+        return false;
+    }
+    return sorted_entries[sort_type] ? true : false;
+}
+
+static bool
 search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
 
     const guint id = fsearch_database_work_search_get_view_id(work);
     emit_signal(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id));
 
-    g_print("search database: %d\n", id);
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
-    const FsearchDatabaseIndexType sort_order = fsearch_database_work_search_get_sort_order(work);
+    FsearchDatabaseIndexType sort_order = fsearch_database_work_search_get_sort_order(work);
     // const GtkSortType sort_type = fsearch_database_search_info_get_sort_type(work);
     uint32_t num_files = 0;
     uint32_t num_folders = 0;
@@ -347,10 +340,24 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     database_lock(self);
 
     bool result = false;
+    DynamicArray *files = NULL;
+    DynamicArray *folders = NULL;
+
+    if (has_entries_sorted_by_type(self->index->folders, sort_order)
+        && has_entries_sorted_by_type(self->index->files, sort_order)) {
+        files = self->index->files[sort_order];
+        folders = self->index->folders[sort_order];
+    }
+    else {
+        files = self->index->files[DATABASE_INDEX_TYPE_NAME];
+        folders = self->index->folders[DATABASE_INDEX_TYPE_NAME];
+        sort_order = DATABASE_INDEX_TYPE_NAME;
+    }
+
     DatabaseSearchResult *search_result = db_search(query,
                                                     self->thread_pool,
-                                                    self->index->folders[sort_order],
-                                                    self->index->files[sort_order],
+                                                    folders,
+                                                    files,
                                                     sort_order,
                                                     NULL);
     if (search_result) {
