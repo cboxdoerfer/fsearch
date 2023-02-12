@@ -144,6 +144,7 @@ get_last_row_idx(FsearchListView *view) {
 
 static inline int
 get_row_idx_for_sort_type(FsearchListView *view, int row_idx) {
+    return row_idx;
     if (!is_row_idx_valid(view, row_idx)) {
         return row_idx;
     }

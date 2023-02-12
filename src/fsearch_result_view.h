@@ -1,12 +1,10 @@
 #pragma once
 
 #include "fsearch_database2.h"
-#include "fsearch_database_view.h"
 #include "fsearch_list_view.h"
 
 typedef struct {
     FsearchDatabase2 *db;
-    FsearchDatabaseView *database_view;
     FsearchListView *list_view;
 
     GHashTable *item_info_cache;

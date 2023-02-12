@@ -237,7 +237,6 @@ get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntr
     }
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id,
                                                                                   row,
-                                                                                  result_view->sort_type,
                                                                                   FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL,
                                                                                   NULL,
                                                                                   NULL);

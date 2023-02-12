@@ -16,13 +16,13 @@ struct FsearchDatabaseWork {
         struct {
             FsearchQuery *query;
             FsearchDatabaseIndexType sort_order;
+            GtkSortType sort_type;
             guint view_id;
         };
         // FSEARCH_DATABASE_WORK_GET_ITEM_INFO
         struct {
             guint idx;
             FsearchDatabaseEntryInfoFlags entry_info_flags;
-            GtkSortType sort_type;
             gint id;
         };
     };
@@ -118,6 +118,7 @@ FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
                                  FsearchDatabaseIndexType sort_order,
+                                 GtkSortType sort_type,
                                  FsearchDatabaseWorkCallback callback,
                                  gpointer callback_data) {
     g_return_val_if_fail(query, NULL);
@@ -126,6 +127,7 @@ fsearch_database_work_new_search(guint view_id,
     work->kind = FSEARCH_DATABASE_WORK_SEARCH;
     work->view_id = view_id;
     work->sort_order = sort_order;
+    work->sort_type = sort_type;
     work->query = fsearch_query_ref(query);
 
     return work;
@@ -134,12 +136,14 @@ fsearch_database_work_new_search(guint view_id,
 FsearchDatabaseWork *
 fsearch_database_work_new_sort(guint view_id,
                                FsearchDatabaseIndexType sort_order,
+                               GtkSortType sort_type,
                                FsearchDatabaseWorkCallback callback,
                                gpointer callback_data) {
     FsearchDatabaseWork *work = work_new(callback, callback_data);
     work->kind = FSEARCH_DATABASE_WORK_SORT;
     work->view_id = view_id;
     work->sort_order = sort_order;
+    work->sort_type = sort_type;
 
     return work;
 }
@@ -147,7 +151,6 @@ fsearch_database_work_new_sort(guint view_id,
 FsearchDatabaseWork *
 fsearch_database_work_new_get_item_info(gint view_id,
                                         guint idx,
-                                        GtkSortType sort_type,
                                         FsearchDatabaseEntryInfoFlags flags,
                                         FsearchDatabaseWorkCallback callback,
                                         gpointer callback_data) {
@@ -156,7 +159,6 @@ fsearch_database_work_new_get_item_info(gint view_id,
     work->entry_info_flags = flags;
     work->idx = idx;
     work->id = view_id;
-    work->sort_type = sort_type;
 
     return work;
 }
@@ -197,6 +199,13 @@ fsearch_database_work_search_get_sort_order(FsearchDatabaseWork *work) {
     return work->sort_order;
 }
 
+GtkSortType
+fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, GTK_SORT_ASCENDING);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, GTK_SORT_ASCENDING);
+    return work->sort_type;
+}
+
 guint
 fsearch_database_work_search_get_view_id(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
@@ -209,6 +218,13 @@ fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NUM_DATABASE_INDEX_TYPES);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, NUM_DATABASE_INDEX_TYPES);
     return work->sort_order;
+}
+
+GtkSortType
+fsearch_database_work_sort_get_sort_type(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, GTK_SORT_ASCENDING);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, GTK_SORT_ASCENDING);
+    return work->sort_type;
 }
 
 guint
@@ -243,7 +259,7 @@ gint
 fsearch_database_work_item_info_get_view_id(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
-    return work->view_id;
+    return work->id;
 }
 
 guint
@@ -251,13 +267,6 @@ fsearch_database_work_item_info_get_index(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
     return work->idx;
-}
-
-GtkSortType
-fsearch_database_work_item_info_get_sort_type(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, 0);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
-    return work->sort_type;
 }
 
 FsearchDatabaseEntryInfoFlags

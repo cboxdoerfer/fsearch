@@ -10,7 +10,6 @@
 #include "fsearch_database_search.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_sort.h"
-#include "fsearch_database_view2.h"
 #include "fsearch_database_work.h"
 #include "fsearch_memory_pool.h"
 #include "fsearch_selection.h"
@@ -207,7 +206,7 @@ get_default_database_file() {
 }
 
 static FsearchDatabaseEntry *
-get_entry_for_idx(FsearchDatabaseSearchView *view, GtkSortType sort_type, uint32_t idx) {
+get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
     if (!view->files) {
         return NULL;
     }
@@ -216,7 +215,7 @@ get_entry_for_idx(FsearchDatabaseSearchView *view, GtkSortType sort_type, uint32
     }
     const uint32_t num_folders = darray_get_num_items(view->folders);
     const uint32_t num_files = darray_get_num_items(view->files);
-    if (sort_type == GTK_SORT_DESCENDING) {
+    if (view->sort_type == GTK_SORT_DESCENDING) {
         idx = num_folders + num_files - (idx + 1);
     }
     if (idx < num_folders) {
@@ -229,35 +228,37 @@ get_entry_for_idx(FsearchDatabaseSearchView *view, GtkSortType sort_type, uint32
     return NULL;
 }
 
-static FsearchDatabaseEntryInfo *
+static void
 get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
-    g_return_val_if_fail(self, NULL);
-    g_return_val_if_fail(work, NULL);
+    g_return_if_fail(self);
+    g_return_if_fail(work);
 
     database_lock(self);
 
-    const GtkSortType sort_type = fsearch_database_work_item_info_get_sort_type(work);
     const uint32_t idx = fsearch_database_work_item_info_get_index(work);
     const int32_t id = fsearch_database_work_item_info_get_view_id(work);
 
     FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(id));
     if (!view) {
         database_unlock(self);
-        return NULL;
+        return;
     }
 
     const FsearchDatabaseEntryInfoFlags flags = fsearch_database_work_item_info_get_flags(work);
 
-    FsearchDatabaseEntry *entry = get_entry_for_idx(view, sort_type, idx);
+    FsearchDatabaseEntry *entry = get_entry_for_idx(view, idx);
     if (!entry) {
         database_unlock(self);
-        return NULL;
+        return;
     }
-    FsearchDatabaseEntryInfo *info = fsearch_database_entry_info_new(entry, idx, flags);
+
+    g_autoptr(FsearchDatabaseEntryInfo) info = fsearch_database_entry_info_new(entry, idx, flags);
 
     database_unlock(self);
 
-    return info;
+    emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), info);
+
+    return;
 }
 
 static bool
@@ -266,6 +267,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     const guint id = fsearch_database_work_sort_get_view_id(work);
     const FsearchDatabaseIndexType sort_order = fsearch_database_work_sort_get_sort_order(work);
+    const GtkSortType sort_type = fsearch_database_work_sort_get_sort_type(work);
 
     emit_signal(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id));
 
@@ -289,17 +291,19 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     if (files_new) {
         g_clear_pointer(&view->files, darray_unref);
         view->files = files_new;
+        view->sort_type = sort_type;
     }
     if (folders_new) {
         g_clear_pointer(&view->folders, darray_unref);
         view->folders = folders_new;
+        view->sort_type = sort_type;
     }
 
     FsearchDatabaseSearchInfo *info = fsearch_database_search_info_new(fsearch_query_ref(view->query),
                                                                        darray_get_num_items(view->files),
                                                                        darray_get_num_items(view->folders),
                                                                        view->sort_order,
-                                                                       GTK_SORT_ASCENDING);
+                                                                       view->sort_type);
 
     database_unlock(self);
 
@@ -333,7 +337,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
     FsearchDatabaseIndexType sort_order = fsearch_database_work_search_get_sort_order(work);
-    // const GtkSortType sort_type = fsearch_database_search_info_get_sort_type(work);
+    const GtkSortType sort_type = fsearch_database_work_search_get_sort_type(work);
     uint32_t num_files = 0;
     uint32_t num_folders = 0;
 
@@ -354,18 +358,13 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         sort_order = DATABASE_INDEX_TYPE_NAME;
     }
 
-    DatabaseSearchResult *search_result = db_search(query,
-                                                    self->thread_pool,
-                                                    folders,
-                                                    files,
-                                                    sort_order,
-                                                    NULL);
+    DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, NULL);
     if (search_result) {
         num_files = darray_get_num_items(search_result->files);
         num_folders = darray_get_num_items(search_result->folders);
 
         FsearchDatabaseSearchView *view =
-            search_view_new(query, search_result->files, search_result->folders, NULL, sort_order, GTK_SORT_ASCENDING);
+            search_view_new(query, search_result->files, search_result->folders, NULL, sort_order, sort_type);
         g_hash_table_insert(self->search_results, GUINT_TO_POINTER(id), view);
 
         g_print("found: %d/%d\n", num_files, num_folders);
@@ -379,7 +378,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     database_unlock(self);
 
     FsearchDatabaseSearchInfo *info =
-        fsearch_database_search_info_new(query, num_files, num_folders, sort_order, GTK_SORT_ASCENDING);
+        fsearch_database_search_info_new(query, num_files, num_folders, sort_order, sort_type);
     emit_search_finished_signal(self, fsearch_database_work_search_get_view_id(work), info);
 
     return result;
@@ -510,15 +509,12 @@ work_queue_thread(gpointer data) {
             g_autoptr(GTimer) timer = g_timer_new();
             g_timer_start(timer);
 
-            g_autoptr(FsearchDatabaseEntryInfo) info = NULL;
-
             switch (fsearch_database_work_get_kind(work)) {
             case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
                 load_database_from_file(self);
                 break;
             case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
-                info = get_entry_info(self, work);
-                emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), info);
+                get_entry_info(self, work);
                 break;
             case FSEARCH_DATABASE_WORK_RESCAN:
                 emit_signal(self, EVENT_SCAN_STARTED, NULL);
