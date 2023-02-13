@@ -17,22 +17,21 @@ struct FsearchDatabaseWork {
             FsearchQuery *query;
             FsearchDatabaseIndexType sort_order;
             GtkSortType sort_type;
-            guint view_id;
         };
         // FSEARCH_DATABASE_WORK_GET_ITEM_INFO
         struct {
             guint idx;
             FsearchDatabaseEntryInfoFlags entry_info_flags;
-            guint work_view_id;
         };
         // FSEARCH_DATABASE_WORK_MODIFY_SELECTION
         struct {
             FsearchSelectionType selection_type;
             int32_t idx_1;
             int32_t idx_2;
-            guint selection_view_id;
         };
     };
+
+    guint view_id;
 
     GCancellable *cancellable;
 
@@ -125,7 +124,7 @@ FsearchDatabaseWork *
 fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType selection_type, int32_t idx_1, int32_t idx_2) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_MODIFY_SELECTION;
-    work->selection_view_id = view_id;
+    work->view_id = view_id;
     work->selection_type = selection_type;
     work->idx_1 = idx_1;
     work->idx_2 = idx_2;
@@ -167,7 +166,7 @@ fsearch_database_work_new_get_item_info(guint view_id, guint idx, FsearchDatabas
     work->kind = FSEARCH_DATABASE_WORK_GET_ITEM_INFO;
     work->entry_info_flags = flags;
     work->idx = idx;
-    work->work_view_id = view_id;
+    work->view_id = view_id;
 
     return work;
 }
@@ -280,7 +279,7 @@ guint
 fsearch_database_work_item_info_get_view_id(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
-    return work->work_view_id;
+    return work->view_id;
 }
 
 guint
@@ -301,7 +300,7 @@ guint
 fsearch_database_work_modify_selection_get_view_id(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, 0);
-    return work->selection_view_id;
+    return work->view_id;
 }
 
 int32_t
