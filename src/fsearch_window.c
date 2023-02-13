@@ -73,6 +73,9 @@ struct _FsearchApplicationWindow {
     FsearchDatabaseWork *work_search;
     FsearchDatabaseWork *work_sort;
 
+    uint32_t num_files_selected;
+    uint32_t num_folders_selected;
+
     FsearchResultView *result_view;
 };
 
@@ -96,6 +99,21 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay);
 
 static void
 on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data);
+
+static void
+modify_selection(FsearchApplicationWindow *self, FsearchSelectionType type, int32_t start_idx, int32_t end_idx) {
+    const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
+    g_autoptr(FsearchDatabaseWork)
+        work = fsearch_database_work_new_modify_selection(win_id, type, start_idx, end_idx);
+    fsearch_database2_queue_work(self->db, work);
+    fsearch_database2_process_work_now(self->db);
+}
+
+static void
+redraw_listview(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+    gtk_widget_queue_draw(GTK_WIDGET(self->result_view->list_view));
+}
 
 static FsearchFilter *
 get_active_filter(FsearchApplicationWindow *win) {
@@ -350,9 +368,6 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
     if (!info) {
         return;
     }
-    const uint32_t num_rows = fsearch_database_search_info_get_num_entries(info);
-    const GtkSortType sort_type = fsearch_database_search_info_get_sort_type(info);
-    const FsearchDatabaseIndexType sort_order = fsearch_database_search_info_get_sort_order(info);
     g_autoptr(FsearchQuery) query = fsearch_database_search_info_get_query(info);
     if (query) {
         fsearch_statusbar_set_revealer_visibility(FSEARCH_STATUSBAR(win->statusbar),
@@ -363,13 +378,20 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
                                                   query->triggers_auto_match_path);
     }
 
-    win->result_view->sort_order = sort_order;
-    win->result_view->sort_type = sort_type;
+    win->num_files_selected = fsearch_database_search_info_get_num_files_selected(info);
+    win->num_folders_selected = fsearch_database_search_info_get_num_folders_selected(info);
 
+    win->result_view->sort_order = fsearch_database_search_info_get_sort_order(info);
+    win->result_view->sort_type = fsearch_database_search_info_get_sort_type(info);
+
+    const uint32_t num_rows = fsearch_database_search_info_get_num_entries(info);
     fsearch_statusbar_set_num_search_results(FSEARCH_STATUSBAR(win->statusbar), num_rows);
 
     fsearch_result_view_row_cache_reset(win->result_view);
-    fsearch_list_view_set_config(win->result_view->list_view, num_rows, sort_order, sort_type);
+    fsearch_list_view_set_config(win->result_view->list_view,
+                                 num_rows,
+                                 win->result_view->sort_order,
+                                 win->result_view->sort_type);
 
     if (is_empty_search(win)) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
@@ -405,8 +427,20 @@ on_sort_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
 }
 
 static void
+on_selection_changed(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
+    FsearchApplicationWindow *win = get_window_for_id(id);
+
+    if (win) {
+        win->num_files_selected = fsearch_database_search_info_get_num_files_selected(info);
+        win->num_folders_selected = fsearch_database_search_info_get_num_folders_selected(info);
+        fsearch_result_view_row_cache_reset(win->result_view);
+        fsearch_window_actions_update(win);
+        redraw_listview(win);
+    }
+}
+
+static void
 on_search_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
-    const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
@@ -445,9 +479,7 @@ perform_search(FsearchApplicationWindow *win) {
     win->work_search = fsearch_database_work_new_search(win_id,
                                                         query,
                                                         fsearch_list_view_get_sort_order(win->result_view->list_view),
-                                                        fsearch_list_view_get_sort_type(win->result_view->list_view),
-                                                        NULL,
-                                                        NULL);
+                                                        fsearch_list_view_get_sort_type(win->result_view->list_view));
     g_clear_pointer(&filter, fsearch_filter_unref);
     fsearch_database2_queue_work(win->db, win->work_search);
     fsearch_database2_process_work_now(win->db);
@@ -573,7 +605,11 @@ on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
 }
 
 static char *
-on_listview_query_tooltip(PangoLayout *layout, uint32_t row_height, uint32_t row_idx, FsearchListViewColumn *col, gpointer user_data) {
+on_listview_query_tooltip(PangoLayout *layout,
+                          uint32_t row_height,
+                          uint32_t row_idx,
+                          FsearchListViewColumn *col,
+                          gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     // if (!win->result_view->database_view) {
     //     return NULL;
@@ -585,17 +621,17 @@ on_listview_query_tooltip(PangoLayout *layout, uint32_t row_height, uint32_t row
 
 static void
 on_listview_draw_row(cairo_t *cr,
-            GdkWindow *bin_window,
-            PangoLayout *layout,
-            GtkStyleContext *context,
-            GList *columns,
-            cairo_rectangle_int_t *rect,
-            uint32_t row,
-            gboolean row_selected,
-            gboolean row_focused,
-            gboolean row_hovered,
-            gboolean right_to_left_text,
-            gpointer user_data) {
+                     GdkWindow *bin_window,
+                     PangoLayout *layout,
+                     GtkStyleContext *context,
+                     GList *columns,
+                     cairo_rectangle_int_t *rect,
+                     uint32_t row,
+                     gboolean row_selected,
+                     gboolean row_focused,
+                     gboolean row_hovered,
+                     gboolean right_to_left_text,
+                     gpointer user_data) {
     if (!columns) {
         return;
     }
@@ -625,7 +661,7 @@ on_listview_sort(int sort_order, GtkSortType sort_type, gpointer user_data) {
         fsearch_database_work_cancel(win->work_sort);
     }
     g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
-    win->work_sort = fsearch_database_work_new_sort(win_id, sort_order, sort_type, NULL, NULL);
+    win->work_sort = fsearch_database_work_new_sort(win_id, sort_order, sort_type);
 
     fsearch_database2_queue_work(win->db, win->work_sort);
     fsearch_database2_process_work_now(win->db);
@@ -693,61 +729,51 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
 static guint
 on_listview_row_num_selected(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    // return win->result_view->database_view ? db_view_get_num_selected(win->result_view->database_view) : 0;
-    //  TODO:
-    return 0;
+    return fsearch_application_window_get_num_selected(win);
 }
 
 static void
 on_listview_row_unselect_all(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    // TODO:
-    // if (win->result_view->database_view) {
-    //    db_view_unselect_all(win->result_view->database_view);
-    //}
+    modify_selection(win, FSEARCH_SELECTION_TYPE_CLEAR, 0, 0);
 }
 
 static void
 on_listview_row_toggle_range(int start_row, int end_row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    // TODO:
-    // if (win->result_view->database_view) {
-    //    db_view_toggle_range(win->result_view->database_view, start_row, end_row);
-    //}
+    modify_selection(win, FSEARCH_SELECTION_TYPE_TOGGLE_RANGE, start_row, end_row);
 }
 
 static void
 on_listview_row_select_range(int start_row, int end_row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    // TODO:
-    // if (win->result_view->database_view) {
-    //    db_view_select_range(win->result_view->database_view, start_row, end_row);
-    //}
+    modify_selection(win, FSEARCH_SELECTION_TYPE_SELECT_RANGE, start_row, end_row);
 }
 
 static void
 on_listview_row_select_toggle(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    // TODO:
-    // if (win->result_view->database_view) {
-    //    db_view_select_toggle(win->result_view->database_view, row);
-    //}
+    modify_selection(win, FSEARCH_SELECTION_TYPE_TOGGLE, row, 0);
 }
 
 static void
 on_listview_row_select(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-
-    // TODO:
-    // if (win->result_view->database_view) {
-    //    db_view_select(win->result_view->database_view, row);
-    //}
+    modify_selection(win, FSEARCH_SELECTION_TYPE_SELECT, row, 0);
 }
 
 static gboolean
 on_listview_row_is_selected(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
+    g_autoptr(FsearchDatabaseEntryInfo) info = NULL;
+    if (fsearch_database2_try_get_item_info(win->result_view->db,
+                                            win->result_view->view_id,
+                                            row,
+                                            FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED,
+                                            &info)) {
+        return fsearch_database_entry_info_get_selected(info);
+    }
     // TODO:
     // if (win->result_view->database_view) {
     //    return db_view_is_selected(win->result_view->database_view, row);
@@ -886,6 +912,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "selection-changed", G_CALLBACK(on_selection_changed), self, G_CONNECT_AFTER);
 }
 
 static void
@@ -946,18 +973,12 @@ on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user
     return TRUE;
 }
 
-static void
-fsearch_application_window_redraw_listview(FsearchApplicationWindow *self) {
-    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    gtk_widget_queue_draw(GTK_WIDGET(self->result_view->list_view));
-}
-
 static gboolean
 fsearch_window_db_view_selection_changed_cb(gpointer data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
-    fsearch_application_window_redraw_listview(win);
+    redraw_listview(win);
     fsearch_window_actions_update(win);
 
     uint32_t num_folders = 0;
@@ -1208,38 +1229,26 @@ fsearch_application_window_cancel_current_task(FsearchApplicationWindow *win) {
 void
 fsearch_application_window_invert_selection(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    // TODO:
-    // if (self->result_view->database_view) {
-    //    db_view_invert_selection(self->result_view->database_view);
-    //}
+    modify_selection(self, FSEARCH_SELECTION_TYPE_INVERT, 0, 0);
 }
 
 void
 fsearch_application_window_unselect_all(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    // TODO:
-    // if (self->result_view->database_view) {
-    //    db_view_unselect_all(self->result_view->database_view);
-    //}
+    modify_selection(self, FSEARCH_SELECTION_TYPE_CLEAR, 0, 0);
 }
 
 void
 fsearch_application_window_select_all(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    // TODO
-    // if (self->result_view->database_view) {
-    //    db_view_select_all(self->result_view->database_view);
-    //}
+    modify_selection(self, FSEARCH_SELECTION_TYPE_ALL, 0, 0);
 }
 
 uint32_t
 fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    // TODO:
-    // if (self->result_view->database_view) {
-    //    return db_view_get_num_selected(self->result_view->database_view);
-    //}
-    return 0;
+
+    return self->num_folders_selected + self->num_files_selected;
 }
 
 void
@@ -1302,7 +1311,7 @@ fsearch_application_window_update_listview_config(FsearchApplicationWindow *win)
     fsearch_list_view_set_single_click_activate(win->result_view->list_view, config->single_click_open);
     gtk_widget_set_has_tooltip(GTK_WIDGET(win->result_view->list_view), config->enable_list_tooltips);
 
-    fsearch_application_window_redraw_listview(win);
+    redraw_listview(win);
 }
 
 void

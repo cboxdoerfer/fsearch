@@ -25,10 +25,14 @@ struct FsearchDatabaseWork {
             FsearchDatabaseEntryInfoFlags entry_info_flags;
             guint work_view_id;
         };
+        // FSEARCH_DATABASE_WORK_MODIFY_SELECTION
+        struct {
+            FsearchSelectionType selection_type;
+            int32_t idx_1;
+            int32_t idx_2;
+            guint selection_view_id;
+        };
     };
-
-    FsearchDatabaseWorkCallback callback;
-    gpointer callback_data;
 
     GCancellable *cancellable;
 
@@ -36,12 +40,9 @@ struct FsearchDatabaseWork {
 };
 
 static FsearchDatabaseWork *
-work_new(FsearchDatabaseWorkCallback callback, gpointer callback_data) {
+work_new() {
     FsearchDatabaseWork *work = calloc(1, sizeof(FsearchDatabaseWork));
     g_assert(work);
-
-    work->callback = callback;
-    work->callback_data = callback_data;
 
     work->cancellable = g_cancellable_new();
 
@@ -69,6 +70,8 @@ work_free(FsearchDatabaseWork *work) {
         g_clear_pointer(&work->query, fsearch_query_unref);
         break;
     case FSEARCH_DATABASE_WORK_SORT:
+        break;
+    case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
         break;
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
         g_assert_not_reached();
@@ -100,8 +103,8 @@ fsearch_database_work_unref(FsearchDatabaseWork *work) {
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan(FsearchDatabaseWorkCallback callback, gpointer callback_data) {
-    FsearchDatabaseWork *work = work_new(callback, callback_data);
+fsearch_database_work_new_rescan() {
+    FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_RESCAN;
     return work;
 }
@@ -109,10 +112,8 @@ fsearch_database_work_new_rescan(FsearchDatabaseWorkCallback callback, gpointer 
 FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
-                               FsearchDatabaseIndexFlags flags,
-                               FsearchDatabaseWorkCallback callback,
-                               gpointer callback_data) {
-    FsearchDatabaseWork *work = work_new(callback, callback_data);
+                               FsearchDatabaseIndexFlags flags) {
+    FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SCAN;
     work->include_manager = g_object_ref(include_manager);
     work->exclude_manager = g_object_ref(exclude_manager);
@@ -121,15 +122,25 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
 }
 
 FsearchDatabaseWork *
+fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType selection_type, int32_t idx_1, int32_t idx_2) {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_MODIFY_SELECTION;
+    work->selection_view_id = view_id;
+    work->selection_type = selection_type;
+    work->idx_1 = idx_1;
+    work->idx_2 = idx_2;
+
+    return work;
+}
+
+FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
                                  FsearchDatabaseIndexType sort_order,
-                                 GtkSortType sort_type,
-                                 FsearchDatabaseWorkCallback callback,
-                                 gpointer callback_data) {
+                                 GtkSortType sort_type) {
     g_return_val_if_fail(query, NULL);
 
-    FsearchDatabaseWork *work = work_new(callback, callback_data);
+    FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SEARCH;
     work->view_id = view_id;
     work->sort_order = sort_order;
@@ -140,12 +151,8 @@ fsearch_database_work_new_search(guint view_id,
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_sort(guint view_id,
-                               FsearchDatabaseIndexType sort_order,
-                               GtkSortType sort_type,
-                               FsearchDatabaseWorkCallback callback,
-                               gpointer callback_data) {
-    FsearchDatabaseWork *work = work_new(callback, callback_data);
+fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexType sort_order, GtkSortType sort_type) {
+    FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SORT;
     work->view_id = view_id;
     work->sort_order = sort_order;
@@ -155,12 +162,8 @@ fsearch_database_work_new_sort(guint view_id,
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_get_item_info(guint view_id,
-                                        guint idx,
-                                        FsearchDatabaseEntryInfoFlags flags,
-                                        FsearchDatabaseWorkCallback callback,
-                                        gpointer callback_data) {
-    FsearchDatabaseWork *work = work_new(callback, callback_data);
+fsearch_database_work_new_get_item_info(guint view_id, guint idx, FsearchDatabaseEntryInfoFlags flags) {
+    FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_GET_ITEM_INFO;
     work->entry_info_flags = flags;
     work->idx = idx;
@@ -170,16 +173,16 @@ fsearch_database_work_new_get_item_info(guint view_id,
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_load(FsearchDatabaseWorkCallback callback, gpointer callback_data) {
-    FsearchDatabaseWork *work = work_new(callback, callback_data);
+fsearch_database_work_new_load() {
+    FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_LOAD_FROM_FILE;
 
     return work;
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_save(FsearchDatabaseWorkCallback callback, gpointer callback_data) {
-    FsearchDatabaseWork *work = work_new(callback, callback_data);
+fsearch_database_work_new_save() {
+    FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SAVE_TO_FILE;
 
     return work;
@@ -292,4 +295,32 @@ fsearch_database_work_item_info_get_flags(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
     return work->entry_info_flags;
+}
+
+guint
+fsearch_database_work_modify_selection_get_view_id(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, 0);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, 0);
+    return work->selection_view_id;
+}
+
+int32_t
+fsearch_database_work_modify_selection_get_start_idx(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, 0);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, 0);
+    return work->idx_1;
+}
+
+int32_t
+fsearch_database_work_modify_selection_get_end_idx(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, 0);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, 0);
+    return work->idx_2;
+}
+
+FsearchSelectionType
+fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NUM_FSEARCH_SELECTION_TYPES);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, NUM_FSEARCH_SELECTION_TYPES);
+    return work->selection_type;
 }

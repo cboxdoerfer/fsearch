@@ -41,7 +41,10 @@ void
 fsearch_database_entry_info_unref(FsearchDatabaseEntryInfo *info);
 
 FsearchDatabaseEntryInfo *
-fsearch_database_entry_info_new(FsearchDatabaseEntry *entry, uint32_t idx, FsearchDatabaseEntryInfoFlags flags);
+fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
+                                uint32_t idx,
+                                bool is_selected,
+                                FsearchDatabaseEntryInfoFlags flags);
 
 GString *
 fsearch_database_entry_info_get_name(FsearchDatabaseEntryInfo *info);

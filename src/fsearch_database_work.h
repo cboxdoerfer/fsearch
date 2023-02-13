@@ -5,12 +5,11 @@
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
 #include "fsearch_query.h"
+#include "fsearch_selection_type.h"
 
 #include <glib.h>
 
 typedef struct FsearchDatabaseWork FsearchDatabaseWork;
-typedef struct FsearchDatabaseWorkResult FsearchDatabaseWorkResult;
-typedef void (*FsearchDatabaseWorkCallback)(FsearchDatabaseWork *, FsearchDatabaseWorkResult *, gpointer);
 
 typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_LOAD_FROM_FILE,
@@ -20,6 +19,7 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_SEARCH,
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
+    FSEARCH_DATABASE_WORK_MODIFY_SELECTION,
     NUM_FSEARCH_DATABASE_WORK_KINDS,
 } FsearchDatabaseWorkKind;
 
@@ -30,49 +30,38 @@ void
 fsearch_database_work_unref(FsearchDatabaseWork *work);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_rescan(FsearchDatabaseWorkCallback callback, gpointer callback_data);
+fsearch_database_work_new_rescan(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
-                               FsearchDatabaseIndexFlags flags,
-                               FsearchDatabaseWorkCallback callback,
-                               gpointer callback_data);
+                               FsearchDatabaseIndexFlags flags);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
-                               FsearchDatabaseIndexFlags flags,
-                               FsearchDatabaseWorkCallback callback,
-                               gpointer callback_data);
+                               FsearchDatabaseIndexFlags flags);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType selection_type, int32_t idx_1, int32_t idx_2);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
                                  FsearchDatabaseIndexType sort_order,
-                                 GtkSortType sort_type,
-                                 FsearchDatabaseWorkCallback callback,
-                                 gpointer callback_data);
+                                 GtkSortType sort_type);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_sort(guint view_id,
-                               FsearchDatabaseIndexType sort_order,
-                               GtkSortType sort_type,
-                               FsearchDatabaseWorkCallback callback,
-                               gpointer callback_data);
+fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexType sort_order, GtkSortType sort_type);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_get_item_info(guint view_id,
-                                        guint index,
-                                        FsearchDatabaseEntryInfoFlags flags,
-                                        FsearchDatabaseWorkCallback callback,
-                                        gpointer callback_data);
+fsearch_database_work_new_get_item_info(guint view_id, guint index, FsearchDatabaseEntryInfoFlags flags);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_load(FsearchDatabaseWorkCallback callback, gpointer callback_data);
+fsearch_database_work_new_load(void);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_save(FsearchDatabaseWorkCallback callback, gpointer callback_data);
+fsearch_database_work_new_save(void);
 
 FsearchDatabaseWorkKind
 fsearch_database_work_get_kind(FsearchDatabaseWork *work);
@@ -82,6 +71,18 @@ fsearch_database_work_get_cancellable(FsearchDatabaseWork *work);
 
 void
 fsearch_database_work_cancel(FsearchDatabaseWork *work);
+
+guint
+fsearch_database_work_modify_selection_get_view_id(FsearchDatabaseWork *work);
+
+int32_t
+fsearch_database_work_modify_selection_get_start_idx(FsearchDatabaseWork *work);
+
+int32_t
+fsearch_database_work_modify_selection_get_end_idx(FsearchDatabaseWork *work);
+
+FsearchSelectionType
+fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work);
 
 FsearchQuery *
 fsearch_database_work_search_get_query(FsearchDatabaseWork *work);

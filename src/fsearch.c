@@ -312,7 +312,7 @@ action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpo
         fsearch_database_work_cancel(self->work_scan);
     }
     g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-    self->work_scan = fsearch_database_work_new_rescan(NULL, NULL);
+    self->work_scan = fsearch_database_work_new_rescan();
 
     fsearch_database2_queue_work(self->db2, self->work_scan);
     fsearch_database2_process_work_now(self->db2);

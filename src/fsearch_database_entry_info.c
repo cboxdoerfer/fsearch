@@ -137,7 +137,10 @@ fsearch_database_entry_info_unref(FsearchDatabaseEntryInfo *info) {
 }
 
 FsearchDatabaseEntryInfo *
-fsearch_database_entry_info_new(FsearchDatabaseEntry *entry, uint32_t idx, FsearchDatabaseEntryInfoFlags flags) {
+fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
+                                uint32_t idx,
+                                bool is_selected,
+                                FsearchDatabaseEntryInfoFlags flags) {
     FsearchDatabaseEntryInfo *info = calloc(1, sizeof(FsearchDatabaseEntryInfo));
     g_assert(info);
 
@@ -210,8 +213,7 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry, uint32_t idx, Fsear
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED) {
         FsearchDatabaseEntryInfoValue val = {0};
         val.id = ENTRY_INFO_ID_SELECTED;
-        // TODO:
-        val.selected = false;
+        val.selected = is_selected;
         g_array_append_val(info->infos, val);
     }
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX) {
@@ -288,4 +290,13 @@ fsearch_database_entry_info_get_index(FsearchDatabaseEntryInfo *info) {
     FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_INDEX);
     g_return_val_if_fail(val, 0);
     return val->uint;
+}
+
+bool
+fsearch_database_entry_info_get_selected(FsearchDatabaseEntryInfo *info) {
+    g_return_val_if_fail(info, 0);
+    g_return_val_if_fail(info->flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED, 0);
+    FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_SELECTED);
+    g_return_val_if_fail(val, 0);
+    return val->selected;
 }

@@ -47,7 +47,8 @@ typedef struct FsearchDatabaseSearchView {
     DynamicArray *folders;
     GtkSortType sort_type;
     FsearchDatabaseIndexType sort_order;
-    GHashTable *selection;
+    GHashTable *file_selection;
+    GHashTable *folder_selection;
 } FsearchDatabaseSearchView;
 
 typedef enum FsearchDatabase2EventType {
@@ -62,6 +63,7 @@ typedef enum FsearchDatabase2EventType {
     EVENT_SEARCH_FINISHED,
     EVENT_SORT_STARTED,
     EVENT_SORT_FINISHED,
+    EVENT_SELECTION_CHANGED,
     NUM_EVENTS,
 } FsearchDatabase2EventType;
 
@@ -85,7 +87,8 @@ search_view_free(FsearchDatabaseSearchView *view) {
     g_clear_pointer(&view->query, fsearch_query_unref);
     g_clear_pointer(&view->files, darray_unref);
     g_clear_pointer(&view->folders, darray_unref);
-    g_clear_pointer(&view->selection, fsearch_selection_free);
+    g_clear_pointer(&view->file_selection, fsearch_selection_free);
+    g_clear_pointer(&view->folder_selection, fsearch_selection_free);
     g_clear_pointer(&view, free);
 }
 
@@ -103,7 +106,8 @@ search_view_new(FsearchQuery *query,
     view->folders = darray_ref(folders);
     view->sort_order = sort_order;
     view->sort_type = sort_type;
-    view->selection = fsearch_selection_new();
+    view->file_selection = fsearch_selection_new();
+    view->folder_selection = fsearch_selection_new();
     return view;
 }
 
@@ -189,6 +193,12 @@ emit_sort_finished_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearc
 }
 
 static void
+emit_selection_changed_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearchInfo *info) {
+    g_idle_add(emit_search_finished_signal_cb,
+               signal_emit_context_new(self, EVENT_SELECTION_CHANGED, GUINT_TO_POINTER(id), info));
+}
+
+static void
 database_unlock(FsearchDatabase2 *self) {
     g_assert(FSEARCH_IS_DATABASE2(self));
     g_mutex_unlock(&self->mutex);
@@ -205,6 +215,14 @@ get_default_database_file() {
     return g_file_new_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
 }
 
+static uint32_t
+get_idx_for_sort_type(uint32_t idx, uint32_t num_files, uint32_t num_folders, GtkSortType sort_type) {
+    if (sort_type == GTK_SORT_DESCENDING) {
+        return num_folders + num_files - (idx + 1);
+    }
+    return idx;
+}
+
 static FsearchDatabaseEntry *
 get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
     if (!view->files) {
@@ -215,9 +233,9 @@ get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
     }
     const uint32_t num_folders = darray_get_num_items(view->folders);
     const uint32_t num_files = darray_get_num_items(view->files);
-    if (view->sort_type == GTK_SORT_DESCENDING) {
-        idx = num_folders + num_files - (idx + 1);
-    }
+
+    idx = get_idx_for_sort_type(idx, num_files, num_folders, view->sort_type);
+
     if (idx < num_folders) {
         return darray_get_item(view->folders, idx);
     }
@@ -228,37 +246,37 @@ get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
     return NULL;
 }
 
-static void
-get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
-    g_return_if_fail(self);
-    g_return_if_fail(work);
+static bool
+is_selected(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry) {
+    if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FILE) {
+        return fsearch_selection_is_selected(view->file_selection, entry);
+    }
+    else {
+        return fsearch_selection_is_selected(view->folder_selection, entry);
+    }
+}
 
-    database_lock(self);
+static FsearchDatabaseEntryInfo *
+get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+    g_return_val_if_fail(self, NULL);
+    g_return_val_if_fail(work, NULL);
 
     const uint32_t idx = fsearch_database_work_item_info_get_index(work);
     const int32_t id = fsearch_database_work_item_info_get_view_id(work);
 
     FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(id));
     if (!view) {
-        database_unlock(self);
-        return;
+        return NULL;
     }
 
     const FsearchDatabaseEntryInfoFlags flags = fsearch_database_work_item_info_get_flags(work);
 
     FsearchDatabaseEntry *entry = get_entry_for_idx(view, idx);
     if (!entry) {
-        database_unlock(self);
-        return;
+        return NULL;
     }
 
-    g_autoptr(FsearchDatabaseEntryInfo) info = fsearch_database_entry_info_new(entry, idx, flags);
-
-    database_unlock(self);
-
-    emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), info);
-
-    return;
+    return fsearch_database_entry_info_new(entry, idx, is_selected(view, entry), flags);
 }
 
 static bool
@@ -300,11 +318,14 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         view->sort_type = sort_type;
     }
 
-    FsearchDatabaseSearchInfo *info = fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                                                       darray_get_num_items(view->files),
-                                                                       darray_get_num_items(view->folders),
-                                                                       view->sort_order,
-                                                                       view->sort_type);
+    FsearchDatabaseSearchInfo *info =
+        fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                         darray_get_num_items(view->files),
+                                         darray_get_num_items(view->folders),
+                                         fsearch_selection_get_num_selected(view->file_selection),
+                                         fsearch_selection_get_num_selected(view->folder_selection),
+                                         view->sort_order,
+                                         view->sort_type);
 
     database_unlock(self);
 
@@ -380,10 +401,124 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     database_unlock(self);
 
     FsearchDatabaseSearchInfo *info =
-        fsearch_database_search_info_new(query, num_files, num_folders, sort_order, sort_type);
+        fsearch_database_search_info_new(query, num_files, num_folders, 0, 0, sort_order, sort_type);
+
     emit_search_finished_signal(self, fsearch_database_work_search_get_view_id(work), info);
 
     return result;
+}
+
+static void
+toggle_range(FsearchDatabaseSearchView *view, int32_t start_idx, int32_t end_idx) {
+    int32_t tmp = start_idx;
+    if (start_idx > end_idx) {
+        start_idx = end_idx;
+        end_idx = tmp;
+    }
+    for (int32_t i = start_idx; i <= end_idx; ++i) {
+        FsearchDatabaseEntry *entry = get_entry_for_idx(view, i);
+        if (!entry) {
+            continue;
+        }
+        FsearchDatabaseEntryType type = db_entry_get_type(entry);
+        if (type == DATABASE_ENTRY_TYPE_FILE) {
+            fsearch_selection_select_toggle(view->file_selection, entry);
+        }
+        else {
+            fsearch_selection_select_toggle(view->folder_selection, entry);
+        }
+    }
+}
+
+static void
+select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int32_t end_idx) {
+    int32_t tmp = start_idx;
+    if (start_idx > end_idx) {
+        start_idx = end_idx;
+        end_idx = tmp;
+    }
+    for (int32_t i = start_idx; i <= end_idx; ++i) {
+        FsearchDatabaseEntry *entry = get_entry_for_idx(view, i);
+        if (!entry) {
+            continue;
+        }
+        FsearchDatabaseEntryType type = db_entry_get_type(entry);
+        if (type == DATABASE_ENTRY_TYPE_FILE) {
+            fsearch_selection_select(view->file_selection, entry);
+        }
+        else {
+            fsearch_selection_select(view->folder_selection, entry);
+        }
+    }
+}
+
+static bool
+modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+    g_return_val_if_fail(self, false);
+    g_return_val_if_fail(work, false);
+    const guint id = fsearch_database_work_modify_selection_get_view_id(work);
+    const FsearchSelectionType type = fsearch_database_work_modify_selection_get_type(work);
+    const int32_t start_idx = fsearch_database_work_modify_selection_get_start_idx(work);
+    const int32_t end_idx = fsearch_database_work_modify_selection_get_end_idx(work);
+
+    database_lock(self);
+
+    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(id));
+
+    FsearchDatabaseEntry *entry = get_entry_for_idx(view, start_idx);
+
+    switch (type) {
+    case FSEARCH_SELECTION_TYPE_CLEAR:
+        fsearch_selection_unselect_all(view->file_selection);
+        fsearch_selection_unselect_all(view->folder_selection);
+        break;
+    case FSEARCH_SELECTION_TYPE_ALL:
+        fsearch_selection_select_all(view->folder_selection, view->folders);
+        fsearch_selection_select_all(view->file_selection, view->files);
+        break;
+    case FSEARCH_SELECTION_TYPE_INVERT:
+        fsearch_selection_invert(view->folder_selection, view->folders);
+        fsearch_selection_invert(view->folder_selection, view->files);
+        break;
+    case FSEARCH_SELECTION_TYPE_SELECT:
+        if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FILE) {
+            fsearch_selection_select(view->file_selection, entry);
+        }
+        else {
+            fsearch_selection_select(view->folder_selection, entry);
+        }
+    case FSEARCH_SELECTION_TYPE_TOGGLE:
+        if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FILE) {
+            fsearch_selection_select_toggle(view->file_selection, entry);
+        }
+        else {
+            fsearch_selection_select_toggle(view->folder_selection, entry);
+        }
+        break;
+    case FSEARCH_SELECTION_TYPE_SELECT_RANGE:
+        select_range(view, start_idx, end_idx);
+        break;
+    case FSEARCH_SELECTION_TYPE_TOGGLE_RANGE:
+        toggle_range(view, start_idx, end_idx);
+        break;
+    case NUM_FSEARCH_SELECTION_TYPES:
+        g_assert_not_reached();
+    }
+
+    FsearchDatabaseSearchInfo *info =
+        fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                         darray_get_num_items(view->files),
+                                         darray_get_num_items(view->folders),
+                                         fsearch_selection_get_num_selected(view->file_selection),
+                                         fsearch_selection_get_num_selected(view->folder_selection),
+                                         view->sort_order,
+                                         view->sort_type);
+
+    database_unlock(self);
+
+    emit_selection_changed_signal(self, id, info);
+
+    return true;
 }
 
 static bool
@@ -515,9 +650,15 @@ work_queue_thread(gpointer data) {
             case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
                 load_database_from_file(self);
                 break;
-            case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
-                get_entry_info(self, work);
+            case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
+                database_lock(self);
+                FsearchDatabaseEntryInfo *info = get_entry_info(self, work);
+                database_unlock(self);
+                if (info) {
+                    emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), info);
+                }
                 break;
+            }
             case FSEARCH_DATABASE_WORK_RESCAN:
                 emit_signal(self, EVENT_SCAN_STARTED, NULL);
                 rescan_database(self);
@@ -538,6 +679,9 @@ work_queue_thread(gpointer data) {
                 break;
             case FSEARCH_DATABASE_WORK_SORT:
                 sort_database(self, work);
+                break;
+            case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
+                modify_selection(self, work);
                 break;
             default:
                 g_assert_not_reached();
@@ -568,7 +712,7 @@ fsearch_database2_constructed(GObject *object) {
         self->file = get_default_database_file();
     }
 
-    g_async_queue_push(self->work_queue, fsearch_database_work_new_load(NULL, NULL));
+    g_async_queue_push(self->work_queue, fsearch_database_work_new_load());
 
     g_print("constructed...\n");
 }
@@ -763,6 +907,17 @@ fsearch_database2_class_init(FsearchDatabase2Class *klass) {
                                                 2,
                                                 G_TYPE_UINT,
                                                 FSEARCH_TYPE_DATABASE_SEARCH_INFO);
+    signals[EVENT_SELECTION_CHANGED] = g_signal_new("selection-changed",
+                                                    G_TYPE_FROM_CLASS(klass),
+                                                    G_SIGNAL_RUN_LAST,
+                                                    0,
+                                                    NULL,
+                                                    NULL,
+                                                    NULL,
+                                                    G_TYPE_NONE,
+                                                    2,
+                                                    G_TYPE_UINT,
+                                                    FSEARCH_TYPE_DATABASE_SEARCH_INFO);
     signals[EVENT_ITEM_INFO_READY] = g_signal_new("item-info-ready",
                                                   G_TYPE_FROM_CLASS(klass),
                                                   G_SIGNAL_RUN_LAST,
@@ -800,6 +955,59 @@ fsearch_database2_process_work_now(FsearchDatabase2 *self) {
     g_return_if_fail(self);
 
     wakeup_work_queue(self);
+}
+
+bool
+fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out) {
+    g_return_val_if_fail(self, false);
+    g_return_val_if_fail(info_out, false);
+
+    if (!g_mutex_trylock(&self->mutex)) {
+        return false;
+    }
+
+    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
+    FsearchDatabaseSearchInfo *info =
+        fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                         darray_get_num_items(view->files),
+                                         darray_get_num_items(view->folders),
+                                         fsearch_selection_get_num_selected(view->file_selection),
+                                         fsearch_selection_get_num_selected(view->folder_selection),
+                                         view->sort_order,
+                                         view->sort_type);
+
+    database_unlock(self);
+
+    if (info) {
+        *info_out = info;
+        return true;
+    }
+    return false;
+}
+
+bool
+fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
+                                    uint32_t view_id,
+                                    uint32_t idx,
+                                    FsearchDatabaseEntryInfoFlags flags,
+                                    FsearchDatabaseEntryInfo **info_out) {
+    g_return_val_if_fail(self, false);
+    g_return_val_if_fail(info_out, false);
+
+    if (!g_mutex_trylock(&self->mutex)) {
+        g_print("locked db...\n");
+        return false;
+    }
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(view_id, idx, flags);
+    FsearchDatabaseEntryInfo *info = get_entry_info(self, work);
+
+    database_unlock(self);
+
+    if (info) {
+        *info_out = info;
+        return true;
+    }
+    return false;
 }
 
 FsearchDatabase2 *

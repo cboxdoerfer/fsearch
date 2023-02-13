@@ -241,11 +241,11 @@ get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntr
     if (g_hash_table_lookup_extended(result_view->item_info_cache, key, NULL, (gpointer *)info)) {
         return TRUE;
     }
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id,
-                                                                                  row,
-                                                                                  FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL,
-                                                                                  NULL,
-                                                                                  NULL);
+    if (fsearch_database2_try_get_item_info(result_view->db, result_view->view_id, row, FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL, info)) {
+        g_hash_table_insert(result_view->item_info_cache, key, *info);
+        return TRUE;
+    }
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id, row, FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL);
     fsearch_database2_queue_work(result_view->db, work);
     fsearch_database2_process_work_now(result_view->db);
     g_hash_table_insert(result_view->item_info_cache, key, NULL);
@@ -405,6 +405,9 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     }
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
+    if (!pending) {
+        row_selected = fsearch_database_entry_info_get_selected(info);
+    }
     if (row_selected) {
         flags |= GTK_STATE_FLAG_SELECTED;
     }
