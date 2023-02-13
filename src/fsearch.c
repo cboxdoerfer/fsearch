@@ -58,6 +58,8 @@ struct _FsearchApplication {
     uint32_t num_files;
     uint32_t num_folders;
 
+    FsearchDatabaseWork *work_scan;
+
     int num_database_update_active;
 
     bool is_shutting_down;
@@ -305,8 +307,14 @@ action_cancel_update_database_activated(GSimpleAction *action, GVariant *paramet
 static void
 action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_rescan(NULL, NULL);
-    fsearch_database2_queue_work(self->db2, work);
+
+    if (self->work_scan) {
+        fsearch_database_work_cancel(self->work_scan);
+    }
+    g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
+    self->work_scan = fsearch_database_work_new_rescan(NULL, NULL);
+
+    fsearch_database2_queue_work(self->db2, self->work_scan);
     fsearch_database2_process_work_now(self->db2);
 }
 
@@ -348,6 +356,7 @@ fsearch_application_shutdown(GApplication *app) {
         fsearch->file_manager_watch_id = 0;
     }
 
+    g_clear_pointer(&fsearch->work_scan, fsearch_database_work_unref);
     g_clear_object(&fsearch->db2);
 
     g_clear_pointer(&fsearch->option_search_term, g_free);

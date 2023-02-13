@@ -30,6 +30,8 @@ struct FsearchDatabaseWork {
     FsearchDatabaseWorkCallback callback;
     gpointer callback_data;
 
+    GCancellable *cancellable;
+
     volatile gint ref_count;
 };
 
@@ -40,6 +42,8 @@ work_new(FsearchDatabaseWorkCallback callback, gpointer callback_data) {
 
     work->callback = callback;
     work->callback_data = callback_data;
+
+    work->cancellable = g_cancellable_new();
 
     work->ref_count = 1;
 
@@ -69,6 +73,8 @@ work_free(FsearchDatabaseWork *work) {
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
         g_assert_not_reached();
     }
+
+    g_clear_object(&work->cancellable);
 
     g_clear_pointer(&work, free);
 }
@@ -183,6 +189,18 @@ FsearchDatabaseWorkKind
 fsearch_database_work_get_kind(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NUM_FSEARCH_DATABASE_WORK_KINDS);
     return work->kind;
+}
+
+GCancellable *
+fsearch_database_work_get_cancellable(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    return g_object_ref(work->cancellable);
+}
+
+void
+fsearch_database_work_cancel(FsearchDatabaseWork *work) {
+    g_return_if_fail(work);
+    g_cancellable_cancel(work->cancellable);
 }
 
 FsearchQuery *

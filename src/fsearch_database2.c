@@ -268,6 +268,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     const guint id = fsearch_database_work_sort_get_view_id(work);
     const FsearchDatabaseIndexType sort_order = fsearch_database_work_sort_get_sort_order(work);
     const GtkSortType sort_type = fsearch_database_work_sort_get_sort_type(work);
+    g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
     emit_signal(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id));
 
@@ -286,7 +287,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
                                       &files_new,
                                       &folders_new,
                                       &view->sort_order,
-                                      NULL);
+                                      cancellable);
     }
     if (files_new) {
         g_clear_pointer(&view->files, darray_unref);
@@ -338,6 +339,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
     FsearchDatabaseIndexType sort_order = fsearch_database_work_search_get_sort_order(work);
     const GtkSortType sort_type = fsearch_database_work_search_get_sort_type(work);
+    g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
     uint32_t num_files = 0;
     uint32_t num_folders = 0;
 
@@ -358,7 +360,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         sort_order = DATABASE_INDEX_TYPE_NAME;
     }
 
-    DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, NULL);
+    DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, cancellable);
     if (search_result) {
         num_files = darray_get_num_items(search_result->files);
         num_folders = darray_get_num_items(search_result->folders);

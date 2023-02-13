@@ -77,6 +77,12 @@ fsearch_database_work_new_save(FsearchDatabaseWorkCallback callback, gpointer ca
 FsearchDatabaseWorkKind
 fsearch_database_work_get_kind(FsearchDatabaseWork *work);
 
+GCancellable *
+fsearch_database_work_get_cancellable(FsearchDatabaseWork *work);
+
+void
+fsearch_database_work_cancel(FsearchDatabaseWork *work);
+
 FsearchQuery *
 fsearch_database_work_search_get_query(FsearchDatabaseWork *work);
 

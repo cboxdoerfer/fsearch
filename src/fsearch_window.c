@@ -70,6 +70,8 @@ struct _FsearchApplicationWindow {
     char *active_filter_name;
 
     FsearchDatabase2 *db;
+    FsearchDatabaseWork *work_search;
+    FsearchDatabaseWork *work_sort;
 
     FsearchResultView *result_view;
 };
@@ -279,6 +281,8 @@ fsearch_application_window_constructed(GObject *object) {
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->constructed(object);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    self->work_search = NULL;
+    self->work_sort = NULL;
 
     fsearch_window_apply_menubar_config(self);
 
@@ -301,6 +305,8 @@ fsearch_application_window_finalize(GObject *object) {
 
     g_clear_pointer(&self->active_filter_name, free);
     g_clear_pointer(&self->result_view, fsearch_result_view_free);
+    g_clear_pointer(&self->work_search, fsearch_database_work_unref);
+    g_clear_pointer(&self->work_sort, fsearch_database_work_unref);
     g_clear_object(&self->db);
 
     G_OBJECT_CLASS(fsearch_application_window_parent_class)->finalize(object);
@@ -384,6 +390,7 @@ on_sort_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info
 
     if (win) {
         fsearch_window_db_view_apply_changes(win, info);
+        g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
     }
 }
 
@@ -403,6 +410,7 @@ on_search_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *in
 
     if (win) {
         fsearch_window_db_view_apply_changes(win, info);
+        g_clear_pointer(&win->work_search, fsearch_database_work_unref);
     }
 }
 
@@ -428,15 +436,18 @@ perform_search(FsearchApplicationWindow *win) {
     FsearchFilter *filter = get_active_filter(win);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     FsearchQuery *query = fsearch_query_new(text, filter, config->filters, get_query_flags(), "test");
-    g_autoptr(FsearchDatabaseWork)
-        work = fsearch_database_work_new_search(win_id,
-                                                query,
-                                                fsearch_list_view_get_sort_order(win->result_view->list_view),
-                                                fsearch_list_view_get_sort_type(win->result_view->list_view),
-                                                NULL,
-                                                NULL);
+    if (win->work_search) {
+        fsearch_database_work_cancel(win->work_search);
+    }
+    g_clear_pointer(&win->work_search, fsearch_database_work_unref);
+    win->work_search = fsearch_database_work_new_search(win_id,
+                                                        query,
+                                                        fsearch_list_view_get_sort_order(win->result_view->list_view),
+                                                        fsearch_list_view_get_sort_type(win->result_view->list_view),
+                                                        NULL,
+                                                        NULL);
     g_clear_pointer(&filter, fsearch_filter_unref);
-    fsearch_database2_queue_work(win->db, work);
+    fsearch_database2_queue_work(win->db, win->work_search);
     fsearch_database2_process_work_now(win->db);
 }
 
@@ -536,9 +547,9 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
 static void
 on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexType col, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    //if (!self->result_view->database_view) {
-    //    return;
-    //}
+    // if (!self->result_view->database_view) {
+    //     return;
+    // }
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     int launch_folder = false;
@@ -569,9 +580,9 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
                                 FsearchListViewColumn *col,
                                 gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    //if (!win->result_view->database_view) {
-    //    return NULL;
-    //}
+    // if (!win->result_view->database_view) {
+    //     return NULL;
+    // }
 
     // return fsearch_result_view_query_tooltip(win->result_view->database_view, row_idx, col, layout, row_height);
     return NULL;
@@ -617,8 +628,14 @@ static void
 fsearch_results_sort_func(int sort_order, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_sort(win_id, sort_order, sort_type, NULL, NULL);
-    fsearch_database2_queue_work(win->db, work);
+
+    if (win->work_sort) {
+        fsearch_database_work_cancel(win->work_sort);
+    }
+    g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
+    win->work_sort = fsearch_database_work_new_sort(win_id, sort_order, sort_type, NULL, NULL);
+
+    fsearch_database2_queue_work(win->db, win->work_sort);
     fsearch_database2_process_work_now(win->db);
 }
 
@@ -684,8 +701,8 @@ add_columns(FsearchListView *view, FsearchConfig *config) {
 static guint
 on_listview_row_num_selected(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    //return win->result_view->database_view ? db_view_get_num_selected(win->result_view->database_view) : 0;
-    // TODO:
+    // return win->result_view->database_view ? db_view_get_num_selected(win->result_view->database_view) : 0;
+    //  TODO:
     return 0;
 }
 
@@ -693,7 +710,7 @@ static void
 on_listview_row_unselect_all(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     // TODO:
-    //if (win->result_view->database_view) {
+    // if (win->result_view->database_view) {
     //    db_view_unselect_all(win->result_view->database_view);
     //}
 }
@@ -702,7 +719,7 @@ static void
 on_listview_row_toggle_range(int start_row, int end_row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     // TODO:
-    //if (win->result_view->database_view) {
+    // if (win->result_view->database_view) {
     //    db_view_toggle_range(win->result_view->database_view, start_row, end_row);
     //}
 }
@@ -711,7 +728,7 @@ static void
 on_listview_row_select_range(int start_row, int end_row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     // TODO:
-    //if (win->result_view->database_view) {
+    // if (win->result_view->database_view) {
     //    db_view_select_range(win->result_view->database_view, start_row, end_row);
     //}
 }
@@ -720,7 +737,7 @@ static void
 on_listview_row_select_toggle(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     // TODO:
-    //if (win->result_view->database_view) {
+    // if (win->result_view->database_view) {
     //    db_view_select_toggle(win->result_view->database_view, row);
     //}
 }
@@ -730,7 +747,7 @@ on_listview_row_select(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     // TODO:
-    //if (win->result_view->database_view) {
+    // if (win->result_view->database_view) {
     //    db_view_select(win->result_view->database_view, row);
     //}
 }
@@ -740,7 +757,7 @@ on_listview_row_is_selected(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     // TODO:
-    //if (win->result_view->database_view) {
+    // if (win->result_view->database_view) {
     //    return db_view_is_selected(win->result_view->database_view, row);
     //}
     return FALSE;
@@ -916,7 +933,7 @@ on_search_entry_activate(GtkButton *widget, gpointer user_data) {
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (config->search_as_you_type) {
         // TODO:
-        //if (db_view_get_num_entries(win->result_view->database_view) > 0) {
+        // if (db_view_get_num_entries(win->result_view->database_view) > 0) {
         //    if (db_view_get_num_selected(win->result_view->database_view) < 1) {
         //        db_view_select(win->result_view->database_view, 0);
         //    }
@@ -953,7 +970,7 @@ fsearch_window_db_view_selection_changed_cb(gpointer data) {
     uint32_t num_folders = 0;
     uint32_t num_files = 0;
     // TODO:
-    //if (win->result_view->database_view) {
+    // if (win->result_view->database_view) {
     //    db_view_lock(win->result_view->database_view);
     //    num_folders = db_view_get_num_folders(win->result_view->database_view);
     //    num_files = db_view_get_num_files(win->result_view->database_view);
@@ -985,9 +1002,9 @@ fsearch_window_db_view_content_changed_cb(gpointer data) {
     fsearch_window_actions_update(win);
 
     // TODO:
-    //db_view_lock(win->result_view->database_view);
-    //const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->result_view->database_view);
-    //db_view_unlock(win->result_view->database_view);
+    // db_view_lock(win->result_view->database_view);
+    // const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->result_view->database_view);
+    // db_view_unlock(win->result_view->database_view);
     const uint32_t num_rows = 0;
 
     if (is_empty_search(win)) {
@@ -1240,10 +1257,12 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 void
 fsearch_application_window_cancel_current_task(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
-    // TODO:
-    //if (win->result_view && win->result_view->database_view) {
-    //     db_view_cancel_current_task(win->result_view->database_view);
-    //}
+    if (win->work_search) {
+        fsearch_database_work_cancel(win->work_search);
+    }
+    if (win->work_sort) {
+        fsearch_database_work_cancel(win->work_sort);
+    }
 }
 
 void
@@ -1255,7 +1274,7 @@ void
 fsearch_application_window_invert_selection(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     // TODO:
-    //if (self->result_view->database_view) {
+    // if (self->result_view->database_view) {
     //    db_view_invert_selection(self->result_view->database_view);
     //}
 }
@@ -1264,7 +1283,7 @@ void
 fsearch_application_window_unselect_all(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     // TODO:
-    //if (self->result_view->database_view) {
+    // if (self->result_view->database_view) {
     //    db_view_unselect_all(self->result_view->database_view);
     //}
 }
@@ -1273,7 +1292,7 @@ void
 fsearch_application_window_select_all(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     // TODO
-    //if (self->result_view->database_view) {
+    // if (self->result_view->database_view) {
     //    db_view_select_all(self->result_view->database_view);
     //}
 }
@@ -1282,7 +1301,7 @@ uint32_t
 fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     // TODO:
-    //if (self->result_view->database_view) {
+    // if (self->result_view->database_view) {
     //    return db_view_get_num_selected(self->result_view->database_view);
     //}
     return 0;
@@ -1292,7 +1311,7 @@ void
 fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GHFunc func, gpointer user_data) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
     // TODO:
-    //if (self->result_view->database_view) {
+    // if (self->result_view->database_view) {
     //    db_view_selection_for_each(self->result_view->database_view, func, user_data);
     //}
 }
@@ -1326,7 +1345,7 @@ uint32_t
 fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
     uint32_t num_results = 0;
     // TODO:
-    //if (self->result_view->database_view) {
+    // if (self->result_view->database_view) {
     //    db_view_lock(self->result_view->database_view);
     //    num_results = db_view_get_num_entries(self->result_view->database_view);
     //    db_view_unlock(self->result_view->database_view);
