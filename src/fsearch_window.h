@@ -67,7 +67,7 @@ void
 fsearch_application_window_set_database_index_progress(FsearchApplicationWindow *self, const char *text);
 
 uint32_t
-fsearch_application_window_get_num_results(FsearchApplicationWindow *self);
+fsearch_application_window_get_num_rows(FsearchApplicationWindow *self);
 
 gint
 fsearch_application_window_get_active_filter(FsearchApplicationWindow *self);

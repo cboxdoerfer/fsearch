@@ -127,6 +127,9 @@ fsearch_list_view_get_sort_order(FsearchListView *view);
 GtkSortType
 fsearch_list_view_get_sort_type(FsearchListView *view);
 
+uint32_t
+fsearch_list_view_get_num_rows(FsearchListView *view);
+
 void
 fsearch_list_view_set_sort_func(FsearchListView *view, FsearchListViewSortFunc func, gpointer sort_func_data);
 

@@ -549,9 +549,6 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
 static void
 on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexType col, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
-    // if (!self->result_view->database_view) {
-    //     return;
-    // }
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     int launch_folder = false;
@@ -576,11 +573,7 @@ on_search_entry_changed(GtkEntry *entry, gpointer user_data) {
 }
 
 static char *
-fsearch_list_view_query_tooltip(PangoLayout *layout,
-                                uint32_t row_height,
-                                uint32_t row_idx,
-                                FsearchListViewColumn *col,
-                                gpointer user_data) {
+on_listview_query_tooltip(PangoLayout *layout, uint32_t row_height, uint32_t row_idx, FsearchListViewColumn *col, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     // if (!win->result_view->database_view) {
     //     return NULL;
@@ -591,26 +584,23 @@ fsearch_list_view_query_tooltip(PangoLayout *layout,
 }
 
 static void
-fsearch_list_view_draw_row(cairo_t *cr,
-                           GdkWindow *bin_window,
-                           PangoLayout *layout,
-                           GtkStyleContext *context,
-                           GList *columns,
-                           cairo_rectangle_int_t *rect,
-                           uint32_t row,
-                           gboolean row_selected,
-                           gboolean row_focused,
-                           gboolean row_hovered,
-                           gboolean right_to_left_text,
-                           gpointer user_data) {
+on_listview_draw_row(cairo_t *cr,
+            GdkWindow *bin_window,
+            PangoLayout *layout,
+            GtkStyleContext *context,
+            GList *columns,
+            cairo_rectangle_int_t *rect,
+            uint32_t row,
+            gboolean row_selected,
+            gboolean row_focused,
+            gboolean row_hovered,
+            gboolean right_to_left_text,
+            gpointer user_data) {
     if (!columns) {
         return;
     }
 
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    // if (!win->result_view->database_view) {
-    //     return;
-    // }
 
     fsearch_result_view_draw_row(win->result_view,
                                  cr,
@@ -627,7 +617,7 @@ fsearch_list_view_draw_row(cairo_t *cr,
 }
 
 static void
-fsearch_results_sort_func(int sort_order, GtkSortType sort_type, gpointer user_data) {
+on_listview_sort(int sort_order, GtkSortType sort_type, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
 
@@ -814,9 +804,9 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     gtk_container_add(GTK_CONTAINER(win->listview_scrolled_window), GTK_WIDGET(list_view));
 
     gtk_widget_show((GTK_WIDGET(list_view)));
-    fsearch_list_view_set_query_tooltip_func(list_view, fsearch_list_view_query_tooltip, win);
-    fsearch_list_view_set_draw_row_func(list_view, fsearch_list_view_draw_row, win);
-    fsearch_list_view_set_sort_func(list_view, fsearch_results_sort_func, win);
+    fsearch_list_view_set_query_tooltip_func(list_view, on_listview_query_tooltip, win);
+    fsearch_list_view_set_draw_row_func(list_view, on_listview_draw_row, win);
+    fsearch_list_view_set_sort_func(list_view, on_listview_sort, win);
     fsearch_list_view_set_selection_handlers(list_view,
                                              on_listview_row_is_selected,
                                              on_listview_row_select,
@@ -1189,7 +1179,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
     FsearchConfig *config = fsearch_application_get_config(app);
 
     FsearchDatabaseIndexType sort_order = config->restore_sort_order ? get_sort_type_for_name(config->sort_by)
-                                                                           : DATABASE_INDEX_TYPE_NAME;
+                                                                     : DATABASE_INDEX_TYPE_NAME;
     if (sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
         // -> fall back to sort by name instead
@@ -1287,15 +1277,11 @@ fsearch_application_window_set_database_index_progress(FsearchApplicationWindow 
 }
 
 uint32_t
-fsearch_application_window_get_num_results(FsearchApplicationWindow *self) {
-    uint32_t num_results = 0;
-    // TODO:
-    // if (self->result_view->database_view) {
-    //    db_view_lock(self->result_view->database_view);
-    //    num_results = db_view_get_num_entries(self->result_view->database_view);
-    //    db_view_unlock(self->result_view->database_view);
-    //}
-    return num_results;
+fsearch_application_window_get_num_rows(FsearchApplicationWindow *self) {
+    if (self->result_view->list_view) {
+        return fsearch_list_view_get_num_rows(self->result_view->list_view);
+    }
+    return 0;
 }
 
 gint

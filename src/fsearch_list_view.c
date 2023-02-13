@@ -2292,6 +2292,11 @@ fsearch_list_view_get_sort_type(FsearchListView *view) {
     return view->sort_type;
 }
 
+uint32_t
+fsearch_list_view_get_num_rows(FsearchListView *view) {
+    return view->num_rows;
+}
+
 void
 fsearch_list_view_set_single_click_activate(FsearchListView *view, gboolean value) {
     if (!view) {

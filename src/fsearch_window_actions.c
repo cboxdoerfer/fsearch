@@ -861,17 +861,12 @@ static GActionEntry FsearchWindowActions[] = {
 
 void
 fsearch_window_actions_update(FsearchApplicationWindow *self) {
-    const gint num_rows = fsearch_application_window_get_num_results(self);
 
     GActionGroup *group = G_ACTION_GROUP(self);
 
-    FsearchListView *view = fsearch_application_window_get_listview(self);
     const gint active_filter = fsearch_application_window_get_active_filter(self);
-
-    gint num_rows_selected = 0;
-    if (view) {
-        num_rows_selected = fsearch_application_window_get_num_selected(self);
-    }
+    const gint num_rows = fsearch_application_window_get_num_rows(self);
+    const gint num_rows_selected = fsearch_application_window_get_num_selected(self);
 
     const bool has_file_manager_on_bus = fsearch_application_has_file_manager_on_bus(FSEARCH_APPLICATION_DEFAULT);
 
