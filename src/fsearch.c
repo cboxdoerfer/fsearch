@@ -756,12 +756,6 @@ fsearch_application_win_added(GtkApplication *app, GtkWindow *win) {
 }
 
 static void
-fsearch_application_win_removed(GtkApplication *app, GtkWindow *win) {
-    fsearch_application_window_removed(FSEARCH_APPLICATION_WINDOW(win), FSEARCH_APPLICATION(app));
-    GTK_APPLICATION_CLASS(fsearch_application_parent_class)->window_removed(app, win);
-}
-
-static void
 fsearch_application_class_init(FsearchApplicationClass *klass) {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
     GApplicationClass *g_app_class = G_APPLICATION_CLASS(klass);
@@ -776,7 +770,6 @@ fsearch_application_class_init(FsearchApplicationClass *klass) {
     g_app_class->handle_local_options = fsearch_application_handle_local_options;
 
     gtk_app_class->window_added = fsearch_application_win_added;
-    gtk_app_class->window_removed = fsearch_application_win_removed;
 }
 
 // Public functions

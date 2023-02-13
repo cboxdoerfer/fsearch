@@ -346,7 +346,7 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
 }
 
 static void
-fsearch_window_db_view_apply_changes(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
+apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
     if (!info) {
         return;
     }
@@ -389,7 +389,8 @@ on_sort_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
-        fsearch_window_db_view_apply_changes(win, info);
+        apply_search_info(win, info);
+
         g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
     }
 }
@@ -409,7 +410,8 @@ on_search_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *in
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
-        fsearch_window_db_view_apply_changes(win, info);
+        apply_search_info(win, info);
+        fsearch_window_actions_update(win);
         g_clear_pointer(&win->work_search, fsearch_database_work_unref);
     }
 }
@@ -841,6 +843,7 @@ on_database_update_finished(FsearchDatabase2 *db2, FsearchDatabaseInfo *info, gp
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
+    fsearch_window_listview_set_empty(win);
     fsearch_statusbar_set_num_search_results(FSEARCH_STATUSBAR(win->statusbar), 0);
 
     GtkWidget *update_database_button = gtk_stack_get_child_by_name(GTK_STACK(win->popover_update_button_stack),
@@ -986,38 +989,6 @@ fsearch_window_db_view_selection_changed_cb(gpointer data) {
                                     num_files,
                                     num_folders);
 
-    return G_SOURCE_REMOVE;
-}
-
-static gboolean
-fsearch_window_db_view_content_changed_cb(gpointer data) {
-    const guint win_id = GPOINTER_TO_UINT(data);
-    FsearchApplicationWindow *win = get_window_for_id(win_id);
-
-    if (!win) {
-        return G_SOURCE_REMOVE;
-    }
-
-    fsearch_window_db_view_apply_changes(win, NULL);
-    fsearch_window_actions_update(win);
-
-    // TODO:
-    // db_view_lock(win->result_view->database_view);
-    // const uint32_t num_rows = is_empty_search(win) ? 0 : db_view_get_num_entries(win->result_view->database_view);
-    // db_view_unlock(win->result_view->database_view);
-    const uint32_t num_rows = 0;
-
-    if (is_empty_search(win)) {
-        show_overlay(win, OVERLAY_QUERY_EMPTY);
-        gtk_widget_show(win->main_search_overlay_stack);
-    }
-    else if (num_rows == 0) {
-        show_overlay(win, OVERLAY_RESULTS_EMPTY);
-        gtk_widget_show(win->main_search_overlay_stack);
-    }
-    else {
-        gtk_widget_hide(win->main_search_overlay_stack);
-    }
     return G_SOURCE_REMOVE;
 }
 
@@ -1173,56 +1144,34 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
     config->window_width = width;
     config->window_height = height;
 
-    if (win->result_view) {
-        // TODO: save window config
-        // if (win->result_view->database_view) {
-        //    FsearchDatabaseView *db_view = win->result_view->database_view;
-        //    db_view_lock(db_view);
-        //    config->sort_ascending = db_view_get_sort_type(db_view) == GTK_SORT_ASCENDING ? true : false;
+    if (win->result_view && win->result_view->list_view) {
+        FsearchListView *list_view = win->result_view->list_view;
+        config->sort_ascending = fsearch_list_view_get_sort_type(list_view) == GTK_SORT_ASCENDING ? true : false;
 
-        //    if (config->sort_by) {
-        //        g_clear_pointer(&config->sort_by, g_free);
-        //    }
-        //    config->sort_by = get_sort_name_for_type(db_view_get_sort_order(db_view));
-        //    db_view_unlock(db_view);
-        //}
+        if (config->sort_by) {
+            g_clear_pointer(&config->sort_by, g_free);
+        }
+        config->sort_by = get_sort_name_for_type(fsearch_list_view_get_sort_order(list_view));
 
-        if (win->result_view->list_view) {
-            FsearchListView *list_view = win->result_view->list_view;
-            config->sort_ascending = fsearch_list_view_get_sort_type(list_view) == GTK_SORT_ASCENDING ? true : false;
-
-            if (config->sort_by) {
-                g_clear_pointer(&config->sort_by, g_free);
-            }
-            config->sort_by = get_sort_name_for_type(fsearch_list_view_get_sort_order(list_view));
-
-            // update the config with the widths of all columns whose width we can store
-            const struct {
-                int type;
-                uint32_t *width;
-            } columns[] = {
-                {DATABASE_INDEX_TYPE_NAME, &config->name_column_width},
-                {DATABASE_INDEX_TYPE_PATH, &config->path_column_width},
-                {DATABASE_INDEX_TYPE_FILETYPE, &config->type_column_width},
-                {DATABASE_INDEX_TYPE_EXTENSION, &config->extension_column_width},
-                {DATABASE_INDEX_TYPE_SIZE, &config->size_column_width},
-                {DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width},
-            };
-            for (int i = 0; i < G_N_ELEMENTS(columns); i++) {
-                const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list_view,
-                                                                                               columns[i].type);
-                if (col) {
-                    *columns[i].width = col->width;
-                }
+        // update the config with the widths of all columns whose width we can store
+        const struct {
+            int type;
+            uint32_t *width;
+        } columns[] = {
+            {DATABASE_INDEX_TYPE_NAME, &config->name_column_width},
+            {DATABASE_INDEX_TYPE_PATH, &config->path_column_width},
+            {DATABASE_INDEX_TYPE_FILETYPE, &config->type_column_width},
+            {DATABASE_INDEX_TYPE_EXTENSION, &config->extension_column_width},
+            {DATABASE_INDEX_TYPE_SIZE, &config->size_column_width},
+            {DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width},
+        };
+        for (int i = 0; i < G_N_ELEMENTS(columns); i++) {
+            const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list_view, columns[i].type);
+            if (col) {
+                *columns[i].width = col->width;
             }
         }
     }
-}
-
-void
-fsearch_application_window_remove_model(FsearchApplicationWindow *win) {
-    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
-    fsearch_window_listview_set_empty(win);
 }
 
 void
@@ -1240,17 +1189,18 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
     FsearchConfig *config = fsearch_application_get_config(app);
 
     FsearchDatabaseIndexType sort_order = config->restore_sort_order ? get_sort_type_for_name(config->sort_by)
-                                                                     : DATABASE_INDEX_TYPE_NAME;
+                                                                           : DATABASE_INDEX_TYPE_NAME;
     if (sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
         // -> fall back to sort by name instead
         sort_order = DATABASE_INDEX_TYPE_NAME;
     }
-    GtkSortType sort_type = config->restore_sort_order
-                              ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
-                              : GTK_SORT_ASCENDING;
+    const GtkSortType sort_type = config->restore_sort_order
+                                    ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)
+                                    : GTK_SORT_ASCENDING;
 
     fsearch_window_apply_config(win);
+    fsearch_list_view_set_config(win->result_view->list_view, 0, sort_order, sort_type);
     perform_search(win);
 }
 
@@ -1263,11 +1213,6 @@ fsearch_application_window_cancel_current_task(FsearchApplicationWindow *win) {
     if (win->work_sort) {
         fsearch_database_work_cancel(win->work_sort);
     }
-}
-
-void
-fsearch_application_window_removed(FsearchApplicationWindow *win, FsearchApplication *app) {
-    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 }
 
 void
