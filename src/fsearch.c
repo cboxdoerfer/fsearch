@@ -272,7 +272,10 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
 static void
 action_cancel_update_database_activated(GSimpleAction *action, GVariant *parameter, gpointer user_data) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    // TODO: implement
+    if (app->work_scan) {
+        fsearch_database_work_cancel(app->work_scan);
+        g_clear_pointer(&app->work_scan, fsearch_database_work_unref);
+    }
 }
 
 static void
@@ -281,8 +284,8 @@ action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpo
 
     if (self->work_scan) {
         fsearch_database_work_cancel(self->work_scan);
+        g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
     }
-    g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
     self->work_scan = fsearch_database_work_new_rescan();
 
     fsearch_database2_queue_work(self->db2, self->work_scan);
