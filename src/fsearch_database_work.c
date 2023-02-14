@@ -187,6 +187,16 @@ fsearch_database_work_new_save() {
     return work;
 }
 
+guint
+fsearch_database_work_get_view_id(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, 0);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH || work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION
+                             || work->kind == FSEARCH_DATABASE_WORK_SORT
+                             || work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
+                         0);
+    return work->view_id;
+}
+
 FsearchDatabaseWorkKind
 fsearch_database_work_get_kind(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NUM_FSEARCH_DATABASE_WORK_KINDS);
@@ -226,13 +236,6 @@ fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work) {
     return work->sort_type;
 }
 
-guint
-fsearch_database_work_search_get_view_id(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, 0);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, 0);
-    return work->view_id;
-}
-
 FsearchDatabaseIndexType
 fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NUM_DATABASE_INDEX_TYPES);
@@ -245,13 +248,6 @@ fsearch_database_work_sort_get_sort_type(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, GTK_SORT_ASCENDING);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, GTK_SORT_ASCENDING);
     return work->sort_type;
-}
-
-guint
-fsearch_database_work_sort_get_view_id(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, 0);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, 0);
-    return work->view_id;
 }
 
 FsearchDatabaseIncludeManager *
@@ -276,13 +272,6 @@ fsearch_database_work_scan_get_flags(FsearchDatabaseWork *work) {
 }
 
 guint
-fsearch_database_work_item_info_get_view_id(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, 0);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
-    return work->view_id;
-}
-
-guint
 fsearch_database_work_item_info_get_index(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
@@ -294,13 +283,6 @@ fsearch_database_work_item_info_get_flags(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_GET_ITEM_INFO, 0);
     return work->entry_info_flags;
-}
-
-guint
-fsearch_database_work_modify_selection_get_view_id(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, 0);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, 0);
-    return work->view_id;
 }
 
 int32_t
