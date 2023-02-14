@@ -294,7 +294,7 @@ get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NULL);
 
     const uint32_t idx = fsearch_database_work_item_info_get_index(work);
-    const int32_t id = fsearch_database_work_item_info_get_view_id(work);
+    const uint32_t id = fsearch_database_work_get_view_id(work);
 
     FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(id));
     if (!view) {
@@ -315,7 +315,7 @@ static bool
 sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
 
-    const guint id = fsearch_database_work_sort_get_view_id(work);
+    const uint32_t id = fsearch_database_work_get_view_id(work);
     const FsearchDatabaseIndexType sort_order = fsearch_database_work_sort_get_sort_order(work);
     const GtkSortType sort_type = fsearch_database_work_sort_get_sort_type(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
@@ -386,7 +386,7 @@ static bool
 search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
 
-    const guint id = fsearch_database_work_search_get_view_id(work);
+    const uint32_t id = fsearch_database_work_get_view_id(work);
     emit_signal(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
@@ -435,7 +435,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     FsearchDatabaseSearchInfo *info =
         fsearch_database_search_info_new(query, num_files, num_folders, 0, 0, sort_order, sort_type);
 
-    emit_search_finished_signal(self, fsearch_database_work_search_get_view_id(work), g_steal_pointer(&info));
+    emit_search_finished_signal(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
 
     return result;
 }
@@ -488,7 +488,7 @@ static bool
 modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
     g_return_val_if_fail(work, false);
-    const guint id = fsearch_database_work_modify_selection_get_view_id(work);
+    const uint32_t id = fsearch_database_work_get_view_id(work);
     const FsearchSelectionType type = fsearch_database_work_modify_selection_get_type(work);
     const int32_t start_idx = fsearch_database_work_modify_selection_get_start_idx(work);
     const int32_t end_idx = fsearch_database_work_modify_selection_get_end_idx(work);
@@ -687,7 +687,7 @@ work_queue_thread(gpointer data) {
                 FsearchDatabaseEntryInfo *info = get_entry_info(self, work);
                 database_unlock(self);
                 if (info) {
-                    emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), g_steal_pointer(&info));
+                    emit_item_info_ready_signal(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
                 }
                 break;
             }
@@ -1027,7 +1027,6 @@ fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
     g_return_val_if_fail(info_out, false);
 
     if (!g_mutex_trylock(&self->mutex)) {
-        g_print("locked db...\n");
         return false;
     }
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(view_id, idx, flags);

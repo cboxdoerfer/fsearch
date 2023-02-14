@@ -73,7 +73,7 @@ void
 fsearch_database_work_cancel(FsearchDatabaseWork *work);
 
 guint
-fsearch_database_work_modify_selection_get_view_id(FsearchDatabaseWork *work);
+fsearch_database_work_get_view_id(FsearchDatabaseWork *work);
 
 int32_t
 fsearch_database_work_modify_selection_get_start_idx(FsearchDatabaseWork *work);
@@ -93,17 +93,11 @@ fsearch_database_work_search_get_sort_order(FsearchDatabaseWork *work);
 GtkSortType
 fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work);
 
-guint
-fsearch_database_work_search_get_view_id(FsearchDatabaseWork *work);
-
 FsearchDatabaseIndexType
 fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work);
 
 GtkSortType
 fsearch_database_work_sort_get_sort_type(FsearchDatabaseWork *work);
-
-guint
-fsearch_database_work_sort_get_view_id(FsearchDatabaseWork *work);
 
 FsearchDatabaseIncludeManager *
 fsearch_database_work_scan_get_include_manager(FsearchDatabaseWork *work);
@@ -113,9 +107,6 @@ fsearch_database_work_scan_get_exclude_manager(FsearchDatabaseWork *work);
 
 FsearchDatabaseIndexFlags
 fsearch_database_work_scan_get_flags(FsearchDatabaseWork *work);
-
-guint
-fsearch_database_work_item_info_get_view_id(FsearchDatabaseWork *work);
 
 guint
 fsearch_database_work_item_info_get_index(FsearchDatabaseWork *work);
