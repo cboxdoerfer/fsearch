@@ -77,8 +77,11 @@ static guint signals[NUM_EVENTS];
 typedef struct FsearchSignalEmitContext {
     FsearchDatabase2 *db;
     FsearchDatabase2EventType type;
-    gpointer data;
-    gpointer data2;
+    gpointer arg1;
+    gpointer arg2;
+    GDestroyNotify arg1_free_func;
+    GDestroyNotify arg2_free_func;
+    guint n_args;
 } FsearchSignalEmitContext;
 
 static void
@@ -119,83 +122,112 @@ wakeup_work_queue(FsearchDatabase2 *self) {
 static void
 signal_emit_context_free(FsearchSignalEmitContext *ctx) {
     g_clear_object(&ctx->db);
+    if (ctx->arg1_free_func) {
+        g_clear_pointer(&ctx->arg1, ctx->arg1_free_func);
+    }
+    if (ctx->arg2_free_func) {
+        g_clear_pointer(&ctx->arg2, ctx->arg2_free_func);
+    }
     g_clear_pointer(&ctx, free);
 }
 
 static FsearchSignalEmitContext *
-signal_emit_context_new(FsearchDatabase2 *db, FsearchDatabase2EventType type, gpointer data, gpointer data2) {
+signal_emit_context_new(FsearchDatabase2 *db,
+                        FsearchDatabase2EventType type,
+                        gpointer arg1,
+                        gpointer arg2,
+                        guint n_args,
+                        GDestroyNotify arg1_free_func,
+                        GDestroyNotify arg2_free_func) {
     FsearchSignalEmitContext *ctx = calloc(1, sizeof(FsearchSignalEmitContext));
     g_assert(ctx != NULL);
 
     ctx->db = g_object_ref(db);
     ctx->type = type;
-    ctx->data = data;
-    ctx->data2 = data2;
+    ctx->arg1 = arg1;
+    ctx->arg2 = arg2;
+    ctx->n_args = n_args;
+    ctx->arg1_free_func = arg1_free_func;
+    ctx->arg2_free_func = arg2_free_func;
     return ctx;
 }
 
 static gboolean
 emit_signal_cb(gpointer user_data) {
     FsearchSignalEmitContext *ctx = user_data;
-    g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->data);
 
-    g_clear_pointer(&ctx, signal_emit_context_free);
+    switch (ctx->n_args) {
+    case 0:
+        g_signal_emit(ctx->db, signals[ctx->type], 0);
+        break;
+    case 1:
+        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1);
+        break;
+    case 2:
+        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1, ctx->arg2);
+        break;
+    default:
+        g_assert_not_reached();
+    }
 
-    return G_SOURCE_REMOVE;
-}
-
-static gboolean
-emit_item_info_signal_cb(gpointer user_data) {
-    FsearchSignalEmitContext *ctx = user_data;
-    g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->data, ctx->data2);
-
-    g_clear_pointer(&ctx->data2, fsearch_database_entry_info_unref);
-    g_clear_pointer(&ctx, signal_emit_context_free);
-
-    return G_SOURCE_REMOVE;
-}
-
-static gboolean
-emit_search_finished_signal_cb(gpointer user_data) {
-    FsearchSignalEmitContext *ctx = user_data;
-    g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->data, ctx->data2);
-
-    g_clear_pointer(&ctx->data2, fsearch_database_search_info_unref);
     g_clear_pointer(&ctx, signal_emit_context_free);
 
     return G_SOURCE_REMOVE;
 }
 
 static void
-emit_signal(FsearchDatabase2 *self, FsearchDatabase2EventType type, gpointer data) {
-    g_idle_add(emit_signal_cb, signal_emit_context_new(self, type, data, NULL));
+emit_signal(FsearchDatabase2 *self,
+            FsearchDatabase2EventType type,
+            gpointer arg1,
+            gpointer arg2,
+            guint n_args,
+            GDestroyNotify arg1_free_func,
+            GDestroyNotify arg2_free_func) {
+    g_idle_add(emit_signal_cb, signal_emit_context_new(self, type, arg1, arg2, n_args, arg1_free_func, arg2_free_func));
 }
 
 static void
 emit_item_info_ready_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseEntryInfo *info) {
-    g_idle_add(emit_item_info_signal_cb,
-               signal_emit_context_new(self,
-                                       EVENT_ITEM_INFO_READY,
-                                       GUINT_TO_POINTER(id),
-                                       info ? fsearch_database_entry_info_ref(info) : NULL));
+    emit_signal(self,
+                EVENT_ITEM_INFO_READY,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_entry_info_unref);
 }
 
 static void
 emit_search_finished_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearchInfo *info) {
-    g_idle_add(emit_search_finished_signal_cb,
-               signal_emit_context_new(self, EVENT_SEARCH_FINISHED, GUINT_TO_POINTER(id), info));
+    emit_signal(self,
+                EVENT_SEARCH_FINISHED,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_search_info_unref);
 }
 
 static void
 emit_sort_finished_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearchInfo *info) {
-    g_idle_add(emit_search_finished_signal_cb,
-               signal_emit_context_new(self, EVENT_SORT_FINISHED, GUINT_TO_POINTER(id), info));
+    emit_signal(self,
+                EVENT_SORT_FINISHED,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_search_info_unref);
 }
 
 static void
 emit_selection_changed_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearchInfo *info) {
-    g_idle_add(emit_search_finished_signal_cb,
-               signal_emit_context_new(self, EVENT_SELECTION_CHANGED, GUINT_TO_POINTER(id), info));
+    emit_signal(self,
+                EVENT_SELECTION_CHANGED,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_search_info_unref);
 }
 
 static void
@@ -288,7 +320,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     const GtkSortType sort_type = fsearch_database_work_sort_get_sort_type(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
-    emit_signal(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id));
+    emit_signal(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     database_lock(self);
 
@@ -329,7 +361,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     database_unlock(self);
 
-    emit_sort_finished_signal(self, id, info);
+    emit_sort_finished_signal(self, id, g_steal_pointer(&info));
 
     return true;
 }
@@ -355,7 +387,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
 
     const guint id = fsearch_database_work_search_get_view_id(work);
-    emit_signal(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id));
+    emit_signal(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
     FsearchDatabaseIndexType sort_order = fsearch_database_work_search_get_sort_order(work);
@@ -403,7 +435,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     FsearchDatabaseSearchInfo *info =
         fsearch_database_search_info_new(query, num_files, num_folders, 0, 0, sort_order, sort_type);
 
-    emit_search_finished_signal(self, fsearch_database_work_search_get_view_id(work), info);
+    emit_search_finished_signal(self, fsearch_database_work_search_get_view_id(work), g_steal_pointer(&info));
 
     return result;
 }
@@ -516,7 +548,7 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     database_unlock(self);
 
-    emit_selection_changed_signal(self, id, info);
+    emit_selection_changed_signal(self, id, g_steal_pointer(&info));
 
     return true;
 }
@@ -601,7 +633,7 @@ load_database_from_file(FsearchDatabase2 *self) {
     g_return_val_if_fail(self, false);
     g_return_val_if_fail(self->file, false);
 
-    emit_signal(self, EVENT_LOAD_STARTED, NULL);
+    emit_signal(self, EVENT_LOAD_STARTED, NULL, NULL, 0, NULL, NULL);
 
     g_autofree gchar *file_path = g_file_get_path(self->file);
     g_return_val_if_fail(file_path, false);
@@ -622,7 +654,7 @@ load_database_from_file(FsearchDatabase2 *self) {
 
     database_unlock(self);
 
-    emit_signal(self, EVENT_LOAD_FINISHED, info);
+    emit_signal(self, EVENT_LOAD_FINISHED, g_steal_pointer(&info), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
 
     return true;
 }
@@ -655,25 +687,24 @@ work_queue_thread(gpointer data) {
                 FsearchDatabaseEntryInfo *info = get_entry_info(self, work);
                 database_unlock(self);
                 if (info) {
-                    g_print("emit item info ready!\n");
-                    emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), info);
+                    emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), g_steal_pointer(&info));
                 }
                 break;
             }
             case FSEARCH_DATABASE_WORK_RESCAN:
-                emit_signal(self, EVENT_SCAN_STARTED, NULL);
+                emit_signal(self, EVENT_SCAN_STARTED, NULL, NULL, 0, NULL, NULL);
                 rescan_database(self);
-                emit_signal(self, EVENT_SCAN_FINISHED, NULL);
+                emit_signal(self, EVENT_SCAN_FINISHED, NULL, NULL, 0, NULL, NULL);
                 break;
             case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
-                emit_signal(self, EVENT_SAVE_STARTED, NULL);
+                emit_signal(self, EVENT_SAVE_STARTED, NULL, NULL, 0, NULL, NULL);
                 save_database_to_file(self);
-                emit_signal(self, EVENT_SAVE_FINISHED, NULL);
+                emit_signal(self, EVENT_SAVE_FINISHED, NULL, NULL, 0, NULL, NULL);
                 break;
             case FSEARCH_DATABASE_WORK_SCAN:
-                emit_signal(self, EVENT_SCAN_STARTED, NULL);
+                emit_signal(self, EVENT_SCAN_STARTED, NULL, NULL, 0, NULL, NULL);
                 scan_database(self, work);
-                emit_signal(self, EVENT_SCAN_FINISHED, NULL);
+                emit_signal(self, EVENT_SCAN_FINISHED, NULL, NULL, 0, NULL, NULL);
                 break;
             case FSEARCH_DATABASE_WORK_SEARCH:
                 search_database(self, work);
