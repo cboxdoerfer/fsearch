@@ -23,6 +23,7 @@ typedef enum {
     ENTRY_INFO_ID_ICON,
     ENTRY_INFO_ID_SELECTED,
     ENTRY_INFO_ID_INDEX,
+    ENTRY_INFO_ID_EXTENSION,
     NUM_ENTRY_INFO_IDS,
 } FsearchDatabaseEntryInfoID;
 
@@ -50,6 +51,7 @@ entry_info_value_clear(FsearchDatabaseEntryInfoValue *value) {
     case ENTRY_INFO_ID_NAME:
     case ENTRY_INFO_ID_PATH:
     case ENTRY_INFO_ID_PATH_FULL:
+    case ENTRY_INFO_ID_EXTENSION:
         g_string_free(g_steal_pointer(&value->str), TRUE);
         break;
     case ENTRY_INFO_ID_ICON:
@@ -105,6 +107,9 @@ num_flags_set(FsearchDatabaseEntryInfoFlags flags) {
         num_flags++;
     }
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX) {
+        num_flags++;
+    }
+    if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION) {
         num_flags++;
     }
     return num_flags;
@@ -207,6 +212,8 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
         FsearchDatabaseEntryInfoValue val = {0};
         val.id = ENTRY_INFO_ID_ICON;
         g_autoptr(GString) path = db_entry_get_path_full(entry);
+        g_print("get icon...\n");
+        g_print("got icon!\n");
         val.icon = fsearch_file_utils_get_icon_for_path(path->str);
         g_array_append_val(info->infos, val);
     }
@@ -222,7 +229,12 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
         val.uint = idx;
         g_array_append_val(info->infos, val);
     }
-
+    if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION) {
+        FsearchDatabaseEntryInfoValue val = {0};
+        val.id = ENTRY_INFO_ID_EXTENSION;
+        val.str = g_string_new(db_entry_get_extension(entry));
+        g_array_append_val(info->infos, val);
+    }
 
     info->ref_count = 1;
 
@@ -243,6 +255,15 @@ fsearch_database_entry_info_get_path(FsearchDatabaseEntryInfo *info) {
     g_return_val_if_fail(info, NULL);
     g_return_val_if_fail(info->flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH, NULL);
     FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_PATH);
+    g_return_val_if_fail(val, NULL);
+    return val->str;
+}
+
+GString *
+fsearch_database_entry_info_get_extension(FsearchDatabaseEntryInfo *info) {
+    g_return_val_if_fail(info, NULL);
+    g_return_val_if_fail(info->flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION, NULL);
+    FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_EXTENSION);
     g_return_val_if_fail(val, NULL);
     return val->str;
 }

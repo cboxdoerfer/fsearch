@@ -23,13 +23,14 @@ typedef enum {
     FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH_FULL = 1 << 8,
     FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED = 1 << 9,
     FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX = 1 << 10,
+    FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION = 1 << 11,
 } FsearchDatabaseEntryInfoFlags;
 
-#define FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL                                                                           \
-    FSEARCH_DATABASE_ENTRY_INFO_FLAG_NAME | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH                                      \
-        | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SIZE | FSEARCH_DATABASE_ENTRY_INFO_FLAG_MODIFICATION_TIME                   \
-        | FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH_FULL                           \
-        | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED | FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX
+#define FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL                                                                               \
+    (FSEARCH_DATABASE_ENTRY_INFO_FLAG_NAME | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SIZE \
+     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_MODIFICATION_TIME | FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON                          \
+     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH_FULL | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED                              \
+     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX | FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION)
 
 GType
 fsearch_database_entry_info_get_type(void);
@@ -51,6 +52,9 @@ fsearch_database_entry_info_get_name(FsearchDatabaseEntryInfo *info);
 
 GString *
 fsearch_database_entry_info_get_path(FsearchDatabaseEntryInfo *info);
+
+GString *
+fsearch_database_entry_info_get_extension(FsearchDatabaseEntryInfo *info);
 
 GString *
 fsearch_database_entry_info_get_path_full(FsearchDatabaseEntryInfo *info);

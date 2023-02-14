@@ -655,6 +655,7 @@ work_queue_thread(gpointer data) {
                 FsearchDatabaseEntryInfo *info = get_entry_info(self, work);
                 database_unlock(self);
                 if (info) {
+                    g_print("emit item info ready!\n");
                     emit_item_info_ready_signal(self, fsearch_database_work_item_info_get_view_id(work), info);
                 }
                 break;
