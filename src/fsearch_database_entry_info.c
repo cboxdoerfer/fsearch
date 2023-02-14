@@ -212,8 +212,6 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
         FsearchDatabaseEntryInfoValue val = {0};
         val.id = ENTRY_INFO_ID_ICON;
         g_autoptr(GString) path = db_entry_get_path_full(entry);
-        g_print("get icon...\n");
-        g_print("got icon!\n");
         val.icon = fsearch_file_utils_get_icon_for_path(path->str);
         g_array_append_val(info->infos, val);
     }
