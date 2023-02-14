@@ -448,70 +448,80 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         int32_t dw = 0;
         pango_layout_set_attributes(layout, NULL);
 
+        g_autofree char *text_temp = NULL;
         const char *text = NULL;
+        char text_time[100] = "";
         int text_len = -1;
 
-        switch (column->type) {
-        case DATABASE_INDEX_TYPE_NAME: {
-            if (!pending && config->show_listview_icons) {
-                cairo_surface_t *icon_surface = config->show_listview_icons
-                                                  ? get_cairo_surface_for_gicon(result_view,
-                                                                                bin_window,
-                                                                                fsearch_database_entry_info_get_icon(info),
-                                                                                icon_size,
-                                                                                gdk_window_get_scale_factor(bin_window))
-                                                  : NULL;
-                if (icon_surface) {
-                    int32_t x_icon = x;
-                    if (right_to_left_text) {
-                        x_icon += column->effective_width - icon_size - ROW_PADDING_X;
-                    }
-                    else {
-                        x_icon += ROW_PADDING_X;
-                        dx += icon_size + 2 * ROW_PADDING_X;
-                    }
-                    dw += icon_size + 2 * ROW_PADDING_X;
-                    gtk_render_icon_surface(context,
-                                            cr,
-                                            icon_surface,
-                                            x_icon,
-                                            rect->y + floor((rect->height - icon_size) / 2.0));
-                    g_clear_pointer(&icon_surface, cairo_surface_destroy);
-                }
-            }
-            if (!pending) {
+        if (pending) {
+            text = "Loading...";
+            text_len = strlen(text);
+        }
+        else {
+            switch (column->type) {
+            case DATABASE_INDEX_TYPE_NAME: {
                 GString *name = fsearch_database_entry_info_get_name(info);
                 text = name->str;
+
+                if (config->show_listview_icons) {
+                    cairo_surface_t *icon_surface = config->show_listview_icons ? get_cairo_surface_for_gicon(
+                                                        result_view,
+                                                        bin_window,
+                                                        fsearch_database_entry_info_get_icon(info),
+                                                        icon_size,
+                                                        gdk_window_get_scale_factor(bin_window))
+                                                                                : NULL;
+                    if (icon_surface) {
+                        int32_t x_icon = x;
+                        if (right_to_left_text) {
+                            x_icon += column->effective_width - icon_size - ROW_PADDING_X;
+                        }
+                        else {
+                            x_icon += ROW_PADDING_X;
+                            dx += icon_size + 2 * ROW_PADDING_X;
+                        }
+                        dw += icon_size + 2 * ROW_PADDING_X;
+                        gtk_render_icon_surface(context,
+                                                cr,
+                                                icon_surface,
+                                                x_icon,
+                                                rect->y + floor((rect->height - icon_size) / 2.0));
+                        g_clear_pointer(&icon_surface, cairo_surface_destroy);
+                    }
+                }
+                break;
             }
-            else {
-                text = "Loading...";
-            }
-        } break;
-        case DATABASE_INDEX_TYPE_PATH:
-            if (!pending) {
+            case DATABASE_INDEX_TYPE_PATH: {
                 GString *path = fsearch_database_entry_info_get_path(info);
                 text = path->str;
                 text_len = path->len;
+                break;
             }
-            else {
-                text = "Loading...";
-                text_len = strlen(text);
+            case DATABASE_INDEX_TYPE_SIZE:
+                text_temp = fsearch_file_utils_get_size_formatted(fsearch_database_entry_info_get_size(info),
+                                                                  config->show_base_2_units);
+                text = text_temp;
+                break;
+            case DATABASE_INDEX_TYPE_EXTENSION: {
+                GString *extension = fsearch_database_entry_info_get_extension(info);
+                text = extension->str;
+                break;
             }
-            break;
-        case DATABASE_INDEX_TYPE_SIZE:
-            text = "TODO";
-            break;
-        case DATABASE_INDEX_TYPE_EXTENSION:
-            text = "TODO";
-            break;
-        case DATABASE_INDEX_TYPE_FILETYPE:
-            text = "TODO";
-            break;
-        case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
-            text = "TODO";
-            break;
-        default:
-            text = NULL;
+            case DATABASE_INDEX_TYPE_FILETYPE:
+                text = "TODO";
+                break;
+            case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
+                const time_t mtime = fsearch_database_entry_info_get_mtime(info);
+                strftime(text_time,
+                         100,
+                         "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+                         localtime(&mtime));
+                text = text_time;
+                break;
+            }
+            default:
+                text = NULL;
+            }
         }
 
         // if (config->highlight_search_terms) {
