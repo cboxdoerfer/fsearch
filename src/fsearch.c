@@ -59,10 +59,6 @@ struct _FsearchApplication {
     uint32_t num_folders;
 
     FsearchDatabaseWork *work_scan;
-
-    int num_database_update_active;
-
-    bool is_shutting_down;
 };
 
 static const char *fsearch_bus_name = "io.github.cboxdoerfer.FSearch";
@@ -100,31 +96,6 @@ database_auto_update_init(FsearchApplication *fsearch) {
 
         g_debug("[app] update database every %d seconds", seconds);
         fsearch->db_timeout_id = g_timeout_add_seconds(seconds, on_database_auto_update, fsearch);
-    }
-}
-
-static gboolean
-on_database_notify_status(gpointer user_data) {
-    g_autofree char *text = user_data;
-    g_return_val_if_fail(text, G_SOURCE_REMOVE);
-
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-
-    for (; windows; windows = windows->next) {
-        GtkWindow *window = windows->data;
-        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
-            fsearch_application_window_set_database_index_progress((FsearchApplicationWindow *)window, text);
-        }
-    }
-
-    return G_SOURCE_REMOVE;
-}
-
-static void
-database_notify_status_cb(const char *text) {
-    if (text) {
-        g_idle_add(on_database_notify_status, g_strdup(text));
     }
 }
 
@@ -500,8 +471,6 @@ fsearch_application_startup(GApplication *app) {
     set_accel_for_action(app, "win.close_window", "<control>w");
     set_accel_for_action(app, "app.help", "F1");
     set_accels_for_escape(app);
-
-    fsearch->is_shutting_down = false;
 }
 
 static GActionEntry fsearch_app_entries[] = {
