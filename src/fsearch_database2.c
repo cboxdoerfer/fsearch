@@ -121,13 +121,13 @@ wakeup_work_queue(FsearchDatabase2 *self) {
 
 static void
 signal_emit_context_free(FsearchSignalEmitContext *ctx) {
-    g_clear_object(&ctx->db);
     if (ctx->arg1_free_func) {
         g_clear_pointer(&ctx->arg1, ctx->arg1_free_func);
     }
     if (ctx->arg2_free_func) {
         g_clear_pointer(&ctx->arg2, ctx->arg2_free_func);
     }
+    g_clear_object(&ctx->db);
     g_clear_pointer(&ctx, free);
 }
 
@@ -173,6 +173,11 @@ emit_signal_cb(gpointer user_data) {
     g_clear_pointer(&ctx, signal_emit_context_free);
 
     return G_SOURCE_REMOVE;
+}
+
+static void
+emit_signal0(FsearchDatabase2 *self, FsearchDatabase2EventType type) {
+    g_idle_add(emit_signal_cb, signal_emit_context_new(self, type, NULL, NULL, 0, NULL, NULL));
 }
 
 static void
@@ -435,7 +440,10 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     FsearchDatabaseSearchInfo *info =
         fsearch_database_search_info_new(query, num_files, num_folders, 0, 0, sort_order, sort_type);
 
-    emit_search_finished_signal(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
+    emit_search_finished_signal(
+        self,
+        id,
+        fsearch_database_search_info_new(query, num_files, num_folders, 0, 0, sort_order, sort_type));
 
     return result;
 }
@@ -484,18 +492,18 @@ select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int32_t end_idx
     }
 }
 
-static bool
+static void
 modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
-    g_return_val_if_fail(self, false);
-    g_return_val_if_fail(work, false);
-    const uint32_t id = fsearch_database_work_get_view_id(work);
+    g_return_if_fail(self);
+    g_return_if_fail(work);
+    const uint32_t view_id = fsearch_database_work_get_view_id(work);
     const FsearchSelectionType type = fsearch_database_work_modify_selection_get_type(work);
     const int32_t start_idx = fsearch_database_work_modify_selection_get_start_idx(work);
     const int32_t end_idx = fsearch_database_work_modify_selection_get_end_idx(work);
 
     database_lock(self);
 
-    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(id));
+    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
 
     FsearchDatabaseEntry *entry = get_entry_for_idx(view, start_idx);
 
@@ -537,42 +545,38 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         g_assert_not_reached();
     }
 
-    FsearchDatabaseSearchInfo *info =
+    emit_selection_changed_signal(
+        self,
+        view_id,
         fsearch_database_search_info_new(fsearch_query_ref(view->query),
                                          darray_get_num_items(view->files),
                                          darray_get_num_items(view->folders),
                                          fsearch_selection_get_num_selected(view->file_selection),
                                          fsearch_selection_get_num_selected(view->folder_selection),
                                          view->sort_order,
-                                         view->sort_type);
+                                         view->sort_type));
 
     database_unlock(self);
-
-    emit_selection_changed_signal(self, id, g_steal_pointer(&info));
-
-    return true;
 }
 
-static bool
+static void
 save_database_to_file(FsearchDatabase2 *self) {
-    g_return_val_if_fail(self, false);
-    g_return_val_if_fail(self->file, false);
+    g_return_if_fail(self);
+    g_return_if_fail(self->file);
 
     g_autoptr(GFile) db_directory = g_file_get_parent(self->file);
     g_autofree gchar *db_directory_path = g_file_get_path(db_directory);
 
     database_lock(self);
 
-    const bool res = db_file_save(self->index, db_directory_path);
+    db_file_save(self->index, db_directory_path);
 
     database_unlock(self);
-
-    return res;
 }
 
-static bool
+static void
 rescan_database(FsearchDatabase2 *self) {
-    g_return_val_if_fail(self, false);
+    g_return_if_fail(self);
 
     database_lock(self);
 
@@ -583,10 +587,7 @@ rescan_database(FsearchDatabase2 *self) {
     database_unlock(self);
 
     g_autoptr(FsearchDatabaseIndex) index = db_scan2(include_manager, exclude_manager, flags, NULL);
-
-    if (!index) {
-        return false;
-    }
+    g_return_if_fail(index);
 
     database_lock(self);
 
@@ -597,24 +598,20 @@ rescan_database(FsearchDatabase2 *self) {
     self->index = g_steal_pointer(&index);
 
     database_unlock(self);
-
-    return true;
 }
 
-static bool
+static void
 scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
-    g_return_val_if_fail(self, false);
-    g_return_val_if_fail(work, false);
+    g_return_if_fail(self);
+    g_return_if_fail(work);
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_work_scan_get_include_manager(work);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
     const FsearchDatabaseIndexFlags flags = fsearch_database_work_scan_get_flags(work);
 
     g_autoptr(FsearchDatabaseIndex) index = db_scan2(include_manager, exclude_manager, flags, NULL);
+    g_return_if_fail(index);
 
-    if (!index) {
-        return false;
-    }
     database_lock(self);
 
     g_set_object(&self->include_manager, include_manager);
@@ -624,39 +621,38 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     self->index = g_steal_pointer(&index);
 
     database_unlock(self);
-
-    return true;
 }
 
-static bool
+static void
 load_database_from_file(FsearchDatabase2 *self) {
-    g_return_val_if_fail(self, false);
-    g_return_val_if_fail(self->file, false);
+    g_return_if_fail(self);
+    g_return_if_fail(self->file);
 
-    emit_signal(self, EVENT_LOAD_STARTED, NULL, NULL, 0, NULL, NULL);
+    emit_signal0(self, EVENT_LOAD_STARTED);
 
     g_autofree gchar *file_path = g_file_get_path(self->file);
-    g_return_val_if_fail(file_path, false);
+    g_return_if_fail(file_path);
 
     g_autofree FsearchDatabaseIndex *index = db_file_load(file_path, NULL);
+    g_return_if_fail(index);
 
-    if (!index) {
-        return false;
-    }
     database_lock(self);
 
     g_clear_pointer(&self->index, fsearch_database_index_free);
     self->index = g_steal_pointer(&index);
 
-    FsearchDatabaseInfo *info =
-        fsearch_database_info_new(darray_get_num_items(self->index->files[DATABASE_INDEX_TYPE_NAME]),
-                                  darray_get_num_items(self->index->folders[DATABASE_INDEX_TYPE_NAME]));
+    const uint32_t num_files = darray_get_num_items(self->index->files[DATABASE_ENTRY_TYPE_FILE]);
+    const uint32_t num_folders = darray_get_num_items(self->index->folders[DATABASE_ENTRY_TYPE_FILE]);
 
     database_unlock(self);
 
-    emit_signal(self, EVENT_LOAD_FINISHED, g_steal_pointer(&info), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
-
-    return true;
+    emit_signal(self,
+                EVENT_LOAD_FINISHED,
+                fsearch_database_info_new(num_files, num_folders),
+                NULL,
+                1,
+                (GDestroyNotify)fsearch_database_info_unref,
+                NULL);
 }
 
 static gpointer
@@ -692,19 +688,19 @@ work_queue_thread(gpointer data) {
                 break;
             }
             case FSEARCH_DATABASE_WORK_RESCAN:
-                emit_signal(self, EVENT_SCAN_STARTED, NULL, NULL, 0, NULL, NULL);
+                emit_signal0(self, EVENT_SCAN_STARTED);
                 rescan_database(self);
-                emit_signal(self, EVENT_SCAN_FINISHED, NULL, NULL, 0, NULL, NULL);
+                emit_signal0(self, EVENT_SCAN_FINISHED);
                 break;
             case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
-                emit_signal(self, EVENT_SAVE_STARTED, NULL, NULL, 0, NULL, NULL);
+                emit_signal0(self, EVENT_SAVE_STARTED);
                 save_database_to_file(self);
-                emit_signal(self, EVENT_SAVE_FINISHED, NULL, NULL, 0, NULL, NULL);
+                emit_signal0(self, EVENT_SAVE_FINISHED);
                 break;
             case FSEARCH_DATABASE_WORK_SCAN:
-                emit_signal(self, EVENT_SCAN_STARTED, NULL, NULL, 0, NULL, NULL);
+                emit_signal0(self, EVENT_SCAN_STARTED);
                 scan_database(self, work);
-                emit_signal(self, EVENT_SCAN_FINISHED, NULL, NULL, 0, NULL, NULL);
+                emit_signal0(self, EVENT_SCAN_FINISHED);
                 break;
             case FSEARCH_DATABASE_WORK_SEARCH:
                 search_database(self, work);
