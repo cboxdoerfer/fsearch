@@ -103,8 +103,7 @@ on_filter_combobox_changed(GtkComboBox *widget, gpointer user_data);
 static void
 modify_selection(FsearchApplicationWindow *self, FsearchSelectionType type, int32_t start_idx, int32_t end_idx) {
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
-    g_autoptr(FsearchDatabaseWork)
-        work = fsearch_database_work_new_modify_selection(win_id, type, start_idx, end_idx);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_modify_selection(win_id, type, start_idx, end_idx);
     fsearch_database2_queue_work(self->db, work);
     fsearch_database2_process_work_now(self->db);
 }
@@ -431,10 +430,17 @@ on_selection_changed(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
+        const uint32_t num_files = fsearch_database_search_info_get_num_files(info);
+        const uint32_t num_folders = fsearch_database_search_info_get_num_folders(info);
         win->num_files_selected = fsearch_database_search_info_get_num_files_selected(info);
         win->num_folders_selected = fsearch_database_search_info_get_num_folders_selected(info);
         fsearch_result_view_row_cache_reset(win->result_view);
         fsearch_window_actions_update(win);
+        fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(win->statusbar),
+                                        win->num_files_selected,
+                                        win->num_folders_selected,
+                                        num_files,
+                                        num_folders);
         redraw_listview(win);
     }
 }
