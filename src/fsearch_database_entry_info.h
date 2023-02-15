@@ -4,6 +4,7 @@
 #include <glib.h>
 
 #include "fsearch_database_entry.h"
+#include "fsearch_query.h"
 
 G_BEGIN_DECLS
 
@@ -24,13 +25,15 @@ typedef enum {
     FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED = 1 << 9,
     FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX = 1 << 10,
     FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION = 1 << 11,
+    FSEARCH_DATABASE_ENTRY_INFO_FLAG_HIGHLIGHTS = 1 << 12,
 } FsearchDatabaseEntryInfoFlags;
 
-#define FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL                                                                               \
-    (FSEARCH_DATABASE_ENTRY_INFO_FLAG_NAME | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SIZE \
-     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_MODIFICATION_TIME | FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON                          \
-     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH_FULL | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED                              \
-     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX | FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION)
+#define FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL                                                                           \
+    (FSEARCH_DATABASE_ENTRY_INFO_FLAG_NAME | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH                                     \
+     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SIZE | FSEARCH_DATABASE_ENTRY_INFO_FLAG_MODIFICATION_TIME                      \
+     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_ICON | FSEARCH_DATABASE_ENTRY_INFO_FLAG_PATH_FULL                              \
+     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED | FSEARCH_DATABASE_ENTRY_INFO_FLAG_INDEX                              \
+     | FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION | FSEARCH_DATABASE_ENTRY_INFO_FLAG_HIGHLIGHTS)
 
 GType
 fsearch_database_entry_info_get_type(void);
@@ -43,6 +46,7 @@ fsearch_database_entry_info_unref(FsearchDatabaseEntryInfo *info);
 
 FsearchDatabaseEntryInfo *
 fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
+                                FsearchQuery *query,
                                 uint32_t idx,
                                 bool is_selected,
                                 FsearchDatabaseEntryInfoFlags flags);
@@ -73,6 +77,9 @@ fsearch_database_entry_info_get_selected(FsearchDatabaseEntryInfo *info);
 
 uint32_t
 fsearch_database_entry_info_get_index(FsearchDatabaseEntryInfo *info);
+
+GHashTable *
+fsearch_database_entry_info_get_highlights(FsearchDatabaseEntryInfo *info);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseEntryInfo, fsearch_database_entry_info_unref)
 

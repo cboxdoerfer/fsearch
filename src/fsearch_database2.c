@@ -320,7 +320,7 @@ get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabas
         return FSEARCH_DATABASE_RESULT_ENTRY_NOT_FOUND;
     }
 
-    *info_out = fsearch_database_entry_info_new(entry, idx, is_selected(view, entry), flags);
+    *info_out = fsearch_database_entry_info_new(entry, view->query, idx, is_selected(view, entry), flags);
     return FSEARCH_DATABASE_RESULT_SUCCESS;
 }
 
