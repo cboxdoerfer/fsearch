@@ -74,9 +74,17 @@ fsearch_deps = [
     dependency('icu-uc', version: '>= 3.8'),
 ]
 
+fsearch_enums_headers = [
+    'fsearch_database2.h'
+]
+
+fsearch_enums = gnome.mkenums_simple('fsearch_enums',
+     sources: fsearch_enums_headers,
+)
+
 libfsearch = static_library(
     'fsearch',
-    libfsearch_sources,
+    libfsearch_sources + fsearch_enums,
     dependencies: fsearch_deps,
     include_directories: fsearch_include_dirs,
 )
