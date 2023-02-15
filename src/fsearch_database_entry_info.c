@@ -57,8 +57,8 @@ entry_info_value_clear(FsearchDatabaseEntryInfoValue *value) {
     case ENTRY_INFO_ID_ICON:
         g_clear_object(&value->icon);
         break;
-    case NUM_ENTRY_INFO_IDS:
-        g_assert_not_reached();
+    default:
+        break;
     }
 }
 
