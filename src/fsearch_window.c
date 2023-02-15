@@ -940,13 +940,11 @@ on_search_entry_activate(GtkButton *widget, gpointer user_data) {
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     if (config->search_as_you_type) {
-        // TODO:
-        // if (db_view_get_num_entries(win->result_view->database_view) > 0) {
-        //    if (db_view_get_num_selected(win->result_view->database_view) < 1) {
-        //        db_view_select(win->result_view->database_view, 0);
-        //    }
-        //    gtk_widget_grab_focus(GTK_WIDGET(win->result_view->list_view));
-        //}
+        // select the first entry in the result list if the selection is empty
+        if (win->num_folders_selected == 0 && win->num_files_selected == 0) {
+            modify_selection(win, FSEARCH_SELECTION_TYPE_SELECT, 0, 0);
+        }
+        gtk_widget_grab_focus(GTK_WIDGET(win->result_view->list_view));
     }
     else {
         perform_search(win);
