@@ -595,12 +595,7 @@ on_listview_query_tooltip(PangoLayout *layout,
                           FsearchListViewColumn *col,
                           gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    // if (!win->result_view->database_view) {
-    //     return NULL;
-    // }
-
-    // return fsearch_result_view_query_tooltip(win->result_view->database_view, row_idx, col, layout, row_height);
-    return NULL;
+    return fsearch_result_view_query_tooltip(win->result_view, row_idx, col, layout, row_height);
 }
 
 static void

@@ -25,6 +25,7 @@ typedef enum {
     ENTRY_INFO_ID_INDEX,
     ENTRY_INFO_ID_EXTENSION,
     ENTRY_INFO_ID_HIGHLIGHTS,
+    ENTRY_INFO_ID_TYPE,
     NUM_ENTRY_INFO_IDS,
 } FsearchDatabaseEntryInfoID;
 
@@ -35,7 +36,7 @@ typedef struct {
         GHashTable *highlights;
         GString *str;
         GIcon *icon;
-        size_t size;
+        off_t size;
         time_t time;
         uint32_t uint;
         bool selected;
@@ -253,6 +254,11 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
         g_array_append_val(info->infos, val);
     }
 
+    FsearchDatabaseEntryInfoValue val = {0};
+    val.id = ENTRY_INFO_ID_TYPE;
+    val.type = db_entry_get_type(entry);
+    g_array_append_val(info->infos, val);
+
     info->ref_count = 1;
 
     return info;
@@ -303,7 +309,7 @@ fsearch_database_entry_info_get_mtime(FsearchDatabaseEntryInfo *info) {
     return val->time;
 }
 
-size_t
+off_t
 fsearch_database_entry_info_get_size(FsearchDatabaseEntryInfo *info) {
     g_return_val_if_fail(info, 0);
     g_return_val_if_fail(info->flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_SIZE, 0);
@@ -346,4 +352,12 @@ fsearch_database_entry_info_get_highlights(FsearchDatabaseEntryInfo *info) {
     FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_HIGHLIGHTS);
     g_return_val_if_fail(val, NULL);
     return val->highlights;
+}
+
+FsearchDatabaseEntryType
+fsearch_database_entry_info_get_entry_type(FsearchDatabaseEntryInfo *info) {
+    g_return_val_if_fail(info, 0);
+    FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_TYPE);
+    g_return_val_if_fail(val, 0);
+    return val->type;
 }
