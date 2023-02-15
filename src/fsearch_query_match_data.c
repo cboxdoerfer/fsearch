@@ -222,6 +222,24 @@ fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchData
     return match_data->highlights[idx];
 }
 
+GHashTable *
+fsearch_query_match_data_get_highlights(FsearchQueryMatchData *match_data) {
+    g_assert(match_data);
+    if (match_data->has_highlights == 0) {
+        return NULL;
+    }
+    GHashTable *highlights =
+        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)pango_attr_list_unref);
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+        PangoAttrList *attr_list = match_data->highlights[i];
+        if (attr_list) {
+            g_hash_table_insert(highlights, GUINT_TO_POINTER(i), pango_attr_list_ref(attr_list));
+        }
+    }
+    return highlights;
+}
+
 void
 fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
                                        PangoAttribute *attribute,

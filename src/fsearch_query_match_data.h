@@ -27,6 +27,9 @@ fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
 PangoAttrList *
 fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx);
 
+GHashTable *
+fsearch_query_match_data_get_highlights(FsearchQueryMatchData *match_data);
+
 void
 fsearch_query_match_data_set_thread_id(FsearchQueryMatchData *match_data, int32_t thread_id);
 

@@ -354,12 +354,18 @@ get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntr
 // }
 
 static void
-set_attributes(PangoLayout *layout, FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx) {
+set_pango_layout_attributes(PangoLayout *layout, FsearchDatabaseEntryInfo *info, FsearchDatabaseIndexType idx) {
     g_assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
-    PangoAttrList *attrs = fsearch_query_match_get_highlight(match_data, idx);
-    if (attrs) {
-        pango_layout_set_attributes(layout, attrs);
+    GHashTable *highlights = fsearch_database_entry_info_get_highlights(info);
+    if (!highlights) {
+        return;
     }
+    PangoAttrList *attrs = g_hash_table_lookup(highlights, GUINT_TO_POINTER(idx));
+    if (!attrs) {
+        return;
+    }
+
+    pango_layout_set_attributes(layout, attrs);
 }
 
 static cairo_surface_t *
@@ -530,9 +536,9 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
             }
         }
 
-        // if (config->highlight_search_terms) {
-        //     set_attributes(layout, ctx->match_data, column->type);
-        // }
+        if (config->highlight_search_terms) {
+            set_pango_layout_attributes(layout, info, column->type);
+        }
 
         pango_layout_set_text(layout, text ? text : _("Invalid row data"), text_len);
 

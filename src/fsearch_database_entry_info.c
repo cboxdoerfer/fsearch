@@ -24,6 +24,7 @@ typedef enum {
     ENTRY_INFO_ID_SELECTED,
     ENTRY_INFO_ID_INDEX,
     ENTRY_INFO_ID_EXTENSION,
+    ENTRY_INFO_ID_HIGHLIGHTS,
     NUM_ENTRY_INFO_IDS,
 } FsearchDatabaseEntryInfoID;
 
@@ -31,6 +32,7 @@ typedef struct {
     FsearchDatabaseEntryInfoID id;
     union {
         FsearchDatabaseEntryType type;
+        GHashTable *highlights;
         GString *str;
         GIcon *icon;
         size_t size;
@@ -56,6 +58,9 @@ entry_info_value_clear(FsearchDatabaseEntryInfoValue *value) {
         break;
     case ENTRY_INFO_ID_ICON:
         g_clear_object(&value->icon);
+        break;
+    case ENTRY_INFO_ID_HIGHLIGHTS:
+        g_clear_pointer(&value->highlights, g_hash_table_unref);
         break;
     default:
         break;
@@ -112,6 +117,9 @@ num_flags_set(FsearchDatabaseEntryInfoFlags flags) {
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_EXTENSION) {
         num_flags++;
     }
+    if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_HIGHLIGHTS) {
+        num_flags++;
+    }
     return num_flags;
 }
 
@@ -143,6 +151,7 @@ fsearch_database_entry_info_unref(FsearchDatabaseEntryInfo *info) {
 
 FsearchDatabaseEntryInfo *
 fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
+                                FsearchQuery *query,
                                 uint32_t idx,
                                 bool is_selected,
                                 FsearchDatabaseEntryInfoFlags flags) {
@@ -233,6 +242,16 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
         val.str = g_string_new(db_entry_get_extension(entry));
         g_array_append_val(info->infos, val);
     }
+    if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_HIGHLIGHTS && query) {
+        FsearchDatabaseEntryInfoValue val = {0};
+        val.id = ENTRY_INFO_ID_HIGHLIGHTS;
+        FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+        fsearch_query_match_data_set_entry(match_data, entry);
+        fsearch_query_highlight(query, match_data);
+        val.highlights = fsearch_query_match_data_get_highlights(match_data);
+        g_clear_pointer(&match_data, fsearch_query_match_data_free);
+        g_array_append_val(info->infos, val);
+    }
 
     info->ref_count = 1;
 
@@ -318,4 +337,13 @@ fsearch_database_entry_info_get_selected(FsearchDatabaseEntryInfo *info) {
     FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_SELECTED);
     g_return_val_if_fail(val, 0);
     return val->selected;
+}
+
+GHashTable *
+fsearch_database_entry_info_get_highlights(FsearchDatabaseEntryInfo *info) {
+    g_return_val_if_fail(info, NULL);
+    g_return_val_if_fail(info->flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_HIGHLIGHTS, NULL);
+    FsearchDatabaseEntryInfoValue *val = get_value(info, ENTRY_INFO_ID_HIGHLIGHTS);
+    g_return_val_if_fail(val, NULL);
+    return val->highlights;
 }
