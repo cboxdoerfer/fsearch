@@ -150,9 +150,9 @@ fsearch_statusbar_set_selection(FsearchStatusbar *sb,
     else {
         gtk_revealer_set_reveal_child(GTK_REVEALER(sb->statusbar_selection_revealer), TRUE);
         char text[100] = "";
-        snprintf(text, sizeof(text), "%d/%d", num_folders_selected, num_folders);
+        snprintf(text, sizeof(text), "%'d/%'d", num_folders_selected, num_folders);
         gtk_label_set_text(GTK_LABEL(sb->statusbar_selection_num_folders_label), text);
-        snprintf(text, sizeof(text), "%d/%d", num_files_selected, num_files);
+        snprintf(text, sizeof(text), "%'d/%'d", num_files_selected, num_files);
         gtk_label_set_text(GTK_LABEL(sb->statusbar_selection_num_files_label), text);
     }
 }
