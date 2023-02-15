@@ -511,15 +511,13 @@ count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
     }
 }
 
-// static gboolean
-// on_fsearch_list_view_popup(FsearchListView *view, gpointer user_data) {
-//     FsearchApplicationWindow *win = user_data;
-//     if (!win->result_view->database_view) {
-//         return FALSE;
-//     }
-//
-//     return listview_popup_menu(user_data, win->result_view->database_view);
-// }
+static gboolean
+on_fsearch_list_view_popup(FsearchListView *view, gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
+
+    return listview_popup_menu(user_data, win->db, win_id);
+}
 
 static gboolean
 on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
@@ -853,7 +851,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
 
     add_columns(list_view, config);
 
-    // g_signal_connect_object(list_view, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), win, G_CONNECT_AFTER);
+    g_signal_connect_object(list_view, "row-popup", G_CALLBACK(on_fsearch_list_view_popup), win, G_CONNECT_AFTER);
     g_signal_connect_object(list_view, "row-activated", G_CALLBACK(on_fsearch_list_view_row_activated), win, G_CONNECT_AFTER);
     g_signal_connect(list_view, "key-press-event", G_CALLBACK(on_listview_key_press_event), win);
 

@@ -24,5 +24,7 @@
 
 #include <gtk/gtk.h>
 
-//gboolean
-//listview_popup_menu(GtkWidget *widget, FsearchDatabaseView *db_view);
+#include "fsearch_database2.h"
+
+gboolean
+listview_popup_menu(GtkWidget *widget, FsearchDatabase2 *db, uint32_t view_id);
