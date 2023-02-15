@@ -32,6 +32,7 @@ Makefile.in
 /.version
 /config.h*
 fsearch*-dirty
+*.rpm
 
 # Project files
 tags
@@ -42,6 +43,7 @@ src/fsearch
 src/tags
 src/fsearch.glade~
 src/*.ui~
+\#*\#
 
 # Valgrind
 callgrind.out*
@@ -153,3 +155,4 @@ po/stamp-it
 /tools/print_version.sh
 /data/io.github.cboxdoerfer.FSearch.desktop
 /data/io.github.cboxdoerfer.FSearch.desktop.in
+/data/io.github.cboxdoerfer.FSearch.appdata.xml
