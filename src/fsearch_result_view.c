@@ -341,7 +341,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         int32_t dw = 0;
         pango_layout_set_attributes(layout, NULL);
 
-        g_autofree char *text_temp = NULL;
+        g_autofree char *text_autofree = NULL;
         const char *text = NULL;
         char text_time[100] = "";
         int text_len = -1;
@@ -390,16 +390,19 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
                 break;
             }
             case DATABASE_INDEX_TYPE_SIZE:
-                text_temp = fsearch_file_utils_get_size_formatted(fsearch_database_entry_info_get_size(info),
+                text_autofree = fsearch_file_utils_get_size_formatted(fsearch_database_entry_info_get_size(info),
                                                                   config->show_base_2_units);
-                text = text_temp;
+                text = text_autofree;
                 break;
             case DATABASE_INDEX_TYPE_EXTENSION: {
                 text = fsearch_database_entry_info_get_extension(info)->str;
                 break;
             }
             case DATABASE_INDEX_TYPE_FILETYPE:
-                text = "TODO";
+                text_autofree = fsearch_file_utils_get_file_type(
+                    fsearch_database_entry_info_get_name(info)->str,
+                    fsearch_database_entry_info_get_entry_type(info) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+                text = text_autofree;
                 break;
             case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
                 const time_t mtime = fsearch_database_entry_info_get_mtime(info);
