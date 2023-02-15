@@ -66,7 +66,7 @@ fsearch_database_entry_info_get_path_full(FsearchDatabaseEntryInfo *info);
 time_t
 fsearch_database_entry_info_get_mtime(FsearchDatabaseEntryInfo *info);
 
-size_t
+off_t
 fsearch_database_entry_info_get_size(FsearchDatabaseEntryInfo *info);
 
 GIcon *
@@ -80,6 +80,9 @@ fsearch_database_entry_info_get_index(FsearchDatabaseEntryInfo *info);
 
 GHashTable *
 fsearch_database_entry_info_get_highlights(FsearchDatabaseEntryInfo *info);
+
+FsearchDatabaseEntryType
+fsearch_database_entry_info_get_entry_type(FsearchDatabaseEntryInfo *info);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseEntryInfo, fsearch_database_entry_info_unref)
 

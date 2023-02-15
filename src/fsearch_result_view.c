@@ -125,111 +125,6 @@ get_icon_surface(FsearchResultView *result_view,
     return gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
 }
 
-typedef struct {
-    char *display_name;
-
-    FsearchQueryMatchData *match_data;
-    PangoAttrList *highlights[NUM_DATABASE_INDEX_TYPES];
-
-    FsearchDatabaseEntryType entry_type;
-
-    GString *name;
-    GString *path;
-    GString *full_path;
-    char *size;
-    char *type;
-    char *extension;
-    char time[100];
-} DrawRowContext;
-
-static void
-draw_row_ctx_free(DrawRowContext *ctx) {
-    g_clear_pointer(&ctx->match_data, fsearch_query_match_data_free);
-    g_clear_pointer(&ctx->display_name, g_free);
-    g_clear_pointer(&ctx->extension, g_free);
-    g_clear_pointer(&ctx->type, g_free);
-    g_clear_pointer(&ctx->size, g_free);
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
-        if (ctx->highlights[i]) {
-            g_clear_pointer(&ctx->highlights[i], pango_attr_list_unref);
-        }
-    }
-    if (ctx->name) {
-        g_string_free(g_steal_pointer(&ctx->name), TRUE);
-    }
-    if (ctx->path) {
-        g_string_free(g_steal_pointer(&ctx->path), TRUE);
-    }
-    if (ctx->full_path) {
-        g_string_free(g_steal_pointer(&ctx->full_path), TRUE);
-    }
-    g_clear_pointer(&ctx, free);
-}
-
-// static DrawRowContext *
-// draw_row_ctx_new(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window, int32_t icon_size) {
-//     DrawRowContext *ctx = calloc(1, sizeof(DrawRowContext));
-//     g_assert(ctx);
-//
-//     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-//
-//     bool ret = true;
-//     db_view_lock(view);
-//
-//     const uint32_t num_items = db_view_get_num_entries(view);
-//     if (row >= num_items) {
-//         g_debug("[draw_row] row idx out of bound");
-//         ret = false;
-//         goto out;
-//     }
-//
-//     ctx->name = db_view_entry_get_name_for_idx(view, row);
-//     if (!ctx->name) {
-//         g_debug("[draw_row] failed to get entry name");
-//         ret = false;
-//         goto out;
-//     }
-//     ctx->display_name = g_filename_display_name(ctx->name->str);
-//
-//     ctx->extension = db_view_entry_get_extension_for_idx(view, row);
-//
-//     ctx->path = db_view_entry_get_path_for_idx(view, row);
-//
-//     FsearchQuery *query = db_view_get_query(view);
-//     if (query) {
-//         FsearchDatabaseEntry *entry = db_view_entry_get_for_idx(view, row);
-//         ctx->match_data = fsearch_query_match_data_new();
-//         fsearch_query_match_data_set_entry(ctx->match_data, entry);
-//
-//         fsearch_query_highlight(query, ctx->match_data);
-//
-//         g_clear_pointer(&query, fsearch_query_unref);
-//     }
-//
-//     ctx->full_path = db_view_entry_get_path_full_for_idx(view, row);
-//
-//     ctx->entry_type = db_view_entry_get_type_for_idx(view, row);
-//     ctx->type = fsearch_file_utils_get_file_type(ctx->name->str,
-//                                                  ctx->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
-//
-//     off_t size = db_view_entry_get_size_for_idx(view, row);
-//     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
-//
-//     const time_t mtime = db_view_entry_get_mtime_for_idx(view, row);
-//     strftime(ctx->time,
-//              100,
-//              "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-//              localtime(&mtime));
-//
-// out:
-//     db_view_unlock(view);
-//     if (ret) {
-//         return ctx;
-//     }
-//     g_clear_pointer(&ctx, draw_row_ctx_free);
-//     return NULL;
-// }
-
 static gpointer
 get_key_from_row_idx(uint32_t idx) {
     return GUINT_TO_POINTER(idx + 1);
@@ -258,101 +153,6 @@ get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntr
     return FALSE;
 }
 
-// static DrawRowContext *
-// draw_row_ctx_get(FsearchResultView *result_view, uint32_t row, GdkWindow *bin_window, int32_t icon_size) {
-//     g_return_val_if_fail(result_view, NULL);
-//
-//     if (g_hash_table_size(result_view->row_cache) > 100) {
-//         fsearch_result_view_row_cache_reset(result_view);
-//     }
-//
-//     DrawRowContext *ctx = g_hash_table_lookup(result_view->row_cache, GINT_TO_POINTER(row + 1));
-//     if (ctx) {
-//         return ctx;
-//     }
-//     ctx = draw_row_ctx_new(result_view->database_view, row, bin_window, icon_size);
-//     if (!ctx) {
-//         return NULL;
-//     }
-//     g_hash_table_insert(result_view->row_cache, GINT_TO_POINTER(row + 1), ctx);
-//     return ctx;
-// }
-//
-// char *
-// fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
-//                                   uint32_t row,
-//                                   FsearchListViewColumn *col,
-//                                   PangoLayout *layout,
-//                                   uint32_t row_height) {
-//     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
-//
-//     db_view_lock(view);
-//     g_autoptr(GString) name = db_view_entry_get_name_for_idx(view, row);
-//     if (!name) {
-//         db_view_unlock(view);
-//         return NULL;
-//     }
-//
-//     int32_t width = col->effective_width - 2 * ROW_PADDING_X;
-//     g_autofree char *text = NULL;
-//
-//     switch (col->type) {
-//     case DATABASE_INDEX_TYPE_NAME:
-//         if (config->show_listview_icons) {
-//             int32_t icon_size = get_icon_size_for_height((int32_t)row_height - ROW_PADDING_X);
-//             width -= 2 * ROW_PADDING_X + icon_size;
-//         }
-//         text = g_filename_display_name(name->str);
-//         break;
-//     case DATABASE_INDEX_TYPE_PATH: {
-//         g_autoptr(GString) path = db_view_entry_get_path_for_idx(view, row);
-//         text = g_filename_display_name(path->str);
-//         break;
-//     }
-//     case DATABASE_INDEX_TYPE_EXTENSION: {
-//         text = db_view_entry_get_extension_for_idx(view, row);
-//         break;
-//     }
-//     case DATABASE_INDEX_TYPE_FILETYPE: {
-//         text = fsearch_file_utils_get_file_type(
-//             name->str,
-//             db_view_entry_get_type_for_idx(view, row) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
-//         break;
-//     }
-//     case DATABASE_INDEX_TYPE_SIZE:
-//         text = fsearch_file_utils_get_size_formatted(db_view_entry_get_size_for_idx(view, row),
-//                                                      config->show_base_2_units);
-//         break;
-//     case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
-//         const time_t mtime = db_view_entry_get_mtime_for_idx(view, row);
-//         char mtime_formatted[100] = "";
-//         strftime(mtime_formatted,
-//                  sizeof(mtime_formatted),
-//                  "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-//                  localtime(&mtime));
-//         text = g_strdup(mtime_formatted);
-//         break;
-//     }
-//     default:
-//         g_warning("[query_tooltip] unknown index type");
-//     }
-//
-//     db_view_unlock(view);
-//
-//     g_return_val_if_fail(text, NULL);
-//
-//     pango_layout_set_text(layout, text, -1);
-//
-//     int32_t layout_width = 0;
-//     pango_layout_get_pixel_size(layout, &layout_width, NULL);
-//     width -= layout_width;
-//
-//     if (width < 0) {
-//         return g_steal_pointer(&text);
-//     }
-//     return NULL;
-// }
-
 static void
 set_pango_layout_attributes(PangoLayout *layout, FsearchDatabaseEntryInfo *info, FsearchDatabaseIndexType idx) {
     g_assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
@@ -366,6 +166,87 @@ set_pango_layout_attributes(PangoLayout *layout, FsearchDatabaseEntryInfo *info,
     }
 
     pango_layout_set_attributes(layout, attrs);
+}
+
+char *
+fsearch_result_view_query_tooltip(FsearchResultView *view,
+                                  uint32_t row,
+                                  FsearchListViewColumn *col,
+                                  PangoLayout *layout,
+                                  uint32_t row_height) {
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
+    FsearchDatabaseEntryInfo *info = NULL;
+    if (get_entry_info(view, row, &info)) {
+        if (!info) {
+            // TODO: handle async case when info isn't ready yet
+            return NULL;
+        }
+    }
+    else {
+        return NULL;
+    }
+
+    int32_t width = col->effective_width - 2 * ROW_PADDING_X;
+    g_autofree char *text = NULL;
+
+    switch (col->type) {
+    case DATABASE_INDEX_TYPE_NAME: {
+        if (config->show_listview_icons) {
+            int32_t icon_size = get_icon_size_for_height((int32_t)row_height - ROW_PADDING_X);
+            width -= 2 * ROW_PADDING_X + icon_size;
+        }
+        GString *name = fsearch_database_entry_info_get_name(info);
+        text = g_filename_display_name(name->str);
+        break;
+    }
+    case DATABASE_INDEX_TYPE_PATH: {
+        GString *path = fsearch_database_entry_info_get_path(info);
+        text = g_filename_display_name(path->str);
+        break;
+    }
+    case DATABASE_INDEX_TYPE_EXTENSION: {
+        GString *extension = fsearch_database_entry_info_get_extension(info);
+        text = g_strdup(extension->str);
+        break;
+    }
+    case DATABASE_INDEX_TYPE_FILETYPE: {
+        GString *name = fsearch_database_entry_info_get_name(info);
+        text = fsearch_file_utils_get_file_type(
+            name->str,
+            fsearch_database_entry_info_get_entry_type(info) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+        break;
+    }
+    case DATABASE_INDEX_TYPE_SIZE:
+        text = fsearch_file_utils_get_size_formatted(fsearch_database_entry_info_get_size(info),
+                                                     config->show_base_2_units);
+        break;
+    case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
+        const time_t mtime = fsearch_database_entry_info_get_mtime(info);
+        char mtime_formatted[100] = "";
+        strftime(mtime_formatted,
+                 sizeof(mtime_formatted),
+                 "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
+                 localtime(&mtime));
+        text = g_strdup(mtime_formatted);
+        break;
+    }
+    default:
+        g_warning("[query_tooltip] unknown index type");
+    }
+
+    g_return_val_if_fail(text, NULL);
+
+    pango_layout_set_text(layout, text, -1);
+
+    int32_t layout_width = 0;
+    pango_layout_get_pixel_size(layout, &layout_width, NULL);
+    width -= layout_width;
+
+    if (width < 0) {
+        return g_steal_pointer(&text);
+    }
+    return NULL;
 }
 
 static cairo_surface_t *
@@ -555,7 +436,6 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
 void
 fsearch_result_view_row_cache_reset(FsearchResultView *result_view) {
     g_return_if_fail(result_view);
-    g_hash_table_remove_all(result_view->row_cache);
     g_hash_table_remove_all(result_view->item_info_cache);
 }
 
@@ -592,7 +472,6 @@ fsearch_result_view_new(guint view_id) {
     result_view->item_info_cache =
         g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)entry_info_free);
     result_view->db = fsearch_application_get_db(FSEARCH_APPLICATION_DEFAULT);
-    result_view->row_cache = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)draw_row_ctx_free);
     result_view->pixbuf_cache =
         g_hash_table_new_full(g_icon_hash, (GEqualFunc)g_icon_equal, g_object_unref, g_object_unref);
     result_view->app_gicon_cache = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
@@ -606,7 +485,6 @@ fsearch_result_view_free(FsearchResultView *result_view) {
     g_clear_pointer(&result_view->item_info_cache, g_hash_table_unref);
     g_clear_pointer(&result_view->pixbuf_cache, g_hash_table_unref);
     g_clear_pointer(&result_view->app_gicon_cache, g_hash_table_unref);
-    g_clear_pointer(&result_view->row_cache, g_hash_table_unref);
     g_clear_object(&result_view->db);
     g_clear_pointer(&result_view, free);
 }
