@@ -491,26 +491,6 @@ perform_search(FsearchApplicationWindow *win) {
     fsearch_database2_process_work_now(win->db);
 }
 
-typedef struct {
-    uint32_t num_folders;
-    uint32_t num_files;
-} count_results_ctx;
-
-static void
-count_results_cb(gpointer key, gpointer value, count_results_ctx *ctx) {
-    if (!value) {
-        return;
-    }
-    FsearchDatabaseEntry *entry = value;
-    FsearchDatabaseEntryType type = db_entry_get_type(entry);
-    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
-        ctx->num_folders++;
-    }
-    else if (type == DATABASE_ENTRY_TYPE_FILE) {
-        ctx->num_files++;
-    }
-}
-
 static gboolean
 on_fsearch_list_view_popup(FsearchListView *view, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
@@ -975,36 +955,6 @@ on_fsearch_window_delete_event(GtkWidget *widget, GdkEvent *event, gpointer user
     fsearch_application_window_prepare_shutdown(win);
     g_clear_pointer(&widget, gtk_widget_destroy);
     return TRUE;
-}
-
-static gboolean
-fsearch_window_db_view_selection_changed_cb(gpointer data) {
-    const guint win_id = GPOINTER_TO_UINT(data);
-    FsearchApplicationWindow *win = get_window_for_id(win_id);
-
-    redraw_listview(win);
-    fsearch_window_actions_update(win);
-
-    uint32_t num_folders = 0;
-    uint32_t num_files = 0;
-    // TODO:
-    // if (win->result_view->database_view) {
-    //    db_view_lock(win->result_view->database_view);
-    //    num_folders = db_view_get_num_folders(win->result_view->database_view);
-    //    num_files = db_view_get_num_files(win->result_view->database_view);
-    //    db_view_unlock(win->result_view->database_view);
-    //}
-
-    count_results_ctx ctx = {0, 0};
-    fsearch_application_window_selection_for_each(win, (GHFunc)count_results_cb, &ctx);
-
-    fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(win->statusbar),
-                                    ctx.num_files,
-                                    ctx.num_folders,
-                                    num_files,
-                                    num_folders);
-
-    return G_SOURCE_REMOVE;
 }
 
 static void
