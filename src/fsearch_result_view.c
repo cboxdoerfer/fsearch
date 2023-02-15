@@ -155,6 +155,10 @@ get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntr
 
 static void
 set_pango_layout_attributes(PangoLayout *layout, FsearchDatabaseEntryInfo *info, FsearchDatabaseIndexType idx) {
+    if (!info) {
+        return;
+    }
+
     g_assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
     GHashTable *highlights = fsearch_database_entry_info_get_highlights(info);
     if (!highlights) {
