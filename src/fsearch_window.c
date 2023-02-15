@@ -754,6 +754,7 @@ on_listview_row_is_selected(int row, gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
 
     g_autoptr(FsearchDatabaseEntryInfo) info = NULL;
+    // TODO: handle async case where entry info isn't ready yet or maybe use blocking call?
     if (fsearch_database2_try_get_item_info(win->result_view->db,
                                             win->result_view->view_id,
                                             row,
@@ -762,10 +763,6 @@ on_listview_row_is_selected(int row, gpointer user_data) {
         == FSEARCH_DATABASE_RESULT_SUCCESS) {
         return fsearch_database_entry_info_get_selected(info);
     }
-    // TODO:
-    // if (win->result_view->database_view) {
-    //    return db_view_is_selected(win->result_view->database_view, row);
-    //}
     return FALSE;
 }
 
