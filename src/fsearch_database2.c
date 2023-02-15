@@ -293,6 +293,11 @@ is_selected(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry) {
     }
 }
 
+static FsearchDatabaseSearchView *
+get_search_view(FsearchDatabase2 *self, uint32_t view_id) {
+    return g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
+}
+
 static FsearchDatabaseEntryInfo *
 get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, NULL);
@@ -301,7 +306,7 @@ get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     const uint32_t idx = fsearch_database_work_item_info_get_index(work);
     const uint32_t id = fsearch_database_work_get_view_id(work);
 
-    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(id));
+    FsearchDatabaseSearchView *view = get_search_view(self, id);
     if (!view) {
         return NULL;
     }
@@ -329,7 +334,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     database_lock(self);
 
-    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(id));
+    FsearchDatabaseSearchView *view = get_search_view(self, id);
     DynamicArray *files_new = NULL;
     DynamicArray *folders_new = NULL;
     if (view) {
@@ -503,7 +508,7 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     database_lock(self);
 
-    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
+    FsearchDatabaseSearchView *view = get_search_view(self, view_id);
 
     FsearchDatabaseEntry *entry = get_entry_for_idx(view, start_idx);
 
@@ -994,7 +999,7 @@ fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, 
         return false;
     }
 
-    FsearchDatabaseSearchView *view = g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
+    FsearchDatabaseSearchView *view = get_search_view(self, view_id);
     FsearchDatabaseSearchInfo *info =
         fsearch_database_search_info_new(fsearch_query_ref(view->query),
                                          darray_get_num_items(view->files),
@@ -1035,6 +1040,42 @@ fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
         return true;
     }
     return false;
+}
+
+typedef struct {
+    FsearchDatabase2ForeachFunc func;
+    gpointer user_data;
+} FsearchDatabase2SelectionForeachContext;
+
+static void
+selection_foreach(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabaseEntry *entry = value;
+    FsearchDatabase2SelectionForeachContext *ctx = user_data;
+    ctx->func(entry, ctx->user_data);
+}
+
+void
+fsearch_database2_selection_foreach(FsearchDatabase2 *self,
+                                    uint32_t view_id,
+                                    FsearchDatabase2ForeachFunc func,
+                                    gpointer user_data) {
+    g_return_if_fail(FSEARCH_IS_DATABASE2(self));
+    g_return_if_fail(func);
+
+    database_lock(self);
+
+    FsearchDatabaseSearchView *view = get_search_view(self, view_id);
+    if (!view) {
+        database_unlock(self);
+        return;
+    }
+
+    FsearchDatabase2SelectionForeachContext ctx = {.func = func, .user_data = user_data};
+
+    g_hash_table_foreach(view->folder_selection, selection_foreach, &ctx);
+    g_hash_table_foreach(view->file_selection, selection_foreach, &ctx);
+
+    database_unlock(self);
 }
 
 FsearchDatabase2 *
