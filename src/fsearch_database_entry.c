@@ -211,6 +211,18 @@ db_entry_get_depth(FsearchDatabaseEntry *entry) {
     return depth;
 }
 
+uint32_t
+db_entry_get_db_index(FsearchDatabaseEntry *entry) {
+    if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+        return ((FsearchDatabaseEntryFolder *)entry)->db_idx;
+    }
+    FsearchDatabaseEntryFolder *parent = entry->parent;
+    if (G_UNLIKELY(!parent)) {
+        return 0;
+    }
+    return parent->db_idx;
+}
+
 static FsearchDatabaseEntryFolder *
 db_entry_get_parent_nth(FsearchDatabaseEntryFolder *entry, uint32_t nth) {
     while (entry && nth > 0) {
@@ -363,6 +375,14 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
             parent->num_files++;
         }
     }
+}
+
+void
+db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index) {
+    if (entry->type != DATABASE_ENTRY_TYPE_FOLDER) {
+        return;
+    }
+    ((FsearchDatabaseEntryFolder *)entry)->db_idx = db_index;
 }
 
 void
