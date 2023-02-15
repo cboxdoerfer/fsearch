@@ -321,9 +321,9 @@ get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     return fsearch_database_entry_info_new(entry, idx, is_selected(view, entry), flags);
 }
 
-static bool
+static void
 sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
-    g_return_val_if_fail(self, false);
+    g_return_if_fail(self);
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
     const FsearchDatabaseIndexType sort_order = fsearch_database_work_sort_get_sort_order(work);
@@ -335,20 +335,24 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     database_lock(self);
 
     FsearchDatabaseSearchView *view = get_search_view(self, id);
+    if (!view) {
+        goto out;
+    }
+
     DynamicArray *files_new = NULL;
     DynamicArray *folders_new = NULL;
-    if (view) {
-        fsearch_database_sort_results(view->sort_order,
-                                      sort_order,
-                                      view->files,
-                                      view->folders,
-                                      self->index->files,
-                                      self->index->folders,
-                                      &files_new,
-                                      &folders_new,
-                                      &view->sort_order,
-                                      cancellable);
-    }
+
+    fsearch_database_sort_results(view->sort_order,
+                                  sort_order,
+                                  view->files,
+                                  view->folders,
+                                  self->index->files,
+                                  self->index->folders,
+                                  &files_new,
+                                  &folders_new,
+                                  &view->sort_order,
+                                  cancellable);
+
     if (files_new) {
         g_clear_pointer(&view->files, darray_unref);
         view->files = files_new;
@@ -360,20 +364,18 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         view->sort_type = sort_type;
     }
 
-    FsearchDatabaseSearchInfo *info =
-        fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                         darray_get_num_items(view->files),
-                                         darray_get_num_items(view->folders),
-                                         fsearch_selection_get_num_selected(view->file_selection),
-                                         fsearch_selection_get_num_selected(view->folder_selection),
-                                         view->sort_order,
-                                         view->sort_type);
+    emit_sort_finished_signal(self,
+                              id,
+                              fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                                               darray_get_num_items(view->files),
+                                                               darray_get_num_items(view->folders),
+                                                               fsearch_selection_get_num_selected(view->file_selection),
+                                                               fsearch_selection_get_num_selected(view->folder_selection),
+                                                               view->sort_order,
+                                                               view->sort_type));
 
+out:
     database_unlock(self);
-
-    emit_sort_finished_signal(self, id, g_steal_pointer(&info));
-
-    return true;
 }
 
 static bool
@@ -442,9 +444,6 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     database_unlock(self);
 
-    FsearchDatabaseSearchInfo *info =
-        fsearch_database_search_info_new(query, num_files, num_folders, 0, 0, sort_order, sort_type);
-
     emit_search_finished_signal(
         self,
         id,
@@ -509,8 +508,14 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     database_lock(self);
 
     FsearchDatabaseSearchView *view = get_search_view(self, view_id);
+    if (!view) {
+        goto out;
+    }
 
     FsearchDatabaseEntry *entry = get_entry_for_idx(view, start_idx);
+    if (!entry) {
+        goto out;
+    }
 
     switch (type) {
     case FSEARCH_SELECTION_TYPE_CLEAR:
@@ -561,6 +566,7 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
                                          view->sort_order,
                                          view->sort_type));
 
+out:
     database_unlock(self);
 }
 
@@ -1069,8 +1075,7 @@ fsearch_database2_selection_foreach(FsearchDatabase2 *self,
 
     FsearchDatabaseSearchView *view = get_search_view(self, view_id);
     if (!view) {
-        database_unlock(self);
-        return;
+        goto out;
     }
 
     FsearchDatabase2SelectionForeachContext ctx = {.func = func, .user_data = user_data};
@@ -1078,6 +1083,7 @@ fsearch_database2_selection_foreach(FsearchDatabase2 *self,
     g_hash_table_foreach(view->folder_selection, selection_foreach, &ctx);
     g_hash_table_foreach(view->file_selection, selection_foreach, &ctx);
 
+out:
     database_unlock(self);
 }
 
