@@ -131,7 +131,7 @@ get_key_from_row_idx(uint32_t idx) {
 }
 
 static gboolean
-get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntryInfo **info) {
+try_get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntryInfo **info) {
     gpointer key = get_key_from_row_idx(row);
     if (g_hash_table_lookup_extended(result_view->item_info_cache, key, NULL, (gpointer *)info)) {
         return TRUE;
@@ -181,7 +181,7 @@ fsearch_result_view_query_tooltip(FsearchResultView *view,
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
 
     FsearchDatabaseEntryInfo *info = NULL;
-    if (get_entry_info(view, row, &info)) {
+    if (try_get_entry_info(view, row, &info)) {
         if (!info) {
             // TODO: handle async case when info isn't ready yet
             return NULL;
@@ -292,7 +292,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
 
     gboolean pending = FALSE;
     FsearchDatabaseEntryInfo *info = NULL;
-    if (get_entry_info(result_view, row, &info)) {
+    if (try_get_entry_info(result_view, row, &info)) {
         if (!info) {
             pending = TRUE;
         }
