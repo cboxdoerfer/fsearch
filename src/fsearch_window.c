@@ -386,6 +386,14 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
     const uint32_t num_rows = fsearch_database_search_info_get_num_entries(info);
     fsearch_statusbar_set_num_search_results(FSEARCH_STATUSBAR(win->statusbar), num_rows);
 
+    const uint32_t num_files = fsearch_database_search_info_get_num_files(info);
+    const uint32_t num_folders = fsearch_database_search_info_get_num_folders(info);
+    fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(win->statusbar),
+                                    win->num_files_selected,
+                                    win->num_folders_selected,
+                                    num_files,
+                                    num_folders);
+
     fsearch_result_view_row_cache_reset(win->result_view);
     fsearch_list_view_set_config(win->result_view->list_view,
                                  num_rows,
