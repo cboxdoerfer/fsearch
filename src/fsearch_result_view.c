@@ -200,24 +200,20 @@ fsearch_result_view_query_tooltip(FsearchResultView *view,
             int32_t icon_size = get_icon_size_for_height((int32_t)row_height - ROW_PADDING_X);
             width -= 2 * ROW_PADDING_X + icon_size;
         }
-        GString *name = fsearch_database_entry_info_get_name(info);
-        text = g_filename_display_name(name->str);
+        text = g_filename_display_name(fsearch_database_entry_info_get_name(info)->str);
         break;
     }
     case DATABASE_INDEX_TYPE_PATH: {
-        GString *path = fsearch_database_entry_info_get_path(info);
-        text = g_filename_display_name(path->str);
+        text = g_filename_display_name(fsearch_database_entry_info_get_path(info)->str);
         break;
     }
     case DATABASE_INDEX_TYPE_EXTENSION: {
-        GString *extension = fsearch_database_entry_info_get_extension(info);
-        text = g_strdup(extension->str);
+        text = g_strdup(fsearch_database_entry_info_get_extension(info)->str);
         break;
     }
     case DATABASE_INDEX_TYPE_FILETYPE: {
-        GString *name = fsearch_database_entry_info_get_name(info);
         text = fsearch_file_utils_get_file_type(
-            name->str,
+            fsearch_database_entry_info_get_name(info)->str,
             fsearch_database_entry_info_get_entry_type(info) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
         break;
     }
@@ -357,8 +353,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         else {
             switch (column->type) {
             case DATABASE_INDEX_TYPE_NAME: {
-                GString *name = fsearch_database_entry_info_get_name(info);
-                text = name->str;
+                text = fsearch_database_entry_info_get_name(info)->str;
 
                 if (config->show_listview_icons) {
                     cairo_surface_t *icon_surface = config->show_listview_icons ? get_cairo_surface_for_gicon(
@@ -400,8 +395,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
                 text = text_temp;
                 break;
             case DATABASE_INDEX_TYPE_EXTENSION: {
-                GString *extension = fsearch_database_entry_info_get_extension(info);
-                text = extension->str;
+                text = fsearch_database_entry_info_get_extension(info)->str;
                 break;
             }
             case DATABASE_INDEX_TYPE_FILETYPE:
