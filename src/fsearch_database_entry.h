@@ -63,6 +63,9 @@ void
 db_entry_set_type(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type);
 
 void
+db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index);
+
+void
 db_entry_update_parent_size(FsearchDatabaseEntry *entry);
 
 uint8_t
@@ -73,6 +76,9 @@ db_entry_get_idx(FsearchDatabaseEntry *entry);
 
 uint32_t
 db_entry_get_depth(FsearchDatabaseEntry *entry);
+
+uint32_t
+db_entry_get_db_index(FsearchDatabaseEntry *entry);
 
 GString *
 db_entry_get_path(FsearchDatabaseEntry *entry);

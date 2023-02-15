@@ -613,8 +613,7 @@ save_folders(FILE *fp,
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
 
-        // TODO: actually store the folders db_index instead of always 0
-        const uint16_t db_index = 0;
+        const uint16_t db_index = db_entry_get_db_index(entry);
         bytes_written += write_data_to_file(fp, &db_index, 2, 1, write_failed);
         if (*write_failed == true) {
             g_debug("[db_save] failed to save folder's database index: %d", db_index);
