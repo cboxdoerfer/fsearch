@@ -1256,12 +1256,11 @@ fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
 }
 
 void
-fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GHFunc func, gpointer user_data) {
+fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, FsearchDatabase2ForeachFunc func, gpointer user_data) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
-    // TODO:
-    // if (self->result_view->database_view) {
-    //    db_view_selection_for_each(self->result_view->database_view, func, user_data);
-    //}
+
+    const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
+    fsearch_database2_selection_foreach(self->db, win_id, func, user_data);
 }
 
 void

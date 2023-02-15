@@ -94,11 +94,8 @@ confirm_file_open_action(GtkWidget *parent, int num_files) {
 }
 
 static void
-prepend_path_uri_to_array(gpointer key, gpointer value, gpointer user_data) {
-    g_return_if_fail(value);
-
+prepend_path_uri_to_array(FsearchDatabaseEntry *entry, gpointer user_data) {
     GPtrArray **file_array = (GPtrArray **)user_data;
-    FsearchDatabaseEntry *entry = value;
     GString *path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
@@ -145,23 +142,23 @@ append_line_to_string(GString *buffer, FsearchDatabaseEntry *entry, GString *(*g
 }
 
 static void
-prepend_full_path_to_list(gpointer key, gpointer value, gpointer user_data) {
-    prepend_string_to_list(user_data, value, db_entry_get_path_full);
+prepend_full_path_to_list(FsearchDatabaseEntry *entry, gpointer user_data) {
+    prepend_string_to_list(user_data, entry, db_entry_get_path_full);
 }
 
 static void
-append_full_path_to_string(gpointer key, gpointer value, gpointer user_data) {
-    append_line_to_string(user_data, value, db_entry_get_path_full);
+append_full_path_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+    append_line_to_string(user_data, entry, db_entry_get_path_full);
 }
 
 static void
-append_path_to_string(gpointer key, gpointer value, gpointer user_data) {
-    append_line_to_string(user_data, value, db_entry_get_path);
+append_path_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+    append_line_to_string(user_data, entry, db_entry_get_path);
 }
 
 static void
-append_name_to_string(gpointer key, gpointer value, gpointer user_data) {
-    append_line_to_string(user_data, value, db_entry_get_name_for_display);
+append_name_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+    append_line_to_string(user_data, entry, db_entry_get_name_for_display);
 }
 
 static void
@@ -337,7 +334,7 @@ fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer us
 }
 
 static void
-copy_selection_as_text(FsearchApplicationWindow *win, GHFunc text_copy_func) {
+copy_selection_as_text(FsearchApplicationWindow *win, FsearchDatabase2ForeachFunc text_copy_func) {
     g_autoptr(GString) file_list_buffer = g_string_sized_new(8192);
     fsearch_application_window_selection_for_each(win, text_copy_func, file_list_buffer);
 
@@ -364,10 +361,8 @@ fsearch_window_action_copy_name(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-collect_selected_entry_parent_path(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
-    g_return_if_fail(paths);
-    g_return_if_fail(entry);
-
+collect_selected_entry_parent_path(FsearchDatabaseEntry *entry, gpointer user_data) {
+    GList **paths = user_data;
     GString *parent_path = db_entry_get_path(entry);
     g_return_if_fail(parent_path);
 
@@ -375,10 +370,8 @@ collect_selected_entry_parent_path(gpointer key, FsearchDatabaseEntry *entry, GL
 }
 
 static void
-collect_selected_entry_path(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
-    g_return_if_fail(paths);
-    g_return_if_fail(entry);
-
+collect_selected_entry_path(FsearchDatabaseEntry *entry, gpointer user_data) {
+    GList **paths = user_data;
     GString *path = db_entry_get_path_full(entry);
     g_return_if_fail(path);
 
@@ -386,11 +379,7 @@ collect_selected_entry_path(gpointer key, FsearchDatabaseEntry *entry, GList **p
 }
 
 static void
-append_path_to_list(gpointer key, gpointer value, gpointer data) {
-    g_return_if_fail(value);
-
-    FsearchDatabaseEntry *entry = value;
-
+append_path_to_list(FsearchDatabaseEntry *entry, gpointer data) {
     GString *path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
@@ -399,11 +388,7 @@ append_path_to_list(gpointer key, gpointer value, gpointer data) {
 }
 
 static void
-append_file_to_list(gpointer key, gpointer value, gpointer data) {
-    g_return_if_fail(value);
-
-    FsearchDatabaseEntry *entry = value;
-
+append_file_to_list(FsearchDatabaseEntry *entry, gpointer data) {
     g_autoptr(GString) path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
@@ -512,10 +497,10 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
 
     GList *paths = NULL;
     if (open_parent_folder && !config->folder_open_cmd) {
-        fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_parent_path, &paths);
+        fsearch_application_window_selection_for_each(win, collect_selected_entry_parent_path, &paths);
     }
     else {
-        fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_path, &paths);
+        fsearch_application_window_selection_for_each(win, collect_selected_entry_path, &paths);
     }
 
     if (open_parent_folder && config->folder_open_cmd) {

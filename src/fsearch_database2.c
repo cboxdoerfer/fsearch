@@ -1050,6 +1050,9 @@ typedef struct {
 static void
 selection_foreach(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseEntry *entry = value;
+    if (G_UNLIKELY(!entry)) {
+        return;
+    }
     FsearchDatabase2SelectionForeachContext *ctx = user_data;
     ctx->func(entry, ctx->user_data);
 }

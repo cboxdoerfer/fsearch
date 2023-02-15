@@ -100,7 +100,9 @@ uint32_t
 fsearch_application_window_get_num_selected(FsearchApplicationWindow *self);
 
 void
-fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GHFunc func, gpointer user_data);
+fsearch_application_window_selection_for_each(FsearchApplicationWindow *self,
+                                              FsearchDatabase2ForeachFunc func,
+                                              gpointer user_data);
 
 void
 fsearch_application_window_toggle_app_menu(FsearchApplicationWindow *self);
