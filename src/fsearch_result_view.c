@@ -241,11 +241,17 @@ get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabaseEntr
     if (g_hash_table_lookup_extended(result_view->item_info_cache, key, NULL, (gpointer *)info)) {
         return TRUE;
     }
-    if (fsearch_database2_try_get_item_info(result_view->db, result_view->view_id, row, FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL, info)) {
+    if (fsearch_database2_try_get_item_info(result_view->db,
+                                            result_view->view_id,
+                                            row,
+                                            FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL,
+                                            info)
+        == FSEARCH_DATABASE_RESULT_SUCCESS) {
         g_hash_table_insert(result_view->item_info_cache, key, *info);
         return TRUE;
     }
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(result_view->view_id, row, FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL);
+    g_autoptr(FsearchDatabaseWork)
+        work = fsearch_database_work_new_get_item_info(result_view->view_id, row, FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL);
     fsearch_database2_queue_work(result_view->db, work);
     fsearch_database2_process_work_now(result_view->db);
     g_hash_table_insert(result_view->item_info_cache, key, NULL);

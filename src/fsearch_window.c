@@ -755,7 +755,8 @@ on_listview_row_is_selected(int row, gpointer user_data) {
                                             win->result_view->view_id,
                                             row,
                                             FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED,
-                                            &info)) {
+                                            &info)
+        == FSEARCH_DATABASE_RESULT_SUCCESS) {
         return fsearch_database_entry_info_get_selected(info);
     }
     // TODO:
@@ -1206,7 +1207,9 @@ fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
 }
 
 void
-fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, FsearchDatabase2ForeachFunc func, gpointer user_data) {
+fsearch_application_window_selection_for_each(FsearchApplicationWindow *self,
+                                              FsearchDatabase2ForeachFunc func,
+                                              gpointer user_data) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));

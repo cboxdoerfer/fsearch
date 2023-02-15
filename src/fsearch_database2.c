@@ -11,6 +11,7 @@
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_sort.h"
 #include "fsearch_database_work.h"
+#include "fsearch_enums.h"
 #include "fsearch_memory_pool.h"
 #include "fsearch_selection.h"
 #include "fsearch_thread_pool.h"
@@ -298,27 +299,29 @@ get_search_view(FsearchDatabase2 *self, uint32_t view_id) {
     return g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
 }
 
-static FsearchDatabaseEntryInfo *
-get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
-    g_return_val_if_fail(self, NULL);
-    g_return_val_if_fail(work, NULL);
+static FsearchDatabaseResult
+get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
+    g_return_val_if_fail(self, FSEARCH_DATABASE_RESULT_FAILED);
+    g_return_val_if_fail(work, FSEARCH_DATABASE_RESULT_FAILED);
+    g_return_val_if_fail(info_out, FSEARCH_DATABASE_RESULT_FAILED);
 
     const uint32_t idx = fsearch_database_work_item_info_get_index(work);
     const uint32_t id = fsearch_database_work_get_view_id(work);
 
     FsearchDatabaseSearchView *view = get_search_view(self, id);
     if (!view) {
-        return NULL;
+        return FSEARCH_DATABASE_RESULT_UNKOWN_SEARCH_VIEW;
     }
 
     const FsearchDatabaseEntryInfoFlags flags = fsearch_database_work_item_info_get_flags(work);
 
     FsearchDatabaseEntry *entry = get_entry_for_idx(view, idx);
     if (!entry) {
-        return NULL;
+        return FSEARCH_DATABASE_RESULT_ENTRY_NOT_FOUND;
     }
 
-    return fsearch_database_entry_info_new(entry, idx, is_selected(view, entry), flags);
+    *info_out = fsearch_database_entry_info_new(entry, idx, is_selected(view, entry), flags);
+    return FSEARCH_DATABASE_RESULT_SUCCESS;
 }
 
 static void
@@ -691,7 +694,8 @@ work_queue_thread(gpointer data) {
                 break;
             case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
                 database_lock(self);
-                FsearchDatabaseEntryInfo *info = get_entry_info(self, work);
+                FsearchDatabaseEntryInfo *info = NULL;
+                get_entry_info(self, work, &info);
                 database_unlock(self);
                 if (info) {
                     emit_item_info_ready_signal(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
@@ -996,56 +1000,54 @@ fsearch_database2_process_work_now(FsearchDatabase2 *self) {
     wakeup_work_queue(self);
 }
 
-bool
+FsearchDatabaseResult
 fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out) {
-    g_return_val_if_fail(self, false);
-    g_return_val_if_fail(info_out, false);
+    g_return_val_if_fail(self, FSEARCH_DATABASE_RESULT_FAILED);
+    g_return_val_if_fail(info_out, FSEARCH_DATABASE_RESULT_FAILED);
 
     if (!g_mutex_trylock(&self->mutex)) {
-        return false;
+        return FSEARCH_DATABASE_RESULT_BUSY;
     }
 
+    FsearchDatabaseResult res = FSEARCH_DATABASE_RESULT_FAILED;
     FsearchDatabaseSearchView *view = get_search_view(self, view_id);
-    FsearchDatabaseSearchInfo *info =
-        fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                         darray_get_num_items(view->files),
-                                         darray_get_num_items(view->folders),
-                                         fsearch_selection_get_num_selected(view->file_selection),
-                                         fsearch_selection_get_num_selected(view->folder_selection),
-                                         view->sort_order,
-                                         view->sort_type);
+    if (!view) {
+        res = FSEARCH_DATABASE_RESULT_UNKOWN_SEARCH_VIEW;
+    }
+    else {
+        *info_out = fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                                     darray_get_num_items(view->files),
+                                                     darray_get_num_items(view->folders),
+                                                     fsearch_selection_get_num_selected(view->file_selection),
+                                                     fsearch_selection_get_num_selected(view->folder_selection),
+                                                     view->sort_order,
+                                                     view->sort_type);
+        res = FSEARCH_DATABASE_RESULT_SUCCESS;
+    }
 
     database_unlock(self);
 
-    if (info) {
-        *info_out = info;
-        return true;
-    }
-    return false;
+    return res;
 }
 
-bool
+FsearchDatabaseResult
 fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
                                     uint32_t view_id,
                                     uint32_t idx,
                                     FsearchDatabaseEntryInfoFlags flags,
                                     FsearchDatabaseEntryInfo **info_out) {
-    g_return_val_if_fail(self, false);
-    g_return_val_if_fail(info_out, false);
+    g_return_val_if_fail(self, FSEARCH_DATABASE_RESULT_FAILED);
+    g_return_val_if_fail(info_out, FSEARCH_DATABASE_RESULT_FAILED);
 
     if (!g_mutex_trylock(&self->mutex)) {
-        return false;
+        return FSEARCH_DATABASE_RESULT_BUSY;
     }
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(view_id, idx, flags);
-    FsearchDatabaseEntryInfo *info = get_entry_info(self, work);
+    FsearchDatabaseResult res = get_entry_info(self, work, info_out);
 
     database_unlock(self);
 
-    if (info) {
-        *info_out = info;
-        return true;
-    }
-    return false;
+    return res;
 }
 
 typedef struct {
