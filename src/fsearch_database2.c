@@ -540,6 +540,7 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         else {
             fsearch_selection_select(view->folder_selection, entry);
         }
+        break;
     case FSEARCH_SELECTION_TYPE_TOGGLE:
         if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FILE) {
             fsearch_selection_select_toggle(view->file_selection, entry);
