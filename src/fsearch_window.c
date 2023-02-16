@@ -91,6 +91,8 @@ typedef enum {
     NUM_OVERLAYS,
 } FsearchOverlay;
 
+G_DEFINE_TYPE(FsearchApplicationWindow, fsearch_application_window, GTK_TYPE_APPLICATION_WINDOW)
+
 static void
 perform_search(FsearchApplicationWindow *win);
 
@@ -287,8 +289,6 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
 
     fsearch_window_set_overlay_for_database_state(self);
 }
-
-G_DEFINE_TYPE(FsearchApplicationWindow, fsearch_application_window, GTK_TYPE_APPLICATION_WINDOW)
 
 static void
 fsearch_application_window_constructed(GObject *object) {
