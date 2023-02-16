@@ -62,7 +62,7 @@ test_query(QueryTest *t) {
     fsearch_query_match_data_set_entry(match_data, entry);
 
     const bool found = fsearch_query_match(q, match_data);
-    g_clear_pointer(&manager, fsearch_filter_manager_free);
+    g_clear_pointer(&manager, fsearch_filter_manager_unref);
     g_clear_pointer(&q, fsearch_query_unref);
     g_clear_pointer(&match_data, fsearch_query_match_data_free);
 
