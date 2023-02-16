@@ -68,7 +68,7 @@
     <property name="step-increment">1</property>
     <property name="page-increment">10</property>
   </object>
-  <object class="GtkDialog" id="FsearchPreferencesWindow">
+  <template class="FsearchPreferencesDialog" parent="GtkDialog">
     <property name="can-focus">False</property>
     <property name="title" translatable="yes">Preferences</property>
     <property name="modal">True</property>
@@ -145,6 +145,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_dark_theme" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -160,6 +163,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_csd" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -176,6 +182,9 @@
                                 <property name="has-tooltip">True</property>
                                 <property name="valign">end</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_units" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -191,6 +200,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_window_size" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -206,6 +218,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_exit_on_escape" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -243,6 +258,9 @@
                                             <property name="receives-default">False</property>
                                             <property name="margin-start">24</property>
                                             <property name="draw-indicator">True</property>
+                                            <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                            <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                            <signal name="query-tooltip" handler="on_help_show" object="help_action_after_open" swapped="no"/>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -258,6 +276,9 @@
                                             <property name="receives-default">False</property>
                                             <property name="margin-start">24</property>
                                             <property name="draw-indicator">True</property>
+                                            <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                            <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                            <signal name="query-tooltip" handler="on_help_show" object="help_action_after_open" swapped="no"/>
                                           </object>
                                           <packing>
                                             <property name="expand">False</property>
@@ -300,6 +321,9 @@
                                           <item id="FSEARCH_AFTER_FILE_OPEN_MINIMIZE" translatable="yes">Minimize</item>
                                           <item id="FSEARCH_AFTER_FILE_OPEN_CLOSE" translatable="yes">Close</item>
                                         </items>
+                                        <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                        <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                        <signal name="query-tooltip" handler="on_help_show" object="help_action_after_open" swapped="no"/>
                                       </object>
                                       <packing>
                                         <property name="expand">False</property>
@@ -366,6 +390,9 @@
                                 <property name="has-tooltip">True</property>
                                 <property name="valign">end</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_highlight_search_terms" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -381,6 +408,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_show_tooltips" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -396,6 +426,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_show_icons" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -411,6 +444,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_restore_column_config" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -426,6 +462,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_restore_sort_order" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -441,6 +480,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_double_click_path" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -456,6 +498,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_single_click_open" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -471,6 +516,9 @@
                                 <property name="receives-default">False</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="draw-indicator">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_launch_desktop_files" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -533,6 +581,9 @@
                                     <property name="receives-default">False</property>
                                     <property name="has-tooltip">True</property>
                                     <property name="draw-indicator">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_show_indexing_status" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -607,6 +658,9 @@
                                     <property name="margin-left">24</property>
                                     <property name="margin-start">24</property>
                                     <property name="draw-indicator">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_warn_failed_open" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -672,6 +726,9 @@
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
+                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="query-tooltip" handler="on_help_show" object="help_auto_path" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -686,6 +743,9 @@
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
+                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="query-tooltip" handler="on_help_show" object="help_search_as_you_type" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -700,6 +760,9 @@
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
+                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="query-tooltip" handler="on_help_show" object="help_hide_results" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -714,6 +777,9 @@
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
+                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="query-tooltip" handler="on_help_show" object="help_auto_case" swapped="no"/>
                   </object>
                   <packing>
                     <property name="left-attach">0</property>
@@ -755,6 +821,9 @@
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="has-tooltip">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_list" swapped="no"/>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection"/>
                                     </child>
@@ -779,6 +848,9 @@
                                     <property name="tooltip-text" translatable="yes">Add new filter</property>
                                     <property name="image">image5</property>
                                     <property name="always-show-image">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_add" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -795,6 +867,9 @@
                                     <property name="tooltip-text" translatable="yes">Remove selected filter</property>
                                     <property name="image">image6</property>
                                     <property name="always-show-image">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_remove" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -810,6 +885,9 @@
                                     <property name="receives-default">True</property>
                                     <property name="tooltip-text" translatable="yes">Edit selected filter</property>
                                     <property name="image">image7</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_edit" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -824,6 +902,9 @@
                                     <property name="receives-default">True</property>
                                     <property name="tooltip-text" translatable="yes">Restore default filters</property>
                                     <property name="image">image8</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_revert" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -900,6 +981,9 @@
                     <property name="receives-default">False</property>
                     <property name="has-tooltip">True</property>
                     <property name="draw-indicator">True</property>
+                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="query-tooltip" handler="on_help_show" object="help_update_database_on_start" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -912,6 +996,9 @@
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="has-tooltip">True</property>
+                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                    <signal name="query-tooltip" handler="on_help_show" object="help_update_database_every" swapped="no"/>
                     <child>
                       <object class="GtkCheckButton" id="auto_update_checkbox">
                         <property name="label" translatable="yes">Update every</property>
@@ -920,6 +1007,9 @@
                         <property name="receives-default">False</property>
                         <property name="has-tooltip">True</property>
                         <property name="draw-indicator">True</property>
+                        <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                        <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                        <signal name="query-tooltip" handler="on_help_show" object="help_update_database_every" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -932,6 +1022,9 @@
                         <property name="visible">True</property>
                         <property name="can-focus">False</property>
                         <property name="spacing">6</property>
+                        <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                        <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                        <signal name="query-tooltip" handler="on_help_show" object="help_update_database_every" swapped="no"/>
                         <child>
                           <object class="GtkSpinButton" id="auto_update_hours_spin_button">
                             <property name="visible">True</property>
@@ -942,6 +1035,9 @@
                             <property name="climb-rate">1</property>
                             <property name="numeric">True</property>
                             <property name="wrap">True</property>
+                            <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                            <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                            <signal name="query-tooltip" handler="on_help_show" object="help_update_database_every" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -972,6 +1068,9 @@
                             <property name="numeric">True</property>
                             <property name="wrap">True</property>
                             <property name="value">30</property>
+                            <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                            <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                            <signal name="query-tooltip" handler="on_help_show" object="help_update_database_every" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1030,6 +1129,9 @@
                                 <property name="visible">True</property>
                                 <property name="can-focus">True</property>
                                 <property name="placeholder-text" translatable="yes">Enter path…</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_index_add" swapped="no"/>
                                 <style>
                                   <class name="path_entry"/>
                                 </style>
@@ -1051,6 +1153,9 @@
                                 </property>
                                 <property name="image">image9</property>
                                 <property name="always-show-image">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_index_add" swapped="no"/>
                                 <style>
                                   <class name="path_add_button"/>
                                 </style>
@@ -1083,6 +1188,9 @@
                                 <property name="can-focus">True</property>
                                 <property name="has-tooltip">True</property>
                                 <property name="reorderable">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_index_list" swapped="no"/>
                                 <child internal-child="selection">
                                   <object class="GtkTreeSelection"/>
                                 </child>
@@ -1108,6 +1216,9 @@
                                 </property>
                                 <property name="image">image1</property>
                                 <property name="always-show-image">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_index_add" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1124,6 +1235,9 @@
                                 <property name="tooltip-text" translatable="yes">Remove selected path</property>
                                 <property name="image">image2</property>
                                 <property name="always-show-image">True</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_index_remove" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">False</property>
@@ -1179,6 +1293,9 @@
                                     <property name="visible">True</property>
                                     <property name="can-focus">True</property>
                                     <property name="placeholder-text" translatable="yes">Enter path…</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_exclude_add" swapped="no"/>
                                     <style>
                                       <class name="path_entry"/>
                                     </style>
@@ -1196,10 +1313,12 @@
                                     <property name="sensitive">False</property>
                                     <property name="can-focus">True</property>
                                     <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Add path to be included in database
-                                </property>
+                                    <property name="tooltip-text" translatable="yes">Add path to be included in database</property>
                                     <property name="image">image10</property>
                                     <property name="always-show-image">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_exclude_add" swapped="no"/>
                                     <style>
                                       <class name="path_add_button"/>
                                     </style>
@@ -1232,6 +1351,9 @@
                                     <property name="can-focus">True</property>
                                     <property name="has-tooltip">True</property>
                                     <property name="reorderable">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_exclude_list" swapped="no"/>
                                     <child internal-child="selection">
                                       <object class="GtkTreeSelection"/>
                                     </child>
@@ -1256,6 +1378,9 @@
                                     <property name="tooltip-text" translatable="yes">Add path to be excluded from database</property>
                                     <property name="image">image3</property>
                                     <property name="always-show-image">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_exclude_add" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1272,6 +1397,9 @@
                                     <property name="tooltip-text" translatable="yes">Remove selected path</property>
                                     <property name="image">image4</property>
                                     <property name="always-show-image">True</property>
+                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                    <signal name="query-tooltip" handler="on_help_show" object="help_exclude_remove" swapped="no"/>
                                   </object>
                                   <packing>
                                     <property name="expand">False</property>
@@ -1320,6 +1448,9 @@
                                 <property name="can-focus">True</property>
                                 <property name="tooltip-text" translatable="yes">Supports wildcards. Multiple entries must be separated by ';'</property>
                                 <property name="placeholder-text" translatable="yes">e.g. ".git;*.tmp"</property>
+                                <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                                <signal name="query-tooltip" handler="on_help_show" object="help_exclude_files" swapped="no"/>
                               </object>
                               <packing>
                                 <property name="expand">True</property>
@@ -1342,6 +1473,9 @@
                             <property name="receives-default">False</property>
                             <property name="has-tooltip">True</property>
                             <property name="draw-indicator">True</property>
+                            <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                            <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
+                            <signal name="query-tooltip" handler="on_help_show" object="help_exclude_hidden" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">False</property>
@@ -1494,7 +1628,7 @@ Note that some window managers ignore this request and force the window to have 
 
 When a file/folder was successfully opened one of the following actions can be performed:
 	• &lt;b&gt;Nothing:&lt;/b&gt; Nothing happens.
-	• &lt;b&gt;Minimize:&lt;/b&gt; The currently selected FSearch window becomes minimized. 
+	• &lt;b&gt;Minimize:&lt;/b&gt; The currently selected FSearch window becomes minimized.
 	• &lt;b&gt;Close:&lt;/b&gt; Quit FSearch.
 
 You can configure if those actions should be triggered when the file was opened with
@@ -1901,7 +2035,7 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkLabel" id="help_help">
+                  <object class="GtkLabel" id="help_description">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="label" translatable="yes">Focus a setting to get a detailed description of what it does.</property>
@@ -2077,5 +2211,5 @@ If enabled, FSearch exits when the Escape key is pressed instead of the window b
         </child>
       </object>
     </child>
-  </object>
+  </template>
 </interface>

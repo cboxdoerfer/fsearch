@@ -30,6 +30,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
 #include "fsearch_preferences_ui.h"
+#include "fsearch_preferences_dialog.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
 #include "icon_resources.h"
@@ -265,8 +266,12 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
     if (!win_active) {
         return;
     }
-    FsearchConfig *copy_config = config_copy(self->config);
-    preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
+    //FsearchConfig *copy_config = config_copy(self->config);
+    //preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
+    GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(self->config, self->db2));
+    gtk_dialog_run(GTK_DIALOG(pref));
+    g_print("dialog finished...\n");
+    g_clear_pointer(&pref, gtk_widget_destroy);
 }
 
 static void
