@@ -278,7 +278,7 @@ get_selected_filter(FsearchPreferencesInterface *ui) {
 static void
 on_filter_revert_button_clicked(GtkButton *button, gpointer user_data) {
     FsearchPreferencesInterface *ui = user_data;
-    g_clear_pointer(&ui->new_config->filters, fsearch_filter_manager_free);
+    g_clear_pointer(&ui->new_config->filters, fsearch_filter_manager_unref);
     ui->new_config->filters = fsearch_filter_manager_new_with_defaults();
     pref_filter_treeview_update(ui->filter_model, ui->new_config->filters);
 }

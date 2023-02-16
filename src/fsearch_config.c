@@ -796,7 +796,7 @@ config_free(FsearchConfig *config) {
 
     g_clear_pointer(&config->folder_open_cmd, free);
     g_clear_pointer(&config->sort_by, free);
-    g_clear_pointer(&config->filters, fsearch_filter_manager_free);
+    g_clear_pointer(&config->filters, fsearch_filter_manager_unref);
     if (config->indexes) {
         g_list_free_full(g_steal_pointer(&config->indexes), (GDestroyNotify)fsearch_index_free);
     }

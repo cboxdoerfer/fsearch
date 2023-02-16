@@ -1,14 +1,25 @@
 #pragma once
 
 #include <glib.h>
+#include <glib-object.h>
 #include <stdbool.h>
 
 #include "fsearch_filter.h"
 
+G_BEGIN_DECLS
+
+#define FSEARCH_TYPE_FILTER_MANAGER (fsearch_filter_manager_get_type())
+
 typedef struct FsearchFilterManager FsearchFilterManager;
 
+GType
+fsearch_database_info_get_type(void);
+
+FsearchFilterManager *
+fsearch_filter_manager_ref(FsearchFilterManager *manager);
+
 void
-fsearch_filter_manager_free(FsearchFilterManager *manager);
+fsearch_filter_manager_unref(FsearchFilterManager *manager);
 
 FsearchFilterManager *
 fsearch_filter_manager_new(void);
@@ -47,3 +58,5 @@ fsearch_filter_manager_edit(FsearchFilterManager *manager,
 
 bool
 fsearch_filter_manager_cmp(FsearchFilterManager *manager_1, FsearchFilterManager *manager_2);
+
+G_END_DECLS
