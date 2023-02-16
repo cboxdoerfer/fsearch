@@ -13,7 +13,7 @@ G_BEGIN_DECLS
 typedef struct FsearchFilterManager FsearchFilterManager;
 
 GType
-fsearch_database_info_get_type(void);
+fsearch_filter_manager_get_type(void);
 
 FsearchFilterManager *
 fsearch_filter_manager_ref(FsearchFilterManager *manager);

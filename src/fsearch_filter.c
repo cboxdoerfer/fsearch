@@ -104,19 +104,17 @@ static const char *archive_filter = "ext:7z;ace;arj;bz2;cab;gz;gzip;jar;r00;r01;
                                     "R09;R10;R11;R12;R13;R14;R15;R16;R17;R18;R19;R20;R21;R22;R23;R24;R25;R26;R27;R28;"
                                     "R29;RAR;TAR;TGZ;Z;ZIP";
 
-GList *
-fsearch_filter_get_default() {
-    GList *filters = NULL;
-    filters = g_list_append(filters, fsearch_filter_new(_("All"), NULL, NULL, 0));
-    filters = g_list_append(filters, fsearch_filter_new(_("Folders"), NULL, folder_filter, 0));
-    filters = g_list_append(filters, fsearch_filter_new(_("Files"), NULL, file_filter, 0));
-    filters = g_list_append(filters,
-                            fsearch_filter_new(_("Applications"), "app", application_filter, QUERY_FLAG_MATCH_CASE));
-    filters = g_list_append(filters, fsearch_filter_new(_("Archives"), "archive", archive_filter, QUERY_FLAG_MATCH_CASE));
-    filters = g_list_append(filters, fsearch_filter_new(_("Audio"), "audio", audio_filter, QUERY_FLAG_MATCH_CASE));
-    filters = g_list_append(filters, fsearch_filter_new(_("Documents"), "doc", document_filter, QUERY_FLAG_MATCH_CASE));
-    filters = g_list_append(filters, fsearch_filter_new(_("Pictures"), "pic", image_filter, QUERY_FLAG_MATCH_CASE));
-    filters = g_list_append(filters, fsearch_filter_new(_("Videos"), "video", video_filter, QUERY_FLAG_MATCH_CASE));
-
+GPtrArray *
+fsearch_filter_get_default_filters() {
+    GPtrArray *filters = g_ptr_array_new_full(9, (GDestroyNotify)fsearch_filter_unref);
+    g_ptr_array_add(filters, fsearch_filter_new(_("All"), NULL, NULL, 0));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Folders"), NULL, folder_filter, 0));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Files"), NULL, file_filter, 0));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Applications"), "app", application_filter, QUERY_FLAG_MATCH_CASE));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Archives"), "archive", archive_filter, QUERY_FLAG_MATCH_CASE));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Audio"), "audio", audio_filter, QUERY_FLAG_MATCH_CASE));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Documents"), "doc", document_filter, QUERY_FLAG_MATCH_CASE));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Pictures"), "pic", image_filter, QUERY_FLAG_MATCH_CASE));
+    g_ptr_array_add(filters, fsearch_filter_new(_("Videos"), "video", video_filter, QUERY_FLAG_MATCH_CASE));
     return filters;
 }
