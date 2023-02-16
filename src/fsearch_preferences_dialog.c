@@ -13,6 +13,71 @@ struct _FsearchPreferencesDialog {
     GtkWidget *help_expander;
 
     guint help_reset_timeout_id;
+
+    // Interface page
+    GtkToggleButton *enable_dark_theme_button;
+    GtkToggleButton *show_menubar_button;
+    GtkToggleButton *show_tooltips_button;
+    GtkToggleButton *restore_win_size_button;
+    GtkToggleButton *exit_on_escape_button;
+    GtkToggleButton *restore_sort_order_button;
+    GtkToggleButton *restore_column_config_button;
+    GtkToggleButton *double_click_path_button;
+    GtkToggleButton *single_click_open_button;
+    GtkToggleButton *launch_desktop_files_button;
+    GtkToggleButton *show_icons_button;
+    GtkToggleButton *highlight_search_terms;
+    GtkToggleButton *show_base_2_units;
+    GtkBox *action_after_file_open_box;
+    GtkComboBox *action_after_file_open;
+    GtkToggleButton *action_after_file_open_keyboard;
+    GtkToggleButton *action_after_file_open_mouse;
+    GtkToggleButton *show_indexing_status_button;
+
+    // Search page
+    GtkToggleButton *auto_search_in_path_button;
+    GtkToggleButton *auto_match_case_button;
+    GtkToggleButton *search_as_you_type_button;
+    GtkToggleButton *hide_results_button;
+
+    GtkTreeView *filter_list;
+    GtkTreeModel *filter_model;
+    GtkWidget *filter_add_button;
+    GtkWidget *filter_edit_button;
+    GtkWidget *filter_remove_button;
+    GtkWidget *filter_revert_button;
+    GtkTreeSelection *filter_selection;
+
+    // Database page
+    GtkToggleButton *update_db_at_start_button;
+    GtkToggleButton *auto_update_checkbox;
+    GtkBox *auto_update_spin_box;
+    GtkWidget *auto_update_hours_spin_button;
+    GtkWidget *auto_update_minutes_spin_button;
+
+    // Dialog page
+    GtkToggleButton *show_dialog_failed_opening;
+
+    // Include page
+    GtkTreeView *index_list;
+    GtkTreeModel *index_model;
+    GtkWidget *index_add_button;
+    GtkWidget *index_add_path_button;
+    GtkWidget *index_path_entry;
+    GtkWidget *index_remove_button;
+    GtkTreeSelection *sel;
+
+    // Exclude model
+    GtkTreeView *exclude_list;
+    GtkTreeModel *exclude_model;
+    GtkWidget *exclude_add_path_button;
+    GtkWidget *exclude_path_entry;
+    GtkWidget *exclude_add_button;
+    GtkWidget *exclude_remove_button;
+    GtkTreeSelection *exclude_selection;
+    GtkToggleButton *exclude_hidden_items_button;
+    GtkEntry *exclude_files_entry;
+    gchar *exclude_files_str;
 };
 
 enum { PROP_0, PROP_CONFIG, PROP_DATABASE, NUM_PROPERTIES };
@@ -20,6 +85,108 @@ enum { PROP_0, PROP_CONFIG, PROP_DATABASE, NUM_PROPERTIES };
 static GParamSpec *properties[NUM_PROPERTIES];
 
 G_DEFINE_TYPE(FsearchPreferencesDialog, fsearch_preferences_dialog, GTK_TYPE_DIALOG)
+
+static gboolean
+help_reset(gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    if (self->help_stack != NULL) {
+        gtk_stack_set_visible_child(GTK_STACK(self->help_stack), GTK_WIDGET(self->help_description));
+    }
+    g_source_remove(self->help_reset_timeout_id);
+    self->help_reset_timeout_id = 0;
+    return G_SOURCE_REMOVE;
+}
+
+static gboolean
+on_help_reset(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    if (self->help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(self->help_expander))) {
+        return GDK_EVENT_PROPAGATE;
+    }
+    self->help_reset_timeout_id = g_timeout_add(200, help_reset, self);
+    return GDK_EVENT_PROPAGATE;
+}
+
+static gboolean
+on_help_show(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip *tooltip, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(gtk_widget_get_toplevel(widget));
+    g_return_val_if_fail(self, GDK_EVENT_PROPAGATE);
+
+    if (self->help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(self->help_expander))) {
+        return GDK_EVENT_PROPAGATE;
+    }
+
+    if (self->help_reset_timeout_id != 0) {
+        g_source_remove(self->help_reset_timeout_id);
+        self->help_reset_timeout_id = 0;
+    }
+    if (self->help_stack != NULL) {
+        gtk_stack_set_visible_child(GTK_STACK(self->help_stack), GTK_WIDGET(user_data));
+    }
+    return GDK_EVENT_PROPAGATE;
+}
+
+static void
+on_auto_update_spin_button_changed(GtkSpinButton *spin_button, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    double minutes = gtk_spin_button_get_value(GTK_SPIN_BUTTON(self->auto_update_minutes_spin_button));
+    double hours = gtk_spin_button_get_value(GTK_SPIN_BUTTON(self->auto_update_hours_spin_button));
+
+    if (hours == 0 && minutes == 0) {
+        gtk_spin_button_set_value(GTK_SPIN_BUTTON(self->auto_update_minutes_spin_button), 1.0);
+    }
+}
+
+static void
+on_auto_update_checkbox_toggled(GtkToggleButton *togglebutton, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->auto_update_spin_box), gtk_toggle_button_get_active(togglebutton));
+}
+
+static void
+on_action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
+    int active = gtk_combo_box_get_active(widget);
+    if (active != ACTION_AFTER_OPEN_NOTHING) {
+        gtk_widget_set_sensitive(GTK_WIDGET(user_data), TRUE);
+    }
+    else {
+        gtk_widget_set_sensitive(GTK_WIDGET(user_data), FALSE);
+    }
+}
+
+static void
+on_filter_add_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+}
+
+static void
+on_filter_remove_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+}
+
+static void
+on_filter_edit_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+}
+
+static void
+on_filter_revert_button_clicked(GtkButton *button, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+}
+
+static void
+on_filter_list_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
+    gboolean selected = gtk_tree_selection_get_selected(self->filter_selection, NULL, NULL);
+    if (!selected) {
+        return;
+    }
+    // on_filter_edit_button_clicked(GTK_BUTTON(ui->filter_edit_button), ui);
+}
 
 static void
 fsearch_preferences_dialog_get_property(GObject *object, guint prop_id, GValue *value, GParamSpec *pspec) {
@@ -79,44 +246,46 @@ fsearch_preferences_dialog_finalize(GObject *object) {
     G_OBJECT_CLASS(fsearch_preferences_dialog_parent_class)->finalize(object);
 }
 
-static gboolean
-help_reset(gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
-    if (self->help_stack != NULL) {
-        gtk_stack_set_visible_child(GTK_STACK(self->help_stack), GTK_WIDGET(self->help_description));
-    }
-    g_source_remove(self->help_reset_timeout_id);
-    self->help_reset_timeout_id = 0;
-    return G_SOURCE_REMOVE;
-}
+static void
+fsearch_preferences_dialog_constructed(GObject *object) {
+    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(object);
 
-static gboolean
-on_help_reset(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
-    if (self->help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(self->help_expander))) {
-        return GDK_EVENT_PROPAGATE;
-    }
-    self->help_reset_timeout_id = g_timeout_add(200, help_reset, self);
-    return GDK_EVENT_PROPAGATE;
-}
+    G_OBJECT_CLASS(fsearch_preferences_dialog_parent_class)->constructed(object);
 
-static gboolean
-on_help_show(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip *tooltip, gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(gtk_widget_get_toplevel(widget));
-    g_return_val_if_fail(self, GDK_EVENT_PROPAGATE);
+    gtk_toggle_button_set_active(self->enable_dark_theme_button, self->config_old->enable_dark_theme);
+    gtk_toggle_button_set_active(self->show_menubar_button, !self->config_old->show_menubar);
+    gtk_toggle_button_set_active(self->show_tooltips_button, self->config_old->enable_list_tooltips);
+    gtk_toggle_button_set_active(self->restore_win_size_button, self->config_old->restore_window_size);
+    gtk_toggle_button_set_active(self->restore_column_config_button, self->config_old->restore_column_config);
+    gtk_toggle_button_set_active(self->restore_sort_order_button, self->config_old->restore_sort_order);
+    gtk_toggle_button_set_active(self->exit_on_escape_button, self->config_old->exit_on_escape);
+    gtk_toggle_button_set_active(self->double_click_path_button, self->config_old->double_click_path);
+    gtk_toggle_button_set_active(self->single_click_open_button, self->config_old->single_click_open);
+    gtk_toggle_button_set_active(self->launch_desktop_files_button, self->config_old->launch_desktop_files);
+    gtk_toggle_button_set_active(self->show_icons_button, self->config_old->show_listview_icons);
+    gtk_toggle_button_set_active(self->highlight_search_terms, self->config_old->highlight_search_terms);
+    gtk_toggle_button_set_active(self->show_base_2_units, self->config_old->show_base_2_units);
+    gtk_toggle_button_set_active(self->action_after_file_open_keyboard,
+                                 self->config_old->action_after_file_open_keyboard);
+    gtk_toggle_button_set_active(self->action_after_file_open_mouse, self->config_old->action_after_file_open_mouse);
+    gtk_toggle_button_set_active(self->show_indexing_status_button, self->config_old->show_indexing_status);
+    gtk_toggle_button_set_active(self->auto_search_in_path_button, self->config_old->auto_search_in_path);
+    gtk_toggle_button_set_active(self->auto_match_case_button, self->config_old->auto_match_case);
+    gtk_toggle_button_set_active(self->search_as_you_type_button, self->config_old->search_as_you_type);
+    gtk_toggle_button_set_active(self->hide_results_button, self->config_old->hide_results_on_empty_search);
+    gtk_toggle_button_set_active(self->update_db_at_start_button, self->config_old->update_database_on_launch);
 
-    if (self->help_expander && !gtk_expander_get_expanded(GTK_EXPANDER(self->help_expander))) {
-        return GDK_EVENT_PROPAGATE;
-    }
+    gtk_toggle_button_set_active(self->auto_update_checkbox, self->config_old->update_database_every);
+    gtk_widget_set_sensitive(GTK_WIDGET(self->auto_update_spin_box), self->config_old->update_database_every);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(self->auto_update_hours_spin_button),
+                              (double)self->config_old->update_database_every_hours);
+    gtk_spin_button_set_value(GTK_SPIN_BUTTON(self->auto_update_minutes_spin_button),
+                              (double)self->config_old->update_database_every_minutes);
 
-    if (self->help_reset_timeout_id != 0) {
-        g_source_remove(self->help_reset_timeout_id);
-        self->help_reset_timeout_id = 0;
-    }
-    if (self->help_stack != NULL) {
-        gtk_stack_set_visible_child(GTK_STACK(self->help_stack), GTK_WIDGET(user_data));
-    }
-    return GDK_EVENT_PROPAGATE;
+    gtk_toggle_button_set_active(self->show_dialog_failed_opening, self->config_old->show_dialog_failed_opening);
+    gtk_toggle_button_set_active(self->exclude_hidden_items_button, self->config_old->exclude_hidden_items);
+
+    gtk_combo_box_set_active(self->action_after_file_open, self->config_old->action_after_file_open);
 }
 
 static void
@@ -126,6 +295,7 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
 
     object_class->finalize = fsearch_preferences_dialog_finalize;
     object_class->dispose = fsearch_preferences_dialog_dispose;
+    object_class->constructed = fsearch_preferences_dialog_constructed;
     object_class->set_property = fsearch_preferences_dialog_set_property;
     object_class->get_property = fsearch_preferences_dialog_get_property;
 
@@ -150,8 +320,61 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, help_stack);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, help_description);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, help_expander);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, enable_dark_theme_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_menubar_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_tooltips_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, restore_win_size_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exit_on_escape_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, restore_sort_order_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, restore_column_config_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, double_click_path_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, single_click_open_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, launch_desktop_files_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_icons_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, highlight_search_terms);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_base_2_units);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open_keyboard);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, action_after_file_open_mouse);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_indexing_status_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_search_in_path_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_match_case_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, search_as_you_type_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, hide_results_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_list);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_add_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_edit_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_remove_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_revert_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, update_db_at_start_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_update_checkbox);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_update_spin_box);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_update_hours_spin_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_update_minutes_spin_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, show_dialog_failed_opening);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, index_list);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, index_add_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, index_add_path_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, index_path_entry);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, index_remove_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exclude_list);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exclude_add_path_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exclude_path_entry);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exclude_add_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exclude_remove_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exclude_hidden_items_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, exclude_files_entry);
+
     gtk_widget_class_bind_template_callback(widget_class, on_help_show);
     gtk_widget_class_bind_template_callback(widget_class, on_help_reset);
+    gtk_widget_class_bind_template_callback(widget_class, on_action_after_file_open_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_auto_update_checkbox_toggled);
+    gtk_widget_class_bind_template_callback(widget_class, on_auto_update_spin_button_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_filter_add_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_filter_remove_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_filter_edit_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_filter_revert_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_filter_list_row_activated);
 }
 
 static void
