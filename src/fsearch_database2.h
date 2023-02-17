@@ -7,6 +7,7 @@
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_work.h"
+#include "fsearch_result.h"
 
 G_BEGIN_DECLS
 
@@ -15,21 +16,13 @@ G_DECLARE_FINAL_TYPE(FsearchDatabase2, fsearch_database2, FSEARCH, DATABASE2, GO
 
 typedef void (*FsearchDatabase2ForeachFunc)(FsearchDatabaseEntry *entry, gpointer user_data);
 
-typedef enum {
-    FSEARCH_DATABASE_RESULT_SUCCESS,
-    FSEARCH_DATABASE_RESULT_FAILED,
-    FSEARCH_DATABASE_RESULT_BUSY,
-    FSEARCH_DATABASE_RESULT_UNKOWN_SEARCH_VIEW,
-    FSEARCH_DATABASE_RESULT_ENTRY_NOT_FOUND,
-} FsearchDatabaseResult;
-
 void
 fsearch_database2_queue_work(FsearchDatabase2 *self, FsearchDatabaseWork *work);
 
 void
 fsearch_database2_process_work_now(FsearchDatabase2 *self);
 
-FsearchDatabaseResult
+FsearchResult
 fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out);
 
 void
@@ -38,7 +31,7 @@ fsearch_database2_selection_foreach(FsearchDatabase2 *self,
                                     FsearchDatabase2ForeachFunc func,
                                     gpointer user_data);
 
-FsearchDatabaseResult
+FsearchResult
 fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
                                     uint32_t view_id,
                                     uint32_t idx,

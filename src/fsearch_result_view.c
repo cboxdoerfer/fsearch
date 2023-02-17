@@ -141,7 +141,7 @@ try_get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabase
                                             row,
                                             FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL,
                                             info)
-        == FSEARCH_DATABASE_RESULT_SUCCESS) {
+        == FSEARCH_RESULT_SUCCESS) {
         g_hash_table_insert(result_view->item_info_cache, key, *info);
         return TRUE;
     }
