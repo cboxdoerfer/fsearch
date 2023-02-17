@@ -67,6 +67,18 @@ fsearch_database_exclude_manager_new() {
     return g_object_new(FSEARCH_TYPE_DATABASE_EXCLUDE_MANAGER, NULL);
 }
 
+FsearchDatabaseExcludeManager *
+fsearch_database_exclude_manager_new_with_defaults() {
+    FsearchDatabaseExcludeManager *self = fsearch_database_exclude_manager_new();
+    g_return_val_if_fail(self, NULL);
+
+    g_ptr_array_add(self->paths, g_strdup("/.snapshots"));
+    g_ptr_array_add(self->paths, g_strdup("/proc"));
+    g_ptr_array_add(self->paths, g_strdup("/sys"));
+
+    return self;
+}
+
 void
 fsearch_database_exclude_manager_add_path(FsearchDatabaseExcludeManager *self, const char *path) {
     g_return_if_fail(self);

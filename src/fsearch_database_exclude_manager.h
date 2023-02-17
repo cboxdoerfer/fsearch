@@ -10,6 +10,9 @@ G_DECLARE_FINAL_TYPE(FsearchDatabaseExcludeManager, fsearch_database_exclude_man
 FsearchDatabaseExcludeManager *
 fsearch_database_exclude_manager_new(void);
 
+FsearchDatabaseExcludeManager *
+fsearch_database_exclude_manager_new_with_defaults(void);
+
 GPtrArray *
 fsearch_database_exclude_manager_get_paths(FsearchDatabaseExcludeManager *manager);
 
