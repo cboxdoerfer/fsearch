@@ -11,6 +11,6 @@ G_BEGIN_DECLS
 
 G_DECLARE_FINAL_TYPE(FsearchPreferencesDialog, fsearch_preferences_dialog, FSEARCH, PREFERENCES_DIALOG, GtkDialog)
 
-FsearchPreferencesDialog *fsearch_preferences_dialog_new(FsearchConfig *config, FsearchDatabase2 *db);
+FsearchPreferencesDialog *fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase2 *db);
 
 G_END_DECLS
