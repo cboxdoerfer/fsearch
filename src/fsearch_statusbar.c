@@ -221,7 +221,6 @@ on_database_load_started(FsearchDatabase2 *db, gpointer data, gpointer user_data
 
 static void
 on_database_update_finished(FsearchDatabase2 *db, FsearchDatabaseInfo *info, gpointer user_data) {
-    g_print("statusbar: update finished\n");
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     fsearch_statusbar_set_database_idle(statusbar);
 }

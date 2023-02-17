@@ -270,7 +270,6 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
     //preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
     GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config, self->db2));
     gtk_dialog_run(GTK_DIALOG(pref));
-    g_print("dialog finished...\n");
     g_clear_pointer(&pref, gtk_widget_destroy);
 }
 
