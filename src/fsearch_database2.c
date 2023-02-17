@@ -248,6 +248,21 @@ database_lock(FsearchDatabase2 *self) {
     g_mutex_lock(&self->mutex);
 }
 
+static uint32_t
+get_num_database_files(FsearchDatabase2 *self) {
+    return self->index ? darray_get_num_items(self->index->files[DATABASE_INDEX_TYPE_NAME]) : 0;
+}
+
+static uint32_t
+get_num_database_folders(FsearchDatabase2 *self) {
+    return self->index ? darray_get_num_items(self->index->folders[DATABASE_INDEX_TYPE_NAME]) : 0;
+}
+
+static uint32_t
+get_num_database_entries(FsearchDatabase2 *self) {
+    return get_num_database_files(self) + get_num_database_folders(self);
+}
+
 static GFile *
 get_default_database_file() {
     return g_file_new_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
@@ -661,7 +676,10 @@ load_database_from_file(FsearchDatabase2 *self) {
 
     emit_signal(self,
                 EVENT_LOAD_FINISHED,
-                fsearch_database_info_new(self->include_manager, self->exclude_manager, num_files, num_folders),
+                fsearch_database_info_new(self->include_manager,
+                                          self->exclude_manager,
+                                          get_num_database_files(self),
+                                          get_num_database_folders(self)),
                 NULL,
                 1,
                 (GDestroyNotify)fsearch_database_info_unref,
