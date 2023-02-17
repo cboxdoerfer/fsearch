@@ -24,4 +24,7 @@ fsearch_database_include_manager_remove(FsearchDatabaseIncludeManager *manager, 
 gboolean
 fsearch_database_include_manager_equal(FsearchDatabaseIncludeManager *m1, FsearchDatabaseIncludeManager *m2);
 
+FsearchDatabaseIncludeManager *
+fsearch_database_include_manager_copy(FsearchDatabaseIncludeManager *self);
+
 G_END_DECLS

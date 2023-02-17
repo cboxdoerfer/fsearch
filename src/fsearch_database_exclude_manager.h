@@ -52,4 +52,7 @@ fsearch_database_exclude_manager_excludes(FsearchDatabaseExcludeManager *manager
 gboolean
 fsearch_database_exclude_manager_equal(FsearchDatabaseExcludeManager *m1, FsearchDatabaseExcludeManager *m2);
 
+FsearchDatabaseExcludeManager *
+fsearch_database_exclude_manager_copy(FsearchDatabaseExcludeManager *self);
+
 G_END_DECLS

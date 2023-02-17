@@ -81,3 +81,13 @@ fsearch_database_include_manager_get_directories(FsearchDatabaseIncludeManager *
     g_return_val_if_fail(FSEARCH_IS_DATABASE_INCLUDE_MANAGER(self), NULL);
     return g_ptr_array_ref(self->includes);
 }
+
+FsearchDatabaseIncludeManager *
+fsearch_database_include_manager_copy(FsearchDatabaseIncludeManager *self) {
+    g_return_val_if_fail(self, NULL);
+    FsearchDatabaseIncludeManager *copy = fsearch_database_include_manager_new();
+    g_clear_pointer(&copy->includes, g_ptr_array_unref);
+    copy->includes = g_ptr_array_copy(self->includes, (GCopyFunc)fsearch_database_include_copy, NULL);
+
+    return copy;
+}
