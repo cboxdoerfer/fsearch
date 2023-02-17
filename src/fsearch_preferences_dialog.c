@@ -392,6 +392,11 @@ fsearch_preferences_dialog_init(FsearchPreferencesDialog *self) {
 }
 
 FsearchPreferencesDialog *
-fsearch_preferences_dialog_new(FsearchConfig *config, FsearchDatabase2 *db) {
-    return g_object_new(FSEARCH_PREFERENCES_DIALOG_TYPE, "config", config, "database", db, NULL);
+fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase2 *db) {
+    FsearchPreferencesDialog *self =
+        g_object_new(FSEARCH_PREFERENCES_DIALOG_TYPE, "config", config, "database", db, NULL);
+    if (parent) {
+        gtk_window_set_transient_for(GTK_WINDOW(self), parent);
+    }
+    return self;
 }
