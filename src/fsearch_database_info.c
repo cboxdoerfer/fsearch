@@ -76,11 +76,11 @@ fsearch_database_info_get_num_entries(FsearchDatabaseInfo *self) {
 FsearchDatabaseIncludeManager *
 fsearch_database_info_get_include_manager(FsearchDatabaseInfo *self) {
     g_return_val_if_fail(self, NULL);
-    return g_object_ref(self->include_manager);
+    return self->include_manager ? g_object_ref(self->include_manager) : NULL;
 }
 
 FsearchDatabaseExcludeManager *
 fsearch_database_info_get_exclude_manager(FsearchDatabaseInfo *self) {
     g_return_val_if_fail(self, NULL);
-    return g_object_ref(self->exclude_manager);
+    return self->exclude_manager ? g_object_ref(self->exclude_manager) : NULL;
 }
