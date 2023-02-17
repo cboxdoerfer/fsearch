@@ -194,6 +194,21 @@ fsearch_database_exclude_manager_equal(FsearchDatabaseExcludeManager *m1, Fsearc
     return TRUE;
 }
 
+FsearchDatabaseExcludeManager *
+fsearch_database_exclude_manager_copy(FsearchDatabaseExcludeManager *self) {
+    g_return_val_if_fail(self, NULL);
+    FsearchDatabaseExcludeManager *copy = fsearch_database_exclude_manager_new();
+    copy->exclude_hidden = self->exclude_hidden;
+    g_clear_pointer(&copy->paths, g_ptr_array_unref);
+    g_clear_pointer(&copy->directory_patterns, g_ptr_array_unref);
+    g_clear_pointer(&copy->file_patterns, g_ptr_array_unref);
+    copy->paths = g_ptr_array_copy(self->paths, (GCopyFunc)g_strdup, NULL);
+    copy->directory_patterns = g_ptr_array_copy(self->directory_patterns, (GCopyFunc)g_strdup, NULL);
+    copy->file_patterns = g_ptr_array_copy(self->file_patterns, (GCopyFunc)g_strdup, NULL);
+
+    return copy;
+}
+
 GPtrArray *
 fsearch_database_exclude_manager_get_paths(FsearchDatabaseExcludeManager *self) {
     g_return_val_if_fail(self, NULL);
