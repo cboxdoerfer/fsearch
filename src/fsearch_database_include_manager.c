@@ -35,6 +35,13 @@ fsearch_database_include_manager_new() {
     return g_object_new(FSEARCH_TYPE_DATABASE_INCLUDE_MANAGER, NULL);
 }
 
+FsearchDatabaseIncludeManager *
+fsearch_database_include_manager_new_with_defaults() {
+    // NOTE: Do we want to have some directories included by default?
+    return fsearch_database_include_manager_new();
+}
+
+
 void
 fsearch_database_include_manager_add(FsearchDatabaseIncludeManager *self, FsearchDatabaseInclude *include) {
     g_return_if_fail(self);

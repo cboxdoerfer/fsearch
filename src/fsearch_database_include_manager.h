@@ -12,6 +12,9 @@ G_DECLARE_FINAL_TYPE(FsearchDatabaseIncludeManager, fsearch_database_include_man
 FsearchDatabaseIncludeManager *
 fsearch_database_include_manager_new(void);
 
+FsearchDatabaseIncludeManager *
+fsearch_database_include_manager_new_with_defaults(void);
+
 GPtrArray *
 fsearch_database_include_manager_get_directories(FsearchDatabaseIncludeManager *manager);
 
