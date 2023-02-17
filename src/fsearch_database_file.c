@@ -952,7 +952,6 @@ load_fail:
     }
     g_clear_pointer(&file_pool, fsearch_memory_pool_free_pool);
     g_clear_pointer(&folder_pool, fsearch_memory_pool_free_pool);
-    g_clear_pointer(&index, free);
 
     return NULL;
 }
