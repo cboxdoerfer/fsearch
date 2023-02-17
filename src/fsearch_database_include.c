@@ -31,6 +31,8 @@ fsearch_database_include_new_directory(GFile *directory,
     g_return_val_if_fail(directory, NULL);
 
     self = g_slice_new0(FsearchDatabaseInclude);
+
+    self->directory = g_object_ref(directory);
     self->one_file_system = one_file_system;
     self->monitor = monitor;
     self->scan_after_launch = scan_after_load;
@@ -77,7 +79,7 @@ fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclud
 
 gint
 fsearch_database_include_compare(gconstpointer i1, gconstpointer i2) {
-    FsearchDatabaseInclude *include1= *(FsearchDatabaseInclude **)i1;
+    FsearchDatabaseInclude *include1 = *(FsearchDatabaseInclude **)i1;
     FsearchDatabaseInclude *include2 = *(FsearchDatabaseInclude **)i2;
 
     return include1->id - include2->id;
