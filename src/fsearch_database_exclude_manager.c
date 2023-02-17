@@ -41,9 +41,9 @@ remove_str(GPtrArray *array, const char *str) {
 static void
 fsearch_database_exclude_manager_finalize(GObject *object) {
     FsearchDatabaseExcludeManager *self = (FsearchDatabaseExcludeManager *)object;
-    g_clear_object(&self->paths);
-    g_clear_object(&self->file_patterns);
-    g_clear_object(&self->directory_patterns);
+    g_clear_pointer(&self->paths, g_ptr_array_unref);
+    g_clear_pointer(&self->file_patterns, g_ptr_array_unref);
+    g_clear_pointer(&self->directory_patterns, g_ptr_array_unref);
 
     G_OBJECT_CLASS(fsearch_database_exclude_manager_parent_class)->finalize(object);
 }
