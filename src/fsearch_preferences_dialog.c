@@ -1,5 +1,7 @@
 #include "fsearch_preferences_dialog.h"
 
+#include <glib/gi18n.h>
+
 #include "fsearch_filter_preferences_widget.h"
 
 struct _FsearchPreferencesDialog {
@@ -175,11 +177,11 @@ on_index_path_entry_changed(GtkEntry *entry, gpointer user_data) {
 
 static void
 on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
-   // GtkTreeModel *model = user_data;
-   // FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
-   // ctx->model = model;
-   // ctx->row_add_func = pref_exclude_treeview_row_add;
-   // run_file_chooser_dialog(button, ctx);
+    // GtkTreeModel *model = user_data;
+    // FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
+    // ctx->model = model;
+    // ctx->row_add_func = pref_exclude_treeview_row_add;
+    // run_file_chooser_dialog(button, ctx);
 }
 
 static void
@@ -389,6 +391,9 @@ fsearch_preferences_dialog_init(FsearchPreferencesDialog *self) {
     g_assert(FSEARCH_IS_PREFERENCES_DIALOG(self));
 
     gtk_widget_init_template(GTK_WIDGET(self));
+
+    gtk_dialog_add_button(GTK_DIALOG(self), _("_Cancel"), GTK_RESPONSE_CANCEL);
+    gtk_dialog_add_button(GTK_DIALOG(self), _("_OK"), GTK_RESPONSE_OK);
 }
 
 FsearchPreferencesDialog *
