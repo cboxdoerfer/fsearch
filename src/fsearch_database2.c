@@ -661,8 +661,7 @@ load_database_from_file(FsearchDatabase2 *self) {
     g_autofree gchar *file_path = g_file_get_path(self->file);
     g_return_if_fail(file_path);
 
-    g_autofree FsearchDatabaseIndex *index = db_file_load(file_path, NULL);
-    g_return_if_fail(index);
+    g_autoptr(FsearchDatabaseIndex) index = db_file_load(file_path, NULL);
 
     database_lock(self);
 
