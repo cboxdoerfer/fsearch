@@ -1,6 +1,8 @@
 #include "fsearch_database_info.h"
 
 struct _FsearchDatabaseInfo {
+    FsearchDatabaseIncludeManager *include_manager;
+    FsearchDatabaseExcludeManager *exclude_manager;
     uint32_t num_files;
     uint32_t num_folders;
 
@@ -10,52 +12,75 @@ struct _FsearchDatabaseInfo {
 G_DEFINE_BOXED_TYPE(FsearchDatabaseInfo, fsearch_database_info, fsearch_database_info_ref, fsearch_database_info_unref)
 
 FsearchDatabaseInfo *
-fsearch_database_info_ref(FsearchDatabaseInfo *info) {
-    g_return_val_if_fail(info != NULL, NULL);
-    g_return_val_if_fail(info->ref_count > 0, NULL);
+fsearch_database_info_ref(FsearchDatabaseInfo *self) {
+    g_return_val_if_fail(self != NULL, NULL);
+    g_return_val_if_fail(self->ref_count > 0, NULL);
 
-    g_atomic_int_inc(&info->ref_count);
+    g_atomic_int_inc(&self->ref_count);
 
-    return info;
+    return self;
 }
 
 void
-fsearch_database_info_unref(FsearchDatabaseInfo *info) {
-    g_return_if_fail(info != NULL);
-    g_return_if_fail(info->ref_count > 0);
+fsearch_database_info_unref(FsearchDatabaseInfo *self) {
+    g_return_if_fail(self != NULL);
+    g_return_if_fail(self->ref_count > 0);
 
-    if (g_atomic_int_dec_and_test(&info->ref_count)) {
-        g_clear_pointer(&info, g_free);
+    if (g_atomic_int_dec_and_test(&self->ref_count)) {
+        g_clear_object(&self->include_manager);
+        g_clear_object(&self->exclude_manager);
+        g_clear_pointer(&self, g_free);
     }
 }
 
 FsearchDatabaseInfo *
-fsearch_database_info_new(uint32_t num_files, uint32_t num_folders) {
-    FsearchDatabaseInfo *info = calloc(1, sizeof(FsearchDatabaseInfo));
-    g_assert(info);
+fsearch_database_info_new(FsearchDatabaseIncludeManager *include_manager,
+                          FsearchDatabaseExcludeManager *exclude_manager,
+                          uint32_t num_files,
+                          uint32_t num_folders) {
+    FsearchDatabaseInfo *self = calloc(1, sizeof(FsearchDatabaseInfo));
+    g_assert(self);
 
-    info->num_files = num_files;
-    info->num_folders = num_folders;
+    if (include_manager) {
+        self->include_manager = fsearch_database_include_manager_copy(include_manager);
+    }
+    if (exclude_manager) {
+        self->exclude_manager = fsearch_database_exclude_manager_copy(exclude_manager);
+    }
+    self->num_files = num_files;
+    self->num_folders = num_folders;
 
-    info->ref_count = 1;
+    self->ref_count = 1;
 
-    return info;
+    return self;
 }
 
 uint32_t
-fsearch_database_info_get_num_files(FsearchDatabaseInfo *info) {
-    g_return_val_if_fail(info, 0);
-    return info->num_files;
+fsearch_database_info_get_num_files(FsearchDatabaseInfo *self) {
+    g_return_val_if_fail(self, 0);
+    return self->num_files;
 }
 
 uint32_t
-fsearch_database_info_get_num_folders(FsearchDatabaseInfo *info) {
-    g_return_val_if_fail(info, 0);
-    return info->num_files;
+fsearch_database_info_get_num_folders(FsearchDatabaseInfo *self) {
+    g_return_val_if_fail(self, 0);
+    return self->num_files;
 }
 
 uint32_t
-fsearch_database_info_get_num_entries(FsearchDatabaseInfo *info) {
-    g_return_val_if_fail(info, 0);
-    return info->num_files + info->num_folders;
+fsearch_database_info_get_num_entries(FsearchDatabaseInfo *self) {
+    g_return_val_if_fail(self, 0);
+    return self->num_files + self->num_folders;
+}
+
+FsearchDatabaseIncludeManager *
+fsearch_database_info_get_include_manager(FsearchDatabaseInfo *self) {
+    g_return_val_if_fail(self, NULL);
+    return g_object_ref(self->include_manager);
+}
+
+FsearchDatabaseExcludeManager *
+fsearch_database_info_get_exclude_manager(FsearchDatabaseInfo *self) {
+    g_return_val_if_fail(self, NULL);
+    return g_object_ref(self->exclude_manager);
 }
