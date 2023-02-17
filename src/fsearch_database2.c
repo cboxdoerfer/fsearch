@@ -659,15 +659,16 @@ load_database_from_file(FsearchDatabase2 *self) {
     const uint32_t num_files = darray_get_num_items(self->index->files[DATABASE_ENTRY_TYPE_FILE]);
     const uint32_t num_folders = darray_get_num_items(self->index->folders[DATABASE_ENTRY_TYPE_FILE]);
 
-    database_unlock(self);
-
     emit_signal(self,
                 EVENT_LOAD_FINISHED,
-                fsearch_database_info_new(num_files, num_folders),
+                fsearch_database_info_new(self->include_manager, self->exclude_manager, num_files, num_folders),
                 NULL,
                 1,
                 (GDestroyNotify)fsearch_database_info_unref,
                 NULL);
+
+    database_unlock(self);
+
 }
 
 static gpointer
