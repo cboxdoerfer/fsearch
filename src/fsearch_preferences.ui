@@ -37,26 +37,6 @@
     <property name="can-focus">False</property>
     <property name="icon-name">list-remove-symbolic</property>
   </object>
-  <object class="GtkImage" id="image5">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-add-symbolic</property>
-  </object>
-  <object class="GtkImage" id="image6">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">list-remove-symbolic</property>
-  </object>
-  <object class="GtkImage" id="image7">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-edit-symbolic</property>
-  </object>
-  <object class="GtkImage" id="image8">
-    <property name="visible">True</property>
-    <property name="can-focus">False</property>
-    <property name="icon-name">document-revert-symbolic</property>
-  </object>
   <object class="GtkImage" id="image9">
     <property name="visible">True</property>
     <property name="can-focus">False</property>
@@ -788,7 +768,7 @@
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkFrame">
+                  <object class="GtkFrame" id="filter_frame">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
                     <property name="margin-top">6</property>
@@ -796,146 +776,7 @@
                     <property name="label-xalign">0</property>
                     <property name="shadow-type">none</property>
                     <child>
-                      <object class="GtkBox">
-                        <property name="visible">True</property>
-                        <property name="can-focus">False</property>
-                        <property name="hexpand">True</property>
-                        <child>
-                          <object class="GtkBox">
-                            <property name="visible">True</property>
-                            <property name="can-focus">False</property>
-                            <property name="margin-start">6</property>
-                            <property name="margin-end">6</property>
-                            <property name="margin-top">6</property>
-                            <property name="margin-bottom">6</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <object class="GtkScrolledWindow">
-                                <property name="width-request">200</property>
-                                <property name="height-request">200</property>
-                                <property name="visible">True</property>
-                                <property name="can-focus">True</property>
-                                <property name="vexpand">True</property>
-                                <property name="shadow-type">in</property>
-                                <child>
-                                  <object class="GtkTreeView" id="filter_list">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="has-tooltip">True</property>
-                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_list" swapped="no"/>
-                                    <signal name="row-activated" handler="on_filter_list_row_activated" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <child internal-child="selection">
-                                      <object class="GtkTreeSelection"/>
-                                    </child>
-                                  </object>
-                                </child>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">0</property>
-                              </packing>
-                            </child>
-                            <child>
-                              <object class="GtkBox">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <child>
-                                  <object class="GtkButton" id="filter_add_button">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Add new filter</property>
-                                    <property name="image">image5</property>
-                                    <property name="always-show-image">True</property>
-                                    <signal name="clicked" handler="on_filter_add_button_clicked" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_add" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">0</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="filter_remove_button">
-                                    <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Remove selected filter</property>
-                                    <property name="image">image6</property>
-                                    <property name="always-show-image">True</property>
-                                    <signal name="clicked" handler="on_filter_remove_button_clicked" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_remove" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">1</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="filter_edit_button">
-                                    <property name="visible">True</property>
-                                    <property name="sensitive">False</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Edit selected filter</property>
-                                    <property name="image">image7</property>
-                                    <signal name="clicked" handler="on_filter_edit_button_clicked" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_edit" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">2</property>
-                                  </packing>
-                                </child>
-                                <child>
-                                  <object class="GtkButton" id="filter_revert_button">
-                                    <property name="visible">True</property>
-                                    <property name="can-focus">True</property>
-                                    <property name="receives-default">True</property>
-                                    <property name="tooltip-text" translatable="yes">Restore default filters</property>
-                                    <property name="image">image8</property>
-                                    <signal name="clicked" handler="on_filter_revert_button_clicked" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="focus-out-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="leave-notify-event" handler="on_help_reset" object="FsearchPreferencesDialog" swapped="no"/>
-                                    <signal name="query-tooltip" handler="on_help_show" object="help_filter_revert" swapped="no"/>
-                                  </object>
-                                  <packing>
-                                    <property name="expand">False</property>
-                                    <property name="fill">True</property>
-                                    <property name="position">3</property>
-                                  </packing>
-                                </child>
-                                <style>
-                                  <class name="inline-toolbar"/>
-                                </style>
-                              </object>
-                              <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                              </packing>
-                            </child>
-                          </object>
-                          <packing>
-                            <property name="expand">True</property>
-                            <property name="fill">True</property>
-                            <property name="position">0</property>
-                          </packing>
-                        </child>
-                      </object>
+                      <placeholder/>
                     </child>
                     <child type="label">
                       <object class="GtkLabel">
