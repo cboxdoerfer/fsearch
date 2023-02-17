@@ -29,6 +29,9 @@ fsearch_database_include_ref(FsearchDatabaseInclude *self);
 void
 fsearch_database_include_unref(FsearchDatabaseInclude *self);
 
+FsearchDatabaseInclude *
+fsearch_database_include_copy(FsearchDatabaseInclude *self);
+
 FsearchDatabaseIncludeKind
 fsearch_database_include_get_kind(FsearchDatabaseInclude *self);
 

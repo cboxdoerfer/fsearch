@@ -83,6 +83,16 @@ fsearch_database_include_compare(gconstpointer i1, gconstpointer i2) {
     return include1->id - include2->id;
 }
 
+FsearchDatabaseInclude *
+fsearch_database_include_copy(FsearchDatabaseInclude *self) {
+    g_return_val_if_fail(self, NULL);
+    return fsearch_database_include_new_directory(self->directory,
+                                                  self->one_file_system,
+                                                  self->monitor,
+                                                  self->scan_after_launch,
+                                                  self->id);
+}
+
 FsearchDatabaseIncludeKind
 fsearch_database_include_get_kind(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, 0);
