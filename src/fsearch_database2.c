@@ -417,7 +417,6 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
-    emit_signal(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
     FsearchDatabaseIndexType sort_order = fsearch_database_work_search_get_sort_order(work);
@@ -427,6 +426,13 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     uint32_t num_folders = 0;
 
     database_lock(self);
+
+    if (!self->index) {
+        database_unlock(self);
+        return false;
+    }
+
+    emit_signal(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     bool result = false;
     DynamicArray *files = NULL;
