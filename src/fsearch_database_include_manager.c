@@ -13,7 +13,7 @@ G_DEFINE_TYPE(FsearchDatabaseIncludeManager, fsearch_database_include_manager, G
 static void
 fsearch_database_include_manager_finalize(GObject *object) {
     FsearchDatabaseIncludeManager *self = (FsearchDatabaseIncludeManager *)object;
-    g_clear_object(&self->includes);
+    g_clear_pointer(&self->includes, g_ptr_array_unref);
 
     G_OBJECT_CLASS(fsearch_database_include_manager_parent_class)->finalize(object);
 }
@@ -27,7 +27,7 @@ fsearch_database_include_manager_class_init(FsearchDatabaseIncludeManagerClass *
 
 static void
 fsearch_database_include_manager_init(FsearchDatabaseIncludeManager *self) {
-    self->includes = g_ptr_array_new_with_free_func(g_object_unref);
+    self->includes = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_include_unref);
 }
 
 FsearchDatabaseIncludeManager *
@@ -40,7 +40,7 @@ fsearch_database_include_manager_add(FsearchDatabaseIncludeManager *self, Fsearc
     g_return_if_fail(self);
     g_return_if_fail(FSEARCH_IS_DATABASE_INCLUDE_MANAGER(self));
     if (!g_ptr_array_find_with_equal_func(self->includes, include, (GEqualFunc)fsearch_database_include_equal, NULL)) {
-        g_ptr_array_add(self->includes, g_object_ref(include));
+        g_ptr_array_add(self->includes, fsearch_database_include_ref(include));
         g_ptr_array_sort(self->includes, fsearch_database_include_compare);
     }
 }
