@@ -405,3 +405,10 @@ fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, Fsearch
     }
     return self;
 }
+
+FsearchConfig *
+fsearch_preferences_dialog_get_config(FsearchPreferencesDialog *self) {
+    g_return_val_if_fail(self, NULL);
+    return self->config;
+}
+
