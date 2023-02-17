@@ -77,7 +77,7 @@ fsearch_deps = [
 ]
 
 fsearch_enums_headers = [
-    'fsearch_database2.h'
+    'fsearch_result.h'
 ]
 
 fsearch_enums = gnome.mkenums_simple('fsearch_enums',

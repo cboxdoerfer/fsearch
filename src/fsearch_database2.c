@@ -314,29 +314,29 @@ get_search_view(FsearchDatabase2 *self, uint32_t view_id) {
     return g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
 }
 
-static FsearchDatabaseResult
+static FsearchResult
 get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
-    g_return_val_if_fail(self, FSEARCH_DATABASE_RESULT_FAILED);
-    g_return_val_if_fail(work, FSEARCH_DATABASE_RESULT_FAILED);
-    g_return_val_if_fail(info_out, FSEARCH_DATABASE_RESULT_FAILED);
+    g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(work, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
     const uint32_t idx = fsearch_database_work_item_info_get_index(work);
     const uint32_t id = fsearch_database_work_get_view_id(work);
 
     FsearchDatabaseSearchView *view = get_search_view(self, id);
     if (!view) {
-        return FSEARCH_DATABASE_RESULT_UNKOWN_SEARCH_VIEW;
+        return FSEARCH_RESULT_DB_UNKOWN_SEARCH_VIEW;
     }
 
     const FsearchDatabaseEntryInfoFlags flags = fsearch_database_work_item_info_get_flags(work);
 
     FsearchDatabaseEntry *entry = get_entry_for_idx(view, idx);
     if (!entry) {
-        return FSEARCH_DATABASE_RESULT_ENTRY_NOT_FOUND;
+        return FSEARCH_RESULT_DB_ENTRY_NOT_FOUND;
     }
 
     *info_out = fsearch_database_entry_info_new(entry, view->query, idx, is_selected(view, entry), flags);
-    return FSEARCH_DATABASE_RESULT_SUCCESS;
+    return FSEARCH_RESULT_SUCCESS;
 }
 
 static void
@@ -1009,19 +1009,19 @@ fsearch_database2_process_work_now(FsearchDatabase2 *self) {
     wakeup_work_queue(self);
 }
 
-FsearchDatabaseResult
+FsearchResult
 fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out) {
-    g_return_val_if_fail(self, FSEARCH_DATABASE_RESULT_FAILED);
-    g_return_val_if_fail(info_out, FSEARCH_DATABASE_RESULT_FAILED);
+    g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
     if (!g_mutex_trylock(&self->mutex)) {
-        return FSEARCH_DATABASE_RESULT_BUSY;
+        return FSEARCH_RESULT_DB_BUSY;
     }
 
-    FsearchDatabaseResult res = FSEARCH_DATABASE_RESULT_FAILED;
+    FsearchResult res = FSEARCH_RESULT_FAILED;
     FsearchDatabaseSearchView *view = get_search_view(self, view_id);
     if (!view) {
-        res = FSEARCH_DATABASE_RESULT_UNKOWN_SEARCH_VIEW;
+        res = FSEARCH_RESULT_DB_UNKOWN_SEARCH_VIEW;
     }
     else {
         *info_out = fsearch_database_search_info_new(fsearch_query_ref(view->query),
@@ -1031,7 +1031,7 @@ fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, 
                                                      fsearch_selection_get_num_selected(view->folder_selection),
                                                      view->sort_order,
                                                      view->sort_type);
-        res = FSEARCH_DATABASE_RESULT_SUCCESS;
+        res = FSEARCH_RESULT_SUCCESS;
     }
 
     database_unlock(self);
@@ -1039,20 +1039,20 @@ fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, 
     return res;
 }
 
-FsearchDatabaseResult
+FsearchResult
 fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
                                     uint32_t view_id,
                                     uint32_t idx,
                                     FsearchDatabaseEntryInfoFlags flags,
                                     FsearchDatabaseEntryInfo **info_out) {
-    g_return_val_if_fail(self, FSEARCH_DATABASE_RESULT_FAILED);
-    g_return_val_if_fail(info_out, FSEARCH_DATABASE_RESULT_FAILED);
+    g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
     if (!g_mutex_trylock(&self->mutex)) {
-        return FSEARCH_DATABASE_RESULT_BUSY;
+        return FSEARCH_RESULT_DB_BUSY;
     }
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(view_id, idx, flags);
-    FsearchDatabaseResult res = get_entry_info(self, work, info_out);
+    FsearchResult res = get_entry_info(self, work, info_out);
 
     database_unlock(self);
 
