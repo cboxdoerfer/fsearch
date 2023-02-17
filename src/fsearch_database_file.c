@@ -66,9 +66,9 @@ copy_bytes_and_return_new_src(void *dest, const uint8_t *src, size_t len) {
 
 static const uint8_t *
 load_entry_super_elements_from_memory(const uint8_t *data_block,
-                                         FsearchDatabaseIndexFlags index_flags,
-                                         FsearchDatabaseEntry *entry,
-                                         GString *previous_entry_name) {
+                                      FsearchDatabaseIndexFlags index_flags,
+                                      FsearchDatabaseEntry *entry,
+                                      GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint8_t name_offset = *data_block++;
 
@@ -203,10 +203,10 @@ load_parent_idx(FILE *fp, uint32_t *parent_idx) {
 
 static bool
 load_folders(FILE *fp,
-                FsearchDatabaseIndexFlags index_flags,
-                DynamicArray *folders,
-                uint32_t num_folders,
-                uint64_t folder_block_size) {
+             FsearchDatabaseIndexFlags index_flags,
+             DynamicArray *folders,
+             uint32_t num_folders,
+             uint64_t folder_block_size) {
     g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
 
     g_autofree uint8_t *folder_block = calloc(folder_block_size + 1, sizeof(uint8_t));
@@ -262,12 +262,12 @@ load_folders(FILE *fp,
 
 static bool
 load_files(FILE *fp,
-              FsearchDatabaseIndexFlags index_flags,
-              FsearchMemoryPool *pool,
-              DynamicArray *folders,
-              DynamicArray *files,
-              uint32_t num_files,
-              uint64_t file_block_size) {
+           FsearchDatabaseIndexFlags index_flags,
+           FsearchMemoryPool *pool,
+           DynamicArray *folders,
+           DynamicArray *files,
+           uint32_t num_files,
+           uint64_t file_block_size) {
     g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
     g_autofree uint8_t *file_block = calloc(file_block_size + 1, sizeof(uint8_t));
     g_assert(file_block);
@@ -388,12 +388,12 @@ write_data_to_file(FILE *fp, const void *data, size_t data_size, size_t num_elem
 
 static size_t
 save_entry_super_elements(FILE *fp,
-                             FsearchDatabaseIndexFlags index_flags,
-                             FsearchDatabaseEntry *entry,
-                             uint32_t parent_idx,
-                             GString *previous_entry_name,
-                             GString *new_entry_name,
-                             bool *write_failed) {
+                          FsearchDatabaseIndexFlags index_flags,
+                          FsearchDatabaseEntry *entry,
+                          uint32_t parent_idx,
+                          GString *previous_entry_name,
+                          GString *new_entry_name,
+                          bool *write_failed) {
     // init new_entry_name with the name of the current entry
     g_string_erase(new_entry_name, 0, -1);
     g_string_append(new_entry_name, db_entry_get_name_raw(entry));
@@ -456,7 +456,7 @@ save_entry_super_elements(FILE *fp,
         goto out;
     }
 
-    out:
+out:
     return bytes_written;
 }
 
@@ -485,7 +485,7 @@ save_header(FILE *fp, bool *write_failed) {
         goto out;
     }
 
-    out:
+out:
     return bytes_written;
 }
 
@@ -595,16 +595,16 @@ save_sorted_arrays(FILE *fp, FsearchDatabaseIndex *index, uint32_t num_files, ui
         }
     }
 
-    out:
+out:
     return bytes_written;
 }
 
 static size_t
 save_folders(FILE *fp,
-                FsearchDatabaseIndexFlags index_flags,
-                DynamicArray *folders,
-                uint32_t num_folders,
-                bool *write_failed) {
+             FsearchDatabaseIndexFlags index_flags,
+             DynamicArray *folders,
+             uint32_t num_folders,
+             bool *write_failed) {
     size_t bytes_written = 0;
 
     g_autoptr(GString) name_prev = g_string_sized_new(256);
@@ -642,7 +642,7 @@ save_indexes(FILE *fp, FsearchDatabaseIndex *index, bool *write_failed) {
         g_debug("[db_save] failed to save number of indexes: %d", num_indexes);
         goto out;
     }
-    out:
+out:
     return bytes_written;
 }
 
@@ -657,7 +657,7 @@ save_excludes(FILE *fp, FsearchDatabaseIndex *index, bool *write_failed) {
         g_debug("[db_save] failed to save number of indexes: %d", num_excludes);
         goto out;
     }
-    out:
+out:
     return bytes_written;
 }
 
@@ -816,7 +816,7 @@ db_file_save(FsearchDatabaseIndex *index, const char *path) {
 
     return true;
 
-    save_fail:
+save_fail:
     g_warning("[db_save] saving failed");
 
     g_clear_pointer(&fp, fclose);
@@ -941,7 +941,7 @@ db_file_load(const char *file_path, void (*status_cb)(const char *)) {
 
     return index;
 
-    load_fail:
+load_fail:
     g_debug("[db_load] load failed");
 
     g_clear_pointer(&fp, fclose);
