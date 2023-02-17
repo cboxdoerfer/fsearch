@@ -1059,6 +1059,25 @@ fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
     return res;
 }
 
+FsearchResult
+fsearch_database2_try_get_database_info(FsearchDatabase2 *self, FsearchDatabaseInfo **info_out) {
+    g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
+
+    if (!g_mutex_trylock(&self->mutex)) {
+        return FSEARCH_RESULT_DB_BUSY;
+    }
+
+    *info_out = fsearch_database_info_new(self->include_manager,
+                                          self->exclude_manager,
+                                          get_num_database_files(self),
+                                          get_num_database_folders(self));
+
+    database_unlock(self);
+
+    return FSEARCH_RESULT_SUCCESS;
+}
+
 typedef struct {
     FsearchDatabase2ForeachFunc func;
     gpointer user_data;

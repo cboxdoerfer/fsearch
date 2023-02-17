@@ -5,6 +5,7 @@
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
+#include "fsearch_database_info.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_work.h"
 #include "fsearch_result.h"
@@ -24,6 +25,9 @@ fsearch_database2_process_work_now(FsearchDatabase2 *self);
 
 FsearchResult
 fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out);
+
+FsearchResult
+fsearch_database2_try_get_database_info(FsearchDatabase2 *self, FsearchDatabaseInfo **info_out);
 
 void
 fsearch_database2_selection_foreach(FsearchDatabase2 *self,
