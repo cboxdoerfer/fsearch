@@ -1,5 +1,7 @@
 #include "fsearch_preferences_dialog.h"
 
+#include "fsearch_filter_preferences_widget.h"
+
 struct _FsearchPreferencesDialog {
     GtkDialog parent_instance;
 
@@ -11,6 +13,8 @@ struct _FsearchPreferencesDialog {
     GtkWidget *help_stack;
     GtkWidget *help_description;
     GtkWidget *help_expander;
+
+    FsearchFilterPreferencesWidget *filter_pref_widget;
 
     guint help_reset_timeout_id;
 
@@ -40,13 +44,7 @@ struct _FsearchPreferencesDialog {
     GtkToggleButton *search_as_you_type_button;
     GtkToggleButton *hide_results_button;
 
-    GtkTreeView *filter_list;
-    GtkTreeModel *filter_model;
-    GtkWidget *filter_add_button;
-    GtkWidget *filter_edit_button;
-    GtkWidget *filter_remove_button;
-    GtkWidget *filter_revert_button;
-    GtkTreeSelection *filter_selection;
+    GtkFrame *filter_frame;
 
     // Database page
     GtkToggleButton *update_db_at_start_button;
@@ -155,37 +153,45 @@ on_action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
 }
 
 static void
-on_filter_add_button_clicked(GtkButton *button, gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
-    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+on_index_add_button_clicked(GtkButton *button, gpointer user_data) {
+    // GtkTreeModel *model = user_data;
+    // FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
+    // ctx->model = model;
+    // ctx->row_add_func = pref_index_treeview_row_add;
+    // run_file_chooser_dialog(button, ctx);
 }
 
 static void
-on_filter_remove_button_clicked(GtkButton *button, gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
-    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+on_index_add_path_button_clicked(GtkButton *button, gpointer user_data) {
+    // FsearchPreferencesInterface *ui = user_data;
+    // add_path(GTK_ENTRY(ui->index_path_entry), ui->index_model, pref_index_treeview_row_add);
 }
 
 static void
-on_filter_edit_button_clicked(GtkButton *button, gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
-    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+on_index_path_entry_changed(GtkEntry *entry, gpointer user_data) {
+    // FsearchPreferencesInterface *ui = user_data;
+    // path_entry_changed(entry, ui->index_add_path_button);
 }
 
 static void
-on_filter_revert_button_clicked(GtkButton *button, gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
-    // fsearch_filter_editor_run(_("Add filter"), GTK_WINDOW(ui->dialog), NULL, on_filter_editor_add_finished, ui);
+on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
+   // GtkTreeModel *model = user_data;
+   // FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
+   // ctx->model = model;
+   // ctx->row_add_func = pref_exclude_treeview_row_add;
+   // run_file_chooser_dialog(button, ctx);
 }
 
 static void
-on_filter_list_row_activated(GtkTreeView *tree_view, GtkTreePath *path, GtkTreeViewColumn *column, gpointer user_data) {
-    FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(user_data);
-    gboolean selected = gtk_tree_selection_get_selected(self->filter_selection, NULL, NULL);
-    if (!selected) {
-        return;
-    }
-    // on_filter_edit_button_clicked(GTK_BUTTON(ui->filter_edit_button), ui);
+on_exclude_add_path_button_clicked(GtkButton *button, gpointer user_data) {
+    //    FsearchPreferencesInterface *ui = user_data;
+    //    add_path(GTK_ENTRY(ui->exclude_path_entry), ui->exclude_model, pref_exclude_treeview_row_add);
+}
+
+static void
+on_exclude_path_entry_changed(GtkEntry *entry, gpointer user_data) {
+    //    FsearchPreferencesInterface *ui = user_data;
+    //    path_entry_changed(entry, ui->exclude_add_path_button);
 }
 
 static void
@@ -251,6 +257,10 @@ fsearch_preferences_dialog_constructed(GObject *object) {
     FsearchPreferencesDialog *self = FSEARCH_PREFERENCES_DIALOG(object);
 
     G_OBJECT_CLASS(fsearch_preferences_dialog_parent_class)->constructed(object);
+
+    self->filter_pref_widget = fsearch_filter_preferences_widget_new(self->config_old->filters);
+    gtk_container_add(GTK_CONTAINER(self->filter_frame), GTK_WIDGET(self->filter_pref_widget));
+    gtk_widget_show(GTK_WIDGET(self->filter_pref_widget));
 
     gtk_toggle_button_set_active(self->enable_dark_theme_button, self->config_old->enable_dark_theme);
     gtk_toggle_button_set_active(self->show_menubar_button, !self->config_old->show_menubar);
@@ -341,11 +351,7 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_match_case_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, search_as_you_type_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, hide_results_button);
-    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_list);
-    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_add_button);
-    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_edit_button);
-    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_remove_button);
-    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_revert_button);
+    gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, filter_frame);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, update_db_at_start_button);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_update_checkbox);
     gtk_widget_class_bind_template_child(widget_class, FsearchPreferencesDialog, auto_update_spin_box);
@@ -370,11 +376,12 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
     gtk_widget_class_bind_template_callback(widget_class, on_action_after_file_open_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_auto_update_checkbox_toggled);
     gtk_widget_class_bind_template_callback(widget_class, on_auto_update_spin_button_changed);
-    gtk_widget_class_bind_template_callback(widget_class, on_filter_add_button_clicked);
-    gtk_widget_class_bind_template_callback(widget_class, on_filter_remove_button_clicked);
-    gtk_widget_class_bind_template_callback(widget_class, on_filter_edit_button_clicked);
-    gtk_widget_class_bind_template_callback(widget_class, on_filter_revert_button_clicked);
-    gtk_widget_class_bind_template_callback(widget_class, on_filter_list_row_activated);
+    gtk_widget_class_bind_template_callback(widget_class, on_index_add_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_index_path_entry_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_index_add_path_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_exclude_add_button_clicked);
+    gtk_widget_class_bind_template_callback(widget_class, on_exclude_path_entry_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_exclude_add_path_button_clicked);
 }
 
 static void

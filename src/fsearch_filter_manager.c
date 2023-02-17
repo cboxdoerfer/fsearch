@@ -146,7 +146,10 @@ fsearch_filter_manager_edit(FsearchFilterManager *self,
                             const char *query,
                             FsearchQueryFlags flags) {
     g_return_if_fail(self);
-    g_return_if_fail(name);
+
+    if (!name) {
+        return;
+    }
 
     g_clear_pointer(&filter->name, g_free);
     g_clear_pointer(&filter->query, g_free);
