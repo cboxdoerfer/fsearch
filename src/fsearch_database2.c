@@ -452,8 +452,6 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
             search_view_new(query, search_result->files, search_result->folders, NULL, sort_order, sort_type);
         g_hash_table_insert(self->search_results, GUINT_TO_POINTER(id), view);
 
-        g_print("found: %d/%d\n", num_files, num_folders);
-
         g_clear_pointer(&search_result->files, darray_unref);
         g_clear_pointer(&search_result->folders, darray_unref);
         g_clear_pointer(&search_result, free);
@@ -691,7 +689,7 @@ load_database_from_file(FsearchDatabase2 *self) {
 
 static gpointer
 work_queue_thread(gpointer data) {
-    g_print("manager thread started\n");
+    g_debug("manager thread started");
     FsearchDatabase2 *self = data;
 
     while (TRUE) {
@@ -750,16 +748,16 @@ work_queue_thread(gpointer data) {
                 g_assert_not_reached();
             }
 
-            // g_print("finished work in: %fs.\n", g_timer_elapsed(timer, NULL));
+            g_debug("finished work in: %fs.", g_timer_elapsed(timer, NULL));
         }
 
         if (g_cancellable_is_cancelled(self->work_queue_thread_cancellable)) {
-            g_print("thread cancelled...\n");
+            g_debug("thread cancelled...");
             break;
         }
     }
 
-    g_print("manager thread returning\n");
+    g_debug("manager thread returning");
     return NULL;
 }
 
@@ -776,14 +774,11 @@ fsearch_database2_constructed(GObject *object) {
     }
 
     g_async_queue_push(self->work_queue, fsearch_database_work_new_load());
-
-    g_print("constructed...\n");
 }
 
 static void
 fsearch_database2_dispose(GObject *object) {
     FsearchDatabase2 *self = (FsearchDatabase2 *)object;
-    g_print("dispose db2...\n");
 
     // Notify work queue thread to exit itself
     g_cancellable_cancel(self->work_queue_thread_cancellable);
@@ -791,14 +786,11 @@ fsearch_database2_dispose(GObject *object) {
     g_thread_join(self->work_queue_thread);
 
     G_OBJECT_CLASS(fsearch_database2_parent_class)->dispose(object);
-
-    g_print("disposed db2.\n");
 }
 
 static void
 fsearch_database2_finalize(GObject *object) {
     FsearchDatabase2 *self = (FsearchDatabase2 *)object;
-    g_print("finalize db2...\n");
 
     database_lock(self);
     g_clear_object(&self->work_queue_thread_cancellable);
@@ -817,7 +809,6 @@ fsearch_database2_finalize(GObject *object) {
     g_mutex_clear(&self->mutex);
 
     G_OBJECT_CLASS(fsearch_database2_parent_class)->finalize(object);
-    g_print("finalized db2.\n");
 }
 
 static void
@@ -850,7 +841,6 @@ fsearch_database2_set_property(GObject *object, guint prop_id, const GValue *val
 
 static void
 fsearch_database2_class_init(FsearchDatabase2Class *klass) {
-    g_print("class init....\n");
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
     object_class->constructed = fsearch_database2_constructed;

@@ -174,7 +174,6 @@ fsearch_database_sort_results(FsearchDatabaseIndexType old_sort_order,
     }
 
     if (cancellable && g_cancellable_is_cancelled(cancellable)) {
-        g_print("cancelled!!!\n");
         g_clear_pointer(folders_out, darray_unref);
         g_clear_pointer(files_out, darray_unref);
         *sort_order_out = old_sort_order;
