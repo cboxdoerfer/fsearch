@@ -189,6 +189,7 @@
                     <property name="visible">True</property>
                     <property name="can-focus">True</property>
                     <property name="placeholder-text" translatable="yes">Enter path…</property>
+                    <signal name="changed" handler="on_path_entry_changed" object="include_add_path_button" swapped="no"/>
                     <style>
                       <class name="path_entry"/>
                     </style>
@@ -210,6 +211,7 @@
                                 </property>
                     <property name="image">include_add_path_image</property>
                     <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_include_add_path_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
                     <style>
                       <class name="path_add_button"/>
                     </style>
@@ -243,7 +245,9 @@
                     <property name="has-tooltip">True</property>
                     <property name="reorderable">True</property>
                     <child internal-child="selection">
-                      <object class="GtkTreeSelection" id="include_selection"/>
+                      <object class="GtkTreeSelection" id="include_selection">
+                        <signal name="changed" handler="on_selection_changed" object="include_remove_button" swapped="no"/>
+                      </object>
                     </child>
                   </object>
                 </child>
@@ -267,6 +271,7 @@
                                 </property>
                     <property name="image">include_add_image</property>
                     <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_include_add_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -283,6 +288,7 @@
                     <property name="tooltip-text" translatable="yes">Remove selected path</property>
                     <property name="image">include_remove_image</property>
                     <property name="always-show-image">True</property>
+                    <signal name="clicked" handler="on_include_remove_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -338,6 +344,7 @@
                         <property name="visible">True</property>
                         <property name="can-focus">True</property>
                         <property name="placeholder-text" translatable="yes">Enter path…</property>
+                        <signal name="changed" handler="on_path_entry_changed" object="exclude_add_path_button" swapped="no"/>
                         <style>
                           <class name="path_entry"/>
                         </style>
@@ -358,6 +365,7 @@
                         <property name="tooltip-text" translatable="yes">Add path to be included in database</property>
                         <property name="image">exclude_add_path_image</property>
                         <property name="always-show-image">True</property>
+                        <signal name="clicked" handler="on_exclude_add_path_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
                         <style>
                           <class name="path_add_button"/>
                         </style>
@@ -391,7 +399,9 @@
                         <property name="has-tooltip">True</property>
                         <property name="reorderable">True</property>
                         <child internal-child="selection">
-                          <object class="GtkTreeSelection" id="exclude_selection"/>
+                          <object class="GtkTreeSelection" id="exclude_selection">
+                            <signal name="changed" handler="on_selection_changed" object="exclude_remove_button" swapped="no"/>
+                          </object>
                         </child>
                       </object>
                     </child>
@@ -414,6 +424,7 @@
                         <property name="tooltip-text" translatable="yes">Add path to be excluded from database</property>
                         <property name="image">exculde_add_image</property>
                         <property name="always-show-image">True</property>
+                        <signal name="clicked" handler="on_exclude_add_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
@@ -430,6 +441,7 @@
                         <property name="tooltip-text" translatable="yes">Remove selected path</property>
                         <property name="image">exclude_remove_image</property>
                         <property name="always-show-image">True</property>
+                        <signal name="clicked" handler="on_exclude_remove_button_clicked" object="FsearchDatabasePreferencesWidget" swapped="no"/>
                       </object>
                       <packing>
                         <property name="expand">False</property>
