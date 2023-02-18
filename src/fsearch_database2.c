@@ -689,7 +689,6 @@ load_database_from_file(FsearchDatabase2 *self) {
                 NULL);
 
     database_unlock(self);
-
 }
 
 static gpointer
