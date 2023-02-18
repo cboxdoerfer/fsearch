@@ -17,11 +17,7 @@ GType
 fsearch_database_include_get_type(void);
 
 FsearchDatabaseInclude *
-fsearch_database_include_new_directory(GFile *directory,
-                                       gboolean one_file_system,
-                                       gboolean monitor,
-                                       gboolean scan_after_load,
-                                       gint id);
+fsearch_database_include_new(const char *path, gboolean one_file_system, gboolean monitor, gboolean scan_after_load, gint id);
 
 FsearchDatabaseInclude *
 fsearch_database_include_ref(FsearchDatabaseInclude *self);
@@ -35,8 +31,8 @@ fsearch_database_include_copy(FsearchDatabaseInclude *self);
 FsearchDatabaseIncludeKind
 fsearch_database_include_get_kind(FsearchDatabaseInclude *self);
 
-GFile *
-fsearch_database_include_get_directory(FsearchDatabaseInclude *self);
+const char *
+fsearch_database_include_get_path(FsearchDatabaseInclude *self);
 
 gboolean
 fsearch_database_include_get_one_file_system(FsearchDatabaseInclude *self);

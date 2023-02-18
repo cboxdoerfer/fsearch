@@ -146,8 +146,7 @@ db_scan_folder(FsearchDatabaseIndex *index,
                FsearchDatabaseExcludeManager *exclude_manager,
                GCancellable *cancellable,
                void (*status_cb)(const char *)) {
-    g_autoptr(GFile) directory = fsearch_database_include_get_directory(include);
-    g_autofree gchar *directory_path = g_file_get_path(directory);
+    const char *directory_path = fsearch_database_include_get_path(include);
     g_assert(g_path_is_absolute(directory_path));
     g_debug("[db_scan] scan path: %s", directory_path);
 

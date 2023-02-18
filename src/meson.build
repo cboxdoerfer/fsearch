@@ -19,6 +19,7 @@ libfsearch_sources = [
     'fsearch_database2.c',
     'fsearch_database_entry.c',
     'fsearch_database_entry_info.c',
+    'fsearch_database_exclude.c',
     'fsearch_database_exclude_manager.c',
     'fsearch_database_file.c',
     'fsearch_database_include.c',
