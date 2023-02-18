@@ -4,11 +4,10 @@
 
 struct _FsearchDatabaseInclude {
     char *path;
+    gboolean active;
     gboolean monitor;
     gboolean one_file_system;
     gboolean scan_after_launch;
-
-    FsearchDatabaseIncludeKind kind;
 
     gint id;
 
@@ -21,7 +20,12 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseInclude,
                     fsearch_database_include_unref)
 
 FsearchDatabaseInclude *
-fsearch_database_include_new(const char *path, gboolean one_file_system, gboolean monitor, gboolean scan_after_load, gint id) {
+fsearch_database_include_new(const char *path,
+                             gboolean active,
+                             gboolean one_file_system,
+                             gboolean monitor,
+                             gboolean scan_after_load,
+                             gint id) {
     FsearchDatabaseInclude *self;
 
     g_return_val_if_fail(path, NULL);
@@ -29,6 +33,7 @@ fsearch_database_include_new(const char *path, gboolean one_file_system, gboolea
     self = g_slice_new0(FsearchDatabaseInclude);
 
     self->path = g_strdup(path);
+    self->active = active;
     self->one_file_system = one_file_system;
     self->monitor = monitor;
     self->scan_after_launch = scan_after_load;
@@ -84,15 +89,20 @@ fsearch_database_include_compare(gconstpointer i1, gconstpointer i2) {
 FsearchDatabaseInclude *
 fsearch_database_include_copy(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self, NULL);
-    return fsearch_database_include_new(self->path, self->one_file_system, self->monitor, self->scan_after_launch, self->id);
+    return fsearch_database_include_new(self->path,
+                                        self->active,
+                                        self->one_file_system,
+                                        self->monitor,
+                                        self->scan_after_launch,
+                                        self->id);
 }
 
-FsearchDatabaseIncludeKind
-fsearch_database_include_get_kind(FsearchDatabaseInclude *self) {
+gboolean
+fsearch_database_include_get_active(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, 0);
     g_return_val_if_fail(self->ref_count > 0, 0);
 
-    return self->kind;
+    return self->active;
 }
 
 const char *

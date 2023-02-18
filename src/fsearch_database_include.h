@@ -8,16 +8,16 @@ G_BEGIN_DECLS
 
 typedef struct _FsearchDatabaseInclude FsearchDatabaseInclude;
 
-typedef enum {
-    FSEARCH_DATABASE_INCLUDE_KIND_DIRECTORY,
-    NUM_FSEARCH_DATABASE_INCLUDE_KINDS,
-} FsearchDatabaseIncludeKind;
-
 GType
 fsearch_database_include_get_type(void);
 
 FsearchDatabaseInclude *
-fsearch_database_include_new(const char *path, gboolean one_file_system, gboolean monitor, gboolean scan_after_load, gint id);
+fsearch_database_include_new(const char *path,
+                             gboolean active,
+                             gboolean one_file_system,
+                             gboolean monitor,
+                             gboolean scan_after_load,
+                             gint id);
 
 FsearchDatabaseInclude *
 fsearch_database_include_ref(FsearchDatabaseInclude *self);
@@ -28,8 +28,8 @@ fsearch_database_include_unref(FsearchDatabaseInclude *self);
 FsearchDatabaseInclude *
 fsearch_database_include_copy(FsearchDatabaseInclude *self);
 
-FsearchDatabaseIncludeKind
-fsearch_database_include_get_kind(FsearchDatabaseInclude *self);
+gboolean
+fsearch_database_include_get_active(FsearchDatabaseInclude *self);
 
 const char *
 fsearch_database_include_get_path(FsearchDatabaseInclude *self);
