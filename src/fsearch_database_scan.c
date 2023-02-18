@@ -101,7 +101,8 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             continue;
         }
 
-        if (fsearch_database_include_get_one_file_system(walk_context->include) && walk_context->root_device_id != st.st_dev) {
+        if (fsearch_database_include_get_one_file_system(walk_context->include)
+            && walk_context->root_device_id != st.st_dev) {
             g_debug("[db_scan] different filesystem, skipping: %s", path->str);
             continue;
         }
@@ -315,7 +316,6 @@ db_scan2(FsearchDatabaseIncludeManager *include_manager,
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
         db_scan_folder(index, include, exclude_manager, cancellable, NULL);
-
     }
     if (is_cancelled(cancellable)) {
         goto cancelled;
