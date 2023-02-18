@@ -139,13 +139,28 @@ init_include_page(FsearchDatabasePreferencesWidget *self) {
 
 static void
 populate_include_page(FsearchDatabasePreferencesWidget *self) {
-    FsearchDatabaseIncludeManager *includes = fsearch_database_info_get_include_manager(self->info);
-    if (!includes) {
+    FsearchDatabaseIncludeManager *include_manager = fsearch_database_info_get_include_manager(self->info);
+    if (!include_manager) {
         return;
     }
-    g_autoptr(GPtrArray) directories = fsearch_database_include_manager_get_includes(includes);
-    if (!directories || directories->len == 0) {
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
+    if (!includes || includes->len == 0) {
         return;
+    }
+
+    for (uint32_t i = 0; i < includes->len; ++i) {
+        GtkTreeIter iter = {};
+        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
+        gtk_list_store_append(self->exclude_model, &iter);
+        gtk_list_store_set(self->exclude_model,
+                           &iter,
+                           COL_INCLUDE_ACTIVE,
+                           fsearch_database_include_get_active(include),
+                           COL_INCLUDE_PATH,
+                           fsearch_database_include_get_path(include),
+                           COL_INCLUDE_ONE_FS,
+                           fsearch_database_include_get_one_file_system(include),
+                           -1);
     }
 }
 

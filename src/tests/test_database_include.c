@@ -2,6 +2,7 @@
 
 struct include_ctx {
     const char *path;
+    gboolean active;
     gboolean one_file_system;
     gboolean monitor;
     gboolean scan_after_load;
@@ -9,14 +10,15 @@ struct include_ctx {
 };
 
 static struct include_ctx includes[] = {
-    {.path = "/home/user_1", .one_file_system = TRUE, .monitor = TRUE, .scan_after_load = FALSE, .id = 1},
-    {.path = "/home/user_2", .one_file_system = FALSE, .monitor = FALSE, .scan_after_load = TRUE, .id = 2},
+    {.path = "/home/user_1", .active = TRUE, .one_file_system = TRUE, .monitor = TRUE, .scan_after_load = FALSE, .id = 1},
+    {.path = "/home/user_1", .active = TRUE, .one_file_system = FALSE, .monitor = FALSE, .scan_after_load = TRUE, .id = 2},
 };
 
 static void
 test_database_include() {
     for (guint i = 0; i < G_N_ELEMENTS(includes); ++i) {
         g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(includes[i].path,
+                                                                                 includes[i].active,
                                                                                  includes[i].one_file_system,
                                                                                  includes[i].monitor,
                                                                                  includes[i].scan_after_load,
@@ -29,11 +31,13 @@ test_database_include() {
     }
 
     g_autoptr(FsearchDatabaseInclude) i1 = fsearch_database_include_new(includes[0].path,
+                                                                        includes[0].active,
                                                                         includes[0].one_file_system,
                                                                         includes[0].monitor,
                                                                         includes[0].scan_after_load,
                                                                         includes[0].id);
     g_autoptr(FsearchDatabaseInclude) i2 = fsearch_database_include_new(includes[1].path,
+                                                                        includes[1].active,
                                                                         includes[1].one_file_system,
                                                                         includes[1].monitor,
                                                                         includes[1].scan_after_load,
@@ -56,6 +60,7 @@ test_database_include_manager() {
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
     for (guint i = 0; i < G_N_ELEMENTS(includes); ++i) {
         g_autoptr(FsearchDatabaseInclude) include = fsearch_database_include_new(includes[i].path,
+                                                                                 includes[i].active,
                                                                                  includes[i].one_file_system,
                                                                                  includes[i].monitor,
                                                                                  includes[i].scan_after_load,
