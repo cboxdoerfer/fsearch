@@ -83,7 +83,7 @@ fsearch_database_include_manager_equal(FsearchDatabaseIncludeManager *m1, Fsearc
 }
 
 GPtrArray *
-fsearch_database_include_manager_get_directories(FsearchDatabaseIncludeManager *self) {
+fsearch_database_include_manager_get_includes(FsearchDatabaseIncludeManager *self) {
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(FSEARCH_IS_DATABASE_INCLUDE_MANAGER(self), NULL);
     return g_ptr_array_ref(self->includes);

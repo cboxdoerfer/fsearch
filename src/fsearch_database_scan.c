@@ -311,7 +311,7 @@ db_scan2(FsearchDatabaseIncludeManager *include_manager,
     index->files[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
     index->folders[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
 
-    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_directories(include_manager);
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
         db_scan_folder(index, include, exclude_manager, cancellable, NULL);

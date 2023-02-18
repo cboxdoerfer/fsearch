@@ -16,7 +16,7 @@ FsearchDatabaseIncludeManager *
 fsearch_database_include_manager_new_with_defaults(void);
 
 GPtrArray *
-fsearch_database_include_manager_get_directories(FsearchDatabaseIncludeManager *manager);
+fsearch_database_include_manager_get_includes(FsearchDatabaseIncludeManager *self);
 
 void
 fsearch_database_include_manager_add(FsearchDatabaseIncludeManager *manager, FsearchDatabaseInclude *include);

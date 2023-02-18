@@ -143,7 +143,7 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
     if (!includes) {
         return;
     }
-    g_autoptr(GPtrArray) directories = fsearch_database_include_manager_get_directories(includes);
+    g_autoptr(GPtrArray) directories = fsearch_database_include_manager_get_includes(includes);
     if (!directories || directories->len == 0) {
         return;
     }
