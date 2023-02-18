@@ -3,7 +3,7 @@
 #include <glib.h>
 
 struct _FsearchDatabaseInclude {
-    GFile *directory;
+    char *path;
     gboolean monitor;
     gboolean one_file_system;
     gboolean scan_after_launch;
@@ -21,18 +21,14 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseInclude,
                     fsearch_database_include_unref)
 
 FsearchDatabaseInclude *
-fsearch_database_include_new_directory(GFile *directory,
-                                       gboolean one_file_system,
-                                       gboolean monitor,
-                                       gboolean scan_after_load,
-                                       gint id) {
+fsearch_database_include_new(const char *path, gboolean one_file_system, gboolean monitor, gboolean scan_after_load, gint id) {
     FsearchDatabaseInclude *self;
 
-    g_return_val_if_fail(directory, NULL);
+    g_return_val_if_fail(path, NULL);
 
     self = g_slice_new0(FsearchDatabaseInclude);
 
-    self->directory = g_object_ref(directory);
+    self->path = g_strdup(path);
     self->one_file_system = one_file_system;
     self->monitor = monitor;
     self->scan_after_launch = scan_after_load;
@@ -58,7 +54,7 @@ fsearch_database_include_unref(FsearchDatabaseInclude *self) {
     g_return_if_fail(self->ref_count > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
-        g_clear_object(&self->directory);
+        g_clear_pointer(&self->path, g_free);
         g_slice_free(FsearchDatabaseInclude, self);
     }
 }
@@ -71,7 +67,7 @@ fsearch_database_include_equal(FsearchDatabaseInclude *i1, FsearchDatabaseInclud
     g_return_val_if_fail(i2->ref_count > 0, FALSE);
 
     if (i1->monitor != i2->monitor || i1->one_file_system != i2->one_file_system
-        || i1->scan_after_launch != i2->scan_after_launch || !g_file_equal(i1->directory, i2->directory)) {
+        || i1->scan_after_launch != i2->scan_after_launch || g_strcmp0(i1->path, i2->path) != 0) {
         return FALSE;
     }
     return TRUE;
@@ -88,11 +84,7 @@ fsearch_database_include_compare(gconstpointer i1, gconstpointer i2) {
 FsearchDatabaseInclude *
 fsearch_database_include_copy(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self, NULL);
-    return fsearch_database_include_new_directory(self->directory,
-                                                  self->one_file_system,
-                                                  self->monitor,
-                                                  self->scan_after_launch,
-                                                  self->id);
+    return fsearch_database_include_new(self->path, self->one_file_system, self->monitor, self->scan_after_launch, self->id);
 }
 
 FsearchDatabaseIncludeKind
@@ -103,12 +95,12 @@ fsearch_database_include_get_kind(FsearchDatabaseInclude *self) {
     return self->kind;
 }
 
-GFile *
-fsearch_database_include_get_directory(FsearchDatabaseInclude *self) {
+const char *
+fsearch_database_include_get_path(FsearchDatabaseInclude *self) {
     g_return_val_if_fail(self != NULL, NULL);
     g_return_val_if_fail(self->ref_count > 0, NULL);
 
-    return g_object_ref(self->directory);
+    return self->path;
 }
 
 gboolean

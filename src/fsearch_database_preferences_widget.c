@@ -151,20 +151,26 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
 
 static void
 populate_exclude_page(FsearchDatabasePreferencesWidget *self) {
-    FsearchDatabaseExcludeManager *excludes = fsearch_database_info_get_exclude_manager(self->info);
-    if (!excludes) {
+    FsearchDatabaseExcludeManager *exclude_manager = fsearch_database_info_get_exclude_manager(self->info);
+    if (!exclude_manager) {
         return;
     }
-    g_autoptr(GPtrArray) paths = fsearch_database_exclude_manager_get_paths(excludes);
-    if (!paths || paths->len == 0) {
+    g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
+    if (!excludes || excludes->len == 0) {
         return;
     }
 
-    for (uint32_t i = 0; i < paths->len; ++i) {
+    for (uint32_t i = 0; i < excludes->len; ++i) {
         GtkTreeIter iter = {};
-        const char *path = g_ptr_array_index(paths, i);
+        FsearchDatabaseExclude *exclude = g_ptr_array_index(excludes, i);
         gtk_list_store_append(self->exclude_model, &iter);
-        gtk_list_store_set(self->exclude_model, &iter, COL_EXCLUDE_ACTIVE, TRUE, COL_EXCLUDE_PATH, path, -1);
+        gtk_list_store_set(self->exclude_model,
+                           &iter,
+                           COL_EXCLUDE_ACTIVE,
+                           fsearch_database_exclude_get_active(exclude),
+                           COL_EXCLUDE_PATH,
+                           fsearch_database_exclude_get_path(exclude),
+                           -1);
     }
 }
 
