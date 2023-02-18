@@ -295,5 +295,17 @@ fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, Fsearch
 FsearchConfig *
 fsearch_preferences_dialog_get_config(FsearchPreferencesDialog *self) {
     g_return_val_if_fail(self, NULL);
-    return self->config;
+    return config_copy(self->config);
+}
+
+FsearchDatabaseIncludeManager *
+fsearch_preferences_dialog_get_include_manager(FsearchPreferencesDialog *self) {
+    g_return_val_if_fail(self, NULL);
+    return fsearch_database_preferences_widget_get_include_manager(self->database_pref_widget);
+}
+
+FsearchDatabaseExcludeManager *
+fsearch_preferences_dialog_get_exclude_manager(FsearchPreferencesDialog *self) {
+    g_return_val_if_fail(self, NULL);
+    return fsearch_database_preferences_widget_get_exclude_manager(self->database_pref_widget);
 }

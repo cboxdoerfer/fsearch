@@ -17,4 +17,10 @@ fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, Fsearch
 FsearchConfig *
 fsearch_preferences_dialog_get_config(FsearchPreferencesDialog *self);
 
+FsearchDatabaseIncludeManager *
+fsearch_preferences_dialog_get_include_manager(FsearchPreferencesDialog *self);
+
+FsearchDatabaseExcludeManager *
+fsearch_preferences_dialog_get_exclude_manager(FsearchPreferencesDialog *self);
+
 G_END_DECLS
