@@ -38,7 +38,6 @@ struct _FsearchPreferencesDialog {
     GtkToggleButton *show_icons_button;
     GtkToggleButton *highlight_search_terms;
     GtkToggleButton *show_base_2_units;
-    GtkBox *action_after_file_open_box;
     GtkComboBox *action_after_file_open;
     GtkToggleButton *action_after_file_open_keyboard;
     GtkToggleButton *action_after_file_open_mouse;

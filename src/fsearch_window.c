@@ -853,10 +853,12 @@ on_database_update_finished(FsearchDatabase2 *db2, FsearchDatabaseInfo *info, gp
         gtk_stack_set_visible_child(GTK_STACK(win->popover_update_button_stack), update_database_button);
     }
     fsearch_window_set_overlay_for_database_state(win);
+
+    perform_search(win);
 }
 
 static void
-on_database_load_started(FsearchDatabase2 *db2, gpointer data, gpointer user_data) {
+on_database_load_started(FsearchDatabase2 *db2, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -864,7 +866,7 @@ on_database_load_started(FsearchDatabase2 *db2, gpointer data, gpointer user_dat
 }
 
 static void
-on_database_scan_started(FsearchDatabase2 *db2, gpointer data, gpointer user_data) {
+on_database_scan_started(FsearchDatabase2 *db2, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 

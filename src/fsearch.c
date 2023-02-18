@@ -29,8 +29,8 @@
 #include "fsearch_database_info.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
-#include "fsearch_preferences_ui.h"
 #include "fsearch_preferences_dialog.h"
+#include "fsearch_preferences_ui.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
 #include "icon_resources.h"
@@ -256,6 +256,29 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
 }
 
 static void
+on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    FsearchPreferencesDialog *pref_dialog = FSEARCH_PREFERENCES_DIALOG(dialog);
+    if (response_id == GTK_RESPONSE_OK) {
+        g_autoptr(FsearchDatabaseIncludeManager)
+            include_manager = fsearch_preferences_dialog_get_include_manager(pref_dialog);
+        g_autoptr(FsearchDatabaseExcludeManager)
+            exclude_manager = fsearch_preferences_dialog_get_exclude_manager(pref_dialog);
+        g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
+        g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
+        g_debug("response OK: with %d includes and %d excludes", includes->len, excludes->len);
+
+        if (self->work_scan) {
+            fsearch_database_work_cancel(self->work_scan);
+            g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
+        }
+        self->work_scan = fsearch_database_work_new_scan(include_manager, exclude_manager, 0);
+        fsearch_database2_queue_work(self->db2, self->work_scan);
+        fsearch_database2_process_work_now(self->db2);
+    }
+}
+
+static void
 action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointer gapp) {
     g_assert(FSEARCH_IS_APPLICATION(gapp));
     FsearchApplication *self = FSEARCH_APPLICATION(gapp);
@@ -266,9 +289,10 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
     if (!win_active) {
         return;
     }
-    //FsearchConfig *copy_config = config_copy(self->config);
-    //preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
+    // FsearchConfig *copy_config = config_copy(self->config);
+    // preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
     GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config, self->db2));
+    g_signal_connect(GTK_DIALOG(pref), "response", G_CALLBACK(on_preferences_dialog_response), self);
     gtk_dialog_run(GTK_DIALOG(pref));
     g_clear_pointer(&pref, gtk_widget_destroy);
 }
@@ -389,14 +413,14 @@ set_accels_for_escape(GApplication *app) {
 }
 
 static void
-on_database_scan_started(FsearchDatabase2 *db2, gpointer data, gpointer user_data) {
+on_database_scan_started(FsearchDatabase2 *db2, gpointer user_data) {
     FsearchApplication *self = (FsearchApplication *)user_data;
     g_assert(FSEARCH_IS_APPLICATION(self));
     self->db_state = FSEARCH_DATABASE_STATE_SCANNING;
 }
 
 static void
-on_database_load_started(FsearchDatabase2 *db2, gpointer data, gpointer user_data) {
+on_database_load_started(FsearchDatabase2 *db2, gpointer user_data) {
     FsearchApplication *self = (FsearchApplication *)user_data;
     g_assert(FSEARCH_IS_APPLICATION(self));
     self->db_state = FSEARCH_DATABASE_STATE_LOADING;

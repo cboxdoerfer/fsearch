@@ -639,6 +639,8 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
 
+    emit_signal0(self, EVENT_SCAN_STARTED);
+
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_work_scan_get_include_manager(work);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
     const FsearchDatabaseIndexFlags flags = fsearch_database_work_scan_get_flags(work);
@@ -653,6 +655,19 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     self->flags = flags;
     g_clear_pointer(&self->index, fsearch_database_index_free);
     self->index = g_steal_pointer(&index);
+
+    g_hash_table_remove_all(self->search_results);
+
+    emit_signal(self,
+                EVENT_SCAN_FINISHED,
+                fsearch_database_info_new(self->include_manager,
+                                          self->exclude_manager,
+                                          get_num_database_files(self),
+                                          get_num_database_folders(self)),
+                NULL,
+                1,
+                (GDestroyNotify)fsearch_database_info_unref,
+                NULL);
 
     database_unlock(self);
 }
@@ -735,9 +750,7 @@ work_queue_thread(gpointer data) {
                 emit_signal0(self, EVENT_SAVE_FINISHED);
                 break;
             case FSEARCH_DATABASE_WORK_SCAN:
-                emit_signal0(self, EVENT_SCAN_STARTED);
                 scan_database(self, work);
-                emit_signal0(self, EVENT_SCAN_FINISHED);
                 break;
             case FSEARCH_DATABASE_WORK_SEARCH:
                 search_database(self, work);
@@ -862,16 +875,8 @@ fsearch_database2_class_init(FsearchDatabase2Class *klass) {
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
-    signals[EVENT_LOAD_STARTED] = g_signal_new("load-started",
-                                               G_TYPE_FROM_CLASS(klass),
-                                               G_SIGNAL_RUN_LAST,
-                                               0,
-                                               NULL,
-                                               NULL,
-                                               NULL,
-                                               G_TYPE_NONE,
-                                               1,
-                                               G_TYPE_POINTER);
+    signals[EVENT_LOAD_STARTED] =
+        g_signal_new("load-started", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
     signals[EVENT_LOAD_FINISHED] = g_signal_new("load-finished",
                                                 G_TYPE_FROM_CLASS(klass),
                                                 G_SIGNAL_RUN_LAST,
@@ -902,16 +907,8 @@ fsearch_database2_class_init(FsearchDatabase2Class *klass) {
                                                 G_TYPE_NONE,
                                                 1,
                                                 G_TYPE_POINTER);
-    signals[EVENT_SCAN_STARTED] = g_signal_new("scan-started",
-                                               G_TYPE_FROM_CLASS(klass),
-                                               G_SIGNAL_RUN_LAST,
-                                               0,
-                                               NULL,
-                                               NULL,
-                                               NULL,
-                                               G_TYPE_NONE,
-                                               1,
-                                               G_TYPE_POINTER);
+    signals[EVENT_SCAN_STARTED] =
+        g_signal_new("scan-started", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
     signals[EVENT_SCAN_FINISHED] = g_signal_new("scan-finished",
                                                 G_TYPE_FROM_CLASS(klass),
                                                 G_SIGNAL_RUN_LAST,
