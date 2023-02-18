@@ -17,4 +17,10 @@ G_DECLARE_FINAL_TYPE(FsearchDatabasePreferencesWidget,
 FsearchDatabasePreferencesWidget *
 fsearch_database_preferences_widget_new(FsearchDatabase2 *db);
 
+FsearchDatabaseIncludeManager *
+fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferencesWidget *widget);
+
+FsearchDatabaseExcludeManager *
+fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferencesWidget *widget);
+
 G_END_DECLS

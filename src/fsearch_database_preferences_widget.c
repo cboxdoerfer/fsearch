@@ -287,3 +287,64 @@ FsearchDatabasePreferencesWidget *
 fsearch_database_preferences_widget_new(FsearchDatabase2 *db) {
     return g_object_new(FSEARCH_DATABASE_PREFERENCES_WIDGET_TYPE, "database", db, NULL);
 }
+
+FsearchDatabaseIncludeManager *
+fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(self, NULL);
+
+    GtkTreeModel *model = GTK_TREE_MODEL(self->include_model);
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+
+    g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
+
+    while (valid) {
+        g_autofree gchar *path = NULL;
+        gboolean active = FALSE;
+        gboolean one_file_system = FALSE;
+        gtk_tree_model_get(model,
+                           &iter,
+                           COL_INCLUDE_PATH,
+                           &path,
+                           COL_INCLUDE_ACTIVE,
+                           &active,
+                           COL_INCLUDE_ONE_FS,
+                           &one_file_system,
+                           -1);
+
+        if (path) {
+            fsearch_database_include_manager_add(
+                include_manager,
+                fsearch_database_include_new(path, active, one_file_system, FALSE, FALSE, 0));
+        }
+
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+
+    return g_steal_pointer(&include_manager);
+}
+
+FsearchDatabaseExcludeManager *
+fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferencesWidget *self) {
+    g_return_val_if_fail(self, NULL);
+
+    GtkTreeModel *model = GTK_TREE_MODEL(self->exclude_model);
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+
+    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
+
+    while (valid) {
+        g_autofree gchar *path = NULL;
+        gboolean active = FALSE;
+        gtk_tree_model_get(model, &iter, COL_EXCLUDE_PATH, &path, COL_EXCLUDE_ACTIVE, &active, -1);
+
+        if (path) {
+            fsearch_database_exclude_manager_add(exclude_manager, fsearch_database_exclude_new(path, active));
+        }
+
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+
+    return g_steal_pointer(&exclude_manager);
+}
