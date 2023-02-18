@@ -38,11 +38,6 @@ fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseIndexFlags flags);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
-                               FsearchDatabaseExcludeManager *exclude_manager,
-                               FsearchDatabaseIndexFlags flags);
-
-FsearchDatabaseWork *
 fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType selection_type, int32_t idx_1, int32_t idx_2);
 
 FsearchDatabaseWork *

@@ -6,7 +6,7 @@
 struct FsearchDatabaseWork {
     FsearchDatabaseWorkKind kind;
     union {
-        // FSEARCH_DATABASE_WORK_SCAN_FROM_FILE
+        // FSEARCH_DATABASE_WORK_SCAN
         struct {
             FsearchDatabaseIncludeManager *include_manager;
             FsearchDatabaseExcludeManager *exclude_manager;

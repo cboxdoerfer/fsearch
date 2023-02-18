@@ -195,7 +195,7 @@ fsearch_statusbar_set_database_idle(FsearchStatusbar *sb) {
 }
 
 static void
-on_database_scan_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
+on_database_scan_started(FsearchDatabase2 *db, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
@@ -208,7 +208,7 @@ on_database_scan_started(FsearchDatabase2 *db, gpointer data, gpointer user_data
 }
 
 static void
-on_database_load_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
+on_database_load_started(FsearchDatabase2 *db, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
     FsearchConfig *config = fsearch_application_get_config(app);
