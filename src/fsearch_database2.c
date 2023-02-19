@@ -350,11 +350,12 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     emit_signal(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
-    database_lock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     FsearchDatabaseSearchView *view = get_search_view(self, id);
     if (!view) {
-        goto out;
+        return;
     }
 
     DynamicArray *files_new = NULL;
@@ -391,9 +392,6 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
                                                                fsearch_selection_get_num_selected(view->folder_selection),
                                                                view->sort_order,
                                                                view->sort_type));
-
-out:
-    database_unlock(self);
 }
 
 static bool
@@ -527,16 +525,17 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     const int32_t start_idx = fsearch_database_work_modify_selection_get_start_idx(work);
     const int32_t end_idx = fsearch_database_work_modify_selection_get_end_idx(work);
 
-    database_lock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     FsearchDatabaseSearchView *view = get_search_view(self, view_id);
     if (!view) {
-        goto out;
+        return;
     }
 
     FsearchDatabaseEntry *entry = get_entry_for_idx(view, start_idx);
     if (!entry) {
-        goto out;
+        return;
     }
 
     switch (type) {
@@ -588,9 +587,6 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
                                          fsearch_selection_get_num_selected(view->folder_selection),
                                          view->sort_order,
                                          view->sort_type));
-
-out:
-    database_unlock(self);
 }
 
 static void
@@ -612,26 +608,26 @@ static void
 rescan_database(FsearchDatabase2 *self) {
     g_return_if_fail(self);
 
-    database_lock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = g_object_ref(self->include_manager);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = g_object_ref(self->exclude_manager);
     const FsearchDatabaseIndexFlags flags = self->flags;
 
-    database_unlock(self);
+    g_clear_pointer(&locker, g_mutex_locker_free);
 
     g_autoptr(FsearchDatabaseIndex) index = db_scan2(include_manager, exclude_manager, flags, NULL);
     g_return_if_fail(index);
 
-    database_lock(self);
+    locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     g_set_object(&self->include_manager, include_manager);
     g_set_object(&self->exclude_manager, exclude_manager);
     self->flags = flags;
     g_clear_pointer(&self->index, fsearch_database_index_free);
     self->index = g_steal_pointer(&index);
-
-    database_unlock(self);
 }
 
 static void
@@ -648,7 +644,8 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseIndex) index = db_scan2(include_manager, exclude_manager, flags, NULL);
     g_return_if_fail(index);
 
-    database_lock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     g_set_object(&self->include_manager, include_manager);
     g_set_object(&self->exclude_manager, exclude_manager);
@@ -668,8 +665,6 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
                 1,
                 (GDestroyNotify)fsearch_database_info_unref,
                 NULL);
-
-    database_unlock(self);
 }
 
 static void
@@ -1103,20 +1098,18 @@ fsearch_database2_selection_foreach(FsearchDatabase2 *self,
     g_return_if_fail(FSEARCH_IS_DATABASE2(self));
     g_return_if_fail(func);
 
-    database_lock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     FsearchDatabaseSearchView *view = get_search_view(self, view_id);
     if (!view) {
-        goto out;
+        return;
     }
 
     FsearchDatabase2SelectionForeachContext ctx = {.func = func, .user_data = user_data};
 
     g_hash_table_foreach(view->folder_selection, selection_foreach, &ctx);
     g_hash_table_foreach(view->file_selection, selection_foreach, &ctx);
-
-out:
-    database_unlock(self);
 }
 
 FsearchDatabase2 *
