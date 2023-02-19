@@ -269,9 +269,7 @@ apply_filter_config(FsearchApplicationWindow *win) {
     g_signal_handlers_unblock_by_func(win->filter_combobox, on_filter_combobox_changed, win);
     gtk_combo_box_set_active(GTK_COMBO_BOX(win->filter_combobox), (int32_t)active_filter);
 
-    // if (win->result_view && win->result_view->database_view) {
-    //     db_view_set_filters(win->result_view->database_view, config->filters);
-    // }
+    perform_search(win);
 }
 
 static void
