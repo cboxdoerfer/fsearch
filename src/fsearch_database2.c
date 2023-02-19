@@ -315,7 +315,7 @@ get_search_view(FsearchDatabase2 *self, uint32_t view_id) {
 }
 
 static FsearchResult
-get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
+get_entry_info_non_blocking(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(work, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
@@ -337,6 +337,13 @@ get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabas
 
     *info_out = fsearch_database_entry_info_new(entry, view->query, idx, is_selected(view, entry), flags);
     return FSEARCH_RESULT_SUCCESS;
+}
+
+static FsearchResult
+get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+    return get_entry_info_non_blocking(self, work, info_out);
 }
 
 static void
@@ -725,10 +732,8 @@ work_queue_thread(gpointer data) {
                 load_database_from_file(self);
                 break;
             case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
-                database_lock(self);
                 FsearchDatabaseEntryInfo *info = NULL;
                 get_entry_info(self, work, &info);
-                database_unlock(self);
                 if (info) {
                     emit_item_info_ready_signal(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
                 }
@@ -1049,7 +1054,7 @@ fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
         return FSEARCH_RESULT_DB_BUSY;
     }
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(view_id, idx, flags);
-    FsearchResult res = get_entry_info(self, work, info_out);
+    FsearchResult res = get_entry_info_non_blocking(self, work, info_out);
 
     database_unlock(self);
 
