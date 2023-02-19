@@ -451,8 +451,8 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, cancellable);
     if (search_result) {
-        num_files = darray_get_num_items(search_result->files);
-        num_folders = darray_get_num_items(search_result->folders);
+        num_files = search_result->files ? darray_get_num_items(search_result->files) : 0;
+        num_folders = search_result->folders ? darray_get_num_items(search_result->folders) : 0;
 
         FsearchDatabaseSearchView *view =
             search_view_new(query, search_result->files, search_result->folders, NULL, sort_order, sort_type);
