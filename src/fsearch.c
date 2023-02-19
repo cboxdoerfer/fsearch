@@ -216,46 +216,6 @@ action_quit_activated(GSimpleAction *action, GVariant *parameter, gpointer app) 
 }
 
 static void
-on_preferences_ui_finished(FsearchConfig *new_config) {
-    if (!new_config) {
-        return;
-    }
-
-    FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
-
-    FsearchConfigCompareResult config_diff = {.database_config_changed = true,
-                                              .listview_config_changed = true,
-                                              .search_config_changed = true};
-
-    if (self->config) {
-        config_diff = config_cmp(self->config, new_config);
-        g_clear_pointer(&self->config, config_free);
-    }
-    self->config = new_config;
-    config_save(self->config);
-
-    g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
-    database_auto_update_init(self);
-
-    if (config_diff.database_config_changed) {
-        // database_scan_or_load_enqueue(FSEARCH_DATABASE_ACTION_SCAN);
-    }
-
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(self));
-    for (GList *w = windows; w; w = w->next) {
-        FsearchApplicationWindow *window = w->data;
-        if (config_diff.search_config_changed) {
-            fsearch_application_window_update_query_flags(window);
-        }
-        if (config_diff.listview_config_changed) {
-            fsearch_application_window_update_listview_config(window);
-        }
-    }
-
-    set_accels_for_escape(G_APPLICATION(self));
-}
-
-static void
 on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
     FsearchPreferencesDialog *pref_dialog = FSEARCH_PREFERENCES_DIALOG(dialog);
@@ -264,9 +224,6 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
             include_manager = fsearch_preferences_dialog_get_include_manager(pref_dialog);
         g_autoptr(FsearchDatabaseExcludeManager)
             exclude_manager = fsearch_preferences_dialog_get_exclude_manager(pref_dialog);
-        g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
-        g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
-        g_debug("response OK: with %d includes and %d excludes", includes->len, excludes->len);
 
         if (self->work_scan) {
             fsearch_database_work_cancel(self->work_scan);
@@ -275,6 +232,32 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
         self->work_scan = fsearch_database_work_new_scan(include_manager, exclude_manager, 0);
         fsearch_database2_queue_work(self->db2, self->work_scan);
         fsearch_database2_process_work_now(self->db2);
+
+        FsearchConfigCompareResult config_diff = {.listview_config_changed = true, .search_config_changed = true};
+
+        FsearchConfig *new_config = fsearch_preferences_dialog_get_config(pref_dialog);
+        if (self->config) {
+            config_diff = config_cmp(self->config, new_config);
+            g_clear_pointer(&self->config, config_free);
+        }
+        self->config = new_config;
+        config_save(self->config);
+
+        g_object_set(gtk_settings_get_default(), "gtk-application-prefer-dark-theme", new_config->enable_dark_theme, NULL);
+        database_auto_update_init(self);
+
+        GList *windows = gtk_application_get_windows(GTK_APPLICATION(self));
+        for (GList *w = windows; w; w = w->next) {
+            FsearchApplicationWindow *window = w->data;
+            if (config_diff.search_config_changed) {
+                fsearch_application_window_update_query_flags(window);
+            }
+            if (config_diff.listview_config_changed) {
+                fsearch_application_window_update_listview_config(window);
+            }
+        }
+
+        set_accels_for_escape(G_APPLICATION(self));
     }
 }
 
@@ -289,8 +272,7 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
     if (!win_active) {
         return;
     }
-    // FsearchConfig *copy_config = config_copy(self->config);
-    // preferences_ui_launch(copy_config, win_active, page, on_preferences_ui_finished);
+
     GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config, self->db2));
     g_signal_connect(GTK_DIALOG(pref), "response", G_CALLBACK(on_preferences_dialog_response), self);
     gtk_dialog_run(GTK_DIALOG(pref));
