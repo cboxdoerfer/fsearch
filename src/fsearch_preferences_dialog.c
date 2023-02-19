@@ -102,6 +102,36 @@ on_help_show(GtkWidget *widget, int x, int y, gboolean keyboard_mode, GtkTooltip
 }
 
 static void
+update_config(FsearchPreferencesDialog *self) {
+    self->config->enable_dark_theme = gtk_toggle_button_get_active(self->enable_dark_theme_button);
+    self->config->show_menubar = !gtk_toggle_button_get_active(self->show_menubar_button);
+    self->config->enable_list_tooltips = gtk_toggle_button_get_active(self->show_tooltips_button);
+    self->config->restore_window_size = gtk_toggle_button_get_active(self->restore_win_size_button);
+    self->config->restore_column_config = gtk_toggle_button_get_active(self->restore_column_config_button);
+    self->config->restore_sort_order = gtk_toggle_button_get_active(self->restore_sort_order_button);
+    self->config->exit_on_escape = gtk_toggle_button_get_active(self->exit_on_escape_button);
+    self->config->double_click_path = gtk_toggle_button_get_active(self->double_click_path_button);
+    self->config->single_click_open = gtk_toggle_button_get_active(self->single_click_open_button);
+    self->config->launch_desktop_files = gtk_toggle_button_get_active(self->launch_desktop_files_button);
+    self->config->show_listview_icons = gtk_toggle_button_get_active(self->show_icons_button);
+    self->config->highlight_search_terms = gtk_toggle_button_get_active(self->highlight_search_terms);
+    self->config->show_base_2_units = gtk_toggle_button_get_active(self->show_base_2_units);
+    self->config->action_after_file_open_keyboard = gtk_toggle_button_get_active(self->action_after_file_open_keyboard);
+    self->config->action_after_file_open_mouse = gtk_toggle_button_get_active(self->action_after_file_open_mouse);
+    self->config->show_indexing_status = gtk_toggle_button_get_active(self->show_indexing_status_button);
+    self->config->auto_search_in_path = gtk_toggle_button_get_active(self->auto_search_in_path_button);
+    self->config->auto_match_case = gtk_toggle_button_get_active(self->auto_match_case_button);
+    self->config->search_as_you_type = gtk_toggle_button_get_active(self->search_as_you_type_button);
+    self->config->hide_results_on_empty_search = gtk_toggle_button_get_active(self->hide_results_button);
+    self->config->show_dialog_failed_opening = gtk_toggle_button_get_active(self->show_dialog_failed_opening);
+
+    self->config_old->action_after_file_open = gtk_combo_box_get_active(self->action_after_file_open);
+
+    g_clear_pointer(&self->config->filters, fsearch_filter_manager_unref);
+    self->config->filters = fsearch_filter_preferences_widget_get_filter_manager(self->filter_pref_widget);
+}
+
+static void
 on_action_after_file_open_changed(GtkComboBox *widget, gpointer user_data) {
     int active = gtk_combo_box_get_active(widget);
     if (active != ACTION_AFTER_OPEN_NOTHING) {
@@ -294,6 +324,7 @@ fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, Fsearch
 FsearchConfig *
 fsearch_preferences_dialog_get_config(FsearchPreferencesDialog *self) {
     g_return_val_if_fail(self, NULL);
+    update_config(self);
     return config_copy(self->config);
 }
 
