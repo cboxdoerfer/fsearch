@@ -6,8 +6,8 @@
 #include <stdio.h>
 #include <sys/file.h>
 
-#define DATABASE_MAJOR_VERSION 0
-#define DATABASE_MINOR_VERSION 9
+#define DATABASE_MAJOR_VERSION 1
+#define DATABASE_MINOR_VERSION 0
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
@@ -668,21 +668,26 @@ save_exclude_pattern(FILE *fp, FsearchDatabaseIndex *index, bool *write_failed) 
 }
 
 bool
-db_file_save(FsearchDatabaseIndex *index, const char *path) {
-    g_assert(path);
-    g_assert(index);
+db_file_save(FsearchDatabaseIncludeManager *includes,
+             FsearchDatabaseExcludeManager *excludes,
+             FsearchDatabaseIndex *index,
+             const char *file_path) {
+    g_return_val_if_fail(file_path, false);
+    g_return_val_if_fail(index, false);
+    g_return_val_if_fail(includes, false);
+    g_return_val_if_fail(excludes, false);
 
     g_debug("[db_save] saving database to file...");
 
-    if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
-        g_debug("[db_save] database path doesn't exist: %s", path);
+    if (!g_file_test(file_path, G_FILE_TEST_IS_DIR)) {
+        g_debug("[db_save] database file_path doesn't exist: %s", file_path);
         return false;
     }
 
     g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
-    g_autoptr(GString) path_full = g_string_new(path);
+    g_autoptr(GString) path_full = g_string_new(file_path);
     g_string_append_c(path_full, G_DIR_SEPARATOR);
     g_string_append(path_full, "fsearch.db");
 
@@ -827,9 +832,16 @@ save_fail:
     return false;
 }
 
-FsearchDatabaseIndex *
-db_file_load(const char *file_path, void (*status_cb)(const char *)) {
-    g_assert(file_path);
+bool
+db_file_load(const char *file_path,
+             void (*status_cb)(const char *),
+             FsearchDatabaseIncludeManager **includes_out,
+             FsearchDatabaseExcludeManager **excludes_out,
+             FsearchDatabaseIndex **index_out) {
+    g_return_val_if_fail(file_path, false);
+    g_return_val_if_fail(includes_out, false);
+    g_return_val_if_fail(excludes_out, false);
+    g_return_val_if_fail(index_out, false);
 
     FILE *fp = file_open_locked(file_path, "rb");
     if (!fp) {
@@ -937,9 +949,11 @@ db_file_load(const char *file_path, void (*status_cb)(const char *)) {
 
     index->flags = index_flags;
 
+    *index_out = index;
+
     g_clear_pointer(&fp, fclose);
 
-    return index;
+    return true;
 
 load_fail:
     g_debug("[db_load] load failed");
@@ -953,5 +967,5 @@ load_fail:
     g_clear_pointer(&file_pool, fsearch_memory_pool_free_pool);
     g_clear_pointer(&folder_pool, fsearch_memory_pool_free_pool);
 
-    return NULL;
+    return false;
 }

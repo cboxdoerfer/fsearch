@@ -604,11 +604,9 @@ save_database_to_file(FsearchDatabase2 *self) {
     g_autoptr(GFile) db_directory = g_file_get_parent(self->file);
     g_autofree gchar *db_directory_path = g_file_get_path(db_directory);
 
-    database_lock(self);
-
-    db_file_save(self->index, db_directory_path);
-
-    database_unlock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+    db_file_save(NULL, NULL, self->index, db_directory_path);
 }
 
 static void
@@ -684,15 +682,21 @@ load_database_from_file(FsearchDatabase2 *self) {
     g_autofree gchar *file_path = g_file_get_path(self->file);
     g_return_if_fail(file_path);
 
-    g_autoptr(FsearchDatabaseIndex) index = db_file_load(file_path, NULL);
+    g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
+    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
+    g_autoptr(FsearchDatabaseIndex) index = NULL;
+    db_file_load(file_path, NULL, &include_manager, &exclude_manager, &index);
 
-    database_lock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     g_clear_pointer(&self->index, fsearch_database_index_free);
     self->index = g_steal_pointer(&index);
 
-    const uint32_t num_files = darray_get_num_items(self->index->files[DATABASE_ENTRY_TYPE_FILE]);
-    const uint32_t num_folders = darray_get_num_items(self->index->folders[DATABASE_ENTRY_TYPE_FILE]);
+    if (!self->index) {
+        g_set_object(&self->include_manager, fsearch_database_include_manager_new_with_defaults());
+        g_set_object(&self->exclude_manager, fsearch_database_exclude_manager_new_with_defaults());
+    }
 
     emit_signal(self,
                 EVENT_LOAD_FINISHED,
@@ -704,8 +708,6 @@ load_database_from_file(FsearchDatabase2 *self) {
                 1,
                 (GDestroyNotify)fsearch_database_info_unref,
                 NULL);
-
-    database_unlock(self);
 }
 
 static gpointer
