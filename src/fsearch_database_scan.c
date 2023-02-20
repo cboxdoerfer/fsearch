@@ -120,7 +120,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             db_entry_set_mtime(entry, st.st_mtime);
             db_entry_set_parent(entry, parent);
 
-            darray_add_item(index->folders[DATABASE_INDEX_TYPE_NAME], entry);
+            darray_add_item(index->folders[DATABASE_INDEX_PROPERTY_NAME], entry);
 
             db_folder_scan_recursive(walk_context, (FsearchDatabaseEntryFolder *)entry);
         }
@@ -133,7 +133,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             db_entry_set_parent(file_entry, parent);
             db_entry_update_parent_size(file_entry);
 
-            darray_add_item(index->files[DATABASE_INDEX_TYPE_NAME], file_entry);
+            darray_add_item(index->files[DATABASE_INDEX_PROPERTY_NAME], file_entry);
         }
     }
 
@@ -186,7 +186,7 @@ db_scan_folder(FsearchDatabaseIndex *index,
     db_entry_set_parent(entry, NULL);
     db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
 
-    darray_add_item(index->folders[DATABASE_INDEX_TYPE_NAME], entry);
+    darray_add_item(index->folders[DATABASE_INDEX_PROPERTY_NAME], entry);
 
     uint32_t res = db_folder_scan_recursive(&walk_context, (FsearchDatabaseEntryFolder *)entry);
 
@@ -217,7 +217,7 @@ db_sort_entries(FsearchDatabaseIndex *index,
     if (is_cancelled(cancellable)) {
         return;
     }
-    sorted_entries[DATABASE_INDEX_TYPE_PATH] = darray_copy(entries);
+    sorted_entries[DATABASE_INDEX_PROPERTY_PATH] = darray_copy(entries);
 
     // then by name
     darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, cancellable, NULL);
@@ -226,9 +226,9 @@ db_sort_entries(FsearchDatabaseIndex *index,
     }
 
     // now build individual lists sorted by all of the indexed metadata
-    if ((index->flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
-        sorted_entries[DATABASE_INDEX_TYPE_SIZE] = darray_copy(entries);
-        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_SIZE],
+    if ((index->flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
+        sorted_entries[DATABASE_INDEX_PROPERTY_SIZE] = darray_copy(entries);
+        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_SIZE],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
                                    cancellable,
                                    NULL);
@@ -237,9 +237,9 @@ db_sort_entries(FsearchDatabaseIndex *index,
         }
     }
 
-    if ((index->flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
-        sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME] = darray_copy(entries);
-        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+    if ((index->flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
+        sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] = darray_copy(entries);
+        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
                                    cancellable,
                                    NULL);
@@ -256,7 +256,7 @@ db_sort(FsearchDatabaseIndex *index, GCancellable *cancellable) {
     g_autoptr(GTimer) timer = g_timer_new();
 
     // first we sort all the files
-    DynamicArray *files = index->files[DATABASE_INDEX_TYPE_NAME];
+    DynamicArray *files = index->files[DATABASE_INDEX_PROPERTY_NAME];
     if (files) {
         db_sort_entries(index, files, index->files, cancellable);
         if (is_cancelled(cancellable)) {
@@ -264,8 +264,8 @@ db_sort(FsearchDatabaseIndex *index, GCancellable *cancellable) {
         }
 
         // now build extension sort array
-        index->files[DATABASE_INDEX_TYPE_EXTENSION] = darray_copy(files);
-        darray_sort_multi_threaded(index->files[DATABASE_INDEX_TYPE_EXTENSION],
+        index->files[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_copy(files);
+        darray_sort_multi_threaded(index->files[DATABASE_INDEX_PROPERTY_EXTENSION],
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
                                    cancellable,
                                    NULL);
@@ -279,7 +279,7 @@ db_sort(FsearchDatabaseIndex *index, GCancellable *cancellable) {
     }
 
     // then we sort all the folders
-    DynamicArray *folders = index->folders[DATABASE_INDEX_TYPE_NAME];
+    DynamicArray *folders = index->folders[DATABASE_INDEX_PROPERTY_NAME];
     if (folders) {
         db_sort_entries(index, folders, index->folders, cancellable);
         if (is_cancelled(cancellable)) {
@@ -287,7 +287,7 @@ db_sort(FsearchDatabaseIndex *index, GCancellable *cancellable) {
         }
 
         // Folders don't have a file extension -> use the name array instead
-        index->folders[DATABASE_INDEX_TYPE_EXTENSION] = darray_ref(folders);
+        index->folders[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_ref(folders);
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
@@ -297,7 +297,7 @@ db_sort(FsearchDatabaseIndex *index, GCancellable *cancellable) {
 FsearchDatabaseIndex *
 db_scan2(FsearchDatabaseIncludeManager *include_manager,
          FsearchDatabaseExcludeManager *exclude_manager,
-         FsearchDatabaseIndexFlags flags,
+         FsearchDatabaseIndexPropertyFlags flags,
          GCancellable *cancellable) {
     FsearchDatabaseIndex *index = calloc(1, sizeof(FsearchDatabaseIndex));
     g_assert(index);
@@ -309,8 +309,8 @@ db_scan2(FsearchDatabaseIncludeManager *include_manager,
     index->folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                                  db_entry_get_sizeof_folder_entry(),
                                                  (GDestroyNotify)db_entry_destroy);
-    index->files[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
-    index->folders[DATABASE_INDEX_TYPE_NAME] = darray_new(1024);
+    index->files[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
+    index->folders[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
 
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     for (uint32_t i = 0; i < includes->len; ++i) {

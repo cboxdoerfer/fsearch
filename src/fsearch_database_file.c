@@ -14,12 +14,12 @@
 
 static void
 update_folder_indices(FsearchDatabaseIndex *index) {
-    if (!index || !index->folders[DATABASE_INDEX_TYPE_NAME]) {
+    if (!index || !index->folders[DATABASE_INDEX_PROPERTY_NAME]) {
         return;
     }
-    const uint32_t num_folders = darray_get_num_items(index->folders[DATABASE_INDEX_TYPE_NAME]);
+    const uint32_t num_folders = darray_get_num_items(index->folders[DATABASE_INDEX_PROPERTY_NAME]);
     for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(index->folders[DATABASE_INDEX_TYPE_NAME], i);
+        FsearchDatabaseEntryFolder *folder = darray_get_item(index->folders[DATABASE_INDEX_PROPERTY_NAME], i);
         if (!folder) {
             continue;
         }
@@ -66,7 +66,7 @@ copy_bytes_and_return_new_src(void *dest, const uint8_t *src, size_t len) {
 
 static const uint8_t *
 load_entry_super_elements_from_memory(const uint8_t *data_block,
-                                      FsearchDatabaseIndexFlags index_flags,
+                                      FsearchDatabaseIndexPropertyFlags index_flags,
                                       FsearchDatabaseEntry *entry,
                                       GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
@@ -89,7 +89,7 @@ load_entry_super_elements_from_memory(const uint8_t *data_block,
     g_string_append(previous_entry_name, name);
     db_entry_set_name(entry, previous_entry_name->str);
 
-    if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
+    if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: size of file/folder
         off_t size = 0;
         data_block = copy_bytes_and_return_new_src(&size, data_block, 8);
@@ -97,7 +97,7 @@ load_entry_super_elements_from_memory(const uint8_t *data_block,
         db_entry_set_size(entry, size);
     }
 
-    if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
+    if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time file/folder
         time_t mtime = 0;
         data_block = copy_bytes_and_return_new_src(&mtime, data_block, 8);
@@ -203,7 +203,7 @@ load_parent_idx(FILE *fp, uint32_t *parent_idx) {
 
 static bool
 load_folders(FILE *fp,
-             FsearchDatabaseIndexFlags index_flags,
+             FsearchDatabaseIndexPropertyFlags index_flags,
              DynamicArray *folders,
              uint32_t num_folders,
              uint64_t folder_block_size) {
@@ -262,7 +262,7 @@ load_folders(FILE *fp,
 
 static bool
 load_files(FILE *fp,
-           FsearchDatabaseIndexFlags index_flags,
+           FsearchDatabaseIndexPropertyFlags index_flags,
            FsearchMemoryPool *pool,
            DynamicArray *folders,
            DynamicArray *files,
@@ -351,7 +351,7 @@ load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, DynamicArray **sorte
             return false;
         }
 
-        if (sorted_array_id < 1 || sorted_array_id >= NUM_DATABASE_INDEX_TYPES) {
+        if (sorted_array_id < 1 || sorted_array_id >= NUM_DATABASE_INDEX_PROPERTIES) {
             g_debug("[db_load] sorted array id is not supported: %d", sorted_array_id);
             return false;
         }
@@ -388,7 +388,7 @@ write_data_to_file(FILE *fp, const void *data, size_t data_size, size_t num_elem
 
 static size_t
 save_entry_super_elements(FILE *fp,
-                          FsearchDatabaseIndexFlags index_flags,
+                          FsearchDatabaseIndexPropertyFlags index_flags,
                           FsearchDatabaseEntry *entry,
                           uint32_t parent_idx,
                           GString *previous_entry_name,
@@ -429,7 +429,7 @@ save_entry_super_elements(FILE *fp,
         }
     }
 
-    if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
+    if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: file or folder size (folder size: sum of all children sizes)
         const uint64_t size = db_entry_get_size(entry);
         bytes_written += write_data_to_file(fp, &size, 8, 1, write_failed);
@@ -439,7 +439,7 @@ save_entry_super_elements(FILE *fp,
         }
     }
 
-    if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
+    if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time of file/folder
         const uint64_t mtime = db_entry_get_mtime(entry);
         bytes_written += write_data_to_file(fp, &mtime, 8, 1, write_failed);
@@ -490,7 +490,11 @@ out:
 }
 
 static size_t
-save_files(FILE *fp, FsearchDatabaseIndexFlags index_flags, DynamicArray *files, uint32_t num_files, bool *write_failed) {
+save_files(FILE *fp,
+           FsearchDatabaseIndexPropertyFlags index_flags,
+           DynamicArray *files,
+           uint32_t num_files,
+           bool *write_failed) {
     size_t bytes_written = 0;
 
     g_autoptr(GString) name_prev = g_string_sized_new(256);
@@ -553,7 +557,7 @@ static size_t
 save_sorted_arrays(FILE *fp, FsearchDatabaseIndex *index, uint32_t num_files, uint32_t num_folders, bool *write_failed) {
     size_t bytes_written = 0;
     uint32_t num_sorted_arrays = 0;
-    for (uint32_t i = 1; i < NUM_DATABASE_INDEX_TYPES; i++) {
+    for (uint32_t i = 1; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
         if (index->folders[i] && index->files[i]) {
             num_sorted_arrays++;
         }
@@ -569,7 +573,7 @@ save_sorted_arrays(FILE *fp, FsearchDatabaseIndex *index, uint32_t num_files, ui
         goto out;
     }
 
-    for (uint32_t id = 1; id < NUM_DATABASE_INDEX_TYPES; id++) {
+    for (uint32_t id = 1; id < NUM_DATABASE_INDEX_PROPERTIES; id++) {
         DynamicArray *folders = index->folders[id];
         DynamicArray *files = index->files[id];
         if (!files || !folders) {
@@ -601,7 +605,7 @@ out:
 
 static size_t
 save_folders(FILE *fp,
-             FsearchDatabaseIndexFlags index_flags,
+             FsearchDatabaseIndexPropertyFlags index_flags,
              DynamicArray *folders,
              uint32_t num_folders,
              bool *write_failed) {
@@ -722,8 +726,8 @@ db_file_save(FsearchDatabaseIncludeManager *includes,
         goto save_fail;
     }
 
-    DynamicArray *files = index->files[DATABASE_INDEX_TYPE_NAME];
-    DynamicArray *folders = index->folders[DATABASE_INDEX_TYPE_NAME];
+    DynamicArray *files = index->files[DATABASE_INDEX_PROPERTY_NAME];
+    DynamicArray *folders = index->folders[DATABASE_INDEX_PROPERTY_NAME];
 
     const uint32_t num_folders = darray_get_num_items(folders);
     g_debug("[db_save] saving number of folders: %d", num_folders);
@@ -850,8 +854,8 @@ db_file_load(const char *file_path,
 
     DynamicArray *folders = NULL;
     DynamicArray *files = NULL;
-    DynamicArray *sorted_folders[NUM_DATABASE_INDEX_TYPES] = {NULL};
-    DynamicArray *sorted_files[NUM_DATABASE_INDEX_TYPES] = {NULL};
+    DynamicArray *sorted_folders[NUM_DATABASE_INDEX_PROPERTIES] = {NULL};
+    DynamicArray *sorted_files[NUM_DATABASE_INDEX_PROPERTIES] = {NULL};
     FsearchMemoryPool *file_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                                            db_entry_get_sizeof_file_entry(),
                                                            (GDestroyNotify)db_entry_destroy);
@@ -903,8 +907,8 @@ db_file_load(const char *file_path,
     }
 
     // pre-allocate the folders array so we can later map parent indices to the corresponding pointers
-    sorted_folders[DATABASE_INDEX_TYPE_NAME] = darray_new(num_folders);
-    folders = sorted_folders[DATABASE_INDEX_TYPE_NAME];
+    sorted_folders[DATABASE_INDEX_PROPERTY_NAME] = darray_new(num_folders);
+    folders = sorted_folders[DATABASE_INDEX_PROPERTY_NAME];
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = fsearch_memory_pool_malloc(folder_pool);
@@ -927,8 +931,8 @@ db_file_load(const char *file_path,
         status_cb(_("Loading files…"));
     }
     // load files
-    sorted_files[DATABASE_INDEX_TYPE_NAME] = darray_new(num_files);
-    files = sorted_files[DATABASE_INDEX_TYPE_NAME];
+    sorted_files[DATABASE_INDEX_PROPERTY_NAME] = darray_new(num_files);
+    files = sorted_files[DATABASE_INDEX_PROPERTY_NAME];
     if (!load_files(fp, index_flags, file_pool, folders, files, num_files, file_block_size)) {
         goto load_fail;
     }
@@ -940,7 +944,7 @@ db_file_load(const char *file_path,
     FsearchDatabaseIndex *index = calloc(1, sizeof(FsearchDatabaseIndex));
     g_assert(index);
 
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
         index->files[i] = g_steal_pointer(&sorted_files[i]);
         index->folders[i] = g_steal_pointer(&sorted_folders[i]);
     }
@@ -960,7 +964,7 @@ load_fail:
 
     g_clear_pointer(&fp, fclose);
 
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
         g_clear_pointer(&sorted_folders[i], darray_unref);
         g_clear_pointer(&sorted_files[i], darray_unref);
     }

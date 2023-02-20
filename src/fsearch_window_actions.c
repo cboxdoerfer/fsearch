@@ -722,7 +722,7 @@ fsearch_window_action_show_path_column(GSimpleAction *action, GVariant *variant,
     FsearchApplicationWindow *self = user_data;
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_PATH);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_PATH);
     if (!col) {
         return;
     }
@@ -738,7 +738,7 @@ fsearch_window_action_show_extension_column(GSimpleAction *action, GVariant *var
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_EXTENSION);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_EXTENSION);
     if (!col) {
         return;
     }
@@ -754,7 +754,7 @@ fsearch_window_action_show_type_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_FILETYPE);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_FILETYPE);
     if (!col) {
         return;
     }
@@ -770,7 +770,7 @@ fsearch_window_action_show_size_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_SIZE);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_SIZE);
     if (!col) {
         return;
     }
@@ -786,7 +786,8 @@ fsearch_window_action_show_modified_column(GSimpleAction *action, GVariant *vari
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_MODIFICATION_TIME);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list,
+                                                                             DATABASE_INDEX_PROPERTY_MODIFICATION_TIME);
     if (!col) {
         return;
     }

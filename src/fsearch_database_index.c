@@ -4,7 +4,7 @@ void
 fsearch_database_index_free(FsearchDatabaseIndex *index) {
     g_return_if_fail(index);
 
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
         g_clear_pointer(&index->files[i], darray_unref);
         g_clear_pointer(&index->folders[i], darray_unref);
     }

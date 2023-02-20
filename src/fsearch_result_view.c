@@ -154,12 +154,12 @@ try_get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabase
 }
 
 static void
-set_pango_layout_attributes(PangoLayout *layout, FsearchDatabaseEntryInfo *info, FsearchDatabaseIndexType idx) {
+set_pango_layout_attributes(PangoLayout *layout, FsearchDatabaseEntryInfo *info, FsearchDatabaseIndexProperty idx) {
     if (!info) {
         return;
     }
 
-    g_assert(idx >= 0 && idx < NUM_DATABASE_INDEX_TYPES);
+    g_assert(idx >= 0 && idx < NUM_DATABASE_INDEX_PROPERTIES);
     GHashTable *highlights = fsearch_database_entry_info_get_highlights(info);
     if (!highlights) {
         return;
@@ -195,7 +195,7 @@ fsearch_result_view_query_tooltip(FsearchResultView *view,
     g_autofree char *text = NULL;
 
     switch (col->type) {
-    case DATABASE_INDEX_TYPE_NAME: {
+    case DATABASE_INDEX_PROPERTY_NAME: {
         if (config->show_listview_icons) {
             int32_t icon_size = get_icon_size_for_height((int32_t)row_height - ROW_PADDING_X);
             width -= 2 * ROW_PADDING_X + icon_size;
@@ -203,25 +203,25 @@ fsearch_result_view_query_tooltip(FsearchResultView *view,
         text = g_filename_display_name(fsearch_database_entry_info_get_name(info)->str);
         break;
     }
-    case DATABASE_INDEX_TYPE_PATH: {
+    case DATABASE_INDEX_PROPERTY_PATH: {
         text = g_filename_display_name(fsearch_database_entry_info_get_path(info)->str);
         break;
     }
-    case DATABASE_INDEX_TYPE_EXTENSION: {
+    case DATABASE_INDEX_PROPERTY_EXTENSION: {
         text = g_strdup(fsearch_database_entry_info_get_extension(info)->str);
         break;
     }
-    case DATABASE_INDEX_TYPE_FILETYPE: {
+    case DATABASE_INDEX_PROPERTY_FILETYPE: {
         text = fsearch_file_utils_get_file_type(
             fsearch_database_entry_info_get_name(info)->str,
             fsearch_database_entry_info_get_entry_type(info) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
         break;
     }
-    case DATABASE_INDEX_TYPE_SIZE:
+    case DATABASE_INDEX_PROPERTY_SIZE:
         text = fsearch_file_utils_get_size_formatted(fsearch_database_entry_info_get_size(info),
                                                      config->show_base_2_units);
         break;
-    case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
+    case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME: {
         const time_t mtime = fsearch_database_entry_info_get_mtime(info);
         char mtime_formatted[100] = "";
         strftime(mtime_formatted,
@@ -352,7 +352,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
         }
         else {
             switch (column->type) {
-            case DATABASE_INDEX_TYPE_NAME: {
+            case DATABASE_INDEX_PROPERTY_NAME: {
                 text = fsearch_database_entry_info_get_name(info)->str;
 
                 if (config->show_listview_icons) {
@@ -383,28 +383,28 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
                 }
                 break;
             }
-            case DATABASE_INDEX_TYPE_PATH: {
+            case DATABASE_INDEX_PROPERTY_PATH: {
                 GString *path = fsearch_database_entry_info_get_path(info);
                 text = path->str;
                 text_len = path->len;
                 break;
             }
-            case DATABASE_INDEX_TYPE_SIZE:
+            case DATABASE_INDEX_PROPERTY_SIZE:
                 text_autofree = fsearch_file_utils_get_size_formatted(fsearch_database_entry_info_get_size(info),
-                                                                  config->show_base_2_units);
+                                                                      config->show_base_2_units);
                 text = text_autofree;
                 break;
-            case DATABASE_INDEX_TYPE_EXTENSION: {
+            case DATABASE_INDEX_PROPERTY_EXTENSION: {
                 text = fsearch_database_entry_info_get_extension(info)->str;
                 break;
             }
-            case DATABASE_INDEX_TYPE_FILETYPE:
+            case DATABASE_INDEX_PROPERTY_FILETYPE:
                 text_autofree = fsearch_file_utils_get_file_type(
                     fsearch_database_entry_info_get_name(info)->str,
                     fsearch_database_entry_info_get_entry_type(info) == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
                 text = text_autofree;
                 break;
-            case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
+            case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME: {
                 const time_t mtime = fsearch_database_entry_info_get_mtime(info);
                 strftime(text_time,
                          100,

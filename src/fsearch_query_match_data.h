@@ -22,10 +22,10 @@ fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDat
 void
 fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
                                        PangoAttribute *attribute,
-                                       FsearchDatabaseIndexType idx);
+                                       FsearchDatabaseIndexProperty idx);
 
 PangoAttrList *
-fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexType idx);
+fsearch_query_match_get_highlight(FsearchQueryMatchData *match_data, FsearchDatabaseIndexProperty idx);
 
 GHashTable *
 fsearch_query_match_data_get_highlights(FsearchQueryMatchData *match_data);

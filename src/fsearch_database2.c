@@ -37,7 +37,7 @@ struct _FsearchDatabase2 {
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
 
-    FsearchDatabaseIndexFlags flags;
+    FsearchDatabaseIndexPropertyFlags flags;
 
     GMutex mutex;
 };
@@ -47,7 +47,7 @@ typedef struct FsearchDatabaseSearchView {
     DynamicArray *files;
     DynamicArray *folders;
     GtkSortType sort_type;
-    FsearchDatabaseIndexType sort_order;
+    FsearchDatabaseIndexProperty sort_order;
     GHashTable *file_selection;
     GHashTable *folder_selection;
 } FsearchDatabaseSearchView;
@@ -101,7 +101,7 @@ search_view_new(FsearchQuery *query,
                 DynamicArray *files,
                 DynamicArray *folders,
                 GHashTable *old_selection,
-                FsearchDatabaseIndexType sort_order,
+                FsearchDatabaseIndexProperty sort_order,
                 GtkSortType sort_type) {
     FsearchDatabaseSearchView *view = calloc(1, sizeof(FsearchDatabaseSearchView));
     g_assert(view);
@@ -250,12 +250,12 @@ database_lock(FsearchDatabase2 *self) {
 
 static uint32_t
 get_num_database_files(FsearchDatabase2 *self) {
-    return self->index ? darray_get_num_items(self->index->files[DATABASE_INDEX_TYPE_NAME]) : 0;
+    return self->index ? darray_get_num_items(self->index->files[DATABASE_INDEX_PROPERTY_NAME]) : 0;
 }
 
 static uint32_t
 get_num_database_folders(FsearchDatabase2 *self) {
-    return self->index ? darray_get_num_items(self->index->folders[DATABASE_INDEX_TYPE_NAME]) : 0;
+    return self->index ? darray_get_num_items(self->index->folders[DATABASE_INDEX_PROPERTY_NAME]) : 0;
 }
 
 static uint32_t
@@ -351,7 +351,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
-    const FsearchDatabaseIndexType sort_order = fsearch_database_work_sort_get_sort_order(work);
+    const FsearchDatabaseIndexProperty sort_order = fsearch_database_work_sort_get_sort_order(work);
     const GtkSortType sort_type = fsearch_database_work_sort_get_sort_type(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
@@ -402,15 +402,15 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 }
 
 static bool
-is_valid_fast_sort_type(FsearchDatabaseIndexType sort_type) {
-    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
+is_valid_fast_sort_type(FsearchDatabaseIndexProperty sort_type) {
+    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_PROPERTIES) {
         return true;
     }
     return false;
 }
 
 static bool
-has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexType sort_type) {
+has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexProperty sort_type) {
     if (!is_valid_fast_sort_type(sort_type)) {
         return false;
     }
@@ -424,7 +424,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     const uint32_t id = fsearch_database_work_get_view_id(work);
 
     g_autoptr(FsearchQuery) query = fsearch_database_work_search_get_query(work);
-    FsearchDatabaseIndexType sort_order = fsearch_database_work_search_get_sort_order(work);
+    FsearchDatabaseIndexProperty sort_order = fsearch_database_work_search_get_sort_order(work);
     const GtkSortType sort_type = fsearch_database_work_search_get_sort_type(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
     uint32_t num_files = 0;
@@ -449,9 +449,9 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         folders = self->index->folders[sort_order];
     }
     else {
-        files = self->index->files[DATABASE_INDEX_TYPE_NAME];
-        folders = self->index->folders[DATABASE_INDEX_TYPE_NAME];
-        sort_order = DATABASE_INDEX_TYPE_NAME;
+        files = self->index->files[DATABASE_INDEX_PROPERTY_NAME];
+        folders = self->index->folders[DATABASE_INDEX_PROPERTY_NAME];
+        sort_order = DATABASE_INDEX_PROPERTY_NAME;
     }
 
     DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, cancellable);
@@ -618,7 +618,7 @@ rescan_database(FsearchDatabase2 *self) {
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = g_object_ref(self->include_manager);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = g_object_ref(self->exclude_manager);
-    const FsearchDatabaseIndexFlags flags = self->flags;
+    const FsearchDatabaseIndexPropertyFlags flags = self->flags;
 
     g_clear_pointer(&locker, g_mutex_locker_free);
 
@@ -644,7 +644,7 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_work_scan_get_include_manager(work);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
-    const FsearchDatabaseIndexFlags flags = fsearch_database_work_scan_get_flags(work);
+    const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_work_scan_get_flags(work);
 
     g_autoptr(FsearchDatabaseIndex) index = db_scan2(include_manager, exclude_manager, flags, NULL);
     g_return_if_fail(index);

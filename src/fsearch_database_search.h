@@ -28,16 +28,16 @@
 typedef struct DatabaseSearchResult {
     DynamicArray *folders;
     DynamicArray *files;
-    FsearchDatabaseIndexType sort_type;
+    FsearchDatabaseIndexProperty sort_type;
 } DatabaseSearchResult;
 
 DatabaseSearchResult *
-db_search_empty(DynamicArray *folders, DynamicArray *files, FsearchDatabaseIndexType sort_type);
+db_search_empty(DynamicArray *folders, DynamicArray *files, FsearchDatabaseIndexProperty sort_type);
 
 DatabaseSearchResult *
 db_search(FsearchQuery *q,
           FsearchThreadPool *pool,
           DynamicArray *folders,
           DynamicArray *files,
-          FsearchDatabaseIndexType sort_type,
+          FsearchDatabaseIndexProperty sort_type,
           GCancellable *cancellable);

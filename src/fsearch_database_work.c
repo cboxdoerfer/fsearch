@@ -10,12 +10,12 @@ struct FsearchDatabaseWork {
         struct {
             FsearchDatabaseIncludeManager *include_manager;
             FsearchDatabaseExcludeManager *exclude_manager;
-            FsearchDatabaseIndexFlags index_flags;
+            FsearchDatabaseIndexPropertyFlags index_flags;
         };
         // FSEARCH_DATABASE_WORK_SEARCH
         struct {
             FsearchQuery *query;
-            FsearchDatabaseIndexType sort_order;
+            FsearchDatabaseIndexProperty sort_order;
             GtkSortType sort_type;
         };
         // FSEARCH_DATABASE_WORK_GET_ITEM_INFO
@@ -111,7 +111,7 @@ fsearch_database_work_new_rescan() {
 FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
-                               FsearchDatabaseIndexFlags flags) {
+                               FsearchDatabaseIndexPropertyFlags flags) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SCAN;
     work->include_manager = g_object_ref(include_manager);
@@ -135,7 +135,7 @@ fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType s
 FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
-                                 FsearchDatabaseIndexType sort_order,
+                                 FsearchDatabaseIndexProperty sort_order,
                                  GtkSortType sort_type) {
     g_return_val_if_fail(query, NULL);
 
@@ -150,7 +150,7 @@ fsearch_database_work_new_search(guint view_id,
 }
 
 FsearchDatabaseWork *
-fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexType sort_order, GtkSortType sort_type) {
+fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, GtkSortType sort_type) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SORT;
     work->view_id = view_id;
@@ -222,10 +222,10 @@ fsearch_database_work_search_get_query(FsearchDatabaseWork *work) {
     return fsearch_query_ref(work->query);
 }
 
-FsearchDatabaseIndexType
+FsearchDatabaseIndexProperty
 fsearch_database_work_search_get_sort_order(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, NUM_DATABASE_INDEX_TYPES);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, NUM_DATABASE_INDEX_TYPES);
+    g_return_val_if_fail(work, NUM_DATABASE_INDEX_PROPERTIES);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SEARCH, NUM_DATABASE_INDEX_PROPERTIES);
     return work->sort_order;
 }
 
@@ -236,10 +236,10 @@ fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work) {
     return work->sort_type;
 }
 
-FsearchDatabaseIndexType
+FsearchDatabaseIndexProperty
 fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, NUM_DATABASE_INDEX_TYPES);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, NUM_DATABASE_INDEX_TYPES);
+    g_return_val_if_fail(work, NUM_DATABASE_INDEX_PROPERTIES);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SORT, NUM_DATABASE_INDEX_PROPERTIES);
     return work->sort_order;
 }
 
@@ -264,7 +264,7 @@ fsearch_database_work_scan_get_exclude_manager(FsearchDatabaseWork *work) {
     return g_object_ref(work->exclude_manager);
 }
 
-FsearchDatabaseIndexFlags
+FsearchDatabaseIndexPropertyFlags
 fsearch_database_work_scan_get_flags(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, 0);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_SCAN, 0);

@@ -16,7 +16,7 @@ typedef struct {
     int32_t row_height;
 
     guint view_id;
-    FsearchDatabaseIndexType sort_order;
+    FsearchDatabaseIndexProperty sort_order;
     GtkSortType sort_type;
 } FsearchResultView;
 

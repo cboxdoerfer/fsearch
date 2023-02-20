@@ -3,15 +3,15 @@
 #include "fsearch_database_entry.h"
 
 static bool
-is_valid_fast_sort_type(FsearchDatabaseIndexType sort_type) {
-    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_TYPES) {
+is_valid_fast_sort_type(FsearchDatabaseIndexProperty sort_type) {
+    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_PROPERTIES) {
         return true;
     }
     return false;
 }
 
 static bool
-has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexType sort_type) {
+has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexProperty sort_type) {
     if (!is_valid_fast_sort_type(sort_type)) {
         return false;
     }
@@ -19,8 +19,8 @@ has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexTy
 }
 
 static bool
-sort_order_affects_folders(FsearchDatabaseIndexType sort_order) {
-    if (sort_order == DATABASE_INDEX_TYPE_EXTENSION || sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
+sort_order_affects_folders(FsearchDatabaseIndexProperty sort_order) {
+    if (sort_order == DATABASE_INDEX_PROPERTY_EXTENSION || sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // Folders are stored in a different array than files, so they all have the same sort_type and extension (none),
         // therefore we don't need to sort them in such cases.
         return false;
@@ -29,25 +29,25 @@ sort_order_affects_folders(FsearchDatabaseIndexType sort_order) {
 }
 
 static DynamicArrayCompareDataFunc
-get_sort_func(FsearchDatabaseIndexType sort_order) {
+get_sort_func(FsearchDatabaseIndexProperty sort_order) {
     DynamicArrayCompareDataFunc func = NULL;
     switch (sort_order) {
-    case DATABASE_INDEX_TYPE_NAME:
+    case DATABASE_INDEX_PROPERTY_NAME:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name;
         break;
-    case DATABASE_INDEX_TYPE_PATH:
+    case DATABASE_INDEX_PROPERTY_PATH:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
         break;
-    case DATABASE_INDEX_TYPE_SIZE:
+    case DATABASE_INDEX_PROPERTY_SIZE:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size;
         break;
-    case DATABASE_INDEX_TYPE_EXTENSION:
+    case DATABASE_INDEX_PROPERTY_EXTENSION:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension;
         break;
-    case DATABASE_INDEX_TYPE_FILETYPE:
+    case DATABASE_INDEX_PROPERTY_FILETYPE:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_type;
         break;
-    case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
+    case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time;
         break;
     default:
@@ -94,7 +94,7 @@ sort_entries(DynamicArray *entries_in,
 }
 
 static DynamicArray *
-fast_sort(FsearchDatabaseIndexType new_sort_order, DynamicArray *entries_in, DynamicArray **sorted_entries_in) {
+fast_sort(FsearchDatabaseIndexProperty new_sort_order, DynamicArray *entries_in, DynamicArray **sorted_entries_in) {
     if (darray_get_num_items(entries_in) == darray_get_num_items(sorted_entries_in[new_sort_order])) {
         // We're matching everything, and we have the entries already sorted in our index.
         // So we can just return references to the sorted indices.
@@ -108,15 +108,15 @@ fast_sort(FsearchDatabaseIndexType new_sort_order, DynamicArray *entries_in, Dyn
 }
 
 void
-fsearch_database_sort_results(FsearchDatabaseIndexType old_sort_order,
-                              FsearchDatabaseIndexType new_sort_order,
+fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
+                              FsearchDatabaseIndexProperty new_sort_order,
                               DynamicArray *files_in,
                               DynamicArray *folders_in,
                               DynamicArray **sorted_files_in,
                               DynamicArray **sorted_folders_in,
                               DynamicArray **files_out,
                               DynamicArray **folders_out,
-                              FsearchDatabaseIndexType *sort_order_out,
+                              FsearchDatabaseIndexProperty *sort_order_out,
                               GCancellable *cancellable) {
     g_return_if_fail(files_in);
     g_return_if_fail(folders_in);
@@ -146,7 +146,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexType old_sort_order,
     bool parallel_sort = true;
 
     FsearchDatabaseEntryCompareContext *comp_ctx = NULL;
-    if (new_sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
+    if (new_sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // Sorting by type can be really slow, because it accesses the filesystem to determine the type of files
         // To mitigate that issue to a certain degree we cache the filetype for each file
         // To avoid duplicating the filetype in memory for each file, we also store each filetype only once in
@@ -181,10 +181,10 @@ fsearch_database_sort_results(FsearchDatabaseIndexType old_sort_order,
 }
 
 void
-fsearch_database_sort(FsearchDatabaseIndexType sort_order,
+fsearch_database_sort(FsearchDatabaseIndexProperty sort_order,
                       DynamicArray *files_in,
                       DynamicArray *folders_in,
-                      FsearchDatabaseIndexType *sort_order_out,
+                      FsearchDatabaseIndexProperty *sort_order_out,
                       DynamicArray **files_out,
                       DynamicArray **folders_out,
                       GCancellable *cancellable) {}

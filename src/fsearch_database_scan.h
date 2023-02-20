@@ -7,5 +7,5 @@
 FsearchDatabaseIndex *
 db_scan2(FsearchDatabaseIncludeManager *include_manager,
          FsearchDatabaseExcludeManager *exclude_manager,
-         FsearchDatabaseIndexFlags flags,
+         FsearchDatabaseIndexPropertyFlags flags,
          GCancellable *cancellable);

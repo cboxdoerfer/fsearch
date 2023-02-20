@@ -569,12 +569,12 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
 }
 
 static void
-on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexType col, int row_idx, gpointer user_data) {
+on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexProperty col, int row_idx, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     int launch_folder = false;
-    if (config->double_click_path && col == DATABASE_INDEX_TYPE_PATH) {
+    if (config->double_click_path && col == DATABASE_INDEX_PROPERTY_PATH) {
         launch_folder = true;
     }
 
@@ -655,42 +655,42 @@ on_listview_sort(int sort_order, GtkSortType sort_type, gpointer user_data) {
 static void
 add_columns(FsearchListView *view, FsearchConfig *config) {
     const bool restore = config->restore_column_config;
-    FsearchListViewColumn *name_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_NAME,
+    FsearchListViewColumn *name_col = fsearch_list_view_column_new(DATABASE_INDEX_PROPERTY_NAME,
                                                                    _("Name"),
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    TRUE,
                                                                    TRUE,
                                                                    restore ? config->name_column_width : 250);
-    FsearchListViewColumn *path_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_PATH,
+    FsearchListViewColumn *path_col = fsearch_list_view_column_new(DATABASE_INDEX_PROPERTY_PATH,
                                                                    _("Path"),
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    restore ? config->show_path_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->path_column_width : 250);
-    FsearchListViewColumn *size_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_SIZE,
+    FsearchListViewColumn *size_col = fsearch_list_view_column_new(DATABASE_INDEX_PROPERTY_SIZE,
                                                                    _("Size"),
                                                                    PANGO_ALIGN_RIGHT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    restore ? config->show_size_column : TRUE,
                                                                    FALSE,
                                                                    restore ? config->size_column_width : 75);
-    FsearchListViewColumn *type_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_FILETYPE,
+    FsearchListViewColumn *type_col = fsearch_list_view_column_new(DATABASE_INDEX_PROPERTY_FILETYPE,
                                                                    _("Type"),
                                                                    PANGO_ALIGN_LEFT,
                                                                    PANGO_ELLIPSIZE_END,
                                                                    restore ? config->show_type_column : FALSE,
                                                                    FALSE,
                                                                    restore ? config->type_column_width : 100);
-    FsearchListViewColumn *ext_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_EXTENSION,
+    FsearchListViewColumn *ext_col = fsearch_list_view_column_new(DATABASE_INDEX_PROPERTY_EXTENSION,
                                                                   _("Extension"),
                                                                   PANGO_ALIGN_LEFT,
                                                                   PANGO_ELLIPSIZE_END,
                                                                   restore ? config->show_extension_column : TRUE,
                                                                   FALSE,
                                                                   restore ? config->extension_column_width : 100);
-    FsearchListViewColumn *changed_col = fsearch_list_view_column_new(DATABASE_INDEX_TYPE_MODIFICATION_TIME,
+    FsearchListViewColumn *changed_col = fsearch_list_view_column_new(DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                                       _("Date Modified"),
                                                                       PANGO_ALIGN_RIGHT,
                                                                       PANGO_ELLIPSIZE_END,
@@ -1038,59 +1038,59 @@ fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
     apply_filter_config(win);
 }
 
-static FsearchDatabaseIndexType
+static FsearchDatabaseIndexProperty
 get_sort_type_for_name(const char *name) {
     if (!name) {
         g_warning("[get_sort_type_for_name] name is nullptr");
-        return DATABASE_INDEX_TYPE_NAME;
+        return DATABASE_INDEX_PROPERTY_NAME;
     }
-    if (!strcmp(name, DATABASE_INDEX_TYPE_NAME_STRING)) {
-        return DATABASE_INDEX_TYPE_NAME;
+    if (!strcmp(name, DATABASE_INDEX_PROPERTY_NAME_STRING)) {
+        return DATABASE_INDEX_PROPERTY_NAME;
     }
-    else if (!strcmp(name, DATABASE_INDEX_TYPE_PATH_STRING)) {
-        return DATABASE_INDEX_TYPE_PATH;
+    else if (!strcmp(name, DATABASE_INDEX_PROPERTY_PATH_STRING)) {
+        return DATABASE_INDEX_PROPERTY_PATH;
     }
-    else if (!strcmp(name, DATABASE_INDEX_TYPE_SIZE_STRING)) {
-        return DATABASE_INDEX_TYPE_SIZE;
+    else if (!strcmp(name, DATABASE_INDEX_PROPERTY_SIZE_STRING)) {
+        return DATABASE_INDEX_PROPERTY_SIZE;
     }
-    else if (!strcmp(name, DATABASE_INDEX_TYPE_MODIFICATION_TIME_STRING)) {
-        return DATABASE_INDEX_TYPE_MODIFICATION_TIME;
+    else if (!strcmp(name, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME_STRING)) {
+        return DATABASE_INDEX_PROPERTY_MODIFICATION_TIME;
     }
-    else if (!strcmp(name, DATABASE_INDEX_TYPE_EXTENSION_STRING)) {
-        return DATABASE_INDEX_TYPE_EXTENSION;
+    else if (!strcmp(name, DATABASE_INDEX_PROPERTY_EXTENSION_STRING)) {
+        return DATABASE_INDEX_PROPERTY_EXTENSION;
     }
-    else if (!strcmp(name, DATABASE_INDEX_TYPE_FILETYPE_STRING)) {
-        return DATABASE_INDEX_TYPE_FILETYPE;
+    else if (!strcmp(name, DATABASE_INDEX_PROPERTY_FILETYPE_STRING)) {
+        return DATABASE_INDEX_PROPERTY_FILETYPE;
     }
     else {
-        return DATABASE_INDEX_TYPE_NAME;
+        return DATABASE_INDEX_PROPERTY_NAME;
     }
 }
 
 static char *
-get_sort_name_for_type(FsearchDatabaseIndexType type) {
+get_sort_name_for_type(FsearchDatabaseIndexProperty type) {
     const char *name = NULL;
     switch (type) {
-    case DATABASE_INDEX_TYPE_NAME:
-        name = DATABASE_INDEX_TYPE_NAME_STRING;
+    case DATABASE_INDEX_PROPERTY_NAME:
+        name = DATABASE_INDEX_PROPERTY_NAME_STRING;
         break;
-    case DATABASE_INDEX_TYPE_PATH:
-        name = DATABASE_INDEX_TYPE_PATH_STRING;
+    case DATABASE_INDEX_PROPERTY_PATH:
+        name = DATABASE_INDEX_PROPERTY_PATH_STRING;
         break;
-    case DATABASE_INDEX_TYPE_MODIFICATION_TIME:
-        name = DATABASE_INDEX_TYPE_MODIFICATION_TIME_STRING;
+    case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
+        name = DATABASE_INDEX_PROPERTY_MODIFICATION_TIME_STRING;
         break;
-    case DATABASE_INDEX_TYPE_EXTENSION:
-        name = DATABASE_INDEX_TYPE_EXTENSION_STRING;
+    case DATABASE_INDEX_PROPERTY_EXTENSION:
+        name = DATABASE_INDEX_PROPERTY_EXTENSION_STRING;
         break;
-    case DATABASE_INDEX_TYPE_FILETYPE:
-        name = DATABASE_INDEX_TYPE_FILETYPE_STRING;
+    case DATABASE_INDEX_PROPERTY_FILETYPE:
+        name = DATABASE_INDEX_PROPERTY_FILETYPE_STRING;
         break;
-    case DATABASE_INDEX_TYPE_SIZE:
-        name = DATABASE_INDEX_TYPE_SIZE_STRING;
+    case DATABASE_INDEX_PROPERTY_SIZE:
+        name = DATABASE_INDEX_PROPERTY_SIZE_STRING;
         break;
     default:
-        name = DATABASE_INDEX_TYPE_NAME_STRING;
+        name = DATABASE_INDEX_PROPERTY_NAME_STRING;
     }
     return g_strdup(name);
 }
@@ -1122,12 +1122,12 @@ fsearch_application_window_prepare_shutdown(gpointer self) {
             int type;
             uint32_t *width;
         } columns[] = {
-            {DATABASE_INDEX_TYPE_NAME, &config->name_column_width},
-            {DATABASE_INDEX_TYPE_PATH, &config->path_column_width},
-            {DATABASE_INDEX_TYPE_FILETYPE, &config->type_column_width},
-            {DATABASE_INDEX_TYPE_EXTENSION, &config->extension_column_width},
-            {DATABASE_INDEX_TYPE_SIZE, &config->size_column_width},
-            {DATABASE_INDEX_TYPE_MODIFICATION_TIME, &config->modified_column_width},
+            {DATABASE_INDEX_PROPERTY_NAME, &config->name_column_width},
+            {DATABASE_INDEX_PROPERTY_PATH, &config->path_column_width},
+            {DATABASE_INDEX_PROPERTY_FILETYPE, &config->type_column_width},
+            {DATABASE_INDEX_PROPERTY_EXTENSION, &config->extension_column_width},
+            {DATABASE_INDEX_PROPERTY_SIZE, &config->size_column_width},
+            {DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, &config->modified_column_width},
         };
         for (int i = 0; i < G_N_ELEMENTS(columns); i++) {
             const FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list_view, columns[i].type);
@@ -1152,12 +1152,12 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 
     FsearchConfig *config = fsearch_application_get_config(app);
 
-    FsearchDatabaseIndexType sort_order = config->restore_sort_order ? get_sort_type_for_name(config->sort_by)
-                                                                     : DATABASE_INDEX_TYPE_NAME;
-    if (sort_order == DATABASE_INDEX_TYPE_FILETYPE) {
+    FsearchDatabaseIndexProperty sort_order = config->restore_sort_order ? get_sort_type_for_name(config->sort_by)
+                                                                         : DATABASE_INDEX_PROPERTY_NAME;
+    if (sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
         // -> fall back to sort by name instead
-        sort_order = DATABASE_INDEX_TYPE_NAME;
+        sort_order = DATABASE_INDEX_PROPERTY_NAME;
     }
     const GtkSortType sort_type = config->restore_sort_order
                                     ? (config->sort_ascending ? GTK_SORT_ASCENDING : GTK_SORT_DESCENDING)

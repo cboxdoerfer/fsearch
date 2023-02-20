@@ -27,7 +27,7 @@ fsearch_database_search_info_new(FsearchQuery *query,
                                  uint32_t num_folders,
                                  uint32_t num_files_selected,
                                  uint32_t num_folders_selected,
-                                 FsearchDatabaseIndexType sort_order,
+                                 FsearchDatabaseIndexProperty sort_order,
                                  GtkSortType sort_type);
 
 uint32_t
@@ -48,7 +48,7 @@ fsearch_database_search_info_get_num_entries_selected(FsearchDatabaseSearchInfo 
 uint32_t
 fsearch_database_search_info_get_num_entries(FsearchDatabaseSearchInfo *info);
 
-FsearchDatabaseIndexType
+FsearchDatabaseIndexProperty
 fsearch_database_search_info_get_sort_order(FsearchDatabaseSearchInfo *info);
 
 GtkSortType

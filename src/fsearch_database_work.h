@@ -35,7 +35,7 @@ fsearch_database_work_new_rescan(void);
 FsearchDatabaseWork *
 fsearch_database_work_new_scan(FsearchDatabaseIncludeManager *include_manager,
                                FsearchDatabaseExcludeManager *exclude_manager,
-                               FsearchDatabaseIndexFlags flags);
+                               FsearchDatabaseIndexPropertyFlags flags);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType selection_type, int32_t idx_1, int32_t idx_2);
@@ -43,11 +43,11 @@ fsearch_database_work_new_modify_selection(guint view_id, FsearchSelectionType s
 FsearchDatabaseWork *
 fsearch_database_work_new_search(guint view_id,
                                  FsearchQuery *query,
-                                 FsearchDatabaseIndexType sort_order,
+                                 FsearchDatabaseIndexProperty sort_order,
                                  GtkSortType sort_type);
 
 FsearchDatabaseWork *
-fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexType sort_order, GtkSortType sort_type);
+fsearch_database_work_new_sort(guint view_id, FsearchDatabaseIndexProperty sort_order, GtkSortType sort_type);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_get_item_info(guint view_id, guint index, FsearchDatabaseEntryInfoFlags flags);
@@ -82,13 +82,13 @@ fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work);
 FsearchQuery *
 fsearch_database_work_search_get_query(FsearchDatabaseWork *work);
 
-FsearchDatabaseIndexType
+FsearchDatabaseIndexProperty
 fsearch_database_work_search_get_sort_order(FsearchDatabaseWork *work);
 
 GtkSortType
 fsearch_database_work_search_get_sort_type(FsearchDatabaseWork *work);
 
-FsearchDatabaseIndexType
+FsearchDatabaseIndexProperty
 fsearch_database_work_sort_get_sort_order(FsearchDatabaseWork *work);
 
 GtkSortType
@@ -100,7 +100,7 @@ fsearch_database_work_scan_get_include_manager(FsearchDatabaseWork *work);
 FsearchDatabaseExcludeManager *
 fsearch_database_work_scan_get_exclude_manager(FsearchDatabaseWork *work);
 
-FsearchDatabaseIndexFlags
+FsearchDatabaseIndexPropertyFlags
 fsearch_database_work_scan_get_flags(FsearchDatabaseWork *work);
 
 guint
