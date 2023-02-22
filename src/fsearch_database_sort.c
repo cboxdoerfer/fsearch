@@ -109,16 +109,16 @@ sort_entries(DynamicArray *entries_in,
 }
 
 static DynamicArray *
-fast_sort(FsearchDatabaseIndexProperty new_sort_order, DynamicArray *entries_in, DynamicArray **sorted_entries_in) {
-    if (darray_get_num_items(entries_in) == darray_get_num_items(sorted_entries_in[new_sort_order])) {
+fast_sort(FsearchDatabaseIndexProperty new_sort_order, DynamicArray *entries_in, DynamicArray *fast_sort_index) {
+    if (darray_get_num_items(entries_in) == darray_get_num_items(fast_sort_index)) {
         // We're matching everything, and we have the entries already sorted in our index.
         // So we can just return references to the sorted indices.
-        return darray_ref(sorted_entries_in[new_sort_order]);
+        return darray_ref(fast_sort_index);
     }
     else {
         // Another fast path. First we mark all entries we have currently in the view, then we walk the sorted
         // index in order and add all marked entries to a new array.
-        return get_entries_sorted_from_reference_list(entries_in, sorted_entries_in[new_sort_order]);
+        return get_entries_sorted_from_reference_list(entries_in, fast_sort_index);
     }
 }
 
@@ -127,16 +127,14 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
                               FsearchDatabaseIndexProperty new_sort_order,
                               DynamicArray *files_in,
                               DynamicArray *folders_in,
-                              DynamicArray **sorted_files_in,
-                              DynamicArray **sorted_folders_in,
+                              DynamicArray *files_fast_sort_index,
+                              DynamicArray *folders_fast_sort_index,
                               DynamicArray **files_out,
                               DynamicArray **folders_out,
                               FsearchDatabaseIndexProperty *sort_order_out,
                               GCancellable *cancellable) {
     g_return_if_fail(files_in);
     g_return_if_fail(folders_in);
-    g_return_if_fail(sorted_files_in);
-    g_return_if_fail(sorted_folders_in);
     g_return_if_fail(files_out);
     g_return_if_fail(folders_out);
     g_return_if_fail(sort_order_out);
@@ -149,10 +147,10 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
         return;
     }
 
-    if (has_entries_sorted_by_type(sorted_files_in, new_sort_order)) {
+    if (files_fast_sort_index && folders_fast_sort_index) {
         // Use the fast-sort indices
-        *files_out = fast_sort(new_sort_order, files_in, sorted_files_in);
-        *folders_out = fast_sort(new_sort_order, folders_in, sorted_folders_in);
+        *files_out = fast_sort(new_sort_order, files_in, files_fast_sort_index);
+        *folders_out = fast_sort(new_sort_order, folders_in, folders_fast_sort_index);
         *sort_order_out = new_sort_order;
         return;
     }

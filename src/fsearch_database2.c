@@ -33,7 +33,8 @@ struct _FsearchDatabase2 {
 
     FsearchThreadPool *thread_pool;
 
-    FsearchDatabaseIndex *index;
+    FsearchDatabaseIndexStore *store;
+
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
 
@@ -250,12 +251,12 @@ database_lock(FsearchDatabase2 *self) {
 
 static uint32_t
 get_num_database_files(FsearchDatabase2 *self) {
-    return self->index ? darray_get_num_items(self->index->files[DATABASE_INDEX_PROPERTY_NAME]) : 0;
+    return self->store ? fsearch_database_index_store_get_num_files(self->store) : 0;
 }
 
 static uint32_t
 get_num_database_folders(FsearchDatabase2 *self) {
-    return self->index ? darray_get_num_items(self->index->folders[DATABASE_INDEX_PROPERTY_NAME]) : 0;
+    return self->store ? fsearch_database_index_store_get_num_folders(self->store) : 0;
 }
 
 static uint32_t
@@ -368,12 +369,15 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     DynamicArray *files_new = NULL;
     DynamicArray *folders_new = NULL;
 
+    g_autoptr(DynamicArray) files_fast_sort_index = fsearch_database_index_store_get_files(self->store, sort_order);
+    g_autoptr(DynamicArray) folders_fast_sort_index = fsearch_database_index_store_get_folders(self->store, sort_order);
+
     fsearch_database_sort_results(view->sort_order,
                                   sort_order,
                                   view->files,
                                   view->folders,
-                                  self->index->files,
-                                  self->index->folders,
+                                  files_fast_sort_index,
+                                  folders_fast_sort_index,
                                   &files_new,
                                   &folders_new,
                                   &view->sort_order,
@@ -432,7 +436,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     database_lock(self);
 
-    if (!self->index) {
+    if (!self->store) {
         database_unlock(self);
         return false;
     }
@@ -440,18 +444,19 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     emit_signal(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     bool result = false;
-    DynamicArray *files = NULL;
-    DynamicArray *folders = NULL;
 
-    if (has_entries_sorted_by_type(self->index->folders, sort_order)
-        && has_entries_sorted_by_type(self->index->files, sort_order)) {
-        files = self->index->files[sort_order];
-        folders = self->index->folders[sort_order];
+    g_autoptr(DynamicArray) files = fsearch_database_index_store_get_files(self->store, sort_order);
+    g_autoptr(DynamicArray) folders = fsearch_database_index_store_get_folders(self->store, sort_order);
+
+    if (!files && !folders) {
+        files = fsearch_database_index_store_get_files(self->store, DATABASE_INDEX_PROPERTY_NAME);
+        folders = fsearch_database_index_store_get_folders(self->store, DATABASE_INDEX_PROPERTY_NAME);
+        sort_order = DATABASE_INDEX_PROPERTY_NAME;
+    }
+    else if (files && folders) {
     }
     else {
-        files = self->index->files[DATABASE_INDEX_PROPERTY_NAME];
-        folders = self->index->folders[DATABASE_INDEX_PROPERTY_NAME];
-        sort_order = DATABASE_INDEX_PROPERTY_NAME;
+        g_assert_not_reached();
     }
 
     DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, cancellable);
@@ -606,7 +611,7 @@ save_database_to_file(FsearchDatabase2 *self) {
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
-    db_file_save(NULL, NULL, self->index, db_directory_path);
+    db_file_save(self->store, NULL);
 }
 
 static void
@@ -622,8 +627,8 @@ rescan_database(FsearchDatabase2 *self) {
 
     g_clear_pointer(&locker, g_mutex_locker_free);
 
-    g_autoptr(FsearchDatabaseIndex) index = db_scan2(include_manager, exclude_manager, flags, NULL);
-    g_return_if_fail(index);
+    g_autoptr(FsearchDatabaseIndexStore) store = db_scan2(include_manager, exclude_manager, flags, NULL);
+    g_return_if_fail(store);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -631,8 +636,8 @@ rescan_database(FsearchDatabase2 *self) {
     g_set_object(&self->include_manager, include_manager);
     g_set_object(&self->exclude_manager, exclude_manager);
     self->flags = flags;
-    g_clear_pointer(&self->index, fsearch_database_index_free);
-    self->index = g_steal_pointer(&index);
+    g_clear_pointer(&self->store, fsearch_database_index_store_unref);
+    self->store = g_steal_pointer(&store);
 }
 
 static void
@@ -646,8 +651,8 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_work_scan_get_flags(work);
 
-    g_autoptr(FsearchDatabaseIndex) index = db_scan2(include_manager, exclude_manager, flags, NULL);
-    g_return_if_fail(index);
+    g_autoptr(FsearchDatabaseIndexStore) store = db_scan2(include_manager, exclude_manager, flags, NULL);
+    g_return_if_fail(store);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -655,8 +660,8 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_set_object(&self->include_manager, include_manager);
     g_set_object(&self->exclude_manager, exclude_manager);
     self->flags = flags;
-    g_clear_pointer(&self->index, fsearch_database_index_free);
-    self->index = g_steal_pointer(&index);
+    g_clear_pointer(&self->store, fsearch_database_index_store_unref);
+    self->store = g_steal_pointer(&store);
 
     g_hash_table_remove_all(self->search_results);
 
@@ -684,16 +689,19 @@ load_database_from_file(FsearchDatabase2 *self) {
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
-    g_autoptr(FsearchDatabaseIndex) index = NULL;
-    db_file_load(file_path, NULL, &include_manager, &exclude_manager, &index);
+    g_autoptr(FsearchDatabaseIndexStore) store = NULL;
+    bool res = db_file_load(file_path, NULL, &store, &include_manager, &exclude_manager);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    g_clear_pointer(&self->index, fsearch_database_index_free);
-    self->index = g_steal_pointer(&index);
-
-    if (!self->index) {
+    if (res) {
+        g_clear_pointer(&self->store, fsearch_database_index_store_unref);
+        self->store = g_steal_pointer(&store);
+        g_set_object(&self->include_manager, include_manager);
+        g_set_object(&self->exclude_manager, exclude_manager);
+    }
+    else {
         g_set_object(&self->include_manager, fsearch_database_include_manager_new_with_defaults());
         g_set_object(&self->exclude_manager, fsearch_database_exclude_manager_new_with_defaults());
     }
@@ -820,7 +828,6 @@ fsearch_database2_finalize(GObject *object) {
     g_clear_object(&self->file);
 
     g_clear_pointer(&self->search_results, g_hash_table_unref);
-    g_clear_pointer(&self->index, fsearch_database_index_free);
     g_clear_object(&self->include_manager);
     g_clear_object(&self->exclude_manager);
     database_unlock(self);

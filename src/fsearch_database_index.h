@@ -1,6 +1,11 @@
 #pragma once
 
 #include "fsearch_array.h"
+#include "fsearch_database_entry.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include.h"
+#include "fsearch_database_index_event.h"
+#include "fsearch_database_index_properties.h"
 #include "fsearch_memory_pool.h"
 
 #include <gio/gio.h>
@@ -9,18 +14,71 @@ G_BEGIN_DECLS
 
 #define FSEARCH_DATABASE_INDEX (fsearch_database_index_get_type())
 
-typedef struct {
-    FsearchMemoryPool *file_pool;
-    FsearchMemoryPool *folder_pool;
-    DynamicArray *files[NUM_DATABASE_INDEX_PROPERTIES];
-    DynamicArray *folders[NUM_DATABASE_INDEX_PROPERTIES];
+typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
 
-    FsearchDatabaseIndexPropertyFlags flags;
+typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *,
+                                              FsearchDatabaseIndexEventKind kind,
+                                              FsearchDatabaseIndexEvent *,
+                                              gpointer user_data);
 
-    uint32_t id;
-} FsearchDatabaseIndex;
+GType
+fsearch_database_index_get_type(void);
+
+FsearchDatabaseIndex *
+fsearch_database_index_ref(FsearchDatabaseIndex *self);
 
 void
-fsearch_database_index_free(FsearchDatabaseIndex *index);
+fsearch_database_index_unref(FsearchDatabaseIndex *self);
 
-G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_free)
+FsearchDatabaseIndex *
+fsearch_database_index_new(uint32_t id,
+                           FsearchDatabaseInclude *include,
+                           FsearchDatabaseExcludeManager *exclude_manager,
+                           FsearchDatabaseIndexPropertyFlags flags,
+                           FsearchDatabaseIndexEventFunc event_func,
+                           gpointer user_data);
+
+FsearchDatabaseIndex *
+fsearch_database_index_new_with_content(uint32_t id,
+                                        FsearchDatabaseInclude *include,
+                                        FsearchDatabaseExcludeManager *exclude_manager,
+                                        FsearchMemoryPool *file_pool,
+                                        FsearchMemoryPool *folder_pool,
+                                        DynamicArray *files,
+                                        DynamicArray *folders,
+                                        FsearchDatabaseIndexPropertyFlags flags,
+                                        FsearchDatabaseIndexEventFunc event_func,
+                                        gpointer user_data);
+
+FsearchDatabaseInclude *
+fsearch_database_index_get_include(FsearchDatabaseIndex *self);
+
+FsearchDatabaseExcludeManager *
+fsearch_database_index_get_exclude_manager(FsearchDatabaseIndex *self);
+
+DynamicArray *
+fsearch_database_index_get_files(FsearchDatabaseIndex *self);
+
+DynamicArray *
+fsearch_database_index_get_folders(FsearchDatabaseIndex *self);
+
+uint32_t
+fsearch_database_index_get_id(FsearchDatabaseIndex *self);
+
+FsearchDatabaseIndexPropertyFlags
+fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
+
+FsearchDatabaseEntry *
+fsearch_database_index_add_file(FsearchDatabaseIndex *self,
+                                const char *name,
+                                off_t size,
+                                time_t mtime,
+                                FsearchDatabaseEntryFolder *parent);
+
+FsearchDatabaseEntryFolder *
+fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
+                                  const char *name,
+                                  time_t mtime,
+                                  FsearchDatabaseEntryFolder *parent);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)

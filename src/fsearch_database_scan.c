@@ -67,8 +67,6 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         g_timer_start(walk_context->timer);
     }
 
-    FsearchDatabaseIndex *index = walk_context->index;
-
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
         if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
@@ -115,26 +113,12 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         }
 
         if (is_dir) {
-            FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(index->folder_pool);
-            db_entry_set_name(entry, dent->d_name);
-            db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
-            db_entry_set_mtime(entry, st.st_mtime);
-            db_entry_set_parent(entry, parent);
-
-            darray_add_item(index->folders[DATABASE_INDEX_PROPERTY_NAME], entry);
-
-            db_folder_scan_recursive(walk_context, (FsearchDatabaseEntryFolder *)entry);
+            db_folder_scan_recursive(
+                walk_context,
+                fsearch_database_index_add_folder(walk_context->index, dent->d_name, st.st_mtime, parent));
         }
         else {
-            FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(index->file_pool);
-            db_entry_set_name(file_entry, dent->d_name);
-            db_entry_set_size(file_entry, st.st_size);
-            db_entry_set_mtime(file_entry, st.st_mtime);
-            db_entry_set_type(file_entry, DATABASE_ENTRY_TYPE_FILE);
-            db_entry_set_parent(file_entry, parent);
-            db_entry_update_parent_size(file_entry);
-
-            darray_add_item(index->files[DATABASE_INDEX_PROPERTY_NAME], file_entry);
+            fsearch_database_index_add_file(walk_context->index, dent->d_name, st.st_size, st.st_mtime, parent);
         }
     }
 
@@ -142,10 +126,10 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     return WALK_OK;
 }
 
-static bool
-db_scan_folder(FsearchDatabaseIndex *index,
-               FsearchDatabaseInclude *include,
+static FsearchDatabaseIndex *
+db_scan_folder(FsearchDatabaseInclude *include,
                FsearchDatabaseExcludeManager *exclude_manager,
+               FsearchDatabaseIndexPropertyFlags flags,
                GCancellable *cancellable,
                void (*status_cb)(const char *)) {
     const char *directory_path = fsearch_database_include_get_path(include);
@@ -154,7 +138,7 @@ db_scan_folder(FsearchDatabaseIndex *index,
 
     if (!g_file_test(directory_path, G_FILE_TEST_IS_DIR)) {
         g_warning("[db_scan] %s doesn't exist", directory_path);
-        return false;
+        return NULL;
     }
 
     g_autoptr(GString) path = g_string_new(directory_path);
@@ -171,6 +155,9 @@ db_scan_folder(FsearchDatabaseIndex *index,
         g_debug("[db_scan] can't stat: %s", directory_path);
     }
 
+    g_autoptr(FsearchDatabaseIndex) index =
+        fsearch_database_index_new(fsearch_database_include_get_id(include), include, exclude_manager, flags, NULL, NULL);
+
     DatabaseWalkContext walk_context = {
         .index = index,
         .include = include,
@@ -182,21 +169,14 @@ db_scan_folder(FsearchDatabaseIndex *index,
         .root_device_id = root_st.st_dev,
     };
 
-    FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(index->folder_pool);
-    db_entry_set_name(entry, path->str);
-    db_entry_set_parent(entry, NULL);
-    db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
-
-    darray_add_item(index->folders[DATABASE_INDEX_PROPERTY_NAME], entry);
-
-    uint32_t res = db_folder_scan_recursive(&walk_context, (FsearchDatabaseEntryFolder *)entry);
+    uint32_t res = db_folder_scan_recursive(&walk_context, fsearch_database_index_add_folder(index, path->str, 0, NULL));
 
     if (res == WALK_OK) {
         // g_debug("[db_scan] scanned: %d files, %d folders -> %d total",
         //         db_get_num_files(db),
         //         db_get_num_folders(db),
         //         db_get_num_entries(db));
-        return true;
+        return g_steal_pointer(&index);
     }
 
     if (res == WALK_CANCEL) {
@@ -205,46 +185,35 @@ db_scan_folder(FsearchDatabaseIndex *index,
     else {
         g_warning("[db_scan] walk error: %d", res);
     }
-    return false;
+    return NULL;
 }
 
-FsearchDatabaseIndex *
+FsearchDatabaseIndexStore *
 db_scan2(FsearchDatabaseIncludeManager *include_manager,
          FsearchDatabaseExcludeManager *exclude_manager,
          FsearchDatabaseIndexPropertyFlags flags,
          GCancellable *cancellable) {
-    FsearchDatabaseIndex *index = calloc(1, sizeof(FsearchDatabaseIndex));
-    g_assert(index);
-
-    index->flags = flags;
-    index->file_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
-                                               db_entry_get_sizeof_file_entry(),
-                                               (GDestroyNotify)db_entry_destroy);
-    index->folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
-                                                 db_entry_get_sizeof_folder_entry(),
-                                                 (GDestroyNotify)db_entry_destroy);
-    index->files[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
-    index->folders[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
+    g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(flags);
 
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        db_scan_folder(index, include, exclude_manager, cancellable, NULL);
+        g_autoptr(FsearchDatabaseIndex) index = db_scan_folder(include, exclude_manager, flags, cancellable, NULL);
+        if (index) {
+            fsearch_database_index_store_add(store, index);
+        }
     }
     if (is_cancelled(cancellable)) {
-        goto cancelled;
+        return NULL;
     }
     // if (status_cb) {
     //     status_cb(_("Sorting…"));
     // }
-    fsearch_database_sort(index->files, index->folders, index->flags, cancellable);
+    fsearch_database_index_store_sort(store, cancellable);
+
     if (is_cancelled(cancellable)) {
-        goto cancelled;
+        return NULL;
     }
 
-    return index;
-
-cancelled:
-    g_clear_pointer(&index, fsearch_database_index_free);
-    return NULL;
+    return g_steal_pointer(&store);
 }

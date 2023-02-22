@@ -12,14 +12,20 @@
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
+typedef struct {
+    FsearchMemoryPool *file_pool;
+    FsearchMemoryPool *folder_pool;
+    DynamicArray *files[NUM_DATABASE_INDEX_PROPERTIES];
+    DynamicArray *folders[NUM_DATABASE_INDEX_PROPERTIES];
+    FsearchDatabaseIndexPropertyFlags flags;
+} LoadSaveContext;
+
 static void
-update_folder_indices(FsearchDatabaseIndex *index) {
-    if (!index || !index->folders[DATABASE_INDEX_PROPERTY_NAME]) {
-        return;
-    }
-    const uint32_t num_folders = darray_get_num_items(index->folders[DATABASE_INDEX_PROPERTY_NAME]);
+update_folder_indices(DynamicArray *folders) {
+    g_assert(folders);
+    const uint32_t num_folders = darray_get_num_items(folders);
     for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(index->folders[DATABASE_INDEX_PROPERTY_NAME], i);
+        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
         if (!folder) {
             continue;
         }
@@ -554,14 +560,9 @@ save_sorted_entries(FILE *fp, DynamicArray *entries, uint32_t num_entries, bool 
 }
 
 static size_t
-save_sorted_arrays(FILE *fp, FsearchDatabaseIndex *index, uint32_t num_files, uint32_t num_folders, bool *write_failed) {
+save_sorted_arrays(FILE *fp, FsearchDatabaseIndexStore *store, uint32_t num_files, uint32_t num_folders, bool *write_failed) {
     size_t bytes_written = 0;
-    uint32_t num_sorted_arrays = 0;
-    for (uint32_t i = 1; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
-        if (index->folders[i] && index->files[i]) {
-            num_sorted_arrays++;
-        }
-    }
+    uint32_t num_sorted_arrays = fsearch_database_index_store_get_num_fast_sort_indices(store);
 
     bytes_written += write_data_to_file(fp, &num_sorted_arrays, 4, 1, write_failed);
     if (*write_failed == true) {
@@ -574,8 +575,8 @@ save_sorted_arrays(FILE *fp, FsearchDatabaseIndex *index, uint32_t num_files, ui
     }
 
     for (uint32_t id = 1; id < NUM_DATABASE_INDEX_PROPERTIES; id++) {
-        DynamicArray *folders = index->folders[id];
-        DynamicArray *files = index->files[id];
+        g_autoptr(DynamicArray) folders = fsearch_database_index_store_get_folders(store, id);
+        g_autoptr(DynamicArray) files = fsearch_database_index_store_get_files(store, id);
         if (!files || !folders) {
             continue;
         }
@@ -636,7 +637,7 @@ save_folders(FILE *fp,
 }
 
 static size_t
-save_indexes(FILE *fp, FsearchDatabaseIndex *index, bool *write_failed) {
+save_indexes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
     size_t bytes_written = 0;
 
     // TODO: actually implement storing all index information
@@ -651,7 +652,7 @@ out:
 }
 
 static size_t
-save_excludes(FILE *fp, FsearchDatabaseIndex *index, bool *write_failed) {
+save_excludes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
     size_t bytes_written = 0;
 
     // TODO: actually implement storing all exclude information
@@ -666,20 +667,15 @@ out:
 }
 
 static size_t
-save_exclude_pattern(FILE *fp, FsearchDatabaseIndex *index, bool *write_failed) {
+save_exclude_pattern(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
     // TODO
     return 0;
 }
 
 bool
-db_file_save(FsearchDatabaseIncludeManager *includes,
-             FsearchDatabaseExcludeManager *excludes,
-             FsearchDatabaseIndex *index,
-             const char *file_path) {
+db_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
     g_return_val_if_fail(file_path, false);
-    g_return_val_if_fail(index, false);
-    g_return_val_if_fail(includes, false);
-    g_return_val_if_fail(excludes, false);
+    g_return_val_if_fail(store, false);
 
     g_debug("[db_save] saving database to file...");
 
@@ -698,6 +694,9 @@ db_file_save(FsearchDatabaseIncludeManager *includes,
     g_autoptr(GString) path_full_temp = g_string_new(path_full->str);
     g_string_append(path_full_temp, ".tmp");
 
+    g_autoptr(DynamicArray) files = NULL;
+    g_autoptr(DynamicArray) folders = NULL;
+
     g_debug("[db_save] trying to open temporary database file: %s", path_full_temp->str);
 
     FILE *fp = file_open_locked(path_full_temp->str, "wb");
@@ -705,9 +704,6 @@ db_file_save(FsearchDatabaseIncludeManager *includes,
         g_debug("[db_save] failed to open temporary database file: %s", path_full_temp->str);
         goto save_fail;
     }
-
-    g_debug("[db_save] updating folder indices...");
-    update_folder_indices(index);
 
     bool write_failed = false;
 
@@ -720,14 +716,15 @@ db_file_save(FsearchDatabaseIncludeManager *includes,
     }
 
     g_debug("[db_save] saving database index flags...");
-    const uint64_t index_flags = index->flags;
+    const uint64_t index_flags = fsearch_database_index_store_get_flags(store);
     bytes_written += write_data_to_file(fp, &index_flags, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
 
-    DynamicArray *files = index->files[DATABASE_INDEX_PROPERTY_NAME];
-    DynamicArray *folders = index->folders[DATABASE_INDEX_PROPERTY_NAME];
+    g_debug("[db_save] updating folder indices...");
+    folders = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
+    update_folder_indices(folders);
 
     const uint32_t num_folders = darray_get_num_items(folders);
     g_debug("[db_save] saving number of folders: %d", num_folders);
@@ -736,6 +733,7 @@ db_file_save(FsearchDatabaseIncludeManager *includes,
         goto save_fail;
     }
 
+    files = fsearch_database_index_store_get_files(store, DATABASE_INDEX_PROPERTY_NAME);
     const uint32_t num_files = darray_get_num_items(files);
     g_debug("[db_save] saving number of files: %d", num_files);
     bytes_written += write_data_to_file(fp, &num_files, 4, 1, &write_failed);
@@ -760,17 +758,17 @@ db_file_save(FsearchDatabaseIncludeManager *includes,
     }
 
     g_debug("[db_save] saving indices...");
-    bytes_written += save_indexes(fp, index, &write_failed);
+    bytes_written += save_indexes(fp, store, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
     g_debug("[db_save] saving excludes...");
-    bytes_written += save_excludes(fp, index, &write_failed);
+    bytes_written += save_excludes(fp, store, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
     g_debug("[db_save] saving exclude pattern...");
-    bytes_written += save_exclude_pattern(fp, index, &write_failed);
+    bytes_written += save_exclude_pattern(fp, store, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
@@ -787,7 +785,7 @@ db_file_save(FsearchDatabaseIncludeManager *includes,
         goto save_fail;
     }
     g_debug("[db_save] saving sorted arrays...");
-    bytes_written += save_sorted_arrays(fp, index, num_files, num_folders, &write_failed);
+    bytes_written += save_sorted_arrays(fp, store, num_files, num_folders, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
@@ -839,13 +837,11 @@ save_fail:
 bool
 db_file_load(const char *file_path,
              void (*status_cb)(const char *),
-             FsearchDatabaseIncludeManager **includes_out,
-             FsearchDatabaseExcludeManager **excludes_out,
-             FsearchDatabaseIndex **index_out) {
+             FsearchDatabaseIndexStore **store_out,
+             FsearchDatabaseIncludeManager **include_manager_out,
+             FsearchDatabaseExcludeManager **exclude_manager_out) {
     g_return_val_if_fail(file_path, false);
-    g_return_val_if_fail(includes_out, false);
-    g_return_val_if_fail(excludes_out, false);
-    g_return_val_if_fail(index_out, false);
+    g_return_val_if_fail(store_out, false);
 
     FILE *fp = file_open_locked(file_path, "rb");
     if (!fp) {
@@ -941,19 +937,20 @@ db_file_load(const char *file_path,
         goto load_fail;
     }
 
-    FsearchDatabaseIndex *index = calloc(1, sizeof(FsearchDatabaseIndex));
-    g_assert(index);
+    FsearchDatabaseIndexStore *store = fsearch_database_index_store_new(index_flags);
+    // FsearchDatabaseIndex *index = calloc(1, sizeof(FsearchDatabaseIndex));
+    // g_assert(index);
 
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
-        index->files[i] = g_steal_pointer(&sorted_files[i]);
-        index->folders[i] = g_steal_pointer(&sorted_folders[i]);
-    }
-    index->file_pool = g_steal_pointer(&file_pool);
-    index->folder_pool = g_steal_pointer(&folder_pool);
+    // for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
+    //     index->files[i] = g_steal_pointer(&sorted_files[i]);
+    //     index->folders[i] = g_steal_pointer(&sorted_folders[i]);
+    // }
+    // index->file_pool = g_steal_pointer(&file_pool);
+    // index->folder_pool = g_steal_pointer(&folder_pool);
 
-    index->flags = index_flags;
+    // index->flags = index_flags;
 
-    *index_out = index;
+    //*index_out = index;
 
     g_clear_pointer(&fp, fclose);
 
