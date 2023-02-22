@@ -15,11 +15,8 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
                               FsearchDatabaseIndexProperty *sort_order_out,
                               GCancellable *cancellable);
 
-void
-fsearch_database_sort(FsearchDatabaseIndexProperty sort_order,
-                      DynamicArray *files_in,
-                      DynamicArray *folders_in,
-                      FsearchDatabaseIndexProperty *sort_order_out,
-                      DynamicArray **files_out,
-                      DynamicArray **folders_out,
+bool
+fsearch_database_sort(DynamicArray **files_store,
+                      DynamicArray **folders_store,
+                      FsearchDatabaseIndexPropertyFlags flags,
                       GCancellable *cancellable);

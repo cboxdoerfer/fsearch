@@ -2,6 +2,21 @@
 
 #include "fsearch_database_entry.h"
 
+static void
+clear_fast_sorted_array(DynamicArray **sorted_entries, FsearchDatabaseIndexProperty property) {
+    if (sorted_entries && sorted_entries[property]) {
+        g_clear_pointer(&sorted_entries[property], darray_unref);
+    }
+}
+
+static bool
+is_cancelled(GCancellable *cancellable) {
+    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
+        return true;
+    }
+    return false;
+}
+
 static bool
 is_valid_fast_sort_type(FsearchDatabaseIndexProperty sort_type) {
     if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_PROPERTIES) {
@@ -180,11 +195,100 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
     }
 }
 
-void
-fsearch_database_sort(FsearchDatabaseIndexProperty sort_order,
-                      DynamicArray *files_in,
-                      DynamicArray *folders_in,
-                      FsearchDatabaseIndexProperty *sort_order_out,
-                      DynamicArray **files_out,
-                      DynamicArray **folders_out,
-                      GCancellable *cancellable) {}
+static void
+sort_store_entries(DynamicArray *entries,
+                   DynamicArray **sorted_entries,
+                   FsearchDatabaseIndexPropertyFlags flags,
+                   GCancellable *cancellable) {
+    // first sort by path
+    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, cancellable, NULL);
+    if (is_cancelled(cancellable)) {
+        return;
+    }
+    clear_fast_sorted_array(sorted_entries, DATABASE_INDEX_PROPERTY_PATH);
+    sorted_entries[DATABASE_INDEX_PROPERTY_PATH] = darray_copy(entries);
+
+    // then by name
+    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, cancellable, NULL);
+    if (is_cancelled(cancellable)) {
+        return;
+    }
+
+    // now build individual lists sorted by all the indexed metadata
+    if ((flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
+        clear_fast_sorted_array(sorted_entries, DATABASE_INDEX_PROPERTY_SIZE);
+        sorted_entries[DATABASE_INDEX_PROPERTY_SIZE] = darray_copy(entries);
+        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_SIZE],
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
+                                   cancellable,
+                                   NULL);
+        if (is_cancelled(cancellable)) {
+            return;
+        }
+    }
+
+    if ((flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
+        clear_fast_sorted_array(sorted_entries, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME);
+        sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] = darray_copy(entries);
+        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME],
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
+                                   cancellable,
+                                   NULL);
+        if (is_cancelled(cancellable)) {
+            return;
+        }
+    }
+}
+
+bool
+fsearch_database_sort(DynamicArray **files_store,
+                      DynamicArray **folders_store,
+                      FsearchDatabaseIndexPropertyFlags flags,
+                      GCancellable *cancellable) {
+    g_return_val_if_fail(files_store, false);
+    g_return_val_if_fail(folders_store, false);
+
+    g_autoptr(GTimer) timer = g_timer_new();
+
+    // first we sort all the files
+    DynamicArray *files = files_store[DATABASE_INDEX_PROPERTY_NAME];
+    if (files) {
+        sort_store_entries(files, files_store, flags, cancellable);
+        if (is_cancelled(cancellable)) {
+            return false;
+        }
+
+        // now build extension sort array
+        clear_fast_sorted_array(files_store, DATABASE_INDEX_PROPERTY_EXTENSION);
+        files_store[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_copy(files);
+        darray_sort_multi_threaded(files_store[DATABASE_INDEX_PROPERTY_EXTENSION],
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
+                                   cancellable,
+                                   NULL);
+        if (is_cancelled(cancellable)) {
+            return false;
+        }
+
+        const double seconds = g_timer_elapsed(timer, NULL);
+        g_timer_reset(timer);
+        g_debug("[db_sort] sorted files: %f s", seconds);
+    }
+
+    // then we sort all the folders
+    DynamicArray *folders = folders_store[DATABASE_INDEX_PROPERTY_NAME];
+    if (folders) {
+        sort_store_entries(folders, folders_store, flags, cancellable);
+        if (is_cancelled(cancellable)) {
+            return false;
+        }
+
+        // Folders don't have a file extension -> use the name array instead
+        clear_fast_sorted_array(folders_store, DATABASE_INDEX_PROPERTY_EXTENSION);
+        folders_store[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_ref(folders);
+
+        const double seconds = g_timer_elapsed(timer, NULL);
+        g_debug("[db_sort] sorted folders: %f s", seconds);
+    }
+
+    return true;
+}

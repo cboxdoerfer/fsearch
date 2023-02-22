@@ -1,6 +1,7 @@
 #include "fsearch_database_scan.h"
 
 #include "fsearch_database_entry.h"
+#include "fsearch_database_sort.h"
 
 #include <dirent.h>
 #include <fcntl.h>
@@ -207,93 +208,6 @@ db_scan_folder(FsearchDatabaseIndex *index,
     return false;
 }
 
-static void
-db_sort_entries(FsearchDatabaseIndex *index,
-                DynamicArray *entries,
-                DynamicArray **sorted_entries,
-                GCancellable *cancellable) {
-    // first sort by path
-    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, cancellable, NULL);
-    if (is_cancelled(cancellable)) {
-        return;
-    }
-    sorted_entries[DATABASE_INDEX_PROPERTY_PATH] = darray_copy(entries);
-
-    // then by name
-    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, cancellable, NULL);
-    if (is_cancelled(cancellable)) {
-        return;
-    }
-
-    // now build individual lists sorted by all of the indexed metadata
-    if ((index->flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
-        sorted_entries[DATABASE_INDEX_PROPERTY_SIZE] = darray_copy(entries);
-        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_SIZE],
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
-                                   cancellable,
-                                   NULL);
-        if (is_cancelled(cancellable)) {
-            return;
-        }
-    }
-
-    if ((index->flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
-        sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] = darray_copy(entries);
-        darray_sort_multi_threaded(sorted_entries[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME],
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
-                                   cancellable,
-                                   NULL);
-        if (is_cancelled(cancellable)) {
-            return;
-        }
-    }
-}
-
-static void
-db_sort(FsearchDatabaseIndex *index, GCancellable *cancellable) {
-    g_assert(index);
-
-    g_autoptr(GTimer) timer = g_timer_new();
-
-    // first we sort all the files
-    DynamicArray *files = index->files[DATABASE_INDEX_PROPERTY_NAME];
-    if (files) {
-        db_sort_entries(index, files, index->files, cancellable);
-        if (is_cancelled(cancellable)) {
-            return;
-        }
-
-        // now build extension sort array
-        index->files[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_copy(files);
-        darray_sort_multi_threaded(index->files[DATABASE_INDEX_PROPERTY_EXTENSION],
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
-                                   cancellable,
-                                   NULL);
-        if (is_cancelled(cancellable)) {
-            return;
-        }
-
-        const double seconds = g_timer_elapsed(timer, NULL);
-        g_timer_reset(timer);
-        g_debug("[db_sort] sorted files: %f s", seconds);
-    }
-
-    // then we sort all the folders
-    DynamicArray *folders = index->folders[DATABASE_INDEX_PROPERTY_NAME];
-    if (folders) {
-        db_sort_entries(index, folders, index->folders, cancellable);
-        if (is_cancelled(cancellable)) {
-            return;
-        }
-
-        // Folders don't have a file extension -> use the name array instead
-        index->folders[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_ref(folders);
-
-        const double seconds = g_timer_elapsed(timer, NULL);
-        g_debug("[db_sort] sorted folders: %f s", seconds);
-    }
-}
-
 FsearchDatabaseIndex *
 db_scan2(FsearchDatabaseIncludeManager *include_manager,
          FsearchDatabaseExcludeManager *exclude_manager,
@@ -323,7 +237,7 @@ db_scan2(FsearchDatabaseIncludeManager *include_manager,
     // if (status_cb) {
     //     status_cb(_("Sorting…"));
     // }
-    db_sort(index, cancellable);
+    fsearch_database_sort(index->files, index->folders, index->flags, cancellable);
     if (is_cancelled(cancellable)) {
         goto cancelled;
     }
