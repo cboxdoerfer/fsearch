@@ -229,7 +229,12 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
             fsearch_database_work_cancel(self->work_scan);
             g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
         }
-        self->work_scan = fsearch_database_work_new_scan(include_manager, exclude_manager, 0);
+        self->work_scan = fsearch_database_work_new_scan(include_manager,
+                                                         exclude_manager,
+                                                         DATABASE_INDEX_PROPERTY_FLAG_NAME
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_PATH
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_SIZE
+                                                             | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
         fsearch_database2_queue_work(self->db2, self->work_scan);
         fsearch_database2_process_work_now(self->db2);
 
