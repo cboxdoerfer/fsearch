@@ -244,6 +244,16 @@ darray_add_items(DynamicArray *array, void **items, uint32_t num_items) {
 }
 
 void
+darray_add_array(DynamicArray *dest, DynamicArray *source) {
+    g_assert(dest);
+    g_assert(dest->data);
+    g_assert(source);
+    g_assert(source->data);
+
+    darray_add_items(dest, source->data, source->num_items);
+}
+
+void
 darray_add_item(DynamicArray *array, void *data) {
     g_assert(array);
     g_assert(array->data);

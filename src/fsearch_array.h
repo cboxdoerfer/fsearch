@@ -67,6 +67,9 @@ void
 darray_add_items(DynamicArray *array, void **items, uint32_t num_items);
 
 void
+darray_add_array(DynamicArray *dest, DynamicArray *source);
+
+void
 darray_add_item(DynamicArray *array, void *data);
 
 DynamicArray *
@@ -80,3 +83,5 @@ darray_ref(DynamicArray *array);
 
 DynamicArray *
 darray_copy(DynamicArray *array);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(DynamicArray, darray_unref)
