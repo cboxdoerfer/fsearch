@@ -183,10 +183,39 @@ test_search(void) {
     same_elements();
 }
 
+static void
+test_remove(void) {
+    const int32_t upper_limit = 10;
+    g_autoptr(DynamicArray) array = darray_new(upper_limit);
+    g_assert_true(darray_get_size(array) == upper_limit);
+
+    g_assert_true(darray_get_num_items(array) == 0);
+    darray_remove(array, 0, upper_limit);
+    g_assert_true(darray_get_num_items(array) == 0);
+    darray_remove(array, 1, 1);
+    g_assert_true(darray_get_num_items(array) == 0);
+
+    for (int32_t i = 0; i < upper_limit; ++i) {
+        darray_add_item(array, GINT_TO_POINTER(i));
+    }
+    darray_remove(array, 1, 0);
+    g_assert_true(darray_get_num_items(array) == upper_limit);
+
+    darray_remove(array, 4, 2);
+    g_assert_true(darray_get_num_items(array) == upper_limit - 2);
+    g_assert_true(GPOINTER_TO_INT(darray_get_item(array, 3)) == 3);
+    g_assert_true(GPOINTER_TO_INT(darray_get_item(array, 4)) == 6);
+
+    darray_remove(array, 1, upper_limit);
+    g_print("%d\n", darray_get_num_items(array));
+    g_assert_true(darray_get_num_items(array) == 1);
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
     g_test_add_func("/FSearch/array/main", test_main);
+    g_test_add_func("/FSearch/array/remove", test_remove);
     g_test_add_func("/FSearch/array/sort", test_sort);
     g_test_add_func("/FSearch/array/search", test_search);
     return g_test_run();

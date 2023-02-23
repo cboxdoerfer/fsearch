@@ -72,6 +72,9 @@ darray_add_array(DynamicArray *dest, DynamicArray *source);
 void
 darray_add_item(DynamicArray *array, void *data);
 
+void
+darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements);
+
 DynamicArray *
 darray_new(size_t num_items);
 

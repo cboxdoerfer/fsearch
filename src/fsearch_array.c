@@ -266,6 +266,30 @@ darray_add_item(DynamicArray *array, void *data) {
     array->data[array->num_items++] = data;
 }
 
+void
+darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
+    g_assert(array);
+    g_assert(array->data);
+
+    if (n_elements == 0) {
+        // No need to remove anything
+        return;
+    }
+
+    if (index >= array->num_items) {
+        return;
+    }
+    else if (index + n_elements >= array->num_items - 1) {
+        // the end of the items to be removed is also the end of the array.
+        // No need to memmove, just to decrement the number of array items.
+        array->num_items -= array->num_items - index;
+        return;
+    }
+
+    memmove(array->data + index, array->data + index + n_elements, (array->num_items - index - 1) * sizeof(void *));
+    array->num_items -= n_elements;
+}
+
 bool
 darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index) {
     g_assert(array);
