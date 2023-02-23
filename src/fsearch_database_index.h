@@ -18,7 +18,8 @@ typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
 
 typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *,
                                               FsearchDatabaseIndexEventKind kind,
-                                              FsearchDatabaseIndexEvent *,
+                                              FsearchDatabaseEntry *parent,
+                                              GString *path,
                                               gpointer user_data);
 
 GType
@@ -78,6 +79,7 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
 FsearchDatabaseEntryFolder *
 fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
                                   const char *name,
+                                  const char *path,
                                   time_t mtime,
                                   FsearchDatabaseEntryFolder *parent);
 

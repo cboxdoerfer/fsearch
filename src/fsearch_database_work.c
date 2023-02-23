@@ -29,6 +29,13 @@ struct FsearchDatabaseWork {
             int32_t idx_1;
             int32_t idx_2;
         };
+        // FSEARCH_DATABASE_WORK_MONITOR_EVENT
+        struct {
+            FsearchDatabaseIndex *monitoring_index;
+            FsearchDatabaseIndexEventKind event_kind;
+            FsearchDatabaseEntry *parent;
+            GString *path;
+        };
     };
 
     guint view_id;
@@ -71,6 +78,10 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_SORT:
         break;
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
+        break;
+    case FSEARCH_DATABASE_WORK_MONITOR_EVENT:
+        g_clear_pointer(&work->monitoring_index, fsearch_database_index_unref);
+        g_string_free(g_steal_pointer(&work->path), TRUE);
         break;
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
         g_assert_not_reached();
@@ -183,6 +194,22 @@ FsearchDatabaseWork *
 fsearch_database_work_new_save() {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SAVE_TO_FILE;
+
+    return work;
+}
+
+FsearchDatabaseWork *
+fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
+                                        FsearchDatabaseIndexEventKind event_kind,
+                                        FsearchDatabaseEntry *parent,
+                                        GString *path) {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_MONITOR_EVENT;
+
+    work->monitoring_index = fsearch_database_index_ref(index);
+    work->event_kind = event_kind;
+    work->path = path;
+    work->parent = parent;
 
     return work;
 }

@@ -615,6 +615,17 @@ save_database_to_file(FsearchDatabase2 *self) {
 }
 
 static void
+index_event_cb(FsearchDatabaseIndex *index,
+               FsearchDatabaseIndexEventKind kind,
+               FsearchDatabaseEntry *parent,
+               GString *path,
+               gpointer user_data) {
+    FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
+    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_monitor_event(index, kind, parent, path);
+    fsearch_database2_queue_work(self, work);
+}
+
+static void
 rescan_database(FsearchDatabase2 *self) {
     g_return_if_fail(self);
 
@@ -627,7 +638,8 @@ rescan_database(FsearchDatabase2 *self) {
 
     g_clear_pointer(&locker, g_mutex_locker_free);
 
-    g_autoptr(FsearchDatabaseIndexStore) store = db_scan2(include_manager, exclude_manager, flags, NULL);
+    g_autoptr(FsearchDatabaseIndexStore)
+        store = db_scan2(include_manager, exclude_manager, flags, NULL, index_event_cb, self);
     g_return_if_fail(store);
 
     locker = g_mutex_locker_new(&self->mutex);
@@ -651,7 +663,8 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_work_scan_get_flags(work);
 
-    g_autoptr(FsearchDatabaseIndexStore) store = db_scan2(include_manager, exclude_manager, flags, NULL);
+    g_autoptr(FsearchDatabaseIndexStore)
+        store = db_scan2(include_manager, exclude_manager, flags, NULL, index_event_cb, self);
     g_return_if_fail(store);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);

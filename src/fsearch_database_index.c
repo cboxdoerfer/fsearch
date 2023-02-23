@@ -1,10 +1,17 @@
 #include "fsearch_database_index.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_database_work.h"
 #include "fsearch_memory_pool.h"
 
+#include <glib-unix.h>
 #include <glib.h>
+#include <sys/inotify.h>
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
+
+#define INOTIFY_FOLDER_MASK                                                                                            \
+    (IN_MODIFY | IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT         \
+     | IN_MOVE_SELF | IN_CLOSE_WRITE)
 
 struct _FsearchDatabaseIndex {
     FsearchDatabaseInclude *include;
@@ -15,6 +22,12 @@ struct _FsearchDatabaseIndex {
     DynamicArray *folders;
 
     FsearchDatabaseIndexPropertyFlags flags;
+
+    GHashTable *watch_descriptors;
+    int32_t inotify_fd;
+    GSource *monitor_source;
+
+    GHashTable *pending_moves;
 
     FsearchDatabaseIndexEventFunc event_func;
     gpointer event_user_data;
@@ -30,6 +43,11 @@ static void
 index_free(FsearchDatabaseIndex *index) {
     g_return_if_fail(index);
 
+    g_source_destroy(index->monitor_source);
+    g_clear_pointer(&index->monitor_source, g_source_unref);
+
+    g_clear_pointer(&index->watch_descriptors, g_hash_table_unref);
+
     g_clear_pointer(&index->include, fsearch_database_include_unref);
     g_clear_object(&index->exclude_manager);
 
@@ -39,6 +57,136 @@ index_free(FsearchDatabaseIndex *index) {
     g_clear_pointer(&index->file_pool, fsearch_memory_pool_free_pool);
     g_clear_pointer(&index->folder_pool, fsearch_memory_pool_free_pool);
     g_clear_pointer(&index, free);
+}
+
+static gboolean
+inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
+    FsearchDatabaseIndex *self = user_data;
+    char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
+    const struct inotify_event *event;
+
+    /* Loop while events can be read from inotify file descriptor. */
+
+    for (;;) {
+
+        /* Read some events. */
+
+        ssize_t len = read(fd, buf, sizeof(buf));
+        if (len == -1 && errno != EAGAIN) {
+            g_debug("failed to read from fd!");
+            return G_SOURCE_REMOVE;
+        }
+
+        /* If the nonblocking read() found no events to read, then
+           it returns -1 with errno set to EAGAIN. In that case,
+           we exit the loop. */
+
+        if (len <= 0) {
+            g_debug("processed all inotify events.");
+            return G_SOURCE_CONTINUE;
+        }
+
+        /* Loop over all events in the buffer. */
+
+        for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
+
+            event = (const struct inotify_event *)ptr;
+
+            /* Print event type. */
+
+            g_autoptr(FsearchDatabaseWork) work = NULL;
+
+            g_autoptr(GString) path = NULL;
+            FsearchDatabaseEntry *entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
+            if (!entry) {
+                g_debug("no entry for watch descriptor not in hash table!!!");
+            }
+
+            if (event->len) {
+                path = db_entry_get_path_full(entry);
+                g_string_append_c(path, G_DIR_SEPARATOR);
+                g_string_append(path, event->name);
+            }
+
+            if (event->mask & IN_MODIFY) {
+                g_print("IN_MODIFY: ");
+            }
+            else if (event->mask & IN_ATTRIB) {
+                work = fsearch_database_work_new_monitor_event(self,
+                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_ATTRIBUTE_CHANGED,
+                                                               entry,
+                                                               g_steal_pointer(&path));
+                g_print("IN_ATTRIB: ");
+            }
+            else if (event->mask & IN_MOVED_FROM) {
+                // TODO: add to pending moves
+                g_print("IN_MOVED_FROM: ");
+            }
+            else if (event->mask & IN_MOVED_TO) {
+                // TODO: find corresponding pending move
+                g_print("IN_MOVED_TO: ");
+            }
+            else if (event->mask & IN_DELETE) {
+                work = fsearch_database_work_new_monitor_event(self,
+                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
+                                                               entry,
+                                                               g_steal_pointer(&path));
+                g_print("IN_DELETE: ");
+            }
+            else if (event->mask & IN_CREATE) {
+                work = fsearch_database_work_new_monitor_event(self,
+                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED,
+                                                               entry,
+                                                               g_steal_pointer(&path));
+                g_print("IN_CREATE: ");
+            }
+            else if (event->mask & IN_DELETE_SELF) {
+                work = fsearch_database_work_new_monitor_event(self,
+                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
+                                                               entry,
+                                                               g_steal_pointer(&path));
+                g_print("IN_DELETE_SELF: ");
+            }
+            else if (event->mask & IN_UNMOUNT) {
+                g_print("IN_UNMOUNT: ");
+            }
+            else if (event->mask & IN_MOVE_SELF) {
+                g_print("IN_MOVE_SELF: ");
+            }
+            else if (event->mask & IN_CLOSE_WRITE) {
+                work = fsearch_database_work_new_monitor_event(self,
+                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CHANGED,
+                                                               entry,
+                                                               g_steal_pointer(&path));
+                g_print("IN_CLOSE_WRITE: ");
+            }
+            else {
+                continue;
+            }
+
+            /* Print the name of the watched directory. */
+
+            // for (int i = 1; i < argc; ++i) {
+            //     if (wd[i] == event->wd) {
+            //         g_print("%s/", argv[i]);
+            //         break;
+            //     }
+            // }
+
+            /* Print type of filesystem object. */
+
+            if (event->mask & IN_ISDIR) {
+                g_print(" [directory]\n");
+            }
+            else {
+                g_print(" [file]\n");
+            }
+            if (work && self->event_func) {
+                // self->event_func(self, , self->event_user_data);
+            }
+        }
+    }
+    return G_SOURCE_CONTINUE;
 }
 
 FsearchDatabaseIndex *
@@ -68,6 +216,13 @@ fsearch_database_index_new(uint32_t id,
     self->folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                                 db_entry_get_sizeof_folder_entry(),
                                                 (GDestroyNotify)db_entry_destroy);
+
+    self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
+    self->pending_moves = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
+    self->inotify_fd = inotify_init1(IN_NONBLOCK);
+    self->monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
+    g_source_set_callback(self->monitor_source, (GSourceFunc)inotify_events_cb, self, NULL);
+    g_source_attach(self->monitor_source, NULL);
 
     self->ref_count = 1;
 
@@ -187,6 +342,7 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
 FsearchDatabaseEntryFolder *
 fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
                                   const char *name,
+                                  const char *path,
                                   time_t mtime,
                                   FsearchDatabaseEntryFolder *parent) {
     g_return_val_if_fail(self, NULL);
@@ -196,6 +352,9 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
     db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
     db_entry_set_mtime(entry, mtime);
     db_entry_set_parent(entry, parent);
+
+    const uint32_t wd = inotify_add_watch(self->inotify_fd, path, INOTIFY_FOLDER_MASK);
+    g_hash_table_insert(self->watch_descriptors, GINT_TO_POINTER(wd), entry);
 
     darray_add_item(self->folders, entry);
 

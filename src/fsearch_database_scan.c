@@ -115,7 +115,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         if (is_dir) {
             db_folder_scan_recursive(
                 walk_context,
-                fsearch_database_index_add_folder(walk_context->index, dent->d_name, st.st_mtime, parent));
+                fsearch_database_index_add_folder(walk_context->index, dent->d_name, path->str, st.st_mtime, parent));
         }
         else {
             fsearch_database_index_add_file(walk_context->index, dent->d_name, st.st_size, st.st_mtime, parent);
@@ -131,7 +131,9 @@ db_scan_folder(FsearchDatabaseInclude *include,
                FsearchDatabaseExcludeManager *exclude_manager,
                FsearchDatabaseIndexPropertyFlags flags,
                GCancellable *cancellable,
-               void (*status_cb)(const char *)) {
+               void (*status_cb)(const char *),
+               FsearchDatabaseIndexEventFunc event_func,
+               gpointer event_func_user_data) {
     const char *directory_path = fsearch_database_include_get_path(include);
     g_assert(g_path_is_absolute(directory_path));
     g_debug("[db_scan] scan path: %s", directory_path);
@@ -155,8 +157,12 @@ db_scan_folder(FsearchDatabaseInclude *include,
         g_debug("[db_scan] can't stat: %s", directory_path);
     }
 
-    g_autoptr(FsearchDatabaseIndex) index =
-        fsearch_database_index_new(fsearch_database_include_get_id(include), include, exclude_manager, flags, NULL, NULL);
+    g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(fsearch_database_include_get_id(include),
+                                                                       include,
+                                                                       exclude_manager,
+                                                                       flags,
+                                                                       event_func,
+                                                                       event_func_user_data);
 
     DatabaseWalkContext walk_context = {
         .index = index,
@@ -169,7 +175,8 @@ db_scan_folder(FsearchDatabaseInclude *include,
         .root_device_id = root_st.st_dev,
     };
 
-    uint32_t res = db_folder_scan_recursive(&walk_context, fsearch_database_index_add_folder(index, path->str, 0, NULL));
+    uint32_t res = db_folder_scan_recursive(&walk_context,
+                                            fsearch_database_index_add_folder(index, path->str, path->str, 0, NULL));
 
     if (res == WALK_OK) {
         // g_debug("[db_scan] scanned: %d files, %d folders -> %d total",
@@ -192,13 +199,16 @@ FsearchDatabaseIndexStore *
 db_scan2(FsearchDatabaseIncludeManager *include_manager,
          FsearchDatabaseExcludeManager *exclude_manager,
          FsearchDatabaseIndexPropertyFlags flags,
-         GCancellable *cancellable) {
+         GCancellable *cancellable,
+         FsearchDatabaseIndexEventFunc event_func,
+         gpointer event_func_user_data) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(flags);
 
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        g_autoptr(FsearchDatabaseIndex) index = db_scan_folder(include, exclude_manager, flags, cancellable, NULL);
+        g_autoptr(FsearchDatabaseIndex)
+            index = db_scan_folder(include, exclude_manager, flags, cancellable, NULL, event_func, event_func_user_data);
         if (index) {
             fsearch_database_index_store_add(store, index);
         }

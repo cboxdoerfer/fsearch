@@ -20,6 +20,7 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
     FSEARCH_DATABASE_WORK_MODIFY_SELECTION,
+    FSEARCH_DATABASE_WORK_MONITOR_EVENT,
     NUM_FSEARCH_DATABASE_WORK_KINDS,
 } FsearchDatabaseWorkKind;
 
@@ -57,6 +58,12 @@ fsearch_database_work_new_load(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_save(void);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
+                                        FsearchDatabaseIndexEventKind event_kind,
+                                        FsearchDatabaseEntry *parent,
+                                        GString *path);
 
 FsearchDatabaseWorkKind
 fsearch_database_work_get_kind(FsearchDatabaseWork *work);
