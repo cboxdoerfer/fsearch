@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-12-18 17:51+0000\n"
+"PO-Revision-Date: 2023-02-25 21:38+0000\n"
 "Last-Translator: Edward <edwardchirita@mailbox.org>\n"
 "Language-Team: Romanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ro/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n==1 ? 0 : (n==0 || (n%100 > 0 && n%100 < "
 "20)) ? 1 : 2;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.16-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -35,10 +35,12 @@ msgstr ""
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"cautare;fsearch;fisiere;foldere;muzica;video;documente;gasire;unelte;everythi"
+"ng;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
 msgid "File Search Utility"
-msgstr ""
+msgstr "Utilitate de căutare a fișierelor"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
@@ -54,16 +56,12 @@ msgstr ""
 "vor apărea aproape instantaneu."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
-#, fuzzy
-#| msgid ""
-#| "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as "
-#| "well)"
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
-"Ignorare majuscule (de exemplu, dacă se caută \"fsearch\", se va găsi și "
-"\"FSearch\")"
+"Ignorare majuscule (de exemplu, dacă se caută \"<code>fsearch</code>\", se "
+"va găsi și \"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -87,16 +85,12 @@ msgstr ""
 "Sortare rapidă după nume, cale, dimensiune, timp de modificare și extensie"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
-#, fuzzy
-#| msgid ""
-#| "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
-#| "system."
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
-"Notă: Din cauza sandboxing-ului Flatpak, FSearch nu poate găsi toate "
-"fișierele de pe sistemul dvs."
+"<em>Observație:</em>: Din cauza sandboxing-ului Flatpak, FSearch nu poate "
+"găsi toate fișierele de pe sistemul dvs."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
@@ -107,56 +101,44 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "O dispunere mai apropiată de HIG-urile GNOME"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
-#| msgid "Search"
 msgid "search"
-msgstr "Căutare"
+msgstr "cautare"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "Căutare"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "Files"
 msgid "files"
-msgstr "Fișiere"
+msgstr "fisiere"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "Foldere"
+msgstr "foldere"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "muzica"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "Videoclipuri"
+msgstr "videoclipuri"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
-msgstr "Documente"
+msgstr "documente"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "gasire"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "unelte"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "everything"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -165,106 +147,116 @@ msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
 msgid "New search engine"
-msgstr ""
+msgstr "Motor de căutare nou"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
-#| msgid "Show highlighted search terms"
 msgid "Greatly improved highlighting of search terms"
-msgstr "Se evidențiază termenii de căutare"
+msgstr "S-a îmbunătățit evidențierea termenilor de căutare"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
-#, fuzzy
-#| msgid "Edit filter"
 msgid "Custom filters"
-msgstr "Editare flitru"
+msgstr "Filtre particularizate"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Performanță de sortare îmbunătățită"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Performanță de derulare îmbunătățită"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "Se reține selecția elementelor după actualizarea bazei de date"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr ""
+msgstr "Se derulează automat lista de rezultate în modul de selecție elastică"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
+"Se inversează selecția în modul elastic atunci când CTRL este ținut apăsat"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
 msgstr ""
+"Se focalizează intrarea de căutare atunci când se activează fereastra "
+"principală"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Adăugați un filtru pentru aplicații (ex. fișiere .desktop)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
+"Adăugați opțiunea de a lansa direct aplicațiile în loc să deschideți "
+"fișierele .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Afișați preferințele aplicației"
+msgstr "Afișați pictogramele aplicațiilor pentru fișierele .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Adăugați fișiere .odp și .ods la filtrul de documente"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"Meniul \"Deschidere cu\" afișează acum numai aplicațiile care pot gestiona "
+"fișierele selectate"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
+"S-a îmbunătățit deschiderea a mai multor fișiere de același tip (acum sunt "
+"transmise ca o listă către aplicații, în loc de unul câte unul)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "Suport mai bun pentru deschiderea fișierelor în modul sandboxed"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
+"S-au adăugat elemente de meniu cu link-uri către trackerul de probleme, "
+"forum și pagina de donație"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "S-a îmbunătățit suportul pentru sisteme non-Linux"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
+"S-a adăugat opțiunea de a închide FSearch când se apasă ESC în loc de a "
+"minimiza fereastra"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "Se exclude '/proc' și '/sys' în mod implicit"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
+"Se deschide meniul de context când se apasă tasta 'Menu' sau 'Shift + F10'"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
+"și o mulțime de corecturi de erori, actualizări de traduceri și îmbunătățiri "
+"mai mici"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
@@ -327,12 +319,9 @@ msgid "Failed to get path"
 msgstr "Nu s-a putut obține calea"
 
 #: src/fsearch_file_utils.c:253
-#, fuzzy
-#| msgctxt "Will be followed by the content type string."
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "Eroare la obținerea informațiilor privind tipul de conținut"
+msgstr "Eroare la obținerea informațiilor din fișier"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
@@ -696,7 +685,7 @@ msgstr "minut(e)"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "Introduceți calea…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
@@ -709,39 +698,39 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1124 src/fsearch_preferences.ui:1272
 msgid "Remove selected path"
-msgstr ""
+msgstr "Eliminiați calea selectată"
 
 #: src/fsearch_preferences.ui:1150
 msgid "Include"
-msgstr ""
+msgstr "Se include"
 
 #: src/fsearch_preferences.ui:1256
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Adăugați calea de exclus din baza de date"
 
 #: src/fsearch_preferences.ui:1308 src/fsearch_preferences.ui:1321
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr ""
+msgstr "Se acceptă wildcards. Intrările multiple sunt separate cu ';'"
 
 #: src/fsearch_preferences.ui:1309
 msgid "Exclude files:"
-msgstr ""
+msgstr "Se exclud fișierele:"
 
 #: src/fsearch_preferences.ui:1322
 msgid "e.g. \".git;*.tmp\""
-msgstr ""
+msgstr "ex. \".git;*.tmp\""
 
 #: src/fsearch_preferences.ui:1339
 msgid "Exclude hidden files and folders"
-msgstr ""
+msgstr "Se exclud fișierele și folderele ascunse"
 
 #: src/fsearch_preferences.ui:1361
 msgid "Exclude"
-msgstr ""
+msgstr "Se exclude"
 
 #: src/fsearch_preferences.ui:1384
 msgid "Database"
-msgstr ""
+msgstr "Baza de date"
 
 #: src/fsearch_preferences.ui:1416
 msgid ""
@@ -753,6 +742,15 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Activați tema înunecată:</b>\n"
+"\n"
+"Dacă este activată, tema de sistem este solicitată să folosească un stil mai "
+"întunecat pentru aplicație <i>(de ex. elemente întunecate ale interfeței cu "
+"text luminos)</i>.\n"
+"\n"
+"Rețineți că nu toate temele de sistem oferă o astfel de variantă mai "
+"întunecată, prin urmare, activarea acestei setări ar putea să nu aibă niciun "
+"efect."
 
 #: src/fsearch_preferences.ui:1434
 msgid ""
@@ -766,6 +764,15 @@ msgid ""
 "This resembles a more traditional UI layout and takes a little bit more "
 "space."
 msgstr ""
+"<b>Activați decorațiunile de client:</b>\n"
+"\n"
+"Dacă este activată, intrarea de căutare și meniul principal sunt afișate în "
+"bara de titlu a ferestrei.\n"
+"\n"
+"Dacă este dezactivată, meniul principal este afișat ca o bară de meniu, cu "
+"intrarea de căutare sub ea.\n"
+"Acest lucru seamănă cu o dispunere mai tradițională a interfeței de "
+"utilizator și ocupă ceva mai mult spațiu."
 
 #: src/fsearch_preferences.ui:1454
 msgid ""
@@ -778,6 +785,15 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Folosiți unitățile binare în loc de unitățile decimale:</b>\n"
+"\n"
+"Aceste setări controlează modul în care sunt afișate dimensiunile fișierelor."
+"\n"
+"\n"
+"\t• <b>Unități binare:</b> Aceasta se referă la prefixele binare IEC <i>(ex. "
+"1 KiB = 1024 baiți)</i>\n"
+"\t• <b>Unități  decimale:</b> Aceasta se referă la prefixele decimale în SI "
+"<i>(ex. 1 kB = 1000 baiți)</i>"
 
 #: src/fsearch_preferences.ui:1474
 msgid ""
@@ -789,6 +805,13 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Rețineți dimensiunea ferestrei:</b>\n"
+"\n"
+"Dacă este activată, dimensiunea ferestrei din sesiunea anterioară va fi "
+"restabilită atunci când deschideți o fereastră FSearch.\n"
+"\n"
+"Rețineți că unii manageri de ferestre ignoră această cerere și forțează "
+"fereastra să aibă o dimensiune diferită."
 
 #: src/fsearch_preferences.ui:1493
 msgid ""
@@ -806,6 +829,19 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>Comportamentul după deschiderea cu succes a unui fișier:</b>\n"
+"\n"
+"Atunci când un fișier/folder a fost deschis cu succes, se poate efectua una "
+"dintre următoarele acțiuni:\n"
+"\t• <b>Nimic:</b> Nu se întâmplă nimic.\n"
+"\t• <b>Minimizare:</b> Fereastra FSearch selectată în prezent este "
+"minimizată. \n"
+"\t• <b>Închidere:</b> Se închide FSearch.\n"
+"\n"
+"Puteți configura dacă aceste acțiuni trebuie să fie declanșate atunci când "
+"fișierul a fost deschis cu\n"
+"\t• <b>scurtături de la tastatură sau intrări de meniu</b> și/sau\n"
+"\t• <b>clic de mouse</b>"
 
 #: src/fsearch_preferences.ui:1517
 msgid ""
@@ -821,6 +857,18 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
+"<b>Afișați termenii de căutare evidențiați:</b>\n"
+"\n"
+"Dacă este activat, termenii de căutare vor fi evidențiați în secțiunea de "
+"rezultate. De exemplu, atunci când căutați „foo”, toate aparițiile de "
+"<i>foo</i> în numele fișierelor/folderelor vor fi evidențiate cu caractere "
+"îngroșate:\n"
+"\n"
+"\t<b>foo</b>bar.txt\n"
+"\tfile.<b>foo</b>\n"
+"\n"
+"Aceasta funcționează, de asemenea, pentru expresii regulate și expresii "
+"wildcard care încep sau se termină cu un asterisc. "
 
 #: src/fsearch_preferences.ui:1539
 msgid ""
@@ -829,6 +877,10 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b>Afișați indicii:</b>\n"
+"\n"
+"Dacă este activată, vizualizarea rezultatelor va afișa calea completă a fiș"
+"ierului/folderului vizat într-o mică fereastră de tip tooltip."
 
 #: src/fsearch_preferences.ui:1556
 msgid ""
@@ -836,6 +888,10 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Afișați pictograma în coloana de nume:</b>\n"
+"\n"
+"Dacă este activată, pictogramele fișierelor/folderelor vor fi afișate în "
+"coloana de nume."
 
 #: src/fsearch_preferences.ui:1573
 msgid ""
@@ -845,6 +901,11 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>Rețineți configurația coloanelor:</b>\n"
+"\n"
+"Dacă este activată, configurația coloanelor din vizualizarea rezultatelor "
+"din sesiunea anterioară va fi restaurată atunci când deschideți o fereastră "
+"FSearch. Aceasta include dimensiunea și vizibilitatea tuturor coloanelor."
 
 #: src/fsearch_preferences.ui:1590
 msgid ""
@@ -853,6 +914,11 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Rețineți ordinea de sortare:</b>\n"
+"\n"
+"Dacă este activată, ordinea de sortare a vizualizării rezultatelor din "
+"sesiunea anterioară va fi restaurată atunci când deschideți o fereastră "
+"FSearch."
 
 #: src/fsearch_preferences.ui:1607
 msgid ""
@@ -860,6 +926,10 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>Deschideți calea printr-un dublu clic în coloana de cale:</b>\n"
+"\n"
+"Dacă este activată, când se face dublu clic în coloana de cale, se va "
+"deschide calea selectat."
 
 #: src/fsearch_preferences.ui:1624
 msgid ""
@@ -869,6 +939,12 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to hold "
 "<i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>Un singur clic pentru a deschide:</b>\n"
+"\n"
+"Dacă este activată, un singur clic va deschide fișierul/folderul selectat. "
+"Dacă doriți doar să selectați un fișier/folder cât timp această setare este "
+"activă, trebuie să țineți apăsat <i>Ctrl</i> în timp ce selectați fișierul/"
+"folderul."
 
 #: src/fsearch_preferences.ui:1641
 msgid ""
@@ -877,6 +953,10 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>Se afișează statusul de indexare al bazei de date:</b>\n"
+"\n"
+"If enabled, the path that is currently being indexed is displayed in the "
+"statusbar."
 
 #: src/fsearch_preferences.ui:1658
 msgid ""
