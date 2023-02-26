@@ -267,6 +267,34 @@ darray_add_item(DynamicArray *array, void *data) {
 }
 
 void
+darray_insert_item(DynamicArray *array, void *data, uint32_t index) {
+    g_assert(array);
+    g_assert(array->data);
+    if (index > array->num_items) {
+        index = array->num_items;
+    }
+
+    if (array->num_items >= array->max_items) {
+        darray_expand(array, array->num_items + 1);
+    }
+
+    memmove(array->data + index + 1, array->data + index, (array->num_items - index) * sizeof(void *));
+    array->data[index] = data;
+    array->num_items++;
+}
+
+void
+darray_insert_item_sorted(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data) {
+    g_assert(array);
+    g_assert(array->data);
+
+    uint32_t insert_at = 0;
+    darray_binary_search_with_data(array, item, compare_func, data, &insert_at);
+
+    darray_insert_item(array, item, insert_at);
+}
+
+void
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
     g_assert(array);
     g_assert(array->data);
@@ -492,41 +520,44 @@ darray_binary_search_with_data(DynamicArray *array,
     g_assert(comp_func);
 
     if (array->num_items <= 0) {
+        if (matched_index != NULL) {
+            *matched_index = 0;
+        }
         return false;
     }
 
-    bool result = false;
-
-    uint32_t left = 0;
-    uint32_t middle = 0;
-    uint32_t right = array->num_items - 1;
+    int32_t left = 0;
+    int32_t middle = 0;
+    int32_t right = (int32_t)array->num_items - 1;
 
     while (left <= right) {
         middle = left + (right - left) / 2;
 
         int32_t match = comp_func(&array->data[middle], &item, data);
         if (match == 0) {
-            result = true;
-            break;
+            // We've found an exact match
+            if (matched_index) {
+                *matched_index = middle;
+            }
+            return true;
         }
         else if (match < 0) {
+            // item is to the right of middle
             left = middle + 1;
         }
-        else if (middle > 0) {
-            // match > 0
-            // This means the item is to the left of middle
-            // If middle == 0 then the item is not in the array
-            right = middle - 1;
-        }
         else {
-            break;
+            // item is to the left of middle
+            right = middle - 1;
         }
     }
 
-    if (result && matched_index != NULL)
-        *matched_index = middle;
+    // No match found
+    // set matched_index to left, i.e. the first index which is greater than our item
+    if (matched_index != NULL) {
+        *matched_index = left;
+    }
 
-    return result;
+    return false;
 }
 
 DynamicArray *

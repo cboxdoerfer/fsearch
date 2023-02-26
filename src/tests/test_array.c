@@ -133,7 +133,11 @@ static int32_t
 sort_version(void **a, void **b, void *data) {
     Version *v1 = *a;
     Version *v2 = *b;
-    return v1->major - v2->major;
+    int res = v1->major - v2->major;
+    if (res != 0) {
+        return res;
+    }
+    return v1->minor - v2->minor;
 }
 
 static void
@@ -211,10 +215,74 @@ test_remove(void) {
     g_assert_true(darray_get_num_items(array) == 1);
 }
 
+static void
+test_insert(void) {
+    const int32_t upper_limit = 10;
+    g_autoptr(DynamicArray) array = darray_new(upper_limit);
+    for (int32_t i = 0; i < upper_limit; ++i) {
+        darray_insert_item(array, GINT_TO_POINTER(i), i);
+    }
+    g_assert_cmpint(upper_limit, ==, darray_get_num_items(array));
+    for (int32_t i = 0; i < upper_limit; ++i) {
+        int32_t j = GPOINTER_TO_INT(darray_get_item(array, i));
+        g_assert_cmpint(i, ==, j);
+    }
+
+    darray_insert_item(array, GINT_TO_POINTER(42), 0);
+    g_assert_cmpint(42, ==, GPOINTER_TO_INT(darray_get_item(array, 0)));
+    g_assert_cmpint(upper_limit + 1, ==, darray_get_num_items(array));
+
+    darray_insert_item(array, GINT_TO_POINTER(21), darray_get_num_items(array));
+    g_assert_cmpint(21, ==, GPOINTER_TO_INT(darray_get_item(array, darray_get_num_items(array) - 1)));
+    g_assert_cmpint(upper_limit + 2, ==, darray_get_num_items(array));
+}
+
+static void
+test_insert_sorted(void) {
+    Version versions[] = {
+        {3, 0},
+        {4, 1},
+        {4, 3},
+        {1, 5},
+        {1, 4},
+        {2, 6},
+        {0, 7},
+        {2, 8},
+        {1, 9},
+        {0, 9},
+        {0, 9},
+        {0, 9},
+        {4, 2},
+        {0, 9},
+        {0, 9},
+        {0, 9},
+    };
+
+    g_autoptr(DynamicArray) array_sorted_once = darray_new(10);
+    for (uint32_t i = 0; i < G_N_ELEMENTS(versions); i++) {
+        darray_add_item(array_sorted_once, &versions[i]);
+    }
+    darray_sort(array_sorted_once, (DynamicArrayCompareDataFunc)sort_version, NULL, NULL);
+
+    g_autoptr(DynamicArray) array_insert_sorted = darray_new(10);
+    for (uint32_t i = 0; i < G_N_ELEMENTS(versions); i++) {
+        darray_insert_item_sorted(array_insert_sorted, &versions[i], (DynamicArrayCompareDataFunc)sort_version, NULL);
+    }
+
+    for (uint32_t i = 0; i < G_N_ELEMENTS(versions); i++) {
+        Version *v1 = darray_get_item(array_sorted_once, i);
+        Version *v2 = darray_get_item(array_insert_sorted, i);
+        g_assert_cmpint(v1->major, ==, v2->major);
+        g_assert_cmpint(v1->minor, ==, v2->minor);
+    }
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
     g_test_add_func("/FSearch/array/main", test_main);
+    g_test_add_func("/FSearch/array/insert", test_insert);
+    g_test_add_func("/FSearch/array/insert_sorted", test_insert_sorted);
     g_test_add_func("/FSearch/array/remove", test_remove);
     g_test_add_func("/FSearch/array/sort", test_sort);
     g_test_add_func("/FSearch/array/search", test_search);
