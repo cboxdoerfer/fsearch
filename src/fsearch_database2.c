@@ -529,6 +529,42 @@ select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int32_t end_idx
 }
 
 static void
+process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+    g_return_if_fail(self);
+    g_return_if_fail(work);
+
+    const FsearchDatabaseIndexEventKind event_kind = fsearch_database_work_monitor_event_get_kind(work);
+    GString *path = fsearch_database_work_monitor_event_get_path(work);
+    FsearchDatabaseIndex *index = fsearch_database_work_monitor_event_get_index(work);
+    FsearchDatabaseEntry *entry = fsearch_database_work_monitor_event_get_parent(work);
+
+    switch (event_kind) {
+    case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_STARTED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_MOVED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CHANGED:
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_ATTRIBUTE_CHANGED:
+        break;
+    case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
+        break;
+    }
+}
+
+static void
 modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
@@ -737,9 +773,7 @@ work_queue_thread(gpointer data) {
     FsearchDatabase2 *self = data;
 
     while (TRUE) {
-        if (!g_async_queue_timeout_pop(self->work_trigger_queue, 1000000)) {
-            continue;
-        }
+        g_async_queue_timeout_pop(self->work_trigger_queue, 1000000);
 
         while (TRUE) {
             g_autoptr(FsearchDatabaseWork) work = g_async_queue_try_pop(self->work_queue);
@@ -783,6 +817,9 @@ work_queue_thread(gpointer data) {
                 break;
             case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
                 modify_selection(self, work);
+                break;
+            case FSEARCH_DATABASE_WORK_MONITOR_EVENT:
+                process_monitor_event(self, work);
                 break;
             default:
                 g_assert_not_reached();

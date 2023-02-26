@@ -94,29 +94,26 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
 
             /* Print event type. */
 
-            g_autoptr(FsearchDatabaseWork) work = NULL;
-
-            g_autoptr(GString) path = NULL;
-            FsearchDatabaseEntry *entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
-            if (!entry) {
+            FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors,
+                                                                      GINT_TO_POINTER(event->wd));
+            if (!watched_entry) {
                 g_debug("no entry for watch descriptor not in hash table!!!");
+                return G_SOURCE_REMOVE;
             }
 
+            g_autoptr(GString) path = NULL;
             if (event->len) {
-                path = db_entry_get_path_full(entry);
+                path = db_entry_get_path_full(watched_entry);
                 g_string_append_c(path, G_DIR_SEPARATOR);
                 g_string_append(path, event->name);
             }
 
+            FsearchDatabaseIndexEventKind event_kind = NUM_FSEARCH_DATABASE_INDEX_EVENTS;
             if (event->mask & IN_MODIFY) {
                 g_print("IN_MODIFY: ");
             }
             else if (event->mask & IN_ATTRIB) {
-                work = fsearch_database_work_new_monitor_event(self,
-                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_ATTRIBUTE_CHANGED,
-                                                               entry,
-                                                               g_steal_pointer(&path));
-                g_print("IN_ATTRIB: ");
+                event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_ATTRIBUTE_CHANGED;
             }
             else if (event->mask & IN_MOVED_FROM) {
                 // TODO: add to pending moves
@@ -127,25 +124,13 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 g_print("IN_MOVED_TO: ");
             }
             else if (event->mask & IN_DELETE) {
-                work = fsearch_database_work_new_monitor_event(self,
-                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
-                                                               entry,
-                                                               g_steal_pointer(&path));
-                g_print("IN_DELETE: ");
+                event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED;
             }
             else if (event->mask & IN_CREATE) {
-                work = fsearch_database_work_new_monitor_event(self,
-                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED,
-                                                               entry,
-                                                               g_steal_pointer(&path));
-                g_print("IN_CREATE: ");
+                event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED;
             }
             else if (event->mask & IN_DELETE_SELF) {
-                work = fsearch_database_work_new_monitor_event(self,
-                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
-                                                               entry,
-                                                               g_steal_pointer(&path));
-                g_print("IN_DELETE_SELF: ");
+                event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED;
             }
             else if (event->mask & IN_UNMOUNT) {
                 g_print("IN_UNMOUNT: ");
@@ -154,35 +139,21 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 g_print("IN_MOVE_SELF: ");
             }
             else if (event->mask & IN_CLOSE_WRITE) {
-                work = fsearch_database_work_new_monitor_event(self,
-                                                               FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CHANGED,
-                                                               entry,
-                                                               g_steal_pointer(&path));
-                g_print("IN_CLOSE_WRITE: ");
+                event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CHANGED;
             }
             else {
                 continue;
             }
 
-            /* Print the name of the watched directory. */
-
-            // for (int i = 1; i < argc; ++i) {
-            //     if (wd[i] == event->wd) {
-            //         g_print("%s/", argv[i]);
-            //         break;
-            //     }
+            // if (event->mask & IN_ISDIR) {
+            //     g_print(" [directory]\n");
             // }
-
-            /* Print type of filesystem object. */
-
-            if (event->mask & IN_ISDIR) {
-                g_print(" [directory]\n");
-            }
-            else {
-                g_print(" [file]\n");
-            }
-            if (work && self->event_func) {
-                // self->event_func(self, , self->event_user_data);
+            // else {
+            //     g_print(" [file]\n");
+            // }
+            if (event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->event_func) {
+                g_print("call event func\n");
+                self->event_func(self, event_kind, watched_entry, g_steal_pointer(&path), self->event_user_data);
             }
         }
     }

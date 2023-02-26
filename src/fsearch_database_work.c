@@ -31,7 +31,7 @@ struct FsearchDatabaseWork {
         };
         // FSEARCH_DATABASE_WORK_MONITOR_EVENT
         struct {
-            FsearchDatabaseIndex *monitoring_index;
+            FsearchDatabaseIndex *monitored_index;
             FsearchDatabaseIndexEventKind event_kind;
             FsearchDatabaseEntry *parent;
             GString *path;
@@ -80,7 +80,7 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
         break;
     case FSEARCH_DATABASE_WORK_MONITOR_EVENT:
-        g_clear_pointer(&work->monitoring_index, fsearch_database_index_unref);
+        g_clear_pointer(&work->monitored_index, fsearch_database_index_unref);
         g_string_free(g_steal_pointer(&work->path), TRUE);
         break;
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
@@ -206,7 +206,7 @@ fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_MONITOR_EVENT;
 
-    work->monitoring_index = fsearch_database_index_ref(index);
+    work->monitored_index = fsearch_database_index_ref(index);
     work->event_kind = event_kind;
     work->path = path;
     work->parent = parent;
@@ -331,4 +331,36 @@ fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NUM_FSEARCH_SELECTION_TYPES);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, NUM_FSEARCH_SELECTION_TYPES);
     return work->selection_type;
+}
+
+FsearchDatabaseIndexEventKind
+fsearch_database_work_monitor_event_get_kind(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NUM_FSEARCH_DATABASE_INDEX_EVENTS);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NUM_FSEARCH_DATABASE_INDEX_EVENTS);
+
+    return work->event_kind;
+}
+
+GString *
+fsearch_database_work_monitor_event_get_path(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
+
+    return work->path;
+}
+
+FsearchDatabaseEntry *
+fsearch_database_work_monitor_event_get_parent(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
+
+    return work->parent;
+}
+
+FsearchDatabaseIndex *
+fsearch_database_work_monitor_event_get_index(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
+
+    return work->monitored_index;
 }

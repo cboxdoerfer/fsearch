@@ -116,4 +116,16 @@ fsearch_database_work_item_info_get_index(FsearchDatabaseWork *work);
 FsearchDatabaseEntryInfoFlags
 fsearch_database_work_item_info_get_flags(FsearchDatabaseWork *work);
 
+FsearchDatabaseIndexEventKind
+fsearch_database_work_monitor_event_get_kind(FsearchDatabaseWork *work);
+
+GString *
+fsearch_database_work_monitor_event_get_path(FsearchDatabaseWork *work);
+
+FsearchDatabaseEntry *
+fsearch_database_work_monitor_event_get_parent(FsearchDatabaseWork *work);
+
+FsearchDatabaseIndex *
+fsearch_database_work_monitor_event_get_index(FsearchDatabaseWork *work);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseWork, fsearch_database_work_unref)
