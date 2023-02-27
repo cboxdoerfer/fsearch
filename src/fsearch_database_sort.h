@@ -20,3 +20,6 @@ fsearch_database_sort(DynamicArray **files_store,
                       DynamicArray **folders_store,
                       FsearchDatabaseIndexPropertyFlags flags,
                       GCancellable *cancellable);
+
+DynamicArrayCompareDataFunc
+fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property);

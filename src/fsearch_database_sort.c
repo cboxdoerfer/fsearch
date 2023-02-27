@@ -290,3 +290,63 @@ fsearch_database_sort(DynamicArray **files_store,
 
     return true;
 }
+
+static int
+compare_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const int res = db_entry_compare_entries_by_name(a, b);
+    if (G_LIKELY(res != 0)) {
+        return res;
+    }
+    else {
+        return db_entry_compare_entries_by_path(a, b);
+    }
+}
+
+static int
+compare_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const int res = db_entry_compare_entries_by_size(a, b);
+    if (G_LIKELY(res != 0)) {
+        return res;
+    }
+    return compare_by_name(a, b);
+}
+
+static int
+compare_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const int res = db_entry_compare_entries_by_modification_time(a, b);
+    if (G_LIKELY(res != 0)) {
+        return res;
+    }
+    else {
+        return compare_by_name(a, b);
+    }
+}
+
+static int
+compare_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    const int res = db_entry_compare_entries_by_extension(a, b);
+    if (G_LIKELY(res != 0)) {
+        return res;
+    }
+    else {
+        return compare_by_name(a, b);
+    }
+}
+
+DynamicArrayCompareDataFunc
+fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property) {
+    switch (property) {
+    case DATABASE_INDEX_PROPERTY_NAME:
+        return (DynamicArrayCompareDataFunc)compare_by_name;
+    case DATABASE_INDEX_PROPERTY_PATH:
+        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
+    case DATABASE_INDEX_PROPERTY_SIZE:
+        return (DynamicArrayCompareDataFunc)compare_by_size;
+    case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
+        return (DynamicArrayCompareDataFunc)compare_by_modification_time;
+    case DATABASE_INDEX_PROPERTY_EXTENSION:
+        return (DynamicArrayCompareDataFunc)compare_by_extension;
+    default:
+        return NULL;
+    }
+}
