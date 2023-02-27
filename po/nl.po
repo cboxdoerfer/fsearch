@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-02-26 23:39+0000\n"
+"PO-Revision-Date: 2023-02-28 08:40+0000\n"
 "Last-Translator: Didier Sandra <didier.mg.sandra@skynet.be>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -170,74 +170,87 @@ msgstr "Resultatenlijst automatisch scrollen in de rubberband selectiemodus"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "Selectie omkeren met rubberband wanneer 'Ctrl' ingedrukt is"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "Zoekveld samen met het hoofdvenster activeren"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Filter toevoegen voor toepassingen (d.w.z. .desktop bestanden)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
+"Een optie toevoegen die toepassingen rechtsreeks start in plaats van gebruik "
+"te maken van .desktop bestanden"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Toepassingsvoorkeuren openen"
+msgstr "Toepassingspictogrammen tonen voor .desktop bestanden"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Voeg .odp en .ods bestanden toe aan het documentenfilter"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"'Openen met' menu toont nu enkel toepassingen die de geselecteerde bestanden "
+"kunnen behandelen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
+"Verbeterd openen van meerdere bestanden van hetzelfde type (deze worden nu "
+"als een lijst doorgegeven aan toepassingen, in plaats van één voor één)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
 msgstr ""
+"Betere ondersteuning voor openen van bestanden in een afgesloten omgeving "
+"(sandboxed)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
+"Menu onderdelen toevoegen met koppelingen naar de issue tracker, het forum "
+"en de donatiepagina's"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Verbeter ondersteuning voor niet-Linux systemen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
+"Optie toevoegen die FSearch afsluit wanneer Escape ingedrukt is in plaats "
+"van het venster minimaliseren"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "Sluit '/proc' en '/sys' standaard uit"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
+"Contextmenu openen wanneer de 'Menu' toets of 'Shift + F10' ingedrukt worden"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
+"en massa's opgeloste programmeerfouten, bijgewerkte vertalingen en kleinere "
+"verbeteringen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
@@ -249,7 +262,9 @@ msgstr "Bezig met opslaan…"
 
 #: src/fsearch.c:435
 msgid "translator-credits"
-msgstr "Heimen Stoffels"
+msgstr ""
+"Heimen Stoffels\n"
+"Didier Sandra"
 
 #: src/fsearch.c:437
 msgid "A search utility focusing on performance and advanced features"
@@ -312,7 +327,7 @@ msgstr "Er kan geen toepassingsinformatie worden getoond"
 #: src/fsearch_file_utils.c:270
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr "Er kan geen bestandsinformatie worden opgevraagd"
+msgstr "Er kan geen informatie over het type inhoud worden opgevraagd"
 
 #: src/fsearch_file_utils.c:272
 msgid "No default application registered"
@@ -461,7 +476,7 @@ msgstr "Bezig met laden van databank…"
 
 #: src/fsearch_overlay.ui:123
 msgid "This won't take long."
-msgstr "Dit kan even duren."
+msgstr "Dit gaat niet lang duren."
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
@@ -513,7 +528,7 @@ msgstr "Vensterafmetingen onthouden"
 
 #: src/fsearch_preferences.ui:203
 msgid "Exit on Escape"
-msgstr "Afsluiten met escape"
+msgstr "Afsluiten met Escape"
 
 #: src/fsearch_preferences.ui:240
 msgid "with keyboard shortcuts or menu entries"
@@ -623,7 +638,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:779
 msgid "Add new filter"
-msgstr "Filter toevoegen"
+msgstr "Nieuw filter toevoegen"
 
 #: src/fsearch_preferences.ui:795
 msgid "Remove selected filter"
@@ -667,7 +682,7 @@ msgstr "minute(n)"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "Pad invoeren…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
@@ -675,7 +690,7 @@ msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
-"Voeg doe op te nemen locatie toe\n"
+"Voeg de in de database op te nemen locatie toe\n"
 "                                "
 
 #: src/fsearch_preferences.ui:1124 src/fsearch_preferences.ui:1272
@@ -858,8 +873,8 @@ msgid ""
 msgstr ""
 "<b>Hulpballonnen tonen:</b>\n"
 "\n"
-"Schakel in om de volledige locatie in een geselecteerd(e) bestand/map in het "
-"resultatenvenster te tonen in een kleine hulpballon."
+"Schakel in om de volledige locatie van een geselecteerd(e) bestand/map in "
+"het resultatenvenster te tonen in een kleine hulpballon."
 
 #: src/fsearch_preferences.ui:1556
 msgid ""
@@ -1123,8 +1138,8 @@ msgstr ""
 "\n"
 "Dit is een puntkommagescheiden lijst met bestanden (of mappen) die je niet "
 "wilt opnemen in de databank. Voorbeeld: <i>.git;.cache;*.swp</i> sluit alle "
-"bestanden of mappen uit de <i>.git</i> of <i>.cache</i> heten of eindigen op "
-"<i>.swp</i>."
+"bestanden of mappen uit die <i>.git</i> of <i>.cache</i> heten of eindigen "
+"op <i>.swp</i>."
 
 #: src/fsearch_preferences.ui:1890
 msgid ""
@@ -1155,14 +1170,15 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
-"<b>Periodically update database at a specific time interval:</b>\n"
+"<b>Periodiek de database bijwerken naargelang een specifiek tijdinterval:</b>"
 "\n"
-"If enabled and as long as FSearch is running, the database will be updated "
-"periodically with the given time interval.\n"
 "\n"
-"If you want to update the database in the background, even when FSearch is "
-"not running, you should use tools like cron or systemd timers to "
-"periodically trigger the update with:\n"
+"Indien ingeschakeld en zolang FSearch draait, zal de database op gezette "
+"tijden worden bijgewerkt met het opgegeven tijdinterval.\n"
+"\n"
+"Als je de database op de achtergrond wilt bijwerken, zelfs wanneer FSearch "
+"afgesloten is, zou je gebruik kunnen maken van hulpmiddelen zoals cron of "
+"systemd timers om periodiek bijwerken te starten met:\n"
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 
