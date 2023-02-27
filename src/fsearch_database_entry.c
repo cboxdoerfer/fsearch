@@ -267,7 +267,13 @@ int
 db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     const off_t size_a = db_entry_get_size(*a);
     const off_t size_b = db_entry_get_size(*b);
-    return (size_a > size_b) ? 1 : -1;
+    if (size_a > size_b) {
+        return 1;
+    }
+    else if (size_a < size_b) {
+        return -1;
+    }
+    return 0;
 }
 
 static const char *
@@ -302,7 +308,15 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
 int
 db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    return ((*a)->mtime > (*b)->mtime) ? 1 : -1;
+    const time_t time_a = (*a)->mtime;
+    const time_t time_b = (*b)->mtime;
+    if (time_a > time_b) {
+        return 1;
+    }
+    else if (time_a < time_b) {
+        return -1;
+    }
+    return 0;
 }
 
 int
