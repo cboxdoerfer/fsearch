@@ -173,7 +173,7 @@ FsearchDatabaseEntry *
 db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char *name, FsearchDatabaseEntryType type) {
     g_return_val_if_fail(name, NULL);
     if (parent) {
-        g_return_val_if_fail(parent->type != DATABASE_ENTRY_TYPE_FOLDER, NULL);
+        g_return_val_if_fail(parent->type == DATABASE_ENTRY_TYPE_FOLDER, NULL);
     }
 
     FsearchDatabaseEntry *entry = calloc(1,
