@@ -25,6 +25,14 @@ fsearch_selection_select_toggle(GHashTable *selection, gpointer item) {
 }
 
 void
+fsearch_selection_unselect(GHashTable *selection, gpointer item) {
+    g_assert(selection);
+    g_assert(item);
+
+    g_hash_table_remove(selection, item);
+}
+
+void
 fsearch_selection_select(GHashTable *selection, gpointer item) {
     g_assert(selection);
     g_assert(item);
