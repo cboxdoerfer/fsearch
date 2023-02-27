@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-01-24 20:51+0000\n"
+"PO-Revision-Date: 2023-02-28 08:40+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -164,11 +164,11 @@ msgstr "ביצועי הגלילה השתפרו"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "לזכור את בחירת הקבצים אחרי עדכון מסד נתונים"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr ""
+msgstr "לגלול את רשימת התוצאות אוטומטית במצב בחירה גומייה"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
@@ -300,12 +300,9 @@ msgid "Failed to get path"
 msgstr "קבלת הנתיב נכשלה"
 
 #: src/fsearch_file_utils.c:253
-#, fuzzy
-#| msgctxt "Will be followed by the content type string."
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "שגיאה בקבלת מידע על סוג התוכן"
+msgstr "שגיאה בקבלת מידע מקובץ"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
@@ -667,7 +664,7 @@ msgstr "דקה/ות"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "נא למלא נתיב…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
@@ -898,13 +895,6 @@ msgstr ""
 "אם האפשרות פעילה, לחיצה כפולה על עמודת הנתיב תפתח את הנתיב הנבחר."
 
 #: src/fsearch_preferences.ui:1624
-#, fuzzy
-#| msgid ""
-#| "<b>Single click to open:</b>\n"
-#| "\n"
-#| "If enabled, a single click will open the selected file/folder. If you "
-#| "only want to select a file/folder while this setting is active, you need "
-#| "to a hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
