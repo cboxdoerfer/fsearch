@@ -116,6 +116,9 @@ db_entry_get_parent(FsearchDatabaseEntry *entry);
 FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry);
 
+FsearchDatabaseEntry *
+db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char *name, FsearchDatabaseEntryType type);
+
 void
 db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str);
 

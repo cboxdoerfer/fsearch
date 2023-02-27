@@ -169,6 +169,23 @@ db_entry_get_type(FsearchDatabaseEntry *entry) {
     return entry ? entry->type : DATABASE_ENTRY_TYPE_NONE;
 }
 
+FsearchDatabaseEntry *
+db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char *name, FsearchDatabaseEntryType type) {
+    g_return_val_if_fail(name, NULL);
+    if (parent) {
+        g_return_val_if_fail(parent->type != DATABASE_ENTRY_TYPE_FOLDER, NULL);
+    }
+
+    FsearchDatabaseEntry *entry = calloc(1,
+                                         type == DATABASE_ENTRY_TYPE_FOLDER ? sizeof(FsearchDatabaseEntryFolder)
+                                                                            : sizeof(FsearchDatabaseEntryFile));
+    entry->parent = (FsearchDatabaseEntryFolder *)parent;
+    entry->name = g_strdup(name);
+    entry->type = type;
+
+    return entry;
+}
+
 void
 db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
     g_autoptr(GString) path = db_entry_get_path_full(entry);
