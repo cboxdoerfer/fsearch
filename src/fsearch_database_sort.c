@@ -207,7 +207,7 @@ sort_store_entries(DynamicArray *entries,
     sorted_entries[DATABASE_INDEX_PROPERTY_PATH] = darray_copy(entries);
 
     // then by name
-    darray_sort(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, cancellable, NULL);
+    darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, cancellable, NULL);
     if (is_cancelled(cancellable)) {
         return;
     }
