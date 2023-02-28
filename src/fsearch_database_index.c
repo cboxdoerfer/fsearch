@@ -73,6 +73,8 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
     /* Loop while events can be read from inotify file descriptor. */
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
     for (;;) {
 
         /* Read some events. */
@@ -306,6 +308,7 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
     g_return_val_if_fail(self, NULL);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
     FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(self->file_pool);
     db_entry_set_name(file_entry, name);
     db_entry_set_size(file_entry, size);
@@ -328,6 +331,7 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
     g_return_val_if_fail(self, NULL);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(self->folder_pool);
     db_entry_set_name(entry, name);
