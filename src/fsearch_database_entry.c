@@ -331,6 +331,38 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     const uint32_t a_depth = db_entry_get_depth(entry_a);
     const uint32_t b_depth = db_entry_get_depth(entry_b);
 
+#if (0)
+    const char *a_path[a_depth];
+    const char *b_path[b_depth];
+    FsearchDatabaseEntry *tmp = (FsearchDatabaseEntry *)entry_a->parent;
+    for (uint32_t i = 0; i < a_depth; i++) {
+        a_path[a_depth - i - 1] = tmp->name;
+        tmp = (FsearchDatabaseEntry *)tmp->parent;
+    }
+    tmp = (FsearchDatabaseEntry *)entry_b->parent;
+    for (uint32_t i = 0; i < b_depth; i++) {
+        b_path[b_depth - i - 1] = tmp->name;
+        tmp = (FsearchDatabaseEntry *)tmp->parent;
+    }
+
+    const uint32_t limit = MIN(a_depth, b_depth);
+    for (uint32_t i = 0; i < limit; ++i) {
+        const int res = strverscmp(a_path[i], b_path[i]);
+        if (res != 0) {
+            return res;
+        }
+    }
+    if (a_depth < b_depth) {
+        return -1;
+    }
+    else if (a_depth > b_depth) {
+        return 1;
+    }
+    else {
+        return db_entry_compare_entries_by_name(a, b);
+    }
+#endif
+
     int res = 0;
     if (a_depth == b_depth) {
         sort_entry_by_path_recursive(entry_a->parent, entry_b->parent, &res);
