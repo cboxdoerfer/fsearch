@@ -538,6 +538,9 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     FsearchDatabaseIndex *index = fsearch_database_work_monitor_event_get_index(work);
     FsearchDatabaseEntry *entry = fsearch_database_work_monitor_event_get_parent(work);
 
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
     switch (event_kind) {
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
         break;
