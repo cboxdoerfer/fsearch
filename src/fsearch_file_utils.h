@@ -68,3 +68,6 @@ fsearch_file_utils_get_desktop_file_icon(const char *path);
 
 char *
 fsearch_file_utils_get_content_type(const char *path, GError **error);
+
+bool
+fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *is_dir);

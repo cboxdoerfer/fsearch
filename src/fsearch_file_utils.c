@@ -32,6 +32,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/stat.h>
 
 const char *data_folder_name = "fsearch";
 
@@ -651,4 +652,25 @@ fsearch_file_utils_get_content_type(const char *path, GError **error) {
     }
     const char *content_type = g_file_info_get_content_type(info);
     return content_type ? g_strdup(content_type) : NULL;
+}
+
+bool
+fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *is_dir) {
+    g_return_val_if_fail(path, false);
+
+    struct stat st;
+    if (lstat(path, &st)) {
+        g_debug("[get_info] can't stat: %s", path);
+        return false;
+    }
+    if (mtime) {
+        *mtime = st.st_mtime;
+    }
+    if (size) {
+        *size = st.st_size;
+    }
+    if (is_dir) {
+        *is_dir = S_ISDIR(st.st_mode) ? true : false;
+    }
+    return true;
 }
