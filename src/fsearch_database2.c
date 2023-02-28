@@ -549,6 +549,36 @@ update_views(gpointer key, gpointer value, gpointer user_data) {
                                          view->sort_type));
 }
 
+static bool
+entry_matches_query(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry) {
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+    fsearch_query_match_data_set_entry(match_data, entry);
+
+    const bool found = fsearch_query_match(view->query, match_data);
+    g_clear_pointer(&match_data, fsearch_query_match_data_free);
+    return found;
+}
+
+static void
+add_result(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabaseEntry *entry = user_data;
+    g_return_if_fail(entry);
+
+    FsearchDatabaseSearchView *view = value;
+    g_return_if_fail(view);
+
+    if (!entry_matches_query(view, entry)) {
+        return;
+    }
+
+    // Remove it from search results
+    DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
+    DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
+    if (array && comp_func) {
+        darray_insert_item_sorted(array, entry, comp_func, NULL);
+    }
+}
+
 static void
 remove_result(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseEntry *entry = user_data;
@@ -598,6 +628,11 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
+        fsearch_database_index_store_add_entry(self->store, entry, index);
+        fsearch_database_index_lock(index);
+        g_hash_table_foreach(self->search_results, add_result, entry);
+        fsearch_database_index_unlock(index);
+        views_changed_maybe = true;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
         fsearch_database_index_store_remove_entry(self->store, entry, index, watch_descriptor);
