@@ -32,6 +32,8 @@ struct _FsearchDatabaseIndex {
     FsearchDatabaseIndexEventFunc event_func;
     gpointer event_user_data;
 
+    GMutex mutex;
+
     uint32_t id;
 
     volatile gint ref_count;
@@ -40,23 +42,26 @@ struct _FsearchDatabaseIndex {
 G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex, fsearch_database_index, fsearch_database_index_ref, fsearch_database_index_unref)
 
 static void
-index_free(FsearchDatabaseIndex *index) {
-    g_return_if_fail(index);
+index_free(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
 
-    g_source_destroy(index->monitor_source);
-    g_clear_pointer(&index->monitor_source, g_source_unref);
+    g_source_destroy(self->monitor_source);
+    g_clear_pointer(&self->monitor_source, g_source_unref);
 
-    g_clear_pointer(&index->watch_descriptors, g_hash_table_unref);
+    g_clear_pointer(&self->watch_descriptors, g_hash_table_unref);
 
-    g_clear_pointer(&index->include, fsearch_database_include_unref);
-    g_clear_object(&index->exclude_manager);
+    g_clear_pointer(&self->include, fsearch_database_include_unref);
+    g_clear_object(&self->exclude_manager);
 
-    g_clear_pointer(&index->files, darray_unref);
-    g_clear_pointer(&index->folders, darray_unref);
+    g_clear_pointer(&self->files, darray_unref);
+    g_clear_pointer(&self->folders, darray_unref);
 
-    g_clear_pointer(&index->file_pool, fsearch_memory_pool_free_pool);
-    g_clear_pointer(&index->folder_pool, fsearch_memory_pool_free_pool);
-    g_clear_pointer(&index, free);
+    g_clear_pointer(&self->file_pool, fsearch_memory_pool_free_pool);
+    g_clear_pointer(&self->folder_pool, fsearch_memory_pool_free_pool);
+
+    g_mutex_clear(&self->mutex);
+
+    g_clear_pointer(&self, free);
 }
 
 static gboolean
@@ -67,6 +72,7 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
 
     /* Loop while events can be read from inotify file descriptor. */
 
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     for (;;) {
 
         /* Read some events. */
@@ -180,6 +186,8 @@ fsearch_database_index_new(uint32_t id,
 
     self->event_func = event_func;
     self->event_user_data = user_data;
+
+    g_mutex_init(&self->mutex);
 
     self->file_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                               db_entry_get_sizeof_file_entry(),
@@ -297,6 +305,7 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
                                 FsearchDatabaseEntryFolder *parent) {
     g_return_val_if_fail(self, NULL);
 
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(self->file_pool);
     db_entry_set_name(file_entry, name);
     db_entry_set_size(file_entry, size);
@@ -318,6 +327,8 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
                                   FsearchDatabaseEntryFolder *parent) {
     g_return_val_if_fail(self, NULL);
 
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+
     FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(self->folder_pool);
     db_entry_set_name(entry, name);
     db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
@@ -330,4 +341,16 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
     darray_insert_item_sorted(self->folders, entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
 
     return (FsearchDatabaseEntryFolder *)entry;
+}
+
+void
+fsearch_database_index_lock(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
+    g_mutex_lock(&self->mutex);
+}
+
+void
+fsearch_database_index_unlock(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
+    g_mutex_unlock(&self->mutex);
 }

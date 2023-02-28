@@ -83,4 +83,10 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
                                   time_t mtime,
                                   FsearchDatabaseEntryFolder *parent);
 
+void
+fsearch_database_index_lock(FsearchDatabaseIndex *self);
+
+void
+fsearch_database_index_unlock(FsearchDatabaseIndex *self);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)
