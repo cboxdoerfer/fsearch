@@ -186,7 +186,8 @@ fsearch_database_index_store_get_num_folders(FsearchDatabaseIndexStore *self) {
 void
 fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
                                           FsearchDatabaseEntry *entry,
-                                          FsearchDatabaseIndex *index) {
+                                          FsearchDatabaseIndex *index,
+                                          int32_t watch_descriptor) {
     g_return_if_fail(self);
     g_return_if_fail(entry);
     g_return_if_fail(index);
@@ -229,4 +230,6 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
         }
     }
     fsearch_database_index_unlock(index);
+
+    fsearch_database_index_remove_entry(index, entry, watch_descriptor);
 }

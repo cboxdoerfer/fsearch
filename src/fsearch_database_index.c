@@ -197,7 +197,7 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
             }
 
             if (entry && event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->event_func) {
-                self->event_func(self, event_kind, entry, g_steal_pointer(&path), self->event_user_data);
+                self->event_func(self, event_kind, entry, g_steal_pointer(&path), event->wd, self->event_user_data);
             }
         }
     }
@@ -427,6 +427,7 @@ fsearch_database_index_remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseE
                                            NULL,
                                            &idx)) {
             darray_remove(array, idx, 1);
+            g_debug("index store removed entry: %d - %s", idx, db_entry_get_name_raw_for_display(entry));
         }
     }
     if (pool) {

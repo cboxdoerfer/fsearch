@@ -35,6 +35,7 @@ struct FsearchDatabaseWork {
             FsearchDatabaseIndexEventKind event_kind;
             FsearchDatabaseEntry *parent;
             GString *path;
+            int32_t watch_descriptor;
         };
     };
 
@@ -202,7 +203,8 @@ FsearchDatabaseWork *
 fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
                                         FsearchDatabaseIndexEventKind event_kind,
                                         FsearchDatabaseEntry *parent,
-                                        GString *path) {
+                                        GString *path,
+                                        int32_t watch_descriptor) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_MONITOR_EVENT;
 
@@ -210,6 +212,7 @@ fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
     work->event_kind = event_kind;
     work->path = path;
     work->parent = parent;
+    work->watch_descriptor = watch_descriptor;
 
     return work;
 }
@@ -339,6 +342,14 @@ fsearch_database_work_monitor_event_get_kind(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NUM_FSEARCH_DATABASE_INDEX_EVENTS);
 
     return work->event_kind;
+}
+
+int32_t
+fsearch_database_work_monitor_event_get_watch_descriptor(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, -1);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, -1);
+
+    return work->watch_descriptor;
 }
 
 GString *

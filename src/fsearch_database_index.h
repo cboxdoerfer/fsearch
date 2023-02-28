@@ -20,6 +20,7 @@ typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *,
                                               FsearchDatabaseIndexEventKind kind,
                                               FsearchDatabaseEntry *parent,
                                               GString *path,
+                                              int32_t watch_descriptor,
                                               gpointer user_data);
 
 GType

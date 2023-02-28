@@ -63,7 +63,8 @@ FsearchDatabaseWork *
 fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
                                         FsearchDatabaseIndexEventKind event_kind,
                                         FsearchDatabaseEntry *parent,
-                                        GString *path);
+                                        GString *path,
+                                        int32_t watch_descriptor);
 
 FsearchDatabaseWorkKind
 fsearch_database_work_get_kind(FsearchDatabaseWork *work);
@@ -118,6 +119,9 @@ fsearch_database_work_item_info_get_flags(FsearchDatabaseWork *work);
 
 FsearchDatabaseIndexEventKind
 fsearch_database_work_monitor_event_get_kind(FsearchDatabaseWork *work);
+
+int32_t
+fsearch_database_work_monitor_event_get_watch_descriptor(FsearchDatabaseWork *work);
 
 GString *
 fsearch_database_work_monitor_event_get_path(FsearchDatabaseWork *work);

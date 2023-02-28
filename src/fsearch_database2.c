@@ -581,6 +581,7 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     GString *path = fsearch_database_work_monitor_event_get_path(work);
     FsearchDatabaseIndex *index = fsearch_database_work_monitor_event_get_index(work);
     FsearchDatabaseEntry *entry = fsearch_database_work_monitor_event_get_parent(work);
+    const int32_t watch_descriptor = fsearch_database_work_monitor_event_get_watch_descriptor(work);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -599,8 +600,10 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        fsearch_database_index_store_remove_entry(self->store, entry, index);
+        fsearch_database_index_store_remove_entry(self->store, entry, index, watch_descriptor);
+        fsearch_database_index_lock(index);
         g_hash_table_foreach(self->search_results, remove_result, entry);
+        fsearch_database_index_unlock(index);
         views_changed_maybe = true;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
@@ -711,9 +714,11 @@ index_event_cb(FsearchDatabaseIndex *index,
                FsearchDatabaseIndexEventKind kind,
                FsearchDatabaseEntry *parent,
                GString *path,
+               int32_t watch_descriptor,
                gpointer user_data) {
     FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
-    g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_monitor_event(index, kind, parent, path);
+    g_autoptr(FsearchDatabaseWork)
+        work = fsearch_database_work_new_monitor_event(index, kind, parent, path, watch_descriptor);
     fsearch_database2_queue_work(self, work);
 }
 
