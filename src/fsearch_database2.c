@@ -529,6 +529,50 @@ select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int32_t end_idx
 }
 
 static void
+update_views(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabase2 *self = user_data;
+    g_return_if_fail(self);
+    g_return_if_fail(FSEARCH_IS_DATABASE2(self));
+
+    FsearchDatabaseSearchView *view = value;
+    g_return_if_fail(view);
+
+    emit_selection_changed_signal(
+        self,
+        GPOINTER_TO_INT(key),
+        fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                         darray_get_num_items(view->files),
+                                         darray_get_num_items(view->folders),
+                                         fsearch_selection_get_num_selected(view->file_selection),
+                                         fsearch_selection_get_num_selected(view->folder_selection),
+                                         view->sort_order,
+                                         view->sort_type));
+}
+
+static void
+remove_result(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabaseEntry *entry = user_data;
+    g_return_if_fail(entry);
+
+    FsearchDatabaseSearchView *view = value;
+    g_return_if_fail(view);
+
+    // Remove it from search results
+    DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
+    if (array) {
+        uint32_t idx = 0;
+        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
+        if (darray_get_item_idx(array, entry, comp_func, NULL, &idx)) {
+            darray_remove(array, idx, 1);
+        }
+    }
+    // Remove it from the selection
+    GHashTable *selection = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folder_selection
+                                                                                   : view->file_selection;
+    fsearch_selection_unselect(selection, entry);
+}
+
+static void
 process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
@@ -540,6 +584,8 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
+
+    bool views_changed_maybe = false;
 
     switch (event_kind) {
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
@@ -553,6 +599,9 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
+        fsearch_database_index_store_remove_entry(self->store, entry, index);
+        g_hash_table_foreach(self->search_results, remove_result, entry);
+        views_changed_maybe = true;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
         break;
@@ -564,6 +613,10 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         break;
     case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
         break;
+    }
+
+    if (views_changed_maybe) {
+        g_hash_table_foreach(self->search_results, update_views, self);
     }
 }
 
