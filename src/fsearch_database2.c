@@ -587,6 +587,10 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
+    if (!entry_matches_query(view, entry)) {
+        return;
+    }
+
     // Remove it from search results
     DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
     if (array) {
