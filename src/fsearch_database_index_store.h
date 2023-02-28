@@ -57,6 +57,11 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
                                           FsearchDatabaseIndex *index,
                                           int32_t watch_descriptor);
 
+void
+fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
+                                       FsearchDatabaseEntry *entry,
+                                       FsearchDatabaseIndex *index);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, fsearch_database_index_store_unref)
 
 G_END_DECLS

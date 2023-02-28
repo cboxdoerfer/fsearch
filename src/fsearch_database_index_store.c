@@ -233,3 +233,34 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
 
     fsearch_database_index_remove_entry(index, entry, watch_descriptor);
 }
+
+void
+fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
+                                       FsearchDatabaseEntry *entry,
+                                       FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+    g_return_if_fail(entry);
+    g_return_if_fail(index);
+
+    fsearch_database_index_lock(index);
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        DynamicArray *array = NULL;
+        if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
+            array = self->folders_sorted[i];
+        }
+        else {
+            array = self->files_sorted[i];
+        }
+
+        if (!array) {
+            continue;
+        }
+        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(i);
+        g_assert(comp_func);
+
+        darray_insert_item_sorted(array, entry, comp_func, NULL);
+    }
+
+    fsearch_database_index_unlock(index);
+}
