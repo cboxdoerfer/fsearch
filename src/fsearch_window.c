@@ -397,6 +397,7 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
                                  num_rows,
                                  win->result_view->sort_order,
                                  win->result_view->sort_type);
+    fsearch_window_actions_update(win);
 
     if (is_empty_search(win)) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
@@ -436,18 +437,7 @@ on_selection_changed(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
-        const uint32_t num_files = fsearch_database_search_info_get_num_files(info);
-        const uint32_t num_folders = fsearch_database_search_info_get_num_folders(info);
-        win->num_files_selected = fsearch_database_search_info_get_num_files_selected(info);
-        win->num_folders_selected = fsearch_database_search_info_get_num_folders_selected(info);
-        fsearch_result_view_row_cache_reset(win->result_view);
-        fsearch_window_actions_update(win);
-        fsearch_statusbar_set_selection(FSEARCH_STATUSBAR(win->statusbar),
-                                        win->num_files_selected,
-                                        win->num_folders_selected,
-                                        num_files,
-                                        num_folders);
-        redraw_listview(win);
+        apply_search_info(win, info);
     }
 }
 
@@ -457,7 +447,6 @@ on_search_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *in
 
     if (win) {
         apply_search_info(win, info);
-        fsearch_window_actions_update(win);
         g_clear_pointer(&win->work_search, fsearch_database_work_unref);
     }
 }
