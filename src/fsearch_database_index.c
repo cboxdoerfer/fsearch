@@ -305,7 +305,7 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
     db_entry_set_parent(file_entry, parent);
     db_entry_update_parent_size(file_entry);
 
-    darray_add_item(self->files, file_entry);
+    darray_insert_item_sorted(self->files, file_entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
 
     return file_entry;
 }
@@ -327,7 +327,7 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
     const uint32_t wd = inotify_add_watch(self->inotify_fd, path, INOTIFY_FOLDER_MASK);
     g_hash_table_insert(self->watch_descriptors, GINT_TO_POINTER(wd), entry);
 
-    darray_add_item(self->folders, entry);
+    darray_insert_item_sorted(self->folders, entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
 
     return (FsearchDatabaseEntryFolder *)entry;
 }
