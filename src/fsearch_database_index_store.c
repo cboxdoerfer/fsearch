@@ -182,3 +182,51 @@ fsearch_database_index_store_get_num_folders(FsearchDatabaseIndexStore *self) {
 
     return darray_get_num_items(self->folders_sorted[0]);
 }
+
+void
+fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
+                                          FsearchDatabaseEntry *entry,
+                                          FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+    g_return_if_fail(entry);
+    g_return_if_fail(index);
+
+    if (!g_ptr_array_find(self->indices, index, NULL)) {
+        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
+        g_assert_not_reached();
+    }
+
+    fsearch_database_index_lock(index);
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        DynamicArray *array = NULL;
+        if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
+            array = self->folders_sorted[i];
+        }
+        else {
+            array = self->files_sorted[i];
+        }
+
+        if (!array) {
+            continue;
+        }
+        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(i);
+        g_assert(comp_func);
+        uint32_t entry_index = 0;
+        if (darray_binary_search_with_data(array, entry, comp_func, NULL, &entry_index)) {
+            darray_remove(array, entry_index, 1);
+        }
+        else {
+            // It's most certainly a bug when we reach this section. Still, we try if we can find the entry by simply
+            // walking through the array from start to end before we abort.
+            g_autoptr(GString) entry_path = db_entry_get_path_full(entry);
+            if (darray_get_item_idx(array, entry, NULL, NULL, &entry_index)) {
+                g_debug("[index_store_remove] brute force search found entry at %d: %s\n", entry_index, entry_path->str);
+            }
+            else {
+                g_debug("[index_store_remove] didn't find entry: %s", entry_path->str);
+            }
+            g_assert_not_reached();
+        }
+    }
+    fsearch_database_index_unlock(index);
+}

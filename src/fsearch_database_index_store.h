@@ -51,6 +51,11 @@ fsearch_database_index_store_get_num_folders(FsearchDatabaseIndexStore *self);
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_store_get_flags(FsearchDatabaseIndexStore *self);
 
+void
+fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
+                                          FsearchDatabaseEntry *entry,
+                                          FsearchDatabaseIndex *index);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, fsearch_database_index_store_unref)
 
 G_END_DECLS
