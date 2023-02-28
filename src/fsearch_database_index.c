@@ -116,6 +116,8 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 g_string_append(path, event->name);
             }
 
+            bool is_self = false;
+
             FsearchDatabaseIndexEventKind event_kind = NUM_FSEARCH_DATABASE_INDEX_EVENTS;
             if (event->mask & IN_MODIFY) {
                 g_print("IN_MODIFY: ");
@@ -138,12 +140,14 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED;
             }
             else if (event->mask & IN_DELETE_SELF) {
+                is_self = true;
                 event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED;
             }
             else if (event->mask & IN_UNMOUNT) {
                 g_print("IN_UNMOUNT: ");
             }
             else if (event->mask & IN_MOVE_SELF) {
+                is_self = true;
                 g_print("IN_MOVE_SELF: ");
             }
             else if (event->mask & IN_CLOSE_WRITE) {
@@ -153,15 +157,47 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 continue;
             }
 
-            // if (event->mask & IN_ISDIR) {
-            //     g_print(" [directory]\n");
-            // }
-            // else {
-            //     g_print(" [file]\n");
-            // }
-            if (event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->event_func) {
-                g_print("call event func\n");
-                self->event_func(self, event_kind, watched_entry, g_steal_pointer(&path), self->event_user_data);
+            FsearchDatabaseEntry *entry = NULL;
+            if (is_self) {
+                // The file this event was created for is the watched directory itself
+                entry = watched_entry;
+            }
+            else if (event->len) {
+                // This event belongs to a child of the watched directory, which we attempt to find right now in our
+                // index:
+                const bool is_dir = event->mask & IN_ISDIR ? true : false;
+
+                // The dummy entry is used to mimic the entry we want to find.
+                // It has the same name and parent (i.e. the watched directory)
+                // and hence the same path. This means it will compare in the same way as the entry we're looking for
+                // when it gets passed to the `db_entry_compare_entries_by_path` function.
+                g_autofree FsearchDatabaseEntry *entry_tmp = db_entry_get_dummy_for_name_and_parent(
+                    watched_entry,
+                    event->name,
+                    is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
+
+                DynamicArray *array = is_dir ? self->folders : self->files;
+                uint32_t idx = 0;
+                if (darray_binary_search_with_data(array,
+                                                   entry_tmp,
+                                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                                   NULL,
+                                                   &idx)) {
+                    entry = darray_get_item(array, idx);
+                }
+                else {
+                    // TODO: If the entry doesn't belong to the index yet it either means:
+                    // * it wasn't indexed yet -> solution: we must block event handling until the indexing was
+                    // completed
+                    // * the index is corrupt -> solution: we must queue a rebuild
+                    // For now we just halt the execution.
+                    g_assert_not_reached();
+                }
+                db_entry_destroy(entry_tmp);
+            }
+
+            if (entry && event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->event_func) {
+                self->event_func(self, event_kind, entry, g_steal_pointer(&path), self->event_user_data);
             }
         }
     }
