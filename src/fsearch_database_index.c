@@ -375,12 +375,63 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
     db_entry_set_mtime(entry, mtime);
     db_entry_set_parent(entry, parent);
 
-    const uint32_t wd = inotify_add_watch(self->inotify_fd, path, INOTIFY_FOLDER_MASK);
+    const int32_t wd = inotify_add_watch(self->inotify_fd, path, INOTIFY_FOLDER_MASK);
     g_hash_table_insert(self->watch_descriptors, GINT_TO_POINTER(wd), entry);
 
     darray_insert_item_sorted(self->folders, entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
 
     return (FsearchDatabaseEntryFolder *)entry;
+}
+
+void
+fsearch_database_index_remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t watch_descriptor) {
+    g_return_if_fail(self);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    DynamicArray *array = NULL;
+    FsearchMemoryPool *pool = NULL;
+
+    const bool is_dir = db_entry_is_folder(entry);
+    if (is_dir) {
+        FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors,
+                                                                  GINT_TO_POINTER(watch_descriptor));
+        if (watched_entry != entry) {
+            g_assert_not_reached();
+        }
+
+        if (db_entry_folder_get_num_children((FsearchDatabaseEntryFolder *)entry) > 0) {
+            // TODO : The folder we are about to remove still has children.
+            // Not sure if this is expected behavior by inotify etc. which should be dealt with properly.
+            // For now, we abort, but it might make sense to remove those children as well.
+            g_assert_not_reached();
+        }
+        else {
+            g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(watch_descriptor));
+            inotify_rm_watch(self->inotify_fd, watch_descriptor);
+            array = self->folders;
+            pool = self->folder_pool;
+        }
+    }
+    else {
+        array = self->files;
+        pool = self->file_pool;
+    }
+
+    if (array) {
+        uint32_t idx = 0;
+        if (darray_binary_search_with_data(array,
+                                           entry,
+                                           (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                           NULL,
+                                           &idx)) {
+            darray_remove(array, idx, 1);
+        }
+    }
+    if (pool) {
+        fsearch_memory_pool_free(pool, entry, true);
+    }
 }
 
 void
