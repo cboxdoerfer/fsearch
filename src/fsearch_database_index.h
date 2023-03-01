@@ -84,7 +84,7 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
                                   time_t mtime,
                                   FsearchDatabaseEntryFolder *parent);
 void
-fsearch_database_index_remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t watch_descriptor);
+fsearch_database_index_free_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry);
 
 void
 fsearch_database_index_lock(FsearchDatabaseIndex *self);

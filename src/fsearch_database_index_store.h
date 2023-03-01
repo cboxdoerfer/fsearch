@@ -54,8 +54,7 @@ fsearch_database_index_store_get_flags(FsearchDatabaseIndexStore *self);
 void
 fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
                                           FsearchDatabaseEntry *entry,
-                                          FsearchDatabaseIndex *index,
-                                          int32_t watch_descriptor);
+                                          FsearchDatabaseIndex *index);
 
 void
 fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
