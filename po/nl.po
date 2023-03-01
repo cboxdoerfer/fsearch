@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-02-28 08:40+0000\n"
+"PO-Revision-Date: 2023-03-02 07:39+0000\n"
 "Last-Translator: Didier Sandra <didier.mg.sandra@skynet.be>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 4.16\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -174,7 +174,7 @@ msgstr "Selectie omkeren met rubberband wanneer 'Ctrl' ingedrukt is"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr "Zoekveld samen met het hoofdvenster activeren"
+msgstr "Zoekvak activeren wanneer het hoofdvenster geactiveerd wordt"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
@@ -313,9 +313,6 @@ msgid "Failed to get path"
 msgstr "De locatie kan niet worden opgevraagd"
 
 #: src/fsearch_file_utils.c:253
-#, fuzzy
-#| msgctxt "Will be followed by the content type string."
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
 msgstr "Er kan geen bestandsinformatie worden opgevraagd"
@@ -924,13 +921,6 @@ msgstr ""
 "locatiekolom."
 
 #: src/fsearch_preferences.ui:1624
-#, fuzzy
-#| msgid ""
-#| "<b>Single click to open:</b>\n"
-#| "\n"
-#| "If enabled, a single click will open the selected file/folder. If you "
-#| "only want to select a file/folder while this setting is active, you need "
-#| "to a hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -941,7 +931,8 @@ msgstr ""
 "<b>Eénmaal klikken om te openen:</b>\n"
 "\n"
 "Schakel in om de geselecteerde map of het geselecteerde bestand te openen "
-"met één muisklik. Selecteren kan dan door <i>Ctrl</i>-klik te gebruiken."
+"met één muisklik. Indien je enkel wilt selecteren kan dat door <i>Ctrl</i> "
+"ingedrukt te houden terwijl je op de map of het bestand klikt."
 
 #: src/fsearch_preferences.ui:1641
 msgid ""
@@ -1056,9 +1047,9 @@ msgstr ""
 "\n"
 "Deze lijst bevat alle mappen die je wilt opnemen in de databank.\n"
 "\n"
-"\t• <b>Actief:</b> schakel in om een locatie uit te sluiten en dus niet te "
+"\t• <b>Actief:</b> schakel in om een locatie in de databank op te nemen voor "
 "doorzoeken.\n"
-"\t• <b>Locatie:</b> de volledige uit te sluiten locatie.\n"
+"\t• <b>Locatie:</b> het volledige pad van de op te nemen locatie.\n"
 "\t•<b>Eén bestandssysteem:</b> schakel in om alléén het huidige "
 "bestandssysteem te doorzoeken."
 
@@ -1098,9 +1089,9 @@ msgstr ""
 "\n"
 "Deze lijst bevat alle mappen die je niet wilt opnemen in de databank.\n"
 "\n"
-"\t• <b>Actief:</b> schakel in om een locatie uit te sluiten en dus niet te "
+"\t• <b>Actief:</b> schakel in om een locatie uit te sluiten en niet te "
 "doorzoeken.\n"
-"\t• <b>Locatie:</b> de volledige uit te sluiten locatie."
+"\t• <b>Locatie:</b> het volledige pad van de uit te sluiten locatie."
 
 #: src/fsearch_preferences.ui:1839
 msgid ""
@@ -1191,15 +1182,14 @@ msgid ""
 "launcher. Otherwise the <i>.desktop</i> file will be opened with the default "
 "handler for this type of files, which is usually a text editor."
 msgstr ""
-"<b>Launch desktop files:</b>\n"
+"<b>Desktop-bestanden starten:</b>\n"
 "\n"
-" If enabled, activating a <i>.desktop</i> file will launch the application "
-"defined\n"
-" within that file. This way FSearch can act like an application launcher. "
-"Otherwise the <i>.desktop</i>\n"
-" file will be opened with the default handler for this type of files, which "
-"is usually a text\n"
-" editor."
+" Indien ingeschakeld zal de in het <i>.desktop</i> bestand vermelde "
+"toepassing gestart worden bij activatie\n"
+" van het bestand. Zo kan FSearch werken als een toepassingenstarter. Anders "
+"zal het <i>.desktop</i> bestand\n"
+" geopend worden in de standaard toepassing voor dit bestandstype, "
+"gebruikelijk is dit een tekstbewerker."
 
 #: src/fsearch_preferences.ui:1958
 msgid ""
@@ -1214,12 +1204,13 @@ msgid ""
 msgstr ""
 "<b>Filters:</b>\n"
 "\n"
-" This is a list of all available filters. A filter is a predefined search.\n"
+" Dit is een lijst met alle beschikbare filters. Een filter is een "
+"voorgedefiniëerde zoekopdracht.\n"
 "\n"
-" • <b>Name:</b> A unique and descriptive identifier for the filter\n"
-" • <b>Macro:</b> By typing the macro text followed by a ':' you can enable "
-"the filter on demand\n"
-" • <b>Query:</b> The search term by which the database should be filtered"
+" • <b>Naam:</b> Een unieke en beschrijvende identificatie voor het filter\n"
+" • <b>Macro:</b> Door de macrotekst te typen gevolgd met een ':' kan je het "
+"filter inschakelen wanneer gewenst\n"
+" • <b>Zoekopdracht:</b> De zoekterm waarop de database moet worden gefilterd"
 
 #: src/fsearch_preferences.ui:1979
 msgid ""
@@ -1263,7 +1254,7 @@ msgstr ""
 "\n"
 "Met deze knop herstel je de standaard filterconfiguratie.\n"
 "\n"
-"⚠ Alle door de zelfgemaakte of -bewerkte filters worden gewist! ⚠"
+"⚠ Alle zelfgemaakte of bewerkte filters zullen worden gewist! ⚠"
 
 #: src/fsearch_preferences.ui:2049
 msgid ""
@@ -1272,10 +1263,10 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
-"<b>Afsluiten met espace</b>\n"
+"<b>Afsluiten met Espace</b>\n"
 "\n"
-"Schakel in om FSearch af te sluiten met de espacetoets in plaats van het "
-"venster te minimaliseren."
+"Schakel in om FSearch af te sluiten met Espace in plaats van het venster te "
+"minimaliseren."
 
 #: src/fsearch_preferences.ui:2068 src/fsearch_window.ui:289
 #: src/fsearch_window.ui:414 src/menus.ui:150 src/menus.ui:156
@@ -1530,7 +1521,7 @@ msgstr "Bezig met verwijderen…"
 
 #: src/fsearch_window_actions.c:183
 msgid "Moving files to trash…"
-msgstr "Bezig met verplaatsen naar prullenbak…"
+msgstr "Bezig met verplaatsen naar Prullenbak…"
 
 #: src/fsearch_window_actions.c:210 src/fsearch_window_actions.c:494
 #: src/fsearch_window_actions.c:534
@@ -1545,7 +1536,7 @@ msgstr "Er is/zijn %d bestan(en) verwijderd."
 #: src/fsearch_window_actions.c:218
 #, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Er is/zijn %d bestan(en) naar de prullenbak verplaatst."
+msgstr "Er is/zijn %d bestan(en) naar de Prullenbak verplaatst."
 
 #: src/fsearch_window_actions.c:224
 msgid ""
@@ -1553,7 +1544,7 @@ msgid ""
 "This will be fixed with future updates."
 msgstr ""
 "De databank dient te worden bijgewerkt voordat de wijzigingen worden "
-"getoond. Dit wordt in een toekomstige versie opgelost."
+"getoond! Dit zal door toekomstig bijwerken opgelost worden."
 
 #: src/fsearch_window_actions.c:250
 #, c-format
@@ -1562,7 +1553,7 @@ msgstr "Weet je zeker dat je %d bestandseigenschap(pen) wilt openen?"
 
 #: src/fsearch_window_actions.c:254
 msgid "Opening file properties…"
-msgstr "Bezig met openen…"
+msgstr "Bezig met bestandseigenschappen openen…"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -1586,7 +1577,7 @@ msgstr "Databank bijwerken"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr "Update afbreken"
+msgstr "Bijwerken afbreken"
 
 #: src/menus.ui:42
 msgid "Close Window"
@@ -1646,7 +1637,7 @@ msgstr "Locatie + naam"
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
-msgstr "Verplaatsen naar _prullenbak"
+msgstr "Verplaatsen naar _Prullenbak"
 
 #~ msgid ""
 #~ "There are a lot of features which make searching as efficient and "
