@@ -18,7 +18,8 @@ typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
 
 typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *,
                                               FsearchDatabaseIndexEventKind kind,
-                                              FsearchDatabaseEntry *parent,
+                                              FsearchDatabaseEntry *entry_1,
+                                              FsearchDatabaseEntry *entry_2,
                                               GString *path,
                                               int32_t watch_descriptor,
                                               gpointer user_data);

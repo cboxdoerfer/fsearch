@@ -40,17 +40,46 @@ struct _FsearchDatabaseIndex {
     volatile gint ref_count;
 };
 
+typedef struct {
+    GString *name;
+    GString *path;
+
+    int32_t watch_descriptor;
+
+    uint32_t cookie;
+    uint32_t mask;
+} FsearchDatabaseIndexMonitorEventContext;
+
 G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex, fsearch_database_index, fsearch_database_index_ref, fsearch_database_index_unref)
 
+static void
+monitor_event_context_free(FsearchDatabaseIndexMonitorEventContext *ctx) {
+    if (ctx->name) {
+        g_string_free(g_steal_pointer(&ctx->name), TRUE);
+    }
+    g_clear_pointer(&ctx, free);
+}
+
+static FsearchDatabaseIndexMonitorEventContext *
+monitor_event_context_new(const struct inotify_event *event) {
+    FsearchDatabaseIndexMonitorEventContext *ctx = calloc(1, sizeof(FsearchDatabaseIndexMonitorEventContext));
+    g_assert(ctx);
+
+    ctx->name = event->len ? g_string_new(event->name) : NULL;
+    ctx->watch_descriptor = event->wd;
+    ctx->cookie = event->cookie;
+    ctx->mask = event->mask;
+
+    return ctx;
+}
+
 FsearchDatabaseEntry *
-find_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *parent, const struct inotify_event *event) {
+find_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *parent, const char *name, uint32_t mask) {
     g_return_val_if_fail(self, NULL);
-    g_return_val_if_fail(event, NULL);
-    g_return_val_if_fail(event->len, NULL);
 
     // This event belongs to a child of the watched directory, which we attempt to find right now in our
     // index:
-    const bool is_dir = event->mask & IN_ISDIR ? true : false;
+    const bool is_dir = mask & IN_ISDIR ? true : false;
 
     // The dummy entry is used to mimic the entry we want to find.
     // It has the same name and parent (i.e. the watched directory)
@@ -58,7 +87,7 @@ find_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *parent, const struc
     // for when it gets passed to the `db_entry_compare_entries_by_path` function.
     g_autofree FsearchDatabaseEntry *entry_tmp =
         db_entry_get_dummy_for_name_and_parent(parent,
-                                               event->name,
+                                               name,
                                                is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
 
     DynamicArray *array = is_dir ? self->folders : self->files;
@@ -161,11 +190,13 @@ handle_create_event(FsearchDatabaseIndex *self,
 FsearchDatabaseEntry *
 handle_delete_event(FsearchDatabaseIndex *self,
                     FsearchDatabaseEntry *watched_entry,
-                    const struct inotify_event *event) {
-    FsearchDatabaseEntry *entry = find_entry(self, watched_entry, event);
+                    const char *name,
+                    int32_t wd,
+                    uint32_t mask) {
+    FsearchDatabaseEntry *entry = find_entry(self, watched_entry, name, mask);
 
     if (entry) {
-        remove_entry(self, entry, event->wd);
+        remove_entry(self, entry, wd);
     }
     return entry;
 }
@@ -200,9 +231,6 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
     const struct inotify_event *event;
 
     /* Loop while events can be read from inotify file descriptor. */
-
-    // g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    // g_assert_nonnull(locker);
 
     for (;;) {
 
@@ -245,7 +273,8 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 g_string_append(path, event->name);
             }
 
-            FsearchDatabaseEntry *entry = NULL;
+            FsearchDatabaseEntry *entry_1 = NULL;
+            FsearchDatabaseEntry *entry_2 = NULL;
             FsearchDatabaseIndexEventKind event_kind = NUM_FSEARCH_DATABASE_INDEX_EVENTS;
             if (event->mask & IN_MODIFY) {
                 g_print("IN_MODIFY: ");
@@ -254,20 +283,40 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_ATTRIBUTE_CHANGED;
             }
             else if (event->mask & IN_MOVED_FROM) {
-                // TODO: add to pending moves
-                g_print("IN_MOVED_FROM: ");
+                if (!g_hash_table_lookup(self->pending_moves, GUINT_TO_POINTER(event->cookie))) {
+                    g_hash_table_insert(self->pending_moves,
+                                        GUINT_TO_POINTER(event->cookie),
+                                        monitor_event_context_new(event));
+                }
+                else {
+                    // TODO: There's already a MOVED_FROM event with the same cookie in the hash table
+                    // Not sure how to deal with this situation yet (if it is even possible)
+                    g_assert_not_reached();
+                }
             }
             else if (event->mask & IN_MOVED_TO) {
-                // TODO: find corresponding pending move
-                g_print("IN_MOVED_TO: ");
+                FsearchDatabaseIndexMonitorEventContext *ctx = NULL;
+                if (g_hash_table_steal_extended(self->pending_moves,
+                                                GUINT_TO_POINTER(event->cookie),
+                                                NULL,
+                                                (gpointer *)&ctx)) {
+                    event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_MOVED;
+                    entry_1 = handle_delete_event(self, watched_entry, ctx->name->str, ctx->watch_descriptor, ctx->mask);
+                    entry_2 = handle_create_event(self, watched_entry, path, event);
+                }
+                else {
+                    // TODO: There's no matching MOVED_FROM event with the same cookie in the hash table
+                    // Not sure how to deal with this situation yet (if it is even possible)
+                    // g_assert_not_reached();
+                }
             }
             else if (event->mask & IN_DELETE) {
                 event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED;
-                entry = handle_delete_event(self, watched_entry, event);
+                entry_1 = handle_delete_event(self, watched_entry, event->name, event->wd, event->mask);
             }
             else if (event->mask & IN_CREATE) {
                 event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED;
-                entry = handle_create_event(self, watched_entry, path, event);
+                entry_1 = handle_create_event(self, watched_entry, path, event);
             }
             else if (event->mask & IN_DELETE_SELF) {
                 event_kind = FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED;
@@ -285,9 +334,9 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 continue;
             }
 
-            if (entry && event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->event_func) {
+            if (entry_1 && event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->event_func) {
                 g_debug("call event func");
-                self->event_func(self, event_kind, entry, g_steal_pointer(&path), event->wd, self->event_user_data);
+                self->event_func(self, event_kind, entry_1, entry_2, g_steal_pointer(&path), event->wd, self->event_user_data);
             }
         }
     }
@@ -325,7 +374,8 @@ fsearch_database_index_new(uint32_t id,
                                                 (GDestroyNotify)db_entry_destroy);
 
     self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
-    self->pending_moves = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
+    self->pending_moves =
+        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)monitor_event_context_free);
     self->inotify_fd = inotify_init1(IN_NONBLOCK);
     self->monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
     g_source_set_callback(self->monitor_source, (GSourceFunc)inotify_events_cb, self, NULL);

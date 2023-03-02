@@ -62,7 +62,8 @@ fsearch_database_work_new_save(void);
 FsearchDatabaseWork *
 fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
                                         FsearchDatabaseIndexEventKind event_kind,
-                                        FsearchDatabaseEntry *parent,
+                                        FsearchDatabaseEntry *entry_1,
+                                        FsearchDatabaseEntry *entry_2,
                                         GString *path,
                                         int32_t watch_descriptor);
 
@@ -127,7 +128,10 @@ GString *
 fsearch_database_work_monitor_event_get_path(FsearchDatabaseWork *work);
 
 FsearchDatabaseEntry *
-fsearch_database_work_monitor_event_get_parent(FsearchDatabaseWork *work);
+fsearch_database_work_monitor_event_get_entry_1(FsearchDatabaseWork *work);
+
+FsearchDatabaseEntry *
+fsearch_database_work_monitor_event_get_entry_2(FsearchDatabaseWork *work);
 
 FsearchDatabaseIndex *
 fsearch_database_work_monitor_event_get_index(FsearchDatabaseWork *work);

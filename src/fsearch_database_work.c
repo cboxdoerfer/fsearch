@@ -33,7 +33,8 @@ struct FsearchDatabaseWork {
         struct {
             FsearchDatabaseIndex *monitored_index;
             FsearchDatabaseIndexEventKind event_kind;
-            FsearchDatabaseEntry *parent;
+            FsearchDatabaseEntry *entry_1;
+            FsearchDatabaseEntry *entry_2;
             GString *path;
             int32_t watch_descriptor;
         };
@@ -202,7 +203,8 @@ fsearch_database_work_new_save() {
 FsearchDatabaseWork *
 fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
                                         FsearchDatabaseIndexEventKind event_kind,
-                                        FsearchDatabaseEntry *parent,
+                                        FsearchDatabaseEntry *entry_1,
+                                        FsearchDatabaseEntry *entry_2,
                                         GString *path,
                                         int32_t watch_descriptor) {
     FsearchDatabaseWork *work = work_new();
@@ -211,7 +213,8 @@ fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
     work->monitored_index = fsearch_database_index_ref(index);
     work->event_kind = event_kind;
     work->path = path;
-    work->parent = parent;
+    work->entry_1 = entry_1;
+    work->entry_2 = entry_2;
     work->watch_descriptor = watch_descriptor;
 
     return work;
@@ -361,11 +364,19 @@ fsearch_database_work_monitor_event_get_path(FsearchDatabaseWork *work) {
 }
 
 FsearchDatabaseEntry *
-fsearch_database_work_monitor_event_get_parent(FsearchDatabaseWork *work) {
+fsearch_database_work_monitor_event_get_entry_1(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NULL);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
 
-    return work->parent;
+    return work->entry_1;
+}
+
+FsearchDatabaseEntry *
+fsearch_database_work_monitor_event_get_entry_2(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, NULL);
+    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
+
+    return work->entry_2;
 }
 
 FsearchDatabaseIndex *
