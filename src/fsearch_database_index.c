@@ -210,6 +210,8 @@ index_free(FsearchDatabaseIndex *self) {
 
     g_clear_pointer(&self->watch_descriptors, g_hash_table_unref);
 
+    close(self->inotify_fd);
+
     g_clear_pointer(&self->include, fsearch_database_include_unref);
     g_clear_object(&self->exclude_manager);
 
