@@ -83,7 +83,9 @@ work_free(FsearchDatabaseWork *work) {
         break;
     case FSEARCH_DATABASE_WORK_MONITOR_EVENT:
         g_clear_pointer(&work->monitored_index, fsearch_database_index_unref);
-        g_string_free(g_steal_pointer(&work->path), TRUE);
+        if (work->path) {
+            g_string_free(g_steal_pointer(&work->path), TRUE);
+        }
         break;
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
         g_assert_not_reached();
