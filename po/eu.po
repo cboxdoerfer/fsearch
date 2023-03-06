@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-02-16 07:35+0000\n"
+"PO-Revision-Date: 2023-03-07 05:41+0000\n"
 "Last-Translator: Alex Gabilondo <alexgabi@disroot.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -38,10 +38,8 @@ msgstr ""
 "dena;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "File Search Utility"
-msgstr "Lineako Fsearch"
+msgstr "Fitxategiak bilatzeko zerbitzua"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
@@ -57,16 +55,12 @@ msgstr ""
 "agertuko dira."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
-#, fuzzy
-#| msgid ""
-#| "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as "
-#| "well)"
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
-"Ezikusi letra larriak eta xeheak (adibidez, \"fsearch\" bilatuta \"FSearch\" "
-"ere topatuko luke)"
+"Ezikusi letra larriak eta xeheak (adibidez, \"<code>fsearch</code>\" "
+"bilatuta \"FSearch\" ere topatuko luke)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -91,16 +85,12 @@ msgstr ""
 "oinarrituta"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
-#, fuzzy
-#| msgid ""
-#| "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
-#| "system."
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
-"Oharra: Flatpak-en ingurune isolatuaren ondorioz, FSearch-ek ezin ditu zure "
-"sistemako fitxategi guztiak aurkitu."
+"<em>Oharra::</em> Flatpak-en ingurune isolatuaren ondorioz, FSearch-ek ezin "
+"ditu zure sistemako fitxategi guztiak aurkitu."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
@@ -111,44 +101,32 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr "GNOMEren jarraibideak hurbilagotik jarraitzen duen diseinua"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
-#| msgid "Search"
 msgid "search"
-msgstr "Bilatu"
+msgstr "bilatu"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "Bilatu"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "Files"
 msgid "files"
-msgstr "Fitxategiak"
+msgstr "fitxategiak"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "Karpetak"
+msgstr "karpetak"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
 msgstr "musika"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "Bideoak"
+msgstr "bideo"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
-msgstr "Dokumentuak"
+msgstr "dokumentuak"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
@@ -164,27 +142,20 @@ msgstr "dena"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-#, fuzzy
 msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "New search engine"
-msgstr "Lineako Fsearch"
+msgstr "Bilatzaile berria"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
-#| msgid "Show highlighted search terms"
 msgid "Greatly improved highlighting of search terms"
-msgstr "Nabarmendu bilaketaren terminoak"
+msgstr "Asko hobetu da bilaketa-terminoak nabarmentzea"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
-#, fuzzy
-#| msgid "Edit filter"
 msgid "Custom filters"
-msgstr "Editatu iragazkia"
+msgstr "Iragazki pertsonalizatuak"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
@@ -223,10 +194,8 @@ msgstr ""
 "beharrean"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Erakutsi aplikazioaren hobespenak"
+msgstr "Erakutsi .desktop fitxategietarako aplikazioen ikonoak"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
@@ -343,12 +312,9 @@ msgid "Failed to get path"
 msgstr "Ezin izan da bidea lortu"
 
 #: src/fsearch_file_utils.c:253
-#, fuzzy
-#| msgctxt "Will be followed by the content type string."
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "Errore bat gertatu da eduki motari buruzko informazioa eskuratzean"
+msgstr "Errore bat gertatu da fitxategitik informazioa jasotzean"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
@@ -953,13 +919,6 @@ msgstr ""
 "irekiko da."
 
 #: src/fsearch_preferences.ui:1624
-#, fuzzy
-#| msgid ""
-#| "<b>Single click to open:</b>\n"
-#| "\n"
-#| "If enabled, a single click will open the selected file/folder. If you "
-#| "only want to select a file/folder while this setting is active, you need "
-#| "to a hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
