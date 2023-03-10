@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-10-12 06:50+0000\n"
+"PO-Revision-Date: 2023-03-11 08:41+0000\n"
 "Last-Translator: Ammuu5 <ammuu5@tutanota.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
 "translations/fi/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.15-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -34,10 +34,8 @@ msgid ""
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "File Search Utility"
-msgstr "FSearch Online"
+msgstr "Tiedostohakuapuohjelma"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
@@ -53,16 +51,12 @@ msgstr ""
 "näkyviin lähes välittömästi."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
-#, fuzzy
-#| msgid ""
-#| "Ignore case (e.g. searching for \"fsearch\" will match \"FSearch\" as "
-#| "well)"
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
-"Ei huomioi isoja ja pieniä kirjaimia (esim. haku \"fsearch\" vastaa myös "
-"\"FSearch\" hakua)"
+"Ei huomioi isoja ja pieniä kirjaimia (esim. haku \"<code>fsearch</code>\" "
+"vastaa myös \"FSearch\" hakua)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -85,15 +79,11 @@ msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
-#, fuzzy
-#| msgid ""
-#| "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
-#| "system."
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
-"Huomautus: Flatpakin hiekkalaatikon vuoksi FSearch ei löydä kaikkia "
+"<em>Huomautus:</em> Flatpakin hiekkalaatikon vuoksi FSearch ei löydä kaikkia "
 "järjestelmäsi tiedostoja."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
@@ -105,56 +95,44 @@ msgid "A layout more closely following GNOME HIGs"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
-#| msgid "Search"
 msgid "search"
-msgstr "Etsi"
+msgstr "etsi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "Etsi"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "files?"
 msgid "files"
-msgstr "tiedostot?"
+msgstr "tiedostot"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "Kansiot"
+msgstr "kansiot"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "musiikki"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "Videot"
+msgstr "video"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
-msgstr "Asiakirjat"
+msgstr "asiakirjat"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "löydä"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "työkalu"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "kaikki"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -162,30 +140,24 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch Online"
 msgid "New search engine"
-msgstr "FSearch Online"
+msgstr "Uusi hakukone"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
-#| msgid "Show highlighted search terms"
 msgid "Greatly improved highlighting of search terms"
-msgstr "Näytä korostut hakusanat"
+msgstr "Hakusanojen korostus on parantunut huomattavasti"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
-#, fuzzy
-#| msgid "Edit filter"
 msgid "Custom filters"
-msgstr "Muokkaa suodatinta"
+msgstr "Mukautetut suodattimet"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Parannettu lajittelun suorituskyky"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Parempi rullauksen suorituskyky"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
@@ -205,7 +177,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Lisää suodatin sovelluksille (esim. .desktop-tiedostoille)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
@@ -214,14 +186,12 @@ msgid ""
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Näytä sovelluksen asetukset"
+msgstr "Näytä .desktop-tiedostojen sovelluskuvakkeet"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Lisää .odp- ja .ods-tiedostot asiakirjasuodattimeen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
@@ -237,7 +207,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "Parempi tuki tiedostojen avaamiselle hiekkalaatikkotilassa"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
@@ -246,7 +216,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Parempi muiden kuin Linux-järjestelmien tuki"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
@@ -325,12 +295,9 @@ msgid "Failed to get path"
 msgstr "Polun saaminen epäonnistui"
 
 #: src/fsearch_file_utils.c:253
-#, fuzzy
-#| msgctxt "Will be followed by the content type string."
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "Virhe haettaessa sisältötyypin tietoja"
+msgstr "Virhe haettaessa tietoja tiedostosta"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
@@ -690,7 +657,7 @@ msgstr "minuutti(a)"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "Syötä polku…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
