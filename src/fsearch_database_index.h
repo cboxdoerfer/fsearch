@@ -71,6 +71,9 @@ fsearch_database_index_get_id(FsearchDatabaseIndex *self);
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
 
+bool
+fsearch_database_index_get_one_file_system(FsearchDatabaseIndex *self);
+
 FsearchDatabaseEntry *
 fsearch_database_index_add_file(FsearchDatabaseIndex *self,
                                 const char *name,
@@ -92,5 +95,8 @@ fsearch_database_index_lock(FsearchDatabaseIndex *self);
 
 void
 fsearch_database_index_unlock(FsearchDatabaseIndex *self);
+
+bool
+fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)

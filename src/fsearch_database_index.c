@@ -1,5 +1,6 @@
 #include "fsearch_database_index.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_database_scan.h"
 #include "fsearch_database_work.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_memory_pool.h"
@@ -36,6 +37,8 @@ struct _FsearchDatabaseIndex {
     GMutex mutex;
 
     uint32_t id;
+
+    bool initialized;
 
     volatile gint ref_count;
 };
@@ -477,6 +480,12 @@ fsearch_database_index_get_flags(FsearchDatabaseIndex *self) {
     return self->flags;
 }
 
+bool
+fsearch_database_index_get_one_file_system(FsearchDatabaseIndex *self) {
+    g_assert(self);
+    return self->include ? fsearch_database_include_get_one_file_system(self->include) : false;
+}
+
 FsearchDatabaseEntry *
 fsearch_database_index_add_file(FsearchDatabaseIndex *self,
                                 const char *name,
@@ -485,8 +494,8 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
                                 FsearchDatabaseEntryFolder *parent) {
     g_return_val_if_fail(self, NULL);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
+    //    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    //    g_assert_nonnull(locker);
     FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(self->file_pool);
     db_entry_set_name(file_entry, name);
     db_entry_set_size(file_entry, size);
@@ -508,8 +517,8 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
                                   FsearchDatabaseEntryFolder *parent) {
     g_return_val_if_fail(self, NULL);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
+    // g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    // g_assert_nonnull(locker);
 
     FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(self->folder_pool);
     db_entry_set_name(entry, name);
@@ -529,8 +538,8 @@ void
 fsearch_database_index_free_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
     g_return_if_fail(self);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
+    //    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    //    g_assert_nonnull(locker);
 
     FsearchMemoryPool *pool = NULL;
 
@@ -557,4 +566,33 @@ void
 fsearch_database_index_unlock(FsearchDatabaseIndex *self) {
     g_return_if_fail(self);
     g_mutex_unlock(&self->mutex);
+}
+
+bool
+fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable) {
+    g_return_val_if_fail(self, false);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    if (self->initialized) {
+        return true;
+    }
+
+    if (self->event_func) {
+        self->event_func(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED, NULL, NULL, NULL, 0, self->event_user_data);
+    }
+
+    if (db_scan_folder(self, fsearch_database_include_get_path(self->include), self->exclude_manager, cancellable, NULL)) {
+        self->initialized = true;
+    }
+    else {
+        // TODO: reset index
+    }
+
+    if (self->event_func) {
+        self->event_func(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED, NULL, NULL, NULL, 0, self->event_user_data);
+    }
+
+    return self->initialized;
 }
