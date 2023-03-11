@@ -10,10 +10,3 @@ db_scan_folder(FsearchDatabaseIndex *index,
                FsearchDatabaseExcludeManager *exclude_manager,
                GCancellable *cancellable,
                void (*status_cb)(const char *));
-
-FsearchDatabaseIndexStore *
-db_scan2(FsearchDatabaseIncludeManager *include_manager,
-         FsearchDatabaseExcludeManager *exclude_manager,
-         FsearchDatabaseIndexPropertyFlags flags,
-         GCancellable *cancellable,
-         GAsyncQueue *work_queue);

@@ -2,6 +2,8 @@
 
 #include <gio/gio.h>
 
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
 
 G_BEGIN_DECLS
@@ -14,7 +16,10 @@ GType
 fsearch_database_index_store_get_type(void);
 
 FsearchDatabaseIndexStore *
-fsearch_database_index_store_new(FsearchDatabaseIndexPropertyFlags flags);
+fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
+                                 FsearchDatabaseExcludeManager *exclude_manager,
+                                 FsearchDatabaseIndexPropertyFlags flags,
+                                 GAsyncQueue *work_queue);
 
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_ref(FsearchDatabaseIndexStore *self);
@@ -60,6 +65,9 @@ void
 fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
                                        FsearchDatabaseEntry *entry,
                                        FsearchDatabaseIndex *index);
+
+void
+fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, fsearch_database_index_store_unref)
 

@@ -18,14 +18,6 @@ enum {
     WALK_CANCEL,
 };
 
-static bool
-is_cancelled(GCancellable *cancellable) {
-    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
-        return true;
-    }
-    return false;
-}
-
 typedef struct DatabaseWalkContext {
     FsearchDatabaseIndex *index;
     GString *path;
@@ -184,47 +176,4 @@ db_scan_folder(FsearchDatabaseIndex *index,
         g_warning("[db_scan] walk error: %d", res);
     }
     return false;
-}
-
-FsearchDatabaseIndexStore *
-db_scan2(FsearchDatabaseIncludeManager *include_manager,
-         FsearchDatabaseExcludeManager *exclude_manager,
-         FsearchDatabaseIndexPropertyFlags flags,
-         GCancellable *cancellable,
-         GAsyncQueue *work_queue) {
-    g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(flags);
-
-    g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
-    for (uint32_t i = 0; i < includes->len; ++i) {
-        FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        FsearchDatabaseIndex *index = fsearch_database_index_new(fsearch_database_include_get_id(include),
-                                                                 include,
-                                                                 exclude_manager,
-                                                                 flags,
-                                                                 work_queue);
-        g_debug("started");
-        fsearch_database_index_scan(index, cancellable);
-        g_debug("finished");
-        if (index) {
-            g_ptr_array_add(indices, index);
-        }
-    }
-    if (is_cancelled(cancellable)) {
-        return NULL;
-    }
-    // if (status_cb) {
-    //     status_cb(_("Sorting…"));
-    // }
-    for (uint32_t i = 0; i < indices->len; ++i) {
-        FsearchDatabaseIndex *index = g_ptr_array_index(indices, i);
-        fsearch_database_index_store_add(store, index);
-    }
-    fsearch_database_index_store_sort(store, cancellable);
-
-    if (is_cancelled(cancellable)) {
-        return NULL;
-    }
-
-    return g_steal_pointer(&store);
 }
