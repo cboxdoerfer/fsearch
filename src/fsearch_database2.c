@@ -1029,6 +1029,7 @@ fsearch_database2_finalize(GObject *object) {
     g_clear_object(&self->file);
 
     g_clear_pointer(&self->search_results, g_hash_table_unref);
+    g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     g_clear_object(&self->include_manager);
     g_clear_object(&self->exclude_manager);
     database_unlock(self);
