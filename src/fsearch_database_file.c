@@ -937,8 +937,8 @@ db_file_load(const char *file_path,
         goto load_fail;
     }
 
-    FsearchDatabaseIndexStore *store = fsearch_database_index_store_new(index_flags);
-    // FsearchDatabaseIndex *index = calloc(1, sizeof(FsearchDatabaseIndex));
+    // FsearchDatabaseIndexStore *store = fsearch_database_index_store_new(index_flags);
+    //  FsearchDatabaseIndex *index = calloc(1, sizeof(FsearchDatabaseIndex));
     // g_assert(index);
 
     // for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
