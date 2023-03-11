@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-01-11 16:52+0000\n"
+"PO-Revision-Date: 2023-03-13 12:41+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -152,15 +152,15 @@ msgstr "Documentos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "encontrar"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "ferramenta"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "tudo"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -366,7 +366,7 @@ msgstr "Falha ao abrir:"
 #: src/fsearch_file_utils.c:502
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr ""
+msgstr "Erro ao abrir pasta"
 
 #: src/fsearch_file_utils.c:505
 #, fuzzy
@@ -433,7 +433,7 @@ msgstr "_OK"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:301
 msgid "Edit filter"
-msgstr ""
+msgstr "Editar filtro"
 
 #: src/fsearch_filter_editor.ui:50
 #, fuzzy
@@ -443,11 +443,11 @@ msgstr "Nome"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "O nome exclusivo deste filtro"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Nome do filtro exclusivo"
 
 #: src/fsearch_filter_editor.ui:73
 #, fuzzy
@@ -469,11 +469,11 @@ msgstr "Coincidir Capitalização"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Consulta:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Macro:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -618,7 +618,7 @@ msgstr "Abrir com clique único"
 
 #: src/fsearch_preferences.ui:468
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Iniciar ficheiros desktop"
 
 #: src/fsearch_preferences.ui:489
 msgid "Results:"
@@ -686,7 +686,7 @@ msgstr "Quantidade de ficheiros selecionados"
 
 #: src/fsearch_preferences.ui:825
 msgid "Restore default filters"
-msgstr ""
+msgstr "Restaurar filtros padrão"
 
 #: src/fsearch_preferences.ui:857
 #, fuzzy
@@ -1422,7 +1422,7 @@ msgstr "Nome"
 
 #: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
-msgstr ""
+msgstr "Macro"
 
 #: src/fsearch_preferences_widgets.c:292
 #, fuzzy
