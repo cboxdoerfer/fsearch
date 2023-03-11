@@ -17,6 +17,12 @@ struct _FsearchDatabaseIndexStore {
 
     GAsyncQueue *work_queue;
 
+    struct {
+        GThread *thread;
+        GMainLoop *loop;
+        GMainContext *ctx;
+    } monitor;
+
     bool is_sorted;
     bool running;
 
@@ -67,10 +73,42 @@ index_store_has_index_with_same_id(FsearchDatabaseIndexStore *self, FsearchDatab
     return false;
 }
 
+static gboolean
+monitor_thread_quit(FsearchDatabaseIndexStore *self) {
+    g_return_val_if_fail(self, G_SOURCE_REMOVE);
+
+    g_main_loop_quit(self->monitor.loop);
+
+    return G_SOURCE_REMOVE;
+}
+
+static gpointer
+monitor_thread_func(gpointer user_data) {
+    FsearchDatabaseIndexStore *self = user_data;
+    g_return_val_if_fail(self, NULL);
+
+    g_main_context_push_thread_default(self->monitor.ctx);
+    g_main_loop_run(self->monitor.loop);
+    g_main_context_pop_thread_default(self->monitor.ctx);
+    g_main_loop_unref(self->monitor.loop);
+
+    return NULL;
+}
+
 static void
 index_store_free(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
 
+    if (self->monitor.loop) {
+        g_main_context_invoke_full(self->monitor.ctx, G_PRIORITY_HIGH, (GSourceFunc)monitor_thread_quit, self, NULL);
+    }
+    if (self->monitor.thread) {
+        g_thread_join(self->monitor.thread);
+    }
+
+    g_clear_pointer(&self->monitor.ctx, g_main_context_unref);
+
+    sorted_entries_free(self);
     g_clear_pointer(&self->indices, g_ptr_array_unref);
     g_clear_object(&self->include_manager);
     g_clear_object(&self->exclude_manager);
@@ -99,6 +137,10 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
 
     self->files_sorted[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
     self->folders_sorted[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
+
+    self->monitor.ctx = g_main_context_new();
+    self->monitor.loop = g_main_loop_new(self->monitor.ctx, FALSE);
+    self->monitor.thread = g_thread_new("FsearchDatabaseIndexStoreMonitor", monitor_thread_func, self);
 
     self->ref_count = 1;
 
@@ -134,10 +176,16 @@ fsearch_database_index_store_add(FsearchDatabaseIndexStore *self, FsearchDatabas
 
     g_ptr_array_add(self->indices, fsearch_database_index_ref(index));
 
+    fsearch_database_index_lock(index);
+
+    fsearch_database_index_set_propagate_work(index, true);
     g_autoptr(DynamicArray) files = fsearch_database_index_get_files(index);
     g_autoptr(DynamicArray) folders = fsearch_database_index_get_folders(index);
     darray_add_array(self->files_sorted[DATABASE_INDEX_PROPERTY_NAME], files);
     darray_add_array(self->folders_sorted[DATABASE_INDEX_PROPERTY_NAME], folders);
+
+    fsearch_database_index_unlock(index);
+
     self->is_sorted = false;
 }
 
@@ -309,7 +357,8 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable
                                                                  include,
                                                                  self->exclude_manager,
                                                                  self->flags,
-                                                                 self->work_queue);
+                                                                 self->work_queue,
+                                                                 self->monitor.ctx);
         fsearch_database_index_scan(index, cancellable);
         if (index) {
             g_ptr_array_add(indices, index);

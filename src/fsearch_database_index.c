@@ -28,10 +28,12 @@ struct _FsearchDatabaseIndex {
     GHashTable *watch_descriptors;
     int32_t inotify_fd;
     GSource *monitor_source;
+    GMainContext *monitor_ctx;
 
     GHashTable *pending_moves;
 
     GAsyncQueue *work_queue;
+    bool propagate_work;
 
     GMutex mutex;
 
@@ -85,7 +87,10 @@ monitor_event_queue(FsearchDatabaseIndex *self,
     g_return_if_fail(self);
     g_return_if_fail(self->work_queue);
 
-    g_async_queue_push(self->work_queue, fsearch_database_work_new_monitor_event(self, kind, entry_1, entry_2, path, wd));
+    if (self->propagate_work) {
+        g_async_queue_push(self->work_queue,
+                           fsearch_database_work_new_monitor_event(self, kind, entry_1, entry_2, path, wd));
+    }
 }
 
 FsearchDatabaseEntry *
@@ -222,6 +227,7 @@ index_free(FsearchDatabaseIndex *self) {
 
     g_source_destroy(self->monitor_source);
     g_clear_pointer(&self->monitor_source, g_source_unref);
+    g_clear_pointer(&self->monitor_ctx, g_main_context_unref);
 
     g_clear_pointer(&self->watch_descriptors, g_hash_table_unref);
 
@@ -246,6 +252,13 @@ index_free(FsearchDatabaseIndex *self) {
 static gboolean
 inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
     FsearchDatabaseIndex *self = user_data;
+
+    // Assert that this function is run in the right monitor thread
+    g_assert(g_main_context_is_owner(self->monitor_ctx));
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
     char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
     const struct inotify_event *event;
 
@@ -367,7 +380,8 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
-                           GAsyncQueue *work_queue) {
+                           GAsyncQueue *work_queue,
+                           GMainContext *monitor_ctx) {
     FsearchDatabaseIndex *self = calloc(1, sizeof(FsearchDatabaseIndex));
     g_assert(self);
 
@@ -380,6 +394,7 @@ fsearch_database_index_new(uint32_t id,
     self->folders = darray_new(1024);
 
     self->work_queue = work_queue ? g_async_queue_ref(work_queue) : NULL;
+    self->propagate_work = false;
 
     g_mutex_init(&self->mutex);
 
@@ -394,9 +409,11 @@ fsearch_database_index_new(uint32_t id,
     self->pending_moves =
         g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)monitor_event_context_free);
     self->inotify_fd = inotify_init1(IN_NONBLOCK);
+
+    self->monitor_ctx = g_main_context_ref(monitor_ctx);
     self->monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
     g_source_set_callback(self->monitor_source, (GSourceFunc)inotify_events_cb, self, NULL);
-    g_source_attach(self->monitor_source, NULL);
+    g_source_attach(self->monitor_source, self->monitor_ctx);
 
     self->ref_count = 1;
 
@@ -601,4 +618,11 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
     monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED, NULL, NULL, NULL, 0);
 
     return self->initialized;
+}
+
+void
+fsearch_database_index_set_propagate_work(FsearchDatabaseIndex *self, bool propagate) {
+    g_return_if_fail(self);
+
+    self->propagate_work = propagate;
 }

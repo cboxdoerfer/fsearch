@@ -30,7 +30,8 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
-                           GAsyncQueue *work_queue);
+                           GAsyncQueue *work_queue,
+                           GMainContext *monitor_ctx);
 
 FsearchDatabaseIndex *
 fsearch_database_index_new_with_content(uint32_t id,
@@ -88,5 +89,8 @@ fsearch_database_index_unlock(FsearchDatabaseIndex *self);
 
 bool
 fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable);
+
+void
+fsearch_database_index_set_propagate_work(FsearchDatabaseIndex *self, bool propagate);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)
