@@ -16,5 +16,4 @@ db_scan2(FsearchDatabaseIncludeManager *include_manager,
          FsearchDatabaseExcludeManager *exclude_manager,
          FsearchDatabaseIndexPropertyFlags flags,
          GCancellable *cancellable,
-         FsearchDatabaseIndexEventFunc event_func,
-         gpointer user_data);
+         GAsyncQueue *work_queue);

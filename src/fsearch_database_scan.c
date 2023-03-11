@@ -191,8 +191,7 @@ db_scan2(FsearchDatabaseIncludeManager *include_manager,
          FsearchDatabaseExcludeManager *exclude_manager,
          FsearchDatabaseIndexPropertyFlags flags,
          GCancellable *cancellable,
-         FsearchDatabaseIndexEventFunc event_func,
-         gpointer event_func_user_data) {
+         GAsyncQueue *work_queue) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(flags);
 
     g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
@@ -203,8 +202,7 @@ db_scan2(FsearchDatabaseIncludeManager *include_manager,
                                                                  include,
                                                                  exclude_manager,
                                                                  flags,
-                                                                 event_func,
-                                                                 event_func_user_data);
+                                                                 work_queue);
         g_debug("started");
         fsearch_database_index_scan(index, cancellable);
         g_debug("finished");

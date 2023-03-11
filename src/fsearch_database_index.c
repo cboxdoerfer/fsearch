@@ -31,8 +31,7 @@ struct _FsearchDatabaseIndex {
 
     GHashTable *pending_moves;
 
-    FsearchDatabaseIndexEventFunc event_func;
-    gpointer event_user_data;
+    GAsyncQueue *work_queue;
 
     GMutex mutex;
 
@@ -74,6 +73,19 @@ monitor_event_context_new(const struct inotify_event *event) {
     ctx->mask = event->mask;
 
     return ctx;
+}
+
+static void
+monitor_event_queue(FsearchDatabaseIndex *self,
+                    FsearchDatabaseIndexEventKind kind,
+                    FsearchDatabaseEntry *entry_1,
+                    FsearchDatabaseEntry *entry_2,
+                    GString *path,
+                    int32_t wd) {
+    g_return_if_fail(self);
+    g_return_if_fail(self->work_queue);
+
+    g_async_queue_push(self->work_queue, fsearch_database_work_new_monitor_event(self, kind, entry_1, entry_2, path, wd));
 }
 
 FsearchDatabaseEntry *
@@ -224,6 +236,8 @@ index_free(FsearchDatabaseIndex *self) {
     g_clear_pointer(&self->file_pool, fsearch_memory_pool_free_pool);
     g_clear_pointer(&self->folder_pool, fsearch_memory_pool_free_pool);
 
+    g_clear_pointer(&self->work_queue, g_async_queue_unref);
+
     g_mutex_clear(&self->mutex);
 
     g_clear_pointer(&self, free);
@@ -339,9 +353,9 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
                 continue;
             }
 
-            if (entry_1 && event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->event_func) {
-                g_debug("call event func");
-                self->event_func(self, event_kind, entry_1, entry_2, g_steal_pointer(&path), event->wd, self->event_user_data);
+            if (entry_1 && event_kind < NUM_FSEARCH_DATABASE_INDEX_EVENTS && self->work_queue) {
+                g_debug("[monitor_event] queue work");
+                monitor_event_queue(self, event_kind, entry_1, entry_2, g_steal_pointer(&path), event->wd);
             }
         }
     }
@@ -353,8 +367,7 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
-                           FsearchDatabaseIndexEventFunc event_func,
-                           gpointer user_data) {
+                           GAsyncQueue *work_queue) {
     FsearchDatabaseIndex *self = g_slice_new0(FsearchDatabaseIndex);
     g_assert(self);
 
@@ -366,8 +379,7 @@ fsearch_database_index_new(uint32_t id,
     self->files = darray_new(1024);
     self->folders = darray_new(1024);
 
-    self->event_func = event_func;
-    self->event_user_data = user_data;
+    self->work_queue = work_queue ? g_async_queue_ref(work_queue) : NULL;
 
     g_mutex_init(&self->mutex);
 
@@ -400,8 +412,7 @@ fsearch_database_index_new_with_content(uint32_t id,
                                         DynamicArray *files,
                                         DynamicArray *folders,
                                         FsearchDatabaseIndexPropertyFlags flags,
-                                        FsearchDatabaseIndexEventFunc event_func,
-                                        gpointer user_data) {
+                                        GAsyncQueue *work_queue) {
     FsearchDatabaseIndex *self = g_slice_new0(FsearchDatabaseIndex);
     g_assert(self);
 
@@ -416,8 +427,7 @@ fsearch_database_index_new_with_content(uint32_t id,
     self->file_pool = file_pool;
     self->folder_pool = folder_pool;
 
-    self->event_func = event_func;
-    self->event_user_data = user_data;
+    self->work_queue = work_queue ? g_async_queue_ref(work_queue) : NULL;
 
     self->ref_count = 1;
 
@@ -579,9 +589,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
         return true;
     }
 
-    if (self->event_func) {
-        self->event_func(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED, NULL, NULL, NULL, 0, self->event_user_data);
-    }
+    monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED, NULL, NULL, NULL, 0);
 
     if (db_scan_folder(self, fsearch_database_include_get_path(self->include), self->exclude_manager, cancellable, NULL)) {
         self->initialized = true;
@@ -590,9 +598,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
         // TODO: reset index
     }
 
-    if (self->event_func) {
-        self->event_func(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED, NULL, NULL, NULL, 0, self->event_user_data);
-    }
+    monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED, NULL, NULL, NULL, 0);
 
     return self->initialized;
 }

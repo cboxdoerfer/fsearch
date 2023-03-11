@@ -16,14 +16,6 @@ G_BEGIN_DECLS
 
 typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
 
-typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *,
-                                              FsearchDatabaseIndexEventKind kind,
-                                              FsearchDatabaseEntry *entry_1,
-                                              FsearchDatabaseEntry *entry_2,
-                                              GString *path,
-                                              int32_t watch_descriptor,
-                                              gpointer user_data);
-
 GType
 fsearch_database_index_get_type(void);
 
@@ -38,8 +30,7 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
-                           FsearchDatabaseIndexEventFunc event_func,
-                           gpointer user_data);
+                           GAsyncQueue *work_queue);
 
 FsearchDatabaseIndex *
 fsearch_database_index_new_with_content(uint32_t id,
@@ -50,8 +41,7 @@ fsearch_database_index_new_with_content(uint32_t id,
                                         DynamicArray *files,
                                         DynamicArray *folders,
                                         FsearchDatabaseIndexPropertyFlags flags,
-                                        FsearchDatabaseIndexEventFunc event_func,
-                                        gpointer user_data);
+                                        GAsyncQueue *work_queue);
 
 FsearchDatabaseInclude *
 fsearch_database_index_get_include(FsearchDatabaseIndex *self);
