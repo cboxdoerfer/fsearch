@@ -102,7 +102,7 @@ merge(DynamicArray *src,
       GCancellable *cancellable,
       DynamicArrayCompareDataFunc comp_func,
       gpointer comp_data) {
-    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
+    if (g_cancellable_is_cancelled(cancellable)) {
         return;
     }
 
@@ -132,7 +132,7 @@ split_merge(DynamicArray *src,
     if (end_idx - 1 <= start_idx) {
         return;
     }
-    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
+    if (g_cancellable_is_cancelled(cancellable)) {
         return;
     }
 
@@ -398,7 +398,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
     if (merge_me->len == 1) {
         return merge_me;
     }
-    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
+    if (g_cancellable_is_cancelled(cancellable)) {
         return merge_me;
     }
     const uint32_t num_threads = merge_me->len / 2;

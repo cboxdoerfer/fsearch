@@ -31,7 +31,7 @@ typedef struct DatabaseWalkContext {
 
 static int
 db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntryFolder *parent) {
-    if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
+    if (g_cancellable_is_cancelled(walk_context->cancellable)) {
         g_debug("[db_scan] cancelled");
         return WALK_CANCEL;
     }
@@ -60,7 +60,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
     struct dirent *dent = NULL;
     while ((dent = readdir(dir))) {
-        if (walk_context->cancellable && g_cancellable_is_cancelled(walk_context->cancellable)) {
+        if (g_cancellable_is_cancelled(walk_context->cancellable)) {
             g_debug("[db_scan] cancelled");
             g_clear_pointer(&dir, closedir);
             return WALK_CANCEL;

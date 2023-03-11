@@ -10,14 +10,6 @@ clear_fast_sorted_array(DynamicArray **sorted_entries, FsearchDatabaseIndexPrope
 }
 
 static bool
-is_cancelled(GCancellable *cancellable) {
-    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
-        return true;
-    }
-    return false;
-}
-
-static bool
 is_valid_fast_sort_type(FsearchDatabaseIndexProperty sort_type) {
     if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_PROPERTIES) {
         return true;
@@ -186,7 +178,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
         g_clear_pointer(&comp_ctx, free);
     }
 
-    if (cancellable && g_cancellable_is_cancelled(cancellable)) {
+    if (g_cancellable_is_cancelled(cancellable)) {
         g_clear_pointer(folders_out, darray_unref);
         g_clear_pointer(files_out, darray_unref);
         *sort_order_out = old_sort_order;
@@ -200,7 +192,7 @@ sort_store_entries(DynamicArray *entries,
                    GCancellable *cancellable) {
     // first sort by path
     darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, cancellable, NULL);
-    if (is_cancelled(cancellable)) {
+    if (g_cancellable_is_cancelled(cancellable)) {
         return;
     }
     clear_fast_sorted_array(sorted_entries, DATABASE_INDEX_PROPERTY_PATH);
@@ -208,7 +200,7 @@ sort_store_entries(DynamicArray *entries,
 
     // then by name
     darray_sort_multi_threaded(entries, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name, cancellable, NULL);
-    if (is_cancelled(cancellable)) {
+    if (g_cancellable_is_cancelled(cancellable)) {
         return;
     }
 
@@ -220,7 +212,7 @@ sort_store_entries(DynamicArray *entries,
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
                                    cancellable,
                                    NULL);
-        if (is_cancelled(cancellable)) {
+        if (g_cancellable_is_cancelled(cancellable)) {
             return;
         }
     }
@@ -232,7 +224,7 @@ sort_store_entries(DynamicArray *entries,
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
                                    cancellable,
                                    NULL);
-        if (is_cancelled(cancellable)) {
+        if (g_cancellable_is_cancelled(cancellable)) {
             return;
         }
     }
@@ -252,7 +244,7 @@ fsearch_database_sort(DynamicArray **files_store,
     DynamicArray *files = files_store[DATABASE_INDEX_PROPERTY_NAME];
     if (files) {
         sort_store_entries(files, files_store, flags, cancellable);
-        if (is_cancelled(cancellable)) {
+        if (g_cancellable_is_cancelled(cancellable)) {
             return false;
         }
 
@@ -263,7 +255,7 @@ fsearch_database_sort(DynamicArray **files_store,
                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
                                    cancellable,
                                    NULL);
-        if (is_cancelled(cancellable)) {
+        if (g_cancellable_is_cancelled(cancellable)) {
             return false;
         }
 
@@ -276,7 +268,7 @@ fsearch_database_sort(DynamicArray **files_store,
     DynamicArray *folders = folders_store[DATABASE_INDEX_PROPERTY_NAME];
     if (folders) {
         sort_store_entries(folders, folders_store, flags, cancellable);
-        if (is_cancelled(cancellable)) {
+        if (g_cancellable_is_cancelled(cancellable)) {
             return false;
         }
 
