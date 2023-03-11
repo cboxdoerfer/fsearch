@@ -15,6 +15,8 @@ struct _FsearchDatabaseIndexStore {
 
     FsearchDatabaseIndexPropertyFlags flags;
 
+    GAsyncQueue *work_queue;
+
     bool is_sorted;
     bool running;
 
