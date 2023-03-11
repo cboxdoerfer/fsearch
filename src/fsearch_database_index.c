@@ -368,7 +368,7 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
                            GAsyncQueue *work_queue) {
-    FsearchDatabaseIndex *self = g_slice_new0(FsearchDatabaseIndex);
+    FsearchDatabaseIndex *self = calloc(1, sizeof(FsearchDatabaseIndex));
     g_assert(self);
 
     self->id = id;
