@@ -62,9 +62,7 @@ fsearch_database_work_new_save(void);
 FsearchDatabaseWork *
 fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
                                         FsearchDatabaseIndexEventKind event_kind,
-                                        FsearchDatabaseEntry *entry_1,
-                                        FsearchDatabaseEntry *entry_2,
-                                        GString *path,
+                                        FsearchDatabaseEntry *entry,
                                         int32_t watch_descriptor);
 
 FsearchDatabaseWorkKind

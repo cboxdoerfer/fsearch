@@ -205,18 +205,14 @@ fsearch_database_work_new_save() {
 FsearchDatabaseWork *
 fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
                                         FsearchDatabaseIndexEventKind event_kind,
-                                        FsearchDatabaseEntry *entry_1,
-                                        FsearchDatabaseEntry *entry_2,
-                                        GString *path,
+                                        FsearchDatabaseEntry *entry,
                                         int32_t watch_descriptor) {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_MONITOR_EVENT;
 
     work->monitored_index = fsearch_database_index_ref(index);
     work->event_kind = event_kind;
-    work->path = path;
-    work->entry_1 = entry_1;
-    work->entry_2 = entry_2;
+    work->entry_1 = entry;
     work->watch_descriptor = watch_descriptor;
 
     return work;

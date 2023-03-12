@@ -12,7 +12,6 @@
 #include "fsearch_database_sort.h"
 #include "fsearch_database_work.h"
 #include "fsearch_enums.h"
-#include "fsearch_memory_pool.h"
 #include "fsearch_selection.h"
 #include "fsearch_thread_pool.h"
 
@@ -669,6 +668,7 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     FsearchDatabaseIndex *index = fsearch_database_work_monitor_event_get_index(work);
     FsearchDatabaseEntry *entry_1 = fsearch_database_work_monitor_event_get_entry_1(work);
     FsearchDatabaseEntry *entry_2 = fsearch_database_work_monitor_event_get_entry_2(work);
+    int32_t wd = fsearch_database_work_monitor_event_get_watch_descriptor(work);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -696,7 +696,7 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         fsearch_database_index_lock(index);
         g_hash_table_foreach(self->search_results, remove_result, entry_1);
         fsearch_database_index_unlock(index);
-        fsearch_database_index_free_entry(index, entry_1);
+        fsearch_database_index_remove_entry(index, entry_1, wd);
         views_changed_maybe = true;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
