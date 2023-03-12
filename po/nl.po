@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-03-02 07:39+0000\n"
+"PO-Revision-Date: 2023-03-13 12:41+0000\n"
 "Last-Translator: Didier Sandra <didier.mg.sandra@skynet.be>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -469,7 +469,7 @@ msgstr "Mappen toevoegen"
 
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
-msgstr "Bezig met laden van databank…"
+msgstr "Bezig met laden van de databank…"
 
 #: src/fsearch_overlay.ui:123
 msgid "This won't take long."
@@ -477,7 +477,7 @@ msgstr "Dit gaat niet lang duren."
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
-msgstr "Bezig met bijwerken van databank…"
+msgstr "Bezig met bijwerken van de databank…"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
@@ -687,7 +687,7 @@ msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
-"Voeg de in de database op te nemen locatie toe\n"
+"Voeg een in de databank op te nemen locatie toe\n"
 "                                "
 
 #: src/fsearch_preferences.ui:1124 src/fsearch_preferences.ui:1272
@@ -1125,7 +1125,7 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
-"<b>Mappen en bestanden uitsluiten van databank:</b>\n"
+"<b>Mappen en bestanden uitsluiten in de databank:</b>\n"
 "\n"
 "Dit is een puntkommagescheiden lijst met bestanden (of mappen) die je niet "
 "wilt opnemen in de databank. Voorbeeld: <i>.git;.cache;*.swp</i> sluit alle "
@@ -1161,13 +1161,13 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
-"<b>Periodiek de database bijwerken naargelang een specifiek tijdinterval:</b>"
+"<b>Periodiek de databank bijwerken naargelang een specifiek tijdinterval:</b>"
 "\n"
 "\n"
-"Indien ingeschakeld en zolang FSearch draait, zal de database op gezette "
+"Indien ingeschakeld en zolang FSearch draait, zal de databank op gezette "
 "tijden worden bijgewerkt met het opgegeven tijdinterval.\n"
 "\n"
-"Als je de database op de achtergrond wilt bijwerken, zelfs wanneer FSearch "
+"Als je de databank op de achtergrond wilt bijwerken, zelfs wanneer FSearch "
 "afgesloten is, zou je gebruik kunnen maken van hulpmiddelen zoals cron of "
 "systemd timers om periodiek bijwerken te starten met:\n"
 "\n"
@@ -1210,7 +1210,7 @@ msgstr ""
 " • <b>Naam:</b> Een unieke en beschrijvende identificatie voor het filter\n"
 " • <b>Macro:</b> Door de macrotekst te typen gevolgd met een ':' kan je het "
 "filter inschakelen wanneer gewenst\n"
-" • <b>Zoekopdracht:</b> De zoekterm waarop de database moet worden gefilterd"
+" • <b>Zoekopdracht:</b> De zoekterm waarop de databank moet worden gefilterd"
 
 #: src/fsearch_preferences.ui:1979
 msgid ""
@@ -1363,7 +1363,7 @@ msgstr "Aantal geselecteerde bestanden"
 
 #: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:102
 msgid "Cancel database update"
-msgstr "Databank bijwerken afbreken"
+msgstr "Databank bijwerking afbreken"
 
 #: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
