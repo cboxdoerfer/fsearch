@@ -73,6 +73,26 @@ index_store_has_index_with_same_id(FsearchDatabaseIndexStore *self, FsearchDatab
     return false;
 }
 
+static void
+lock_all_indices(FsearchDatabaseIndexStore *self) {
+    g_return_if_fail(self);
+
+    for (uint32_t i = 0; i < self->indices->len; ++i) {
+        FsearchDatabaseIndex *index_stored = g_ptr_array_index(self->indices, i);
+        fsearch_database_index_lock(index_stored);
+    }
+}
+
+static void
+unlock_all_indices(FsearchDatabaseIndexStore *self) {
+    g_return_if_fail(self);
+
+    for (uint32_t i = 0; i < self->indices->len; ++i) {
+        FsearchDatabaseIndex *index_stored = g_ptr_array_index(self->indices, i);
+        fsearch_database_index_unlock(index_stored);
+    }
+}
+
 static gboolean
 monitor_thread_quit(FsearchDatabaseIndexStore *self) {
     g_return_val_if_fail(self, G_SOURCE_REMOVE);
@@ -200,7 +220,9 @@ fsearch_database_index_store_add_sorted(FsearchDatabaseIndexStore *self,
 
     fsearch_database_index_store_add(self, index);
 
+    lock_all_indices(self);
     self->is_sorted = fsearch_database_sort(self->files_sorted, self->folders_sorted, self->flags, cancellable);
+    unlock_all_indices(self);
 }
 
 void
@@ -209,7 +231,9 @@ fsearch_database_index_store_sort(FsearchDatabaseIndexStore *self, GCancellable 
     if (self->is_sorted) {
         return;
     }
+    lock_all_indices(self);
     self->is_sorted = fsearch_database_sort(self->files_sorted, self->folders_sorted, self->flags, cancellable);
+    unlock_all_indices(self);
 }
 
 DynamicArray *
