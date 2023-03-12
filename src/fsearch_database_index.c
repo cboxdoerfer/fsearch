@@ -30,6 +30,7 @@ struct _FsearchDatabaseIndex {
     GSource *monitor_source;
     GMainContext *monitor_ctx;
 
+    GAsyncQueue *event_queue;
     GHashTable *pending_moves;
 
     GAsyncQueue *work_queue;
@@ -39,7 +40,7 @@ struct _FsearchDatabaseIndex {
 
     uint32_t id;
 
-    bool initialized;
+    volatile gint initialized;
 
     volatile gint ref_count;
 };
@@ -293,15 +294,36 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
     }
 }
 
+static void
+handle_queued_events(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
+
+    if (g_async_queue_length(self->event_queue) == 0) {
+        return;
+    }
+
+    while (true) {
+        FsearchDatabaseIndexMonitorEventContext *ctx = g_async_queue_try_pop(self->event_queue);
+        if (!ctx) {
+            break;
+        }
+        g_debug("handle queue event: %s", ctx->name ? ctx->name->str : "");
+        handle_event(self,
+                     ctx->watch_descriptor,
+                     ctx->mask,
+                     ctx->cookie,
+                     ctx->name ? ctx->name->str : NULL,
+                     ctx->name ? ctx->name->len : 0);
+        g_clear_pointer(&ctx, monitor_event_context_free);
+    }
+}
+
 static gboolean
 inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
     FsearchDatabaseIndex *self = user_data;
 
     // Assert that this function is run in the right monitor thread
     g_assert(g_main_context_is_owner(self->monitor_ctx));
-
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
 
     char buf[4096] __attribute__((aligned(__alignof__(struct inotify_event))));
     const struct inotify_event *event;
@@ -331,7 +353,25 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
 
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
-            handle_event(self, event->wd, event->mask, event->cookie, event->name, event->len);
+
+            if (g_atomic_int_get(&self->initialized) == 0) {
+                // The index is not initialized yet (e.g. it's still doing an initial scan)
+                // and therefore events can't be applied to it yet.
+                // Instead, we buffer the events for now and apply them once the index is ready.
+                g_debug("queue event: %s", event->name);
+                g_async_queue_push(
+                    self->event_queue,
+                    monitor_event_context_new(event->len ? event->name : NULL, event->wd, event->mask, event->cookie));
+            }
+            else {
+                g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+                g_assert_nonnull(locker);
+
+                // In case there are still queued events from the time the index wasn't initialized yet,
+                // we first must process them before any new events can be handled.
+                handle_queued_events(self);
+                handle_event(self, event->wd, event->mask, event->cookie, event->name, event->len);
+            }
         }
     }
     return G_SOURCE_CONTINUE;
@@ -351,6 +391,8 @@ index_free(FsearchDatabaseIndex *self) {
 
     g_clear_pointer(&self->include, fsearch_database_include_unref);
     g_clear_object(&self->exclude_manager);
+
+    g_clear_pointer(&self->event_queue, g_async_queue_unref);
 
     g_clear_pointer(&self->files, darray_unref);
     g_clear_pointer(&self->folders, darray_unref);
@@ -382,6 +424,8 @@ fsearch_database_index_new(uint32_t id,
 
     self->files = darray_new(1024);
     self->folders = darray_new(1024);
+
+    self->event_queue = g_async_queue_new_full((GDestroyNotify)monitor_event_context_free);
 
     self->work_queue = work_queue ? g_async_queue_ref(work_queue) : NULL;
     self->propagate_work = false;
@@ -592,14 +636,17 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    if (self->initialized) {
+    if (g_atomic_int_get(&self->initialized) > 0) {
         return true;
     }
 
     monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED, NULL, NULL, NULL, 0);
 
+    bool res = false;
     if (db_scan_folder(self, fsearch_database_include_get_path(self->include), self->exclude_manager, cancellable, NULL)) {
-        self->initialized = true;
+        g_atomic_int_set(&self->initialized, 1);
+        handle_queued_events(self);
+        res = true;
     }
     else {
         // TODO: reset index
@@ -607,7 +654,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
     monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED, NULL, NULL, NULL, 0);
 
-    return self->initialized;
+    return res;
 }
 
 void
