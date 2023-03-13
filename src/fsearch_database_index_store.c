@@ -15,8 +15,6 @@ struct _FsearchDatabaseIndexStore {
 
     FsearchDatabaseIndexPropertyFlags flags;
 
-    GAsyncQueue *work_queue;
-
     struct {
         GThread *thread;
         GMainLoop *loop;
@@ -160,7 +158,6 @@ index_store_free(FsearchDatabaseIndexStore *self) {
     g_clear_pointer(&self->indices, g_ptr_array_unref);
     g_clear_object(&self->include_manager);
     g_clear_object(&self->exclude_manager);
-    g_clear_pointer(&self->work_queue, g_async_queue_unref);
 
     g_slice_free(FsearchDatabaseIndexStore, self);
 }
@@ -168,8 +165,7 @@ index_store_free(FsearchDatabaseIndexStore *self) {
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
-                                 FsearchDatabaseIndexPropertyFlags flags,
-                                 GAsyncQueue *work_queue) {
+                                 FsearchDatabaseIndexPropertyFlags flags) {
     FsearchDatabaseIndexStore *self;
     self = g_slice_new0(FsearchDatabaseIndexStore);
 
@@ -180,8 +176,6 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
 
     self->include_manager = g_object_ref(include_manager);
     self->exclude_manager = g_object_ref(exclude_manager);
-
-    self->work_queue = g_async_queue_ref(work_queue);
 
     self->files_sorted[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
     self->folders_sorted[DATABASE_INDEX_PROPERTY_NAME] = darray_new(1024);
@@ -410,7 +404,6 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
                                                                  include,
                                                                  self->exclude_manager,
                                                                  self->flags,
-                                                                 self->work_queue,
                                                                  self->worker.ctx,
                                                                  self->monitor.ctx,
                                                                  event_func,

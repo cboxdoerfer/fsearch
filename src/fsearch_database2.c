@@ -815,7 +815,7 @@ rescan_database(FsearchDatabase2 *self) {
     g_clear_pointer(&locker, g_mutex_locker_free);
 
     g_autoptr(FsearchDatabaseIndexStore)
-        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, self->work_queue);
+        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags);
     g_return_if_fail(store);
     fsearch_database_index_store_start(store, NULL, index_event_func, self);
 
@@ -841,7 +841,7 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_work_scan_get_flags(work);
 
     g_autoptr(FsearchDatabaseIndexStore)
-        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, self->work_queue);
+        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags);
     g_return_if_fail(store);
     fsearch_database_index_store_start(store, NULL, index_event_func, self);
 

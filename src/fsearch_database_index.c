@@ -3,7 +3,6 @@
 #include "fsearch_database_index.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_scan.h"
-#include "fsearch_database_work.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_memory_pool.h"
 
@@ -38,7 +37,6 @@ struct _FsearchDatabaseIndex {
     GAsyncQueue *event_queue;
     GHashTable *pending_moves;
 
-    GAsyncQueue *work_queue;
     bool propagate_work;
 
     GMutex mutex;
@@ -416,8 +414,6 @@ index_free(FsearchDatabaseIndex *self) {
     g_clear_pointer(&self->file_pool, fsearch_memory_pool_free_pool);
     g_clear_pointer(&self->folder_pool, fsearch_memory_pool_free_pool);
 
-    g_clear_pointer(&self->work_queue, g_async_queue_unref);
-
     g_mutex_clear(&self->mutex);
 
     g_clear_pointer(&self, free);
@@ -428,7 +424,6 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
-                           GAsyncQueue *work_queue,
                            GMainContext *worker_ctx,
                            GMainContext *monitor_ctx,
                            FsearchDatabaseIndexEventFunc event_func,
@@ -446,7 +441,6 @@ fsearch_database_index_new(uint32_t id,
 
     self->event_queue = g_async_queue_new_full((GDestroyNotify)monitor_event_context_free);
 
-    self->work_queue = work_queue ? g_async_queue_ref(work_queue) : NULL;
     self->propagate_work = false;
 
     self->event_func = event_func;
@@ -490,8 +484,7 @@ fsearch_database_index_new_with_content(uint32_t id,
                                         FsearchMemoryPool *folder_pool,
                                         DynamicArray *files,
                                         DynamicArray *folders,
-                                        FsearchDatabaseIndexPropertyFlags flags,
-                                        GAsyncQueue *work_queue) {
+                                        FsearchDatabaseIndexPropertyFlags flags) {
     FsearchDatabaseIndex *self = g_slice_new0(FsearchDatabaseIndex);
     g_assert(self);
 
@@ -505,8 +498,6 @@ fsearch_database_index_new_with_content(uint32_t id,
 
     self->file_pool = file_pool;
     self->folder_pool = folder_pool;
-
-    self->work_queue = work_queue ? g_async_queue_ref(work_queue) : NULL;
 
     self->ref_count = 1;
 

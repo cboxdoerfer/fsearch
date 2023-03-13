@@ -18,8 +18,7 @@ fsearch_database_index_store_get_type(void);
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
-                                 FsearchDatabaseIndexPropertyFlags flags,
-                                 GAsyncQueue *work_queue);
+                                 FsearchDatabaseIndexPropertyFlags flags);
 
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_ref(FsearchDatabaseIndexStore *self);

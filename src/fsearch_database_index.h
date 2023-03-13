@@ -32,7 +32,6 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseInclude *include,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
-                           GAsyncQueue *work_queue,
                            GMainContext *worker_ctx,
                            GMainContext *monitor_ctx,
                            FsearchDatabaseIndexEventFunc event_func,
@@ -46,8 +45,7 @@ fsearch_database_index_new_with_content(uint32_t id,
                                         FsearchMemoryPool *folder_pool,
                                         DynamicArray *files,
                                         DynamicArray *folders,
-                                        FsearchDatabaseIndexPropertyFlags flags,
-                                        GAsyncQueue *work_queue);
+                                        FsearchDatabaseIndexPropertyFlags flags);
 
 FsearchDatabaseInclude *
 fsearch_database_index_get_include(FsearchDatabaseIndex *self);
