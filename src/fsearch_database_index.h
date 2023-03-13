@@ -31,6 +31,7 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
                            GAsyncQueue *work_queue,
+                           GMainContext *worker_ctx,
                            GMainContext *monitor_ctx);
 
 FsearchDatabaseIndex *

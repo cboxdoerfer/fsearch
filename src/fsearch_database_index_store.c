@@ -27,7 +27,7 @@ struct _FsearchDatabaseIndexStore {
         GThread *thread;
         GMainLoop *loop;
         GMainContext *ctx;
-    } scanner;
+    } worker;
 
     bool is_sorted;
     bool running;
@@ -117,11 +117,11 @@ thread_func(GMainContext *ctx, GMainLoop *loop) {
 }
 
 static gpointer
-scanner_thread_func(gpointer user_data) {
+worker_thread_func(gpointer user_data) {
     FsearchDatabaseIndexStore *self = user_data;
     g_return_val_if_fail(self, NULL);
 
-    thread_func(self->scanner.ctx, self->scanner.loop);
+    thread_func(self->worker.ctx, self->worker.loop);
 
     return NULL;
 }
@@ -148,13 +148,13 @@ index_store_free(FsearchDatabaseIndexStore *self) {
     }
     g_clear_pointer(&self->monitor.ctx, g_main_context_unref);
 
-    if (self->scanner.loop) {
-        g_main_context_invoke_full(self->scanner.ctx, G_PRIORITY_HIGH, (GSourceFunc)thread_quit, self->scanner.loop, NULL);
+    if (self->worker.loop) {
+        g_main_context_invoke_full(self->worker.ctx, G_PRIORITY_HIGH, (GSourceFunc)thread_quit, self->worker.loop, NULL);
     }
-    if (self->scanner.thread) {
-        g_thread_join(self->scanner.thread);
+    if (self->worker.thread) {
+        g_thread_join(self->worker.thread);
     }
-    g_clear_pointer(&self->scanner.ctx, g_main_context_unref);
+    g_clear_pointer(&self->worker.ctx, g_main_context_unref);
 
     sorted_entries_free(self);
     g_clear_pointer(&self->indices, g_ptr_array_unref);
@@ -190,9 +190,9 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
     self->monitor.loop = g_main_loop_new(self->monitor.ctx, FALSE);
     self->monitor.thread = g_thread_new("FsearchDatabaseIndexStoreMonitor", monitor_thread_func, self);
 
-    self->scanner.ctx = g_main_context_new();
-    self->scanner.loop = g_main_loop_new(self->scanner.ctx, FALSE);
-    self->scanner.thread = g_thread_new("FsearchDatabaseIndexStoreScanner", scanner_thread_func, self);
+    self->worker.ctx = g_main_context_new();
+    self->worker.loop = g_main_loop_new(self->worker.ctx, FALSE);
+    self->worker.thread = g_thread_new("FsearchDatabaseIndexStoreWorker", worker_thread_func, self);
 
     self->ref_count = 1;
 
@@ -414,6 +414,7 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable
                                                                  self->exclude_manager,
                                                                  self->flags,
                                                                  self->work_queue,
+                                                                 self->worker.ctx,
                                                                  self->monitor.ctx);
         fsearch_database_index_scan(index, cancellable);
         if (index) {

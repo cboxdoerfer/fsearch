@@ -32,6 +32,9 @@ struct _FsearchDatabaseIndex {
     GSource *monitor_source;
     GMainContext *monitor_ctx;
 
+    GSource *event_source;
+    GMainContext *worker_ctx;
+
     GAsyncQueue *event_queue;
     GHashTable *pending_moves;
 
@@ -60,6 +63,12 @@ typedef struct {
 G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex, fsearch_database_index, fsearch_database_index_ref, fsearch_database_index_unref)
 
 static void
+handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len);
+
+static void
+handle_queued_events(FsearchDatabaseIndex *self);
+
+static void
 monitor_event_context_free(FsearchDatabaseIndexMonitorEventContext *ctx) {
     if (ctx->name) {
         g_string_free(g_steal_pointer(&ctx->name), TRUE);
@@ -81,7 +90,31 @@ monitor_event_context_new(const char *name, int32_t wd, uint32_t mask, uint32_t 
 }
 
 static void
-monitor_event_queue(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventKind kind, FsearchDatabaseEntry *entry, int32_t wd) {
+handle_queued_events(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
+
+    if (g_async_queue_length(self->event_queue) == 0) {
+        return;
+    }
+
+    while (true) {
+        FsearchDatabaseIndexMonitorEventContext *ctx = g_async_queue_try_pop(self->event_queue);
+        if (!ctx) {
+            break;
+        }
+        g_debug("handle queue event: %s", ctx->name ? ctx->name->str : "");
+        handle_event(self,
+                     ctx->watch_descriptor,
+                     ctx->mask,
+                     ctx->cookie,
+                     ctx->name ? ctx->name->str : NULL,
+                     ctx->name ? ctx->name->len : 0);
+        g_clear_pointer(&ctx, monitor_event_context_free);
+    }
+}
+
+static void
+index_event_queue(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventKind kind, FsearchDatabaseEntry *entry, int32_t wd) {
     g_return_if_fail(self);
     g_return_if_fail(self->work_queue);
 
@@ -210,7 +243,7 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
 
         if (self->work_queue) {
             g_debug("[monitor_event] queue work");
-            monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, entry, 0);
+            index_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, entry, 0);
         }
     }
 }
@@ -224,7 +257,7 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
 
     if (self->work_queue) {
         g_debug("[monitor_event] queue work");
-        monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, entry, wd);
+        index_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, entry, wd);
     }
     else {
         fsearch_database_index_remove_entry(self, entry, wd);
@@ -299,32 +332,24 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
     }
 }
 
-static void
-handle_queued_events(FsearchDatabaseIndex *self) {
-    g_return_if_fail(self);
+static gboolean
+handle_queued_events_cb(gpointer user_data) {
+    g_return_val_if_fail(user_data, G_SOURCE_REMOVE);
+    FsearchDatabaseIndex *self = user_data;
 
-    if (g_async_queue_length(self->event_queue) == 0) {
-        return;
-    }
+    // Assert that this function is running is the worker thread
+    g_assert(g_main_context_is_owner(self->worker_ctx));
 
-    while (true) {
-        FsearchDatabaseIndexMonitorEventContext *ctx = g_async_queue_try_pop(self->event_queue);
-        if (!ctx) {
-            break;
-        }
-        g_debug("handle queue event: %s", ctx->name ? ctx->name->str : "");
-        handle_event(self,
-                     ctx->watch_descriptor,
-                     ctx->mask,
-                     ctx->cookie,
-                     ctx->name ? ctx->name->str : NULL,
-                     ctx->name ? ctx->name->len : 0);
-        g_clear_pointer(&ctx, monitor_event_context_free);
-    }
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    handle_queued_events(self);
+
+    return G_SOURCE_CONTINUE;
 }
 
 static gboolean
-inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
+inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
     FsearchDatabaseIndex *self = user_data;
 
     // Assert that this function is run in the right monitor thread
@@ -334,9 +359,7 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
     const struct inotify_event *event;
 
     /* Loop while events can be read from inotify file descriptor. */
-
-    for (;;) {
-
+    while (true) {
         /* Read some events. */
 
         ssize_t len = read(fd, buf, sizeof(buf));
@@ -355,28 +378,13 @@ inotify_events_cb(int fd, GIOCondition condition, gpointer user_data) {
         }
 
         /* Loop over all events in the buffer. */
-
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
 
-            if (g_atomic_int_get(&self->initialized) == 0) {
-                // The index is not initialized yet (e.g. it's still doing an initial scan)
-                // and therefore events can't be applied to it yet.
-                // Instead, we buffer the events for now and apply them once the index is ready.
-                g_debug("queue event: %s", event->name);
-                g_async_queue_push(
-                    self->event_queue,
-                    monitor_event_context_new(event->len ? event->name : NULL, event->wd, event->mask, event->cookie));
-            }
-            else {
-                g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-                g_assert_nonnull(locker);
-
-                // In case there are still queued events from the time the index wasn't initialized yet,
-                // we first must process them before any new events can be handled.
-                handle_queued_events(self);
-                handle_event(self, event->wd, event->mask, event->cookie, event->name, event->len);
-            }
+            g_debug("queue event: %s", event->name);
+            g_async_queue_push(
+                self->event_queue,
+                monitor_event_context_new(event->len ? event->name : NULL, event->wd, event->mask, event->cookie));
         }
     }
     return G_SOURCE_CONTINUE;
@@ -386,9 +394,14 @@ static void
 index_free(FsearchDatabaseIndex *self) {
     g_return_if_fail(self);
 
+    g_clear_pointer(&self->worker_ctx, g_main_context_unref);
+
     g_source_destroy(self->monitor_source);
     g_clear_pointer(&self->monitor_source, g_source_unref);
     g_clear_pointer(&self->monitor_ctx, g_main_context_unref);
+
+    g_source_destroy(self->event_source);
+    g_clear_pointer(&self->event_source, g_source_unref);
 
     g_clear_pointer(&self->watch_descriptors, g_hash_table_unref);
 
@@ -418,6 +431,7 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseExcludeManager *exclude_manager,
                            FsearchDatabaseIndexPropertyFlags flags,
                            GAsyncQueue *work_queue,
+                           GMainContext *worker_ctx,
                            GMainContext *monitor_ctx) {
     FsearchDatabaseIndex *self = calloc(1, sizeof(FsearchDatabaseIndex));
     g_assert(self);
@@ -451,8 +465,14 @@ fsearch_database_index_new(uint32_t id,
 
     self->monitor_ctx = g_main_context_ref(monitor_ctx);
     self->monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
-    g_source_set_callback(self->monitor_source, (GSourceFunc)inotify_events_cb, self, NULL);
+    g_source_set_callback(self->monitor_source, (GSourceFunc)inotify_listener_cb, self, NULL);
     g_source_attach(self->monitor_source, self->monitor_ctx);
+
+    self->worker_ctx = g_main_context_ref(worker_ctx);
+    self->event_source = g_timeout_source_new_seconds(1);
+    g_source_set_priority(self->event_source, G_PRIORITY_DEFAULT_IDLE);
+    g_source_set_callback(self->event_source, (GSourceFunc)handle_queued_events_cb, self, NULL);
+    g_source_attach(self->event_source, self->worker_ctx);
 
     self->ref_count = 1;
 
@@ -660,7 +680,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
         return true;
     }
 
-    monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED, NULL, 0);
+    index_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED, NULL, 0);
 
     bool res = false;
     if (db_scan_folder(fsearch_database_include_get_path(self->include),
@@ -683,7 +703,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
         // TODO: reset index
     }
 
-    monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED, NULL, 0);
+    index_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED, NULL, 0);
 
     return res;
 }
