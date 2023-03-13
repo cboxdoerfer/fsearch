@@ -23,6 +23,12 @@ struct _FsearchDatabaseIndexStore {
         GMainContext *ctx;
     } monitor;
 
+    struct {
+        GThread *thread;
+        GMainLoop *loop;
+        GMainContext *ctx;
+    } scanner;
+
     bool is_sorted;
     bool running;
 
@@ -94,12 +100,30 @@ unlock_all_indices(FsearchDatabaseIndexStore *self) {
 }
 
 static gboolean
-monitor_thread_quit(FsearchDatabaseIndexStore *self) {
-    g_return_val_if_fail(self, G_SOURCE_REMOVE);
+thread_quit(GMainLoop *loop) {
+    g_return_val_if_fail(loop, G_SOURCE_REMOVE);
 
-    g_main_loop_quit(self->monitor.loop);
+    g_main_loop_quit(loop);
 
     return G_SOURCE_REMOVE;
+}
+
+static void
+thread_func(GMainContext *ctx, GMainLoop *loop) {
+    g_main_context_push_thread_default(ctx);
+    g_main_loop_run(loop);
+    g_main_context_pop_thread_default(ctx);
+    g_main_loop_unref(loop);
+}
+
+static gpointer
+scanner_thread_func(gpointer user_data) {
+    FsearchDatabaseIndexStore *self = user_data;
+    g_return_val_if_fail(self, NULL);
+
+    thread_func(self->scanner.ctx, self->scanner.loop);
+
+    return NULL;
 }
 
 static gpointer
@@ -107,10 +131,7 @@ monitor_thread_func(gpointer user_data) {
     FsearchDatabaseIndexStore *self = user_data;
     g_return_val_if_fail(self, NULL);
 
-    g_main_context_push_thread_default(self->monitor.ctx);
-    g_main_loop_run(self->monitor.loop);
-    g_main_context_pop_thread_default(self->monitor.ctx);
-    g_main_loop_unref(self->monitor.loop);
+    thread_func(self->monitor.ctx, self->monitor.loop);
 
     return NULL;
 }
@@ -120,13 +141,20 @@ index_store_free(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
 
     if (self->monitor.loop) {
-        g_main_context_invoke_full(self->monitor.ctx, G_PRIORITY_HIGH, (GSourceFunc)monitor_thread_quit, self, NULL);
+        g_main_context_invoke_full(self->monitor.ctx, G_PRIORITY_HIGH, (GSourceFunc)thread_quit, self->monitor.loop, NULL);
     }
     if (self->monitor.thread) {
         g_thread_join(self->monitor.thread);
     }
-
     g_clear_pointer(&self->monitor.ctx, g_main_context_unref);
+
+    if (self->scanner.loop) {
+        g_main_context_invoke_full(self->scanner.ctx, G_PRIORITY_HIGH, (GSourceFunc)thread_quit, self->scanner.loop, NULL);
+    }
+    if (self->scanner.thread) {
+        g_thread_join(self->scanner.thread);
+    }
+    g_clear_pointer(&self->scanner.ctx, g_main_context_unref);
 
     sorted_entries_free(self);
     g_clear_pointer(&self->indices, g_ptr_array_unref);
@@ -161,6 +189,10 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
     self->monitor.ctx = g_main_context_new();
     self->monitor.loop = g_main_loop_new(self->monitor.ctx, FALSE);
     self->monitor.thread = g_thread_new("FsearchDatabaseIndexStoreMonitor", monitor_thread_func, self);
+
+    self->scanner.ctx = g_main_context_new();
+    self->scanner.loop = g_main_loop_new(self->scanner.ctx, FALSE);
+    self->scanner.thread = g_thread_new("FsearchDatabaseIndexStoreScanner", scanner_thread_func, self);
 
     self->ref_count = 1;
 
