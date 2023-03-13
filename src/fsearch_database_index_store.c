@@ -332,7 +332,6 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
         g_assert_not_reached();
     }
 
-    fsearch_database_index_lock(index);
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         DynamicArray *array = NULL;
         if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
@@ -364,7 +363,6 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
             g_assert_not_reached();
         }
     }
-    fsearch_database_index_unlock(index);
 }
 
 void
@@ -374,8 +372,6 @@ fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
     g_return_if_fail(self);
     g_return_if_fail(entry);
     g_return_if_fail(index);
-
-    fsearch_database_index_lock(index);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         DynamicArray *array = NULL;
@@ -394,12 +390,13 @@ fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
 
         darray_insert_item_sorted(array, entry, comp_func, NULL);
     }
-
-    fsearch_database_index_unlock(index);
 }
 
 void
-fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable) {
+fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
+                                   GCancellable *cancellable,
+                                   FsearchDatabaseIndexEventFunc event_func,
+                                   gpointer event_func_data) {
     g_return_if_fail(self);
     if (self->running) {
         return;
@@ -415,7 +412,9 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable
                                                                  self->flags,
                                                                  self->work_queue,
                                                                  self->worker.ctx,
-                                                                 self->monitor.ctx);
+                                                                 self->monitor.ctx,
+                                                                 event_func,
+                                                                 event_func_data);
         fsearch_database_index_scan(index, cancellable);
         if (index) {
             g_ptr_array_add(indices, index);

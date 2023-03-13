@@ -16,6 +16,8 @@ G_BEGIN_DECLS
 
 typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
 
+typedef void (*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *, FsearchDatabaseIndexEvent *event, gpointer);
+
 GType
 fsearch_database_index_get_type(void);
 
@@ -32,7 +34,9 @@ fsearch_database_index_new(uint32_t id,
                            FsearchDatabaseIndexPropertyFlags flags,
                            GAsyncQueue *work_queue,
                            GMainContext *worker_ctx,
-                           GMainContext *monitor_ctx);
+                           GMainContext *monitor_ctx,
+                           FsearchDatabaseIndexEventFunc event_func,
+                           gpointer event_func_data);
 
 FsearchDatabaseIndex *
 fsearch_database_index_new_with_content(uint32_t id,
@@ -63,9 +67,6 @@ fsearch_database_index_get_id(FsearchDatabaseIndex *self);
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
 
-bool
-fsearch_database_index_get_one_file_system(FsearchDatabaseIndex *self);
-
 FsearchDatabaseEntry *
 fsearch_database_index_add_file(FsearchDatabaseIndex *self,
                                 const char *name,
@@ -79,15 +80,6 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
                                   const char *path,
                                   time_t mtime,
                                   FsearchDatabaseEntryFolder *parent);
-
-void
-fsearch_database_index_add_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry);
-
-void
-fsearch_database_index_remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t watch_descriptor);
-
-void
-fsearch_database_index_free_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry);
 
 void
 fsearch_database_index_lock(FsearchDatabaseIndex *self);

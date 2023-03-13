@@ -20,7 +20,6 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
     FSEARCH_DATABASE_WORK_MODIFY_SELECTION,
-    FSEARCH_DATABASE_WORK_MONITOR_EVENT,
     NUM_FSEARCH_DATABASE_WORK_KINDS,
 } FsearchDatabaseWorkKind;
 
@@ -58,12 +57,6 @@ fsearch_database_work_new_load(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_save(void);
-
-FsearchDatabaseWork *
-fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
-                                        FsearchDatabaseIndexEventKind event_kind,
-                                        FsearchDatabaseEntry *entry,
-                                        int32_t watch_descriptor);
 
 FsearchDatabaseWorkKind
 fsearch_database_work_get_kind(FsearchDatabaseWork *work);
@@ -115,23 +108,5 @@ fsearch_database_work_item_info_get_index(FsearchDatabaseWork *work);
 
 FsearchDatabaseEntryInfoFlags
 fsearch_database_work_item_info_get_flags(FsearchDatabaseWork *work);
-
-FsearchDatabaseIndexEventKind
-fsearch_database_work_monitor_event_get_kind(FsearchDatabaseWork *work);
-
-int32_t
-fsearch_database_work_monitor_event_get_watch_descriptor(FsearchDatabaseWork *work);
-
-GString *
-fsearch_database_work_monitor_event_get_path(FsearchDatabaseWork *work);
-
-FsearchDatabaseEntry *
-fsearch_database_work_monitor_event_get_entry_1(FsearchDatabaseWork *work);
-
-FsearchDatabaseEntry *
-fsearch_database_work_monitor_event_get_entry_2(FsearchDatabaseWork *work);
-
-FsearchDatabaseIndex *
-fsearch_database_work_monitor_event_get_index(FsearchDatabaseWork *work);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseWork, fsearch_database_work_unref)

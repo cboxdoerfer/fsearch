@@ -580,55 +580,56 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
 
 static void
 move_result(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabaseWork *work = user_data;
-    g_return_if_fail(work);
+    // FsearchDatabaseWork *work = user_data;
+    // g_return_if_fail(work);
 
-    FsearchDatabaseSearchView *view = value;
-    g_return_if_fail(view);
+    // FsearchDatabaseSearchView *view = value;
+    // g_return_if_fail(view);
 
-    FsearchDatabaseEntry *entry_moved_from = fsearch_database_work_monitor_event_get_entry_1(work);
-    FsearchDatabaseEntry *entry_moved_to = fsearch_database_work_monitor_event_get_entry_2(work);
+    // FsearchDatabaseEntry *entry_moved_from = fsearch_database_work_monitor_event_get_entry_1(work);
+    // FsearchDatabaseEntry *entry_moved_to = fsearch_database_work_monitor_event_get_entry_2(work);
 
-    DynamicArray *array = NULL;
-    GHashTable *selection = NULL;
-    if (db_entry_is_folder(entry_moved_from) && db_entry_is_folder(entry_moved_to)) {
-        array = view->folders;
-        selection = view->folder_selection;
-    }
-    else if (db_entry_is_file(entry_moved_from) && db_entry_is_file(entry_moved_to)) {
-        array = view->files;
-        selection = view->file_selection;
-    }
-    else {
-        // You can't move/rename a file, and it becomes a folder (or vice versa), right?
-        g_assert_not_reached();
-    }
+    // DynamicArray *array = NULL;
+    // GHashTable *selection = NULL;
+    // if (db_entry_is_folder(entry_moved_from) && db_entry_is_folder(entry_moved_to)) {
+    //     array = view->folders;
+    //     selection = view->folder_selection;
+    // }
+    // else if (db_entry_is_file(entry_moved_from) && db_entry_is_file(entry_moved_to)) {
+    //     array = view->files;
+    //     selection = view->file_selection;
+    // }
+    // else {
+    //     // You can't move/rename a file, and it becomes a folder (or vice versa), right?
+    //     g_assert_not_reached();
+    // }
 
-    // First remove the old moved_from entry
-    if (entry_matches_query(view, entry_moved_from)) {
-        uint32_t idx = 0;
-        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
-        if (darray_get_item_idx(array, entry_moved_from, comp_func, NULL, &idx)) {
-            darray_remove(array, idx, 1);
-        }
-    }
+    //// First remove the old moved_from entry
+    // if (entry_matches_query(view, entry_moved_from)) {
+    //     uint32_t idx = 0;
+    //     DynamicArrayCompareDataFunc comp_func =
+    //     fsearch_database_sort_get_compare_func_for_property(view->sort_order); if (darray_get_item_idx(array,
+    //     entry_moved_from, comp_func, NULL, &idx)) {
+    //         darray_remove(array, idx, 1);
+    //     }
+    // }
 
-    // If the moved/renamed entry in its new state doesn't match the current query we're done here.
-    if (!entry_matches_query(view, entry_moved_to)) {
-        return;
-    }
+    //// If the moved/renamed entry in its new state doesn't match the current query we're done here.
+    // if (!entry_matches_query(view, entry_moved_to)) {
+    //     return;
+    // }
 
-    // Otherwise add it to the results ...
-    DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
-    if (array && comp_func) {
-        darray_insert_item_sorted(array, entry_moved_to, comp_func, NULL);
-    }
+    //// Otherwise add it to the results ...
+    // DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
+    // if (array && comp_func) {
+    //     darray_insert_item_sorted(array, entry_moved_to, comp_func, NULL);
+    // }
 
-    // ... and keep the selection alive in case the old entry was selected
-    if (fsearch_selection_is_selected(selection, entry_moved_from)) {
-        fsearch_selection_unselect(selection, entry_moved_from);
-        fsearch_selection_select(selection, entry_moved_to);
-    }
+    //// ... and keep the selection alive in case the old entry was selected
+    // if (fsearch_selection_is_selected(selection, entry_moved_from)) {
+    //     fsearch_selection_unselect(selection, entry_moved_from);
+    //     fsearch_selection_select(selection, entry_moved_to);
+    // }
 }
 
 static void
@@ -659,23 +660,16 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
-    g_return_if_fail(self);
-    g_return_if_fail(work);
-
-    const FsearchDatabaseIndexEventKind event_kind = fsearch_database_work_monitor_event_get_kind(work);
-    GString *path = fsearch_database_work_monitor_event_get_path(work);
-    FsearchDatabaseIndex *index = fsearch_database_work_monitor_event_get_index(work);
-    FsearchDatabaseEntry *entry_1 = fsearch_database_work_monitor_event_get_entry_1(work);
-    FsearchDatabaseEntry *entry_2 = fsearch_database_work_monitor_event_get_entry_2(work);
-    int32_t wd = fsearch_database_work_monitor_event_get_watch_descriptor(work);
+index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
+    FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
+    g_print("index event!!!");
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
     bool views_changed_maybe = false;
 
-    switch (event_kind) {
+    switch (event->kind) {
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED:
@@ -685,33 +679,28 @@ process_monitor_event(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
-        fsearch_database_index_store_add_entry(self->store, entry_1, index);
-        fsearch_database_index_lock(index);
-        g_hash_table_foreach(self->search_results, add_result, entry_1);
-        fsearch_database_index_unlock(index);
+        fsearch_database_index_store_add_entry(self->store, event->entry, index);
+        g_hash_table_foreach(self->search_results, add_result, event->entry);
         views_changed_maybe = true;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        fsearch_database_index_store_remove_entry(self->store, entry_1, index);
-        fsearch_database_index_lock(index);
-        g_hash_table_foreach(self->search_results, remove_result, entry_1);
-        fsearch_database_index_unlock(index);
-        fsearch_database_index_remove_entry(index, entry_1, wd);
+        fsearch_database_index_store_remove_entry(self->store, event->entry, index);
+        g_hash_table_foreach(self->search_results, remove_result, event->entry);
         views_changed_maybe = true;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_MOVED:
-        // Remove the old moved_from entry from the index store ...
-        fsearch_database_index_store_remove_entry(self->store, entry_1, index);
-        // ... and add the new moved_to entry to it instead
-        fsearch_database_index_store_add_entry(self->store, entry_2, index);
+        //// Remove the old moved_from entry from the index store ...
+        // fsearch_database_index_store_remove_entry(self->store, event->entry, index);
+        //// ... and add the new moved_to entry to it instead
+        // fsearch_database_index_store_add_entry(self->store, entry_2, index);
 
-        fsearch_database_index_lock(index);
-        g_hash_table_foreach(self->search_results, move_result, work);
-        fsearch_database_index_unlock(index);
+        // fsearch_database_index_lock(index);
+        // g_hash_table_foreach(self->search_results, move_result, work);
+        // fsearch_database_index_unlock(index);
 
-        fsearch_database_index_free_entry(index, entry_1);
-        views_changed_maybe = true;
+        // fsearch_database_index_free_entry(index, entry_1);
+        // views_changed_maybe = true;
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CHANGED:
         break;
@@ -828,7 +817,7 @@ rescan_database(FsearchDatabase2 *self) {
     g_autoptr(FsearchDatabaseIndexStore)
         store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, self->work_queue);
     g_return_if_fail(store);
-    fsearch_database_index_store_start(store, NULL);
+    fsearch_database_index_store_start(store, NULL, index_event_func, self);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -854,7 +843,7 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseIndexStore)
         store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, self->work_queue);
     g_return_if_fail(store);
-    fsearch_database_index_store_start(store, NULL);
+    fsearch_database_index_store_start(store, NULL, index_event_func, self);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -970,9 +959,6 @@ work_queue_thread(gpointer data) {
                 break;
             case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
                 modify_selection(self, work);
-                break;
-            case FSEARCH_DATABASE_WORK_MONITOR_EVENT:
-                process_monitor_event(self, work);
                 break;
             default:
                 g_assert_not_reached();

@@ -29,15 +29,6 @@ struct FsearchDatabaseWork {
             int32_t idx_1;
             int32_t idx_2;
         };
-        // FSEARCH_DATABASE_WORK_MONITOR_EVENT
-        struct {
-            FsearchDatabaseIndex *monitored_index;
-            FsearchDatabaseIndexEventKind event_kind;
-            FsearchDatabaseEntry *entry_1;
-            FsearchDatabaseEntry *entry_2;
-            GString *path;
-            int32_t watch_descriptor;
-        };
     };
 
     guint view_id;
@@ -80,12 +71,6 @@ work_free(FsearchDatabaseWork *work) {
     case FSEARCH_DATABASE_WORK_SORT:
         break;
     case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
-        break;
-    case FSEARCH_DATABASE_WORK_MONITOR_EVENT:
-        g_clear_pointer(&work->monitored_index, fsearch_database_index_unref);
-        if (work->path) {
-            g_string_free(g_steal_pointer(&work->path), TRUE);
-        }
         break;
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
         g_assert_not_reached();
@@ -198,22 +183,6 @@ FsearchDatabaseWork *
 fsearch_database_work_new_save() {
     FsearchDatabaseWork *work = work_new();
     work->kind = FSEARCH_DATABASE_WORK_SAVE_TO_FILE;
-
-    return work;
-}
-
-FsearchDatabaseWork *
-fsearch_database_work_new_monitor_event(FsearchDatabaseIndex *index,
-                                        FsearchDatabaseIndexEventKind event_kind,
-                                        FsearchDatabaseEntry *entry,
-                                        int32_t watch_descriptor) {
-    FsearchDatabaseWork *work = work_new();
-    work->kind = FSEARCH_DATABASE_WORK_MONITOR_EVENT;
-
-    work->monitored_index = fsearch_database_index_ref(index);
-    work->event_kind = event_kind;
-    work->entry_1 = entry;
-    work->watch_descriptor = watch_descriptor;
 
     return work;
 }
@@ -335,52 +304,4 @@ fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work, NUM_FSEARCH_SELECTION_TYPES);
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, NUM_FSEARCH_SELECTION_TYPES);
     return work->selection_type;
-}
-
-FsearchDatabaseIndexEventKind
-fsearch_database_work_monitor_event_get_kind(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, NUM_FSEARCH_DATABASE_INDEX_EVENTS);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NUM_FSEARCH_DATABASE_INDEX_EVENTS);
-
-    return work->event_kind;
-}
-
-int32_t
-fsearch_database_work_monitor_event_get_watch_descriptor(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, -1);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, -1);
-
-    return work->watch_descriptor;
-}
-
-GString *
-fsearch_database_work_monitor_event_get_path(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, NULL);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
-
-    return work->path;
-}
-
-FsearchDatabaseEntry *
-fsearch_database_work_monitor_event_get_entry_1(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, NULL);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
-
-    return work->entry_1;
-}
-
-FsearchDatabaseEntry *
-fsearch_database_work_monitor_event_get_entry_2(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, NULL);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
-
-    return work->entry_2;
-}
-
-FsearchDatabaseIndex *
-fsearch_database_work_monitor_event_get_index(FsearchDatabaseWork *work) {
-    g_return_val_if_fail(work, NULL);
-    g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MONITOR_EVENT, NULL);
-
-    return work->monitored_index;
 }

@@ -67,7 +67,10 @@ fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
                                        FsearchDatabaseIndex *index);
 
 void
-fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable);
+fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
+                                   GCancellable *cancellable,
+                                   FsearchDatabaseIndexEventFunc event_func,
+                                   gpointer event_func_data);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, fsearch_database_index_store_unref)
 
