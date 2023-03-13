@@ -19,9 +19,11 @@ struct FsearchMemoryPool {
     uint32_t block_size;
     size_t item_size;
     GDestroyNotify item_free_func;
+
+    GMutex mutex;
 };
 
-void
+static void
 fsearch_memory_pool_new_block(FsearchMemoryPool *pool) {
     FsearchMemoryPoolBlock *block = calloc(1, sizeof(FsearchMemoryPoolBlock));
     g_assert(block);
@@ -41,6 +43,9 @@ fsearch_memory_pool_new(uint32_t block_size, size_t item_size, GDestroyNotify it
     pool->item_free_func = item_free_func;
     pool->block_size = block_size;
     pool->item_size = MAX(item_size, sizeof(FsearchMemoryPoolFreed));
+
+    g_mutex_init(&pool->mutex);
+
     fsearch_memory_pool_new_block(pool);
 
     return pool;
@@ -63,9 +68,11 @@ fsearch_memory_pool_free_block(FsearchMemoryPool *pool, FsearchMemoryPoolBlock *
 
 void
 fsearch_memory_pool_free_pool(FsearchMemoryPool *pool) {
-    if (!pool) {
-        return;
-    }
+    g_return_if_fail(pool);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&pool->mutex);
+    g_assert_nonnull(locker);
+
     for (GList *b = pool->blocks; b != NULL; b = b->next) {
         FsearchMemoryPoolBlock *block = b->data;
         g_assert(block);
@@ -74,10 +81,14 @@ fsearch_memory_pool_free_pool(FsearchMemoryPool *pool) {
     pool->freed_items = NULL;
 
     g_clear_pointer(&pool->blocks, g_list_free);
+
+    g_clear_pointer(&locker, g_mutex_locker_free);
+
+    g_mutex_clear(&pool->mutex);
     g_clear_pointer(&pool, free);
 }
 
-bool
+static bool
 fsearch_memory_pool_is_block_full(FsearchMemoryPool *pool) {
     FsearchMemoryPoolBlock *block = pool->blocks->data;
     g_assert(block);
@@ -89,9 +100,12 @@ fsearch_memory_pool_is_block_full(FsearchMemoryPool *pool) {
 
 void
 fsearch_memory_pool_free(FsearchMemoryPool *pool, void *item, bool item_clear) {
-    if (!pool || !item) {
-        return;
-    }
+    g_return_if_fail(pool);
+    g_return_if_fail(item);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&pool->mutex);
+    g_assert_nonnull(locker);
+
     if (item_clear && pool->item_free_func) {
         pool->item_free_func(item);
     }
@@ -102,9 +116,11 @@ fsearch_memory_pool_free(FsearchMemoryPool *pool, void *item, bool item_clear) {
 
 void *
 fsearch_memory_pool_malloc(FsearchMemoryPool *pool) {
-    if (!pool) {
-        return NULL;
-    }
+    g_return_val_if_fail(pool, NULL);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&pool->mutex);
+    g_assert_nonnull(locker);
+
     if (pool->freed_items) {
         void *freed_head = pool->freed_items;
         pool->freed_items = pool->freed_items->next;
