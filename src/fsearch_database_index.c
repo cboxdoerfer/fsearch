@@ -661,7 +661,18 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
     monitor_event_queue(self, FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED, NULL, 0);
 
     bool res = false;
-    if (db_scan_folder(self, fsearch_database_include_get_path(self->include), self->exclude_manager, cancellable, NULL)) {
+    if (db_scan_folder(fsearch_database_include_get_path(self->include),
+                       NULL,
+                       self->folder_pool,
+                       self->file_pool,
+                       self->folders,
+                       self->files,
+                       self->exclude_manager,
+                       self->watch_descriptors,
+                       self->inotify_fd,
+                       fsearch_database_include_get_one_file_system(self->include),
+                       cancellable,
+                       NULL)) {
         g_atomic_int_set(&self->initialized, 1);
         handle_queued_events(self);
         res = true;

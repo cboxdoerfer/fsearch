@@ -8,9 +8,14 @@
 #include <fnmatch.h>
 #include <glib/gi18n.h>
 #include <stdio.h>
+#include <sys/inotify.h>
 #include <sys/stat.h>
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
+
+#define INOTIFY_FOLDER_MASK                                                                                            \
+    (IN_MODIFY | IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT         \
+     | IN_MOVE_SELF | IN_CLOSE_WRITE)
 
 enum {
     WALK_OK = 0,
@@ -19,15 +24,58 @@ enum {
 };
 
 typedef struct DatabaseWalkContext {
-    FsearchDatabaseIndex *index;
     GString *path;
     FsearchDatabaseExcludeManager *exclude_manager;
+    DynamicArray *folders;
+    DynamicArray *files;
+    FsearchMemoryPool *folder_pool;
+    FsearchMemoryPool *file_pool;
+    GHashTable *watch_descriptors;
+    DynamicArray *watch_descriptor_array;
+    int32_t monitor_fd;
+    bool one_file_system;
     GTimer *timer;
     GCancellable *cancellable;
     void (*status_cb)(const char *);
 
     dev_t root_device_id;
 } DatabaseWalkContext;
+
+static FsearchDatabaseEntryFolder *
+add_folder(DatabaseWalkContext *walk_context,
+           const char *name,
+           const char *path,
+           time_t mtime,
+           FsearchDatabaseEntryFolder *parent) {
+    FsearchDatabaseEntry *folder = fsearch_memory_pool_malloc(walk_context->folder_pool);
+    db_entry_set_name(folder, name);
+    db_entry_set_type(folder, DATABASE_ENTRY_TYPE_FOLDER);
+    db_entry_set_mtime(folder, mtime);
+    db_entry_set_parent(folder, (FsearchDatabaseEntryFolder *)parent);
+
+    const int32_t wd = inotify_add_watch(walk_context->monitor_fd, path, INOTIFY_FOLDER_MASK);
+
+    g_hash_table_insert(walk_context->watch_descriptors, GINT_TO_POINTER(wd), folder);
+    darray_add_item(walk_context->watch_descriptor_array, GINT_TO_POINTER(wd));
+    darray_add_item(walk_context->folders, folder);
+
+    return (FsearchDatabaseEntryFolder *)folder;
+}
+
+FsearchDatabaseEntry *
+add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntryFolder *parent) {
+    FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(walk_context->file_pool);
+    db_entry_set_name(file_entry, name);
+    db_entry_set_size(file_entry, size);
+    db_entry_set_mtime(file_entry, mtime);
+    db_entry_set_type(file_entry, DATABASE_ENTRY_TYPE_FILE);
+    db_entry_set_parent(file_entry, parent);
+    db_entry_update_parent_size(file_entry);
+
+    darray_add_item(walk_context->files, file_entry);
+
+    return file_entry;
+}
 
 static int
 db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntryFolder *parent) {
@@ -91,7 +139,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
             continue;
         }
 
-        if (fsearch_database_index_get_one_file_system(walk_context->index) && walk_context->root_device_id != st.st_dev) {
+        if (walk_context->one_file_system && walk_context->root_device_id != st.st_dev) {
             g_debug("[db_scan] different filesystem, skipping: %s", path->str);
             continue;
         }
@@ -103,12 +151,11 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         }
 
         if (is_dir) {
-            db_folder_scan_recursive(
-                walk_context,
-                fsearch_database_index_add_folder(walk_context->index, dent->d_name, path->str, st.st_mtime, parent));
+            db_folder_scan_recursive(walk_context,
+                                     add_folder(walk_context, dent->d_name, path->str, st.st_mtime, parent));
         }
         else {
-            fsearch_database_index_add_file(walk_context->index, dent->d_name, st.st_size, st.st_mtime, parent);
+            add_file(walk_context, dent->d_name, st.st_size, st.st_mtime, parent);
         }
     }
 
@@ -117,9 +164,16 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 }
 
 bool
-db_scan_folder(FsearchDatabaseIndex *index,
-               const char *path,
+db_scan_folder(const char *path,
+               FsearchDatabaseEntryFolder *parent,
+               FsearchMemoryPool *folder_pool,
+               FsearchMemoryPool *file_pool,
+               DynamicArray *folders,
+               DynamicArray *files,
                FsearchDatabaseExcludeManager *exclude_manager,
+               GHashTable *watch_descriptors,
+               int32_t monitor_fd,
+               bool one_file_system,
                GCancellable *cancellable,
                void (*status_cb)(const char *)) {
     g_return_val_if_fail(index, false);
@@ -147,28 +201,36 @@ db_scan_folder(FsearchDatabaseIndex *index,
         g_debug("[db_scan] can't stat: %s", path);
     }
 
+    g_autoptr(DynamicArray) watch_descriptor_array = darray_new(128);
+
     DatabaseWalkContext walk_context = {
-        .index = index,
+        .folder_pool = folder_pool,
+        .file_pool = file_pool,
+        .folders = folders,
+        .files = files,
+        .watch_descriptors = watch_descriptors,
+        .watch_descriptor_array = watch_descriptor_array,
+        .monitor_fd = monitor_fd,
         .exclude_manager = exclude_manager,
         .path = path_string,
+        .one_file_system = one_file_system,
         .timer = timer,
         .cancellable = cancellable,
         .status_cb = status_cb,
         .root_device_id = root_st.st_dev,
     };
 
-    uint32_t res =
-        db_folder_scan_recursive(&walk_context,
-                                 fsearch_database_index_add_folder(index, path_string->str, path_string->str, 0, NULL));
+    if (!parent) {
+        parent = add_folder(&walk_context, path, path, 0, NULL);
+    }
+
+    uint32_t res = db_folder_scan_recursive(&walk_context, parent);
 
     if (res == WALK_OK) {
-        // g_debug("[db_scan] scanned: %d files, %d folders -> %d total",
-        //         db_get_num_files(db),
-        //         db_get_num_folders(db),
-        //         db_get_num_entries(db));
         return true;
     }
 
+    // TODO: free
     if (res == WALK_CANCEL) {
         g_debug("[db_scan] scan cancelled.");
     }
