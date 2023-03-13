@@ -107,7 +107,6 @@ modify_selection(FsearchApplicationWindow *self, FsearchSelectionType type, int3
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_modify_selection(win_id, type, start_idx, end_idx);
     fsearch_database2_queue_work(self->db, work);
-    fsearch_database2_process_work_now(self->db);
 }
 
 static void
@@ -483,7 +482,6 @@ perform_search(FsearchApplicationWindow *win) {
                                                         fsearch_list_view_get_sort_type(win->result_view->list_view));
     g_clear_pointer(&filter, fsearch_filter_unref);
     fsearch_database2_queue_work(win->db, win->work_search);
-    fsearch_database2_process_work_now(win->db);
 }
 
 static gboolean
@@ -638,7 +636,6 @@ on_listview_sort(int sort_order, GtkSortType sort_type, gpointer user_data) {
     win->work_sort = fsearch_database_work_new_sort(win_id, sort_order, sort_type);
 
     fsearch_database2_queue_work(win->db, win->work_sort);
-    fsearch_database2_process_work_now(win->db);
 }
 
 static void

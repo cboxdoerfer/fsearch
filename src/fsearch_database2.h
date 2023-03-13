@@ -20,9 +20,6 @@ typedef void (*FsearchDatabase2ForeachFunc)(FsearchDatabaseEntry *entry, gpointe
 void
 fsearch_database2_queue_work(FsearchDatabase2 *self, FsearchDatabaseWork *work);
 
-void
-fsearch_database2_process_work_now(FsearchDatabase2 *self);
-
 FsearchResult
 fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out);
 

@@ -54,12 +54,12 @@ static void
 work_free(FsearchDatabaseWork *work) {
     switch (work->kind) {
     case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
-        break;
     case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
-        break;
     case FSEARCH_DATABASE_WORK_RESCAN:
-        break;
     case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
+    case FSEARCH_DATABASE_WORK_SORT:
+    case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
+    case FSEARCH_DATABASE_WORK_QUIT:
         break;
     case FSEARCH_DATABASE_WORK_SCAN:
         g_clear_object(&work->include_manager);
@@ -67,10 +67,6 @@ work_free(FsearchDatabaseWork *work) {
         break;
     case FSEARCH_DATABASE_WORK_SEARCH:
         g_clear_pointer(&work->query, fsearch_query_unref);
-        break;
-    case FSEARCH_DATABASE_WORK_SORT:
-        break;
-    case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
         break;
     case NUM_FSEARCH_DATABASE_WORK_KINDS:
         g_assert_not_reached();
@@ -99,6 +95,13 @@ fsearch_database_work_unref(FsearchDatabaseWork *work) {
     if (g_atomic_int_dec_and_test(&work->ref_count)) {
         g_clear_pointer(&work, work_free);
     }
+}
+
+FsearchDatabaseWork *
+fsearch_database_work_new_quit() {
+    FsearchDatabaseWork *work = work_new();
+    work->kind = FSEARCH_DATABASE_WORK_QUIT;
+    return work;
 }
 
 FsearchDatabaseWork *

@@ -236,7 +236,6 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
                                                              | DATABASE_INDEX_PROPERTY_FLAG_SIZE
                                                              | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
         fsearch_database2_queue_work(self->db2, self->work_scan);
-        fsearch_database2_process_work_now(self->db2);
 
         FsearchConfigCompareResult config_diff = {.listview_config_changed = true, .search_config_changed = true};
 
@@ -304,7 +303,6 @@ action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpo
     self->work_scan = fsearch_database_work_new_rescan();
 
     fsearch_database2_queue_work(self->db2, self->work_scan);
-    fsearch_database2_process_work_now(self->db2);
 }
 
 static void

@@ -23,9 +23,7 @@ struct _FsearchDatabase2 {
     // The file the database will be loaded from and saved to
     GFile *file;
 
-    GCancellable *work_queue_thread_cancellable;
     GThread *work_queue_thread;
-    GAsyncQueue *work_trigger_queue;
     GAsyncQueue *work_queue;
 
     GHashTable *search_results;
@@ -116,8 +114,8 @@ search_view_new(FsearchQuery *query,
 }
 
 static void
-wakeup_work_queue(FsearchDatabase2 *self) {
-    g_async_queue_push(self->work_trigger_queue, GUINT_TO_POINTER(1));
+quit_work_queue(FsearchDatabase2 *self) {
+    g_async_queue_push(self->work_queue, fsearch_database_work_new_quit());
 }
 
 static void
@@ -915,60 +913,60 @@ work_queue_thread(gpointer data) {
     FsearchDatabase2 *self = data;
 
     while (TRUE) {
-        g_async_queue_timeout_pop(self->work_trigger_queue, 1000000);
-
-        while (TRUE) {
-            g_autoptr(FsearchDatabaseWork) work = g_async_queue_try_pop(self->work_queue);
-            if (!work) {
-                break;
-            }
-
-            g_autoptr(GTimer) timer = g_timer_new();
-            g_timer_start(timer);
-
-            switch (fsearch_database_work_get_kind(work)) {
-            case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
-                load_database_from_file(self);
-                break;
-            case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
-                FsearchDatabaseEntryInfo *info = NULL;
-                get_entry_info(self, work, &info);
-                if (info) {
-                    emit_item_info_ready_signal(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
-                }
-                break;
-            }
-            case FSEARCH_DATABASE_WORK_RESCAN:
-                emit_signal0(self, EVENT_SCAN_STARTED);
-                rescan_database(self);
-                emit_signal0(self, EVENT_SCAN_FINISHED);
-                break;
-            case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
-                emit_signal0(self, EVENT_SAVE_STARTED);
-                save_database_to_file(self);
-                emit_signal0(self, EVENT_SAVE_FINISHED);
-                break;
-            case FSEARCH_DATABASE_WORK_SCAN:
-                scan_database(self, work);
-                break;
-            case FSEARCH_DATABASE_WORK_SEARCH:
-                search_database(self, work);
-                break;
-            case FSEARCH_DATABASE_WORK_SORT:
-                sort_database(self, work);
-                break;
-            case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
-                modify_selection(self, work);
-                break;
-            default:
-                g_assert_not_reached();
-            }
-
-            g_debug("finished work in: %fs.", g_timer_elapsed(timer, NULL));
+        g_autoptr(FsearchDatabaseWork) work = g_async_queue_pop(self->work_queue);
+        if (!work) {
+            break;
         }
 
-        if (g_cancellable_is_cancelled(self->work_queue_thread_cancellable)) {
-            g_debug("thread cancelled...");
+        g_autoptr(GTimer) timer = g_timer_new();
+        g_timer_start(timer);
+
+        bool quit = false;
+
+        switch (fsearch_database_work_get_kind(work)) {
+        case FSEARCH_DATABASE_WORK_QUIT:
+            quit = true;
+            break;
+        case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
+            load_database_from_file(self);
+            break;
+        case FSEARCH_DATABASE_WORK_GET_ITEM_INFO: {
+            FsearchDatabaseEntryInfo *info = NULL;
+            get_entry_info(self, work, &info);
+            if (info) {
+                emit_item_info_ready_signal(self, fsearch_database_work_get_view_id(work), g_steal_pointer(&info));
+            }
+            break;
+        }
+        case FSEARCH_DATABASE_WORK_RESCAN:
+            emit_signal0(self, EVENT_SCAN_STARTED);
+            rescan_database(self);
+            emit_signal0(self, EVENT_SCAN_FINISHED);
+            break;
+        case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
+            emit_signal0(self, EVENT_SAVE_STARTED);
+            save_database_to_file(self);
+            emit_signal0(self, EVENT_SAVE_FINISHED);
+            break;
+        case FSEARCH_DATABASE_WORK_SCAN:
+            scan_database(self, work);
+            break;
+        case FSEARCH_DATABASE_WORK_SEARCH:
+            search_database(self, work);
+            break;
+        case FSEARCH_DATABASE_WORK_SORT:
+            sort_database(self, work);
+            break;
+        case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
+            modify_selection(self, work);
+            break;
+        default:
+            g_assert_not_reached();
+        }
+
+        g_debug("finished work in: %fs.", g_timer_elapsed(timer, NULL));
+
+        if (quit) {
             break;
         }
     }
@@ -997,8 +995,7 @@ fsearch_database2_dispose(GObject *object) {
     FsearchDatabase2 *self = (FsearchDatabase2 *)object;
 
     // Notify work queue thread to exit itself
-    g_cancellable_cancel(self->work_queue_thread_cancellable);
-    wakeup_work_queue(self);
+    quit_work_queue(self);
     g_thread_join(self->work_queue_thread);
 
     G_OBJECT_CLASS(fsearch_database2_parent_class)->dispose(object);
@@ -1009,8 +1006,6 @@ fsearch_database2_finalize(GObject *object) {
     FsearchDatabase2 *self = (FsearchDatabase2 *)object;
 
     database_lock(self);
-    g_clear_object(&self->work_queue_thread_cancellable);
-    g_clear_pointer(&self->work_trigger_queue, g_async_queue_unref);
     g_clear_pointer(&self->work_queue, g_async_queue_unref);
     g_clear_pointer(&self->thread_pool, fsearch_thread_pool_free);
 
@@ -1190,9 +1185,7 @@ fsearch_database2_init(FsearchDatabase2 *self) {
     self->thread_pool = fsearch_thread_pool_init();
     self->search_results = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)search_view_free);
     self->work_queue = g_async_queue_new();
-    self->work_trigger_queue = g_async_queue_new();
     self->work_queue_thread = g_thread_new("FsearchDatabaseWorkQueue", work_queue_thread, self);
-    self->work_queue_thread_cancellable = g_cancellable_new();
 }
 
 void
@@ -1201,13 +1194,6 @@ fsearch_database2_queue_work(FsearchDatabase2 *self, FsearchDatabaseWork *work) 
     g_return_if_fail(work);
 
     g_async_queue_push(self->work_queue, fsearch_database_work_ref(work));
-}
-
-void
-fsearch_database2_process_work_now(FsearchDatabase2 *self) {
-    g_return_if_fail(self);
-
-    wakeup_work_queue(self);
 }
 
 FsearchResult

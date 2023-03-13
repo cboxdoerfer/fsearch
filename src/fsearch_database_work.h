@@ -20,6 +20,7 @@ typedef enum FsearchDatabaseWorkKind {
     FSEARCH_DATABASE_WORK_SORT,
     FSEARCH_DATABASE_WORK_GET_ITEM_INFO,
     FSEARCH_DATABASE_WORK_MODIFY_SELECTION,
+    FSEARCH_DATABASE_WORK_QUIT,
     NUM_FSEARCH_DATABASE_WORK_KINDS,
 } FsearchDatabaseWorkKind;
 
@@ -28,6 +29,9 @@ fsearch_database_work_ref(FsearchDatabaseWork *work);
 
 void
 fsearch_database_work_unref(FsearchDatabaseWork *work);
+
+FsearchDatabaseWork *
+fsearch_database_work_new_quit(void);
 
 FsearchDatabaseWork *
 fsearch_database_work_new_rescan(void);

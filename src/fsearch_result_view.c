@@ -148,7 +148,6 @@ try_get_entry_info(FsearchResultView *result_view, uint32_t row, FsearchDatabase
     g_autoptr(FsearchDatabaseWork)
         work = fsearch_database_work_new_get_item_info(result_view->view_id, row, FSEARCH_DATABASE_ENTRY_INFO_FLAG_ALL);
     fsearch_database2_queue_work(result_view->db, work);
-    fsearch_database2_process_work_now(result_view->db);
     g_hash_table_insert(result_view->item_info_cache, key, NULL);
     return FALSE;
 }
