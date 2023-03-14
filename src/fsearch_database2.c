@@ -657,15 +657,40 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
     fsearch_selection_unselect(selection, entry);
 }
 
+typedef struct {
+    FsearchDatabase2 *db;
+    FsearchDatabaseIndex *index;
+    bool modified;
+} FsearchDatabase2AddRemoveContext;
+
+static bool
+add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
+    fsearch_database_index_store_add_entry(ctx->db->store, entry, ctx->index);
+    g_hash_table_foreach(ctx->db->search_results, add_result, entry);
+    ctx->modified = true;
+    return true;
+}
+
+static bool
+remove_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
+    fsearch_database_index_store_remove_entry(ctx->db->store, entry, ctx->index);
+    g_hash_table_foreach(ctx->db->search_results, remove_result, entry);
+    ctx->modified = true;
+    return true;
+}
+
 static void
 index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
     FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
-    g_print("index event!!!");
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    bool views_changed_maybe = false;
+    FsearchDatabase2AddRemoveContext ctx = {
+        .db = self,
+        .index = index,
+        .modified = false,
+    };
 
     switch (event->kind) {
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
@@ -677,14 +702,26 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
-        fsearch_database_index_store_add_entry(self->store, event->entry, index);
-        g_hash_table_foreach(self->search_results, add_result, event->entry);
-        views_changed_maybe = true;
+        if (event->folders && darray_get_num_items(event->folders) > 0) {
+            darray_for_each(event->folders, (DynamicArrayForEachFunc)add_entry_func, &ctx);
+        }
+        if (event->files && darray_get_num_items(event->files) > 0) {
+            darray_for_each(event->files, (DynamicArrayForEachFunc)add_entry_func, &ctx);
+        }
+        if (event->entry) {
+            add_entry_func(event->entry, &ctx);
+        }
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        fsearch_database_index_store_remove_entry(self->store, event->entry, index);
-        g_hash_table_foreach(self->search_results, remove_result, event->entry);
-        views_changed_maybe = true;
+        if (event->folders && darray_get_num_items(event->folders) > 0) {
+            darray_for_each(event->folders, (DynamicArrayForEachFunc)remove_entry_func, &ctx);
+        }
+        if (event->files && darray_get_num_items(event->files) > 0) {
+            darray_for_each(event->files, (DynamicArrayForEachFunc)remove_entry_func, &ctx);
+        }
+        if (event->entry) {
+            remove_entry_func(event->entry, &ctx);
+        }
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_MOVED:
@@ -708,7 +745,7 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         break;
     }
 
-    if (views_changed_maybe) {
+    if (ctx.modified) {
         g_hash_table_foreach(self->search_results, update_views, self);
     }
 }
