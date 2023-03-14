@@ -445,8 +445,8 @@ db_entry_set_name(FsearchDatabaseEntry *entry, const char *name) {
 
 void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *parent) {
-    entry->parent = parent;
     if (parent) {
+        // parent is non-NULL, increment its file/folder count
         g_assert(parent->super.type == DATABASE_ENTRY_TYPE_FOLDER);
         if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
             parent->num_folders++;
@@ -455,6 +455,20 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
             parent->num_files++;
         }
     }
+    else if (entry->parent) {
+        // we're un-parenting the entry and hence need to decrement its current parents file/folder count
+        if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+            if (entry->parent->num_folders > 0) {
+                entry->parent->num_folders--;
+            }
+        }
+        else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
+            if (entry->parent->num_files > 0) {
+                entry->parent->num_files--;
+            }
+        }
+    }
+    entry->parent = parent;
 }
 
 void
