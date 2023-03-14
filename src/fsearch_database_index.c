@@ -76,8 +76,7 @@ propagate_event(FsearchDatabaseIndex *self,
                 DynamicArray *files,
                 FsearchDatabaseEntry *entry) {
     if (self->propagate_work && self->event_func) {
-        g_autoptr(FsearchDatabaseIndexEvent)
-            event = fsearch_database_index_event_new(FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files, entry);
+        g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files, entry);
         self->event_func(self, event, self->event_func_data);
     }
 }
