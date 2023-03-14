@@ -235,6 +235,9 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t wa
             darray_remove(array, idx, 1);
             g_debug("index store removed entry: %d - %s", idx, db_entry_get_name_raw_for_display(entry));
 
+            // Un-parent the entry to update its current parents state
+            db_entry_set_parent(found_entry, NULL);
+
             fsearch_memory_pool_free(pool, found_entry, TRUE);
         }
     }
