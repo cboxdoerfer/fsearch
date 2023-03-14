@@ -126,6 +126,22 @@ handle_queued_events(FsearchDatabaseIndex *self) {
     }
 }
 
+static DynamicArray *
+collect_descendants(FsearchDatabaseEntryFolder *parent, DynamicArray *entries) {
+    g_autoptr(DynamicArray) array = darray_new(128);
+
+    // TODO: This implementation is rather slow. The index is already sorted by path,
+    // so descendants should be next to each other and their last common ancestor
+
+    for (uint32_t i = 0; i < darray_get_num_items(entries); ++i) {
+        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
+        if (db_entry_is_descendant(entry, parent)) {
+            darray_add_item(array, entry);
+        }
+    }
+    return g_steal_pointer(&array);
+}
+
 static FsearchDatabaseEntry *
 find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask) {
     g_return_val_if_fail(self, NULL);
