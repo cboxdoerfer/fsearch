@@ -350,12 +350,16 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
             // It's most certainly a bug when we reach this section. Still, we try if we can find the entry by simply
             // walking through the array from start to end before we abort.
             g_autoptr(GString) entry_path = db_entry_get_path_full(entry);
-            if (darray_get_item_idx(array, entry, NULL, NULL, &entry_index)) {
-                g_debug("[index_store_remove] brute force search found entry at %d: %s\n", entry_index, entry_path->str);
+
+            g_debug("[index_store_remove] didn't find entry: %s", entry_path->str);
+            for (uint32_t ii = 0; ii < darray_get_num_items(array); ++ii) {
+                FsearchDatabaseEntry *e = darray_get_item(array, ii);
+                g_autoptr(GString) e_path = db_entry_get_path_full(e);
+                if (g_strcmp0(entry_path->str, e_path->str) == 0) {
+                    g_assert_not_reached();
+                }
             }
-            else {
-                g_debug("[index_store_remove] didn't find entry: %s", entry_path->str);
-            }
+
             g_assert_not_reached();
         }
     }
