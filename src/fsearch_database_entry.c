@@ -445,6 +445,27 @@ db_entry_set_name(FsearchDatabaseEntry *entry, const char *name) {
 
 void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *parent) {
+    if (entry->parent) {
+        // The entry already has a parent. First un-parent it and update its current parents state:
+        // * Decrement file/folder count
+        FsearchDatabaseEntryFolder *p = entry->parent;
+        if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+            if (p->num_folders > 0) {
+                p->num_folders--;
+            }
+        }
+        else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
+            if (p->num_files > 0) {
+                p->num_files--;
+            }
+        }
+        // * Update the size
+        while (p) {
+            p->super.size = p->super.size > entry->size ? p->super.size - entry->size : 0;
+            p = p->super.parent;
+        }
+    }
+
     if (parent) {
         // parent is non-NULL, increment its file/folder count
         g_assert(parent->super.type == DATABASE_ENTRY_TYPE_FOLDER);
@@ -454,18 +475,11 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
         else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
             parent->num_files++;
         }
-    }
-    else if (entry->parent) {
-        // we're un-parenting the entry and hence need to decrement its current parents file/folder count
-        if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
-            if (entry->parent->num_folders > 0) {
-                entry->parent->num_folders--;
-            }
-        }
-        else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
-            if (entry->parent->num_files > 0) {
-                entry->parent->num_files--;
-            }
+        // * Update the size
+        FsearchDatabaseEntryFolder *p = parent;
+        while (p) {
+            p->super.size += entry->size;
+            p = p->super.parent;
         }
     }
     entry->parent = parent;
@@ -500,9 +514,4 @@ db_entry_set_wd(FsearchDatabaseEntryFolder *entry, int32_t wd) {
         return;
     }
     entry->wd = wd;
-}
-
-void
-db_entry_update_parent_size(FsearchDatabaseEntry *entry) {
-    db_entry_update_folder_size(entry->parent, entry->size);
 }

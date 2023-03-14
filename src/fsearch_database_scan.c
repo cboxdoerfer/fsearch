@@ -71,7 +71,6 @@ add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t
     db_entry_set_mtime(file_entry, mtime);
     db_entry_set_type(file_entry, DATABASE_ENTRY_TYPE_FILE);
     db_entry_set_parent(file_entry, parent);
-    db_entry_update_parent_size(file_entry);
 
     darray_add_item(walk_context->files, file_entry);
 

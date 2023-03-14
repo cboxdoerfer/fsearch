@@ -71,9 +71,6 @@ db_entry_set_type(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type);
 void
 db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index);
 
-void
-db_entry_update_parent_size(FsearchDatabaseEntry *entry);
-
 int32_t
 db_entry_get_wd(FsearchDatabaseEntryFolder *entry);
 

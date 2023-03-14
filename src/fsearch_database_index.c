@@ -638,7 +638,6 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
     db_entry_set_mtime(file_entry, mtime);
     db_entry_set_type(file_entry, DATABASE_ENTRY_TYPE_FILE);
     db_entry_set_parent(file_entry, parent);
-    db_entry_update_parent_size(file_entry);
 
     darray_insert_item_sorted(self->files, file_entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
 
