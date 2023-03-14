@@ -654,7 +654,17 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                        fsearch_database_include_get_one_file_system(self->include),
                        cancellable,
                        NULL)) {
+        darray_sort_multi_threaded(self->folders,
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                   cancellable,
+                                   NULL);
+        darray_sort_multi_threaded(self->files,
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                   cancellable,
+                                   NULL);
+
         g_atomic_int_set(&self->initialized, 1);
+
         handle_queued_events(self);
         res = true;
     }
