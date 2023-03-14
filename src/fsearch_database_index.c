@@ -336,6 +336,10 @@ handle_queued_events_cb(gpointer user_data) {
     // Assert that this function is running is the worker thread
     g_assert(g_main_context_is_owner(self->worker_ctx));
 
+    if (g_atomic_int_get(&self->initialized) == 0) {
+        return G_SOURCE_CONTINUE;
+    }
+
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
