@@ -222,7 +222,12 @@ db_scan_folder(const char *path,
     };
 
     if (!parent) {
-        parent = add_folder(&walk_context, path, path, 0, NULL);
+        parent = add_folder(&walk_context, path, path, root_st.st_mtime, NULL);
+    }
+    else {
+        g_autofree char *name = g_path_get_basename(path);
+        FsearchDatabaseEntryFolder *folder = add_folder(&walk_context, name, path, root_st.st_mtime, parent);
+        parent = folder;
     }
 
     uint32_t res = db_folder_scan_recursive(&walk_context, parent);
