@@ -340,7 +340,8 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
         if (!array) {
             continue;
         }
-        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(i);
+        DynamicArrayCompareDataFunc comp_func =
+            fsearch_database_sort_get_compare_func_for_property(i, db_entry_is_folder(entry));
         g_assert(comp_func);
         uint32_t entry_index = 0;
         if (darray_binary_search_with_data(array, entry, comp_func, NULL, &entry_index)) {
@@ -385,7 +386,8 @@ fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
         if (!array) {
             continue;
         }
-        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(i);
+        DynamicArrayCompareDataFunc comp_func =
+            fsearch_database_sort_get_compare_func_for_property(i, db_entry_is_folder(entry));
         g_assert(comp_func);
 
         darray_insert_item_sorted(array, entry, comp_func, NULL);

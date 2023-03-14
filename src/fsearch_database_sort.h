@@ -22,4 +22,4 @@ fsearch_database_sort(DynamicArray **files_store,
                       GCancellable *cancellable);
 
 DynamicArrayCompareDataFunc
-fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property);
+fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property, bool is_dir);

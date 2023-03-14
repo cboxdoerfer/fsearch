@@ -326,7 +326,7 @@ compare_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
 }
 
 DynamicArrayCompareDataFunc
-fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property) {
+fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property, bool is_dir) {
     switch (property) {
     case DATABASE_INDEX_PROPERTY_NAME:
         return (DynamicArrayCompareDataFunc)compare_by_name;
@@ -337,7 +337,13 @@ fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty
     case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
         return (DynamicArrayCompareDataFunc)compare_by_modification_time;
     case DATABASE_INDEX_PROPERTY_EXTENSION:
-        return (DynamicArrayCompareDataFunc)compare_by_extension;
+        // Folders don't have extensions and hence are simply sorted by name
+        if (!is_dir) {
+            return (DynamicArrayCompareDataFunc)compare_by_extension;
+        }
+        else {
+            return (DynamicArrayCompareDataFunc)compare_by_name;
+        }
     default:
         return NULL;
     }

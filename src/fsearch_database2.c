@@ -570,7 +570,8 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
 
     // Remove it from search results
     DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
-    DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
+    DynamicArrayCompareDataFunc comp_func =
+        fsearch_database_sort_get_compare_func_for_property(view->sort_order, db_entry_is_folder(entry));
     if (array && comp_func) {
         darray_insert_item_sorted(array, entry, comp_func, NULL);
     }
@@ -646,7 +647,8 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
     DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
     if (array) {
         uint32_t idx = 0;
-        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
+        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order,
+                                                                                                    false);
         if (darray_get_item_idx(array, entry, comp_func, NULL, &idx)) {
             darray_remove(array, idx, 1);
         }
