@@ -167,7 +167,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
         *folders_out = sort_entries(folders_in, func, cancellable, parallel_sort, comp_ctx);
     }
     else {
-        *folders_out = darray_ref(folders_in);
+        *folders_out = darray_copy(folders_in);
     }
     *files_out = sort_entries(files_in, func, cancellable, parallel_sort, comp_ctx);
     *sort_order_out = new_sort_order;
@@ -274,7 +274,7 @@ fsearch_database_sort(DynamicArray **files_store,
 
         // Folders don't have a file extension -> use the name array instead
         clear_fast_sorted_array(folders_store, DATABASE_INDEX_PROPERTY_EXTENSION);
-        folders_store[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_ref(folders);
+        folders_store[DATABASE_INDEX_PROPERTY_EXTENSION] = darray_copy(folders);
 
         const double seconds = g_timer_elapsed(timer, NULL);
         g_debug("[db_sort] sorted folders: %f s", seconds);
