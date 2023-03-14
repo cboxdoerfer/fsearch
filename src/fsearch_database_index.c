@@ -245,23 +245,50 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
     off_t size = 0;
     time_t mtime = 0;
     bool is_dir = false;
+
     FsearchDatabaseEntry *entry = NULL;
+    g_autoptr(DynamicArray) folders = NULL;
+    g_autoptr(DynamicArray) files = NULL;
 
     if (fsearch_file_utils_get_info(path->str, &mtime, &size, &is_dir)) {
         if (is_dir) {
             g_debug("new folder...");
-            entry = (FsearchDatabaseEntry *)fsearch_database_index_add_folder(self,
-                                                                              name,
-                                                                              path->str,
-                                                                              mtime,
-                                                                              (FsearchDatabaseEntryFolder *)watched_entry);
+            folders = darray_new(128);
+            files = darray_new(128);
+            if (db_scan_folder(path->str,
+                               (FsearchDatabaseEntryFolder *)watched_entry,
+                               self->folder_pool,
+                               self->file_pool,
+                               folders,
+                               files,
+                               self->exclude_manager,
+                               self->watch_descriptors,
+                               self->inotify_fd,
+                               fsearch_database_include_get_one_file_system(self->include),
+                               NULL,
+                               NULL)) {
+                for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+                    FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+                    darray_insert_item_sorted(self->folders,
+                                              folder,
+                                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                              NULL);
+                }
+                for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
+                    FsearchDatabaseEntry *file = darray_get_item(files, i);
+                    darray_insert_item_sorted(self->files,
+                                              file,
+                                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                              NULL);
+                }
+            }
         }
         else {
             g_debug("new file...");
             entry = fsearch_database_index_add_file(self, name, size, mtime, (FsearchDatabaseEntryFolder *)watched_entry);
         }
 
-        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, NULL, NULL, entry);
+        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files, entry);
     }
 }
 
@@ -271,8 +298,27 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
     if (!entry) {
         return;
     }
+    g_autoptr(DynamicArray) folders = NULL;
+    g_autoptr(DynamicArray) files = NULL;
+    if (db_entry_is_folder(entry)) {
+        folders = collect_descendants((FsearchDatabaseEntryFolder *)entry, self->folders);
+        files = collect_descendants((FsearchDatabaseEntryFolder *)entry, self->files);
+    }
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, NULL, entry);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, entry);
+
+    if (folders) {
+        for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+            FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+            remove_entry(self, folder, wd);
+        }
+    }
+    if (files) {
+        for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
+            FsearchDatabaseEntry *file = darray_get_item(files, i);
+            remove_entry(self, file, wd);
+        }
+    }
     remove_entry(self, entry, wd);
 }
 
@@ -292,52 +338,43 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
     }
 
     if (mask & IN_MODIFY) {
-        g_print("IN_MODIFY: ");
+        g_print("IN_MODIFY: %s\n", name_len ? name : "");
     }
     else if (mask & IN_ATTRIB) {
-        g_print("IN_ATTRIB: ");
+        g_print("IN_ATTRIB: %s\n", name_len ? name : "");
     }
     else if (mask & IN_MOVED_FROM) {
-        if (!g_hash_table_lookup(self->pending_moves, GUINT_TO_POINTER(cookie))) {
-            g_hash_table_insert(self->pending_moves,
-                                GUINT_TO_POINTER(cookie),
-                                monitor_event_context_new(name_len ? name : NULL, wd, mask, cookie));
-        }
-        else {
-            // TODO: There's already a MOVED_FROM event with the same cookie in the hash table
-            // Not sure how to deal with this situation yet (if it is even possible)
-            g_assert_not_reached();
-        }
+        g_print("IN_MOVED_FROM: %s\n", name_len ? name : "");
+        handle_delete_event(self, name, wd, mask);
     }
     else if (mask & IN_MOVED_TO) {
-        FsearchDatabaseIndexMonitorEventContext *ctx = NULL;
-        if (g_hash_table_steal_extended(self->pending_moves, GUINT_TO_POINTER(cookie), NULL, (gpointer *)&ctx)) {
-            handle_delete_event(self, ctx->name->str, ctx->watch_descriptor, ctx->mask);
+        g_print("IN_MOVED_TO: %s\n", name_len ? name : "");
+        if (!find_entry(self, name, wd, mask)) {
             handle_create_event(self, watched_entry, path, name);
         }
         else {
-            // TODO: There's no matching MOVED_FROM event with the same cookie in the hash table
-            // Not sure how to deal with this situation yet (if it is even possible)
-            // g_assert_not_reached();
+            // TODO: The entry is already present in our index, treat it as an IN_MODIFY or IN_ATTRIB event
         }
     }
     else if (mask & IN_DELETE) {
+        g_print("IN_DELETE: %s\n", name_len ? name : "");
         handle_delete_event(self, name, wd, mask);
     }
     else if (mask & IN_CREATE) {
+        g_print("IN_CREATE: %s\n", name_len ? name : "");
         handle_create_event(self, watched_entry, path, name);
     }
     else if (mask & IN_DELETE_SELF) {
-        g_print("IN_DELETE_SELF: ");
+        g_print("IN_DELETE_SELF: %s\n", name_len ? name : "");
     }
     else if (mask & IN_UNMOUNT) {
-        g_print("IN_UNMOUNT: ");
+        g_print("IN_UNMOUNT: %s\n", name_len ? name : "");
     }
     else if (mask & IN_MOVE_SELF) {
-        g_print("IN_MOVE_SELF: ");
+        g_print("IN_MOVE_SELF: %s\n", name_len ? name : "");
     }
     else if (mask & IN_CLOSE_WRITE) {
-        g_print("IN_CLOSE_WRITE: ");
+        g_print("IN_CLOSE_WRITE: %s\n", name_len ? name : "");
     }
     else {
         return;
@@ -389,7 +426,6 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
            we exit the loop. */
 
         if (len <= 0) {
-            g_debug("processed all inotify events.");
             return G_SOURCE_CONTINUE;
         }
 
@@ -397,7 +433,6 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
 
-            g_debug("queue event: %s", event->name);
             g_async_queue_push(
                 self->event_queue,
                 monitor_event_context_new(event->len ? event->name : NULL, event->wd, event->mask, event->cookie));
