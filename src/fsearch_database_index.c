@@ -166,7 +166,13 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
         // completed
         // * the index is corrupt -> solution: we must queue a rebuild
         // For now we just halt the execution.
-        g_assert_not_reached();
+        for (uint32_t i = 0; i < darray_get_num_items(array); ++i) {
+            FsearchDatabaseEntry *e = darray_get_item(array, i);
+            if (db_entry_compare_entries_by_path(&entry_tmp, &e) == 0) {
+                g_assert_not_reached();
+            }
+        }
+        g_warning("entry not found: %s", db_entry_get_name_raw_for_display(entry));
     }
 
     db_entry_destroy(entry_tmp);
