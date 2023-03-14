@@ -54,6 +54,7 @@ add_folder(DatabaseWalkContext *walk_context,
     db_entry_set_parent(folder, (FsearchDatabaseEntryFolder *)parent);
 
     const int32_t wd = inotify_add_watch(walk_context->monitor_fd, path, INOTIFY_FOLDER_MASK);
+    db_entry_set_wd((FsearchDatabaseEntryFolder *)folder, wd);
 
     g_hash_table_insert(walk_context->watch_descriptors, GINT_TO_POINTER(wd), folder);
     darray_add_item(walk_context->watch_descriptor_array, GINT_TO_POINTER(wd));

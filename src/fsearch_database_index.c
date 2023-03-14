@@ -605,6 +605,8 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
     db_entry_set_parent(entry, parent);
 
     const int32_t wd = inotify_add_watch(self->inotify_fd, path, INOTIFY_FOLDER_MASK);
+    db_entry_set_wd((FsearchDatabaseEntryFolder *)entry, wd);
+
     g_hash_table_insert(self->watch_descriptors, GINT_TO_POINTER(wd), entry);
 
     darray_insert_item_sorted(self->folders, entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
