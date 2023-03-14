@@ -42,6 +42,9 @@ uint32_t
 db_entry_folder_get_num_folders(FsearchDatabaseEntryFolder *entry);
 
 void
+db_entry_set_wd(FsearchDatabaseEntryFolder *entry, int32_t wd);
+
+void
 db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx);
 
 void
@@ -67,6 +70,9 @@ db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index);
 
 void
 db_entry_update_parent_size(FsearchDatabaseEntry *entry);
+
+int32_t
+db_entry_get_wd(FsearchDatabaseEntryFolder *entry);
 
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry);

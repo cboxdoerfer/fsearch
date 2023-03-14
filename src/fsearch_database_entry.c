@@ -33,6 +33,7 @@ struct FsearchDatabaseEntryFolder {
     uint32_t db_idx;
     uint32_t num_files;
     uint32_t num_folders;
+    int32_t wd;
 };
 
 static void
@@ -198,6 +199,11 @@ db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
         content_type = g_file_info_get_content_type(info);
     }
     g_string_append(str, content_type ? content_type : "unknown");
+}
+
+int32_t
+db_entry_get_wd(FsearchDatabaseEntryFolder *entry) {
+    return entry ? entry->wd : 0;
 }
 
 uint8_t
@@ -461,6 +467,14 @@ db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx) {
 void
 db_entry_set_mark(FsearchDatabaseEntry *entry, uint8_t mark) {
     entry->mark = mark;
+}
+
+void
+db_entry_set_wd(FsearchDatabaseEntryFolder *entry, int32_t wd) {
+    if (entry->super.type != DATABASE_ENTRY_TYPE_FOLDER) {
+        return;
+    }
+    entry->wd = wd;
 }
 
 void
