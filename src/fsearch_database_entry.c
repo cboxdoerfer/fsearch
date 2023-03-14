@@ -61,6 +61,17 @@ db_entry_is_file(FsearchDatabaseEntry *entry) {
     return entry->type == DATABASE_ENTRY_TYPE_FILE;
 }
 
+bool
+db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *maybe_ancestor) {
+    while (entry) {
+        if (entry->parent == maybe_ancestor) {
+            return true;
+        }
+        entry = (FsearchDatabaseEntry *)entry->parent;
+    }
+    return false;
+}
+
 uint32_t
 db_entry_folder_get_num_children(FsearchDatabaseEntryFolder *entry) {
     g_assert(entry->super.type == DATABASE_ENTRY_TYPE_FOLDER);
