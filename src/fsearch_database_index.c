@@ -184,8 +184,8 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t wa
 
     const bool is_dir = db_entry_is_folder(entry);
     if (is_dir) {
-        FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors,
-                                                                  GINT_TO_POINTER(watch_descriptor));
+        int32_t wd = db_entry_get_wd((FsearchDatabaseEntryFolder *)entry);
+        FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
         if (watched_entry != entry) {
             g_assert_not_reached();
         }
