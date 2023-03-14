@@ -560,6 +560,18 @@ darray_binary_search_with_data(DynamicArray *array,
     return false;
 }
 
+void
+darray_for_each(DynamicArray *array, DynamicArrayForEachFunc func, void *data) {
+    g_return_if_fail(array);
+    g_return_if_fail(func);
+
+    for (uint32_t i = 0; i < array->num_items; ++i) {
+        if (!func(array->data[i], data)) {
+            break;
+        }
+    }
+}
+
 DynamicArray *
 darray_copy(DynamicArray *array) {
     if (!array) {

@@ -27,6 +27,10 @@ typedef struct DynamicArray DynamicArray;
 
 typedef int32_t (*DynamicArrayCompareFunc)(void *a, void *b);
 typedef int32_t (*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);
+typedef bool (*DynamicArrayForEachFunc)(void *, void *data);
+
+void
+darray_for_each(DynamicArray *array, DynamicArrayForEachFunc func, void *data);
 
 bool
 darray_binary_search_with_data(DynamicArray *array,
