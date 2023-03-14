@@ -172,7 +172,7 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
                 g_assert_not_reached();
             }
         }
-        g_warning("entry not found: %s", db_entry_get_name_raw_for_display(entry));
+        g_warning("entry not found: %s", db_entry_get_name_raw_for_display(entry_tmp));
     }
 
     db_entry_destroy(entry_tmp);
