@@ -624,6 +624,7 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
 static bool
 add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_add_entry(ctx->db->store, entry, ctx->index);
+    ctx->entry = entry;
     g_hash_table_foreach(ctx->db->search_results, add_result, ctx);
     return true;
 }
@@ -631,6 +632,7 @@ add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ct
 static bool
 remove_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_remove_entry(ctx->db->store, entry, ctx->index);
+    ctx->entry = entry;
     g_hash_table_foreach(ctx->db->search_results, remove_result, ctx);
     return true;
 }
@@ -641,7 +643,6 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
 
     FsearchDatabase2AddRemoveContext ctx = {
         .db = self,
-        .entry = event->entry,
         .index = index,
     };
 
