@@ -39,7 +39,7 @@ fsearch_database_index_store_sort(FsearchDatabaseIndexStore *self, GCancellable 
 
 bool
 fsearch_database_index_store_has_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries);
-}
+
 DynamicArray *
 fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order);
 
