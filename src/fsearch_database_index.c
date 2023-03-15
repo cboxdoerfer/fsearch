@@ -43,6 +43,8 @@ struct _FsearchDatabaseIndex {
 
     uint32_t id;
 
+    gdouble max_process_time;
+
     FsearchDatabaseIndexEventFunc event_func;
     gpointer event_func_data;
 
@@ -129,7 +131,9 @@ handle_queued_events(FsearchDatabaseIndex *self) {
     }
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
 
-    g_debug("processed all events: %d in %fs.", num_events_queued, g_timer_elapsed(timer, NULL));
+    const double process_time = g_timer_elapsed(timer, NULL);
+    self->max_process_time = MAX(process_time, self->max_process_time);
+    g_debug("processed all events: %d in %fs (max: %fs)", num_events_queued, process_time, self->max_process_time);
 }
 
 static FsearchDatabaseEntry *
