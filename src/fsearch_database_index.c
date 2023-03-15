@@ -343,12 +343,20 @@ handle_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GStri
     time_t mtime = 0;
     bool is_dir = false;
 
+    off_t old_size = db_entry_get_size(entry);
+    time_t old_mtime = db_entry_get_mtime(entry);
+
     if (fsearch_file_utils_get_info(path->str, &mtime, &size, &is_dir)) {
-        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, NULL, entry);
-        if (mtime != db_entry_get_mtime(entry)) {
-            db_entry_set_mtime(entry, mtime);
+        if (old_size != size || old_mtime != mtime) {
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, NULL, entry);
+            if (mtime != old_mtime) {
+                db_entry_set_mtime(entry, mtime);
+            }
+            if (size != old_size) {
+                db_entry_set_size(entry, size);
+            }
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, NULL, NULL, entry);
         }
-        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, NULL, NULL, entry);
     }
 }
 
