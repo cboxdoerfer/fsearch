@@ -184,6 +184,7 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
         entry = darray_get_item(array, idx);
     }
     else {
+#if 0
         for (uint32_t i = 0; i < darray_get_num_items(array); ++i) {
             FsearchDatabaseEntry *e = darray_get_item(array, i);
             if (db_entry_compare_entries_by_path(&entry_tmp, &e) == 0) {
@@ -191,6 +192,7 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
             }
         }
         g_debug("entry not found: %s", db_entry_get_name_raw_for_display(entry_tmp));
+#endif
     }
 
     db_entry_destroy(entry_tmp);
