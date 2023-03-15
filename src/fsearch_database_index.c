@@ -132,23 +132,6 @@ handle_queued_events(FsearchDatabaseIndex *self) {
     g_debug("processed all events: %d in %fs.", num_events_queued, g_timer_elapsed(timer, NULL));
 }
 
-static DynamicArray *
-steal_descendants(FsearchDatabaseEntryFolder *parent, DynamicArray *entries) {
-    g_autoptr(DynamicArray) array = darray_new(128);
-
-    // TODO: This implementation is rather slow. The index is already sorted by path,
-    // so descendants should be next to each other and their last common ancestor
-
-    for (uint32_t i = 0; i < darray_get_num_items(entries); ++i) {
-        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        if (db_entry_is_descendant(entry, parent)) {
-            darray_add_item(array, entry);
-            darray_remove(entries, i, 1);
-        }
-    }
-    return g_steal_pointer(&array);
-}
-
 static FsearchDatabaseEntry *
 find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask) {
     g_return_val_if_fail(self, NULL);
@@ -309,8 +292,8 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
     g_autoptr(DynamicArray) folders = NULL;
     g_autoptr(DynamicArray) files = NULL;
     if (db_entry_is_folder(entry)) {
-        folders = steal_descendants((FsearchDatabaseEntryFolder *)entry, self->folders);
-        files = steal_descendants((FsearchDatabaseEntryFolder *)entry, self->files);
+        folders = darray_steal_items(self->folders, (DynamicArrayStealFunc)db_entry_is_descendant, entry);
+        files = darray_steal_items(self->files, (DynamicArrayStealFunc)db_entry_is_descendant, entry);
     }
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, entry);
