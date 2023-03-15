@@ -13,8 +13,8 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define INOTIFY_FOLDER_MASK                                                                                            \
-    (IN_MODIFY | IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT         \
-     | IN_MOVE_SELF | IN_CLOSE_WRITE)
+    (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
+     | IN_CLOSE_WRITE)
 
 struct _FsearchDatabaseIndex {
     FsearchDatabaseInclude *include;
@@ -362,10 +362,7 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
         g_string_append(path, name);
     }
 
-    if (mask & IN_MODIFY) {
-        g_print("IN_MODIFY: %s\n", name_len ? name : "");
-    }
-    else if (mask & IN_ATTRIB) {
+    if (mask & IN_ATTRIB) {
         g_print("IN_ATTRIB: %s\n", name_len ? name : "");
         handle_attrib_event(self, wd, mask, path, name);
     }

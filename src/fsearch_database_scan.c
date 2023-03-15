@@ -14,8 +14,8 @@
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define INOTIFY_FOLDER_MASK                                                                                            \
-    (IN_MODIFY | IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT         \
-     | IN_MOVE_SELF | IN_CLOSE_WRITE)
+    (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
+     | IN_CLOSE_WRITE)
 
 enum {
     WALK_OK = 0,
