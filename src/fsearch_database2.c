@@ -578,60 +578,6 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-move_result(gpointer key, gpointer value, gpointer user_data) {
-    // FsearchDatabaseWork *work = user_data;
-    // g_return_if_fail(work);
-
-    // FsearchDatabaseSearchView *view = value;
-    // g_return_if_fail(view);
-
-    // FsearchDatabaseEntry *entry_moved_from = fsearch_database_work_monitor_event_get_entry_1(work);
-    // FsearchDatabaseEntry *entry_moved_to = fsearch_database_work_monitor_event_get_entry_2(work);
-
-    // DynamicArray *array = NULL;
-    // GHashTable *selection = NULL;
-    // if (db_entry_is_folder(entry_moved_from) && db_entry_is_folder(entry_moved_to)) {
-    //     array = view->folders;
-    //     selection = view->folder_selection;
-    // }
-    // else if (db_entry_is_file(entry_moved_from) && db_entry_is_file(entry_moved_to)) {
-    //     array = view->files;
-    //     selection = view->file_selection;
-    // }
-    // else {
-    //     // You can't move/rename a file, and it becomes a folder (or vice versa), right?
-    //     g_assert_not_reached();
-    // }
-
-    //// First remove the old moved_from entry
-    // if (entry_matches_query(view, entry_moved_from)) {
-    //     uint32_t idx = 0;
-    //     DynamicArrayCompareDataFunc comp_func =
-    //     fsearch_database_sort_get_compare_func_for_property(view->sort_order); if (darray_get_item_idx(array,
-    //     entry_moved_from, comp_func, NULL, &idx)) {
-    //         darray_remove(array, idx, 1);
-    //     }
-    // }
-
-    //// If the moved/renamed entry in its new state doesn't match the current query we're done here.
-    // if (!entry_matches_query(view, entry_moved_to)) {
-    //     return;
-    // }
-
-    //// Otherwise add it to the results ...
-    // DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order);
-    // if (array && comp_func) {
-    //     darray_insert_item_sorted(array, entry_moved_to, comp_func, NULL);
-    // }
-
-    //// ... and keep the selection alive in case the old entry was selected
-    // if (fsearch_selection_is_selected(selection, entry_moved_from)) {
-    //     fsearch_selection_unselect(selection, entry_moved_from);
-    //     fsearch_selection_select(selection, entry_moved_to);
-    // }
-}
-
-static void
 remove_result(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseEntry *entry = user_data;
     g_return_if_fail(entry);
