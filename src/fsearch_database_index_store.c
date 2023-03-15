@@ -348,7 +348,7 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         DynamicArray *array = NULL;
-        if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
+        if (db_entry_is_folder(entry)) {
             array = self->folders_sorted[i];
         }
         else {
@@ -394,7 +394,7 @@ fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         DynamicArray *array = NULL;
-        if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
+        if (db_entry_is_folder(entry)) {
             array = self->folders_sorted[i];
         }
         else {

@@ -94,7 +94,7 @@ intersect_supported_appliations(FsearchDatabaseEntry *entry, gpointer user_data)
         return;
     }
 
-    if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
+    if (db_entry_is_folder(entry)) {
         // we already know the content type for folders, so we can use a slightly more
         // efficient and reliable path for them here
         const char *dir_content_type = "inode/directory";

@@ -143,7 +143,7 @@ db_entry_get_extension(FsearchDatabaseEntry *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
-    if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+    if (db_entry_is_folder(entry)) {
         return NULL;
     }
     return fsearch_string_get_extension(entry->name);
@@ -247,7 +247,7 @@ db_entry_get_depth(FsearchDatabaseEntry *entry) {
 
 uint32_t
 db_entry_get_db_index(FsearchDatabaseEntry *entry) {
-    if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+    if (db_entry_is_folder(entry)) {
         return ((FsearchDatabaseEntryFolder *)entry)->db_idx;
     }
     FsearchDatabaseEntryFolder *parent = entry->parent;
@@ -295,11 +295,9 @@ db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
 static const char *
 get_file_type(FsearchDatabaseEntry *entry, GHashTable *file_type_table, GHashTable *entry_table) {
-    const FsearchDatabaseEntryType type_a = db_entry_get_type(entry);
-
     const char *name = db_entry_get_name_raw_for_display(entry);
-    g_autofree char *type =
-        fsearch_file_utils_get_file_type_non_localized(name, type_a == DATABASE_ENTRY_TYPE_FOLDER ? TRUE : FALSE);
+    g_autofree char *type = fsearch_file_utils_get_file_type_non_localized(name,
+                                                                           db_entry_is_folder(entry) ? TRUE : FALSE);
     char *cached_type = g_hash_table_lookup(file_type_table, type);
     if (!cached_type) {
         g_hash_table_add(file_type_table, type);
@@ -449,12 +447,12 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
         // The entry already has a parent. First un-parent it and update its current parents state:
         // * Decrement file/folder count
         FsearchDatabaseEntryFolder *p = entry->parent;
-        if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+        if (db_entry_is_folder(entry)) {
             if (p->num_folders > 0) {
                 p->num_folders--;
             }
         }
-        else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
+        else if (db_entry_is_file(entry)) {
             if (p->num_files > 0) {
                 p->num_files--;
             }
@@ -469,10 +467,10 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
     if (parent) {
         // parent is non-NULL, increment its file/folder count
         g_assert(parent->super.type == DATABASE_ENTRY_TYPE_FOLDER);
-        if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+        if (db_entry_is_folder(entry)) {
             parent->num_folders++;
         }
-        else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
+        else if (db_entry_is_file(entry)) {
             parent->num_files++;
         }
         // * Update the size
@@ -487,7 +485,7 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
 
 void
 db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index) {
-    if (entry->type != DATABASE_ENTRY_TYPE_FOLDER) {
+    if (!db_entry_is_folder(entry)) {
         return;
     }
     ((FsearchDatabaseEntryFolder *)entry)->db_idx = db_index;

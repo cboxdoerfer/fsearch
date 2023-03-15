@@ -575,7 +575,7 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
+    DynamicArray *array = db_entry_is_folder(entry) ? view->folders : view->files;
     if (fsearch_database_index_store_has_entries(ctx->db->store, array)) {
         // The files/folders are referenced directly from the index store.
         // We must not alter them.
@@ -604,7 +604,7 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
+    DynamicArray *array = db_entry_is_folder(entry) ? view->folders : view->files;
     if (array && !fsearch_database_index_store_has_entries(ctx->db->store, array)) {
         // Remove it from search results
         uint32_t idx = 0;
@@ -616,8 +616,7 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
     }
 
     // Remove it from the selection
-    GHashTable *selection = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folder_selection
-                                                                                   : view->file_selection;
+    GHashTable *selection = db_entry_is_folder(entry) ? view->folder_selection : view->file_selection;
     fsearch_selection_unselect(selection, entry);
 }
 
