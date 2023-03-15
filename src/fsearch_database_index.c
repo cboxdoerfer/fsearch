@@ -317,7 +317,7 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
 
     if (files) {
         for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
-            FsearchDatabaseEntry *file = darray_get_item(folders, i);
+            FsearchDatabaseEntry *file = darray_get_item(files, i);
             db_entry_set_parent(file, NULL);
             fsearch_memory_pool_free(self->file_pool, file, TRUE);
         }
