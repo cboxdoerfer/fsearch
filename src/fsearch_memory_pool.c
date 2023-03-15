@@ -124,6 +124,7 @@ fsearch_memory_pool_malloc(FsearchMemoryPool *pool) {
     if (pool->freed_items) {
         void *freed_head = pool->freed_items;
         pool->freed_items = pool->freed_items->next;
+        memset(freed_head, 0, pool->item_size);
         return freed_head;
     }
 
