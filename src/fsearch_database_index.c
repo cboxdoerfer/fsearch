@@ -418,6 +418,7 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
     }
     else if (mask & IN_CLOSE_WRITE) {
         g_print("IN_CLOSE_WRITE: %s\n", name_len ? name : "");
+        handle_attrib_event(self, wd, mask, path, name);
     }
     else {
         return;
