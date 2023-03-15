@@ -25,6 +25,7 @@
 
 typedef struct DynamicArray DynamicArray;
 
+typedef bool (*DynamicArrayStealFunc)(void *a, void *data);
 typedef int32_t (*DynamicArrayCompareFunc)(void *a, void *b);
 typedef int32_t (*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);
 typedef bool (*DynamicArrayForEachFunc)(void *, void *data);
@@ -84,6 +85,9 @@ darray_insert_item(DynamicArray *array, void *data, uint32_t index);
 
 void
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements);
+
+DynamicArray *
+darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data);
 
 DynamicArray *
 darray_new(size_t num_items);

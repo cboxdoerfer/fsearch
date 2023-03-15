@@ -294,6 +294,27 @@ darray_insert_item_sorted(DynamicArray *array, void *item, DynamicArrayCompareDa
     darray_insert_item(array, item, insert_at);
 }
 
+DynamicArray *
+darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) {
+    g_assert(array);
+    g_assert(array->data);
+
+    g_autoptr(DynamicArray) stolen_entries = darray_new(16);
+
+    uint32_t i = 0;
+    while (i < array->num_items) {
+        void *item = array->data[i];
+        if (item && func(item, data)) {
+            darray_add_item(stolen_entries, item);
+            darray_remove(array, i, 1);
+            continue;
+        }
+        i++;
+    }
+
+    return g_steal_pointer(&stolen_entries);
+}
+
 void
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
     g_assert(array);
