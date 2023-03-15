@@ -119,7 +119,6 @@ handle_queued_events(FsearchDatabaseIndex *self) {
         if (!ctx) {
             break;
         }
-        g_debug("handle queue event: %s", ctx->name ? ctx->name->str : "");
         handle_event(self,
                      ctx->watch_descriptor,
                      ctx->mask,
@@ -134,7 +133,7 @@ handle_queued_events(FsearchDatabaseIndex *self) {
 }
 
 static DynamicArray *
-collect_descendants(FsearchDatabaseEntryFolder *parent, DynamicArray *entries) {
+steal_descendants(FsearchDatabaseEntryFolder *parent, DynamicArray *entries) {
     g_autoptr(DynamicArray) array = darray_new(128);
 
     // TODO: This implementation is rather slow. The index is already sorted by path,
@@ -144,6 +143,7 @@ collect_descendants(FsearchDatabaseEntryFolder *parent, DynamicArray *entries) {
         FsearchDatabaseEntry *entry = darray_get_item(entries, i);
         if (db_entry_is_descendant(entry, parent)) {
             darray_add_item(array, entry);
+            darray_remove(entries, i, 1);
         }
     }
     return g_steal_pointer(&array);
@@ -240,11 +240,9 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t wa
                                            &idx)) {
             FsearchDatabaseEntry *found_entry = darray_get_item(array, idx);
             darray_remove(array, idx, 1);
-            g_debug("index store removed entry: %d - %s", idx, db_entry_get_name_raw_for_display(entry));
 
             // Un-parent the entry to update its current parents state
             db_entry_set_parent(found_entry, NULL);
-
             fsearch_memory_pool_free(pool, found_entry, TRUE);
         }
     }
@@ -262,7 +260,6 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
 
     if (fsearch_file_utils_get_info(path->str, &mtime, &size, &is_dir)) {
         if (is_dir) {
-            g_debug("new folder...");
             folders = darray_new(128);
             files = darray_new(128);
             if (db_scan_folder(path->str,
@@ -294,7 +291,6 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
             }
         }
         else {
-            g_debug("new file...");
             entry = fsearch_database_index_add_file(self, name, size, mtime, (FsearchDatabaseEntryFolder *)watched_entry);
         }
 
@@ -311,22 +307,24 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
     g_autoptr(DynamicArray) folders = NULL;
     g_autoptr(DynamicArray) files = NULL;
     if (db_entry_is_folder(entry)) {
-        folders = collect_descendants((FsearchDatabaseEntryFolder *)entry, self->folders);
-        files = collect_descendants((FsearchDatabaseEntryFolder *)entry, self->files);
+        folders = steal_descendants((FsearchDatabaseEntryFolder *)entry, self->folders);
+        files = steal_descendants((FsearchDatabaseEntryFolder *)entry, self->files);
     }
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, entry);
 
+    if (files) {
+        for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
+            FsearchDatabaseEntry *file = darray_get_item(folders, i);
+            db_entry_set_parent(file, NULL);
+            fsearch_memory_pool_free(self->file_pool, file, TRUE);
+        }
+    }
     if (folders) {
         for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
             FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-            remove_entry(self, folder, wd);
-        }
-    }
-    if (files) {
-        for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
-            FsearchDatabaseEntry *file = darray_get_item(files, i);
-            remove_entry(self, file, wd);
+            db_entry_set_parent(folder, NULL);
+            fsearch_memory_pool_free(self->folder_pool, folder, TRUE);
         }
     }
     remove_entry(self, entry, wd);
