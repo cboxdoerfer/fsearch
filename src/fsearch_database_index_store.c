@@ -264,6 +264,24 @@ fsearch_database_index_store_sort(FsearchDatabaseIndexStore *self, GCancellable 
     unlock_all_indices(self);
 }
 
+bool
+fsearch_database_index_store_has_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries) {
+    g_return_val_if_fail(self, false);
+    g_return_val_if_fail(entries, false);
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        DynamicArray *e = self->files_sorted[i];
+        if (e == entries) {
+            return true;
+        }
+        e = self->folders_sorted[i];
+        if (e == entries) {
+            return true;
+        }
+    }
+    return false;
+}
+
 DynamicArray *
 fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order) {
     g_return_val_if_fail(self, NULL);
