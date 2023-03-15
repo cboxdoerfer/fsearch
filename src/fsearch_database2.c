@@ -63,6 +63,7 @@ typedef enum FsearchDatabase2EventType {
     EVENT_SORT_STARTED,
     EVENT_SORT_FINISHED,
     EVENT_SELECTION_CHANGED,
+    EVENT_DATABASE_CHANGED,
     NUM_EVENTS,
 } FsearchDatabase2EventType;
 
@@ -232,6 +233,11 @@ emit_selection_changed_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseS
                 2,
                 NULL,
                 (GDestroyNotify)fsearch_database_search_info_unref);
+}
+
+static void
+emit_database_changed_signal(FsearchDatabase2 *self, FsearchDatabaseInfo *info) {
+    emit_signal(self, EVENT_DATABASE_CHANGED, info, NULL, 1, NULL, (GDestroyNotify)fsearch_database_info_unref);
 }
 
 static void
@@ -651,6 +657,11 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
         g_hash_table_foreach(self->search_results, update_views, self);
+        emit_database_changed_signal(self,
+                                     fsearch_database_info_new(self->include_manager,
+                                                               self->exclude_manager,
+                                                               get_num_database_files(self),
+                                                               get_num_database_folders(self)));
         database_unlock(self);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
@@ -1148,6 +1159,16 @@ fsearch_database2_class_init(FsearchDatabase2Class *klass) {
                                                 2,
                                                 G_TYPE_UINT,
                                                 FSEARCH_TYPE_DATABASE_SEARCH_INFO);
+    signals[EVENT_DATABASE_CHANGED] = g_signal_new("database-changed",
+                                                   G_TYPE_FROM_CLASS(klass),
+                                                   G_SIGNAL_RUN_LAST,
+                                                   0,
+                                                   NULL,
+                                                   NULL,
+                                                   NULL,
+                                                   G_TYPE_NONE,
+                                                   1,
+                                                   FSEARCH_TYPE_DATABASE_INFO);
     signals[EVENT_SELECTION_CHANGED] = g_signal_new("selection-changed",
                                                     G_TYPE_FROM_CLASS(klass),
                                                     G_SIGNAL_RUN_LAST,
