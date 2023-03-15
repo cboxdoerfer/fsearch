@@ -327,6 +327,10 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
 
 static void
 handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len) {
+    if (!name) {
+        return;
+    }
+
     FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
     if (!watched_entry) {
         g_debug("no entry for watch descriptor not in hash table!!!");
