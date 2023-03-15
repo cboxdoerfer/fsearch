@@ -184,7 +184,7 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
 }
 
 static void
-remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t watch_descriptor) {
+remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
     g_return_if_fail(self);
 
     DynamicArray *array = NULL;
@@ -205,8 +205,8 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, int32_t wa
             g_assert_not_reached();
         }
         else {
-            g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(watch_descriptor));
-            inotify_rm_watch(self->inotify_fd, watch_descriptor);
+            inotify_rm_watch(self->inotify_fd, wd);
+            g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(wd));
             array = self->folders;
             pool = self->folder_pool;
         }
@@ -312,7 +312,7 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
             fsearch_memory_pool_free(self->folder_pool, folder, TRUE);
         }
     }
-    remove_entry(self, entry, wd);
+    remove_entry(self, entry);
 }
 
 static void
