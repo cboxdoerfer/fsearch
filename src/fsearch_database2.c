@@ -560,7 +560,6 @@ typedef struct {
     FsearchDatabase2 *db;
     FsearchDatabaseIndex *index;
     FsearchDatabaseEntry *entry;
-    bool modified;
 } FsearchDatabase2AddRemoveContext;
 
 static void
@@ -626,7 +625,6 @@ static bool
 add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_add_entry(ctx->db->store, entry, ctx->index);
     g_hash_table_foreach(ctx->db->search_results, add_result, ctx);
-    ctx->modified = true;
     return true;
 }
 
@@ -634,7 +632,6 @@ static bool
 remove_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_remove_entry(ctx->db->store, entry, ctx->index);
     g_hash_table_foreach(ctx->db->search_results, remove_result, ctx);
-    ctx->modified = true;
     return true;
 }
 
@@ -642,17 +639,20 @@ static void
 index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
     FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
-
     FsearchDatabase2AddRemoveContext ctx = {
         .db = self,
         .entry = event->entry,
         .index = index,
-        .modified = false,
     };
 
     switch (event->kind) {
+    case FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING:
+        database_lock(self);
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
+        g_hash_table_foreach(self->search_results, update_views, self);
+        database_unlock(self);
+        break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED:
@@ -703,10 +703,6 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         break;
     case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
         break;
-    }
-
-    if (ctx.modified) {
-        g_hash_table_foreach(self->search_results, update_views, self);
     }
 }
 

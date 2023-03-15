@@ -106,10 +106,14 @@ static void
 handle_queued_events(FsearchDatabaseIndex *self) {
     g_return_if_fail(self);
 
-    if (g_async_queue_length(self->event_queue) == 0) {
+    const int32_t num_events_queued = g_async_queue_length(self->event_queue);
+    if (num_events_queued < 1) {
         return;
     }
 
+    g_autoptr(GTimer) timer = g_timer_new();
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
     while (true) {
         FsearchDatabaseIndexMonitorEventContext *ctx = g_async_queue_try_pop(self->event_queue);
         if (!ctx) {
@@ -124,6 +128,9 @@ handle_queued_events(FsearchDatabaseIndex *self) {
                      ctx->name ? ctx->name->len : 0);
         g_clear_pointer(&ctx, monitor_event_context_free);
     }
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
+
+    g_debug("processed all events: %d in %fs.", num_events_queued, g_timer_elapsed(timer, NULL));
 }
 
 static DynamicArray *
