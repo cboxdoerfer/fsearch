@@ -556,9 +556,17 @@ entry_matches_query(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry
     return found;
 }
 
+typedef struct {
+    FsearchDatabase2 *db;
+    FsearchDatabaseIndex *index;
+    FsearchDatabaseEntry *entry;
+    bool modified;
+} FsearchDatabase2AddRemoveContext;
+
 static void
 add_result(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabaseEntry *entry = user_data;
+    FsearchDatabase2AddRemoveContext *ctx = user_data;
+    FsearchDatabaseEntry *entry = ctx->entry;
     g_return_if_fail(entry);
 
     FsearchDatabaseSearchView *view = value;
@@ -568,8 +576,14 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    // Remove it from search results
     DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
+    if (fsearch_database_index_store_has_entries(ctx->db->store, array)) {
+        // The files/folders are referenced directly from the index store.
+        // We must not alter them.
+        return;
+    }
+
+    // Add it to the search results
     DynamicArrayCompareDataFunc comp_func =
         fsearch_database_sort_get_compare_func_for_property(view->sort_order, db_entry_is_folder(entry));
     if (array && comp_func) {
@@ -579,7 +593,9 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
 
 static void
 remove_result(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabaseEntry *entry = user_data;
+    FsearchDatabase2AddRemoveContext *ctx = user_data;
+    FsearchDatabaseEntry *entry = ctx->entry;
+
     g_return_if_fail(entry);
 
     FsearchDatabaseSearchView *view = value;
@@ -589,32 +605,27 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    // Remove it from search results
     DynamicArray *array = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folders : view->files;
-    if (array) {
+    if (array && !fsearch_database_index_store_has_entries(ctx->db->store, array)) {
+        // Remove it from search results
         uint32_t idx = 0;
-        DynamicArrayCompareDataFunc comp_func = fsearch_database_sort_get_compare_func_for_property(view->sort_order,
-                                                                                                    false);
+        DynamicArrayCompareDataFunc comp_func =
+            fsearch_database_sort_get_compare_func_for_property(view->sort_order, db_entry_is_folder(entry));
         if (darray_get_item_idx(array, entry, comp_func, NULL, &idx)) {
             darray_remove(array, idx, 1);
         }
     }
+
     // Remove it from the selection
     GHashTable *selection = db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER ? view->folder_selection
                                                                                    : view->file_selection;
     fsearch_selection_unselect(selection, entry);
 }
 
-typedef struct {
-    FsearchDatabase2 *db;
-    FsearchDatabaseIndex *index;
-    bool modified;
-} FsearchDatabase2AddRemoveContext;
-
 static bool
 add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_add_entry(ctx->db->store, entry, ctx->index);
-    g_hash_table_foreach(ctx->db->search_results, add_result, entry);
+    g_hash_table_foreach(ctx->db->search_results, add_result, ctx);
     ctx->modified = true;
     return true;
 }
@@ -622,7 +633,7 @@ add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ct
 static bool
 remove_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_remove_entry(ctx->db->store, entry, ctx->index);
-    g_hash_table_foreach(ctx->db->search_results, remove_result, entry);
+    g_hash_table_foreach(ctx->db->search_results, remove_result, ctx);
     ctx->modified = true;
     return true;
 }
@@ -636,6 +647,7 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
 
     FsearchDatabase2AddRemoveContext ctx = {
         .db = self,
+        .entry = event->entry,
         .index = index,
         .modified = false,
     };

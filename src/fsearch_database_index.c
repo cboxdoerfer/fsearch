@@ -326,6 +326,26 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
 }
 
 static void
+handle_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GString *path, const char *name) {
+    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask);
+    if (!entry) {
+        return;
+    }
+
+    off_t size = 0;
+    time_t mtime = 0;
+    bool is_dir = false;
+
+    if (fsearch_file_utils_get_info(path->str, &mtime, &size, &is_dir)) {
+        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, NULL, entry);
+        if (mtime != db_entry_get_mtime(entry)) {
+            db_entry_set_mtime(entry, mtime);
+        }
+        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, NULL, NULL, entry);
+    }
+}
+
+static void
 handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len) {
     if (!name) {
         return;
@@ -349,6 +369,7 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
     }
     else if (mask & IN_ATTRIB) {
         g_print("IN_ATTRIB: %s\n", name_len ? name : "");
+        handle_attrib_event(self, wd, mask, path, name);
     }
     else if (mask & IN_MOVED_FROM) {
         g_print("IN_MOVED_FROM: %s\n", name_len ? name : "");
@@ -360,7 +381,7 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
             handle_create_event(self, watched_entry, path, name);
         }
         else {
-            // TODO: The entry is already present in our index, treat it as an IN_MODIFY or IN_ATTRIB event
+            handle_attrib_event(self, wd, mask, path, name);
         }
     }
     else if (mask & IN_DELETE) {
