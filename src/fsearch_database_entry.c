@@ -496,10 +496,10 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
             }
         }
         // * Update the size
-        while (p) {
-            p->super.size = p->super.size > entry->size ? p->super.size - entry->size : 0;
-            p = p->super.parent;
-        }
+        // while (p) {
+        //    p->super.size = p->super.size > entry->size ? p->super.size - entry->size : 0;
+        //    p = p->super.parent;
+        //}
     }
 
     if (parent) {
@@ -512,11 +512,11 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
             parent->num_files++;
         }
         // * Update the size
-        FsearchDatabaseEntryFolder *p = parent;
-        while (p) {
-            p->super.size += entry->size;
-            p = p->super.parent;
-        }
+        // FsearchDatabaseEntryFolder *p = parent;
+        // while (p) {
+        //    p->super.size += entry->size;
+        //    p = p->super.parent;
+        //}
     }
     entry->parent = parent;
 }
