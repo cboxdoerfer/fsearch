@@ -165,7 +165,7 @@ handle_queued_events(FsearchDatabaseIndex *self) {
 }
 
 static FsearchDatabaseEntry *
-find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask) {
+find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask, uint32_t *index_out) {
     g_return_val_if_fail(self, NULL);
 
     FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
@@ -181,7 +181,7 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
     // The dummy entry is used to mimic the entry we want to find.
     // It has the same name and parent (i.e. the watched directory)
     // and hence the same path. This means it will compare in the same way as the entry we're looking
-    // for when it gets passed to the `db_entry_compare_entries_by_path` function.
+    // for when it gets passed to the `db_entry_compare_entries_by_full_path` function.
     g_autofree FsearchDatabaseEntry *entry_tmp =
         db_entry_get_dummy_for_name_and_parent(watched_entry,
                                                name,
@@ -193,9 +193,12 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
     FsearchDatabaseEntry *entry = NULL;
     if (darray_binary_search_with_data(array,
                                        entry_tmp,
-                                       (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                       (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
                                        NULL,
                                        &idx)) {
+        if (index_out) {
+            *index_out = idx;
+        }
         entry = darray_get_item(array, idx);
     }
     else {
@@ -252,7 +255,7 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
         uint32_t idx = 0;
         if (darray_binary_search_with_data(array,
                                            entry,
-                                           (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                           (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
                                            NULL,
                                            &idx)) {
             FsearchDatabaseEntry *found_entry = darray_get_item(array, idx);
@@ -296,7 +299,7 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
                     FsearchDatabaseEntry *folder = darray_get_item(folders, i);
                     darray_insert_item_sorted(self->folders,
                                               folder,
-                                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
                                               NULL);
                     num_folder_creates++;
                 }
@@ -304,7 +307,7 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
                     FsearchDatabaseEntry *file = darray_get_item(files, i);
                     darray_insert_item_sorted(self->files,
                                               file,
-                                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
                                               NULL);
                     num_file_creates++;
                 }
@@ -319,17 +322,50 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
     }
 }
 
+static DynamicArray *
+steal_descendants(DynamicArray *array, FsearchDatabaseEntryFolder *folder, uint32_t idx) {
+    DynamicArray *descendants = darray_new(128);
+
+    // NOTE: Unfortunately we don't know how many descendants a folder has in total, so we have to add them one by one
+    for (uint32_t i = idx; i < darray_get_num_items(array); ++i) {
+        FsearchDatabaseEntry *e = darray_get_item(array, i);
+        if (db_entry_is_descendant(e, folder)) {
+            darray_add_item(descendants, e);
+            continue;
+        }
+        else {
+            break;
+        }
+    }
+    darray_remove(array, idx, darray_get_num_items(descendants));
+    return descendants;
+}
+
 static void
 handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask) {
-    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask);
+    uint32_t entry_idx = 0;
+    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, &entry_idx);
     if (!entry) {
         return;
     }
     g_autoptr(DynamicArray) folders = NULL;
     g_autoptr(DynamicArray) files = NULL;
     if (db_entry_is_folder(entry)) {
-        folders = darray_steal_items(self->folders, (DynamicArrayStealFunc)db_entry_is_descendant, entry);
-        files = darray_steal_items(self->files, (DynamicArrayStealFunc)db_entry_is_descendant, entry);
+        FsearchDatabaseEntryFolder *folder_entry_to_remove = (FsearchDatabaseEntryFolder *)entry;
+
+        // folder descendants of `folder_entry_to_remove` (if there are any) start immediately after it, i.e. at `idx +
+        // 1`
+        folders = steal_descendants(self->folders, folder_entry_to_remove, entry_idx + 1);
+
+        // to find all file descendants we start looking for them right at the position where `folder_entry_to_remove`
+        // would be inserted into the files array.
+        uint32_t folder_entry_insert_idx = 0;
+        darray_binary_search_with_data(self->files,
+                                       entry,
+                                       (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
+                                       NULL,
+                                       &folder_entry_insert_idx);
+        files = steal_descendants(self->files, folder_entry_to_remove, folder_entry_insert_idx);
         num_descendant_counted++;
     }
 
@@ -354,7 +390,7 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
 
 static void
 handle_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GString *path, const char *name) {
-    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask);
+    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, NULL);
     if (!entry) {
         return;
     }
@@ -410,7 +446,7 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
     }
     else if (mask & IN_MOVED_TO) {
         g_print("IN_MOVED_TO: %s\n", name_len ? name : "");
-        if (!find_entry(self, name, wd, mask)) {
+        if (!find_entry(self, name, wd, mask, NULL)) {
             handle_create_event(self, watched_entry, path, name);
         }
         else {
@@ -698,7 +734,10 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
     db_entry_set_type(file_entry, DATABASE_ENTRY_TYPE_FILE);
     db_entry_set_parent(file_entry, parent);
 
-    darray_insert_item_sorted(self->files, file_entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
+    darray_insert_item_sorted(self->files,
+                              file_entry,
+                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
+                              NULL);
 
     return file_entry;
 }
@@ -725,7 +764,10 @@ fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
 
     g_hash_table_insert(self->watch_descriptors, GINT_TO_POINTER(wd), entry);
 
-    darray_insert_item_sorted(self->folders, entry, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path, NULL);
+    darray_insert_item_sorted(self->folders,
+                              entry,
+                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
+                              NULL);
 
     return (FsearchDatabaseEntryFolder *)entry;
 }
@@ -767,11 +809,11 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                        cancellable,
                        NULL)) {
         darray_sort_multi_threaded(self->folders,
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
                                    cancellable,
                                    NULL);
         darray_sort_multi_threaded(self->files,
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
                                    cancellable,
                                    NULL);
 
