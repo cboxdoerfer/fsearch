@@ -2183,6 +2183,22 @@ fsearch_list_view_append_column(FsearchListView *view, FsearchListViewColumn *co
 }
 
 void
+fsearch_list_view_update(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
+    if (!view) {
+        return;
+    }
+    view->num_rows = num_rows;
+    view->list_height = num_rows * view->row_height;
+    gtk_adjustment_set_value(view->vadjustment, CLAMP(gtk_adjustment_get_value(view->vadjustment), 0, view->list_height));
+
+    view->sort_order = sort_order;
+    view->sort_type = sort_type;
+    fsearch_list_view_update_sort_indicator(view);
+
+    gtk_widget_queue_resize(GTK_WIDGET(view));
+}
+
+void
 fsearch_list_view_set_config(FsearchListView *view, uint32_t num_rows, int sort_order, GtkSortType sort_type) {
     if (!view) {
         return;
