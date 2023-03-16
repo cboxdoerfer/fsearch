@@ -360,7 +360,7 @@ show_overlay(FsearchApplicationWindow *win, FsearchOverlay overlay) {
 }
 
 static void
-apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info) {
+apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info, bool reset_view) {
     if (!info) {
         return;
     }
@@ -392,10 +392,18 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
                                     num_folders);
 
     fsearch_result_view_row_cache_reset(win->result_view);
-    fsearch_list_view_set_config(win->result_view->list_view,
+    if (reset_view) {
+        fsearch_list_view_set_config(win->result_view->list_view,
+                                     num_rows,
+                                     win->result_view->sort_order,
+                                     win->result_view->sort_type);
+    }
+    else {
+        fsearch_list_view_update(win->result_view->list_view,
                                  num_rows,
                                  win->result_view->sort_order,
                                  win->result_view->sort_type);
+    }
     fsearch_window_actions_update(win);
 
     if (is_empty_search(win)) {
@@ -416,7 +424,7 @@ on_sort_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
-        apply_search_info(win, info);
+        apply_search_info(win, info, true);
 
         g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
     }
@@ -436,7 +444,7 @@ on_selection_changed(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
-        apply_search_info(win, info);
+        apply_search_info(win, info, false);
     }
 }
 
@@ -445,7 +453,7 @@ on_search_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *in
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
-        apply_search_info(win, info);
+        apply_search_info(win, info, true);
         g_clear_pointer(&win->work_search, fsearch_database_work_unref);
     }
 }
