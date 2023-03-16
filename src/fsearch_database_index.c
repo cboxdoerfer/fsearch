@@ -128,6 +128,12 @@ handle_queued_events(FsearchDatabaseIndex *self) {
         if (!ctx) {
             break;
         }
+        if (g_timer_elapsed(timer, NULL) > 0.1) {
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
+            g_usleep(G_USEC_PER_SEC * 0.05);
+            g_timer_start(timer);
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
+        }
         handle_event(self,
                      ctx->watch_descriptor,
                      ctx->mask,
