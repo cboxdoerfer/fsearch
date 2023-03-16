@@ -63,6 +63,13 @@ typedef struct {
     uint32_t mask;
 } FsearchDatabaseIndexMonitorEventContext;
 
+static uint32_t num_file_deletes = 0;
+static uint32_t num_folder_deletes = 0;
+static uint32_t num_file_creates = 0;
+static uint32_t num_folder_creates = 0;
+static uint32_t num_attrib_changes = 0;
+static uint32_t num_descendant_counted = 0;
+
 G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex, fsearch_database_index, fsearch_database_index_ref, fsearch_database_index_unref)
 
 static void
@@ -133,7 +140,22 @@ handle_queued_events(FsearchDatabaseIndex *self) {
 
     const double process_time = g_timer_elapsed(timer, NULL);
     self->max_process_time = MAX(process_time, self->max_process_time);
-    g_debug("processed all events: %d in %fs (max: %fs)", num_events_queued, process_time, self->max_process_time);
+    g_debug("processed all events: %d (%d/%d %d/%d %d %d) in %fs (max: %fs)",
+            num_events_queued,
+            num_folder_creates,
+            num_file_creates,
+            num_folder_deletes,
+            num_file_deletes,
+            num_attrib_changes,
+            num_descendant_counted,
+            process_time,
+            self->max_process_time);
+    num_folder_deletes = 0;
+    num_file_deletes = 0;
+    num_folder_creates = 0;
+    num_file_creates = 0;
+    num_attrib_changes = 0;
+    num_descendant_counted = 0;
 }
 
 static FsearchDatabaseEntry *
@@ -233,6 +255,7 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
             // Un-parent the entry to update its current parents state
             db_entry_set_parent(found_entry, NULL);
             fsearch_memory_pool_free(pool, found_entry, TRUE);
+            is_dir ? num_folder_deletes++ : num_file_deletes++;
         }
     }
 }
@@ -269,6 +292,7 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
                                               folder,
                                               (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
                                               NULL);
+                    num_folder_creates++;
                 }
                 for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
                     FsearchDatabaseEntry *file = darray_get_item(files, i);
@@ -276,11 +300,13 @@ handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_en
                                               file,
                                               (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
                                               NULL);
+                    num_file_creates++;
                 }
             }
         }
         else {
             entry = fsearch_database_index_add_file(self, name, size, mtime, (FsearchDatabaseEntryFolder *)watched_entry);
+            num_file_creates++;
         }
 
         propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files, entry);
@@ -298,6 +324,7 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
     if (db_entry_is_folder(entry)) {
         folders = darray_steal_items(self->folders, (DynamicArrayStealFunc)db_entry_is_descendant, entry);
         files = darray_steal_items(self->files, (DynamicArrayStealFunc)db_entry_is_descendant, entry);
+        num_descendant_counted++;
     }
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, entry);
@@ -343,6 +370,7 @@ handle_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GStri
                 db_entry_set_size(entry, size);
             }
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, NULL, NULL, entry);
+            num_attrib_changes++;
         }
     }
 }
