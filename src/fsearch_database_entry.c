@@ -340,6 +340,44 @@ db_entry_compare_entries_by_position(FsearchDatabaseEntry **a, FsearchDatabaseEn
 }
 
 int
+db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+    FsearchDatabaseEntry *entry_a = *a;
+    FsearchDatabaseEntry *entry_b = *b;
+    const uint32_t a_n_path_elements = db_entry_get_depth(entry_a) + 1;
+    const uint32_t b_n_path_elements = db_entry_get_depth(entry_b) + 1;
+
+    const char *a_path[a_n_path_elements];
+    const char *b_path[b_n_path_elements];
+    FsearchDatabaseEntry *tmp = (FsearchDatabaseEntry *)entry_a;
+    for (uint32_t i = 0; i < a_n_path_elements; i++) {
+        a_path[a_n_path_elements - i - 1] = tmp->name;
+        tmp = (FsearchDatabaseEntry *)tmp->parent;
+    }
+    tmp = (FsearchDatabaseEntry *)entry_b;
+    for (uint32_t i = 0; i < b_n_path_elements; i++) {
+        b_path[b_n_path_elements - i - 1] = tmp->name;
+        tmp = (FsearchDatabaseEntry *)tmp->parent;
+    }
+
+    const uint32_t limit = MIN(a_n_path_elements, b_n_path_elements);
+    for (uint32_t i = 0; i < limit; ++i) {
+        const int res = strverscmp(a_path[i], b_path[i]);
+        if (res != 0) {
+            return res;
+        }
+    }
+    if (a_n_path_elements < b_n_path_elements) {
+        return -1;
+    }
+    else if (a_n_path_elements > b_n_path_elements) {
+        return 1;
+    }
+    else {
+        return 0;
+    }
+}
+
+int
 db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     FsearchDatabaseEntry *entry_a = *a;
     FsearchDatabaseEntry *entry_b = *b;
