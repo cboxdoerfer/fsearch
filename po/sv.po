@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-11-08 18:10+0000\n"
+"PO-Revision-Date: 2023-03-20 08:37+0000\n"
 "Last-Translator: Ingemar Karlsson <po@ingk.se>\n"
 "Language-Team: Swedish <https://hosted.weblate.org/projects/fsearch/"
 "translations/sv/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.14.2\n"
+"X-Generator: Weblate 4.16.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -27,62 +27,70 @@ msgstr "FSearch"
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
 msgid "A file search application focusing on performance and advanced features"
 msgstr ""
+"Ett program för filsökning med fokus på prestanda och avancerade funktioner"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"sök;fsearch;filer; kataloger; musik; video; dokument; hitta; verktyg; allt;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
 msgid "File Search Utility"
-msgstr "FSearch"
+msgstr "Verktyg för filsökning"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "Ett grafiskt program för filsökning"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch hjälper dig att hitta filer och kataloger så enkelt och snabbt som "
+"möjligt. Skriv bara några bokstäver och sökresultaten visas nästan "
+"omedelbart."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
+"Ignorera stora och små bokstäver (om du t.ex. söker efter \""
+"<code>fsearch</code>\" kommer du också att hitta \"FSearch\")"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
-msgstr ""
+msgstr "Reguljära uttryck"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Wildcard support"
-msgstr ""
+msgstr "Stöd för jokertecken"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Stöd för filter (t.ex. endast sökning efter ljudfiler)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Exclude certain files and folders"
-msgstr ""
+msgstr "Exkludera vissa filer och kataloger"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "Snabb sortering efter namn, sökväg, storlek, ändringstid och filändelse"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
+"<em>Notera:</em> På grund av Flatpaks sandlåda kan FSearch inte hitta alla "
+"filer på ditt system."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
-msgstr ""
+msgstr "Standardlayout för användargränssnittet"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
