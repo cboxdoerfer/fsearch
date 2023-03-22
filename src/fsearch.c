@@ -676,6 +676,7 @@ database_scan_in_local_instance() {
     // }
 
     // return res;
+    return EXIT_FAILURE;
 }
 
 static int
