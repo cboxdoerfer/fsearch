@@ -511,7 +511,7 @@ select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int32_t end_idx
 }
 
 static void
-update_views(gpointer key, gpointer value, gpointer user_data) {
+search_views_updated_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabase2 *self = user_data;
     g_return_if_fail(self);
     g_return_if_fail(FSEARCH_IS_DATABASE2(self));
@@ -550,7 +550,7 @@ typedef struct {
 } FsearchDatabase2AddRemoveContext;
 
 static void
-add_result(gpointer key, gpointer value, gpointer user_data) {
+search_view_result_add_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabase2AddRemoveContext *ctx = user_data;
     FsearchDatabaseEntry *entry = ctx->entry;
     g_return_if_fail(entry);
@@ -578,7 +578,7 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-remove_result(FsearchDatabaseSearchView *view, FsearchDatabaseIndexStore *store, FsearchDatabaseEntry *entry) {
+search_view_result_remove(FsearchDatabaseSearchView *view, FsearchDatabaseIndexStore *store, FsearchDatabaseEntry *entry) {
     if (!entry_matches_query(view, entry)) {
         return;
     }
@@ -600,7 +600,7 @@ remove_result(FsearchDatabaseSearchView *view, FsearchDatabaseIndexStore *store,
 }
 
 static void
-remove_results_func(gpointer key, gpointer value, gpointer user_data) {
+search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabase2AddRemoveContext *ctx = user_data;
     g_return_if_fail(ctx);
 
@@ -611,36 +611,36 @@ remove_results_func(gpointer key, gpointer value, gpointer user_data) {
         if (ctx->files) {
             for (uint32_t i = 0; i < darray_get_num_items(ctx->files); ++i) {
                 FsearchDatabaseEntry *entry = darray_get_item(ctx->files, i);
-                remove_result(view, ctx->db->store, entry);
+                search_view_result_remove(view, ctx->db->store, entry);
             }
         }
         if (db_entry_is_file(ctx->entry)) {
-            remove_result(view, ctx->db->store, ctx->entry);
+            search_view_result_remove(view, ctx->db->store, ctx->entry);
         }
     }
     if (view->folders && !fsearch_database_index_store_has_entries(ctx->db->store, view->folders)) {
         if (ctx->folders) {
             for (uint32_t i = 0; i < darray_get_num_items(ctx->folders); ++i) {
                 FsearchDatabaseEntry *entry = darray_get_item(ctx->folders, i);
-                remove_result(view, ctx->db->store, entry);
+                search_view_result_remove(view, ctx->db->store, entry);
             }
         }
         if (db_entry_is_folder(ctx->entry)) {
-            remove_result(view, ctx->db->store, ctx->entry);
+            search_view_result_remove(view, ctx->db->store, ctx->entry);
         }
     }
 }
 
 static bool
-add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
+add_entry_cb(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_add_entry(ctx->db->store, entry, ctx->index);
     ctx->entry = entry;
-    g_hash_table_foreach(ctx->db->search_results, add_result, ctx);
+    g_hash_table_foreach(ctx->db->search_results, search_view_result_add_cb, ctx);
     return true;
 }
 
 static void
-index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
+index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
     FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
 
     FsearchDatabase2AddRemoveContext ctx = {
@@ -656,7 +656,7 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         database_lock(self);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
-        g_hash_table_foreach(self->search_results, update_views, self);
+        g_hash_table_foreach(self->search_results, search_views_updated_cb, self);
         emit_database_changed_signal(self,
                                      fsearch_database_info_new(self->include_manager,
                                                                self->exclude_manager,
@@ -674,13 +674,13 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
         if (event->folders && darray_get_num_items(event->folders) > 0) {
-            darray_for_each(event->folders, (DynamicArrayForEachFunc)add_entry_func, &ctx);
+            darray_for_each(event->folders, (DynamicArrayForEachFunc)add_entry_cb, &ctx);
         }
         if (event->files && darray_get_num_items(event->files) > 0) {
-            darray_for_each(event->files, (DynamicArrayForEachFunc)add_entry_func, &ctx);
+            darray_for_each(event->files, (DynamicArrayForEachFunc)add_entry_cb, &ctx);
         }
         if (event->entry) {
-            add_entry_func(event->entry, &ctx);
+            add_entry_cb(event->entry, &ctx);
         }
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
@@ -693,7 +693,7 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         if (event->entry) {
             fsearch_database_index_store_remove_entry(self->store, event->entry, index);
         }
-        g_hash_table_foreach(self->search_results, remove_results_func, &ctx);
+        g_hash_table_foreach(self->search_results, search_view_results_remove_cb, &ctx);
         break;
     case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
         break;
@@ -802,7 +802,7 @@ rescan_database(FsearchDatabase2 *self) {
     g_autoptr(FsearchDatabaseIndexStore)
         store = fsearch_database_index_store_new(include_manager, exclude_manager, flags);
     g_return_if_fail(store);
-    fsearch_database_index_store_start(store, NULL, index_event_func, self);
+    fsearch_database_index_store_start(store, NULL, index_event_cb, self);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -828,7 +828,7 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseIndexStore)
         store = fsearch_database_index_store_new(include_manager, exclude_manager, flags);
     g_return_if_fail(store);
-    fsearch_database_index_store_start(store, NULL, index_event_func, self);
+    fsearch_database_index_store_start(store, NULL, index_event_cb, self);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -1268,7 +1268,7 @@ typedef struct {
 } FsearchDatabase2SelectionForeachContext;
 
 static void
-selection_foreach(gpointer key, gpointer value, gpointer user_data) {
+selection_foreach_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseEntry *entry = value;
     if (G_UNLIKELY(!entry)) {
         return;
@@ -1295,8 +1295,8 @@ fsearch_database2_selection_foreach(FsearchDatabase2 *self,
 
     FsearchDatabase2SelectionForeachContext ctx = {.func = func, .user_data = user_data};
 
-    g_hash_table_foreach(view->folder_selection, selection_foreach, &ctx);
-    g_hash_table_foreach(view->file_selection, selection_foreach, &ctx);
+    g_hash_table_foreach(view->folder_selection, selection_foreach_cb, &ctx);
+    g_hash_table_foreach(view->file_selection, selection_foreach_cb, &ctx);
 }
 
 FsearchDatabase2 *
