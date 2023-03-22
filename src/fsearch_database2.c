@@ -262,11 +262,6 @@ get_num_database_folders(FsearchDatabase2 *self) {
     return self->store ? fsearch_database_index_store_get_num_folders(self->store) : 0;
 }
 
-static uint32_t
-get_num_database_entries(FsearchDatabase2 *self) {
-    return get_num_database_files(self) + get_num_database_folders(self);
-}
-
 static GFile *
 get_default_database_file() {
     return g_file_new_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
@@ -406,22 +401,6 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
                                                                fsearch_selection_get_num_selected(view->folder_selection),
                                                                view->sort_order,
                                                                view->sort_type));
-}
-
-static bool
-is_valid_fast_sort_type(FsearchDatabaseIndexProperty sort_type) {
-    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_PROPERTIES) {
-        return true;
-    }
-    return false;
-}
-
-static bool
-has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexProperty sort_type) {
-    if (!is_valid_fast_sort_type(sort_type)) {
-        return false;
-    }
-    return sorted_entries[sort_type] ? true : false;
 }
 
 static bool
@@ -799,8 +778,8 @@ save_database_to_file(FsearchDatabase2 *self) {
     g_return_if_fail(self);
     g_return_if_fail(self->file);
 
-    g_autoptr(GFile) db_directory = g_file_get_parent(self->file);
-    g_autofree gchar *db_directory_path = g_file_get_path(db_directory);
+    // g_autoptr(GFile) db_directory = g_file_get_parent(self->file);
+    // g_autofree gchar *db_directory_path = g_file_get_path(db_directory);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
