@@ -629,18 +629,22 @@ remove_results_func(gpointer key, gpointer value, gpointer user_data) {
     g_return_if_fail(view);
 
     if (view->files && !fsearch_database_index_store_has_entries(ctx->db->store, view->files)) {
-        for (uint32_t i = 0; i < darray_get_num_items(ctx->files); ++i) {
-            FsearchDatabaseEntry *entry = darray_get_item(ctx->files, i);
-            remove_result(view, ctx->db->store, entry);
+        if (ctx->files) {
+            for (uint32_t i = 0; i < darray_get_num_items(ctx->files); ++i) {
+                FsearchDatabaseEntry *entry = darray_get_item(ctx->files, i);
+                remove_result(view, ctx->db->store, entry);
+            }
         }
         if (db_entry_is_file(ctx->entry)) {
             remove_result(view, ctx->db->store, ctx->entry);
         }
     }
     if (view->folders && !fsearch_database_index_store_has_entries(ctx->db->store, view->folders)) {
-        for (uint32_t i = 0; i < darray_get_num_items(ctx->folders); ++i) {
-            FsearchDatabaseEntry *entry = darray_get_item(ctx->folders, i);
-            remove_result(view, ctx->db->store, entry);
+        if (ctx->folders) {
+            for (uint32_t i = 0; i < darray_get_num_items(ctx->folders); ++i) {
+                FsearchDatabaseEntry *entry = darray_get_item(ctx->folders, i);
+                remove_result(view, ctx->db->store, entry);
+            }
         }
         if (db_entry_is_folder(ctx->entry)) {
             remove_result(view, ctx->db->store, ctx->entry);
