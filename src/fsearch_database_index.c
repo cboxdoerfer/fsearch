@@ -35,7 +35,6 @@ struct _FsearchDatabaseIndex {
     GMainContext *worker_ctx;
 
     GAsyncQueue *event_queue;
-    GHashTable *pending_moves;
 
     bool propagate_work;
 
@@ -609,8 +608,6 @@ fsearch_database_index_new(uint32_t id,
                                                 (GDestroyNotify)db_entry_destroy);
 
     self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
-    self->pending_moves =
-        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)monitor_event_context_free);
     self->inotify_fd = inotify_init1(IN_NONBLOCK);
 
     self->monitor_ctx = g_main_context_ref(monitor_ctx);
