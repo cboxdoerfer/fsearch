@@ -10,22 +10,6 @@ clear_fast_sorted_array(DynamicArray **sorted_entries, FsearchDatabaseIndexPrope
 }
 
 static bool
-is_valid_fast_sort_type(FsearchDatabaseIndexProperty sort_type) {
-    if (0 <= sort_type && sort_type < NUM_DATABASE_INDEX_PROPERTIES) {
-        return true;
-    }
-    return false;
-}
-
-static bool
-has_entries_sorted_by_type(DynamicArray **sorted_entries, FsearchDatabaseIndexProperty sort_type) {
-    if (!is_valid_fast_sort_type(sort_type)) {
-        return false;
-    }
-    return sorted_entries[sort_type] ? true : false;
-}
-
-static bool
 sort_order_affects_folders(FsearchDatabaseIndexProperty sort_order) {
     if (sort_order == DATABASE_INDEX_PROPERTY_EXTENSION || sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // Folders are stored in a different array than files, so they all have the same sort_type and extension (none),
