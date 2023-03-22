@@ -339,6 +339,21 @@ darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
     array->num_items -= n_elements;
 }
 
+void
+darray_remove_items_sorted(DynamicArray *array, DynamicArray *items, DynamicArrayCompareDataFunc compare_func, void *data) {
+    g_assert(array);
+    g_assert(items);
+    g_assert(compare_func);
+
+    for (uint32_t i = 0; i < items->num_items; ++i) {
+        void *item = darray_get_item(items, i);
+        int32_t idx = 0;
+        if (darray_binary_search_with_data(array, item, compare_func, data, (uint32_t *)&idx)) {
+            darray_remove(array, idx, 1);
+        }
+    }
+}
+
 bool
 darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index) {
     g_assert(array);

@@ -86,6 +86,9 @@ darray_insert_item(DynamicArray *array, void *data, uint32_t index);
 void
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements);
 
+void
+darray_remove_items_sorted(DynamicArray *array, DynamicArray *items, DynamicArrayCompareDataFunc compare_func, void *data);
+
 DynamicArray *
 darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data);
 
