@@ -339,3 +339,22 @@ fsearch_preferences_dialog_get_exclude_manager(FsearchPreferencesDialog *self) {
     g_return_val_if_fail(self, NULL);
     return fsearch_database_preferences_widget_get_exclude_manager(self->database_pref_widget);
 }
+
+void
+fsearch_preferences_dialog_set_page(FsearchPreferencesDialog *self, FsearchPreferencesDialogPage page) {
+    g_return_if_fail(self);
+
+    switch (page) {
+    case FSEARCH_PREFERENCES_DIALOG_PAGE_GENERAL:
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(self->main_notebook), 0);
+        break;
+    case FSEARCH_PREFERENCES_DIALOG_PAGE_SEARCH:
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(self->main_notebook), 1);
+        break;
+    case FSEARCH_PREFERENCES_DIALOG_PAGE_DATABASE:
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(self->main_notebook), 2);
+        break;
+    default:
+        gtk_notebook_set_current_page(GTK_NOTEBOOK(self->main_notebook), 0);
+    }
+}
