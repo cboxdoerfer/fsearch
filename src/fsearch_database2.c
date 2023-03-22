@@ -566,6 +566,8 @@ typedef struct {
     FsearchDatabase2 *db;
     FsearchDatabaseIndex *index;
     FsearchDatabaseEntry *entry;
+    DynamicArray *folders;
+    DynamicArray *files;
 } FsearchDatabase2AddRemoveContext;
 
 static void
@@ -597,21 +599,13 @@ add_result(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-remove_result(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabase2AddRemoveContext *ctx = user_data;
-    FsearchDatabaseEntry *entry = ctx->entry;
-
-    g_return_if_fail(entry);
-
-    FsearchDatabaseSearchView *view = value;
-    g_return_if_fail(view);
-
+remove_result(FsearchDatabaseSearchView *view, FsearchDatabaseIndexStore *store, FsearchDatabaseEntry *entry) {
     if (!entry_matches_query(view, entry)) {
         return;
     }
 
     DynamicArray *array = db_entry_is_folder(entry) ? view->folders : view->files;
-    if (array && !fsearch_database_index_store_has_entries(ctx->db->store, array)) {
+    if (array && !fsearch_database_index_store_has_entries(store, array)) {
         // Remove it from search results
         uint32_t idx = 0;
         DynamicArrayCompareDataFunc comp_func =
@@ -626,19 +620,39 @@ remove_result(gpointer key, gpointer value, gpointer user_data) {
     fsearch_selection_unselect(selection, entry);
 }
 
+static void
+remove_results_func(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabase2AddRemoveContext *ctx = user_data;
+    g_return_if_fail(ctx);
+
+    FsearchDatabaseSearchView *view = value;
+    g_return_if_fail(view);
+
+    if (view->files && !fsearch_database_index_store_has_entries(ctx->db->store, view->files)) {
+        for (uint32_t i = 0; i < darray_get_num_items(ctx->files); ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(ctx->files, i);
+            remove_result(view, ctx->db->store, entry);
+        }
+        if (db_entry_is_file(ctx->entry)) {
+            remove_result(view, ctx->db->store, ctx->entry);
+        }
+    }
+    if (view->folders && !fsearch_database_index_store_has_entries(ctx->db->store, view->folders)) {
+        for (uint32_t i = 0; i < darray_get_num_items(ctx->folders); ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(ctx->folders, i);
+            remove_result(view, ctx->db->store, entry);
+        }
+        if (db_entry_is_folder(ctx->entry)) {
+            remove_result(view, ctx->db->store, ctx->entry);
+        }
+    }
+}
+
 static bool
 add_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     fsearch_database_index_store_add_entry(ctx->db->store, entry, ctx->index);
     ctx->entry = entry;
     g_hash_table_foreach(ctx->db->search_results, add_result, ctx);
-    return true;
-}
-
-static bool
-remove_entry_func(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
-    fsearch_database_index_store_remove_entry(ctx->db->store, entry, ctx->index);
-    ctx->entry = entry;
-    g_hash_table_foreach(ctx->db->search_results, remove_result, ctx);
     return true;
 }
 
@@ -649,6 +663,9 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
     FsearchDatabase2AddRemoveContext ctx = {
         .db = self,
         .index = index,
+        .folders = event->folders,
+        .files = event->files,
+        .entry = event->entry,
     };
 
     switch (event->kind) {
@@ -684,15 +701,16 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         }
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        if (event->folders && darray_get_num_items(event->folders) > 0) {
-            darray_for_each(event->folders, (DynamicArrayForEachFunc)remove_entry_func, &ctx);
+        if (event->folders) {
+            fsearch_database_index_store_remove_folders(self->store, event->folders, index);
         }
-        if (event->files && darray_get_num_items(event->files) > 0) {
-            darray_for_each(event->files, (DynamicArrayForEachFunc)remove_entry_func, &ctx);
+        if (event->files) {
+            fsearch_database_index_store_remove_files(self->store, event->files, index);
         }
         if (event->entry) {
-            remove_entry_func(event->entry, &ctx);
+            fsearch_database_index_store_remove_entry(self->store, event->entry, index);
         }
+        g_hash_table_foreach(self->search_results, remove_results_func, &ctx);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_MOVED:
