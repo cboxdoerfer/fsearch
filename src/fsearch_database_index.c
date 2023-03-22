@@ -745,36 +745,6 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
     return file_entry;
 }
 
-FsearchDatabaseEntryFolder *
-fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
-                                  const char *name,
-                                  const char *path,
-                                  time_t mtime,
-                                  FsearchDatabaseEntryFolder *parent) {
-    g_return_val_if_fail(self, NULL);
-
-    // g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    // g_assert_nonnull(locker);
-
-    FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(self->folder_pool);
-    db_entry_set_name(entry, name);
-    db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
-    db_entry_set_mtime(entry, mtime);
-    db_entry_set_parent(entry, parent);
-
-    const int32_t wd = inotify_add_watch(self->inotify_fd, path, INOTIFY_FOLDER_MASK);
-    db_entry_set_wd((FsearchDatabaseEntryFolder *)entry, wd);
-
-    g_hash_table_insert(self->watch_descriptors, GINT_TO_POINTER(wd), entry);
-
-    darray_insert_item_sorted(self->folders,
-                              entry,
-                              (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
-                              NULL);
-
-    return (FsearchDatabaseEntryFolder *)entry;
-}
-
 void
 fsearch_database_index_lock(FsearchDatabaseIndex *self) {
     g_return_if_fail(self);
