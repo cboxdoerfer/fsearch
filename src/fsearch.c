@@ -68,9 +68,6 @@ static const char *fsearch_object_path = "/io/github/cboxdoerfer/FSearch";
 G_DEFINE_TYPE(FsearchApplication, fsearch_application, GTK_TYPE_APPLICATION)
 
 static void
-action_set_enabled(const char *action_name, gboolean enabled);
-
-static void
 set_accels_for_escape(GApplication *app);
 
 static gboolean
@@ -314,15 +311,6 @@ action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer
     fsearch_application_window_focus_search_entry(FSEARCH_APPLICATION_WINDOW(window));
 
     gtk_window_present(window);
-}
-
-static void
-action_set_enabled(const char *action_name, gboolean enabled) {
-    GAction *action = g_action_map_lookup_action(G_ACTION_MAP(FSEARCH_APPLICATION_DEFAULT), action_name);
-    g_return_if_fail(action);
-
-    g_debug(enabled ? "[app] enabled action: %s" : "[app] disabled action: %s", action_name);
-    g_simple_action_set_enabled(G_SIMPLE_ACTION(action), enabled);
 }
 
 static void
