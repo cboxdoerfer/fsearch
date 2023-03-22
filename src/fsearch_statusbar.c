@@ -178,8 +178,6 @@ fsearch_statusbar_set_database_scanning(FsearchStatusbar *sb) {
 
 static void
 fsearch_statusbar_set_num_db_entries(FsearchStatusbar *sb, uint32_t num_entries) {
-    FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-
     gchar db_text[100] = "";
     snprintf(db_text, sizeof(db_text), _("%'d Items"), num_entries);
     gtk_label_set_text(GTK_LABEL(sb->statusbar_database_status_label), db_text);

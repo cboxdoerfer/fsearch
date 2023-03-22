@@ -200,19 +200,6 @@ fsearch_list_view_get_columns_effective_width(FsearchListView *view) {
     return width;
 }
 
-static int
-fsearch_list_view_get_columns_width(FsearchListView *view) {
-    int width = 0;
-    for (GList *col = view->columns; col != NULL; col = col->next) {
-        FsearchListViewColumn *column = col->data;
-        if (!column->visible) {
-            continue;
-        }
-        width += column->width;
-    }
-    return width;
-}
-
 static gboolean
 is_row_idx_fully_in_view(FsearchListView *view, int row_idx) {
     const int y_view_start = floor(get_vscroll_pos(view));

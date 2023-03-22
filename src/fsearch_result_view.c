@@ -34,27 +34,6 @@ reset_icon_caches(FsearchResultView *result_view) {
     g_hash_table_remove_all(result_view->app_gicon_cache);
 }
 
-static void
-maybe_reset_icon_caches(FsearchResultView *result_view) {
-    const uint32_t cached_icon_limit = 200;
-    if (g_hash_table_size(result_view->pixbuf_cache) > cached_icon_limit) {
-        g_hash_table_remove_all(result_view->pixbuf_cache);
-    }
-    if (g_hash_table_size(result_view->app_gicon_cache) > cached_icon_limit) {
-        g_hash_table_remove_all(result_view->app_gicon_cache);
-    }
-}
-
-static GIcon *
-get_desktop_file_icon(FsearchResultView *result_view, const char *path) {
-    GIcon *icon = g_hash_table_lookup(result_view->app_gicon_cache, path);
-    if (!icon) {
-        icon = fsearch_file_utils_get_desktop_file_icon(path);
-        g_hash_table_insert(result_view->app_gicon_cache, g_strdup(path), icon);
-    }
-    return g_object_ref(icon);
-}
-
 static GdkPixbuf *
 get_pixbuf_from_gicon(FsearchResultView *result_view, GIcon *icon, int32_t icon_size, int32_t scale_factor) {
     GdkPixbuf *pixbuf = g_hash_table_lookup(result_view->pixbuf_cache, icon);
@@ -93,36 +72,6 @@ get_pixbuf_from_gicon(FsearchResultView *result_view, GIcon *icon, int32_t icon_
         g_hash_table_insert(result_view->pixbuf_cache, g_object_ref(icon), pixbuf);
     }
     return pixbuf;
-}
-
-static cairo_surface_t *
-get_icon_surface(FsearchResultView *result_view,
-                 GdkWindow *win,
-                 const char *name,
-                 const char *path,
-                 FsearchDatabaseEntryType type,
-                 int32_t icon_size,
-                 int32_t scale_factor) {
-    maybe_reset_icon_caches(result_view);
-
-    g_autoptr(GIcon) icon = NULL;
-    struct stat buffer;
-    if (lstat(path, &buffer)) {
-        icon = g_themed_icon_new("edit-delete");
-    }
-    else if (type == DATABASE_ENTRY_TYPE_FILE && fsearch_file_utils_is_desktop_file(path)) {
-        icon = get_desktop_file_icon(result_view, path);
-    }
-    else {
-        icon = fsearch_file_utils_guess_icon(name, path, type == DATABASE_ENTRY_TYPE_FOLDER);
-    }
-
-    GdkPixbuf *pixbuf = get_pixbuf_from_gicon(result_view, icon, icon_size, scale_factor);
-    if (!pixbuf) {
-        return NULL;
-    }
-
-    return gdk_cairo_surface_create_from_pixbuf(pixbuf, scale_factor, win);
 }
 
 static gpointer

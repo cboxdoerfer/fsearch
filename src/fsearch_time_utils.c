@@ -272,20 +272,20 @@ FsearchDateTimeConstant suffix_plural_constants[] = {
     {"seconds", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
 };
 
-static void
-print_tm(struct tm *tm) {
-    if (!tm) {
-        return;
-    }
-    g_print("%04d/%02d/%02d %02d:%02d:%02d (%d)\n",
-            tm->tm_year + 1900,
-            tm->tm_mon,
-            tm->tm_mday,
-            tm->tm_hour,
-            tm->tm_min,
-            tm->tm_sec,
-            tm->tm_isdst);
-}
+// static void
+// print_tm(struct tm *tm) {
+//     if (!tm) {
+//         return;
+//     }
+//     g_print("%04d/%02d/%02d %02d:%02d:%02d (%d)\n",
+//             tm->tm_year + 1900,
+//             tm->tm_mon,
+//             tm->tm_mday,
+//             tm->tm_hour,
+//             tm->tm_min,
+//             tm->tm_sec,
+//             tm->tm_isdst);
+// }
 
 static bool
 parse_implicit_date_time_constants(const char *str, struct tm *start, struct tm *end) {
