@@ -712,24 +712,6 @@ index_event_func(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, 
         }
         g_hash_table_foreach(self->search_results, remove_results_func, &ctx);
         break;
-    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_RENAMED:
-    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_MOVED:
-        //// Remove the old moved_from entry from the index store ...
-        // fsearch_database_index_store_remove_entry(self->store, event->entry, index);
-        //// ... and add the new moved_to entry to it instead
-        // fsearch_database_index_store_add_entry(self->store, entry_2, index);
-
-        // fsearch_database_index_lock(index);
-        // g_hash_table_foreach(self->search_results, move_result, work);
-        // fsearch_database_index_unlock(index);
-
-        // fsearch_database_index_free_entry(index, entry_1);
-        // views_changed_maybe = true;
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CHANGED:
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_ATTRIBUTE_CHANGED:
-        break;
     case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
         break;
     }
