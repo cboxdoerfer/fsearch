@@ -72,10 +72,10 @@ static uint32_t num_descendant_counted = 0;
 G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex, fsearch_database_index, fsearch_database_index_ref, fsearch_database_index_unref)
 
 static void
-handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len);
+process_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len);
 
 static void
-handle_queued_events(FsearchDatabaseIndex *self);
+process_queued_events(FsearchDatabaseIndex *self);
 
 static void
 propagate_event(FsearchDatabaseIndex *self,
@@ -111,7 +111,7 @@ monitor_event_context_new(const char *name, int32_t wd, uint32_t mask, uint32_t 
 }
 
 static void
-handle_queued_events(FsearchDatabaseIndex *self) {
+process_queued_events(FsearchDatabaseIndex *self) {
     g_return_if_fail(self);
 
     const int32_t num_events_queued = g_async_queue_length(self->event_queue);
@@ -133,12 +133,12 @@ handle_queued_events(FsearchDatabaseIndex *self) {
             g_timer_start(timer);
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
         }
-        handle_event(self,
-                     ctx->watch_descriptor,
-                     ctx->mask,
-                     ctx->cookie,
-                     ctx->name ? ctx->name->str : NULL,
-                     ctx->name ? ctx->name->len : 0);
+        process_event(self,
+                      ctx->watch_descriptor,
+                      ctx->mask,
+                      ctx->cookie,
+                      ctx->name ? ctx->name->str : NULL,
+                      ctx->name ? ctx->name->len : 0);
         g_clear_pointer(&ctx, monitor_event_context_free);
     }
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
@@ -164,13 +164,18 @@ handle_queued_events(FsearchDatabaseIndex *self) {
 }
 
 static FsearchDatabaseEntry *
-find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask, uint32_t *index_out) {
+find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask, uint32_t *index_out, bool expect_success) {
     g_return_val_if_fail(self, NULL);
 
     FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
     if (!watched_entry) {
-        g_debug("no entry for watch descriptor not in hash table!!!");
-        return NULL;
+        if (!expect_success) {
+            g_debug("no entry for watch descriptor not in hash table!!!");
+            return NULL;
+        }
+        else {
+            g_assert_not_reached();
+        }
     }
 
     // This event belongs to a child of the watched directory, which we attempt to find right now in our
@@ -269,7 +274,7 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
 }
 
 static void
-handle_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_entry, GString *path, const char *name) {
+process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_entry, GString *path, const char *name) {
     off_t size = 0;
     time_t mtime = 0;
     bool is_dir = false;
@@ -341,9 +346,9 @@ steal_descendants(DynamicArray *array, FsearchDatabaseEntryFolder *folder, uint3
 }
 
 static void
-handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask) {
+process_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask) {
     uint32_t entry_idx = 0;
-    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, &entry_idx);
+    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, &entry_idx, true);
     if (!entry) {
         return;
     }
@@ -388,8 +393,8 @@ handle_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, ui
 }
 
 static void
-handle_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GString *path, const char *name) {
-    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, NULL);
+process_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GString *path, const char *name) {
+    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, NULL, true);
     if (!entry) {
         return;
     }
@@ -417,7 +422,7 @@ handle_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GStri
 }
 
 static void
-handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len) {
+process_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len) {
     if (!name) {
         return;
     }
@@ -437,28 +442,28 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
 
     if (mask & IN_ATTRIB) {
         g_print("IN_ATTRIB: %s\n", name_len ? name : "");
-        handle_attrib_event(self, wd, mask, path, name);
+        process_attrib_event(self, wd, mask, path, name);
     }
     else if (mask & IN_MOVED_FROM) {
         g_print("IN_MOVED_FROM: %s\n", name_len ? name : "");
-        handle_delete_event(self, name, wd, mask);
+        process_delete_event(self, name, wd, mask);
     }
     else if (mask & IN_MOVED_TO) {
         g_print("IN_MOVED_TO: %s\n", name_len ? name : "");
-        if (!find_entry(self, name, wd, mask, NULL)) {
-            handle_create_event(self, watched_entry, path, name);
+        if (!find_entry(self, name, wd, mask, NULL, false)) {
+            process_create_event(self, watched_entry, path, name);
         }
         else {
-            handle_attrib_event(self, wd, mask, path, name);
+            process_attrib_event(self, wd, mask, path, name);
         }
     }
     else if (mask & IN_DELETE) {
         g_print("IN_DELETE: %s\n", name_len ? name : "");
-        handle_delete_event(self, name, wd, mask);
+        process_delete_event(self, name, wd, mask);
     }
     else if (mask & IN_CREATE) {
         g_print("IN_CREATE: %s\n", name_len ? name : "");
-        handle_create_event(self, watched_entry, path, name);
+        process_create_event(self, watched_entry, path, name);
     }
     else if (mask & IN_DELETE_SELF) {
         g_print("IN_DELETE_SELF: %s\n", name_len ? name : "");
@@ -471,7 +476,7 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
     }
     else if (mask & IN_CLOSE_WRITE) {
         g_print("IN_CLOSE_WRITE: %s\n", name_len ? name : "");
-        handle_attrib_event(self, wd, mask, path, name);
+        process_attrib_event(self, wd, mask, path, name);
     }
     else {
         return;
@@ -479,13 +484,14 @@ handle_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t coo
 }
 
 static gboolean
-handle_queued_events_cb(gpointer user_data) {
+process_queued_events_cb(gpointer user_data) {
     g_return_val_if_fail(user_data, G_SOURCE_REMOVE);
     FsearchDatabaseIndex *self = user_data;
 
     // Assert that this function is running is the worker thread
     g_assert(g_main_context_is_owner(self->worker_ctx));
 
+    // Don't process events until the index is ready
     if (g_atomic_int_get(&self->initialized) == 0) {
         return G_SOURCE_CONTINUE;
     }
@@ -493,7 +499,7 @@ handle_queued_events_cb(gpointer user_data) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    handle_queued_events(self);
+    process_queued_events(self);
 
     return G_SOURCE_CONTINUE;
 }
@@ -618,7 +624,7 @@ fsearch_database_index_new(uint32_t id,
     self->worker_ctx = g_main_context_ref(worker_ctx);
     self->event_source = g_timeout_source_new_seconds(1);
     g_source_set_priority(self->event_source, G_PRIORITY_DEFAULT_IDLE);
-    g_source_set_callback(self->event_source, (GSourceFunc)handle_queued_events_cb, self, NULL);
+    g_source_set_callback(self->event_source, (GSourceFunc)process_queued_events_cb, self, NULL);
     g_source_attach(self->event_source, self->worker_ctx);
 
     self->ref_count = 1;
@@ -816,7 +822,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
         g_atomic_int_set(&self->initialized, 1);
 
-        handle_queued_events(self);
+        process_queued_events(self);
         res = true;
     }
     else {
