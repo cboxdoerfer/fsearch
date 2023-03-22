@@ -1076,7 +1076,7 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
                                              gdouble offset_x,
                                              gdouble offset_y,
                                              FsearchListView *view) {
-    GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
+    // GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
 
     // if (gtk_gesture_get_sequence_state(GTK_GESTURE(gesture), sequence) != GTK_EVENT_SEQUENCE_CLAIMED) {
     //     return;
@@ -1503,16 +1503,16 @@ fsearch_list_view_set_property(GObject *object, guint prop_id, const GValue *val
 
 static int
 fsearch_list_view_num_expanding_columns(FsearchListView *view) {
-    int num_expanding = 0;
-    for (GList *col = view->columns; col != NULL; col = col->next) {
-        FsearchListViewColumn *column = col->data;
-        if (!column->visible) {
-            continue;
-        }
-        if (column->expand) {
-            num_expanding++;
-        }
-    }
+    // int num_expanding = 0;
+    // for (GList *col = view->columns; col != NULL; col = col->next) {
+    //     FsearchListViewColumn *column = col->data;
+    //     if (!column->visible) {
+    //         continue;
+    //     }
+    //     if (column->expand) {
+    //         num_expanding++;
+    //     }
+    // }
     return 0;
 }
 
@@ -1679,8 +1679,6 @@ fsearch_list_view_map(GtkWidget *widget) {
 
 static void
 fsearch_list_view_grab_focus(GtkWidget *widget) {
-    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
-
     GTK_WIDGET_CLASS(fsearch_list_view_parent_class)->grab_focus(widget);
 }
 
