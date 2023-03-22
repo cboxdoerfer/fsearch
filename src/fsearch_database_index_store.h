@@ -64,6 +64,16 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
                                           FsearchDatabaseIndex *index);
 
 void
+fsearch_database_index_store_remove_folders(FsearchDatabaseIndexStore *self,
+                                            DynamicArray *files,
+                                            FsearchDatabaseIndex *index);
+
+void
+fsearch_database_index_store_remove_files(FsearchDatabaseIndexStore *self,
+                                          DynamicArray *files,
+                                          FsearchDatabaseIndex *index);
+
+void
 fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
                                        FsearchDatabaseEntry *entry,
                                        FsearchDatabaseIndex *index);

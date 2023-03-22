@@ -385,6 +385,50 @@ fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
 }
 
 void
+fsearch_database_index_store_remove_folders(FsearchDatabaseIndexStore *self,
+                                            DynamicArray *folders,
+                                            FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+    g_return_if_fail(folders);
+    g_return_if_fail(index);
+
+    if (!g_ptr_array_find(self->indices, index, NULL)) {
+        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
+        g_assert_not_reached();
+    }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        DynamicArray *array = self->folders_sorted[i];
+        if (!array) {
+            continue;
+        }
+        darray_remove_items_sorted(array, folders, fsearch_database_sort_get_compare_func_for_property(i, true), NULL);
+    }
+}
+
+void
+fsearch_database_index_store_remove_files(FsearchDatabaseIndexStore *self,
+                                          DynamicArray *files,
+                                          FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+    g_return_if_fail(files);
+    g_return_if_fail(index);
+
+    if (!g_ptr_array_find(self->indices, index, NULL)) {
+        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
+        g_assert_not_reached();
+    }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        DynamicArray *array = self->files_sorted[i];
+        if (!array) {
+            continue;
+        }
+        darray_remove_items_sorted(array, files, fsearch_database_sort_get_compare_func_for_property(i, false), NULL);
+    }
+}
+
+void
 fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
                                        FsearchDatabaseEntry *entry,
                                        FsearchDatabaseIndex *index) {
