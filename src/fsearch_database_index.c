@@ -8,6 +8,7 @@
 
 #include <glib-unix.h>
 #include <glib.h>
+#include <sys/fanotify.h>
 #include <sys/inotify.h>
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
@@ -15,6 +16,10 @@
 #define INOTIFY_FOLDER_MASK                                                                                            \
     (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
      | IN_CLOSE_WRITE)
+
+#define FANOTIFY_FOLDER_MASK                                                                                           \
+    (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
+     | FAN_MOVE_SELF | FAN_EVENT_ON_CHILD | FAN_ONDIR)
 
 struct _FsearchDatabaseIndex {
     FsearchDatabaseInclude *include;
@@ -26,9 +31,12 @@ struct _FsearchDatabaseIndex {
 
     FsearchDatabaseIndexPropertyFlags flags;
 
+    GHashTable *handles;
     GHashTable *watch_descriptors;
     int32_t inotify_fd;
-    GSource *monitor_source;
+    int32_t fanotify_fd;
+    GSource *inotify_monitor_source;
+    GSource *fanotify_monitor_source;
     GMainContext *monitor_ctx;
 
     GSource *event_source;
@@ -56,11 +64,19 @@ typedef struct {
     GString *name;
     GString *path;
 
-    int32_t watch_descriptor;
-
-    uint32_t cookie;
-    uint32_t mask;
+    FsearchDatabaseEntryFolder *watched_entry;
+    uint32_t kind;
+    bool is_dir;
+    bool is_inotify_event;
 } FsearchDatabaseIndexMonitorEventContext;
+
+// From tracker-miners:
+// https://gitlab.gnome.org/GNOME/tracker-miners/-/blob/master/src/miners/fs/tracker-monitor-fanotify.c
+/* Binary compatible with the last portions of fanotify_event_info_fid */
+typedef struct {
+    fsid_t fsid;
+    struct file_handle handle;
+} FsearchDatabaseIndexHandleData;
 
 static uint32_t num_file_deletes = 0;
 static uint32_t num_folder_deletes = 0;
@@ -72,7 +88,7 @@ static uint32_t num_descendant_counted = 0;
 G_DEFINE_BOXED_TYPE(FsearchDatabaseIndex, fsearch_database_index, fsearch_database_index_ref, fsearch_database_index_unref)
 
 static void
-process_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len);
+process_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx);
 
 static void
 process_queued_events(FsearchDatabaseIndex *self);
@@ -94,18 +110,32 @@ monitor_event_context_free(FsearchDatabaseIndexMonitorEventContext *ctx) {
     if (ctx->name) {
         g_string_free(g_steal_pointer(&ctx->name), TRUE);
     }
+    if (ctx->path) {
+        g_string_free(g_steal_pointer(&ctx->path), TRUE);
+    }
     g_clear_pointer(&ctx, free);
 }
 
 static FsearchDatabaseIndexMonitorEventContext *
-monitor_event_context_new(const char *name, int32_t wd, uint32_t mask, uint32_t cookie) {
+monitor_event_context_new(const char *name,
+                          FsearchDatabaseEntryFolder *watched_entry,
+                          uint32_t kind,
+                          bool is_dir,
+                          bool is_inotify_event) {
     FsearchDatabaseIndexMonitorEventContext *ctx = calloc(1, sizeof(FsearchDatabaseIndexMonitorEventContext));
     g_assert(ctx);
 
     ctx->name = name ? g_string_new(name) : NULL;
-    ctx->watch_descriptor = wd;
-    ctx->cookie = cookie;
-    ctx->mask = mask;
+    ctx->watched_entry = watched_entry;
+    if (ctx->name && ctx->watched_entry) {
+        ctx->path = db_entry_get_path_full((FsearchDatabaseEntry *)ctx->watched_entry);
+        g_string_append_c(ctx->path, G_DIR_SEPARATOR);
+        g_string_append(ctx->path, ctx->name->str);
+    }
+
+    ctx->kind = kind;
+    ctx->is_dir = is_dir;
+    ctx->is_inotify_event = is_inotify_event;
 
     return ctx;
 }
@@ -133,12 +163,7 @@ process_queued_events(FsearchDatabaseIndex *self) {
             g_timer_start(timer);
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
         }
-        process_event(self,
-                      ctx->watch_descriptor,
-                      ctx->mask,
-                      ctx->cookie,
-                      ctx->name ? ctx->name->str : NULL,
-                      ctx->name ? ctx->name->len : 0);
+        process_event(self, ctx);
         g_clear_pointer(&ctx, monitor_event_context_free);
     }
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
@@ -164,11 +189,13 @@ process_queued_events(FsearchDatabaseIndex *self) {
 }
 
 static FsearchDatabaseEntry *
-find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask, uint32_t *index_out, bool expect_success) {
+find_entry_for_event(FsearchDatabaseIndex *self,
+                     FsearchDatabaseIndexMonitorEventContext *ctx,
+                     uint32_t *index_out,
+                     bool expect_success) {
     g_return_val_if_fail(self, NULL);
 
-    FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
-    if (!watched_entry) {
+    if (!ctx->watched_entry) {
         if (!expect_success) {
             g_debug("no entry for watch descriptor not in hash table!!!");
             return NULL;
@@ -178,20 +205,16 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
         }
     }
 
-    // This event belongs to a child of the watched directory, which we attempt to find right now in our
-    // index:
-    const bool is_dir = mask & IN_ISDIR ? true : false;
-
     // The dummy entry is used to mimic the entry we want to find.
     // It has the same name and parent (i.e. the watched directory)
     // and hence the same path. This means it will compare in the same way as the entry we're looking
     // for when it gets passed to the `db_entry_compare_entries_by_full_path` function.
     g_autofree FsearchDatabaseEntry *entry_tmp =
-        db_entry_get_dummy_for_name_and_parent(watched_entry,
-                                               name,
-                                               is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
+        db_entry_get_dummy_for_name_and_parent((FsearchDatabaseEntry *)ctx->watched_entry,
+                                               ctx->name->str,
+                                               ctx->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
 
-    DynamicArray *array = is_dir ? self->folders : self->files;
+    DynamicArray *array = ctx->is_dir ? self->folders : self->files;
 
     uint32_t idx = 0;
     FsearchDatabaseEntry *entry = NULL;
@@ -223,7 +246,7 @@ find_entry(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t ma
 }
 
 static void
-remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
+remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, bool is_inotify_event) {
     g_return_if_fail(self);
 
     DynamicArray *array = NULL;
@@ -231,24 +254,27 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
 
     const bool is_dir = db_entry_is_folder(entry);
     if (is_dir) {
-        int32_t wd = db_entry_get_wd((FsearchDatabaseEntryFolder *)entry);
-        FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
-        if (watched_entry != entry) {
-            g_assert_not_reached();
-        }
-
         if (db_entry_folder_get_num_children((FsearchDatabaseEntryFolder *)entry) > 0) {
             // TODO : The folder we are about to remove still has children.
-            // Not sure if this is expected behavior by inotify etc. which should be dealt with properly.
+            // Not sure if this is expected behavior by fanotify and inotify, which should be dealt with properly.
             // For now, we abort, but it might make sense to remove those children as well.
             g_assert_not_reached();
         }
-        else {
-            inotify_rm_watch(self->inotify_fd, wd);
-            g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(wd));
-            array = self->folders;
-            pool = self->folder_pool;
+
+        if (is_inotify_event) {
+            int32_t wd = db_entry_get_wd((FsearchDatabaseEntryFolder *)entry);
+            FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
+            if (watched_entry != entry) {
+                g_assert_not_reached();
+            }
+            else {
+                inotify_rm_watch(self->inotify_fd, wd);
+                g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(wd));
+            }
         }
+
+        array = self->folders;
+        pool = self->folder_pool;
     }
     else {
         array = self->files;
@@ -274,7 +300,7 @@ remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry) {
 }
 
 static void
-process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_entry, GString *path, const char *name) {
+process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx) {
     off_t size = 0;
     time_t mtime = 0;
     bool is_dir = false;
@@ -283,18 +309,20 @@ process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_e
     g_autoptr(DynamicArray) folders = NULL;
     g_autoptr(DynamicArray) files = NULL;
 
-    if (fsearch_file_utils_get_info(path->str, &mtime, &size, &is_dir)) {
+    if (fsearch_file_utils_get_info(ctx->path->str, &mtime, &size, &is_dir)) {
         if (is_dir) {
             folders = darray_new(128);
             files = darray_new(128);
-            if (db_scan_folder(path->str,
-                               (FsearchDatabaseEntryFolder *)watched_entry,
+            if (db_scan_folder(ctx->path->str,
+                               ctx->watched_entry,
                                self->folder_pool,
                                self->file_pool,
                                folders,
                                files,
                                self->exclude_manager,
+                               self->handles,
                                self->watch_descriptors,
+                               self->fanotify_fd,
                                self->inotify_fd,
                                fsearch_database_include_get_one_file_system(self->include),
                                NULL,
@@ -318,7 +346,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseEntry *watched_e
             }
         }
         else {
-            entry = fsearch_database_index_add_file(self, name, size, mtime, (FsearchDatabaseEntryFolder *)watched_entry);
+            entry = fsearch_database_index_add_file(self, ctx->name->str, size, mtime, ctx->watched_entry);
             num_file_creates++;
         }
 
@@ -330,7 +358,8 @@ static DynamicArray *
 steal_descendants(DynamicArray *array, FsearchDatabaseEntryFolder *folder, uint32_t idx) {
     DynamicArray *descendants = darray_new(128);
 
-    // NOTE: Unfortunately we don't know how many descendants a folder has in total, so we have to add them one by one
+    // NOTE: Unfortunately we don't know how many descendants a folder has in total, so we have to add them one by
+    // one
     for (uint32_t i = idx; i < darray_get_num_items(array); ++i) {
         FsearchDatabaseEntry *e = darray_get_item(array, i);
         if (db_entry_is_descendant(e, folder)) {
@@ -346,9 +375,9 @@ steal_descendants(DynamicArray *array, FsearchDatabaseEntryFolder *folder, uint3
 }
 
 static void
-process_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, uint32_t mask) {
+process_delete_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx) {
     uint32_t entry_idx = 0;
-    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, &entry_idx, true);
+    FsearchDatabaseEntry *entry = find_entry_for_event(self, ctx, &entry_idx, true);
     if (!entry) {
         return;
     }
@@ -357,12 +386,12 @@ process_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, u
     if (db_entry_is_folder(entry)) {
         FsearchDatabaseEntryFolder *folder_entry_to_remove = (FsearchDatabaseEntryFolder *)entry;
 
-        // folder descendants of `folder_entry_to_remove` (if there are any) start immediately after it, i.e. at `idx +
-        // 1`
+        // folder descendants of `folder_entry_to_remove` (if there are any) start immediately after it, i.e. at
+        // `idx + 1`
         folders = steal_descendants(self->folders, folder_entry_to_remove, entry_idx + 1);
 
-        // to find all file descendants we start looking for them right at the position where `folder_entry_to_remove`
-        // would be inserted into the files array.
+        // to find all file descendants we start looking for them right at the position where
+        // `folder_entry_to_remove` would be inserted into the files array.
         uint32_t folder_entry_insert_idx = 0;
         darray_binary_search_with_data(self->files,
                                        entry,
@@ -389,24 +418,24 @@ process_delete_event(FsearchDatabaseIndex *self, const char *name, int32_t wd, u
             fsearch_memory_pool_free(self->folder_pool, folder, TRUE);
         }
     }
-    remove_entry(self, entry);
+    remove_entry(self, entry, ctx->is_inotify_event);
 }
 
 static void
-process_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GString *path, const char *name) {
-    FsearchDatabaseEntry *entry = find_entry(self, name, wd, mask, NULL, true);
+process_attrib_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx) {
+    FsearchDatabaseEntry *entry = find_entry_for_event(self, ctx, NULL, true);
     if (!entry) {
         return;
     }
 
     off_t size = 0;
     time_t mtime = 0;
-    bool is_dir = false;
 
     off_t old_size = db_entry_get_size(entry);
     time_t old_mtime = db_entry_get_mtime(entry);
 
-    if (fsearch_file_utils_get_info(path->str, &mtime, &size, &is_dir)) {
+    bool is_dir = false;
+    if (fsearch_file_utils_get_info(ctx->path->str, &mtime, &size, &is_dir)) {
         if (old_size != size || old_mtime != mtime) {
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, NULL, entry);
             if (mtime != old_mtime) {
@@ -422,65 +451,54 @@ process_attrib_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, GStr
 }
 
 static void
-process_event(FsearchDatabaseIndex *self, int32_t wd, uint32_t mask, uint32_t cookie, const char *name, uint32_t name_len) {
-    if (!name) {
+process_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx) {
+    if (!ctx->name) {
         return;
     }
 
-    FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
-    if (!watched_entry) {
-        g_debug("no entry for watch descriptor not in hash table!!!");
-        return;
-    }
-
-    g_autoptr(GString) path = NULL;
-    if (name_len) {
-        path = db_entry_get_path_full(watched_entry);
-        g_string_append_c(path, G_DIR_SEPARATOR);
-        g_string_append(path, name);
-    }
-
-    if (mask & IN_ATTRIB) {
-        g_print("IN_ATTRIB: %s\n", name_len ? name : "");
-        process_attrib_event(self, wd, mask, path, name);
-    }
-    else if (mask & IN_MOVED_FROM) {
-        g_print("IN_MOVED_FROM: %s\n", name_len ? name : "");
-        process_delete_event(self, name, wd, mask);
-    }
-    else if (mask & IN_MOVED_TO) {
-        g_print("IN_MOVED_TO: %s\n", name_len ? name : "");
-        if (!find_entry(self, name, wd, mask, NULL, false)) {
-            process_create_event(self, watched_entry, path, name);
+    switch (ctx->kind) {
+    case IN_ATTRIB:
+        g_print("EVENT_ATTRIB: ");
+        process_attrib_event(self, ctx);
+        break;
+    case IN_MOVED_FROM:
+        g_print("EVENT_MOVED_FROM: ");
+        process_delete_event(self, ctx);
+        break;
+    case IN_MOVED_TO:
+        g_print("EVENT_MOVED_TO: ");
+        if (!find_entry_for_event(self, ctx, NULL, false)) {
+            process_create_event(self, ctx);
         }
         else {
-            process_attrib_event(self, wd, mask, path, name);
+            process_attrib_event(self, ctx);
         }
+        break;
+    case IN_DELETE:
+        g_print("EVENT_DELETE: ");
+        process_delete_event(self, ctx);
+        break;
+    case IN_CREATE:
+        g_print("EVENT_CREATE: ");
+        process_create_event(self, ctx);
+        break;
+    case IN_DELETE_SELF:
+        g_print("EVENT_DELETE_SELF: ");
+        break;
+    case IN_UNMOUNT:
+        g_print("EVENT_UNMOUNT: ");
+        break;
+    case IN_MOVE_SELF:
+        g_print("EVENT_MOVE_SELF: ");
+        break;
+    case IN_CLOSE_WRITE:
+        g_print("EVENT_CLOSE_WRITE: ");
+        process_attrib_event(self, ctx);
+        break;
+    default:
+        g_warning("Unhandled event (%d): ", ctx->kind);
     }
-    else if (mask & IN_DELETE) {
-        g_print("IN_DELETE: %s\n", name_len ? name : "");
-        process_delete_event(self, name, wd, mask);
-    }
-    else if (mask & IN_CREATE) {
-        g_print("IN_CREATE: %s\n", name_len ? name : "");
-        process_create_event(self, watched_entry, path, name);
-    }
-    else if (mask & IN_DELETE_SELF) {
-        g_print("IN_DELETE_SELF: %s\n", name_len ? name : "");
-    }
-    else if (mask & IN_UNMOUNT) {
-        g_print("IN_UNMOUNT: %s\n", name_len ? name : "");
-    }
-    else if (mask & IN_MOVE_SELF) {
-        g_print("IN_MOVE_SELF: %s\n", name_len ? name : "");
-    }
-    else if (mask & IN_CLOSE_WRITE) {
-        g_print("IN_CLOSE_WRITE: %s\n", name_len ? name : "");
-        process_attrib_event(self, wd, mask, path, name);
-    }
-    else {
-        return;
-    }
+    g_print("%s\n", ctx->path->str);
 }
 
 static gboolean
@@ -504,6 +522,138 @@ process_queued_events_cb(gpointer user_data) {
     return G_SOURCE_CONTINUE;
 }
 
+static inline GBytes *
+create_bytes_for_static_handle(FsearchDatabaseIndexHandleData *handle) {
+    return g_bytes_new_static(handle, sizeof(FsearchDatabaseIndexHandleData) + handle->handle.handle_bytes);
+}
+
+static gboolean
+fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
+    FsearchDatabaseIndex *self = user_data;
+
+    // Assert that this function is run in the right monitor thread
+    g_assert(g_main_context_is_owner(self->monitor_ctx));
+
+    struct fanotify_event_metadata buf[200] = {};
+
+    for (;;) {
+        ssize_t len = read(fd, buf, sizeof(buf));
+        if (len == -1 && errno != EAGAIN) {
+            g_debug("[fanotify_listener] failed to read from fd!");
+            return G_SOURCE_REMOVE;
+        }
+
+        /* Check if end of available data reached. */
+        if (len <= 0) {
+            g_debug("[fanotify_listener] no more events");
+            return G_SOURCE_CONTINUE;
+        }
+
+        for (const struct fanotify_event_metadata *metadata = (struct fanotify_event_metadata *)buf;
+             FAN_EVENT_OK(metadata, len);
+             metadata = FAN_EVENT_NEXT(metadata, len)) {
+
+            /* Check that run-time and compile-time structures match. */
+            if (metadata->vers != FANOTIFY_METADATA_VERSION) {
+                g_warning("[fanotify_listener] fanotify ABI mismatch, monitoring is disabled");
+                return G_SOURCE_REMOVE;
+            }
+
+            struct fanotify_event_info_fid *fid = (struct fanotify_event_info_fid *)(metadata + 1);
+            struct file_handle *file_handle = (struct file_handle *)fid->handle;
+
+            /* Ensure that the event info is of the correct type. */
+            g_assert(fid->hdr.info_type == FAN_EVENT_INFO_TYPE_DFID_NAME);
+
+            const char *file_name = (const char *)(file_handle->f_handle + file_handle->handle_bytes);
+            if (g_strcmp0(file_name, ".") == 0) {
+                file_name = NULL;
+            }
+
+            /* fsid/handle portions are compatible with HandleData */
+            FsearchDatabaseIndexHandleData *handle = (FsearchDatabaseIndexHandleData *)&fid->fsid;
+            g_autoptr(GBytes) fid_bytes = create_bytes_for_static_handle(handle);
+
+            FsearchDatabaseEntryFolder *watched_entry = g_hash_table_lookup(self->handles, fid_bytes);
+            if (!watched_entry) {
+                g_warning("[fanotify_listener] no watched entry for handle found!");
+                continue;
+            }
+
+            const bool is_dir = metadata->mask & FAN_ONDIR ? true : false;
+
+            // fanotify allows mask to have bits for multiple events set, so we mustn't use if/else branches,
+            // but test for all bits to not miss any event
+            if (metadata->mask & FAN_CREATE) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_CREATE, is_dir, false));
+            }
+            if (metadata->mask & FAN_ATTRIB) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_ATTRIB, is_dir, false));
+            }
+            if (metadata->mask & FAN_CLOSE_WRITE) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_CLOSE_WRITE, is_dir, false));
+            }
+            if (metadata->mask & FAN_MOVED_TO) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_MOVED_TO, is_dir, false));
+            }
+            if (metadata->mask & FAN_MOVED_FROM) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_MOVED_FROM, is_dir, false));
+            }
+            if (metadata->mask & FAN_MOVE_SELF) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_DELETE, is_dir, false));
+            }
+            if (metadata->mask & FAN_DELETE) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_DELETE, is_dir, false));
+            }
+            if (metadata->mask & FAN_DELETE_SELF) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(file_name, watched_entry, IN_DELETE, is_dir, false));
+            }
+        }
+    }
+
+    return G_SOURCE_REMOVE;
+}
+
+static uint32_t
+get_index_event_kind_for_inotify_mask(uint32_t mask) {
+    if (mask & IN_ATTRIB) {
+        return IN_ATTRIB;
+    }
+    else if (mask & IN_MOVED_FROM) {
+        return IN_MOVED_FROM;
+    }
+    else if (mask & IN_MOVED_TO) {
+        return IN_MOVED_TO;
+    }
+    else if (mask & IN_DELETE) {
+        return IN_DELETE;
+    }
+    else if (mask & IN_CREATE) {
+        return IN_CREATE;
+    }
+    else if (mask & IN_DELETE_SELF) {
+        return IN_DELETE_SELF;
+    }
+    else if (mask & IN_UNMOUNT) {
+        return IN_UNMOUNT;
+    }
+    else if (mask & IN_MOVE_SELF) {
+        return IN_MOVE_SELF;
+    }
+    else if (mask & IN_CLOSE_WRITE) {
+        return IN_CLOSE_WRITE;
+    }
+    return 0;
+}
+
 static gboolean
 inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
     FsearchDatabaseIndex *self = user_data;
@@ -517,7 +667,6 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
     /* Loop while events can be read from inotify file descriptor. */
     while (true) {
         /* Read some events. */
-
         ssize_t len = read(fd, buf, sizeof(buf));
         if (len == -1 && errno != EAGAIN) {
             g_debug("failed to read from fd!");
@@ -527,7 +676,6 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         /* If the nonblocking read() found no events to read, then
            it returns -1 with errno set to EAGAIN. In that case,
            we exit the loop. */
-
         if (len <= 0) {
             return G_SOURCE_CONTINUE;
         }
@@ -536,9 +684,15 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
 
-            g_async_queue_push(
-                self->event_queue,
-                monitor_event_context_new(event->len ? event->name : NULL, event->wd, event->mask, event->cookie));
+            FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
+            if (folder) {
+                g_async_queue_push(self->event_queue,
+                                   monitor_event_context_new(event->len ? event->name : NULL,
+                                                             folder,
+                                                             get_index_event_kind_for_inotify_mask(event->mask),
+                                                             event->mask & IN_ISDIR ? true : false,
+                                                             true));
+            }
         }
     }
     return G_SOURCE_CONTINUE;
@@ -550,14 +704,19 @@ index_free(FsearchDatabaseIndex *self) {
 
     g_clear_pointer(&self->worker_ctx, g_main_context_unref);
 
-    g_source_destroy(self->monitor_source);
-    g_clear_pointer(&self->monitor_source, g_source_unref);
+    g_source_destroy(self->inotify_monitor_source);
+    g_clear_pointer(&self->inotify_monitor_source, g_source_unref);
+
+    g_source_destroy(self->fanotify_monitor_source);
+    g_clear_pointer(&self->fanotify_monitor_source, g_source_unref);
+
     g_clear_pointer(&self->monitor_ctx, g_main_context_unref);
 
     g_source_destroy(self->event_source);
     g_clear_pointer(&self->event_source, g_source_unref);
 
     g_clear_pointer(&self->watch_descriptors, g_hash_table_unref);
+    g_clear_pointer(&self->handles, g_hash_table_unref);
 
     close(self->inotify_fd);
 
@@ -614,12 +773,28 @@ fsearch_database_index_new(uint32_t id,
                                                 (GDestroyNotify)db_entry_destroy);
 
     self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
-    self->inotify_fd = inotify_init1(IN_NONBLOCK);
+    self->handles = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
 
     self->monitor_ctx = g_main_context_ref(monitor_ctx);
-    self->monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
-    g_source_set_callback(self->monitor_source, (GSourceFunc)inotify_listener_cb, self, NULL);
-    g_source_attach(self->monitor_source, self->monitor_ctx);
+
+    self->inotify_fd = inotify_init1(IN_NONBLOCK);
+    if (self->inotify_fd >= 0) {
+        self->inotify_monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
+        g_source_set_callback(self->inotify_monitor_source, (GSourceFunc)inotify_listener_cb, self, NULL);
+        g_source_attach(self->inotify_monitor_source, self->monitor_ctx);
+    }
+    else {
+    }
+
+    self->fanotify_fd = fanotify_init(FAN_CLOEXEC | FAN_NONBLOCK | FAN_CLASS_NOTIF | FAN_REPORT_DFID_NAME, O_RDONLY);
+    if (self->fanotify_fd >= 0) {
+        self->fanotify_monitor_source = g_unix_fd_source_new(self->fanotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
+        g_source_set_callback(self->fanotify_monitor_source, (GSourceFunc)fanotify_listener_cb, self, NULL);
+        g_source_attach(self->fanotify_monitor_source, self->monitor_ctx);
+    }
+    else {
+        g_warning("Failed to init fanotify: %d", errno);
+    }
 
     self->worker_ctx = g_main_context_ref(worker_ctx);
     self->event_source = g_timeout_source_new_seconds(1);
@@ -776,7 +951,9 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                        self->folders,
                        self->files,
                        self->exclude_manager,
+                       self->handles,
                        self->watch_descriptors,
+                       self->fanotify_fd,
                        self->inotify_fd,
                        fsearch_database_include_get_one_file_system(self->include),
                        cancellable,
