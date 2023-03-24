@@ -283,7 +283,7 @@ darray_insert_item(DynamicArray *array, void *data, uint32_t index) {
     array->num_items++;
 }
 
-void
+uint32_t
 darray_insert_item_sorted(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data) {
     g_assert(array);
     g_assert(array->data);
@@ -292,6 +292,7 @@ darray_insert_item_sorted(DynamicArray *array, void *item, DynamicArrayCompareDa
     darray_binary_search_with_data(array, item, compare_func, data, &insert_at);
 
     darray_insert_item(array, item, insert_at);
+    return insert_at;
 }
 
 DynamicArray *
@@ -404,6 +405,21 @@ darray_get_item(DynamicArray *array, uint32_t idx) {
     }
 
     return array->data[idx];
+}
+
+DynamicArray *
+darray_get_range(DynamicArray *array, uint32_t start_idx, uint32_t num_items) {
+    g_assert(array);
+    g_assert(array->data);
+    g_assert(start_idx < array->num_items);
+
+    num_items = MIN(array->num_items - start_idx, num_items);
+
+    DynamicArray *range = darray_new(num_items);
+    memcpy(range->data, array->data + start_idx, num_items * sizeof(void *));
+    range->num_items = num_items;
+
+    return range;
 }
 
 uint32_t

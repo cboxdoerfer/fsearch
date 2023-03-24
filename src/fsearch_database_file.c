@@ -575,8 +575,13 @@ save_sorted_arrays(FILE *fp, FsearchDatabaseIndexStore *store, uint32_t num_file
     }
 
     for (uint32_t id = 1; id < NUM_DATABASE_INDEX_PROPERTIES; id++) {
-        g_autoptr(DynamicArray) folders = fsearch_database_index_store_get_folders(store, id);
-        g_autoptr(DynamicArray) files = fsearch_database_index_store_get_files(store, id);
+        g_autoptr(FsearchDatabaseEntriesContainer) folder_container = fsearch_database_index_store_get_folders(store, id);
+        g_autoptr(FsearchDatabaseEntriesContainer) file_container = fsearch_database_index_store_get_files(store, id);
+        if (!folder_container || !file_container) {
+            continue;
+        }
+        g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(folder_container);
+        g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(file_container);
         if (!files || !folders) {
             continue;
         }
@@ -694,6 +699,9 @@ db_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
     g_autoptr(GString) path_full_temp = g_string_new(path_full->str);
     g_string_append(path_full_temp, ".tmp");
 
+    g_autoptr(FsearchDatabaseEntriesContainer) folder_container = NULL;
+    g_autoptr(FsearchDatabaseEntriesContainer) file_container = NULL;
+
     g_autoptr(DynamicArray) files = NULL;
     g_autoptr(DynamicArray) folders = NULL;
 
@@ -723,7 +731,8 @@ db_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
     }
 
     g_debug("[db_save] updating folder indices...");
-    folders = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
+    folder_container = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
+    folders = fsearch_database_entries_container_get_joined(folder_container);
     update_folder_indices(folders);
 
     const uint32_t num_folders = darray_get_num_items(folders);
@@ -733,7 +742,8 @@ db_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
         goto save_fail;
     }
 
-    files = fsearch_database_index_store_get_files(store, DATABASE_INDEX_PROPERTY_NAME);
+    file_container = fsearch_database_index_store_get_files(store, DATABASE_INDEX_PROPERTY_NAME);
+    files = fsearch_database_entries_container_get_joined(file_container);
     const uint32_t num_files = darray_get_num_items(files);
     g_debug("[db_save] saving number of files: %d", num_files);
     bytes_written += write_data_to_file(fp, &num_files, 4, 1, &write_failed);

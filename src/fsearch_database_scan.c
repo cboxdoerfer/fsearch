@@ -130,11 +130,11 @@ add_folder(DatabaseWalkContext *walk_context,
     db_entry_set_parent(folder, (FsearchDatabaseEntryFolder *)parent);
 
     if (walk_context->fanotify_fd >= 0 && add_fanotify_mark(walk_context, path, folder)) {
-        g_debug("added fanotify mark: %s", path);
+        // g_debug("added fanotify mark: %s", path);
     }
     else if (walk_context->inotify_fd >= 0) {
         // Use inotify as a fallback
-        g_debug("use inotify as fallback for path: %s", path);
+        // g_debug("use inotify as fallback for path: %s", path);
         const int32_t wd = inotify_add_watch(walk_context->inotify_fd, path, INOTIFY_FOLDER_MASK);
         db_entry_set_wd((FsearchDatabaseEntryFolder *)folder, wd);
         g_hash_table_insert(walk_context->watch_descriptors, GINT_TO_POINTER(wd), folder);

@@ -65,6 +65,9 @@ darray_get_item_next(DynamicArray *array,
                      void *data,
                      uint32_t *next_idx);
 
+DynamicArray *
+darray_get_range(DynamicArray *array, uint32_t start_idx, uint32_t num_items);
+
 bool
 darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index);
 
@@ -77,7 +80,7 @@ darray_add_array(DynamicArray *dest, DynamicArray *source);
 void
 darray_add_item(DynamicArray *array, void *data);
 
-void
+uint32_t
 darray_insert_item_sorted(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data);
 
 void

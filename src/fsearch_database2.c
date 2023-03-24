@@ -1,3 +1,5 @@
+#define G_LOG_DOMAIN "fsearch-database"
+
 #include "fsearch_database2.h"
 
 #include "fsearch_array.h"
@@ -42,8 +44,8 @@ struct _FsearchDatabase2 {
 
 typedef struct FsearchDatabaseSearchView {
     FsearchQuery *query;
-    DynamicArray *files;
-    DynamicArray *folders;
+    FsearchDatabaseEntriesContainer *file_container;
+    FsearchDatabaseEntriesContainer *folder_container;
     GtkSortType sort_type;
     FsearchDatabaseIndexProperty sort_order;
     GHashTable *file_selection;
@@ -88,8 +90,8 @@ static void
 search_view_free(FsearchDatabaseSearchView *view) {
     g_return_if_fail(view);
     g_clear_pointer(&view->query, fsearch_query_unref);
-    g_clear_pointer(&view->files, darray_unref);
-    g_clear_pointer(&view->folders, darray_unref);
+    g_clear_pointer(&view->file_container, fsearch_database_entries_container_unref);
+    g_clear_pointer(&view->folder_container, fsearch_database_entries_container_unref);
     g_clear_pointer(&view->file_selection, fsearch_selection_free);
     g_clear_pointer(&view->folder_selection, fsearch_selection_free);
     g_clear_pointer(&view, free);
@@ -105,8 +107,9 @@ search_view_new(FsearchQuery *query,
     FsearchDatabaseSearchView *view = calloc(1, sizeof(FsearchDatabaseSearchView));
     g_assert(view);
     view->query = fsearch_query_ref(query);
-    view->files = darray_ref(files);
-    view->folders = darray_ref(folders);
+    view->folder_container =
+        fsearch_database_entries_container_new(folders, TRUE, sort_order, DATABASE_ENTRY_TYPE_FOLDER, NULL);
+    view->file_container = fsearch_database_entries_container_new(files, TRUE, sort_order, DATABASE_ENTRY_TYPE_FILE, NULL);
     view->sort_order = sort_order;
     view->sort_type = sort_type;
     view->file_selection = fsearch_selection_new();
@@ -253,6 +256,16 @@ database_lock(FsearchDatabase2 *self) {
 }
 
 static uint32_t
+get_num_search_file_results(FsearchDatabaseSearchView *view) {
+    return view && view->file_container ? fsearch_database_entries_container_get_num_entries(view->file_container) : 0;
+}
+
+static uint32_t
+get_num_search_folder_results(FsearchDatabaseSearchView *view) {
+    return view && view->file_container ? fsearch_database_entries_container_get_num_entries(view->folder_container) : 0;
+}
+
+static uint32_t
 get_num_database_files(FsearchDatabase2 *self) {
     return self->store ? fsearch_database_index_store_get_num_files(self->store) : 0;
 }
@@ -277,23 +290,23 @@ get_idx_for_sort_type(uint32_t idx, uint32_t num_files, uint32_t num_folders, Gt
 
 static FsearchDatabaseEntry *
 get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
-    if (!view->files) {
+    if (!view->folder_container) {
         return NULL;
     }
-    if (!view->folders) {
+    if (!view->file_container) {
         return NULL;
     }
-    const uint32_t num_folders = darray_get_num_items(view->folders);
-    const uint32_t num_files = darray_get_num_items(view->files);
+    const uint32_t num_folders = get_num_search_folder_results(view);
+    const uint32_t num_files = get_num_search_file_results(view);
 
     idx = get_idx_for_sort_type(idx, num_files, num_folders, view->sort_type);
 
     if (idx < num_folders) {
-        return darray_get_item(view->folders, idx);
+        return fsearch_database_entries_container_get_entry(view->folder_container, idx);
     }
     idx -= num_folders;
     if (idx < num_files) {
-        return darray_get_item(view->files, idx);
+        return fsearch_database_entries_container_get_entry(view->file_container, idx);
     }
     return NULL;
 }
@@ -364,39 +377,52 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         return;
     }
 
-    DynamicArray *files_new = NULL;
-    DynamicArray *folders_new = NULL;
+    g_autoptr(DynamicArray) files_new = NULL;
+    g_autoptr(DynamicArray) folders_new = NULL;
 
-    g_autoptr(DynamicArray) files_fast_sort_index = fsearch_database_index_store_get_files(self->store, sort_order);
-    g_autoptr(DynamicArray) folders_fast_sort_index = fsearch_database_index_store_get_folders(self->store, sort_order);
+    g_autoptr(FsearchDatabaseEntriesContainer)
+        files_fast_sort_index = fsearch_database_index_store_get_files(self->store, sort_order);
+    g_autoptr(FsearchDatabaseEntriesContainer)
+        folders_fast_sort_index = fsearch_database_index_store_get_folders(self->store, sort_order);
+
+    g_autoptr(DynamicArray) files_fast_sorted = NULL;
+    g_autoptr(DynamicArray) folders_fast_sorted = NULL;
+    if (files_fast_sort_index && folders_fast_sort_index) {
+        files_fast_sorted = fsearch_database_entries_container_get_joined(files_fast_sort_index);
+        folders_fast_sorted = fsearch_database_entries_container_get_joined(folders_fast_sort_index);
+    }
+    g_autoptr(DynamicArray) files_in = fsearch_database_entries_container_get_joined(view->file_container);
+    g_autoptr(DynamicArray) folders_in = fsearch_database_entries_container_get_joined(view->folder_container);
 
     fsearch_database_sort_results(view->sort_order,
                                   sort_order,
-                                  view->files,
-                                  view->folders,
-                                  files_fast_sort_index,
-                                  folders_fast_sort_index,
+                                  files_in,
+                                  folders_in,
+                                  files_fast_sorted,
+                                  folders_fast_sorted,
                                   &files_new,
                                   &folders_new,
                                   &view->sort_order,
                                   cancellable);
 
     if (files_new) {
-        g_clear_pointer(&view->files, darray_unref);
-        view->files = files_new;
+        g_clear_pointer(&view->file_container, fsearch_database_entries_container_unref);
+        view->file_container =
+            fsearch_database_entries_container_new(files_new, TRUE, view->sort_order, DATABASE_ENTRY_TYPE_FILE, NULL);
         view->sort_type = sort_type;
     }
     if (folders_new) {
-        g_clear_pointer(&view->folders, darray_unref);
-        view->folders = folders_new;
+        g_clear_pointer(&view->folder_container, fsearch_database_entries_container_unref);
+        view->folder_container =
+            fsearch_database_entries_container_new(folders_new, TRUE, view->sort_order, DATABASE_ENTRY_TYPE_FOLDER, NULL);
         view->sort_type = sort_type;
     }
 
     emit_sort_finished_signal(self,
                               id,
                               fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                                               darray_get_num_items(view->files),
-                                                               darray_get_num_items(view->folders),
+                                                               get_num_search_file_results(view),
+                                                               get_num_search_folder_results(view),
                                                                fsearch_selection_get_num_selected(view->file_selection),
                                                                fsearch_selection_get_num_selected(view->folder_selection),
                                                                view->sort_order,
@@ -427,19 +453,19 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     bool result = false;
 
-    g_autoptr(DynamicArray) files = fsearch_database_index_store_get_files(self->store, sort_order);
-    g_autoptr(DynamicArray) folders = fsearch_database_index_store_get_folders(self->store, sort_order);
+    g_autoptr(FsearchDatabaseEntriesContainer)
+        file_container = fsearch_database_index_store_get_files(self->store, sort_order);
+    g_autoptr(FsearchDatabaseEntriesContainer)
+        folder_container = fsearch_database_index_store_get_folders(self->store, sort_order);
 
-    if (!files && !folders) {
-        files = fsearch_database_index_store_get_files(self->store, DATABASE_INDEX_PROPERTY_NAME);
-        folders = fsearch_database_index_store_get_folders(self->store, DATABASE_INDEX_PROPERTY_NAME);
+    if (!file_container && !folder_container) {
         sort_order = DATABASE_INDEX_PROPERTY_NAME;
+        file_container = fsearch_database_index_store_get_files(self->store, sort_order);
+        folder_container = fsearch_database_index_store_get_files(self->store, sort_order);
     }
-    else if (files && folders) {
-    }
-    else {
-        g_assert_not_reached();
-    }
+
+    g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(file_container);
+    g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(folder_container);
 
     DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, cancellable);
     if (search_result) {
@@ -523,8 +549,8 @@ search_views_updated_cb(gpointer key, gpointer value, gpointer user_data) {
         self,
         GPOINTER_TO_INT(key),
         fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                         darray_get_num_items(view->files),
-                                         darray_get_num_items(view->folders),
+                                         get_num_search_file_results(view),
+                                         get_num_search_folder_results(view),
                                          fsearch_selection_get_num_selected(view->file_selection),
                                          fsearch_selection_get_num_selected(view->folder_selection),
                                          view->sort_order,
@@ -562,19 +588,15 @@ search_view_result_add_cb(gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    DynamicArray *array = db_entry_is_folder(entry) ? view->folders : view->files;
-    if (fsearch_database_index_store_has_entries(ctx->db->store, array)) {
+    FsearchDatabaseEntriesContainer *container = db_entry_is_folder(entry) ? view->folder_container
+                                                                           : view->file_container;
+    if (fsearch_database_index_store_has_container(ctx->db->store, container)) {
         // The files/folders are referenced directly from the index store.
         // We must not alter them.
         return;
     }
 
-    // Add it to the search results
-    DynamicArrayCompareDataFunc comp_func =
-        fsearch_database_sort_get_compare_func_for_property(view->sort_order, db_entry_is_folder(entry));
-    if (array && comp_func) {
-        darray_insert_item_sorted(array, entry, comp_func, NULL);
-    }
+    fsearch_database_entries_container_insert(container, entry);
 }
 
 static void
@@ -583,15 +605,11 @@ search_view_result_remove(FsearchDatabaseSearchView *view, FsearchDatabaseIndexS
         return;
     }
 
-    DynamicArray *array = db_entry_is_folder(entry) ? view->folders : view->files;
-    if (array && !fsearch_database_index_store_has_entries(store, array)) {
+    FsearchDatabaseEntriesContainer *container = db_entry_is_folder(entry) ? view->folder_container
+                                                                           : view->file_container;
+    if (container && !fsearch_database_index_store_has_container(store, container)) {
         // Remove it from search results
-        uint32_t idx = 0;
-        DynamicArrayCompareDataFunc comp_func =
-            fsearch_database_sort_get_compare_func_for_property(view->sort_order, db_entry_is_folder(entry));
-        if (darray_get_item_idx(array, entry, comp_func, NULL, &idx)) {
-            darray_remove(array, idx, 1);
-        }
+        fsearch_database_entries_container_steal(container, entry);
     }
 
     // Remove it from the selection
@@ -607,7 +625,7 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
-    if (view->files && !fsearch_database_index_store_has_entries(ctx->db->store, view->files)) {
+    if (view->file_container && !fsearch_database_index_store_has_container(ctx->db->store, view->file_container)) {
         if (ctx->files) {
             for (uint32_t i = 0; i < darray_get_num_items(ctx->files); ++i) {
                 FsearchDatabaseEntry *entry = darray_get_item(ctx->files, i);
@@ -618,7 +636,7 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
             search_view_result_remove(view, ctx->db->store, ctx->entry);
         }
     }
-    if (view->folders && !fsearch_database_index_store_has_entries(ctx->db->store, view->folders)) {
+    if (view->folder_container && !fsearch_database_index_store_has_container(ctx->db->store, view->folder_container)) {
         if (ctx->folders) {
             for (uint32_t i = 0; i < darray_get_num_items(ctx->folders); ++i) {
                 FsearchDatabaseEntry *entry = darray_get_item(ctx->folders, i);
@@ -728,12 +746,12 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         fsearch_selection_unselect_all(view->folder_selection);
         break;
     case FSEARCH_SELECTION_TYPE_ALL:
-        fsearch_selection_select_all(view->folder_selection, view->folders);
-        fsearch_selection_select_all(view->file_selection, view->files);
+        // fsearch_selection_select_all(view->folder_selection, view->folders);
+        // fsearch_selection_select_all(view->file_selection, view->files);
         break;
     case FSEARCH_SELECTION_TYPE_INVERT:
-        fsearch_selection_invert(view->folder_selection, view->folders);
-        fsearch_selection_invert(view->folder_selection, view->files);
+        //        fsearch_selection_invert(view->folder_selection, view->folders);
+        //       fsearch_selection_invert(view->folder_selection, view->files);
         break;
     case FSEARCH_SELECTION_TYPE_SELECT:
         if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FILE) {
@@ -765,8 +783,8 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         self,
         view_id,
         fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                         darray_get_num_items(view->files),
-                                         darray_get_num_items(view->folders),
+                                         get_num_search_file_results(view),
+                                         get_num_search_folder_results(view),
                                          fsearch_selection_get_num_selected(view->file_selection),
                                          fsearch_selection_get_num_selected(view->folder_selection),
                                          view->sort_order,
@@ -1208,9 +1226,10 @@ fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, 
         res = FSEARCH_RESULT_DB_UNKOWN_SEARCH_VIEW;
     }
     else {
-        *info_out = fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                                     darray_get_num_items(view->files),
-                                                     darray_get_num_items(view->folders),
+        *info_out =
+            fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                                     get_num_search_file_results(view),
+                                                     get_num_search_folder_results(view),
                                                      fsearch_selection_get_num_selected(view->file_selection),
                                                      fsearch_selection_get_num_selected(view->folder_selection),
                                                      view->sort_order,

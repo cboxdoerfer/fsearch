@@ -2,6 +2,7 @@
 
 #include <gio/gio.h>
 
+#include "fsearch_database_entries_container.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
@@ -38,12 +39,12 @@ void
 fsearch_database_index_store_sort(FsearchDatabaseIndexStore *self, GCancellable *cancellable);
 
 bool
-fsearch_database_index_store_has_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries);
+fsearch_database_index_store_has_container(FsearchDatabaseIndexStore *self, FsearchDatabaseEntriesContainer *container);
 
-DynamicArray *
+FsearchDatabaseEntriesContainer *
 fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order);
 
-DynamicArray *
+FsearchDatabaseEntriesContainer *
 fsearch_database_index_store_get_folders(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order);
 
 uint32_t

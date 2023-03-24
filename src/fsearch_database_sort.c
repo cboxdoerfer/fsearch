@@ -29,6 +29,9 @@ get_sort_func(FsearchDatabaseIndexProperty sort_order) {
     case DATABASE_INDEX_PROPERTY_PATH:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
         break;
+    case DATABASE_INDEX_PROPERTY_PATH_FULL:
+        func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path;
+        break;
     case DATABASE_INDEX_PROPERTY_SIZE:
         func = (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size;
         break;
@@ -316,6 +319,8 @@ fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty
         return (DynamicArrayCompareDataFunc)compare_by_name;
     case DATABASE_INDEX_PROPERTY_PATH:
         return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path;
+    case DATABASE_INDEX_PROPERTY_PATH_FULL:
+        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path;
     case DATABASE_INDEX_PROPERTY_SIZE:
         return (DynamicArrayCompareDataFunc)compare_by_size;
     case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
