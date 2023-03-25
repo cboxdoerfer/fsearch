@@ -66,6 +66,8 @@ typedef struct {
     GString *path;
 
     FsearchDatabaseEntryFolder *watched_entry;
+    FsearchDatabaseEntryFolder *watched_entry_copy;
+
     uint32_t kind;
     bool is_dir;
     bool is_inotify_event;
@@ -114,6 +116,7 @@ monitor_event_context_free(FsearchDatabaseIndexMonitorEventContext *ctx) {
     if (ctx->path) {
         g_string_free(g_steal_pointer(&ctx->path), TRUE);
     }
+    g_clear_pointer((FsearchDatabaseEntry **)&ctx->watched_entry_copy, db_entry_free_deep_copy);
     g_clear_pointer(&ctx, free);
 }
 
@@ -127,9 +130,10 @@ monitor_event_context_new(const char *name,
     g_assert(ctx);
 
     ctx->name = name ? g_string_new(name) : NULL;
-    ctx->watched_entry = watched_entry;
-    if (ctx->name && ctx->watched_entry) {
-        ctx->path = db_entry_get_path_full((FsearchDatabaseEntry *)ctx->watched_entry);
+    ctx->watched_entry_copy = (FsearchDatabaseEntryFolder *)db_entry_get_deep_copy((FsearchDatabaseEntry *)watched_entry);
+
+    if (ctx->name) {
+        ctx->path = db_entry_get_path_full((FsearchDatabaseEntry *)ctx->watched_entry_copy);
         g_string_append_c(ctx->path, G_DIR_SEPARATOR);
         g_string_append(ctx->path, ctx->name->str);
     }
@@ -152,18 +156,23 @@ process_queued_events(FsearchDatabaseIndex *self) {
 
     g_autoptr(GTimer) timer = g_timer_new();
 
+    double last_time = 0.0;
+
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
     while (true) {
         FsearchDatabaseIndexMonitorEventContext *ctx = g_async_queue_try_pop(self->event_queue);
         if (!ctx) {
             break;
         }
-        // if (g_timer_elapsed(timer, NULL) > 0.1) {
-        //     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
-        //     g_usleep(G_USEC_PER_SEC * 0.05);
-        //     g_timer_start(timer);
-        //     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
-        // }
+        double elapsed = g_timer_elapsed(timer, NULL);
+        if (elapsed - last_time > 0.2) {
+            g_debug("interupt event processing for a while...");
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
+            last_time = elapsed;
+            g_usleep(G_USEC_PER_SEC * 0.05);
+            g_debug("continue event processing...");
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
+        }
         process_event(self, ctx);
         g_clear_pointer(&ctx, monitor_event_context_free);
     }
@@ -480,6 +489,13 @@ process_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContex
         return;
     }
 
+    ctx->watched_entry = (FsearchDatabaseEntryFolder *)
+        fsearch_database_entries_container_find(self->folder_container, (FsearchDatabaseEntry *)ctx->watched_entry_copy);
+    if (!ctx->watched_entry) {
+        g_debug("Watched entry no longer present!");
+        return;
+    }
+
     switch (ctx->kind) {
     case IN_ATTRIB:
         process_attrib_event(self, ctx);
@@ -699,14 +715,16 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             event = (const struct inotify_event *)ptr;
 
             FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
-            if (folder) {
-                g_async_queue_push(self->event_queue,
-                                   monitor_event_context_new(event->len ? event->name : NULL,
-                                                             folder,
-                                                             get_index_event_kind_for_inotify_mask(event->mask),
-                                                             event->mask & IN_ISDIR ? true : false,
-                                                             true));
+            if (!folder) {
+                g_warning("[inotify_listener] no watched entry for watch descriptor found!");
+                continue;
             }
+            g_async_queue_push(self->event_queue,
+                               monitor_event_context_new(event->len ? event->name : NULL,
+                                                         folder,
+                                                         get_index_event_kind_for_inotify_mask(event->mask),
+                                                         event->mask & IN_ISDIR ? true : false,
+                                                         true));
         }
     }
     return G_SOURCE_CONTINUE;

@@ -181,6 +181,41 @@ db_entry_get_type(FsearchDatabaseEntry *entry) {
     return entry ? entry->type : DATABASE_ENTRY_TYPE_NONE;
 }
 
+void
+db_entry_free_deep_copy(FsearchDatabaseEntry *entry) {
+    while (entry) {
+        FsearchDatabaseEntryFolder *parent = entry->parent;
+        db_entry_destroy(entry);
+        g_clear_pointer(&entry, free);
+        entry = (FsearchDatabaseEntry *)parent;
+    }
+}
+
+FsearchDatabaseEntry *
+db_entry_get_deep_copy(FsearchDatabaseEntry *entry) {
+    FsearchDatabaseEntry *copy = calloc(1,
+                                        entry->type == DATABASE_ENTRY_TYPE_FOLDER ? sizeof(FsearchDatabaseEntryFolder)
+                                                                                  : sizeof(FsearchDatabaseEntryFile));
+    copy->name = g_strdup(entry->name);
+    copy->type = entry->type;
+    copy->mtime = entry->mtime;
+    copy->size = entry->size;
+    copy->idx = entry->idx;
+    copy->mark = entry->mark;
+    if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+        FsearchDatabaseEntryFolder *copy_folder = (FsearchDatabaseEntryFolder *)copy;
+        FsearchDatabaseEntryFolder *entry_folder = (FsearchDatabaseEntryFolder *)entry;
+        copy_folder->num_files = entry_folder->num_files;
+        copy_folder->num_folders = entry_folder->num_folders;
+        copy_folder->db_idx = entry_folder->db_idx;
+        copy_folder->wd = entry_folder->wd;
+    }
+    copy->parent = entry->parent
+                     ? (FsearchDatabaseEntryFolder *)db_entry_get_deep_copy((FsearchDatabaseEntry *)entry->parent)
+                     : NULL;
+    return copy;
+}
+
 FsearchDatabaseEntry *
 db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char *name, FsearchDatabaseEntryType type) {
     g_return_val_if_fail(name, NULL);

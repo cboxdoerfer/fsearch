@@ -122,6 +122,12 @@ db_entry_get_parent(FsearchDatabaseEntry *entry);
 FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry);
 
+void
+db_entry_free_deep_copy(FsearchDatabaseEntry *entry);
+
+FsearchDatabaseEntry *
+db_entry_get_deep_copy(FsearchDatabaseEntry *entry);
+
 FsearchDatabaseEntry *
 db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char *name, FsearchDatabaseEntryType type);
 
