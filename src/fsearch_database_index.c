@@ -483,6 +483,32 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
     }
 }
 
+static const char *
+inotify_event_kind_to_string(uint32_t kind) {
+    switch (kind) {
+    case IN_ATTRIB:
+        return "ATTRIB";
+    case IN_MOVED_FROM:
+        return "MOVED_FROM";
+    case IN_MOVED_TO:
+        return "MOVED_TO";
+    case IN_DELETE:
+        return "DELETE";
+    case IN_CREATE:
+        return "CREATE";
+    case IN_DELETE_SELF:
+        return "DELETE_SELF";
+    case IN_UNMOUNT:
+        return "UNMOUNT";
+    case IN_MOVE_SELF:
+        return "MOVE_SELF";
+    case IN_CLOSE_WRITE:
+        return "CLOSE_WRITE";
+    default:
+        return "INVALID";
+    }
+}
+
 static void
 process_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx) {
     if (!ctx->name) {
@@ -495,6 +521,8 @@ process_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContex
         g_debug("Watched entry no longer present!");
         return;
     }
+
+    g_debug("process %s: %s", inotify_event_kind_to_string(ctx->kind), ctx->path ? ctx->path->str : "NULL");
 
     switch (ctx->kind) {
     case IN_ATTRIB:
