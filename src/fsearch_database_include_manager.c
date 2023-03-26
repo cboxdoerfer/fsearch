@@ -74,7 +74,7 @@ fsearch_database_include_manager_equal(FsearchDatabaseIncludeManager *m1, Fsearc
 
     for (guint i = 0; i < m1->includes->len; ++i) {
         FsearchDatabaseInclude *i1 = g_ptr_array_index(m1->includes, i);
-        FsearchDatabaseInclude *i2 = g_ptr_array_index(m1->includes, i);
+        FsearchDatabaseInclude *i2 = g_ptr_array_index(m2->includes, i);
         if (!fsearch_database_include_equal(i1, i2)) {
             return FALSE;
         }
