@@ -256,10 +256,8 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
     uint32_t container_idx = 0;
     uint32_t entry_start_idx = 0;
     if (self->sort_type == DATABASE_INDEX_PROPERTY_PATH_FULL) {
-        if (self->entry_type == DATABASE_ENTRY_TYPE_FOLDER) {
-            DynamicArray *container = get_container_for_entry(self, (FsearchDatabaseEntry *)folder, &container_idx);
-            darray_binary_search_with_data(container, folder, self->entry_comp_func, NULL, &entry_start_idx);
-        }
+        DynamicArray *container = get_container_for_entry(self, (FsearchDatabaseEntry *)folder, &container_idx);
+        darray_binary_search_with_data(container, folder, self->entry_comp_func, NULL, &entry_start_idx);
     }
 
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
