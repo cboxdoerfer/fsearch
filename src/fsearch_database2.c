@@ -837,18 +837,29 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
 
-    emit_signal0(self, EVENT_SCAN_STARTED);
-
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_work_scan_get_include_manager(work);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_work_scan_get_flags(work);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    if (fsearch_database_include_manager_equal(self->include_manager, include_manager)
+        && fsearch_database_exclude_manager_equal(self->exclude_manager, exclude_manager)) {
+        g_debug("[scan] new config is identical to the current one. No scan necessary.");
+        return;
+    }
+
+    g_clear_pointer(&locker, g_mutex_locker_free);
+
+    emit_signal0(self, EVENT_SCAN_STARTED);
 
     g_autoptr(FsearchDatabaseIndexStore)
         store = fsearch_database_index_store_new(include_manager, exclude_manager, flags);
     g_return_if_fail(store);
     fsearch_database_index_store_start(store, NULL, index_event_cb, self);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
     g_set_object(&self->include_manager, include_manager);
