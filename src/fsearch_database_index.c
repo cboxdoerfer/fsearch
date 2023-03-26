@@ -601,7 +601,6 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
         /* Check if end of available data reached. */
         if (len <= 0) {
-            g_debug("[fanotify_listener] no more events");
             return G_SOURCE_CONTINUE;
         }
 
