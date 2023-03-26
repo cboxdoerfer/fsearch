@@ -1,3 +1,5 @@
+#define G_LOG_DOMAIN "fsearch-database-preferences-widget"
+
 #include "fsearch_database_preferences_widget.h"
 
 #include <glib/gi18n.h>
@@ -25,8 +27,7 @@ struct _FsearchDatabasePreferencesWidget {
 
     gchar *exclude_files_str;
 };
-
-enum { COL_INCLUDE_ACTIVE, COL_INCLUDE_PATH, COL_INCLUDE_ONE_FS, NUM_INCLUDE_COLUMNS };
+enum { COL_INCLUDE_ACTIVE, COL_INCLUDE_PATH, COL_INCLUDE_ONE_FS, COL_INCLUDE_ID, NUM_INCLUDE_COLUMNS };
 enum { COL_EXCLUDE_ACTIVE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
 
 enum { PROP_0, PROP_DATABASE, NUM_PROPERTIES };
@@ -108,6 +109,47 @@ run_file_chooser_dialog(GtkButton *button, FsearchPreferencesFileChooserContext 
     gtk_file_chooser_set_select_multiple(GTK_FILE_CHOOSER(dialog), TRUE);
 }
 
+static int
+compare_int(const void *a, const void *b) {
+    return (*(int *)a - *(int *)b);
+}
+
+static gint
+get_unique_include_id(GtkListStore *store) {
+    g_assert(store);
+    GtkTreeModel *model = GTK_TREE_MODEL(store);
+
+    // We want to have the smallest possible unique ID >= 0:
+    // 1. First we fetch all ids currently present in the model
+    g_autoptr(GArray) model_ids = g_array_new(FALSE, FALSE, sizeof(gint));
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+    while (valid) {
+        gint id = -1;
+        gtk_tree_model_get(model, &iter, COL_INCLUDE_ID, &id, -1);
+        g_array_append_val(model_ids, id);
+
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+
+    // 2. Then we sort them ascendingly
+    g_array_sort(model_ids, compare_int);
+
+    // 3. Then we find the first ID, starting with 0, which isn't in the array. That's the unique ID we want.
+    for (gint i = 0; i < model_ids->len; ++i) {
+        gint model_id = g_array_index(model_ids, gint, i);
+        if (i != model_id) {
+            // Found the smallest unique ID
+            return i;
+        }
+    }
+
+    // The model is either empty or has no gaps in between IDs, 0, 1, 2, ..., model_idx->len - 1
+    // Our new unique ID therefore is the length of the array, which is either 0 or 1 greater than the largest ID in the
+    // model:
+    return (gint)model_ids->len;
+}
+
 static void
 column_text_append(GtkTreeView *view, const char *name, gboolean expand, int id) {
     GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
@@ -152,7 +194,7 @@ remove_row(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer u
 }
 
 static void
-include_append_row(GtkListStore *store, gboolean active, const char *path, gboolean one_file_system) {
+include_append_row(GtkListStore *store, gboolean active, const char *path, gboolean one_file_system, gint id) {
     GtkTreeIter iter;
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store,
@@ -163,12 +205,14 @@ include_append_row(GtkListStore *store, gboolean active, const char *path, gbool
                        path,
                        COL_INCLUDE_ONE_FS,
                        one_file_system,
+                       COL_INCLUDE_ID,
+                       id,
                        -1);
 }
 
 static void
 on_include_append_new_row(GtkListStore *store, const char *path) {
-    include_append_row(store, TRUE, path, FALSE);
+    include_append_row(store, TRUE, path, FALSE, get_unique_include_id(store));
 }
 
 static void
@@ -295,7 +339,7 @@ init_exclude_page(FsearchDatabasePreferencesWidget *self) {
 static void
 init_include_page(FsearchDatabasePreferencesWidget *self) {
     self->include_model =
-        gtk_list_store_new(NUM_INCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
+        gtk_list_store_new(NUM_INCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT);
     gtk_tree_view_set_model(self->include_list, GTK_TREE_MODEL(self->include_model));
 
     column_toggle_append(self->include_list,
@@ -332,7 +376,8 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
         include_append_row(self->include_model,
                            fsearch_database_include_get_active(include),
                            fsearch_database_include_get_path(include),
-                           fsearch_database_include_get_one_file_system(include));
+                           fsearch_database_include_get_one_file_system(include),
+                           fsearch_database_include_get_id(include));
     }
 }
 
@@ -474,6 +519,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         g_autofree gchar *path = NULL;
         gboolean active = FALSE;
         gboolean one_file_system = FALSE;
+        gint id = -1;
         gtk_tree_model_get(model,
                            &iter,
                            COL_INCLUDE_PATH,
@@ -482,12 +528,14 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
                            &active,
                            COL_INCLUDE_ONE_FS,
                            &one_file_system,
+                           COL_INCLUDE_ID,
+                           &id,
                            -1);
 
         if (path) {
             fsearch_database_include_manager_add(
                 include_manager,
-                fsearch_database_include_new(path, active, one_file_system, FALSE, FALSE, 0));
+                fsearch_database_include_new(path, active, one_file_system, FALSE, FALSE, id));
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
