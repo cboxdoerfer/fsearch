@@ -993,7 +993,7 @@ work_queue_thread(gpointer data) {
             g_assert_not_reached();
         }
 
-        g_debug("finished work in: %fs.", g_timer_elapsed(timer, NULL));
+        g_debug("finished work '%s' in: %fs.", fsearch_database_work_to_string(work), g_timer_elapsed(timer, NULL));
 
         if (quit) {
             break;
@@ -1250,8 +1250,7 @@ fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, 
         res = FSEARCH_RESULT_DB_UNKOWN_SEARCH_VIEW;
     }
     else {
-        *info_out =
-            fsearch_database_search_info_new(fsearch_query_ref(view->query),
+        *info_out = fsearch_database_search_info_new(fsearch_query_ref(view->query),
                                                      get_num_search_file_results(view),
                                                      get_num_search_folder_results(view),
                                                      fsearch_selection_get_num_selected(view->file_selection),

@@ -308,3 +308,31 @@ fsearch_database_work_modify_selection_get_type(FsearchDatabaseWork *work) {
     g_return_val_if_fail(work->kind == FSEARCH_DATABASE_WORK_MODIFY_SELECTION, NUM_FSEARCH_SELECTION_TYPES);
     return work->selection_type;
 }
+
+const char *
+fsearch_database_work_to_string(FsearchDatabaseWork *work) {
+    g_return_val_if_fail(work, "NULL");
+
+    switch (work->kind) {
+    case FSEARCH_DATABASE_WORK_LOAD_FROM_FILE:
+        return "LOAD_FROM_FILE";
+    case FSEARCH_DATABASE_WORK_RESCAN:
+        return "RESCAN";
+    case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
+        return "SAVE_TO_FILE";
+    case FSEARCH_DATABASE_WORK_SCAN:
+        return "SCAN";
+    case FSEARCH_DATABASE_WORK_SEARCH:
+        return "SEARCH";
+    case FSEARCH_DATABASE_WORK_SORT:
+        return "SORT";
+    case FSEARCH_DATABASE_WORK_GET_ITEM_INFO:
+        return "GET_ITEM_INFO";
+    case FSEARCH_DATABASE_WORK_MODIFY_SELECTION:
+        return "MODIFY_SELECTION";
+    case FSEARCH_DATABASE_WORK_QUIT:
+        return "QUIT";
+    default:
+        return "UNKNOWN";
+    }
+}

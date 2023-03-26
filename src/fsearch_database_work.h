@@ -113,4 +113,7 @@ fsearch_database_work_item_info_get_index(FsearchDatabaseWork *work);
 FsearchDatabaseEntryInfoFlags
 fsearch_database_work_item_info_get_flags(FsearchDatabaseWork *work);
 
+const char *
+fsearch_database_work_to_string(FsearchDatabaseWork *work);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseWork, fsearch_database_work_unref)
