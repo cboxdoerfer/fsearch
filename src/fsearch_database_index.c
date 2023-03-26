@@ -746,10 +746,21 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
             FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
             if (!folder) {
-                g_warning("[inotify_listener] no watched entry for watch descriptor found: %s (%d) -> %s",
-                          inotify_event_kind_to_string(get_index_event_kind_for_inotify_mask(event->mask)),
-                          event->mask,
-                          event->len ? event->name : "UNKNOWN");
+                if (event->mask & IN_IGNORED) {
+                    // The only expected situation when a watched entry is no longer present for a given event,
+                    // is when the IN_IGNORED bit is set. This happens after a watched folder was removed or
+                    // moved to a different filesystem and we already removed the watch descriptor while handling this
+                    // earlier event.
+                    g_debug("[inotify_listener] no watched entry for watch descriptor found: %s (%d) -> %s",
+                            inotify_event_kind_to_string(get_index_event_kind_for_inotify_mask(event->mask)),
+                            event->mask,
+                            event->len ? event->name : "UNKNOWN");
+                }
+                else {
+                    // The IN_IGNORED bit is not set and we don't have an associate watched entry. This is probably a
+                    // bug.
+                    g_assert_not_reached();
+                }
                 continue;
             }
             g_async_queue_push(self->event_queue,
