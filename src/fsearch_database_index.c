@@ -416,21 +416,19 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
         g_autoptr(GTimer) timer = g_timer_new();
         FsearchDatabaseEntryFolder *folder_entry_to_remove = (FsearchDatabaseEntryFolder *)entry;
 
-        // folder descendants of `folder_entry_to_remove` (if there are any) start immediately after it, i.e. at
-        // `idx + 1`
-        // folders = steal_descendants(self->folder_container, folder_entry_to_remove, entry_idx + 1);
         folders = fsearch_database_entries_container_steal_descendants(self->folder_container, folder_entry_to_remove, -1);
 
-        // to find all file descendants we start looking for them right at the position where
-        // `folder_entry_to_remove` would be inserted into the files array.
-        // uint32_t folder_entry_insert_idx = 0;
-        // darray_binary_search_with_data(self->files,
-        //                               entry,
-        //                               (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
-        //                               NULL,
-        //                               &folder_entry_insert_idx);
-        // files = steal_descendants(self->file_container, folder_entry_to_remove, folder_entry_insert_idx);
-        files = fsearch_database_entries_container_steal_descendants(self->file_container, folder_entry_to_remove, -1);
+        // It's worth to iterate over all folders to calculate the exact number of file descendants we must find,
+        // because this means we can steal the files in huge chunks, which is much faster.
+        uint32_t num_file_descendants = db_entry_folder_get_num_files(folder_entry_to_remove);
+        for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+            FsearchDatabaseEntryFolder *folder_entry = darray_get_item(folders, i);
+            num_file_descendants += db_entry_folder_get_num_files(folder_entry);
+        }
+
+        files = fsearch_database_entries_container_steal_descendants(self->file_container,
+                                                                     folder_entry_to_remove,
+                                                                     (int32_t)num_file_descendants);
         num_descendant_counted++;
         g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
     }

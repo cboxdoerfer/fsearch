@@ -262,20 +262,38 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
 
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
 
-    // NOTE: Unfortunately we don't know how many descendants a folder has in total, so we have to add them one by
-    // one
+    uint32_t num_known_descandants_stolen = 0;
+
     while (container_idx < darray_get_num_items(self->container)) {
+        if (num_known_descendants == num_known_descandants_stolen) {
+            // We've found all known descendants and are done here.
+            break;
+        }
         DynamicArray *container = darray_get_item(self->container, container_idx);
         uint32_t entry_idx = entry_start_idx;
-        while (entry_idx < darray_get_num_items(container)) {
-            FsearchDatabaseEntry *maybe_descendant = darray_get_item(container, entry_idx);
-            if (db_entry_is_descendant(maybe_descendant, folder)) {
-                darray_add_item(descendants, maybe_descendant);
-                darray_remove(container, entry_idx, 1);
-                continue;
-            }
-            entry_idx++;
+
+        if (num_known_descendants >= 0 && self->sort_type == DATABASE_INDEX_PROPERTY_PATH_FULL) {
+            // We know the exact number of descendants and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
+            // it is guaranteed that they are all sorted next to each other. Therefore we can use an optimized code
+            // paths where we steal them in large chunks, instead of one by one.
+            num_known_descandants_stolen += darray_steal(container,
+                                                         entry_start_idx,
+                                                         num_known_descendants - num_known_descandants_stolen,
+                                                         descendants);
         }
+        else {
+            // Unfortunately we have to steal/remove descendants one by one.
+            while (entry_idx < darray_get_num_items(container)) {
+                FsearchDatabaseEntry *maybe_descendant = darray_get_item(container, entry_idx);
+                if (db_entry_is_descendant(maybe_descendant, folder)) {
+                    darray_add_item(descendants, maybe_descendant);
+                    darray_remove(container, entry_idx, 1);
+                    continue;
+                }
+                entry_idx++;
+            }
+        }
+        // We must set the start index back to zero before we move on to the next entry container
         entry_start_idx = 0;
 
         // Remove the container if it became empty
@@ -286,6 +304,11 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
         else {
             container_idx++;
         }
+    }
+
+    if (num_known_descendants >= 0) {
+        // Ensure that we got the exact number of descendants
+        g_assert(num_known_descendants == darray_get_num_items(descendants));
     }
 
     return descendants;
