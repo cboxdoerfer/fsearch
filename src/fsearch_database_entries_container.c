@@ -248,31 +248,45 @@ fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, 
 
 DynamicArray *
 fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesContainer *self,
-                                                     FsearchDatabaseEntryFolder *folder) {
-    DynamicArray *descendants = darray_new(128);
+                                                     FsearchDatabaseEntryFolder *folder,
+                                                     int32_t num_known_descendants) {
+    g_return_val_if_fail(self, NULL);
+    g_return_val_if_fail(folder, NULL);
+
+    uint32_t container_idx = 0;
+    uint32_t entry_start_idx = 0;
+    if (self->sort_type == DATABASE_INDEX_PROPERTY_PATH_FULL) {
+        if (self->entry_type == DATABASE_ENTRY_TYPE_FOLDER) {
+            DynamicArray *container = get_container_for_entry(self, (FsearchDatabaseEntry *)folder, &container_idx);
+            darray_binary_search_with_data(container, folder, self->entry_comp_func, NULL, &entry_start_idx);
+        }
+    }
+
+    DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
 
     // NOTE: Unfortunately we don't know how many descendants a folder has in total, so we have to add them one by
     // one
-    uint32_t i = 0;
-    while (i < darray_get_num_items(self->container)) {
-        DynamicArray *c = darray_get_item(self->container, i);
-        uint32_t j = 0;
-        while (j < darray_get_num_items(c)) {
-            FsearchDatabaseEntry *e = darray_get_item(c, j);
-            if (db_entry_is_descendant(e, folder)) {
-                darray_add_item(descendants, e);
-                darray_remove(c, j, 1);
+    while (container_idx < darray_get_num_items(self->container)) {
+        DynamicArray *container = darray_get_item(self->container, container_idx);
+        uint32_t entry_idx = entry_start_idx;
+        while (entry_idx < darray_get_num_items(container)) {
+            FsearchDatabaseEntry *maybe_descendant = darray_get_item(container, entry_idx);
+            if (db_entry_is_descendant(maybe_descendant, folder)) {
+                darray_add_item(descendants, maybe_descendant);
+                darray_remove(container, entry_idx, 1);
                 continue;
             }
-            j++;
+            entry_idx++;
         }
+        entry_start_idx = 0;
+
         // Remove the container if it became empty
-        if (darray_get_num_items(c) == 0) {
-            darray_remove(self->container, i, 1);
-            g_clear_pointer(&c, darray_unref);
+        if (darray_get_num_items(container) == 0) {
+            darray_remove(self->container, container_idx, 1);
+            g_clear_pointer(&container, darray_unref);
         }
         else {
-            i++;
+            container_idx++;
         }
     }
 

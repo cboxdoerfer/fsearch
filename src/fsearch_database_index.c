@@ -419,7 +419,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
         // folder descendants of `folder_entry_to_remove` (if there are any) start immediately after it, i.e. at
         // `idx + 1`
         // folders = steal_descendants(self->folder_container, folder_entry_to_remove, entry_idx + 1);
-        folders = fsearch_database_entries_container_steal_descendants(self->folder_container, folder_entry_to_remove);
+        folders = fsearch_database_entries_container_steal_descendants(self->folder_container, folder_entry_to_remove, -1);
 
         // to find all file descendants we start looking for them right at the position where
         // `folder_entry_to_remove` would be inserted into the files array.
@@ -430,7 +430,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
         //                               NULL,
         //                               &folder_entry_insert_idx);
         // files = steal_descendants(self->file_container, folder_entry_to_remove, folder_entry_insert_idx);
-        files = fsearch_database_entries_container_steal_descendants(self->file_container, folder_entry_to_remove);
+        files = fsearch_database_entries_container_steal_descendants(self->file_container, folder_entry_to_remove, -1);
         num_descendant_counted++;
         g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
     }

@@ -38,7 +38,8 @@ fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, 
 
 DynamicArray *
 fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesContainer *self,
-                                                     FsearchDatabaseEntryFolder *folder);
+                                                     FsearchDatabaseEntryFolder *folder,
+                                                     int32_t num_known_descendants);
 
 FsearchDatabaseEntry *
 fsearch_database_entries_container_find(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntry *entry);
