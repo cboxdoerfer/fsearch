@@ -634,7 +634,9 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
             FsearchDatabaseEntryFolder *watched_entry = g_hash_table_lookup(self->handles, fid_bytes);
             if (!watched_entry) {
-                g_warning("[fanotify_listener] no watched entry for handle found!");
+                g_warning("[fanotify_listener] no watched entry for handle found: %llu -> %s",
+                          metadata->mask,
+                          file_name ? file_name : "UNKNOWN");
                 continue;
             }
 
@@ -744,7 +746,10 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
             FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
             if (!folder) {
-                g_warning("[inotify_listener] no watched entry for watch descriptor found!");
+                g_warning("[inotify_listener] no watched entry for watch descriptor found: %s (%d) -> %s",
+                          inotify_event_kind_to_string(get_index_event_kind_for_inotify_mask(event->mask)),
+                          event->mask,
+                          event->len ? event->name : "UNKNOWN");
                 continue;
             }
             g_async_queue_push(self->event_queue,
