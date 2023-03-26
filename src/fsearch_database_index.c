@@ -777,21 +777,32 @@ index_free(FsearchDatabaseIndex *self) {
 
     g_clear_pointer(&self->worker_ctx, g_main_context_unref);
 
-    g_source_destroy(self->inotify_monitor_source);
+    if (self->inotify_monitor_source) {
+        g_source_destroy(self->inotify_monitor_source);
+    }
     g_clear_pointer(&self->inotify_monitor_source, g_source_unref);
 
-    g_source_destroy(self->fanotify_monitor_source);
+    if (self->fanotify_monitor_source) {
+        g_source_destroy(self->fanotify_monitor_source);
+    }
     g_clear_pointer(&self->fanotify_monitor_source, g_source_unref);
 
     g_clear_pointer(&self->monitor_ctx, g_main_context_unref);
 
-    g_source_destroy(self->event_source);
+    if (self->event_source) {
+        g_source_destroy(self->event_source);
+    }
     g_clear_pointer(&self->event_source, g_source_unref);
 
     g_clear_pointer(&self->watch_descriptors, g_hash_table_unref);
     g_clear_pointer(&self->handles, g_hash_table_unref);
 
-    close(self->inotify_fd);
+    if (self->inotify_fd >= 0) {
+        close(self->inotify_fd);
+    }
+    if (self->fanotify_fd >= 0) {
+        close(self->fanotify_fd);
+    }
 
     g_clear_pointer(&self->include, fsearch_database_include_unref);
     g_clear_object(&self->exclude_manager);
@@ -842,35 +853,41 @@ fsearch_database_index_new(uint32_t id,
                                                 db_entry_get_sizeof_folder_entry(),
                                                 (GDestroyNotify)db_entry_destroy);
 
-    self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
-    self->handles = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
+    if (fsearch_database_include_get_monitored(self->include)) {
+        self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
+        self->handles = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
 
-    self->monitor_ctx = g_main_context_ref(monitor_ctx);
+        self->monitor_ctx = g_main_context_ref(monitor_ctx);
 
-    self->inotify_fd = inotify_init1(IN_NONBLOCK);
-    if (self->inotify_fd >= 0) {
-        self->inotify_monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
-        g_source_set_callback(self->inotify_monitor_source, (GSourceFunc)inotify_listener_cb, self, NULL);
-        g_source_attach(self->inotify_monitor_source, self->monitor_ctx);
+        self->inotify_fd = inotify_init1(IN_NONBLOCK);
+        if (self->inotify_fd >= 0) {
+            self->inotify_monitor_source = g_unix_fd_source_new(self->inotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
+            g_source_set_callback(self->inotify_monitor_source, (GSourceFunc)inotify_listener_cb, self, NULL);
+            g_source_attach(self->inotify_monitor_source, self->monitor_ctx);
+        }
+        else {
+        }
+
+        self->fanotify_fd = fanotify_init(FAN_CLOEXEC | FAN_NONBLOCK | FAN_CLASS_NOTIF | FAN_REPORT_DFID_NAME, O_RDONLY);
+        if (self->fanotify_fd >= 0) {
+            self->fanotify_monitor_source = g_unix_fd_source_new(self->fanotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
+            g_source_set_callback(self->fanotify_monitor_source, (GSourceFunc)fanotify_listener_cb, self, NULL);
+            g_source_attach(self->fanotify_monitor_source, self->monitor_ctx);
+        }
+        else {
+            g_warning("Failed to init fanotify: %d", errno);
+        }
+
+        self->worker_ctx = g_main_context_ref(worker_ctx);
+        self->event_source = g_timeout_source_new_seconds(1);
+        g_source_set_priority(self->event_source, G_PRIORITY_DEFAULT_IDLE);
+        g_source_set_callback(self->event_source, (GSourceFunc)process_queued_events_cb, self, NULL);
+        g_source_attach(self->event_source, self->worker_ctx);
     }
     else {
+        self->inotify_fd = -1;
+        self->fanotify_fd = -1;
     }
-
-    self->fanotify_fd = fanotify_init(FAN_CLOEXEC | FAN_NONBLOCK | FAN_CLASS_NOTIF | FAN_REPORT_DFID_NAME, O_RDONLY);
-    if (self->fanotify_fd >= 0) {
-        self->fanotify_monitor_source = g_unix_fd_source_new(self->fanotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
-        g_source_set_callback(self->fanotify_monitor_source, (GSourceFunc)fanotify_listener_cb, self, NULL);
-        g_source_attach(self->fanotify_monitor_source, self->monitor_ctx);
-    }
-    else {
-        g_warning("Failed to init fanotify: %d", errno);
-    }
-
-    self->worker_ctx = g_main_context_ref(worker_ctx);
-    self->event_source = g_timeout_source_new_seconds(1);
-    g_source_set_priority(self->event_source, G_PRIORITY_DEFAULT_IDLE);
-    g_source_set_callback(self->event_source, (GSourceFunc)process_queued_events_cb, self, NULL);
-    g_source_attach(self->event_source, self->worker_ctx);
 
     self->ref_count = 1;
 
