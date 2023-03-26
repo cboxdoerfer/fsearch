@@ -811,6 +811,8 @@ rescan_database(FsearchDatabase2 *self) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
+    emit_signal0(self, EVENT_SCAN_STARTED);
+
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = g_object_ref(self->include_manager);
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = g_object_ref(self->exclude_manager);
     const FsearchDatabaseIndexPropertyFlags flags = self->flags;
@@ -830,6 +832,19 @@ rescan_database(FsearchDatabase2 *self) {
     self->flags = flags;
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     self->store = g_steal_pointer(&store);
+
+    g_hash_table_remove_all(self->search_results);
+
+    emit_signal(self,
+                EVENT_SCAN_FINISHED,
+                fsearch_database_info_new(self->include_manager,
+                                          self->exclude_manager,
+                                          get_num_database_files(self),
+                                          get_num_database_folders(self)),
+                NULL,
+                1,
+                (GDestroyNotify)fsearch_database_info_unref,
+                NULL);
 }
 
 static void
@@ -955,9 +970,7 @@ work_queue_thread(gpointer data) {
             break;
         }
         case FSEARCH_DATABASE_WORK_RESCAN:
-            emit_signal0(self, EVENT_SCAN_STARTED);
             rescan_database(self);
-            emit_signal0(self, EVENT_SCAN_FINISHED);
             break;
         case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
             emit_signal0(self, EVENT_SAVE_STARTED);
