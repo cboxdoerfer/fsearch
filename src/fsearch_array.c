@@ -316,28 +316,52 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data) 
     return g_steal_pointer(&stolen_entries);
 }
 
-void
-darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
+static uint32_t
+darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *dest) {
     g_assert(array);
     g_assert(array->data);
 
     if (n_elements == 0) {
         // No need to remove anything
-        return;
+        return 0;
     }
 
     if (index >= array->num_items) {
-        return;
+        return 0;
     }
     else if (index + n_elements >= array->num_items) {
         // the end of the items to be removed is also the end of the array.
         // No need to memmove, just to decrement the number of array items.
-        array->num_items -= array->num_items - index;
-        return;
+        n_elements = array->num_items - index;
+        if (dest) {
+            darray_add_items(dest, array->data + index, n_elements);
+        }
+        array->num_items -= n_elements;
+        return n_elements;
     }
 
+    if (dest) {
+        darray_add_items(dest, array->data + index, n_elements);
+    }
     memmove(array->data + index, array->data + index + n_elements, (array->num_items - index - 1) * sizeof(void *));
     array->num_items -= n_elements;
+
+    return n_elements;
+}
+
+uint32_t
+darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
+    g_assert(array);
+    g_assert(array->data);
+
+    return darray_steal_or_remove(array, index, n_elements, NULL);
+}
+
+uint32_t
+darray_steal(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *destination) {
+    g_assert(destination);
+
+    return darray_steal_or_remove(array, index, n_elements, destination);
 }
 
 void
