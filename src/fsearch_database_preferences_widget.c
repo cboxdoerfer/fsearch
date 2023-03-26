@@ -27,7 +27,14 @@ struct _FsearchDatabasePreferencesWidget {
 
     gchar *exclude_files_str;
 };
-enum { COL_INCLUDE_ACTIVE, COL_INCLUDE_PATH, COL_INCLUDE_ONE_FS, COL_INCLUDE_ID, NUM_INCLUDE_COLUMNS };
+enum {
+    COL_INCLUDE_ACTIVE,
+    COL_INCLUDE_PATH,
+    COL_INCLUDE_ONE_FS,
+    COL_INCLUDE_MONITOR,
+    COL_INCLUDE_ID,
+    NUM_INCLUDE_COLUMNS
+};
 enum { COL_EXCLUDE_ACTIVE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
 
 enum { PROP_0, PROP_DATABASE, NUM_PROPERTIES };
@@ -194,7 +201,12 @@ remove_row(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer u
 }
 
 static void
-include_append_row(GtkListStore *store, gboolean active, const char *path, gboolean one_file_system, gint id) {
+include_append_row(GtkListStore *store,
+                   gboolean active,
+                   const char *path,
+                   gboolean one_file_system,
+                   gboolean monitor,
+                   gint id) {
     GtkTreeIter iter;
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store,
@@ -205,6 +217,8 @@ include_append_row(GtkListStore *store, gboolean active, const char *path, gbool
                        path,
                        COL_INCLUDE_ONE_FS,
                        one_file_system,
+                       COL_INCLUDE_MONITOR,
+                       monitor,
                        COL_INCLUDE_ID,
                        id,
                        -1);
@@ -212,7 +226,7 @@ include_append_row(GtkListStore *store, gboolean active, const char *path, gbool
 
 static void
 on_include_append_new_row(GtkListStore *store, const char *path) {
-    include_append_row(store, TRUE, path, FALSE, get_unique_include_id(store));
+    include_append_row(store, TRUE, path, FALSE, FALSE, get_unique_include_id(store));
 }
 
 static void
@@ -261,6 +275,12 @@ static void
 on_column_include_one_fs_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
     GtkTreeModel *include_model = data;
     on_column_toggled(path_str, include_model, COL_INCLUDE_ONE_FS);
+}
+
+static void
+on_column_include_monitor_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *include_model = data;
+    on_column_toggled(path_str, include_model, COL_INCLUDE_MONITOR);
 }
 
 static void
@@ -339,7 +359,7 @@ init_exclude_page(FsearchDatabasePreferencesWidget *self) {
 static void
 init_include_page(FsearchDatabasePreferencesWidget *self) {
     self->include_model =
-        gtk_list_store_new(NUM_INCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_INT);
+        gtk_list_store_new(NUM_INCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_INT);
     gtk_tree_view_set_model(self->include_list, GTK_TREE_MODEL(self->include_model));
 
     column_toggle_append(self->include_list,
@@ -347,14 +367,20 @@ init_include_page(FsearchDatabasePreferencesWidget *self) {
                          _("Active"),
                          COL_INCLUDE_ACTIVE,
                          G_CALLBACK(on_column_include_active_toggled),
-                         self);
+                         self->include_model);
     column_text_append(self->include_list, _("Path"), TRUE, COL_INCLUDE_PATH);
     column_toggle_append(self->include_list,
                          GTK_TREE_MODEL(self->include_model),
                          _("One Filesystem"),
                          COL_INCLUDE_ONE_FS,
                          G_CALLBACK(on_column_include_one_fs_toggled),
-                         self);
+                         self->include_model);
+    column_toggle_append(self->include_list,
+                         GTK_TREE_MODEL(self->include_model),
+                         _("Monitor"),
+                         COL_INCLUDE_MONITOR,
+                         G_CALLBACK(on_column_include_monitor_toggled),
+                         self->include_model);
 
     // Workaround for GTK bug: https://gitlab.gnome.org/GNOME/gtk/-/issues/3084
     g_signal_connect(self->include_list, "realize", G_CALLBACK(gtk_tree_view_columns_autosize), NULL);
@@ -377,6 +403,7 @@ populate_include_page(FsearchDatabasePreferencesWidget *self) {
                            fsearch_database_include_get_active(include),
                            fsearch_database_include_get_path(include),
                            fsearch_database_include_get_one_file_system(include),
+                           fsearch_database_include_get_monitored(include),
                            fsearch_database_include_get_id(include));
     }
 }
@@ -519,6 +546,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         g_autofree gchar *path = NULL;
         gboolean active = FALSE;
         gboolean one_file_system = FALSE;
+        gboolean monitor = FALSE;
         gint id = -1;
         gtk_tree_model_get(model,
                            &iter,
@@ -528,6 +556,8 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
                            &active,
                            COL_INCLUDE_ONE_FS,
                            &one_file_system,
+                           COL_INCLUDE_MONITOR,
+                           &monitor,
                            COL_INCLUDE_ID,
                            &id,
                            -1);
@@ -535,7 +565,7 @@ fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferenc
         if (path) {
             fsearch_database_include_manager_add(
                 include_manager,
-                fsearch_database_include_new(path, active, one_file_system, FALSE, FALSE, id));
+                fsearch_database_include_new(path, active, one_file_system, monitor, FALSE, id));
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
