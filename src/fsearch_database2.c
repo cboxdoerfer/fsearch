@@ -740,18 +740,29 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         return;
     }
 
+    g_autoptr(DynamicArray) file_container = fsearch_database_entries_container_get_containers(view->file_container);
+    g_autoptr(DynamicArray) folder_container = fsearch_database_entries_container_get_containers(view->folder_container);
+
     switch (type) {
     case FSEARCH_SELECTION_TYPE_CLEAR:
         fsearch_selection_unselect_all(view->file_selection);
         fsearch_selection_unselect_all(view->folder_selection);
         break;
     case FSEARCH_SELECTION_TYPE_ALL:
-        // fsearch_selection_select_all(view->folder_selection, view->folders);
-        // fsearch_selection_select_all(view->file_selection, view->files);
+        for (uint32_t i = 0; i < darray_get_num_items(file_container); ++i) {
+            fsearch_selection_select_all(view->file_selection, darray_get_item(file_container, i));
+        }
+        for (uint32_t i = 0; i < darray_get_num_items(folder_container); ++i) {
+            fsearch_selection_select_all(view->folder_selection, darray_get_item(folder_container, i));
+        }
         break;
     case FSEARCH_SELECTION_TYPE_INVERT:
-        //        fsearch_selection_invert(view->folder_selection, view->folders);
-        //       fsearch_selection_invert(view->folder_selection, view->files);
+        for (uint32_t i = 0; i < darray_get_num_items(file_container); ++i) {
+            fsearch_selection_invert(view->file_selection, darray_get_item(file_container, i));
+        }
+        for (uint32_t i = 0; i < darray_get_num_items(folder_container); ++i) {
+            fsearch_selection_invert(view->folder_selection, darray_get_item(folder_container, i));
+        }
         break;
     case FSEARCH_SELECTION_TYPE_SELECT:
         if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FILE) {
