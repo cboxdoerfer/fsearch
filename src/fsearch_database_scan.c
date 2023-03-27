@@ -45,6 +45,7 @@ typedef struct DatabaseWalkContext {
     int32_t fanotify_fd;
     bool one_file_system;
     GTimer *timer;
+    GMutex *monitor_lock;
     GCancellable *cancellable;
     void (*status_cb)(const char *);
 
@@ -128,6 +129,9 @@ add_folder(DatabaseWalkContext *walk_context,
     db_entry_set_type(folder, DATABASE_ENTRY_TYPE_FOLDER);
     db_entry_set_mtime(folder, mtime);
     db_entry_set_parent(folder, (FsearchDatabaseEntryFolder *)parent);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(walk_context->monitor_lock);
+    g_assert_nonnull(locker);
 
     if (walk_context->fanotify_fd >= 0 && add_fanotify_mark(walk_context, path, folder)) {
         // g_debug("added fanotify mark: %s", path);
@@ -259,6 +263,7 @@ db_scan_folder(const char *path,
                FsearchDatabaseExcludeManager *exclude_manager,
                GHashTable *handles,
                GHashTable *watch_descriptors,
+               GMutex *monitor_lock,
                int32_t fanotify_fd,
                int32_t inotify_fd,
                bool one_file_system,
@@ -309,6 +314,7 @@ db_scan_folder(const char *path,
         .status_cb = status_cb,
         .root_device_id = root_st.st_dev,
         .file_handle_payload = 0,
+        .monitor_lock = monitor_lock,
     };
 
     if (!parent) {

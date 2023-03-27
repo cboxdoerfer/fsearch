@@ -39,6 +39,7 @@ struct _FsearchDatabaseIndex {
     GSource *inotify_monitor_source;
     GSource *fanotify_monitor_source;
     GMainContext *monitor_ctx;
+    GMutex monitor_lock;
 
     GSource *event_source;
     GMainContext *worker_ctx;
@@ -346,6 +347,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
                                self->exclude_manager,
                                self->handles,
                                self->watch_descriptors,
+                               &self->monitor_lock,
                                self->fanotify_fd,
                                self->inotify_fd,
                                fsearch_database_include_get_one_file_system(self->include),
@@ -630,7 +632,10 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             FsearchDatabaseIndexHandleData *handle = (FsearchDatabaseIndexHandleData *)&fid->fsid;
             g_autoptr(GBytes) fid_bytes = create_bytes_for_static_handle(handle);
 
+            g_mutex_lock(&self->monitor_lock);
             FsearchDatabaseEntryFolder *watched_entry = g_hash_table_lookup(self->handles, fid_bytes);
+            g_mutex_unlock(&self->monitor_lock);
+
             if (!watched_entry) {
                 g_warning("[fanotify_listener] no watched entry for handle found: %llu -> %s",
                           metadata->mask,
@@ -742,7 +747,10 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         for (char *ptr = buf; ptr < buf + len; ptr += sizeof(struct inotify_event) + event->len) {
             event = (const struct inotify_event *)ptr;
 
+            g_mutex_lock(&self->monitor_lock);
             FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
+            g_mutex_unlock(&self->monitor_lock);
+
             if (!folder) {
                 if (event->mask & IN_IGNORED) {
                     // The only expected situation when a watched entry is no longer present for a given event,
@@ -804,6 +812,7 @@ index_free(FsearchDatabaseIndex *self) {
     if (self->fanotify_fd >= 0) {
         close(self->fanotify_fd);
     }
+    g_mutex_clear(&self->monitor_lock);
 
     g_clear_pointer(&self->include, fsearch_database_include_unref);
     g_clear_object(&self->exclude_manager);
@@ -851,6 +860,8 @@ fsearch_database_index_new(uint32_t id,
     self->folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
                                                 db_entry_get_sizeof_folder_entry(),
                                                 (GDestroyNotify)db_entry_destroy);
+
+    g_mutex_init(&self->monitor_lock);
 
     if (fsearch_database_include_get_monitored(self->include)) {
         self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
@@ -1035,6 +1046,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                        self->exclude_manager,
                        self->handles,
                        self->watch_descriptors,
+                       &self->monitor_lock,
                        self->fanotify_fd,
                        self->inotify_fd,
                        fsearch_database_include_get_one_file_system(self->include),
