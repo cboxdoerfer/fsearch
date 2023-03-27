@@ -89,6 +89,6 @@ bool
 fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable);
 
 void
-fsearch_database_index_set_propagate_work(FsearchDatabaseIndex *self, bool propagate);
+fsearch_database_index_start_monitoring(FsearchDatabaseIndex *self, bool start);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)

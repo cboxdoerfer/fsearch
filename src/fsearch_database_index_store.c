@@ -489,7 +489,6 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
         }
         g_ptr_array_add(self->indices, fsearch_database_index_ref(index));
         fsearch_database_index_lock(index);
-        fsearch_database_index_set_propagate_work(index, true);
         g_autoptr(DynamicArray) files = fsearch_database_index_get_files(index);
         g_autoptr(DynamicArray) folders = fsearch_database_index_get_folders(index);
         darray_add_array(store_files, files);
@@ -573,4 +572,17 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
     self->running = true;
 
     return;
+}
+
+void
+fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *self) {
+    g_return_if_fail(self);
+    lock_all_indices(self);
+
+    for (uint32_t i = 0; i < self->indices->len; ++i) {
+        FsearchDatabaseIndex *index = g_ptr_array_index(self->indices, i);
+        fsearch_database_index_start_monitoring(index, true);
+    }
+
+    unlock_all_indices(self);
 }

@@ -45,8 +45,6 @@ struct _FsearchDatabaseIndex {
 
     GAsyncQueue *event_queue;
 
-    bool propagate_work;
-
     GMutex mutex;
 
     uint32_t id;
@@ -56,6 +54,7 @@ struct _FsearchDatabaseIndex {
     FsearchDatabaseIndexEventFunc event_func;
     gpointer event_func_data;
 
+    volatile gint monitor;
     volatile gint initialized;
 
     volatile gint ref_count;
@@ -102,10 +101,11 @@ propagate_event(FsearchDatabaseIndex *self,
                 DynamicArray *folders,
                 DynamicArray *files,
                 FsearchDatabaseEntry *entry) {
-    if (self->propagate_work && self->event_func) {
-        g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files, entry);
-        self->event_func(self, event, self->event_func_data);
+    if (!self->event_func) {
+        return;
     }
+    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files, entry);
+    self->event_func(self, event, self->event_func_data);
 }
 
 static void
@@ -387,7 +387,8 @@ process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
 // steal_descendants(DynamicArray *array, FsearchDatabaseEntryFolder *folder, uint32_t idx) {
 //     DynamicArray *descendants = darray_new(128);
 //
-//     // NOTE: Unfortunately we don't know how many descendants a folder has in total, so we have to add them one by
+//     // NOTE: Unfortunately we don't know how many descendants a folder has in total, so we have to add them one
+//     by
 //     // one
 //     for (uint32_t i = idx; i < darray_get_num_items(array); ++i) {
 //         FsearchDatabaseEntry *e = darray_get_item(array, i);
@@ -565,8 +566,8 @@ process_queued_events_cb(gpointer user_data) {
     // Assert that this function is running is the worker thread
     g_assert(g_main_context_is_owner(self->worker_ctx));
 
-    // Don't process events until the index is ready
-    if (g_atomic_int_get(&self->initialized) == 0) {
+    // Don't process events until the monitoring was enabled and the index was initialized
+    if (g_atomic_int_get(&self->monitor) == 0 || g_atomic_int_get(&self->initialized) == 0) {
         return G_SOURCE_CONTINUE;
     }
 
@@ -746,16 +747,16 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 if (event->mask & IN_IGNORED) {
                     // The only expected situation when a watched entry is no longer present for a given event,
                     // is when the IN_IGNORED bit is set. This happens after a watched folder was removed or
-                    // moved to a different filesystem and we already removed the watch descriptor while handling this
-                    // earlier event.
+                    // moved to a different filesystem and we already removed the watch descriptor while handling
+                    // this earlier event.
                     g_debug("[inotify_listener] no watched entry for watch descriptor found: %s (%d) -> %s",
                             inotify_event_kind_to_string(get_index_event_kind_for_inotify_mask(event->mask)),
                             event->mask,
                             event->len ? event->name : "UNKNOWN");
                 }
                 else {
-                    // The IN_IGNORED bit is not set and we don't have an associate watched entry. This is probably a
-                    // bug.
+                    // The IN_IGNORED bit is not set and we don't have an associate watched entry. This is probably
+                    // a bug.
                     g_assert_not_reached();
                 }
                 continue;
@@ -838,8 +839,6 @@ fsearch_database_index_new(uint32_t id,
     self->flags = flags;
 
     self->event_queue = g_async_queue_new_full((GDestroyNotify)monitor_event_context_free);
-
-    self->propagate_work = false;
 
     self->event_func = event_func;
     self->event_func_data = event_func_data;
@@ -1063,7 +1062,6 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
         g_atomic_int_set(&self->initialized, 1);
 
-        process_queued_events(self);
         res = true;
     }
     else {
@@ -1074,8 +1072,8 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 }
 
 void
-fsearch_database_index_set_propagate_work(FsearchDatabaseIndex *self, bool propagate) {
+fsearch_database_index_start_monitoring(FsearchDatabaseIndex *self, bool start) {
     g_return_if_fail(self);
 
-    self->propagate_work = propagate;
+    g_atomic_int_set(&self->monitor, start);
 }

@@ -85,6 +85,9 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
                                    FsearchDatabaseIndexEventFunc event_func,
                                    gpointer event_func_data);
 
+void
+fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *self);
+
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, fsearch_database_index_store_unref)
 
 G_END_DECLS

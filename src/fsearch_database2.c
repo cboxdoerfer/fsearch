@@ -833,6 +833,8 @@ rescan_database(FsearchDatabase2 *self) {
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     self->store = g_steal_pointer(&store);
 
+    fsearch_database_index_store_start_monitoring(self->store);
+
     g_hash_table_remove_all(self->search_results);
 
     emit_signal(self,
@@ -882,6 +884,8 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     self->flags = flags;
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     self->store = g_steal_pointer(&store);
+
+    fsearch_database_index_store_start_monitoring(self->store);
 
     g_hash_table_remove_all(self->search_results);
 
