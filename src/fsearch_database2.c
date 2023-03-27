@@ -461,7 +461,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     if (!file_container && !folder_container) {
         sort_order = DATABASE_INDEX_PROPERTY_NAME;
         file_container = fsearch_database_index_store_get_files(self->store, sort_order);
-        folder_container = fsearch_database_index_store_get_files(self->store, sort_order);
+        folder_container = fsearch_database_index_store_get_folders(self->store, sort_order);
     }
 
     g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(file_container);
