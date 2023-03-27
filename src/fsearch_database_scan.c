@@ -144,9 +144,6 @@ add_folder(DatabaseWalkContext *walk_context,
         g_hash_table_insert(walk_context->watch_descriptors, GINT_TO_POINTER(wd), folder);
         darray_add_item(walk_context->watch_descriptor_array, GINT_TO_POINTER(wd));
     }
-    else {
-        g_debug("don't monitor: %s", path);
-    }
 
     darray_add_item(walk_context->folders, folder);
 
