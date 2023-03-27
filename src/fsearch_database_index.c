@@ -350,6 +350,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
                                &self->monitor_lock,
                                self->fanotify_fd,
                                self->inotify_fd,
+                               self->id,
                                fsearch_database_include_get_one_file_system(self->include),
                                NULL,
                                NULL)) {
@@ -523,7 +524,10 @@ process_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContex
         return;
     }
 
-    g_debug("process %s: %s", inotify_event_kind_to_string(ctx->kind), ctx->path ? ctx->path->str : "NULL");
+    g_debug("[index-%d] %s: %s",
+            db_entry_get_db_index((FsearchDatabaseEntry *)ctx->watched_entry),
+            inotify_event_kind_to_string(ctx->kind),
+            ctx->path ? ctx->path->str : "NULL");
 
     switch (ctx->kind) {
     case IN_ATTRIB:
@@ -1049,6 +1053,7 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                        &self->monitor_lock,
                        self->fanotify_fd,
                        self->inotify_fd,
+                       self->id,
                        fsearch_database_include_get_one_file_system(self->include),
                        cancellable,
                        NULL)) {

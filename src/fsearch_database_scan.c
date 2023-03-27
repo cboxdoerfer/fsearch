@@ -43,6 +43,7 @@ typedef struct DatabaseWalkContext {
     DynamicArray *watch_descriptor_array;
     int32_t inotify_fd;
     int32_t fanotify_fd;
+    uint32_t index_id;
     bool one_file_system;
     GTimer *timer;
     GMutex *monitor_lock;
@@ -129,6 +130,7 @@ add_folder(DatabaseWalkContext *walk_context,
     db_entry_set_type(folder, DATABASE_ENTRY_TYPE_FOLDER);
     db_entry_set_mtime(folder, mtime);
     db_entry_set_parent(folder, (FsearchDatabaseEntryFolder *)parent);
+    db_entry_set_db_index(folder, walk_context->index_id);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(walk_context->monitor_lock);
     g_assert_nonnull(locker);
@@ -263,6 +265,7 @@ db_scan_folder(const char *path,
                GMutex *monitor_lock,
                int32_t fanotify_fd,
                int32_t inotify_fd,
+               uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
                void (*status_cb)(const char *)) {
@@ -306,6 +309,7 @@ db_scan_folder(const char *path,
         .exclude_manager = exclude_manager,
         .path = path_string,
         .one_file_system = one_file_system,
+        .index_id = index_id,
         .timer = timer,
         .cancellable = cancellable,
         .status_cb = status_cb,

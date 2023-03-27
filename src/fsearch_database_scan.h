@@ -17,6 +17,7 @@ db_scan_folder(const char *path,
                GMutex *monitor_lock,
                int32_t fanotify_fd,
                int32_t inotify_fd,
+               uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
                void (*status_cb)(const char *));
