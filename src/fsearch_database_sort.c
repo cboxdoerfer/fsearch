@@ -137,16 +137,13 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
     DynamicArrayCompareDataFunc func = get_sort_func(new_sort_order);
     bool parallel_sort = true;
 
-    FsearchDatabaseEntryCompareContext *comp_ctx = NULL;
+    FsearchDatabaseEntryCompareContext *comp_ctx = db_entry_compare_context_new(NULL, NULL, NULL);
     if (new_sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // Sorting by type can be really slow, because it accesses the filesystem to determine the type of files
         // To mitigate that issue to a certain degree we cache the filetype for each file
         // To avoid duplicating the filetype in memory for each file, we also store each filetype only once in
         // a separate hash table.
         // We also disable parallel sorting.
-        comp_ctx = calloc(1, sizeof(FsearchDatabaseEntryCompareContext));
-        comp_ctx->file_type_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
-        comp_ctx->entry_to_file_type_table = g_hash_table_new(NULL, NULL);
         parallel_sort = false;
     }
 
@@ -159,11 +156,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
     *files_out = sort_entries(files_in, func, cancellable, parallel_sort, comp_ctx);
     *sort_order_out = new_sort_order;
 
-    if (comp_ctx) {
-        g_clear_pointer(&comp_ctx->entry_to_file_type_table, g_hash_table_unref);
-        g_clear_pointer(&comp_ctx->file_type_table, g_hash_table_unref);
-        g_clear_pointer(&comp_ctx, free);
-    }
+    g_clear_pointer(&comp_ctx, db_entry_compare_context_free);
 
     if (g_cancellable_is_cancelled(cancellable)) {
         g_clear_pointer(folders_out, darray_unref);

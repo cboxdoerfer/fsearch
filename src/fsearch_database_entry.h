@@ -4,6 +4,8 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#include "fsearch_array.h"
+
 typedef enum {
     DATABASE_ENTRY_TYPE_NONE,
     DATABASE_ENTRY_TYPE_FOLDER,
@@ -18,7 +20,18 @@ typedef struct FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
 typedef struct FsearchDatabaseEntryCompareContext {
     GHashTable *file_type_table;
     GHashTable *entry_to_file_type_table;
+    DynamicArrayCompareDataFunc next_comp_func;
+    void *next_comp_func_data;
+    GDestroyNotify next_comp_func_data_free_func;
 } FsearchDatabaseEntryCompareContext;
+
+void
+db_entry_compare_context_free(FsearchDatabaseEntryCompareContext *ctx);
+
+FsearchDatabaseEntryCompareContext *
+db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
+                             void *next_comp_func_data,
+                             GDestroyNotify next_comp_func_data_free_func);
 
 bool
 db_entry_is_folder(FsearchDatabaseEntry *entry);

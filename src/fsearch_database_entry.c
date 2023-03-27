@@ -51,6 +51,33 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
     g_string_append_c(str, G_DIR_SEPARATOR);
 }
 
+void
+db_entry_compare_context_free(FsearchDatabaseEntryCompareContext *ctx) {
+    g_return_if_fail(ctx);
+
+    g_clear_pointer(&ctx->file_type_table, g_hash_table_unref);
+    g_clear_pointer(&ctx->entry_to_file_type_table, g_hash_table_unref);
+    if (ctx->next_comp_func_data_free_func) {
+        g_clear_pointer(&ctx->next_comp_func_data, ctx->next_comp_func_data_free_func);
+    }
+    g_clear_pointer(&ctx, free);
+}
+
+FsearchDatabaseEntryCompareContext *
+db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
+                             void *next_comp_func_data,
+                             GDestroyNotify next_comp_func_data_free_func) {
+    FsearchDatabaseEntryCompareContext *ctx = calloc(1, sizeof(FsearchDatabaseEntryCompareContext));
+    g_assert(ctx);
+
+    ctx->file_type_table = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
+    ctx->entry_to_file_type_table = g_hash_table_new(NULL, NULL);
+    ctx->next_comp_func = next_comp_func;
+    ctx->next_comp_func_data = next_comp_func_data;
+    ctx->next_comp_func_data_free_func = next_comp_func_data_free_func;
+    return ctx;
+}
+
 bool
 db_entry_is_folder(FsearchDatabaseEntry *entry) {
     return entry->type == DATABASE_ENTRY_TYPE_FOLDER;
