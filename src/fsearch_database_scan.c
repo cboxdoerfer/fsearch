@@ -8,9 +8,7 @@
 #include <config.h>
 #include <dirent.h>
 #include <fcntl.h>
-#include <fnmatch.h>
 #include <glib/gi18n.h>
-#include <stdio.h>
 
 #ifdef HAVE_FANOTIFY
 #include <sys/fanotify.h>
