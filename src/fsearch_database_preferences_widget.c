@@ -200,6 +200,27 @@ remove_row(GtkTreeModel *model, GtkTreePath *path, GtkTreeIter *iter, gpointer u
     gtk_list_store_remove(GTK_LIST_STORE(model), iter);
 }
 
+static bool
+include_path_is_unique(GtkListStore *store, const char *new_path) {
+    g_return_val_if_fail(store, false);
+    g_return_val_if_fail(new_path, false);
+
+    GtkTreeModel *model = GTK_TREE_MODEL(store);
+
+    GtkTreeIter iter = {};
+    gboolean valid = gtk_tree_model_get_iter_first(model, &iter);
+    while (valid) {
+        g_autofree char *path = NULL;
+        gtk_tree_model_get(model, &iter, COL_INCLUDE_PATH, &path, -1);
+        if (g_strcmp0(path, new_path) == 0) {
+            return false;
+        }
+
+        valid = gtk_tree_model_iter_next(model, &iter);
+    }
+    return true;
+}
+
 static void
 include_append_row(GtkListStore *store,
                    gboolean active,
@@ -207,6 +228,9 @@ include_append_row(GtkListStore *store,
                    gboolean one_file_system,
                    gboolean monitor,
                    gint id) {
+    if (!include_path_is_unique(store, path)) {
+        return;
+    }
     GtkTreeIter iter;
     gtk_list_store_append(store, &iter);
     gtk_list_store_set(store,
