@@ -30,6 +30,24 @@ else
   have_malloc_trim = false
 endif
 
+# Check if the build platform supports using fanotify without the CAP_SYS_ADMIN capability
+fanotify_support_result = cc.run('''
+    #include <sys/fanotify.h>
+    #include <fcntl.h>
+
+    int main (int argc, char *argv[]) {
+      int fd = fanotify_init (FAN_CLOEXEC|FAN_CLASS_NOTIF|FAN_REPORT_DFID_NAME, O_RDONLY);
+      return fd < 0 ? 1 : 0;
+    }
+  ''',
+  name: 'fanotify works without additional capabilities')
+
+if fanotify_support_result.compiled() and fanotify_support_result.returncode() == 0
+  have_fanotify = true
+else
+  have_fanotify = false
+endif
+
 config_h = configuration_data()
 config_h.set('HAVE_MALLOC_TRIM', have_malloc_trim)
 config_h.set('HAVE_FANOTIFY', have_fanotify)

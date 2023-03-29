@@ -5,15 +5,20 @@
 #include "fsearch_database_entry.h"
 #include "fsearch_database_sort.h"
 
+#include <config.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <fnmatch.h>
 #include <glib/gi18n.h>
 #include <stdio.h>
+
+#ifdef HAVE_FANOTIFY
 #include <sys/fanotify.h>
+#include <sys/vfs.h>
+#endif
+
 #include <sys/inotify.h>
 #include <sys/stat.h>
-#include <sys/vfs.h>
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
@@ -21,9 +26,11 @@
     (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
      | IN_CLOSE_WRITE)
 
+#ifdef HAVE_FANOTIFY
 #define FANOTIFY_FOLDER_MASK                                                                                           \
     (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
      | FAN_MOVE_SELF | FAN_EVENT_ON_CHILD | FAN_ONDIR)
+#endif
 
 enum {
     WALK_OK = 0,
@@ -54,6 +61,7 @@ typedef struct DatabaseWalkContext {
     dev_t root_device_id;
 } DatabaseWalkContext;
 
+#ifdef HAVE_FANOTIFY
 // copied and modified from tracker-miners:
 // https://gitlab.gnome.org/GNOME/tracker-miners/-/blob/master/src/miners/fs/tracker-monitor-fanotify.c
 
@@ -67,11 +75,12 @@ static inline GBytes *
 create_bytes_for_handle(FsearchDatabaseIndexHandleData *handle) {
     return g_bytes_new_take(handle, sizeof(FsearchDatabaseIndexHandleData) + handle->handle.handle_bytes);
 }
+#endif
 
 static bool
 add_fanotify_mark(DatabaseWalkContext *ctx, const char *path, FsearchDatabaseEntry *watched_folder) {
+#ifdef HAVE_FANOTIFY
     g_assert(watched_folder != NULL);
-
     struct statfs buf;
     if (statfs(path, &buf) < 0) {
         if (errno != ENOENT)
@@ -113,8 +122,9 @@ add_fanotify_mark(DatabaseWalkContext *ctx, const char *path, FsearchDatabaseEnt
         g_hash_table_remove(ctx->handles, handle_bytes);
         return false;
     }
-
     return true;
+#endif
+    return false;
 }
 
 // end tracker-miners copy

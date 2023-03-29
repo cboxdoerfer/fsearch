@@ -7,9 +7,12 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_memory_pool.h"
 
+#include <config.h>
 #include <glib-unix.h>
 #include <glib.h>
+#ifdef HAVE_FANOTIFY
 #include <sys/fanotify.h>
+#endif
 #include <sys/inotify.h>
 
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
@@ -18,9 +21,11 @@
     (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
      | IN_CLOSE_WRITE)
 
+#ifdef HAVE_FANOTIFY
 #define FANOTIFY_FOLDER_MASK                                                                                           \
     (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
      | FAN_MOVE_SELF | FAN_EVENT_ON_CHILD | FAN_ONDIR)
+#endif
 
 struct _FsearchDatabaseIndex {
     FsearchDatabaseInclude *include;
@@ -72,14 +77,6 @@ typedef struct {
     bool is_dir;
     bool is_inotify_event;
 } FsearchDatabaseIndexMonitorEventContext;
-
-// From tracker-miners:
-// https://gitlab.gnome.org/GNOME/tracker-miners/-/blob/master/src/miners/fs/tracker-monitor-fanotify.c
-/* Binary compatible with the last portions of fanotify_event_info_fid */
-typedef struct {
-    fsid_t fsid;
-    struct file_handle handle;
-} FsearchDatabaseIndexHandleData;
 
 static uint32_t num_file_deletes = 0;
 static uint32_t num_folder_deletes = 0;
@@ -585,6 +582,15 @@ process_queued_events_cb(gpointer user_data) {
     return G_SOURCE_CONTINUE;
 }
 
+#ifdef HAVE_FANOTIFY
+// From tracker-miners:
+// https://gitlab.gnome.org/GNOME/tracker-miners/-/blob/master/src/miners/fs/tracker-monitor-fanotify.c
+/* Binary compatible with the last portions of fanotify_event_info_fid */
+typedef struct {
+    fsid_t fsid;
+    struct file_handle handle;
+} FsearchDatabaseIndexHandleData;
+
 static inline GBytes *
 create_bytes_for_static_handle(FsearchDatabaseIndexHandleData *handle) {
     return g_bytes_new_static(handle, sizeof(FsearchDatabaseIndexHandleData) + handle->handle.handle_bytes);
@@ -688,6 +694,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
     return G_SOURCE_REMOVE;
 }
+#endif
 
 static uint32_t
 get_index_event_kind_for_inotify_mask(uint32_t mask) {
@@ -882,6 +889,7 @@ fsearch_database_index_new(uint32_t id,
         else {
         }
 
+#ifdef HAVE_FANOTIFY
         self->fanotify_fd = fanotify_init(FAN_CLOEXEC | FAN_NONBLOCK | FAN_CLASS_NOTIF | FAN_REPORT_DFID_NAME, O_RDONLY);
         if (self->fanotify_fd >= 0) {
             self->fanotify_monitor_source = g_unix_fd_source_new(self->fanotify_fd, G_IO_IN | G_IO_ERR | G_IO_HUP);
@@ -891,6 +899,7 @@ fsearch_database_index_new(uint32_t id,
         else {
             g_warning("Failed to init fanotify: %d", errno);
         }
+#endif
 
         self->worker_ctx = g_main_context_ref(worker_ctx);
         self->event_source = g_timeout_source_new_seconds(1);
