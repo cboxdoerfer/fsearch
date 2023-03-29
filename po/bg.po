@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-01-27 12:46+0000\n"
+"PO-Revision-Date: 2023-03-30 12:41+0000\n"
 "Last-Translator: Kalam Mekhar <kirilovkiril678@gmail.com>\n"
 "Language-Team: Bulgarian <https://hosted.weblate.org/projects/fsearch/"
 "translations/bg/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -1068,8 +1068,8 @@ msgid ""
 msgstr ""
 "<b>Добавяне на на папка към базата с данни:</b>\n"
 "\n"
-"Този бутон отваря диалог, където ще можете да изберете папка, която да "
-"добавите папка към базата с данни за търсене."
+"Този бутон отваря диалог, където ще можете да изберете папка, която искате "
+"да добавите към базата с данни за търсене."
 
 #: src/fsearch_preferences.ui:1802
 msgid ""
