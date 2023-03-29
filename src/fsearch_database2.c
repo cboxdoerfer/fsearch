@@ -48,6 +48,7 @@ typedef struct FsearchDatabaseSearchView {
     FsearchDatabaseEntriesContainer *folder_container;
     GtkSortType sort_type;
     FsearchDatabaseIndexProperty sort_order;
+    FsearchDatabaseIndexProperty secondardy_sort_order;
     GHashTable *file_selection;
     GHashTable *folder_selection;
 } FsearchDatabaseSearchView;
@@ -103,14 +104,25 @@ search_view_new(FsearchQuery *query,
                 DynamicArray *folders,
                 GHashTable *old_selection,
                 FsearchDatabaseIndexProperty sort_order,
+                FsearchDatabaseIndexProperty secondary_sort_order,
                 GtkSortType sort_type) {
     FsearchDatabaseSearchView *view = calloc(1, sizeof(FsearchDatabaseSearchView));
     g_assert(view);
     view->query = fsearch_query_ref(query);
-    view->folder_container =
-        fsearch_database_entries_container_new(folders, TRUE, sort_order, DATABASE_ENTRY_TYPE_FOLDER, NULL);
-    view->file_container = fsearch_database_entries_container_new(files, TRUE, sort_order, DATABASE_ENTRY_TYPE_FILE, NULL);
+    view->folder_container = fsearch_database_entries_container_new(folders,
+                                                                    TRUE,
+                                                                    sort_order,
+                                                                    secondary_sort_order,
+                                                                    DATABASE_ENTRY_TYPE_FOLDER,
+                                                                    NULL);
+    view->file_container = fsearch_database_entries_container_new(files,
+                                                                  TRUE,
+                                                                  sort_order,
+                                                                  secondary_sort_order,
+                                                                  DATABASE_ENTRY_TYPE_FILE,
+                                                                  NULL);
     view->sort_order = sort_order;
+    view->secondardy_sort_order = secondary_sort_order;
     view->sort_type = sort_type;
     view->file_selection = fsearch_selection_new();
     view->folder_selection = fsearch_selection_new();
@@ -395,6 +407,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(DynamicArray) folders_in = fsearch_database_entries_container_get_joined(view->folder_container);
 
     fsearch_database_sort_results(view->sort_order,
+                                  view->secondardy_sort_order,
                                   sort_order,
                                   files_in,
                                   folders_in,
@@ -403,18 +416,27 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
                                   &files_new,
                                   &folders_new,
                                   &view->sort_order,
+                                  &view->secondardy_sort_order,
                                   cancellable);
 
     if (files_new) {
         g_clear_pointer(&view->file_container, fsearch_database_entries_container_unref);
-        view->file_container =
-            fsearch_database_entries_container_new(files_new, TRUE, view->sort_order, DATABASE_ENTRY_TYPE_FILE, NULL);
+        view->file_container = fsearch_database_entries_container_new(files_new,
+                                                                      TRUE,
+                                                                      view->sort_order,
+                                                                      view->secondardy_sort_order,
+                                                                      DATABASE_ENTRY_TYPE_FILE,
+                                                                      NULL);
         view->sort_type = sort_type;
     }
     if (folders_new) {
         g_clear_pointer(&view->folder_container, fsearch_database_entries_container_unref);
-        view->folder_container =
-            fsearch_database_entries_container_new(folders_new, TRUE, view->sort_order, DATABASE_ENTRY_TYPE_FOLDER, NULL);
+        view->folder_container = fsearch_database_entries_container_new(folders_new,
+                                                                        TRUE,
+                                                                        view->sort_order,
+                                                                        view->secondardy_sort_order,
+                                                                        DATABASE_ENTRY_TYPE_FOLDER,
+                                                                        NULL);
         view->sort_type = sort_type;
     }
 
@@ -472,8 +494,14 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
         num_files = search_result->files ? darray_get_num_items(search_result->files) : 0;
         num_folders = search_result->folders ? darray_get_num_items(search_result->folders) : 0;
 
-        FsearchDatabaseSearchView *view =
-            search_view_new(query, search_result->files, search_result->folders, NULL, sort_order, sort_type);
+        // After searching the secondary sort order will always be NONE, because we only search in pre-sorted indexes
+        FsearchDatabaseSearchView *view = search_view_new(query,
+                                                          search_result->files,
+                                                          search_result->folders,
+                                                          NULL,
+                                                          sort_order,
+                                                          DATABASE_INDEX_PROPERTY_NONE,
+                                                          sort_type);
         g_hash_table_insert(self->search_results, GUINT_TO_POINTER(id), view);
 
         g_clear_pointer(&search_result->files, darray_unref);

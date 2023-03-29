@@ -357,10 +357,15 @@ db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
 static const char *
 get_file_type(FsearchDatabaseEntry *entry, GHashTable *file_type_table, GHashTable *entry_table) {
+    char *cached_type = g_hash_table_lookup(entry_table, entry);
+    if (cached_type) {
+        return cached_type;
+    }
+
     const char *name = db_entry_get_name_raw_for_display(entry);
     g_autofree char *type = fsearch_file_utils_get_file_type_non_localized(name,
                                                                            db_entry_is_folder(entry) ? TRUE : FALSE);
-    char *cached_type = g_hash_table_lookup(file_type_table, type);
+    cached_type = g_hash_table_lookup(file_type_table, type);
     if (!cached_type) {
         g_hash_table_add(file_type_table, type);
         cached_type = g_steal_pointer(&type);
@@ -372,15 +377,15 @@ get_file_type(FsearchDatabaseEntry *entry, GHashTable *file_type_table, GHashTab
 int
 db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, gpointer data) {
     FsearchDatabaseEntryCompareContext *comp_ctx = data;
-    const char *file_type_a = g_hash_table_lookup(comp_ctx->entry_to_file_type_table, *a);
-    const char *file_type_b = g_hash_table_lookup(comp_ctx->entry_to_file_type_table, *b);
-    if (!file_type_a) {
-        file_type_a = get_file_type(*a, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
+
+    const char *file_type_a = get_file_type(*a, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
+    const char *file_type_b = get_file_type(*b, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
+
+    int res = strcmp(file_type_a, file_type_b);
+    if (res != 0) {
+        return res;
     }
-    if (!file_type_b) {
-        file_type_b = get_file_type(*b, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
-    }
-    return strcmp(file_type_a, file_type_b);
+    return comp_ctx->next_comp_func ? comp_ctx->next_comp_func(a, b, comp_ctx->next_comp_func_data) : res;
 }
 
 int

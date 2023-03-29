@@ -5,6 +5,7 @@
 
 void
 fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
+                              FsearchDatabaseIndexProperty old_secondary_sort_order,
                               FsearchDatabaseIndexProperty new_sort_order,
                               DynamicArray *files_in,
                               DynamicArray *folders_in,
@@ -13,6 +14,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
                               DynamicArray **files_out,
                               DynamicArray **folders_out,
                               FsearchDatabaseIndexProperty *sort_order_out,
+                              FsearchDatabaseIndexProperty *secondary_sort_order_out,
                               GCancellable *cancellable);
 
 bool

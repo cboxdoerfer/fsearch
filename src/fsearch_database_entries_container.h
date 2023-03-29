@@ -17,7 +17,8 @@ fsearch_database_entries_container_get_type(void);
 FsearchDatabaseEntriesContainer *
 fsearch_database_entries_container_new(DynamicArray *array,
                                        gboolean is_array_sorted,
-                                       FsearchDatabaseIndexProperty sort_type,
+                                       FsearchDatabaseIndexProperty sort_order,
+                                       FsearchDatabaseIndexProperty secondary_sort_order,
                                        FsearchDatabaseEntryType entry_type,
                                        GCancellable *cancellable);
 

@@ -12,9 +12,14 @@ struct _FsearchDatabaseEntriesContainer {
     uint32_t num_entries;
     uint32_t ideal_entries_per_container;
 
-    FsearchDatabaseIndexProperty sort_type;
+    FsearchDatabaseIndexProperty sort_order;
+    FsearchDatabaseIndexProperty secondary_sort_order;
+
     FsearchDatabaseEntryType entry_type;
     DynamicArrayCompareDataFunc entry_comp_func;
+    DynamicArrayCompareDataFunc secondary_entry_comp_func;
+
+    FsearchDatabaseEntryCompareContext *compare_context;
 
     volatile gint ref_count;
 };
@@ -25,15 +30,15 @@ G_DEFINE_BOXED_TYPE(FsearchDatabaseEntriesContainer,
                     fsearch_database_entries_container_unref)
 
 static int32_t
-container_compare_func(DynamicArray **a, FsearchDatabaseEntry **b, DynamicArrayCompareDataFunc comp_func) {
+container_compare_func(DynamicArray **a, FsearchDatabaseEntry **b, FsearchDatabaseEntriesContainer *self) {
     DynamicArray *array = *a;
     g_assert(darray_get_num_items(array) > 0);
 
     FsearchDatabaseEntry *entry_a = darray_get_item(array, 0);
     FsearchDatabaseEntry *entry_b = darray_get_item(array, darray_get_num_items(array) - 1);
 
-    const int32_t res_a = comp_func(&entry_a, b, NULL);
-    const int32_t res_b = comp_func(&entry_b, b, NULL);
+    const int32_t res_a = self->entry_comp_func(&entry_a, b, self->compare_context);
+    const int32_t res_b = self->entry_comp_func(&entry_b, b, self->compare_context);
     if (res_a <= 0 && res_b >= 0) {
         return 0;
     }
@@ -53,7 +58,7 @@ get_container_for_entry(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEn
     darray_binary_search_with_data(self->container,
                                    entry,
                                    (DynamicArrayCompareDataFunc)container_compare_func,
-                                   self->entry_comp_func,
+                                   self,
                                    &container_idx);
     container_idx = MIN(container_idx, darray_get_num_items(self->container) - 1);
     DynamicArray *container = darray_get_item(self->container, container_idx);
@@ -135,7 +140,8 @@ balance_container(FsearchDatabaseEntriesContainer *self, DynamicArray *container
 FsearchDatabaseEntriesContainer *
 fsearch_database_entries_container_new(DynamicArray *array,
                                        gboolean is_array_sorted,
-                                       FsearchDatabaseIndexProperty sort_type,
+                                       FsearchDatabaseIndexProperty sort_order,
+                                       FsearchDatabaseIndexProperty secondary_sort_order,
                                        FsearchDatabaseEntryType entry_type,
                                        GCancellable *cancellable) {
     FsearchDatabaseEntriesContainer *self;
@@ -145,14 +151,25 @@ fsearch_database_entries_container_new(DynamicArray *array,
     self = g_slice_new0(FsearchDatabaseEntriesContainer);
 
     self->ideal_entries_per_container = 8192;
-    self->sort_type = sort_type;
+
+    self->sort_order = sort_order;
+    self->secondary_sort_order = secondary_sort_order;
+
     self->entry_type = entry_type;
     self->entry_comp_func = fsearch_database_sort_get_compare_func_for_property(
-        self->sort_type,
+        self->sort_order,
         self->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? true : false);
 
+    self->secondary_entry_comp_func = fsearch_database_sort_get_compare_func_for_property(
+        self->secondary_sort_order,
+        self->entry_type == DATABASE_ENTRY_TYPE_FOLDER ? true : false);
+
+    if (self->sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
+        self->compare_context = db_entry_compare_context_new(self->secondary_entry_comp_func, NULL, NULL);
+    }
+
     if (!is_array_sorted) {
-        darray_sort_multi_threaded(array, self->entry_comp_func, cancellable, NULL);
+        darray_sort_multi_threaded(array, self->entry_comp_func, cancellable, self->compare_context);
     }
 
     self->num_entries = darray_get_num_items(array);
@@ -183,6 +200,7 @@ fsearch_database_entries_container_unref(FsearchDatabaseEntriesContainer *self) 
             darray_unref(darray_get_item(self->container, i));
         }
         g_clear_pointer(&self->container, darray_unref);
+        g_clear_pointer(&self->compare_context, db_entry_compare_context_free);
         g_slice_free(FsearchDatabaseEntriesContainer, self);
     }
 }
@@ -195,7 +213,7 @@ fsearch_database_entries_container_insert(FsearchDatabaseEntriesContainer *self,
     uint32_t c_idx = 0;
     DynamicArray *c = get_container_for_entry(self, entry, &c_idx);
 
-    darray_insert_item_sorted(c, entry, self->entry_comp_func, NULL);
+    darray_insert_item_sorted(c, entry, self->entry_comp_func, self->compare_context);
     self->num_entries++;
 
     balance_container(self, c, c_idx);
@@ -213,7 +231,7 @@ fsearch_database_entries_container_find(FsearchDatabaseEntriesContainer *self, F
     DynamicArray *c = get_container_for_entry(self, entry, NULL);
 
     uint32_t idx = 0;
-    if (darray_binary_search_with_data(c, entry, self->entry_comp_func, NULL, &idx)) {
+    if (darray_binary_search_with_data(c, entry, self->entry_comp_func, self->compare_context, &idx)) {
         return darray_get_item(c, idx);
     }
     g_autoptr(GString) path = db_entry_get_path_full(entry);
@@ -233,7 +251,7 @@ fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, 
     DynamicArray *c = get_container_for_entry(self, entry, &c_idx);
 
     uint32_t idx = 0;
-    if (darray_binary_search_with_data(c, entry, self->entry_comp_func, NULL, &idx)) {
+    if (darray_binary_search_with_data(c, entry, self->entry_comp_func, self->compare_context, &idx)) {
         FsearchDatabaseEntry *e = darray_get_item(c, idx);
         darray_remove(c, idx, 1);
         self->num_entries--;
@@ -255,9 +273,9 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
 
     uint32_t container_idx = 0;
     uint32_t entry_start_idx = 0;
-    if (self->sort_type == DATABASE_INDEX_PROPERTY_PATH_FULL) {
+    if (self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
         DynamicArray *container = get_container_for_entry(self, (FsearchDatabaseEntry *)folder, &container_idx);
-        darray_binary_search_with_data(container, folder, self->entry_comp_func, NULL, &entry_start_idx);
+        darray_binary_search_with_data(container, folder, self->entry_comp_func, self->compare_context, &entry_start_idx);
     }
 
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
@@ -272,7 +290,7 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
         DynamicArray *container = darray_get_item(self->container, container_idx);
         uint32_t entry_idx = entry_start_idx;
 
-        if (num_known_descendants >= 0 && self->sort_type == DATABASE_INDEX_PROPERTY_PATH_FULL) {
+        if (num_known_descendants >= 0 && self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
             // We know the exact number of descendants and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
             // it is guaranteed that they are all sorted next to each other. Therefore we can use an optimized code
             // paths where we steal them in large chunks, instead of one by one.

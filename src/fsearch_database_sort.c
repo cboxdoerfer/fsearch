@@ -1,3 +1,5 @@
+#define G_LOG_DOMAIN "fsearch-database-sort"
+
 #include "fsearch_database_sort.h"
 
 #include "fsearch_database_entry.h"
@@ -103,6 +105,7 @@ fast_sort(FsearchDatabaseIndexProperty new_sort_order, DynamicArray *entries_in,
 
 void
 fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
+                              FsearchDatabaseIndexProperty old_secondary_sort_order,
                               FsearchDatabaseIndexProperty new_sort_order,
                               DynamicArray *files_in,
                               DynamicArray *folders_in,
@@ -111,6 +114,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
                               DynamicArray **files_out,
                               DynamicArray **folders_out,
                               FsearchDatabaseIndexProperty *sort_order_out,
+                              FsearchDatabaseIndexProperty *secondary_sort_order_out,
                               GCancellable *cancellable) {
     g_return_if_fail(files_in);
     g_return_if_fail(folders_in);
@@ -123,6 +127,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
         *files_out = darray_ref(files_in);
         *folders_out = darray_ref(folders_in);
         *sort_order_out = new_sort_order;
+        *secondary_sort_order_out = old_secondary_sort_order;
         return;
     }
 
@@ -131,6 +136,8 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
         *files_out = fast_sort(new_sort_order, files_in, files_fast_sort_index);
         *folders_out = fast_sort(new_sort_order, folders_in, folders_fast_sort_index);
         *sort_order_out = new_sort_order;
+        // Fast sorted indexes don't have a secondary sort order
+        *secondary_sort_order_out = DATABASE_INDEX_PROPERTY_NONE;
         return;
     }
 
@@ -155,6 +162,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
     }
     *files_out = sort_entries(files_in, func, cancellable, parallel_sort, comp_ctx);
     *sort_order_out = new_sort_order;
+    *secondary_sort_order_out = old_sort_order;
 
     g_clear_pointer(&comp_ctx, db_entry_compare_context_free);
 
@@ -162,6 +170,7 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
         g_clear_pointer(folders_out, darray_unref);
         g_clear_pointer(files_out, darray_unref);
         *sort_order_out = old_sort_order;
+        *secondary_sort_order_out = old_secondary_sort_order;
     }
 }
 
@@ -326,6 +335,8 @@ fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty
         else {
             return (DynamicArrayCompareDataFunc)compare_by_name;
         }
+    case DATABASE_INDEX_PROPERTY_FILETYPE:
+        return (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_type;
     default:
         return NULL;
     }

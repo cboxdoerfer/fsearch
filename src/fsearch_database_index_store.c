@@ -504,60 +504,70 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_NAME,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
     self->file_container[DATABASE_INDEX_PROPERTY_NAME] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_NAME,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
     self->folder_container[DATABASE_INDEX_PROPERTY_PATH] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_PATH,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
     self->file_container[DATABASE_INDEX_PROPERTY_PATH] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_PATH,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
     self->folder_container[DATABASE_INDEX_PROPERTY_SIZE] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_SIZE,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
     self->file_container[DATABASE_INDEX_PROPERTY_SIZE] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_SIZE,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
     self->folder_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
     self->file_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
     self->folder_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_EXTENSION,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
     self->file_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_EXTENSION,
+                                               DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
     self->is_sorted = true;

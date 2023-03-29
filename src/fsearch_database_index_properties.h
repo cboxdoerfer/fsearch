@@ -19,6 +19,7 @@ typedef enum {
 } FsearchDatabaseIndexPropertyFlags;
 
 typedef enum {
+    DATABASE_INDEX_PROPERTY_NONE,
     DATABASE_INDEX_PROPERTY_NAME,
     DATABASE_INDEX_PROPERTY_PATH,
     DATABASE_INDEX_PROPERTY_PATH_FULL,

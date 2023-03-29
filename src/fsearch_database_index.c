@@ -1069,11 +1069,13 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
         self->file_container = fsearch_database_entries_container_new(files,
                                                                       TRUE,
                                                                       DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                                      DATABASE_INDEX_PROPERTY_NONE,
                                                                       DATABASE_ENTRY_TYPE_FILE,
                                                                       NULL);
         self->folder_container = fsearch_database_entries_container_new(folders,
                                                                         TRUE,
                                                                         DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                                        DATABASE_INDEX_PROPERTY_NONE,
                                                                         DATABASE_ENTRY_TYPE_FOLDER,
                                                                         NULL);
 
