@@ -489,7 +489,7 @@ search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(file_container);
     g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(folder_container);
 
-    DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, sort_order, cancellable);
+    DatabaseSearchResult *search_result = db_search(query, self->thread_pool, folders, files, cancellable);
     if (search_result) {
         num_files = search_result->files ? darray_get_num_items(search_result->files) : 0;
         num_folders = search_result->folders ? darray_get_num_items(search_result->folders) : 0;
