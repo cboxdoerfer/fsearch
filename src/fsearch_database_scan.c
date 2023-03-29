@@ -9,26 +9,27 @@
 #include <dirent.h>
 #include <fcntl.h>
 #include <glib/gi18n.h>
+#include <sys/stat.h>
 
 #ifdef HAVE_FANOTIFY
 #include <sys/fanotify.h>
 #include <sys/vfs.h>
+
+#define FANOTIFY_FOLDER_MASK                                                                                           \
+    (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
+     | FAN_MOVE_SELF | FAN_EVENT_ON_CHILD | FAN_ONDIR)
 #endif
 
+#ifdef HAVE_INOTIFY
 #include <sys/inotify.h>
-#include <sys/stat.h>
-
-#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 #define INOTIFY_FOLDER_MASK                                                                                            \
     (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
      | IN_CLOSE_WRITE)
 
-#ifdef HAVE_FANOTIFY
-#define FANOTIFY_FOLDER_MASK                                                                                           \
-    (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
-     | FAN_MOVE_SELF | FAN_EVENT_ON_CHILD | FAN_ONDIR)
 #endif
+
+#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 enum {
     WALK_OK = 0,
@@ -147,12 +148,14 @@ add_folder(DatabaseWalkContext *walk_context,
         // g_debug("added fanotify mark: %s", path);
     }
     else if (walk_context->inotify_fd >= 0) {
+#ifdef HAVE_INOTIFY
         // Use inotify as a fallback
         // g_debug("use inotify as fallback for path: %s", path);
         const int32_t wd = inotify_add_watch(walk_context->inotify_fd, path, INOTIFY_FOLDER_MASK);
         db_entry_set_wd((FsearchDatabaseEntryFolder *)folder, wd);
         g_hash_table_insert(walk_context->watch_descriptors, GINT_TO_POINTER(wd), folder);
         darray_add_item(walk_context->watch_descriptor_array, GINT_TO_POINTER(wd));
+#endif
     }
 
     darray_add_item(walk_context->folders, folder);

@@ -40,7 +40,7 @@ fanotify_support_result = cc.run('''
       return fd < 0 ? 1 : 0;
     }
   ''',
-  name: 'fanotify works without additional capabilities')
+  name: 'fanotify is supported by the build platform and works without CAP_SYS_ADMIN capabilities')
 
 if fanotify_support_result.compiled() and fanotify_support_result.returncode() == 0
   have_fanotify = true
@@ -48,9 +48,28 @@ else
   have_fanotify = false
 endif
 
+# Check if the build platform supports inotify
+inotify_support_result = cc.run('''
+    #include <sys/inotify.h>
+    #include <fcntl.h>
+
+    int main (int argc, char *argv[]) {
+      int fd = inotify_init1(IN_NONBLOCK);
+      return fd < 0 ? 1 : 0;
+    }
+  ''',
+  name: 'inotify is supported by the build platform')
+
+if inotify_support_result.compiled() and inotify_support_result.returncode() == 0
+  have_inotify = true
+else
+  have_inotify = false
+endif
+
 config_h = configuration_data()
 config_h.set('HAVE_MALLOC_TRIM', have_malloc_trim)
 config_h.set('HAVE_FANOTIFY', have_fanotify)
+config_h.set('HAVE_INOTIFY', have_inotify)
 config_h.set_quoted('APP_ID', app_id)
 config_h.set_quoted('PACKAGE_VERSION', meson.project_version())
 config_h.set_quoted('VERSION', meson.project_version())
