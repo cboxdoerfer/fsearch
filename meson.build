@@ -7,12 +7,13 @@ project('fsearch', 'c',
     )
 app_id = 'io.github.cboxdoerfer.FSearch'
 
-cc = meson.get_compiler('c')
 
 gnome = import('gnome')
 i18n = import('i18n')
 
-have_malloc_trim = meson.get_compiler('c').has_function('malloc_trim')
+cc = meson.get_compiler('c')
+
+have_malloc_trim = cc.has_function('malloc_trim')
 
 config_h = configuration_data()
 config_h.set('HAVE_MALLOC_TRIM', have_malloc_trim)
