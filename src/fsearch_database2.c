@@ -13,7 +13,6 @@
 #include "fsearch_database_file.h"
 #include "fsearch_database_index.h"
 #include "fsearch_database_info.h"
-#include "fsearch_database_scan.h"
 #include "fsearch_database_search.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_sort.h"
