@@ -14,8 +14,8 @@ clear_fast_sorted_array(DynamicArray **sorted_entries, FsearchDatabaseIndexPrope
 static bool
 sort_order_affects_folders(FsearchDatabaseIndexProperty sort_order) {
     if (sort_order == DATABASE_INDEX_PROPERTY_EXTENSION || sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
-        // Folders are stored in a different array than files, so they all have the same sort_type and extension (none),
-        // therefore we don't need to sort them in such cases.
+        // Folders are stored in a different array than files, so they all have the same sort_order and extension
+        // (none), therefore we don't need to sort them in such cases.
         return false;
     }
     return true;

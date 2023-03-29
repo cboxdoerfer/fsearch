@@ -1033,9 +1033,9 @@ fsearch_application_window_update_query_flags(FsearchApplicationWindow *win) {
 }
 
 static FsearchDatabaseIndexProperty
-get_sort_type_for_name(const char *name) {
+get_sort_order_for_name(const char *name) {
     if (!name) {
-        g_warning("[get_sort_type_for_name] name is nullptr");
+        g_warning("[get_sort_order_for_name] name is nullptr");
         return DATABASE_INDEX_PROPERTY_NAME;
     }
     if (!strcmp(name, DATABASE_INDEX_PROPERTY_NAME_STRING)) {
@@ -1146,7 +1146,7 @@ fsearch_application_window_added(FsearchApplicationWindow *win, FsearchApplicati
 
     FsearchConfig *config = fsearch_application_get_config(app);
 
-    FsearchDatabaseIndexProperty sort_order = config->restore_sort_order ? get_sort_type_for_name(config->sort_by)
+    FsearchDatabaseIndexProperty sort_order = config->restore_sort_order ? get_sort_order_for_name(config->sort_by)
                                                                          : DATABASE_INDEX_PROPERTY_NAME;
     if (sort_order == DATABASE_INDEX_PROPERTY_FILETYPE) {
         // file type order is not indexed, so it would make startup really slow
