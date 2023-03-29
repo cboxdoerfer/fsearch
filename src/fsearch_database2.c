@@ -2,6 +2,11 @@
 
 #include "fsearch_database2.h"
 
+#include <config.h>
+#ifdef HAVE_MALLOC_TRIM
+#include <malloc.h>
+#endif
+
 #include "fsearch_array.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_entry_info.h"
@@ -878,6 +883,10 @@ rescan_database(FsearchDatabase2 *self) {
 
     g_hash_table_remove_all(self->search_results);
 
+#ifdef HAVE_MALLOC_TRIM
+    malloc_trim(0);
+#endif
+
     emit_signal(self,
                 EVENT_SCAN_FINISHED,
                 fsearch_database_info_new(self->include_manager,
@@ -929,6 +938,10 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     fsearch_database_index_store_start_monitoring(self->store);
 
     g_hash_table_remove_all(self->search_results);
+
+#ifdef HAVE_MALLOC_TRIM
+    malloc_trim(0);
+#endif
 
     emit_signal(self,
                 EVENT_SCAN_FINISHED,

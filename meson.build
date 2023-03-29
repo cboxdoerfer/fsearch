@@ -13,10 +13,26 @@ i18n = import('i18n')
 
 cc = meson.get_compiler('c')
 
-have_malloc_trim = cc.has_function('malloc_trim')
+# Check if the build platform supports using malloc_trim
+malloc_trim_support_result = cc.run('''
+    #include <malloc.h>
+
+    int main (int argc, char *argv[]) {
+      malloc_trim(0);
+      return 0;
+    }
+  ''',
+  name: 'malloc_trim is supported on the build platform')
+
+if malloc_trim_support_result.compiled() and malloc_trim_support_result.returncode() == 0
+  have_malloc_trim = true
+else
+  have_malloc_trim = false
+endif
 
 config_h = configuration_data()
 config_h.set('HAVE_MALLOC_TRIM', have_malloc_trim)
+config_h.set('HAVE_FANOTIFY', have_fanotify)
 config_h.set_quoted('APP_ID', app_id)
 config_h.set_quoted('PACKAGE_VERSION', meson.project_version())
 config_h.set_quoted('VERSION', meson.project_version())
