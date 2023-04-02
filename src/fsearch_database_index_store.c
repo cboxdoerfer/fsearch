@@ -15,6 +15,9 @@ struct _FsearchDatabaseIndexStore {
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
 
+    FsearchDatabaseIndexEventFunc event_func;
+    gpointer event_func_data;
+
     FsearchDatabaseIndexPropertyFlags flags;
 
     struct {
@@ -79,6 +82,148 @@ index_store_has_index_with_same_id(FsearchDatabaseIndexStore *self, FsearchDatab
     return false;
 }
 
+void
+index_store_remove_entry(FsearchDatabaseIndexStore *self, FsearchDatabaseEntry *entry, FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+    g_return_if_fail(index);
+
+    if (!entry) {
+        return;
+    }
+
+    if (!g_ptr_array_find(self->indices, index, NULL)) {
+        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
+        g_assert_not_reached();
+    }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        FsearchDatabaseEntriesContainer *container = NULL;
+        if (db_entry_is_folder(entry)) {
+            container = self->folder_container[i];
+        }
+        else {
+            container = self->file_container[i];
+        }
+
+        if (!container) {
+            continue;
+        }
+
+        if (!fsearch_database_entries_container_steal(container, entry)) {
+            g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
+        }
+    }
+}
+
+void
+index_store_remove_folders(FsearchDatabaseIndexStore *self, DynamicArray *folders, FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+    g_return_if_fail(index);
+
+    if (!folders || darray_get_num_items(folders) == 0) {
+        return;
+    }
+
+    if (!g_ptr_array_find(self->indices, index, NULL)) {
+        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
+        g_assert_not_reached();
+    }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        FsearchDatabaseEntriesContainer *container = self->folder_container[i];
+        if (!container) {
+            continue;
+        }
+        for (uint32_t j = 0; j < darray_get_num_items(folders); ++j) {
+            FsearchDatabaseEntry *entry = darray_get_item(folders, j);
+            if (!fsearch_database_entries_container_steal(container, entry)) {
+                g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
+            }
+        }
+    }
+}
+
+void
+index_store_remove_files(FsearchDatabaseIndexStore *self, DynamicArray *files, FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+    g_return_if_fail(index);
+
+    if (!files || darray_get_num_items(files) == 0) {
+        return;
+    }
+
+    if (!g_ptr_array_find(self->indices, index, NULL)) {
+        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
+        g_assert_not_reached();
+    }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        FsearchDatabaseEntriesContainer *container = self->file_container[i];
+        if (!container) {
+            continue;
+        }
+        for (uint32_t j = 0; j < darray_get_num_items(files); ++j) {
+            FsearchDatabaseEntry *entry = darray_get_item(files, j);
+            if (!fsearch_database_entries_container_steal(container, entry)) {
+                g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
+            }
+        }
+    }
+}
+
+void
+index_store_add_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries, bool is_dir) {
+    g_return_if_fail(self);
+
+    if (!entries || darray_get_num_items(entries) == 0) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        FsearchDatabaseEntriesContainer *container = NULL;
+        if (is_dir) {
+            container = self->folder_container[i];
+        }
+        else {
+            container = self->file_container[i];
+        }
+
+        if (!container) {
+            continue;
+        }
+
+        for (uint32_t i = 0; i < darray_get_num_items(entries); ++i) {
+            FsearchDatabaseEntry *entry = darray_get_item(entries, i);
+            fsearch_database_entries_container_insert(container, entry);
+        }
+    }
+}
+
+void
+index_store_add_entry(FsearchDatabaseIndexStore *self, FsearchDatabaseEntry *entry, FsearchDatabaseIndex *index) {
+    g_return_if_fail(self);
+
+    if (!entry) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        FsearchDatabaseEntriesContainer *container = NULL;
+        if (db_entry_is_folder(entry)) {
+            container = self->folder_container[i];
+        }
+        else {
+            container = self->file_container[i];
+        }
+
+        if (!container) {
+            continue;
+        }
+
+        fsearch_database_entries_container_insert(container, entry);
+    }
+}
+
 static void
 lock_all_indices(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
@@ -96,6 +241,31 @@ unlock_all_indices(FsearchDatabaseIndexStore *self) {
     for (uint32_t i = 0; i < self->indices->len; ++i) {
         FsearchDatabaseIndex *index_stored = g_ptr_array_index(self->indices, i);
         fsearch_database_index_unlock(index_stored);
+    }
+}
+
+static void
+index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
+    FsearchDatabaseIndexStore *self = user_data;
+
+    // Let the event bubble up to the database first
+    if (self->event_func) {
+        self->event_func(index, event, self->event_func_data);
+    }
+
+    switch (event->kind) {
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
+        index_store_add_entries(self, event->folders, true);
+        index_store_add_entries(self, event->files, false);
+        index_store_add_entry(self, event->entry, index);
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
+        index_store_remove_folders(self, event->folders, index);
+        index_store_remove_files(self, event->files, index);
+        index_store_remove_entry(self, event->entry, index);
+        break;
+    default:
+        break;
     }
 }
 
@@ -167,7 +337,9 @@ index_store_free(FsearchDatabaseIndexStore *self) {
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
-                                 FsearchDatabaseIndexPropertyFlags flags) {
+                                 FsearchDatabaseIndexPropertyFlags flags,
+                                 FsearchDatabaseIndexEventFunc event_func,
+                                 gpointer event_func_data) {
     FsearchDatabaseIndexStore *self;
     self = g_slice_new0(FsearchDatabaseIndexStore);
 
@@ -178,6 +350,9 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
 
     self->include_manager = g_object_ref(include_manager);
     self->exclude_manager = g_object_ref(exclude_manager);
+
+    self->event_func = event_func;
+    self->event_func_data = event_func_data;
 
     self->monitor.ctx = g_main_context_new();
     self->monitor.loop = g_main_loop_new(self->monitor.ctx, FALSE);
@@ -211,55 +386,6 @@ fsearch_database_index_store_unref(FsearchDatabaseIndexStore *self) {
         g_clear_pointer(&self, index_store_free);
     }
 }
-
-// void
-// fsearch_database_index_store_add(FsearchDatabaseIndexStore *self, FsearchDatabaseIndex *index) {
-//     g_return_if_fail(self);
-//     g_return_if_fail(index);
-//     g_return_if_fail(!index_store_has_index_with_same_id(self, index));
-//     g_return_if_fail(has_flag(self, index));
-//
-//     g_ptr_array_add(self->indices, fsearch_database_index_ref(index));
-//
-//     fsearch_database_index_lock(index);
-//
-//     fsearch_database_index_set_propagate_work(index, true);
-//     g_autoptr(DynamicArray) files = fsearch_database_index_get_files(index);
-//     g_autoptr(DynamicArray) folders = fsearch_database_index_get_folders(index);
-//     darray_add_array(self->files_sorted[DATABASE_INDEX_PROPERTY_NAME], files);
-//     darray_add_array(self->folders_sorted[DATABASE_INDEX_PROPERTY_NAME], folders);
-//
-//     fsearch_database_index_unlock(index);
-//
-//     self->is_sorted = false;
-// }
-
-// void
-// fsearch_database_index_store_add_sorted(FsearchDatabaseIndexStore *self,
-//                                         FsearchDatabaseIndex *index,
-//                                         GCancellable *cancellable) {
-//     g_return_if_fail(self);
-//     g_return_if_fail(index);
-//     g_return_if_fail(!index_store_has_index_with_same_id(self, index));
-//     g_return_if_fail(!has_flag(self, index));
-//
-//     //fsearch_database_index_store_add(self, index);
-//
-//     lock_all_indices(self);
-//     self->is_sorted = fsearch_database_sort(self->files_sorted, self->folders_sorted, self->flags, cancellable);
-//     unlock_all_indices(self);
-// }
-//
-// void
-// fsearch_database_index_store_sort(FsearchDatabaseIndexStore *self, GCancellable *cancellable) {
-//     g_return_if_fail(self);
-//     if (self->is_sorted) {
-//         return;
-//     }
-//     lock_all_indices(self);
-//     self->is_sorted = fsearch_database_sort(self->files_sorted, self->folders_sorted, self->flags, cancellable);
-//     unlock_all_indices(self);
-// }
 
 bool
 fsearch_database_index_store_has_container(FsearchDatabaseIndexStore *self, FsearchDatabaseEntriesContainer *container) {
@@ -338,121 +464,7 @@ fsearch_database_index_store_get_num_folders(FsearchDatabaseIndexStore *self) {
 }
 
 void
-fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
-                                          FsearchDatabaseEntry *entry,
-                                          FsearchDatabaseIndex *index) {
-    g_return_if_fail(self);
-    g_return_if_fail(entry);
-    g_return_if_fail(index);
-
-    if (!g_ptr_array_find(self->indices, index, NULL)) {
-        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
-        g_assert_not_reached();
-    }
-
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = NULL;
-        if (db_entry_is_folder(entry)) {
-            container = self->folder_container[i];
-        }
-        else {
-            container = self->file_container[i];
-        }
-
-        if (!container) {
-            continue;
-        }
-
-        if (!fsearch_database_entries_container_steal(container, entry)) {
-            g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
-        }
-    }
-}
-
-void
-fsearch_database_index_store_remove_folders(FsearchDatabaseIndexStore *self,
-                                            DynamicArray *folders,
-                                            FsearchDatabaseIndex *index) {
-    g_return_if_fail(self);
-    g_return_if_fail(folders);
-    g_return_if_fail(index);
-
-    if (!g_ptr_array_find(self->indices, index, NULL)) {
-        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
-        g_assert_not_reached();
-    }
-
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = self->folder_container[i];
-        if (!container) {
-            continue;
-        }
-        for (uint32_t j = 0; j < darray_get_num_items(folders); ++j) {
-            FsearchDatabaseEntry *entry = darray_get_item(folders, j);
-            if (!fsearch_database_entries_container_steal(container, entry)) {
-                g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
-            }
-        }
-    }
-}
-
-void
-fsearch_database_index_store_remove_files(FsearchDatabaseIndexStore *self,
-                                          DynamicArray *files,
-                                          FsearchDatabaseIndex *index) {
-    g_return_if_fail(self);
-    g_return_if_fail(files);
-    g_return_if_fail(index);
-
-    if (!g_ptr_array_find(self->indices, index, NULL)) {
-        g_debug("[index_store_remove] index does not belong to index store; must be a bug");
-        g_assert_not_reached();
-    }
-
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = self->file_container[i];
-        if (!container) {
-            continue;
-        }
-        for (uint32_t j = 0; j < darray_get_num_items(files); ++j) {
-            FsearchDatabaseEntry *entry = darray_get_item(files, j);
-            if (!fsearch_database_entries_container_steal(container, entry)) {
-                g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
-            }
-        }
-    }
-}
-
-void
-fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
-                                       FsearchDatabaseEntry *entry,
-                                       FsearchDatabaseIndex *index) {
-    g_return_if_fail(self);
-    g_return_if_fail(entry);
-    g_return_if_fail(index);
-
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = NULL;
-        if (db_entry_is_folder(entry)) {
-            container = self->folder_container[i];
-        }
-        else {
-            container = self->file_container[i];
-        }
-
-        if (!container) {
-            continue;
-        }
-
-        fsearch_database_entries_container_insert(container, entry);
-    }
-}
-
-void
-fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
-                                   GCancellable *cancellable,
-                                   FsearchDatabaseIndexEventFunc event_func,
-                                   gpointer event_func_data) {
+fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable) {
     g_return_if_fail(self);
     if (self->running) {
         return;
@@ -468,8 +480,8 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
                                                                  self->flags,
                                                                  self->worker.ctx,
                                                                  self->monitor.ctx,
-                                                                 event_func,
-                                                                 event_func_data);
+                                                                 index_event_cb,
+                                                                 self);
         fsearch_database_index_scan(index, cancellable);
         if (index) {
             g_ptr_array_add(indices, index);

@@ -685,7 +685,6 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
 
 static bool
 add_entry_cb(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
-    fsearch_database_index_store_add_entry(ctx->db->store, entry, ctx->index);
     ctx->entry = entry;
     g_hash_table_foreach(ctx->db->search_results, search_view_result_add_cb, ctx);
     return true;
@@ -736,15 +735,6 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
         }
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        if (event->folders) {
-            fsearch_database_index_store_remove_folders(self->store, event->folders, index);
-        }
-        if (event->files) {
-            fsearch_database_index_store_remove_files(self->store, event->files, index);
-        }
-        if (event->entry) {
-            fsearch_database_index_store_remove_entry(self->store, event->entry, index);
-        }
         g_hash_table_foreach(self->search_results, search_view_results_remove_cb, &ctx);
         break;
     case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
@@ -865,9 +855,9 @@ rescan_database(FsearchDatabase2 *self) {
     g_clear_pointer(&locker, g_mutex_locker_free);
 
     g_autoptr(FsearchDatabaseIndexStore)
-        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags);
+        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
     g_return_if_fail(store);
-    fsearch_database_index_store_start(store, NULL, index_event_cb, self);
+    fsearch_database_index_store_start(store, NULL);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -921,9 +911,9 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
     emit_signal0(self, EVENT_SCAN_STARTED);
 
     g_autoptr(FsearchDatabaseIndexStore)
-        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags);
+        store = fsearch_database_index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
     g_return_if_fail(store);
-    fsearch_database_index_store_start(store, NULL, index_event_cb, self);
+    fsearch_database_index_store_start(store, NULL);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);

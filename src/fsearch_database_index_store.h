@@ -19,24 +19,15 @@ fsearch_database_index_store_get_type(void);
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
-                                 FsearchDatabaseIndexPropertyFlags flags);
+                                 FsearchDatabaseIndexPropertyFlags flags,
+                                 FsearchDatabaseIndexEventFunc event_func,
+                                 gpointer event_func_data);
 
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_ref(FsearchDatabaseIndexStore *self);
 
 void
 fsearch_database_index_store_unref(FsearchDatabaseIndexStore *self);
-
-void
-fsearch_database_index_store_add(FsearchDatabaseIndexStore *self, FsearchDatabaseIndex *index);
-
-void
-fsearch_database_index_store_add_sorted(FsearchDatabaseIndexStore *self,
-                                        FsearchDatabaseIndex *index,
-                                        GCancellable *cancellable);
-
-void
-fsearch_database_index_store_sort(FsearchDatabaseIndexStore *self, GCancellable *cancellable);
 
 bool
 fsearch_database_index_store_has_container(FsearchDatabaseIndexStore *self, FsearchDatabaseEntriesContainer *container);
@@ -60,30 +51,7 @@ FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_store_get_flags(FsearchDatabaseIndexStore *self);
 
 void
-fsearch_database_index_store_remove_entry(FsearchDatabaseIndexStore *self,
-                                          FsearchDatabaseEntry *entry,
-                                          FsearchDatabaseIndex *index);
-
-void
-fsearch_database_index_store_remove_folders(FsearchDatabaseIndexStore *self,
-                                            DynamicArray *files,
-                                            FsearchDatabaseIndex *index);
-
-void
-fsearch_database_index_store_remove_files(FsearchDatabaseIndexStore *self,
-                                          DynamicArray *files,
-                                          FsearchDatabaseIndex *index);
-
-void
-fsearch_database_index_store_add_entry(FsearchDatabaseIndexStore *self,
-                                       FsearchDatabaseEntry *entry,
-                                       FsearchDatabaseIndex *index);
-
-void
-fsearch_database_index_store_start(FsearchDatabaseIndexStore *self,
-                                   GCancellable *cancellable,
-                                   FsearchDatabaseIndexEventFunc event_func,
-                                   gpointer event_func_data);
+fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable);
 
 void
 fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *self);
