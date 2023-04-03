@@ -609,46 +609,67 @@ typedef struct {
     DynamicArray *files;
 } FsearchDatabase2AddRemoveContext;
 
+static bool
+search_view_result_add(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *view) {
+    if (!entry || !entry_matches_query(view, entry)) {
+        return true;
+    }
+
+    fsearch_database_entries_container_insert(db_entry_is_folder(entry) ? view->folder_container : view->file_container,
+                                              entry);
+    return true;
+}
+
 static void
-search_view_result_add_cb(gpointer key, gpointer value, gpointer user_data) {
+search_view_results_add_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabase2AddRemoveContext *ctx = user_data;
-    FsearchDatabaseEntry *entry = ctx->entry;
-    g_return_if_fail(entry);
+    g_return_if_fail(ctx);
 
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
-    if (!entry_matches_query(view, entry)) {
-        return;
+    if (view->file_container && !fsearch_database_index_store_has_container(ctx->db->store, view->file_container)) {
+        if (ctx->files) {
+            darray_for_each(ctx->files, (DynamicArrayForEachFunc)search_view_result_add, view);
+        }
+        if (db_entry_is_file(ctx->entry)) {
+            search_view_result_add(ctx->entry, view);
+        }
     }
-
-    FsearchDatabaseEntriesContainer *container = db_entry_is_folder(entry) ? view->folder_container
-                                                                           : view->file_container;
-    if (fsearch_database_index_store_has_container(ctx->db->store, container)) {
-        // The files/folders are referenced directly from the index store.
-        // We must not alter them.
-        return;
+    if (view->folder_container && !fsearch_database_index_store_has_container(ctx->db->store, view->folder_container)) {
+        if (ctx->folders) {
+            darray_for_each(ctx->folders, (DynamicArrayForEachFunc)search_view_result_add, view);
+        }
+        if (db_entry_is_folder(ctx->entry)) {
+            search_view_result_add(ctx->entry, view);
+        }
     }
-
-    fsearch_database_entries_container_insert(container, entry);
 }
 
-static void
-search_view_result_remove(FsearchDatabaseSearchView *view, FsearchDatabaseIndexStore *store, FsearchDatabaseEntry *entry) {
-    if (!entry_matches_query(view, entry)) {
-        return;
+static bool
+search_view_result_remove(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *view) {
+    if (!entry || !entry_matches_query(view, entry)) {
+        return true;
     }
 
-    FsearchDatabaseEntriesContainer *container = db_entry_is_folder(entry) ? view->folder_container
-                                                                           : view->file_container;
-    if (container && !fsearch_database_index_store_has_container(store, container)) {
-        // Remove it from search results
-        fsearch_database_entries_container_steal(container, entry);
+    FsearchDatabaseEntriesContainer *container = NULL;
+    GHashTable *selection = NULL;
+    if (db_entry_is_folder(entry)) {
+        container = view->folder_container;
+        selection = view->folder_selection;
     }
+    else {
+        container = view->file_container;
+        selection = view->file_selection;
+    }
+
+    // Remove it from search results
+    fsearch_database_entries_container_steal(container, entry);
 
     // Remove it from the selection
-    GHashTable *selection = db_entry_is_folder(entry) ? view->folder_selection : view->file_selection;
     fsearch_selection_unselect(selection, entry);
+
+    return true;
 }
 
 static void
@@ -661,24 +682,18 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
 
     if (view->file_container && !fsearch_database_index_store_has_container(ctx->db->store, view->file_container)) {
         if (ctx->files) {
-            for (uint32_t i = 0; i < darray_get_num_items(ctx->files); ++i) {
-                FsearchDatabaseEntry *entry = darray_get_item(ctx->files, i);
-                search_view_result_remove(view, ctx->db->store, entry);
-            }
+            darray_for_each(ctx->files, (DynamicArrayForEachFunc)search_view_result_remove, view);
         }
         if (db_entry_is_file(ctx->entry)) {
-            search_view_result_remove(view, ctx->db->store, ctx->entry);
+            search_view_result_remove(ctx->entry, view);
         }
     }
     if (view->folder_container && !fsearch_database_index_store_has_container(ctx->db->store, view->folder_container)) {
         if (ctx->folders) {
-            for (uint32_t i = 0; i < darray_get_num_items(ctx->folders); ++i) {
-                FsearchDatabaseEntry *entry = darray_get_item(ctx->folders, i);
-                search_view_result_remove(view, ctx->db->store, entry);
-            }
+            darray_for_each(ctx->folders, (DynamicArrayForEachFunc)search_view_result_remove, view);
         }
         if (db_entry_is_folder(ctx->entry)) {
-            search_view_result_remove(view, ctx->db->store, ctx->entry);
+            search_view_result_remove(ctx->entry, view);
         }
     }
 }
@@ -686,7 +701,7 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
 static bool
 add_entry_cb(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
     ctx->entry = entry;
-    g_hash_table_foreach(ctx->db->search_results, search_view_result_add_cb, ctx);
+    g_hash_table_foreach(ctx->db->search_results, search_view_results_add_cb, ctx);
     return true;
 }
 
@@ -724,15 +739,7 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
-        if (event->folders && darray_get_num_items(event->folders) > 0) {
-            darray_for_each(event->folders, (DynamicArrayForEachFunc)add_entry_cb, &ctx);
-        }
-        if (event->files && darray_get_num_items(event->files) > 0) {
-            darray_for_each(event->files, (DynamicArrayForEachFunc)add_entry_cb, &ctx);
-        }
-        if (event->entry) {
-            add_entry_cb(event->entry, &ctx);
-        }
+        g_hash_table_foreach(self->search_results, search_view_results_add_cb, &ctx);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
         g_hash_table_foreach(self->search_results, search_view_results_remove_cb, &ctx);
