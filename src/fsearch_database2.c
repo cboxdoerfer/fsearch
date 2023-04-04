@@ -628,21 +628,13 @@ search_view_results_add_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
-    if (view->file_container && !fsearch_database_index_store_has_container(ctx->db->store, view->file_container)) {
-        if (ctx->files) {
-            darray_for_each(ctx->files, (DynamicArrayForEachFunc)search_view_result_add, view);
-        }
-        if (db_entry_is_file(ctx->entry)) {
-            search_view_result_add(ctx->entry, view);
-        }
+    if (ctx->files && view->file_container
+        && !fsearch_database_index_store_has_container(ctx->db->store, view->file_container)) {
+        darray_for_each(ctx->files, (DynamicArrayForEachFunc)search_view_result_add, view);
     }
-    if (view->folder_container && !fsearch_database_index_store_has_container(ctx->db->store, view->folder_container)) {
-        if (ctx->folders) {
-            darray_for_each(ctx->folders, (DynamicArrayForEachFunc)search_view_result_add, view);
-        }
-        if (db_entry_is_folder(ctx->entry)) {
-            search_view_result_add(ctx->entry, view);
-        }
+    if (ctx->folders && view->folder_container
+        && !fsearch_database_index_store_has_container(ctx->db->store, view->folder_container)) {
+        darray_for_each(ctx->folders, (DynamicArrayForEachFunc)search_view_result_add, view);
     }
 }
 
@@ -680,21 +672,13 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
-    if (view->file_container && !fsearch_database_index_store_has_container(ctx->db->store, view->file_container)) {
-        if (ctx->files) {
-            darray_for_each(ctx->files, (DynamicArrayForEachFunc)search_view_result_remove, view);
-        }
-        if (db_entry_is_file(ctx->entry)) {
-            search_view_result_remove(ctx->entry, view);
-        }
+    if (ctx->files && view->file_container
+        && !fsearch_database_index_store_has_container(ctx->db->store, view->file_container)) {
+        darray_for_each(ctx->files, (DynamicArrayForEachFunc)search_view_result_remove, view);
     }
-    if (view->folder_container && !fsearch_database_index_store_has_container(ctx->db->store, view->folder_container)) {
-        if (ctx->folders) {
-            darray_for_each(ctx->folders, (DynamicArrayForEachFunc)search_view_result_remove, view);
-        }
-        if (db_entry_is_folder(ctx->entry)) {
-            search_view_result_remove(ctx->entry, view);
-        }
+    if (ctx->folders && view->folder_container
+        && !fsearch_database_index_store_has_container(ctx->db->store, view->folder_container)) {
+        darray_for_each(ctx->folders, (DynamicArrayForEachFunc)search_view_result_remove, view);
     }
 }
 
@@ -714,7 +698,6 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
         .index = index,
         .folders = event->folders,
         .files = event->files,
-        .entry = event->entry,
     };
 
     switch (event->kind) {

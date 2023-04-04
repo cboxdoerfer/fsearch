@@ -257,12 +257,10 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
         index_store_add_entries(self, event->folders, true);
         index_store_add_entries(self, event->files, false);
-        index_store_add_entry(self, event->entry, index);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
         index_store_remove_folders(self, event->folders, index);
         index_store_remove_files(self, event->files, index);
-        index_store_remove_entry(self, event->entry, index);
         break;
     default:
         break;

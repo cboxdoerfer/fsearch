@@ -108,15 +108,11 @@ static void
 process_queued_events(FsearchDatabaseIndex *self);
 
 static void
-propagate_event(FsearchDatabaseIndex *self,
-                FsearchDatabaseIndexEventKind kind,
-                DynamicArray *folders,
-                DynamicArray *files,
-                FsearchDatabaseEntry *entry) {
+propagate_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventKind kind, DynamicArray *folders, DynamicArray *files) {
     if (!self->event_func) {
         return;
     }
-    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files, entry);
+    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files);
     self->event_func(self, event, self->event_func_data);
 }
 
@@ -170,7 +166,7 @@ process_queued_events(FsearchDatabaseIndex *self) {
 
     double last_time = 0.0;
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
     while (true) {
         FsearchDatabaseIndexMonitorEventContext *ctx = g_async_queue_try_pop(self->event_queue);
         if (!ctx) {
@@ -179,16 +175,16 @@ process_queued_events(FsearchDatabaseIndex *self) {
         double elapsed = g_timer_elapsed(timer, NULL);
         if (elapsed - last_time > 0.2) {
             g_debug("interupt event processing for a while...");
-            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
             last_time = elapsed;
             g_usleep(G_USEC_PER_SEC * 0.05);
             g_debug("continue event processing...");
-            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL, NULL);
+            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
         }
         process_event(self, ctx);
         g_clear_pointer(&ctx, monitor_event_context_free);
     }
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL, NULL);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
 
     const double process_time = g_timer_elapsed(timer, NULL);
     self->max_process_time = MAX(process_time, self->max_process_time);
@@ -211,10 +207,10 @@ process_queued_events(FsearchDatabaseIndex *self) {
 }
 
 static FsearchDatabaseEntry *
-find_entry_for_event(FsearchDatabaseIndex *self,
-                     FsearchDatabaseIndexMonitorEventContext *ctx,
-                     uint32_t *index_out,
-                     bool expect_success) {
+lookup_entry_for_event(FsearchDatabaseIndex *self,
+                       FsearchDatabaseIndexMonitorEventContext *ctx,
+                       bool steal,
+                       bool expect_success) {
     g_return_val_if_fail(self, NULL);
 
     if (!ctx->watched_entry) {
@@ -238,7 +234,8 @@ find_entry_for_event(FsearchDatabaseIndex *self,
 
     FsearchDatabaseEntriesContainer *container = ctx->is_dir ? self->folder_container : self->file_container;
 
-    FsearchDatabaseEntry *entry = fsearch_database_entries_container_find(container, entry_tmp);
+    FsearchDatabaseEntry *entry = steal ? fsearch_database_entries_container_steal(container, entry_tmp)
+                                        : fsearch_database_entries_container_find(container, entry_tmp);
     if (!entry && expect_success) {
         g_assert_not_reached();
     }
@@ -273,65 +270,18 @@ find_entry_for_event(FsearchDatabaseIndex *self,
 }
 
 static void
-remove_entry(FsearchDatabaseIndex *self, FsearchDatabaseEntry *entry, bool is_inotify_event) {
+unwatch_folder(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder) {
     g_return_if_fail(self);
+    g_return_if_fail(db_entry_is_folder(folder));
 
-    FsearchDatabaseEntriesContainer *container = NULL;
-    FsearchMemoryPool *pool = NULL;
-
-    const bool is_dir = db_entry_is_folder(entry);
-    if (is_dir) {
-        if (db_entry_folder_get_num_children((FsearchDatabaseEntryFolder *)entry) > 0) {
-            // TODO : The folder we are about to remove still has children.
-            // Not sure if this is expected behavior by fanotify and inotify, which should be dealt with properly.
-            // For now, we abort, but it might make sense to remove those children as well.
-            g_assert_not_reached();
-        }
-
-        if (is_inotify_event) {
-            int32_t wd = db_entry_get_wd((FsearchDatabaseEntryFolder *)entry);
-            FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
-            if (watched_entry != entry) {
-                g_assert_not_reached();
-            }
-            else {
-                inotify_rm_watch(self->inotify_fd, wd);
-                g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(wd));
-            }
-        }
-
-        container = self->folder_container;
-        pool = self->folder_pool;
+    int32_t wd = db_entry_get_wd((FsearchDatabaseEntryFolder *)folder);
+    FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
+    if (watched_entry != folder) {
+        g_assert_not_reached();
     }
     else {
-        container = self->file_container;
-        pool = self->file_pool;
-    }
-
-    if (container && pool) {
-        FsearchDatabaseEntry *found_entry = fsearch_database_entries_container_steal(container, entry);
-        if (found_entry) {
-            db_entry_set_parent(found_entry, NULL);
-            fsearch_memory_pool_free(pool, found_entry, TRUE);
-            is_dir ? num_folder_deletes++ : num_file_deletes++;
-        }
-        else {
-            g_assert_not_reached();
-        }
-        // uint32_t idx = 0;
-        // if (darray_binary_search_with_data(array,
-        //                                    entry,
-        //                                    (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
-        //                                    NULL,
-        //                                    &idx)) {
-        //     FsearchDatabaseEntry *found_entry = darray_get_item(array, idx);
-        //     darray_remove(array, idx, 1);
-
-        //    // Un-parent the entry to update its current parents state
-        //    db_entry_set_parent(found_entry, NULL);
-        //    fsearch_memory_pool_free(pool, found_entry, TRUE);
-        //    is_dir ? num_folder_deletes++ : num_file_deletes++;
-        //}
+        inotify_rm_watch(self->inotify_fd, wd);
+        g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(wd));
     }
 }
 
@@ -345,110 +295,133 @@ process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
     g_autoptr(DynamicArray) folders = NULL;
     g_autoptr(DynamicArray) files = NULL;
 
-    if (fsearch_file_utils_get_info(ctx->path->str, &mtime, &size, &is_dir)) {
-        if (is_dir) {
-            folders = darray_new(128);
-            files = darray_new(128);
-            if (db_scan_folder(ctx->path->str,
-                               ctx->watched_entry,
-                               self->folder_pool,
-                               self->file_pool,
-                               folders,
-                               files,
-                               self->exclude_manager,
-                               self->handles,
-                               self->watch_descriptors,
-                               &self->monitor_lock,
-                               self->fanotify_fd,
-                               self->inotify_fd,
-                               self->id,
-                               fsearch_database_include_get_one_file_system(self->include),
-                               NULL,
-                               NULL)) {
-                for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
-                    FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-                    // g_debug("insert folder");
-                    fsearch_database_entries_container_insert(self->folder_container, folder);
-                    // darray_insert_item_sorted(self->folders,
-                    //                           folder,
-                    //                           (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
-                    //                           NULL);
-                    num_folder_creates++;
-                }
-                for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
-                    FsearchDatabaseEntry *file = darray_get_item(files, i);
-                    // g_debug("insert file");
-                    fsearch_database_entries_container_insert(self->file_container, file);
-                    // darray_insert_item_sorted(self->files,
-                    //                           file,
-                    //                           (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
-                    //                           NULL);
-                    num_file_creates++;
-                }
+    if (!fsearch_file_utils_get_info(ctx->path->str, &mtime, &size, &is_dir)) {
+        return;
+    }
+
+    if (is_dir) {
+        folders = darray_new(128);
+        files = darray_new(128);
+        if (db_scan_folder(ctx->path->str,
+                           ctx->watched_entry,
+                           self->folder_pool,
+                           self->file_pool,
+                           folders,
+                           files,
+                           self->exclude_manager,
+                           self->handles,
+                           self->watch_descriptors,
+                           &self->monitor_lock,
+                           self->fanotify_fd,
+                           self->inotify_fd,
+                           self->id,
+                           fsearch_database_include_get_one_file_system(self->include),
+                           NULL,
+                           NULL)) {
+            for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+                FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+                fsearch_database_entries_container_insert(self->folder_container, folder);
+                num_folder_creates++;
+            }
+            for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
+                FsearchDatabaseEntry *file = darray_get_item(files, i);
+                fsearch_database_entries_container_insert(self->file_container, file);
+                num_file_creates++;
             }
         }
-        else {
-            // g_debug("insert file");
-            entry = fsearch_database_index_add_file(self, ctx->name->str, size, mtime, ctx->watched_entry);
-            num_file_creates++;
-        }
-
-        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files, entry);
     }
+    else {
+        entry = fsearch_database_index_add_file(self, ctx->name->str, size, mtime, ctx->watched_entry);
+        files = darray_new(1);
+        darray_add_item(files, entry);
+        num_file_creates++;
+    }
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
+}
+
+static inline void
+free_entry(FsearchMemoryPool *pool, FsearchDatabaseEntry *entry) {
+    db_entry_set_parent(entry, NULL);
+    fsearch_memory_pool_free(pool, entry, TRUE);
 }
 
 static void
 process_delete_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx) {
-    uint32_t entry_idx = 0;
-    FsearchDatabaseEntry *entry = find_entry_for_event(self, ctx, &entry_idx, false);
+    FsearchDatabaseEntry *entry = lookup_entry_for_event(self, ctx, true, false);
     if (!entry) {
         return;
     }
-    g_autoptr(DynamicArray) folders = NULL;
-    g_autoptr(DynamicArray) files = NULL;
-    if (db_entry_is_folder(entry)) {
-        g_autoptr(GTimer) timer = g_timer_new();
-        FsearchDatabaseEntryFolder *folder_entry_to_remove = (FsearchDatabaseEntryFolder *)entry;
 
-        folders = fsearch_database_entries_container_steal_descendants(self->folder_container, folder_entry_to_remove, -1);
-
-        // It's worth to iterate over all folders to calculate the exact number of file descendants we must find,
-        // because this means we can steal the files in huge chunks, which is much faster.
-        uint32_t num_file_descendants = db_entry_folder_get_num_files(folder_entry_to_remove);
-        for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
-            FsearchDatabaseEntryFolder *folder_entry = darray_get_item(folders, i);
-            num_file_descendants += db_entry_folder_get_num_files(folder_entry);
-        }
-
-        files = fsearch_database_entries_container_steal_descendants(self->file_container,
-                                                                     folder_entry_to_remove,
-                                                                     (int32_t)num_file_descendants);
-        num_descendant_counted++;
-        g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
+    // Deleting a file is simple:
+    // 1. notify listeners about the deletion
+    // 2. free the entry
+    if (db_entry_is_file(entry)) {
+        g_autoptr(DynamicArray) files = darray_new(1);
+        darray_add_item(files, entry);
+        propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files);
+        free_entry(self->file_pool, entry);
+        return;
     }
 
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files, entry);
+    g_assert(db_entry_is_folder(entry));
 
+    // Deleting a folder is more complex:
+    // 1. Find and remove all its descendants from the index
+    // 2. Notify listeners about the removal of all descendants and the folder
+    // 3. Unparent, unwatch and free all entries
+
+    g_autoptr(GTimer) timer = g_timer_new();
+    FsearchDatabaseEntryFolder *folder_entry_to_remove = (FsearchDatabaseEntryFolder *)entry;
+
+    g_autoptr(DynamicArray) folders =
+        fsearch_database_entries_container_steal_descendants(self->folder_container, folder_entry_to_remove, -1);
+
+    // It's worth to iterate over all folders to calculate the exact number of file descendants we must find,
+    // because this means we can steal the files in huge chunks, which is much faster.
+    uint32_t num_file_descendants = db_entry_folder_get_num_files(folder_entry_to_remove);
+    for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+        FsearchDatabaseEntryFolder *folder_entry = darray_get_item(folders, i);
+        num_file_descendants += db_entry_folder_get_num_files(folder_entry);
+    }
+
+    g_autoptr(DynamicArray) files = fsearch_database_entries_container_steal_descendants(self->file_container,
+                                                                                         folder_entry_to_remove,
+                                                                                         (int32_t)num_file_descendants);
+    num_descendant_counted++;
+    g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
+
+    // We also add the parent folder to the folder array
+    if (!folders) {
+        folders = darray_new(1);
+    }
+    darray_add_item(folders, folder_entry_to_remove);
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
+
+    // Free all entries
     if (files) {
         for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
             FsearchDatabaseEntry *file = darray_get_item(files, i);
-            db_entry_set_parent(file, NULL);
-            fsearch_memory_pool_free(self->file_pool, file, TRUE);
+            free_entry(self->file_pool, file);
         }
+        num_file_deletes += darray_get_num_items(files);
     }
     if (folders) {
         for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
             FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-            db_entry_set_parent(folder, NULL);
-            fsearch_memory_pool_free(self->folder_pool, folder, TRUE);
+            if (ctx->is_inotify_event) {
+                unwatch_folder(self, folder);
+            }
+            free_entry(self->folder_pool, folder);
         }
+        num_folder_deletes += darray_get_num_items(folders);
     }
-    remove_entry(self, entry, ctx->is_inotify_event);
 }
 
 static void
 process_attrib_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContext *ctx) {
-    FsearchDatabaseEntry *entry = find_entry_for_event(self, ctx, NULL, false);
+    FsearchDatabaseEntry *entry = lookup_entry_for_event(self, ctx, false, false);
     if (!entry) {
         return;
     }
@@ -460,19 +433,21 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
     time_t old_mtime = db_entry_get_mtime(entry);
 
     bool is_dir = false;
-    if (fsearch_file_utils_get_info(ctx->path->str, &mtime, &size, &is_dir)) {
-        if (old_size != size || old_mtime != mtime) {
-            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, NULL, entry);
-            if (mtime != old_mtime) {
-                db_entry_set_mtime(entry, mtime);
-            }
-            if (size != old_size) {
-                db_entry_set_size(entry, size);
-            }
-            propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, NULL, NULL, entry);
-            num_attrib_changes++;
-        }
+    if (!fsearch_file_utils_get_info(ctx->path->str, &mtime, &size, &is_dir)) {
+        return;
     }
+
+    if (old_size == size && old_mtime == mtime) {
+        return;
+    }
+
+    g_autoptr(DynamicArray) entries = darray_new(1);
+    darray_add_item(entries, entry);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, is_dir ? entries : NULL, !is_dir ? entries : NULL);
+    db_entry_set_mtime(entry, mtime);
+    db_entry_set_size(entry, size);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, is_dir ? entries : NULL, !is_dir ? entries : NULL);
+    num_attrib_changes++;
 }
 
 static const char *
@@ -527,7 +502,7 @@ process_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEventContex
         process_delete_event(self, ctx);
         break;
     case EVENT_MOVED_TO:
-        if (!find_entry_for_event(self, ctx, NULL, false)) {
+        if (!lookup_entry_for_event(self, ctx, false, false)) {
             process_create_event(self, ctx);
         }
         else {
