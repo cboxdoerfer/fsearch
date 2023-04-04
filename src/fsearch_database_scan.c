@@ -44,8 +44,10 @@ typedef struct DatabaseWalkContext {
     DynamicArray *files;
     FsearchMemoryPool *folder_pool;
     FsearchMemoryPool *file_pool;
-    GHashTable *handles;
-    GHashTable *watch_descriptors;
+    GHashTable *fanotify_handles;
+    GHashTable *fanotify_watched_folders;
+    GHashTable *inotify_watch_descriptors;
+    GHashTable *inotify_watched_folders;
     DynamicArray *watch_descriptor_array;
     int32_t inotify_fd;
     int32_t fanotify_fd;
@@ -115,10 +117,12 @@ add_fanotify_mark(DatabaseWalkContext *ctx, const char *path, FsearchDatabaseEnt
     memcpy(&handle_data->fsid, &buf.f_fsid, sizeof(fsid_t));
 
     GBytes *handle_bytes = create_bytes_for_handle(g_steal_pointer(&handle_data));
-    g_hash_table_insert(ctx->handles, handle_bytes, watched_folder);
+    g_hash_table_insert(ctx->fanotify_handles, handle_bytes, watched_folder);
+    g_hash_table_insert(ctx->fanotify_watched_folders, watched_folder, handle_bytes);
 
     if (fanotify_mark(ctx->fanotify_fd, (FAN_MARK_ADD | FAN_MARK_ONLYDIR), FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
-        g_hash_table_remove(ctx->handles, handle_bytes);
+        g_hash_table_remove(ctx->fanotify_handles, handle_bytes);
+        g_hash_table_remove(ctx->fanotify_watched_folders, watched_folder);
         return false;
     }
     return true;
@@ -152,8 +156,8 @@ add_folder(DatabaseWalkContext *walk_context,
         // Use inotify as a fallback
         // g_debug("use inotify as fallback for path: %s", path);
         const int32_t wd = inotify_add_watch(walk_context->inotify_fd, path, INOTIFY_FOLDER_MASK);
-        db_entry_set_wd((FsearchDatabaseEntryFolder *)folder, wd);
-        g_hash_table_insert(walk_context->watch_descriptors, GINT_TO_POINTER(wd), folder);
+        g_hash_table_insert(walk_context->inotify_watch_descriptors, GINT_TO_POINTER(wd), folder);
+        g_hash_table_insert(walk_context->inotify_watched_folders, folder, GINT_TO_POINTER(wd));
         darray_add_item(walk_context->watch_descriptor_array, GINT_TO_POINTER(wd));
 #endif
     }
@@ -271,8 +275,10 @@ db_scan_folder(const char *path,
                DynamicArray *folders,
                DynamicArray *files,
                FsearchDatabaseExcludeManager *exclude_manager,
-               GHashTable *handles,
-               GHashTable *watch_descriptors,
+               GHashTable *fanotify_handles,
+               GHashTable *fanotify_watched_folders,
+               GHashTable *inotify_watch_descriptors,
+               GHashTable *inotify_watched_folders,
                GMutex *monitor_lock,
                int32_t fanotify_fd,
                int32_t inotify_fd,
@@ -312,8 +318,10 @@ db_scan_folder(const char *path,
         .file_pool = file_pool,
         .folders = folders,
         .files = files,
-        .handles = handles,
-        .watch_descriptors = watch_descriptors,
+        .fanotify_handles = fanotify_handles,
+        .fanotify_watched_folders = fanotify_watched_folders,
+        .inotify_watch_descriptors = inotify_watch_descriptors,
+        .inotify_watched_folders = inotify_watched_folders,
         .watch_descriptor_array = watch_descriptor_array,
         .inotify_fd = inotify_fd,
         .fanotify_fd = fanotify_fd,
