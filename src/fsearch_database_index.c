@@ -39,8 +39,8 @@ struct _FsearchDatabaseIndex {
 
     FsearchDatabaseIndexPropertyFlags flags;
 
-    GHashTable *handles;
-    GHashTable *watch_descriptors;
+    GHashTable *fanotify_handles;
+    GHashTable *inotify_watch_descriptors;
     int32_t inotify_fd;
     int32_t fanotify_fd;
     GSource *inotify_monitor_source;
@@ -275,13 +275,13 @@ unwatch_folder(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder) {
     g_return_if_fail(db_entry_is_folder(folder));
 
     int32_t wd = db_entry_get_wd((FsearchDatabaseEntryFolder *)folder);
-    FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(wd));
+    FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->inotify_watch_descriptors, GINT_TO_POINTER(wd));
     if (watched_entry != folder) {
         g_assert_not_reached();
     }
     else {
         inotify_rm_watch(self->inotify_fd, wd);
-        g_hash_table_remove(self->watch_descriptors, GINT_TO_POINTER(wd));
+        g_hash_table_remove(self->inotify_watch_descriptors, GINT_TO_POINTER(wd));
     }
 }
 
@@ -309,8 +309,8 @@ process_create_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexMonitorEven
                            folders,
                            files,
                            self->exclude_manager,
-                           self->handles,
-                           self->watch_descriptors,
+                           self->fanotify_handles,
+                           self->inotify_watch_descriptors,
                            &self->monitor_lock,
                            self->fanotify_fd,
                            self->inotify_fd,
@@ -611,7 +611,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             g_autoptr(GBytes) fid_bytes = create_bytes_for_static_handle(handle);
 
             g_mutex_lock(&self->monitor_lock);
-            FsearchDatabaseEntryFolder *watched_entry = g_hash_table_lookup(self->handles, fid_bytes);
+            FsearchDatabaseEntryFolder *watched_entry = g_hash_table_lookup(self->fanotify_handles, fid_bytes);
             g_mutex_unlock(&self->monitor_lock);
 
             if (!watched_entry) {
@@ -728,7 +728,8 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             event = (const struct inotify_event *)ptr;
 
             g_mutex_lock(&self->monitor_lock);
-            FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->watch_descriptors, GINT_TO_POINTER(event->wd));
+            FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->inotify_watch_descriptors,
+                                                                     GINT_TO_POINTER(event->wd));
             g_mutex_unlock(&self->monitor_lock);
 
             if (!folder) {
@@ -784,8 +785,8 @@ index_free(FsearchDatabaseIndex *self) {
     }
     g_clear_pointer(&self->event_source, g_source_unref);
 
-    g_clear_pointer(&self->watch_descriptors, g_hash_table_unref);
-    g_clear_pointer(&self->handles, g_hash_table_unref);
+    g_clear_pointer(&self->inotify_watch_descriptors, g_hash_table_unref);
+    g_clear_pointer(&self->fanotify_handles, g_hash_table_unref);
 
     if (self->inotify_fd >= 0) {
         close(self->inotify_fd);
@@ -848,8 +849,8 @@ fsearch_database_index_new(uint32_t id,
     self->fanotify_fd = -1;
 
     if (fsearch_database_include_get_monitored(self->include)) {
-        self->watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
-        self->handles = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
+        self->inotify_watch_descriptors = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
+        self->fanotify_handles = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
 
         self->monitor_ctx = g_main_context_ref(monitor_ctx);
 
@@ -1025,8 +1026,8 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                        folders,
                        files,
                        self->exclude_manager,
-                       self->handles,
-                       self->watch_descriptors,
+                       self->fanotify_handles,
+                       self->inotify_watch_descriptors,
                        &self->monitor_lock,
                        self->fanotify_fd,
                        self->inotify_fd,
