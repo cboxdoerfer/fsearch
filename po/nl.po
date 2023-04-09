@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-03-13 12:41+0000\n"
+"PO-Revision-Date: 2023-04-10 11:52+0000\n"
 "Last-Translator: Didier Sandra <didier.mg.sandra@skynet.be>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 4.17-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -605,7 +605,7 @@ msgstr "Waarschuwingen tonen als:"
 
 #: src/fsearch_preferences.ui:602
 msgid "file / folder failed to open"
-msgstr "bestand/map niet kan worden geopend"
+msgstr "bestand of map niet kan worden geopend"
 
 #: src/fsearch_preferences.ui:625
 msgid "Dialogs:"
@@ -870,7 +870,7 @@ msgid ""
 msgstr ""
 "<b>Hulpballonnen tonen:</b>\n"
 "\n"
-"Schakel in om de volledige locatie van een geselecteerd(e) bestand/map in "
+"Schakel in om de volledige locatie van een geselecteerd(e) bestand of map in "
 "het resultatenvenster te tonen in een kleine hulpballon."
 
 #: src/fsearch_preferences.ui:1556
