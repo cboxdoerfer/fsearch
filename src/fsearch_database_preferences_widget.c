@@ -2,6 +2,7 @@
 
 #include "fsearch_database_preferences_widget.h"
 
+#include <config.h>
 #include <glib/gi18n.h>
 
 struct _FsearchDatabasePreferencesWidget {
@@ -399,12 +400,14 @@ init_include_page(FsearchDatabasePreferencesWidget *self) {
                          COL_INCLUDE_ONE_FS,
                          G_CALLBACK(on_column_include_one_fs_toggled),
                          self->include_model);
+#if (defined HAVE_INOTIFY) || (defined HAVE_FANOTIFY)
     column_toggle_append(self->include_list,
                          GTK_TREE_MODEL(self->include_model),
                          _("Monitor"),
                          COL_INCLUDE_MONITOR,
                          G_CALLBACK(on_column_include_monitor_toggled),
                          self->include_model);
+#endif
 
     // Workaround for GTK bug: https://gitlab.gnome.org/GNOME/gtk/-/issues/3084
     g_signal_connect(self->include_list, "realize", G_CALLBACK(gtk_tree_view_columns_autosize), NULL);
