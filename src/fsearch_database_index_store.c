@@ -192,8 +192,8 @@ index_store_add_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries, 
             continue;
         }
 
-        for (uint32_t i = 0; i < darray_get_num_items(entries); ++i) {
-            FsearchDatabaseEntry *entry = darray_get_item(entries, i);
+        for (uint32_t j = 0; j < darray_get_num_items(entries); ++j) {
+            FsearchDatabaseEntry *entry = darray_get_item(entries, j);
             fsearch_database_entries_container_insert(container, entry);
         }
     }
