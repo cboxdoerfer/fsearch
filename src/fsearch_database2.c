@@ -682,13 +682,6 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
     }
 }
 
-static bool
-add_entry_cb(FsearchDatabaseEntry *entry, FsearchDatabase2AddRemoveContext *ctx) {
-    ctx->entry = entry;
-    g_hash_table_foreach(ctx->db->search_results, search_view_results_add_cb, ctx);
-    return true;
-}
-
 static void
 index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
     FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
