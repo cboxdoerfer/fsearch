@@ -472,17 +472,16 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *self, GCancellable
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(self->include_manager);
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
-        FsearchDatabaseIndex *index = fsearch_database_index_new(fsearch_database_include_get_id(include),
-                                                                 include,
-                                                                 self->exclude_manager,
-                                                                 self->flags,
-                                                                 self->worker.ctx,
-                                                                 self->monitor.ctx,
-                                                                 index_event_cb,
-                                                                 self);
-        fsearch_database_index_scan(index, cancellable);
-        if (index) {
-            g_ptr_array_add(indices, index);
+        g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(fsearch_database_include_get_id(include),
+                                                                           include,
+                                                                           self->exclude_manager,
+                                                                           self->flags,
+                                                                           self->worker.ctx,
+                                                                           self->monitor.ctx,
+                                                                           index_event_cb,
+                                                                           self);
+        if (index && fsearch_database_index_scan(index, cancellable)) {
+            g_ptr_array_add(indices, g_steal_pointer(&index));
         }
     }
     if (g_cancellable_is_cancelled(cancellable)) {

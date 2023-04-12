@@ -668,51 +668,45 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
 
     g_autoptr(DynamicArray) files = darray_new(4096);
     g_autoptr(DynamicArray) folders = darray_new(4096);
-    bool res = false;
-    if (db_scan_folder(fsearch_database_include_get_path(self->include),
-                       NULL,
-                       self->folder_pool,
-                       self->file_pool,
-                       folders,
-                       files,
-                       self->exclude_manager,
-                       self->fanotify_monitor,
-                       self->inotify_monitor,
-                       self->id,
-                       fsearch_database_include_get_one_file_system(self->include),
-                       cancellable,
-                       NULL)) {
-        darray_sort_multi_threaded(folders,
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
-                                   cancellable,
-                                   NULL);
-        darray_sort_multi_threaded(files,
-                                   (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
-                                   cancellable,
-                                   NULL);
 
-        self->file_container = fsearch_database_entries_container_new(files,
-                                                                      TRUE,
-                                                                      DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                                      DATABASE_INDEX_PROPERTY_NONE,
-                                                                      DATABASE_ENTRY_TYPE_FILE,
-                                                                      NULL);
-        self->folder_container = fsearch_database_entries_container_new(folders,
-                                                                        TRUE,
-                                                                        DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                                        DATABASE_INDEX_PROPERTY_NONE,
-                                                                        DATABASE_ENTRY_TYPE_FOLDER,
-                                                                        NULL);
-
-        g_atomic_int_set(&self->initialized, 1);
-
-        res = true;
-    }
-    else {
-        // TODO: reset index
+    if (!db_scan_folder(fsearch_database_include_get_path(self->include),
+                        NULL,
+                        self->folder_pool,
+                        self->file_pool,
+                        folders,
+                        files,
+                        self->exclude_manager,
+                        self->fanotify_monitor,
+                        self->inotify_monitor,
+                        self->id,
+                        fsearch_database_include_get_one_file_system(self->include),
+                        cancellable,
+                        NULL)) {
+        return false;
     }
 
-    return res;
+    darray_sort_multi_threaded(folders,
+                               (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path,
+                               cancellable,
+                               NULL);
+    darray_sort_multi_threaded(files, (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_full_path, cancellable, NULL);
+
+    self->file_container = fsearch_database_entries_container_new(files,
+                                                                  TRUE,
+                                                                  DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                                  DATABASE_INDEX_PROPERTY_NONE,
+                                                                  DATABASE_ENTRY_TYPE_FILE,
+                                                                  NULL);
+    self->folder_container = fsearch_database_entries_container_new(folders,
+                                                                    TRUE,
+                                                                    DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                                    DATABASE_INDEX_PROPERTY_NONE,
+                                                                    DATABASE_ENTRY_TYPE_FOLDER,
+                                                                    NULL);
+
+    g_atomic_int_set(&self->initialized, 1);
+
+    return true;
 }
 
 void
