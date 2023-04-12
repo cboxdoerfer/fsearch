@@ -21,8 +21,6 @@
 #include "fsearch_selection.h"
 #include "fsearch_thread_pool.h"
 
-#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
-
 struct _FsearchDatabase2 {
     GObject parent_instance;
 

@@ -11,8 +11,6 @@
 #include <glib/gi18n.h>
 #include <sys/stat.h>
 
-#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
-
 enum {
     WALK_OK = 0,
     WALK_BADIO,
