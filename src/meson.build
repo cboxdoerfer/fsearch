@@ -41,6 +41,7 @@ libfsearch_sources = [
     'fsearch_filter_editor.c',
     'fsearch_filter_manager.c',
     'fsearch_filter_preferences_widget.c',
+    'fsearch_folder_monitor_event.c',
     'fsearch_index.c',
     'fsearch_list_view.c',
     'fsearch_listview_popup.c',
@@ -66,6 +67,14 @@ libfsearch_sources = [
     'fsearch_window.c',
     'fsearch_window_actions.c',
 ]
+
+if have_inotify
+    libfsearch_sources += 'fsearch_folder_monitor_inotify.c'
+endif
+
+if have_fanotify
+    libfsearch_sources += 'fsearch_folder_monitor_fanotify.c'
+endif
 
 if build_machine.system()=='darwin'
     libfsearch_sources+=['strverscmp.c']

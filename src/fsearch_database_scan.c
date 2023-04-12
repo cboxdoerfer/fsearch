@@ -11,24 +11,6 @@
 #include <glib/gi18n.h>
 #include <sys/stat.h>
 
-#ifdef HAVE_FANOTIFY
-#include <sys/fanotify.h>
-#include <sys/vfs.h>
-
-#define FANOTIFY_FOLDER_MASK                                                                                           \
-    (FAN_CREATE | FAN_CLOSE_WRITE | FAN_ATTRIB | FAN_DELETE | FAN_DELETE_SELF | FAN_MOVED_TO | FAN_MOVED_FROM          \
-     | FAN_MOVE_SELF | FAN_EVENT_ON_CHILD | FAN_ONDIR)
-#endif
-
-#ifdef HAVE_INOTIFY
-#include <sys/inotify.h>
-
-#define INOTIFY_FOLDER_MASK                                                                                            \
-    (IN_ATTRIB | IN_MOVED_FROM | IN_MOVED_TO | IN_DELETE | IN_CREATE | IN_DELETE_SELF | IN_UNMOUNT | IN_MOVE_SELF      \
-     | IN_CLOSE_WRITE)
-
-#endif
-
 #define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
 
 enum {
@@ -44,13 +26,8 @@ typedef struct DatabaseWalkContext {
     DynamicArray *files;
     FsearchMemoryPool *folder_pool;
     FsearchMemoryPool *file_pool;
-    GHashTable *fanotify_handles;
-    GHashTable *fanotify_watched_folders;
-    GHashTable *inotify_watch_descriptors;
-    GHashTable *inotify_watched_folders;
-    DynamicArray *watch_descriptor_array;
-    int32_t inotify_fd;
-    int32_t fanotify_fd;
+    FsearchFolderMonitorFanotify *fanotify_monitor;
+    FsearchFolderMonitorInotify *inotify_monitor;
     uint32_t index_id;
     bool one_file_system;
     GTimer *timer;
@@ -62,75 +39,23 @@ typedef struct DatabaseWalkContext {
     dev_t root_device_id;
 } DatabaseWalkContext;
 
+static void
+watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder, const char *path) {
 #ifdef HAVE_FANOTIFY
-// copied and modified from tracker-miners:
-// https://gitlab.gnome.org/GNOME/tracker-miners/-/blob/master/src/miners/fs/tracker-monitor-fanotify.c
-
-/* Binary compatible with the last portions of fanotify_event_info_fid */
-typedef struct {
-    fsid_t fsid;
-    struct file_handle handle;
-} FsearchDatabaseIndexHandleData;
-
-static inline GBytes *
-create_bytes_for_handle(FsearchDatabaseIndexHandleData *handle) {
-    return g_bytes_new_take(handle, sizeof(FsearchDatabaseIndexHandleData) + handle->handle.handle_bytes);
-}
-#endif
-
-static bool
-add_fanotify_mark(DatabaseWalkContext *ctx, const char *path, FsearchDatabaseEntry *watched_folder) {
-#ifdef HAVE_FANOTIFY
-    g_assert(watched_folder != NULL);
-    struct statfs buf;
-    if (statfs(path, &buf) < 0) {
-        if (errno != ENOENT)
-            g_warning("Could not get filesystem ID for %s", path);
-        return false;
-    }
-
-    g_autofree FsearchDatabaseIndexHandleData *handle_data =
-        calloc(1, sizeof(FsearchDatabaseIndexHandleData) + ctx->file_handle_payload);
-
-    while (true) {
-        int32_t mntid = -1;
-        if (name_to_handle_at(AT_FDCWD, path, (void *)&handle_data->handle, &mntid, 0) < 0) {
-            if (errno == EOVERFLOW) {
-                /* The payload is not big enough to hold a file_handle,
-                 * in this case we get the ideal handle data size, so
-                 * fetch that and retry.
-                 */
-                ctx->file_handle_payload = handle_data->handle.handle_bytes;
-                g_clear_pointer(&handle_data, free);
-                handle_data = calloc(1, sizeof(FsearchDatabaseIndexHandleData) + ctx->file_handle_payload);
-                handle_data->handle.handle_bytes = ctx->file_handle_payload;
-                continue;
-            }
-            else if (errno != ENOENT) {
-                g_warning("Could not get file handle for '%s': %m", path);
-            }
-            return false;
+    if (walk_context->fanotify_monitor) {
+        if (fsearch_folder_monitor_fanotify_watch(walk_context->fanotify_monitor, folder, path)) {
+            return;
         }
-        break;
     }
-
-    memcpy(&handle_data->fsid, &buf.f_fsid, sizeof(fsid_t));
-
-    GBytes *handle_bytes = create_bytes_for_handle(g_steal_pointer(&handle_data));
-    g_hash_table_insert(ctx->fanotify_handles, handle_bytes, watched_folder);
-    g_hash_table_insert(ctx->fanotify_watched_folders, watched_folder, handle_bytes);
-
-    if (fanotify_mark(ctx->fanotify_fd, (FAN_MARK_ADD | FAN_MARK_ONLYDIR), FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
-        g_hash_table_remove(ctx->fanotify_handles, handle_bytes);
-        g_hash_table_remove(ctx->fanotify_watched_folders, watched_folder);
-        return false;
-    }
-    return true;
 #endif
-    return false;
+#ifdef HAVE_INOTIFY
+    if (walk_context->inotify_monitor) {
+        if (fsearch_folder_monitor_inotify_watch(walk_context->inotify_monitor, folder, path)) {
+            return;
+        }
+    }
+#endif
 }
-
-// end tracker-miners copy
 
 static FsearchDatabaseEntryFolder *
 add_folder(DatabaseWalkContext *walk_context,
@@ -145,22 +70,7 @@ add_folder(DatabaseWalkContext *walk_context,
     db_entry_set_parent(folder, (FsearchDatabaseEntryFolder *)parent);
     db_entry_set_db_index(folder, walk_context->index_id);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(walk_context->monitor_lock);
-    g_assert_nonnull(locker);
-
-    if (walk_context->fanotify_fd >= 0 && add_fanotify_mark(walk_context, path, folder)) {
-        // g_debug("added fanotify mark: %s", path);
-    }
-    else if (walk_context->inotify_fd >= 0) {
-#ifdef HAVE_INOTIFY
-        // Use inotify as a fallback
-        // g_debug("use inotify as fallback for path: %s", path);
-        const int32_t wd = inotify_add_watch(walk_context->inotify_fd, path, INOTIFY_FOLDER_MASK);
-        g_hash_table_insert(walk_context->inotify_watch_descriptors, GINT_TO_POINTER(wd), folder);
-        g_hash_table_insert(walk_context->inotify_watched_folders, folder, GINT_TO_POINTER(wd));
-        darray_add_item(walk_context->watch_descriptor_array, GINT_TO_POINTER(wd));
-#endif
-    }
+    watch_folder(walk_context, folder, path);
 
     darray_add_item(walk_context->folders, folder);
 
@@ -275,13 +185,8 @@ db_scan_folder(const char *path,
                DynamicArray *folders,
                DynamicArray *files,
                FsearchDatabaseExcludeManager *exclude_manager,
-               GHashTable *fanotify_handles,
-               GHashTable *fanotify_watched_folders,
-               GHashTable *inotify_watch_descriptors,
-               GHashTable *inotify_watched_folders,
-               GMutex *monitor_lock,
-               int32_t fanotify_fd,
-               int32_t inotify_fd,
+               FsearchFolderMonitorFanotify *fanotify_monitor,
+               FsearchFolderMonitorInotify *inotify_monitor,
                uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
@@ -311,20 +216,13 @@ db_scan_folder(const char *path,
         g_debug("[db_scan] can't stat: %s", path);
     }
 
-    g_autoptr(DynamicArray) watch_descriptor_array = darray_new(128);
-
     DatabaseWalkContext walk_context = {
         .folder_pool = folder_pool,
         .file_pool = file_pool,
         .folders = folders,
         .files = files,
-        .fanotify_handles = fanotify_handles,
-        .fanotify_watched_folders = fanotify_watched_folders,
-        .inotify_watch_descriptors = inotify_watch_descriptors,
-        .inotify_watched_folders = inotify_watched_folders,
-        .watch_descriptor_array = watch_descriptor_array,
-        .inotify_fd = inotify_fd,
-        .fanotify_fd = fanotify_fd,
+        .fanotify_monitor = fanotify_monitor,
+        .inotify_monitor = inotify_monitor,
         .exclude_manager = exclude_manager,
         .path = path_string,
         .one_file_system = one_file_system,
@@ -334,7 +232,6 @@ db_scan_folder(const char *path,
         .status_cb = status_cb,
         .root_device_id = root_st.st_dev,
         .file_handle_payload = 0,
-        .monitor_lock = monitor_lock,
     };
 
     if (!parent) {

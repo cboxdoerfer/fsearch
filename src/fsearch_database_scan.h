@@ -3,6 +3,8 @@
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
 #include "fsearch_database_index_store.h"
+#include "fsearch_folder_monitor_fanotify.h"
+#include "fsearch_folder_monitor_inotify.h"
 
 bool
 db_scan_folder(const char *path,
@@ -12,13 +14,8 @@ db_scan_folder(const char *path,
                DynamicArray *folders,
                DynamicArray *files,
                FsearchDatabaseExcludeManager *exclude_manager,
-               GHashTable *fanotify_handles,
-               GHashTable *fanotify_watched_folders,
-               GHashTable *inotify_watch_descriptors,
-               GHashTable *inotify_watched_folders,
-               GMutex *monitor_lock,
-               int32_t fanotify_fd,
-               int32_t inotify_fd,
+               FsearchFolderMonitorFanotify *fanotify_monitor,
+               FsearchFolderMonitorInotify *inotify_monitor,
                uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
