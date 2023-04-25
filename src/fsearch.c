@@ -48,6 +48,7 @@ struct _FsearchApplication {
 
     char *option_search_term;
     bool new_window;
+    bool minimized;
 
     guint file_manager_watch_id;
     bool has_file_manager_on_bus;
@@ -303,14 +304,29 @@ action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpo
 }
 
 static void
+show_app_window(FsearchApplication *self, FsearchApplicationWindow *app_window, gboolean minimized) {
+    g_return_if_fail(FSEARCH_IS_APPLICATION(self));
+    g_return_if_fail(FSEARCH_IS_APPLICATION_WINDOW(app_window));
+
+    move_search_term_to_window(self, app_window);
+    fsearch_application_window_focus_search_entry(app_window);
+
+    if (minimized) {
+        gtk_widget_show(GTK_WIDGET(app_window));
+        gtk_window_iconify(GTK_WINDOW(app_window));
+    }
+    else {
+        gtk_window_present_with_time(GTK_WINDOW(app_window), gtk_get_current_event_time());
+    }
+}
+
+static void
 action_new_window_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
-    GtkWindow *window = GTK_WINDOW(fsearch_application_window_new(FSEARCH_APPLICATION(app)));
+    FsearchApplicationWindow *app_window = fsearch_application_window_new(FSEARCH_APPLICATION(app));
     FsearchApplication *self = FSEARCH_APPLICATION(app);
+    gboolean minimized = g_variant_get_boolean(parameter);
 
-    move_search_term_to_window(self, FSEARCH_APPLICATION_WINDOW(window));
-    fsearch_application_window_focus_search_entry(FSEARCH_APPLICATION_WINDOW(window));
-
-    gtk_window_present(window);
+    show_app_window(self, app_window, minimized);
 }
 
 static void
@@ -478,7 +494,7 @@ fsearch_application_startup(GApplication *app) {
 }
 
 static GActionEntry fsearch_app_entries[] = {
-    {"new_window", action_new_window_activated, NULL, NULL, NULL},
+    {"new_window", action_new_window_activated, "b", NULL, NULL},
     {"about", action_about_activated, NULL, NULL, NULL},
     {"online_help", action_online_help_activated, NULL, NULL, NULL},
     {"help", action_help_activated, NULL, NULL, NULL},
@@ -506,14 +522,12 @@ fsearch_application_activate(GApplication *app) {
         // If there's already a window make it visible
         FsearchApplicationWindow *window = get_first_application_window(FSEARCH_APPLICATION(app));
         if (window) {
-            move_search_term_to_window(self, window);
-            fsearch_application_window_focus_search_entry(FSEARCH_APPLICATION_WINDOW(window));
-            gtk_window_present(GTK_WINDOW(window));
+            show_app_window(self, window, self->minimized);
             return;
         }
     }
 
-    g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", NULL);
+    g_action_group_activate_action(G_ACTION_GROUP(self), "new_window", g_variant_new_boolean(self->minimized));
 
     database_auto_update_init(self);
 
@@ -535,6 +549,10 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
         self->new_window = true;
     }
 
+    if (g_variant_dict_contains(dict, "minimized")) {
+        self->minimized = true;
+    }
+
     if (g_variant_dict_contains(dict, "preferences")) {
         g_action_group_activate_action(G_ACTION_GROUP(self), "preferences", g_variant_new_uint32(0));
         return 0;
@@ -553,6 +571,7 @@ fsearch_application_command_line(GApplication *app, GApplicationCommandLine *cmd
 
     g_application_activate(G_APPLICATION(self));
     self->new_window = false;
+    self->minimized = false;
 
     return G_APPLICATION_CLASS(fsearch_application_parent_class)->command_line(app, cmdline);
 }
@@ -712,6 +731,7 @@ static void
 fsearch_application_add_option_entries(FsearchApplication *self) {
     static const GOptionEntry main_entries[] = {
         {"new-window", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Open a new application window")},
+        {"minimized", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Minimize the application window")},
         {"preferences", 0, 0, G_OPTION_ARG_NONE, NULL, N_("Show the application preferences")},
         {"search", 's', 0, G_OPTION_ARG_STRING, NULL, N_("Set the search pattern"), "PATTERN"},
         {"update-database", 'u', 0, G_OPTION_ARG_NONE, NULL, N_("Update the database and exit")},

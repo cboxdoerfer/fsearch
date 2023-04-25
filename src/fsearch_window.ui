@@ -67,6 +67,7 @@ Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
                 <property name="receives-default">True</property>
                 <property name="tooltip-text" translatable="yes">New window</property>
                 <property name="action-name">app.new_window</property>
+                <property name="action-target">boolean false</property>
                 <property name="image">image_window_new</property>
               </object>
               <packing>
