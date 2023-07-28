@@ -1,6 +1,6 @@
 #define G_LOG_DOMAIN "fsearch-database"
 
-#include "fsearch_database2.h"
+#include "fsearch_database.h"
 
 #include <config.h>
 #ifdef HAVE_MALLOC_TRIM
@@ -62,7 +62,7 @@ typedef struct {
     volatile gint ref_count;
 } FsearchDatabaseIndexStore;
 
-struct _FsearchDatabase2 {
+struct _FsearchDatabase {
     GObject parent_instance;
 
     // The file the database will be loaded from and saved to
@@ -96,7 +96,7 @@ typedef struct FsearchDatabaseSearchView {
     GHashTable *folder_selection;
 } FsearchDatabaseSearchView;
 
-typedef enum FsearchDatabase2EventType {
+typedef enum FsearchDatabaseEventType {
     EVENT_LOAD_STARTED,
     EVENT_LOAD_FINISHED,
     EVENT_ITEM_INFO_READY,
@@ -111,9 +111,9 @@ typedef enum FsearchDatabase2EventType {
     EVENT_SELECTION_CHANGED,
     EVENT_DATABASE_CHANGED,
     NUM_EVENTS,
-} FsearchDatabase2EventType;
+} FsearchDatabaseEventType;
 
-G_DEFINE_TYPE(FsearchDatabase2, fsearch_database2, G_TYPE_OBJECT)
+G_DEFINE_TYPE(FsearchDatabase, fsearch_database, G_TYPE_OBJECT)
 
 enum { PROP_0, PROP_FILE, NUM_PROPERTIES };
 
@@ -121,8 +121,8 @@ static GParamSpec *properties[NUM_PROPERTIES];
 static guint signals[NUM_EVENTS];
 
 typedef struct FsearchSignalEmitContext {
-    FsearchDatabase2 *db;
-    FsearchDatabase2EventType type;
+    FsearchDatabase *db;
+    FsearchDatabaseEventType type;
     gpointer arg1;
     gpointer arg2;
     GDestroyNotify arg1_free_func;
@@ -1660,7 +1660,7 @@ search_view_new(FsearchQuery *query,
 }
 
 static void
-quit_work_queue(FsearchDatabase2 *self) {
+quit_work_queue(FsearchDatabase *self) {
     g_async_queue_push(self->work_queue, fsearch_database_work_new_quit());
 }
 
@@ -1677,8 +1677,8 @@ signal_emit_context_free(FsearchSignalEmitContext *ctx) {
 }
 
 static FsearchSignalEmitContext *
-signal_emit_context_new(FsearchDatabase2 *db,
-                        FsearchDatabase2EventType type,
+signal_emit_context_new(FsearchDatabase *db,
+                        FsearchDatabaseEventType type,
                         gpointer arg1,
                         gpointer arg2,
                         guint n_args,
@@ -1721,13 +1721,13 @@ emit_signal_cb(gpointer user_data) {
 }
 
 static void
-emit_signal0(FsearchDatabase2 *self, FsearchDatabase2EventType type) {
+emit_signal0(FsearchDatabase *self, FsearchDatabaseEventType type) {
     g_idle_add(emit_signal_cb, signal_emit_context_new(self, type, NULL, NULL, 0, NULL, NULL));
 }
 
 static void
-emit_signal(FsearchDatabase2 *self,
-            FsearchDatabase2EventType type,
+emit_signal(FsearchDatabase *self,
+            FsearchDatabaseEventType type,
             gpointer arg1,
             gpointer arg2,
             guint n_args,
@@ -1737,7 +1737,7 @@ emit_signal(FsearchDatabase2 *self,
 }
 
 static void
-emit_item_info_ready_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseEntryInfo *info) {
+emit_item_info_ready_signal(FsearchDatabase *self, guint id, FsearchDatabaseEntryInfo *info) {
     emit_signal(self,
                 EVENT_ITEM_INFO_READY,
                 GUINT_TO_POINTER(id),
@@ -1748,7 +1748,7 @@ emit_item_info_ready_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseEnt
 }
 
 static void
-emit_search_finished_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearchInfo *info) {
+emit_search_finished_signal(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
     emit_signal(self,
                 EVENT_SEARCH_FINISHED,
                 GUINT_TO_POINTER(id),
@@ -1759,7 +1759,7 @@ emit_search_finished_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSea
 }
 
 static void
-emit_sort_finished_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearchInfo *info) {
+emit_sort_finished_signal(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
     emit_signal(self,
                 EVENT_SORT_FINISHED,
                 GUINT_TO_POINTER(id),
@@ -1770,7 +1770,7 @@ emit_sort_finished_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearc
 }
 
 static void
-emit_selection_changed_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseSearchInfo *info) {
+emit_selection_changed_signal(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
     emit_signal(self,
                 EVENT_SELECTION_CHANGED,
                 GUINT_TO_POINTER(id),
@@ -1781,19 +1781,19 @@ emit_selection_changed_signal(FsearchDatabase2 *self, guint id, FsearchDatabaseS
 }
 
 static void
-emit_database_changed_signal(FsearchDatabase2 *self, FsearchDatabaseInfo *info) {
+emit_database_changed_signal(FsearchDatabase *self, FsearchDatabaseInfo *info) {
     emit_signal(self, EVENT_DATABASE_CHANGED, info, NULL, 1, NULL, (GDestroyNotify)fsearch_database_info_unref);
 }
 
 static void
-database_unlock(FsearchDatabase2 *self) {
-    g_assert(FSEARCH_IS_DATABASE2(self));
+database_unlock(FsearchDatabase *self) {
+    g_assert(FSEARCH_IS_DATABASE(self));
     g_mutex_unlock(&self->mutex);
 }
 
 static void
-database_lock(FsearchDatabase2 *self) {
-    g_assert(FSEARCH_IS_DATABASE2(self));
+database_lock(FsearchDatabase *self) {
+    g_assert(FSEARCH_IS_DATABASE(self));
     g_mutex_lock(&self->mutex);
 }
 
@@ -1808,12 +1808,12 @@ get_num_search_folder_results(FsearchDatabaseSearchView *view) {
 }
 
 static uint32_t
-get_num_database_files(FsearchDatabase2 *self) {
+get_num_database_files(FsearchDatabase *self) {
     return self->store ? index_store_get_num_files(self->store) : 0;
 }
 
 static uint32_t
-get_num_database_folders(FsearchDatabase2 *self) {
+get_num_database_folders(FsearchDatabase *self) {
     return self->store ? index_store_get_num_folders(self->store) : 0;
 }
 
@@ -1864,12 +1864,12 @@ is_selected(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry) {
 }
 
 static FsearchDatabaseSearchView *
-get_search_view(FsearchDatabase2 *self, uint32_t view_id) {
+get_search_view(FsearchDatabase *self, uint32_t view_id) {
     return g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
 }
 
 static FsearchResult
-get_entry_info_non_blocking(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
+get_entry_info_non_blocking(FsearchDatabase *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(work, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
@@ -1894,14 +1894,14 @@ get_entry_info_non_blocking(FsearchDatabase2 *self, FsearchDatabaseWork *work, F
 }
 
 static FsearchResult
-get_entry_info(FsearchDatabase2 *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
+get_entry_info(FsearchDatabase *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
     return get_entry_info_non_blocking(self, work, info_out);
 }
 
 static void
-sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+sort_database(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
@@ -1980,7 +1980,7 @@ sort_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 }
 
 static bool
-search_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+search_database(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_val_if_fail(self, false);
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
@@ -2094,9 +2094,9 @@ select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int32_t end_idx
 
 static void
 search_views_updated_cb(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabase2 *self = user_data;
+    FsearchDatabase *self = user_data;
     g_return_if_fail(self);
-    g_return_if_fail(FSEARCH_IS_DATABASE2(self));
+    g_return_if_fail(FSEARCH_IS_DATABASE(self));
 
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
@@ -2124,12 +2124,12 @@ entry_matches_query(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry
 }
 
 typedef struct {
-    FsearchDatabase2 *db;
+    FsearchDatabase *db;
     FsearchDatabaseIndex *index;
     FsearchDatabaseEntry *entry;
     DynamicArray *folders;
     DynamicArray *files;
-} FsearchDatabase2AddRemoveContext;
+} FsearchDatabaseAddRemoveContext;
 
 static bool
 search_view_result_add(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *view) {
@@ -2144,7 +2144,7 @@ search_view_result_add(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *v
 
 static void
 search_view_results_add_cb(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabase2AddRemoveContext *ctx = user_data;
+    FsearchDatabaseAddRemoveContext *ctx = user_data;
     g_return_if_fail(ctx);
 
     FsearchDatabaseSearchView *view = value;
@@ -2186,7 +2186,7 @@ search_view_result_remove(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView
 
 static void
 search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabase2AddRemoveContext *ctx = user_data;
+    FsearchDatabaseAddRemoveContext *ctx = user_data;
     g_return_if_fail(ctx);
 
     FsearchDatabaseSearchView *view = value;
@@ -2202,9 +2202,9 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
 
 static void
 index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
-    FsearchDatabase2 *self = FSEARCH_DATABASE2(user_data);
+    FsearchDatabase *self = FSEARCH_DATABASE(user_data);
 
-    FsearchDatabase2AddRemoveContext ctx = {
+    FsearchDatabaseAddRemoveContext ctx = {
         .db = self,
         .index = index,
         .folders = event->folders,
@@ -2248,7 +2248,7 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
 }
 
 static void
-modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
     const uint32_t view_id = fsearch_database_work_get_view_id(work);
@@ -2332,7 +2332,7 @@ modify_selection(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 }
 
 static void
-save_database_to_file(FsearchDatabase2 *self) {
+save_database_to_file(FsearchDatabase *self) {
     g_return_if_fail(self);
     g_return_if_fail(self->file);
 
@@ -2345,7 +2345,7 @@ save_database_to_file(FsearchDatabase2 *self) {
 }
 
 static void
-rescan_database(FsearchDatabase2 *self) {
+rescan_database(FsearchDatabase *self) {
     g_return_if_fail(self);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
@@ -2394,7 +2394,7 @@ rescan_database(FsearchDatabase2 *self) {
 }
 
 static void
-scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+scan_database(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
 
@@ -2450,7 +2450,7 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 }
 
 static void
-load_database_from_file(FsearchDatabase2 *self) {
+load_database_from_file(FsearchDatabase *self) {
     g_return_if_fail(self);
     g_return_if_fail(self->file);
 
@@ -2494,7 +2494,7 @@ load_database_from_file(FsearchDatabase2 *self) {
 static gpointer
 work_queue_thread(gpointer data) {
     g_debug("manager thread started");
-    FsearchDatabase2 *self = data;
+    FsearchDatabase *self = data;
 
     while (TRUE) {
         g_autoptr(FsearchDatabaseWork) work = g_async_queue_pop(self->work_queue);
@@ -2558,12 +2558,12 @@ work_queue_thread(gpointer data) {
 }
 
 static void
-fsearch_database2_constructed(GObject *object) {
-    FsearchDatabase2 *self = (FsearchDatabase2 *)object;
+fsearch_database_constructed(GObject *object) {
+    FsearchDatabase *self = (FsearchDatabase *)object;
 
-    g_assert(FSEARCH_IS_DATABASE2(self));
+    g_assert(FSEARCH_IS_DATABASE(self));
 
-    G_OBJECT_CLASS(fsearch_database2_parent_class)->constructed(object);
+    G_OBJECT_CLASS(fsearch_database_parent_class)->constructed(object);
 
     if (self->file == NULL) {
         self->file = get_default_database_file();
@@ -2573,19 +2573,19 @@ fsearch_database2_constructed(GObject *object) {
 }
 
 static void
-fsearch_database2_dispose(GObject *object) {
-    FsearchDatabase2 *self = (FsearchDatabase2 *)object;
+fsearch_database_dispose(GObject *object) {
+    FsearchDatabase *self = (FsearchDatabase *)object;
 
     // Notify work queue thread to exit itself
     quit_work_queue(self);
     g_thread_join(self->work_queue_thread);
 
-    G_OBJECT_CLASS(fsearch_database2_parent_class)->dispose(object);
+    G_OBJECT_CLASS(fsearch_database_parent_class)->dispose(object);
 }
 
 static void
-fsearch_database2_finalize(GObject *object) {
-    FsearchDatabase2 *self = (FsearchDatabase2 *)object;
+fsearch_database_finalize(GObject *object) {
+    FsearchDatabase *self = (FsearchDatabase *)object;
 
     database_lock(self);
     g_clear_pointer(&self->work_queue, g_async_queue_unref);
@@ -2601,12 +2601,12 @@ fsearch_database2_finalize(GObject *object) {
 
     g_mutex_clear(&self->mutex);
 
-    G_OBJECT_CLASS(fsearch_database2_parent_class)->finalize(object);
+    G_OBJECT_CLASS(fsearch_database_parent_class)->finalize(object);
 }
 
 static void
-fsearch_database2_get_property(GObject *object, guint prop_id, GValue *value, GParamSpec *pspec) {
-    FsearchDatabase2 *self = FSEARCH_DATABASE2(object);
+fsearch_database_get_property(GObject *object, guint prop_id, GValue *value, GParamSpec *pspec) {
+    FsearchDatabase *self = FSEARCH_DATABASE(object);
 
     switch (prop_id) {
     case PROP_FILE:
@@ -2619,8 +2619,8 @@ fsearch_database2_get_property(GObject *object, guint prop_id, GValue *value, GP
 }
 
 static void
-fsearch_database2_set_property(GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec) {
-    FsearchDatabase2 *self = FSEARCH_DATABASE2(object);
+fsearch_database_set_property(GObject *object, guint prop_id, const GValue *value, GParamSpec *pspec) {
+    FsearchDatabase *self = FSEARCH_DATABASE(object);
 
     switch (prop_id) {
     case PROP_FILE:
@@ -2633,14 +2633,14 @@ fsearch_database2_set_property(GObject *object, guint prop_id, const GValue *val
 }
 
 static void
-fsearch_database2_class_init(FsearchDatabase2Class *klass) {
+fsearch_database_class_init(FsearchDatabaseClass *klass) {
     GObjectClass *object_class = G_OBJECT_CLASS(klass);
 
-    object_class->constructed = fsearch_database2_constructed;
-    object_class->dispose = fsearch_database2_dispose;
-    object_class->finalize = fsearch_database2_finalize;
-    object_class->set_property = fsearch_database2_set_property;
-    object_class->get_property = fsearch_database2_get_property;
+    object_class->constructed = fsearch_database_constructed;
+    object_class->dispose = fsearch_database_dispose;
+    object_class->finalize = fsearch_database_finalize;
+    object_class->set_property = fsearch_database_set_property;
+    object_class->get_property = fsearch_database_get_property;
 
     properties[PROP_FILE] = g_param_spec_object("file",
                                                 "File",
@@ -2772,7 +2772,7 @@ fsearch_database2_class_init(FsearchDatabase2Class *klass) {
 }
 
 static void
-fsearch_database2_init(FsearchDatabase2 *self) {
+fsearch_database_init(FsearchDatabase *self) {
     g_mutex_init((&self->mutex));
     self->thread_pool = fsearch_thread_pool_init();
     self->search_results = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)search_view_free);
@@ -2781,7 +2781,7 @@ fsearch_database2_init(FsearchDatabase2 *self) {
 }
 
 void
-fsearch_database2_queue_work(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
+fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_return_if_fail(self);
     g_return_if_fail(work);
 
@@ -2789,7 +2789,7 @@ fsearch_database2_queue_work(FsearchDatabase2 *self, FsearchDatabaseWork *work) 
 }
 
 FsearchResult
-fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out) {
+fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
@@ -2819,8 +2819,8 @@ fsearch_database2_try_get_search_info(FsearchDatabase2 *self, uint32_t view_id, 
 }
 
 FsearchResult
-fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
-                                    uint32_t view_id,
+fsearch_database_try_get_item_info(FsearchDatabase *self,
+                                   uint32_t view_id,
                                     uint32_t idx,
                                     FsearchDatabaseEntryInfoFlags flags,
                                     FsearchDatabaseEntryInfo **info_out) {
@@ -2839,7 +2839,7 @@ fsearch_database2_try_get_item_info(FsearchDatabase2 *self,
 }
 
 FsearchResult
-fsearch_database2_try_get_database_info(FsearchDatabase2 *self, FsearchDatabaseInfo **info_out) {
+fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
@@ -2858,9 +2858,9 @@ fsearch_database2_try_get_database_info(FsearchDatabase2 *self, FsearchDatabaseI
 }
 
 typedef struct {
-    FsearchDatabase2ForeachFunc func;
+    FsearchDatabaseForeachFunc func;
     gpointer user_data;
-} FsearchDatabase2SelectionForeachContext;
+} FsearchDatabaseSelectionForeachContext;
 
 static void
 selection_foreach_cb(gpointer key, gpointer value, gpointer user_data) {
@@ -2868,16 +2868,16 @@ selection_foreach_cb(gpointer key, gpointer value, gpointer user_data) {
     if (G_UNLIKELY(!entry)) {
         return;
     }
-    FsearchDatabase2SelectionForeachContext *ctx = user_data;
+    FsearchDatabaseSelectionForeachContext *ctx = user_data;
     ctx->func(entry, ctx->user_data);
 }
 
 void
-fsearch_database2_selection_foreach(FsearchDatabase2 *self,
-                                    uint32_t view_id,
-                                    FsearchDatabase2ForeachFunc func,
-                                    gpointer user_data) {
-    g_return_if_fail(FSEARCH_IS_DATABASE2(self));
+fsearch_database_selection_foreach(FsearchDatabase *self,
+                                   uint32_t view_id,
+                                   FsearchDatabaseForeachFunc func,
+                                   gpointer user_data) {
+    g_return_if_fail(FSEARCH_IS_DATABASE(self));
     g_return_if_fail(func);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
@@ -2888,13 +2888,13 @@ fsearch_database2_selection_foreach(FsearchDatabase2 *self,
         return;
     }
 
-    FsearchDatabase2SelectionForeachContext ctx = {.func = func, .user_data = user_data};
+    FsearchDatabaseSelectionForeachContext ctx = {.func = func, .user_data = user_data};
 
     g_hash_table_foreach(view->folder_selection, selection_foreach_cb, &ctx);
     g_hash_table_foreach(view->file_selection, selection_foreach_cb, &ctx);
 }
 
-FsearchDatabase2 *
-fsearch_database2_new(GFile *file) {
-    return g_object_new(FSEARCH_TYPE_DATABASE2, "file", file, NULL);
+FsearchDatabase *
+fsearch_database_new(GFile *file) {
+    return g_object_new(FSEARCH_TYPE_DATABASE, "file", file, NULL);
 }

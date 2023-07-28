@@ -24,7 +24,7 @@
 
 #include "fsearch_array.h"
 #include "fsearch_config.h"
-#include "fsearch_database2.h"
+#include "fsearch_database.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_info.h"
 #include "fsearch_database_search_info.h"
@@ -69,7 +69,7 @@ struct _FsearchApplicationWindow {
 
     char *active_filter_name;
 
-    FsearchDatabase2 *db;
+    FsearchDatabase *db;
     FsearchDatabaseWork *work_search;
     FsearchDatabaseWork *work_sort;
 
@@ -106,7 +106,7 @@ static void
 modify_selection(FsearchApplicationWindow *self, FsearchSelectionType type, int32_t start_idx, int32_t end_idx) {
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_modify_selection(win_id, type, start_idx, end_idx);
-    fsearch_database2_queue_work(self->db, work);
+    fsearch_database_queue_work(self->db, work);
 }
 
 static void
@@ -420,7 +420,7 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
 }
 
 static void
-on_sort_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info, gpointer user_data) {
+on_sort_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info, gpointer user_data) {
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
@@ -431,7 +431,7 @@ on_sort_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info
 }
 
 static void
-on_sort_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
+on_sort_started(FsearchDatabase *db, gpointer data, gpointer user_data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
     if (win) {
@@ -440,7 +440,7 @@ on_sort_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
 }
 
 static void
-on_selection_changed(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
+on_selection_changed(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
@@ -449,7 +449,7 @@ on_selection_changed(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *
 }
 
 static void
-on_search_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
+on_search_finished(FsearchDatabase *db, guint id, FsearchDatabaseSearchInfo *info, gpointer self) {
     FsearchApplicationWindow *win = get_window_for_id(id);
 
     if (win) {
@@ -459,7 +459,7 @@ on_search_finished(FsearchDatabase2 *db, guint id, FsearchDatabaseSearchInfo *in
 }
 
 static void
-on_search_started(FsearchDatabase2 *db, gpointer data, gpointer user_data) {
+on_search_started(FsearchDatabase *db, gpointer data, gpointer user_data) {
     const guint win_id = GPOINTER_TO_UINT(data);
     FsearchApplicationWindow *win = get_window_for_id(win_id);
 
@@ -489,7 +489,7 @@ perform_search(FsearchApplicationWindow *win) {
                                                         fsearch_list_view_get_sort_order(win->result_view->list_view),
                                                         fsearch_list_view_get_sort_type(win->result_view->list_view));
     g_clear_pointer(&filter, fsearch_filter_unref);
-    fsearch_database2_queue_work(win->db, win->work_search);
+    fsearch_database_queue_work(win->db, win->work_search);
 }
 
 static gboolean
@@ -643,7 +643,7 @@ on_listview_sort(int sort_order, GtkSortType sort_type, gpointer user_data) {
     g_clear_pointer(&win->work_sort, fsearch_database_work_unref);
     win->work_sort = fsearch_database_work_new_sort(win_id, sort_order, sort_type);
 
-    fsearch_database2_queue_work(win->db, win->work_sort);
+    fsearch_database_queue_work(win->db, win->work_sort);
 }
 
 static void
@@ -747,11 +747,11 @@ on_listview_row_is_selected(int row, gpointer user_data) {
 
     g_autoptr(FsearchDatabaseEntryInfo) info = NULL;
     // TODO: handle async case where entry info isn't ready yet or maybe use blocking call?
-    if (fsearch_database2_try_get_item_info(win->result_view->db,
-                                            win->result_view->view_id,
-                                            row,
-                                            FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED,
-                                            &info)
+    if (fsearch_database_try_get_item_info(win->result_view->db,
+                                           win->result_view->view_id,
+                                           row,
+                                           FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED,
+                                           &info)
         == FSEARCH_RESULT_SUCCESS) {
         return fsearch_database_entry_info_get_selected(info);
     }
@@ -832,7 +832,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
 }
 
 static void
-on_database_update_finished(FsearchDatabase2 *db2, FsearchDatabaseInfo *info, gpointer user_data) {
+on_database_update_finished(FsearchDatabase *db2, FsearchDatabaseInfo *info, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -850,7 +850,7 @@ on_database_update_finished(FsearchDatabase2 *db2, FsearchDatabaseInfo *info, gp
 }
 
 static void
-on_database_load_started(FsearchDatabase2 *db2, gpointer user_data) {
+on_database_load_started(FsearchDatabase *db2, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -858,7 +858,7 @@ on_database_load_started(FsearchDatabase2 *db2, gpointer user_data) {
 }
 
 static void
-on_database_scan_started(FsearchDatabase2 *db2, gpointer user_data) {
+on_database_scan_started(FsearchDatabase *db2, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -1200,12 +1200,12 @@ fsearch_application_window_get_num_selected(FsearchApplicationWindow *self) {
 
 void
 fsearch_application_window_selection_for_each(FsearchApplicationWindow *self,
-                                              FsearchDatabase2ForeachFunc func,
+                                              FsearchDatabaseForeachFunc func,
                                               gpointer user_data) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
 
     const guint win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(self));
-    fsearch_database2_selection_foreach(self->db, win_id, func, user_data);
+    fsearch_database_selection_foreach(self->db, win_id, func, user_data);
 }
 
 void

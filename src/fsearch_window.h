@@ -101,7 +101,7 @@ fsearch_application_window_get_num_selected(FsearchApplicationWindow *self);
 
 void
 fsearch_application_window_selection_for_each(FsearchApplicationWindow *self,
-                                              FsearchDatabase2ForeachFunc func,
+                                              FsearchDatabaseForeachFunc func,
                                               gpointer user_data);
 
 void

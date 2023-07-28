@@ -334,7 +334,7 @@ fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer us
 }
 
 static void
-copy_selection_as_text(FsearchApplicationWindow *win, FsearchDatabase2ForeachFunc text_copy_func) {
+copy_selection_as_text(FsearchApplicationWindow *win, FsearchDatabaseForeachFunc text_copy_func) {
     g_autoptr(GString) file_list_buffer = g_string_sized_new(8192);
     fsearch_application_window_selection_for_each(win, text_copy_func, file_list_buffer);
 

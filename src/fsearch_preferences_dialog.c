@@ -10,7 +10,7 @@ struct _FsearchPreferencesDialog {
 
     FsearchConfig *config;
     FsearchConfig *config_old;
-    FsearchDatabase2 *db;
+    FsearchDatabase *db;
 
     // Interface page
     GtkWidget *help_stack;
@@ -262,7 +262,7 @@ fsearch_preferences_dialog_class_init(FsearchPreferencesDialogClass *klass) {
                                                     "The database which will be used fill the database section of the "
                                                     "dialog and which the new database config will be saved to"
                                                     "default",
-                                                    FSEARCH_TYPE_DATABASE2,
+                                                    FSEARCH_TYPE_DATABASE,
                                                     (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
@@ -313,7 +313,7 @@ fsearch_preferences_dialog_init(FsearchPreferencesDialog *self) {
 }
 
 FsearchPreferencesDialog *
-fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase2 *db) {
+fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase *db) {
     FsearchPreferencesDialog *self = g_object_new(FSEARCH_PREFERENCES_DIALOG_TYPE, "config", config, "database", db, NULL);
     if (parent) {
         gtk_window_set_transient_for(GTK_WINDOW(self), parent);

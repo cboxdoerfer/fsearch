@@ -3,7 +3,7 @@
 #include <gtk/gtk.h>
 
 #include "fsearch_config.h"
-#include "fsearch_database2.h"
+#include "fsearch_database.h"
 
 G_BEGIN_DECLS
 
@@ -19,7 +19,7 @@ typedef enum FsearchPreferencesDialogPage {
 G_DECLARE_FINAL_TYPE(FsearchPreferencesDialog, fsearch_preferences_dialog, FSEARCH, PREFERENCES_DIALOG, GtkDialog)
 
 FsearchPreferencesDialog *
-fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase2 *db);
+fsearch_preferences_dialog_new(GtkWindow *parent, FsearchConfig *config, FsearchDatabase *db);
 
 void
 fsearch_preferences_dialog_set_page(FsearchPreferencesDialog *self, FsearchPreferencesDialogPage page);

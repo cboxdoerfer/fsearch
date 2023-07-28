@@ -8,7 +8,7 @@
 struct _FsearchDatabasePreferencesWidget {
     GtkBox parent_instance;
 
-    FsearchDatabase2 *db;
+    FsearchDatabase *db;
 
     FsearchDatabaseInfo *info;
 
@@ -495,7 +495,7 @@ static void
 fsearch_database_preferences_widget_constructed(GObject *object) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
-    if (fsearch_database2_try_get_database_info(self->db, &self->info) == FSEARCH_RESULT_SUCCESS) {
+    if (fsearch_database_try_get_database_info(self->db, &self->info) == FSEARCH_RESULT_SUCCESS) {
         populate_include_page(self);
         populate_exclude_page(self);
     }
@@ -517,7 +517,7 @@ fsearch_database_preferences_widget_class_init(FsearchDatabasePreferencesWidgetC
                                                     "Database",
                                                     "The database which will be represented and edited in this "
                                                     "widget",
-                                                    FSEARCH_TYPE_DATABASE2,
+                                                    FSEARCH_TYPE_DATABASE,
                                                     (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
@@ -555,7 +555,7 @@ fsearch_database_preferences_widget_init(FsearchDatabasePreferencesWidget *self)
 }
 
 FsearchDatabasePreferencesWidget *
-fsearch_database_preferences_widget_new(FsearchDatabase2 *db) {
+fsearch_database_preferences_widget_new(FsearchDatabase *db) {
     return g_object_new(FSEARCH_DATABASE_PREFERENCES_WIDGET_TYPE, "database", db, NULL);
 }
 

@@ -2,7 +2,7 @@
 
 #include <gtk/gtk.h>
 
-#include "fsearch_database2.h"
+#include "fsearch_database.h"
 
 G_BEGIN_DECLS
 
@@ -15,7 +15,7 @@ G_DECLARE_FINAL_TYPE(FsearchDatabasePreferencesWidget,
                      GtkBox)
 
 FsearchDatabasePreferencesWidget *
-fsearch_database_preferences_widget_new(FsearchDatabase2 *db);
+fsearch_database_preferences_widget_new(FsearchDatabase *db);
 
 FsearchDatabaseIncludeManager *
 fsearch_database_preferences_widget_get_include_manager(FsearchDatabasePreferencesWidget *widget);

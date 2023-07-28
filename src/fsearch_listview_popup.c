@@ -138,14 +138,14 @@ append_application_to_menu(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-fill_open_with_menu(GtkBuilder *builder, FsearchDatabase2 *db, uint32_t view_id) {
+fill_open_with_menu(GtkBuilder *builder, FsearchDatabase *db, uint32_t view_id) {
     struct content_type_context content_type_ctx = {};
     content_type_ctx.content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     content_type_ctx.applications = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
     content_type_ctx.first_run = true;
     // find applications which can open all selected files
     // this basically computes the intersection of the lists of applications for each entry
-    fsearch_database2_selection_foreach(db, view_id, intersect_supported_appliations, &content_type_ctx);
+    fsearch_database_selection_foreach(db, view_id, intersect_supported_appliations, &content_type_ctx);
     g_hash_table_remove_all(content_type_ctx.content_types);
     g_clear_pointer(&content_type_ctx.content_types, g_hash_table_destroy);
 
@@ -165,7 +165,7 @@ fill_open_with_menu(GtkBuilder *builder, FsearchDatabase2 *db, uint32_t view_id)
 }
 
 gboolean
-listview_popup_menu(GtkWidget *widget, FsearchDatabase2 *db, uint32_t view_id) {
+listview_popup_menu(GtkWidget *widget, FsearchDatabase *db, uint32_t view_id) {
     g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
     fill_open_with_menu(builder, db, view_id);

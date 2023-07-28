@@ -25,7 +25,7 @@
 #include "fsearch.h"
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
-#include "fsearch_database2.h"
+#include "fsearch_database.h"
 #include "fsearch_database_info.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
@@ -43,7 +43,7 @@
 
 struct _FsearchApplication {
     GtkApplication parent;
-    FsearchDatabase2 *db2;
+    FsearchDatabase *db;
     FsearchConfig *config;
 
     char *option_search_term;
@@ -232,7 +232,7 @@ on_preferences_dialog_response(GtkDialog *dialog, gint response_id, gpointer use
                                                              | DATABASE_INDEX_PROPERTY_FLAG_PATH
                                                              | DATABASE_INDEX_PROPERTY_FLAG_SIZE
                                                              | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME);
-        fsearch_database2_queue_work(self->db2, self->work_scan);
+        fsearch_database_queue_work(self->db, self->work_scan);
 
         FsearchConfigCompareResult config_diff = {.listview_config_changed = true, .search_config_changed = true};
 
@@ -274,7 +274,7 @@ action_preferences_activated(GSimpleAction *action, GVariant *parameter, gpointe
         return;
     }
 
-    GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config, self->db2));
+    GtkWidget *pref = GTK_WIDGET(fsearch_preferences_dialog_new(win_active, self->config, self->db));
     fsearch_preferences_dialog_set_page(FSEARCH_PREFERENCES_DIALOG(pref), page);
     g_signal_connect(GTK_DIALOG(pref), "response", G_CALLBACK(on_preferences_dialog_response), self);
     gtk_dialog_run(GTK_DIALOG(pref));
@@ -300,7 +300,7 @@ action_update_database_activated(GSimpleAction *action, GVariant *parameter, gpo
     }
     self->work_scan = fsearch_database_work_new_rescan();
 
-    fsearch_database2_queue_work(self->db2, self->work_scan);
+    fsearch_database_queue_work(self->db, self->work_scan);
 }
 
 static void
@@ -348,7 +348,7 @@ fsearch_application_shutdown(GApplication *app) {
     }
 
     g_clear_pointer(&self->work_scan, fsearch_database_work_unref);
-    g_clear_object(&self->db2);
+    g_clear_object(&self->db);
 
     g_clear_pointer(&self->option_search_term, g_free);
 
@@ -402,21 +402,21 @@ set_accels_for_escape(GApplication *app) {
 }
 
 static void
-on_database_scan_started(FsearchDatabase2 *db2, gpointer user_data) {
+on_database_scan_started(FsearchDatabase *db, gpointer user_data) {
     FsearchApplication *self = (FsearchApplication *)user_data;
     g_assert(FSEARCH_IS_APPLICATION(self));
     self->db_state = FSEARCH_DATABASE_STATE_SCANNING;
 }
 
 static void
-on_database_load_started(FsearchDatabase2 *db2, gpointer user_data) {
+on_database_load_started(FsearchDatabase *db, gpointer user_data) {
     FsearchApplication *self = (FsearchApplication *)user_data;
     g_assert(FSEARCH_IS_APPLICATION(self));
     self->db_state = FSEARCH_DATABASE_STATE_LOADING;
 }
 
 static void
-on_database_update_finished(FsearchDatabase2 *db2, FsearchDatabaseInfo *info, gpointer user_data) {
+on_database_update_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
     FsearchApplication *self = (FsearchApplication *)user_data;
     g_assert(FSEARCH_IS_APPLICATION(self));
     self->num_files = fsearch_database_info_get_num_files(info);
@@ -443,13 +443,13 @@ fsearch_application_startup(GApplication *app) {
         config_load_default(self->config);
     }
 
-    self->db2 = fsearch_database2_new(NULL);
+    self->db = fsearch_database_new(NULL);
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
 
-    g_signal_connect_object(self->db2, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(self->db2, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
-    g_signal_connect_object(self->db2, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
-    g_signal_connect_object(self->db2, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
 
     self->file_manager_watch_id = g_bus_watch_name(G_BUS_TYPE_SESSION,
                                                    "org.freedesktop.FileManager1",
@@ -780,10 +780,10 @@ fsearch_application_get_num_db_entries(FsearchApplication *self) {
     return self->num_files + self->num_folders;
 }
 
-FsearchDatabase2 *
+FsearchDatabase *
 fsearch_application_get_db(FsearchApplication *self) {
     g_assert(FSEARCH_IS_APPLICATION(self));
-    return g_object_ref(self->db2);
+    return g_object_ref(self->db);
 }
 
 FsearchConfig *
