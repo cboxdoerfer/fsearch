@@ -60,7 +60,7 @@ typedef struct {
     bool running;
 
     volatile gint ref_count;
-} FsearchDatabaseIndexStore2;
+} FsearchDatabaseIndexStore;
 
 struct _FsearchDatabase2 {
     GObject parent_instance;
@@ -75,7 +75,7 @@ struct _FsearchDatabase2 {
 
     FsearchThreadPool *thread_pool;
 
-    FsearchDatabaseIndexStore2 *store;
+    FsearchDatabaseIndexStore *store;
 
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
@@ -134,12 +134,12 @@ static void
 index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data);
 
 static void
-index_store_unref(FsearchDatabaseIndexStore2 *self);
+index_store_unref(FsearchDatabaseIndexStore *self);
 
-G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore2, index_store_unref)
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, index_store_unref)
 
 static void
-unlock_all_indices(FsearchDatabaseIndexStore2 *self) {
+unlock_all_indices(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
 
     for (uint32_t i = 0; i < self->indices->len; ++i) {
@@ -149,7 +149,7 @@ unlock_all_indices(FsearchDatabaseIndexStore2 *self) {
 }
 
 static void
-lock_all_indices(FsearchDatabaseIndexStore2 *self) {
+lock_all_indices(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
 
     for (uint32_t i = 0; i < self->indices->len; ++i) {
@@ -159,7 +159,7 @@ lock_all_indices(FsearchDatabaseIndexStore2 *self) {
 }
 
 static void
-sorted_entries_free(FsearchDatabaseIndexStore2 *self) {
+sorted_entries_free(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
@@ -173,7 +173,7 @@ sorted_entries_free(FsearchDatabaseIndexStore2 *self) {
 }
 
 static bool
-has_flag(FsearchDatabaseIndexStore2 *self, FsearchDatabaseIndex *index) {
+has_flag(FsearchDatabaseIndexStore *self, FsearchDatabaseIndex *index) {
     g_assert(self);
     g_assert(index);
 
@@ -184,7 +184,7 @@ has_flag(FsearchDatabaseIndexStore2 *self, FsearchDatabaseIndex *index) {
 }
 
 static bool
-index_store_has_index_with_same_id(FsearchDatabaseIndexStore2 *self, FsearchDatabaseIndex *index) {
+index_store_has_index_with_same_id(FsearchDatabaseIndexStore *self, FsearchDatabaseIndex *index) {
     g_assert(self);
     g_assert(index);
 
@@ -198,7 +198,7 @@ index_store_has_index_with_same_id(FsearchDatabaseIndexStore2 *self, FsearchData
 }
 
 static void
-index_store_remove_entry(FsearchDatabaseIndexStore2 *self, FsearchDatabaseEntry *entry, FsearchDatabaseIndex *index) {
+index_store_remove_entry(FsearchDatabaseIndexStore *self, FsearchDatabaseEntry *entry, FsearchDatabaseIndex *index) {
     g_return_if_fail(self);
     g_return_if_fail(index);
 
@@ -231,7 +231,7 @@ index_store_remove_entry(FsearchDatabaseIndexStore2 *self, FsearchDatabaseEntry 
 }
 
 static void
-index_store_remove_folders(FsearchDatabaseIndexStore2 *self, DynamicArray *folders, FsearchDatabaseIndex *index) {
+index_store_remove_folders(FsearchDatabaseIndexStore *self, DynamicArray *folders, FsearchDatabaseIndex *index) {
     g_return_if_fail(self);
     g_return_if_fail(index);
 
@@ -259,7 +259,7 @@ index_store_remove_folders(FsearchDatabaseIndexStore2 *self, DynamicArray *folde
 }
 
 static void
-index_store_remove_files(FsearchDatabaseIndexStore2 *self, DynamicArray *files, FsearchDatabaseIndex *index) {
+index_store_remove_files(FsearchDatabaseIndexStore *self, DynamicArray *files, FsearchDatabaseIndex *index) {
     g_return_if_fail(self);
     g_return_if_fail(index);
 
@@ -287,7 +287,7 @@ index_store_remove_files(FsearchDatabaseIndexStore2 *self, DynamicArray *files, 
 }
 
 static void
-index_store_add_entries(FsearchDatabaseIndexStore2 *self, DynamicArray *entries, bool is_dir) {
+index_store_add_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries, bool is_dir) {
     g_return_if_fail(self);
 
     if (!entries || darray_get_num_items(entries) == 0) {
@@ -333,7 +333,7 @@ thread_func(GMainContext *ctx, GMainLoop *loop) {
 
 static gpointer
 worker_thread_func(gpointer user_data) {
-    FsearchDatabaseIndexStore2 *self = user_data;
+    FsearchDatabaseIndexStore *self = user_data;
     g_return_val_if_fail(self, NULL);
 
     thread_func(self->worker.ctx, self->worker.loop);
@@ -343,7 +343,7 @@ worker_thread_func(gpointer user_data) {
 
 static gpointer
 monitor_thread_func(gpointer user_data) {
-    FsearchDatabaseIndexStore2 *self = user_data;
+    FsearchDatabaseIndexStore *self = user_data;
     g_return_val_if_fail(self, NULL);
 
     thread_func(self->monitor.ctx, self->monitor.loop);
@@ -352,7 +352,7 @@ monitor_thread_func(gpointer user_data) {
 }
 
 static void
-index_store_free(FsearchDatabaseIndexStore2 *self) {
+index_store_free(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
 
     if (self->monitor.loop) {
@@ -376,17 +376,17 @@ index_store_free(FsearchDatabaseIndexStore2 *self) {
     g_clear_object(&self->include_manager);
     g_clear_object(&self->exclude_manager);
 
-    g_slice_free(FsearchDatabaseIndexStore2, self);
+    g_slice_free(FsearchDatabaseIndexStore, self);
 }
 
-static FsearchDatabaseIndexStore2 *
+static FsearchDatabaseIndexStore *
 index_store_new(FsearchDatabaseIncludeManager *include_manager,
                 FsearchDatabaseExcludeManager *exclude_manager,
                 FsearchDatabaseIndexPropertyFlags flags,
                 FsearchDatabaseIndexEventFunc event_func,
                 gpointer event_func_data) {
-    FsearchDatabaseIndexStore2 *self;
-    self = g_slice_new0(FsearchDatabaseIndexStore2);
+    FsearchDatabaseIndexStore *self;
+    self = g_slice_new0(FsearchDatabaseIndexStore);
 
     self->indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
     self->flags = flags;
@@ -412,8 +412,8 @@ index_store_new(FsearchDatabaseIncludeManager *include_manager,
     return self;
 }
 
-static FsearchDatabaseIndexStore2 *
-index_store_ref(FsearchDatabaseIndexStore2 *self) {
+static FsearchDatabaseIndexStore *
+index_store_ref(FsearchDatabaseIndexStore *self) {
     g_return_val_if_fail(self != NULL, NULL);
     g_return_val_if_fail(self->ref_count > 0, NULL);
 
@@ -423,7 +423,7 @@ index_store_ref(FsearchDatabaseIndexStore2 *self) {
 }
 
 static void
-index_store_unref(FsearchDatabaseIndexStore2 *self) {
+index_store_unref(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self != NULL);
     g_return_if_fail(self->ref_count > 0);
 
@@ -433,7 +433,7 @@ index_store_unref(FsearchDatabaseIndexStore2 *self) {
 }
 
 static bool
-index_store_has_container(FsearchDatabaseIndexStore2 *self, FsearchDatabaseEntriesContainer *container) {
+index_store_has_container(FsearchDatabaseIndexStore *self, FsearchDatabaseEntriesContainer *container) {
     g_return_val_if_fail(self, false);
     g_return_val_if_fail(container, false);
 
@@ -451,7 +451,7 @@ index_store_has_container(FsearchDatabaseIndexStore2 *self, FsearchDatabaseEntri
 }
 
 static FsearchDatabaseEntriesContainer *
-index_store_get_files(FsearchDatabaseIndexStore2 *self, FsearchDatabaseIndexProperty sort_order) {
+index_store_get_files(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order) {
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(self->is_sorted, NULL);
 
@@ -460,7 +460,7 @@ index_store_get_files(FsearchDatabaseIndexStore2 *self, FsearchDatabaseIndexProp
 }
 
 static FsearchDatabaseEntriesContainer *
-index_store_get_folders(FsearchDatabaseIndexStore2 *self, FsearchDatabaseIndexProperty sort_order) {
+index_store_get_folders(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order) {
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(self->is_sorted, NULL);
 
@@ -470,7 +470,7 @@ index_store_get_folders(FsearchDatabaseIndexStore2 *self, FsearchDatabaseIndexPr
 }
 
 static uint32_t
-index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore2 *self) {
+index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore *self) {
     g_return_val_if_fail(self, 0);
 
     uint32_t num_fast_sort_indices = 0;
@@ -484,7 +484,7 @@ index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore2 *self) {
 }
 
 static uint32_t
-index_store_get_num_files(FsearchDatabaseIndexStore2 *self) {
+index_store_get_num_files(FsearchDatabaseIndexStore *self) {
     g_return_val_if_fail(self, 0);
 
     return self->file_container[DATABASE_INDEX_PROPERTY_NAME]
@@ -493,7 +493,7 @@ index_store_get_num_files(FsearchDatabaseIndexStore2 *self) {
 }
 
 static uint32_t
-index_store_get_num_folders(FsearchDatabaseIndexStore2 *self) {
+index_store_get_num_folders(FsearchDatabaseIndexStore *self) {
     g_return_val_if_fail(self, 0);
 
     return self->folder_container[DATABASE_INDEX_PROPERTY_NAME]
@@ -502,7 +502,7 @@ index_store_get_num_folders(FsearchDatabaseIndexStore2 *self) {
 }
 
 static void
-index_store_start(FsearchDatabaseIndexStore2 *self, GCancellable *cancellable) {
+index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable) {
     g_return_if_fail(self);
     if (self->running) {
         return;
@@ -634,7 +634,7 @@ index_store_start(FsearchDatabaseIndexStore2 *self, GCancellable *cancellable) {
 }
 
 static void
-index_store_start_monitoring(FsearchDatabaseIndexStore2 *self) {
+index_store_start_monitoring(FsearchDatabaseIndexStore *self) {
     g_return_if_fail(self);
     lock_all_indices(self);
 
@@ -1196,7 +1196,7 @@ save_sorted_entries(FILE *fp, DynamicArray *entries, uint32_t num_entries, bool 
 }
 
 static size_t
-save_sorted_arrays(FILE *fp, FsearchDatabaseIndexStore2 *store, uint32_t num_files, uint32_t num_folders, bool *write_failed) {
+save_sorted_arrays(FILE *fp, FsearchDatabaseIndexStore *store, uint32_t num_files, uint32_t num_folders, bool *write_failed) {
     size_t bytes_written = 0;
     uint32_t num_sorted_arrays = index_store_get_num_fast_sort_indices(store);
 
@@ -1278,7 +1278,7 @@ save_folders(FILE *fp,
 }
 
 static size_t
-save_indexes(FILE *fp, FsearchDatabaseIndexStore2 *store, bool *write_failed) {
+save_indexes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
     size_t bytes_written = 0;
 
     // TODO: actually implement storing all index information
@@ -1293,7 +1293,7 @@ out:
 }
 
 static size_t
-save_excludes(FILE *fp, FsearchDatabaseIndexStore2 *store, bool *write_failed) {
+save_excludes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
     size_t bytes_written = 0;
 
     // TODO: actually implement storing all exclude information
@@ -1308,13 +1308,13 @@ out:
 }
 
 static size_t
-save_exclude_pattern(FILE *fp, FsearchDatabaseIndexStore2 *store, bool *write_failed) {
+save_exclude_pattern(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
     // TODO
     return 0;
 }
 
 bool
-db_file_save(FsearchDatabaseIndexStore2 *store, const char *file_path) {
+db_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
     g_return_val_if_fail(file_path, false);
     g_return_val_if_fail(store, false);
 
@@ -1483,7 +1483,7 @@ save_fail:
 bool
 db_file_load(const char *file_path,
              void (*status_cb)(const char *),
-             FsearchDatabaseIndexStore2 **store_out,
+             FsearchDatabaseIndexStore **store_out,
              FsearchDatabaseIncludeManager **include_manager_out,
              FsearchDatabaseExcludeManager **exclude_manager_out) {
     g_return_val_if_fail(file_path, false);
@@ -2359,7 +2359,7 @@ rescan_database(FsearchDatabase2 *self) {
 
     g_clear_pointer(&locker, g_mutex_locker_free);
 
-    g_autoptr(FsearchDatabaseIndexStore2)
+    g_autoptr(FsearchDatabaseIndexStore)
         store = index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
     g_return_if_fail(store);
     index_store_start(store, NULL);
@@ -2415,7 +2415,7 @@ scan_database(FsearchDatabase2 *self, FsearchDatabaseWork *work) {
 
     emit_signal0(self, EVENT_SCAN_STARTED);
 
-    g_autoptr(FsearchDatabaseIndexStore2)
+    g_autoptr(FsearchDatabaseIndexStore)
         store = index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
     g_return_if_fail(store);
     index_store_start(store, NULL);
@@ -2461,7 +2461,7 @@ load_database_from_file(FsearchDatabase2 *self) {
 
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
-    g_autoptr(FsearchDatabaseIndexStore2) store = NULL;
+    g_autoptr(FsearchDatabaseIndexStore) store = NULL;
     bool res = false;
     // bool res = db_file_load(file_path, NULL, &store, &include_manager, &exclude_manager);
 
