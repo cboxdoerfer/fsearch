@@ -76,29 +76,29 @@ struct _FsearchDatabase {
     GMutex mutex;
 };
 
-typedef enum FsearchDatabaseEventType {
-    EVENT_LOAD_STARTED,
-    EVENT_LOAD_FINISHED,
-    EVENT_ITEM_INFO_READY,
-    EVENT_SAVE_STARTED,
-    EVENT_SAVE_FINISHED,
-    EVENT_SCAN_STARTED,
-    EVENT_SCAN_FINISHED,
-    EVENT_SEARCH_STARTED,
-    EVENT_SEARCH_FINISHED,
-    EVENT_SORT_STARTED,
-    EVENT_SORT_FINISHED,
-    EVENT_SELECTION_CHANGED,
-    EVENT_DATABASE_CHANGED,
-    NUM_EVENTS,
-} FsearchDatabaseEventType;
-
 G_DEFINE_TYPE(FsearchDatabase, fsearch_database, G_TYPE_OBJECT)
 
 enum { PROP_0, PROP_FILE, NUM_PROPERTIES };
-
 static GParamSpec *properties[NUM_PROPERTIES];
-static guint signals[NUM_EVENTS];
+
+typedef enum FsearchDatabaseSignalType {
+    SIGNAL_LOAD_STARTED,
+    SIGNAL_LOAD_FINISHED,
+    SIGNAL_ITEM_INFO_READY,
+    SIGNAL_SAVE_STARTED,
+    SIGNAL_SAVE_FINISHED,
+    SIGNAL_SCAN_STARTED,
+    SIGNAL_SCAN_FINISHED,
+    SIGNAL_SEARCH_STARTED,
+    SIGNAL_SEARCH_FINISHED,
+    SIGNAL_SORT_STARTED,
+    SIGNAL_SORT_FINISHED,
+    SIGNAL_SELECTION_CHANGED,
+    SIGNAL_DATABASE_CHANGED,
+    NUM_DATABASE_SIGNALS,
+} FsearchDatabaseSignalType;
+
+static guint signals[NUM_DATABASE_SIGNALS];
 
 // region GMainLoop helpers
 static gboolean
@@ -1606,7 +1606,7 @@ load_fail:
 // region Signaling
 typedef struct FsearchSignalEmitContext {
     FsearchDatabase *db;
-    FsearchDatabaseEventType type;
+    FsearchDatabaseSignalType type;
     gpointer arg1;
     gpointer arg2;
     GDestroyNotify arg1_free_func;
@@ -1628,7 +1628,7 @@ signal_emit_context_free(FsearchSignalEmitContext *ctx) {
 
 static FsearchSignalEmitContext *
 signal_emit_context_new(FsearchDatabase *db,
-                        FsearchDatabaseEventType type,
+                        FsearchDatabaseSignalType type,
                         gpointer arg1,
                         gpointer arg2,
                         guint n_args,
@@ -1671,13 +1671,13 @@ signal_emit_cb(gpointer user_data) {
 }
 
 static void
-signal_emit0(FsearchDatabase *self, FsearchDatabaseEventType type) {
+signal_emit0(FsearchDatabase *self, FsearchDatabaseSignalType type) {
     g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, NULL, NULL, 0, NULL, NULL));
 }
 
 static void
 signal_emit(FsearchDatabase *self,
-            FsearchDatabaseEventType type,
+            FsearchDatabaseSignalType type,
             gpointer arg1,
             gpointer arg2,
             guint n_args,
@@ -1689,7 +1689,7 @@ signal_emit(FsearchDatabase *self,
 static void
 signal_emit_item_info_ready(FsearchDatabase *self, guint id, FsearchDatabaseEntryInfo *info) {
     signal_emit(self,
-                EVENT_ITEM_INFO_READY,
+                SIGNAL_ITEM_INFO_READY,
                 GUINT_TO_POINTER(id),
                 info,
                 2,
@@ -1700,7 +1700,7 @@ signal_emit_item_info_ready(FsearchDatabase *self, guint id, FsearchDatabaseEntr
 static void
 signal_emit_search_finished(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
     signal_emit(self,
-                EVENT_SEARCH_FINISHED,
+                SIGNAL_SEARCH_FINISHED,
                 GUINT_TO_POINTER(id),
                 info,
                 2,
@@ -1711,7 +1711,7 @@ signal_emit_search_finished(FsearchDatabase *self, guint id, FsearchDatabaseSear
 static void
 signal_emit_sort_finished(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
     signal_emit(self,
-                EVENT_SORT_FINISHED,
+                SIGNAL_SORT_FINISHED,
                 GUINT_TO_POINTER(id),
                 info,
                 2,
@@ -1722,7 +1722,7 @@ signal_emit_sort_finished(FsearchDatabase *self, guint id, FsearchDatabaseSearch
 static void
 signal_emit_selection_changed(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
     signal_emit(self,
-                EVENT_SELECTION_CHANGED,
+                SIGNAL_SELECTION_CHANGED,
                 GUINT_TO_POINTER(id),
                 info,
                 2,
@@ -1732,7 +1732,7 @@ signal_emit_selection_changed(FsearchDatabase *self, guint id, FsearchDatabaseSe
 
 static void
 signal_emit_database_changed(FsearchDatabase *self, FsearchDatabaseInfo *info) {
-    signal_emit(self, EVENT_DATABASE_CHANGED, info, NULL, 1, NULL, (GDestroyNotify)fsearch_database_info_unref);
+    signal_emit(self, SIGNAL_DATABASE_CHANGED, info, NULL, 1, NULL, (GDestroyNotify)fsearch_database_info_unref);
 }
 // endregion
 
@@ -2068,7 +2068,7 @@ database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
     const GtkSortType sort_type = fsearch_database_work_sort_get_sort_type(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
-    signal_emit(self, EVENT_SORT_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
+    signal_emit(self, SIGNAL_SORT_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -2158,7 +2158,7 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
         return false;
     }
 
-    signal_emit(self, EVENT_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
+    signal_emit(self, SIGNAL_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
     bool result = false;
 
@@ -2375,7 +2375,7 @@ database_rescan(FsearchDatabase *self) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    signal_emit0(self, EVENT_SCAN_STARTED);
+    signal_emit0(self, SIGNAL_SCAN_STARTED);
 
     const FsearchDatabaseIndexPropertyFlags flags = self->flags;
 
@@ -2404,7 +2404,13 @@ database_rescan(FsearchDatabase *self) {
     malloc_trim(0);
 #endif
 
-    signal_emit(self, EVENT_SCAN_FINISHED, database_get_info(self), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
+    signal_emit(self,
+                SIGNAL_SCAN_FINISHED,
+                database_get_info(self),
+                NULL,
+                1,
+                (GDestroyNotify)fsearch_database_info_unref,
+                NULL);
 }
 
 static void
@@ -2427,7 +2433,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     g_clear_pointer(&locker, g_mutex_locker_free);
 
-    signal_emit0(self, EVENT_SCAN_STARTED);
+    signal_emit0(self, SIGNAL_SCAN_STARTED);
 
     g_autoptr(FsearchDatabaseIndexStore)
         store = index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
@@ -2449,7 +2455,13 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     malloc_trim(0);
 #endif
 
-    signal_emit(self, EVENT_SCAN_FINISHED, database_get_info(self), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
+    signal_emit(self,
+                SIGNAL_SCAN_FINISHED,
+                database_get_info(self),
+                NULL,
+                1,
+                (GDestroyNotify)fsearch_database_info_unref,
+                NULL);
 }
 
 static void
@@ -2457,7 +2469,7 @@ database_load(FsearchDatabase *self) {
     g_return_if_fail(self);
     g_return_if_fail(self->file);
 
-    signal_emit0(self, EVENT_LOAD_STARTED);
+    signal_emit0(self, SIGNAL_LOAD_STARTED);
 
     g_autofree gchar *file_path = g_file_get_path(self->file);
     g_return_if_fail(file_path);
@@ -2480,7 +2492,13 @@ database_load(FsearchDatabase *self) {
         // g_set_object(&self->exclude_manager, fsearch_database_exclude_manager_new_with_defaults());
     }
 
-    signal_emit(self, EVENT_LOAD_FINISHED, database_get_info(self), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
+    signal_emit(self,
+                SIGNAL_LOAD_FINISHED,
+                database_get_info(self),
+                NULL,
+                1,
+                (GDestroyNotify)fsearch_database_info_unref,
+                NULL);
 }
 
 static gpointer
@@ -2518,9 +2536,9 @@ database_work_queue_thread(gpointer data) {
             database_rescan(self);
             break;
         case FSEARCH_DATABASE_WORK_SAVE_TO_FILE:
-            signal_emit0(self, EVENT_SAVE_STARTED);
+            signal_emit0(self, SIGNAL_SAVE_STARTED);
             database_save(self);
-            signal_emit0(self, EVENT_SAVE_FINISHED);
+            signal_emit0(self, SIGNAL_SAVE_FINISHED);
             break;
         case FSEARCH_DATABASE_WORK_SCAN:
             database_scan(self, work);
@@ -2643,10 +2661,10 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
-    signals[EVENT_LOAD_STARTED] =
+    signals[SIGNAL_LOAD_STARTED] =
         g_signal_new("load-started", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
-    signals[EVENT_LOAD_FINISHED] = g_signal_new("load-finished",
-                                                G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_LOAD_FINISHED] = g_signal_new("load-finished",
+                                                 G_TYPE_FROM_CLASS(klass),
                                                 G_SIGNAL_RUN_LAST,
                                                 0,
                                                 NULL,
@@ -2655,8 +2673,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                 G_TYPE_NONE,
                                                 1,
                                                 FSEARCH_TYPE_DATABASE_INFO);
-    signals[EVENT_SAVE_STARTED] = g_signal_new("save-started",
-                                               G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SAVE_STARTED] = g_signal_new("save-started",
+                                                G_TYPE_FROM_CLASS(klass),
                                                G_SIGNAL_RUN_LAST,
                                                0,
                                                NULL,
@@ -2665,8 +2683,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                G_TYPE_NONE,
                                                1,
                                                G_TYPE_POINTER);
-    signals[EVENT_SAVE_FINISHED] = g_signal_new("save-finished",
-                                                G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SAVE_FINISHED] = g_signal_new("save-finished",
+                                                 G_TYPE_FROM_CLASS(klass),
                                                 G_SIGNAL_RUN_LAST,
                                                 0,
                                                 NULL,
@@ -2675,10 +2693,10 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                 G_TYPE_NONE,
                                                 1,
                                                 G_TYPE_POINTER);
-    signals[EVENT_SCAN_STARTED] =
+    signals[SIGNAL_SCAN_STARTED] =
         g_signal_new("scan-started", G_TYPE_FROM_CLASS(klass), G_SIGNAL_RUN_LAST, 0, NULL, NULL, NULL, G_TYPE_NONE, 0);
-    signals[EVENT_SCAN_FINISHED] = g_signal_new("scan-finished",
-                                                G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SCAN_FINISHED] = g_signal_new("scan-finished",
+                                                 G_TYPE_FROM_CLASS(klass),
                                                 G_SIGNAL_RUN_LAST,
                                                 0,
                                                 NULL,
@@ -2687,8 +2705,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                 G_TYPE_NONE,
                                                 1,
                                                 FSEARCH_TYPE_DATABASE_INFO);
-    signals[EVENT_SEARCH_STARTED] = g_signal_new("search-started",
-                                                 G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SEARCH_STARTED] = g_signal_new("search-started",
+                                                  G_TYPE_FROM_CLASS(klass),
                                                  G_SIGNAL_RUN_LAST,
                                                  0,
                                                  NULL,
@@ -2697,8 +2715,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                  G_TYPE_NONE,
                                                  1,
                                                  G_TYPE_UINT);
-    signals[EVENT_SEARCH_FINISHED] = g_signal_new("search-finished",
-                                                  G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SEARCH_FINISHED] = g_signal_new("search-finished",
+                                                   G_TYPE_FROM_CLASS(klass),
                                                   G_SIGNAL_RUN_LAST,
                                                   0,
                                                   NULL,
@@ -2708,8 +2726,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                   2,
                                                   G_TYPE_UINT,
                                                   FSEARCH_TYPE_DATABASE_SEARCH_INFO);
-    signals[EVENT_SORT_STARTED] = g_signal_new("sort-started",
-                                               G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SORT_STARTED] = g_signal_new("sort-started",
+                                                G_TYPE_FROM_CLASS(klass),
                                                G_SIGNAL_RUN_LAST,
                                                0,
                                                NULL,
@@ -2718,8 +2736,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                G_TYPE_NONE,
                                                1,
                                                G_TYPE_UINT);
-    signals[EVENT_SORT_FINISHED] = g_signal_new("sort-finished",
-                                                G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SORT_FINISHED] = g_signal_new("sort-finished",
+                                                 G_TYPE_FROM_CLASS(klass),
                                                 G_SIGNAL_RUN_LAST,
                                                 0,
                                                 NULL,
@@ -2729,8 +2747,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                 2,
                                                 G_TYPE_UINT,
                                                 FSEARCH_TYPE_DATABASE_SEARCH_INFO);
-    signals[EVENT_DATABASE_CHANGED] = g_signal_new("database-changed",
-                                                   G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_DATABASE_CHANGED] = g_signal_new("database-changed",
+                                                    G_TYPE_FROM_CLASS(klass),
                                                    G_SIGNAL_RUN_LAST,
                                                    0,
                                                    NULL,
@@ -2739,8 +2757,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                    G_TYPE_NONE,
                                                    1,
                                                    FSEARCH_TYPE_DATABASE_INFO);
-    signals[EVENT_SELECTION_CHANGED] = g_signal_new("selection-changed",
-                                                    G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_SELECTION_CHANGED] = g_signal_new("selection-changed",
+                                                     G_TYPE_FROM_CLASS(klass),
                                                     G_SIGNAL_RUN_LAST,
                                                     0,
                                                     NULL,
@@ -2750,8 +2768,8 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                     2,
                                                     G_TYPE_UINT,
                                                     FSEARCH_TYPE_DATABASE_SEARCH_INFO);
-    signals[EVENT_ITEM_INFO_READY] = g_signal_new("item-info-ready",
-                                                  G_TYPE_FROM_CLASS(klass),
+    signals[SIGNAL_ITEM_INFO_READY] = g_signal_new("item-info-ready",
+                                                   G_TYPE_FROM_CLASS(klass),
                                                   G_SIGNAL_RUN_LAST,
                                                   0,
                                                   NULL,
