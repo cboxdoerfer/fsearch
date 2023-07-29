@@ -24,12 +24,6 @@
 #include "fsearch_selection.h"
 #include "fsearch_thread_pool.h"
 
-#define DATABASE_MAJOR_VERSION 1
-#define DATABASE_MINOR_VERSION 0
-#define DATABASE_MAGIC_NUMBER "FSDB"
-
-#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
-
 typedef struct {
     GPtrArray *indices;
 
@@ -626,6 +620,13 @@ index_store_start_monitoring(FsearchDatabaseIndexStore *self) {
 // endregion
 
 // region Database file
+
+#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
+
+#define DATABASE_MAJOR_VERSION 1
+#define DATABASE_MINOR_VERSION 0
+#define DATABASE_MAGIC_NUMBER "FSDB"
+
 typedef struct {
     FsearchMemoryPool *file_pool;
     FsearchMemoryPool *folder_pool;
