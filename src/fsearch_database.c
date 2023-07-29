@@ -1545,7 +1545,7 @@ db_file_load(const char *file_path,
         goto load_fail;
     }
 
-    // pre-allocate the folders array so we can later map parent indices to the corresponding pointers
+    // pre-allocate the folders array, so we can later map parent indices to the corresponding pointers
     sorted_folders[DATABASE_INDEX_PROPERTY_NAME] = darray_new(num_folders);
     folders = sorted_folders[DATABASE_INDEX_PROPERTY_NAME];
 
