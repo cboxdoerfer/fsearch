@@ -2447,8 +2447,6 @@ load_database_from_file(FsearchDatabase *self) {
     g_autofree gchar *file_path = g_file_get_path(self->file);
     g_return_if_fail(file_path);
 
-    g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
-    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
     g_autoptr(FsearchDatabaseIndexStore) store = NULL;
     bool res = false;
     // bool res = db_file_load(file_path, NULL, &store, &include_manager, &exclude_manager);
