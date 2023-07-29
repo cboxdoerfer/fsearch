@@ -77,9 +77,6 @@ struct _FsearchDatabase {
 
     FsearchDatabaseIndexStore *store;
 
-    FsearchDatabaseIncludeManager *include_manager;
-    FsearchDatabaseExcludeManager *exclude_manager;
-
     FsearchDatabaseIndexPropertyFlags flags;
 
     GMutex mutex;
@@ -1807,6 +1804,16 @@ get_num_search_folder_results(FsearchDatabaseSearchView *view) {
     return view && view->file_container ? fsearch_database_entries_container_get_num_entries(view->folder_container) : 0;
 }
 
+FsearchDatabaseExcludeManager *
+get_exclude_manager(FsearchDatabase *self) {
+    return self->store ? self->store->exclude_manager : NULL;
+}
+
+FsearchDatabaseIncludeManager *
+get_include_manager(FsearchDatabase *self) {
+    return self->store ? self->store->include_manager : NULL;
+}
+
 static uint32_t
 get_num_database_files(FsearchDatabase *self) {
     return self->store ? index_store_get_num_files(self->store) : 0;
@@ -2218,8 +2225,8 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
     case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
         g_hash_table_foreach(self->search_results, search_views_updated_cb, self);
         emit_database_changed_signal(self,
-                                     fsearch_database_info_new(self->include_manager,
-                                                               self->exclude_manager,
+                                     fsearch_database_info_new(get_include_manager(self),
+                                                               get_exclude_manager(self),
                                                                get_num_database_files(self),
                                                                get_num_database_folders(self)));
         database_unlock(self);
@@ -2353,22 +2360,18 @@ rescan_database(FsearchDatabase *self) {
 
     emit_signal0(self, EVENT_SCAN_STARTED);
 
-    g_autoptr(FsearchDatabaseIncludeManager) include_manager = g_object_ref(self->include_manager);
-    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = g_object_ref(self->exclude_manager);
     const FsearchDatabaseIndexPropertyFlags flags = self->flags;
 
     g_clear_pointer(&locker, g_mutex_locker_free);
 
     g_autoptr(FsearchDatabaseIndexStore)
-        store = index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
+        store = index_store_new(get_include_manager(self), get_exclude_manager(self), flags, index_event_cb, self);
     g_return_if_fail(store);
     index_store_start(store, NULL);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    g_set_object(&self->include_manager, include_manager);
-    g_set_object(&self->exclude_manager, exclude_manager);
     self->flags = flags;
     g_clear_pointer(&self->store, index_store_unref);
     self->store = g_steal_pointer(&store);
@@ -2383,8 +2386,8 @@ rescan_database(FsearchDatabase *self) {
 
     emit_signal(self,
                 EVENT_SCAN_FINISHED,
-                fsearch_database_info_new(self->include_manager,
-                                          self->exclude_manager,
+                fsearch_database_info_new(get_include_manager(self),
+                                          get_exclude_manager(self),
                                           get_num_database_files(self),
                                           get_num_database_folders(self)),
                 NULL,
@@ -2405,8 +2408,8 @@ scan_database(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    if (fsearch_database_include_manager_equal(self->include_manager, include_manager)
-        && fsearch_database_exclude_manager_equal(self->exclude_manager, exclude_manager)) {
+    if (self->store && fsearch_database_include_manager_equal(get_include_manager(self), include_manager)
+        && fsearch_database_exclude_manager_equal(get_exclude_manager(self), exclude_manager)) {
         g_debug("[scan] new config is identical to the current one. No scan necessary.");
         return;
     }
@@ -2423,8 +2426,6 @@ scan_database(FsearchDatabase *self, FsearchDatabaseWork *work) {
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    g_set_object(&self->include_manager, include_manager);
-    g_set_object(&self->exclude_manager, exclude_manager);
     self->flags = flags;
     g_clear_pointer(&self->store, index_store_unref);
     self->store = g_steal_pointer(&store);
@@ -2439,8 +2440,8 @@ scan_database(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     emit_signal(self,
                 EVENT_SCAN_FINISHED,
-                fsearch_database_info_new(self->include_manager,
-                                          self->exclude_manager,
+                fsearch_database_info_new(get_include_manager(self),
+                                          get_exclude_manager(self),
                                           get_num_database_files(self),
                                           get_num_database_folders(self)),
                 NULL,
@@ -2471,18 +2472,18 @@ load_database_from_file(FsearchDatabase *self) {
     if (res) {
         g_clear_pointer(&self->store, index_store_unref);
         self->store = g_steal_pointer(&store);
-        g_set_object(&self->include_manager, include_manager);
-        g_set_object(&self->exclude_manager, exclude_manager);
+        // g_set_object(&self->include_manager, include_manager);
+        // g_set_object(&self->exclude_manager, exclude_manager);
     }
     else {
-        g_set_object(&self->include_manager, fsearch_database_include_manager_new_with_defaults());
-        g_set_object(&self->exclude_manager, fsearch_database_exclude_manager_new_with_defaults());
+        // g_set_object(&self->include_manager, fsearch_database_include_manager_new_with_defaults());
+        // g_set_object(&self->exclude_manager, fsearch_database_exclude_manager_new_with_defaults());
     }
 
     emit_signal(self,
                 EVENT_LOAD_FINISHED,
-                fsearch_database_info_new(self->include_manager,
-                                          self->exclude_manager,
+                fsearch_database_info_new(get_include_manager(self),
+                                          get_exclude_manager(self),
                                           get_num_database_files(self),
                                           get_num_database_folders(self)),
                 NULL,
@@ -2595,8 +2596,6 @@ fsearch_database_finalize(GObject *object) {
 
     g_clear_pointer(&self->search_results, g_hash_table_unref);
     g_clear_pointer(&self->store, index_store_unref);
-    g_clear_object(&self->include_manager);
-    g_clear_object(&self->exclude_manager);
     database_unlock(self);
 
     g_mutex_clear(&self->mutex);
@@ -2821,9 +2820,9 @@ fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, Fs
 FsearchResult
 fsearch_database_try_get_item_info(FsearchDatabase *self,
                                    uint32_t view_id,
-                                    uint32_t idx,
-                                    FsearchDatabaseEntryInfoFlags flags,
-                                    FsearchDatabaseEntryInfo **info_out) {
+                                   uint32_t idx,
+                                   FsearchDatabaseEntryInfoFlags flags,
+                                   FsearchDatabaseEntryInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
@@ -2847,8 +2846,8 @@ fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInf
         return FSEARCH_RESULT_DB_BUSY;
     }
 
-    *info_out = fsearch_database_info_new(self->include_manager,
-                                          self->exclude_manager,
+    *info_out = fsearch_database_info_new(get_include_manager(self),
+                                          get_exclude_manager(self),
                                           get_num_database_files(self),
                                           get_num_database_folders(self));
 
