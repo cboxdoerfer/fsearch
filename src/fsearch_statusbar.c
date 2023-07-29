@@ -228,6 +228,12 @@ on_database_update_finished(FsearchDatabase *db, FsearchDatabaseInfo *info, gpoi
 }
 
 static void
+on_database_progress(FsearchDatabase *db, char *text, gpointer user_data) {
+    FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
+    fsearch_statusbar_set_database_index_text(statusbar, text);
+}
+
+static void
 on_database_changed(FsearchDatabase *db, FsearchDatabaseInfo *info, gpointer user_data) {
     FsearchStatusbar *statusbar = FSEARCH_STATUSBAR(user_data);
     fsearch_statusbar_set_num_db_entries(statusbar, fsearch_database_info_get_num_entries(info));
@@ -313,6 +319,7 @@ fsearch_statusbar_init(FsearchStatusbar *self) {
     g_signal_connect_object(db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(db, "database-changed", G_CALLBACK(on_database_changed), self, G_CONNECT_AFTER);
+    g_signal_connect_object(db, "database-progress", G_CALLBACK(on_database_progress), self, G_CONNECT_AFTER);
 }
 
 static void
