@@ -1824,6 +1824,15 @@ get_num_database_folders(FsearchDatabase *self) {
     return self->store ? index_store_get_num_folders(self->store) : 0;
 }
 
+static FsearchDatabaseInfo *
+get_database_info(FsearchDatabase *self) {
+    g_return_val_if_fail(self, NULL);
+    return fsearch_database_info_new(get_include_manager(self),
+                                     get_exclude_manager(self),
+                                     get_num_database_files(self),
+                                     get_num_database_folders(self));
+}
+
 static GFile *
 get_default_database_file() {
     return g_file_new_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
@@ -2224,11 +2233,7 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
         g_hash_table_foreach(self->search_results, search_views_updated_cb, self);
-        emit_database_changed_signal(self,
-                                     fsearch_database_info_new(get_include_manager(self),
-                                                               get_exclude_manager(self),
-                                                               get_num_database_files(self),
-                                                               get_num_database_folders(self)));
+        emit_database_changed_signal(self, get_database_info(self));
         database_unlock(self);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
@@ -2384,16 +2389,7 @@ rescan_database(FsearchDatabase *self) {
     malloc_trim(0);
 #endif
 
-    emit_signal(self,
-                EVENT_SCAN_FINISHED,
-                fsearch_database_info_new(get_include_manager(self),
-                                          get_exclude_manager(self),
-                                          get_num_database_files(self),
-                                          get_num_database_folders(self)),
-                NULL,
-                1,
-                (GDestroyNotify)fsearch_database_info_unref,
-                NULL);
+    emit_signal(self, EVENT_SCAN_FINISHED, get_database_info(self), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
 }
 
 static void
@@ -2438,16 +2434,7 @@ scan_database(FsearchDatabase *self, FsearchDatabaseWork *work) {
     malloc_trim(0);
 #endif
 
-    emit_signal(self,
-                EVENT_SCAN_FINISHED,
-                fsearch_database_info_new(get_include_manager(self),
-                                          get_exclude_manager(self),
-                                          get_num_database_files(self),
-                                          get_num_database_folders(self)),
-                NULL,
-                1,
-                (GDestroyNotify)fsearch_database_info_unref,
-                NULL);
+    emit_signal(self, EVENT_SCAN_FINISHED, get_database_info(self), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
 }
 
 static void
@@ -2480,16 +2467,7 @@ load_database_from_file(FsearchDatabase *self) {
         // g_set_object(&self->exclude_manager, fsearch_database_exclude_manager_new_with_defaults());
     }
 
-    emit_signal(self,
-                EVENT_LOAD_FINISHED,
-                fsearch_database_info_new(get_include_manager(self),
-                                          get_exclude_manager(self),
-                                          get_num_database_files(self),
-                                          get_num_database_folders(self)),
-                NULL,
-                1,
-                (GDestroyNotify)fsearch_database_info_unref,
-                NULL);
+    emit_signal(self, EVENT_LOAD_FINISHED, get_database_info(self), NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
 }
 
 static gpointer
@@ -2846,10 +2824,7 @@ fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInf
         return FSEARCH_RESULT_DB_BUSY;
     }
 
-    *info_out = fsearch_database_info_new(get_include_manager(self),
-                                          get_exclude_manager(self),
-                                          get_num_database_files(self),
-                                          get_num_database_folders(self));
+    *info_out = get_database_info(self);
 
     database_unlock(self);
 
