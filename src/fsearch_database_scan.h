@@ -19,4 +19,5 @@ db_scan_folder(const char *path,
                uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
-               void (*status_cb)(const char *));
+               void (*status_cb)(const char *, gpointer),
+               gpointer status_cb_data);

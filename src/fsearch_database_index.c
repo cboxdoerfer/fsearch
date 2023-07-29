@@ -70,7 +70,7 @@ propagate_event(FsearchDatabaseIndex *self, FsearchDatabaseIndexEventKind kind, 
     if (!self->event_func) {
         return;
     }
-    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files);
+    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(kind, folders, files, NULL);
     self->event_func(self, event, self->event_func_data);
 }
 
@@ -233,6 +233,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
                            self->inotify_monitor,
                            self->id,
                            fsearch_database_include_get_one_file_system(self->include),
+                           NULL,
                            NULL,
                            NULL)) {
             for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
@@ -655,6 +656,17 @@ fsearch_database_index_unlock(FsearchDatabaseIndex *self) {
     g_mutex_unlock(&self->mutex);
 }
 
+static void
+scan_status_cb(const char *path, gpointer user_data) {
+    FsearchDatabaseIndex *self = user_data;
+    if (!self->event_func) {
+        return;
+    }
+    g_autoptr(FsearchDatabaseIndexEvent)
+        event = fsearch_database_index_event_new(FSEARCH_DATABASE_INDEX_EVENT_SCANNING, NULL, NULL, path);
+    self->event_func(self, event, self->event_func_data);
+}
+
 bool
 fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable) {
     g_return_val_if_fail(self, false);
@@ -681,7 +693,8 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                         self->id,
                         fsearch_database_include_get_one_file_system(self->include),
                         cancellable,
-                        NULL)) {
+                        scan_status_cb,
+                        self)) {
         return false;
     }
 

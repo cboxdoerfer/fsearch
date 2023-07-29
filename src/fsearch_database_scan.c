@@ -31,8 +31,8 @@ typedef struct DatabaseWalkContext {
     GTimer *timer;
     GMutex *monitor_lock;
     GCancellable *cancellable;
-    void (*status_cb)(const char *);
-
+    void (*status_cb)(const char *, gpointer);
+    gpointer status_cb_data;
     ssize_t file_handle_payload;
     dev_t root_device_id;
 } DatabaseWalkContext;
@@ -113,7 +113,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     const double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
     if (elapsed_seconds > 0.1) {
         if (walk_context->status_cb) {
-            walk_context->status_cb(path->str);
+            walk_context->status_cb(path->str, walk_context->status_cb_data);
         }
         g_timer_start(walk_context->timer);
     }
@@ -188,7 +188,8 @@ db_scan_folder(const char *path,
                uint32_t index_id,
                bool one_file_system,
                GCancellable *cancellable,
-               void (*status_cb)(const char *)) {
+               void (*status_cb)(const char *, gpointer),
+               gpointer status_cb_data) {
     g_return_val_if_fail(index, false);
     g_return_val_if_fail(index, false);
 
@@ -228,6 +229,7 @@ db_scan_folder(const char *path,
         .timer = timer,
         .cancellable = cancellable,
         .status_cb = status_cb,
+        .status_cb_data = status_cb_data,
         .root_device_id = root_st.st_dev,
         .file_handle_payload = 0,
     };

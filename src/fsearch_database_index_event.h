@@ -11,17 +11,26 @@ typedef enum {
     FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING,
     FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED,
     FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED,
+    FSEARCH_DATABASE_INDEX_EVENT_SCANNING,
     NUM_FSEARCH_DATABASE_INDEX_EVENTS,
 } FsearchDatabaseIndexEventKind;
 
 typedef struct {
     FsearchDatabaseIndexEventKind kind;
-    DynamicArray *folders;
-    DynamicArray *files;
+    union {
+        struct {
+            DynamicArray *folders;
+            DynamicArray *files;
+        } entries;
+        char *path;
+    };
 } FsearchDatabaseIndexEvent;
 
 FsearchDatabaseIndexEvent *
-fsearch_database_index_event_new(FsearchDatabaseIndexEventKind kind, DynamicArray *folders, DynamicArray *files);
+fsearch_database_index_event_new(FsearchDatabaseIndexEventKind kind,
+                                 DynamicArray *folders,
+                                 DynamicArray *files,
+                                 const char *path);
 
 void
 fsearch_database_index_event_free(FsearchDatabaseIndexEvent *event);

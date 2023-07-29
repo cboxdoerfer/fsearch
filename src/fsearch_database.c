@@ -100,6 +100,7 @@ typedef enum FsearchDatabaseSignalType {
     SIGNAL_SORT_FINISHED,
     SIGNAL_SELECTION_CHANGED,
     SIGNAL_DATABASE_CHANGED,
+    SIGNAL_DATABASE_PROGRESS,
     NUM_DATABASE_SIGNALS,
 } FsearchDatabaseSignalType;
 
@@ -2245,8 +2246,8 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
     FsearchDatabaseAddRemoveContext ctx = {
         .db = self,
         .index = index,
-        .folders = event->folders,
-        .files = event->files,
+        .folders = event->entries.folders,
+        .files = event->entries.files,
     };
 
     switch (event->kind) {
@@ -2268,13 +2269,16 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
         g_hash_table_foreach(self->search_results, search_view_results_add_cb, &ctx);
-        index_store_add_entries(self->store, event->folders, true);
-        index_store_add_entries(self->store, event->files, false);
+        index_store_add_entries(self->store, event->entries.folders, true);
+        index_store_add_entries(self->store, event->entries.files, false);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
         g_hash_table_foreach(self->search_results, search_view_results_remove_cb, &ctx);
-        index_store_remove_folders(self->store, event->folders, index);
-        index_store_remove_files(self->store, event->files, index);
+        index_store_remove_folders(self->store, event->entries.folders, index);
+        index_store_remove_files(self->store, event->entries.files, index);
+        break;
+    case FSEARCH_DATABASE_INDEX_EVENT_SCANNING:
+        signal_emit(self, SIGNAL_DATABASE_PROGRESS, g_steal_pointer(&event->path), NULL, 1, (GDestroyNotify)free, NULL);
         break;
     case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
         break;
@@ -2753,6 +2757,16 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                  2,
                                                  G_TYPE_UINT,
                                                  FSEARCH_TYPE_DATABASE_SEARCH_INFO);
+    signals[SIGNAL_DATABASE_PROGRESS] = g_signal_new("database-progress",
+                                                     G_TYPE_FROM_CLASS(klass),
+                                                     G_SIGNAL_RUN_LAST,
+                                                     0,
+                                                     NULL,
+                                                     NULL,
+                                                     NULL,
+                                                     G_TYPE_NONE,
+                                                     1,
+                                                     G_TYPE_STRING);
     signals[SIGNAL_DATABASE_CHANGED] = g_signal_new("database-changed",
                                                     G_TYPE_FROM_CLASS(klass),
                                                     G_SIGNAL_RUN_LAST,
