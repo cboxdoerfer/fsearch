@@ -25,25 +25,32 @@
 #include "fsearch_thread_pool.h"
 
 typedef struct {
+    // Array of FsearchDatabaseIndex's
     GPtrArray *indices;
 
+    // Sorted "lists" of all entries in `indices`
     FsearchDatabaseEntriesContainer *file_container[NUM_DATABASE_INDEX_PROPERTIES];
     FsearchDatabaseEntriesContainer *folder_container[NUM_DATABASE_INDEX_PROPERTIES];
 
+    // Include/Exclude configuration
     FsearchDatabaseIncludeManager *include_manager;
     FsearchDatabaseExcludeManager *exclude_manager;
 
+    // Gets called on every FsearchDatabaseIndex event
     FsearchDatabaseIndexEventFunc event_func;
     gpointer event_func_data;
 
+    // Stores which properties have been indexed
     FsearchDatabaseIndexPropertyFlags flags;
 
+    // Shared thread where all indices can listen for file system change events and queue them for being processed later
     struct {
         GThread *thread;
         GMainLoop *loop;
         GMainContext *ctx;
     } monitor;
 
+    // Shared thread where all indices can process file system change events
     struct {
         GThread *thread;
         GMainLoop *loop;
@@ -59,7 +66,7 @@ typedef struct {
 struct _FsearchDatabase {
     GObject parent_instance;
 
-    // The file the database will be loaded from and saved to
+    // The database will be loaded from and saved to this file
     GFile *file;
 
     GThread *work_queue_thread;
