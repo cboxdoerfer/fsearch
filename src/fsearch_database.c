@@ -1737,7 +1737,7 @@ signal_emit_selection_changed(FsearchDatabase *self, guint id, FsearchDatabaseSe
 
 static void
 signal_emit_database_changed(FsearchDatabase *self, FsearchDatabaseInfo *info) {
-    signal_emit(self, SIGNAL_DATABASE_CHANGED, info, NULL, 1, NULL, (GDestroyNotify)fsearch_database_info_unref);
+    signal_emit(self, SIGNAL_DATABASE_CHANGED, info, NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
 }
 // endregion
 
