@@ -125,6 +125,139 @@ thread_func(GMainContext *ctx, GMainLoop *loop) {
 }
 // endregion
 
+// region Signaling
+typedef struct FsearchSignalEmitContext {
+    FsearchDatabase *db;
+    FsearchDatabaseSignalType type;
+    gpointer arg1;
+    gpointer arg2;
+    GDestroyNotify arg1_free_func;
+    GDestroyNotify arg2_free_func;
+    guint n_args;
+} FsearchSignalEmitContext;
+
+static void
+signal_emit_context_free(FsearchSignalEmitContext *ctx) {
+    if (ctx->arg1_free_func) {
+        g_clear_pointer(&ctx->arg1, ctx->arg1_free_func);
+    }
+    if (ctx->arg2_free_func) {
+        g_clear_pointer(&ctx->arg2, ctx->arg2_free_func);
+    }
+    g_clear_object(&ctx->db);
+    g_clear_pointer(&ctx, free);
+}
+
+static FsearchSignalEmitContext *
+signal_emit_context_new(FsearchDatabase *db,
+                        FsearchDatabaseSignalType type,
+                        gpointer arg1,
+                        gpointer arg2,
+                        guint n_args,
+                        GDestroyNotify arg1_free_func,
+                        GDestroyNotify arg2_free_func) {
+    FsearchSignalEmitContext *ctx = calloc(1, sizeof(FsearchSignalEmitContext));
+    g_assert(ctx != NULL);
+
+    ctx->db = g_object_ref(db);
+    ctx->type = type;
+    ctx->arg1 = arg1;
+    ctx->arg2 = arg2;
+    ctx->n_args = n_args;
+    ctx->arg1_free_func = arg1_free_func;
+    ctx->arg2_free_func = arg2_free_func;
+    return ctx;
+}
+
+static gboolean
+signal_emit_cb(gpointer user_data) {
+    FsearchSignalEmitContext *ctx = user_data;
+
+    switch (ctx->n_args) {
+    case 0:
+        g_signal_emit(ctx->db, signals[ctx->type], 0);
+        break;
+    case 1:
+        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1);
+        break;
+    case 2:
+        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1, ctx->arg2);
+        break;
+    default:
+        g_assert_not_reached();
+    }
+
+    g_clear_pointer(&ctx, signal_emit_context_free);
+
+    return G_SOURCE_REMOVE;
+}
+
+static void
+signal_emit0(FsearchDatabase *self, FsearchDatabaseSignalType type) {
+    g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, NULL, NULL, 0, NULL, NULL));
+}
+
+static void
+signal_emit(FsearchDatabase *self,
+            FsearchDatabaseSignalType type,
+            gpointer arg1,
+            gpointer arg2,
+            guint n_args,
+            GDestroyNotify arg1_free_func,
+            GDestroyNotify arg2_free_func) {
+    g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, arg1, arg2, n_args, arg1_free_func, arg2_free_func));
+}
+
+static void
+signal_emit_item_info_ready(FsearchDatabase *self, guint id, FsearchDatabaseEntryInfo *info) {
+    signal_emit(self,
+                SIGNAL_ITEM_INFO_READY,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_entry_info_unref);
+}
+
+static void
+signal_emit_search_finished(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
+    signal_emit(self,
+                SIGNAL_SEARCH_FINISHED,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_search_info_unref);
+}
+
+static void
+signal_emit_sort_finished(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
+    signal_emit(self,
+                SIGNAL_SORT_FINISHED,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_search_info_unref);
+}
+
+static void
+signal_emit_selection_changed(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
+    signal_emit(self,
+                SIGNAL_SELECTION_CHANGED,
+                GUINT_TO_POINTER(id),
+                info,
+                2,
+                NULL,
+                (GDestroyNotify)fsearch_database_search_info_unref);
+}
+
+static void
+signal_emit_database_changed(FsearchDatabase *self, FsearchDatabaseInfo *info) {
+    signal_emit(self, SIGNAL_DATABASE_CHANGED, info, NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
+}
+// endregion
+
 // region Index store
 static void
 index_store_unref(FsearchDatabaseIndexStore *self);
@@ -479,7 +612,7 @@ index_store_get_num_folders(FsearchDatabaseIndexStore *self) {
 }
 
 static void
-index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable) {
+index_store_start(FsearchDatabaseIndexStore *self, FsearchDatabase *db, GCancellable *cancellable) {
     g_return_if_fail(self);
     if (self->running) {
         return;
@@ -525,6 +658,8 @@ index_store_start(FsearchDatabaseIndexStore *self, GCancellable *cancellable) {
 
         self->is_sorted = false;
     }
+
+    signal_emit(db, SIGNAL_DATABASE_PROGRESS, g_strdup(_("Sorting…")), NULL, 1, (GDestroyNotify)free, NULL);
 
     index_store_lock_all_indices(self);
     self->folder_container[DATABASE_INDEX_PROPERTY_NAME] =
@@ -1609,139 +1744,6 @@ load_fail:
 }
 // endregion
 
-// region Signaling
-typedef struct FsearchSignalEmitContext {
-    FsearchDatabase *db;
-    FsearchDatabaseSignalType type;
-    gpointer arg1;
-    gpointer arg2;
-    GDestroyNotify arg1_free_func;
-    GDestroyNotify arg2_free_func;
-    guint n_args;
-} FsearchSignalEmitContext;
-
-static void
-signal_emit_context_free(FsearchSignalEmitContext *ctx) {
-    if (ctx->arg1_free_func) {
-        g_clear_pointer(&ctx->arg1, ctx->arg1_free_func);
-    }
-    if (ctx->arg2_free_func) {
-        g_clear_pointer(&ctx->arg2, ctx->arg2_free_func);
-    }
-    g_clear_object(&ctx->db);
-    g_clear_pointer(&ctx, free);
-}
-
-static FsearchSignalEmitContext *
-signal_emit_context_new(FsearchDatabase *db,
-                        FsearchDatabaseSignalType type,
-                        gpointer arg1,
-                        gpointer arg2,
-                        guint n_args,
-                        GDestroyNotify arg1_free_func,
-                        GDestroyNotify arg2_free_func) {
-    FsearchSignalEmitContext *ctx = calloc(1, sizeof(FsearchSignalEmitContext));
-    g_assert(ctx != NULL);
-
-    ctx->db = g_object_ref(db);
-    ctx->type = type;
-    ctx->arg1 = arg1;
-    ctx->arg2 = arg2;
-    ctx->n_args = n_args;
-    ctx->arg1_free_func = arg1_free_func;
-    ctx->arg2_free_func = arg2_free_func;
-    return ctx;
-}
-
-static gboolean
-signal_emit_cb(gpointer user_data) {
-    FsearchSignalEmitContext *ctx = user_data;
-
-    switch (ctx->n_args) {
-    case 0:
-        g_signal_emit(ctx->db, signals[ctx->type], 0);
-        break;
-    case 1:
-        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1);
-        break;
-    case 2:
-        g_signal_emit(ctx->db, signals[ctx->type], 0, ctx->arg1, ctx->arg2);
-        break;
-    default:
-        g_assert_not_reached();
-    }
-
-    g_clear_pointer(&ctx, signal_emit_context_free);
-
-    return G_SOURCE_REMOVE;
-}
-
-static void
-signal_emit0(FsearchDatabase *self, FsearchDatabaseSignalType type) {
-    g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, NULL, NULL, 0, NULL, NULL));
-}
-
-static void
-signal_emit(FsearchDatabase *self,
-            FsearchDatabaseSignalType type,
-            gpointer arg1,
-            gpointer arg2,
-            guint n_args,
-            GDestroyNotify arg1_free_func,
-            GDestroyNotify arg2_free_func) {
-    g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, arg1, arg2, n_args, arg1_free_func, arg2_free_func));
-}
-
-static void
-signal_emit_item_info_ready(FsearchDatabase *self, guint id, FsearchDatabaseEntryInfo *info) {
-    signal_emit(self,
-                SIGNAL_ITEM_INFO_READY,
-                GUINT_TO_POINTER(id),
-                info,
-                2,
-                NULL,
-                (GDestroyNotify)fsearch_database_entry_info_unref);
-}
-
-static void
-signal_emit_search_finished(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
-    signal_emit(self,
-                SIGNAL_SEARCH_FINISHED,
-                GUINT_TO_POINTER(id),
-                info,
-                2,
-                NULL,
-                (GDestroyNotify)fsearch_database_search_info_unref);
-}
-
-static void
-signal_emit_sort_finished(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
-    signal_emit(self,
-                SIGNAL_SORT_FINISHED,
-                GUINT_TO_POINTER(id),
-                info,
-                2,
-                NULL,
-                (GDestroyNotify)fsearch_database_search_info_unref);
-}
-
-static void
-signal_emit_selection_changed(FsearchDatabase *self, guint id, FsearchDatabaseSearchInfo *info) {
-    signal_emit(self,
-                SIGNAL_SELECTION_CHANGED,
-                GUINT_TO_POINTER(id),
-                info,
-                2,
-                NULL,
-                (GDestroyNotify)fsearch_database_search_info_unref);
-}
-
-static void
-signal_emit_database_changed(FsearchDatabase *self, FsearchDatabaseInfo *info) {
-    signal_emit(self, SIGNAL_DATABASE_CHANGED, info, NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
-}
-// endregion
-
 // region Search view
 typedef struct FsearchDatabaseSearchView {
     FsearchQuery *query;
@@ -2399,7 +2401,7 @@ database_rescan(FsearchDatabase *self) {
                                                                  index_event_cb,
                                                                  self);
     g_return_if_fail(store);
-    index_store_start(store, NULL);
+    index_store_start(store, self, NULL);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -2449,7 +2451,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseIndexStore)
         store = index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
     g_return_if_fail(store);
-    index_store_start(store, NULL);
+    index_store_start(store, self, NULL);
 
     locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
