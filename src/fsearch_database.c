@@ -260,59 +260,59 @@ signal_emit_database_changed(FsearchDatabase *self, FsearchDatabaseInfo *info) {
 
 // region Index store
 static void
-index_store_unref(FsearchDatabaseIndexStore *self);
+index_store_unref(FsearchDatabaseIndexStore *store);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndexStore, index_store_unref)
 
 static void
-index_store_unlock_all_indices(FsearchDatabaseIndexStore *self) {
-    g_return_if_fail(self);
+index_store_unlock_all_indices(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
 
-    for (uint32_t i = 0; i < self->indices->len; ++i) {
-        FsearchDatabaseIndex *index_stored = g_ptr_array_index(self->indices, i);
+    for (uint32_t i = 0; i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index_stored = g_ptr_array_index(store->indices, i);
         fsearch_database_index_unlock(index_stored);
     }
 }
 
 static void
-index_store_lock_all_indices(FsearchDatabaseIndexStore *self) {
-    g_return_if_fail(self);
+index_store_lock_all_indices(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
 
-    for (uint32_t i = 0; i < self->indices->len; ++i) {
-        FsearchDatabaseIndex *index_stored = g_ptr_array_index(self->indices, i);
+    for (uint32_t i = 0; i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index_stored = g_ptr_array_index(store->indices, i);
         fsearch_database_index_lock(index_stored);
     }
 }
 
 static void
-index_store_sorted_entries_free(FsearchDatabaseIndexStore *self) {
-    g_return_if_fail(self);
+index_store_sorted_entries_free(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        if (self->file_container[i]) {
-            g_clear_pointer(&self->file_container[i], fsearch_database_entries_container_unref);
+        if (store->file_container[i]) {
+            g_clear_pointer(&store->file_container[i], fsearch_database_entries_container_unref);
         }
-        if (self->folder_container[i]) {
-            g_clear_pointer(&self->folder_container[i], fsearch_database_entries_container_unref);
+        if (store->folder_container[i]) {
+            g_clear_pointer(&store->folder_container[i], fsearch_database_entries_container_unref);
         }
     }
 }
 
 static bool
-index_store_flag_compare(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexPropertyFlags flags) {
-    g_assert(self);
+index_store_flag_compare(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexPropertyFlags flags) {
+    g_assert(store);
 
-    const FsearchDatabaseIndexPropertyFlags store_flags = self->flags;
+    const FsearchDatabaseIndexPropertyFlags store_flags = store->flags;
     return (store_flags & flags) == store_flags;
 }
 
 static bool
-index_store_has_index_with_same_id(FsearchDatabaseIndexStore *self, FsearchDatabaseIndex *index) {
-    g_assert(self);
+index_store_has_index_with_same_id(FsearchDatabaseIndexStore *store, FsearchDatabaseIndex *index) {
+    g_assert(store);
     g_assert(index);
 
-    for (uint32_t i = 0; i < self->indices->len; ++i) {
-        FsearchDatabaseIndex *index_stored = g_ptr_array_index(self->indices, i);
+    for (uint32_t i = 0; i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index_stored = g_ptr_array_index(store->indices, i);
         if (fsearch_database_index_get_id(index_stored) == fsearch_database_index_get_id(index)) {
             return true;
         }
@@ -321,15 +321,15 @@ index_store_has_index_with_same_id(FsearchDatabaseIndexStore *self, FsearchDatab
 }
 
 static void
-index_store_remove_entry(FsearchDatabaseIndexStore *self, FsearchDatabaseEntry *entry, FsearchDatabaseIndex *index) {
-    g_return_if_fail(self);
+index_store_remove_entry(FsearchDatabaseIndexStore *store, FsearchDatabaseEntry *entry, FsearchDatabaseIndex *index) {
+    g_return_if_fail(store);
     g_return_if_fail(index);
 
     if (!entry) {
         return;
     }
 
-    if (!g_ptr_array_find(self->indices, index, NULL)) {
+    if (!g_ptr_array_find(store->indices, index, NULL)) {
         g_debug("[index_store_remove] index does not belong to index store; must be a bug");
         g_assert_not_reached();
     }
@@ -337,10 +337,10 @@ index_store_remove_entry(FsearchDatabaseIndexStore *self, FsearchDatabaseEntry *
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         FsearchDatabaseEntriesContainer *container = NULL;
         if (db_entry_is_folder(entry)) {
-            container = self->folder_container[i];
+            container = store->folder_container[i];
         }
         else {
-            container = self->file_container[i];
+            container = store->file_container[i];
         }
 
         if (!container) {
@@ -354,21 +354,21 @@ index_store_remove_entry(FsearchDatabaseIndexStore *self, FsearchDatabaseEntry *
 }
 
 static void
-index_store_remove_folders(FsearchDatabaseIndexStore *self, DynamicArray *folders, FsearchDatabaseIndex *index) {
-    g_return_if_fail(self);
+index_store_remove_folders(FsearchDatabaseIndexStore *store, DynamicArray *folders, FsearchDatabaseIndex *index) {
+    g_return_if_fail(store);
     g_return_if_fail(index);
 
     if (!folders || darray_get_num_items(folders) == 0) {
         return;
     }
 
-    if (!g_ptr_array_find(self->indices, index, NULL)) {
+    if (!g_ptr_array_find(store->indices, index, NULL)) {
         g_debug("[index_store_remove] index does not belong to index store; must be a bug");
         g_assert_not_reached();
     }
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = self->folder_container[i];
+        FsearchDatabaseEntriesContainer *container = store->folder_container[i];
         if (!container) {
             continue;
         }
@@ -382,21 +382,21 @@ index_store_remove_folders(FsearchDatabaseIndexStore *self, DynamicArray *folder
 }
 
 static void
-index_store_remove_files(FsearchDatabaseIndexStore *self, DynamicArray *files, FsearchDatabaseIndex *index) {
-    g_return_if_fail(self);
+index_store_remove_files(FsearchDatabaseIndexStore *store, DynamicArray *files, FsearchDatabaseIndex *index) {
+    g_return_if_fail(store);
     g_return_if_fail(index);
 
     if (!files || darray_get_num_items(files) == 0) {
         return;
     }
 
-    if (!g_ptr_array_find(self->indices, index, NULL)) {
+    if (!g_ptr_array_find(store->indices, index, NULL)) {
         g_debug("[index_store_remove] index does not belong to index store; must be a bug");
         g_assert_not_reached();
     }
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = self->file_container[i];
+        FsearchDatabaseEntriesContainer *container = store->file_container[i];
         if (!container) {
             continue;
         }
@@ -410,8 +410,8 @@ index_store_remove_files(FsearchDatabaseIndexStore *self, DynamicArray *files, F
 }
 
 static void
-index_store_add_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries, bool is_dir) {
-    g_return_if_fail(self);
+index_store_add_entries(FsearchDatabaseIndexStore *store, DynamicArray *entries, bool is_dir) {
+    g_return_if_fail(store);
 
     if (!entries || darray_get_num_items(entries) == 0) {
         return;
@@ -420,10 +420,10 @@ index_store_add_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries, 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         FsearchDatabaseEntriesContainer *container = NULL;
         if (is_dir) {
-            container = self->folder_container[i];
+            container = store->folder_container[i];
         }
         else {
-            container = self->file_container[i];
+            container = store->file_container[i];
         }
 
         if (!container) {
@@ -439,54 +439,58 @@ index_store_add_entries(FsearchDatabaseIndexStore *self, DynamicArray *entries, 
 
 static gpointer
 index_store_worker_thread_func(gpointer user_data) {
-    FsearchDatabaseIndexStore *self = user_data;
-    g_return_val_if_fail(self, NULL);
+    FsearchDatabaseIndexStore *store = user_data;
+    g_return_val_if_fail(store, NULL);
 
-    thread_func(self->worker.ctx, self->worker.loop);
+    thread_func(store->worker.ctx, store->worker.loop);
 
     return NULL;
 }
 
 static gpointer
 index_store_monitor_thread_func(gpointer user_data) {
-    FsearchDatabaseIndexStore *self = user_data;
-    g_return_val_if_fail(self, NULL);
+    FsearchDatabaseIndexStore *store = user_data;
+    g_return_val_if_fail(store, NULL);
 
-    thread_func(self->monitor.ctx, self->monitor.loop);
+    thread_func(store->monitor.ctx, store->monitor.loop);
 
     return NULL;
 }
 
 static void
-index_store_free(FsearchDatabaseIndexStore *self) {
-    g_return_if_fail(self);
+index_store_free(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
 
-    if (self->monitor.loop) {
-        g_main_context_invoke_full(self->monitor.ctx,
+    if (store->monitor.loop) {
+        g_main_context_invoke_full(store->monitor.ctx,
                                    G_PRIORITY_HIGH,
                                    (GSourceFunc)thread_quit_func,
-                                   self->monitor.loop,
+                                   store->monitor.loop,
                                    NULL);
     }
-    if (self->monitor.thread) {
-        g_thread_join(self->monitor.thread);
+    if (store->monitor.thread) {
+        g_thread_join(store->monitor.thread);
     }
-    g_clear_pointer(&self->monitor.ctx, g_main_context_unref);
+    g_clear_pointer(&store->monitor.ctx, g_main_context_unref);
 
-    if (self->worker.loop) {
-        g_main_context_invoke_full(self->worker.ctx, G_PRIORITY_HIGH, (GSourceFunc)thread_quit_func, self->worker.loop, NULL);
+    if (store->worker.loop) {
+        g_main_context_invoke_full(store->worker.ctx,
+                                   G_PRIORITY_HIGH,
+                                   (GSourceFunc)thread_quit_func,
+                                   store->worker.loop,
+                                   NULL);
     }
-    if (self->worker.thread) {
-        g_thread_join(self->worker.thread);
+    if (store->worker.thread) {
+        g_thread_join(store->worker.thread);
     }
-    g_clear_pointer(&self->worker.ctx, g_main_context_unref);
+    g_clear_pointer(&store->worker.ctx, g_main_context_unref);
 
-    index_store_sorted_entries_free(self);
-    g_clear_pointer(&self->indices, g_ptr_array_unref);
-    g_clear_object(&self->include_manager);
-    g_clear_object(&self->exclude_manager);
+    index_store_sorted_entries_free(store);
+    g_clear_pointer(&store->indices, g_ptr_array_unref);
+    g_clear_object(&store->include_manager);
+    g_clear_object(&store->exclude_manager);
 
-    g_slice_free(FsearchDatabaseIndexStore, self);
+    g_slice_free(FsearchDatabaseIndexStore, store);
 }
 
 static FsearchDatabaseIndexStore *
@@ -495,64 +499,64 @@ index_store_new(FsearchDatabaseIncludeManager *include_manager,
                 FsearchDatabaseIndexPropertyFlags flags,
                 FsearchDatabaseIndexEventFunc event_func,
                 gpointer event_func_data) {
-    FsearchDatabaseIndexStore *self;
-    self = g_slice_new0(FsearchDatabaseIndexStore);
+    FsearchDatabaseIndexStore *store;
+    store = g_slice_new0(FsearchDatabaseIndexStore);
 
-    self->indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    self->flags = flags;
-    self->is_sorted = false;
-    self->running = false;
+    store->indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
+    store->flags = flags;
+    store->is_sorted = false;
+    store->running = false;
 
-    self->include_manager = g_object_ref(include_manager);
-    self->exclude_manager = g_object_ref(exclude_manager);
+    store->include_manager = g_object_ref(include_manager);
+    store->exclude_manager = g_object_ref(exclude_manager);
 
-    self->event_func = event_func;
-    self->event_func_data = event_func_data;
+    store->event_func = event_func;
+    store->event_func_data = event_func_data;
 
-    self->monitor.ctx = g_main_context_new();
-    self->monitor.loop = g_main_loop_new(self->monitor.ctx, FALSE);
-    self->monitor.thread = g_thread_new("FsearchDatabaseIndexStoreMonitor", index_store_monitor_thread_func, self);
+    store->monitor.ctx = g_main_context_new();
+    store->monitor.loop = g_main_loop_new(store->monitor.ctx, FALSE);
+    store->monitor.thread = g_thread_new("FsearchDatabaseIndexStoreMonitor", index_store_monitor_thread_func, store);
 
-    self->worker.ctx = g_main_context_new();
-    self->worker.loop = g_main_loop_new(self->worker.ctx, FALSE);
-    self->worker.thread = g_thread_new("FsearchDatabaseIndexStoreWorker", index_store_worker_thread_func, self);
+    store->worker.ctx = g_main_context_new();
+    store->worker.loop = g_main_loop_new(store->worker.ctx, FALSE);
+    store->worker.thread = g_thread_new("FsearchDatabaseIndexStoreWorker", index_store_worker_thread_func, store);
 
-    self->ref_count = 1;
+    store->ref_count = 1;
 
-    return self;
+    return store;
 }
 
 static FsearchDatabaseIndexStore *
-index_store_ref(FsearchDatabaseIndexStore *self) {
-    g_return_val_if_fail(self != NULL, NULL);
-    g_return_val_if_fail(self->ref_count > 0, NULL);
+index_store_ref(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store != NULL, NULL);
+    g_return_val_if_fail(store->ref_count > 0, NULL);
 
-    g_atomic_int_inc(&self->ref_count);
+    g_atomic_int_inc(&store->ref_count);
 
-    return self;
+    return store;
 }
 
 static void
-index_store_unref(FsearchDatabaseIndexStore *self) {
-    g_return_if_fail(self != NULL);
-    g_return_if_fail(self->ref_count > 0);
+index_store_unref(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store != NULL);
+    g_return_if_fail(store->ref_count > 0);
 
-    if (g_atomic_int_dec_and_test(&self->ref_count)) {
-        g_clear_pointer(&self, index_store_free);
+    if (g_atomic_int_dec_and_test(&store->ref_count)) {
+        g_clear_pointer(&store, index_store_free);
     }
 }
 
 static bool
-index_store_has_container(FsearchDatabaseIndexStore *self, FsearchDatabaseEntriesContainer *container) {
-    g_return_val_if_fail(self, false);
+index_store_has_container(FsearchDatabaseIndexStore *store, FsearchDatabaseEntriesContainer *container) {
+    g_return_val_if_fail(store, false);
     g_return_val_if_fail(container, false);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *c = self->folder_container[i];
+        FsearchDatabaseEntriesContainer *c = store->folder_container[i];
         if (c == container) {
             return true;
         }
-        c = self->file_container[i];
+        c = store->file_container[i];
         if (c == container) {
             return true;
         }
@@ -561,31 +565,31 @@ index_store_has_container(FsearchDatabaseIndexStore *self, FsearchDatabaseEntrie
 }
 
 static FsearchDatabaseEntriesContainer *
-index_store_get_files(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order) {
-    g_return_val_if_fail(self, NULL);
-    g_return_val_if_fail(self->is_sorted, NULL);
+index_store_get_files(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexProperty sort_order) {
+    g_return_val_if_fail(store, NULL);
+    g_return_val_if_fail(store->is_sorted, NULL);
 
-    return self->file_container[sort_order] ? fsearch_database_entries_container_ref(self->file_container[sort_order])
-                                            : NULL;
+    return store->file_container[sort_order] ? fsearch_database_entries_container_ref(store->file_container[sort_order])
+                                             : NULL;
 }
 
 static FsearchDatabaseEntriesContainer *
-index_store_get_folders(FsearchDatabaseIndexStore *self, FsearchDatabaseIndexProperty sort_order) {
-    g_return_val_if_fail(self, NULL);
-    g_return_val_if_fail(self->is_sorted, NULL);
+index_store_get_folders(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexProperty sort_order) {
+    g_return_val_if_fail(store, NULL);
+    g_return_val_if_fail(store->is_sorted, NULL);
 
-    return self->folder_container[sort_order]
-             ? fsearch_database_entries_container_ref(self->folder_container[sort_order])
+    return store->folder_container[sort_order]
+             ? fsearch_database_entries_container_ref(store->folder_container[sort_order])
              : NULL;
 }
 
 static uint32_t
-index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore *self) {
-    g_return_val_if_fail(self, 0);
+index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, 0);
 
     uint32_t num_fast_sort_indices = 0;
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        if (self->folder_container[i] && self->file_container[i]) {
+        if (store->folder_container[i] && store->file_container[i]) {
             num_fast_sort_indices++;
         }
     }
@@ -594,42 +598,42 @@ index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore *self) {
 }
 
 static uint32_t
-index_store_get_num_files(FsearchDatabaseIndexStore *self) {
-    g_return_val_if_fail(self, 0);
+index_store_get_num_files(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, 0);
 
-    return self->file_container[DATABASE_INDEX_PROPERTY_NAME]
-             ? fsearch_database_entries_container_get_num_entries(self->file_container[DATABASE_INDEX_PROPERTY_NAME])
+    return store->file_container[DATABASE_INDEX_PROPERTY_NAME]
+             ? fsearch_database_entries_container_get_num_entries(store->file_container[DATABASE_INDEX_PROPERTY_NAME])
              : 0;
 }
 
 static uint32_t
-index_store_get_num_folders(FsearchDatabaseIndexStore *self) {
-    g_return_val_if_fail(self, 0);
+index_store_get_num_folders(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, 0);
 
-    return self->folder_container[DATABASE_INDEX_PROPERTY_NAME]
-             ? fsearch_database_entries_container_get_num_entries(self->folder_container[DATABASE_INDEX_PROPERTY_NAME])
+    return store->folder_container[DATABASE_INDEX_PROPERTY_NAME]
+             ? fsearch_database_entries_container_get_num_entries(store->folder_container[DATABASE_INDEX_PROPERTY_NAME])
              : 0;
 }
 
 static void
-index_store_start(FsearchDatabaseIndexStore *self, FsearchDatabase *db, GCancellable *cancellable) {
-    g_return_if_fail(self);
-    if (self->running) {
+index_store_start(FsearchDatabaseIndexStore *store, FsearchDatabase *db, GCancellable *cancellable) {
+    g_return_if_fail(store);
+    if (store->running) {
         return;
     }
 
     g_autoptr(GPtrArray) indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
-    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(self->include_manager);
+    g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(store->include_manager);
     for (uint32_t i = 0; i < includes->len; ++i) {
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
         g_autoptr(FsearchDatabaseIndex) index = fsearch_database_index_new(fsearch_database_include_get_id(include),
                                                                            include,
-                                                                           self->exclude_manager,
-                                                                           self->flags,
-                                                                           self->worker.ctx,
-                                                                           self->monitor.ctx,
-                                                                           self->event_func,
-                                                                           self->event_func_data);
+                                                                           store->exclude_manager,
+                                                                           store->flags,
+                                                                           store->worker.ctx,
+                                                                           store->monitor.ctx,
+                                                                           store->event_func,
+                                                                           store->event_func_data);
         if (index && fsearch_database_index_scan(index, cancellable)) {
             g_ptr_array_add(indices, g_steal_pointer(&index));
         }
@@ -643,11 +647,11 @@ index_store_start(FsearchDatabaseIndexStore *self, FsearchDatabase *db, GCancell
     for (uint32_t i = 0; i < indices->len; ++i) {
         FsearchDatabaseIndex *index = g_ptr_array_index(indices, i);
 
-        if (index_store_has_index_with_same_id(self, index)
-            || !index_store_flag_compare(self, fsearch_database_index_get_flags(index))) {
+        if (index_store_has_index_with_same_id(store, index)
+            || !index_store_flag_compare(store, fsearch_database_index_get_flags(index))) {
             continue;
         }
-        g_ptr_array_add(self->indices, fsearch_database_index_ref(index));
+        g_ptr_array_add(store->indices, fsearch_database_index_ref(index));
         fsearch_database_index_lock(index);
         g_autoptr(DynamicArray) files = fsearch_database_index_get_files(index);
         g_autoptr(DynamicArray) folders = fsearch_database_index_get_folders(index);
@@ -656,107 +660,107 @@ index_store_start(FsearchDatabaseIndexStore *self, FsearchDatabase *db, GCancell
 
         fsearch_database_index_unlock(index);
 
-        self->is_sorted = false;
+        store->is_sorted = false;
     }
 
     signal_emit(db, SIGNAL_DATABASE_PROGRESS, g_strdup(_("Sorting…")), NULL, 1, (GDestroyNotify)free, NULL);
 
-    index_store_lock_all_indices(self);
-    self->folder_container[DATABASE_INDEX_PROPERTY_NAME] =
+    index_store_lock_all_indices(store);
+    store->folder_container[DATABASE_INDEX_PROPERTY_NAME] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_NAME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
-    self->file_container[DATABASE_INDEX_PROPERTY_NAME] =
+    store->file_container[DATABASE_INDEX_PROPERTY_NAME] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_NAME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
-    self->folder_container[DATABASE_INDEX_PROPERTY_PATH] =
+    store->folder_container[DATABASE_INDEX_PROPERTY_PATH] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_PATH,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
-    self->file_container[DATABASE_INDEX_PROPERTY_PATH] =
+    store->file_container[DATABASE_INDEX_PROPERTY_PATH] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_PATH,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
-    self->folder_container[DATABASE_INDEX_PROPERTY_SIZE] =
+    store->folder_container[DATABASE_INDEX_PROPERTY_SIZE] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_SIZE,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
-    self->file_container[DATABASE_INDEX_PROPERTY_SIZE] =
+    store->file_container[DATABASE_INDEX_PROPERTY_SIZE] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_SIZE,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
-    self->folder_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
+    store->folder_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
-    self->file_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
+    store->file_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
-    self->folder_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
+    store->folder_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_EXTENSION,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
                                                cancellable);
-    self->file_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
+    store->file_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_EXTENSION,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
                                                cancellable);
-    self->is_sorted = true;
-    index_store_unlock_all_indices(self);
+    store->is_sorted = true;
+    index_store_unlock_all_indices(store);
 
     if (g_cancellable_is_cancelled(cancellable)) {
-        index_store_sorted_entries_free(self);
-        g_ptr_array_remove_range(self->indices, 0, self->indices->len);
+        index_store_sorted_entries_free(store);
+        g_ptr_array_remove_range(store->indices, 0, store->indices->len);
         return;
     }
 
-    self->running = true;
+    store->running = true;
 
     return;
 }
 
 static void
-index_store_start_monitoring(FsearchDatabaseIndexStore *self) {
-    g_return_if_fail(self);
-    index_store_lock_all_indices(self);
+index_store_start_monitoring(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
+    index_store_lock_all_indices(store);
 
-    for (uint32_t i = 0; i < self->indices->len; ++i) {
-        FsearchDatabaseIndex *index = g_ptr_array_index(self->indices, i);
+    for (uint32_t i = 0; i < store->indices->len; ++i) {
+        FsearchDatabaseIndex *index = g_ptr_array_index(store->indices, i);
         fsearch_database_index_start_monitoring(index, true);
     }
 
-    index_store_unlock_all_indices(self);
+    index_store_unlock_all_indices(store);
 }
 // endregion
 
