@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-06-07 08:53+0000\n"
-"Last-Translator: aerowolf <aerowolf@tom.com>\n"
+"PO-Revision-Date: 2023-08-02 14:06+0000\n"
+"Last-Translator: tjw123hh <tjw123hh@outlook.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -39,15 +39,14 @@ msgstr "文件搜索工具"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr "一个图形化的文件搜索工具"
+msgstr "图形文件搜索应用程序"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
-msgstr ""
-"FSearch帮助你尽可能容易和快速地找到文件和文件夹。只需键入几个字母，搜索结果几"
-"乎会立即出现。"
+msgstr "FSearch 可帮助您尽可能轻松快捷地查找文件和文件夹。只需输入几个字母，搜索结果"
+"几乎就会立即出现。"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
 msgid ""
@@ -65,7 +64,7 @@ msgstr "支持通配符"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Filter support (e.g. only search for audio files)"
-msgstr "支持筛选器（例如：只搜索音频文件）"
+msgstr "支持筛选器（例如仅搜索音频文件）"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Exclude certain files and folders"
@@ -79,7 +78,7 @@ msgstr "按名称、路径、大小、修改时间和扩展名快速排序"
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
-msgstr "<em>注意：</em>由于Flatpak的沙箱功能，FSearch无法找到系统中的每个文件。"
+msgstr "<em>注意：</em>由于 Flatpak 的沙箱，FSearch 无法找到系统中的每个文件。"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
@@ -87,7 +86,7 @@ msgstr "默认用户界面布局"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
-msgstr "一个更接近GNOME人机界面指南的布局"
+msgstr "更接近 GNOME 人机界面指南的布局"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 msgid "search"
@@ -140,11 +139,11 @@ msgstr "新的搜索引擎"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 msgid "Greatly improved highlighting of search terms"
-msgstr "极大改进高亮显示搜索词"
+msgstr "极大改进了搜索词的高亮显示"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid "Custom filters"
-msgstr "自定义筛选器"
+msgstr "自定义过滤器"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
@@ -160,45 +159,46 @@ msgstr "数据库更新之后记住文件选择"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr "在橡皮筋选择模式中，自动滚动结果列表"
+msgstr "在矩形选择模式下自动滚动结果列表"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr "按住“Ctrl”时，使用橡皮筋反选"
+msgstr "按住“Ctrl”时，使用矩形反选"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr "激活主窗口时聚集搜索条目"
+msgstr "当主窗口被激活时聚焦搜索条目"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr "为程序添加过滤器（比如.desktop文件）"
+msgstr "为应用程序（即 .desktop 文件）添加过滤器"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
-msgstr "添加选项直接启动程序，而不是打开.desktop文件"
+msgstr "添加直接启动程序而不是打开 .desktop 文件的选项"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "Show application icons for .desktop files"
-msgstr "为.desktop文件显示程序图标"
+msgstr "显示 .desktop 文件的应用程序图标"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr "将.odp和.ods文件添加到文档过滤器"
+msgstr "将 .odp 和 .ods 文件添加到文档过滤器"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
-msgstr "“打开方式”菜单现在只显示可处理所选定文件的程序"
+msgstr "现在“打开方式”菜单中只会显示可处理选定文件的程序"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
-msgstr "改进打开多个同类型文件（它们以列表形式，而不是逐个地，传递给程序）"
+msgstr "改进的多个同类型文件打开方式（它们将以列表形式一次性地传递给程序，而不是重复"
+"调用程序）"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
@@ -211,13 +211,13 @@ msgstr "添加带有问题跟踪器、论坛和捐赠页面链接的菜单项"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr "改进对非Linux系统的支持"
+msgstr "改进对非 Linux 系统的支持"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
-msgstr "按下Esc键时添加退出FSearch选项，而不是最小化窗口"
+msgstr "添加在按 Esc 键时退出 FSearch，而不是最小化窗口的选项"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
@@ -225,7 +225,7 @@ msgstr "默认排除“/proc”和“/sys”"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
-msgstr "按下“菜单”键或“Shift + F10”时打开上下文菜单"
+msgstr "按下菜单键或“Shift + F10”时打开上下文菜单"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
@@ -241,7 +241,9 @@ msgstr "正在保存…"
 
 #: src/fsearch.c:435
 msgid "translator-credits"
-msgstr "翻译人员"
+msgstr ""
+"翻译人员\n"
+"tjw123hh"
 
 #: src/fsearch.c:437
 msgid "A search utility focusing on performance and advanced features"
@@ -249,11 +251,11 @@ msgstr "注重性能和高级功能的搜索工具"
 
 #: src/fsearch.c:916
 msgid "Open a new application window"
-msgstr "开启新窗口"
+msgstr "打开新的应用程序窗口"
 
 #: src/fsearch.c:917
 msgid "Show the application preferences"
-msgstr "显示首选项"
+msgstr "显示应用程序首选项"
 
 #: src/fsearch.c:918
 msgid "Set the search pattern"
@@ -269,16 +271,16 @@ msgstr "显示版本信息并退出"
 
 #: src/fsearch_database.c:646
 msgid "Loading folders…"
-msgstr "正在加载文件夹…"
+msgstr "正在加载文件夹……"
 
 #: src/fsearch_database.c:654
 msgid "Loading files…"
-msgstr "正在加载文件…"
+msgstr "正在加载文件……"
 
 #: src/fsearch_database.c:1641 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
-msgstr "排序中…"
+msgstr "正在排序……"
 
 #: src/fsearch_file_utils.c:140
 msgctxt "Will be followed by the path of the file."
@@ -292,16 +294,16 @@ msgstr "获取路径失败"
 #: src/fsearch_file_utils.c:253
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "从文件获取信息时出错"
+msgstr "从获取文件信息时出错"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
-msgstr "获取应用信息失败"
+msgstr "获取应用程序信息失败"
 
 #: src/fsearch_file_utils.c:270
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr "获取下列内容类型信息时出错"
+msgstr "获取内容类型信息时出错"
 
 #: src/fsearch_file_utils.c:272
 msgid "No default application registered"
@@ -310,20 +312,20 @@ msgstr "未注册默认应用程序"
 #: src/fsearch_file_utils.c:496
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr "打开下列主文件夹时出错"
+msgstr "打开父文件夹时出错"
 
 #: src/fsearch_file_utils.c:498
 msgid "Failed to get parent path"
-msgstr "获取主路径失败"
+msgstr "无法获取父路径"
 
 #: src/fsearch_file_utils.c:502
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr "打开下列文件夹时出错"
+msgstr "打开文件夹时出错"
 
 #: src/fsearch_file_utils.c:505
 msgid "Failed to build open command"
-msgstr "构建打开命令失败"
+msgstr "无法生成打开命令"
 
 #: src/fsearch_file_utils.c:561
 msgid "Folder"
@@ -335,7 +337,7 @@ msgstr "未知类型"
 
 #: src/fsearch_filter.c:110
 msgid "All"
-msgstr "所有"
+msgstr "全部"
 
 #: src/fsearch_filter.c:111
 msgid "Folders"
@@ -371,20 +373,20 @@ msgstr "视频"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr "宏名称必须包含 `:` 字符。"
+msgstr "宏名称不能包含`:`字符。"
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:203
 #: src/fsearch_preferences_ui.c:215 src/fsearch_preferences_ui.c:565
 msgid "_Cancel"
-msgstr "取消"
+msgstr "取消(_C)"
 
 #: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:566
 msgid "_OK"
-msgstr "_确定"
+msgstr "确定(_O)"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:301
 msgid "Edit filter"
-msgstr "编辑筛选器"
+msgstr "编辑过滤器"
 
 #: src/fsearch_filter_editor.ui:50
 msgid "Name:"
@@ -392,11 +394,11 @@ msgstr "名称："
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr "此筛选器的唯一名称"
+msgstr "此过滤器的唯一名称"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr "唯一的筛选器名"
+msgstr "过滤器唯一名"
 
 #: src/fsearch_filter_editor.ui:73
 msgid "Search in path"
@@ -424,16 +426,16 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
-"此筛选器的宏。宏允许你通过在搜索文本后面加上“:”从搜索条目访问这个筛选器。\n"
+"此筛选器的宏。宏允许你通过在其文本后面加上“:”以从搜索条目访问这个过滤器。\n"
 "                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr "属性…"
+msgstr "属性……"
 
 #: src/fsearch_listview_popup.c:169
 msgid "Other Application…"
-msgstr "其他应用程序…"
+msgstr "其他应用程序……"
 
 #: src/fsearch_overlay.ui:44
 msgid "Empty Database"
@@ -445,7 +447,7 @@ msgstr "添加文件夹"
 
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
-msgstr "加载数据库…"
+msgstr "加载数据库……"
 
 #: src/fsearch_overlay.ui:123
 msgid "This won't take long."
@@ -453,7 +455,7 @@ msgstr "不会花很长时间。"
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
-msgstr "数据库更新中…"
+msgstr "数据库更新中……"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
@@ -461,11 +463,11 @@ msgstr "可能需要一些时间。"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
-msgstr "空的查询"
+msgstr "空查询"
 
 #: src/fsearch_overlay.ui:256
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "按 <b>Ctrl + F</b> 开始输入。"
+msgstr "按 <b>Ctrl + F</b> 并开始输入。"
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -477,7 +479,7 @@ msgstr "试试其他搜索条件"
 
 #: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
-msgstr "结果排序中…"
+msgstr "正在排序结果……"
 
 #: src/fsearch_preferences.ui:73 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
