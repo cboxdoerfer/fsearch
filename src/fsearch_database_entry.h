@@ -45,7 +45,7 @@ void
 db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx);
 
 void
-db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime);
+db_entry_set_mtime(FsearchDatabaseEntry *entry, int64_t mtime);
 
 void
 db_entry_set_size(FsearchDatabaseEntry *entry, off_t size);
@@ -86,7 +86,7 @@ db_entry_append_path(FsearchDatabaseEntry *entry, GString *str);
 void
 db_entry_append_full_path(FsearchDatabaseEntry *entry, GString *str);
 
-time_t
+int64_t
 db_entry_get_mtime(FsearchDatabaseEntry *entry);
 
 off_t

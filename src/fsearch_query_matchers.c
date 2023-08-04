@@ -66,7 +66,7 @@ uint32_t
 fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
-        const time_t time = db_entry_get_mtime(entry);
+        const int64_t time = db_entry_get_mtime(entry);
         return cmp_num(time, node);
     }
     return 0;

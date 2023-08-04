@@ -81,7 +81,7 @@ db_view_entry_get_path_full_for_idx(FsearchDatabaseView *view, uint32_t idx);
 void
 db_view_entry_append_path_for_idx(FsearchDatabaseView *view, uint32_t idx, GString *str);
 
-time_t
+int64_t
 db_view_entry_get_mtime_for_idx(FsearchDatabaseView *view, uint32_t idx);
 
 off_t

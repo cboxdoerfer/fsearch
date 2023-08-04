@@ -133,7 +133,7 @@ typedef struct {
     char *size;
     char *type;
     char *extension;
-    char time[100];
+    char *time;
 } DrawRowContext;
 
 static void
@@ -143,6 +143,7 @@ draw_row_ctx_free(DrawRowContext *ctx) {
     g_clear_pointer(&ctx->extension, g_free);
     g_clear_pointer(&ctx->type, g_free);
     g_clear_pointer(&ctx->size, g_free);
+    g_clear_pointer(&ctx->time, g_free);
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_TYPES; i++) {
         if (ctx->highlights[i]) {
             g_clear_pointer(&ctx->highlights[i], pango_attr_list_unref);
@@ -169,6 +170,8 @@ draw_row_ctx_new(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window,
 
     bool ret = true;
     db_view_lock(view);
+
+    g_autoptr(GDateTime) dtime = NULL;
 
     const uint32_t num_items = db_view_get_num_entries(view);
     if (row >= num_items) {
@@ -209,11 +212,14 @@ draw_row_ctx_new(FsearchDatabaseView *view, uint32_t row, GdkWindow *bin_window,
     off_t size = db_view_entry_get_size_for_idx(view, row);
     ctx->size = fsearch_file_utils_get_size_formatted(size, config->show_base_2_units);
 
-    const time_t mtime = db_view_entry_get_mtime_for_idx(view, row);
-    strftime(ctx->time,
-             100,
-             "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-             localtime(&mtime));
+    const int64_t mtime = db_view_entry_get_mtime_for_idx(view, row);
+    dtime = g_date_time_new_from_unix_local(mtime);
+    if (dtime) {
+        ctx->time = g_date_time_format(dtime, "%Y-%m-%d %H:%M");
+    }
+    else {
+        ctx->time = g_strdup(_("Date out of range"));
+    }
 
 out:
     db_view_unlock(view);
@@ -290,13 +296,15 @@ fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
                                                      config->show_base_2_units);
         break;
     case DATABASE_INDEX_TYPE_MODIFICATION_TIME: {
-        const time_t mtime = db_view_entry_get_mtime_for_idx(view, row);
-        char mtime_formatted[100] = "";
-        strftime(mtime_formatted,
-                 sizeof(mtime_formatted),
-                 "%Y-%m-%d %H:%M", //"%Y-%m-%d %H:%M",
-                 localtime(&mtime));
-        text = g_strdup(mtime_formatted);
+        const int64_t mtime = db_view_entry_get_mtime_for_idx(view, row);
+        g_autoptr(GDateTime) dtime = g_date_time_new_from_unix_local(mtime);
+        if (dtime) {
+            text = g_date_time_format(dtime, "%Y-%m-%d %H:%M");
+        }
+        else {
+            text = g_strdup(_("Date out of range"));
+        }
+
         break;
     }
     default:

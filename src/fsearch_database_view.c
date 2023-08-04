@@ -776,7 +776,7 @@ db_view_entry_append_path_for_idx(FsearchDatabaseView *view, uint32_t idx, GStri
     }
 }
 
-time_t
+int64_t
 db_view_entry_get_mtime_for_idx(FsearchDatabaseView *view, uint32_t idx) {
     g_assert(view);
 

@@ -298,7 +298,7 @@ db_load_entry_super_elements_from_memory(const uint8_t *data_block,
 
     if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time file/folder
-        time_t mtime = 0;
+        int64_t mtime = 0;
         data_block = copy_bytes_and_return_new_src(&mtime, data_block, 8);
 
         db_entry_set_mtime(entry, mtime);
@@ -759,7 +759,7 @@ db_save_entry_super_elements(FILE *fp,
 
     if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time of file/folder
-        const uint64_t mtime = db_entry_get_mtime(entry);
+        const int64_t mtime = db_entry_get_mtime(entry);
         bytes_written += write_data_to_file(fp, &mtime, 8, 1, write_failed);
         if (*write_failed == true) {
             g_debug("[db_save] failed to save modification time");

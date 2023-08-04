@@ -12,7 +12,7 @@ struct FsearchDatabaseEntry {
     FsearchDatabaseEntryFolder *parent;
     char *name;
     off_t size;
-    time_t mtime;
+    int64_t mtime;
 
     // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
     uint32_t idx;
@@ -114,7 +114,7 @@ db_entry_append_full_path(FsearchDatabaseEntry *entry, GString *str) {
     g_string_append(str, entry->name[0] == '\0' ? G_DIR_SEPARATOR_S : entry->name);
 }
 
-time_t
+int64_t
 db_entry_get_mtime(FsearchDatabaseEntry *entry) {
     return entry ? entry->mtime : 0;
 }
@@ -336,7 +336,7 @@ db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 }
 
 void
-db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime) {
+db_entry_set_mtime(FsearchDatabaseEntry *entry, int64_t mtime) {
     entry->mtime = mtime;
 }
 
