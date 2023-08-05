@@ -53,6 +53,13 @@
     <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.appdata.xml.in`. -->
     <content_rating type="oars-1.0"/>
     <releases>
+        <release date="2023-08-05" version="0.2.3">
+            <description>
+                <ul>
+                    <li>Fix buffer overflow on systems with `time_t` being less than 8 bytes in size</li>
+                </ul>
+            </description>
+        </release>
         <release date="2022-08-22" version="0.2.2">
             <description>
                 <ul>

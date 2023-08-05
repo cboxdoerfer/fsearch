@@ -1,4 +1,9 @@
 =================
+Version 0.2.3
+=================
+* Fix buffer overflow on systems with `time_t` being less than 8 bytes in size
+
+=================
 Version 0.2.2
 =================
 * Fix applications sometimes not getting started when FSearch closes immediately after activation
