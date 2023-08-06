@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-04-29 02:52+0000\n"
+"PO-Revision-Date: 2023-08-07 18:50+0000\n"
 "Last-Translator: \"Mathieu B.\" <mathieu.bousquet2@gmail.com>\n"
 "Language-Team: French <https://hosted.weblate.org/projects/fsearch/"
 "translations/fr/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.0-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -60,7 +60,7 @@ msgid ""
 "\" as well)"
 msgstr ""
 "Ignorer la casse (par exemple, la recherche de \"<code>fsearch</code>\" "
-"correspondra également à \" FSearch \")."
+"correspondra également à \" FSearch \")"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -183,6 +183,7 @@ msgstr ""
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
+"Inverser la sélection avec la molette lorsque la touche 'Ctrl' est enfoncée"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
