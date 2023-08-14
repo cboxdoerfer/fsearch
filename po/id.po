@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-08-07 18:50+0000\n"
+"PO-Revision-Date: 2023-08-16 11:52+0000\n"
 "Last-Translator: Christian Elbrianno <crse@protonmail.ch>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
@@ -300,7 +300,7 @@ msgstr ""
 #, fuzzy
 #| msgid "Failed to open:"
 msgid "Failed to get path"
-msgstr "Gagal membuka:"
+msgstr "Gagal mengakses lokasi"
 
 #: src/fsearch_file_utils.c:253
 msgctxt "Will be followed by the file path."
@@ -367,10 +367,8 @@ msgid "Files"
 msgstr "Berkas"
 
 #: src/fsearch_filter.c:114
-#, fuzzy
-#| msgid "Other Application…"
 msgid "Applications"
-msgstr "Aplikasi lainnya…"
+msgstr "Aplikasi"
 
 #: src/fsearch_filter.c:115
 msgid "Archives"
@@ -410,10 +408,8 @@ msgid "Edit filter"
 msgstr ""
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Nama"
+msgstr "Nama:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
@@ -493,10 +489,8 @@ msgid "Empty Query"
 msgstr "Kueri Kosong"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Tekan <b>Ctrl + F</b> dan mulai mengetik"
+msgstr "Tekan <b>Ctrl + F</b> dan mulai mengetik."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -663,10 +657,8 @@ msgid "Restore default filters"
 msgstr ""
 
 #: src/fsearch_preferences.ui:857
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Tampilkan Filter"
+msgstr "Filter:"
 
 #: src/fsearch_preferences.ui:878 src/fsearch_window.ui:638
 msgid "Search"
@@ -1351,16 +1343,14 @@ msgid "Something went wrong."
 msgstr ""
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Menghapus file…"
+msgstr "%d berkas dihapus."
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Memindahkan file ke sampah…"
+msgstr "%d berkas telah dibuang ke tempat sampah."
 
 #: src/fsearch_window_actions.c:224
 msgid ""
