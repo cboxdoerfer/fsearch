@@ -192,6 +192,8 @@ pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path) {
                        COL_INDEX_ONE_FS,
                        index->one_filesystem,
                        -1);
+
+    fsearch_index_free(index);
 }
 
 void
@@ -207,6 +209,8 @@ pref_exclude_treeview_row_add(GtkTreeModel *exclude_model, const char *path) {
                        COL_EXCLUDE_PATH,
                        fs_path->path,
                        -1);
+
+    fsearch_exclude_path_free(fs_path);
 }
 
 GtkTreeModel *
