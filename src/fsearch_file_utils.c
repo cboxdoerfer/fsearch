@@ -604,12 +604,17 @@ fsearch_file_utils_guess_icon(const char *name, const char *path, bool is_dir) {
         return fsearch_file_utils_get_desktop_file_icon(path);
     }
 
+    GIcon *icon = fsearch_file_utils_get_thumbnail_icon(path);
+    if (icon) {
+        return icon;
+    }
+
     g_autofree gchar *content_type = g_content_type_guess(name, NULL, 0, NULL);
     if (!content_type) {
         return g_themed_icon_new(DEFAULT_FILE_ICON_NAME);
     }
 
-    GIcon *icon = g_content_type_get_icon(content_type);
+    icon = g_content_type_get_icon(content_type);
 
     return icon ? icon : g_themed_icon_new(DEFAULT_FILE_ICON_NAME);
 }
@@ -651,4 +656,24 @@ fsearch_file_utils_get_content_type(const char *path, GError **error) {
     }
     const char *content_type = g_file_info_get_content_type(info);
     return content_type ? g_strdup(content_type) : NULL;
+}
+
+GIcon *
+fsearch_file_utils_get_thumbnail_icon(const char *path) {
+    g_autoptr(GFile) g_file = g_file_new_for_path(path);
+    if (!g_file) {
+        return NULL;
+    }
+    
+    g_autoptr(GFileInfo) file_info = g_file_query_info(g_file, "thumbnail::path", 0, NULL, NULL);
+    if (!file_info) {
+        return NULL;
+    }
+
+    const char *thumbnail = g_file_info_get_attribute_byte_string(file_info, "thumbnail::path");
+    if (!thumbnail) {
+        return NULL;
+    }
+
+    return g_icon_new_for_string(thumbnail, NULL);
 }

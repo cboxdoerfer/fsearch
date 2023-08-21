@@ -68,3 +68,6 @@ fsearch_file_utils_get_desktop_file_icon(const char *path);
 
 char *
 fsearch_file_utils_get_content_type(const char *path, GError **error);
+
+GIcon *
+fsearch_file_utils_get_thumbnail_icon(const char *path);
