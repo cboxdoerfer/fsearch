@@ -508,6 +508,9 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
         case GDK_KEY_KP_Enter:
             g_action_group_activate_action(group, "open", NULL);
             return GDK_EVENT_STOP;
+        case GDK_KEY_space:
+            g_action_group_activate_action(group, "preview", NULL);
+            return GDK_EVENT_STOP;
         default:
             return GDK_EVENT_PROPAGATE;
         }

@@ -26,6 +26,11 @@
 
 #include <glib/gi18n.h>
 #include <stdint.h>
+#include <gdk/gdk.h>
+
+#ifdef GDK_WINDOWING_X11
+#include <gdk/gdkx.h>
+#endif
 
 #include "fsearch_clipboard.h"
 #include "fsearch_config.h"
@@ -35,6 +40,7 @@
 #include "fsearch_statusbar.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window_actions.h"
+#include "fsearch_preview.h"
 
 static void
 action_set_active_int(GActionGroup *group, const gchar *action_name, int32_t value) {
@@ -585,6 +591,30 @@ fsearch_window_action_open_folder(GSimpleAction *action, GVariant *variant, gpoi
 }
 
 static void
+fsearch_window_action_preview(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+    guint xid = 0;
+    GList *file_list = NULL;
+
+    fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
+    if (!file_list) {
+        return;
+    }
+    
+    GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
+#ifdef GDK_WINDOWING_X11
+    GdkWindow *window = gtk_widget_get_window (toplevel);
+    if (GDK_IS_X11_WINDOW(window)) {
+        xid = gdk_x11_window_get_xid(gtk_widget_get_window(toplevel));
+    }
+#endif
+
+    g_autofree gchar *first_selected_uri = g_filename_to_uri((char *)file_list->data, NULL, NULL);
+    fsearch_preview_call_show_file(first_selected_uri, xid, TRUE);
+    g_list_free_full(g_steal_pointer(&file_list), g_free);
+}
+
+static void
 on_fsearch_window_action_open_with_response(GtkDialog *dialog, gint response_id, gpointer user_data) {
     if (response_id != GTK_RESPONSE_OK) {
         gtk_widget_destroy(GTK_WIDGET(dialog));
@@ -825,6 +855,7 @@ static GActionEntry FsearchWindowActions[] = {
     {"open_with", fsearch_window_action_open_with, "s"},
     {"open_with_other", fsearch_window_action_open_with_other, "s"},
     {"open_folder", fsearch_window_action_open_folder},
+    {"preview", fsearch_window_action_preview},
     {"close_window", fsearch_window_action_close_window},
     {"copy_clipboard", fsearch_window_action_copy},
     {"copy_as_text_path_and_name_clipboard", fsearch_window_action_copy_full_path},
