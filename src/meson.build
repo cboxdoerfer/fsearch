@@ -51,6 +51,7 @@ libfsearch_sources = [
     'fsearch_utf.c',
     'fsearch_window.c',
     'fsearch_window_actions.c',
+    'fsearch_preview.c',
 ]
 
 if build_machine.system()=='darwin'

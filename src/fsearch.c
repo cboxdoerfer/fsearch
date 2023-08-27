@@ -33,6 +33,7 @@
 #include "fsearch_window.h"
 #include "icon_resources.h"
 #include "ui_resources.h"
+#include "fsearch_preview.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <limits.h>
@@ -555,6 +556,9 @@ fsearch_application_shutdown(GApplication *app) {
         g_thread_pool_free(g_steal_pointer(&fsearch->db_pool), FALSE, TRUE);
         g_debug("[app] database thread finished.");
     }
+
+    // close the preview
+    fsearch_preview_call_close();
 
     g_clear_pointer(&fsearch->db, db_unref);
     g_clear_object(&fsearch->db_thread_cancellable);
