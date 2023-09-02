@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-08-02 14:06+0000\n"
-"Last-Translator: tjw123hh <tjw123hh@outlook.com>\n"
+"PO-Revision-Date: 2023-09-02 08:00+0000\n"
+"Last-Translator: aerowolf <aerowolf@tom.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
 "Language: zh_CN\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.0.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -39,14 +39,13 @@ msgstr "文件搜索工具"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr "图形文件搜索应用程序"
+msgstr "图形化文件搜索应用程序"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
-msgstr "FSearch 可帮助您尽可能轻松快捷地查找文件和文件夹。只需输入几个字母，搜索结果"
-"几乎就会立即出现。"
+msgstr "FSearch 可以帮您轻松快速查找文件和文件夹。输入几个字母，搜索结果立即出现。"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
 msgid ""
@@ -139,7 +138,7 @@ msgstr "新的搜索引擎"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 msgid "Greatly improved highlighting of search terms"
-msgstr "极大改进了搜索词的高亮显示"
+msgstr "极大改进了搜索项目的高亮显示"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid "Custom filters"
@@ -163,7 +162,7 @@ msgstr "在矩形选择模式下自动滚动结果列表"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr "按住“Ctrl”时，使用矩形反选"
+msgstr "按住Ctrl键时，使用矩形反选"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
@@ -243,7 +242,8 @@ msgstr "正在保存…"
 msgid "translator-credits"
 msgstr ""
 "翻译人员\n"
-"tjw123hh"
+"tjw123hh\n"
+"Yuan lijie"
 
 #: src/fsearch.c:437
 msgid "A search utility focusing on performance and advanced features"
@@ -294,7 +294,7 @@ msgstr "获取路径失败"
 #: src/fsearch_file_utils.c:253
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "从获取文件信息时出错"
+msgstr "从文件获取信息时出错"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
@@ -325,7 +325,7 @@ msgstr "打开文件夹时出错"
 
 #: src/fsearch_file_utils.c:505
 msgid "Failed to build open command"
-msgstr "无法生成打开命令"
+msgstr "生成打开命令失败"
 
 #: src/fsearch_file_utils.c:561
 msgid "Folder"
@@ -373,7 +373,7 @@ msgstr "视频"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr "宏名称不能包含`:`字符。"
+msgstr "宏名称不能包含“:”字符。"
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:203
 #: src/fsearch_preferences_ui.c:215 src/fsearch_preferences_ui.c:565
@@ -426,7 +426,8 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
-"此筛选器的宏。宏允许你通过在其文本后面加上“:”以从搜索条目访问这个过滤器。\n"
+"此筛选器的宏。宏允许你通过在其文本后面加上“:”，以便从搜索条目访问这个过滤器。"
+"\n"
 "                "
 
 #: src/fsearch_listview_popup.c:35
@@ -451,7 +452,7 @@ msgstr "加载数据库……"
 
 #: src/fsearch_overlay.ui:123
 msgid "This won't take long."
-msgstr "不会花很长时间。"
+msgstr "用时不会太久。"
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
@@ -467,7 +468,7 @@ msgstr "空查询"
 
 #: src/fsearch_overlay.ui:256
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "按 <b>Ctrl + F</b> 并开始输入。"
+msgstr "按 <b>Ctrl + F</b> ，然后开始输入。"
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -479,11 +480,11 @@ msgstr "试试其他搜索条件"
 
 #: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
-msgstr "正在排序结果……"
+msgstr "正在给结果排序……"
 
 #: src/fsearch_preferences.ui:73 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
-msgstr "选项"
+msgstr "首选项"
 
 #: src/fsearch_preferences.ui:142
 msgid "Enable dark theme"
