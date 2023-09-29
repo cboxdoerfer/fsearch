@@ -41,6 +41,8 @@ build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
         return;
     }
     FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+    g_assert(entry->name != NULL);
+
     if (G_LIKELY(entry->parent)) {
         build_path_recursively(entry->parent, str);
     }
@@ -79,16 +81,19 @@ db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
 
 bool
 db_entry_is_folder(FsearchDatabaseEntry *entry) {
+    g_assert(entry->name != NULL);
     return entry->type == DATABASE_ENTRY_TYPE_FOLDER;
 }
 
 bool
 db_entry_is_file(FsearchDatabaseEntry *entry) {
+    g_assert(entry->name != NULL);
     return entry->type == DATABASE_ENTRY_TYPE_FILE;
 }
 
 bool
 db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *maybe_ancestor) {
+    g_assert(entry->name != NULL);
     while (entry) {
         if (entry->parent == maybe_ancestor) {
             return true;
@@ -180,6 +185,7 @@ db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
+    g_assert(entry->name != NULL);
     if (strcmp(entry->name, "") != 0) {
         return entry->name;
     }
@@ -288,6 +294,7 @@ db_entry_destroy(FsearchDatabaseEntry *entry) {
         return;
     }
     g_clear_pointer(&entry->name, free);
+    entry->parent = NULL;
 }
 
 uint32_t
@@ -326,6 +333,9 @@ sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabas
     if (G_UNLIKELY(!entry_a || !entry_b)) {
         return;
     }
+    g_assert(entry_a->super.name != NULL);
+    g_assert(entry_b->super.name != NULL);
+
     if (entry_a->super.parent) {
         sort_entry_by_path_recursive(entry_a->super.parent, entry_b->super.parent, res);
     }
@@ -533,9 +543,7 @@ db_entry_set_size(FsearchDatabaseEntry *entry, off_t size) {
 
 void
 db_entry_set_name(FsearchDatabaseEntry *entry, const char *name) {
-    if (entry->name) {
-        free(entry->name);
-    }
+    g_clear_pointer(&entry->name, free);
     entry->name = strdup(name ? name : "");
 }
 
