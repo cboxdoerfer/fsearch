@@ -25,6 +25,12 @@
 #include "fsearch_thread_pool.h"
 
 typedef struct {
+    GThread *thread;
+    GMainLoop *loop;
+    GMainContext *ctx;
+} FsearchDatabaseThreadContext;
+
+typedef struct {
     // Array of FsearchDatabaseIndex's
     GPtrArray *indices;
 
@@ -44,18 +50,9 @@ typedef struct {
     FsearchDatabaseIndexPropertyFlags flags;
 
     // Shared thread where all indices can listen for file system change events and queue them for being processed later
-    struct {
-        GThread *thread;
-        GMainLoop *loop;
-        GMainContext *ctx;
-    } monitor;
-
+    FsearchDatabaseThreadContext monitor;
     // Shared thread where all indices can process file system change events
-    struct {
-        GThread *thread;
-        GMainLoop *loop;
-        GMainContext *ctx;
-    } worker;
+    FsearchDatabaseThreadContext worker;
 
     bool is_sorted;
     bool running;
@@ -299,7 +296,7 @@ index_store_sorted_entries_free(FsearchDatabaseIndexStore *store) {
 }
 
 static bool
-index_store_flag_compare(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexPropertyFlags flags) {
+index_store_flags_equal(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexPropertyFlags flags) {
     g_assert(store);
 
     const FsearchDatabaseIndexPropertyFlags store_flags = store->flags;
@@ -648,7 +645,7 @@ index_store_start(FsearchDatabaseIndexStore *store, FsearchDatabase *db, GCancel
         FsearchDatabaseIndex *index = g_ptr_array_index(indices, i);
 
         if (index_store_has_index_with_same_id(store, index)
-            || !index_store_flag_compare(store, fsearch_database_index_get_flags(index))) {
+            || !index_store_flags_equal(store, fsearch_database_index_get_flags(index))) {
             continue;
         }
         g_ptr_array_add(store->indices, fsearch_database_index_ref(index));
