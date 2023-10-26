@@ -2165,10 +2165,10 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
     uint32_t num_files = 0;
     uint32_t num_folders = 0;
 
-    database_lock(self);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     if (!self->store) {
-        database_unlock(self);
         return false;
     }
 
@@ -2210,8 +2210,6 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
         g_clear_pointer(&search_result, free);
         result = true;
     }
-
-    database_unlock(self);
 
     signal_emit_search_finished(
         self,
