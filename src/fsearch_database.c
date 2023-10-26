@@ -2387,12 +2387,10 @@ static void
 database_rescan(FsearchDatabase *self) {
     g_return_if_fail(self);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
-
     signal_emit0(self, SIGNAL_SCAN_STARTED);
 
-    g_clear_pointer(&locker, g_mutex_locker_free);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
 
     g_autoptr(FsearchDatabaseIndexStore) store = index_store_new(database_get_include_manager(self),
                                                                  database_get_exclude_manager(self),
@@ -2400,6 +2398,9 @@ database_rescan(FsearchDatabase *self) {
                                                                  index_event_cb,
                                                                  self);
     g_return_if_fail(store);
+
+    g_clear_pointer(&locker, g_mutex_locker_free);
+
     index_store_start(store, self, NULL);
 
     locker = g_mutex_locker_new(&self->mutex);
