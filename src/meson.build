@@ -57,7 +57,6 @@ libfsearch_sources = [
     'fsearch_size_utils.c',
     'fsearch_statusbar.c',
     'fsearch_string_utils.c',
-    'fsearch_task.c',
     'fsearch_thread_pool.c',
     'fsearch_time_utils.c',
     'fsearch_ui_utils.c',
