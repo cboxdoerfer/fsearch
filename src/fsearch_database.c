@@ -1980,6 +1980,19 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
         darray_for_each(ctx->folders, (DynamicArrayForEachFunc)search_view_result_remove, view);
     }
 }
+
+static FsearchDatabaseSearchInfo *
+get_search_info_for_view(FsearchDatabaseSearchView *view) {
+    g_return_val_if_fail(view, NULL);
+    return fsearch_database_search_info_new(fsearch_query_ref(view->query),
+                                            search_view_get_num_file_results(view),
+                                            search_view_get_num_folder_results(view),
+                                            fsearch_selection_get_num_selected(view->file_selection),
+                                            fsearch_selection_get_num_selected(view->folder_selection),
+                                            view->sort_order,
+                                            view->sort_type);
+}
+
 // endregion
 
 // region Database private
@@ -2141,15 +2154,7 @@ database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
         view->sort_type = sort_type;
     }
 
-    signal_emit_sort_finished(self,
-                              id,
-                              fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                                               search_view_get_num_file_results(view),
-                                                               search_view_get_num_folder_results(view),
-                                                               fsearch_selection_get_num_selected(view->file_selection),
-                                                               fsearch_selection_get_num_selected(view->folder_selection),
-                                                               view->sort_order,
-                                                               view->sort_type));
+    signal_emit_sort_finished(self, id, get_search_info_for_view(view));
 }
 
 static bool
@@ -2162,8 +2167,6 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
     FsearchDatabaseIndexProperty sort_order = fsearch_database_work_search_get_sort_order(work);
     const GtkSortType sort_type = fsearch_database_work_search_get_sort_type(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
-    uint32_t num_files = 0;
-    uint32_t num_folders = 0;
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
@@ -2192,9 +2195,6 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
                                             ? db_search_empty(folders, files)
                                             : db_search(query, self->thread_pool, folders, files, cancellable);
     if (search_result) {
-        num_files = search_result->files ? darray_get_num_items(search_result->files) : 0;
-        num_folders = search_result->folders ? darray_get_num_items(search_result->folders) : 0;
-
         // After searching the secondary sort order will always be NONE, because we only search in pre-sorted indexes
         FsearchDatabaseSearchView *view = search_view_new(query,
                                                           search_result->files,
@@ -2211,10 +2211,7 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
         result = true;
     }
 
-    signal_emit_search_finished(
-        self,
-        id,
-        fsearch_database_search_info_new(query, num_files, num_folders, 0, 0, sort_order, sort_type));
+    signal_emit_search_finished(self, id, get_search_info_for_view(database_get_search_view(self, id)));
 
     return result;
 }
@@ -2228,16 +2225,7 @@ search_views_updated_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
-    signal_emit_selection_changed(
-        self,
-        GPOINTER_TO_INT(key),
-        fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                         search_view_get_num_file_results(view),
-                                         search_view_get_num_folder_results(view),
-                                         fsearch_selection_get_num_selected(view->file_selection),
-                                         fsearch_selection_get_num_selected(view->folder_selection),
-                                         view->sort_order,
-                                         view->sort_type));
+    signal_emit_selection_changed(self, GPOINTER_TO_INT(key), get_search_info_for_view(view));
 }
 
 static void
@@ -2358,16 +2346,7 @@ database_modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
         g_assert_not_reached();
     }
 
-    signal_emit_selection_changed(
-        self,
-        view_id,
-        fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                         search_view_get_num_file_results(view),
-                                         search_view_get_num_folder_results(view),
-                                         fsearch_selection_get_num_selected(view->file_selection),
-                                         fsearch_selection_get_num_selected(view->folder_selection),
-                                         view->sort_order,
-                                         view->sort_type));
+    signal_emit_selection_changed(self, view_id, get_search_info_for_view(view));
 }
 
 static void
@@ -2842,13 +2821,7 @@ fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, Fs
         res = FSEARCH_RESULT_DB_UNKOWN_SEARCH_VIEW;
     }
     else {
-        *info_out = fsearch_database_search_info_new(fsearch_query_ref(view->query),
-                                                     search_view_get_num_file_results(view),
-                                                     search_view_get_num_folder_results(view),
-                                                     fsearch_selection_get_num_selected(view->file_selection),
-                                                     fsearch_selection_get_num_selected(view->folder_selection),
-                                                     view->sort_order,
-                                                     view->sort_type);
+        *info_out = get_search_info_for_view(view);
         res = FSEARCH_RESULT_SUCCESS;
     }
 
