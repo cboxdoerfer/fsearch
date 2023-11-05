@@ -30,9 +30,23 @@ typedef struct {
     GMainContext *ctx;
 } FsearchDatabaseThreadContext;
 
+typedef struct FsearchDatabaseSearchView {
+    FsearchQuery *query;
+    FsearchDatabaseEntriesContainer *file_container;
+    FsearchDatabaseEntriesContainer *folder_container;
+    GtkSortType sort_type;
+    FsearchDatabaseIndexProperty sort_order;
+    FsearchDatabaseIndexProperty secondardy_sort_order;
+    GHashTable *file_selection;
+    GHashTable *folder_selection;
+} FsearchDatabaseSearchView;
+
 typedef struct {
     // Array of FsearchDatabaseIndex's
     GPtrArray *indices;
+
+    // Hash table to all search results
+    GHashTable *search_results;
 
     // Sorted "lists" of all entries in `indices`
     FsearchDatabaseEntriesContainer *file_container[NUM_DATABASE_INDEX_PROPERTIES];
@@ -69,8 +83,6 @@ struct _FsearchDatabase {
     GThread *work_queue_thread;
     GAsyncQueue *work_queue;
 
-    GHashTable *search_results;
-
     FsearchThreadPool *thread_pool;
 
     FsearchDatabaseIndexStore *store;
@@ -102,6 +114,9 @@ typedef enum FsearchDatabaseSignalType {
 } FsearchDatabaseSignalType;
 
 static guint signals[NUM_DATABASE_SIGNALS];
+
+static void
+search_view_free(FsearchDatabaseSearchView *view);
 
 // region GMainLoop helpers
 static gboolean
@@ -482,6 +497,7 @@ index_store_free(FsearchDatabaseIndexStore *store) {
     }
     g_clear_pointer(&store->worker.ctx, g_main_context_unref);
 
+    g_clear_pointer(&store->search_results, g_hash_table_unref);
     index_store_sorted_entries_free(store);
     g_clear_pointer(&store->indices, g_ptr_array_unref);
     g_clear_object(&store->include_manager);
@@ -500,6 +516,8 @@ index_store_new(FsearchDatabaseIncludeManager *include_manager,
     store = g_slice_new0(FsearchDatabaseIndexStore);
 
     store->indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
+    store->search_results = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)search_view_free);
+
     store->flags = flags;
     store->is_sorted = false;
     store->running = false;
@@ -1746,17 +1764,6 @@ load_fail:
 // endregion
 
 // region Search view
-typedef struct FsearchDatabaseSearchView {
-    FsearchQuery *query;
-    FsearchDatabaseEntriesContainer *file_container;
-    FsearchDatabaseEntriesContainer *folder_container;
-    GtkSortType sort_type;
-    FsearchDatabaseIndexProperty sort_order;
-    FsearchDatabaseIndexProperty secondardy_sort_order;
-    GHashTable *file_selection;
-    GHashTable *folder_selection;
-} FsearchDatabaseSearchView;
-
 static void
 search_view_free(FsearchDatabaseSearchView *view) {
     g_return_if_fail(view);
@@ -2049,7 +2056,9 @@ database_get_file_default() {
 
 static FsearchDatabaseSearchView *
 database_get_search_view(FsearchDatabase *self, uint32_t view_id) {
-    return g_hash_table_lookup(self->search_results, GUINT_TO_POINTER(view_id));
+    g_return_val_if_fail(self, NULL);
+    g_return_val_if_fail(self->store, NULL);
+    return g_hash_table_lookup(self->store->search_results, GUINT_TO_POINTER(view_id));
 }
 
 static FsearchResult
@@ -2203,7 +2212,7 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
                                                           sort_order,
                                                           DATABASE_INDEX_PROPERTY_NONE,
                                                           sort_type);
-        g_hash_table_insert(self->search_results, GUINT_TO_POINTER(id), view);
+        g_hash_table_insert(self->store->search_results, GUINT_TO_POINTER(id), view);
 
         g_clear_pointer(&search_result->files, darray_unref);
         g_clear_pointer(&search_result->folders, darray_unref);
@@ -2244,7 +2253,7 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
         database_lock(self);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
-        g_hash_table_foreach(self->search_results, search_views_updated_cb, self);
+        g_hash_table_foreach(self->store->search_results, search_views_updated_cb, self);
         signal_emit_database_changed(self, database_get_info(self));
         database_unlock(self);
         break;
@@ -2257,12 +2266,12 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
     case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
-        g_hash_table_foreach(self->search_results, search_view_results_add_cb, &ctx);
+        g_hash_table_foreach(self->store->search_results, search_view_results_add_cb, &ctx);
         index_store_add_entries(self->store, event->entries.folders, true);
         index_store_add_entries(self->store, event->entries.files, false);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        g_hash_table_foreach(self->search_results, search_view_results_remove_cb, &ctx);
+        g_hash_table_foreach(self->store->search_results, search_view_results_remove_cb, &ctx);
         index_store_remove_folders(self->store, event->entries.folders, index);
         index_store_remove_files(self->store, event->entries.files, index);
         break;
@@ -2390,7 +2399,7 @@ database_rescan(FsearchDatabase *self) {
 
     index_store_start_monitoring(self->store);
 
-    g_hash_table_remove_all(self->search_results);
+    g_hash_table_remove_all(self->store->search_results);
 
 #ifdef HAVE_MALLOC_TRIM
     malloc_trim(0);
@@ -2440,7 +2449,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     index_store_start_monitoring(self->store);
 
-    g_hash_table_remove_all(self->search_results);
+    g_hash_table_remove_all(self->store->search_results);
 
 #ifdef HAVE_MALLOC_TRIM
     malloc_trim(0);
@@ -2596,7 +2605,6 @@ fsearch_database_finalize(GObject *object) {
 
     g_clear_object(&self->file);
 
-    g_clear_pointer(&self->search_results, g_hash_table_unref);
     g_clear_pointer(&self->store, index_store_unref);
     database_unlock(self);
 
@@ -2786,7 +2794,6 @@ static void
 fsearch_database_init(FsearchDatabase *self) {
     g_mutex_init((&self->mutex));
     self->thread_pool = fsearch_thread_pool_init();
-    self->search_results = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)search_view_free);
     self->work_queue = g_async_queue_new();
     self->work_queue_thread = g_thread_new("FsearchDatabaseWorkQueue", database_work_queue_thread, self);
 }
