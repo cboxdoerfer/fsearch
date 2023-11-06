@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-09-02 08:00+0000\n"
+"PO-Revision-Date: 2023-11-08 01:35+0000\n"
 "Last-Translator: aerowolf <aerowolf@tom.com>\n"
 "Language-Team: Chinese (Simplified) <https://hosted.weblate.org/projects/"
 "fsearch/translations/zh_Hans/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.0.1-dev\n"
+"X-Generator: Weblate 5.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -1361,7 +1361,7 @@ msgstr ""
 
 #: src/fsearch_window.ui:68
 msgid "New window"
-msgstr "新窗口打开"
+msgstr "打开新窗口"
 
 #: src/fsearch_window.ui:88
 msgid "Update database"
@@ -1485,15 +1485,15 @@ msgstr "打开文件属性中…"
 
 #: src/menus.ui:6
 msgid "_File"
-msgstr "_文件"
+msgstr "文件(_F)"
 
 #: src/menus.ui:9
 msgid "New Window"
-msgstr "新窗口"
+msgstr "新建窗口"
 
 #: src/menus.ui:16 src/menus.ui:171
 msgid "_Open"
-msgstr "_打开"
+msgstr "打开(_O)"
 
 #: src/menus.ui:21
 msgid "Open Folder"
@@ -1513,15 +1513,15 @@ msgstr "关闭窗口"
 
 #: src/menus.ui:54
 msgid "_Edit"
-msgstr "_编辑"
+msgstr "编辑(_E)"
 
 #: src/menus.ui:57 src/menus.ui:207
 msgid "_Copy"
-msgstr "_复制"
+msgstr "复制(_C)"
 
 #: src/menus.ui:62 src/menus.ui:228
 msgid "Cu_t"
-msgstr "剪切"
+msgstr "剪切(_T)"
 
 #: src/menus.ui:69
 msgid "Select All"
@@ -1537,23 +1537,23 @@ msgstr "反选"
 
 #: src/menus.ui:92
 msgid "_View"
-msgstr "_视图"
+msgstr "视图(_V)"
 
 #: src/menus.ui:109
 msgid "_Search"
-msgstr "_搜索"
+msgstr "搜索(_S)"
 
 #: src/menus.ui:126
 msgid "_Help"
-msgstr "_帮助"
+msgstr "帮助(_H)"
 
 #: src/menus.ui:177
 msgid "Open _With"
-msgstr "打开方式"
+msgstr "打开方式(_W)"
 
 #: src/menus.ui:191
 msgid "_Open Folder"
-msgstr "_打开文件夹"
+msgstr "打开文件夹(_O)"
 
 #: src/menus.ui:213
 msgid "Copy as Text"
@@ -1565,7 +1565,7 @@ msgstr "路径+名称"
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
-msgstr "移动到回收站"
+msgstr "移动到回收站(_T)"
 
 #~ msgid ""
 #~ "There are a lot of features which make searching as efficient and "
