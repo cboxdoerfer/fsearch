@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-04-10 11:52+0000\n"
+"PO-Revision-Date: 2023-11-20 18:04+0000\n"
 "Last-Translator: Didier Sandra <didier.mg.sandra@skynet.be>\n"
 "Language-Team: Dutch <https://hosted.weblate.org/projects/fsearch/"
 "translations/nl/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.17-dev\n"
+"X-Generator: Weblate 5.2\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -41,7 +41,7 @@ msgstr "Bestandszoekhulpmiddel"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr "Een grafisch zoekhulpmiddel"
+msgstr "Een grafisch zoekhulpmiddel voor bestanden"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
@@ -89,11 +89,11 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
-msgstr "De standaard vormgeving"
+msgstr "De standaard UI vormgeving"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
-msgstr "Een vormgeving die meer overeenkomt met de GNOME-ontwerprichtlijnen"
+msgstr "Een vormgeving die meer overeenstemt met de GNOME-ontwerprichtlijnen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 msgid "search"
@@ -146,7 +146,7 @@ msgstr "Nieuwe zoekmachine"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 msgid "Greatly improved highlighting of search terms"
-msgstr "Verbeterde markering van zoektermen"
+msgstr "Sterk verbeterde markering van zoektermen"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid "Custom filters"
@@ -158,15 +158,15 @@ msgstr "Verbeterde sorteerprestaties"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr "Verbeterde scrolprestaties"
+msgstr "Verbeterde afrolprestaties"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr "Bestandsselectie wordt onthouden na het bijwerken van de databank"
+msgstr "Bestandsselectie onthouden na bijwerken van de databank"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr "Resultatenlijst automatisch scrollen in de rubberband selectiemodus"
+msgstr "Resultatenlijst automatisch afrollen in de rubberband selectiemodus"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
@@ -268,7 +268,7 @@ msgstr ""
 
 #: src/fsearch.c:437
 msgid "A search utility focusing on performance and advanced features"
-msgstr "Een zoekhulpmiddel, gericht op snelheid en uitgebreide mogelijkheden"
+msgstr "Een zoekhulpmiddel gericht op snelheid en geavanceerde mogelijkheden"
 
 #: src/fsearch.c:916
 msgid "Open a new application window"
@@ -292,11 +292,11 @@ msgstr "Versie-informatie tonen en afsluiten"
 
 #: src/fsearch_database.c:646
 msgid "Loading folders…"
-msgstr "Bezig met laden van mappen…"
+msgstr "Bezig met mappen laden…"
 
 #: src/fsearch_database.c:654
 msgid "Loading files…"
-msgstr "Bezig met laden van bestanden…"
+msgstr "Bezig met bestanden laden…"
 
 #: src/fsearch_database.c:1641 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
@@ -319,7 +319,7 @@ msgstr "Er kan geen bestandsinformatie worden opgevraagd"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
-msgstr "Er kan geen toepassingsinformatie worden getoond"
+msgstr "Er kan geen toepassingsinformatie worden opgevraagd"
 
 #: src/fsearch_file_utils.c:270
 msgctxt "Will be followed by the content type string."
@@ -328,7 +328,7 @@ msgstr "Er kan geen informatie over het type inhoud worden opgevraagd"
 
 #: src/fsearch_file_utils.c:272
 msgid "No default application registered"
-msgstr "Er is geen standaardtoepassing ingesteld"
+msgstr "Er is geen standaardtoepassing geregistreerd"
 
 #: src/fsearch_file_utils.c:496
 msgctxt "Will be followed by the path of the folder."
@@ -346,7 +346,7 @@ msgstr "De map kan niet worden geopend"
 
 #: src/fsearch_file_utils.c:505
 msgid "Failed to build open command"
-msgstr "De openen-opdracht kan niet worden aangeropen"
+msgstr "De openen-opdracht kan niet worden aangeroepen"
 
 #: src/fsearch_file_utils.c:561
 msgid "Folder"
@@ -394,7 +394,7 @@ msgstr "Video's"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr "Macronamen mogen niet het teken ‘:’ bevatten."
+msgstr "Macronamen mogen geen `:` tekens bevatten."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:203
 #: src/fsearch_preferences_ui.c:215 src/fsearch_preferences_ui.c:565
@@ -407,7 +407,7 @@ msgstr "_Oké"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:301
 msgid "Edit filter"
-msgstr "Filter aanpassen"
+msgstr "Filter bewerken"
 
 #: src/fsearch_filter_editor.ui:50
 msgid "Name:"
@@ -448,7 +448,7 @@ msgid ""
 "                "
 msgstr ""
 "De macro van dit filter. Met een macro kan een filter worden gebruikt in het "
-"zoekvak door de tekst te typen, gevolgd door ‘:’\n"
+"zoekvak door de tekst te typen, gevolgd door ':'\n"
 "                "
 
 #: src/fsearch_listview_popup.c:35
@@ -469,7 +469,7 @@ msgstr "Mappen toevoegen"
 
 #: src/fsearch_overlay.ui:108
 msgid "Loading Database…"
-msgstr "Bezig met laden van de databank…"
+msgstr "Bezig met databank laden…"
 
 #: src/fsearch_overlay.ui:123
 msgid "This won't take long."
@@ -477,7 +477,7 @@ msgstr "Dit gaat niet lang duren."
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
 msgid "Updating Database…"
-msgstr "Bezig met bijwerken van de databank…"
+msgstr "Bezig met databank bijwerken…"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
@@ -497,11 +497,11 @@ msgstr "Geen resultaten gevonden"
 
 #: src/fsearch_overlay.ui:319
 msgid "Try a different search"
-msgstr "Probeer een andere zoekopdracht"
+msgstr "Probeer een andere zoekterm"
 
 #: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
-msgstr "Bezig met sorteren…"
+msgstr "Bezig met resultaten sorteren…"
 
 #: src/fsearch_preferences.ui:73 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -537,7 +537,7 @@ msgstr "middels dubbelklikken"
 
 #: src/fsearch_preferences.ui:283
 msgid "Behaviour after successfully opening a file:"
-msgstr "Wat te doen na het openen van een bestand:"
+msgstr "Gedrag na succesvol openen van een bestand:"
 
 #: src/fsearch_preferences.ui:299
 msgid "Nothing"
@@ -577,7 +577,7 @@ msgstr "Sorteervolgorde onthouden"
 
 #: src/fsearch_preferences.ui:438
 msgid "Open path with double click in path column"
-msgstr "Locatie openen door te dubbelklikken in de locatiekolom"
+msgstr "Locatie openen door dubbelklikken in de locatiekolom"
 
 #: src/fsearch_preferences.ui:453
 msgid "Single click to open"
@@ -593,7 +593,7 @@ msgstr "Resultaten:"
 
 #: src/fsearch_preferences.ui:530
 msgid "Show database indexing status"
-msgstr "Databank-bijwerkstatus tonen"
+msgstr "Bijwerkstatus van de databank tonen"
 
 #: src/fsearch_preferences.ui:551
 msgid "Statusbar:"
@@ -609,7 +609,7 @@ msgstr "bestand of map niet kan worden geopend"
 
 #: src/fsearch_preferences.ui:625
 msgid "Dialogs:"
-msgstr "Vensters:"
+msgstr "Dialogen:"
 
 #: src/fsearch_preferences.ui:650
 msgid "Interface"
@@ -617,7 +617,7 @@ msgstr "Uiterlijk"
 
 #: src/fsearch_preferences.ui:669
 msgid "Search in path when query contains path separators"
-msgstr "Locatie doorzoeken als de zoekopdracht locatie-scheidingstekens bevat"
+msgstr "Locatie doorzoeken wanneer de zoekopdracht locatie-scheidingen bevat"
 
 #: src/fsearch_preferences.ui:683
 msgid "Search as you type"
@@ -625,12 +625,12 @@ msgstr "Zoeken tijdens typen"
 
 #: src/fsearch_preferences.ui:697
 msgid "Hide results when search is empty"
-msgstr "Resultaten verbergen als zoekopdracht blanco is"
+msgstr "Resultaten verbergen wanneer de zoekopdracht blanco is"
 
 #: src/fsearch_preferences.ui:711
 msgid "Match case when query contains at least one upper case character"
 msgstr ""
-"Tekstgrootte moet overeenkomen als de zoekopdracht minstens één hoofdletter "
+"Hoofdlettergevoelig zoeken wanneer de zoekopdracht minstens één hoofdletter "
 "bevat"
 
 #: src/fsearch_preferences.ui:779
@@ -643,7 +643,7 @@ msgstr "Geselecteerd filter verwijderen"
 
 #: src/fsearch_preferences.ui:811
 msgid "Edit selected filter"
-msgstr "Geselecteerd filter aanpassen"
+msgstr "Geselecteerd filter bewerken"
 
 #: src/fsearch_preferences.ui:825
 msgid "Restore default filters"
@@ -659,7 +659,7 @@ msgstr "Zoeken"
 
 #: src/fsearch_preferences.ui:897
 msgid "Update database on start"
-msgstr "Databank bijwerken na opstarten"
+msgstr "Databank bijwerken tijdens opstarten"
 
 #: src/fsearch_preferences.ui:917
 msgid "Update every"
@@ -675,7 +675,7 @@ msgstr "30"
 
 #: src/fsearch_preferences.ui:986
 msgid "minute(s)"
-msgstr "minute(n)"
+msgstr "minuten"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
@@ -700,11 +700,11 @@ msgstr "Opnemen"
 
 #: src/fsearch_preferences.ui:1256
 msgid "Add path to be excluded from database"
-msgstr "Voeg de uit te sluiten locatie toe"
+msgstr "Voeg een uit te sluiten locatie toe"
 
 #: src/fsearch_preferences.ui:1308 src/fsearch_preferences.ui:1321
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "Jokertekens worden ondersteund. Scheid meerdere items met ‘;’"
+msgstr "Ondersteunt jokertekens. Scheid meerdere items met ';'"
 
 #: src/fsearch_preferences.ui:1309
 msgid "Exclude files:"
@@ -712,7 +712,7 @@ msgstr "Bestanden uitsluiten:"
 
 #: src/fsearch_preferences.ui:1322
 msgid "e.g. \".git;*.tmp\""
-msgstr "bijv. \".git;*.tmp\""
+msgstr "bvb. \".git;*.tmp\""
 
 #: src/fsearch_preferences.ui:1339
 msgid "Exclude hidden files and folders"
@@ -738,11 +738,11 @@ msgid ""
 msgstr ""
 "<b>Donker thema gebruiken:</b>\n"
 "\n"
-"Schakel in om het donkere systeemthema te gebruiken in FSearch <i>(donkere "
-"vormgeving met lichte tekst)</i>.\n"
+"Schakel in om een donker systeemthema te gebruiken in FSearch <i>(d.w.z. "
+"donkere vormgeving met lichte tekst)</i>.\n"
 "\n"
 "Let op: niet alle systeemthema's bieden een donkere variant, dus deze "
-"instelling kan ook géén effect hebben."
+"instelling kan géén effect hebben."
 
 #: src/fsearch_preferences.ui:1434
 msgid ""
@@ -760,10 +760,10 @@ msgstr ""
 "\n"
 "Schakel in om het zoekvak en hoofdmenu op de titelbalk te tonen.\n"
 "\n"
-"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak "
-"daaronder.\n"
-"Dit laatste zorgt voor een traditionelere vormgeving, maar neem iets meer "
-"ruimte in beslag."
+"Schakel uit om het hoofdmenu als menubalk te tonen en het zoekvak daaronder."
+"\n"
+"Dit laatste zorgt voor een traditionelere UI vormgeving, maar neemt iets "
+"meer ruimte in beslag."
 
 #: src/fsearch_preferences.ui:1454
 msgid ""
@@ -820,7 +820,7 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
-"<b>Wat te doen na het openen van een bestand:</b>\n"
+"<b>Gedrag na succesvol openen van een bestand:</b>\n"
 "\n"
 "Als een bestand of map geopend is, kan één van de volgende acties worden "
 "uitgevoerd:\n"
@@ -855,11 +855,11 @@ msgstr ""
 "als je zoekt naar ‘iets’, dan worden alle items met <i>iets</i> in de "
 "bestands- of mapnaam vetgedrukt getoond:\n"
 "\n"
-"\t<b>iets</b>bar.txt\n"
+"\t<b>iets</b>leuk.txt\n"
 "\tbestand.<b>iets</b>\n"
 "\n"
 "Dit werkt tevens voor reguliere uitdrukkingen en jokertekens die beginnen "
-"met of eindigen op een sterretje. "
+"met of eindigen op een sterretje *. "
 
 #: src/fsearch_preferences.ui:1539
 msgid ""
@@ -881,7 +881,7 @@ msgid ""
 msgstr ""
 "<b>Pictogrammen tonen in naamkolom:</b>\n"
 "\n"
-"Schakel in om pictogrammen te tonen in de naamkolom."
+"Schakel in om pictogrammen van bestanden en mappen te tonen in de naamkolom."
 
 #: src/fsearch_preferences.ui:1573
 msgid ""
@@ -915,7 +915,7 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
-"<b>Locatie openen door te dubbelklikken in de locatiekolom:</b>\n"
+"<b>Locatie openen door dubbelklikken in de locatiekolom:</b>\n"
 "\n"
 "Schakel in om de geselecteerde locatie te openen door te dubbelklikken in de "
 "locatiekolom."
@@ -941,7 +941,7 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
-"<b>Databank-bijwerkstatus tonen:</b>\n"
+"<b>Bijwerkstatus van databank tonen:</b>\n"
 "\n"
 "Schakel in om op de statusbalk aan te geven welke locatie momenteel wordt "
 "geïndexeerd."
@@ -953,7 +953,7 @@ msgid ""
 "If enabled, a warning dialog is displayed when a file or folder failed to "
 "open."
 msgstr ""
-"<b>Waarschuwingen tonen als:</b>\n"
+"<b>Waarschuwingen tonen wanneer:</b>\n"
 "\n"
 "Schakel in om waarschuwingen te tonen als een bestand of map niet kan worden "
 "geopend."
@@ -965,11 +965,10 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
-"<b>Locatie doorzoeken als zoekopdracht locatie-scheidingstekens bevat:</b>\n"
+"<b>Locatie doorzoeken wanneer zoekopdracht locatie-scheidingen bevat:</b>\n"
 "\n"
-"Schakel in om zoektermen met locatie-scheidingstekens (bijv. ‘/’) "
-"automatisch overeen te laten komen met de volledige locatie van een bestand "
-"of map."
+"Schakel in om zoektermen met locatie-scheidingen (bvb. ‘/’) automatisch "
+"overeen te stemmen met de volledige locatie van een bestand of map."
 
 #: src/fsearch_preferences.ui:1692
 msgid ""
@@ -979,13 +978,13 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
-"<b>Tekstgrootte moet overeenkomen als de zoekopdracht minstens één "
+"<b>Hoofdlettergevoelig zoeken wanneer de zoekopdracht minstens één "
 "hoofdletter bevat:</b>\n"
 "\n"
 "Schakel in om van zoekopdrachten met minimaal één hoofdletter een "
 "hoofdlettergevoelige zoekopdracht te maken. Dit betekent dat termen als "
-"<i>Iets</i> overeenkomen met <i>IetsBar.txt</i>, maar niet met <i>ietsbar."
-"txt</i>."
+"<i>Iets</i> overeenstemmen met <i>IetsLeuk.txt</i>, maar niet met <i>ietsleuk"
+".txt</i>."
 
 #: src/fsearch_preferences.ui:1709
 msgid ""
@@ -996,12 +995,13 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
-"<b>Resultaten verbergen als zoekopdracht blanco is:</b>\n"
+"<b>Resultaten verbergen wanneer zoekopdracht blanco is:</b>\n"
 "\n"
-"Schakel in om geen zoekresultaten te tonen als de zoekopdracht blanco is.\n"
+"Schakel in om geen zoekresultaten te tonen wanneer de zoekopdracht blanco is."
 "\n"
-"Schakel uit om alle bestanden en mappen te tonen als de zoekopdracht blanco "
-"is."
+"\n"
+"Schakel uit om alle bestanden en mappen te tonen wanneer de zoekopdracht "
+"blanco is."
 
 #: src/fsearch_preferences.ui:1728
 msgid ""
@@ -1014,7 +1014,7 @@ msgid ""
 msgstr ""
 "<b>Zoeken tijdens typen:</b>\n"
 "\n"
-"Schakel in om automatisch te zoeken na iedere toetsaanslag.\n"
+"Schakel in om automatisch te zoeken bij iedere toetsaanslag.\n"
 "\n"
 "Schakel uit om alleen te zoeken zodra je op <i>Enter</i> of de zoekknop "
 "drukt. "
@@ -1026,7 +1026,7 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
-"<b>Databank bijwerken na opstarten:</b>\n"
+"<b>Databank bijwerken tijdens opstarten:</b>\n"
 "\n"
 "Schakel in om de databank automatisch bij te werken op de achtergrond zodra "
 "je FSearch opent."
@@ -1146,7 +1146,9 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1907
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr "Plaats de cursor boven een instelling om een hulpballon te tonen."
+msgstr ""
+"Plaats de cursor boven een instelling om een hulpballon met een "
+"gedetailleerde beschrijving te tonen."
 
 #: src/fsearch_preferences.ui:1920
 msgid ""
@@ -1165,7 +1167,7 @@ msgstr ""
 "\n"
 "\n"
 "Indien ingeschakeld en zolang FSearch draait, zal de databank op gezette "
-"tijden worden bijgewerkt met het opgegeven tijdinterval.\n"
+"tijden worden bijgewerkt naargelang het opgegeven tijdinterval.\n"
 "\n"
 "Als je de databank op de achtergrond wilt bijwerken, zelfs wanneer FSearch "
 "afgesloten is, zou je gebruik kunnen maken van hulpmiddelen zoals cron of "
@@ -1220,7 +1222,7 @@ msgid ""
 msgstr ""
 "<b>Filter toevoegen:</b>\n"
 "\n"
-"Met deze knop open je een venster waar je een nieuw filter kunt bewerken."
+"Met deze knop open je een venster waarin je een nieuw filter kunt bewerken."
 
 #: src/fsearch_preferences.ui:1996
 msgid ""
@@ -1240,7 +1242,7 @@ msgid ""
 msgstr ""
 "<b>Geselecteerd filter bewerken:</b>\n"
 "\n"
-"Met deze knop open je een venster waar je een filter kunt bewerken."
+"Met deze knop open je een venster waarin je een filter kunt bewerken."
 
 #: src/fsearch_preferences.ui:2030
 msgid ""
@@ -1254,7 +1256,7 @@ msgstr ""
 "\n"
 "Met deze knop herstel je de standaard filterconfiguratie.\n"
 "\n"
-"⚠ Alle zelfgemaakte of bewerkte filters zullen worden gewist! ⚠"
+"⚠ Alle zelfgemaakte of bewerkte filters zullen verloren gaan! ⚠"
 
 #: src/fsearch_preferences.ui:2049
 msgid ""
@@ -1263,7 +1265,7 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
-"<b>Afsluiten met Espace</b>\n"
+"<b>Afsluiten met Espace:</b>\n"
 "\n"
 "Schakel in om FSearch af te sluiten met Espace in plaats van het venster te "
 "minimaliseren."
@@ -1390,7 +1392,7 @@ msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
-"De zoekterm bevat locatie-scheidingstekens.\n"
+"De zoekterm bevat locatie-scheidingen.\n"
 "De optie <b>Locatie doorzoeken</b> is tijdelijk ingeschakeld."
 
 #: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
@@ -1427,7 +1429,8 @@ msgstr ""
 "Sorteren op <b>type</b> kan enkele seconden duren als er veel resultaten "
 "zijn.\n"
 "\n"
-"Deze volgorde wordt niet permanent ingesteld."
+"Deze sorteervolgorde is tijdelijk en zal hersteld worden wanneer de zoekterm "
+"wijzigt."
 
 #: src/fsearch_window.ui:68
 msgid "New window"
@@ -1463,7 +1466,7 @@ msgstr "Zoekknop tonen"
 
 #: src/fsearch_window.ui:274 src/fsearch_window.ui:355 src/menus.ui:129
 msgid "FSearch Online"
-msgstr "FSearch-website"
+msgstr "FSearch website"
 
 #: src/fsearch_window.ui:303 src/menus.ui:161
 msgid "About"
@@ -1483,7 +1486,7 @@ msgstr "Forum"
 
 #: src/fsearch_window.ui:400 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr "Bugmeldingen- en ideeënpagina"
+msgstr "Foutmeldingen- en ideeënpagina"
 
 #: src/fsearch_window.ui:459 src/menus.ui:133
 msgid "GitHub Sponsors"
@@ -1508,7 +1511,7 @@ msgstr "Weet je zeker dat je %d bestand(en) wilt openen?"
 
 #: src/fsearch_window_actions.c:93
 msgid "Opening Files…"
-msgstr "Bezig met openen…"
+msgstr "Bezig met bestanden openen…"
 
 #: src/fsearch_window_actions.c:179
 #, c-format
@@ -1517,11 +1520,11 @@ msgstr "Weet je zeker dat je %d bestand(en) wilt verwijderen?"
 
 #: src/fsearch_window_actions.c:183
 msgid "Deleting files…"
-msgstr "Bezig met verwijderen…"
+msgstr "Bezig met bestanden verwijderen…"
 
 #: src/fsearch_window_actions.c:183
 msgid "Moving files to trash…"
-msgstr "Bezig met verplaatsen naar Prullenbak…"
+msgstr "Bezig met bestanden verplaatsen naar Prullenbak…"
 
 #: src/fsearch_window_actions.c:210 src/fsearch_window_actions.c:494
 #: src/fsearch_window_actions.c:534
