@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-05-28 07:52+0000\n"
+"PO-Revision-Date: 2023-11-23 09:04+0000\n"
 "Last-Translator: Karl SCHUH <k.schuh@schuh-tv.at>\n"
 "Language-Team: German <https://hosted.weblate.org/projects/fsearch/"
 "translations/de/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.18-dev\n"
+"X-Generator: Weblate 5.2.1-rc\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -424,7 +424,7 @@ msgstr "Eindeutiger Name des Filters"
 
 #: src/fsearch_filter_editor.ui:73
 msgid "Search in path"
-msgstr "Suche in Pfad"
+msgstr "Suche im Pfad"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
@@ -1365,7 +1365,7 @@ msgstr "Anzahl der ausgewählten Dateien"
 
 #: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:102
 msgid "Cancel database update"
-msgstr "Aktualisierung abbrechen"
+msgstr "Datenbank-Aktualisierung abbrechen"
 
 #: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
@@ -1441,7 +1441,7 @@ msgstr "Datenbank aktualisieren"
 
 #: src/fsearch_window.ui:143 src/menus.ui:112
 msgid "Search in Path"
-msgstr "Suche in Pfad"
+msgstr "Suche im Pfad"
 
 #: src/fsearch_window.ui:157 src/menus.ui:116
 msgid "Match Case"
