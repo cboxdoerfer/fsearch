@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1.42-6286\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-07-14 21:52+0000\n"
+"PO-Revision-Date: 2023-12-02 15:05+0000\n"
 "Last-Translator: Alexander Gabilondo <alexgabi@openmailbox.org>\n"
 "Language-Team: Basque <https://hosted.weblate.org/projects/fsearch/"
 "translations/eu/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.3-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -422,7 +422,7 @@ msgstr "Iragazkiaren izen esklusiboa"
 
 #: src/fsearch_filter_editor.ui:73
 msgid "Search in path"
-msgstr "Bilatu bidean"
+msgstr "Bilatu direktorioetan"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
@@ -1435,7 +1435,7 @@ msgstr "Leiho berria"
 
 #: src/fsearch_window.ui:88
 msgid "Update database"
-msgstr "Eguneratu datu-basea"
+msgstr "Eguneratu datubasea"
 
 #: src/fsearch_window.ui:143 src/menus.ui:112
 msgid "Search in Path"
