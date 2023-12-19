@@ -10,6 +10,17 @@
 #include "strverscmp.h"
 #endif
 
+typedef struct FsearchDatabaseEntryBase {
+    FsearchDatabaseEntryBase *parent;
+
+    // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
+    uint32_t attribute_flags;
+    uint32_t index;
+    uint8_t type : 4;
+    uint8_t mark : 4;
+    uint8_t data[];
+} FsearchDatabaseEntryBase;
+
 struct FsearchDatabaseEntry {
     FsearchDatabaseEntryFolder *parent;
     char *name;
@@ -17,9 +28,11 @@ struct FsearchDatabaseEntry {
     time_t mtime;
 
     // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
+    uint32_t attribute_flags;
     uint32_t idx;
     uint8_t type;
     uint8_t mark;
+    // uint8_t data[];
 };
 
 struct FsearchDatabaseEntryFile {
@@ -28,7 +41,6 @@ struct FsearchDatabaseEntryFile {
 
 struct FsearchDatabaseEntryFolder {
     struct FsearchDatabaseEntry super;
-
     // db_idx: the database index this folder belongs to
     uint32_t db_idx;
     uint32_t num_files;
@@ -234,6 +246,8 @@ db_entry_get_deep_copy(FsearchDatabaseEntry *entry) {
     copy->size = entry->size;
     copy->idx = entry->idx;
     copy->mark = entry->mark;
+    copy->attribute_flags = entry->attribute_flags;
+
     if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
         FsearchDatabaseEntryFolder *copy_folder = (FsearchDatabaseEntryFolder *)copy;
         FsearchDatabaseEntryFolder *entry_folder = (FsearchDatabaseEntryFolder *)entry;
@@ -281,6 +295,11 @@ db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry) {
     return entry ? entry->mark : 0;
+}
+
+uint32_t
+db_entry_get_attribute_flags(FsearchDatabaseEntry *entry) {
+    return entry ? entry->attribute_flags : 0;
 }
 
 uint32_t
@@ -610,4 +629,196 @@ db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx) {
 void
 db_entry_set_mark(FsearchDatabaseEntry *entry, uint8_t mark) {
     entry->mark = mark;
+}
+
+static bool
+get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
+                     FsearchDatabaseIndexProperty attribute,
+                     size_t *offset) {
+    size_t offset_tmp = 0;
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
+        if (attribute == DATABASE_INDEX_PROPERTY_SIZE) {
+            goto out;
+        }
+        offset_tmp += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
+        if (attribute == DATABASE_INDEX_PROPERTY_MODIFICATION_TIME) {
+            goto out;
+        }
+        offset_tmp += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_ACCESS_TIME) != 0) {
+        if (attribute == DATABASE_INDEX_PROPERTY_ACCESS_TIME) {
+            goto out;
+        }
+        offset_tmp += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_STATUS_CHANGE_TIME) != 0) {
+        if (attribute == DATABASE_INDEX_PROPERTY_STATUS_CHANGE_TIME) {
+            goto out;
+        }
+        offset_tmp += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX) != 0) {
+        if (attribute == DATABASE_INDEX_PROPERTY_DB_INDEX) {
+            goto out;
+        }
+        offset_tmp += sizeof(int32_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES) != 0) {
+        if (attribute == DATABASE_INDEX_PROPERTY_NUM_FILES) {
+            goto out;
+        }
+        offset_tmp += sizeof(int32_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS) != 0) {
+        if (attribute == DATABASE_INDEX_PROPERTY_NUM_FOLDERS) {
+            goto out;
+        }
+        offset_tmp += sizeof(int32_t);
+    }
+    if (attribute == DATABASE_INDEX_PROPERTY_NAME) {
+        goto out;
+    }
+    return false;
+
+out:
+    *offset = offset_tmp;
+    return true;
+}
+
+static size_t
+entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, const char *name, size_t name_len) {
+    size_t size = 0;
+    if (name) {
+        // Length of string + 1 (zero delimiter)
+        size += name_len + 1;
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
+        size += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
+        size += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_ACCESS_TIME) != 0) {
+        size += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_STATUS_CHANGE_TIME) != 0) {
+        size += sizeof(int64_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX) != 0) {
+        size += sizeof(int32_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES) != 0) {
+        size += sizeof(int32_t);
+    }
+    if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS) != 0) {
+        size += sizeof(int32_t);
+    }
+    return size;
+}
+
+FsearchDatabaseEntryBase *
+db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBase *parent, FsearchDatabaseEntryType type) {
+    const size_t name_len = name ? strlen(name) : 0;
+    const size_t entry_size = entry_get_size_for_flags(attribute_flags, name, name_len);
+    FsearchDatabaseEntryBase *entry = calloc(1, sizeof(FsearchDatabaseEntryBase) + entry_size);
+    g_assert_nonnull(entry);
+
+    entry->parent = parent;
+    entry->type = type;
+    entry->attribute_flags = attribute_flags;
+
+    size_t name_offset = 0;
+    if (get_attribute_offset(attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset)) {
+        memcpy(entry->data + name_offset, name, name_len + 1);
+    }
+
+    return entry;
+}
+
+bool
+db_entry_get_attribute_name(FsearchDatabaseEntryBase *entry, const char **name) {
+    g_return_val_if_fail(entry, false);
+    g_return_val_if_fail(entry, name);
+    size_t offset = 0;
+    if (get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &offset)) {
+        *name = (const char *)(entry->data + offset);
+        return true;
+    }
+    return false;
+}
+
+const char *
+db_entry_get_attribute_name_for_offset(FsearchDatabaseEntryBase *entry, size_t offset) {
+    g_return_val_if_fail(entry, false);
+    return (const char *)(entry->data + offset);
+}
+
+void
+db_entry_get_attribute_for_offest(FsearchDatabaseEntryBase *entry, size_t offset, void *dest, size_t size) {
+    g_return_if_fail(entry);
+    g_return_if_fail(dest);
+    memcpy(dest, entry->data + offset, size);
+}
+
+bool
+db_entry_get_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProperty attribute, void *dest, size_t size) {
+    g_return_val_if_fail(entry, false);
+    g_return_val_if_fail(dest, false);
+    size_t offset = 0;
+    if (get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
+        memcpy(dest, entry->data + offset, size);
+        return true;
+    }
+    return false;
+}
+
+bool
+db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProperty attribute, void *src, size_t size) {
+    g_return_val_if_fail(entry, false);
+    g_return_val_if_fail(src, false);
+    size_t offset = 0;
+    if (get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
+        memcpy(entry->data + offset, src, size);
+        return true;
+    }
+    return false;
+}
+
+uint8_t
+db_entry2_get_mark(FsearchDatabaseEntryBase *entry) {
+    g_return_val_if_fail(entry, 0);
+    return entry->mark;
+}
+
+void
+db_entry2_set_mark(FsearchDatabaseEntryBase *entry, uint8_t mark) {
+    g_return_if_fail(entry);
+    entry->mark = mark;
+}
+
+FsearchDatabaseEntryType
+db_entry2_get_type(FsearchDatabaseEntryBase *entry) {
+    g_return_val_if_fail(entry, 0);
+    return entry->type;
+}
+
+void
+db_entry2_set_type(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryType type) {
+    g_return_if_fail(entry);
+    entry->type = type;
+}
+
+uint32_t
+db_entry2_get_index(FsearchDatabaseEntryBase *entry) {
+    g_return_val_if_fail(entry, 0);
+    return entry->index;
+}
+
+void
+db_entry2_set_index(FsearchDatabaseEntryBase *entry, uint32_t index) {
+    g_return_if_fail(entry);
+    entry->index = index;
 }

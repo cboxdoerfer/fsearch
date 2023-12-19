@@ -5,6 +5,7 @@
 #include <stdint.h>
 
 #include "fsearch_array.h"
+#include "fsearch_database_index_properties.h"
 
 typedef enum {
     DATABASE_ENTRY_TYPE_NONE,
@@ -16,6 +17,7 @@ typedef enum {
 typedef struct FsearchDatabaseEntry FsearchDatabaseEntry;
 typedef struct FsearchDatabaseEntryFile FsearchDatabaseEntryFile;
 typedef struct FsearchDatabaseEntryFolder FsearchDatabaseEntryFolder;
+typedef struct FsearchDatabaseEntryBase FsearchDatabaseEntryBase;
 
 typedef struct FsearchDatabaseEntryCompareContext {
     GHashTable *file_type_table;
@@ -83,6 +85,9 @@ db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index);
 
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry);
+
+uint32_t
+db_entry_get_attribute_flags(FsearchDatabaseEntry *entry);
 
 uint32_t
 db_entry_get_idx(FsearchDatabaseEntry *entry);
@@ -167,3 +172,48 @@ db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseE
 
 int
 db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b);
+
+FsearchDatabaseEntryBase *
+db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBase *parent, FsearchDatabaseEntryType type);
+
+bool
+db_entry_get_attribute_name(FsearchDatabaseEntryBase *entry, const char **name);
+
+bool
+db_entry_get_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProperty attribute, void *dest, size_t size);
+
+bool
+db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProperty attribute, void *src, size_t size);
+
+uint32_t
+db_entry2_get_db_index(FsearchDatabaseEntryBase *entry);
+
+void
+db_entry2_set_db_index(FsearchDatabaseEntryBase *entry, uint32_t db_index);
+
+uint32_t
+db_entry2_get_member_flags(FsearchDatabaseEntryBase *entry);
+
+uint32_t
+db_entry2_get_index(FsearchDatabaseEntryBase *entry);
+
+void
+db_entry2_set_index(FsearchDatabaseEntryBase *entry, uint32_t index);
+
+uint8_t
+db_entry2_get_mark(FsearchDatabaseEntryBase *entry);
+
+void
+db_entry2_set_mark(FsearchDatabaseEntryBase *entry, uint8_t mark);
+
+FsearchDatabaseEntryType
+db_entry2_get_type(FsearchDatabaseEntryBase *entry);
+
+void
+db_entry2_set_type(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryType type);
+
+const char *
+db_entry_get_attribute_name_for_offset(FsearchDatabaseEntryBase *entry, size_t offset);
+
+void
+db_entry_get_attribute_for_offest(FsearchDatabaseEntryBase *entry, size_t offset, void *dest, size_t size);

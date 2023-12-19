@@ -77,6 +77,27 @@ add_folder(DatabaseWalkContext *walk_context,
 
 FsearchDatabaseEntry *
 add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntryFolder *parent) {
+    FsearchDatabaseEntryBase *a = db_entry_new(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
+                                                   | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+                                               name,
+                                               NULL,
+                                               DATABASE_ENTRY_TYPE_FILE);
+    if (a) {
+        db_entry_set_attribute(a, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(off_t));
+        db_entry_set_attribute(a, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, &mtime, sizeof(time_t));
+        const char *n = NULL;
+        if (db_entry_get_attribute_name(a, &n)) {
+            g_print("new_entry: %s\n", n);
+        }
+        off_t s = 0;
+        if (db_entry_get_attribute(a, DATABASE_INDEX_PROPERTY_SIZE, (void *)&s, sizeof(off_t))) {
+            g_assert(s == size);
+        }
+        time_t t = 0;
+        if (db_entry_get_attribute(a, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, (void *)&t, sizeof(time_t))) {
+            g_assert(t == mtime);
+        }
+    }
     FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(walk_context->file_pool);
     db_entry_set_name(file_entry, name);
     db_entry_set_size(file_entry, size);
