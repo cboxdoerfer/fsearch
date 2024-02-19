@@ -47,19 +47,22 @@ struct FsearchDatabaseEntryFolder {
     uint32_t num_folders;
 };
 
+static size_t entry_base_size = 0;
+
 static void
-build_path_recursively(FsearchDatabaseEntryFolder *folder, GString *str) {
+build_path_recursively(FsearchDatabaseEntryBase *folder, GString *str, size_t name_offset) {
+    g_assert(folder->type == DATABASE_ENTRY_TYPE_FOLDER);
     if (G_UNLIKELY(!folder)) {
         return;
     }
-    FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
-    g_assert(entry->name != NULL);
+    g_assert(folder->data != NULL);
 
-    if (G_LIKELY(entry->parent)) {
-        build_path_recursively(entry->parent, str);
+    if (G_LIKELY(folder->parent)) {
+        build_path_recursively(folder->parent, str, name_offset);
     }
-    if (G_LIKELY(strcmp(entry->name, "") != 0)) {
-        g_string_append(str, entry->name);
+    const char *name = db_entry_get_attribute_name_for_offset(folder, name_offset);
+    if (G_LIKELY(strcmp(name, "") != 0)) {
+        g_string_append(str, name);
     }
     g_string_append_c(str, G_DIR_SEPARATOR);
 }
@@ -92,45 +95,46 @@ db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
 }
 
 bool
-db_entry_is_folder(FsearchDatabaseEntry *entry) {
-    g_assert(entry->name != NULL);
+db_entry_is_folder(FsearchDatabaseEntryBase *entry) {
     return entry->type == DATABASE_ENTRY_TYPE_FOLDER;
 }
 
 bool
-db_entry_is_file(FsearchDatabaseEntry *entry) {
-    g_assert(entry->name != NULL);
+db_entry_is_file(FsearchDatabaseEntryBase *entry) {
     return entry->type == DATABASE_ENTRY_TYPE_FILE;
 }
 
 bool
-db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *maybe_ancestor) {
-    g_assert(entry->name != NULL);
+db_entry_is_descendant(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryBase *maybe_ancestor) {
     while (entry) {
         if (entry->parent == maybe_ancestor) {
             return true;
         }
-        entry = (FsearchDatabaseEntry *)entry->parent;
+        entry = entry->parent;
     }
     return false;
 }
 
 uint32_t
-db_entry_folder_get_num_children(FsearchDatabaseEntryFolder *entry) {
-    g_assert(entry->super.type == DATABASE_ENTRY_TYPE_FOLDER);
-    return entry->num_files + entry->num_folders;
+db_entry_folder_get_num_children(FsearchDatabaseEntryBase *entry) {
+    g_assert(entry->type == DATABASE_ENTRY_TYPE_FOLDER);
+    return db_entry_folder_get_num_files(entry) + db_entry_folder_get_num_folders(entry);
 }
 
 uint32_t
-db_entry_folder_get_num_files(FsearchDatabaseEntryFolder *entry) {
-    g_assert(entry->super.type == DATABASE_ENTRY_TYPE_FOLDER);
-    return entry->num_files;
+db_entry_folder_get_num_files(FsearchDatabaseEntryBase *entry) {
+    g_assert(entry->type == DATABASE_ENTRY_TYPE_FOLDER);
+    uint32_t num_files = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
+    return num_files;
 }
 
 uint32_t
-db_entry_folder_get_num_folders(FsearchDatabaseEntryFolder *entry) {
-    g_assert(entry->super.type == DATABASE_ENTRY_TYPE_FOLDER);
-    return entry->num_folders;
+db_entry_folder_get_num_folders(FsearchDatabaseEntryBase *entry) {
+    g_assert(entry->type == DATABASE_ENTRY_TYPE_FOLDER);
+    uint32_t num_folders = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
+    return num_folders;
 }
 
 size_t
@@ -144,142 +148,134 @@ db_entry_get_sizeof_file_entry() {
 }
 
 GString *
-db_entry_get_path(FsearchDatabaseEntry *entry) {
+db_entry_get_path(FsearchDatabaseEntryBase *entry) {
     GString *path = g_string_new(NULL);
     db_entry_append_path(entry, path);
     return path;
 }
 
 GString *
-db_entry_get_path_full(FsearchDatabaseEntry *entry) {
+db_entry_get_path_full(FsearchDatabaseEntryBase *entry) {
     GString *path_full = g_string_new(NULL);
     db_entry_append_full_path(entry, path_full);
     return path_full;
 }
 
 void
-db_entry_append_path(FsearchDatabaseEntry *entry, GString *str) {
-    build_path_recursively(entry->parent, str);
+db_entry_append_path(FsearchDatabaseEntryBase *entry, GString *str) {
+    size_t name_offset = 0;
+    db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset);
+    build_path_recursively(entry->parent, str, name_offset);
     if (str->len > 1) {
         g_string_set_size(str, str->len - 1);
     }
 }
 
 void
-db_entry_append_full_path(FsearchDatabaseEntry *entry, GString *str) {
-    build_path_recursively(entry->parent, str);
-    g_string_append(str, entry->name[0] == '\0' ? G_DIR_SEPARATOR_S : entry->name);
+db_entry_append_full_path(FsearchDatabaseEntryBase *entry, GString *str) {
+    size_t name_offset = 0;
+    db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset);
+    build_path_recursively(entry->parent, str, name_offset);
+
+    const char *name = db_entry_get_attribute_name_for_offset(entry, name_offset);
+    g_string_append(str, name[0] == '\0' ? G_DIR_SEPARATOR_S : name);
 }
 
 time_t
-db_entry_get_mtime(FsearchDatabaseEntry *entry) {
-    return entry ? entry->mtime : 0;
+db_entry_get_mtime(FsearchDatabaseEntryBase *entry) {
+    time_t mtime = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, &mtime, sizeof(mtime));
+    return mtime;
 }
 
 off_t
-db_entry_get_size(FsearchDatabaseEntry *entry) {
-    return entry ? entry->size : 0;
+db_entry_get_size(FsearchDatabaseEntryBase *entry) {
+    off_t size = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size));
+    return size;
 }
 
 const char *
-db_entry_get_extension(FsearchDatabaseEntry *entry) {
+db_entry_get_extension(FsearchDatabaseEntryBase *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
     if (db_entry_is_folder(entry)) {
         return NULL;
     }
-    return fsearch_string_get_extension(entry->name);
+    const char *name = NULL;
+    db_entry_get_attribute_name(entry, &name);
+    return name ? fsearch_string_get_extension(name) : NULL;
 }
 
 const char *
-db_entry_get_name_raw_for_display(FsearchDatabaseEntry *entry) {
+db_entry_get_name_raw_for_display(FsearchDatabaseEntryBase *entry) {
     if (G_UNLIKELY(!entry)) {
         return NULL;
     }
-    g_assert(entry->name != NULL);
-    if (strcmp(entry->name, "") != 0) {
-        return entry->name;
+    const char *name = NULL;
+    db_entry_get_attribute_name(entry, &name);
+    if (name && strcmp(name, "") != 0) {
+        return name;
     }
     return G_DIR_SEPARATOR_S;
 }
 
 GString *
-db_entry_get_name_for_display(FsearchDatabaseEntry *entry) {
+db_entry_get_name_for_display(FsearchDatabaseEntryBase *entry) {
     const char *name = db_entry_get_name_raw_for_display(entry);
     return name ? g_string_new(name) : NULL;
 }
 
 const char *
-db_entry_get_name_raw(FsearchDatabaseEntry *entry) {
-    return entry ? entry->name : NULL;
+db_entry_get_name_raw(FsearchDatabaseEntryBase *entry) {
+    const char *name = NULL;
+    db_entry_get_attribute_name(entry, &name);
+    return name;
 }
 
-FsearchDatabaseEntryFolder *
-db_entry_get_parent(FsearchDatabaseEntry *entry) {
+FsearchDatabaseEntryBase *
+db_entry_get_parent(FsearchDatabaseEntryBase *entry) {
     return entry ? entry->parent : NULL;
 }
 
 FsearchDatabaseEntryType
-db_entry_get_type(FsearchDatabaseEntry *entry) {
+db_entry_get_type(FsearchDatabaseEntryBase *entry) {
     return entry ? entry->type : DATABASE_ENTRY_TYPE_NONE;
 }
 
 void
-db_entry_free_deep_copy(FsearchDatabaseEntry *entry) {
-    while (entry) {
-        FsearchDatabaseEntryFolder *parent = entry->parent;
-        db_entry_destroy(entry);
-        g_clear_pointer(&entry, free);
-        entry = (FsearchDatabaseEntry *)parent;
-    }
-}
-
-FsearchDatabaseEntry *
-db_entry_get_deep_copy(FsearchDatabaseEntry *entry) {
-    FsearchDatabaseEntry *copy = calloc(1,
-                                        entry->type == DATABASE_ENTRY_TYPE_FOLDER ? sizeof(FsearchDatabaseEntryFolder)
-                                                                                  : sizeof(FsearchDatabaseEntryFile));
-    copy->name = g_strdup(entry->name);
-    copy->type = entry->type;
-    copy->mtime = entry->mtime;
-    copy->size = entry->size;
-    copy->idx = entry->idx;
-    copy->mark = entry->mark;
-    copy->attribute_flags = entry->attribute_flags;
-
-    if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
-        FsearchDatabaseEntryFolder *copy_folder = (FsearchDatabaseEntryFolder *)copy;
-        FsearchDatabaseEntryFolder *entry_folder = (FsearchDatabaseEntryFolder *)entry;
-        copy_folder->num_files = entry_folder->num_files;
-        copy_folder->num_folders = entry_folder->num_folders;
-        copy_folder->db_idx = entry_folder->db_idx;
-    }
-    copy->parent = entry->parent
-                     ? (FsearchDatabaseEntryFolder *)db_entry_get_deep_copy((FsearchDatabaseEntry *)entry->parent)
-                     : NULL;
-    return copy;
-}
-
-FsearchDatabaseEntry *
-db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntry *parent, const char *name, FsearchDatabaseEntryType type) {
-    g_return_val_if_fail(name, NULL);
-    if (parent) {
-        g_return_val_if_fail(parent->type == DATABASE_ENTRY_TYPE_FOLDER, NULL);
-    }
-
-    FsearchDatabaseEntry *entry = calloc(1,
-                                         type == DATABASE_ENTRY_TYPE_FOLDER ? sizeof(FsearchDatabaseEntryFolder)
-                                                                            : sizeof(FsearchDatabaseEntryFile));
-    entry->parent = (FsearchDatabaseEntryFolder *)parent;
-    entry->name = g_strdup(name);
-    entry->type = type;
-
-    return entry;
+db_entry_free(FsearchDatabaseEntryBase *entry) {
+    g_return_if_fail(entry);
+    g_clear_pointer(&entry, free);
 }
 
 void
-db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
+db_entry_free_full(FsearchDatabaseEntryBase *entry) {
+    while (entry) {
+        FsearchDatabaseEntryBase *parent = entry->parent;
+        g_clear_pointer(&entry, db_entry_free);
+        entry = parent;
+    }
+}
+
+FsearchDatabaseEntryBase *
+db_entry_get_deep_copy(FsearchDatabaseEntryBase *entry) {
+    const char *name = (const char *)(entry->data + entry_base_size);
+    const size_t name_len = strlen(name);
+
+    const size_t entry_size = entry_base_size + name_len + 1;
+    FsearchDatabaseEntryBase *copy = calloc(1, entry_size);
+    g_assert_nonnull(copy);
+
+    memcpy(copy, entry, entry_size);
+
+    copy->parent = entry->parent ? db_entry_get_deep_copy(entry->parent) : NULL;
+    return copy;
+}
+
+void
+db_entry_append_content_type(FsearchDatabaseEntryBase *entry, GString *str) {
     g_autoptr(GString) path = db_entry_get_path_full(entry);
     g_autoptr(GFile) file = g_file_new_for_path(path->str);
     g_autoptr(GError) error = NULL;
@@ -293,79 +289,70 @@ db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
 }
 
 uint8_t
-db_entry_get_mark(FsearchDatabaseEntry *entry) {
+db_entry_get_mark(FsearchDatabaseEntryBase *entry) {
     return entry ? entry->mark : 0;
 }
 
 uint32_t
-db_entry_get_attribute_flags(FsearchDatabaseEntry *entry) {
+db_entry_get_attribute_flags(FsearchDatabaseEntryBase *entry) {
     return entry ? entry->attribute_flags : 0;
 }
 
 uint32_t
-db_entry_get_idx(FsearchDatabaseEntry *entry) {
-    return entry ? entry->idx : 0;
-}
-
-void
-db_entry_destroy(FsearchDatabaseEntry *entry) {
-    if (G_UNLIKELY(!entry)) {
-        return;
-    }
-    g_clear_pointer(&entry->name, free);
-    entry->parent = NULL;
-}
-
-uint32_t
-db_entry_get_depth(FsearchDatabaseEntry *entry) {
+db_entry_get_depth(FsearchDatabaseEntryBase *entry) {
     uint32_t depth = 0;
     while (entry && entry->parent) {
-        entry = (FsearchDatabaseEntry *)entry->parent;
+        entry = entry->parent;
         depth++;
     }
     return depth;
 }
 
 uint32_t
-db_entry_get_db_index(FsearchDatabaseEntry *entry) {
-    if (db_entry_is_folder(entry)) {
-        return ((FsearchDatabaseEntryFolder *)entry)->db_idx;
+db_entry_get_db_index(FsearchDatabaseEntryBase *entry) {
+    if (!db_entry_is_folder(entry)) {
+        entry = entry->parent;
     }
-    FsearchDatabaseEntryFolder *parent = entry->parent;
-    if (G_UNLIKELY(!parent)) {
+    if (G_UNLIKELY(!entry)) {
         return 0;
     }
-    return parent->db_idx;
+    uint32_t db_index = 0;
+    if (db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_DB_INDEX, &db_index, sizeof(db_index))) {
+        return db_index;
+    }
+    return 0;
 }
 
-static FsearchDatabaseEntryFolder *
-db_entry_get_parent_nth(FsearchDatabaseEntryFolder *entry, uint32_t nth) {
+static FsearchDatabaseEntryBase *
+db_entry_get_parent_nth(FsearchDatabaseEntryBase *entry, uint32_t nth) {
     while (entry && nth > 0) {
-        entry = entry->super.parent;
+        entry = entry->parent;
         nth--;
     }
     return entry;
 }
 
 static void
-sort_entry_by_path_recursive(FsearchDatabaseEntryFolder *entry_a, FsearchDatabaseEntryFolder *entry_b, int *res) {
-    if (G_UNLIKELY(!entry_a || !entry_b)) {
+sort_entry_by_path_recursive(FsearchDatabaseEntryBase *entry_1,
+                             FsearchDatabaseEntryBase *entry_2,
+                             size_t name_offset,
+                             int *res) {
+    if (G_UNLIKELY(!entry_1 || !entry_2)) {
         return;
     }
-    g_assert(entry_a->super.name != NULL);
-    g_assert(entry_b->super.name != NULL);
-
-    if (entry_a->super.parent) {
-        sort_entry_by_path_recursive(entry_a->super.parent, entry_b->super.parent, res);
+    if (entry_1->parent) {
+        sort_entry_by_path_recursive(entry_1->parent, entry_2->parent, name_offset, res);
     }
     if (*res != 0) {
         return;
     }
-    *res = strverscmp(entry_a->super.name, entry_b->super.name);
+    const char *name_1 = db_entry_get_attribute_name_for_offset(entry_1, name_offset);
+    const char *name_2 = db_entry_get_attribute_name_for_offset(entry_2, name_offset);
+    *res = strverscmp(name_1, name_2);
 }
 
 int
-db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+db_entry_compare_entries_by_size(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
     const off_t size_a = db_entry_get_size(*a);
     const off_t size_b = db_entry_get_size(*b);
     if (size_a > size_b) {
@@ -378,7 +365,7 @@ db_entry_compare_entries_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 }
 
 static const char *
-get_file_type(FsearchDatabaseEntry *entry, GHashTable *file_type_table, GHashTable *entry_table) {
+get_file_type(FsearchDatabaseEntryBase *entry, GHashTable *file_type_table, GHashTable *entry_table) {
     char *cached_type = g_hash_table_lookup(entry_table, entry);
     if (cached_type) {
         return cached_type;
@@ -397,7 +384,7 @@ get_file_type(FsearchDatabaseEntry *entry, GHashTable *file_type_table, GHashTab
 }
 
 int
-db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b, gpointer data) {
+db_entry_compare_entries_by_type(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b, gpointer data) {
     FsearchDatabaseEntryCompareContext *comp_ctx = data;
 
     const char *file_type_a = get_file_type(*a, comp_ctx->file_type_table, comp_ctx->entry_to_file_type_table);
@@ -407,13 +394,13 @@ db_entry_compare_entries_by_type(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     if (res != 0) {
         return res;
     }
-    return comp_ctx->next_comp_func ? comp_ctx->next_comp_func(a, b, comp_ctx->next_comp_func_data) : res;
+    return comp_ctx->next_comp_func ? comp_ctx->next_comp_func((void *)a, (void *)b, comp_ctx->next_comp_func_data) : res;
 }
 
 int
-db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    const time_t time_a = (*a)->mtime;
-    const time_t time_b = (*b)->mtime;
+db_entry_compare_entries_by_modification_time(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
+    const time_t time_a = db_entry_get_mtime(*a);
+    const time_t time_b = db_entry_get_mtime(*b);
     if (time_a > time_b) {
         return 1;
     }
@@ -424,28 +411,28 @@ db_entry_compare_entries_by_modification_time(FsearchDatabaseEntry **a, FsearchD
 }
 
 int
-db_entry_compare_entries_by_position(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+db_entry_compare_entries_by_position(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
     return 0;
 }
 
 int
-db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    FsearchDatabaseEntry *entry_a = *a;
-    FsearchDatabaseEntry *entry_b = *b;
+db_entry_compare_entries_by_full_path(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
+    FsearchDatabaseEntryBase *entry_a = *a;
+    FsearchDatabaseEntryBase *entry_b = *b;
     const uint32_t a_n_path_elements = db_entry_get_depth(entry_a) + 1;
     const uint32_t b_n_path_elements = db_entry_get_depth(entry_b) + 1;
 
     const char *a_path[a_n_path_elements];
     const char *b_path[b_n_path_elements];
-    FsearchDatabaseEntry *tmp = (FsearchDatabaseEntry *)entry_a;
+    FsearchDatabaseEntryBase *tmp = (FsearchDatabaseEntryBase *)entry_a;
     for (uint32_t i = 0; i < a_n_path_elements; i++) {
-        a_path[a_n_path_elements - i - 1] = tmp->name;
-        tmp = (FsearchDatabaseEntry *)tmp->parent;
+        a_path[a_n_path_elements - i - 1] = db_entry_get_name_raw(tmp);
+        tmp = tmp->parent;
     }
     tmp = (FsearchDatabaseEntry *)entry_b;
     for (uint32_t i = 0; i < b_n_path_elements; i++) {
-        b_path[b_n_path_elements - i - 1] = tmp->name;
-        tmp = (FsearchDatabaseEntry *)tmp->parent;
+        b_path[b_n_path_elements - i - 1] = db_entry_get_name_raw(tmp);
+        tmp = tmp->parent;
     }
 
     const uint32_t limit = MIN(a_n_path_elements, b_n_path_elements);
@@ -467,9 +454,9 @@ db_entry_compare_entries_by_full_path(FsearchDatabaseEntry **a, FsearchDatabaseE
 }
 
 int
-db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
-    FsearchDatabaseEntry *entry_a = *a;
-    FsearchDatabaseEntry *entry_b = *b;
+db_entry_compare_entries_by_path(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
+    FsearchDatabaseEntryBase *entry_a = *a;
+    FsearchDatabaseEntryBase *entry_b = *b;
     const uint32_t a_depth = db_entry_get_depth(entry_a);
     const uint32_t b_depth = db_entry_get_depth(entry_b);
 
@@ -505,82 +492,124 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
     }
 #endif
 
+    size_t name_offset = 0;
+    if (!db_entry_get_attribute_offset(entry_a->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset)) {
+        return 0;
+    }
+
     int res = 0;
     if (a_depth == b_depth) {
-        sort_entry_by_path_recursive(entry_a->parent, entry_b->parent, &res);
+        sort_entry_by_path_recursive(entry_a->parent, entry_b->parent, name_offset, &res);
         return res == 0 ? db_entry_compare_entries_by_name(a, b) : res;
     }
     else if (a_depth > b_depth) {
         const uint32_t diff = a_depth - b_depth;
-        FsearchDatabaseEntryFolder *parent_a = db_entry_get_parent_nth(entry_a->parent, diff);
-        sort_entry_by_path_recursive(parent_a, entry_b->parent, &res);
+        FsearchDatabaseEntryBase *parent_a = db_entry_get_parent_nth(entry_a->parent, diff);
+        sort_entry_by_path_recursive(parent_a, entry_b->parent, name_offset, &res);
         return res == 0 ? 1 : res;
     }
     else {
         const uint32_t diff = b_depth - a_depth;
-        FsearchDatabaseEntryFolder *parent_b = db_entry_get_parent_nth(entry_b->parent, diff);
-        sort_entry_by_path_recursive(entry_a->parent, parent_b, &res);
+        FsearchDatabaseEntryBase *parent_b = db_entry_get_parent_nth(entry_b->parent, diff);
+        sort_entry_by_path_recursive(entry_a->parent, parent_b, name_offset, &res);
         return res == 0 ? -1 : res;
     }
 }
 
 static void
-db_entry_update_folder_size(FsearchDatabaseEntryFolder *folder, off_t size) {
+db_entry_update_folder_size(FsearchDatabaseEntryBase *folder, off_t size) {
     if (!folder) {
         return;
     }
-    folder->super.size += size;
-    db_entry_update_folder_size(folder->super.parent, size);
+    g_assert(db_entry_is_folder(folder));
+    off_t old_size = 0;
+    db_entry_get_attribute(folder, DATABASE_INDEX_PROPERTY_SIZE, &old_size, sizeof(old_size));
+    old_size += size;
+    db_entry_set_attribute(folder, DATABASE_INDEX_PROPERTY_SIZE, &old_size, sizeof(old_size));
+    db_entry_update_folder_size(folder->parent, size);
 }
 
 int
-db_entry_compare_entries_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+db_entry_compare_entries_by_extension(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
     const char *ext_a = db_entry_get_extension(*a);
     const char *ext_b = db_entry_get_extension(*b);
     return strcmp(ext_a ? ext_a : "", ext_b ? ext_b : "");
 }
 
 int
-db_entry_compare_entries_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
+db_entry_compare_entries_by_name(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
     if (G_UNLIKELY(*a == NULL || *b == NULL)) {
         return 0;
     }
-    const char *name_a = (*a)->name;
-    const char *name_b = (*b)->name;
+    const char *name_a = db_entry_get_name_raw(*a);
+    const char *name_b = db_entry_get_name_raw(*b);
     return strverscmp(name_a ? name_a : "", name_b ? name_b : "");
 }
 
 void
-db_entry_set_mtime(FsearchDatabaseEntry *entry, time_t mtime) {
-    entry->mtime = mtime;
+db_entry_set_mtime(FsearchDatabaseEntryBase *entry, time_t mtime) {
+    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, &mtime, sizeof(mtime));
 }
 
 void
-db_entry_set_size(FsearchDatabaseEntry *entry, off_t size) {
-    entry->size = size;
+db_entry_set_size(FsearchDatabaseEntryBase *entry, off_t size) {
+    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_SIZE, &size, sizeof(size));
 }
 
 void
-db_entry_set_name(FsearchDatabaseEntry *entry, const char *name) {
-    g_clear_pointer(&entry->name, free);
-    entry->name = strdup(name ? name : "");
+db_entry_set_name(FsearchDatabaseEntryBase *entry, const char *name) {
+    // TODO
+    // g_clear_pointer(&entry->name, free);
+    // entry->name = strdup(name ? name : "");
+}
+
+static inline void
+decrement_num_files(FsearchDatabaseEntryBase *entry) {
+    uint32_t num_files = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
+    if (num_files > 0) {
+        num_files -= 1;
+        db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
+    }
+}
+
+static inline void
+decrement_num_folders(FsearchDatabaseEntryBase *entry) {
+    uint32_t num_folders = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
+    if (num_folders > 0) {
+        num_folders -= 1;
+        db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
+    }
+}
+
+static inline void
+increment_num_files(FsearchDatabaseEntryBase *entry) {
+    uint32_t num_files = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
+    num_files += 1;
+    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
+}
+
+static inline void
+increment_num_folders(FsearchDatabaseEntryBase *entry) {
+    uint32_t num_folders = 0;
+    db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
+    num_folders += 1;
+    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
 }
 
 void
-db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *parent) {
+db_entry_set_parent(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryBase *parent) {
     if (entry->parent) {
         // The entry already has a parent. First un-parent it and update its current parents state:
         // * Decrement file/folder count
-        FsearchDatabaseEntryFolder *p = entry->parent;
+        FsearchDatabaseEntryBase *p = entry->parent;
         if (db_entry_is_folder(entry)) {
-            if (p->num_folders > 0) {
-                p->num_folders--;
-            }
+            decrement_num_folders(entry);
         }
         else if (db_entry_is_file(entry)) {
-            if (p->num_files > 0) {
-                p->num_files--;
-            }
+            decrement_num_files(entry);
         }
         // * Update the size
         // while (p) {
@@ -591,12 +620,12 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
 
     if (parent) {
         // parent is non-NULL, increment its file/folder count
-        g_assert(parent->super.type == DATABASE_ENTRY_TYPE_FOLDER);
-        if (db_entry_is_folder(entry)) {
-            parent->num_folders++;
+        g_assert(db_entry_is_folder(parent));
+        if (db_entry_is_folder(parent)) {
+            increment_num_folders(parent);
         }
-        else if (db_entry_is_file(entry)) {
-            parent->num_files++;
+        else if (db_entry_is_file(parent)) {
+            increment_num_files(parent);
         }
         // * Update the size
         // FsearchDatabaseEntryFolder *p = parent;
@@ -609,32 +638,17 @@ db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntryFolder *par
 }
 
 void
-db_entry_set_db_index(FsearchDatabaseEntry *entry, uint32_t db_index) {
+db_entry_set_db_index(FsearchDatabaseEntryBase *entry, uint32_t db_index) {
     if (!db_entry_is_folder(entry)) {
         return;
     }
-    ((FsearchDatabaseEntryFolder *)entry)->db_idx = db_index;
+    db_entry_set_attribute(entry, DATABASE_INDEX_PROPERTY_DB_INDEX, &db_index, sizeof(db_index));
 }
 
-void
-db_entry_set_type(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type) {
-    entry->type = type;
-}
-
-void
-db_entry_set_idx(FsearchDatabaseEntry *entry, uint32_t idx) {
-    entry->idx = idx;
-}
-
-void
-db_entry_set_mark(FsearchDatabaseEntry *entry, uint8_t mark) {
-    entry->mark = mark;
-}
-
-static bool
-get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
-                     FsearchDatabaseIndexProperty attribute,
-                     size_t *offset) {
+bool
+db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
+                              FsearchDatabaseIndexProperty attribute,
+                              size_t *offset) {
     size_t offset_tmp = 0;
     if ((attribute_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         if (attribute == DATABASE_INDEX_PROPERTY_SIZE) {
@@ -731,9 +745,10 @@ db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBas
     entry->attribute_flags = attribute_flags;
 
     size_t name_offset = 0;
-    if (get_attribute_offset(attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset)) {
+    if (db_entry_get_attribute_offset(attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset)) {
         memcpy(entry->data + name_offset, name, name_len + 1);
     }
+    entry_base_size = name_offset;
 
     return entry;
 }
@@ -743,7 +758,7 @@ db_entry_get_attribute_name(FsearchDatabaseEntryBase *entry, const char **name) 
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(entry, name);
     size_t offset = 0;
-    if (get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &offset)) {
+    if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &offset)) {
         *name = (const char *)(entry->data + offset);
         return true;
     }
@@ -768,7 +783,7 @@ db_entry_get_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProp
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(dest, false);
     size_t offset = 0;
-    if (get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
+    if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
         memcpy(dest, entry->data + offset, size);
         return true;
     }
@@ -780,45 +795,21 @@ db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProp
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(src, false);
     size_t offset = 0;
-    if (get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
+    if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
         memcpy(entry->data + offset, src, size);
         return true;
     }
     return false;
 }
 
-uint8_t
-db_entry2_get_mark(FsearchDatabaseEntryBase *entry) {
-    g_return_val_if_fail(entry, 0);
-    return entry->mark;
-}
-
-void
-db_entry2_set_mark(FsearchDatabaseEntryBase *entry, uint8_t mark) {
-    g_return_if_fail(entry);
-    entry->mark = mark;
-}
-
-FsearchDatabaseEntryType
-db_entry2_get_type(FsearchDatabaseEntryBase *entry) {
-    g_return_val_if_fail(entry, 0);
-    return entry->type;
-}
-
-void
-db_entry2_set_type(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryType type) {
-    g_return_if_fail(entry);
-    entry->type = type;
-}
-
 uint32_t
-db_entry2_get_index(FsearchDatabaseEntryBase *entry) {
+db_entry_get_index(FsearchDatabaseEntryBase *entry) {
     g_return_val_if_fail(entry, 0);
     return entry->index;
 }
 
 void
-db_entry2_set_index(FsearchDatabaseEntryBase *entry, uint32_t index) {
+db_entry_set_index(FsearchDatabaseEntryBase *entry, uint32_t index) {
     g_return_if_fail(entry);
     entry->index = index;
 }

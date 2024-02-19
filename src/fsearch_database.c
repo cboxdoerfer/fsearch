@@ -804,7 +804,7 @@ update_folder_indices(DynamicArray *folders) {
         if (!folder) {
             continue;
         }
-        db_entry_set_idx((FsearchDatabaseEntry *)folder, i);
+        db_entry_set_index((FsearchDatabaseEntry *)folder, i);
     }
 }
 
@@ -1064,7 +1064,7 @@ database_file_load_files(FILE *fp,
     for (idx = 0; idx < num_files; idx++) {
         FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(pool);
         db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
-        db_entry_set_idx(entry, idx);
+        db_entry_set_index(entry, idx);
 
         fb = database_file_load_entry_super_elements_from_memory(fb, index_flags, entry, previous_entry_name);
 
@@ -1286,7 +1286,7 @@ database_file_save_files(FILE *fp,
 
         // let's also update the idx of the file here while we're at it to make sure we have the correct
         // idx set when we store the fast sort indexes
-        db_entry_set_idx(entry, i);
+        db_entry_set_index(entry, i);
 
         FsearchDatabaseEntryFolder *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = db_entry_get_idx((FsearchDatabaseEntry *)parent);
@@ -1700,7 +1700,7 @@ database_file_load(const char *file_path,
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntryFolder *folder = fsearch_memory_pool_malloc(folder_pool);
         FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
-        db_entry_set_idx(entry, i);
+        db_entry_set_index(entry, i);
         db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
         db_entry_set_parent(entry, NULL);
         darray_add_item(folders, folder);

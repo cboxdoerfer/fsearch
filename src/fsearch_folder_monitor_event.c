@@ -8,7 +8,7 @@ fsearch_folder_monitor_event_free(FsearchFolderMonitorEvent *self) {
     if (self->path) {
         g_string_free(g_steal_pointer(&self->path), TRUE);
     }
-    g_clear_pointer((FsearchDatabaseEntry **)&self->watched_entry_copy, db_entry_free_deep_copy);
+    g_clear_pointer((FsearchDatabaseEntry **)&self->watched_entry_copy, db_entry_free_full);
     g_clear_pointer(&self, free);
 }
 
