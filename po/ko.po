@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-12-21 08:09+0000\n"
-"Last-Translator: project-dy <kero122899@gmail.com>\n"
+"PO-Revision-Date: 2024-03-26 14:01+0000\n"
+"Last-Translator: han <blitzmaske@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
 "translations/ko/>\n"
 "Language: ko\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.3\n"
+"X-Generator: Weblate 5.5-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -68,7 +68,7 @@ msgstr "와일드카드 지원"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "필터 지원(예: 오디오 파일만 검색)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 #, fuzzy
@@ -78,7 +78,7 @@ msgstr "숨김 파일 과 폴더 제외"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "이름, 경로, 크기, 수정 시간 및 확장별 빠른 정렬"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
@@ -88,7 +88,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
-msgstr ""
+msgstr "기본 UI 레이아웃"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
@@ -148,32 +148,28 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch"
 msgid "New search engine"
-msgstr "FSearch"
+msgstr "새로운 검색 엔진"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
-#| msgid "Show highlighted search terms"
 msgid "Greatly improved highlighting of search terms"
-msgstr "검색어 하일라이트 표시"
+msgstr "검색어 하이라이트 표시"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid "Custom filters"
-msgstr ""
+msgstr "사용자 지정 필터"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "정렬 성능 개선"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "스크롤 성능 향상"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "데이터베이스 업데이트 후 파일 선택 기억"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
@@ -181,81 +177,82 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "'Ctrl'을 누르면 고무줄 효과 선택 반전하기"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "기본 창이 활성화되면 검색 항목에 집중하기"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "애플리케이션용 필터 추가(예: .desktop 파일)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
-msgstr ""
+msgstr ".desktop 파일을 여는 대신 응용프로그램을 직접 실행할 수 있는 옵션 추가"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "Show application icons for .desktop files"
-msgstr ""
+msgstr ".desktop files 대한 응용프로그램 아이콘 표시"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr ".odp 및 .ods 파일을 문서 필터에 추가"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
-msgstr ""
+msgstr "이제 '연결 프로그램' 메뉴에 선택한 파일을 처리할 수 있는 애플리케이션만 "
+"표시됩니다."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
-msgstr ""
+msgstr "같은 유형으로 여러 파일의 개선 (그들은 지금 응용 프로그램에 목록으로 전달, "
+"대신 하나씩)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "Sandboxed 모드에서 파일을 엽니 다"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
-msgstr ""
+msgstr "이슈 트래커, 포럼 및 기부 페이지로 메뉴 항목을 추가"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Non-Linux 시스템 지원"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
-msgstr ""
+msgstr "탈출 대신 눌러 FSearch를 종료하는 옵션 추가"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "기본적으로 '/proc'와 '/sys'를 제외함"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
-msgstr ""
+msgstr "'Menu' 키 또는 'Shift + F10'가 눌러지는 컨텍스트 메뉴"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
-msgstr ""
+msgstr "및 버그 수정의 톤, 번역 업데이트 및 더 작은 개선"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
-msgstr ""
+msgstr "초기 릴리즈"
 
 #: src/fsearch.c:243
-#, fuzzy
 msgid "Saving…"
-msgstr "데이터베이스 로딩중…"
+msgstr "저장…"
 
 #: src/fsearch.c:435
 msgid "translator-credits"
