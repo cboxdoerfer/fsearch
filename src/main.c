@@ -33,6 +33,7 @@ main(int argc, char *argv[]) {
     textdomain(GETTEXT_PACKAGE);
 
     g_set_application_name(_("FSearch"));
+    g_set_prgname("io.github.cboxdoerfer.FSearch");
 
     return g_application_run(G_APPLICATION(fsearch_application_new()), argc, argv);
 }
