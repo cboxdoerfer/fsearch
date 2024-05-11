@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2024-05-11 06:00+0000\n"
+"PO-Revision-Date: 2024-05-11 06:09+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -1020,7 +1020,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1907
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr ""
+msgstr "設定項目にフォーカスすると、各項目の機能に関する詳細な説明を表示します。"
 
 #: src/fsearch_preferences.ui:1920
 msgid ""
@@ -1095,6 +1095,10 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>Escape キーで終了:</b>\n"
+"\n"
+"有効にした場合、Escape を押すと FSearch "
+"はウィンドウを最小化する代わりに終了します。"
 
 #: src/fsearch_preferences.ui:2068 src/fsearch_window.ui:289
 #: src/fsearch_window.ui:414 src/menus.ui:150 src/menus.ui:156
@@ -1252,6 +1256,9 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"<b>タイプ</b>でソートすると、結果が多い場合に時間がかかる可能性があります。\n"
+"\n"
+"このソート順は維持されません。検索文字列が変わった場合にリセットされます。"
 
 #: src/fsearch_window.ui:68
 msgid "New window"
