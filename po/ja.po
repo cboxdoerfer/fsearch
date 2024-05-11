@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2024-05-11 06:09+0000\n"
+"PO-Revision-Date: 2024-05-11 10:30+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -162,29 +162,30 @@ msgstr "スクロールパフォーマンスを改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "選択中のファイルをデータベース更新後も維持するように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr ""
+msgstr "自由選択モードで自動的に結果一覧をスクロールするように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "自由選択モードで 'Ctrl' を押すと、選択を反転するように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "メインウィンドウがアクティブになった際、検索欄にフォーカスするように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "アプリケーション用のフィルターを追加 (例: .desktop ファイル)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
-msgstr ""
+msgstr ".desktop "
+"ファイルを開くのではなく、直接アプリケーションを起動するオプションを追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "Show application icons for .desktop files"
@@ -192,50 +193,54 @@ msgstr ".desktop ファイルのアプリケーションアイコンを表示す
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "ドキュメントフィルターに .odp と .ods ファイルを追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
-msgstr ""
+msgstr "選択したファイルを処理できるアプリケーションだけを'次で開く'メニューに表示す"
+"るように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
-msgstr ""
+msgstr "タイプが同じ複数のファイルを開く処理を改善 "
+"(ひとつずつではなくリストとしてアプリケーションに渡すように修正)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "サンドボックスモードでファイルを開く対応を改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
-msgstr ""
+msgstr "イシュートラッカー、フォーラム、寄付ページへのリンクをメニュー項目として追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Linux 以外のシステムへの対応を改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
-msgstr ""
+msgstr "Escape キー押下時にウィンドウ最小化ではなく FSearch "
+"を終了するオプションを追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "デフォルトで '/proc' と '/sys' を除外"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
-msgstr ""
+msgstr "'メニュー' キーまたは 'Shift + F10' "
+"の押下時にコンテキストメニューを開くように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
-msgstr ""
+msgstr "そして、大量のバグ修正/翻訳の更新/軽微な改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
@@ -328,10 +333,8 @@ msgid "Error while opening folder"
 msgstr "以下のフォルダーを開く際にエラーが発生しました"
 
 #: src/fsearch_file_utils.c:505
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to build open command"
-msgstr "ファイルを開けませんでした"
+msgstr "open コマンドを構築できませんでした"
 
 #: src/fsearch_file_utils.c:561
 msgid "Folder"
@@ -339,7 +342,7 @@ msgstr "フォルダー"
 
 #: src/fsearch_file_utils.c:567
 msgid "Unknown Type"
-msgstr "不明な種類"
+msgstr "不明なタイプ"
 
 #: src/fsearch_filter.c:110
 msgid "All"
@@ -610,7 +613,7 @@ msgstr "文字入力するたびに検索"
 
 #: src/fsearch_preferences.ui:697
 msgid "Hide results when search is empty"
-msgstr "検索結果が空の場合は結果を隠す"
+msgstr "検索文字列が空の場合は結果を隠す"
 
 #: src/fsearch_preferences.ui:711
 msgid "Match case when query contains at least one upper case character"
@@ -782,8 +785,8 @@ msgid ""
 msgstr ""
 "<b>ウィンドウサイズを保持:</b>\n"
 "\n"
-"有効にした場合、FSearch "
-"のウィンドウを開いた際に、以前のセッションのウィンドウサイズを復元します。\n"
+"有効にした場合、FSearch のウィンドウを開いた際に、以前のセッションで使用した"
+"ウィンドウサイズを復元します。\n"
 "\n"
 "ウィンドウマネージャーの中には、この要求を無視してウィンドウが別のサイズにな"
 "るように強制するものもあります。"
@@ -804,6 +807,19 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>ファイルを正常に開いた後の動作:</b>\n"
+"\n"
+"ファイル/フォルダーを正常に開いた場合、以下のうちひとつのアクションを実行でき"
+"ます:\n"
+"\t• <b>何もしない:</b> 何もしません。\n"
+"\t• <b>最小化:</b> 現在アクティブな FSearch のウィンドウを最小化します。\n"
+"\t• <b>閉じる:</b> FSearch を終了します。\n"
+"\n"
+"これらのアクションをトリガーするかどうかを、ファイルの開き方ごとに設定できま"
+"す。\n"
+"\t• <b>キーボードショートカットまたはメニュー項目から開いた場合</b> および/"
+"または\n"
+"\t• <b>マウスでクリックした場合</b>"
 
 #: src/fsearch_preferences.ui:1517
 msgid ""
@@ -848,6 +864,9 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>\"名前\"カラムにアイコンを表示:</b>\n"
+"\n"
+"有効にした場合、ファイル/フォルダーアイコンが\"名前\"カラムに表示されます。"
 
 #: src/fsearch_preferences.ui:1573
 msgid ""
@@ -857,6 +876,11 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>カラム設定を保持:</b>\n"
+"\n"
+"有効にした場合、FSearch のウィンドウを開いた際に、以前のセッションで使用した"
+"検索結果のカラム設定を復元します。これにはすべてのカラムのサイズと表示有無が"
+"含まれます。"
 
 #: src/fsearch_preferences.ui:1590
 msgid ""
@@ -865,9 +889,10 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
-"<b>並び替え順を記憶</b>\n"
+"<b>ソート順を保持:</b>\n"
 "\n"
-"有効にした場合、以前のセッションで使用した並び順が記憶されます。"
+"有効にした場合、FSearch のウィンドウを開いた際に、以前のセッションで使用した"
+"検索結果のソート順を復元します。"
 
 #: src/fsearch_preferences.ui:1607
 msgid ""
@@ -875,6 +900,10 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>\"パス\"カラムのダブルクリックでパスを開く:</b>\n"
+"\n"
+"有効にした場合、\"パス\"カラムでダブルクリックすると"
+"、選択されたパスを開きます。"
 
 #: src/fsearch_preferences.ui:1624
 msgid ""
@@ -884,6 +913,12 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to hold "
 "<i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>シングルクリックで開く:</b>\n"
+"\n"
+"有効にした場合、シングルクリックで選択されたファイル/フォルダーを開きます。こ"
+"の設定が有効時にファイル/フォルダーを選択したい場合、ファイル/"
+"フォルダーをクリックするのと同時に <i>Ctrl</i> "
+"キーを押したままにする必要があります。"
 
 #: src/fsearch_preferences.ui:1641
 msgid ""
@@ -892,6 +927,9 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>データベースのインデックス状況を表示:</b>\n"
+"\n"
+"有効にした場合、現在インデックスされているパスをステータスバーに表示します。"
 
 #: src/fsearch_preferences.ui:1658
 msgid ""
@@ -900,6 +938,10 @@ msgid ""
 "If enabled, a warning dialog is displayed when a file or folder failed to "
 "open."
 msgstr ""
+"<b>警告ダイアログを表示:</b>\n"
+"\n"
+"有効にした場合、ファイルやフォルダーを開くのに失敗した場合に警告ダイアログを"
+"表示します。"
 
 #: src/fsearch_preferences.ui:1675
 msgid ""
@@ -908,6 +950,10 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
+"<b>クエリがパスの区切り文字を含む場合はパスを検索:</b>\n"
+"\n"
+"有効にした場合、パスの区切り文字 (例: \"/\") "
+"を含む検索文字列は、自動的にファイルやフォルダーのフルパスにヒットします。"
 
 #: src/fsearch_preferences.ui:1692
 msgid ""
@@ -917,6 +963,11 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
+"<b>クエリが大文字を含む場合は大文字小文字を区別して検索:</b>\n"
+"\n"
+"有効にした場合、大文字を含む検索文字列は、大文字小文字を区別して検索します。"
+"つまり、<i>Foo</i> という検索文字列のときに、<i>FooBar.txt</i> "
+"はヒットするが <i>foobar.txt</i> はヒットしない、ということです。"
 
 #: src/fsearch_preferences.ui:1709
 msgid ""
@@ -927,6 +978,11 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
+"<b>検索文字列が空の場合は結果を隠す:</b>\n"
+"\n"
+"有効にした場合、検索欄が空のときは検索結果を表示しません。\n"
+"\n"
+"無効にした場合、検索欄が空のときはすべてのファイルとフォルダーを表示します。"
 
 #: src/fsearch_preferences.ui:1728
 msgid ""
@@ -937,6 +993,12 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>文字入力のたびに検索:</b>\n"
+"\n"
+"有効にした場合、キーボード入力のたびに検索結果を自動的に更新します。\n"
+"\n"
+"無効にした場合、<i>Enter</i> "
+"キーを押すか検索ボタンを押した場合にのみ検索結果を更新します。 "
 
 #: src/fsearch_preferences.ui:1747
 msgid ""
@@ -945,6 +1007,10 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>起動時にデータベースを更新:</b>\n"
+"\n"
+"有効にした場合、FSearch "
+"起動時にデータベースをバックグラウンドで自動的に更新します。"
 
 #: src/fsearch_preferences.ui:1764
 msgid ""
@@ -958,6 +1024,15 @@ msgid ""
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
 "boundaries for this folder"
 msgstr ""
+"<b>含まれるフォルダー:</b>\n"
+"\n"
+"データベースに含みたいすべてのフォルダーを、このリストに追加します。\n"
+"\n"
+"\t• <b>有効:</b> "
+"有効にした場合、パスはデータベースに含まれ、検索対象となります。\n"
+"\t• <b>パス:</b> 含みたいフルパス。\n"
+"\t• <b>単一のファイルシステム:</b> 有効にした場合、FSearch "
+"はフォルダーが存在するファイルシステムにはないファイル/フォルダーを除外します"
 
 #: src/fsearch_preferences.ui:1785
 msgid ""
@@ -966,6 +1041,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>フォルダーをデータベースに追加:</b>\n"
+"\n"
+"このボタンは、検索用データベースに含めたいフォルダーを選択可能なダイアログを"
+"開きます。"
 
 #: src/fsearch_preferences.ui:1802
 msgid ""
@@ -973,6 +1052,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>選択した行を削除:</b>\n"
+"\n"
+"含まれるフォルダーのリストから選択したフォルダーを削除します。"
 
 #: src/fsearch_preferences.ui:1819
 msgid ""
@@ -984,6 +1066,13 @@ msgid ""
 "can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
+"<b>除外されるフォルダー:</b>\n"
+"\n"
+"データベースから除外したいすべてのフォルダーを、このリストに追加します。\n"
+"\n"
+"\t• <b>有効:</b> "
+"有効にすると、パスはデータベースから除外され、検索対象になりません。\n"
+"\t• <b>パス:</b> 除外したいフルパス。"
 
 #: src/fsearch_preferences.ui:1839
 msgid ""
@@ -992,6 +1081,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to exclude "
 "from the database."
 msgstr ""
+"<b>フォルダーをデータベースから除外:</b>\n"
+"\n"
+"このボタンは、データベースから除外したいフォルダーを選択可能なダイアログを開"
+"きます。"
 
 #: src/fsearch_preferences.ui:1856
 msgid ""
@@ -999,6 +1092,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
+"<b>選択した行を削除:</b>\n"
+"\n"
+"除外されるフォルダーのリストから選択したフォルダーを削除します。"
 
 #: src/fsearch_preferences.ui:1873
 msgid ""
