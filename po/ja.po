@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-08-26 16:20+0000\n"
-"Last-Translator: Hugel <qihu@nfschina.com>\n"
+"PO-Revision-Date: 2024-05-11 04:49+0000\n"
+"Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
 "Language: ja\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 4.14-dev\n"
+"X-Generator: Weblate 5.5.4\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -25,24 +25,24 @@ msgid "FSearch"
 msgstr "FSearch"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
-msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
+msgstr "パフォーマンスと高度な機能を重視したファイル検索アプリケーション"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
 "search;fsearch;files;folders;music;video;documents;find;tool;everything;"
 msgstr ""
+"search;fsearch;files;folders;music;video;documents;find;tool;everything;検索;"
+"ファイル;フォルダー;ミュージック;音楽;ビデオ;動画;ドキュメント;文書;検索;探す"
+";ツール;すべて;全部;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch"
 msgid "File Search Utility"
-msgstr "FSearch"
+msgstr "ファイル検索ユーティリティ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "グラフィカルなファイル検索アプリケーション"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
@@ -62,92 +62,80 @@ msgstr "正規表現"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Wildcard support"
-msgstr ""
+msgstr "ワイルドカードへの対応"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "フィルター検索への対応 (例: オーディオファイルのみを検索)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "隠しファイルと隠しフォルダを除外"
+msgstr "特定のファイルとフォルダーの除外"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "名前、パス、サイズ、更新日時、拡張子で素早くソート"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
+"<em>注意:</em> Flatpak のサンドボックス化の仕様上、FSearch "
+"はシステム上のすべてのファイルを検索することはできません。"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
-msgstr ""
+msgstr "デフォルトの UI レイアウト"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "GNOME HIG により準拠したレイアウト"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
-#| msgid "Search"
 msgid "search"
 msgstr "検索"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "検索"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "files?"
 msgid "files"
-msgstr "個のファイルを削除しますか？"
+msgstr "ファイル"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "フォルダ"
+msgstr "フォルダー"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "ミュージック"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "動画ファイル"
+msgstr "ビデオ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
 msgstr "ドキュメント"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "検索"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "ツール"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "すべて"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
 msgid "Christian Boxdörfer"
-msgstr ""
+msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
 #, fuzzy
@@ -257,104 +245,90 @@ msgid "Initial release."
 msgstr ""
 
 #: src/fsearch.c:243
-#, fuzzy
 msgid "Saving…"
-msgstr "ソート中..."
+msgstr "保存しています…"
 
 #: src/fsearch.c:435
 msgid "translator-credits"
-msgstr ""
+msgstr "Ryo Nakano"
 
 #: src/fsearch.c:437
 msgid "A search utility focusing on performance and advanced features"
-msgstr "検索ユーティリティはパフォーマンスと追加機能にフォーカスしています"
+msgstr "パフォーマンスと高度な機能を重視した検索ユーティリティ"
 
 #: src/fsearch.c:916
-#, fuzzy
 msgid "Open a new application window"
-msgstr "他のアプリケーションで開く"
+msgstr "新しいアプリケーションウィンドウを開く"
 
 #: src/fsearch.c:917
 msgid "Show the application preferences"
 msgstr "アプリケーションの設定を表示する"
 
 #: src/fsearch.c:918
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "検索ボタンを表示"
+msgstr "検索パターンを指定する"
 
 #: src/fsearch.c:919
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "データベースをアップデート"
+msgstr "データベースを更新して終了する"
 
 #: src/fsearch.c:920
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "バージョン情報を表示"
+msgstr "バージョン情報を表示して終了する"
 
 #: src/fsearch_database.c:646
-#, fuzzy
 msgid "Loading folders…"
-msgstr "データベースを読み込み中…"
+msgstr "フォルダーを読み込んでいます…"
 
 #: src/fsearch_database.c:654
-#, fuzzy
 msgid "Loading files…"
-msgstr "ファイルを削除中…"
+msgstr "ファイルを読み込んでいます…"
 
 #: src/fsearch_database.c:1641 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
-#, fuzzy
 msgid "Sorting…"
-msgstr "ソート中..."
+msgstr "ソートしています…"
 
 #: src/fsearch_file_utils.c:140
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr ""
+msgstr "以下のファイルの削除中にエラーが発生しました"
 
 #: src/fsearch_file_utils.c:142
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get path"
-msgstr "ファイルを開けませんでした"
+msgstr "パスを取得できませんでした"
 
 #: src/fsearch_file_utils.c:253
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr ""
+msgstr "以下のファイルの情報取得中にエラーが発生しました"
 
 #: src/fsearch_file_utils.c:255
-#, fuzzy
 msgid "Failed to get application information"
-msgstr "他のアプリケーションで開く"
+msgstr "アプリケーションの情報を取得できませんでした"
 
 #: src/fsearch_file_utils.c:270
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "以下のメディアタイプの情報取得中にエラーが発生しました"
 
 #: src/fsearch_file_utils.c:272
 msgid "No default application registered"
-msgstr ""
+msgstr "デフォルトのアプリケーションが未登録"
 
 #: src/fsearch_file_utils.c:496
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "以下の親フォルダーを開く際にエラーが発生しました"
 
 #: src/fsearch_file_utils.c:498
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get parent path"
-msgstr "ファイルを開けませんでした"
+msgstr "親のパスを取得できませんでした"
 
 #: src/fsearch_file_utils.c:502
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr ""
+msgstr "以下のフォルダーを開く際にエラーが発生しました"
 
 #: src/fsearch_file_utils.c:505
 #, fuzzy
@@ -363,13 +337,12 @@ msgid "Failed to build open command"
 msgstr "ファイルを開けませんでした"
 
 #: src/fsearch_file_utils.c:561
-#, fuzzy
 msgid "Folder"
-msgstr "フォルダ"
+msgstr "フォルダー"
 
 #: src/fsearch_file_utils.c:567
 msgid "Unknown Type"
-msgstr ""
+msgstr "不明な種類"
 
 #: src/fsearch_filter.c:110
 msgid "All"
@@ -377,16 +350,15 @@ msgstr "すべて"
 
 #: src/fsearch_filter.c:111
 msgid "Folders"
-msgstr "フォルダ"
+msgstr "フォルダー"
 
 #: src/fsearch_filter.c:112
 msgid "Files"
 msgstr "ファイル"
 
 #: src/fsearch_filter.c:114
-#, fuzzy
 msgid "Applications"
-msgstr "他のアプリケーション"
+msgstr "アプリケーション"
 
 #: src/fsearch_filter.c:115
 msgid "Archives"
@@ -402,66 +374,60 @@ msgstr "ドキュメント"
 
 #: src/fsearch_filter.c:118
 msgid "Pictures"
-msgstr "画像ファイル"
+msgstr "画像"
 
 #: src/fsearch_filter.c:119
 msgid "Videos"
-msgstr "動画ファイル"
+msgstr "ビデオ"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "マクロ名に `:` を含めないでください。"
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:203
 #: src/fsearch_preferences_ui.c:215 src/fsearch_preferences_ui.c:565
 msgid "_Cancel"
-msgstr ""
+msgstr "キャンセル(_C)"
 
 #: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:566
 msgid "_OK"
-msgstr ""
+msgstr "OK(_O)"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:301
 msgid "Edit filter"
-msgstr ""
+msgstr "フィルターを編集"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "名前"
+msgstr "名前:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "このフィルターの一意の名前"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "一意のフィルター名"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "パスを検索"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "正規表現を有効にする"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "大文字小文字を区別"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "クエリ:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "マクロ:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -472,50 +438,43 @@ msgstr ""
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr ""
+msgstr "プロパティ…"
 
 #: src/fsearch_listview_popup.c:169
-#, fuzzy
 msgid "Other Application…"
-msgstr "他のアプリケーション"
+msgstr "他のアプリケーション…"
 
 #: src/fsearch_overlay.ui:44
 msgid "Empty Database"
 msgstr "空のデータベース"
 
 #: src/fsearch_overlay.ui:60
-#, fuzzy
 msgid "Add folders"
-msgstr "フォルダ"
+msgstr "フォルダーを追加"
 
 #: src/fsearch_overlay.ui:108
-#, fuzzy
 msgid "Loading Database…"
-msgstr "データベースを読み込み中…"
+msgstr "データベースを読み込んでいます…"
 
 #: src/fsearch_overlay.ui:123
-#, fuzzy
 msgid "This won't take long."
-msgstr "しばらくかかるかもしれません。"
+msgstr "時間はかかりません。"
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
-#, fuzzy
 msgid "Updating Database…"
-msgstr "データベースをアップデート中…"
+msgstr "データベースを更新しています…"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
-msgstr "しばらくかかるかもしれません。"
+msgstr "時間がかかるかもしれません。"
 
 #: src/fsearch_overlay.ui:241
 msgid "Empty Query"
 msgstr "空のクエリ"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "<b>Ctrl + F</b>を押して入力してください"
+msgstr "<b>Ctrl + F</b> を押して入力してください。"
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -526,9 +485,8 @@ msgid "Try a different search"
 msgstr "違う条件で検索してみてください"
 
 #: src/fsearch_overlay.ui:368
-#, fuzzy
 msgid "Sorting results…"
-msgstr "ソート中..."
+msgstr "結果をソートしています…"
 
 #: src/fsearch_preferences.ui:73 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -536,23 +494,23 @@ msgstr "設定"
 
 #: src/fsearch_preferences.ui:142
 msgid "Enable dark theme"
-msgstr "暗い色のテーマを有効"
+msgstr "ダークテーマを有効にする"
 
 #: src/fsearch_preferences.ui:157
 msgid "Enable client-side decorations (requires restart)"
-msgstr ""
+msgstr "クライアントサイドデコレーションを有効にする (再起動が必要)"
 
 #: src/fsearch_preferences.ui:172
 msgid "Use binary units instead of decimal units"
-msgstr ""
+msgstr "SI 接頭語ではなく 2 進接頭辞を使う"
 
 #: src/fsearch_preferences.ui:188
 msgid "Remember window size"
-msgstr "ウィンドウサイズを記憶"
+msgstr "ウィンドウサイズを保持"
 
 #: src/fsearch_preferences.ui:203
 msgid "Exit on Escape"
-msgstr ""
+msgstr "Escape キーで終了"
 
 #: src/fsearch_preferences.ui:240
 msgid "with keyboard shortcuts or menu entries"
@@ -568,15 +526,15 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:299
 msgid "Nothing"
-msgstr ""
+msgstr "何もしない"
 
 #: src/fsearch_preferences.ui:300
 msgid "Minimize"
-msgstr ""
+msgstr "最小化"
 
 #: src/fsearch_preferences.ui:301
 msgid "Close"
-msgstr ""
+msgstr "閉じる"
 
 #: src/fsearch_preferences.ui:327
 msgid "General:"
@@ -592,53 +550,51 @@ msgstr "ツールチップを表示"
 
 #: src/fsearch_preferences.ui:393
 msgid "Show icons in name column"
-msgstr "名前カラムにアイコンを表示"
+msgstr "\"名前\"カラムにアイコンを表示"
 
 #: src/fsearch_preferences.ui:408
 msgid "Remember column configuration"
-msgstr "カラム設定を記憶"
+msgstr "カラム設定を保持"
 
 #: src/fsearch_preferences.ui:423
 msgid "Remember sort order"
-msgstr "並び替え順を記憶"
+msgstr "ソート順を保持"
 
 #: src/fsearch_preferences.ui:438
 msgid "Open path with double click in path column"
-msgstr ""
+msgstr "\"パス\"カラムのダブルクリックでパスを開く"
 
 #: src/fsearch_preferences.ui:453
 msgid "Single click to open"
-msgstr ""
+msgstr "シングルクリックで開く"
 
 #: src/fsearch_preferences.ui:468
 msgid "Launch desktop files"
-msgstr ""
+msgstr "デスクトップファイルを起動"
 
 #: src/fsearch_preferences.ui:489
 msgid "Results:"
 msgstr "結果:"
 
 #: src/fsearch_preferences.ui:530
-#, fuzzy
 msgid "Show database indexing status"
-msgstr "起動時にデータベースをアップデート"
+msgstr "データベースのインデックス状況を表示"
 
 #: src/fsearch_preferences.ui:551
-#, fuzzy
 msgid "Statusbar:"
-msgstr "ステータスバーを表示"
+msgstr "ステータスバー:"
 
 #: src/fsearch_preferences.ui:592
 msgid "Show warning dialogs when:"
-msgstr ""
+msgstr "以下の場合に警告ダイアログを表示:"
 
 #: src/fsearch_preferences.ui:602
 msgid "file / folder failed to open"
-msgstr ""
+msgstr "ファイル/フォルダーを開けなかった場合"
 
 #: src/fsearch_preferences.ui:625
 msgid "Dialogs:"
-msgstr ""
+msgstr "ダイアログ:"
 
 #: src/fsearch_preferences.ui:650
 msgid "Interface"
@@ -650,41 +606,35 @@ msgstr "クエリがパス区切り文字を含む場合はパスを検索"
 
 #: src/fsearch_preferences.ui:683
 msgid "Search as you type"
-msgstr "文字入力ごとに検索"
+msgstr "文字入力するたびに検索"
 
 #: src/fsearch_preferences.ui:697
 msgid "Hide results when search is empty"
 msgstr "検索結果が空の場合は結果を隠す"
 
 #: src/fsearch_preferences.ui:711
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "クエリがパス区切り文字を含む場合はパスを検索"
+msgstr "クエリが大文字を含む場合は大文字小文字を区別して検索"
 
 #: src/fsearch_preferences.ui:779
-#, fuzzy
 msgid "Add new filter"
-msgstr "フォルダ"
+msgstr "新しいフィルターを追加"
 
 #: src/fsearch_preferences.ui:795
-#, fuzzy
 msgid "Remove selected filter"
-msgstr "検索ヒット数"
+msgstr "選択したフィルターを削除"
 
 #: src/fsearch_preferences.ui:811
-#, fuzzy
 msgid "Edit selected filter"
-msgstr "検索ヒット数"
+msgstr "選択したフィルターを編集"
 
 #: src/fsearch_preferences.ui:825
 msgid "Restore default filters"
-msgstr ""
+msgstr "デフォルトのフィルターを復元"
 
 #: src/fsearch_preferences.ui:857
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "フィルターを表示"
+msgstr "フィルター:"
 
 #: src/fsearch_preferences.ui:878 src/fsearch_window.ui:638
 msgid "Search"
@@ -692,28 +642,27 @@ msgstr "検索"
 
 #: src/fsearch_preferences.ui:897
 msgid "Update database on start"
-msgstr "起動時にデータベースをアップデート"
+msgstr "起動時にデータベースを更新"
 
 #: src/fsearch_preferences.ui:917
-#, fuzzy
 msgid "Update every"
-msgstr "更新"
+msgstr "更新頻度:"
 
 #: src/fsearch_preferences.ui:956
 msgid "hour(s) and"
-msgstr ""
+msgstr "時間"
 
 #: src/fsearch_preferences.ui:968
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/fsearch_preferences.ui:986
 msgid "minute(s)"
-msgstr ""
+msgstr "分"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "パスを入力…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
@@ -721,10 +670,12 @@ msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
+"データベースに含めるパスを追加\n"
+"                                "
 
 #: src/fsearch_preferences.ui:1124 src/fsearch_preferences.ui:1272
 msgid "Remove selected path"
-msgstr ""
+msgstr "選択したパスを削除"
 
 #: src/fsearch_preferences.ui:1150
 msgid "Include"
@@ -732,19 +683,19 @@ msgstr "含む"
 
 #: src/fsearch_preferences.ui:1256
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "データベースから除外するパスを追加"
 
 #: src/fsearch_preferences.ui:1308 src/fsearch_preferences.ui:1321
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
-msgstr "ワイルドカードをサポート。複数のエントリーは ';' で分割します"
+msgstr "ワイルドカードに対応しています。複数のエントリーは ';' で分割します"
 
 #: src/fsearch_preferences.ui:1309
 msgid "Exclude files:"
-msgstr "除外ファイル:"
+msgstr "除外するファイル:"
 
 #: src/fsearch_preferences.ui:1322
 msgid "e.g. \".git;*.tmp\""
-msgstr "例. \".git;*.tmp\""
+msgstr "例: \".git;*.tmp\""
 
 #: src/fsearch_preferences.ui:1339
 msgid "Exclude hidden files and folders"
@@ -1124,24 +1075,20 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:2068 src/fsearch_window.ui:289
 #: src/fsearch_window.ui:414 src/menus.ui:150 src/menus.ui:156
-#, fuzzy
 msgid "Help"
-msgstr "ヘルプ(_H)"
+msgstr "ヘルプ"
 
 #: src/fsearch_preferences_ui.c:200 src/fsearch_preferences_ui.c:215
-#, fuzzy
 msgid "Select folder"
-msgstr "フィルターを選択"
+msgstr "フォルダーを選択"
 
 #: src/fsearch_preferences_ui.c:205 src/fsearch_preferences_ui.c:215
-#, fuzzy
 msgid "_Select"
-msgstr "すべての選択を解除"
+msgstr "選択(_S)"
 
 #: src/fsearch_preferences_ui.c:332
-#, fuzzy
 msgid "Add filter"
-msgstr "フォルダ"
+msgstr "フィルターを追加"
 
 #: src/fsearch_preferences_widgets.c:220 src/fsearch_preferences_widgets.c:267
 msgid "Active"
@@ -1165,17 +1112,14 @@ msgstr "名前"
 
 #: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
-msgstr ""
+msgstr "マクロ"
 
 #: src/fsearch_preferences_widgets.c:292
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "空のクエリ"
+msgstr "クエリ"
 
 #: src/fsearch_statusbar.c:56
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "%'d Item"
 msgstr "%'d 個"
 
@@ -1189,55 +1133,48 @@ msgid "Querying…"
 msgstr "表示中…"
 
 #: src/fsearch_statusbar.c:170
-#, fuzzy
 msgid "Loading…"
-msgstr "ソート中..."
+msgstr "読み込んでいます…"
 
 #: src/fsearch_statusbar.c:175
-#, fuzzy
 msgid "Scanning…"
-msgstr "ソート中..."
+msgstr "スキャンしています…"
 
 #: src/fsearch_statusbar.ui:52
 msgid "Number of Search Results"
-msgstr "検索ヒット数"
+msgstr "検索結果数"
 
 #: src/fsearch_statusbar.ui:53
 msgid "0 Items"
 msgstr "0 個"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "Cancel Update"
 msgid "Cancel"
-msgstr "アップデートを中断"
+msgstr "キャンセル"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
 msgstr "インデックス:"
 
 #: src/fsearch_statusbar.ui:228
-#, fuzzy
 msgid "Number of selected folders"
-msgstr "検索ヒット数"
+msgstr "選択したフォルダーの数"
 
 #: src/fsearch_statusbar.ui:229 src/fsearch_statusbar.ui:254
 msgid "0/0"
 msgstr "0/0"
 
 #: src/fsearch_statusbar.ui:253
-#, fuzzy
 msgid "Number of selected files"
-msgstr "検索ヒット数"
+msgstr "選択したフィルターの数"
 
 #: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:102
-#, fuzzy
 msgid "Cancel database update"
-msgstr "起動時にデータベースをアップデート"
+msgstr "データベースの更新をキャンセル"
 
 #: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
-msgstr "データベースに登録されたアイテム数"
+msgstr "データベースの項目数"
 
 #: src/fsearch_statusbar.ui:370
 msgid "(empty)"
@@ -1289,7 +1226,7 @@ msgstr "タイプ"
 
 #: src/fsearch_window.c:641 src/menus.ui:271
 msgid "Extension"
-msgstr ""
+msgstr "拡張子"
 
 #: src/fsearch_window.c:648 src/menus.ui:283
 msgid "Date Modified"
@@ -1304,14 +1241,12 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_window.ui:68
-#, fuzzy
 msgid "New window"
 msgstr "新しいウィンドウ"
 
 #: src/fsearch_window.ui:88
-#, fuzzy
 msgid "Update database"
-msgstr "データベースをアップデート"
+msgstr "データベースを更新"
 
 #: src/fsearch_window.ui:143 src/menus.ui:112
 msgid "Search in Path"
@@ -1338,14 +1273,12 @@ msgid "Show Search Button"
 msgstr "検索ボタンを表示"
 
 #: src/fsearch_window.ui:274 src/fsearch_window.ui:355 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch オンライン"
 
 #: src/fsearch_window.ui:303 src/menus.ui:161
 msgid "About"
-msgstr "このソフトウェアについて"
+msgstr "FSearch について"
 
 #: src/fsearch_window.ui:328 src/menus.ui:47
 msgid "Quit"
@@ -1353,72 +1286,68 @@ msgstr "終了"
 
 #: src/fsearch_window.ui:371 src/fsearch_window.ui:442 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "寄付"
 
 #: src/fsearch_window.ui:386 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "フォーラム"
 
 #: src/fsearch_window.ui:400 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "バグ報告と機能追加要望"
 
 #: src/fsearch_window.ui:459 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub Sponsors"
 
 #: src/fsearch_window.ui:473 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:585
-#, fuzzy
 msgid "Search…"
-msgstr "検索"
+msgstr "検索…"
 
 #: src/fsearch_window.ui:607
 msgid "Select a Filter"
 msgstr "フィルターを選択"
 
 #: src/fsearch_window_actions.c:91
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "本当に"
+msgstr "%d 個のファイルを開いてもよろしいですか?"
 
 #: src/fsearch_window_actions.c:93
-#, fuzzy
 msgid "Opening Files…"
-msgstr "ファイルを開く"
+msgstr "ファイルを開いています…"
 
 #: src/fsearch_window_actions.c:179
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %d file(s)?"
-msgstr "本当に"
+msgstr "%d 個のファイルを削除してもよろしいですか?"
 
 #: src/fsearch_window_actions.c:183
-#, fuzzy
 msgid "Deleting files…"
-msgstr "ファイルを削除中…"
+msgstr "ファイルを削除しています…"
 
 #: src/fsearch_window_actions.c:183
-#, fuzzy
 msgid "Moving files to trash…"
-msgstr "ゴミ箱に移動中…"
+msgstr "ファイルをゴミ箱に移動しています…"
 
 #: src/fsearch_window_actions.c:210 src/fsearch_window_actions.c:494
 #: src/fsearch_window_actions.c:534
 msgid "Something went wrong."
-msgstr ""
+msgstr "問題が発生しました。"
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "ファイルを削除中…"
+msgstr "%d 個のファイルを削除しました。"
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "ゴミ箱に移動中…"
+msgstr "%d 個のファイルをゴミ箱に移動しました。"
 
 #: src/fsearch_window_actions.c:224
 msgid ""
@@ -1427,14 +1356,13 @@ msgid ""
 msgstr ""
 
 #: src/fsearch_window_actions.c:250
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "本当に"
+msgstr "%d 個のファイルのプロパティウィンドウを開いてもよろしいですか?"
 
 #: src/fsearch_window_actions.c:254
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "ファイルを開く"
+msgstr "ファイルのプロパティを開いています…"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -1450,20 +1378,19 @@ msgstr "開く(_O)"
 
 #: src/menus.ui:21
 msgid "Open Folder"
-msgstr "フォルダを開く"
+msgstr "フォルダーを開く"
 
 #: src/menus.ui:29
 msgid "Update Database"
-msgstr "データベースをアップデート"
+msgstr "データベースを更新"
 
 #: src/menus.ui:35
 msgid "Cancel Update"
-msgstr "アップデートを中断"
+msgstr "更新をキャンセル"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "新しいウィンドウ"
+msgstr "ウィンドウを閉じる"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -1475,7 +1402,7 @@ msgstr "コピー(_C)"
 
 #: src/menus.ui:62 src/menus.ui:228
 msgid "Cu_t"
-msgstr ""
+msgstr "切り取り(_T)"
 
 #: src/menus.ui:69
 msgid "Select All"
@@ -1507,19 +1434,19 @@ msgstr "次で開く(_W)"
 
 #: src/menus.ui:191
 msgid "_Open Folder"
-msgstr "フォルダを開く(_O)"
+msgstr "フォルダーを開く(_O)"
 
 #: src/menus.ui:213
 msgid "Copy as Text"
-msgstr ""
+msgstr "テキストとしてコピー"
 
 #: src/menus.ui:223
 msgid "Path + Name"
-msgstr ""
+msgstr "パス + 名前"
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
-msgstr "ゴミ箱に送る(_T)"
+msgstr "ゴミ箱に移動(_T)"
 
 #, fuzzy
 #~| msgid "Failed to open file"
