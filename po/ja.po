@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2024-05-11 04:49+0000\n"
+"PO-Revision-Date: 2024-05-11 05:26+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -49,12 +49,15 @@ msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch を使うことで、可能な限り簡単かつ高速にファイルとフォルダーを見つけら"
+"れます。数文字入力するだけで、検索結果がほとんど一瞬で表示されます。"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
-msgstr ""
+msgstr "大文字小文字を区別しない (例: \"<code>fsearch</code>\" を検索すると、"
+"\"FSearch\" にもヒット)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
@@ -90,7 +93,7 @@ msgstr "デフォルトの UI レイアウト"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
-msgstr "GNOME HIG により準拠したレイアウト"
+msgstr "より GNOME HIG に準拠したレイアウト"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 msgid "search"
@@ -138,28 +141,24 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch"
 msgid "New search engine"
-msgstr "FSearch"
+msgstr "新しい検索エンジン"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
-#| msgid "Show highlighted search terms"
 msgid "Greatly improved highlighting of search terms"
-msgstr "検索文字列を強調表示"
+msgstr "検索文字列の強調表示を大幅に改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid "Custom filters"
-msgstr ""
+msgstr "カスタムフィルター"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "ソートパフォーマンスを改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "スクロールパフォーマンスを改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
@@ -188,10 +187,8 @@ msgid ""
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "アプリケーションの設定を表示する"
+msgstr ".desktop ファイルのアプリケーションアイコンを表示するように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
@@ -242,7 +239,7 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
-msgstr ""
+msgstr "最初のリリース。"
 
 #: src/fsearch.c:243
 msgid "Saving…"
@@ -378,7 +375,7 @@ msgstr "画像"
 
 #: src/fsearch_filter.c:119
 msgid "Videos"
-msgstr "ビデオ"
+msgstr "動画"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
@@ -435,6 +432,9 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
+"このフィルターに対するマクロ。マクロを使うと、マクロ名に続けて ':' "
+"を検索欄に入力することで、このフィルターにアクセスできます\n"
+"                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -514,15 +514,15 @@ msgstr "Escape キーで終了"
 
 #: src/fsearch_preferences.ui:240
 msgid "with keyboard shortcuts or menu entries"
-msgstr ""
+msgstr "キーボードショートカットまたはメニュー項目から開いた場合"
 
 #: src/fsearch_preferences.ui:255
 msgid "with double click"
-msgstr ""
+msgstr "ダブルクリックで開いた場合"
 
 #: src/fsearch_preferences.ui:283
 msgid "Behaviour after successfully opening a file:"
-msgstr ""
+msgstr "ファイルを正常に開いた後の動作:"
 
 #: src/fsearch_preferences.ui:299
 msgid "Nothing"
@@ -602,7 +602,7 @@ msgstr "インターフェイス"
 
 #: src/fsearch_preferences.ui:669
 msgid "Search in path when query contains path separators"
-msgstr "クエリがパス区切り文字を含む場合はパスを検索"
+msgstr "クエリがパスの区切り文字を含む場合はパスを検索"
 
 #: src/fsearch_preferences.ui:683
 msgid "Search as you type"
@@ -1166,7 +1166,7 @@ msgstr "0/0"
 
 #: src/fsearch_statusbar.ui:253
 msgid "Number of selected files"
-msgstr "選択したフィルターの数"
+msgstr "選択したファイルの数"
 
 #: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:102
 msgid "Cancel database update"
@@ -1181,32 +1181,24 @@ msgid "(empty)"
 msgstr "(空)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains upper case characters.\n"
-#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
 "検索文字列に大文字が含まれています。\n"
-"<b>大文字/小文字を区別</b>は一時的に有効です。"
+"<b>大文字小文字を区別</b>は一時的に有効です。"
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
 msgstr "大文字小文字"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains upper case characters.\n"
-#| "<b>Match Case</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
-"検索文字列に大文字が含まれています。\n"
-"<b>大文字/小文字を区別</b>は一時的に有効です。"
+"検索文字列にパスの区切り文字が含まれています。\n"
+"<b>パスを検索</b>は一時的に有効です。"
 
 #: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
@@ -1258,7 +1250,7 @@ msgstr "大文字小文字を区別"
 
 #: src/fsearch_window.ui:171 src/menus.ui:120
 msgid "Enable RegEx"
-msgstr "正規表現を有効"
+msgstr "正規表現を有効にする"
 
 #: src/fsearch_window.ui:196 src/menus.ui:95
 msgid "Show Statusbar"
