@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2024-05-11 23:08+0000\n"
+"PO-Revision-Date: 2024-05-11 23:51+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -166,7 +166,7 @@ msgstr "選択中のファイルをデータベース更新後も維持するよ
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr "自由選択モードで自動的に結果一覧をスクロールするように修正"
+msgstr "自由選択モードで自動的に結果リストをスクロールするように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
@@ -211,7 +211,7 @@ msgstr "タイプが同じ複数のファイルを開く処理を改善 "
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr "サンドボックスモードでファイルを開く対応を改善"
+msgstr "サンドボックス内でファイルを開く対応を改善"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
@@ -235,7 +235,7 @@ msgstr "デフォルトで '/proc' と '/sys' を除外"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
-msgstr "'メニュー' キーまたは 'Shift + F10' "
+msgstr "'メニュー'キーまたは 'Shift + F10' "
 "の押下時にコンテキストメニューを開くように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
@@ -316,7 +316,7 @@ msgstr "以下のメディアタイプの情報取得中にエラーが発生し
 
 #: src/fsearch_file_utils.c:272
 msgid "No default application registered"
-msgstr "デフォルトのアプリケーションが未登録"
+msgstr "デフォルトのアプリケーションが未登録です"
 
 #: src/fsearch_file_utils.c:496
 msgctxt "Will be followed by the path of the folder."
@@ -702,7 +702,7 @@ msgstr "例: \".git;*.tmp\""
 
 #: src/fsearch_preferences.ui:1339
 msgid "Exclude hidden files and folders"
-msgstr "隠しファイルと隠しフォルダを除外"
+msgstr "隠しファイルと隠しフォルダーを除外"
 
 #: src/fsearch_preferences.ui:1361
 msgid "Exclude"
@@ -787,8 +787,8 @@ msgstr ""
 "有効にした場合、FSearch のウィンドウを開いた際に、以前のセッションで使用した"
 "ウィンドウサイズを復元します。\n"
 "\n"
-"ウィンドウマネージャーの中には、この要求を無視してウィンドウが別のサイズにな"
-"るように強制するものもあります。"
+"ウィンドウマネージャーの中には、この要求を無視してウィンドウを異なるサイズに"
+"強制するものもあります。"
 
 #: src/fsearch_preferences.ui:1493
 msgid ""
@@ -838,7 +838,7 @@ msgstr ""
 "\n"
 "有効にした場合、検索文字列を検索結果内で強調表示します。例えば \"foo\" "
 "と検索した場合、ファイル/フォルダー名の <i>foo</i> "
-"を含む部分が太字で強調表示されます。\n"
+"を含む部分が太字で強調表示されます:\n"
 "\n"
 "\t<b>foo</b>bar.txt\n"
 "\tfile.<b>foo</b>\n"
@@ -994,7 +994,7 @@ msgid ""
 msgstr ""
 "<b>文字入力のたびに検索:</b>\n"
 "\n"
-"有効にした場合、キーボード入力のたびに検索結果を自動的に更新します。\n"
+"有効にした場合、キー入力のたびに検索結果を自動的に更新します。\n"
 "\n"
 "無効にした場合、<i>Enter</i> "
 "キーを押すか検索ボタンを押した場合にのみ検索結果を更新します。 "
@@ -1118,7 +1118,7 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
-"<b>隠しファイルと隠しフォルダを除外:</b>\n"
+"<b>隠しファイルと隠しフォルダーを除外:</b>\n"
 "\n"
 "有効にした場合、隠しファイルと隠しフォルダー "
 "<i>(ドットから始まるすべてのファイルとフォルダー)</i> "
