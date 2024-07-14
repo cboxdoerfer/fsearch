@@ -572,14 +572,14 @@ fsearch_list_view_draw(GtkWidget *widget, cairo_t *cr) {
 
     if (gtk_cairo_should_draw_window(cr, gtk_widget_get_window(widget))) {
         gtk_render_background(context, cr, 0, 0, width, height);
-    }
 
-    if (clip_rec.y + clip_rec.height > view->header_height) {
-        fsearch_list_view_draw_list(widget, context, cr);
-    }
+        if (clip_rec.y + clip_rec.height > view->header_height) {
+            fsearch_list_view_draw_list(widget, context, cr);
+        }
 
-    if (clip_rec.y < view->header_height) {
-        fsearch_list_view_draw_column_header(widget, context, cr);
+        if (clip_rec.y < view->header_height) {
+            fsearch_list_view_draw_column_header(widget, context, cr);
+        }
     }
 
     return GDK_EVENT_PROPAGATE;
