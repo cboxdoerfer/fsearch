@@ -7,7 +7,7 @@
 #include "fsearch_utf.h"
 
 struct FsearchQueryMatchData {
-    FsearchDatabaseEntry *entry;
+    FsearchDatabaseEntryBase *entry;
 
     FsearchUtfBuilder *utf_name_builder;
     FsearchUtfBuilder *utf_path_builder;
@@ -110,7 +110,7 @@ fsearch_query_match_data_get_content_type_str(FsearchQueryMatchData *match_data)
     return match_data->content_type_buffer->str;
 }
 
-FsearchDatabaseEntry *
+FsearchDatabaseEntryBase *
 fsearch_query_match_data_get_entry(FsearchQueryMatchData *match_data) {
     return match_data->entry;
 }
@@ -179,7 +179,7 @@ fsearch_query_match_data_free(FsearchQueryMatchData *match_data) {
 }
 
 void
-fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDatabaseEntry *entry) {
+fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDatabaseEntryBase *entry) {
     if (!match_data) {
         return;
     }

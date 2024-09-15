@@ -89,7 +89,7 @@ fsearch_query_matches_everything(FsearchQuery *query) {
 }
 
 static bool
-highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, FsearchDatabaseEntryType type) {
+highlight(GNode *node, FsearchDatabaseEntryBase *entry, FsearchQueryMatchData *match_data, FsearchDatabaseEntryType type) {
     if (!node) {
         return true;
     }
@@ -124,7 +124,7 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match
 }
 
 static bool
-matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, FsearchDatabaseEntryType type) {
+matches(GNode *node, FsearchDatabaseEntryBase *entry, FsearchQueryMatchData *match_data, FsearchDatabaseEntryType type) {
     if (!node) {
         return true;
     }
@@ -159,7 +159,7 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_d
 }
 
 static bool
-filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, FsearchQuery *query) {
+filter_entry(FsearchDatabaseEntryBase *entry, FsearchQueryMatchData *match_data, FsearchQuery *query) {
     if (!query->filter) {
         return true;
     }
@@ -175,7 +175,7 @@ filter_entry(FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_data, Fse
 
 bool
 fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
     if (G_UNLIKELY(!match_data || !entry)) {
         return false;
     }
@@ -192,7 +192,7 @@ fsearch_query_highlight(FsearchQuery *query, FsearchQueryMatchData *match_data) 
 
 bool
 fsearch_query_match(FsearchQuery *query, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
     if (G_UNLIKELY(!match_data || !entry)) {
         return false;
     }

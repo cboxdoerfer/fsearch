@@ -333,7 +333,7 @@ index_store_has_index_with_same_id(FsearchDatabaseIndexStore *store, FsearchData
 }
 
 static void
-index_store_remove_entry(FsearchDatabaseIndexStore *store, FsearchDatabaseEntry *entry, FsearchDatabaseIndex *index) {
+index_store_remove_entry(FsearchDatabaseIndexStore *store, FsearchDatabaseEntryBase *entry, FsearchDatabaseIndex *index) {
     g_return_if_fail(store);
     g_return_if_fail(index);
 
@@ -385,7 +385,7 @@ index_store_remove_folders(FsearchDatabaseIndexStore *store, DynamicArray *folde
             continue;
         }
         for (uint32_t j = 0; j < darray_get_num_items(folders); ++j) {
-            FsearchDatabaseEntry *entry = darray_get_item(folders, j);
+            FsearchDatabaseEntryBase *entry = darray_get_item(folders, j);
             if (!fsearch_database_entries_container_steal(container, entry)) {
                 g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
             }
@@ -413,7 +413,7 @@ index_store_remove_files(FsearchDatabaseIndexStore *store, DynamicArray *files, 
             continue;
         }
         for (uint32_t j = 0; j < darray_get_num_items(files); ++j) {
-            FsearchDatabaseEntry *entry = darray_get_item(files, j);
+            FsearchDatabaseEntryBase *entry = darray_get_item(files, j);
             if (!fsearch_database_entries_container_steal(container, entry)) {
                 g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
             }
@@ -443,7 +443,7 @@ index_store_add_entries(FsearchDatabaseIndexStore *store, DynamicArray *entries,
         }
 
         for (uint32_t j = 0; j < darray_get_num_items(entries); ++j) {
-            FsearchDatabaseEntry *entry = darray_get_item(entries, j);
+            FsearchDatabaseEntryBase *entry = darray_get_item(entries, j);
             fsearch_database_entries_container_insert(container, entry);
         }
     }
@@ -781,15 +781,11 @@ index_store_start_monitoring(FsearchDatabaseIndexStore *store) {
 
 // region Database file
 
-#define NUM_DB_ENTRIES_FOR_POOL_BLOCK 10000
-
 #define DATABASE_MAJOR_VERSION 1
 #define DATABASE_MINOR_VERSION 0
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
 typedef struct {
-    FsearchMemoryPool *file_pool;
-    FsearchMemoryPool *folder_pool;
     DynamicArray *files[NUM_DATABASE_INDEX_PROPERTIES];
     DynamicArray *folders[NUM_DATABASE_INDEX_PROPERTIES];
     FsearchDatabaseIndexPropertyFlags flags;
@@ -800,11 +796,11 @@ update_folder_indices(DynamicArray *folders) {
     g_assert(folders);
     const uint32_t num_folders = darray_get_num_items(folders);
     for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
+        FsearchDatabaseEntryBase *folder = darray_get_item(folders, i);
         if (!folder) {
             continue;
         }
-        db_entry_set_index((FsearchDatabaseEntry *)folder, i);
+        db_entry_set_index(folder, i);
     }
 }
 
@@ -848,8 +844,9 @@ copy_bytes_and_return_new_src(void *dest, const uint8_t *src, size_t len) {
 static const uint8_t *
 database_file_load_entry_super_elements_from_memory(const uint8_t *data_block,
                                                     FsearchDatabaseIndexPropertyFlags index_flags,
-                                                    FsearchDatabaseEntry *entry,
-                                                    GString *previous_entry_name) {
+                                                    GString *previous_entry_name,
+                                                    FsearchDatabaseEntryBase **entry_out,
+                                                    FsearchDatabaseEntryType type) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint8_t name_offset = *data_block++;
 
@@ -868,22 +865,22 @@ database_file_load_entry_super_elements_from_memory(const uint8_t *data_block,
 
     // now we can build the new full file name
     g_string_append(previous_entry_name, name);
-    db_entry_set_name(entry, previous_entry_name->str);
 
+    *entry_out = db_entry_new(index_flags, previous_entry_name->str, NULL, type);
+    off_t size = 0;
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: size of file/folder
-        off_t size = 0;
         data_block = copy_bytes_and_return_new_src(&size, data_block, 8);
 
-        db_entry_set_size(entry, size);
+        db_entry_set_size(*entry_out, size);
     }
 
+    time_t mtime = 0;
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time file/folder
-        time_t mtime = 0;
         data_block = copy_bytes_and_return_new_src(&mtime, data_block, 8);
 
-        db_entry_set_mtime(entry, mtime);
+        db_entry_set_mtime(*entry_out, mtime);
     }
 
     return data_block;
@@ -895,7 +892,7 @@ database_file_read_element(void *restrict ptr, size_t size, FILE *restrict strea
 }
 
 static bool
-database_file_load_entry_super_elements(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_entry_name) {
+database_file_load_entry_super_elements(FILE *fp, FsearchDatabaseEntryBase *entry, GString *previous_entry_name) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint8_t name_offset = 0;
     if (!database_file_read_element(&name_offset, 1, fp)) {
@@ -1002,27 +999,29 @@ database_file_load_folders(FILE *fp,
     // load folders
     uint32_t idx = 0;
     for (idx = 0; idx < num_folders; idx++) {
-        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, idx);
-        FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+        FsearchDatabaseEntryBase *folder = NULL;
 
         // TODO: db_index is currently unused
         // db_index: the database index this folder belongs to
         uint16_t db_index = 0;
         fb = copy_bytes_and_return_new_src(&db_index, fb, 2);
 
-        fb = database_file_load_entry_super_elements_from_memory(fb, index_flags, entry, previous_entry_name);
+        fb = database_file_load_entry_super_elements_from_memory(fb,
+                                                                 index_flags,
+                                                                 previous_entry_name,
+                                                                 &folder,
+                                                                 DATABASE_ENTRY_TYPE_NONE);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
         fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
 
-        if (parent_idx != db_entry_get_idx(entry)) {
-            FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
-            db_entry_set_parent(entry, parent);
+        if (parent_idx != idx) {
+            db_entry_set_parent(folder, GINT_TO_POINTER(parent_idx));
         }
         else {
             // parent_idx and idx are the same (i.e. folder is a root index) so it has no parent
-            db_entry_set_parent(entry, NULL);
+            db_entry_set_parent(folder, NULL);
         }
     }
 
@@ -1044,7 +1043,6 @@ database_file_load_folders(FILE *fp,
 static bool
 database_file_load_files(FILE *fp,
                          FsearchDatabaseIndexPropertyFlags index_flags,
-                         FsearchMemoryPool *pool,
                          DynamicArray *folders,
                          DynamicArray *files,
                          uint32_t num_files,
@@ -1062,17 +1060,18 @@ database_file_load_files(FILE *fp,
     // load folders
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
-        FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(pool);
-        db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
-        db_entry_set_index(entry, idx);
-
-        fb = database_file_load_entry_super_elements_from_memory(fb, index_flags, entry, previous_entry_name);
+        FsearchDatabaseEntryBase *entry = NULL;
+        fb = database_file_load_entry_super_elements_from_memory(fb,
+                                                                 index_flags,
+                                                                 previous_entry_name,
+                                                                 &entry,
+                                                                 DATABASE_ENTRY_TYPE_NONE);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
         fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
 
-        FsearchDatabaseEntryFolder *parent = darray_get_item(folders, parent_idx);
+        FsearchDatabaseEntryBase *parent = darray_get_item(folders, parent_idx);
         db_entry_set_parent(entry, parent);
 
         darray_add_item(files, entry);
@@ -1170,7 +1169,7 @@ database_file_write_data(FILE *fp, const void *data, size_t data_size, size_t nu
 static size_t
 database_file_save_entry_super_elements(FILE *fp,
                                         FsearchDatabaseIndexPropertyFlags index_flags,
-                                        FsearchDatabaseEntry *entry,
+                                        FsearchDatabaseEntryBase *entry,
                                         uint32_t parent_idx,
                                         GString *previous_entry_name,
                                         GString *new_entry_name,
@@ -1282,14 +1281,10 @@ database_file_save_files(FILE *fp,
     g_autoptr(GString) name_new = g_string_sized_new(256);
 
     for (uint32_t i = 0; i < num_files; i++) {
-        FsearchDatabaseEntry *entry = darray_get_item(files, i);
+        FsearchDatabaseEntryBase *entry = darray_get_item(files, i);
 
-        // let's also update the idx of the file here while we're at it to make sure we have the correct
-        // idx set when we store the fast sort indexes
-        db_entry_set_index(entry, i);
-
-        FsearchDatabaseEntryFolder *parent = db_entry_get_parent(entry);
-        const uint32_t parent_idx = db_entry_get_idx((FsearchDatabaseEntry *)parent);
+        FsearchDatabaseEntryBase *parent = db_entry_get_parent(entry);
+        const uint32_t parent_idx = db_entry_get_index(parent);
         bytes_written +=
             database_file_save_entry_super_elements(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true)
@@ -1307,8 +1302,8 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
     g_assert(indexes);
 
     for (int i = 0; i < num_entries; i++) {
-        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
-        indexes[i] = db_entry_get_idx(entry);
+        FsearchDatabaseEntryBase *entry = darray_get_item(entries, i);
+        indexes[i] = db_entry_get_index(entry);
     }
     return indexes;
 }
@@ -1401,7 +1396,7 @@ database_file_save_folders(FILE *fp,
     g_autoptr(GString) name_new = g_string_sized_new(256);
 
     for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntry *entry = darray_get_item(folders, i);
+        FsearchDatabaseEntryBase *entry = darray_get_item(folders, i);
 
         const uint16_t db_index = db_entry_get_db_index(entry);
         bytes_written += database_file_write_data(fp, &db_index, 2, 1, write_failed);
@@ -1410,8 +1405,8 @@ database_file_save_folders(FILE *fp,
             return bytes_written;
         }
 
-        FsearchDatabaseEntryFolder *parent = db_entry_get_parent(entry);
-        const uint32_t parent_idx = parent ? db_entry_get_idx((FsearchDatabaseEntry *)parent) : db_entry_get_idx(entry);
+        FsearchDatabaseEntryBase *parent = db_entry_get_parent(entry);
+        const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
         bytes_written +=
             database_file_save_entry_super_elements(fp, index_flags, entry, parent_idx, name_prev, name_new, write_failed);
         if (*write_failed == true) {
@@ -1643,12 +1638,6 @@ database_file_load(const char *file_path,
     DynamicArray *files = NULL;
     DynamicArray *sorted_folders[NUM_DATABASE_INDEX_PROPERTIES] = {NULL};
     DynamicArray *sorted_files[NUM_DATABASE_INDEX_PROPERTIES] = {NULL};
-    FsearchMemoryPool *file_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
-                                                           db_entry_get_sizeof_file_entry(),
-                                                           (GDestroyNotify)db_entry_destroy);
-    FsearchMemoryPool *folder_pool = fsearch_memory_pool_new(NUM_DB_ENTRIES_FOR_POOL_BLOCK,
-                                                             db_entry_get_sizeof_folder_entry(),
-                                                             (GDestroyNotify)db_entry_destroy);
 
     if (!database_file_load_header(fp)) {
         goto load_fail;
@@ -1697,21 +1686,17 @@ database_file_load(const char *file_path,
     sorted_folders[DATABASE_INDEX_PROPERTY_NAME] = darray_new(num_folders);
     folders = sorted_folders[DATABASE_INDEX_PROPERTY_NAME];
 
-    for (uint32_t i = 0; i < num_folders; i++) {
-        FsearchDatabaseEntryFolder *folder = fsearch_memory_pool_malloc(folder_pool);
-        FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
-        db_entry_set_index(entry, i);
-        db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
-        db_entry_set_parent(entry, NULL);
-        darray_add_item(folders, folder);
-    }
-
     if (status_cb) {
         status_cb(_("Loading folders…"));
     }
     // load folders
     if (!database_file_load_folders(fp, index_flags, folders, num_folders, folder_block_size)) {
         goto load_fail;
+    }
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryBase *folder = darray_get_item(folders, i);
+        uint32_t parent_idx = GPOINTER_TO_INT(db_entry_get_parent(folder));
+        db_entry_set_parent(folder, darray_get_item(folders, parent_idx));
     }
 
     if (status_cb) {
@@ -1720,7 +1705,7 @@ database_file_load(const char *file_path,
     // load files
     sorted_files[DATABASE_INDEX_PROPERTY_NAME] = darray_new(num_files);
     files = sorted_files[DATABASE_INDEX_PROPERTY_NAME];
-    if (!database_file_load_files(fp, index_flags, file_pool, folders, files, num_files, file_block_size)) {
+    if (!database_file_load_files(fp, index_flags, folders, files, num_files, file_block_size)) {
         goto load_fail;
     }
 
@@ -1756,9 +1741,6 @@ load_fail:
         g_clear_pointer(&sorted_folders[i], darray_unref);
         g_clear_pointer(&sorted_files[i], darray_unref);
     }
-    g_clear_pointer(&file_pool, fsearch_memory_pool_free_pool);
-    g_clear_pointer(&folder_pool, fsearch_memory_pool_free_pool);
-
     return false;
 }
 // endregion
@@ -1824,7 +1806,7 @@ get_idx_for_sort_type(uint32_t idx, uint32_t num_files, uint32_t num_folders, Gt
     return idx;
 }
 
-static FsearchDatabaseEntry *
+static FsearchDatabaseEntryBase *
 search_view_get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
     if (!view->folder_container) {
         return NULL;
@@ -1848,7 +1830,7 @@ search_view_get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
 }
 
 static bool
-search_view_is_selected(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry) {
+search_view_is_selected(FsearchDatabaseSearchView *view, FsearchDatabaseEntryBase *entry) {
     if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FILE) {
         return fsearch_selection_is_selected(view->file_selection, entry);
     }
@@ -1865,7 +1847,7 @@ search_view_toggle_range(FsearchDatabaseSearchView *view, int32_t start_idx, int
         end_idx = tmp;
     }
     for (int32_t i = start_idx; i <= end_idx; ++i) {
-        FsearchDatabaseEntry *entry = search_view_get_entry_for_idx(view, i);
+        FsearchDatabaseEntryBase *entry = search_view_get_entry_for_idx(view, i);
         if (!entry) {
             continue;
         }
@@ -1887,7 +1869,7 @@ search_view_select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int
         end_idx = tmp;
     }
     for (int32_t i = start_idx; i <= end_idx; ++i) {
-        FsearchDatabaseEntry *entry = search_view_get_entry_for_idx(view, i);
+        FsearchDatabaseEntryBase *entry = search_view_get_entry_for_idx(view, i);
         if (!entry) {
             continue;
         }
@@ -1902,7 +1884,7 @@ search_view_select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int
 }
 
 static bool
-search_view_entry_matches_query(FsearchDatabaseSearchView *view, FsearchDatabaseEntry *entry) {
+search_view_entry_matches_query(FsearchDatabaseSearchView *view, FsearchDatabaseEntryBase *entry) {
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
     fsearch_query_match_data_set_entry(match_data, entry);
 
@@ -1920,7 +1902,7 @@ typedef struct {
 } FsearchDatabaseAddRemoveContext;
 
 static bool
-search_view_result_add(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *view) {
+search_view_result_add(FsearchDatabaseEntryBase *entry, FsearchDatabaseSearchView *view) {
     if (!entry || !search_view_entry_matches_query(view, entry)) {
         return true;
     }
@@ -1947,7 +1929,7 @@ search_view_results_add_cb(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static bool
-search_view_result_remove(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *view) {
+search_view_result_remove(FsearchDatabaseEntryBase *entry, FsearchDatabaseSearchView *view) {
     if (!entry || !search_view_entry_matches_query(view, entry)) {
         return true;
     }
@@ -2079,7 +2061,7 @@ database_get_entry_info_non_blocking(FsearchDatabase *self,
 
     const FsearchDatabaseEntryInfoFlags flags = fsearch_database_work_item_info_get_flags(work);
 
-    FsearchDatabaseEntry *entry = search_view_get_entry_for_idx(view, idx);
+    FsearchDatabaseEntryBase *entry = search_view_get_entry_for_idx(view, idx);
     if (!entry) {
         return FSEARCH_RESULT_DB_ENTRY_NOT_FOUND;
     }
@@ -2300,7 +2282,7 @@ database_modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
         return;
     }
 
-    FsearchDatabaseEntry *entry = search_view_get_entry_for_idx(view, start_idx);
+    FsearchDatabaseEntryBase *entry = search_view_get_entry_for_idx(view, start_idx);
     if (!entry) {
         return;
     }
@@ -2880,7 +2862,7 @@ typedef struct {
 
 static void
 selection_foreach_cb(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabaseEntry *entry = value;
+    FsearchDatabaseEntryBase *entry = value;
     if (G_UNLIKELY(!entry)) {
         return;
     }

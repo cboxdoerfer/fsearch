@@ -3,7 +3,6 @@
 #include <stdlib.h>
 
 #include <src/fsearch_limits.h>
-#include <src/fsearch_memory_pool.h>
 #include <src/fsearch_query.h>
 
 typedef struct QueryTest {
@@ -18,44 +17,41 @@ typedef struct QueryTest {
 static void
 test_query(QueryTest *t) {
     FsearchFilterManager *manager = fsearch_filter_manager_new_with_defaults();
-    FsearchMemoryPool *file_pool =
-        fsearch_memory_pool_new(100, db_entry_get_sizeof_file_entry(), (GDestroyNotify)db_entry_destroy);
-    FsearchMemoryPool *folder_pool =
-        fsearch_memory_pool_new(100, db_entry_get_sizeof_folder_entry(), (GDestroyNotify)db_entry_destroy);
 
     FsearchQuery *q = fsearch_query_new(t->needle, NULL, manager, t->flags, "debug_query");
 
-    FsearchDatabaseEntry *entry = NULL;
+    FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE;
+    FsearchDatabaseEntryBase *entry = NULL;
     if (g_str_has_prefix(t->haystack, "/")) {
         const char *haystack = t->haystack + 1;
         g_auto(GStrv) names = g_strsplit(haystack, "/", -1);
         const guint names_len = g_strv_length(names);
 
-        entry = fsearch_memory_pool_malloc(folder_pool);
-        db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
-        db_entry_set_name(entry, "");
+        entry = db_entry_new(flags, "1", NULL, DATABASE_ENTRY_TYPE_FOLDER);
 
         if (names_len > 0) {
             for (int i = 0; i < names_len - 1; i++) {
-                FsearchDatabaseEntry *old = entry;
-                entry = fsearch_memory_pool_malloc(folder_pool);
-                db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
-                db_entry_set_name(entry, names[i]);
-                db_entry_set_parent(entry, (FsearchDatabaseEntryFolder *)old);
+                FsearchDatabaseEntryBase *old = entry;
+                entry = db_entry_new(flags, names[i], old, DATABASE_ENTRY_TYPE_FOLDER);
             }
-            FsearchDatabaseEntry *old = entry;
-            entry = fsearch_memory_pool_malloc(t->is_dir ? folder_pool : file_pool);
-            db_entry_set_name(entry, names[names_len - 1]);
-            db_entry_set_type(entry, t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
-            db_entry_set_size(entry, t->size);
-            db_entry_set_parent(entry, (FsearchDatabaseEntryFolder *)old);
+            FsearchDatabaseEntryBase *old = entry;
+            entry = db_entry_new_with_attributes(flags,
+                                                 names[names_len - 1],
+                                                 old,
+                                                 t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE,
+                                                 DATABASE_INDEX_PROPERTY_SIZE,
+                                                 t->size,
+                                                 DATABASE_INDEX_PROPERTY_NONE);
         }
     }
     else {
-        entry = fsearch_memory_pool_malloc(t->is_dir ? folder_pool : file_pool);
-        db_entry_set_name(entry, t->haystack);
-        db_entry_set_size(entry, t->size);
-        db_entry_set_type(entry, t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
+        entry = db_entry_new_with_attributes(flags,
+                                             t->haystack,
+                                             NULL,
+                                             t->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE,
+                                             DATABASE_INDEX_PROPERTY_SIZE,
+                                             t->size,
+                                             DATABASE_INDEX_PROPERTY_NONE);
     }
 
     FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
@@ -70,9 +66,6 @@ test_query(QueryTest *t) {
         g_printerr("[%s] should%s match [name:%s, size:%ld]\n", t->needle, t->result ? "" : " NOT", t->haystack, t->size);
     }
     g_assert_true(found == t->result);
-
-    g_clear_pointer(&file_pool, fsearch_memory_pool_free_pool);
-    g_clear_pointer(&folder_pool, fsearch_memory_pool_free_pool);
 }
 
 static bool
@@ -273,6 +266,7 @@ test_main(void) {
 
         for (uint32_t i = 0; i < G_N_ELEMENTS(main_tests); i++) {
             QueryTest *t = &main_tests[i];
+            g_print("main_query: %d\n", i);
             test_query(t);
         }
     }

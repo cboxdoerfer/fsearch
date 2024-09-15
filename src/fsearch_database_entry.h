@@ -78,9 +78,6 @@ void
 db_entry_set_parent(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryBase *parent);
 
 void
-db_entry_set_type(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryType type);
-
-void
 db_entry_set_db_index(FsearchDatabaseEntryBase *entry, uint32_t db_index);
 
 uint8_t
@@ -146,9 +143,6 @@ db_entry_get_dummy_for_name_and_parent(FsearchDatabaseEntryBase *parent, const c
 void
 db_entry_append_content_type(FsearchDatabaseEntryBase *entry, GString *str);
 
-void
-db_entry_destroy(FsearchDatabaseEntryBase *entry);
-
 int
 db_entry_compare_entries_by_extension(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b);
 
@@ -175,6 +169,13 @@ db_entry_compare_entries_by_name(FsearchDatabaseEntryBase **a, FsearchDatabaseEn
 
 FsearchDatabaseEntryBase *
 db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBase *parent, FsearchDatabaseEntryType type);
+
+FsearchDatabaseEntryBase *
+db_entry_new_with_attributes(uint32_t attribute_flags,
+                             const char *name,
+                             FsearchDatabaseEntryBase *parent,
+                             FsearchDatabaseEntryType type,
+                             ...);
 
 bool
 db_entry_get_attribute_name(FsearchDatabaseEntryBase *entry, const char **name);

@@ -32,20 +32,20 @@ void
 fsearch_database_entries_container_balance(FsearchDatabaseEntriesContainer *self);
 
 void
-fsearch_database_entries_container_insert(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntry *entry);
+fsearch_database_entries_container_insert(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntryBase *entry);
 
-FsearchDatabaseEntry *
-fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntry *entry);
+FsearchDatabaseEntryBase *
+fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntryBase *entry);
 
 DynamicArray *
 fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesContainer *self,
-                                                     FsearchDatabaseEntryFolder *folder,
+                                                     FsearchDatabaseEntryBase *folder,
                                                      int32_t num_known_descendants);
 
-FsearchDatabaseEntry *
-fsearch_database_entries_container_find(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntry *entry);
+FsearchDatabaseEntryBase *
+fsearch_database_entries_container_find(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntryBase *entry);
 
-FsearchDatabaseEntry *
+FsearchDatabaseEntryBase *
 fsearch_database_entries_container_get_entry(FsearchDatabaseEntriesContainer *self, uint32_t idx);
 
 uint32_t

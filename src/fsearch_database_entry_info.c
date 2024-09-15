@@ -151,7 +151,7 @@ fsearch_database_entry_info_unref(FsearchDatabaseEntryInfo *info) {
 }
 
 FsearchDatabaseEntryInfo *
-fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
+fsearch_database_entry_info_new(FsearchDatabaseEntryBase *entry,
                                 FsearchQuery *query,
                                 uint32_t idx,
                                 bool is_selected,

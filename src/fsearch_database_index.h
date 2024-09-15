@@ -6,7 +6,6 @@
 #include "fsearch_database_include.h"
 #include "fsearch_database_index_event.h"
 #include "fsearch_database_index_properties.h"
-#include "fsearch_memory_pool.h"
 
 #include <gio/gio.h>
 
@@ -41,8 +40,6 @@ FsearchDatabaseIndex *
 fsearch_database_index_new_with_content(uint32_t id,
                                         FsearchDatabaseInclude *include,
                                         FsearchDatabaseExcludeManager *exclude_manager,
-                                        FsearchMemoryPool *file_pool,
-                                        FsearchMemoryPool *folder_pool,
                                         DynamicArray *files,
                                         DynamicArray *folders,
                                         FsearchDatabaseIndexPropertyFlags flags);
@@ -65,12 +62,12 @@ fsearch_database_index_get_id(FsearchDatabaseIndex *self);
 FsearchDatabaseIndexPropertyFlags
 fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
 
-FsearchDatabaseEntry *
+FsearchDatabaseEntryBase *
 fsearch_database_index_add_file(FsearchDatabaseIndex *self,
                                 const char *name,
                                 off_t size,
                                 time_t mtime,
-                                FsearchDatabaseEntryFolder *parent);
+                                FsearchDatabaseEntryBase *parent);
 
 FsearchDatabaseEntryFolder *
 fsearch_database_index_add_folder(FsearchDatabaseIndex *self,

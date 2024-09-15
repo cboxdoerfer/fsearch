@@ -51,10 +51,10 @@ static size_t entry_base_size = 0;
 
 static void
 build_path_recursively(FsearchDatabaseEntryBase *folder, GString *str, size_t name_offset) {
-    g_assert(folder->type == DATABASE_ENTRY_TYPE_FOLDER);
     if (G_UNLIKELY(!folder)) {
         return;
     }
+    g_assert(folder->type == DATABASE_ENTRY_TYPE_FOLDER);
     g_assert(folder->data != NULL);
 
     if (G_LIKELY(folder->parent)) {
@@ -293,6 +293,12 @@ db_entry_get_mark(FsearchDatabaseEntryBase *entry) {
     return entry ? entry->mark : 0;
 }
 
+void
+db_entry_set_mark(FsearchDatabaseEntryBase *entry, uint8_t mark) {
+    g_return_if_fail(entry);
+    entry->mark = mark;
+}
+
 uint32_t
 db_entry_get_attribute_flags(FsearchDatabaseEntryBase *entry) {
     return entry ? entry->attribute_flags : 0;
@@ -429,7 +435,7 @@ db_entry_compare_entries_by_full_path(FsearchDatabaseEntryBase **a, FsearchDatab
         a_path[a_n_path_elements - i - 1] = db_entry_get_name_raw(tmp);
         tmp = tmp->parent;
     }
-    tmp = (FsearchDatabaseEntry *)entry_b;
+    tmp = (FsearchDatabaseEntryBase *)entry_b;
     for (uint32_t i = 0; i < b_n_path_elements; i++) {
         b_path[b_n_path_elements - i - 1] = db_entry_get_name_raw(tmp);
         tmp = tmp->parent;
@@ -753,6 +759,59 @@ db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBas
     return entry;
 }
 
+FsearchDatabaseEntryBase *
+db_entry_new_with_attributes(uint32_t attribute_flags,
+                             const char *name,
+                             FsearchDatabaseEntryBase *parent,
+                             FsearchDatabaseEntryType type,
+                             ...) {
+    va_list args;
+    va_start(args, type);
+
+    FsearchDatabaseEntryBase *entry = db_entry_new(attribute_flags, name, parent, type);
+
+    FsearchDatabaseIndexProperty attribute = va_arg(args, int);
+    while (attribute != DATABASE_INDEX_PROPERTY_NONE) {
+        int32_t attribute_val_i32 = 0;
+        int64_t attribute_val_i64 = 0;
+        int32_t attribute_val_test_i32 = 0;
+        int64_t attribute_val_test_i64 = 0;
+        switch (attribute) {
+        case DATABASE_INDEX_PROPERTY_SIZE:
+        case DATABASE_INDEX_PROPERTY_MODIFICATION_TIME:
+        case DATABASE_INDEX_PROPERTY_ACCESS_TIME:
+        case DATABASE_INDEX_PROPERTY_CREATION_TIME:
+        case DATABASE_INDEX_PROPERTY_STATUS_CHANGE_TIME:
+            attribute_val_i64 = va_arg(args, int64_t);
+            db_entry_set_attribute(entry, attribute, &attribute_val_i64, sizeof(int64_t));
+            // db_entry_get_attribute(entry, attribute, &attribute_val_test_i64, sizeof(attribute_val_test_i64));
+            // g_assert(attribute_val_test_i64 == attribute_val_i64);
+            break;
+        case DATABASE_INDEX_PROPERTY_DB_INDEX:
+        case DATABASE_INDEX_PROPERTY_NUM_FILES:
+        case DATABASE_INDEX_PROPERTY_NUM_FOLDERS:
+            attribute_val_i32 = va_arg(args, int32_t);
+            db_entry_set_attribute(entry, attribute, &attribute_val_i32, sizeof(int32_t));
+            // db_entry_get_attribute(entry, attribute, &attribute_val_test_i32, sizeof(attribute_val_test_i32));
+            // g_assert(attribute_val_test_i32 == attribute_val_i32);
+            break;
+        case DATABASE_INDEX_PROPERTY_NONE:
+        case DATABASE_INDEX_PROPERTY_NAME:
+        case DATABASE_INDEX_PROPERTY_PATH:
+        case DATABASE_INDEX_PROPERTY_PATH_FULL:
+        case DATABASE_INDEX_PROPERTY_FILETYPE:
+        case DATABASE_INDEX_PROPERTY_EXTENSION:
+        case NUM_DATABASE_INDEX_PROPERTIES:
+            g_assert_not_reached();
+        }
+        attribute = va_arg(args, int);
+    }
+
+    va_end(args);
+
+    return entry;
+}
+
 bool
 db_entry_get_attribute_name(FsearchDatabaseEntryBase *entry, const char **name) {
     g_return_val_if_fail(entry, false);
@@ -795,8 +854,10 @@ db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProp
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(src, false);
     size_t offset = 0;
+    int old_flags = entry->attribute_flags;
     if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
         memcpy(entry->data + offset, src, size);
+        g_assert(old_flags == entry->attribute_flags);
         return true;
     }
     return false;

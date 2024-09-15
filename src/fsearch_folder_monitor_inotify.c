@@ -87,8 +87,8 @@ inotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             event = (const struct inotify_event *)ptr;
 
             g_mutex_lock(&self->mutex);
-            FsearchDatabaseEntryFolder *folder = g_hash_table_lookup(self->watch_descriptors_to_folders,
-                                                                     GINT_TO_POINTER(event->wd));
+            FsearchDatabaseEntryBase *folder = g_hash_table_lookup(self->watch_descriptors_to_folders,
+                                                                   GINT_TO_POINTER(event->wd));
             g_mutex_unlock(&self->mutex);
 
             if (!folder) {
@@ -174,7 +174,9 @@ fsearch_folder_monitor_inotify_free(FsearchFolderMonitorInotify *self) {
 }
 
 bool
-fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntry *folder, const char *path) {
+fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self,
+                                     FsearchDatabaseEntryBase *folder,
+                                     const char *path) {
     const int32_t wd = inotify_add_watch(self->fd, path, INOTIFY_FOLDER_MASK);
     if (wd < 0) {
         g_debug("failed to add inotify watch");
@@ -186,9 +188,10 @@ fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchD
 }
 
 void
-fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntry *folder) {
+fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntryBase *folder) {
     int32_t wd = GPOINTER_TO_INT(g_hash_table_lookup(self->watched_folders_to_descriptors, folder));
-    FsearchDatabaseEntry *watched_folder = g_hash_table_lookup(self->watch_descriptors_to_folders, GINT_TO_POINTER(wd));
+    FsearchDatabaseEntryBase *watched_folder = g_hash_table_lookup(self->watch_descriptors_to_folders,
+                                                                   GINT_TO_POINTER(wd));
     if (watched_folder == folder) {
         if (inotify_rm_watch(self->fd, wd)) {
             g_debug("[unwatch_folder] failed to remove inotify watch descriptor: %d", wd);

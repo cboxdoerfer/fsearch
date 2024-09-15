@@ -4,13 +4,10 @@
 #include "fsearch_database_include_manager.h"
 #include "fsearch_folder_monitor_fanotify.h"
 #include "fsearch_folder_monitor_inotify.h"
-#include "fsearch_memory_pool.h"
 
 bool
 db_scan_folder(const char *path,
-               FsearchDatabaseEntryFolder *parent,
-               FsearchMemoryPool *folder_pool,
-               FsearchMemoryPool *file_pool,
+               FsearchDatabaseEntryBase *parent,
                DynamicArray *folders,
                DynamicArray *files,
                FsearchDatabaseExcludeManager *exclude_manager,

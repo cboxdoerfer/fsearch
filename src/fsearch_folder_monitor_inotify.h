@@ -13,7 +13,7 @@ void
 fsearch_folder_monitor_inotify_free(FsearchFolderMonitorInotify *self);
 
 bool
-fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntry *folder, const char *path);
+fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntryBase *folder, const char *path);
 
 void
-fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntry *folder);
+fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntryBase *folder);

@@ -94,7 +94,7 @@ confirm_file_open_action(GtkWidget *parent, int num_files) {
 }
 
 static void
-prepend_path_uri_to_array(FsearchDatabaseEntry *entry, gpointer user_data) {
+prepend_path_uri_to_array(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     GPtrArray **file_array = (GPtrArray **)user_data;
     GString *path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
@@ -107,8 +107,8 @@ prepend_path_uri_to_array(FsearchDatabaseEntry *entry, gpointer user_data) {
 
 static void
 prepend_string_to_list(GList **string_list,
-                       FsearchDatabaseEntry *entry,
-                       GString *(*get_string_func)(FsearchDatabaseEntry *)) {
+                       FsearchDatabaseEntryBase *entry,
+                       GString *(*get_string_func)(FsearchDatabaseEntryBase *)) {
     if (!entry || !string_list || !get_string_func) {
         return;
     }
@@ -129,7 +129,9 @@ append_line(GString *str, const char *text) {
 }
 
 static void
-append_line_to_string(GString *buffer, FsearchDatabaseEntry *entry, GString *(*get_string_func)(FsearchDatabaseEntry *)) {
+append_line_to_string(GString *buffer,
+                      FsearchDatabaseEntryBase *entry,
+                      GString *(*get_string_func)(FsearchDatabaseEntryBase *)) {
     if (!entry || !buffer || !get_string_func) {
         return;
     }
@@ -142,22 +144,22 @@ append_line_to_string(GString *buffer, FsearchDatabaseEntry *entry, GString *(*g
 }
 
 static void
-prepend_full_path_to_list(FsearchDatabaseEntry *entry, gpointer user_data) {
+prepend_full_path_to_list(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     prepend_string_to_list(user_data, entry, db_entry_get_path_full);
 }
 
 static void
-append_full_path_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+append_full_path_to_string(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     append_line_to_string(user_data, entry, db_entry_get_path_full);
 }
 
 static void
-append_path_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+append_path_to_string(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     append_line_to_string(user_data, entry, db_entry_get_path);
 }
 
 static void
-append_name_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+append_name_to_string(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     append_line_to_string(user_data, entry, db_entry_get_name_for_display);
 }
 
@@ -361,7 +363,7 @@ fsearch_window_action_copy_name(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-collect_selected_entry_parent_path(FsearchDatabaseEntry *entry, gpointer user_data) {
+collect_selected_entry_parent_path(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     GList **paths = user_data;
     GString *parent_path = db_entry_get_path(entry);
     g_return_if_fail(parent_path);
@@ -370,7 +372,7 @@ collect_selected_entry_parent_path(FsearchDatabaseEntry *entry, gpointer user_da
 }
 
 static void
-collect_selected_entry_path(FsearchDatabaseEntry *entry, gpointer user_data) {
+collect_selected_entry_path(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     GList **paths = user_data;
     GString *path = db_entry_get_path_full(entry);
     g_return_if_fail(path);
@@ -379,7 +381,7 @@ collect_selected_entry_path(FsearchDatabaseEntry *entry, gpointer user_data) {
 }
 
 static void
-append_path_to_list(FsearchDatabaseEntry *entry, gpointer data) {
+append_path_to_list(FsearchDatabaseEntryBase *entry, gpointer data) {
     GString *path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
@@ -388,7 +390,7 @@ append_path_to_list(FsearchDatabaseEntry *entry, gpointer data) {
 }
 
 static void
-append_file_to_list(FsearchDatabaseEntry *entry, gpointer data) {
+append_file_to_list(FsearchDatabaseEntryBase *entry, gpointer data) {
     g_autoptr(GString) path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 

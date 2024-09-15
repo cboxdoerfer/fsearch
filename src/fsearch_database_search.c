@@ -87,7 +87,7 @@ db_search_worker(void *data) {
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
-    FsearchDatabaseEntry **results = (FsearchDatabaseEntry **)ctx->results;
+    FsearchDatabaseEntryBase **results = (FsearchDatabaseEntryBase **)ctx->results;
     DynamicArray *entries = ctx->entries;
 
     if (!entries) {
@@ -101,7 +101,7 @@ db_search_worker(void *data) {
         if (G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
             break;
         }
-        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
+        FsearchDatabaseEntryBase *entry = darray_get_item(entries, i);
         fsearch_query_match_data_set_entry(match_data, entry);
         if (fsearch_query_match(query, match_data)) {
             results[num_results++] = entry;
@@ -176,9 +176,6 @@ db_search_entries(FsearchQuery *q,
 
     for (uint32_t i = 0; i < num_threads; i++) {
         DatabaseSearchWorkerContext *ctx = thread_data[i];
-        if (!ctx) {
-            break;
-        }
 
         darray_add_items(results, (void **)ctx->results, ctx->num_results);
 

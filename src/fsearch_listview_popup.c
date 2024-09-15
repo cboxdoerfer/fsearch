@@ -86,7 +86,7 @@ refresh_applications_for_content_type(GHashTable *applications, const char *cont
 }
 
 static void
-intersect_supported_appliations(FsearchDatabaseEntry *entry, gpointer user_data) {
+intersect_supported_appliations(FsearchDatabaseEntryBase *entry, gpointer user_data) {
     struct content_type_context *ctx = user_data;
     if (!ctx->first_run && g_hash_table_size(ctx->applications) == 0) {
         // there are already no applications which can open all processed entries,

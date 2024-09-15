@@ -92,7 +92,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             g_autoptr(GBytes) fid_bytes = create_bytes_for_static_handle(handle);
 
             g_mutex_lock(&self->mutex);
-            FsearchDatabaseEntryFolder *watched_entry = g_hash_table_lookup(self->handles_to_folders, fid_bytes);
+            FsearchDatabaseEntryBase *watched_entry = g_hash_table_lookup(self->handles_to_folders, fid_bytes);
             g_mutex_unlock(&self->mutex);
 
             if (!watched_entry) {
@@ -227,7 +227,9 @@ fsearch_folder_monitor_fanotify_free(FsearchFolderMonitorFanotify *self) {
 }
 
 bool
-fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntry *folder, const char *path) {
+fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self,
+                                      FsearchDatabaseEntryBase *folder,
+                                      const char *path) {
     g_assert(folder != NULL);
     struct statfs buf;
     if (statfs(path, &buf) < 0) {
@@ -276,7 +278,7 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, Fsearc
 }
 
 void
-fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntry *folder) {
+fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntryBase *folder) {
     GBytes *fanotify_handle_bytes = g_hash_table_lookup(self->folders_to_handles, folder);
     if (fanotify_handle_bytes) {
         g_hash_table_remove(self->handles_to_folders, fanotify_handle_bytes);

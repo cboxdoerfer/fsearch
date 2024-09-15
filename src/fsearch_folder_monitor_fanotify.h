@@ -13,7 +13,9 @@ void
 fsearch_folder_monitor_fanotify_free(FsearchFolderMonitorFanotify *self);
 
 bool
-fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntry *folder, const char *path);
+fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self,
+                                      FsearchDatabaseEntryBase *folder,
+                                      const char *path);
 
 void
-fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntry *folder);
+fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntryBase *folder);
