@@ -856,10 +856,8 @@ db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProp
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(src, false);
     size_t offset = 0;
-    int old_flags = entry->attribute_flags;
     if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
         memcpy(entry->data + offset, src, size);
-        g_assert(old_flags == entry->attribute_flags);
         return true;
     }
     return false;
