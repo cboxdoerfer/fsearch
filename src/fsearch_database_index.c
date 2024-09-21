@@ -263,7 +263,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         g_autoptr(DynamicArray) files = darray_new(1);
         darray_add_item(files, entry);
         propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, NULL, files);
-        g_clear_pointer(&entry, free);
+        g_clear_pointer(&entry, db_entry_free);
         return;
     }
 
@@ -306,7 +306,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     if (files) {
         for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
             FsearchDatabaseEntryBase *file = darray_get_item(files, i);
-            g_clear_pointer(&file, free);
+            g_clear_pointer(&file, db_entry_free);
         }
         num_file_deletes += darray_get_num_items(files);
     }
@@ -319,7 +319,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         }
         for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
             FsearchDatabaseEntryBase *folder = darray_get_item(folders, i);
-            g_clear_pointer(&folder, free);
+            g_clear_pointer(&folder, db_entry_free);
         }
         num_folder_deletes += darray_get_num_items(folders);
     }
