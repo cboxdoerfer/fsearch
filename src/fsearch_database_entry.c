@@ -49,6 +49,9 @@ struct FsearchDatabaseEntryFolder {
 
 static size_t entry_base_size = 0;
 
+static size_t
+entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, const char *name, size_t name_len);
+
 static void
 build_path_recursively(FsearchDatabaseEntryBase *folder, GString *str, size_t name_offset) {
     if (G_UNLIKELY(!folder)) {
@@ -261,10 +264,9 @@ db_entry_free_full(FsearchDatabaseEntryBase *entry) {
 
 FsearchDatabaseEntryBase *
 db_entry_get_deep_copy(FsearchDatabaseEntryBase *entry) {
-    const char *name = (const char *)(entry->data + entry_base_size);
-    const size_t name_len = strlen(name);
+    const char *name = db_entry_get_name_raw(entry);
+    const size_t entry_size = entry_get_size_for_flags(entry->attribute_flags, name, strlen(name));
 
-    const size_t entry_size = entry_base_size + name_len + 1;
     FsearchDatabaseEntryBase *copy = calloc(1, entry_size);
     g_assert_nonnull(copy);
 
@@ -710,7 +712,7 @@ out:
 
 static size_t
 entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, const char *name, size_t name_len) {
-    size_t size = 0;
+    size_t size = sizeof(FsearchDatabaseEntryBase);
     if (name) {
         // Length of string + 1 (zero delimiter)
         size += name_len + 1;
@@ -743,7 +745,7 @@ FsearchDatabaseEntryBase *
 db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBase *parent, FsearchDatabaseEntryType type) {
     const size_t name_len = name ? strlen(name) : 0;
     const size_t entry_size = entry_get_size_for_flags(attribute_flags, name, name_len);
-    FsearchDatabaseEntryBase *entry = calloc(1, sizeof(FsearchDatabaseEntryBase) + entry_size);
+    FsearchDatabaseEntryBase *entry = calloc(1, entry_size);
     g_assert_nonnull(entry);
 
     entry->parent = parent;

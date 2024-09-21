@@ -132,6 +132,9 @@ FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntryBase *entry);
 
 void
+db_entry_free(FsearchDatabaseEntryBase *entry);
+
+void
 db_entry_free_full(FsearchDatabaseEntryBase *entry);
 
 FsearchDatabaseEntryBase *
