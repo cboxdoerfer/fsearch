@@ -76,12 +76,10 @@ add_folder(DatabaseWalkContext *walk_context,
         if (db_entry_get_attribute(folder_entry, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, (void *)&t, sizeof(time_t))) {
             g_assert(t == mtime);
         }
-        darray_add_item(walk_context->files, folder_entry);
+        watch_folder(walk_context, folder_entry, path);
+        darray_add_item(walk_context->folders, folder_entry);
     }
 
-    watch_folder(walk_context, folder_entry, path);
-
-    darray_add_item(walk_context->folders, folder_entry);
 
     return folder_entry;
 }
