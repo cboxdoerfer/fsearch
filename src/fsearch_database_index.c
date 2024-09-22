@@ -140,7 +140,7 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
     // It has the same name and parent (i.e. the watched directory)
     // and hence the same path. This means it will compare in the same way as the entry we're looking
     // for when it gets passed to the `db_entry_compare_entries_by_full_path` function.
-    g_autofree FsearchDatabaseEntryBase *entry_tmp =
+    FsearchDatabaseEntryBase *entry_tmp =
         db_entry_new(DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME,
                      event->name->str,
                                                                   event->watched_entry,
@@ -151,6 +151,9 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
 
     FsearchDatabaseEntryBase *entry = steal ? fsearch_database_entries_container_steal(container, entry_tmp)
                                             : fsearch_database_entries_container_find(container, entry_tmp);
+    // temp entry must be freed properly, to make sure its parent gets updated back to its previous state (e.g.
+    // regarding num_files/folders)
+    g_clear_pointer(&entry_tmp, db_entry_free);
     if (!entry && expect_success) {
         g_assert_not_reached();
     }
