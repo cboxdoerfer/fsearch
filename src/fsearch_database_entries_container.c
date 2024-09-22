@@ -52,6 +52,11 @@ get_container_for_entry(FsearchDatabaseEntriesContainer *self,
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(entry, NULL);
 
+    if (darray_get_num_items(self->container) == 0) {
+        darray_insert_item(self->container, darray_new(self->ideal_entries_per_container), 0);
+        return darray_get_item(self->container, 0);
+    }
+
     if (darray_get_num_items(self->container) == 1) {
         return darray_get_item(self->container, 0);
     }
@@ -113,6 +118,10 @@ split_array(DynamicArray *array, uint32_t ideal_entries_per_array) {
 static void
 balance_container(FsearchDatabaseEntriesContainer *self, DynamicArray *container, uint32_t c_idx) {
     if (darray_get_num_items(container) == 0) {
+        if (darray_get_num_items(self->container) == 1) {
+            // Don't remove the last container
+            return;
+        }
         g_debug("[balance_container] remove empty: %d", c_idx);
         darray_remove(self->container, c_idx, 1);
         g_clear_pointer(&container, darray_unref);
@@ -280,6 +289,7 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
         darray_binary_search_with_data(container, folder, self->entry_comp_func, self->compare_context, &entry_start_idx);
     }
 
+    g_print("steal with %d known descendants\n", num_known_descendants);
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
 
     uint32_t num_known_descandants_stolen = 0;
