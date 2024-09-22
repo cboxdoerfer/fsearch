@@ -18,6 +18,7 @@ typedef struct FsearchDatabaseEntryBase {
     uint32_t index;
     uint8_t type : 4;
     uint8_t mark : 4;
+    uint8_t deleted;
     uint8_t data[];
 } FsearchDatabaseEntryBase;
 
@@ -166,9 +167,11 @@ db_entry_get_path_full(FsearchDatabaseEntryBase *entry) {
 
 void
 db_entry_append_path(FsearchDatabaseEntryBase *entry, GString *str) {
-    size_t name_offset = 0;
-    db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset);
-    build_path_recursively(entry->parent, str, name_offset);
+    if (entry->parent) {
+        size_t name_offset = 0;
+        db_entry_get_attribute_offset(entry->parent->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset);
+        build_path_recursively(entry->parent, str, name_offset);
+    }
     if (str->len > 1) {
         g_string_set_size(str, str->len - 1);
     }
@@ -176,11 +179,13 @@ db_entry_append_path(FsearchDatabaseEntryBase *entry, GString *str) {
 
 void
 db_entry_append_full_path(FsearchDatabaseEntryBase *entry, GString *str) {
-    size_t name_offset = 0;
-    db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset);
-    build_path_recursively(entry->parent, str, name_offset);
+    if (entry->parent) {
+        size_t name_offset = 0;
+        db_entry_get_attribute_offset(entry->parent->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &name_offset);
+        build_path_recursively(entry->parent, str, name_offset);
+    }
 
-    const char *name = db_entry_get_attribute_name_for_offset(entry, name_offset);
+    const char *name = db_entry_get_name_raw(entry);
     g_string_append(str, name[0] == '\0' ? G_DIR_SEPARATOR_S : name);
 }
 
@@ -748,12 +753,15 @@ entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, cons
 
 FsearchDatabaseEntryBase *
 db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBase *parent, FsearchDatabaseEntryType type) {
+    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
+        attribute_flags = attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS
+                        | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES;
+    }
     const size_t name_len = name ? strlen(name) : 0;
     const size_t entry_size = entry_get_size_for_flags(attribute_flags, name, name_len);
     FsearchDatabaseEntryBase *entry = calloc(1, entry_size);
     g_assert_nonnull(entry);
 
-    entry->parent = parent;
     entry->type = type;
     entry->attribute_flags = attribute_flags;
 
@@ -828,6 +836,19 @@ db_entry_get_attribute_name(FsearchDatabaseEntryBase *entry, const char **name) 
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(entry, name);
     size_t offset = 0;
+
+    if (entry->deleted) {
+        GString *path = db_entry_get_path_full(entry);
+        g_print("%s\n", path->str);
+        g_assert(entry->deleted != 1);
+    }
+    if (entry->parent) {
+        if (entry->parent->deleted == 1) {
+            GString *path = db_entry_get_path_full(entry);
+            g_print("%s\n", path->str);
+            g_assert(entry->parent->deleted != 1);
+        }
+    }
     if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &offset)) {
         *name = (const char *)(entry->data + offset);
         return true;
@@ -838,6 +859,10 @@ db_entry_get_attribute_name(FsearchDatabaseEntryBase *entry, const char **name) 
 const char *
 db_entry_get_attribute_name_for_offset(FsearchDatabaseEntryBase *entry, size_t offset) {
     g_return_val_if_fail(entry, false);
+    g_assert(entry->deleted != 1);
+    if (entry->parent) {
+        g_assert(entry->parent->deleted != 1);
+    }
     return (const char *)(entry->data + offset);
 }
 
@@ -852,6 +877,10 @@ bool
 db_entry_get_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProperty attribute, void *dest, size_t size) {
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(dest, false);
+    g_assert(entry->deleted != 1);
+    if (entry->parent) {
+        g_assert(entry->parent->deleted != 1);
+    }
     size_t offset = 0;
     if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
         memcpy(dest, entry->data + offset, size);
@@ -864,6 +893,10 @@ bool
 db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProperty attribute, void *src, size_t size) {
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(src, false);
+    g_assert(entry->deleted != 1);
+    if (entry->parent) {
+        g_assert(entry->parent->deleted != 1);
+    }
     size_t offset = 0;
     if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
         memcpy(entry->data + offset, src, size);
@@ -875,11 +908,19 @@ db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProp
 uint32_t
 db_entry_get_index(FsearchDatabaseEntryBase *entry) {
     g_return_val_if_fail(entry, 0);
+    g_assert(entry->deleted != 1);
+    if (entry->parent) {
+        g_assert(entry->parent->deleted != 1);
+    }
     return entry->index;
 }
 
 void
 db_entry_set_index(FsearchDatabaseEntryBase *entry, uint32_t index) {
     g_return_if_fail(entry);
+    g_assert(entry->deleted != 1);
+    if (entry->parent) {
+        g_assert(entry->parent->deleted != 1);
+    }
     entry->index = index;
 }
