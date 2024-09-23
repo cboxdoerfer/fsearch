@@ -752,7 +752,10 @@ entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, cons
 }
 
 FsearchDatabaseEntryBase *
-db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBase *parent, FsearchDatabaseEntryType type) {
+db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
+             const char *name,
+             FsearchDatabaseEntryBase *parent,
+             FsearchDatabaseEntryType type) {
     if (type == DATABASE_ENTRY_TYPE_FOLDER) {
         attribute_flags = attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS
                         | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES;
@@ -779,7 +782,7 @@ db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBas
 }
 
 FsearchDatabaseEntryBase *
-db_entry_new_with_attributes(uint32_t attribute_flags,
+db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
                              const char *name,
                              FsearchDatabaseEntryBase *parent,
                              FsearchDatabaseEntryType type,

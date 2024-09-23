@@ -257,6 +257,7 @@ static void
 process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
     FsearchDatabaseEntryBase *entry = lookup_entry_for_event(self, event, true, false);
     if (!entry) {
+        g_debug("didn't find entry");
         return;
     }
 

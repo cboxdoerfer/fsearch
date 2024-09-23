@@ -171,10 +171,13 @@ int
 db_entry_compare_entries_by_name(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b);
 
 FsearchDatabaseEntryBase *
-db_entry_new(uint32_t attribute_flags, const char *name, FsearchDatabaseEntryBase *parent, FsearchDatabaseEntryType type);
+db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
+             const char *name,
+             FsearchDatabaseEntryBase *parent,
+             FsearchDatabaseEntryType type);
 
 FsearchDatabaseEntryBase *
-db_entry_new_with_attributes(uint32_t attribute_flags,
+db_entry_new_with_attributes(FsearchDatabaseIndexPropertyFlags attribute_flags,
                              const char *name,
                              FsearchDatabaseEntryBase *parent,
                              FsearchDatabaseEntryType type,
