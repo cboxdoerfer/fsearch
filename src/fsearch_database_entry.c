@@ -720,6 +720,19 @@ out:
     return true;
 }
 
+size_t *
+db_entry_get_attribute_offsets(FsearchDatabaseIndexPropertyFlags attribute_flags) {
+    size_t *offsets = calloc(NUM_DATABASE_INDEX_PROPERTIES, sizeof(size_t));
+    g_assert(offsets != NULL);
+
+    for (int i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
+        if (!db_entry_get_attribute_offset(attribute_flags, i, &offsets[i])) {
+            offsets[i] = -1;
+        }
+    }
+    return offsets;
+}
+
 static size_t
 entry_get_size_for_flags(FsearchDatabaseIndexPropertyFlags attribute_flags, const char *name, size_t name_len) {
     size_t size = sizeof(FsearchDatabaseEntryBase);

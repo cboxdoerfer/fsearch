@@ -192,6 +192,9 @@ db_entry_get_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProp
 bool
 db_entry_set_attribute(FsearchDatabaseEntryBase *entry, FsearchDatabaseIndexProperty attribute, void *src, size_t size);
 
+size_t *
+db_entry_get_attribute_offsets(FsearchDatabaseIndexPropertyFlags attribute_flags);
+
 uint32_t
 db_entry_get_member_flags(FsearchDatabaseEntryBase *entry);
 

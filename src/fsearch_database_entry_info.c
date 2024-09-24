@@ -246,7 +246,7 @@ fsearch_database_entry_info_new(FsearchDatabaseEntryBase *entry,
     if (flags & FSEARCH_DATABASE_ENTRY_INFO_FLAG_HIGHLIGHTS && query) {
         FsearchDatabaseEntryInfoValue val = {0};
         val.id = ENTRY_INFO_ID_HIGHLIGHTS;
-        FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+        FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
         fsearch_query_match_data_set_entry(match_data, entry);
         fsearch_query_highlight(query, match_data);
         val.highlights = fsearch_query_match_data_get_highlights(match_data);

@@ -1885,7 +1885,7 @@ search_view_select_range(FsearchDatabaseSearchView *view, int32_t start_idx, int
 
 static bool
 search_view_entry_matches_query(FsearchDatabaseSearchView *view, FsearchDatabaseEntryBase *entry) {
-    FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
     fsearch_query_match_data_set_entry(match_data, entry);
 
     const bool found = fsearch_query_match(view->query, match_data);

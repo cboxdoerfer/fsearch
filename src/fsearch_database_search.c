@@ -81,7 +81,7 @@ db_search_worker(void *data) {
     g_assert(ctx);
     g_assert(ctx->results);
 
-    FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
 
     fsearch_query_match_data_set_thread_id(match_data, ctx->thread_id);
     FsearchQuery *query = ctx->query;

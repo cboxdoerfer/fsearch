@@ -11,7 +11,7 @@
 typedef struct FsearchQueryMatchData FsearchQueryMatchData;
 
 FsearchQueryMatchData *
-fsearch_query_match_data_new(void);
+fsearch_query_match_data_new(size_t *file_attr_offsets, size_t *folder_attr_offsets);
 
 void
 fsearch_query_match_data_free(FsearchQueryMatchData *match_data);

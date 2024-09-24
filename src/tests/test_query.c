@@ -54,7 +54,7 @@ test_query(QueryTest *t) {
                                              DATABASE_INDEX_PROPERTY_NONE);
     }
 
-    FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
     fsearch_query_match_data_set_entry(match_data, entry);
 
     const bool found = fsearch_query_match(q, match_data);

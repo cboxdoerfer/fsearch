@@ -18,6 +18,9 @@ struct FsearchQueryMatchData {
 
     PangoAttrList **highlights;
 
+    size_t *file_attr_offsets;
+    size_t *folder_attr_offsets;
+
     int32_t thread_id;
 
     bool utf_name_ready;
@@ -116,7 +119,7 @@ fsearch_query_match_data_get_entry(FsearchQueryMatchData *match_data) {
 }
 
 FsearchQueryMatchData *
-fsearch_query_match_data_new(void) {
+fsearch_query_match_data_new(size_t *file_attr_offsets, size_t *folder_attr_offsets) {
     FsearchQueryMatchData *match_data = calloc(1, sizeof(FsearchQueryMatchData));
     g_assert(match_data);
     match_data->utf_name_builder = calloc(1, sizeof(FsearchUtfBuilder));
@@ -128,6 +131,9 @@ fsearch_query_match_data_new(void) {
     match_data->path_buffer = g_string_sized_new(PATH_MAX);
     match_data->parent_path_buffer = g_string_sized_new(PATH_MAX);
     match_data->content_type_buffer = g_string_sized_new(PATH_MAX);
+
+    match_data->file_attr_offsets = file_attr_offsets;
+    match_data->folder_attr_offsets = folder_attr_offsets;
 
     match_data->highlights = calloc(NUM_DATABASE_INDEX_PROPERTIES, sizeof(PangoAttrList *));
     match_data->has_highlights = false;
@@ -160,6 +166,8 @@ fsearch_query_match_data_free(FsearchQueryMatchData *match_data) {
     if (!match_data) {
         return;
     }
+    g_clear_pointer(&match_data->file_attr_offsets, free);
+    g_clear_pointer(&match_data->folder_attr_offsets, free);
 
     free_highlights(match_data);
     g_clear_pointer(&match_data->highlights, free);
