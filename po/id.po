@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-08-16 11:52+0000\n"
-"Last-Translator: Christian Elbrianno <crse@protonmail.ch>\n"
+"PO-Revision-Date: 2024-09-27 21:38+0000\n"
+"Last-Translator: Reza Almanda <rezaalmanda27@gmail.com>\n"
 "Language-Team: Indonesian <https://hosted.weblate.org/projects/fsearch/"
 "translations/id/>\n"
 "Language: id\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -173,27 +173,27 @@ msgstr "Otomatis gulir daftar hasil pada mode seleksi rubberband"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "Membalikkan pilihan dengan karet gelang saat 'Ctrl' ditekan"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "Memfokuskan entri pencarian saat jendela utama diaktifkan"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Tambahkan filter untuk aplikasi (yaitu file .desktop)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
+"Tambahkan opsi untuk meluncurkan aplikasi secara langsung alih-alih membuka "
+"file .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
-#, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Tampilkan preferensi aplikasi"
+msgstr "Tampilkan ikon aplikasi untuk file .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
