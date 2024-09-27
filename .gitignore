@@ -52,6 +52,7 @@ vgdump
 
 # VS Code
 *.vscode
+.cache
 
 # GNOME Builder
 .buildconfig
