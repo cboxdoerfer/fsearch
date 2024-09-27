@@ -1,12 +1,14 @@
-project('fsearch', 'c',
-    version: '0.3.alpha0',
-    meson_version: '>= 0.45.0',
-    default_options: ['c_std=gnu11',
-                      'channel=other',
-                      ],
-    )
+project(
+  'fsearch',
+  'c',
+  version: '0.3.alpha0',
+  meson_version: '>= 0.45.0',
+  default_options: [
+    'c_std=gnu11',
+    'channel=other',
+  ],
+)
 app_id = 'io.github.cboxdoerfer.FSearch'
-
 
 gnome = import('gnome')
 i18n = import('i18n')
@@ -14,7 +16,8 @@ i18n = import('i18n')
 cc = meson.get_compiler('c')
 
 # Check if the build platform supports using malloc_trim
-malloc_trim_support_result = cc.run('''
+malloc_trim_support_result = cc.run(
+  '''
     #include <malloc.h>
 
     int main (int argc, char *argv[]) {
@@ -22,7 +25,8 @@ malloc_trim_support_result = cc.run('''
       return 0;
     }
   ''',
-  name: 'malloc_trim is supported on the build platform')
+  name: 'malloc_trim is supported on the build platform',
+)
 
 if malloc_trim_support_result.compiled() and malloc_trim_support_result.returncode() == 0
   have_malloc_trim = true
@@ -31,7 +35,8 @@ else
 endif
 
 # Check if the build platform supports using fanotify without the CAP_SYS_ADMIN capability
-fanotify_support_result = cc.run('''
+fanotify_support_result = cc.run(
+  '''
     #include <sys/fanotify.h>
     #include <fcntl.h>
 
@@ -40,7 +45,8 @@ fanotify_support_result = cc.run('''
       return fd < 0 ? 1 : 0;
     }
   ''',
-  name: 'fanotify is supported by the build platform and works without CAP_SYS_ADMIN capabilities')
+  name: 'fanotify is supported by the build platform and works without CAP_SYS_ADMIN capabilities',
+)
 
 if fanotify_support_result.compiled() and fanotify_support_result.returncode() == 0
   have_fanotify = true
@@ -49,7 +55,8 @@ else
 endif
 
 # Check if the build platform supports inotify
-inotify_support_result = cc.run('''
+inotify_support_result = cc.run(
+  '''
     #include <sys/inotify.h>
     #include <fcntl.h>
 
@@ -58,7 +65,8 @@ inotify_support_result = cc.run('''
       return fd < 0 ? 1 : 0;
     }
   ''',
-  name: 'inotify is supported by the build platform')
+  name: 'inotify is supported by the build platform',
+)
 
 if inotify_support_result.compiled() and inotify_support_result.returncode() == 0
   have_inotify = true
@@ -81,7 +89,7 @@ config_h.set_quoted('PACKAGE_NAME', 'FSearch')
 config_h.set_quoted('BUILD_CHANNEL', get_option('channel'))
 
 # ensure off_t is 64bit
-add_project_arguments('-DHAVE_CONFIG_H', '-D_FILE_OFFSET_BITS=64', '-D_GNU_SOURCE', language : 'c')
+add_project_arguments('-DHAVE_CONFIG_H', '-D_FILE_OFFSET_BITS=64', '-D_GNU_SOURCE', language: 'c')
 
 fsearch_include_dirs = include_directories(
   '.',
@@ -93,7 +101,6 @@ subdir('src')
 subdir('po')
 
 configure_file(
-    output: 'config.h',
-    configuration: config_h,
-    )
-
+  output: 'config.h',
+  configuration: config_h,
+)
