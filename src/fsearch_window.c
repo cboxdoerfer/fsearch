@@ -885,18 +885,6 @@ on_search_entry_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer use
         fsearch_list_view_set_cursor(win->result_view->list_view, cursor_idx);
         return TRUE;
     }
-    if (keyval == GDK_KEY_KP_Enter || keyval == GDK_KEY_Return || keyval == GDK_KEY_ISO_Enter) {
-        const gint cursor_idx = fsearch_list_view_get_cursor(win->result_view->list_view);
-        gtk_widget_grab_focus(GTK_WIDGET(win->result_view->list_view));
-        fsearch_list_view_set_cursor(win->result_view->list_view, cursor_idx);
-        GActionGroup *group = G_ACTION_GROUP(win);
-        GAction *action = g_action_map_lookup_action(G_ACTION_MAP(group), "open");
-        if (!action)
-            return FALSE;
-        g_simple_action_set_enabled(G_SIMPLE_ACTION(action), true);
-        g_action_group_activate_action(group, "open", NULL);
-        return TRUE;
-    }
     return FALSE;
 }
 
@@ -910,6 +898,9 @@ on_search_entry_activate(GtkButton *widget, gpointer user_data) {
         if (db_view_get_num_entries(win->result_view->database_view) > 0) {
             if (db_view_get_num_selected(win->result_view->database_view) < 1) {
                 db_view_select(win->result_view->database_view, 0);
+                fsearch_window_actions_update(win);
+                GActionGroup *group = G_ACTION_GROUP(win);
+                g_action_group_activate_action(group, "open", NULL);
             }
             gtk_widget_grab_focus(GTK_WIDGET(win->result_view->list_view));
         }
