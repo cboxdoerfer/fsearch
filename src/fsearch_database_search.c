@@ -16,6 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#include "fsearch_database_entry.h"
 #define G_LOG_DOMAIN "fsearch-search"
 
 #include "fsearch_database_search.h"
@@ -87,7 +88,7 @@ db_search_worker(void *data) {
     FsearchQuery *query = ctx->query;
     const uint32_t start = ctx->start_pos;
     const uint32_t end = ctx->end_pos;
-    FsearchDatabaseEntryBase **results = (FsearchDatabaseEntryBase **)ctx->results;
+    FsearchDatabaseEntry **results = (FsearchDatabaseEntry **)ctx->results;
     DynamicArray *entries = ctx->entries;
 
     if (!entries) {
@@ -101,7 +102,7 @@ db_search_worker(void *data) {
         if (G_UNLIKELY(g_cancellable_is_cancelled(ctx->cancellable))) {
             break;
         }
-        FsearchDatabaseEntryBase *entry = darray_get_item(entries, i);
+        FsearchDatabaseEntry *entry = darray_get_item(entries, i);
         fsearch_query_match_data_set_entry(match_data, entry);
         if (fsearch_query_match(query, match_data)) {
             results[num_results++] = entry;
@@ -195,11 +196,7 @@ db_search_empty(DynamicArray *folders, DynamicArray *files) {
 }
 
 DatabaseSearchResult *
-db_search(FsearchQuery *q,
-          FsearchThreadPool *pool,
-          DynamicArray *folders,
-          DynamicArray *files,
-          GCancellable *cancellable) {
+db_search(FsearchQuery *q, FsearchThreadPool *pool, DynamicArray *folders, DynamicArray *files, GCancellable *cancellable) {
     g_assert(files);
     g_assert(folders);
 

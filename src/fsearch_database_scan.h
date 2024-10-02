@@ -7,7 +7,7 @@
 
 bool
 db_scan_folder(const char *path,
-               FsearchDatabaseEntryBase *parent,
+               FsearchDatabaseEntry *parent,
                DynamicArray *folders,
                DynamicArray *files,
                FsearchDatabaseExcludeManager *exclude_manager,

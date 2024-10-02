@@ -1,4 +1,5 @@
 #include "fsearch_query_matchers.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_query_node.h"
 #include <string.h>
 
@@ -17,7 +18,7 @@ fsearch_query_matcher_extension(FsearchQueryNode *node, FsearchQueryMatchData *m
     if (!node->search_term_list) {
         return 0;
     }
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     const char *ext = db_entry_get_extension(entry);
     if (!ext) {
         return 0;
@@ -62,7 +63,7 @@ cmp_num(int64_t num, FsearchQueryNode *node) {
 
 uint32_t
 fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
         const time_t time = db_entry_get_mtime(entry);
         return cmp_num(time, node);
@@ -72,7 +73,7 @@ fsearch_query_matcher_date_modified(FsearchQueryNode *node, FsearchQueryMatchDat
 
 uint32_t
 fsearch_query_matcher_depth(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
         const int64_t depth = db_entry_get_depth(entry);
         return cmp_num(depth, node);
@@ -82,7 +83,7 @@ fsearch_query_matcher_depth(FsearchQueryNode *node, FsearchQueryMatchData *match
 
 uint32_t
 fsearch_query_matcher_childcount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry && db_entry_is_folder(entry)) {
         const int64_t num_children = db_entry_folder_get_num_children(entry);
         return cmp_num(num_children, node);
@@ -92,7 +93,7 @@ fsearch_query_matcher_childcount(FsearchQueryNode *node, FsearchQueryMatchData *
 
 uint32_t
 fsearch_query_matcher_childfilecount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry && db_entry_is_folder(entry)) {
         const int64_t num_files = db_entry_folder_get_num_files(entry);
         return cmp_num(num_files, node);
@@ -102,7 +103,7 @@ fsearch_query_matcher_childfilecount(FsearchQueryNode *node, FsearchQueryMatchDa
 
 uint32_t
 fsearch_query_matcher_childfoldercount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry && db_entry_is_folder(entry)) {
         const int64_t num_folders = db_entry_folder_get_num_folders(entry);
         return cmp_num(num_folders, node);
@@ -112,7 +113,7 @@ fsearch_query_matcher_childfoldercount(FsearchQueryNode *node, FsearchQueryMatch
 
 uint32_t
 fsearch_query_matcher_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry) {
         const int64_t size = db_entry_get_size(entry);
         return cmp_num(size, node);
@@ -244,7 +245,7 @@ fsearch_query_matcher_highlight_extension(FsearchQueryNode *node, FsearchQueryMa
     if (!fsearch_query_matcher_extension(node, match_data)) {
         return 0;
     }
-    FsearchDatabaseEntryBase *entry = fsearch_query_match_data_get_entry(match_data);
+    FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     const char *ext = db_entry_get_extension(entry);
     const char *name = fsearch_query_match_data_get_name_str(match_data);
     if (!name) {

@@ -1,5 +1,6 @@
 #include "fsearch_database_entry_info.h"
 
+#include "fsearch_database_entry.h"
 #include "fsearch_file_utils.h"
 
 #include <glib.h>
@@ -151,7 +152,7 @@ fsearch_database_entry_info_unref(FsearchDatabaseEntryInfo *info) {
 }
 
 FsearchDatabaseEntryInfo *
-fsearch_database_entry_info_new(FsearchDatabaseEntryBase *entry,
+fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
                                 FsearchQuery *query,
                                 uint32_t idx,
                                 bool is_selected,

@@ -15,7 +15,7 @@ G_BEGIN_DECLS
 #define FSEARCH_TYPE_DATABASE fsearch_database_get_type()
 G_DECLARE_FINAL_TYPE(FsearchDatabase, fsearch_database, FSEARCH, DATABASE, GObject)
 
-typedef void (*FsearchDatabaseForeachFunc)(FsearchDatabaseEntryBase *entry, gpointer user_data);
+typedef void (*FsearchDatabaseForeachFunc)(FsearchDatabaseEntry *entry, gpointer user_data);
 
 void
 fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work);

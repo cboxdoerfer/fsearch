@@ -1,3 +1,4 @@
+#include "fsearch_database_entry.h"
 #include <glib.h>
 #include <locale.h>
 #include <stdlib.h>
@@ -21,7 +22,7 @@ test_query(QueryTest *t) {
     FsearchQuery *q = fsearch_query_new(t->needle, NULL, manager, t->flags, "debug_query");
 
     FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_SIZE;
-    FsearchDatabaseEntryBase *entry = NULL;
+    FsearchDatabaseEntry *entry = NULL;
     if (g_str_has_prefix(t->haystack, "/")) {
         const char *haystack = t->haystack + 1;
         g_auto(GStrv) names = g_strsplit(haystack, "/", -1);
@@ -31,10 +32,10 @@ test_query(QueryTest *t) {
 
         if (names_len > 0) {
             for (int i = 0; i < names_len - 1; i++) {
-                FsearchDatabaseEntryBase *old = entry;
+                FsearchDatabaseEntry *old = entry;
                 entry = db_entry_new(flags, names[i], old, DATABASE_ENTRY_TYPE_FOLDER);
             }
-            FsearchDatabaseEntryBase *old = entry;
+            FsearchDatabaseEntry *old = entry;
             entry = db_entry_new_with_attributes(flags,
                                                  names[names_len - 1],
                                                  old,

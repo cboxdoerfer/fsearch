@@ -27,8 +27,8 @@ typedef struct {
     GString *name;
     GString *path;
 
-    FsearchDatabaseEntryBase *watched_entry;
-    FsearchDatabaseEntryBase *watched_entry_copy;
+    FsearchDatabaseEntry *watched_entry;
+    FsearchDatabaseEntry *watched_entry_copy;
 
     FsearchFolderMonitorEventKind event_kind;
     bool is_dir;
@@ -37,7 +37,7 @@ typedef struct {
 
 FsearchFolderMonitorEvent *
 fsearch_folder_monitor_event_new(const char *file_name,
-                                 FsearchDatabaseEntryBase *watched_entry,
+                                 FsearchDatabaseEntry *watched_entry,
                                  FsearchFolderMonitorEventKind event_kind,
                                  FsearchFolderMonitorKind monitor_kind,
                                  bool is_dir);

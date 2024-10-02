@@ -1,4 +1,5 @@
 #include "fsearch_folder_monitor_event.h"
+#include "fsearch_database_entry.h"
 
 void
 fsearch_folder_monitor_event_free(FsearchFolderMonitorEvent *self) {
@@ -8,13 +9,13 @@ fsearch_folder_monitor_event_free(FsearchFolderMonitorEvent *self) {
     if (self->path) {
         g_string_free(g_steal_pointer(&self->path), TRUE);
     }
-    g_clear_pointer((FsearchDatabaseEntryBase **)&self->watched_entry_copy, db_entry_free_full);
+    g_clear_pointer((FsearchDatabaseEntry **)&self->watched_entry_copy, db_entry_free_full);
     g_clear_pointer(&self, free);
 }
 
 FsearchFolderMonitorEvent *
 fsearch_folder_monitor_event_new(const char *file_name,
-                                 FsearchDatabaseEntryBase *watched_entry,
+                                 FsearchDatabaseEntry *watched_entry,
                                  FsearchFolderMonitorEventKind event_kind,
                                  FsearchFolderMonitorKind monitor_kind,
                                  bool is_dir) {
@@ -22,11 +23,10 @@ fsearch_folder_monitor_event_new(const char *file_name,
     g_assert(ctx);
 
     ctx->name = file_name ? g_string_new(file_name) : NULL;
-    ctx->watched_entry_copy = (FsearchDatabaseEntryBase *)db_entry_get_deep_copy(
-        (FsearchDatabaseEntryBase *)watched_entry);
+    ctx->watched_entry_copy = (FsearchDatabaseEntry *)db_entry_get_deep_copy((FsearchDatabaseEntry *)watched_entry);
 
     if (ctx->name) {
-        ctx->path = db_entry_get_path_full((FsearchDatabaseEntryBase *)ctx->watched_entry_copy);
+        ctx->path = db_entry_get_path_full((FsearchDatabaseEntry *)ctx->watched_entry_copy);
         g_string_append_c(ctx->path, G_DIR_SEPARATOR);
         g_string_append(ctx->path, ctx->name->str);
     }

@@ -36,7 +36,7 @@ typedef struct DatabaseWalkContext {
 } DatabaseWalkContext;
 
 static void
-watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntryBase *folder, const char *path) {
+watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder, const char *path) {
 #ifdef HAVE_FANOTIFY
     if (walk_context->fanotify_monitor) {
         if (fsearch_folder_monitor_fanotify_watch(walk_context->fanotify_monitor, folder, path)) {
@@ -53,20 +53,16 @@ watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntryBase *folder
 #endif
 }
 
-static FsearchDatabaseEntryBase *
-add_folder(DatabaseWalkContext *walk_context,
-           const char *name,
-           const char *path,
-           time_t mtime,
-           FsearchDatabaseEntryBase *parent) {
-    FsearchDatabaseEntryBase *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                              | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
-                                                                          name,
-                                                                          parent,
-                                                                          DATABASE_ENTRY_TYPE_FOLDER,
-                                                                          DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-                                                                          mtime,
-                                                                          DATABASE_INDEX_PROPERTY_NONE);
+static FsearchDatabaseEntry *
+add_folder(DatabaseWalkContext *walk_context, const char *name, const char *path, time_t mtime, FsearchDatabaseEntry *parent) {
+    FsearchDatabaseEntry *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
+                                                                          | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+                                                                      name,
+                                                                      parent,
+                                                                      DATABASE_ENTRY_TYPE_FOLDER,
+                                                                      DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
+                                                                      mtime,
+                                                                      DATABASE_INDEX_PROPERTY_NONE);
     if (folder_entry) {
         const char *n = NULL;
         if (db_entry_get_attribute_name(folder_entry, &n)) {
@@ -80,22 +76,21 @@ add_folder(DatabaseWalkContext *walk_context,
         darray_add_item(walk_context->folders, folder_entry);
     }
 
-
     return folder_entry;
 }
 
-FsearchDatabaseEntryBase *
-add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntryBase *parent) {
-    FsearchDatabaseEntryBase *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
-                                                                            | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
-                                                                        name,
-                                                                        parent,
-                                                                        DATABASE_ENTRY_TYPE_FILE,
-                                                                        DATABASE_INDEX_PROPERTY_SIZE,
-                                                                        size,
-                                                                        DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
-                                                                        mtime,
-                                                                        DATABASE_INDEX_PROPERTY_NONE);
+FsearchDatabaseEntry *
+add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntry *parent) {
+    FsearchDatabaseEntry *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
+                                                                        | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+                                                                    name,
+                                                                    parent,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    DATABASE_INDEX_PROPERTY_SIZE,
+                                                                    size,
+                                                                    DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
+                                                                    mtime,
+                                                                    DATABASE_INDEX_PROPERTY_NONE);
     if (file_entry) {
         const char *n = NULL;
         if (db_entry_get_attribute_name(file_entry, &n)) {
@@ -116,7 +111,7 @@ add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t
 }
 
 static int
-db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntryBase *parent) {
+db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *parent) {
     if (g_cancellable_is_cancelled(walk_context->cancellable)) {
         g_debug("[db_scan] cancelled");
         return WALK_CANCEL;
@@ -203,7 +198,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
 bool
 db_scan_folder(const char *path,
-               FsearchDatabaseEntryBase *parent,
+               FsearchDatabaseEntry *parent,
                DynamicArray *folders,
                DynamicArray *files,
                FsearchDatabaseExcludeManager *exclude_manager,
@@ -258,7 +253,7 @@ db_scan_folder(const char *path,
     }
     else {
         g_autofree char *name = g_path_get_basename(path);
-        FsearchDatabaseEntryBase *folder = add_folder(&walk_context, name, path, root_st.st_mtime, parent);
+        FsearchDatabaseEntry *folder = add_folder(&walk_context, name, path, root_st.st_mtime, parent);
         parent = folder;
     }
 

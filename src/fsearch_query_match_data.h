@@ -17,7 +17,7 @@ void
 fsearch_query_match_data_free(FsearchQueryMatchData *match_data);
 
 void
-fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDatabaseEntryBase *entry);
+fsearch_query_match_data_set_entry(FsearchQueryMatchData *match_data, FsearchDatabaseEntry *entry);
 
 void
 fsearch_query_match_data_add_highlight(FsearchQueryMatchData *match_data,
@@ -63,5 +63,5 @@ fsearch_query_match_data_get_utf_path_builder(FsearchQueryMatchData *match_data)
 FsearchUtfBuilder *
 fsearch_query_match_data_get_utf_name_builder(FsearchQueryMatchData *match_data);
 
-FsearchDatabaseEntryBase *
+FsearchDatabaseEntry *
 fsearch_query_match_data_get_entry(FsearchQueryMatchData *match_data);

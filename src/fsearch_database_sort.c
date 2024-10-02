@@ -57,13 +57,13 @@ get_entries_sorted_from_reference_list(DynamicArray *old_list, DynamicArray *sor
     const uint32_t num_items = darray_get_num_items(old_list);
     DynamicArray *new = darray_new(num_items);
     for (uint32_t i = 0; i < num_items; ++i) {
-        FsearchDatabaseEntryBase *entry = darray_get_item(old_list, i);
+        FsearchDatabaseEntry *entry = darray_get_item(old_list, i);
         db_entry_set_mark(entry, 1);
     }
     uint32_t num_marked_found = 0;
     const uint32_t num_items_in_sorted_reference_list = darray_get_num_items(sorted_reference_list);
     for (uint32_t i = 0; i < num_items_in_sorted_reference_list && num_marked_found < num_items; ++i) {
-        FsearchDatabaseEntryBase *entry = darray_get_item(sorted_reference_list, i);
+        FsearchDatabaseEntry *entry = darray_get_item(sorted_reference_list, i);
         if (db_entry_get_mark(entry)) {
             db_entry_set_mark(entry, 0);
             darray_add_item(new, entry);
@@ -273,7 +273,7 @@ fsearch_database_sort(DynamicArray **files_store,
 }
 
 static int
-compare_by_name(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
+compare_by_name(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     const int res = db_entry_compare_entries_by_name(a, b);
     if (G_LIKELY(res != 0)) {
         return res;
@@ -284,7 +284,7 @@ compare_by_name(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
 }
 
 static int
-compare_by_size(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
+compare_by_size(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     const int res = db_entry_compare_entries_by_size(a, b);
     if (G_LIKELY(res != 0)) {
         return res;
@@ -293,7 +293,7 @@ compare_by_size(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
 }
 
 static int
-compare_by_modification_time(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
+compare_by_modification_time(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     const int res = db_entry_compare_entries_by_modification_time(a, b);
     if (G_LIKELY(res != 0)) {
         return res;
@@ -304,7 +304,7 @@ compare_by_modification_time(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryB
 }
 
 static int
-compare_by_extension(FsearchDatabaseEntryBase **a, FsearchDatabaseEntryBase **b) {
+compare_by_extension(FsearchDatabaseEntry **a, FsearchDatabaseEntry **b) {
     const int res = db_entry_compare_entries_by_extension(a, b);
     if (G_LIKELY(res != 0)) {
         return res;
