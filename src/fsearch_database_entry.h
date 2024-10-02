@@ -44,12 +44,6 @@ db_entry_is_file(FsearchDatabaseEntryBase *entry);
 bool
 db_entry_is_descendant(FsearchDatabaseEntryBase *entry, FsearchDatabaseEntryBase *maybe_ancestor);
 
-size_t
-db_entry_get_sizeof_folder_entry();
-
-size_t
-db_entry_get_sizeof_file_entry();
-
 uint32_t
 db_entry_folder_get_num_children(FsearchDatabaseEntryBase *entry);
 

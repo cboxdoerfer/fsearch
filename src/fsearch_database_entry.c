@@ -24,32 +24,6 @@ typedef struct FsearchDatabaseEntryBase {
     alignas(int64_t) uint8_t attributes[];
 } FsearchDatabaseEntryBase;
 
-struct FsearchDatabaseEntry {
-    FsearchDatabaseEntryFolder *parent;
-    char *name;
-    off_t size;
-    time_t mtime;
-
-    // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
-    uint32_t attribute_flags;
-    uint32_t idx;
-    uint8_t type;
-    uint8_t mark;
-    // uint8_t data[];
-};
-
-struct FsearchDatabaseEntryFile {
-    struct FsearchDatabaseEntry super;
-};
-
-struct FsearchDatabaseEntryFolder {
-    struct FsearchDatabaseEntry super;
-    // db_idx: the database index this folder belongs to
-    uint32_t db_idx;
-    uint32_t num_files;
-    uint32_t num_folders;
-};
-
 static size_t entry_base_size = 0;
 
 static size_t
@@ -141,16 +115,6 @@ db_entry_folder_get_num_folders(FsearchDatabaseEntryBase *entry) {
     uint32_t num_folders = 0;
     db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
     return num_folders;
-}
-
-size_t
-db_entry_get_sizeof_folder_entry() {
-    return sizeof(FsearchDatabaseEntryFolder);
-}
-
-size_t
-db_entry_get_sizeof_file_entry() {
-    return sizeof(FsearchDatabaseEntryFile);
 }
 
 GString *
