@@ -20,6 +20,7 @@ typedef struct FsearchDatabaseEntryBase {
     uint8_t type : 4;
     uint8_t mark : 4;
     uint8_t deleted;
+    // Make sure the attributes member is aligned to its largest data type
     alignas(int64_t) uint8_t attributes[];
 } FsearchDatabaseEntryBase;
 
