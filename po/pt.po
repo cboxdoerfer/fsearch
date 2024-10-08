@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-03-13 12:41+0000\n"
+"PO-Revision-Date: 2024-10-08 18:50+0000\n"
 "Last-Translator: ssantos <ssantos@web.de>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.16.2-dev\n"
+"X-Generator: Weblate 5.8-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -123,32 +123,24 @@ msgid "fsearch"
 msgstr "Pesquisar"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "files?"
 msgid "files"
-msgstr "Arquivos?"
+msgstr "ficheiros"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "Pastas"
+msgstr "pastas"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "musica"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "Vídeos"
+msgstr "vídeo"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
-msgstr "Documentos"
+msgstr "documentos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
@@ -436,10 +428,8 @@ msgid "Edit filter"
 msgstr "Editar filtro"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Nome"
+msgstr "Nome:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
@@ -450,16 +440,12 @@ msgid "Unique filter name"
 msgstr "Nome do filtro exclusivo"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
-msgstr "Procurar no Caminho"
+msgstr "Pesquisar no caminho"
 
 #: src/fsearch_filter_editor.ui:87
-#, fuzzy
-#| msgid "Regular expressions"
 msgid "Enable regular expressions"
-msgstr "Expressões regulares"
+msgstr "Ativar expressões regulares"
 
 #: src/fsearch_filter_editor.ui:101
 #, fuzzy
@@ -667,32 +653,24 @@ msgstr ""
 "caractere maiúsculo"
 
 #: src/fsearch_preferences.ui:779
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add new filter"
-msgstr "Adicionar pastas"
+msgstr "Adicionar novo filtro"
 
 #: src/fsearch_preferences.ui:795
-#, fuzzy
-#| msgid "Remove selected path"
 msgid "Remove selected filter"
-msgstr "Remover caminho selecionado"
+msgstr "Remover o filtro selecionado"
 
 #: src/fsearch_preferences.ui:811
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Quantidade de ficheiros selecionados"
+msgstr "Editar filtro selecionado"
 
 #: src/fsearch_preferences.ui:825
 msgid "Restore default filters"
 msgstr "Restaurar filtros padrão"
 
 #: src/fsearch_preferences.ui:857
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Mostrar Filtro"
+msgstr "Filtro:"
 
 #: src/fsearch_preferences.ui:878 src/fsearch_window.ui:638
 msgid "Search"
@@ -1397,10 +1375,8 @@ msgid "_Select"
 msgstr "_Selecionar"
 
 #: src/fsearch_preferences_ui.c:332
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Adicionar pastas"
+msgstr "Adicionar filtro"
 
 #: src/fsearch_preferences_widgets.c:220 src/fsearch_preferences_widgets.c:267
 msgid "Active"
@@ -1425,16 +1401,13 @@ msgid "Macro"
 msgstr "Macro"
 
 #: src/fsearch_preferences_widgets.c:292
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Consulta Vazia"
+msgstr "Consulta"
 
 #: src/fsearch_statusbar.c:56
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "%'d Item"
-msgstr "%'d Itens"
+msgstr "%'d elementos"
 
 #: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
 #, c-format
@@ -1462,8 +1435,6 @@ msgid "0 Items"
 msgstr "0 Itens"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
 msgstr "Cancelar"
 
@@ -1615,7 +1586,7 @@ msgstr "Sair"
 
 #: src/fsearch_window.ui:371 src/fsearch_window.ui:442 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Doar"
 
 #: src/fsearch_window.ui:386 src/menus.ui:142
 msgid "Forum"
@@ -1631,7 +1602,7 @@ msgstr ""
 
 #: src/fsearch_window.ui:473 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:585
 msgid "Search…"
