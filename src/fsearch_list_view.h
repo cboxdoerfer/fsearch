@@ -62,6 +62,8 @@ typedef void (*FsearchListViewSelectRangeFunc)(int start_idx, int end_idx, gpoin
 typedef void (*FsearchListViewUnselectAllFunc)(gpointer user_data);
 typedef guint (*FsearchListViewNumSelectedFunc)(gpointer user_data);
 
+typedef GList* (*FsearchListViewDragDataGetFunc) (GList *indices, gpointer user_data);
+
 FsearchListViewColumn *
 fsearch_list_view_column_ref(FsearchListViewColumn *col);
 
@@ -90,6 +92,9 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
                                          FsearchListViewUnselectAllFunc unselect_func,
                                          FsearchListViewNumSelectedFunc num_selected_func,
                                          gpointer user_data);
+
+void
+fsearch_list_view_set_drag_data_get_handler(FsearchListView *view, FsearchListViewDragDataGetFunc drag_data_get_func);
 
 void
 fsearch_list_view_column_set_visible(FsearchListView *view, FsearchListViewColumn *col, gboolean visible);
