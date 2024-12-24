@@ -180,7 +180,9 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
     GList *file_list = NULL;
     fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
 
-    if (delete || num_selected_rows > 20) {
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
+    if (config->show_dialog_on_deletion && (delete || num_selected_rows > 20)) {
         g_autoptr(GString) warning_message = g_string_new(NULL);
         g_string_printf(warning_message, _("Do you really want to remove %d file(s)?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
@@ -218,7 +220,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
     }
-    if (num_trashed_or_deleted > 0) {
+    if (config->show_dialog_on_deletion && num_trashed_or_deleted > 0) {
         g_autoptr(GString) trashed_or_deleted_message = g_string_new(NULL);
         g_string_printf(trashed_or_deleted_message,
                         delete ? _("Deleted %d file(s).") : _("Moved %d file(s) to the trash."),
@@ -469,7 +471,7 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     #else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
     #endif
-    
+
     if (!app_info) {
         return;
     }
@@ -600,7 +602,7 @@ fsearch_window_action_preview(GSimpleAction *action, GVariant *variant, gpointer
     if (!file_list) {
         return;
     }
-    
+
     GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
 #ifdef GDK_WINDOWING_X11
     GdkWindow *window = gtk_widget_get_window (toplevel);
