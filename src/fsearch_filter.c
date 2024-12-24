@@ -88,8 +88,10 @@ static const char *audio_filter = "ext:aac;ac3;aif;aifc;aiff;au;cda;dts;fla;flac
                                   "mp2;mp3;mpa;ogg;opus;ra;rmi;spc;rmi;snd;umx;voc;wav;wma;xm;AAC;AC3;AIF;AIFC;AIFF;AU;"
                                   "CDA;DTS;FLA;FLAC;IT;M1A;M2A;M3U;M4A;MID;MIDI;MKA;MOD;MP2;MP3;MPA;OGG;OPUS;RA;RMI;"
                                   "SPC;RMI;SND;UMX;VOC;WAV;WMA;XM";
-static const char *image_filter = "ext:ani;bmp;gif;ico;jpe;jpeg;jpg;pcx;png;psd;tga;tif;tiff;webp;wmf;ANI;BMP;GIF;ICO;"
-                                  "JPE;JPEG;JPG;PCX;PNG;PSD;TGA;TIF;TIFF;WEBP;WMF";
+static const char *image_filter = "ext:ani;bmp;gif;ico;jpe;jpeg;jpg;pcx;png;psd;tga;tif;tiff;webp;svg;avif;nef;dds;exr;"
+                                  "hdr;wmf;"
+                                  "ANI;BMP;GIF;ICO;JPE;JPEG;JPG;PCX;PNG;PSD;TGA;TIF;TIFF;WEBP;WMF;SVG;AVIF;NEF;DDS;EXR;"
+                                  "HDR;WMF;";
 static const char *video_filter = "ext:3g2;3gp;3gp2;3gpp;amr;amv;asf;avi;bdmv;bik;d2v;divx;drc;dsa;dsm;dss;dsv;evo;f4v;"
                                   "flc;fli;flic;flv;hdmov;ifo;ivf;m1v;m2p;m2t;m2ts;m2v;m4b;m4p;m4v;mkv;mp2v;mp4;mp4v;"
                                   "mpe;mpeg;mpg;mpls;mpv2;mpv4;mov;mts;ogm;ogv;pss;pva;qt;ram;ratdvd;rm;rmm;rmvb;roq;"
