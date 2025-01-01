@@ -9,8 +9,9 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2024-10-08 18:50+0000\n"
-"Last-Translator: ssantos <ssantos@web.de>\n"
+"PO-Revision-Date: 2025-01-02 23:00+0000\n"
+"Last-Translator: Rui Rodrigues “Albuquerque” Albuquerque "
+"<ruiralbuquerque@gmail.com>\n"
 "Language-Team: Portuguese <https://hosted.weblate.org/projects/fsearch/"
 "translations/pt/>\n"
 "Language: pt\n"
@@ -18,7 +19,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 5.8-dev\n"
+"X-Generator: Weblate 5.10-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -39,10 +40,8 @@ msgstr ""
 "everything;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch"
 msgid "File Search Utility"
-msgstr "FSearch"
+msgstr "Utilitário de pesquisa de arquivos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
@@ -91,16 +90,12 @@ msgstr ""
 "extensão"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
-#, fuzzy
-#| msgid ""
-#| "Note: Due to Flatpak's sandboxing, FSearch can't find every file on your "
-#| "system."
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
 "Nota: Devido ao sandboxing do Flatpak, o FSearch não pode encontrar todos os "
-"ficheiros no seu sistema."
+"arquivos no seu sistema."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
@@ -160,10 +155,8 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch"
 msgid "New search engine"
-msgstr "FSearch"
+msgstr "Novo mecanismo de pesquisa"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 #, fuzzy
@@ -173,23 +166,24 @@ msgstr "Exibir termos de pesquisa destacados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid "Custom filters"
-msgstr ""
+msgstr "Filtros personalizado"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Melhor desempenho de classificação"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Desempenho de rolagem aprimorado"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "Lembre-se da seleção de arquivos após uma atualização do banco de dados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
+#, fuzzy
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr ""
+msgstr "Rolar automaticamente a lista de resultados no modo de seleção elástica"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
