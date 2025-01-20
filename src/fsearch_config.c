@@ -244,6 +244,11 @@ config_load(FsearchConfig *config) {
         config->exit_on_escape = config_load_boolean(key_file, "Interface", "exit_on_escape", false);
         config->show_indexing_status = config_load_boolean(key_file, "Interface", "show_indexing_status", true);
 
+        // History
+        config->enable_history = config_load_boolean(key_file, "History", "enable_history", false);
+        config->sort_history_by =
+            config_load_integer(key_file, "History", "sort_history_by", SORT_BY_NAME);
+
         // Warning Dialogs
         config->show_dialog_failed_opening = config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
 
@@ -368,6 +373,10 @@ config_load_default(FsearchConfig *config) {
     config->action_after_file_open_mouse = false;
     config->exit_on_escape = false;
     config->show_indexing_status = true;
+
+    // History
+    config->enable_history = false;
+    config->sort_history_by = SORT_BY_NAME;
 
     // Columns
     config->show_listview_icons = true;
@@ -545,6 +554,10 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Interface", "action_after_file_open_mouse", config->action_after_file_open_mouse);
     g_key_file_set_boolean(key_file, "Interface", "exit_on_escape", config->exit_on_escape);
     g_key_file_set_boolean(key_file, "Interface", "show_indexing_status", config->show_indexing_status);
+
+    // History
+    g_key_file_set_boolean(key_file, "History", "enable_history", config->enable_history);
+    g_key_file_set_integer(key_file, "History", "sort_history_by", config->sort_history_by);
 
     // Warning Dialogs
     g_key_file_set_boolean(key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);

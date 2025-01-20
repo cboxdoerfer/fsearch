@@ -33,6 +33,11 @@ typedef enum FsearchConfigActionAfterOpen {
     N_ACTIONS_AFTER_OPEN,
 } FsearchConfigActionAfterOpen;
 
+typedef enum FsearchHistorySort {
+    SORT_BY_NAME = 0,
+    SORT_BY_DATE
+}  FsearchHistorySort;
+
 typedef struct {
     bool database_config_changed;
     bool listview_config_changed;
@@ -72,6 +77,10 @@ struct _FsearchConfig {
     bool action_after_file_open_mouse;
     bool exit_on_escape;
     bool show_indexing_status;
+
+    // History
+    bool enable_history;
+    FsearchHistorySort sort_history_by;
 
     // Warning Dialogs
     bool show_dialog_failed_opening;
