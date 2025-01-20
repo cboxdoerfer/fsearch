@@ -58,6 +58,7 @@ struct _FsearchApplicationWindow {
     GtkWidget *search_box;
     GtkWidget *search_button_revealer;
     GtkWidget *search_entry;
+    GtkWidget *search_completion;
     GtkWidget *main_stack;
     GtkWidget *main_database_overlay_stack;
     GtkWidget *main_result_overlay;
@@ -66,6 +67,8 @@ struct _FsearchApplicationWindow {
     GtkWidget *statusbar;
 
     char *active_filter_name;
+
+    GtkListStore *search_history;
 
     FsearchResultView *result_view;
 };
@@ -452,6 +455,15 @@ on_fsearch_list_view_popup(FsearchListView *view, gpointer user_data) {
     return listview_popup_menu(user_data, win->result_view->database_view);
 }
 
+static void
+on_listview_focus(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+    const char *query = get_query_text(win);
+
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    fsearch_history_add(win->search_history, query, config->sort_history_by);
+}
+
 static gboolean
 on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
     FsearchApplicationWindow *win = user_data;
@@ -533,6 +545,19 @@ on_fsearch_list_view_row_activated(FsearchListView *view, FsearchDatabaseIndexTy
 
     fsearch_window_action_open_generic(self, launch_folder ? true : false, true);
     return;
+}
+
+static gboolean
+on_search_entry_button_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_data) {
+    FsearchApplicationWindow *win = user_data;
+
+    if (event->type == GDK_DOUBLE_BUTTON_PRESS && !is_empty_search(win)) {
+        GtkEntryCompletion *completion = GTK_ENTRY_COMPLETION(win->search_completion);
+        gtk_entry_completion_complete(completion);
+
+        return TRUE;
+    }
+    return FALSE;
 }
 
 static void
@@ -795,6 +820,10 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     g_signal_connect_object(list_view, "row-activated", G_CALLBACK(on_fsearch_list_view_row_activated), win, G_CONNECT_AFTER);
     g_signal_connect(list_view, "key-press-event", G_CALLBACK(on_listview_key_press_event), win);
 
+    if(config->enable_history) {
+        g_signal_connect(list_view, "focus-in-event", G_CALLBACK(on_listview_focus), win);
+    }
+
     win->result_view->list_view = list_view;
 }
 
@@ -851,6 +880,20 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     fsearch_application_window_init_overlays(self);
 
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
+    FsearchConfig *config = fsearch_application_get_config(app);
+
+    self->search_history = gtk_list_store_new(2, G_TYPE_STRING, G_TYPE_INT);
+
+    if (config->enable_history) {
+        if (fsearch_history_exists()) {
+            write_csv_to_liststore(self->search_history);
+        }
+
+        GtkEntryCompletion *completion = GTK_ENTRY_COMPLETION(self->search_completion);
+        gtk_entry_completion_set_model(completion, GTK_TREE_MODEL(self->search_history));
+        gtk_entry_completion_set_text_column(completion, 0);
+    }
+
     g_signal_connect_object(app, "database-scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(app, "database-update-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(app, "database-load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
@@ -1035,11 +1078,13 @@ fsearch_application_window_class_init(FsearchApplicationWindowClass *klass) {
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_box);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_button_revealer);
     gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_entry);
+    gtk_widget_class_bind_template_child(widget_class, FsearchApplicationWindow, search_completion);
 
     gtk_widget_class_bind_template_callback(widget_class, on_filter_combobox_changed);
     gtk_widget_class_bind_template_callback(widget_class, on_fsearch_window_delete_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_activate);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_changed);
+    gtk_widget_class_bind_template_callback(widget_class, on_search_entry_button_press_event);
     gtk_widget_class_bind_template_callback(widget_class, on_search_entry_key_press_event);
 }
 

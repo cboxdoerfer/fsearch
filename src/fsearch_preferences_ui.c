@@ -60,6 +60,10 @@ typedef struct {
     GtkToggleButton *action_after_file_open_mouse;
     GtkToggleButton *show_indexing_status;
 
+    // History page
+    GtkToggleButton *enable_history_button;
+    GtkComboBox *sort_history_by;
+
     // Search page
     GtkToggleButton *auto_search_in_path_button;
     GtkToggleButton *auto_match_case_button;
@@ -505,6 +509,9 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->launch_desktop_files = gtk_toggle_button_get_active(ui->launch_desktop_files_button);
     new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
     new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
+    // History
+    new_config->enable_history = gtk_toggle_button_get_active(ui->enable_history_button);
+    new_config->sort_history_by = gtk_combo_box_get_active(ui->sort_history_by);
 
     g_clear_pointer(&new_config->exclude_files, g_strfreev);
     new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
@@ -657,6 +664,15 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                  "show_indexing_status_button",
                                                  "help_show_indexing_status",
                                                  new_config->show_indexing_status);
+
+    // History
+    ui->enable_history_button =
+        toggle_button_get(ui->builder, "enable_history_button", "help_dark_theme", new_config->enable_history);
+
+    ui->sort_history_by = GTK_COMBO_BOX(
+        builder_init_widget(ui->builder, "sort_history_by", "help_action_after_open"));
+
+    gtk_combo_box_set_active(ui->sort_history_by, new_config->sort_history_by);
 
     // Search page
     ui->auto_search_in_path_button =
