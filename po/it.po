@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-08-16 11:52+0000\n"
-"Last-Translator: nortio <savi.napolitano@gmail.com>\n"
+"PO-Revision-Date: 2025-02-26 19:05+0000\n"
+"Last-Translator: Korra DH <korra@corradobigliardi.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/fsearch/"
 "translations/it/>\n"
 "Language: it\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.0-dev\n"
+"X-Generator: Weblate 5.10.2-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -177,6 +177,7 @@ msgstr ""
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
+"Inverti la selezione con la banda di gomma quando è premuto il tasto 'Ctrl'"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
@@ -1248,14 +1249,6 @@ msgstr ""
 "Questo pulsante rimuove il filtro correntemente selezionato."
 
 #: src/fsearch_preferences.ui:2013
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "<b>Edit selected filter:</b>\n"
 "\n"
@@ -1263,11 +1256,8 @@ msgid ""
 msgstr ""
 "<b>Aggiungere la cartella al database:</b>\n"
 "\n"
-"                      Questo pulsante apre una finestra di dialogo in cui è "
-"possibile selezionare una cartella che si desidera includere nel database "
-"per\n"
-"                      la ricerca.\n"
-"                    "
+"Questo pulsante apre una finestra di dialogo in cui è possibile selezionare "
+"una cartella che si desidera includere nel database per la ricerca."
 
 #: src/fsearch_preferences.ui:2030
 msgid ""
@@ -1277,6 +1267,12 @@ msgid ""
 "\n"
 "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
+"<b>Ripristina i filtri predefiniti:</b>\n"
+"\n"
+"Questo pulsante ripristina la configurazione di default dei filtri.\n"
+"\n"
+"⚠ Tutti i filtri che sono stati creati o modificati dall'utente saranno "
+"persi! ⚠"
 
 #: src/fsearch_preferences.ui:2049
 msgid ""
@@ -1285,6 +1281,10 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>Esci con Esc:</b>\n"
+"\n"
+"Se abilitato, FSearch esce quando il pulsante Esc è premuto invece di "
+"ridurre ad icona la finestra."
 
 #: src/fsearch_preferences.ui:2068 src/fsearch_window.ui:289
 #: src/fsearch_window.ui:414 src/menus.ui:150 src/menus.ui:156
@@ -1300,10 +1300,8 @@ msgid "_Select"
 msgstr "_Seleziona"
 
 #: src/fsearch_preferences_ui.c:332
-#, fuzzy
-#| msgid "Add folders"
 msgid "Add filter"
-msgstr "Aggiungi Cartelle"
+msgstr "Aggiungi filtro"
 
 #: src/fsearch_preferences_widgets.c:220 src/fsearch_preferences_widgets.c:267
 msgid "Active"
@@ -1328,16 +1326,13 @@ msgid "Macro"
 msgstr ""
 
 #: src/fsearch_preferences_widgets.c:292
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Svuota la query"
+msgstr "Interroga"
 
 #: src/fsearch_statusbar.c:56
-#, fuzzy, c-format
-#| msgid "%'d Items"
+#, c-format
 msgid "%'d Item"
-msgstr "Oggetti: %'d"
+msgstr "%'d Oggetto"
 
 #: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
 #, c-format
@@ -1365,10 +1360,8 @@ msgid "0 Items"
 msgstr "0 Elementi"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Annulla"
+msgstr "Annulla"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1407,8 +1400,9 @@ msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Il termine di ricerca contiene separatori di percorso.\n"
-"<b>Cerca in Percorso</b> è stato temporaneamente attivato per questo termine."
+"Il termine di ricerca contiene caratteri maiuscoli.\n"
+"<b>Controlla maiuscolo</b> è stato temporaneamente attivato per questa "
+"ricerca."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
@@ -1451,21 +1445,13 @@ msgid "Date Modified"
 msgstr "Ultima modifica"
 
 #: src/fsearch_window.c:662
-#, fuzzy
-#| msgid ""
-#| "Sorting by <b>Type</b> can be very slow with many results and it can't be "
-#| "aborted.\n"
-#| "\n"
-#| "This sort order is not persistent, it will be reset when the search term "
-#| "changes."
 msgid ""
 "Sorting by <b>Type</b> can take a few seconds with many results.\n"
 "\n"
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"L'ordinamento per <b>Tipo</b> può essere molto lento con molti risultati e "
-"non può essere interrotto.\n"
+"L'ordinamento per <b>Tipo</b> può essere lento con molti risultati.\n"
 "\n"
 "Questo ordinamento non è persistente, sarà resettato quando il termine di "
 "ricerca cambia."
@@ -1514,7 +1500,7 @@ msgstr "Informazioni"
 
 #: src/fsearch_window.ui:328 src/menus.ui:47
 msgid "Quit"
-msgstr "Esce"
+msgstr "Esci"
 
 #: src/fsearch_window.ui:371 src/fsearch_window.ui:442 src/menus.ui:131
 msgid "Donate"
@@ -1569,19 +1555,17 @@ msgstr "Sposto i file nel cestino…"
 #: src/fsearch_window_actions.c:210 src/fsearch_window_actions.c:494
 #: src/fsearch_window_actions.c:534
 msgid "Something went wrong."
-msgstr ""
+msgstr "Qualcosa è andato storto."
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
-#| msgid "Deleting files…"
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Elimino file…"
+msgstr "Eliminati %d file(s)…"
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
-#| msgid "Moving files to trash…"
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Sposto i file nel cestino…"
+msgstr "Spostati %d file(s) nel cestino…"
 
 #: src/fsearch_window_actions.c:224
 msgid ""
