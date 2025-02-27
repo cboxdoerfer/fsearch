@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2025-02-26 19:05+0000\n"
+"PO-Revision-Date: 2025-02-28 04:30+0000\n"
 "Last-Translator: Korra DH <korra@corradobigliardi.it>\n"
 "Language-Team: Italian <https://hosted.weblate.org/projects/fsearch/"
 "translations/it/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.10.2-dev\n"
+"X-Generator: Weblate 5.10.2-rc\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -1323,7 +1323,7 @@ msgstr "Nome"
 
 #: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
-msgstr ""
+msgstr "Macro"
 
 #: src/fsearch_preferences_widgets.c:292
 msgid "Query"
@@ -1392,10 +1392,6 @@ msgid "(empty)"
 msgstr "(vuoto)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
@@ -1409,16 +1405,12 @@ msgid "CASE"
 msgstr "CASE"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
-#| msgid ""
-#| "Search term contains path separators.\n"
-#| "<b>Search in Path</b> was temporarily activated for this term."
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
 msgstr ""
 "Il termine di ricerca contiene separatori di percorso.\n"
-"<b>Cerca in Percorso</b> è stato temporaneamente attivato per questo termine."
+"<b>Cerca in Percorso</b> è stato temporaneamente attivato per questa ricerca."
 
 #: src/fsearch_statusbar.ui:545 src/fsearch_statusbar.ui:598
 msgid "PATH"
@@ -1489,10 +1481,8 @@ msgid "Show Search Button"
 msgstr "Mostra Pulsante Cerca"
 
 #: src/fsearch_window.ui:274 src/fsearch_window.ui:355 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSearch"
+msgstr "FSearch Online"
 
 #: src/fsearch_window.ui:303 src/menus.ui:161
 msgid "About"
@@ -1504,23 +1494,23 @@ msgstr "Esci"
 
 #: src/fsearch_window.ui:371 src/fsearch_window.ui:442 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Dona"
 
 #: src/fsearch_window.ui:386 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/fsearch_window.ui:400 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Segnalazioni di bug e richieste di funzionalità"
 
 #: src/fsearch_window.ui:459 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "Sponsor GitHub"
 
 #: src/fsearch_window.ui:473 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:585
 msgid "Search…"
@@ -1572,6 +1562,8 @@ msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"Il database dev'essere aggiornato prima di applicare queste modifiche! "
+"Questo sarà corretto nei prossimi aggiornamenti."
 
 #: src/fsearch_window_actions.c:250
 #, c-format
