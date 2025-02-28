@@ -78,7 +78,7 @@ struct FsearchDatabase {
 };
 
 enum {
-    WALK_OK = 0,
+    WALK_OK,
     WALK_BADIO,
     WALK_CANCEL,
 };
