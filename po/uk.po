@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2023-01-24 20:50+0000\n"
-"Last-Translator: Andrij Mizyk <andm1zyk@proton.me>\n"
+"PO-Revision-Date: 2025-03-09 15:02+0000\n"
+"Last-Translator: Максим Горпиніч <maksimgorpinic2005a@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
 "translations/uk/>\n"
 "Language: uk\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 5.10.3-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -135,12 +135,12 @@ msgstr "засіб"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "все"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
 msgid "Christian Boxdörfer"
-msgstr "Christian Boxdörfer"
+msgstr "Крістіан Боксдорфер"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
 msgid "New search engine"
@@ -156,11 +156,11 @@ msgstr "Власні фільтри"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Покращена продуктивність сортування"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Покращена продуктивність прокручування"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
@@ -169,24 +169,28 @@ msgstr "Запамʼятовувати виділення файлів післ�
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
+"Автоматично прокручувати список результатів у режимі вибору резинової стрічки"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
+"Інвертуйте виділення за допомогою гумової стрічки, коли натиснуто «Ctrl»"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "Перейти до запису пошуку, коли активується головне вікно"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Додати фільтр для програм (наприклад, файлів .desktop)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
+"Додайте опцію для запуску програм безпосередньо замість відкриття файлів "
+".desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "Show application icons for .desktop files"
@@ -194,19 +198,23 @@ msgstr "Показувати значки програми для файлів .
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Додайте файли .odp і .ods до фільтра документів"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"Меню 'Відкрити за допомогою' тепер показує лише програми, які можуть "
+"працювати з вибраними файлами"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
+"Покращено відкриття кількох файлів одного типу (тепер вони передаються "
+"додаткам як список, а не один за одним)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
@@ -216,28 +224,33 @@ msgstr "Краща підтримка відкривання файлів у р�
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
+"Додайте пункти меню з посиланнями на сторінки відстеження проблем, форум і "
+"сторінки пожертв"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Покращена підтримка систем, відмінних від Linux"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
+"Додайте опцію виходу з FSearch після натискання Escape замість згортання "
+"вікна"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "Виключити '/proc' і '/sys' за замовчуванням"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
+"Відкрити контекстне меню, коли натиснуто клавішу «Меню» або «Shift + F10»"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
-msgstr ""
+msgstr "і безліч виправлень помилок, оновлень перекладу та менших покращень"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
@@ -298,12 +311,9 @@ msgid "Failed to get path"
 msgstr "Помилка отримання шляху"
 
 #: src/fsearch_file_utils.c:253
-#, fuzzy
-#| msgctxt "Will be followed by the content type string."
-#| msgid "Error when getting information for content type"
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr "Помилка під час отримання інформації про тип вмісту"
+msgstr "Помилка під час отримання інформації з файлу"
 
 #: src/fsearch_file_utils.c:255
 msgid "Failed to get application information"
@@ -665,7 +675,7 @@ msgstr "хвилин"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "Введіть шлях…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
@@ -901,13 +911,6 @@ msgstr ""
 "Якщо ввімкнено, подвійне клацання в стовпці шляху відкриватиме вибраний шлях."
 
 #: src/fsearch_preferences.ui:1624
-#, fuzzy
-#| msgid ""
-#| "<b>Single click to open:</b>\n"
-#| "\n"
-#| "If enabled, a single click will open the selected file/folder. If you "
-#| "only want to select a file/folder while this setting is active, you need "
-#| "to a hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -915,11 +918,11 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to hold "
 "<i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
-"<b>Відкривати одним клацанням:</b>\n"
+"<b>Один клік, щоб відкрити:</b> \n"
 "\n"
-"Якщо ввімкнено, одинарне клацання відкриватиме вибраний файл/каталог. Якщо "
-"ви хочете виділити файл/каталог, клацніть по них утримуючи клавішу <i>Ctrl</"
-"i>."
+"Якщо ввімкнено, одним клацанням буде відкрито вибраний файл/теку. Якщо ви "
+"хочете лише вибрати файл/теку, поки це налаштування активне, вам потрібно "
+"одночасно утримувати <i>Ctrl</i> і клацати файл/теку."
 
 #: src/fsearch_preferences.ui:1641
 msgid ""
