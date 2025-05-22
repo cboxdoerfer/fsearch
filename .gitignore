@@ -32,6 +32,7 @@ Makefile.in
 /.version
 /config.h*
 fsearch*-dirty
+.ccls-cache/
 
 # Project files
 tags
