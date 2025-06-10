@@ -56,11 +56,13 @@ libfsearch_sources = [
 
 if build_machine.system()=='darwin'
     libfsearch_sources+=['strverscmp.c']
+elif host_machine.system()=='windows'
+    libfsearch_sources+=['strverscmp.c', 'win32_compat.c']
 endif
 
 fsearch_deps = [
     cc.find_library('m', required: true),
-    dependency('gio-unix-2.0', version: '>= 2.50'),
+    dependency(host_machine.system() == 'windows' ? 'gio-windows-2.0' : 'gio-unix-2.0', version: '>= 2.50'),
     dependency('gtk+-3.0', version: '>= 3.18'),
     dependency('libpcre2-8', version: '>= 10.21'),
     dependency('icu-uc', version: '>= 3.8'),
