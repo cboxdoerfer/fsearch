@@ -1295,9 +1295,6 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
         else {
             FsearchDatabaseEntry *file_entry = fsearch_memory_pool_malloc(db->file_pool);
             db_entry_set_name(file_entry, dent->d_name);
-#ifdef _WIN32
-           // printf("[DEBUG] File: %s, Size from stat: %lld bytes\n", dent->d_name, (long long)st.st_size);
-#endif
             db_entry_set_size(file_entry, st.st_size);
             db_entry_set_mtime(file_entry, st.st_mtime);
             db_entry_set_type(file_entry, DATABASE_ENTRY_TYPE_FILE);

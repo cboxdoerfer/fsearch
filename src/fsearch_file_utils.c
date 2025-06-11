@@ -315,14 +315,12 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
         #endif
 
     if (!app_info) {
-        if (!app_info) {
-            add_error_message_with_format(ctx->error_messages,
-                                          C_("Will be followed by the content type string.",
-                                             "Error when getting information for content type"),
-                                          content_type,
-                                          _("No default application registered"));
-            return;
-        }
+        add_error_message_with_format(ctx->error_messages,
+                                      C_("Will be followed by the content type string.",
+                                         "Error when getting information for content type"),
+                                      content_type,
+                                      _("No default application registered"));
+        return;
     }
 
     FsearchFileUtilsLaunchUrisContext *launch_uris_ctx = g_new0(FsearchFileUtilsLaunchUrisContext, 1);
@@ -559,7 +557,7 @@ fsearch_file_utils_open_path_with_command(const char *path, const char *cmd, GSt
 
     const char *error_description = C_("Will be followed by the path of the folder.", "Error while opening folder");
 #ifdef _WIN32
-    g_autofree char *cmd_res = build_folder_open_cmd(parent_path, parent_path, cmd);
+    g_autofree char *cmd_res = build_folder_open_cmd(parent_path, path, cmd);
 #else
     g_autofree char *cmd_res = build_folder_open_cmd(path, path, cmd);
 #endif

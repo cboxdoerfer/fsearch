@@ -127,11 +127,17 @@ int win32_fnmatch(const char *pattern, const char *string, int flags) {
     return match_pattern(pattern, string, flags);
 }
 
-// Simple strptime implementation for Windows
+// Enhanced strptime implementation for Windows
+// Supports:
+// - "%Y" (4-digit year)
+// - "%y" (2-digit year)
+// - "%m" (month)
+// - "%d" (day)
+// - "%H" (hour)
+// - "%M" (minute)
+// - "%S" (second)
+// - Combinations like "%Y-%m-%d", "%y-%m-%d", "%Y-%m-%d %H:%M:%S", etc.
 char *win32_strptime(const char *s, const char *format, struct tm *tm) {
-    // Very basic implementation - only handles common formats
-    // This is a simplified version that handles basic ISO date formats
-    
     if (!s || !format || !tm) {
         return NULL;
     }
@@ -139,30 +145,93 @@ char *win32_strptime(const char *s, const char *format, struct tm *tm) {
     // Clear the tm structure
     memset(tm, 0, sizeof(struct tm));
     
-    // Handle common ISO date formats
-    if (strcmp(format, "%Y-%m-%d") == 0) {
-        int year, month, day;
-        if (sscanf(s, "%d-%d-%d", &year, &month, &day) == 3) {
-            tm->tm_year = year - 1900;
-            tm->tm_mon = month - 1;
-            tm->tm_mday = day;
-            return (char*)(s + 10); // Return pointer after parsed part
-        }
-    }
-    else if (strcmp(format, "%Y-%m-%d %H:%M:%S") == 0) {
-        int year, month, day, hour, min, sec;
-        if (sscanf(s, "%d-%d-%d %d:%d:%d", &year, &month, &day, &hour, &min, &sec) == 6) {
-            tm->tm_year = year - 1900;
-            tm->tm_mon = month - 1;
-            tm->tm_mday = day;
-            tm->tm_hour = hour;
-            tm->tm_min = min;
-            tm->tm_sec = sec;
-            return (char*)(s + 19); // Return pointer after parsed part
+    const char *f = format;
+    const char *p = s;
+    int part_count = 0;
+    
+    while (*f && *p) {
+        if (*f == '%') {
+            f++;
+            int consumed = 0;
+            int n;
+            switch (*f) {
+            case 'Y': // 4-digit year
+                if (sscanf(p, "%4d%n", &n, &consumed) != 1 || consumed != 4) {
+                    return NULL;
+                }
+                tm->tm_year = n - 1900;
+                p += consumed;
+                part_count++;
+                break;
+            case 'y': // 2-digit year
+                if (sscanf(p, "%2d%n", &n, &consumed) != 1 || consumed != 2) {
+                    return NULL;
+                }
+                tm->tm_year = (n < 69) ? (n + 100) : n;
+                p += consumed;
+                part_count++;
+                break;
+            case 'm': // month
+                if (sscanf(p, "%2d%n", &n, &consumed) != 1 || consumed == 0) {
+                    return NULL;
+                }
+                tm->tm_mon = n - 1;
+                p += consumed;
+                part_count++;
+                break;
+            case 'd': // day
+                if (sscanf(p, "%2d%n", &n, &consumed) != 1 || consumed == 0) {
+                    return NULL;
+                }
+                tm->tm_mday = n;
+                p += consumed;
+                part_count++;
+                break;
+            case 'H': // hour (00-23)
+                if (sscanf(p, "%2d%n", &n, &consumed) != 1 || consumed == 0) {
+                    return NULL;
+                }
+                tm->tm_hour = n;
+                p += consumed;
+                part_count++;
+                break;
+            case 'M': // minute (00-59)
+                if (sscanf(p, "%2d%n", &n, &consumed) != 1 || consumed == 0) {
+                    return NULL;
+                }
+                tm->tm_min = n;
+                p += consumed;
+                part_count++;
+                break;
+            case 'S': // second (00-59)
+                if (sscanf(p, "%2d%n", &n, &consumed) != 1 || consumed == 0) {
+                    return NULL;
+                }
+                tm->tm_sec = n;
+                p += consumed;
+                part_count++;
+                break;
+            default:
+                // Unsupported format specifier
+                return NULL;
+            }
+            f++;
+        } else {
+            // Match literal characters (like '-', ':', ' ')
+            if (*f != *p) {
+                return NULL;
+            }
+            f++;
+            p++;
         }
     }
     
-    return NULL; // Format not supported or parsing failed
+    // If we didn't parse any parts or didn't consume entire string, fail
+    if (part_count == 0 || *p != '\0') {
+        return NULL;
+    }
+    
+    return (char *)p;
 }
 
 // Wide string conversion utilities for Unicode support
@@ -260,7 +329,7 @@ DIR *win32_opendir_unicode(const char *dirname) {
     win32_free_wchar(wdirname);
     
     // Use Unicode version of FindFirstFile
-    dirp->handle = FindFirstFileW(wsearch_path, (WIN32_FIND_DATAW*)&dirp->find_data);
+    dirp->handle = FindFirstFileW(wsearch_path, &dirp->find_data);
     if (dirp->handle == INVALID_HANDLE_VALUE) {
         free(dirp);
         return NULL;
@@ -275,25 +344,23 @@ struct dirent *win32_readdir_unicode(DIR *dirp) {
         return NULL;
     }
     
-    WIN32_FIND_DATAW *find_data = (WIN32_FIND_DATAW*)&dirp->find_data;
-    
     if (dirp->first) {
         dirp->first = 0;
     } else {
-        if (!FindNextFileW(dirp->handle, find_data)) {
+        if (!FindNextFileW(dirp->handle, &dirp->find_data)) {
             return NULL;
         }
     }
     
     // Convert wide string filename to UTF-8
-    char *utf8_name = win32_wchar_to_utf8(find_data->cFileName);
+    char *utf8_name = win32_wchar_to_utf8(dirp->find_data.cFileName);
     if (utf8_name) {
         strncpy(dirp->entry.d_name, utf8_name, sizeof(dirp->entry.d_name) - 1);
         dirp->entry.d_name[sizeof(dirp->entry.d_name) - 1] = '\0';
         win32_free_utf8(utf8_name);
     } else {
         // Fallback: truncate wide string to ASCII
-        size_t len = wcstombs(dirp->entry.d_name, find_data->cFileName, sizeof(dirp->entry.d_name) - 1);
+        size_t len = wcstombs(dirp->entry.d_name, dirp->find_data.cFileName, sizeof(dirp->entry.d_name) - 1);
         if (len == (size_t)-1) {
             dirp->entry.d_name[0] = '\0';
         } else {
@@ -325,7 +392,7 @@ DIR *win32_opendir(const char *dirname) {
     char search_path[MAX_PATH];
     snprintf(search_path, sizeof(search_path), "%s\\*", dirname);
     
-    dirp->handle = FindFirstFileA(search_path, &dirp->find_data);
+    dirp->handle = FindFirstFileA(search_path, (LPWIN32_FIND_DATAA)&dirp->find_data);
     if (dirp->handle == INVALID_HANDLE_VALUE) {
         free(dirp);
         return NULL;
@@ -343,12 +410,12 @@ struct dirent *win32_readdir(DIR *dirp) {
     if (dirp->first) {
         dirp->first = 0;
     } else {
-        if (!FindNextFileA(dirp->handle, &dirp->find_data)) {
+        if (!FindNextFileA(dirp->handle, (LPWIN32_FIND_DATAA)&dirp->find_data)) {
             return NULL;
         }
     }
     
-    strncpy(dirp->entry.d_name, dirp->find_data.cFileName, sizeof(dirp->entry.d_name) - 1);
+    strncpy(dirp->entry.d_name, ((LPWIN32_FIND_DATAA)&dirp->find_data)->cFileName, sizeof(dirp->entry.d_name) - 1);
     dirp->entry.d_name[sizeof(dirp->entry.d_name) - 1] = '\0';
     
     return &dirp->entry;

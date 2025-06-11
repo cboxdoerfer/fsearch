@@ -70,7 +70,7 @@ struct dirent {
 
 typedef struct {
     HANDLE handle;
-    WIN32_FIND_DATAA find_data;
+    WIN32_FIND_DATAW find_data;  // Changed to W to support Unicode functions by default
     struct dirent entry;
     int first;
 } DIR;
