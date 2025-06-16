@@ -160,42 +160,41 @@ sort_thread(gpointer data, gpointer user_data) {
 }
 
 static void
+add_remaining_items(DynamicArray *dest, DynamicArray *source, uint32_t start_idx) {
+    const uint32_t remaining_items = source->num_items - start_idx;
+    if (remaining_items > 0) {
+        darray_add_items(dest, &source->data[start_idx], remaining_items);
+    }
+}
+
+static void
 merge_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
-    int i = 0;
-    int j = 0;
-    const uint32_t n1 = ctx->m1->num_items;
-    const uint32_t n2 = ctx->m2->num_items;
+    uint32_t left_idx = 0;
+    uint32_t right_idx = 0;
+    const uint32_t left_size = ctx->m1->num_items;
+    const uint32_t right_size = ctx->m2->num_items;
 
-    while (true) {
-        void *d1 = darray_get_item(ctx->m1, i);
-        void *d2 = darray_get_item(ctx->m2, j);
+    // Merge arrays while both have elements
+    while (left_idx < left_size && right_idx < right_size) {
+        void *left_item = darray_get_item(ctx->m1, left_idx);
+        void *right_item = darray_get_item(ctx->m2, right_idx);
 
-        if (i < n1 && j < n2) {
-            const int res = ctx->comp_func(&d1, &d2, user_data);
-            if (res <= 0) {
-                darray_add_item(ctx->dest, d1);
-                i++;
-            }
-            else {
-                darray_add_item(ctx->dest, d2);
-                j++;
-            }
+        const int comparison = ctx->comp_func(&left_item, &right_item, user_data);
+
+        if (comparison <= 0) {
+            darray_add_item(ctx->dest, left_item);
+            left_idx++;
         }
         else {
-            if (i < n1) {
-                darray_add_items(ctx->dest, &ctx->m1->data[i], ctx->m1->num_items - i);
-                return;
-            }
-            else if (j < n2) {
-                darray_add_items(ctx->dest, &ctx->m2->data[j], ctx->m2->num_items - j);
-                return;
-            }
-            else {
-                return;
-            }
+            darray_add_item(ctx->dest, right_item);
+            right_idx++;
         }
     }
+
+    // Add remaining elements from either array
+    add_remaining_items(ctx->dest, ctx->m1, left_idx);
+    add_remaining_items(ctx->dest, ctx->m2, right_idx);
 }
 
 DynamicArray *
@@ -329,8 +328,8 @@ darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements,
     if (index >= array->num_items) {
         return 0;
     }
-    else if (index + n_elements >= array->num_items) {
-        // the end of the items to be removed is also the end of the array.
+    if (index + n_elements >= array->num_items) {
+        // The end of the items to be removed is also the end of the array.
         // No need to memmove, just to decrement the number of array items.
         n_elements = array->num_items - index;
         if (dest) {
@@ -609,7 +608,7 @@ darray_binary_search_with_data(DynamicArray *array,
     while (left <= right) {
         middle = left + (right - left) / 2;
 
-        int32_t match = comp_func(&array->data[middle], &item, data);
+        const int32_t match = comp_func(&array->data[middle], &item, data);
         if (match == 0) {
             // We've found an exact match
             if (matched_index) {
@@ -617,7 +616,7 @@ darray_binary_search_with_data(DynamicArray *array,
             }
             return true;
         }
-        else if (match < 0) {
+        if (match < 0) {
             // item is to the right of middle
             left = middle + 1;
         }
