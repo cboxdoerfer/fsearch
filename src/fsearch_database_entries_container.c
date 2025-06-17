@@ -290,10 +290,10 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
     g_print("steal with %d known descendants\n", num_known_descendants);
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
 
-    uint32_t num_known_descandants_stolen = 0;
+    uint32_t num_known_descendants_stolen = 0;
 
     while (container_idx < darray_get_num_items(self->container)) {
-        if (num_known_descendants == num_known_descandants_stolen) {
+        if (num_known_descendants == num_known_descendants_stolen) {
             // We've found all known descendants and are done here.
             break;
         }
@@ -303,10 +303,10 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
         if (num_known_descendants >= 0 && self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
             // We know the exact number of descendants and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
             // it is guaranteed that they are all sorted next to each other. Therefore we can use an optimized code
-            // paths where we steal them in large chunks, instead of one by one.
-            num_known_descandants_stolen += darray_steal(container,
+            // path where we steal them in large chunks, instead of one by one.
+            num_known_descendants_stolen += darray_steal(container,
                                                          entry_start_idx,
-                                                         num_known_descendants - num_known_descandants_stolen,
+                                                         num_known_descendants - num_known_descendants_stolen,
                                                          descendants);
         }
         else {
