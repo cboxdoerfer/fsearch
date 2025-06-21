@@ -1,8 +1,17 @@
 #define G_LOG_DOMAIN "fsearch-database-entries-container"
 
 #include "fsearch_database_entries_container.h"
+#include "fsearch_database_index_properties.h"
+#include "fsearch_database_entry.h"
+#include "fsearch_database_sort.h"
+#include "fsearch_array.h"
 
 #include <glib.h>
+#include <glib/gmacros.h>
+#include <gio/giotypes.h>
+#include <stdbool.h>
+#include <stddef.h>
+#include <stdint.h>
 
 #include <math.h>
 
@@ -37,8 +46,8 @@ container_compare_func(DynamicArray **a, FsearchDatabaseEntry **b, FsearchDataba
     FsearchDatabaseEntry *entry_a = darray_get_item(array, 0);
     FsearchDatabaseEntry *entry_b = darray_get_item(array, darray_get_num_items(array) - 1);
 
-    const int32_t res_a = self->entry_comp_func(&entry_a, b, self->compare_context);
-    const int32_t res_b = self->entry_comp_func(&entry_b, b, self->compare_context);
+    const int32_t res_a = self->entry_comp_func((void *)&entry_a, (void *)b, self->compare_context);
+    const int32_t res_b = self->entry_comp_func((void *)&entry_b, (void *)b, self->compare_context);
     if (res_a <= 0 && res_b >= 0) {
         return 0;
     }
@@ -153,11 +162,9 @@ fsearch_database_entries_container_new(DynamicArray *array,
                                        FsearchDatabaseIndexProperty secondary_sort_order,
                                        FsearchDatabaseEntryType entry_type,
                                        GCancellable *cancellable) {
-    FsearchDatabaseEntriesContainer *self;
-
     g_return_val_if_fail(array, NULL);
 
-    self = g_slice_new0(FsearchDatabaseEntriesContainer);
+    FsearchDatabaseEntriesContainer *self = g_slice_new0(FsearchDatabaseEntriesContainer);
 
     self->ideal_entries_per_container = 8192;
 
@@ -283,7 +290,7 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
     uint32_t container_idx = 0;
     uint32_t entry_start_idx = 0;
     if (self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
-        DynamicArray *container = get_container_for_entry(self, (FsearchDatabaseEntry *)folder, &container_idx);
+        DynamicArray *container = get_container_for_entry(self, folder, &container_idx);
         darray_binary_search_with_data(container, folder, self->entry_comp_func, self->compare_context, &entry_start_idx);
     }
 
@@ -301,8 +308,8 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
         uint32_t entry_idx = entry_start_idx;
 
         if (num_known_descendants >= 0 && self->sort_order == DATABASE_INDEX_PROPERTY_PATH_FULL) {
-            // We know the exact number of descendants and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
-            // it is guaranteed that they are all sorted next to each other. Therefore we can use an optimized code
+            // We know the exact number of descendants, and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
+            // it is guaranteed that they are all sorted next to each other. Therefore, we can use an optimized code
             // path where we steal them in large chunks, instead of one by one.
             num_known_descendants_stolen += darray_steal(container,
                                                          entry_start_idx,
@@ -310,7 +317,7 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
                                                          descendants);
         }
         else {
-            // Unfortunately we have to steal/remove descendants one by one.
+            // Unfortunately, we have to steal/remove descendants one by one.
             while (entry_idx < darray_get_num_items(container)) {
                 FsearchDatabaseEntry *maybe_descendant = darray_get_item(container, entry_idx);
                 if (db_entry_is_descendant(maybe_descendant, folder)) {
