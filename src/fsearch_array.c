@@ -136,7 +136,7 @@ split_merge(DynamicArray *src,
         return;
     }
 
-    uint32_t center_idx = (end_idx + start_idx) / 2;
+    const uint32_t center_idx = (end_idx + start_idx) / 2;
     split_merge(dest, src, start_idx, center_idx, cancellable, comp_func, comp_data);
     split_merge(dest, src, center_idx, end_idx, cancellable, comp_func, comp_data);
     merge(src, dest, start_idx, center_idx, end_idx, cancellable, comp_func, comp_data);
