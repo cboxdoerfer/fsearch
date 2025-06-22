@@ -1069,6 +1069,9 @@ on_fsearch_list_view_bin_drag_gesture_update(GtkGestureDrag *gesture,
     //     return;
     // }
 
+    if (view->bin_drag_mode == FALSE) {
+        return;
+    }
     update_rubberband_selection(view);
     add_vertical_autoscroll_timeout(view);
     gtk_widget_queue_draw(GTK_WIDGET(view));
