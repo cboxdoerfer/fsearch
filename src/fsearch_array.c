@@ -159,7 +159,7 @@ sort_thread(gpointer data, gpointer user_data) {
     g_clear_pointer(&tmp, darray_unref);
 }
 
-static void
+static inline void
 add_remaining_items(DynamicArray *dest, DynamicArray *source, uint32_t start_idx) {
     const uint32_t remaining_items = source->num_items - start_idx;
     if (remaining_items > 0) {
