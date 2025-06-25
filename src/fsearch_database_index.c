@@ -278,7 +278,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     g_autoptr(DynamicArray) folders =
         fsearch_database_entries_container_steal_descendants(self->folder_container, folder_entry_to_remove, -1);
 
-    // It's worth to iterate over all folders to calculate the exact number of file descendants we must find,
+    // It's worth iterating over all folders to calculate the exact number of file descendants we must find,
     // because this means we can steal the files in huge chunks, which is much faster.
     uint32_t num_file_descendants = db_entry_folder_get_num_files(folder_entry_to_remove);
     for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
