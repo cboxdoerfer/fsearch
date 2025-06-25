@@ -333,13 +333,13 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     off_t size = 0;
     time_t mtime = 0;
 
-    off_t old_size = db_entry_get_size(entry);
-    time_t old_mtime = db_entry_get_mtime(entry);
-
     bool is_dir = false;
     if (!fsearch_file_utils_get_info(event->path->str, &mtime, &size, &is_dir)) {
         return;
     }
+
+    const off_t old_size = db_entry_get_size(entry);
+    const time_t old_mtime = db_entry_get_mtime(entry);
 
     if (old_size == size && old_mtime == mtime) {
         return;
