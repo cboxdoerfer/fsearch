@@ -6,6 +6,7 @@
 #include "fsearch_size_utils.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_utf.h"
+#include <inttypes.h>
 #include <glib.h>
 #include <stdbool.h>
 #include <string.h>
@@ -52,17 +53,17 @@ static char *
 get_needle_description_for_comparison_type(int64_t start, int64_t end, FsearchQueryNodeComparison comp_type) {
     switch (comp_type) {
     case FSEARCH_QUERY_NODE_COMPARISON_EQUAL:
-        return g_strdup_printf("=%ld", start);
+        return g_strdup_printf("=%" PRId64, start);
     case FSEARCH_QUERY_NODE_COMPARISON_GREATER_EQ:
-        return g_strdup_printf(">=%ld", start);
+        return g_strdup_printf(">=%" PRId64, start);
     case FSEARCH_QUERY_NODE_COMPARISON_GREATER:
-        return g_strdup_printf(">%ld", start);
+        return g_strdup_printf(">%" PRId64, start);
     case FSEARCH_QUERY_NODE_COMPARISON_SMALLER_EQ:
-        return g_strdup_printf("<=%ld", start);
+        return g_strdup_printf("<=%" PRId64, start);
     case FSEARCH_QUERY_NODE_COMPARISON_SMALLER:
-        return g_strdup_printf("<%ld", start);
+        return g_strdup_printf("<%" PRId64, start);
     case FSEARCH_QUERY_NODE_COMPARISON_RANGE:
-        return g_strdup_printf("%ld..%ld", start, end);
+        return g_strdup_printf("%" PRId64 "..%" PRId64, start, end);
     default:
         return g_strdup("invalid");
     }

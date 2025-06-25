@@ -8,6 +8,7 @@
 #endif
 
 #include <glib/gi18n.h>
+#include <inttypes.h>
 #include <sys/file.h>
 
 #include "fsearch_array.h"
@@ -1024,7 +1025,7 @@ database_file_load_folders(FILE *fp,
 
     // fail if we didn't read the correct number of bytes
     if (fb - folder_block != folder_block_size) {
-        g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - folder_block, folder_block_size);
+        g_debug("[db_load] wrong amount of memory read: %zd != %" PRIu64, fb - folder_block, folder_block_size);
         return false;
     }
 
@@ -1074,7 +1075,7 @@ database_file_load_files(FILE *fp,
         darray_add_item(files, entry);
     }
     if (fb - file_block != file_block_size) {
-        g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - file_block, file_block_size);
+        g_debug("[db_load] wrong amount of memory read: %zd != %" PRIu64, fb - file_block, file_block_size);
         return false;
     }
 
@@ -1577,7 +1578,7 @@ database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
     if (fseek(fp, (long int)folder_block_size_offset, SEEK_SET) != 0) {
         goto save_fail;
     }
-    g_debug("[db_save] updating file and folder block size: %lu, %lu", folder_block_size, file_block_size);
+    g_debug("[db_save] updating file and folder block size: %" PRIu64 ", %" PRIu64, folder_block_size, file_block_size);
     bytes_written += database_file_write_data(fp, &folder_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1665,7 +1666,7 @@ database_file_load(const char *file_path,
     if (!database_file_read_element(&file_block_size, 8, fp)) {
         goto load_fail;
     }
-    g_debug("[db_load] folder size: %lu, file size: %lu", folder_block_size, file_block_size);
+    g_debug("[db_load] folder size: %" PRIu64 ", file size: %" PRIu64, folder_block_size, file_block_size);
 
     // TODO: implement index loading
     uint32_t num_indexes = 0;
