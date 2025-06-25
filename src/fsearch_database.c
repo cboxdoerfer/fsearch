@@ -31,8 +31,10 @@
 #include <malloc.h>
 #endif
 
+#include <inttypes.h>
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdint.h>
 #include <string.h>
 #include <sys/file.h>
 #include <sys/stat.h>
@@ -444,7 +446,7 @@ db_load_folders(FILE *fp,
 
     // fail if we didn't read the correct number of bytes
     if (fb - folder_block != folder_block_size) {
-        g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - folder_block, folder_block_size);
+        g_debug("[db_load] wrong amount of memory read: %zd != %" PRIu64, fb - folder_block, folder_block_size);
         return false;
     }
 
@@ -494,7 +496,7 @@ db_load_files(FILE *fp,
         darray_add_item(files, entry);
     }
     if (fb - file_block != file_block_size) {
-        g_debug("[db_load] wrong amount of memory read: %lu != %lu", fb - file_block, file_block_size);
+        g_debug("[db_load] wrong amount of memory read: %zd != %" PRIu64, fb - file_block, file_block_size);
         return false;
     }
 
@@ -615,7 +617,7 @@ db_load(FsearchDatabase *db, const char *file_path, void (*status_cb)(const char
     if (!read_element_from_file(&file_block_size, 8, fp)) {
         goto load_fail;
     }
-    g_debug("[db_load] folder size: %lu, file size: %lu", folder_block_size, file_block_size);
+    g_debug("[db_load] folder size: %" PRIu64 ", file size: %" PRIu64, folder_block_size, file_block_size);
 
     // TODO: implement index loading
     uint32_t num_indexes = 0;
@@ -1106,7 +1108,7 @@ db_save(FsearchDatabase *db, const char *path) {
     if (fseek(fp, (long int)folder_block_size_offset, SEEK_SET) != 0) {
         goto save_fail;
     }
-    g_debug("[db_save] updating file and folder block size: %lu, %lu", folder_block_size, file_block_size);
+    g_debug("[db_save] updating file and folder block size: %" PRIu64 ", %" PRIu64, folder_block_size, file_block_size);
     bytes_written += write_data_to_file(fp, &folder_block_size, 8, 1, &write_failed);
     if (write_failed == true) {
         goto save_fail;
@@ -1238,7 +1240,7 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 
         const size_t d_name_len = strlen(dent->d_name);
         if (d_name_len >= 256) {
-            g_warning("[db_scan] file name too long, skipping: \"%s\" (len: %lu)", dent->d_name, d_name_len);
+            g_warning("[db_scan] file name too long, skipping: \"%s\" (len: %zd)", dent->d_name, d_name_len);
             continue;
         }
 
