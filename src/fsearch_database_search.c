@@ -16,10 +16,10 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
-#include "fsearch_database_entry.h"
 #define G_LOG_DOMAIN "fsearch-search"
 
 #include "fsearch_database_search.h"
+#include "fsearch_database_entry.h"
 
 #include <stdint.h>
 #include <stdlib.h>
