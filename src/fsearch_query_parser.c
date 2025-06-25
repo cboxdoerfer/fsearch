@@ -317,7 +317,7 @@ parse_function_date_modified(FsearchQueryParseContext *parse_ctx, bool is_empty_
                                   flags,
                                   "date-modified",
                                   fsearch_query_node_new_date_modified,
-                                  fsearch_date_time_parse_interval);
+                                  (FsearchQueryIntegerParserFunc *)fsearch_date_time_parse_interval);
 }
 
 static GList *
