@@ -229,16 +229,8 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
                            NULL,
                            NULL,
                            NULL)) {
-            for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
-                FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-                fsearch_database_entries_container_insert(self->folder_container, folder);
-                num_folder_creates++;
-            }
-            for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
-                FsearchDatabaseEntry *file = darray_get_item(files, i);
-                fsearch_database_entries_container_insert(self->file_container, file);
-                num_file_creates++;
-            }
+            fsearch_database_entries_container_insert_array(self->folder_container, folders);
+            fsearch_database_entries_container_insert_array(self->file_container, files);
         }
     }
     else {
@@ -246,8 +238,10 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
             fsearch_database_index_add_file(self, event->name->str, size, mtime, event->watched_entry);
         files = darray_new(1);
         darray_add_item(files, entry);
-        num_file_creates++;
     }
+
+    num_folder_creates += folders ? darray_get_num_items(folders) : 0;
+    num_file_creates += files ? darray_get_num_items(files) : 0;
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
 }

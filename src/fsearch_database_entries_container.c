@@ -235,6 +235,17 @@ fsearch_database_entries_container_insert(FsearchDatabaseEntriesContainer *self,
     balance_container(self, c, c_idx);
 }
 
+void
+fsearch_database_entries_container_insert_array(FsearchDatabaseEntriesContainer *self, DynamicArray *array) {
+    g_return_if_fail(self);
+    g_return_if_fail(array);
+
+    for (uint32_t i = 0; i < darray_get_num_items(array); ++i) {
+        FsearchDatabaseEntry *entry = darray_get_item(array, i);
+        fsearch_database_entries_container_insert(self, entry);
+    }
+}
+
 FsearchDatabaseEntry *
 fsearch_database_entries_container_find(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntry *entry) {
     g_return_val_if_fail(self, NULL);

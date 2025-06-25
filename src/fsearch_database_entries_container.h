@@ -34,6 +34,9 @@ fsearch_database_entries_container_balance(FsearchDatabaseEntriesContainer *self
 void
 fsearch_database_entries_container_insert(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntry *entry);
 
+void
+fsearch_database_entries_container_insert_array(FsearchDatabaseEntriesContainer *self, DynamicArray *array);
+
 FsearchDatabaseEntry *
 fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEntry *entry);
 
