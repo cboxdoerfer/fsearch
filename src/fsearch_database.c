@@ -290,18 +290,18 @@ db_load_entry_super_elements_from_memory(const uint8_t *data_block,
 
     if ((index_flags & DATABASE_INDEX_FLAG_SIZE) != 0) {
         // size: size of file/folder
-        off_t size = 0;
+        int64_t size = 0;
         data_block = copy_bytes_and_return_new_src(&size, data_block, 8);
 
-        db_entry_set_size(entry, size);
+        db_entry_set_size(entry, (off_t)size);
     }
 
     if ((index_flags & DATABASE_INDEX_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time file/folder
-        time_t mtime = 0;
+        int64_t mtime = 0;
         data_block = copy_bytes_and_return_new_src(&mtime, data_block, 8);
 
-        db_entry_set_mtime(entry, mtime);
+        db_entry_set_mtime(entry, (time_t)mtime);
     }
 
     return data_block;
