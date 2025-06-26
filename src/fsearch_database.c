@@ -423,15 +423,9 @@ index_store_add_entries(FsearchDatabaseIndexStore *store, DynamicArray *entries,
         return;
     }
 
+    FsearchDatabaseEntriesContainer **containers = is_dir ? store->folder_container : store->file_container;
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = NULL;
-        if (is_dir) {
-            container = store->folder_container[i];
-        }
-        else {
-            container = store->file_container[i];
-        }
-
+        FsearchDatabaseEntriesContainer *container = containers[i];
         if (!container) {
             continue;
         }
