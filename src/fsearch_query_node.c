@@ -6,6 +6,7 @@
 #include "fsearch_size_utils.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_utf.h"
+#include <inttypes.h>
 #include <glib.h>
 #include <stdbool.h>
 #include <string.h>
