@@ -144,19 +144,19 @@ split_merge(DynamicArray *src,
 
 static void
 merge_sort(DynamicArray *to_sort,
-           DynamicArray *tmp,
            GCancellable *cancellable,
            DynamicArrayCompareDataFunc comp_func,
            gpointer comp_data) {
+    g_assert(to_sort);
+    g_assert(comp_func);
+    g_autoptr(DynamicArray) tmp = darray_copy(to_sort);
     split_merge(tmp, to_sort, 0, to_sort->num_items, cancellable, comp_func, comp_data);
 }
 
 static void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
-    DynamicArray *tmp = darray_copy(ctx->dest);
-    merge_sort(ctx->dest, tmp, user_data, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
-    g_clear_pointer(&tmp, darray_unref);
+    merge_sort(ctx->dest, user_data, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
 }
 
 static inline void
@@ -578,9 +578,7 @@ darray_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, GCancell
     }
     else {
         g_debug("[sort] merge sort: %d\n", array->num_items);
-        DynamicArray *src = darray_copy(array);
-        merge_sort(array, src, cancellable, comp_func, data);
-        g_clear_pointer(&src, darray_unref);
+        merge_sort(array, cancellable, comp_func, data);
     }
 }
 

@@ -621,7 +621,7 @@ on_name_acquired(GDBusConnection *connection, const gchar *name, gpointer user_d
                                                             NULL);
     g_dbus_connection_signal_unsubscribe(connection, signal_id);
 
-    if (dbus_group && reply) {
+    if (dbus_group && reply && worker_ctx) {
         g_debug("[app] trigger database update in primary instance");
         g_action_group_activate_action(G_ACTION_GROUP(dbus_group), "update_database", NULL);
 
