@@ -500,8 +500,7 @@ index_store_new(FsearchDatabaseIncludeManager *include_manager,
                 FsearchDatabaseIndexPropertyFlags flags,
                 FsearchDatabaseIndexEventFunc event_func,
                 gpointer event_func_data) {
-    FsearchDatabaseIndexStore *store;
-    store = g_slice_new0(FsearchDatabaseIndexStore);
+    FsearchDatabaseIndexStore *store = g_slice_new0(FsearchDatabaseIndexStore);
 
     store->indices = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_database_index_unref);
     store->search_results =
