@@ -489,7 +489,7 @@ pop_query_token(GQueue *stack) {
     if (g_queue_is_empty(stack)) {
         return FSEARCH_QUERY_TOKEN_NONE;
     }
-    return (FsearchQueryToken)(GPOINTER_TO_UINT(g_queue_pop_tail(stack)));
+    return (FsearchQueryToken)GPOINTER_TO_UINT(g_queue_pop_tail(stack));
 }
 
 static void

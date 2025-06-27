@@ -805,7 +805,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
     FsearchListView *list_view = fsearch_list_view_new(hadj, vadj);
     gtk_container_add(GTK_CONTAINER(win->listview_scrolled_window), GTK_WIDGET(list_view));
 
-    gtk_widget_show((GTK_WIDGET(list_view)));
+    gtk_widget_show(GTK_WIDGET(list_view));
     fsearch_list_view_set_query_tooltip_func(list_view, on_listview_query_tooltip, win);
     fsearch_list_view_set_draw_row_func(list_view, on_listview_draw_row, win);
     fsearch_list_view_set_sort_func(list_view, on_listview_sort, win);

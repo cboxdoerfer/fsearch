@@ -62,7 +62,6 @@ add_error_message(GString *error_messages, const char *error_message) {
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
     g_assert(path);
-    g_assert(len >= 0);
 
     const gchar *xdg_data_dir = g_get_user_data_dir();
     snprintf(path, len, "%s/%s", xdg_data_dir, data_folder_name);

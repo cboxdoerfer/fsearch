@@ -2643,7 +2643,7 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
                                                 "The file where the database will be loaded from or saved to by "
                                                 "default",
                                                 G_TYPE_FILE,
-                                                (G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS));
+                                                G_PARAM_READWRITE | G_PARAM_CONSTRUCT_ONLY | G_PARAM_STATIC_STRINGS);
 
     g_object_class_install_properties(object_class, NUM_PROPERTIES, properties);
 
@@ -2779,7 +2779,7 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
 
 static void
 fsearch_database_init(FsearchDatabase *self) {
-    g_mutex_init((&self->mutex));
+    g_mutex_init(&self->mutex);
     self->thread_pool = fsearch_thread_pool_init();
     self->work_queue = g_async_queue_new();
     self->work_queue_thread = g_thread_new("FsearchDatabaseWorkQueue", database_work_queue_thread, self);

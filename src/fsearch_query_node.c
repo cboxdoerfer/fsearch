@@ -174,9 +174,9 @@ fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
              operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
-    qnode->description = g_string_new(operator== FSEARCH_QUERY_NODE_OPERATOR_AND
+    qnode->description = g_string_new(operator == FSEARCH_QUERY_NODE_OPERATOR_AND
                                           ? "AND"
-                                          : (operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
+                                          : (operator == FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
     qnode->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
     qnode->operator= operator;
     return qnode;

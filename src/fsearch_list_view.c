@@ -1693,7 +1693,7 @@ fsearch_list_view_motion_notify_event(GtkWidget *widget, GdkEventMotion *event) 
         view->hovered_idx = UNSET_ROW;
     }
     else {
-        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, (int)(event->y));
+        view->hovered_idx = fsearch_list_view_get_row_idx_for_y_canvas(view, (int)event->y);
 
         if (view->single_click_activate && view->hovered_idx >= 0) {
             g_autoptr(GdkCursor) cursor = gdk_cursor_new_for_display(gdk_window_get_display(event->window), GDK_HAND2);
@@ -1767,7 +1767,7 @@ fsearch_list_view_realize_column(FsearchListView *view, FsearchListViewColumn *c
     GtkAllocation allocation;
     gtk_widget_get_allocation(col->button, &allocation);
     if (fsearch_list_view_is_text_dir_rtl(view)) {
-        attrs.x = (-COLUMN_RESIZE_AREA_WIDTH / 2);
+        attrs.x = -COLUMN_RESIZE_AREA_WIDTH / 2;
     }
     else {
         attrs.x = allocation.width - COLUMN_RESIZE_AREA_WIDTH / 2;
@@ -1810,9 +1810,9 @@ fsearch_list_view_realize(GtkWidget *widget) {
     attrs.y = view->header_height;
     attrs.width = MAX(view->min_list_width, allocation.width);
     attrs.height = MAX(view->list_height, allocation.height);
-    attrs.event_mask = (GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK | GDK_POINTER_MOTION_MASK | GDK_ENTER_NOTIFY_MASK
-                        | GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK
-                        | gtk_widget_get_events(widget));
+    attrs.event_mask = GDK_SCROLL_MASK | GDK_SMOOTH_SCROLL_MASK | GDK_POINTER_MOTION_MASK | GDK_ENTER_NOTIFY_MASK
+                       | GDK_LEAVE_NOTIFY_MASK | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK
+                       | gtk_widget_get_events(widget);
 
     view->bin_window = gdk_window_new(window, &attrs, attrs_mask);
     gtk_widget_register_window(widget, view->bin_window);
@@ -1821,9 +1821,9 @@ fsearch_list_view_realize(GtkWidget *widget) {
     attrs.y = 0;
     attrs.width = MAX(view->min_list_width, allocation.width);
     attrs.height = view->header_height;
-    attrs.event_mask = (GDK_EXPOSURE_MASK | GDK_SCROLL_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK
-                        | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK
-                        | gtk_widget_get_events(widget));
+    attrs.event_mask = GDK_EXPOSURE_MASK | GDK_SCROLL_MASK | GDK_ENTER_NOTIFY_MASK | GDK_LEAVE_NOTIFY_MASK
+                       | GDK_BUTTON_PRESS_MASK | GDK_BUTTON_RELEASE_MASK | GDK_KEY_PRESS_MASK | GDK_KEY_RELEASE_MASK
+                       | gtk_widget_get_events(widget);
 
     view->header_window = gdk_window_new(window, &attrs, attrs_mask);
     gtk_widget_register_window(widget, view->header_window);
