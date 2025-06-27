@@ -334,8 +334,7 @@ fsearch_application_shutdown(GApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));
     FsearchApplication *self = FSEARCH_APPLICATION(app);
 
-    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
-    for (; windows; windows = windows->next) {
+    for (GList *windows = gtk_application_get_windows(GTK_APPLICATION(app)); windows; windows = windows->next) {
         GtkWindow *window = windows->data;
         if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
             fsearch_application_window_prepare_shutdown(window);

@@ -700,9 +700,8 @@ fsearch_list_view_get_selection_modifiers(FsearchListView *view, gboolean *modif
     *extend = FALSE;
 
     GdkModifierType state = 0;
-    GdkModifierType mask;
     if (gtk_get_current_event_state(&state)) {
-        mask = gtk_widget_get_modifier_mask(widget, GDK_MODIFIER_INTENT_MODIFY_SELECTION);
+        GdkModifierType mask = gtk_widget_get_modifier_mask(widget, GDK_MODIFIER_INTENT_MODIFY_SELECTION);
         if ((state & mask) == mask) {
             *modify = TRUE;
         }
@@ -1785,7 +1784,6 @@ fsearch_list_view_realize(GtkWidget *widget) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     GtkAllocation allocation;
     GdkWindowAttr attrs;
-    guint attrs_mask;
 
     gtk_widget_set_realized(widget, TRUE);
 
@@ -1800,7 +1798,7 @@ fsearch_list_view_realize(GtkWidget *widget) {
     attrs.visual = gtk_widget_get_visual(widget);
     attrs.event_mask = GDK_VISIBILITY_NOTIFY_MASK;
 
-    attrs_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
+    guint attrs_mask = GDK_WA_X | GDK_WA_Y | GDK_WA_VISUAL;
 
     GdkWindow *window = gdk_window_new(gtk_widget_get_parent_window(widget), &attrs, attrs_mask);
     gtk_widget_set_window(widget, window);
