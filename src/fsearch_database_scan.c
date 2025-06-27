@@ -123,8 +123,8 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
     // remember end of parent path
     const gsize path_len = path->len;
 
-    DIR *dir = NULL;
-    if (!(dir = opendir(path->str))) {
+    DIR *dir = opendir(path->str);
+    if (!dir) {
         g_debug("[db_scan] failed to open directory: %s", path->str);
         return WALK_BADIO;
     }
