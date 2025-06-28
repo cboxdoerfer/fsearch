@@ -191,7 +191,8 @@ fsearch_folder_monitor_fanotify_new(GMainContext *monitor_context, GAsyncQueue *
     self->event_queue = g_async_queue_ref(event_queue);
 
     self->handles_to_folders = g_hash_table_new_full(g_bytes_hash, g_bytes_equal, (GDestroyNotify)g_bytes_unref, NULL);
-    self->folders_to_handles = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, NULL);
+    self->folders_to_handles =
+        g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, (GDestroyNotify)g_bytes_unref);
 
     self->monitor_context = g_main_context_ref(monitor_context);
 
@@ -264,16 +265,13 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, Fsearc
 
     memcpy(&handle_data->fsid, &buf.f_fsid, sizeof(fsid_t));
 
-    GBytes *handle_bytes = create_bytes_for_handle(g_steal_pointer(&handle_data));
-    g_hash_table_insert(self->handles_to_folders, handle_bytes, folder);
-    g_hash_table_insert(self->folders_to_handles, folder, handle_bytes);
-
-    if (fanotify_mark(self->fd, (FAN_MARK_ADD | FAN_MARK_ONLYDIR), FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
-        g_hash_table_remove(self->handles_to_folders, handle_bytes);
-        g_hash_table_remove(self->folders_to_handles, folder);
-        return false;
+    g_autoptr(GBytes) handle_bytes = create_bytes_for_handle(g_steal_pointer(&handle_data));
+    if (!fanotify_mark(self->fd, (FAN_MARK_ADD | FAN_MARK_ONLYDIR), FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
+        g_hash_table_insert(self->handles_to_folders, g_bytes_ref(handle_bytes), folder);
+        g_hash_table_insert(self->folders_to_handles, folder, g_bytes_ref(handle_bytes));
+        return true;
     }
-    return true;
+    return false;
 }
 
 void
