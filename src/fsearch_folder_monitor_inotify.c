@@ -198,6 +198,7 @@ fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, Fsearc
         g_hash_table_remove(self->watched_folders_to_descriptors, folder);
     }
     else {
-        g_assert_not_reached();
+        g_autoptr(GString) path_full = db_entry_get_path_full(folder);
+        g_debug("[unwatch_folder] no inotify fd found for folder: %s", path_full->str);
     }
 }
