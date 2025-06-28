@@ -725,6 +725,36 @@ on_listview_row_is_selected(int row, gpointer user_data) {
     return FALSE;
 }
 
+static GList*
+listview_on_drag_data_get(GList *indices, gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
+    FsearchDatabaseView *db_view = win->result_view->database_view;
+
+    if (!db_view) {
+        g_warning("Database view is NULL.");
+        return NULL;
+    }
+
+    GList *uris = NULL;
+    for (GList *l = indices; l != NULL; l = l->next) {
+        int idx = GPOINTER_TO_INT(l->data);
+        GString *path = db_view_entry_get_path_full_for_idx(db_view, idx);
+        if (path) {
+            gchar *uri = g_filename_to_uri(path->str, NULL, NULL);
+            if (uri) {
+                uris = g_list_append(uris, uri);
+            } else {
+                g_warning("Failed to convert path to URI: %s", path->str);
+            }
+            g_free(path);
+        } else {
+            g_warning("Failed to retrieve path for index: %d", idx);
+        }
+    }
+
+    return uris;
+}
+
 static void
 fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
@@ -786,6 +816,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
                                              on_listview_row_unselect_all,
                                              on_listview_row_num_selected,
                                              win);
+    fsearch_list_view_set_drag_data_get_handler(list_view, listview_on_drag_data_get);
     fsearch_list_view_set_single_click_activate(list_view, config->single_click_open);
     gtk_widget_set_has_tooltip(GTK_WIDGET(list_view), config->enable_list_tooltips);
 
