@@ -289,6 +289,7 @@ fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, Fsea
         }
     }
     else {
-        g_assert_not_reached();
+        g_autoptr(GString) path_full = db_entry_get_path_full(folder);
+        g_debug("[unwatch_folder] no fanotify handle found for folder: %s", path_full->str);
     }
 }
