@@ -188,7 +188,7 @@ fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchD
 
 void
 fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, FsearchDatabaseEntry *folder) {
-    int32_t wd = GPOINTER_TO_INT(g_hash_table_lookup(self->watched_folders_to_descriptors, folder));
+    const int32_t wd = GPOINTER_TO_INT(g_hash_table_lookup(self->watched_folders_to_descriptors, folder));
     FsearchDatabaseEntry *watched_folder = g_hash_table_lookup(self->watch_descriptors_to_folders, GINT_TO_POINTER(wd));
     if (watched_folder == folder) {
         if (inotify_rm_watch(self->fd, wd)) {
