@@ -284,15 +284,14 @@ void
 fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, FsearchDatabaseEntry *folder) {
     GBytes *fanotify_handle_bytes = g_hash_table_lookup(self->folders_to_handles, folder);
     if (fanotify_handle_bytes) {
-        g_hash_table_remove(self->handles_to_folders, fanotify_handle_bytes);
-        g_hash_table_remove(self->folders_to_handles, folder);
-
         g_autoptr(GString) path_full = db_entry_get_path_full(folder);
         if (fanotify_mark(self->fd, FAN_MARK_REMOVE, FANOTIFY_FOLDER_MASK, AT_FDCWD, path_full->str)) {
             if (errno != ENOENT) {
                 g_debug("[unwatch_folder] failed to remove fanotify mark: %s", path_full->str);
             }
         }
+        g_hash_table_remove(self->handles_to_folders, fanotify_handle_bytes);
+        g_hash_table_remove(self->folders_to_handles, folder);
     }
     else {
         g_autoptr(GString) path_full = db_entry_get_path_full(folder);
