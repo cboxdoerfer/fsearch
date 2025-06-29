@@ -266,11 +266,17 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, Fsearc
     memcpy(&handle_data->fsid, &buf.f_fsid, sizeof(fsid_t));
 
     g_autoptr(GBytes) handle_bytes = create_bytes_for_handle(g_steal_pointer(&handle_data));
-    if (!fanotify_mark(self->fd, (FAN_MARK_ADD | FAN_MARK_ONLYDIR), FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
-        g_hash_table_insert(self->handles_to_folders, g_bytes_ref(handle_bytes), folder);
-        g_hash_table_insert(self->folders_to_handles, folder, g_bytes_ref(handle_bytes));
+
+    // To avoid a potential race condition, we first add the folder-to-handle associations to the hash tables
+    // and only then add the fanotify mark to monitor the folder.
+    g_hash_table_insert(self->handles_to_folders, g_bytes_ref(handle_bytes), folder);
+    g_hash_table_insert(self->folders_to_handles, folder, g_bytes_ref(handle_bytes));
+    if (!fanotify_mark(self->fd, FAN_MARK_ADD | FAN_MARK_ONLYDIR, FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
         return true;
     }
+    // Failed to monitor the folder -> remove the associations from the hash tables
+    g_hash_table_remove(self->handles_to_folders, handle_bytes);
+    g_hash_table_remove(self->folders_to_handles, folder);
     return false;
 }
 
