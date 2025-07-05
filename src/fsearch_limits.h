@@ -22,6 +22,8 @@
 
 #define FSEARCH_THREAD_LIMIT 32
 
+#define MAX_HISTORY_SPACE 10 /* max search history queries */
+
 #ifndef PATH_MAX
 #define PATH_MAX 4096 /* max # of characters in a path name */
 #endif
