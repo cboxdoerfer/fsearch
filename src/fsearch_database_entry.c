@@ -817,8 +817,10 @@ db_entry_get_attribute_name(FsearchDatabaseEntry *entry, const char **name) {
     size_t offset = 0;
 
     if (entry->deleted) {
-        GString *path = db_entry_get_path_full(entry);
-        g_print("%s\n", path->str);
+        if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &offset)) {
+            const char *n = (const char *)(entry->attributes + offset);
+            g_print("%s\n", n);
+        }
         g_assert(entry->deleted != 1);
     }
     if (entry->parent) {
