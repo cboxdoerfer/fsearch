@@ -96,6 +96,11 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             FsearchDatabaseEntry *watched_entry = g_hash_table_lookup(self->handles_to_folders, fid_bytes);
             g_mutex_unlock(&self->mutex);
 
+            const char *file_name = (const char *)(file_handle->f_handle + file_handle->handle_bytes);
+            if (g_strcmp0(file_name, ".") == 0) {
+                file_name = watched_entry ? db_entry_get_name_raw_for_display(watched_entry) : NULL;
+            }
+
             if (!watched_entry) {
                 g_warning("[fanotify_listener] no watched entry for handle found: %llu -> %s",
                           metadata->mask,
