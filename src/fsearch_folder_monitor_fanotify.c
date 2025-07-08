@@ -53,7 +53,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
     // Assert that this function is run in the right monitor thread
     g_assert(g_main_context_is_owner(self->monitor_context));
 
-    struct fanotify_event_metadata buf[200] = {};
+    struct fanotify_event_metadata buf[2048] = {};
 
     for (;;) {
         ssize_t len = read(fd, buf, sizeof(buf));
