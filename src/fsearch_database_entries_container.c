@@ -305,7 +305,6 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
         darray_binary_search_with_data(container, folder, self->entry_comp_func, self->compare_context, &entry_start_idx);
     }
 
-    g_print("steal with %d known descendants\n", num_known_descendants);
     DynamicArray *descendants = darray_new(num_known_descendants >= 0 ? num_known_descendants : 128);
 
     uint32_t num_known_descendants_stolen = 0;
