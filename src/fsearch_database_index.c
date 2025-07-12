@@ -150,7 +150,7 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
 
     FsearchDatabaseEntry *entry = steal ? fsearch_database_entries_container_steal(container, entry_tmp)
                                         : fsearch_database_entries_container_find(container, entry_tmp);
-    // temp entry must be freed properly, to make sure its parent gets updated back to its previous state (e.g.
+    // temp entry must be freed properly to make sure its parent gets updated back to its previous state (e.g.
     // regarding num_files/folders)
     g_clear_pointer(&entry_tmp, db_entry_free);
     if (!entry && expect_success) {
