@@ -24,6 +24,8 @@ struct FsearchFolderMonitorFanotify {
     int32_t fd;
 
     ssize_t file_handle_payload;
+    int32_t skip_create_delete;
+    int32_t skip_attrib;
 
     GMutex mutex;
 };
@@ -44,6 +46,55 @@ create_bytes_for_static_handle(FsearchDatabaseIndexHandleData *handle) {
 static inline GBytes *
 create_bytes_for_handle(FsearchDatabaseIndexHandleData *handle) {
     return g_bytes_new_take(handle, sizeof(FsearchDatabaseIndexHandleData) + handle->handle.handle_bytes);
+}
+
+typedef struct {
+    int32_t flag;
+    char present_symbol;
+    char absent_symbol;
+} FanotifyFlag;
+
+static const FanotifyFlag FANOTIFY_FLAGS[] = {
+    {FAN_CREATE, 'c', '-'},
+    {FAN_CLOSE_WRITE, 'w', '-'},
+    {FAN_ATTRIB, 'a', '-'},
+    {FAN_DELETE, 'd', '-'},
+    {FAN_DELETE_SELF, 'D', '-'},
+    {FAN_MOVED_TO, 'm', '-'},
+    {FAN_MOVED_FROM, 'M', '-'},
+    {FAN_MOVE_SELF, 'S', '-'},
+    {FAN_EVENT_ON_CHILD, 'o', '-'},
+    {FAN_ONDIR, '+', '-'}
+};
+
+static void
+print_fanotify_mask(uint32_t mask) {
+    const size_t num_flags = G_N_ELEMENTS(FANOTIFY_FLAGS);
+
+    for (size_t i = 0; i < num_flags; i++) {
+        uint8_t symbol = (mask & FANOTIFY_FLAGS[i].flag)
+                             ? FANOTIFY_FLAGS[i].present_symbol
+                             : FANOTIFY_FLAGS[i].absent_symbol;
+        g_print("%c", symbol);
+    }
+}
+
+static bool
+has_multiple_create_delete_events(uint32_t mask) {
+    uint32_t num_changes = 0;
+    if (mask & FAN_CREATE) {
+        num_changes++;
+    }
+    if (mask & FAN_DELETE) {
+        num_changes++;
+    }
+    if (mask & FAN_MOVED_FROM) {
+        num_changes++;
+    }
+    if (mask & FAN_MOVED_TO) {
+        num_changes++;
+    }
+    return num_changes > 1 ? true : false;
 }
 
 static gboolean
@@ -70,7 +121,6 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
         for (const struct fanotify_event_metadata *metadata = (struct fanotify_event_metadata *)buf;
              FAN_EVENT_OK(metadata, len);
              metadata = FAN_EVENT_NEXT(metadata, len)) {
-
             /* Check that run-time and compile-time structures match. */
             if (metadata->vers != FANOTIFY_METADATA_VERSION) {
                 g_warning("[fanotify_listener] fanotify ABI mismatch, monitoring is disabled");
@@ -82,11 +132,6 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
             /* Ensure that the event info is of the correct type. */
             g_assert(fid->hdr.info_type == FAN_EVENT_INFO_TYPE_DFID_NAME);
-
-            const char *file_name = (const char *)(file_handle->f_handle + file_handle->handle_bytes);
-            if (g_strcmp0(file_name, ".") == 0) {
-                file_name = NULL;
-            }
 
             /* fsid/handle portions are compatible with HandleData */
             FsearchDatabaseIndexHandleData *handle = (FsearchDatabaseIndexHandleData *)&fid->fsid;
@@ -110,9 +155,40 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
             const bool is_dir = metadata->mask & FAN_ONDIR ? true : false;
 
-            // fanotify allows mask to have bits for multiple events set, so we mustn't use if/else branches,
-            // but test for all bits to not miss any event
+            // Always push MOVE_SELF and DELETE_SELF
+            if (metadata->mask & FAN_MOVE_SELF) {
+                self->skip_attrib = true;
+                g_async_queue_push(self->event_queue,
+                                   fsearch_folder_monitor_event_new(file_name,
+                                                                    watched_entry,
+                                                                    FSEARCH_FOLDER_MONITOR_EVENT_MOVE_SELF,
+                                                                    FSEARCH_FOLDER_MONITOR_FANOTIFY,
+                                                                    is_dir));
+            }
+            if (metadata->mask & FAN_DELETE_SELF) {
+                self->skip_attrib = true;
+                g_async_queue_push(self->event_queue,
+                                   fsearch_folder_monitor_event_new(file_name,
+                                                                    watched_entry,
+                                                                    FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF,
+                                                                    FSEARCH_FOLDER_MONITOR_FANOTIFY,
+                                                                    is_dir));
+            }
+            if (has_multiple_create_delete_events(metadata->mask)) {
+                // There's no way to know in which order those events happened, hence we must do a rescan.
+                g_print("multiple create/delete events: %s\n", file_name ? file_name : "UNKNOWN");
+                g_async_queue_push(self->event_queue,
+                                   fsearch_folder_monitor_event_new(file_name,
+                                                                    watched_entry,
+                                                                    FSEARCH_FOLDER_MONITOR_EVENT_RESCAN,
+                                                                    FSEARCH_FOLDER_MONITOR_FANOTIFY,
+                                                                    is_dir));
+                // We can skip other events in the same mask here, since we're going to rescan the file/folder anyway
+                continue;
+            }
+
             if (metadata->mask & FAN_CREATE) {
+                self->skip_attrib = true;
                 g_async_queue_push(self->event_queue,
                                    fsearch_folder_monitor_event_new(file_name,
                                                                     watched_entry,
@@ -120,31 +196,17 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                                                                     FSEARCH_FOLDER_MONITOR_FANOTIFY,
                                                                     is_dir));
             }
-            if (metadata->mask & FAN_ATTRIB) {
+            if (metadata->mask & FAN_DELETE) {
+                self->skip_attrib = true;
                 g_async_queue_push(self->event_queue,
                                    fsearch_folder_monitor_event_new(file_name,
                                                                     watched_entry,
-                                                                    FSEARCH_FOLDER_MONITOR_EVENT_ATTRIB,
-                                                                    FSEARCH_FOLDER_MONITOR_FANOTIFY,
-                                                                    is_dir));
-            }
-            if (metadata->mask & FAN_CLOSE_WRITE) {
-                g_async_queue_push(self->event_queue,
-                                   fsearch_folder_monitor_event_new(file_name,
-                                                                    watched_entry,
-                                                                    FSEARCH_FOLDER_MONITOR_EVENT_CLOSE_WRITE,
-                                                                    FSEARCH_FOLDER_MONITOR_FANOTIFY,
-                                                                    is_dir));
-            }
-            if (metadata->mask & FAN_MOVED_TO) {
-                g_async_queue_push(self->event_queue,
-                                   fsearch_folder_monitor_event_new(file_name,
-                                                                    watched_entry,
-                                                                    FSEARCH_FOLDER_MONITOR_EVENT_MOVED_TO,
+                                                                    FSEARCH_FOLDER_MONITOR_EVENT_DELETE,
                                                                     FSEARCH_FOLDER_MONITOR_FANOTIFY,
                                                                     is_dir));
             }
             if (metadata->mask & FAN_MOVED_FROM) {
+                self->skip_attrib = true;
                 g_async_queue_push(self->event_queue,
                                    fsearch_folder_monitor_event_new(file_name,
                                                                     watched_entry,
@@ -152,35 +214,39 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                                                                     FSEARCH_FOLDER_MONITOR_FANOTIFY,
                                                                     is_dir));
             }
-            if (metadata->mask & FAN_MOVE_SELF) {
+            if (metadata->mask & FAN_MOVED_TO) {
+                self->skip_attrib = true;
                 g_async_queue_push(self->event_queue,
                                    fsearch_folder_monitor_event_new(file_name,
                                                                     watched_entry,
-                                                                    FSEARCH_FOLDER_MONITOR_EVENT_DELETE,
+                                                                    FSEARCH_FOLDER_MONITOR_EVENT_MOVED_TO,
                                                                     FSEARCH_FOLDER_MONITOR_FANOTIFY,
                                                                     is_dir));
             }
-            if (metadata->mask & FAN_DELETE) {
-                g_async_queue_push(self->event_queue,
-                                   fsearch_folder_monitor_event_new(file_name,
-                                                                    watched_entry,
-                                                                    FSEARCH_FOLDER_MONITOR_EVENT_DELETE,
-                                                                    FSEARCH_FOLDER_MONITOR_FANOTIFY,
-                                                                    is_dir));
-            }
-            if (metadata->mask & FAN_DELETE_SELF) {
-                g_async_queue_push(self->event_queue,
-                                   fsearch_folder_monitor_event_new(file_name,
-                                                                    watched_entry,
-                                                                    FSEARCH_FOLDER_MONITOR_EVENT_DELETE,
-                                                                    FSEARCH_FOLDER_MONITOR_FANOTIFY,
-                                                                    is_dir));
+            if (!self->skip_attrib) {
+                if (metadata->mask & FAN_ATTRIB) {
+                    g_async_queue_push(self->event_queue,
+                                       fsearch_folder_monitor_event_new(file_name,
+                                                                        watched_entry,
+                                                                        FSEARCH_FOLDER_MONITOR_EVENT_ATTRIB,
+                                                                        FSEARCH_FOLDER_MONITOR_FANOTIFY,
+                                                                        is_dir));
+                }
+                else if (metadata->mask & FAN_CLOSE_WRITE) {
+                    g_async_queue_push(self->event_queue,
+                                       fsearch_folder_monitor_event_new(file_name,
+                                                                        watched_entry,
+                                                                        FSEARCH_FOLDER_MONITOR_EVENT_CLOSE_WRITE,
+                                                                        FSEARCH_FOLDER_MONITOR_FANOTIFY,
+                                                                        is_dir));
+                }
             }
         }
     }
 
     return G_SOURCE_REMOVE;
 }
+
 FsearchFolderMonitorFanotify *
 fsearch_folder_monitor_fanotify_new(GMainContext *monitor_context, GAsyncQueue *event_queue) {
     g_return_val_if_fail(monitor_context, NULL);

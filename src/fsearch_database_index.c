@@ -323,6 +323,16 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
 }
 
 static void
+process_rescan_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
+    g_return_if_fail(self);
+    g_return_if_fail(event);
+    g_return_if_fail(event->watched_entry);
+
+    process_delete_event(self, event);
+    process_create_event(self, event);
+}
+
+static void
 process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
     FsearchDatabaseEntry *entry = lookup_entry_for_event(self, event, false, false);
     if (!entry) {
@@ -377,19 +387,21 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
     case FSEARCH_FOLDER_MONITOR_EVENT_MOVED_FROM:
         process_delete_event(self, event);
         break;
+    case FSEARCH_FOLDER_MONITOR_EVENT_RESCAN:
     case FSEARCH_FOLDER_MONITOR_EVENT_MOVED_TO:
-        if (!lookup_entry_for_event(self, event, false, false)) {
-            process_create_event(self, event);
-        }
-        else {
-            process_attrib_event(self, event);
-        }
+        process_rescan_event(self, event);
         break;
     case FSEARCH_FOLDER_MONITOR_EVENT_DELETE:
         process_delete_event(self, event);
         break;
     case FSEARCH_FOLDER_MONITOR_EVENT_CREATE:
-        process_create_event(self, event);
+        if (!lookup_entry_for_event(self, event, false, false)) {
+            process_create_event(self, event);
+        }
+        else {
+            // There's already an entry in the index: force a rescan to get the index in a consitent state
+            process_rescan_event(self, event);
+        }
         break;
     case FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF:
         break;
