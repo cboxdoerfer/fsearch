@@ -88,7 +88,7 @@ process_queued_events(FsearchDatabaseIndex *self) {
         if (!event) {
             break;
         }
-        double elapsed = g_timer_elapsed(timer, NULL);
+        const double elapsed = g_timer_elapsed(timer, NULL);
         if (elapsed - last_time > 0.2) {
             g_debug("interrupt event processing for a while...");
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
