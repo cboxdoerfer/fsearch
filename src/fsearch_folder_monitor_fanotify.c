@@ -143,13 +143,13 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
 
             const char *file_name = (const char *)(file_handle->f_handle + file_handle->handle_bytes);
             if (g_strcmp0(file_name, ".") == 0) {
-                file_name = watched_entry ? db_entry_get_name_raw_for_display(watched_entry) : NULL;
+                file_name = NULL;
             }
 
             if (!watched_entry) {
                 g_warning("[fanotify_listener] no watched entry for handle found: %llu -> %s",
                           metadata->mask,
-                          file_name ? file_name : "UNKNOWN");
+                          file_name ? file_name : ".");
                 continue;
             }
 
@@ -176,7 +176,7 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             }
             if (has_multiple_create_delete_events(metadata->mask)) {
                 // There's no way to know in which order those events happened, hence we must do a rescan.
-                g_print("multiple create/delete events: %s\n", file_name ? file_name : "UNKNOWN");
+                g_print("multiple create/delete events: %s\n", file_name ? file_name : ".");
                 g_async_queue_push(self->event_queue,
                                    fsearch_folder_monitor_event_new(file_name,
                                                                     watched_entry,

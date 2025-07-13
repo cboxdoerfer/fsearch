@@ -125,6 +125,7 @@ process_queued_events(FsearchDatabaseIndex *self) {
 static FsearchDatabaseEntry *
 lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event, bool steal, bool expect_success) {
     g_return_val_if_fail(self, NULL);
+    g_return_val_if_fail(event, NULL);
 
     if (!event->watched_entry) {
         if (!expect_success) {
@@ -142,8 +143,8 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
     // for when it gets passed to the `db_entry_compare_entries_by_full_path` function.
     FsearchDatabaseEntry *entry_tmp =
         db_entry_new(DATABASE_INDEX_PROPERTY_FLAG_SIZE | DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME,
-                     event->name->str,
-                     event->watched_entry,
+                     event->name ? event->name->str : event->path->str,
+                     event->name ? event->watched_entry : NULL,
                      event->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
 
     FsearchDatabaseEntriesContainer *container = event->is_dir ? self->folder_container : self->file_container;
@@ -365,10 +366,6 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
 
 static void
 process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
-    if (!event->name) {
-        return;
-    }
-
     event->watched_entry = fsearch_database_entries_container_find(self->folder_container, event->watched_entry_copy);
     if (!event->watched_entry) {
         g_debug("Watched entry no longer present!");

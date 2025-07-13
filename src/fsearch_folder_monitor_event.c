@@ -24,9 +24,9 @@ fsearch_folder_monitor_event_new(const char *file_name,
 
     ctx->name = file_name ? g_string_new(file_name) : NULL;
     ctx->watched_entry_copy = (FsearchDatabaseEntry *)db_entry_get_deep_copy((FsearchDatabaseEntry *)watched_entry);
+    ctx->path = db_entry_get_path_full((FsearchDatabaseEntry *)ctx->watched_entry_copy);
 
     if (ctx->name) {
-        ctx->path = db_entry_get_path_full((FsearchDatabaseEntry *)ctx->watched_entry_copy);
         g_string_append_c(ctx->path, G_DIR_SEPARATOR);
         g_string_append(ctx->path, ctx->name->str);
     }
