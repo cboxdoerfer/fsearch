@@ -181,6 +181,8 @@ fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchD
         g_debug("failed to add inotify watch");
         return false;
     }
+    db_entry_set_monitored_inotify(folder);
+
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
@@ -197,6 +199,7 @@ fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, Fsearc
         if (inotify_rm_watch(self->fd, wd)) {
             g_debug("[unwatch_folder] failed to remove inotify watch descriptor: %d", wd);
         }
+        db_entry_set_unmonitored_inotify(folder);
 
         g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
         g_assert_nonnull(locker);

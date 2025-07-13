@@ -6,6 +6,7 @@
 
 #include "fsearch_array.h"
 #include "fsearch_database_index_properties.h"
+#include "fsearch_database_entry_flags.h"
 
 typedef enum {
     DATABASE_ENTRY_TYPE_NONE,
@@ -202,3 +203,23 @@ bool
 db_entry_get_attribute_offset(FsearchDatabaseIndexPropertyFlags attribute_flags,
                               FsearchDatabaseIndexProperty attribute,
                               size_t *offset);
+void
+db_entry_set_unmonitored_fanotify(FsearchDatabaseEntry *entry);
+
+void
+db_entry_set_monitored_fanotify(FsearchDatabaseEntry *entry);
+
+bool
+db_entry_is_monitored_fanotify(FsearchDatabaseEntry *entry);
+
+void
+db_entry_set_unmonitored_inotify(FsearchDatabaseEntry *entry);
+
+void
+db_entry_set_monitored_inotify(FsearchDatabaseEntry *entry);
+
+bool
+db_entry_is_monitored_inotify(FsearchDatabaseEntry *entry);
+
+FsearchDatabaseEntryFlags
+db_entry_get_flags(FsearchDatabaseEntry *entry);

@@ -368,6 +368,7 @@ fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, Fsea
         g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
         g_assert_nonnull(locker);
 
+        db_entry_set_unmonitored_fanotify(folder);
         g_hash_table_remove(self->handles_to_folders, fanotify_handle_bytes);
         g_hash_table_remove(self->folders_to_handles, folder);
     }

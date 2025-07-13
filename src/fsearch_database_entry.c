@@ -1,4 +1,5 @@
 #include "fsearch_database_entry.h"
+#include "fsearch_database_entry_flags.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_string_utils.h"
 
@@ -17,9 +18,7 @@ typedef struct FsearchDatabaseEntry {
     // idx: index of this entry in the sorted list at pos DATABASE_INDEX_TYPE_NAME
     uint32_t attribute_flags;
     uint32_t index;
-    uint8_t type : 4;
-    uint8_t mark : 4;
-    uint8_t deleted;
+    uint16_t flags;
     // Make sure the attributes member is aligned to its largest data type
     alignas(int64_t) uint8_t attributes[];
 } FsearchDatabaseEntry;
@@ -34,7 +33,7 @@ build_path_recursively(FsearchDatabaseEntry *folder, GString *str, size_t name_o
     if (G_UNLIKELY(!folder)) {
         return;
     }
-    g_assert(folder->type == DATABASE_ENTRY_TYPE_FOLDER);
+    g_assert(folder->flags & FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FOLDER);
     g_assert(folder->attributes != NULL);
 
     if (G_LIKELY(folder->parent)) {
@@ -45,6 +44,11 @@ build_path_recursively(FsearchDatabaseEntry *folder, GString *str, size_t name_o
         g_string_append(str, name);
     }
     g_string_append_c(str, G_DIR_SEPARATOR);
+}
+
+static bool
+is_deleted(FsearchDatabaseEntry *entry) {
+    return entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_DELETED;
 }
 
 void
@@ -76,12 +80,12 @@ db_entry_compare_context_new(DynamicArrayCompareDataFunc next_comp_func,
 
 bool
 db_entry_is_folder(FsearchDatabaseEntry *entry) {
-    return entry->type == DATABASE_ENTRY_TYPE_FOLDER;
+    return entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FOLDER;
 }
 
 bool
 db_entry_is_file(FsearchDatabaseEntry *entry) {
-    return entry->type == DATABASE_ENTRY_TYPE_FILE;
+    return entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FILE;
 }
 
 bool
@@ -97,13 +101,13 @@ db_entry_is_descendant(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *maybe_
 
 uint32_t
 db_entry_folder_get_num_children(FsearchDatabaseEntry *entry) {
-    g_assert(entry->type == DATABASE_ENTRY_TYPE_FOLDER);
+    g_assert(entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FOLDER);
     return db_entry_folder_get_num_files(entry) + db_entry_folder_get_num_folders(entry);
 }
 
 uint32_t
 db_entry_folder_get_num_files(FsearchDatabaseEntry *entry) {
-    g_assert(entry->type == DATABASE_ENTRY_TYPE_FOLDER);
+    g_assert(entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FOLDER);
     uint32_t num_files = 0;
     db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FILES, &num_files, sizeof(num_files));
     return num_files;
@@ -111,7 +115,7 @@ db_entry_folder_get_num_files(FsearchDatabaseEntry *entry) {
 
 uint32_t
 db_entry_folder_get_num_folders(FsearchDatabaseEntry *entry) {
-    g_assert(entry->type == DATABASE_ENTRY_TYPE_FOLDER);
+    g_assert(entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FOLDER);
     uint32_t num_folders = 0;
     db_entry_get_attribute(entry, DATABASE_INDEX_PROPERTY_NUM_FOLDERS, &num_folders, sizeof(num_folders));
     return num_folders;
@@ -215,14 +219,22 @@ db_entry_get_parent(FsearchDatabaseEntry *entry) {
 
 FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry) {
-    return entry ? entry->type : DATABASE_ENTRY_TYPE_NONE;
+    g_return_val_if_fail(entry, DATABASE_ENTRY_TYPE_NONE);
+
+    if (db_entry_is_folder(entry)) {
+        return DATABASE_ENTRY_TYPE_FOLDER;
+    }
+    if (db_entry_is_file(entry)) {
+        return DATABASE_ENTRY_TYPE_FILE;
+    }
+    return DATABASE_ENTRY_TYPE_NONE;
 }
 
 void
 db_entry_free(FsearchDatabaseEntry *entry) {
     g_return_if_fail(entry);
     db_entry_set_parent(entry, NULL);
-    entry->deleted = 1;
+    entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_DELETED;
 }
 
 void
@@ -264,13 +276,18 @@ db_entry_append_content_type(FsearchDatabaseEntry *entry, GString *str) {
 
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry) {
-    return entry ? entry->mark : 0;
+    return entry ? entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MARKED : 0;
 }
 
 void
 db_entry_set_mark(FsearchDatabaseEntry *entry, uint8_t mark) {
     g_return_if_fail(entry);
-    entry->mark = mark;
+    if (mark) {
+        entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_MARKED;
+    }
+    else {
+        entry->flags &= ~FSEARCH_DATABASE_ENTRY_FLAG_MARKED;
+    }
 }
 
 uint32_t
@@ -741,7 +758,16 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
     FsearchDatabaseEntry *entry = calloc(1, entry_size);
     g_assert_nonnull(entry);
 
-    entry->type = type;
+    if (type == DATABASE_ENTRY_TYPE_FOLDER) {
+        entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FOLDER;
+    }
+    else if (type == DATABASE_ENTRY_TYPE_FILE) {
+        entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_TYPE_FILE;
+    }
+    else {
+        g_assert_not_reached();
+    }
+
     entry->attribute_flags = attribute_flags;
 
     size_t name_offset = 0;
@@ -816,18 +842,18 @@ db_entry_get_attribute_name(FsearchDatabaseEntry *entry, const char **name) {
     g_return_val_if_fail(entry, name);
     size_t offset = 0;
 
-    if (entry->deleted) {
+    if (is_deleted(entry)) {
         if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &offset)) {
             const char *n = (const char *)(entry->attributes + offset);
             g_print("%s\n", n);
         }
-        g_assert(entry->deleted != 1);
+        g_assert_not_reached();
     }
     if (entry->parent) {
-        if (entry->parent->deleted == 1) {
+        if (is_deleted(entry->parent)) {
             GString *path = db_entry_get_path_full(entry);
             g_print("%s\n", path->str);
-            g_assert(entry->parent->deleted != 1);
+            g_assert_not_reached();
         }
     }
     if (db_entry_get_attribute_offset(entry->attribute_flags, DATABASE_INDEX_PROPERTY_NAME, &offset)) {
@@ -840,9 +866,9 @@ db_entry_get_attribute_name(FsearchDatabaseEntry *entry, const char **name) {
 const char *
 db_entry_get_attribute_name_for_offset(FsearchDatabaseEntry *entry, size_t offset) {
     g_return_val_if_fail(entry, false);
-    g_assert(entry->deleted != 1);
+    g_assert(!is_deleted(entry));
     if (entry->parent) {
-        g_assert(entry->parent->deleted != 1);
+        g_assert(!is_deleted(entry->parent));
     }
     return (const char *)(entry->attributes + offset);
 }
@@ -858,9 +884,9 @@ bool
 db_entry_get_attribute(FsearchDatabaseEntry *entry, FsearchDatabaseIndexProperty attribute, void *dest, size_t size) {
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(dest, false);
-    g_assert(entry->deleted != 1);
+    g_assert(!is_deleted(entry));
     if (entry->parent) {
-        g_assert(entry->parent->deleted != 1);
+        g_assert(!is_deleted(entry->parent));
     }
     size_t offset = 0;
     if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
@@ -874,9 +900,9 @@ bool
 db_entry_set_attribute(FsearchDatabaseEntry *entry, FsearchDatabaseIndexProperty attribute, void *src, size_t size) {
     g_return_val_if_fail(entry, false);
     g_return_val_if_fail(src, false);
-    g_assert(entry->deleted != 1);
+    g_assert(!is_deleted(entry));
     if (entry->parent) {
-        g_assert(entry->parent->deleted != 1);
+        g_assert(!is_deleted(entry->parent));
     }
     size_t offset = 0;
     if (db_entry_get_attribute_offset(entry->attribute_flags, attribute, &offset)) {
@@ -889,9 +915,9 @@ db_entry_set_attribute(FsearchDatabaseEntry *entry, FsearchDatabaseIndexProperty
 uint32_t
 db_entry_get_index(FsearchDatabaseEntry *entry) {
     g_return_val_if_fail(entry, 0);
-    g_assert(entry->deleted != 1);
+    g_assert(!is_deleted(entry));
     if (entry->parent) {
-        g_assert(entry->parent->deleted != 1);
+        g_assert(!is_deleted(entry->parent));
     }
     return entry->index;
 }
@@ -899,9 +925,64 @@ db_entry_get_index(FsearchDatabaseEntry *entry) {
 void
 db_entry_set_index(FsearchDatabaseEntry *entry, uint32_t index) {
     g_return_if_fail(entry);
-    g_assert(entry->deleted != 1);
+    g_assert(!is_deleted(entry));
     if (entry->parent) {
-        g_assert(entry->parent->deleted != 1);
+        g_assert(!is_deleted(entry->parent));
     }
     entry->index = index;
+}
+
+FsearchDatabaseEntryFlags
+db_entry_get_flags(FsearchDatabaseEntry *entry) {
+    g_return_val_if_fail(entry, 0);
+    g_assert(!is_deleted(entry));
+    return entry->flags;
+}
+
+void
+db_entry_set_unmonitored_fanotify(FsearchDatabaseEntry *entry) {
+    g_return_if_fail(entry);
+    g_assert(!is_deleted(entry));
+    g_assert(db_entry_is_folder(entry));
+    entry->flags &= ~FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FANOTIFY;
+}
+
+void
+db_entry_set_monitored_fanotify(FsearchDatabaseEntry *entry) {
+    g_return_if_fail(entry);
+    g_assert(!is_deleted(entry));
+    g_assert(db_entry_is_folder(entry));
+    entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FANOTIFY;
+}
+
+bool
+db_entry_is_monitored_fanotify(FsearchDatabaseEntry *entry) {
+    g_return_val_if_fail(entry, false);
+    g_assert(!is_deleted(entry));
+    g_assert(db_entry_is_folder(entry));
+    return (entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_FANOTIFY) != 0;
+}
+
+void
+db_entry_set_unmonitored_inotify(FsearchDatabaseEntry *entry) {
+    g_return_if_fail(entry);
+    g_assert(!is_deleted(entry));
+    g_assert(db_entry_is_folder(entry));
+    entry->flags &= ~FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_INOTIFY;
+}
+
+void
+db_entry_set_monitored_inotify(FsearchDatabaseEntry *entry) {
+    g_return_if_fail(entry);
+    g_assert(!is_deleted(entry));
+    g_assert(db_entry_is_folder(entry));
+    entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_INOTIFY;
+}
+
+bool
+db_entry_is_monitored_inotify(FsearchDatabaseEntry *entry) {
+    g_return_val_if_fail(entry, false);
+    g_assert(!is_deleted(entry));
+    g_assert(db_entry_is_folder(entry));
+    return (entry->flags & FSEARCH_DATABASE_ENTRY_FLAG_MONITORED_INOTIFY) != 0;
 }
