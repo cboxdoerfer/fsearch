@@ -49,15 +49,15 @@ msgid ""
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
 "FSearch helpt je op eenvoudige wijze bestanden en mappen te vinden. Typ een "
-"paar letters en je ziet meteen resultaat."
+"paar letters en je ziet meteen resultaten."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
-"Negeer hoofdlettergebruik (voorbeeld: zoeken naar <code>fsearch</code> "
-"levert ook ‘FSearch’ op als resultaat)"
+"Negeer hoofdletters (voorbeeld: zoeken naar <code>fsearch</code> levert ook "
+"‘FSearch’ op als resultaat)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
