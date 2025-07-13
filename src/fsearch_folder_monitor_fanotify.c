@@ -340,6 +340,10 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, Fsearc
 
     // To avoid a potential race condition, we first add the folder-to-handle associations to the hash tables
     // and only then add the fanotify mark to monitor the folder.
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
     g_hash_table_insert(self->handles_to_folders, g_bytes_ref(handle_bytes), folder);
     g_hash_table_insert(self->folders_to_handles, folder, g_bytes_ref(handle_bytes));
     if (!fanotify_mark(self->fd, FAN_MARK_ADD | FAN_MARK_ONLYDIR, FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
@@ -361,6 +365,9 @@ fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, Fsea
                 g_debug("[unwatch_folder] failed to remove fanotify mark: %s", path_full->str);
             }
         }
+        g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+        g_assert_nonnull(locker);
+
         g_hash_table_remove(self->handles_to_folders, fanotify_handle_bytes);
         g_hash_table_remove(self->folders_to_handles, folder);
     }

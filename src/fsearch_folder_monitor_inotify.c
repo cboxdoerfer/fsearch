@@ -181,6 +181,9 @@ fsearch_folder_monitor_inotify_watch(FsearchFolderMonitorInotify *self, FsearchD
         g_debug("failed to add inotify watch");
         return false;
     }
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
     g_hash_table_insert(self->watch_descriptors_to_folders, GINT_TO_POINTER(wd), folder);
     g_hash_table_insert(self->watched_folders_to_descriptors, folder, GINT_TO_POINTER(wd));
     return true;
@@ -194,6 +197,10 @@ fsearch_folder_monitor_inotify_unwatch(FsearchFolderMonitorInotify *self, Fsearc
         if (inotify_rm_watch(self->fd, wd)) {
             g_debug("[unwatch_folder] failed to remove inotify watch descriptor: %d", wd);
         }
+
+        g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+        g_assert_nonnull(locker);
+
         g_hash_table_remove(self->watch_descriptors_to_folders, GINT_TO_POINTER(wd));
         g_hash_table_remove(self->watched_folders_to_descriptors, folder);
     }
