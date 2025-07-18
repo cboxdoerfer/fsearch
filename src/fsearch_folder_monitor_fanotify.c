@@ -127,6 +127,11 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 return G_SOURCE_REMOVE;
             }
 
+            if (metadata->fd != FAN_NOFD) {
+                g_warning("[fanotify_listener] fd is not FAN_NOFD\n");
+                continue;
+            }
+
             struct fanotify_event_info_fid *fid = (struct fanotify_event_info_fid *)(metadata + 1);
             struct file_handle *file_handle = (struct file_handle *)fid->handle;
 
