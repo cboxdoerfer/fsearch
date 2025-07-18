@@ -124,6 +124,9 @@ FsearchDatabaseEntryType
 db_entry_get_type(FsearchDatabaseEntry *entry);
 
 void
+db_entry_free_no_unparent(FsearchDatabaseEntry *entry);
+
+void
 db_entry_free(FsearchDatabaseEntry *entry);
 
 void
