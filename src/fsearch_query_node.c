@@ -8,6 +8,7 @@
 #include "fsearch_utf.h"
 #include <inttypes.h>
 #include <glib.h>
+#include <inttypes.h>
 #include <stdbool.h>
 #include <string.h>
 

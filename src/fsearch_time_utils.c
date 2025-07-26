@@ -1,5 +1,9 @@
 #include "fsearch_time_utils.h"
 
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
+
 #include <glib.h>
 #include <stdint.h>
 #include <time.h>

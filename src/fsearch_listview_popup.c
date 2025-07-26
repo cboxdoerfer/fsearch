@@ -102,7 +102,11 @@ intersect_supported_appliations(gpointer key, gpointer value, gpointer user_data
     if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
         // we already know the content type for folders, so we can use a slightly more
         // efficient and reliable path for them here
+#ifdef _WIN32
+        const char *dir_content_type = "application/x-directory";
+#else
         const char *dir_content_type = "inode/directory";
+#endif
         if (!g_hash_table_contains(ctx->content_types, dir_content_type)) {
             // no folder content type was added up until now, let's add one
             g_hash_table_add(ctx->content_types, g_strdup(dir_content_type));

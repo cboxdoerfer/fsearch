@@ -1,4 +1,8 @@
 #include "fsearch_database_entry.h"
+
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
 #include "fsearch_file_utils.h"
 #include "fsearch_string_utils.h"
 
@@ -6,7 +10,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#ifdef __MACH__
+#if defined(__MACH__) || defined(_WIN32)
 #include "strverscmp.h"
 #endif
 
