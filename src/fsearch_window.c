@@ -746,7 +746,7 @@ listview_on_drag_data_get(GList *indices, gpointer user_data) {
             } else {
                 g_warning("Failed to convert path to URI: %s", path->str);
             }
-            g_free(path);
+            g_string_free(path, TRUE);
         } else {
             g_warning("Failed to retrieve path for index: %d", idx);
         }
