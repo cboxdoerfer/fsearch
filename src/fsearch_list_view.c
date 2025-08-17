@@ -890,13 +890,10 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
         view->rubberband_modify = FALSE;
         GtkTargetEntry targets[] = {{"text/plain", 0, 0}, {"text/uri-list", 0, 1}};
         gtk_widget_queue_draw(GTK_WIDGET(view));
-        gtk_drag_begin_with_coordinates(GTK_WIDGET(view),
-                                        gtk_target_list_new(targets, G_N_ELEMENTS(targets)),
-                                        GDK_ACTION_COPY,
-                                        GDK_BUTTON_PRIMARY,
-                                        gtk_get_current_event(),
-                                        coordinate_x,
-                                        coordinate_y);
+        gtk_drag_source_set(
+            GTK_WIDGET(view), GDK_BUTTON1_MASK, NULL, 0, GDK_ACTION_COPY | GDK_ACTION_LINK | GDK_ACTION_ASK
+        );
+        gtk_drag_source_set_target_list(GTK_WIDGET(view), gtk_target_list_new(targets, G_N_ELEMENTS(targets)));
     }
 }
 
