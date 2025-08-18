@@ -871,8 +871,7 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
     //  GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
     if (view->bin_drag_mode) {
         double drag_distance = hypot(view->x_bin_drag_offset, view->y_bin_drag_offset);
-        double coordinate_x = view->x_bin_drag_started + offset_x, coordinate_y = view->y_bin_drag_started + offset_y;
-        printf("Drag details: %d, %d, %d, %d, %f\n",
+        g_debug("Drag details: %d, %d, %d, %d, %f\n",
                view->x_bin_drag_started,
                view->x_bin_drag_offset,
                view->y_bin_drag_started,
