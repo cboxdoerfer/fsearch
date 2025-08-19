@@ -185,21 +185,84 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
 }
 
 static void
-unwatch_folder(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder, FsearchFolderMonitorKind monitor_kind) {
+unwatch_folder(FsearchDatabaseIndex *self, FsearchDatabaseEntry *folder) {
     g_return_if_fail(self);
     g_return_if_fail(db_entry_is_folder(folder));
-    g_return_if_fail(monitor_kind != FSEARCH_FOLDER_MONITOR_NONE);
 
-    if (monitor_kind == FSEARCH_FOLDER_MONITOR_INOTIFY) {
+    if (db_entry_is_monitored_inotify(folder)) {
 #ifdef HAVE_INOTIFY
         fsearch_folder_monitor_inotify_unwatch(self->inotify_monitor, folder);
 #endif
     }
-    else if (monitor_kind == FSEARCH_FOLDER_MONITOR_FANOTIFY) {
+    if (db_entry_is_monitored_fanotify(folder)) {
 #ifdef HAVE_FANOTIFY
         fsearch_folder_monitor_fanotify_unwatch(self->fanotify_monitor, folder);
 #endif
     }
+}
+
+static void
+index_stop_monitoring(FsearchDatabaseIndex *self, FsearchFolderMonitorKind monitor_kind) {
+    g_return_if_fail(self);
+    g_return_if_fail(monitor_kind != FSEARCH_FOLDER_MONITOR_NONE);
+    g_return_if_fail(self);
+    fsearch_database_index_start_monitoring(self, false);
+
+    g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(self->folder_container);
+    g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(self->file_container);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
+
+    // Unwatch all folders
+    if (!folders) {
+        return;
+    }
+
+    for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+        FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+        unwatch_folder(self, folder);
+    }
+
+    // Clear the event queue
+    while (true) {
+        FsearchFolderMonitorEvent *event = g_async_queue_try_pop(self->event_queue);
+        if (!event) {
+            break;
+        }
+        g_clear_pointer(&event, fsearch_folder_monitor_event_free);
+    }
+
+#ifdef HAVE_FANOTIFY
+    g_print("Remove fanotify monitor\n");
+    fsearch_folder_monitor_fanotify_free(self->fanotify_monitor);
+    g_print("Add new fanotify monitor\n");
+    self->fanotify_monitor = fsearch_folder_monitor_fanotify_new(self->monitor_ctx, self->event_queue);
+#endif
+#ifdef HAVE_INOTIFY
+    fsearch_folder_monitor_inotify_free(self->inotify_monitor);
+    self->inotify_monitor = fsearch_folder_monitor_inotify_new(self->monitor_ctx, self->event_queue);
+#endif
+    fsearch_database_index_start_monitoring(self, true);
+
+    if (files) {
+        for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
+            FsearchDatabaseEntry *file = darray_get_item(files, i);
+            g_clear_pointer(&file, db_entry_free_no_unparent);
+        }
+        num_file_deletes += darray_get_num_items(files);
+    }
+    // First unwatch all folders. We can't free them in the same loop, because this will invalidate their paths,
+    // which are needed in order un-watch them properly
+    for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+        FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+        unwatch_folder(self, folder);
+    }
+    for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
+        FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+        g_clear_pointer(&folder, db_entry_free_no_unparent);
+    }
+    num_folder_deletes += darray_get_num_items(folders);
+    g_clear_pointer(&self->file_container, fsearch_database_entries_container_unref);
+    g_clear_pointer(&self->folder_container, fsearch_database_entries_container_unref);
 }
 
 static void
@@ -313,7 +376,7 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         // which are needed in order un-watch them properly
         for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
             FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-            unwatch_folder(self, folder, event->monitor_kind);
+            unwatch_folder(self, folder);
         }
         for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
             FsearchDatabaseEntry *folder = darray_get_item(folders, i);
@@ -365,6 +428,30 @@ process_attrib_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
 }
 
 static void
+process_move_or_delete_self_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
+    g_return_if_fail(self);
+    g_return_if_fail(event);
+
+    FsearchDatabaseEntry *entry = lookup_entry_for_event(self, event, false, false);
+    if (!entry) {
+        g_debug("move_self: entry not found: %s", event->path->str);
+        return;
+    }
+    if (db_entry_get_parent(entry) != NULL) {
+        g_debug("move_self: entry is not root entry: %s", event->path->str);
+        return;
+    }
+    // In case of a monitored folder itself being moved, we can ignore the case when the folder is
+    const char *root_path = fsearch_database_include_get_path(self->include);
+    if (g_strcmp0(event->path->str, root_path) != 0) {
+        g_debug("move_self: is not root: %s", root_path);
+        return;
+    }
+    g_debug("move_self: is root: %s", root_path);
+    index_stop_monitoring(self, event->monitor_kind);
+}
+
+static void
 process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
     event->watched_entry = fsearch_database_entries_container_find(self->folder_container, event->watched_entry_copy);
     if (!event->watched_entry) {
@@ -396,15 +483,15 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
             process_create_event(self, event);
         }
         else {
-            // There's already an entry in the index: force a rescan to get the index in a consitent state
+            // There's already an entry in the index: force a rescan to get the index in a consistent state
             process_rescan_event(self, event);
         }
         break;
-    case FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF:
-        break;
     case FSEARCH_FOLDER_MONITOR_EVENT_UNMOUNT:
         break;
+    case FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF:
     case FSEARCH_FOLDER_MONITOR_EVENT_MOVE_SELF:
+        process_move_or_delete_self_event(self, event);
         break;
     case FSEARCH_FOLDER_MONITOR_EVENT_CLOSE_WRITE:
         process_attrib_event(self, event);

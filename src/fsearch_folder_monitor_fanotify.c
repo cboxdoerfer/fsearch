@@ -6,6 +6,7 @@
 #include <sys/vfs.h>
 
 #include "fsearch_database_entry.h"
+#include "fsearch_database_entry_flags.h"
 #include "fsearch_folder_monitor_event.h"
 
 #define FANOTIFY_FOLDER_MASK                                                                                           \
@@ -150,6 +151,9 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
             if (g_strcmp0(file_name, ".") == 0) {
                 file_name = NULL;
             }
+
+            print_fanotify_mask(metadata->mask);
+            g_print(": %s\n", file_name ? file_name : "UNKNOWN");
 
             if (!watched_entry) {
                 g_warning("[fanotify_listener] no watched entry for handle found: %llu -> %s",
@@ -352,6 +356,7 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self, Fsearc
     g_hash_table_insert(self->handles_to_folders, g_bytes_ref(handle_bytes), folder);
     g_hash_table_insert(self->folders_to_handles, folder, g_bytes_ref(handle_bytes));
     if (!fanotify_mark(self->fd, FAN_MARK_ADD | FAN_MARK_ONLYDIR, FANOTIFY_FOLDER_MASK, AT_FDCWD, path)) {
+        db_entry_set_monitored_fanotify(folder);
         return true;
     }
     // Failed to monitor the folder -> remove the associations from the hash tables
@@ -376,6 +381,9 @@ fsearch_folder_monitor_fanotify_unwatch(FsearchFolderMonitorFanotify *self, Fsea
         db_entry_set_unmonitored_fanotify(folder);
         g_hash_table_remove(self->handles_to_folders, fanotify_handle_bytes);
         g_hash_table_remove(self->folders_to_handles, folder);
+        g_print("unwatch: num watched entries: %d/%d\n",
+                g_hash_table_size(self->handles_to_folders),
+                g_hash_table_size(self->folders_to_handles));
     }
     else {
         g_autoptr(GString) path_full = db_entry_get_path_full(folder);
