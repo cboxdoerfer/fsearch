@@ -45,6 +45,9 @@ fsearch_file_utils_open_path_list(GList *paths,
 bool
 fsearch_file_utils_open_path_list_with_command(GList *paths, const char *cmd, GString *error_message);
 
+bool
+fsearch_file_utils_open_path_list_with_command_internal(GList *paths, const char *cmd, GString *error_message, bool use_full_path);
+
 gchar *
 fsearch_file_utils_get_file_type(const gchar *name, gboolean is_dir);
 

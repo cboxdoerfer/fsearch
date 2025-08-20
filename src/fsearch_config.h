@@ -67,6 +67,7 @@ struct _FsearchConfig {
     bool restore_column_config;
     bool restore_sort_order;
     bool double_click_path;
+    bool open_folder_selects_active_file;
     FsearchConfigActionAfterOpen action_after_file_open;
     bool action_after_file_open_keyboard;
     bool action_after_file_open_mouse;

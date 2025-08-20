@@ -482,7 +482,7 @@ fsearch_file_utils_open_path_list(GList *paths,
 }
 
 static bool
-fsearch_file_utils_open_path_with_command(const char *path, const char *cmd, GString *error_message) {
+fsearch_file_utils_open_path_with_command_internal(const char *path, const char *cmd, GString *error_message, bool use_full_path) {
     g_autoptr(GFile) file = g_file_new_for_path(path);
     g_autoptr(GFile) parent = g_file_get_parent(file);
     // If file has no parent it means it's the root directory.
@@ -500,7 +500,8 @@ fsearch_file_utils_open_path_with_command(const char *path, const char *cmd, GSt
     }
 
     const char *error_description = C_("Will be followed by the path of the folder.", "Error while opening folder");
-    g_autofree char *cmd_res = build_folder_open_cmd(path, path, cmd);
+    const char *path_for_cmd = use_full_path ? path : parent_path;
+    g_autofree char *cmd_res = build_folder_open_cmd(path_for_cmd, path, cmd);
     if (!cmd_res) {
         add_error_message_with_format(error_message, error_description, path, _("Failed to build open command"));
         return false;
@@ -515,16 +516,26 @@ fsearch_file_utils_open_path_with_command(const char *path, const char *cmd, GSt
     return true;
 }
 
+static bool
+fsearch_file_utils_open_path_with_command(const char *path, const char *cmd, GString *error_message) {
+    return fsearch_file_utils_open_path_with_command_internal(path, cmd, error_message, false);
+}
+
 bool
-fsearch_file_utils_open_path_list_with_command(GList *paths, const char *cmd, GString *error_message) {
+fsearch_file_utils_open_path_list_with_command_internal(GList *paths, const char *cmd, GString *error_message, bool use_full_path) {
     g_return_val_if_fail(cmd, false);
     g_return_val_if_fail(paths, false);
 
     for (GList *p = paths; p != NULL; p = p->next) {
         const char *path = p->data;
-        fsearch_file_utils_open_path_with_command(path, cmd, error_message);
+        fsearch_file_utils_open_path_with_command_internal(path, cmd, error_message, use_full_path);
     }
     return true;
+}
+
+bool
+fsearch_file_utils_open_path_list_with_command(GList *paths, const char *cmd, GString *error_message) {
+    return fsearch_file_utils_open_path_list_with_command_internal(paths, cmd, error_message, false);
 }
 
 static gchar *

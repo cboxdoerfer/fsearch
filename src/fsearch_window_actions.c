@@ -518,29 +518,90 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
 
     GList *paths = NULL;
     if (open_parent_folder && !config->folder_open_cmd) {
-        fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_parent_path, &paths);
+        if (config->open_folder_selects_active_file) {
+            // When the preference is enabled, pass the full file path instead of just the parent folder
+            fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_path, &paths);
+        } else {
+            // Default behavior: pass the parent folder path
+            fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_parent_path, &paths);
+        }
     }
     else {
         fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_path, &paths);
     }
 
-    if (open_parent_folder && config->folder_open_cmd) {
-        fsearch_file_utils_open_path_list_with_command(paths, config->folder_open_cmd, error_message);
+    if (open_parent_folder) {
+        if (config->folder_open_cmd) {
+            // Use the configured folder open command
+            // When the preference is enabled, pass the full file path to the command
+            bool use_full_path = config->open_folder_selects_active_file;
+            fsearch_file_utils_open_path_list_with_command_internal(paths, config->folder_open_cmd, error_message, use_full_path);
 
-        if (error_message->len == 0) {
-            // open succeeded
-            action_after_open(triggered_with_mouse);
-        }
-        else {
-            // open failed
-            if (config->show_dialog_failed_opening) {
-                ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
-                                              GTK_MESSAGE_WARNING,
-                                              GTK_BUTTONS_OK,
-                                              _("Something went wrong."),
-                                              error_message->str,
-                                              G_CALLBACK(gtk_widget_destroy),
-                                              NULL);
+            if (error_message->len == 0) {
+                // open succeeded
+                action_after_open(triggered_with_mouse);
+            }
+            else {
+                // open failed
+                if (config->show_dialog_failed_opening) {
+                    ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
+                                                  GTK_MESSAGE_WARNING,
+                                                  GTK_BUTTONS_OK,
+                                                  _("Something went wrong."),
+                                                  error_message->str,
+                                                  G_CALLBACK(gtk_widget_destroy),
+                                                  NULL);
+                }
+            }
+        } else {
+            // No folder open command configured, try to detect and use a common file manager
+            const char *file_managers[] = {"thunar", "nautilus", "dolphin", "pcmanfm", "caja", "nemo", "spacefm", NULL};
+            const char *detected_manager = NULL;
+            
+            for (int i = 0; file_managers[i] != NULL; i++) {
+                if (g_find_program_in_path(file_managers[i])) {
+                    detected_manager = file_managers[i];
+                    break;
+                }
+            }
+            
+            if (detected_manager) {
+                // Create a temporary command using the detected file manager
+                // Use {path_full} for proper shell escaping and quoting
+                g_autofree char *temp_cmd = g_strdup_printf("%s {path_full}", detected_manager);
+                bool use_full_path = config->open_folder_selects_active_file;
+                fsearch_file_utils_open_path_list_with_command_internal(paths, temp_cmd, error_message, use_full_path);
+                
+                if (error_message->len == 0) {
+                    // open succeeded
+                    action_after_open(triggered_with_mouse);
+                } else {
+                    // open failed
+                    if (config->show_dialog_failed_opening) {
+                        ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
+                                                      GTK_MESSAGE_WARNING,
+                                                      GTK_BUTTONS_OK,
+                                                      _("Something went wrong."),
+                                                      error_message->str,
+                                                      G_CALLBACK(gtk_widget_destroy),
+                                                      NULL);
+                    }
+                }
+            } else {
+                // No file manager detected, fallback to the old behavior
+                GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
+                g_autoptr(GdkAppLaunchContext) launch_context = gdk_display_get_app_launch_context(display);
+
+                FsearchOpenPathContext *open_ctx = g_new0(FsearchOpenPathContext, 1);
+                open_ctx->win_id = gtk_application_window_get_id(GTK_APPLICATION_WINDOW(win));
+                open_ctx->triggered_with_mouse = triggered_with_mouse;
+                open_ctx->show_dialog_failed_opening = config->show_dialog_failed_opening;
+
+                fsearch_file_utils_open_path_list(paths,
+                                                  config->launch_desktop_files,
+                                                  G_APP_LAUNCH_CONTEXT(launch_context),
+                                                  open_path_list_callback,
+                                                  open_ctx);
             }
         }
     }

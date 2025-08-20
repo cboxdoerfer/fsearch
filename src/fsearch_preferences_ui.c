@@ -48,6 +48,7 @@ typedef struct {
     GtkToggleButton *restore_sort_order_button;
     GtkToggleButton *restore_column_config_button;
     GtkToggleButton *double_click_path_button;
+    GtkToggleButton *open_folder_selects_active_file_button;
     GtkToggleButton *single_click_open_button;
     GtkToggleButton *launch_desktop_files_button;
     GtkToggleButton *show_icons_button;
@@ -481,6 +482,7 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->restore_column_config = gtk_toggle_button_get_active(ui->restore_column_config_button);
     new_config->restore_sort_order = gtk_toggle_button_get_active(ui->restore_sort_order_button);
     new_config->double_click_path = gtk_toggle_button_get_active(ui->double_click_path_button);
+    new_config->open_folder_selects_active_file = gtk_toggle_button_get_active(ui->open_folder_selects_active_file_button);
     new_config->enable_list_tooltips = gtk_toggle_button_get_active(ui->show_tooltips_button);
     new_config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
     new_config->exit_on_escape = gtk_toggle_button_get_active(ui->exit_on_escape_button);
@@ -602,6 +604,11 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                      "double_click_path_button",
                                                      "help_double_click_path",
                                                      new_config->double_click_path);
+
+    ui->open_folder_selects_active_file_button = toggle_button_get(ui->builder,
+                                                                   "open_folder_selects_active_file_button",
+                                                                   "help_open_folder_selects_active_file",
+                                                                   new_config->open_folder_selects_active_file);
 
     ui->single_click_open_button = toggle_button_get(ui->builder,
                                                      "single_click_open_button",

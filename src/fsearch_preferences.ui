@@ -449,6 +449,21 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkCheckButton" id="open_folder_selects_active_file_button">
+                                <property name="label" translatable="yes">Open Folder selects active file</property>
+                                <property name="visible">True</property>
+                                <property name="can-focus">True</property>
+                                <property name="receives-default">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="draw-indicator">True</property>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">6</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkCheckButton" id="single_click_open_button">
                                 <property name="label" translatable="yes">Single click to open</property>
                                 <property name="visible">True</property>
@@ -460,7 +475,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">6</property>
+                                <property name="position">7</property>
                               </packing>
                             </child>
                             <child>
@@ -475,7 +490,7 @@
                               <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">7</property>
+                                <property name="position">8</property>
                               </packing>
                             </child>
                           </object>
@@ -1618,6 +1633,30 @@ If enabled, double clicking in the path column will open the selected path.</pro
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkLabel" id="help_open_folder_selects_active_file">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Open Folder selects active file:&lt;/b&gt;
+
+If enabled, "Open Folder" (from the right-click menu or by pressing Ctrl-Return) will pass the full file path to the file manager instead of just the path of the containing folder.
+
+By default an attempt is made to automatically detect your file manager, but you can override this by adding the following to your ~/.config/fsearch/fsearch.conf :
+
+[Applications]
+folder_open_cmd=dolphin --select {path_full}
+
+({path_full} will be automatically escaped)</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page11</property>
+                    <property name="title">page11</property>
+                    <property name="position">11</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkLabel" id="help_single_click_open">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -1629,9 +1668,9 @@ If enabled, a single click will open the selected file/folder. If you only want 
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page11</property>
-                    <property name="title">page11</property>
-                    <property name="position">11</property>
+                    <property name="name">page12</property>
+                    <property name="title">page12</property>
+                    <property name="position">12</property>
                   </packing>
                 </child>
                 <child>
@@ -1646,9 +1685,9 @@ If enabled, the path that is currently being indexed is displayed in the statusb
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page12</property>
-                    <property name="title">page12</property>
-                    <property name="position">12</property>
+                    <property name="name">page13</property>
+                    <property name="title">page13</property>
+                    <property name="position">13</property>
                   </packing>
                 </child>
                 <child>
@@ -1663,9 +1702,9 @@ If enabled, a warning dialog is displayed when a file or folder failed to open.<
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page13</property>
-                    <property name="title">page13</property>
-                    <property name="position">13</property>
+                    <property name="name">page14</property>
+                    <property name="title">page14</property>
+                    <property name="position">14</property>
                   </packing>
                 </child>
                 <child>
@@ -1680,9 +1719,9 @@ If enabled, search terms containing path separators (i.e. "/") will be automatic
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page14</property>
-                    <property name="title">page14</property>
-                    <property name="position">14</property>
+                    <property name="name">page15</property>
+                    <property name="title">page15</property>
+                    <property name="position">15</property>
                   </packing>
                 </child>
                 <child>
@@ -1697,9 +1736,9 @@ If enabled, search terms containing at least one upper case character will trigg
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page15</property>
-                    <property name="title">page15</property>
-                    <property name="position">15</property>
+                    <property name="name">page16</property>
+                    <property name="title">page16</property>
+                    <property name="position">16</property>
                   </packing>
                 </child>
                 <child>
