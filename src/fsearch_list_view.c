@@ -871,12 +871,12 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
     //  GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
     if (view->bin_drag_mode) {
         double drag_distance = hypot(view->x_bin_drag_offset, view->y_bin_drag_offset);
-        g_debug("Drag details: %d, %d, %d, %d, %f\n",
-               view->x_bin_drag_started,
-               view->x_bin_drag_offset,
-               view->y_bin_drag_started,
-               view->y_bin_drag_offset,
-               drag_distance);
+        g_debug("[on_fsearch_list_view_bin_drag_gesture_end] Drag details: %d, %d, %d, %d, %f\n",
+                view->x_bin_drag_started,
+                view->x_bin_drag_offset,
+                view->y_bin_drag_started,
+                view->y_bin_drag_offset,
+                drag_distance);
         view->bin_drag_mode = FALSE;
         view->rubberband_state = RUBBERBAND_SELECT_INACTIVE;
         view->x_bin_drag_started = -1;
@@ -889,9 +889,7 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
         view->rubberband_modify = FALSE;
         GtkTargetEntry targets[] = {{"text/plain", 0, 0}, {"text/uri-list", 0, 1}};
         gtk_widget_queue_draw(GTK_WIDGET(view));
-        gtk_drag_source_set(
-            GTK_WIDGET(view), GDK_BUTTON1_MASK, NULL, 0, GDK_ACTION_COPY | GDK_ACTION_LINK | GDK_ACTION_ASK
-        );
+        gtk_drag_source_set(GTK_WIDGET(view), GDK_BUTTON1_MASK, NULL, 0, GDK_ACTION_COPY | GDK_ACTION_LINK | GDK_ACTION_ASK);
         gtk_drag_source_set_target_list(GTK_WIDGET(view), gtk_target_list_new(targets, G_N_ELEMENTS(targets)));
     }
 }
@@ -1132,38 +1130,12 @@ on_drag_data_get(GtkWidget *widget,
                  gpointer user_data) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
     if (!view->drag_data_get_func) {
-        g_warning("drag_data_get_func is not set for FsearchListView.");
+        g_warning("[on_drag_data_get] drag_data_get_func is not set for FsearchListView.");
         return;
     }
-
-    GList *indices = NULL;
-    for (int i = 0; i < view->num_rows; i++) {
-        if (view->is_selected_func(i, view->selection_user_data)) {
-            indices = g_list_append(indices, GINT_TO_POINTER(i));
-        }
-    }
-
-    GList *uris = view->drag_data_get_func(indices, view->selection_user_data);
-
-    g_list_free(indices);
-
-    if (uris) {
-        gchar **uri_array = g_new(gchar *, g_list_length(uris) + 1);
-        int index = 0;
-        for (GList *l = uris; l != NULL; l = l->next) {
-            uri_array[index++] = g_strdup((gchar *)l->data);
-        }
-        uri_array[index] = NULL;
-        gtk_selection_data_set_uris(selection_data, uri_array);
-        g_list_free_full(uris, g_free);
-        for (int i = 0; uri_array[i] != NULL; i++) {
-            g_free(uri_array[i]);
-        }
-        g_free(uri_array);
-    }
-    else {
-        g_warning("No URIs available for drag operation.");
-    }
+    gchar **uri_array = view->drag_data_get_func(view->selection_user_data);
+    gtk_selection_data_set_uris(selection_data, uri_array);
+    g_clear_pointer(&uri_array, g_strfreev);
 }
 
 static void

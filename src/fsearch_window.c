@@ -725,34 +725,60 @@ on_listview_row_is_selected(int row, gpointer user_data) {
     return FALSE;
 }
 
-static GList*
-listview_on_drag_data_get(GList *indices, gpointer user_data) {
+struct GListAccumulator {
+    GList *list;
+};
+typedef struct GListAccumulator GListAccumulator;
+
+static void
+map_to_uri_helper(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabaseEntry *entry = value;
+    if (G_UNLIKELY(!entry)) {
+        return;
+    }
+
+    GString *path = db_entry_get_path_full(entry);
+    if (G_UNLIKELY(!path)) {
+        g_warning("[map_to_uri_helper] Failed to retrieve path for entry at idx %d", db_entry_get_idx(entry));
+        return;
+    }
+
+    gchar *uri = g_filename_to_uri(path->str, NULL, NULL);
+    if (G_UNLIKELY(!uri)) {
+        g_warning("[map_to_uri_helper] Failed to convert path to URI: %s", path->str);
+        return;
+    }
+
+    GListAccumulator *acc = user_data;
+    acc->list = g_list_prepend(acc->list, uri);
+
+    g_string_free(path, TRUE);
+}
+
+static gchar **
+listview_on_drag_data_get(gpointer user_data) {
     FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
     FsearchDatabaseView *db_view = win->result_view->database_view;
-
     if (!db_view) {
-        g_warning("Database view is NULL.");
+        g_warning("[listview_on_drag_data_get] Database view is NULL.");
         return NULL;
     }
 
-    GList *uris = NULL;
-    for (GList *l = indices; l != NULL; l = l->next) {
-        int idx = GPOINTER_TO_INT(l->data);
-        GString *path = db_view_entry_get_path_full_for_idx(db_view, idx);
-        if (path) {
-            gchar *uri = g_filename_to_uri(path->str, NULL, NULL);
-            if (uri) {
-                uris = g_list_append(uris, uri);
-            } else {
-                g_warning("Failed to convert path to URI: %s", path->str);
-            }
-            g_string_free(path, TRUE);
-        } else {
-            g_warning("Failed to retrieve path for index: %d", idx);
-        }
+    GListAccumulator acc = { NULL };
+    db_view_selection_for_each(db_view, map_to_uri_helper, &acc);
+
+    gchar **uri_array = g_new(gchar *, g_list_length(acc.list) + 1);
+    int i = 0;
+    for (GList *l = g_list_last(acc.list); l != NULL; l = l->prev) {
+        uri_array[i++] = l->data;
+    }
+    uri_array[i] = NULL;
+
+    for (gchar **p = uri_array; *p != NULL; p++) {
+        g_debug("[listview_on_drag_data_get] [uris] %s", *p);
     }
 
-    return uris;
+    return uri_array;
 }
 
 static void
