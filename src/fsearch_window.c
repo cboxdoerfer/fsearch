@@ -725,11 +725,6 @@ on_listview_row_is_selected(int row, gpointer user_data) {
     return FALSE;
 }
 
-struct GListAccumulator {
-    GList *list;
-};
-typedef struct GListAccumulator GListAccumulator;
-
 static void
 map_to_uri_helper(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseEntry *entry = value;
@@ -749,8 +744,8 @@ map_to_uri_helper(gpointer key, gpointer value, gpointer user_data) {
         return;
     }
 
-    GListAccumulator *acc = user_data;
-    acc->list = g_list_prepend(acc->list, uri);
+    GList **acc = user_data;
+    *acc = g_list_prepend(*acc, uri);
 
     g_string_free(path, TRUE);
 }
@@ -764,15 +759,19 @@ listview_on_drag_data_get(gpointer user_data) {
         return NULL;
     }
 
-    GListAccumulator acc = { NULL };
+    GList *acc = NULL;
     db_view_selection_for_each(db_view, map_to_uri_helper, &acc);
 
-    gchar **uri_array = g_new(gchar *, g_list_length(acc.list) + 1);
-    int i = 0;
-    for (GList *l = g_list_last(acc.list); l != NULL; l = l->prev) {
-        uri_array[i++] = l->data;
+    // we prepended to list in the accumulator above since GList, even though doubly linked, does not maintain
+    // a tail pointer, making g_list_append() O(N)
+    // So, we need to populate it backwards into the array.
+    guint uri_array_len = g_list_length(acc) + 1;
+    gchar **uri_array = g_new(gchar *, uri_array_len);
+    guint i = uri_array_len - 1;
+    uri_array[i--] = NULL;
+    for (GList *l = acc; l != NULL; l = l->next) {
+        uri_array[i--] = l->data;
     }
-    uri_array[i] = NULL;
 
     for (gchar **p = uri_array; *p != NULL; p++) {
         g_debug("[listview_on_drag_data_get] [uris] %s", *p);
