@@ -765,7 +765,7 @@ listview_on_drag_data_get(gpointer user_data) {
     // we prepended to list in the accumulator above since GList, even though doubly linked, does not maintain
     // a tail pointer, making g_list_append() O(N)
     // So, we need to populate it backwards into the array.
-    guint uri_array_len = g_list_length(acc) + 1;
+    guint uri_array_len = g_list_length(acc) + 1; // +1 since the array needs to be null-terminated
     gchar **uri_array = g_new(gchar *, uri_array_len);
     guint i = uri_array_len - 1;
     uri_array[i--] = NULL;
