@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2025-08-26 20:01+0000\n"
+"PO-Revision-Date: 2025-08-30 02:01+0000\n"
 "Last-Translator: Telaneo <post@telaneo.net>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13\n"
+"X-Generator: Weblate 5.13.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -25,9 +25,8 @@ msgid "FSearch"
 msgstr "FSearch"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:6
-#, fuzzy
 msgid "A file search application focusing on performance and advanced features"
-msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
+msgstr "Et filsøkeverktøy med fokus på ytelse og avanserte funksjoner"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:11
 msgid ""
@@ -35,114 +34,105 @@ msgid ""
 msgstr "søk;fsearch;filer;mapper;musikk;video;dokumenter;finn;verktøy;alt;"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:13
-#, fuzzy
-#| msgid "FSearch"
 msgid "File Search Utility"
-msgstr "FSøk"
+msgstr "Filsøkningsverktøy"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:8
 msgid "A graphical file search application"
-msgstr ""
+msgstr "En grafisk filsøkningsapplikasjon"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:10
 msgid ""
 "FSearch helps you to find files and folders as easy and fast as possible. "
 "Just type a few letters and search results will appear almost instantly."
 msgstr ""
+"FSearch hjelper deg med å finne filer og mapper så lett og så raskt som "
+"mulig. Bare skriv inn noen få bokstaver, så dukker resultater opp nesten "
+"umiddelbart."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match \"FSearch"
 "\" as well)"
 msgstr ""
+"Ignorer store og små bokstaver (f.eks. at søk på «<code>fsearch</code>» også "
+"viser «FSearch»)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid "Regular expressions"
-msgstr ""
+msgstr "Regulæruttrykk"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Wildcard support"
-msgstr ""
+msgstr "Støtte for jokertegn"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Filter support (e.g. only search for audio files)"
-msgstr ""
+msgstr "Filterstøtte (f.eks. søk kun etter lydfiler)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "Utelat skjulte filer og mapper"
+msgstr "Utelat visse filer og mapper"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Fast sort by name, path, size, modification time and extension"
-msgstr ""
+msgstr "Rask sortering etter navn, si, størrelse, sist endret og filendelse"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:26
 msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
+"<em>Merk:</em> På grunn av Flatpaks sandkasse, kan ikke FSearch søke gjennom "
+"alle filene på systemet ditt."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
-msgstr ""
+msgstr "Standard brukergrensesnitt"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "Et opplegg som nærmere følger GNOME HIG"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
-#, fuzzy
-#| msgid "Search"
 msgid "search"
-msgstr "Søk"
+msgstr "søk"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "Søk"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "files?"
 msgid "files"
-msgstr "filer?"
+msgstr "filer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
-msgstr "Mapper"
+msgstr "mapper"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "musikk"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
-#, fuzzy
-#| msgid "Videos"
 msgid "video"
-msgstr "Video"
+msgstr "video"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
-#, fuzzy
-#| msgid "Documents"
 msgid "documents"
-msgstr "Dokumenter"
+msgstr "dokumenter"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "finn"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "verktøy"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "alt"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -150,113 +140,118 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch"
 msgid "New search engine"
-msgstr "FSøk"
+msgstr "Ny søkemotor"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
-#, fuzzy
 msgid "Greatly improved highlighting of search terms"
-msgstr "Vis framhevede søkeord"
+msgstr "Betydelig forbedret fremheving av søkeord"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid "Custom filters"
-msgstr ""
+msgstr "Egendefinerte filtre"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
-msgstr ""
+msgstr "Forbedret sorteringsytelse"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "Improved scroll performance"
-msgstr ""
+msgstr "Forbedret rullingsytelse"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "Husk filvalget etter databaseoppdatering"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr ""
+msgstr "Automatisk rull ned resultatlisten i gummibånd-valgmodus"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "Snu om valget med gummibåndet når «Ctrl» trykkes"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
-msgstr ""
+msgstr "Flytt fokus til søkefeltet når hovedvinduet blir aktivert"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Add filter for applications (i.e. .desktop files)"
-msgstr ""
+msgstr "Legg til filter for applikasjoner (for eksempel .desktop-filer)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:92
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
+"Legg til et valg som starter applikasjoner direkte istedenfor å åpne "
+".desktop-filene"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:93
 msgid "Show application icons for .desktop files"
-msgstr ""
+msgstr "Vis applikasjonsikoner for .desktop-filer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Legg til .odp- og .ods-filer til dokumentfilter"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"«Åpne med»-menyen viser nå bare applikasjoner som kan åpne de valgte filene"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
+"Forbedret åpning av flere filer med samme type (de blir nå sendt som en "
+"liste til applikasjoner, fremfor en og en)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
 msgid "Better support for opening files in sandboxed mode"
-msgstr ""
+msgstr "Bedre støtte for å åpne filer fra sandkasse-modus"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
+"Legg til menyvalg med lenker til feilsporeren, forumet og donasjonssidene"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Forbedret støtte for systemer utenom Linux"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
+"Legg til valg om å avslutte FSearch når Esc trykkes fremfor å minimere "
+"vinduet"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
-msgstr ""
+msgstr "Ekskluder «/proc» og «/sys» som standard"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
-msgstr ""
+msgstr "Åpne kontekstmenyen når «Menu» eller «Shift + F10» trykkes"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
+"og mange feilfikser, oversettelsesoppdateringer og andre små forbedringer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
-msgstr ""
+msgstr "Første utgivelse."
 
 #: src/fsearch.c:243
-#, fuzzy
 msgid "Saving…"
-msgstr "Sorterer…"
+msgstr "Lagrer…"
 
 #: src/fsearch.c:435
 msgid "translator-credits"
@@ -267,103 +262,90 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "Et søkeverktøy med fokus på ytelse og avanserte funksjoner"
 
 #: src/fsearch.c:916
-#, fuzzy
 msgid "Open a new application window"
-msgstr "Åpne med annet program"
+msgstr "Åpne i et nytt vindu"
 
 #: src/fsearch.c:917
 msgid "Show the application preferences"
-msgstr ""
+msgstr "Vis applikasjonsinnstillingene"
 
 #: src/fsearch.c:918
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "Vis søkeknapp"
+msgstr "Sett søkemønsteret"
 
 #: src/fsearch.c:919
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "Oppdater database"
+msgstr "Oppdater database og avslutt"
 
 #: src/fsearch.c:920
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "Vis versjonsinfo"
+msgstr "Skriv ut versjoninfo og avslutt"
 
 #: src/fsearch_database.c:646
-#, fuzzy
 msgid "Loading folders…"
-msgstr "Laster database…"
+msgstr "Laster mapper…"
 
 #: src/fsearch_database.c:654
-#, fuzzy
 msgid "Loading files…"
-msgstr "Sletter filer…"
+msgstr "Laster filer…"
 
 #: src/fsearch_database.c:1641 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
-#, fuzzy
 msgid "Sorting…"
 msgstr "Sorterer…"
 
 #: src/fsearch_file_utils.c:140
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr ""
+msgstr "En feil oppsto under fjerning av fil"
 
 #: src/fsearch_file_utils.c:142
-#, fuzzy
 msgid "Failed to get path"
-msgstr "Klarte ikke å åpne fil"
+msgstr "Klarte ikke å finne sti"
 
 #: src/fsearch_file_utils.c:253
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr ""
+msgstr "En feil oppsto under innhenting av informasjon fra fil"
 
 #: src/fsearch_file_utils.c:255
-#, fuzzy
 msgid "Failed to get application information"
-msgstr "Åpne med annet program"
+msgstr "Kunne ikke få applikasjonsinformasjon"
 
 #: src/fsearch_file_utils.c:270
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "En feil oppsto ved innhenting av informasjon om innholdstype"
 
 #: src/fsearch_file_utils.c:272
 msgid "No default application registered"
-msgstr ""
+msgstr "Ingen standardapplikasjon registrert"
 
 #: src/fsearch_file_utils.c:496
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "En feil oppsto ved åpning av overmappen"
 
 #: src/fsearch_file_utils.c:498
-#, fuzzy
 msgid "Failed to get parent path"
-msgstr "Klarte ikke å åpne fil"
+msgstr "Kunne ikke hente overordnet sti"
 
 #: src/fsearch_file_utils.c:502
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr ""
+msgstr "En feil oppsto ved åpning avmappe"
 
 #: src/fsearch_file_utils.c:505
-#, fuzzy
 msgid "Failed to build open command"
-msgstr "Klarte ikke å åpne fil"
+msgstr "Kunne ikke bygge åpningskommando"
 
 #: src/fsearch_file_utils.c:561
-#, fuzzy
 msgid "Folder"
-msgstr "Mapper"
+msgstr "Mappe"
 
 #: src/fsearch_file_utils.c:567
 msgid "Unknown Type"
-msgstr ""
+msgstr "Ukjent type"
 
 #: src/fsearch_filter.c:110
 msgid "All"
@@ -378,9 +360,8 @@ msgid "Files"
 msgstr "Filer"
 
 #: src/fsearch_filter.c:114
-#, fuzzy
 msgid "Applications"
-msgstr "Annet program"
+msgstr "Applikasjoner"
 
 #: src/fsearch_filter.c:115
 msgid "Archives"
@@ -404,7 +385,7 @@ msgstr "Videoer"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "Makronavn kan ikke inneholde «:»-tegnet."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:203
 #: src/fsearch_preferences_ui.c:215 src/fsearch_preferences_ui.c:565
@@ -417,45 +398,39 @@ msgstr "_OK"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:301
 msgid "Edit filter"
-msgstr ""
+msgstr "Rediger filter"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "Navn"
+msgstr "Navn:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "Det unike navnet til dette filteret"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "Unikt filternavn"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "Søk i sti"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "Skru på regulæruttrykk"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
 msgstr "Skill mellom store og små bokstaver"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "Spørring:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "Makro:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -466,24 +441,21 @@ msgstr ""
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr ""
+msgstr "Egenskaper…"
 
 #: src/fsearch_listview_popup.c:169
-#, fuzzy
 msgid "Other Application…"
-msgstr "Annet program"
+msgstr "Annet program…"
 
 #: src/fsearch_overlay.ui:44
 msgid "Empty Database"
 msgstr "Tøm database"
 
 #: src/fsearch_overlay.ui:60
-#, fuzzy
 msgid "Add folders"
-msgstr "Mapper"
+msgstr "Legg til mapper"
 
 #: src/fsearch_overlay.ui:108
-#, fuzzy
 msgid "Loading Database…"
 msgstr "Laster database…"
 
@@ -492,7 +464,6 @@ msgid "This won't take long."
 msgstr "Dette tar ikke lang tid."
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
-#, fuzzy
 msgid "Updating Database…"
 msgstr "Oppdaterer database…"
 
@@ -505,24 +476,20 @@ msgid "Empty Query"
 msgstr "Tøm spørring"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "Trykk <b>Ctrl + F</b> og begynn å skrive"
+msgstr "Trykk <b>Ctrl + F</b> og begynn å skrive."
 
 #: src/fsearch_overlay.ui:304
-#, fuzzy
 msgid "No Results Found"
-msgstr "Resultatløst"
+msgstr "Ingen resultater funnet"
 
 #: src/fsearch_overlay.ui:319
 msgid "Try a different search"
 msgstr "Prøv et annet søk"
 
 #: src/fsearch_overlay.ui:368
-#, fuzzy
 msgid "Sorting results…"
-msgstr "Sorterer…"
+msgstr "Sorterer resultater…"
 
 #: src/fsearch_preferences.ui:73 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
@@ -533,12 +500,10 @@ msgid "Enable dark theme"
 msgstr "Ifør mørk drakt"
 
 #: src/fsearch_preferences.ui:157
-#, fuzzy
 msgid "Enable client-side decorations (requires restart)"
 msgstr "Skru på dekorasjoner på klientsiden (omstart kreves)"
 
 #: src/fsearch_preferences.ui:172
-#, fuzzy
 msgid "Use binary units instead of decimal units"
 msgstr "Bruk totallsenheter istedenfor titallsenheter"
 
@@ -548,7 +513,7 @@ msgstr "Husk vindusstørrelse"
 
 #: src/fsearch_preferences.ui:203
 msgid "Exit on Escape"
-msgstr ""
+msgstr "Avslutt ved Esc"
 
 #: src/fsearch_preferences.ui:240
 msgid "with keyboard shortcuts or menu entries"
@@ -559,13 +524,12 @@ msgid "with double click"
 msgstr "med dobbeltklikk"
 
 #: src/fsearch_preferences.ui:283
-#, fuzzy
 msgid "Behaviour after successfully opening a file:"
-msgstr "Foretagende etter åpning av fil"
+msgstr "Adferd etter vellykket åpning av fil:"
 
 #: src/fsearch_preferences.ui:299
 msgid "Nothing"
-msgstr ""
+msgstr "Ingenting"
 
 #: src/fsearch_preferences.ui:300
 msgid "Minimize"
@@ -580,7 +544,6 @@ msgid "General:"
 msgstr "Generelt:"
 
 #: src/fsearch_preferences.ui:362
-#, fuzzy
 msgid "Show highlighted search terms"
 msgstr "Vis framhevede søkeord"
 
@@ -610,16 +573,15 @@ msgstr "Trykk én gang for å åpne"
 
 #: src/fsearch_preferences.ui:468
 msgid "Launch desktop files"
-msgstr ""
+msgstr "Start skrivebordsfiler"
 
 #: src/fsearch_preferences.ui:489
 msgid "Results:"
 msgstr "Resultater:"
 
 #: src/fsearch_preferences.ui:530
-#, fuzzy
 msgid "Show database indexing status"
-msgstr "Oppdater database ved oppstart"
+msgstr "Vis indekseringsstatus til database"
 
 #: src/fsearch_preferences.ui:551
 msgid "Statusbar:"
@@ -630,21 +592,18 @@ msgid "Show warning dialogs when:"
 msgstr "Vis advarselsdialoger når:"
 
 #: src/fsearch_preferences.ui:602
-#, fuzzy
 msgid "file / folder failed to open"
 msgstr "klarte ikke å åpne fil/mappe"
 
 #: src/fsearch_preferences.ui:625
-#, fuzzy
 msgid "Dialogs:"
-msgstr "Dialogvinduer"
+msgstr "Dialogvinduer:"
 
 #: src/fsearch_preferences.ui:650
 msgid "Interface"
 msgstr "Grensesnitt"
 
 #: src/fsearch_preferences.ui:669
-#, fuzzy
 msgid "Search in path when query contains path separators"
 msgstr "Søk i sti når spørring inneholder stiinndelere"
 
@@ -657,66 +616,56 @@ msgid "Hide results when search is empty"
 msgstr "Skjul resultatløse søkeresultater"
 
 #: src/fsearch_preferences.ui:711
-#, fuzzy
 msgid "Match case when query contains at least one upper case character"
-msgstr "Søk i sti når spørring inneholder stiinndelere"
+msgstr "Match når spørringen inneholder minst en stor bokstav"
 
 #: src/fsearch_preferences.ui:779
-#, fuzzy
 msgid "Add new filter"
-msgstr "Mapper"
+msgstr "Legg til nytt filter"
 
 #: src/fsearch_preferences.ui:795
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Remove selected filter"
-msgstr "Antall valgte filer"
+msgstr "Fjern valgte filter"
 
 #: src/fsearch_preferences.ui:811
-#, fuzzy
-#| msgid "Number of selected files"
 msgid "Edit selected filter"
-msgstr "Antall valgte filer"
+msgstr "Rediger valgt filter"
 
 #: src/fsearch_preferences.ui:825
 msgid "Restore default filters"
-msgstr ""
+msgstr "Gjenopprett standardfiltere"
 
 #: src/fsearch_preferences.ui:857
-#, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
-msgstr "Vis filter"
+msgstr "Filter:"
 
 #: src/fsearch_preferences.ui:878 src/fsearch_window.ui:638
 msgid "Search"
 msgstr "Søk"
 
 #: src/fsearch_preferences.ui:897
-#, fuzzy
 msgid "Update database on start"
 msgstr "Oppdater database ved oppstart"
 
 #: src/fsearch_preferences.ui:917
-#, fuzzy
 msgid "Update every"
-msgstr "Oppdater"
+msgstr "Oppdater hver"
 
 #: src/fsearch_preferences.ui:956
 msgid "hour(s) and"
-msgstr ""
+msgstr "time(r) og"
 
 #: src/fsearch_preferences.ui:968
 msgid "30"
-msgstr ""
+msgstr "30"
 
 #: src/fsearch_preferences.ui:986
 msgid "minute(s)"
-msgstr ""
+msgstr "minutt(er)"
 
 #: src/fsearch_preferences.ui:1032 src/fsearch_preferences.ui:1181
 msgid "Enter path…"
-msgstr ""
+msgstr "Legg inn sti…"
 
 #: src/fsearch_preferences.ui:1050 src/fsearch_preferences.ui:1107
 #: src/fsearch_preferences.ui:1199
@@ -727,7 +676,7 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:1124 src/fsearch_preferences.ui:1272
 msgid "Remove selected path"
-msgstr ""
+msgstr "Fjern valgt sti"
 
 #: src/fsearch_preferences.ui:1150
 msgid "Include"
@@ -735,7 +684,7 @@ msgstr "Inkluder"
 
 #: src/fsearch_preferences.ui:1256
 msgid "Add path to be excluded from database"
-msgstr ""
+msgstr "Legg til sti som skal ekskluderes fra database"
 
 #: src/fsearch_preferences.ui:1308 src/fsearch_preferences.ui:1321
 msgid "Supports wildcards. Multiple entries must be separated by ';'"
@@ -1155,7 +1104,7 @@ msgid "%'d Item"
 msgstr "%'d elementer"
 
 #: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
-#, fuzzy, c-format
+#, c-format
 msgid "%'d Items"
 msgstr "%'d elementer"
 
@@ -1164,14 +1113,12 @@ msgid "Querying…"
 msgstr "Utfører spørring…"
 
 #: src/fsearch_statusbar.c:170
-#, fuzzy
 msgid "Loading…"
-msgstr "Sorterer…"
+msgstr "Laster…"
 
 #: src/fsearch_statusbar.c:175
-#, fuzzy
 msgid "Scanning…"
-msgstr "Sorterer…"
+msgstr "Skanner…"
 
 #: src/fsearch_statusbar.ui:52
 msgid "Number of Search Results"
@@ -1182,10 +1129,8 @@ msgid "0 Items"
 msgstr "0 elementer"
 
 #: src/fsearch_statusbar.ui:106
-#, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
-msgstr "_Oppdater"
+msgstr "Avbryt"
 
 #: src/fsearch_statusbar.ui:153
 msgid "Index:"
@@ -1204,9 +1149,8 @@ msgid "Number of selected files"
 msgstr "Antall valgte filer"
 
 #: src/fsearch_statusbar.ui:328 src/fsearch_window.ui:102
-#, fuzzy
 msgid "Cancel database update"
-msgstr "Oppdater database ved oppstart"
+msgstr "Avbryt databaseoppdatering"
 
 #: src/fsearch_statusbar.ui:369
 msgid "Number of database items"
@@ -1226,7 +1170,6 @@ msgstr ""
 "<b>Søk i sti</b> ble midlertidig påslått for dette søket."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
-#, fuzzy
 msgid "CASE"
 msgstr "VERSAL"
 
