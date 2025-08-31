@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2025-08-30 02:01+0000\n"
+"PO-Revision-Date: 2025-08-31 22:01+0000\n"
 "Last-Translator: Telaneo <post@telaneo.net>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -438,6 +438,9 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
+"Makroen til dette filteret. En makro lar deg få tilgang til dette filteret "
+"fra søkefeltet ved å skrive inn teksten dens fulgt av ':'\n"
+"                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
@@ -673,6 +676,8 @@ msgid ""
 "Add path to be included in database\n"
 "                                "
 msgstr ""
+"Legg til sti som skal inkluderes i databasen\n"
+"                                "
 
 #: src/fsearch_preferences.ui:1124 src/fsearch_preferences.ui:1272
 msgid "Remove selected path"
@@ -720,6 +725,13 @@ msgid ""
 "Note that not all system themes provide such a darker variant, therefore "
 "enabling this setting might not have an effect."
 msgstr ""
+"<b>Skru på mørk drakt</b>\n"
+"\n"
+"Hvis skrudd på, bes systemdrakten å bruke mørkere farger til applikasjonen "
+"<i>(f.eks. mørke brukergrensesnittelemener ved lys tekst)</i>.\n"
+"\n"
+"Mer at ikke alle systemdrakter har mørkere varianter, så å endre på denne "
+"innstillingen kan ha ingen effekt."
 
 #: src/fsearch_preferences.ui:1434
 msgid ""
@@ -733,6 +745,13 @@ msgid ""
 "This resembles a more traditional UI layout and takes a little bit more "
 "space."
 msgstr ""
+"<b>Skru på klientside-dekorasjoner:</b>\n"
+"\n"
+"Hvis skrudd på, vises søkefeltet og hovedmenyen i vindutittelbaren.\n"
+"\n"
+"Hvis skrudd av, vises hovedmenyen som en menybar med søkefeltet under seg.\n"
+"Dette etterligner et mer tradisjonelt brukergrensesnitt og tar litt mer "
+"plass."
 
 #: src/fsearch_preferences.ui:1454
 msgid ""
@@ -745,6 +764,15 @@ msgid ""
 "\t• <b>Decimal  units:</b> This refers to decimal SI prefixes <i>(e.g. 1 kB "
 "= 1000 bytes)</i>"
 msgstr ""
+"<b>Bruk totallsystemenheter istedenfor titallsystemenheter:</b>\n"
+"\n"
+"Denne innstillingen endrer hvordan filstørrelser vises settings controls how "
+"file sizes are displayed.\n"
+"\n"
+"\t• <b>Totallsystemenheter</b> Dette er likt IEC-prefiksene <i>(1 KiB = 1024 "
+"byte)</i>\n"
+"\t• <b>Titallsystemenheter :</b> Dette er likt de desimale SI-prefiksene <i>("
+"1 kB = 1000 byte)</i>"
 
 #: src/fsearch_preferences.ui:1474
 msgid ""
@@ -756,6 +784,13 @@ msgid ""
 "Note that some window managers ignore this request and force the window to "
 "have a different size."
 msgstr ""
+"<b>Husk vindustørrelse:</b>\n"
+"\n"
+"Hvis skrudd på, vil vindustørrelsen gjenopprettes fra forrige sesjon når du "
+"åpner FSearch.\n"
+"\n"
+"Merk at noen vindusbehandlere ignorerer denne forespørselen fra programmer "
+"og tvinger vinduet til en annen størrelse."
 
 #: src/fsearch_preferences.ui:1493
 msgid ""
@@ -773,6 +808,16 @@ msgid ""
 "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
 "\t• <b>mouse click</b>"
 msgstr ""
+"<b>Adferd når en fil åpnes:</b>\n"
+"\n"
+"Når en fil/mappe åpnes kan en av følgende handlinger utføres:\n"
+"\t• <b>Ingenting:</b> Ingenting skjer.\n"
+"\t• <b>Minimer:</b> Det valgte FSearch-vinduet minimeres. \n"
+"\t• <b>Lukk:</b> Lukk FSearch.\n"
+"\n"
+"Du kan konfigurere om disse handlingene burde utløses når filen åpnes med\n"
+"\t• <b>tastatursnarveier eller menyvalg</b> og/eller\n"
+"\t• <b>museklikk</b>"
 
 #: src/fsearch_preferences.ui:1517
 msgid ""
@@ -788,6 +833,17 @@ msgid ""
 "This also works for regular expressions and wildcard expressions starting or "
 "ending with an asterisk. "
 msgstr ""
+"<b>Fremhev søkeord:</b>\n"
+"\n"
+"Hvis skrudd på, fremheves søkeord i resultatlisten. For eksempel, hvis du "
+"søker «foo», fremheves alle forekomster av <i>foo</i> i fil/mappenavn med "
+"fet tekst:\n"
+"\n"
+"\t<b>foo</b>bar.txt\n"
+"\tfile.<b>foo</b>\n"
+"\n"
+"Dette fungerer også med regulæruttrykk og jokertegn som starter eller "
+"slutter med en asterisk. "
 
 #: src/fsearch_preferences.ui:1539
 msgid ""
@@ -796,6 +852,10 @@ msgid ""
 "If enabled, the results view will show the full path of the focused file/"
 "folder in a small tooltip window."
 msgstr ""
+"<b>Vis verktøytips:</b>\n"
+"\n"
+"Hvis skrudd på, vises resultatskjermen den fulle stien til den valgte filen/"
+"mappen i et verktøytipsvindu."
 
 #: src/fsearch_preferences.ui:1556
 msgid ""
@@ -803,6 +863,9 @@ msgid ""
 "\n"
 "If enabled, file/folder icons will be shown in the name column."
 msgstr ""
+"<b>Vis ikoner i navnekolonnen:</b>\n"
+"\n"
+"Hvis skrudd på, vises fil/mappeikoner i navnekolonnen."
 
 #: src/fsearch_preferences.ui:1573
 msgid ""
@@ -812,6 +875,10 @@ msgid ""
 "session will be restored when you open an FSearch window. This includes the "
 "size and visibility of all columns."
 msgstr ""
+"<b>Husk kolonnekonfigurasjon:</b>\n"
+"\n"
+"Hvis skrudd på, gjenopprettes kolonnekonfigurasjonen fra forrige gang du "
+"åpnet FSearch. Dette inkluderer størrelsen og synligheten til alle kolonnene."
 
 #: src/fsearch_preferences.ui:1590
 msgid ""
@@ -820,6 +887,10 @@ msgid ""
 "If enabled, the sort order of the results view from the previous session "
 "will be restored when you open an FSearch window."
 msgstr ""
+"<b>Husk sorteringsrekkefølge</b>\n"
+"\n"
+"Hvis skrudd på, huskes sorteringsrekkefølgen på resultatsiden fra forrige "
+"gang du åpnet FSearch."
 
 #: src/fsearch_preferences.ui:1607
 msgid ""
@@ -827,6 +898,10 @@ msgid ""
 "\n"
 "If enabled, double clicking in the path column will open the selected path."
 msgstr ""
+"<b>Åpne stier med dobbeltklikk å stikolonnen:</b>\n"
+"\n"
+"Hvis skrudd på, åpnes den valgte stien når du dobbeltklikker på den i "
+"stikolonnen."
 
 #: src/fsearch_preferences.ui:1624
 msgid ""
@@ -836,6 +911,11 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to hold "
 "<i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
+"<b>Enkeltklikk for å åpne:</b>\n"
+"\n"
+"Hvis skrudd på, vil enkeltklikk åpne den valgte filen/mappen. Hvis du bare "
+"vil velge en fil/mappe med denne innstillingen aktivert, må du holde inne "
+"<i>Ctrl</i> mens du trykker på filen/mappen."
 
 #: src/fsearch_preferences.ui:1641
 msgid ""
@@ -844,6 +924,9 @@ msgid ""
 "If enabled, the path that is currently being indexed is displayed in the "
 "statusbar."
 msgstr ""
+"<b>Vis status til databaseindeksering</b>\n"
+"\n"
+"Hvis skrudd på, vises stien som indekseres i øyeblikket i statusbaren."
 
 #: src/fsearch_preferences.ui:1658
 msgid ""
@@ -852,6 +935,9 @@ msgid ""
 "If enabled, a warning dialog is displayed when a file or folder failed to "
 "open."
 msgstr ""
+"<b>Vis adversler:</b>\n"
+"\n"
+"Hvis skrudd på, vises en advarsel når en fil eller en mappe ikke kunne åpnes."
 
 #: src/fsearch_preferences.ui:1675
 msgid ""
@@ -860,6 +946,10 @@ msgid ""
 "If enabled, search terms containing path separators (i.e. \"/\") will be "
 "automatically matched against the full path of a file or folder."
 msgstr ""
+"<b>Søk i sti når spørringen inneholder stiinndelere:</b>\n"
+"\n"
+"Hvis skrudd på, vil søkeord som inneholder stiinndelere (for eksempel «/») "
+"automatisk matches opp mot den fullstendige stien til en fil eller mappe."
 
 #: src/fsearch_preferences.ui:1692
 msgid ""
@@ -869,6 +959,12 @@ msgid ""
 "trigger a case-sensitive search. This means a search term like <i>Foo</i> "
 "will match <i>FooBar.txt</i> but not <i>foobar.txt</i>."
 msgstr ""
+"<b>Skill mellom store eller små bokstaver når spørringen inneholder minst en "
+"stor bokstav:</b>\n"
+"\n"
+"Hvis skrudd på, vil søk med minst en stor bokstav i seg skille mellom store "
+"og små bokstaver. Dette betyr at søk som <i>Foo</i> vil finne <i>FooBar.txt</"
+"i> men ikke <i>foobar.txt</i>."
 
 #: src/fsearch_preferences.ui:1709
 msgid ""
@@ -879,6 +975,11 @@ msgid ""
 "If disabled, all files and folders will be displayed when the search entry "
 "is empty."
 msgstr ""
+"<b>Skjul resultater når søket er tomt:</b>\n"
+"\n"
+"Hvis skrudd på, vises ingen søkeresultater når søkefeltet er tomt.\n"
+"\n"
+"Hvis skrudd av, vises alle filer og mapper når søkefeltet er tomt."
 
 #: src/fsearch_preferences.ui:1728
 msgid ""
@@ -889,6 +990,13 @@ msgid ""
 "If disabled, the search is only updated when you hit <i>Enter</i> or press "
 "the search button. "
 msgstr ""
+"<b>Søk mens du skriver:</b>\n"
+"\n"
+"Hvis skrudd på, søkes det automatisk for hvert tegn du putter inn i "
+"søkefeltet.\n"
+"\n"
+"Hvis skrudd av, utføres søk bare etter du trykker <i>Enter</i> eller trykker "
+"på søkeknappen. "
 
 #: src/fsearch_preferences.ui:1747
 msgid ""
@@ -897,6 +1005,10 @@ msgid ""
 "If enabled, the database will be updated automatically in the background "
 "when you start FSearch."
 msgstr ""
+"<b>Oppdater database ved oppstart:</b>\n"
+"\n"
+"Hvis skrudd på, oppdateres databasen automatisk i bakgrunnen når du starter "
+"FSearch."
 
 #: src/fsearch_preferences.ui:1764
 msgid ""
@@ -910,6 +1022,14 @@ msgid ""
 "\t• <b>One Filesystem:</b> If enabled, FSearch won't cross filesystem "
 "boundaries for this folder"
 msgstr ""
+"<b>Inkluderte mapper:</b>\n"
+"\n"
+"Denne listen inneholder alle mapper du vil skal være inkludert i databasen.\n"
+"\n"
+"\t• <b>Aktiv:</b> Hvis skrudd på, vil stien inkluderes i databasen for søk.\n"
+"\t• <b>Sti:</b> Den fullstendige stien som skal inkluderes.\n"
+"\t• <b>Ett filsystem Filesystem:</b> Hvis skrudd på, vil ikke FSearch søke "
+"på tvers av andre filsystemer for denne mappen"
 
 #: src/fsearch_preferences.ui:1785
 msgid ""
@@ -918,6 +1038,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to include "
 "in the database for searching."
 msgstr ""
+"<b>Legg til mappe i database:</b>\n"
+"\n"
+"Denne knappen åpner et vindu hvor du kan velge en mappe å legge til i "
+"databasen for søk."
 
 #: src/fsearch_preferences.ui:1802
 msgid ""
@@ -925,6 +1049,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of included folders."
 msgstr ""
+"<b>Fjern valgt rad:</b>\n"
+"\n"
+"Dette fjerner den valgte mappen fra listen over inkluderte mapper."
 
 #: src/fsearch_preferences.ui:1819
 msgid ""
@@ -936,6 +1063,13 @@ msgid ""
 "can't be searched in.\n"
 "\t• <b>Path:</b> The full path to be excluded."
 msgstr ""
+"<b>Ekskluderte mapper:</b>\n"
+"\n"
+"Denne listen inneholder alle mapper du vil skal ekskluderes fra databasen.\n"
+"\n"
+"\t• <b>Aktiv:</b> Hvis skrudd på, vil stien ekskluderes fra databasen og kan "
+"dermed ikke søkes i.\n"
+"\t• <b>Sti:</b> Den fullstendige stien som skal ekskluderes."
 
 #: src/fsearch_preferences.ui:1839
 msgid ""
@@ -944,6 +1078,10 @@ msgid ""
 "This button opens a dialog where you can select a folder you want to exclude "
 "from the database."
 msgstr ""
+"<b>Ekskluder mappe fra database:</b>\n"
+"\n"
+"Denne knappen åpner et vindu hvor du kan velge en mappe du vil ekskludere "
+"fra databasen."
 
 #: src/fsearch_preferences.ui:1856
 msgid ""
@@ -951,6 +1089,9 @@ msgid ""
 "\n"
 "This removes the selected folder from the list of excluded folders."
 msgstr ""
+"<b>Fjern valgt rad:</b>\n"
+"\n"
+"Dette fjerner den valgte raden fra listen over ekskluderte mapper."
 
 #: src/fsearch_preferences.ui:1873
 msgid ""
@@ -961,6 +1102,12 @@ msgid ""
 "all files or folders which are called either <i>.git</i> or <i>.cache</i> or "
 "end with <i>.swp</i>."
 msgstr ""
+"<b>Ekskluder filer og mapper fra databasen:</b>\n"
+"\n"
+"Dette er en liste over filer og mapper du vil skal eksluderes fra databasen. "
+"Bruk semikolon som skilletegn mellom elementer. For eksempel "
+"<i>.git;.cache;*.swp</i> vil ekskludere alle filer eller mapper som heter "
+"enten <i>.git</i> or <i>.cache</i> eller som slutter med <i>.swp</i>."
 
 #: src/fsearch_preferences.ui:1890
 msgid ""
@@ -969,10 +1116,14 @@ msgid ""
 "If enabled, hidden files and folders will be excluded from the database "
 "<i>(i.e. all files or folders which start with a dot character)</i>."
 msgstr ""
+"<b>Ekskluder skjulte filer og mapper:</b>\n"
+"\n"
+"Hvis skrudd på, ekskluderes skjulte filer og mapper fra databasen<i>(altså "
+"alle filer og mapper som starter med punktum)</i>."
 
 #: src/fsearch_preferences.ui:1907
 msgid "Focus a setting to get a detailed description of what it does."
-msgstr ""
+msgstr "Velg en innstilling for å få en beskrivelse over hva det gjør."
 
 #: src/fsearch_preferences.ui:1920
 msgid ""
@@ -987,6 +1138,16 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
+"<b>Oppdater databasen ved satte tidsintervall:</b>\n"
+"\n"
+"Hvis skrudd på, så lenge FSearch kjører, vil databasen oppdateres så ofte "
+"som det gitte tidsintervallet.\n"
+"\n"
+"Hvis du vil oppdatere databasen i bakgrunnen, selv når FSearch ikke kjører, "
+"burde du bruke verktøy som cron eller systemd-timere for å periodisk utløse "
+"en databaseoppdatering med:\n"
+"\n"
+"<i><tt>fsearch --update-database</tt></i>"
 
 #: src/fsearch_preferences.ui:1941
 msgid ""
@@ -997,6 +1158,12 @@ msgid ""
 "launcher. Otherwise the <i>.desktop</i> file will be opened with the default "
 "handler for this type of files, which is usually a text editor."
 msgstr ""
+"<b>Start .desktop-filer:</b>\n"
+"\n"
+"Hvis skrudd på, vil å aktivere en <i>.desktop</i>-fil starte applikasjonen "
+"definert i den filen. Slik kan FSearch fungere som en applikasjonsstarter. "
+"Ellers vil <i>.desktop</i>-filen bli åpnet med standardprogrammet for denne "
+"typen filer, som vanligvis er et tekstredigeringsprogram."
 
 #: src/fsearch_preferences.ui:1958
 msgid ""
@@ -1009,6 +1176,15 @@ msgid ""
 "the filter on demand\n"
 "\t• <b>Query:</b> The search term by which the database should be filtered"
 msgstr ""
+"<b>Filtre:</b>\n"
+"\n"
+"Dette er en liste over alle tilgjengelige filtre. Et filter er et "
+"forhåndsdefinert søk.\n"
+"\n"
+"\t• <b>Navn:</b> Et unikt navn til filteret\n"
+"\t• <b>Makro:</b> Ved å skrive inn makrotekst fulgt av et «:», kan du skru "
+"på filteret når du ønsker\n"
+"\t• <b>Spørring:</b> Søkeordet du vil at databasen skal filtreres etter"
 
 #: src/fsearch_preferences.ui:1979
 msgid ""
@@ -1016,6 +1192,9 @@ msgid ""
 "\n"
 "This button opens a dialog where you can edit a new filter."
 msgstr ""
+"<b>Legg til et nytt filter:</b>\n"
+"\n"
+"Denne knappen åpner et vindu hvor du kan redigere et nytt filter."
 
 #: src/fsearch_preferences.ui:1996
 msgid ""
@@ -1023,6 +1202,9 @@ msgid ""
 "\n"
 "This button removes the currently selected filter."
 msgstr ""
+"<b>Fjern valgt filter:</b>\n"
+"\n"
+"Denne knappen fjerner det valgte filteret."
 
 #: src/fsearch_preferences.ui:2013
 msgid ""
@@ -1030,6 +1212,9 @@ msgid ""
 "\n"
 "This button opens a dialog where you can edit the selected filter."
 msgstr ""
+"<b>Rediger valgt filter:</b>\n"
+"\n"
+"Denne knappen åpner et vindu hvor du kan redigere det valgte filteret."
 
 #: src/fsearch_preferences.ui:2030
 msgid ""
@@ -1039,6 +1224,12 @@ msgid ""
 "\n"
 "⚠ All filters which were created or edited by the user will be lost! ⚠"
 msgstr ""
+"<b>Gjenopprett standardfiltre:</b>\n"
+"\n"
+"Denne knappen gjenoppretter standardfilterkonfigurasjonen.\n"
+"\n"
+"⚠ Alle brukergenererte filtre og endringer til forhåndsdefinerte filtre vil "
+"bli slettet! ⚠"
 
 #: src/fsearch_preferences.ui:2049
 msgid ""
@@ -1047,10 +1238,13 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>Avslutt ved Esc:</b>\n"
+"\n"
+"Hvis skrudd på, avsluttes FSearch når Esc-knappen trykkes, fremfor at "
+"vinduet minimeres."
 
 #: src/fsearch_preferences.ui:2068 src/fsearch_window.ui:289
 #: src/fsearch_window.ui:414 src/menus.ui:150 src/menus.ui:156
-#, fuzzy
 msgid "Help"
 msgstr "_Hjelp"
 
@@ -1063,12 +1257,10 @@ msgid "_Select"
 msgstr "_Velg"
 
 #: src/fsearch_preferences_ui.c:332
-#, fuzzy
 msgid "Add filter"
-msgstr "Mapper"
+msgstr "Legg til filter"
 
 #: src/fsearch_preferences_widgets.c:220 src/fsearch_preferences_widgets.c:267
-#, fuzzy
 msgid "Active"
 msgstr "Aktiv"
 
@@ -1078,10 +1270,8 @@ msgid "Path"
 msgstr "Sti"
 
 #: src/fsearch_preferences_widgets.c:227
-#, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
-msgstr "Åpne fil(er)"
+msgstr "Ett filsystem"
 
 #: src/fsearch_preferences_widgets.c:290 src/fsearch_window.c:613
 #: src/menus.ui:215 src/menus.ui:263
@@ -1090,18 +1280,16 @@ msgstr "Navn"
 
 #: src/fsearch_preferences_widgets.c:291
 msgid "Macro"
-msgstr ""
+msgstr "Makro"
 
 #: src/fsearch_preferences_widgets.c:292
-#, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
-msgstr "Tøm spørring"
+msgstr "Spørring"
 
 #: src/fsearch_statusbar.c:56
-#, fuzzy, c-format
+#, c-format
 msgid "%'d Item"
-msgstr "%'d elementer"
+msgstr "%'d element"
 
 #: src/fsearch_statusbar.c:56 src/fsearch_statusbar.c:192
 #, c-format
@@ -1161,20 +1349,19 @@ msgid "(empty)"
 msgstr "(tom)"
 
 #: src/fsearch_statusbar.ui:407
-#, fuzzy
 msgid ""
 "Search term contains upper case characters.\n"
 "<b>Match Case</b> was temporarily activated for this term."
 msgstr ""
-"Søket inneholder stiinndelere.\n"
-"<b>Søk i sti</b> ble midlertidig påslått for dette søket."
+"Søket inneholder store bokstaver.\n"
+"<b>Skill mellom store og små bokstaver</b> ble midlertidig påslått for dette "
+"søket."
 
 #: src/fsearch_statusbar.ui:438 src/fsearch_statusbar.ui:491
 msgid "CASE"
-msgstr "VERSAL"
+msgstr "STORE/SMÅ"
 
 #: src/fsearch_statusbar.ui:514
-#, fuzzy
 msgid ""
 "Search term contains path separators.\n"
 "<b>Search in Path</b> was temporarily activated for this term."
@@ -1200,7 +1387,7 @@ msgstr "Type"
 
 #: src/fsearch_window.c:641 src/menus.ui:271
 msgid "Extension"
-msgstr ""
+msgstr "Utvidelse"
 
 #: src/fsearch_window.c:648 src/menus.ui:283
 msgid "Date Modified"
@@ -1213,14 +1400,17 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
+"Sortering etter <b>Type</b> kan ta noen sekunder hvis det er mange "
+"resultater.\n"
+"\n"
+"Sorteringsrekkefølgen er ikke vedvarende, og blir nullstilt når spørringen "
+"endres."
 
 #: src/fsearch_window.ui:68
-#, fuzzy
 msgid "New window"
 msgstr "Nytt vindu"
 
 #: src/fsearch_window.ui:88
-#, fuzzy
 msgid "Update database"
 msgstr "Oppdater database"
 
@@ -1233,9 +1423,8 @@ msgid "Match Case"
 msgstr "Skill mellom store og små bokstaver"
 
 #: src/fsearch_window.ui:171 src/menus.ui:120
-#, fuzzy
 msgid "Enable RegEx"
-msgstr "Skru på regulære uttrykk"
+msgstr "Skru på regulæruttrykk"
 
 #: src/fsearch_window.ui:196 src/menus.ui:95
 msgid "Show Statusbar"
@@ -1250,10 +1439,8 @@ msgid "Show Search Button"
 msgstr "Vis søkeknapp"
 
 #: src/fsearch_window.ui:274 src/fsearch_window.ui:355 src/menus.ui:129
-#, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
-msgstr "FSøk"
+msgstr "FSearch Online"
 
 #: src/fsearch_window.ui:303 src/menus.ui:161
 msgid "About"
@@ -1265,42 +1452,40 @@ msgstr "Avslutt"
 
 #: src/fsearch_window.ui:371 src/fsearch_window.ui:442 src/menus.ui:131
 msgid "Donate"
-msgstr ""
+msgstr "Doner"
 
 #: src/fsearch_window.ui:386 src/menus.ui:142
 msgid "Forum"
-msgstr ""
+msgstr "Forum"
 
 #: src/fsearch_window.ui:400 src/menus.ui:146
 msgid "Bug Reports and Feature Requests"
-msgstr ""
+msgstr "Feilrapporter og funksjonsforespørsler"
 
 #: src/fsearch_window.ui:459 src/menus.ui:133
 msgid "GitHub Sponsors"
-msgstr ""
+msgstr "GitHub-sponsorer"
 
 #: src/fsearch_window.ui:473 src/menus.ui:137
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #: src/fsearch_window.ui:585
-#, fuzzy
 msgid "Search…"
-msgstr "Søk"
+msgstr "Søk…"
 
 #: src/fsearch_window.ui:607
 msgid "Select a Filter"
 msgstr "Velg et filter"
 
 #: src/fsearch_window_actions.c:91
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file(s)?"
-msgstr "Ønsker du virkelig å fjerne %d fil(er)?"
+msgstr "Ønsker du virkelig å åpne %d fil(er)?"
 
 #: src/fsearch_window_actions.c:93
-#, fuzzy
 msgid "Opening Files…"
-msgstr "Åpne fil(er)…"
+msgstr "Åpner filer…"
 
 #: src/fsearch_window_actions.c:179
 #, c-format
@@ -1308,45 +1493,44 @@ msgid "Do you really want to remove %d file(s)?"
 msgstr "Ønsker du virkelig å fjerne %d fil(er)?"
 
 #: src/fsearch_window_actions.c:183
-#, fuzzy
 msgid "Deleting files…"
 msgstr "Sletter filer…"
 
 #: src/fsearch_window_actions.c:183
-#, fuzzy
 msgid "Moving files to trash…"
 msgstr "Flytter filer til papirkurv…"
 
 #: src/fsearch_window_actions.c:210 src/fsearch_window_actions.c:494
 #: src/fsearch_window_actions.c:534
 msgid "Something went wrong."
-msgstr ""
+msgstr "Noe gikk galt."
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted %d file(s)."
-msgstr "Sletter filer…"
+msgstr "Slettet %d fil(er)."
 
 #: src/fsearch_window_actions.c:218
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %d file(s) to the trash."
-msgstr "Flytter filer til papirkurv…"
+msgstr "Flyttet %d fil(er) til papirkurven."
 
 #: src/fsearch_window_actions.c:224
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
+"Databasen må oppdateres før den ser endringene! Dette skal fikses i "
+"fremtidige oppdateringer."
 
 #: src/fsearch_window_actions.c:250
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %d file property windows?"
-msgstr "Ønsker du virkelig å fjerne %d fil(er)?"
+msgstr "Ønsker du virkelig å åpne %d filegenskapsvinduer?"
 
 #: src/fsearch_window_actions.c:254
-#, fuzzy
 msgid "Opening file properties…"
-msgstr "Åpne fil(er)…"
+msgstr "Åpner filegenskaper…"
 
 #: src/menus.ui:6
 msgid "_File"
@@ -1373,9 +1557,8 @@ msgid "Cancel Update"
 msgstr "Avbryt oppdatering"
 
 #: src/menus.ui:42
-#, fuzzy
 msgid "Close Window"
-msgstr "Nytt vindu"
+msgstr "Lukk vindu"
 
 #: src/menus.ui:54
 msgid "_Edit"
@@ -1387,12 +1570,11 @@ msgstr "_Kopier"
 
 #: src/menus.ui:62 src/menus.ui:228
 msgid "Cu_t"
-msgstr ""
+msgstr "Kli_pp"
 
 #: src/menus.ui:69
-#, fuzzy
 msgid "Select All"
-msgstr "Fravelg alt"
+msgstr "Velg alt"
 
 #: src/menus.ui:74
 msgid "Deselect All"
@@ -1424,11 +1606,11 @@ msgstr "_Åpne mappe"
 
 #: src/menus.ui:213
 msgid "Copy as Text"
-msgstr ""
+msgstr "Kopier som tekst"
 
 #: src/menus.ui:223
 msgid "Path + Name"
-msgstr ""
+msgstr "Sti + navn"
 
 #: src/menus.ui:236
 msgid "Move to _Trash"
