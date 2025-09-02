@@ -96,6 +96,7 @@ struct _FsearchListView {
     FsearchListViewSelectToggleFunc select_toggle_func;
     FsearchListViewUnselectAllFunc unselect_func;
     FsearchListViewNumSelectedFunc num_selected_func;
+    FsearchListViewDragDataGetFunc drag_data_get_func;
     gpointer selection_user_data;
 };
 
@@ -869,6 +870,13 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
                                           FsearchListView *view) {
     //  GdkEventSequence *sequence = gtk_gesture_single_get_current_sequence(GTK_GESTURE_SINGLE(gesture));
     if (view->bin_drag_mode) {
+        double drag_distance = hypot(view->x_bin_drag_offset, view->y_bin_drag_offset);
+        g_debug("[on_fsearch_list_view_bin_drag_gesture_end] Drag details: %d, %d, %d, %d, %f\n",
+                view->x_bin_drag_started,
+                view->x_bin_drag_offset,
+                view->y_bin_drag_started,
+                view->y_bin_drag_offset,
+                drag_distance);
         view->bin_drag_mode = FALSE;
         view->rubberband_state = RUBBERBAND_SELECT_INACTIVE;
         view->x_bin_drag_started = -1;
@@ -879,7 +887,10 @@ on_fsearch_list_view_bin_drag_gesture_end(GtkGestureDrag *gesture,
         view->rubberband_end_idx = UNSET_ROW;
         view->rubberband_extend = FALSE;
         view->rubberband_modify = FALSE;
+        GtkTargetEntry targets[] = {{"text/plain", 0, 0}, {"text/uri-list", 0, 1}};
         gtk_widget_queue_draw(GTK_WIDGET(view));
+        gtk_drag_source_set(GTK_WIDGET(view), GDK_BUTTON1_MASK, NULL, 0, GDK_ACTION_COPY | GDK_ACTION_LINK | GDK_ACTION_ASK);
+        gtk_drag_source_set_target_list(GTK_WIDGET(view), gtk_target_list_new(targets, G_N_ELEMENTS(targets)));
     }
 }
 
@@ -1108,6 +1119,23 @@ on_fsearch_list_view_bin_drag_gesture_begin(GtkGestureDrag *gesture,
         fsearch_list_view_get_selection_modifiers(view, &view->rubberband_modify, &view->rubberband_extend);
         gtk_gesture_set_state(GTK_GESTURE(gesture), GTK_EVENT_SEQUENCE_CLAIMED);
     }
+}
+
+static void
+on_drag_data_get(GtkWidget *widget,
+                 GdkDragContext *context,
+                 GtkSelectionData *selection_data,
+                 guint info,
+                 guint32 time,
+                 gpointer user_data) {
+    FsearchListView *view = FSEARCH_LIST_VIEW(widget);
+    if (!view->drag_data_get_func) {
+        g_warning("[on_drag_data_get] drag_data_get_func is not set for FsearchListView.");
+        return;
+    }
+    gchar **uri_array = view->drag_data_get_func(view->selection_user_data);
+    gtk_selection_data_set_uris(selection_data, uri_array);
+    g_clear_pointer(&uri_array, g_strfreev);
 }
 
 static void
@@ -1959,6 +1987,7 @@ fsearch_list_view_init(FsearchListView *view) {
     g_signal_connect(view->bin_drag_gesture, "drag-begin", G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_begin), view);
     g_signal_connect(view->bin_drag_gesture, "drag-update", G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_update), view);
     g_signal_connect(view->bin_drag_gesture, "drag-end", G_CALLBACK(on_fsearch_list_view_bin_drag_gesture_end), view);
+    g_signal_connect(view, "drag-data-get", G_CALLBACK(on_drag_data_get), view);
 
     view->header_drag_gesture = gtk_gesture_drag_new(GTK_WIDGET(view));
     g_signal_connect(view->header_drag_gesture,
@@ -2263,6 +2292,11 @@ fsearch_list_view_set_selection_handlers(FsearchListView *view,
     else {
         view->has_selection_handlers = FALSE;
     }
+}
+
+void
+fsearch_list_view_set_drag_data_get_handler(FsearchListView *view, FsearchListViewDragDataGetFunc drag_data_get_func) {
+    view->drag_data_get_func = drag_data_get_func;
 }
 
 gint
