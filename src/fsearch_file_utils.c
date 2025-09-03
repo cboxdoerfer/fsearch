@@ -23,7 +23,7 @@
 #include "fsearch_string_utils.h"
 #include "fsearch_ui_utils.h"
 
-#ifndef __MACH__
+#if !defined(__MACH__) && !defined(_WIN32)
 #include <gio/gdesktopappinfo.h>
 #endif
 
@@ -100,8 +100,15 @@ build_folder_open_cmd(const char *path, const char *path_full, const char *cmd) 
     if (!path || !path_full) {
         return NULL;
     }
+    
+#ifdef _WIN32
+    // On Windows, use simple double quotes for paths instead of shell quoting
+    g_autofree char *path_quoted = g_strdup_printf("\"%s\"", path);
+    g_autofree char *path_full_quoted = g_strdup_printf("\"%s\"", path_full);
+#else
     g_autofree char *path_quoted = g_shell_quote(path);
     g_autofree char *path_full_quoted = g_shell_quote(path_full);
+#endif
 
     // The following code is mostly based on the example code found here:
     // https://developer.gnome.org/glib/stable/glib-Perl-compatible-regular-expressions.html#g-regex-replace-eval
@@ -129,7 +136,24 @@ build_folder_open_cmd(const char *path, const char *path_full, const char *cmd) 
     // surrounded with {}
     g_autoptr(GRegex) reg = g_regex_new("{[\\w]+}", 0, 0, NULL);
     // Replace all the matched keywords
-    return g_regex_replace_eval(reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL);
+    g_autofree char *result = g_regex_replace_eval(reg, cmd, -1, 0, 0, keyword_eval_cb, keywords, NULL);
+    
+    // Also support legacy %p token for backward compatibility
+    if (result && strstr(result, "%p")) {
+        g_autoptr(GRegex) legacy_regex = g_regex_new("%p", 0, 0, NULL);
+        if (legacy_regex) {
+#ifdef _WIN32
+            // On Windows, use the raw path without additional quoting since %p was already quoted in the template
+            g_autofree char *temp = g_steal_pointer(&result);
+            result = g_regex_replace_literal(legacy_regex, temp, -1, 0, path_full, 0, NULL);
+#else
+            g_autofree char *temp = g_steal_pointer(&result);
+            result = g_regex_replace_literal(legacy_regex, temp, -1, 0, path_full_quoted, 0, NULL);
+#endif
+        }
+    }
+    
+    return g_steal_pointer(&result);
 }
 
 static bool
@@ -241,8 +265,10 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
             if (!path) {
                 continue;
             }
-            #ifdef __MACH__
+            #if defined(__MACH__)
             GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open", NULL, G_APP_INFO_CREATE_NONE, NULL);
+            #elif defined(_WIN32)
+            GAppInfo *desktop_app_info = NULL;
             #else
             GDesktopAppInfo *desktop_app_info = g_desktop_app_info_new_from_filename(path);
             #endif
@@ -264,6 +290,30 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
     }
 
     GAppInfo *app_info = g_app_info_get_default_for_type(content_type, FALSE);
+    g_debug("[open_files] Looking for default app for content type: %s, found: %s", 
+            content_type, app_info ? "yes" : "no");
+	#ifdef _WIN32
+            for (uint32_t i = 0; i < files->len; ++i) {
+                GFile *file = g_ptr_array_index(files, i);
+                g_autofree char *path = g_file_get_path(file);
+                if (path) {
+                    g_autofree char *quoted_path = g_shell_quote(path);
+                    g_autofree char *command = g_strdup_printf("explorer.exe %s", quoted_path);
+                    g_autoptr(GError) error = NULL;
+                    if (!g_spawn_command_line_async(command, &error)) {
+                        add_error_message_with_format(ctx->error_messages,
+                                                      C_("Will be followed by the path of the folder.",
+                                                         "Error while opening folder"),
+                                                      path,
+                                                      error->message);
+                    } else {
+                        g_debug("[Windows] Launched explorer.exe for directory: %s", path);
+                    }
+                }
+            }
+            return;
+        #endif
+
     if (!app_info) {
         add_error_message_with_format(ctx->error_messages,
                                       C_("Will be followed by the content type string.",
@@ -276,10 +326,16 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
     FsearchFileUtilsLaunchUrisContext *launch_uris_ctx = g_new0(FsearchFileUtilsLaunchUrisContext, 1);
     launch_uris_ctx->app_info = g_steal_pointer(&app_info);
 
+    g_debug("[open_files] Using app_info for content type %s: %s", content_type, 
+            g_app_info_get_name(launch_uris_ctx->app_info));
+
     for (uint32_t i = 0; i < files->len; ++i) {
         GFile *file = g_ptr_array_index(files, i);
         char *uri = g_file_get_uri(file);
         if (uri) {
+            g_autofree char *path = g_file_get_path(file);
+            g_debug("[open_files] Adding file to launch queue: %s (URI: %s)", 
+                    path ? path : "unknown", uri);
             launch_uris_ctx->uris = g_list_append(launch_uris_ctx->uris, uri);
         }
     }
@@ -500,7 +556,11 @@ fsearch_file_utils_open_path_with_command(const char *path, const char *cmd, GSt
     }
 
     const char *error_description = C_("Will be followed by the path of the folder.", "Error while opening folder");
+#ifdef _WIN32
+    g_autofree char *cmd_res = build_folder_open_cmd(parent_path, path, cmd);
+#else
     g_autofree char *cmd_res = build_folder_open_cmd(path, path, cmd);
+#endif
     if (!cmd_res) {
         add_error_message_with_format(error_message, error_description, path, _("Failed to build open command"));
         return false;
@@ -573,7 +633,7 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 
 GIcon *
 fsearch_file_utils_get_desktop_file_icon(const char *path) {
-    #ifdef __MACH__
+    #if defined(__MACH__) || defined(_WIN32)
     g_autoptr(GAppInfo) info = NULL;
     #else
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
@@ -655,6 +715,15 @@ fsearch_file_utils_get_content_type(const char *path, GError **error) {
         return NULL;
     }
     const char *content_type = g_file_info_get_content_type(info);
+    
+#ifdef _WIN32
+    // On Windows, GLib sometimes returns Unix-style content types like "inode/directory"
+    // which Windows doesn't understand. Convert them to Windows-compatible types.
+    if (content_type && strcmp(content_type, "inode/directory") == 0) {
+        return g_strdup("application/x-directory");
+    }
+#endif
+    
     return content_type ? g_strdup(content_type) : NULL;
 }
 
