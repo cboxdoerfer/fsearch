@@ -614,6 +614,23 @@
                                     <property name="position">1</property>
                                   </packing>
                                 </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="show_dialog_on_deletion">
+                                    <property name="label" translatable="yes">deleting more than 20 files</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">False</property>
+                                    <property name="has-tooltip">True</property>
+                                    <property name="margin-left">24</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="draw-indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
                               </object>
                             </child>
                           </object>
@@ -1494,7 +1511,7 @@ Note that some window managers ignore this request and force the window to have 
 
 When a file/folder was successfully opened one of the following actions can be performed:
 	• &lt;b&gt;Nothing:&lt;/b&gt; Nothing happens.
-	• &lt;b&gt;Minimize:&lt;/b&gt; The currently selected FSearch window becomes minimized. 
+	• &lt;b&gt;Minimize:&lt;/b&gt; The currently selected FSearch window becomes minimized.
 	• &lt;b&gt;Close:&lt;/b&gt; Quit FSearch.
 
 You can configure if those actions should be triggered when the file was opened with
@@ -1669,6 +1686,23 @@ If enabled, a warning dialog is displayed when a file or folder failed to open.<
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkLabel" id="help_warn_deletion">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Show warning dialogs:&lt;/b&gt;
+
+If enabled, a warning dialog is displayed when more than 20 files are being deleted. Note that the database view will not be updated, and only the thumbnail will be. This limitation will be fixed in a future release.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                    </object>
+                    <packing>
+                        <property name="name">page14</property>
+                        <property name="title">page14</property>
+                        <property name="position">14</property>
+                    </packing>
+                </child>
+                <child>
                   <object class="GtkLabel" id="help_auto_path">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -1680,9 +1714,9 @@ If enabled, search terms containing path separators (i.e. "/") will be automatic
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page14</property>
-                    <property name="title">page14</property>
-                    <property name="position">14</property>
+                    <property name="name">page15</property>
+                    <property name="title">page15</property>
+                    <property name="position">15</property>
                   </packing>
                 </child>
                 <child>
@@ -1697,9 +1731,9 @@ If enabled, search terms containing at least one upper case character will trigg
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page15</property>
-                    <property name="title">page15</property>
-                    <property name="position">15</property>
+                    <property name="name">page16</property>
+                    <property name="title">page16</property>
+                    <property name="position">16</property>
                   </packing>
                 </child>
                 <child>
@@ -1716,9 +1750,9 @@ If disabled, all files and folders will be displayed when the search entry is em
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page16</property>
-                    <property name="title">page16</property>
-                    <property name="position">16</property>
+                    <property name="name">page17</property>
+                    <property name="title">page17</property>
+                    <property name="position">17</property>
                   </packing>
                 </child>
                 <child>
@@ -1735,9 +1769,9 @@ If disabled, the search is only updated when you hit &lt;i&gt;Enter&lt;/i&gt; or
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page17</property>
-                    <property name="title">page17</property>
-                    <property name="position">17</property>
+                    <property name="name">page18</property>
+                    <property name="title">page18</property>
+                    <property name="position">18</property>
                   </packing>
                 </child>
                 <child>
@@ -1752,9 +1786,9 @@ If enabled, the database will be updated automatically in the background when yo
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page19</property>
-                    <property name="title">page19</property>
-                    <property name="position">18</property>
+                    <property name="name">page20</property>
+                    <property name="title">page20</property>
+                    <property name="position">19</property>
                   </packing>
                 </child>
                 <child>
@@ -1773,9 +1807,9 @@ This list contains all folders you want to include in the database.
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page20</property>
-                    <property name="title">page20</property>
-                    <property name="position">19</property>
+                    <property name="name">page21</property>
+                    <property name="title">page21</property>
+                    <property name="position">20</property>
                   </packing>
                 </child>
                 <child>
@@ -1790,9 +1824,9 @@ This button opens a dialog where you can select a folder you want to include in 
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page21</property>
-                    <property name="title">page21</property>
-                    <property name="position">20</property>
+                    <property name="name">page22</property>
+                    <property name="title">page22</property>
+                    <property name="position">21</property>
                   </packing>
                 </child>
                 <child>
@@ -1807,9 +1841,9 @@ This removes the selected folder from the list of included folders.</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page22</property>
-                    <property name="title">page22</property>
-                    <property name="position">21</property>
+                    <property name="name">page23</property>
+                    <property name="title">page23</property>
+                    <property name="position">22</property>
                   </packing>
                 </child>
                 <child>
@@ -1827,9 +1861,9 @@ This list contains all folders you want to exclude from the database.
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page23</property>
-                    <property name="title">page23</property>
-                    <property name="position">22</property>
+                    <property name="name">page24</property>
+                    <property name="title">page24</property>
+                    <property name="position">23</property>
                   </packing>
                 </child>
                 <child>
@@ -1844,9 +1878,9 @@ This button opens a dialog where you can select a folder you want to exclude fro
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page24</property>
-                    <property name="title">page24</property>
-                    <property name="position">23</property>
+                    <property name="name">page25</property>
+                    <property name="title">page25</property>
+                    <property name="position">24</property>
                   </packing>
                 </child>
                 <child>
@@ -1861,9 +1895,9 @@ This removes the selected folder from the list of excluded folders.</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page25</property>
-                    <property name="title">page25</property>
-                    <property name="position">24</property>
+                    <property name="name">page26</property>
+                    <property name="title">page26</property>
+                    <property name="position">25</property>
                   </packing>
                 </child>
                 <child>
@@ -1878,9 +1912,9 @@ This is a semi-colon separated list of files (or folders) you want to exclude fr
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page26</property>
-                    <property name="title">page26</property>
-                    <property name="position">25</property>
+                    <property name="name">page27</property>
+                    <property name="title">page27</property>
+                    <property name="position">26</property>
                   </packing>
                 </child>
                 <child>
@@ -1895,9 +1929,9 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page27</property>
-                    <property name="title">page27</property>
-                    <property name="position">26</property>
+                    <property name="name">page28</property>
+                    <property name="title">page28</property>
+                    <property name="position">27</property>
                   </packing>
                 </child>
                 <child>
@@ -1908,9 +1942,9 @@ If enabled, hidden files and folders will be excluded from the database &lt;i&gt
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page28</property>
-                    <property name="title">page28</property>
-                    <property name="position">27</property>
+                    <property name="name">page29</property>
+                    <property name="title">page29</property>
+                    <property name="position">28</property>
                   </packing>
                 </child>
                 <child>
@@ -1929,9 +1963,9 @@ If you want to update the database in the background, even when FSearch is not r
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page29</property>
-                    <property name="title">page29</property>
-                    <property name="position">28</property>
+                    <property name="name">page30</property>
+                    <property name="title">page30</property>
+                    <property name="position">29</property>
                   </packing>
                 </child>
                 <child>
@@ -1946,9 +1980,9 @@ If enabled, activating a &lt;i&gt;.desktop&lt;/i&gt; file will launch the applic
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page30</property>
-                    <property name="title">page30</property>
-                    <property name="position">29</property>
+                    <property name="name">page31</property>
+                    <property name="title">page31</property>
+                    <property name="position">30</property>
                   </packing>
                 </child>
                 <child>
@@ -1967,9 +2001,9 @@ This is a list of all available filters. A filter is a predefined search.
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page18</property>
-                    <property name="title">page18</property>
-                    <property name="position">30</property>
+                    <property name="name">page19</property>
+                    <property name="title">page19</property>
+                    <property name="position">31</property>
                   </packing>
                 </child>
                 <child>
@@ -1984,9 +2018,9 @@ This button opens a dialog where you can edit a new filter.</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page31</property>
-                    <property name="title">page31</property>
-                    <property name="position">31</property>
+                    <property name="name">page32</property>
+                    <property name="title">page32</property>
+                    <property name="position">32</property>
                   </packing>
                 </child>
                 <child>
@@ -2001,9 +2035,9 @@ This button removes the currently selected filter.</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page32</property>
-                    <property name="title">page32</property>
-                    <property name="position">32</property>
+                    <property name="name">page33</property>
+                    <property name="title">page33</property>
+                    <property name="position">33</property>
                   </packing>
                 </child>
                 <child>
@@ -2018,9 +2052,9 @@ This button opens a dialog where you can edit the selected filter.</property>
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page33</property>
-                    <property name="title">page33</property>
-                    <property name="position">33</property>
+                    <property name="name">page34</property>
+                    <property name="title">page34</property>
+                    <property name="position">34</property>
                   </packing>
                 </child>
                 <child>
@@ -2037,9 +2071,9 @@ This button restores the default filter configuration.
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page34</property>
-                    <property name="title">page34</property>
-                    <property name="position">34</property>
+                    <property name="name">page35</property>
+                    <property name="title">page35</property>
+                    <property name="position">35</property>
                   </packing>
                 </child>
                 <child>
@@ -2054,9 +2088,9 @@ If enabled, FSearch exits when the Escape key is pressed instead of the window b
                     <property name="selectable">True</property>
                   </object>
                   <packing>
-                    <property name="name">page35</property>
-                    <property name="title">page35</property>
-                    <property name="position">35</property>
+                    <property name="name">page36</property>
+                    <property name="title">page36</property>
+                    <property name="position">36</property>
                   </packing>
                 </child>
               </object>
