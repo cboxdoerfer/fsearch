@@ -757,7 +757,7 @@ static void
 on_drag(FsearchListView *lv, int row, gpointer user_data) {
     GtkTargetEntry targets[] = {{"text/uri-list", 0, 0}};
     GtkTargetList *target_list = gtk_target_list_new(targets, 1);
-    gtk_drag_begin_with_coordinates(GTK_WIDGET(lv), target_list, GDK_ACTION_LINK, 1, NULL, -1, -1);
+    gtk_drag_begin_with_coordinates(GTK_WIDGET(lv), target_list, GDK_ACTION_COPY, 1, NULL, -1, -1);
 }
 
 static void
