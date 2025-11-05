@@ -4,6 +4,12 @@
 #include <stdbool.h>
 #include <stdint.h>
 
+#ifdef _WIN32
+#include "win32_compat.h"
+#else
+#include <sys/types.h>
+#endif
+
 typedef enum {
     DATABASE_ENTRY_TYPE_NONE,
     DATABASE_ENTRY_TYPE_FOLDER,
