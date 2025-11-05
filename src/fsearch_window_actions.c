@@ -171,6 +171,63 @@ append_name_to_string(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
+fsearch_window_action_compare_files(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+
+    if (!config->diff_tool_cmd || g_utf8_strlen(config->diff_tool_cmd, -1) == 0) {
+        ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                      GTK_MESSAGE_INFO,
+                                      GTK_BUTTONS_OK,
+                                      _("Compare tool not configured"),
+                                      _("Please configure a diff tool in Preferences."),
+                                      G_CALLBACK(gtk_widget_destroy),
+                                      NULL);
+        return;
+    }
+
+    GList *file_list = NULL;
+    fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
+
+    if (g_list_length(file_list) != 2) {
+        if (file_list) {
+            g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
+        }
+        return;
+    }
+
+    char *path1 = (char *)file_list->data;
+    char *path2 = (char *)file_list->next->data;
+
+    g_autofree gchar *quoted_path1 = g_shell_quote(path1);
+    g_autofree gchar *quoted_path2 = g_shell_quote(path2);
+
+    g_autofree gchar *command_line = g_strconcat(config->diff_tool_cmd, " ", quoted_path1, " ", quoted_path2, NULL);
+
+    GError *error = NULL;
+    g_spawn_command_line_async(command_line, &error);
+
+    if (error) {
+        g_warning("Failed to start diff tool '%s': %s", config->diff_tool_cmd, error->message);
+        if (config->show_dialog_failed_diff) {
+            g_autofree gchar *msg = g_strdup_printf(_("Failed to start diff tool:\n%s"), error->message);
+            ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                          GTK_MESSAGE_ERROR,
+                                          GTK_BUTTONS_OK,
+                                          _("Error"),
+                                          msg,
+                                          G_CALLBACK(gtk_widget_destroy),
+                                          NULL);
+        }
+        g_error_free(error);
+    }
+
+    if (file_list) {
+        g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
+    }
+}
+
+static void
 fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
@@ -855,6 +912,7 @@ static GActionEntry FsearchWindowActions[] = {
     {"open_with", fsearch_window_action_open_with, "s"},
     {"open_with_other", fsearch_window_action_open_with_other, "s"},
     {"open_folder", fsearch_window_action_open_folder},
+    {"compare-files", fsearch_window_action_compare_files},
     {"preview", fsearch_window_action_preview},
     {"close_window", fsearch_window_action_close_window},
     {"copy_clipboard", fsearch_window_action_copy},
@@ -906,6 +964,9 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
 
     const bool has_file_manager_on_bus = fsearch_application_has_file_manager_on_bus(FSEARCH_APPLICATION_DEFAULT);
 
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    gboolean compare_enabled = config->diff_tool_cmd && *config->diff_tool_cmd;
+
     action_set_enabled(group, "toggle_app_menu", TRUE);
     action_set_enabled(group, "close_window", TRUE);
     action_set_enabled(group, "select_all", num_rows >= 1 ? TRUE : FALSE);
@@ -923,6 +984,7 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     action_set_enabled(group, "open_with", num_rows_selected >= 1 ? TRUE : FALSE);
     action_set_enabled(group, "open_with_other", num_rows_selected >= 1 ? TRUE : FALSE);
     action_set_enabled(group, "open_folder", num_rows_selected);
+    action_set_enabled(group, "compare-files", num_rows_selected == 2 && compare_enabled);
     action_set_enabled(group, "focus_search", TRUE);
     action_set_enabled(group, "toggle_focus", TRUE);
     action_set_enabled(group, "hide_window", TRUE);
@@ -937,7 +999,6 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     action_set_enabled(group, "show_size_column", TRUE);
     action_set_enabled(group, "show_modified_column", TRUE);
 
-    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
     action_set_active_bool(group, "show_statusbar", config->show_statusbar);
     action_set_active_bool(group, "show_filter", config->show_filter);
     action_set_active_bool(group, "show_search_button", config->show_search_button);
