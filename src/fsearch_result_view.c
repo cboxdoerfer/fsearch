@@ -462,6 +462,11 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
             set_attributes(layout, ctx->match_data, column->type);
         }
 
+        if(!right_to_left_text) {
+            pango_layout_set_alignment(layout, PANGO_ALIGN_LEFT);
+            pango_layout_set_auto_dir(layout, FALSE);
+        }
+
         pango_layout_set_text(layout, text ? text : _("Invalid row data"), text_len);
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);
