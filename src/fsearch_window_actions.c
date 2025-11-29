@@ -290,6 +290,42 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
 }
 
 static void
+fsearch_window_action_dbus_open_folder(FsearchApplicationWindow *win) {
+    GDBusConnection *connection = g_application_get_dbus_connection(G_APPLICATION(FSEARCH_APPLICATION_DEFAULT));
+    if (!connection) {
+        g_debug("[open_folder] failed to get bus connection");
+    }
+
+    const guint num_selected_rows = fsearch_application_window_get_num_selected(win);
+    g_autoptr(GPtrArray) file_array = g_ptr_array_new_full(num_selected_rows, g_free);
+    fsearch_application_window_selection_for_each(win, prepend_path_uri_to_array, &file_array);
+
+    // ensure we have a NULL terminated array
+    g_ptr_array_add(file_array, NULL);
+
+    g_auto(GStrv) file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
+    if (!file_uris) {
+        return;
+    }
+    g_autoptr(GError) error = NULL;
+    g_dbus_connection_call_sync(connection,
+                                "org.freedesktop.FileManager1",
+                                "/org/freedesktop/FileManager1",
+                                "org.freedesktop.FileManager1",
+                                "ShowItems",
+                                g_variant_new("(^ass)", file_uris, ""),
+                                NULL,
+                                G_DBUS_CALL_FLAGS_NONE,
+                                -1,
+                                NULL,
+                                &error);
+    if (error) {
+        g_debug("[file_properties] %s", error->message);
+    }
+}
+
+
+static void
 fsearch_window_action_move_to_trash(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     fsearch_delete_selection(action, variant, false, user_data);
 }
@@ -469,7 +505,7 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     #else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
     #endif
-    
+
     if (!app_info) {
         return;
     }
@@ -512,6 +548,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
     if (!confirm_file_open_action(GTK_WIDGET(win), (gint)selected_rows)) {
         return;
     }
+    const bool has_file_manager_on_bus = fsearch_application_has_file_manager_on_bus(FSEARCH_APPLICATION_DEFAULT);
 
     g_autoptr(GString) error_message = g_string_sized_new(8192);
     FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
@@ -543,6 +580,9 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
                                               NULL);
             }
         }
+    }
+    else if(open_parent_folder && has_file_manager_on_bus) {
+        fsearch_window_action_dbus_open_folder(win);
     }
     else {
         GdkDisplay *display = gtk_widget_get_display(GTK_WIDGET(win));
@@ -600,7 +640,7 @@ fsearch_window_action_preview(GSimpleAction *action, GVariant *variant, gpointer
     if (!file_list) {
         return;
     }
-    
+
     GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
 #ifdef GDK_WINDOWING_X11
     GdkWindow *window = gtk_widget_get_window (toplevel);
