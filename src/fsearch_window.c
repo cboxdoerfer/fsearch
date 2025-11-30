@@ -504,6 +504,9 @@ on_listview_key_press_event(GtkWidget *widget, GdkEvent *event, gpointer user_da
         case GDK_KEY_Delete:
             g_action_group_activate_action(group, "move_to_trash", NULL);
             return GDK_EVENT_STOP;
+        case GDK_KEY_F2:
+            g_action_group_activate_action(group, "rename_selection", NULL);
+            return GDK_EVENT_STOP;
         case GDK_KEY_Return:
         case GDK_KEY_KP_Enter:
             g_action_group_activate_action(group, "open", NULL);
