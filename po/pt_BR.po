@@ -13,8 +13,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2022-12-31 12:52+0000\n"
-"Last-Translator: Marcelo dos Santos Mafra <msmafra@gmail.com>\n"
+"PO-Revision-Date: 2025-12-01 15:14+0000\n"
+"Last-Translator: breakout71fan_1789 <pxhere.viral741@passinbox.com>\n"
 "Language-Team: Portuguese (Brazil) <https://hosted.weblate.org/projects/"
 "fsearch/translations/pt_BR/>\n"
 "Language: pt_BR\n"
@@ -22,7 +22,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n > 1;\n"
-"X-Generator: Weblate 4.15.1-dev\n"
+"X-Generator: Weblate 5.15-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -139,8 +139,9 @@ msgid "folders"
 msgstr "Pastas"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
+#, fuzzy
 msgid "music"
-msgstr ""
+msgstr "Música"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
 #, fuzzy
@@ -156,15 +157,15 @@ msgstr "Documentos"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "encontrar"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "ferramenta"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "tudo"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -172,10 +173,8 @@ msgid "Christian Boxdörfer"
 msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
-#, fuzzy
-#| msgid "FSearch"
 msgid "New search engine"
-msgstr "FSearch"
+msgstr "Novo motor de busca"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 #, fuzzy
@@ -184,10 +183,8 @@ msgid "Greatly improved highlighting of search terms"
 msgstr "Exibir termos de busca destacados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
-#, fuzzy
-#| msgid "Edit filter"
 msgid "Custom filters"
-msgstr "Editar filtro"
+msgstr "Filtros customizados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "Improved sort performance"
@@ -199,15 +196,16 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Remember file selection after a database update"
-msgstr ""
+msgstr "Lembrar seleção de arquivo após uma atualização na base de dados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
+#, fuzzy
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
-msgstr ""
+msgstr "Inverter seleção com o elástico quando 'Ctrl' é pressionado"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "Focus search entry when the main window gets activated"
@@ -227,17 +225,19 @@ msgstr ""
 #, fuzzy
 #| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
-msgstr "Mostra as preferências"
+msgstr "Mostrar ícones de aplicativo para arquivos .desktop"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "Add .odp and .ods files to document filter"
-msgstr ""
+msgstr "Adicionar arquivos .odp e .ods para o filtro de documento"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
+"Menu 'Abrir com' agora apenas mostra aplicativos que podem lidar com os "
+"arquivos selecionados"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
 msgid ""
@@ -575,7 +575,7 @@ msgstr "Lembrar tamanho da janela"
 
 #: src/fsearch_preferences.ui:203
 msgid "Exit on Escape"
-msgstr ""
+msgstr "Sair ao pressionar Esc"
 
 #: src/fsearch_preferences.ui:240
 msgid "with keyboard shortcuts or menu entries"
@@ -1468,6 +1468,10 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
+"<b>Sair ao pressionar Esc:</b>\n"
+"\n"
+"Se ativado, FSearch se fecha quando a tecla Esc é pressionada ao invés da "
+"janela ser minimizada."
 
 #: src/fsearch_preferences.ui:2068 src/fsearch_window.ui:289
 #: src/fsearch_window.ui:414 src/menus.ui:150 src/menus.ui:156
