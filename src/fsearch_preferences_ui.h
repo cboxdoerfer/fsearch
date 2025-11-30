@@ -25,6 +25,7 @@ typedef enum FsearchPreferencesPage {
     PREF_PAGE_GENERAL = 0,
     PREF_PAGE_SEARCH,
     PREF_PAGE_DATABASE,
+    PREF_PAGE_APPLICATIONS,
     N_PREF_PAGES,
 
 } FsearchPreferencesPage;
