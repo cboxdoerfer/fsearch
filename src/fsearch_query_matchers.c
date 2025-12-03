@@ -1,4 +1,8 @@
 #include "fsearch_query_matchers.h"
+
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
 #include "fsearch_query_node.h"
 #include <string.h>
 

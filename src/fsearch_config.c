@@ -248,7 +248,11 @@ config_load(FsearchConfig *config) {
         config->show_dialog_failed_opening = config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
 
         // Applications
+#ifdef _WIN32
+        config->folder_open_cmd = config_load_string(key_file, "Applications", "folder_open_cmd", "explorer.exe \"{path_full_raw}\"");
+#else
         config->folder_open_cmd = config_load_string(key_file, "Applications", "folder_open_cmd", NULL);
+#endif
 
         // Window
         config->restore_window_size = config_load_boolean(key_file, "Interface", "restore_window_size", false);
