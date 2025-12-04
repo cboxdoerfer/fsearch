@@ -52,6 +52,7 @@ struct _FsearchConfig {
 
     // Applications
     char *folder_open_cmd;
+    char *diff_tool_cmd;
 
     // Window
     bool restore_window_size;
@@ -75,6 +76,7 @@ struct _FsearchConfig {
 
     // Warning Dialogs
     bool show_dialog_failed_opening;
+    bool show_dialog_failed_diff;
 
     // View menu
     bool show_menubar;
