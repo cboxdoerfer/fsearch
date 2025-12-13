@@ -59,6 +59,8 @@ typedef struct {
     GtkToggleButton *action_after_file_open_keyboard;
     GtkToggleButton *action_after_file_open_mouse;
     GtkToggleButton *show_indexing_status;
+    GtkBox *diff_tool_box;
+    GtkEntry *diff_tool_entry;
 
     // Search page
     GtkToggleButton *auto_search_in_path_button;
@@ -84,6 +86,7 @@ typedef struct {
 
     // Dialog page
     GtkToggleButton *show_dialog_failed_opening;
+    GtkToggleButton *show_dialog_failed_diff;
 
     // Include page
     GtkTreeView *index_list;
@@ -497,6 +500,7 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->show_indexing_status = gtk_toggle_button_get_active(ui->show_indexing_status);
     // Dialogs
     new_config->show_dialog_failed_opening = gtk_toggle_button_get_active(ui->show_dialog_failed_opening);
+    new_config->show_dialog_failed_diff = gtk_toggle_button_get_active(ui->show_dialog_failed_diff);
     new_config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
     new_config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
     new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
@@ -505,6 +509,14 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->launch_desktop_files = gtk_toggle_button_get_active(ui->launch_desktop_files_button);
     new_config->show_listview_icons = gtk_toggle_button_get_active(ui->show_icons_button);
     new_config->exclude_hidden_items = gtk_toggle_button_get_active(ui->exclude_hidden_items_button);
+
+    g_clear_pointer(&new_config->diff_tool_cmd, g_free);
+    const char *cmd = gtk_entry_get_text(ui->diff_tool_entry);
+    if (cmd && *cmd) {
+        new_config->diff_tool_cmd = g_strdup(cmd);
+    } else {
+        new_config->diff_tool_cmd = NULL;
+    }
 
     g_clear_pointer(&new_config->exclude_files, g_strfreev);
     new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
@@ -658,6 +670,14 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                  "help_show_indexing_status",
                                                  new_config->show_indexing_status);
 
+    ui->diff_tool_box = GTK_BOX(gtk_builder_get_object(ui->builder, "diff_tool_box"));
+    builder_init_widget(ui->builder, "diff_tool_box", "help_diff_tool");
+    ui->diff_tool_entry = GTK_ENTRY(gtk_builder_get_object(ui->builder, "diff_tool_entry"));
+
+    if (new_config->diff_tool_cmd) {
+        gtk_entry_set_text(ui->diff_tool_entry, new_config->diff_tool_cmd);
+    }
+
     // Search page
     ui->auto_search_in_path_button =
         toggle_button_get(ui->builder, "auto_search_in_path_button", "help_auto_path", new_config->auto_search_in_path);
@@ -736,6 +756,10 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                        "show_dialog_failed_opening",
                                                        "help_warn_failed_open",
                                                        new_config->show_dialog_failed_opening);
+    ui->show_dialog_failed_diff = toggle_button_get(ui->builder,
+                                                    "show_dialog_failed_diff",
+                                                    "help_warn_failed_open",
+                                                    new_config->show_dialog_failed_diff);
 
     // Include page
     ui->index_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "index_list", "help_index_list"));
