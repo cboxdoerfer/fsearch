@@ -84,6 +84,7 @@ typedef struct {
 
     // Dialog page
     GtkToggleButton *show_dialog_failed_opening;
+    GtkToggleButton *show_dialog_on_deletion;
 
     // Include page
     GtkTreeView *index_list;
@@ -497,6 +498,7 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->show_indexing_status = gtk_toggle_button_get_active(ui->show_indexing_status);
     // Dialogs
     new_config->show_dialog_failed_opening = gtk_toggle_button_get_active(ui->show_dialog_failed_opening);
+    new_config->show_dialog_on_deletion = gtk_toggle_button_get_active(ui->show_dialog_on_deletion);
     new_config->auto_search_in_path = gtk_toggle_button_get_active(ui->auto_search_in_path_button);
     new_config->auto_match_case = gtk_toggle_button_get_active(ui->auto_match_case_button);
     new_config->hide_results_on_empty_search = gtk_toggle_button_get_active(ui->hide_results_button);
@@ -736,6 +738,11 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                        "show_dialog_failed_opening",
                                                        "help_warn_failed_open",
                                                        new_config->show_dialog_failed_opening);
+
+    ui->show_dialog_on_deletion = toggle_button_get(ui->builder,
+                                                       "show_dialog_on_deletion",
+                                                       "help_warn_deletion",
+                                                       new_config->show_dialog_on_deletion);
 
     // Include page
     ui->index_list = GTK_TREE_VIEW(builder_init_widget(ui->builder, "index_list", "help_index_list"));
