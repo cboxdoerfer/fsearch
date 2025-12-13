@@ -177,6 +177,7 @@ typedef struct {
     GQueue *launch_uris_ctx_queue;
     GQueue *path_queue;
     GAppLaunchContext *app_launch_context;
+    GtkRecentManager *recents_manager;
     GString *error_messages;
     bool launch_desktop_files;
 
@@ -207,6 +208,7 @@ launch_context_new(GAppLaunchContext *app_launch_context,
     launch_ctx->launch_desktop_files = launch_desktop_files;
     launch_ctx->launch_uris_ctx_queue = g_queue_new();
     launch_ctx->path_queue = g_queue_new();
+    launch_ctx->recents_manager = gtk_recent_manager_get_default();
     launch_ctx->error_messages = g_string_new(NULL);
     launch_ctx->callback = callback;
     launch_ctx->callback_data = callback_data;
@@ -305,6 +307,10 @@ handle_queued_uris(FsearchFileUtilsLaunchContext *launch_ctx) {
     }
     else {
         FsearchFileUtilsLaunchUrisContext *uris_ctx = g_queue_pop_head(launch_ctx->launch_uris_ctx_queue);
+
+        for (GList *uri = uris_ctx->uris; uri != NULL; uri = uri->next) {
+            gtk_recent_manager_add_item(launch_ctx->recents_manager, (gchar*)uri->data);
+        }
 
 #if GLIB_CHECK_VERSION(2, 60, 0) && !defined(__MACH__)
         g_app_info_launch_uris_async(uris_ctx->app_info,
@@ -664,7 +670,7 @@ fsearch_file_utils_get_thumbnail_icon(const char *path) {
     if (!g_file) {
         return NULL;
     }
-    
+
     g_autoptr(GFileInfo) file_info = g_file_query_info(g_file, "thumbnail::path", 0, NULL, NULL);
     if (!file_info) {
         return NULL;
