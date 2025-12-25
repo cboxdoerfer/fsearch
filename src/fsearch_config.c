@@ -308,6 +308,7 @@ config_load(FsearchConfig *config) {
         config->update_database_every_hours = config_load_integer(key_file, "Database", "update_database_every_hours", 0);
         config->update_database_every_minutes =
             config_load_integer(key_file, "Database", "update_database_every_minutes", 15);
+        config->enable_file_monitor = config_load_boolean(key_file, "Database", "enable_file_monitor", true);
         config->exclude_hidden_items =
             config_load_boolean(key_file, "Database", "exclude_hidden_files_and_folders", false);
         config->follow_symlinks = config_load_boolean(key_file, "Database", "follow_symbolic_links", false);
@@ -406,6 +407,7 @@ config_load_default(FsearchConfig *config) {
     config->update_database_every = false;
     config->update_database_every_hours = 0;
     config->update_database_every_minutes = 15;
+    config->enable_file_monitor = true;
     config->exclude_hidden_items = false;
     config->follow_symlinks = false;
 
@@ -601,6 +603,7 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Database", "update_database_every", config->update_database_every);
     g_key_file_set_integer(key_file, "Database", "update_database_every_hours", config->update_database_every_hours);
     g_key_file_set_integer(key_file, "Database", "update_database_every_minutes", config->update_database_every_minutes);
+    g_key_file_set_boolean(key_file, "Database", "enable_file_monitor", config->enable_file_monitor);
     g_key_file_set_boolean(key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
     g_key_file_set_boolean(key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
 

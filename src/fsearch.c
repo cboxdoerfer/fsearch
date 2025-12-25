@@ -28,6 +28,7 @@
 #include "fsearch_database.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_limits.h"
+#include "fsearch_monitor.h"
 #include "fsearch_preferences_ui.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
@@ -48,6 +49,8 @@ struct _FsearchApplication {
     FsearchThreadPool *pool;
 
     GThreadPool *db_pool;
+
+    FsearchMonitor *monitor;
 
     char *option_search_term;
     bool new_window;
@@ -169,6 +172,60 @@ prepare_windows_for_db_update(FsearchApplication *app) {
     }
 }
 
+// Callback when monitor detects changes
+static void
+on_monitor_changed(gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    g_debug("[app] file monitor detected changes, refreshing windows");
+
+    // Emit signal to refresh all windows
+    g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED], 0);
+}
+
+// Start or restart the file monitor
+static void
+start_file_monitor(FsearchApplication *self) {
+    if (!self->config->enable_file_monitor) {
+        g_debug("[app] file monitoring disabled in config");
+        return;
+    }
+
+    if (!self->db) {
+        g_debug("[app] no database, skipping monitor start");
+        return;
+    }
+
+    // Stop existing monitor if running
+    if (self->monitor) {
+        fsearch_monitor_stop(self->monitor);
+        g_clear_pointer(&self->monitor, fsearch_monitor_free);
+    }
+
+    // Create and configure new monitor
+    self->monitor = fsearch_monitor_new(self->db, self->config->indexes);
+    if (!self->monitor) {
+        g_warning("[app] failed to create file monitor");
+        return;
+    }
+
+    fsearch_monitor_set_excluded_paths(self->monitor, self->config->exclude_locations);
+    fsearch_monitor_set_exclude_patterns(self->monitor, self->config->exclude_files);
+    fsearch_monitor_set_exclude_hidden(self->monitor, self->config->exclude_hidden_items);
+    fsearch_monitor_set_callback(self->monitor, on_monitor_changed, self);
+
+    if (fsearch_monitor_start(self->monitor)) {
+        g_info("[app] file monitoring started with %u watches",
+               fsearch_monitor_get_num_watches(self->monitor));
+
+        if (fsearch_monitor_watch_limit_reached(self->monitor)) {
+            g_warning("[app] inotify watch limit reached - some directories not monitored");
+        }
+    } else {
+        g_warning("[app] failed to start file monitor");
+        g_clear_pointer(&self->monitor, fsearch_monitor_free);
+    }
+}
+
 static gboolean
 on_database_update_finished(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
@@ -192,6 +249,9 @@ on_database_update_finished(gpointer user_data) {
     if (self->num_database_update_active == 0) {
         action_set_enabled("update_database", TRUE);
         action_set_enabled("cancel_update_database", FALSE);
+
+        // Start file monitor after database is ready
+        start_file_monitor(self);
     }
     fsearch_application_state_unlock(self);
     g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED], 0);
@@ -547,6 +607,14 @@ fsearch_application_shutdown(GApplication *app) {
     if (fsearch->file_manager_watch_id) {
         g_bus_unwatch_name(fsearch->file_manager_watch_id);
         fsearch->file_manager_watch_id = 0;
+    }
+
+    // Stop file monitor before database cleanup
+    if (fsearch->monitor) {
+        g_debug("[app] stopping file monitor...");
+        fsearch_monitor_stop(fsearch->monitor);
+        g_clear_pointer(&fsearch->monitor, fsearch_monitor_free);
+        g_debug("[app] file monitor stopped.");
     }
 
     if (fsearch->db_pool) {
