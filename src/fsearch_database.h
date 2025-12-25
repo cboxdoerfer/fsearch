@@ -19,6 +19,7 @@
 #pragma once
 
 #include "fsearch_array.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_database_index.h"
 #include "fsearch_thread_pool.h"
 
