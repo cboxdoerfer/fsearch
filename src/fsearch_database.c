@@ -1609,6 +1609,56 @@ db_get_thread_pool(FsearchDatabase *db) {
     return db->thread_pool;
 }
 
+// Check if path is a subfolder of parent_path
+static bool
+path_is_subfolder_of(const char *path, const char *parent_path) {
+    if (!path || !parent_path) {
+        return false;
+    }
+
+    size_t parent_len = strlen(parent_path);
+    if (parent_len == 0) {
+        return false;
+    }
+
+    // Check if path starts with parent_path
+    if (strncmp(path, parent_path, parent_len) != 0) {
+        return false;
+    }
+
+    // path must be longer than parent_path and have a separator after parent
+    // e.g., /home/user is subfolder of /home, but /home/username is not
+    if (strlen(path) <= parent_len) {
+        return false;
+    }
+
+    // Handle trailing slash in parent
+    if (parent_path[parent_len - 1] == G_DIR_SEPARATOR) {
+        return true;
+    }
+
+    // Otherwise, next char in path must be separator
+    return path[parent_len] == G_DIR_SEPARATOR;
+}
+
+// Check if an index path is covered by another enabled index in the list
+static bool
+index_is_covered_by_another(GList *indexes, FsearchIndex *index) {
+    for (GList *l = indexes; l != NULL; l = l->next) {
+        FsearchIndex *other = l->data;
+        if (other == index) {
+            continue;
+        }
+        if (!other->enabled || !other->update) {
+            continue;
+        }
+        if (path_is_subfolder_of(index->path, other->path)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool
 db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *)) {
     g_assert(db);
@@ -1632,9 +1682,16 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
         if (!fs_path->enabled) {
             continue;
         }
-        if (fs_path->update) {
-            ret = db_scan_folder(db, fs_path->path, fs_path->one_filesystem, cancellable, status_cb) || ret;
+        if (!fs_path->update) {
+            continue;
         }
+        // Skip if this path is a subfolder of another enabled index
+        // (it will be scanned as part of the parent)
+        if (index_is_covered_by_another(db->indexes, fs_path)) {
+            g_debug("[db_scan] skipping %s (covered by parent index)", fs_path->path);
+            continue;
+        }
+        ret = db_scan_folder(db, fs_path->path, fs_path->one_filesystem, cancellable, status_cb) || ret;
         if (is_cancelled(cancellable)) {
             return false;
         }
