@@ -6,7 +6,7 @@
 #include "fsearch_exclude_path.h"
 #include "fsearch_index.h"
 
-enum { COL_INDEX_ENABLE, COL_INDEX_PATH, COL_INDEX_UPDATE, COL_INDEX_ONE_FS, NUM_INDEX_COLUMNS };
+enum { COL_INDEX_ENABLE, COL_INDEX_PATH, COL_INDEX_UPDATE, COL_INDEX_ONE_FS, COL_INDEX_MONITOR, NUM_INDEX_COLUMNS };
 
 enum { COL_EXCLUDE_ENABLE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
 
@@ -57,6 +57,12 @@ on_column_index_one_fs_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpo
 }
 
 static void
+on_column_index_monitor_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
+    GtkTreeModel *index_model = data;
+    on_column_toggled(path_str, index_model, COL_INDEX_MONITOR);
+}
+
+static void
 on_column_index_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
     GtkTreeModel *index_model = data;
     on_column_toggled(path_str, index_model, COL_INDEX_UPDATE);
@@ -91,6 +97,7 @@ pref_index_treeview_data_get(GtkTreeView *view) {
         gboolean update = FALSE;
         gboolean enable = FALSE;
         gboolean one_filesystem = FALSE;
+        gboolean monitor = FALSE;
         gtk_tree_model_get(model,
                            &iter,
                            COL_INDEX_ENABLE,
@@ -101,10 +108,12 @@ pref_index_treeview_data_get(GtkTreeView *view) {
                            &update,
                            COL_INDEX_ONE_FS,
                            &one_filesystem,
+                           COL_INDEX_MONITOR,
+                           &monitor,
                            -1);
 
         if (path) {
-            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enable, update, one_filesystem, 0);
+            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enable, update, one_filesystem, monitor, 0);
             data = g_list_append(data, index);
         }
 
@@ -177,7 +186,7 @@ pref_filter_treeview_row_add(GtkTreeModel *filter_model, FsearchFilter *filter) 
 
 void
 pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path) {
-    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, true, true, false, 0);
+    FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, true, true, false, true, 0);
 
     GtkTreeIter iter;
     gtk_list_store_append(GTK_LIST_STORE(index_model), &iter);
@@ -191,6 +200,8 @@ pref_index_treeview_row_add(GtkTreeModel *index_model, const char *path) {
                        index->update,
                        COL_INDEX_ONE_FS,
                        index->one_filesystem,
+                       COL_INDEX_MONITOR,
+                       index->monitor,
                        -1);
 
     fsearch_index_free(index);
@@ -216,7 +227,7 @@ pref_exclude_treeview_row_add(GtkTreeModel *exclude_model, const char *path) {
 GtkTreeModel *
 pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
     GtkListStore *store =
-        gtk_list_store_new(NUM_INDEX_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
+        gtk_list_store_new(NUM_INDEX_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN, G_TYPE_BOOLEAN);
     gtk_tree_view_set_model(view, GTK_TREE_MODEL(store));
 
     column_toggle_append(view,
@@ -232,12 +243,12 @@ pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
                          COL_INDEX_ONE_FS,
                          G_CALLBACK(on_column_index_one_fs_toggled),
                          store);
-    // column_toggle_append(view,
-    //                      GTK_TREE_MODEL(store),
-    //                      _("Update"),
-    //                      COL_INDEX_UPDATE,
-    //                      G_CALLBACK(on_column_index_toggled),
-    //                      store);
+    column_toggle_append(view,
+                         GTK_TREE_MODEL(store),
+                         _("Monitor"),
+                         COL_INDEX_MONITOR,
+                         G_CALLBACK(on_column_index_monitor_toggled),
+                         store);
 
     for (GList *l = indexes; l != NULL; l = l->next) {
         GtkTreeIter iter = {};
@@ -253,6 +264,8 @@ pref_index_treeview_init(GtkTreeView *view, GList *indexes) {
                            index->update,
                            COL_INDEX_ONE_FS,
                            index->one_filesystem,
+                           COL_INDEX_MONITOR,
+                           index->monitor,
                            -1);
     }
 

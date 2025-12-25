@@ -27,6 +27,7 @@
 #include "fsearch_config.h"
 #include "fsearch_database.h"
 #include "fsearch_file_utils.h"
+#include "fsearch_index.h"
 #include "fsearch_limits.h"
 #include "fsearch_monitor.h"
 #include "fsearch_preferences_ui.h"
@@ -201,8 +202,24 @@ start_file_monitor(FsearchApplication *self) {
         g_clear_pointer(&self->monitor, fsearch_monitor_free);
     }
 
+    // Filter indexes to only include those with monitor=true
+    GList *monitor_indexes = NULL;
+    for (GList *l = self->config->indexes; l != NULL; l = l->next) {
+        FsearchIndex *index = l->data;
+        if (index->enabled && index->monitor) {
+            monitor_indexes = g_list_append(monitor_indexes, index);
+        }
+    }
+
+    if (!monitor_indexes) {
+        g_debug("[app] no indexes configured for monitoring");
+        return;
+    }
+
     // Create and configure new monitor
-    self->monitor = fsearch_monitor_new(self->db, self->config->indexes);
+    self->monitor = fsearch_monitor_new(self->db, monitor_indexes);
+    g_list_free(monitor_indexes);  // Free the list but not the indexes themselves
+
     if (!self->monitor) {
         g_warning("[app] failed to create file monitor");
         return;

@@ -167,10 +167,12 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
         bool update = config_load_boolean(key_file, "Database", key, true);
         snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
         bool one_filesystem = config_load_boolean(key_file, "Database", key, false);
+        snprintf(key, sizeof(key), "%s_monitor_%d", prefix, pos);
+        bool monitor = config_load_boolean(key_file, "Database", key, true);
 
         pos++;
         if (path) {
-            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, 0);
+            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, monitor, 0);
             indexes = g_list_append(indexes, index);
         }
         else {
@@ -484,6 +486,9 @@ config_save_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
         snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
         g_key_file_set_boolean(key_file, "Database", key, index->one_filesystem);
 
+        snprintf(key, sizeof(key), "%s_monitor_%d", prefix, pos);
+        g_key_file_set_boolean(key_file, "Database", key, index->monitor);
+
         pos++;
     }
 }
@@ -676,6 +681,9 @@ config_indexes_compare(void *i1, void *i2) {
         return false;
     }
     if (index1->one_filesystem != index2->one_filesystem) {
+        return false;
+    }
+    if (index1->monitor != index2->monitor) {
         return false;
     }
     if (g_strcmp0(index1->path, index2->path) != 0) {
