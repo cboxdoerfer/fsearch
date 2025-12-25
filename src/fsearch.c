@@ -183,6 +183,31 @@ on_monitor_changed(gpointer user_data) {
     g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED], 0);
 }
 
+// Callback when monitor encounters an error
+static void
+on_monitor_error(FsearchMonitorError error, gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+
+    switch (error) {
+    case FSEARCH_MONITOR_ERROR_QUEUE_OVERFLOW:
+        g_warning("[app] inotify queue overflow detected - triggering database rescan");
+        // Schedule a rescan to recover from lost events
+        g_idle_add(on_database_scan_enqueue, NULL);
+        break;
+
+    case FSEARCH_MONITOR_ERROR_THREAD_CRASHED:
+        g_warning("[app] file monitor thread crashed - monitoring stopped");
+        // Could attempt to restart monitor here, but for now just log
+        // A rescan will restart the monitor when complete
+        g_idle_add(on_database_scan_enqueue, NULL);
+        break;
+
+    default:
+        g_warning("[app] unknown monitor error: %d", error);
+        break;
+    }
+}
+
 // Start or restart the file monitor
 static void
 start_file_monitor(FsearchApplication *self) {
@@ -229,6 +254,7 @@ start_file_monitor(FsearchApplication *self) {
     fsearch_monitor_set_exclude_patterns(self->monitor, self->config->exclude_files);
     fsearch_monitor_set_exclude_hidden(self->monitor, self->config->exclude_hidden_items);
     fsearch_monitor_set_callback(self->monitor, on_monitor_changed, self);
+    fsearch_monitor_set_error_callback(self->monitor, on_monitor_error, self);
 
     if (fsearch_monitor_start(self->monitor)) {
         g_info("[app] file monitoring started with %u watches",

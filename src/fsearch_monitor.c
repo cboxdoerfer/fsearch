@@ -68,9 +68,10 @@ struct FsearchMonitor {
     int inotify_fd;
     GThread *watch_thread;
 
-    // Watch descriptor mappings
+    // Watch descriptor mappings (protected by watch_mutex)
     GHashTable *wd_to_path;      // int -> char*
     GHashTable *path_to_wd;      // char* -> int
+    GMutex watch_mutex;
 
     // Event queue and coalescing
     GMutex event_mutex;
@@ -87,15 +88,43 @@ struct FsearchMonitor {
     // Callbacks
     FsearchMonitorCallback callback;
     gpointer callback_data;
+    FsearchMonitorErrorCallback error_callback;
+    gpointer error_callback_data;
 
     // State
     volatile bool running;
     volatile bool watch_limit_reached;
     volatile bool is_batching;
+    volatile bool overflow_occurred;
     uint32_t num_watches;
 
     GMutex state_mutex;
 };
+
+// Context for error callback invocation on main thread
+typedef struct {
+    FsearchMonitor *monitor;
+    FsearchMonitorError error;
+} ErrorCallbackContext;
+
+static gboolean
+invoke_error_callback_idle(gpointer user_data) {
+    ErrorCallbackContext *ctx = user_data;
+    if (ctx->monitor->error_callback) {
+        ctx->monitor->error_callback(ctx->error, ctx->monitor->error_callback_data);
+    }
+    g_free(ctx);
+    return G_SOURCE_REMOVE;
+}
+
+// Schedule error callback on main thread
+static void
+notify_error(FsearchMonitor *monitor, FsearchMonitorError error) {
+    ErrorCallbackContext *ctx = g_new(ErrorCallbackContext, 1);
+    ctx->monitor = monitor;
+    ctx->error = error;
+    g_idle_add(invoke_error_callback_idle, ctx);
+}
 
 static void
 monitor_event_free(MonitorEvent *event) {
@@ -154,16 +183,32 @@ is_path_excluded(FsearchMonitor *monitor, const char *path) {
 
 static char *
 build_full_path(FsearchMonitor *monitor, int wd, const char *name) {
+    g_mutex_lock(&monitor->watch_mutex);
     const char *dir_path = g_hash_table_lookup(monitor->wd_to_path, GINT_TO_POINTER(wd));
-    if (!dir_path) {
-        return NULL;
+    char *result = NULL;
+
+    if (dir_path) {
+        if (!name || name[0] == '\0') {
+            result = g_strdup(dir_path);
+        } else {
+            result = g_build_filename(dir_path, name, NULL);
+        }
     }
 
-    if (!name || name[0] == '\0') {
-        return g_strdup(dir_path);
-    }
+    g_mutex_unlock(&monitor->watch_mutex);
+    return result;
+}
 
-    return g_build_filename(dir_path, name, NULL);
+// Build inotify watch mask - IN_EXCL_UNLINK may not be available on old kernels
+static uint32_t
+get_watch_mask(void) {
+    uint32_t mask = IN_CREATE | IN_DELETE | IN_MODIFY |
+                    IN_MOVED_FROM | IN_MOVED_TO |
+                    IN_DONT_FOLLOW | IN_ONLYDIR;
+#ifdef IN_EXCL_UNLINK
+    mask |= IN_EXCL_UNLINK;
+#endif
+    return mask;
 }
 
 // Add inotify watch for a directory
@@ -173,11 +218,7 @@ add_watch(FsearchMonitor *monitor, const char *path) {
         return -1;
     }
 
-    int wd = inotify_add_watch(monitor->inotify_fd, path,
-                               IN_CREATE | IN_DELETE | IN_MODIFY |
-                               IN_MOVED_FROM | IN_MOVED_TO |
-                               IN_DONT_FOLLOW | IN_EXCL_UNLINK |
-                               IN_ONLYDIR);
+    int wd = inotify_add_watch(monitor->inotify_fd, path, get_watch_mask());
 
     if (wd < 0) {
         if (errno == ENOSPC) {
@@ -198,11 +239,13 @@ add_watch(FsearchMonitor *monitor, const char *path) {
         return -1;
     }
 
-    // Store mappings
+    // Store mappings (protected by watch_mutex)
+    g_mutex_lock(&monitor->watch_mutex);
     char *path_copy = g_strdup(path);
     g_hash_table_insert(monitor->wd_to_path, GINT_TO_POINTER(wd), path_copy);
     g_hash_table_insert(monitor->path_to_wd, path_copy, GINT_TO_POINTER(wd));
     monitor->num_watches++;
+    g_mutex_unlock(&monitor->watch_mutex);
 
     g_debug("[monitor] added watch %d for: %s (total: %u)", wd, path, monitor->num_watches);
 
@@ -212,13 +255,15 @@ add_watch(FsearchMonitor *monitor, const char *path) {
 // Remove inotify watch
 static void
 remove_watch(FsearchMonitor *monitor, const char *path) {
+    g_mutex_lock(&monitor->watch_mutex);
+
     gpointer wd_ptr = g_hash_table_lookup(monitor->path_to_wd, path);
     if (!wd_ptr) {
+        g_mutex_unlock(&monitor->watch_mutex);
         return;
     }
 
     int wd = GPOINTER_TO_INT(wd_ptr);
-    inotify_rm_watch(monitor->inotify_fd, wd);
 
     g_hash_table_remove(monitor->wd_to_path, wd_ptr);
     g_hash_table_remove(monitor->path_to_wd, path);
@@ -227,7 +272,13 @@ remove_watch(FsearchMonitor *monitor, const char *path) {
         monitor->num_watches--;
     }
 
-    g_debug("[monitor] removed watch for: %s (total: %u)", path, monitor->num_watches);
+    uint32_t current_watches = monitor->num_watches;
+    g_mutex_unlock(&monitor->watch_mutex);
+
+    // Remove the kernel watch (outside lock since it's a syscall)
+    inotify_rm_watch(monitor->inotify_fd, wd);
+
+    g_debug("[monitor] removed watch for: %s (total: %u)", path, current_watches);
 }
 
 // Recursively add watches for a directory tree
@@ -558,6 +609,7 @@ static gpointer
 watch_thread_func(gpointer data) {
     FsearchMonitor *monitor = data;
     char buffer[INOTIFY_BUFFER_SIZE] __attribute__((aligned(__alignof__(struct inotify_event))));
+    bool crashed = false;
 
     g_debug("[monitor] watch thread started");
 
@@ -573,6 +625,7 @@ watch_thread_func(gpointer data) {
                 continue;
             }
             g_warning("[monitor] poll error: %s", g_strerror(errno));
+            crashed = true;
             break;
         }
 
@@ -586,6 +639,7 @@ watch_thread_func(gpointer data) {
                 continue;
             }
             g_warning("[monitor] read error: %s", g_strerror(errno));
+            crashed = true;
             break;
         }
 
@@ -599,9 +653,12 @@ watch_thread_func(gpointer data) {
                 continue;
             }
 
-            // Handle special cases
+            // Handle inotify queue overflow - events were lost
             if (event->mask & IN_Q_OVERFLOW) {
-                g_warning("[monitor] inotify queue overflow - some events may be lost");
+                g_warning("[monitor] inotify queue overflow - some events may be lost. "
+                          "Consider increasing /proc/sys/fs/inotify/max_queued_events");
+                monitor->overflow_occurred = true;
+                notify_error(monitor, FSEARCH_MONITOR_ERROR_QUEUE_OVERFLOW);
                 ptr += sizeof(struct inotify_event) + event->len;
                 continue;
             }
@@ -627,6 +684,12 @@ watch_thread_func(gpointer data) {
         }
     }
 
+    // Notify if thread exited unexpectedly (not due to stop() being called)
+    if (crashed && monitor->running) {
+        g_warning("[monitor] watch thread crashed unexpectedly");
+        notify_error(monitor, FSEARCH_MONITOR_ERROR_THREAD_CRASHED);
+    }
+
     g_debug("[monitor] watch thread exiting");
     return NULL;
 }
@@ -646,6 +709,7 @@ fsearch_monitor_new(FsearchDatabase *db, GList *index_paths) {
 
     g_mutex_init(&monitor->event_mutex);
     g_mutex_init(&monitor->state_mutex);
+    g_mutex_init(&monitor->watch_mutex);
 
     monitor->event_queue = g_queue_new();
 
@@ -691,6 +755,7 @@ fsearch_monitor_free(FsearchMonitor *monitor) {
 
     g_mutex_clear(&monitor->event_mutex);
     g_mutex_clear(&monitor->state_mutex);
+    g_mutex_clear(&monitor->watch_mutex);
 
     g_free(monitor);
 }
@@ -927,4 +992,21 @@ fsearch_monitor_set_database(FsearchMonitor *monitor, FsearchDatabase *db) {
     g_mutex_unlock(&monitor->state_mutex);
 
     g_debug("[monitor] database reference updated");
+}
+
+void
+fsearch_monitor_set_error_callback(FsearchMonitor *monitor,
+                                   FsearchMonitorErrorCallback callback,
+                                   gpointer user_data) {
+    if (!monitor) {
+        return;
+    }
+
+    monitor->error_callback = callback;
+    monitor->error_callback_data = user_data;
+}
+
+bool
+fsearch_monitor_overflow_occurred(FsearchMonitor *monitor) {
+    return monitor ? monitor->overflow_occurred : false;
 }

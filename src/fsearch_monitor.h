@@ -29,6 +29,17 @@ typedef struct FsearchMonitor FsearchMonitor;
 // Callback for when database changes are applied
 typedef void (*FsearchMonitorCallback)(gpointer user_data);
 
+// Error types that can occur during monitoring
+typedef enum {
+    FSEARCH_MONITOR_ERROR_QUEUE_OVERFLOW,  // inotify queue overflow - events lost
+    FSEARCH_MONITOR_ERROR_THREAD_CRASHED,  // watch thread exited unexpectedly
+} FsearchMonitorError;
+
+// Callback for monitor errors
+// error: type of error that occurred
+// user_data: user-provided callback data
+typedef void (*FsearchMonitorErrorCallback)(FsearchMonitorError error, gpointer user_data);
+
 // Create a new file system monitor
 // db: Database to update (takes a reference)
 // index_paths: List of FsearchIndex paths to monitor
@@ -102,3 +113,14 @@ fsearch_monitor_flush_events(FsearchMonitor *monitor);
 // Call this after scan completes to point to the new database
 void
 fsearch_monitor_set_database(FsearchMonitor *monitor, FsearchDatabase *db);
+
+// Set callback for error conditions (overflow, thread crash)
+// The callback may be invoked from a background thread context
+void
+fsearch_monitor_set_error_callback(FsearchMonitor *monitor,
+                                   FsearchMonitorErrorCallback callback,
+                                   gpointer user_data);
+
+// Check if an overflow occurred (events may have been lost)
+bool
+fsearch_monitor_overflow_occurred(FsearchMonitor *monitor);
