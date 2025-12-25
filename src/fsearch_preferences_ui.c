@@ -76,6 +76,7 @@ typedef struct {
 
     // Database page
     GtkToggleButton *update_db_at_start_button;
+    GtkToggleButton *enable_file_monitor_button;
     GtkToggleButton *auto_update_checkbox;
     GtkBox *auto_update_box;
     GtkBox *auto_update_spin_box;
@@ -485,6 +486,7 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     new_config->restore_window_size = gtk_toggle_button_get_active(ui->restore_win_size_button);
     new_config->exit_on_escape = gtk_toggle_button_get_active(ui->exit_on_escape_button);
     new_config->update_database_on_launch = gtk_toggle_button_get_active(ui->update_db_at_start_button);
+    new_config->enable_file_monitor = gtk_toggle_button_get_active(ui->enable_file_monitor_button);
     new_config->update_database_every = gtk_toggle_button_get_active(ui->auto_update_checkbox);
     new_config->update_database_every_hours = gtk_spin_button_get_value_as_int(
         GTK_SPIN_BUTTON(ui->auto_update_hours_spin_button));
@@ -701,6 +703,11 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
                                                       "update_db_at_start_button",
                                                       "help_update_database_on_start",
                                                       new_config->update_database_on_launch);
+
+    ui->enable_file_monitor_button = toggle_button_get(ui->builder,
+                                                       "enable_file_monitor_button",
+                                                       "help_enable_file_monitor",
+                                                       new_config->enable_file_monitor);
 
     ui->auto_update_checkbox = toggle_button_get(ui->builder,
                                                  "auto_update_checkbox",
