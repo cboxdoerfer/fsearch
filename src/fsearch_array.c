@@ -622,5 +622,34 @@ darray_remove_sorted(DynamicArray *array,
         return NULL;
     }
 
-    return darray_remove_at(array, idx);
+    // Binary search found an entry that compares equal, but it might not be
+    // the exact same pointer if multiple entries have the same sort key.
+    // Verify and search nearby if needed.
+    if (array->data[idx] == item) {
+        return darray_remove_at(array, idx);
+    }
+
+    // Search backwards for exact match
+    for (uint32_t i = idx; i > 0; i--) {
+        if (comp_func(&array->data[i - 1], &item, data) != 0) {
+            break;
+        }
+        if (array->data[i - 1] == item) {
+            return darray_remove_at(array, i - 1);
+        }
+    }
+
+    // Search forwards for exact match
+    for (uint32_t i = idx + 1; i < array->num_items; i++) {
+        if (comp_func(&array->data[i], &item, data) != 0) {
+            break;
+        }
+        if (array->data[i] == item) {
+            return darray_remove_at(array, i);
+        }
+    }
+
+    // Entry not found - this shouldn't happen if the array is consistent
+    g_warning("[darray_remove_sorted] exact pointer match not found");
+    return NULL;
 }

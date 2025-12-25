@@ -1784,7 +1784,7 @@ This provides near real-time updates without needing to rescan the entire file s
 
 &lt;i&gt;Note: If you have many directories, the system's inotify watch limit may be reached. In that case, you can increase the limit with:&lt;/i&gt;
 
-&lt;tt&gt;echo 'fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf &amp;&amp; sudo sysctl -p&lt;/tt&gt;</property>
+&lt;tt&gt;echo 'fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf &amp;amp;&amp;amp; sudo sysctl -p&lt;/tt&gt;</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>
