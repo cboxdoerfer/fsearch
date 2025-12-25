@@ -80,3 +80,36 @@ darray_ref(DynamicArray *array);
 
 DynamicArray *
 darray_copy(DynamicArray *array);
+
+// Remove item at index, shift remaining items left
+// Returns the removed item (caller must handle cleanup)
+void *
+darray_remove_at(DynamicArray *array, uint32_t idx);
+
+// Insert item at specific index, shift existing items right
+void
+darray_insert_at(DynamicArray *array, uint32_t idx, void *item);
+
+// Find insertion point for sorted array
+// Returns index where item should be inserted to maintain sort order
+// If item already exists, returns index of existing item
+uint32_t
+darray_find_insertion_point(DynamicArray *array,
+                            void *item,
+                            DynamicArrayCompareDataFunc comp_func,
+                            void *data);
+
+// Insert item maintaining sort order
+void
+darray_insert_sorted(DynamicArray *array,
+                     void *item,
+                     DynamicArrayCompareDataFunc comp_func,
+                     void *data);
+
+// Remove item from sorted array (uses binary search to find it)
+// Returns the removed item, or NULL if not found
+void *
+darray_remove_sorted(DynamicArray *array,
+                     void *item,
+                     DynamicArrayCompareDataFunc comp_func,
+                     void *data);

@@ -110,3 +110,52 @@ db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
 
 DynamicArray *
 db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
+
+// --- Incremental update API for file monitoring ---
+
+// Add a single file entry to the database
+// Inserts into all sorted arrays, updates parent counts/sizes
+// Returns the newly created entry, or NULL on failure
+FsearchDatabaseEntry *
+db_add_file(FsearchDatabase *db,
+            FsearchDatabaseEntryFolder *parent,
+            const char *name,
+            off_t size,
+            time_t mtime);
+
+// Add a single folder entry to the database
+// Returns the new folder entry for use as parent, or NULL on failure
+FsearchDatabaseEntryFolder *
+db_add_folder(FsearchDatabase *db,
+              FsearchDatabaseEntryFolder *parent,
+              const char *name,
+              time_t mtime);
+
+// Remove a file entry from the database
+// Removes from all sorted arrays, updates parent counts/sizes
+// Entry is returned to memory pool for reuse
+bool
+db_remove_file(FsearchDatabase *db, FsearchDatabaseEntry *entry);
+
+// Remove a folder entry and all its children recursively
+// All entries are returned to memory pool for reuse
+bool
+db_remove_folder(FsearchDatabase *db, FsearchDatabaseEntryFolder *folder);
+
+// Update file entry metadata (size, mtime)
+// Removes and re-inserts into sorted arrays where sort key changed
+bool
+db_update_file(FsearchDatabase *db,
+               FsearchDatabaseEntry *entry,
+               off_t new_size,
+               time_t new_mtime);
+
+// Find a folder entry by full path
+// Returns NULL if not found
+FsearchDatabaseEntryFolder *
+db_find_folder_by_path(FsearchDatabase *db, const char *path);
+
+// Find an entry (file or folder) by full path
+// Returns NULL if not found
+FsearchDatabaseEntry *
+db_find_entry_by_path(FsearchDatabase *db, const char *path);

@@ -65,6 +65,20 @@ db_entry_set_type(FsearchDatabaseEntry *entry, FsearchDatabaseEntryType type);
 void
 db_entry_update_parent_size(FsearchDatabaseEntry *entry);
 
+// Decrement parent file/folder count when removing entry
+// Call before removing entry from database
+void
+db_entry_unset_parent(FsearchDatabaseEntry *entry);
+
+// Subtract size from parent chain (reverse of db_entry_update_parent_size)
+// Call when removing entry from database
+void
+db_entry_subtract_parent_size(FsearchDatabaseEntry *entry);
+
+// Clear entry for reuse (called before returning to memory pool)
+void
+db_entry_clear(FsearchDatabaseEntry *entry);
+
 uint8_t
 db_entry_get_mark(FsearchDatabaseEntry *entry);
 

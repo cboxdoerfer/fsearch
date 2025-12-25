@@ -515,3 +515,112 @@ darray_copy(DynamicArray *array) {
 
     return new;
 }
+
+void *
+darray_remove_at(DynamicArray *array, uint32_t idx) {
+    g_assert(array);
+    g_assert(array->data);
+
+    if (idx >= array->num_items) {
+        return NULL;
+    }
+
+    void *removed = array->data[idx];
+
+    // Shift remaining items left
+    if (idx < array->num_items - 1) {
+        memmove(&array->data[idx],
+                &array->data[idx + 1],
+                (array->num_items - idx - 1) * sizeof(void *));
+    }
+
+    array->num_items--;
+    array->data[array->num_items] = NULL;
+
+    return removed;
+}
+
+void
+darray_insert_at(DynamicArray *array, uint32_t idx, void *item) {
+    g_assert(array);
+    g_assert(array->data);
+
+    // Clamp index to valid range
+    if (idx > array->num_items) {
+        idx = array->num_items;
+    }
+
+    // Expand if needed
+    if (array->num_items >= array->max_items) {
+        darray_expand(array, array->num_items + 1);
+    }
+
+    // Shift items right to make room
+    if (idx < array->num_items) {
+        memmove(&array->data[idx + 1],
+                &array->data[idx],
+                (array->num_items - idx) * sizeof(void *));
+    }
+
+    array->data[idx] = item;
+    array->num_items++;
+}
+
+uint32_t
+darray_find_insertion_point(DynamicArray *array,
+                            void *item,
+                            DynamicArrayCompareDataFunc comp_func,
+                            void *data) {
+    g_assert(array);
+    g_assert(array->data);
+    g_assert(comp_func);
+
+    if (array->num_items == 0) {
+        return 0;
+    }
+
+    uint32_t left = 0;
+    uint32_t right = array->num_items;
+
+    while (left < right) {
+        uint32_t middle = left + (right - left) / 2;
+
+        int32_t cmp = comp_func(&array->data[middle], &item, data);
+        if (cmp < 0) {
+            left = middle + 1;
+        }
+        else {
+            right = middle;
+        }
+    }
+
+    return left;
+}
+
+void
+darray_insert_sorted(DynamicArray *array,
+                     void *item,
+                     DynamicArrayCompareDataFunc comp_func,
+                     void *data) {
+    g_assert(array);
+    g_assert(comp_func);
+
+    uint32_t idx = darray_find_insertion_point(array, item, comp_func, data);
+    darray_insert_at(array, idx, item);
+}
+
+void *
+darray_remove_sorted(DynamicArray *array,
+                     void *item,
+                     DynamicArrayCompareDataFunc comp_func,
+                     void *data) {
+    g_assert(array);
+    g_assert(comp_func);
+
+    uint32_t idx = 0;
+    if (!darray_binary_search_with_data(array, item, comp_func, data, &idx)) {
+        return NULL;
+    }
+
+    return darray_remove_at(array, idx);
+}
