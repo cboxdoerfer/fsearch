@@ -82,3 +82,23 @@ fsearch_monitor_get_num_watches(FsearchMonitor *monitor);
 // Check if watch limit was reached
 bool
 fsearch_monitor_watch_limit_reached(FsearchMonitor *monitor);
+
+// Enable/disable batching mode
+// When batching, events are queued but not processed until flush is called
+// Use this during database scans to accumulate changes
+void
+fsearch_monitor_set_batching(FsearchMonitor *monitor, bool batching);
+
+// Check if batching mode is active
+bool
+fsearch_monitor_is_batching(FsearchMonitor *monitor);
+
+// Immediately process all queued events
+// Call this after scan completes and database is swapped
+void
+fsearch_monitor_flush_events(FsearchMonitor *monitor);
+
+// Update the database reference
+// Call this after scan completes to point to the new database
+void
+fsearch_monitor_set_database(FsearchMonitor *monitor, FsearchDatabase *db);

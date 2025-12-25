@@ -257,9 +257,21 @@ on_database_update_finished(gpointer user_data) {
         prepare_windows_for_db_update(self);
         g_clear_pointer(&self->db, db_unref);
         self->db = g_steal_pointer(&db);
+
+        // Update monitor to use new database and flush batched events
+        if (self->monitor && fsearch_monitor_is_running(self->monitor)) {
+            fsearch_monitor_set_database(self->monitor, self->db);
+            fsearch_monitor_flush_events(self->monitor);
+            fsearch_monitor_set_batching(self->monitor, false);
+        }
     }
     else if (db) {
         g_clear_pointer(&db, db_unref);
+
+        // Scan was cancelled - just disable batching and discard events
+        if (self->monitor && fsearch_monitor_is_batching(self->monitor)) {
+            fsearch_monitor_set_batching(self->monitor, false);
+        }
     }
     g_cancellable_reset(self->db_thread_cancellable);
     self->num_database_update_active--;
@@ -292,6 +304,13 @@ on_database_load_started(gpointer user_data) {
 static gboolean
 on_database_scan_started(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+
+    // Enable batching mode on monitor during scan
+    // Events will accumulate and be applied after scan completes
+    if (self->monitor && fsearch_monitor_is_running(self->monitor)) {
+        fsearch_monitor_set_batching(self->monitor, true);
+    }
+
     g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_SCAN_STARTED], 0);
     return G_SOURCE_REMOVE;
 }

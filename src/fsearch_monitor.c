@@ -91,6 +91,7 @@ struct FsearchMonitor {
     // State
     volatile bool running;
     volatile bool watch_limit_reached;
+    volatile bool is_batching;
     uint32_t num_watches;
 
     GMutex state_mutex;
@@ -357,6 +358,13 @@ apply_changes_to_db(FsearchMonitor *monitor, GHashTable *changes) {
 
         switch (ev->state) {
         case COALESCED_CREATED: {
+            // Check if entry already exists (prevents duplicates from scan + monitor race)
+            FsearchDatabaseEntry *existing = db_find_entry_by_path(monitor->db, ev->path);
+            if (existing) {
+                g_debug("[monitor] entry already exists, skipping create: %s", ev->path);
+                break;
+            }
+
             struct stat st;
             if (lstat(ev->path, &st) != 0) {
                 g_debug("[monitor] cannot stat new entry: %s", ev->path);
@@ -508,6 +516,13 @@ coalesce_timer_callback(gpointer user_data) {
 
     g_mutex_lock(&monitor->event_mutex);
     monitor->coalesce_timer_id = 0;
+
+    // If batching, don't process events now - they'll be flushed after scan
+    if (monitor->is_batching) {
+        g_mutex_unlock(&monitor->event_mutex);
+        g_debug("[monitor] batching mode active, deferring event processing");
+        return G_SOURCE_REMOVE;
+    }
     g_mutex_unlock(&monitor->event_mutex);
 
     g_idle_add(process_events_idle, monitor);
@@ -822,4 +837,94 @@ fsearch_monitor_get_num_watches(FsearchMonitor *monitor) {
 bool
 fsearch_monitor_watch_limit_reached(FsearchMonitor *monitor) {
     return monitor ? monitor->watch_limit_reached : false;
+}
+
+void
+fsearch_monitor_set_batching(FsearchMonitor *monitor, bool batching) {
+    if (!monitor) {
+        return;
+    }
+
+    g_mutex_lock(&monitor->event_mutex);
+    monitor->is_batching = batching;
+
+    if (batching) {
+        // Cancel any pending timer when entering batch mode
+        if (monitor->coalesce_timer_id != 0) {
+            g_source_remove(monitor->coalesce_timer_id);
+            monitor->coalesce_timer_id = 0;
+        }
+        g_debug("[monitor] entering batch mode");
+    } else {
+        g_debug("[monitor] exiting batch mode");
+    }
+
+    g_mutex_unlock(&monitor->event_mutex);
+}
+
+bool
+fsearch_monitor_is_batching(FsearchMonitor *monitor) {
+    return monitor ? monitor->is_batching : false;
+}
+
+void
+fsearch_monitor_flush_events(FsearchMonitor *monitor) {
+    if (!monitor) {
+        return;
+    }
+
+    g_mutex_lock(&monitor->event_mutex);
+
+    // Cancel any pending timer
+    if (monitor->coalesce_timer_id != 0) {
+        g_source_remove(monitor->coalesce_timer_id);
+        monitor->coalesce_timer_id = 0;
+    }
+
+    // Swap out the event queue
+    GQueue *events = monitor->event_queue;
+    monitor->event_queue = g_queue_new();
+
+    g_mutex_unlock(&monitor->event_mutex);
+
+    if (g_queue_is_empty(events)) {
+        g_queue_free(events);
+        g_debug("[monitor] flush: no events to process");
+        return;
+    }
+
+    g_debug("[monitor] flushing %u batched events", g_queue_get_length(events));
+
+    // Coalesce and apply events
+    GHashTable *coalesced = coalesce_events(events, monitor);
+    g_queue_free(events);
+
+    apply_changes_to_db(monitor, coalesced);
+    g_hash_table_unref(coalesced);
+
+    // Notify callback
+    if (monitor->callback) {
+        monitor->callback(monitor->callback_data);
+    }
+}
+
+void
+fsearch_monitor_set_database(FsearchMonitor *monitor, FsearchDatabase *db) {
+    if (!monitor || !db) {
+        return;
+    }
+
+    g_mutex_lock(&monitor->state_mutex);
+
+    // Replace database reference
+    FsearchDatabase *old_db = monitor->db;
+    monitor->db = db_ref(db);
+
+    if (old_db) {
+        db_unref(old_db);
+    }
+
+    g_mutex_unlock(&monitor->state_mutex);
+
+    g_debug("[monitor] database reference updated");
 }
