@@ -27,7 +27,9 @@
 #include "fsearch_config.h"
 #include "fsearch_database.h"
 #include "fsearch_file_utils.h"
+#include "fsearch_index.h"
 #include "fsearch_limits.h"
+#include "fsearch_monitor.h"
 #include "fsearch_preferences_ui.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
@@ -48,6 +50,8 @@ struct _FsearchApplication {
     FsearchThreadPool *pool;
 
     GThreadPool *db_pool;
+
+    FsearchMonitor *monitor;
 
     char *option_search_term;
     bool new_window;
@@ -169,6 +173,102 @@ prepare_windows_for_db_update(FsearchApplication *app) {
     }
 }
 
+// Callback when monitor detects changes
+static void
+on_monitor_changed(gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    g_debug("[app] file monitor detected changes, refreshing windows");
+
+    // Emit signal to refresh all windows
+    g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED], 0);
+}
+
+// Callback when monitor encounters an error
+static void
+on_monitor_error(FsearchMonitorError error, gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+
+    switch (error) {
+    case FSEARCH_MONITOR_ERROR_QUEUE_OVERFLOW:
+        g_warning("[app] inotify queue overflow detected - triggering database rescan");
+        // Schedule a rescan to recover from lost events
+        g_idle_add(on_database_scan_enqueue, NULL);
+        break;
+
+    case FSEARCH_MONITOR_ERROR_THREAD_CRASHED:
+        g_warning("[app] file monitor thread crashed - monitoring stopped");
+        // Could attempt to restart monitor here, but for now just log
+        // A rescan will restart the monitor when complete
+        g_idle_add(on_database_scan_enqueue, NULL);
+        break;
+
+    default:
+        g_warning("[app] unknown monitor error: %d", error);
+        break;
+    }
+}
+
+// Start or restart the file monitor
+static void
+start_file_monitor(FsearchApplication *self) {
+    if (!self->config->enable_file_monitor) {
+        g_debug("[app] file monitoring disabled in config");
+        return;
+    }
+
+    if (!self->db) {
+        g_debug("[app] no database, skipping monitor start");
+        return;
+    }
+
+    // Stop existing monitor if running
+    if (self->monitor) {
+        fsearch_monitor_stop(self->monitor);
+        g_clear_pointer(&self->monitor, fsearch_monitor_free);
+    }
+
+    // Filter indexes to only include those with monitor=true
+    GList *monitor_indexes = NULL;
+    for (GList *l = self->config->indexes; l != NULL; l = l->next) {
+        FsearchIndex *index = l->data;
+        if (index->enabled && index->monitor) {
+            monitor_indexes = g_list_append(monitor_indexes, index);
+        }
+    }
+
+    if (!monitor_indexes) {
+        g_debug("[app] no indexes configured for monitoring");
+        return;
+    }
+
+    // Create and configure new monitor
+    self->monitor = fsearch_monitor_new(self->db, monitor_indexes);
+    g_list_free(monitor_indexes);  // Free the list but not the indexes themselves
+
+    if (!self->monitor) {
+        g_warning("[app] failed to create file monitor");
+        return;
+    }
+
+    fsearch_monitor_set_excluded_paths(self->monitor, self->config->exclude_locations);
+    fsearch_monitor_set_exclude_patterns(self->monitor, self->config->exclude_files);
+    fsearch_monitor_set_exclude_hidden(self->monitor, self->config->exclude_hidden_items);
+    fsearch_monitor_set_callback(self->monitor, on_monitor_changed, self);
+    fsearch_monitor_set_error_callback(self->monitor, on_monitor_error, self);
+
+    if (fsearch_monitor_start(self->monitor)) {
+        g_info("[app] file monitoring started with %u watches",
+               fsearch_monitor_get_num_watches(self->monitor));
+
+        if (fsearch_monitor_watch_limit_reached(self->monitor)) {
+            g_warning("[app] inotify watch limit reached - some directories not monitored");
+        }
+    } else {
+        g_warning("[app] failed to start file monitor");
+        g_clear_pointer(&self->monitor, fsearch_monitor_free);
+    }
+}
+
 static gboolean
 on_database_update_finished(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION_DEFAULT;
@@ -183,15 +283,30 @@ on_database_update_finished(gpointer user_data) {
         prepare_windows_for_db_update(self);
         g_clear_pointer(&self->db, db_unref);
         self->db = g_steal_pointer(&db);
+
+        // Update monitor to use new database and flush batched events
+        if (self->monitor && fsearch_monitor_is_running(self->monitor)) {
+            fsearch_monitor_set_database(self->monitor, self->db);
+            fsearch_monitor_flush_events(self->monitor);
+            fsearch_monitor_set_batching(self->monitor, false);
+        }
     }
     else if (db) {
         g_clear_pointer(&db, db_unref);
+
+        // Scan was cancelled - just disable batching and discard events
+        if (self->monitor && fsearch_monitor_is_batching(self->monitor)) {
+            fsearch_monitor_set_batching(self->monitor, false);
+        }
     }
     g_cancellable_reset(self->db_thread_cancellable);
     self->num_database_update_active--;
     if (self->num_database_update_active == 0) {
         action_set_enabled("update_database", TRUE);
         action_set_enabled("cancel_update_database", FALSE);
+
+        // Start file monitor after database is ready
+        start_file_monitor(self);
     }
     fsearch_application_state_unlock(self);
     g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_UPDATE_FINISHED], 0);
@@ -215,6 +330,13 @@ on_database_load_started(gpointer user_data) {
 static gboolean
 on_database_scan_started(gpointer user_data) {
     FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+
+    // Enable batching mode on monitor during scan
+    // Events will accumulate and be applied after scan completes
+    if (self->monitor && fsearch_monitor_is_running(self->monitor)) {
+        fsearch_monitor_set_batching(self->monitor, true);
+    }
+
     g_signal_emit(self, fsearch_signals[FSEARCH_SIGNAL_DATABASE_SCAN_STARTED], 0);
     return G_SOURCE_REMOVE;
 }
@@ -547,6 +669,14 @@ fsearch_application_shutdown(GApplication *app) {
     if (fsearch->file_manager_watch_id) {
         g_bus_unwatch_name(fsearch->file_manager_watch_id);
         fsearch->file_manager_watch_id = 0;
+    }
+
+    // Stop file monitor before database cleanup
+    if (fsearch->monitor) {
+        g_debug("[app] stopping file monitor...");
+        fsearch_monitor_stop(fsearch->monitor);
+        g_clear_pointer(&fsearch->monitor, fsearch_monitor_free);
+        g_debug("[app] file monitor stopped.");
     }
 
     if (fsearch->db_pool) {

@@ -817,6 +817,9 @@ on_database_update_finished(gpointer data, gpointer user_data) {
     db_view_register_database(win->result_view->database_view, db);
 
     g_clear_pointer(&db, db_unref);
+
+    // Re-run the current search to show updated results
+    perform_search(win);
 }
 
 static void

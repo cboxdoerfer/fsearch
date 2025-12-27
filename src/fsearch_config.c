@@ -167,10 +167,12 @@ config_load_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
         bool update = config_load_boolean(key_file, "Database", key, true);
         snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
         bool one_filesystem = config_load_boolean(key_file, "Database", key, false);
+        snprintf(key, sizeof(key), "%s_monitor_%d", prefix, pos);
+        bool monitor = config_load_boolean(key_file, "Database", key, true);
 
         pos++;
         if (path) {
-            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, 0);
+            FsearchIndex *index = fsearch_index_new(FSEARCH_INDEX_FOLDER_TYPE, path, enabled, update, one_filesystem, monitor, 0);
             indexes = g_list_append(indexes, index);
         }
         else {
@@ -308,6 +310,7 @@ config_load(FsearchConfig *config) {
         config->update_database_every_hours = config_load_integer(key_file, "Database", "update_database_every_hours", 0);
         config->update_database_every_minutes =
             config_load_integer(key_file, "Database", "update_database_every_minutes", 15);
+        config->enable_file_monitor = config_load_boolean(key_file, "Database", "enable_file_monitor", true);
         config->exclude_hidden_items =
             config_load_boolean(key_file, "Database", "exclude_hidden_files_and_folders", false);
         config->follow_symlinks = config_load_boolean(key_file, "Database", "follow_symbolic_links", false);
@@ -406,6 +409,7 @@ config_load_default(FsearchConfig *config) {
     config->update_database_every = false;
     config->update_database_every_hours = 0;
     config->update_database_every_minutes = 15;
+    config->enable_file_monitor = true;
     config->exclude_hidden_items = false;
     config->follow_symlinks = false;
 
@@ -481,6 +485,9 @@ config_save_indexes(GKeyFile *key_file, GList *indexes, const char *prefix) {
 
         snprintf(key, sizeof(key), "%s_one_filesystem_%d", prefix, pos);
         g_key_file_set_boolean(key_file, "Database", key, index->one_filesystem);
+
+        snprintf(key, sizeof(key), "%s_monitor_%d", prefix, pos);
+        g_key_file_set_boolean(key_file, "Database", key, index->monitor);
 
         pos++;
     }
@@ -601,6 +608,7 @@ config_save(FsearchConfig *config) {
     g_key_file_set_boolean(key_file, "Database", "update_database_every", config->update_database_every);
     g_key_file_set_integer(key_file, "Database", "update_database_every_hours", config->update_database_every_hours);
     g_key_file_set_integer(key_file, "Database", "update_database_every_minutes", config->update_database_every_minutes);
+    g_key_file_set_boolean(key_file, "Database", "enable_file_monitor", config->enable_file_monitor);
     g_key_file_set_boolean(key_file, "Database", "exclude_hidden_files_and_folders", config->exclude_hidden_items);
     g_key_file_set_boolean(key_file, "Database", "follow_symbolic_links", config->follow_symlinks);
 
@@ -673,6 +681,9 @@ config_indexes_compare(void *i1, void *i2) {
         return false;
     }
     if (index1->one_filesystem != index2->one_filesystem) {
+        return false;
+    }
+    if (index1->monitor != index2->monitor) {
         return false;
     }
     if (g_strcmp0(index1->path, index2->path) != 0) {

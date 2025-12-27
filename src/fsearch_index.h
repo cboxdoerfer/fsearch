@@ -16,6 +16,7 @@ typedef struct _FsearchIndex {
     bool enabled;
     bool update;
     bool one_filesystem;
+    bool monitor;
 
     time_t last_updated;
 } FsearchIndex;
@@ -26,6 +27,7 @@ fsearch_index_new(FsearchIndexType type,
                   bool search_in,
                   bool update,
                   bool one_filesystem,
+                  bool monitor,
                   time_t last_updated);
 
 FsearchIndex *

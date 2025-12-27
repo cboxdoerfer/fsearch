@@ -111,6 +111,7 @@ struct _FsearchConfig {
     bool update_database_every;
     uint32_t update_database_every_hours;
     uint32_t update_database_every_minutes;
+    bool enable_file_monitor;
 
     bool exclude_hidden_items;
     bool follow_symlinks;
