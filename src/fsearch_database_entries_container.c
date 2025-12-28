@@ -397,7 +397,7 @@ DynamicArray *
 fsearch_database_entries_container_get_joined(FsearchDatabaseEntriesContainer *self) {
     g_return_val_if_fail(self, NULL);
 
-    DynamicArray *joined = darray_new(darray_get_num_items(self->container));
+    DynamicArray* joined = darray_new(self->num_entries);
     for (uint32_t i = 0; i < darray_get_num_items(self->container); ++i) {
         DynamicArray *c = darray_get_item(self->container, i);
         darray_add_array(joined, c);
