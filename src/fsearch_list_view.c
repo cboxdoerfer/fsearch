@@ -133,13 +133,11 @@ is_row_idx_valid(FsearchListView *view, int row_idx) {
 
 static int
 get_last_row_idx(FsearchListView *view) {
-    int last_row = view->num_rows - 1;
+    const int last_row = view->num_rows - 1;
     if (last_row < 0) {
         return UNSET_ROW;
     }
-    else {
-        return last_row;
-    }
+    return last_row;
 }
 
 static inline int
@@ -2282,7 +2280,12 @@ fsearch_list_view_set_cursor(FsearchListView *view, int row_idx) {
         return;
     }
     view->highlight_cursor_idx = TRUE;
-    view->cursor_idx = CLAMP(row_idx, 0, get_last_row_idx(view));
+
+    const int last_row = get_last_row_idx(view);
+    if (last_row == UNSET_ROW) {
+        return;
+    }
+    view->cursor_idx = CLAMP(row_idx, 0, last_row);
     fsearch_list_view_selection_add(view, view->cursor_idx);
     fsearch_list_view_scroll_row_into_view(view, row_idx);
 }
