@@ -359,6 +359,8 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
         g_assert(num_known_descendants == darray_get_num_items(descendants));
     }
 
+    self->num_entries -= darray_get_num_items(descendants);
+
     return descendants;
 }
 
