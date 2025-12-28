@@ -59,22 +59,25 @@ get_container_for_entry(FsearchDatabaseEntriesContainer *self, FsearchDatabaseEn
     g_return_val_if_fail(self, NULL);
     g_return_val_if_fail(entry, NULL);
 
-    if (darray_get_num_items(self->container) == 0) {
-        darray_insert_item(self->container, darray_new(self->ideal_entries_per_container), 0);
-        return darray_get_item(self->container, 0);
-    }
-
-    if (darray_get_num_items(self->container) == 1) {
-        return darray_get_item(self->container, 0);
-    }
-
     uint32_t container_idx = 0;
-    darray_binary_search_with_data(self->container,
-                                   entry,
-                                   (DynamicArrayCompareDataFunc)container_compare_func,
-                                   self,
-                                   &container_idx);
-    container_idx = MIN(container_idx, darray_get_num_items(self->container) - 1);
+    if (darray_get_num_items(self->container) == 0) {
+        // There's no container -> add one
+        darray_insert_item(self->container, darray_new(self->ideal_entries_per_container), 0);
+        container_idx = 0;
+    }
+    else if (darray_get_num_items(self->container) == 1) {
+        // There's only one container, use that one
+        container_idx = 0;
+    }
+    else {
+        darray_binary_search_with_data(self->container,
+                                       entry,
+                                       (DynamicArrayCompareDataFunc)container_compare_func,
+                                       self,
+                                       &container_idx);
+        container_idx = MIN(container_idx, darray_get_num_items(self->container) - 1);
+    }
+
     DynamicArray *container = darray_get_item(self->container, container_idx);
     g_assert_nonnull(container);
     if (container_idx_out) {
