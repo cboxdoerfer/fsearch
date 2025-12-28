@@ -1794,7 +1794,7 @@ search_view_get_num_file_results(FsearchDatabaseSearchView *view) {
 
 static uint32_t
 search_view_get_num_folder_results(FsearchDatabaseSearchView *view) {
-    return view && view->file_container
+    return view && view->folder_container
                ? fsearch_database_entries_container_get_num_entries(view->folder_container)
                : 0;
 }
