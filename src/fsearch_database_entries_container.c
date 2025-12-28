@@ -275,7 +275,7 @@ fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, 
     g_return_val_if_fail(db_entry_get_type(entry) == self->entry_type, NULL);
 
     if (self->num_entries == 0) {
-        return 0;
+        return NULL;
     }
     uint32_t c_idx = 0;
     DynamicArray *c = get_container_for_entry(self, entry, &c_idx);
