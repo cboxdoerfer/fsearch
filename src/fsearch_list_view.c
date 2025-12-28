@@ -1918,6 +1918,7 @@ fsearch_list_view_init(FsearchListView *view) {
     view->header_height = ROW_HEIGHT_DEFAULT;
 
     view->cursor_idx = UNSET_ROW;
+    view->hovered_idx = UNSET_ROW;
     view->highlight_cursor_idx = FALSE;
 
     view->extend_started_idx = UNSET_ROW;
