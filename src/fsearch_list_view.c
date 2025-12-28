@@ -1840,6 +1840,10 @@ static void
 fsearch_list_view_destroy(GtkWidget *widget) {
     FsearchListView *view = FSEARCH_LIST_VIEW(widget);
 
+    if (view->scroll_timeout != 0) {
+        g_source_remove(view->scroll_timeout);
+        view->scroll_timeout = 0;
+    }
     g_list_free(g_steal_pointer(&view->columns_reversed));
     g_list_free_full(g_steal_pointer(&view->columns), (GDestroyNotify)fsearch_list_view_column_unref);
     g_clear_object(&view->multi_press_gesture);
