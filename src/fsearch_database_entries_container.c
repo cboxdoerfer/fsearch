@@ -373,7 +373,7 @@ fsearch_database_entries_container_get_entry(FsearchDatabaseEntriesContainer *se
         DynamicArray *c = darray_get_item(self->container, i);
         const uint32_t num_items = darray_get_num_items(c);
         if (idx < num_items) {
-            return num_items > 0 ? darray_get_item(c, idx) : NULL;
+            return darray_get_item(c, idx);
         }
         idx -= num_items;
     }
