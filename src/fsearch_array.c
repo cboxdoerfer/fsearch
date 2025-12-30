@@ -160,7 +160,8 @@ merge_sort(DynamicArray *to_sort,
 static void
 sort_thread(gpointer data, gpointer user_data) {
     DynamicArraySortContext *ctx = data;
-    merge_sort(ctx->dest, user_data, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
+    GCancellable* cancellable = user_data;
+    merge_sort(ctx->dest, cancellable, (DynamicArrayCompareDataFunc)ctx->comp_func, ctx->user_data);
 }
 
 static inline void
