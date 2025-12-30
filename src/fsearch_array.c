@@ -328,7 +328,8 @@ darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements,
     if (index >= array->num_items) {
         return 0;
     }
-    if (index + n_elements >= array->num_items) {
+    if (n_elements >= array->num_items - index)
+    {
         // The end of the items to be removed is also the end of the array.
         // No need to memmove, just to decrement the number of array items.
         n_elements = array->num_items - index;
