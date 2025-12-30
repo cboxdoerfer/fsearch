@@ -225,7 +225,7 @@ darray_expand(DynamicArray *array, size_t min) {
     void *new_data = realloc(array->data, array->max_items * sizeof(void *));
     g_assert(new_data);
     array->data = new_data;
-    memset(array->data + old_max_items, 0, expand_rate + 1);
+    memset(array->data + old_max_items, 0, expand_rate * sizeof(void*));
 }
 
 void
