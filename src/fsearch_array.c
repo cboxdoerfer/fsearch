@@ -676,7 +676,7 @@ darray_copy(DynamicArray *array) {
 
     new->ref_count = 1;
 
-    memcpy(new->data, array->data, new->max_items * sizeof(void *));
+    memcpy(new->data, array->data, new->num_items * sizeof(void*));
 
     return new;
 }
