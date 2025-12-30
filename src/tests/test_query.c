@@ -28,7 +28,7 @@ test_query(QueryTest *t) {
         g_auto(GStrv) names = g_strsplit(haystack, "/", -1);
         const guint names_len = g_strv_length(names);
 
-        entry = db_entry_new(flags, "1", NULL, DATABASE_ENTRY_TYPE_FOLDER);
+        entry = db_entry_new(flags, "", NULL, DATABASE_ENTRY_TYPE_FOLDER);
 
         if (names_len > 0) {
             for (int i = 0; i < names_len - 1; i++) {
