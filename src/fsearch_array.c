@@ -522,7 +522,7 @@ get_ideal_thread_count() {
 
     const int e = floor(log2(num_processors));
     const int num_threads = (int)pow(2, e);
-    return MAX(num_threads, MAX_SORT_THREADS);
+    return MIN(num_threads, MAX_SORT_THREADS);
 }
 
 void
