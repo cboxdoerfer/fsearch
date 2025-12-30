@@ -482,7 +482,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
 
     g_debug("[sort] merge with %d thread(s)", num_threads);
 
-    GArray *merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
+    g_autoptr(GArray) merged_data = g_array_sized_new(TRUE, TRUE, sizeof(DynamicArraySortContext), num_threads);
     GThreadPool *merge_pool = g_thread_pool_new(merge_thread, NULL, (gint)num_threads, FALSE, NULL);
 
     for (int i = 0; i < num_threads; ++i) {
@@ -510,8 +510,9 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
             g_clear_pointer(&c->dest, darray_unref);
         }
     }
+    g_clear_pointer(&merge_me, g_array_unref);
 
-    return merge_sorted(merged_data, comp_func, cancellable);
+    return merge_sorted(g_steal_pointer(&merged_data), comp_func, cancellable);
 }
 
 static int
@@ -554,17 +555,29 @@ darray_sort_multi_threaded(DynamicArray *array,
     }
     g_thread_pool_free(g_steal_pointer(&sort_pool), FALSE, TRUE);
 
-    g_autoptr(GArray) result = merge_sorted(sort_ctx_array, comp_func, cancellable);
+    g_autoptr(GArray) result = merge_sorted(g_steal_pointer(&sort_ctx_array), comp_func, cancellable);
 
-    if (result) {
-        g_clear_pointer(&array->data, free);
+    if (result)
+    {
+        // Apply results if sorting wasn't canceled
+        if (!g_cancellable_is_cancelled(cancellable))
+        {
+            DynamicArraySortContext* c = &g_array_index(result, DynamicArraySortContext, 0);
+            g_clear_pointer(&array->data, free);
+            array->data = g_steal_pointer(&c->dest->data);
+            array->num_items = c->dest->num_items;
+            array->max_items = c->dest->max_items;
+        }
 
-        DynamicArraySortContext *c = &g_array_index(result, DynamicArraySortContext, 0);
-        array->data = g_steal_pointer(&c->dest->data);
-        array->num_items = c->dest->num_items;
-        array->max_items = c->dest->max_items;
-
-        g_clear_pointer(&c->dest, free);
+        // Make sure to clean up result array entries; in case of cancellation, there can be more than one entry
+        for (guint i = 0; i < result->len; i++)
+        {
+            DynamicArraySortContext* ctx = &g_array_index(result, DynamicArraySortContext, i);
+            if (ctx && ctx->dest)
+            {
+                g_clear_pointer(&ctx->dest, darray_unref);
+            }
+        }
     }
 }
 
