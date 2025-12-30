@@ -343,7 +343,8 @@ darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements,
     if (dest) {
         darray_add_items(dest, array->data + index, n_elements);
     }
-    memmove(array->data + index, array->data + index + n_elements, (array->num_items - index - 1) * sizeof(void *));
+    memmove(array->data + index, array->data + index + n_elements,
+            (array->num_items - index - n_elements) * sizeof(void*));
     array->num_items -= n_elements;
 
     return n_elements;
