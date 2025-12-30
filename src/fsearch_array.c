@@ -180,7 +180,7 @@ merge_thread(gpointer data, gpointer user_data) {
         void *left_item = darray_get_item(ctx->m1, left_idx);
         void *right_item = darray_get_item(ctx->m2, right_idx);
 
-        const int comparison = ctx->comp_func(&left_item, &right_item, user_data);
+        const int comparison = ctx->comp_func(&left_item, &right_item, ctx->user_data);
 
         if (comparison <= 0) {
             darray_add_item(ctx->dest, left_item);
