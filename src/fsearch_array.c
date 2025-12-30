@@ -149,6 +149,10 @@ merge_sort(DynamicArray *to_sort,
            gpointer comp_data) {
     g_assert(to_sort);
     g_assert(comp_func);
+    if (g_cancellable_is_cancelled(cancellable)) {
+        return;
+    }
+
     g_autoptr(DynamicArray) tmp = darray_copy(to_sort);
     split_merge(tmp, to_sort, 0, to_sort->num_items, cancellable, comp_func, comp_data);
 }
