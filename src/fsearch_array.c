@@ -507,7 +507,7 @@ merge_sorted(GArray *merge_me, DynamicArrayCompareDataFunc comp_func, GCancellab
     for (int i = 0; i < merge_me->len; i++) {
         DynamicArraySortContext *c = &g_array_index(merge_me, DynamicArraySortContext, i);
         if (c && c->dest) {
-            g_clear_pointer(&c->dest, darray_free);
+            g_clear_pointer(&c->dest, darray_unref);
         }
     }
 
