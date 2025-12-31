@@ -11,6 +11,7 @@ fsearch_index_new(FsearchIndexType type,
                   bool search_in,
                   bool update,
                   bool one_filesystem,
+                  bool monitor,
                   time_t last_updated) {
     FsearchIndex *index = calloc(1, sizeof(FsearchIndex));
     g_assert(index);
@@ -20,6 +21,7 @@ fsearch_index_new(FsearchIndexType type,
     index->enabled = search_in;
     index->update = update;
     index->one_filesystem = one_filesystem;
+    index->monitor = monitor;
     index->last_updated = last_updated;
 
     return index;
@@ -35,6 +37,7 @@ fsearch_index_copy(FsearchIndex *index) {
                              index->enabled,
                              index->update,
                              index->one_filesystem,
+                             index->monitor,
                              index->last_updated);
 }
 

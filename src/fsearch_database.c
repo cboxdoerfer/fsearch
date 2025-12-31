@@ -1609,6 +1609,56 @@ db_get_thread_pool(FsearchDatabase *db) {
     return db->thread_pool;
 }
 
+// Check if path is a subfolder of parent_path
+static bool
+path_is_subfolder_of(const char *path, const char *parent_path) {
+    if (!path || !parent_path) {
+        return false;
+    }
+
+    size_t parent_len = strlen(parent_path);
+    if (parent_len == 0) {
+        return false;
+    }
+
+    // Check if path starts with parent_path
+    if (strncmp(path, parent_path, parent_len) != 0) {
+        return false;
+    }
+
+    // path must be longer than parent_path and have a separator after parent
+    // e.g., /home/user is subfolder of /home, but /home/username is not
+    if (strlen(path) <= parent_len) {
+        return false;
+    }
+
+    // Handle trailing slash in parent
+    if (parent_path[parent_len - 1] == G_DIR_SEPARATOR) {
+        return true;
+    }
+
+    // Otherwise, next char in path must be separator
+    return path[parent_len] == G_DIR_SEPARATOR;
+}
+
+// Check if an index path is covered by another enabled index in the list
+static bool
+index_is_covered_by_another(GList *indexes, FsearchIndex *index) {
+    for (GList *l = indexes; l != NULL; l = l->next) {
+        FsearchIndex *other = l->data;
+        if (other == index) {
+            continue;
+        }
+        if (!other->enabled || !other->update) {
+            continue;
+        }
+        if (path_is_subfolder_of(index->path, other->path)) {
+            return true;
+        }
+    }
+    return false;
+}
+
 bool
 db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *)) {
     g_assert(db);
@@ -1632,9 +1682,16 @@ db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const 
         if (!fs_path->enabled) {
             continue;
         }
-        if (fs_path->update) {
-            ret = db_scan_folder(db, fs_path->path, fs_path->one_filesystem, cancellable, status_cb) || ret;
+        if (!fs_path->update) {
+            continue;
         }
+        // Skip if this path is a subfolder of another enabled index
+        // (it will be scanned as part of the parent)
+        if (index_is_covered_by_another(db->indexes, fs_path)) {
+            g_debug("[db_scan] skipping %s (covered by parent index)", fs_path->path);
+            continue;
+        }
+        ret = db_scan_folder(db, fs_path->path, fs_path->one_filesystem, cancellable, status_cb) || ret;
         if (is_cancelled(cancellable)) {
             return false;
         }
@@ -1668,4 +1725,457 @@ db_unref(FsearchDatabase *db) {
     if (g_atomic_int_dec_and_test(&db->ref_count)) {
         g_clear_pointer(&db, db_free);
     }
+}
+
+// --- Incremental update API implementation ---
+
+// Helper to insert entry into all applicable sorted arrays
+static void
+db_insert_entry_sorted(FsearchDatabase *db, FsearchDatabaseEntry *entry, bool is_folder) {
+    DynamicArray **sorted_arrays = is_folder ? db->sorted_folders : db->sorted_files;
+
+    // Insert into NAME array (primary, always exists)
+    if (sorted_arrays[DATABASE_INDEX_TYPE_NAME]) {
+        darray_insert_sorted(sorted_arrays[DATABASE_INDEX_TYPE_NAME],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name,
+                             NULL);
+    }
+
+    // Insert into PATH array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_PATH]) {
+        darray_insert_sorted(sorted_arrays[DATABASE_INDEX_TYPE_PATH],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                             NULL);
+    }
+
+    // Insert into SIZE array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_SIZE]) {
+        darray_insert_sorted(sorted_arrays[DATABASE_INDEX_TYPE_SIZE],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
+                             NULL);
+    }
+
+    // Insert into MODIFICATION_TIME array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_MODIFICATION_TIME]) {
+        darray_insert_sorted(sorted_arrays[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
+                             NULL);
+    }
+
+    // Insert into EXTENSION array (files only have meaningful extensions)
+    if (sorted_arrays[DATABASE_INDEX_TYPE_EXTENSION]) {
+        darray_insert_sorted(sorted_arrays[DATABASE_INDEX_TYPE_EXTENSION],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
+                             NULL);
+    }
+}
+
+// Helper to remove entry from all sorted arrays
+static void
+db_remove_entry_sorted(FsearchDatabase *db, FsearchDatabaseEntry *entry, bool is_folder) {
+    DynamicArray **sorted_arrays = is_folder ? db->sorted_folders : db->sorted_files;
+
+    // Remove from NAME array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_NAME]) {
+        darray_remove_sorted(sorted_arrays[DATABASE_INDEX_TYPE_NAME],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_name,
+                             NULL);
+    }
+
+    // Remove from PATH array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_PATH]) {
+        darray_remove_sorted(sorted_arrays[DATABASE_INDEX_TYPE_PATH],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_path,
+                             NULL);
+    }
+
+    // Remove from SIZE array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_SIZE]) {
+        darray_remove_sorted(sorted_arrays[DATABASE_INDEX_TYPE_SIZE],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
+                             NULL);
+    }
+
+    // Remove from MODIFICATION_TIME array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_MODIFICATION_TIME]) {
+        darray_remove_sorted(sorted_arrays[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
+                             NULL);
+    }
+
+    // Remove from EXTENSION array
+    if (sorted_arrays[DATABASE_INDEX_TYPE_EXTENSION]) {
+        darray_remove_sorted(sorted_arrays[DATABASE_INDEX_TYPE_EXTENSION],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_extension,
+                             NULL);
+    }
+}
+
+FsearchDatabaseEntry *
+db_add_file(FsearchDatabase *db,
+            FsearchDatabaseEntryFolder *parent,
+            const char *name,
+            off_t size,
+            time_t mtime) {
+    g_assert(db);
+    g_assert(parent);
+    g_assert(name);
+
+    // Allocate from memory pool
+    FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(db->file_pool);
+    if (!entry) {
+        return NULL;
+    }
+
+    // Initialize entry
+    db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FILE);
+    db_entry_set_name(entry, name);
+    db_entry_set_size(entry, size);
+    db_entry_set_mtime(entry, mtime);
+    db_entry_set_parent(entry, parent);  // This increments parent->num_files
+    db_entry_update_parent_size(entry);  // Propagate size up the tree
+
+    // Insert into all sorted arrays
+    db_insert_entry_sorted(db, entry, false);
+
+    g_debug("[db_add_file] added: %s", name);
+    return entry;
+}
+
+FsearchDatabaseEntryFolder *
+db_add_folder(FsearchDatabase *db,
+              FsearchDatabaseEntryFolder *parent,
+              const char *name,
+              time_t mtime) {
+    g_assert(db);
+    g_assert(name);
+    // parent can be NULL for root folders
+
+    // Allocate from memory pool
+    FsearchDatabaseEntry *entry = fsearch_memory_pool_malloc(db->folder_pool);
+    if (!entry) {
+        return NULL;
+    }
+
+    // Initialize entry
+    db_entry_set_type(entry, DATABASE_ENTRY_TYPE_FOLDER);
+    db_entry_set_name(entry, name);
+    db_entry_set_mtime(entry, mtime);
+    if (parent) {
+        db_entry_set_parent(entry, parent);  // This increments parent->num_folders
+    }
+
+    // Insert into all sorted arrays
+    db_insert_entry_sorted(db, entry, true);
+
+    g_debug("[db_add_folder] added: %s", name);
+    return (FsearchDatabaseEntryFolder *)entry;
+}
+
+bool
+db_remove_file(FsearchDatabase *db, FsearchDatabaseEntry *entry) {
+    g_assert(db);
+    if (!entry || !db_entry_is_file(entry)) {
+        return false;
+    }
+
+    // Remove from all sorted arrays
+    db_remove_entry_sorted(db, entry, false);
+
+    // Update parent counts and sizes
+    db_entry_subtract_parent_size(entry);
+    db_entry_unset_parent(entry);
+
+    // Clear and return to pool
+    db_entry_clear(entry);
+    fsearch_memory_pool_free(db->file_pool, entry, false);
+
+    return true;
+}
+
+// Forward declaration for recursive removal
+static bool db_remove_folder_recursive(FsearchDatabase *db, FsearchDatabaseEntryFolder *folder);
+
+// Helper to find all children of a folder
+static void
+db_collect_folder_children(FsearchDatabase *db,
+                           FsearchDatabaseEntryFolder *folder,
+                           GArray *files_to_remove,
+                           GArray *folders_to_remove) {
+    // Scan file array to find files with this parent
+    DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
+    if (files) {
+        uint32_t num_files = darray_get_num_items(files);
+        for (uint32_t i = 0; i < num_files; i++) {
+            FsearchDatabaseEntry *file = darray_get_item(files, i);
+            if (db_entry_get_parent(file) == folder) {
+                g_array_append_val(files_to_remove, file);
+            }
+        }
+    }
+
+    // Scan folder array to find subfolders with this parent
+    DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
+    if (folders) {
+        uint32_t num_folders = darray_get_num_items(folders);
+        for (uint32_t i = 0; i < num_folders; i++) {
+            FsearchDatabaseEntryFolder *subfolder = darray_get_item(folders, i);
+            if (db_entry_get_parent((FsearchDatabaseEntry *)subfolder) == folder) {
+                g_array_append_val(folders_to_remove, subfolder);
+            }
+        }
+    }
+}
+
+static bool
+db_remove_folder_recursive(FsearchDatabase *db, FsearchDatabaseEntryFolder *folder) {
+    // Collect all children
+    g_autoptr(GArray) files_to_remove = g_array_new(FALSE, FALSE, sizeof(FsearchDatabaseEntry *));
+    g_autoptr(GArray) folders_to_remove = g_array_new(FALSE, FALSE, sizeof(FsearchDatabaseEntryFolder *));
+
+    db_collect_folder_children(db, folder, files_to_remove, folders_to_remove);
+
+    // Recursively remove subfolders first
+    for (uint32_t i = 0; i < folders_to_remove->len; i++) {
+        FsearchDatabaseEntryFolder *subfolder = g_array_index(folders_to_remove, FsearchDatabaseEntryFolder *, i);
+        db_remove_folder_recursive(db, subfolder);
+    }
+
+    // Remove all files
+    for (uint32_t i = 0; i < files_to_remove->len; i++) {
+        FsearchDatabaseEntry *file = g_array_index(files_to_remove, FsearchDatabaseEntry *, i);
+        db_remove_file(db, file);
+    }
+
+    // Now remove the folder itself
+    FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+
+    db_remove_entry_sorted(db, entry, true);
+    db_entry_subtract_parent_size(entry);
+    db_entry_unset_parent(entry);
+    db_entry_clear(entry);
+    fsearch_memory_pool_free(db->folder_pool, entry, false);
+
+    return true;
+}
+
+bool
+db_remove_folder(FsearchDatabase *db, FsearchDatabaseEntryFolder *folder) {
+    g_assert(db);
+    if (!folder) {
+        return false;
+    }
+
+    g_debug("[db_remove_folder] removing folder and children");
+    return db_remove_folder_recursive(db, folder);
+}
+
+bool
+db_update_file(FsearchDatabase *db,
+               FsearchDatabaseEntry *entry,
+               off_t new_size,
+               time_t new_mtime) {
+    g_assert(db);
+    if (!entry || !db_entry_is_file(entry)) {
+        return false;
+    }
+
+    off_t old_size = db_entry_get_size(entry);
+    time_t old_mtime = db_entry_get_mtime(entry);
+
+    bool size_changed = (old_size != new_size);
+    bool mtime_changed = (old_mtime != new_mtime);
+
+    if (!size_changed && !mtime_changed) {
+        return true;  // Nothing to do
+    }
+
+    // Remove from arrays that will be affected by the change
+    if (size_changed && db->sorted_files[DATABASE_INDEX_TYPE_SIZE]) {
+        darray_remove_sorted(db->sorted_files[DATABASE_INDEX_TYPE_SIZE],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
+                             NULL);
+    }
+    if (mtime_changed && db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME]) {
+        darray_remove_sorted(db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
+                             NULL);
+    }
+
+    // Update the entry
+    if (size_changed) {
+        // Adjust parent sizes
+        db_entry_subtract_parent_size(entry);
+        db_entry_set_size(entry, new_size);
+        db_entry_update_parent_size(entry);
+    }
+    if (mtime_changed) {
+        db_entry_set_mtime(entry, new_mtime);
+    }
+
+    // Re-insert into affected arrays
+    if (size_changed && db->sorted_files[DATABASE_INDEX_TYPE_SIZE]) {
+        darray_insert_sorted(db->sorted_files[DATABASE_INDEX_TYPE_SIZE],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_size,
+                             NULL);
+    }
+    if (mtime_changed && db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME]) {
+        darray_insert_sorted(db->sorted_files[DATABASE_INDEX_TYPE_MODIFICATION_TIME],
+                             entry,
+                             (DynamicArrayCompareDataFunc)db_entry_compare_entries_by_modification_time,
+                             NULL);
+    }
+
+    return true;
+}
+
+// Helper to compare path components
+static FsearchDatabaseEntryFolder *
+db_find_child_folder(FsearchDatabase *db, FsearchDatabaseEntryFolder *parent, const char *name) {
+    DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
+    if (!folders) {
+        return NULL;
+    }
+
+    uint32_t num_folders = darray_get_num_items(folders);
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
+        if (db_entry_get_parent((FsearchDatabaseEntry *)folder) == parent) {
+            const char *folder_name = db_entry_get_name_raw((FsearchDatabaseEntry *)folder);
+            if (folder_name && strcmp(folder_name, name) == 0) {
+                return folder;
+            }
+        }
+    }
+    return NULL;
+}
+
+FsearchDatabaseEntryFolder *
+db_find_folder_by_path(FsearchDatabase *db, const char *path) {
+    g_assert(db);
+    if (!path || path[0] != G_DIR_SEPARATOR) {
+        return NULL;
+    }
+
+    DynamicArray *folders = db->sorted_folders[DATABASE_INDEX_TYPE_NAME];
+    if (!folders || darray_get_num_items(folders) == 0) {
+        return NULL;
+    }
+
+    // Parse path and traverse
+    g_auto(GStrv) components = g_strsplit(path, G_DIR_SEPARATOR_S, -1);
+    if (!components) {
+        return NULL;
+    }
+
+    // Find root folder (first component after leading /)
+    FsearchDatabaseEntryFolder *current = NULL;
+
+    // Look for a root folder that matches the start of our path
+    uint32_t num_folders = darray_get_num_items(folders);
+    for (uint32_t i = 0; i < num_folders; i++) {
+        FsearchDatabaseEntryFolder *folder = darray_get_item(folders, i);
+        FsearchDatabaseEntry *entry = (FsearchDatabaseEntry *)folder;
+
+        // Root folders have no parent
+        if (db_entry_get_parent(entry) != NULL) {
+            continue;
+        }
+
+        // Check if this root matches the beginning of our path
+        g_autoptr(GString) folder_path = db_entry_get_path_full(entry);
+        if (g_str_has_prefix(path, folder_path->str)) {
+            // This root contains our path
+            current = folder;
+
+            // Skip components that are part of the root path
+            const char *remaining = path + folder_path->len;
+            if (remaining[0] == '\0') {
+                // Exact match to root
+                return current;
+            }
+            if (remaining[0] == G_DIR_SEPARATOR) {
+                remaining++;
+            }
+
+            // Parse remaining path
+            g_auto(GStrv) remaining_parts = g_strsplit(remaining, G_DIR_SEPARATOR_S, -1);
+            for (int j = 0; remaining_parts[j] != NULL; j++) {
+                if (remaining_parts[j][0] == '\0') {
+                    continue;
+                }
+                current = db_find_child_folder(db, current, remaining_parts[j]);
+                if (!current) {
+                    return NULL;
+                }
+            }
+            return current;
+        }
+    }
+
+    return NULL;
+}
+
+FsearchDatabaseEntry *
+db_find_entry_by_path(FsearchDatabase *db, const char *path) {
+    g_assert(db);
+    if (!path || path[0] != G_DIR_SEPARATOR) {
+        return NULL;
+    }
+
+    // First try to find as folder
+    FsearchDatabaseEntryFolder *folder = db_find_folder_by_path(db, path);
+    if (folder) {
+        return (FsearchDatabaseEntry *)folder;
+    }
+
+    // If not a folder, try to find as file
+    // Split into parent path and filename
+    g_autofree char *path_copy = g_strdup(path);
+    char *last_sep = strrchr(path_copy, G_DIR_SEPARATOR);
+    if (!last_sep || last_sep == path_copy) {
+        return NULL;
+    }
+
+    const char *filename = last_sep + 1;
+    *last_sep = '\0';
+    const char *parent_path = path_copy;
+
+    // Find parent folder
+    FsearchDatabaseEntryFolder *parent = db_find_folder_by_path(db, parent_path);
+    if (!parent) {
+        return NULL;
+    }
+
+    // Search for file with this name in this parent
+    DynamicArray *files = db->sorted_files[DATABASE_INDEX_TYPE_NAME];
+    if (!files) {
+        return NULL;
+    }
+
+    uint32_t num_files = darray_get_num_items(files);
+    for (uint32_t i = 0; i < num_files; i++) {
+        FsearchDatabaseEntry *file = darray_get_item(files, i);
+        if (db_entry_get_parent(file) == parent) {
+            const char *file_name = db_entry_get_name_raw(file);
+            if (file_name && strcmp(file_name, filename) == 0) {
+                return file;
+            }
+        }
+    }
+
+    return NULL;
 }

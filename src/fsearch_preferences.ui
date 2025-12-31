@@ -908,6 +908,21 @@
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkCheckButton" id="enable_file_monitor_button">
+                    <property name="label" translatable="yes">Monitor file system for changes</property>
+                    <property name="visible">True</property>
+                    <property name="can-focus">True</property>
+                    <property name="receives-default">False</property>
+                    <property name="has-tooltip">True</property>
+                    <property name="draw-indicator">True</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkBox" id="auto_update_box">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -1758,6 +1773,29 @@ If enabled, the database will be updated automatically in the background when yo
                   </packing>
                 </child>
                 <child>
+                  <object class="GtkLabel" id="help_enable_file_monitor">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Monitor file system for changes:&lt;/b&gt;
+
+If enabled, FSearch will use inotify to watch for file system changes and automatically update the database when files are created, deleted, or modified.
+
+This provides near real-time updates without needing to rescan the entire file system.
+
+&lt;i&gt;Note: If you have many directories, the system's inotify watch limit may be reached. In that case, you can increase the limit with:&lt;/i&gt;
+
+&lt;tt&gt;echo 'fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf &amp;amp;&amp;amp; sudo sysctl -p&lt;/tt&gt;</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page19a</property>
+                    <property name="title">page19a</property>
+                    <property name="position">19</property>
+                  </packing>
+                </child>
+                <child>
                   <object class="GtkLabel" id="help_index_list">
                     <property name="visible">True</property>
                     <property name="can-focus">False</property>
@@ -1767,7 +1805,8 @@ This list contains all folders you want to include in the database.
 
 	• &lt;b&gt;Active:&lt;/b&gt; If enabled, the path will included in the database to be searched in.
 	• &lt;b&gt;Path:&lt;/b&gt; The full path to be included.
-	• &lt;b&gt;One Filesystem:&lt;/b&gt; If enabled, FSearch won't cross filesystem boundaries for this folder</property>
+	• &lt;b&gt;One Filesystem:&lt;/b&gt; If enabled, FSearch won't cross filesystem boundaries for this folder.
+	• &lt;b&gt;Monitor:&lt;/b&gt; If enabled, FSearch will use inotify to watch this folder for changes and automatically update the database.</property>
                     <property name="use-markup">True</property>
                     <property name="wrap">True</property>
                     <property name="selectable">True</property>

@@ -384,3 +384,57 @@ void
 db_entry_update_parent_size(FsearchDatabaseEntry *entry) {
     db_entry_update_folder_size(entry->parent, entry->size);
 }
+
+void
+db_entry_unset_parent(FsearchDatabaseEntry *entry) {
+    if (!entry || !entry->parent) {
+        return;
+    }
+
+    FsearchDatabaseEntryFolder *parent = entry->parent;
+    g_assert(parent->super.type == DATABASE_ENTRY_TYPE_FOLDER);
+
+    if (entry->type == DATABASE_ENTRY_TYPE_FOLDER) {
+        if (parent->num_folders > 0) {
+            parent->num_folders--;
+        }
+    }
+    else if (entry->type == DATABASE_ENTRY_TYPE_FILE) {
+        if (parent->num_files > 0) {
+            parent->num_files--;
+        }
+    }
+
+    entry->parent = NULL;
+}
+
+static void
+db_entry_subtract_folder_size(FsearchDatabaseEntryFolder *folder, off_t size) {
+    if (!folder) {
+        return;
+    }
+    folder->super.size -= size;
+    db_entry_subtract_folder_size(folder->super.parent, size);
+}
+
+void
+db_entry_subtract_parent_size(FsearchDatabaseEntry *entry) {
+    if (!entry) {
+        return;
+    }
+    db_entry_subtract_folder_size(entry->parent, entry->size);
+}
+
+void
+db_entry_clear(FsearchDatabaseEntry *entry) {
+    if (!entry) {
+        return;
+    }
+    g_clear_pointer(&entry->name, free);
+    entry->parent = NULL;
+    entry->size = 0;
+    entry->mtime = 0;
+    entry->idx = 0;
+    entry->type = DATABASE_ENTRY_TYPE_NONE;
+    entry->mark = 0;
+}
