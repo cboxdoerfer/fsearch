@@ -88,6 +88,8 @@ struct FsearchMonitor {
     // Callbacks
     FsearchMonitorCallback callback;
     gpointer callback_data;
+    FsearchMonitorCallback prepare_callback;
+    gpointer prepare_callback_data;
     FsearchMonitorErrorCallback error_callback;
     gpointer error_callback_data;
 
@@ -548,6 +550,11 @@ process_events_idle(gpointer user_data) {
     GHashTable *coalesced = coalesce_events(events, monitor);
     g_queue_free(events);
 
+    // Notify prepare callback (allows UI to invalidate caches before entries are modified)
+    if (monitor->prepare_callback) {
+        monitor->prepare_callback(monitor->prepare_callback_data);
+    }
+
     // Apply to database
     apply_changes_to_db(monitor, coalesced);
     g_hash_table_unref(coalesced);
@@ -891,6 +898,16 @@ fsearch_monitor_set_callback(FsearchMonitor *monitor,
     if (monitor) {
         monitor->callback = callback;
         monitor->callback_data = user_data;
+    }
+}
+
+void
+fsearch_monitor_set_prepare_callback(FsearchMonitor *monitor,
+                                     FsearchMonitorCallback callback,
+                                     gpointer user_data) {
+    if (monitor) {
+        monitor->prepare_callback = callback;
+        monitor->prepare_callback_data = user_data;
     }
 }
 

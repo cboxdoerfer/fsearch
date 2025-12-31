@@ -86,6 +86,13 @@ fsearch_monitor_set_callback(FsearchMonitor *monitor,
                              FsearchMonitorCallback callback,
                              gpointer user_data);
 
+// Set callback that fires BEFORE changes are applied
+// Use this to invalidate caches that hold entry pointers
+void
+fsearch_monitor_set_prepare_callback(FsearchMonitor *monitor,
+                                     FsearchMonitorCallback callback,
+                                     gpointer user_data);
+
 // Get the number of active watches
 uint32_t
 fsearch_monitor_get_num_watches(FsearchMonitor *monitor);

@@ -208,6 +208,21 @@ on_monitor_error(FsearchMonitorError error, gpointer user_data) {
     }
 }
 
+// Callback that fires BEFORE monitor applies database changes
+// This clears row caches to prevent dangling pointers to freed entries
+static void
+on_monitor_prepare(gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(self));
+
+    for (GList *w = windows; w; w = w->next) {
+        GtkWindow *window = w->data;
+        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
+            fsearch_application_window_reset_row_cache((FsearchApplicationWindow *)window);
+        }
+    }
+}
+
 // Start or restart the file monitor
 static void
 start_file_monitor(FsearchApplication *self) {
@@ -254,6 +269,7 @@ start_file_monitor(FsearchApplication *self) {
     fsearch_monitor_set_exclude_patterns(self->monitor, self->config->exclude_files);
     fsearch_monitor_set_exclude_hidden(self->monitor, self->config->exclude_hidden_items);
     fsearch_monitor_set_callback(self->monitor, on_monitor_changed, self);
+    fsearch_monitor_set_prepare_callback(self->monitor, on_monitor_prepare, self);
     fsearch_monitor_set_error_callback(self->monitor, on_monitor_error, self);
 
     if (fsearch_monitor_start(self->monitor)) {

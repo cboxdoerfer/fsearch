@@ -105,4 +105,9 @@ fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GH
 
 void
 fsearch_application_window_toggle_app_menu(FsearchApplicationWindow *self);
+
+// Reset the row cache to invalidate any cached entry pointers
+// Call this before modifying or freeing database entries
+void
+fsearch_application_window_reset_row_cache(FsearchApplicationWindow *self);
 G_END_DECLS
