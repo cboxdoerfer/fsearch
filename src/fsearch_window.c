@@ -1385,6 +1385,14 @@ fsearch_application_window_get_listview(FsearchApplicationWindow *self) {
     return self->result_view->list_view;
 }
 
+void
+fsearch_application_window_reset_row_cache(FsearchApplicationWindow *self) {
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+    if (self->result_view) {
+        fsearch_result_view_row_cache_reset(self->result_view);
+    }
+}
+
 FsearchApplicationWindow *
 fsearch_application_window_new(FsearchApplication *app) {
     g_assert(FSEARCH_IS_APPLICATION(app));

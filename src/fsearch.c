@@ -31,11 +31,11 @@
 #include "fsearch_limits.h"
 #include "fsearch_monitor.h"
 #include "fsearch_preferences_ui.h"
+#include "fsearch_preview.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
 #include "icon_resources.h"
 #include "ui_resources.h"
-#include "fsearch_preview.h"
 #include <glib.h>
 #include <glib/gi18n.h>
 #include <limits.h>
@@ -208,6 +208,21 @@ on_monitor_error(FsearchMonitorError error, gpointer user_data) {
     }
 }
 
+// Callback that fires BEFORE monitor applies database changes
+// This clears row caches to prevent dangling pointers to freed entries
+static void
+on_monitor_prepare(gpointer user_data) {
+    FsearchApplication *self = FSEARCH_APPLICATION(user_data);
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(self));
+
+    for (GList *w = windows; w; w = w->next) {
+        GtkWindow *window = w->data;
+        if (FSEARCH_IS_APPLICATION_WINDOW(window)) {
+            fsearch_application_window_reset_row_cache((FsearchApplicationWindow *)window);
+        }
+    }
+}
+
 // Start or restart the file monitor
 static void
 start_file_monitor(FsearchApplication *self) {
@@ -243,7 +258,7 @@ start_file_monitor(FsearchApplication *self) {
 
     // Create and configure new monitor
     self->monitor = fsearch_monitor_new(self->db, monitor_indexes);
-    g_list_free(monitor_indexes);  // Free the list but not the indexes themselves
+    g_list_free(monitor_indexes); // Free the list but not the indexes themselves
 
     if (!self->monitor) {
         g_warning("[app] failed to create file monitor");
@@ -254,16 +269,17 @@ start_file_monitor(FsearchApplication *self) {
     fsearch_monitor_set_exclude_patterns(self->monitor, self->config->exclude_files);
     fsearch_monitor_set_exclude_hidden(self->monitor, self->config->exclude_hidden_items);
     fsearch_monitor_set_callback(self->monitor, on_monitor_changed, self);
+    fsearch_monitor_set_prepare_callback(self->monitor, on_monitor_prepare, self);
     fsearch_monitor_set_error_callback(self->monitor, on_monitor_error, self);
 
     if (fsearch_monitor_start(self->monitor)) {
-        g_info("[app] file monitoring started with %u watches",
-               fsearch_monitor_get_num_watches(self->monitor));
+        g_info("[app] file monitoring started with %u watches", fsearch_monitor_get_num_watches(self->monitor));
 
         if (fsearch_monitor_watch_limit_reached(self->monitor)) {
             g_warning("[app] inotify watch limit reached - some directories not monitored");
         }
-    } else {
+    }
+    else {
         g_warning("[app] failed to start file monitor");
         g_clear_pointer(&self->monitor, fsearch_monitor_free);
     }

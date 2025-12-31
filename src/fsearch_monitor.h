@@ -31,8 +31,8 @@ typedef void (*FsearchMonitorCallback)(gpointer user_data);
 
 // Error types that can occur during monitoring
 typedef enum {
-    FSEARCH_MONITOR_ERROR_QUEUE_OVERFLOW,  // inotify queue overflow - events lost
-    FSEARCH_MONITOR_ERROR_THREAD_CRASHED,  // watch thread exited unexpectedly
+    FSEARCH_MONITOR_ERROR_QUEUE_OVERFLOW, // inotify queue overflow - events lost
+    FSEARCH_MONITOR_ERROR_THREAD_CRASHED, // watch thread exited unexpectedly
 } FsearchMonitorError;
 
 // Callback for monitor errors
@@ -82,9 +82,12 @@ fsearch_monitor_set_exclude_hidden(FsearchMonitor *monitor, bool exclude);
 
 // Set callback for when changes are applied
 void
-fsearch_monitor_set_callback(FsearchMonitor *monitor,
-                             FsearchMonitorCallback callback,
-                             gpointer user_data);
+fsearch_monitor_set_callback(FsearchMonitor *monitor, FsearchMonitorCallback callback, gpointer user_data);
+
+// Set callback that fires BEFORE changes are applied
+// Use this to invalidate caches that hold entry pointers
+void
+fsearch_monitor_set_prepare_callback(FsearchMonitor *monitor, FsearchMonitorCallback callback, gpointer user_data);
 
 // Get the number of active watches
 uint32_t
@@ -117,9 +120,7 @@ fsearch_monitor_set_database(FsearchMonitor *monitor, FsearchDatabase *db);
 // Set callback for error conditions (overflow, thread crash)
 // The callback may be invoked from a background thread context
 void
-fsearch_monitor_set_error_callback(FsearchMonitor *monitor,
-                                   FsearchMonitorErrorCallback callback,
-                                   gpointer user_data);
+fsearch_monitor_set_error_callback(FsearchMonitor *monitor, FsearchMonitorErrorCallback callback, gpointer user_data);
 
 // Check if an overflow occurred (events may have been lost)
 bool

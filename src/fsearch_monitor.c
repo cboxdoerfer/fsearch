@@ -69,8 +69,8 @@ struct FsearchMonitor {
     GThread *watch_thread;
 
     // Watch descriptor mappings (protected by watch_mutex)
-    GHashTable *wd_to_path;      // int -> char*
-    GHashTable *path_to_wd;      // char* -> int
+    GHashTable *wd_to_path; // int -> char*
+    GHashTable *path_to_wd; // char* -> int
     GMutex watch_mutex;
 
     // Event queue and coalescing
@@ -88,6 +88,8 @@ struct FsearchMonitor {
     // Callbacks
     FsearchMonitorCallback callback;
     gpointer callback_data;
+    FsearchMonitorCallback prepare_callback;
+    gpointer prepare_callback_data;
     FsearchMonitorErrorCallback error_callback;
     gpointer error_callback_data;
 
@@ -190,7 +192,8 @@ build_full_path(FsearchMonitor *monitor, int wd, const char *name) {
     if (dir_path) {
         if (!name || name[0] == '\0') {
             result = g_strdup(dir_path);
-        } else {
+        }
+        else {
             result = g_build_filename(dir_path, name, NULL);
         }
     }
@@ -202,9 +205,7 @@ build_full_path(FsearchMonitor *monitor, int wd, const char *name) {
 // Build inotify watch mask - IN_EXCL_UNLINK may not be available on old kernels
 static uint32_t
 get_watch_mask(void) {
-    uint32_t mask = IN_CREATE | IN_DELETE | IN_MODIFY |
-                    IN_MOVED_FROM | IN_MOVED_TO |
-                    IN_DONT_FOLLOW | IN_ONLYDIR;
+    uint32_t mask = IN_CREATE | IN_DELETE | IN_MODIFY | IN_MOVED_FROM | IN_MOVED_TO | IN_DONT_FOLLOW | IN_ONLYDIR;
 #ifdef IN_EXCL_UNLINK
     mask |= IN_EXCL_UNLINK;
 #endif
@@ -228,12 +229,15 @@ add_watch(FsearchMonitor *monitor, const char *path) {
                           "Please increase inotify limits: "
                           "echo 'fs.inotify.max_user_watches=524288' | sudo tee -a /etc/sysctl.conf && sudo sysctl -p");
             }
-        } else if (errno == ENOENT) {
+        }
+        else if (errno == ENOENT) {
             // Directory no longer exists, that's okay
             g_debug("[monitor] directory does not exist: %s", path);
-        } else if (errno == EACCES) {
+        }
+        else if (errno == EACCES) {
             g_debug("[monitor] permission denied: %s", path);
-        } else {
+        }
+        else {
             g_debug("[monitor] failed to add watch for %s: %s", path, g_strerror(errno));
         }
         return -1;
@@ -324,8 +328,7 @@ add_watches_recursive(FsearchMonitor *monitor, const char *path) {
 static GHashTable *
 coalesce_events(GQueue *events, FsearchMonitor *monitor) {
     // path -> CoalescedEvent*
-    GHashTable *result = g_hash_table_new_full(g_str_hash, g_str_equal,
-                                                NULL, (GDestroyNotify)coalesced_event_free);
+    GHashTable *result = g_hash_table_new_full(g_str_hash, g_str_equal, NULL, (GDestroyNotify)coalesced_event_free);
 
     while (!g_queue_is_empty(events)) {
         MonitorEvent *ev = g_queue_pop_head(events);
@@ -350,31 +353,37 @@ coalesce_events(GQueue *events, FsearchMonitor *monitor) {
 
             if (is_create) {
                 existing->state = COALESCED_CREATED;
-            } else if (is_delete) {
+            }
+            else if (is_delete) {
                 existing->state = COALESCED_DELETED;
-            } else if (is_modify) {
+            }
+            else if (is_modify) {
                 existing->state = COALESCED_MODIFIED;
-            } else {
+            }
+            else {
                 existing->state = COALESCED_NOOP;
             }
 
             g_hash_table_insert(result, existing->path, existing);
-        } else {
+        }
+        else {
             // Combine with existing
             if (is_create) {
                 if (existing->state == COALESCED_DELETED) {
                     existing->state = COALESCED_MODIFIED;
                 }
                 // else stay as created
-            } else if (is_delete) {
+            }
+            else if (is_delete) {
                 if (existing->state == COALESCED_CREATED) {
                     existing->state = COALESCED_NOOP;
-                } else {
+                }
+                else {
                     existing->state = COALESCED_DELETED;
                 }
-            } else if (is_modify) {
-                if (existing->state != COALESCED_DELETED &&
-                    existing->state != COALESCED_CREATED) {
+            }
+            else if (is_modify) {
+                if (existing->state != COALESCED_DELETED && existing->state != COALESCED_CREATED) {
                     existing->state = COALESCED_MODIFIED;
                 }
             }
@@ -403,9 +412,11 @@ apply_changes_to_db(FsearchMonitor *monitor, GHashTable *changes) {
         }
 
         g_debug("[monitor] applying %s: %s (dir=%d)",
-                ev->state == COALESCED_CREATED ? "CREATE" :
-                ev->state == COALESCED_DELETED ? "DELETE" : "MODIFY",
-                ev->path, ev->is_dir);
+                ev->state == COALESCED_CREATED   ? "CREATE"
+                : ev->state == COALESCED_DELETED ? "DELETE"
+                                                 : "MODIFY",
+                ev->path,
+                ev->is_dir);
 
         switch (ev->state) {
         case COALESCED_CREATED: {
@@ -433,8 +444,7 @@ apply_changes_to_db(FsearchMonitor *monitor, GHashTable *changes) {
             g_autofree char *name = g_path_get_basename(ev->path);
 
             if (S_ISDIR(st.st_mode)) {
-                FsearchDatabaseEntryFolder *new_folder =
-                    db_add_folder(monitor->db, parent, name, st.st_mtime);
+                FsearchDatabaseEntryFolder *new_folder = db_add_folder(monitor->db, parent, name, st.st_mtime);
                 if (new_folder) {
                     // Add watch and scan for contents
                     add_watch(monitor, ev->path);
@@ -455,18 +465,20 @@ apply_changes_to_db(FsearchMonitor *monitor, GHashTable *changes) {
                                     // Recursively add subdirectory
                                     add_watches_recursive(monitor, child_path);
                                     // TODO: Add folder entries recursively
-                                } else {
-                                    db_add_file(monitor->db, new_folder, child_name,
-                                               child_st.st_size, child_st.st_mtime);
+                                }
+                                else {
+                                    db_add_file(monitor->db, new_folder, child_name, child_st.st_size, child_st.st_mtime);
                                 }
                             }
                         }
                         g_dir_close(dir);
-                    } else if (error) {
+                    }
+                    else if (error) {
                         g_error_free(error);
                     }
                 }
-            } else {
+            }
+            else {
                 db_add_file(monitor->db, parent, name, st.st_size, st.st_mtime);
             }
             break;
@@ -483,7 +495,8 @@ apply_changes_to_db(FsearchMonitor *monitor, GHashTable *changes) {
                 // Remove watch first
                 remove_watch(monitor, ev->path);
                 db_remove_folder(monitor->db, (FsearchDatabaseEntryFolder *)entry);
-            } else {
+            }
+            else {
                 db_remove_file(monitor->db, entry);
             }
             break;
@@ -501,8 +514,7 @@ apply_changes_to_db(FsearchMonitor *monitor, GHashTable *changes) {
                 struct stat st;
                 if (lstat(ev->path, &st) == 0 && S_ISREG(st.st_mode)) {
                     g_autofree char *parent_path = g_path_get_dirname(ev->path);
-                    FsearchDatabaseEntryFolder *parent =
-                        db_find_folder_by_path(monitor->db, parent_path);
+                    FsearchDatabaseEntryFolder *parent = db_find_folder_by_path(monitor->db, parent_path);
                     if (parent) {
                         g_autofree char *name = g_path_get_basename(ev->path);
                         db_add_file(monitor->db, parent, name, st.st_size, st.st_mtime);
@@ -547,6 +559,11 @@ process_events_idle(gpointer user_data) {
     // Coalesce events
     GHashTable *coalesced = coalesce_events(events, monitor);
     g_queue_free(events);
+
+    // Notify prepare callback (allows UI to invalidate caches before entries are modified)
+    if (monitor->prepare_callback) {
+        monitor->prepare_callback(monitor->prepare_callback_data);
+    }
 
     // Apply to database
     apply_changes_to_db(monitor, coalesced);
@@ -596,9 +613,7 @@ queue_event(FsearchMonitor *monitor, struct inotify_event *event) {
 
     // Start or reset coalesce timer
     if (monitor->coalesce_timer_id == 0) {
-        monitor->coalesce_timer_id = g_timeout_add(monitor->coalesce_interval_ms,
-                                                    coalesce_timer_callback,
-                                                    monitor);
+        monitor->coalesce_timer_id = g_timeout_add(monitor->coalesce_interval_ms, coalesce_timer_callback, monitor);
     }
 
     g_mutex_unlock(&monitor->event_mutex);
@@ -644,7 +659,7 @@ watch_thread_func(gpointer data) {
         }
 
         // Process events
-        for (char *ptr = buffer; ptr < buffer + len; ) {
+        for (char *ptr = buffer; ptr < buffer + len;) {
             struct inotify_event *event = (struct inotify_event *)ptr;
 
             // Skip excluded names
@@ -713,8 +728,7 @@ fsearch_monitor_new(FsearchDatabase *db, GList *index_paths) {
 
     monitor->event_queue = g_queue_new();
 
-    monitor->wd_to_path = g_hash_table_new_full(g_direct_hash, g_direct_equal,
-                                                 NULL, g_free);
+    monitor->wd_to_path = g_hash_table_new_full(g_direct_hash, g_direct_equal, NULL, g_free);
     monitor->path_to_wd = g_hash_table_new(g_str_hash, g_str_equal);
 
     // Copy index paths
@@ -863,8 +877,7 @@ fsearch_monitor_set_excluded_paths(FsearchMonitor *monitor, GList *excludes) {
         g_list_free_full(monitor->exclude_paths, (GDestroyNotify)fsearch_exclude_path_free);
     }
 
-    monitor->exclude_paths = excludes ?
-        g_list_copy_deep(excludes, (GCopyFunc)fsearch_exclude_path_copy, NULL) : NULL;
+    monitor->exclude_paths = excludes ? g_list_copy_deep(excludes, (GCopyFunc)fsearch_exclude_path_copy, NULL) : NULL;
 }
 
 void
@@ -885,12 +898,18 @@ fsearch_monitor_set_exclude_hidden(FsearchMonitor *monitor, bool exclude) {
 }
 
 void
-fsearch_monitor_set_callback(FsearchMonitor *monitor,
-                             FsearchMonitorCallback callback,
-                             gpointer user_data) {
+fsearch_monitor_set_callback(FsearchMonitor *monitor, FsearchMonitorCallback callback, gpointer user_data) {
     if (monitor) {
         monitor->callback = callback;
         monitor->callback_data = user_data;
+    }
+}
+
+void
+fsearch_monitor_set_prepare_callback(FsearchMonitor *monitor, FsearchMonitorCallback callback, gpointer user_data) {
+    if (monitor) {
+        monitor->prepare_callback = callback;
+        monitor->prepare_callback_data = user_data;
     }
 }
 
@@ -920,7 +939,8 @@ fsearch_monitor_set_batching(FsearchMonitor *monitor, bool batching) {
             monitor->coalesce_timer_id = 0;
         }
         g_debug("[monitor] entering batch mode");
-    } else {
+    }
+    else {
         g_debug("[monitor] exiting batch mode");
     }
 
@@ -995,9 +1015,7 @@ fsearch_monitor_set_database(FsearchMonitor *monitor, FsearchDatabase *db) {
 }
 
 void
-fsearch_monitor_set_error_callback(FsearchMonitor *monitor,
-                                   FsearchMonitorErrorCallback callback,
-                                   gpointer user_data) {
+fsearch_monitor_set_error_callback(FsearchMonitor *monitor, FsearchMonitorErrorCallback callback, gpointer user_data) {
     if (!monitor) {
         return;
     }
