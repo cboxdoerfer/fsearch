@@ -24,7 +24,7 @@ node_init_needle(FsearchQueryNode *node, const char *needle) {
 
     // set up case folded needle in UTF16 format
     node->needle_builder = calloc(1, sizeof(FsearchUtfBuilder));
-    fsearch_utf_builder_init(node->needle_builder, 8 * node->needle_len);
+    fsearch_utf_builder_init(node->needle_builder, node->needle_len);
     const bool utf_ready = fsearch_utf_builder_normalize_and_fold_case(node->needle_builder, needle);
     g_assert(utf_ready == true);
 }

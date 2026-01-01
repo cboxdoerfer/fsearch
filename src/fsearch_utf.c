@@ -8,7 +8,7 @@
 #include <unicode/ustring.h>
 
 void
-fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters) {
+fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t str_len) {
     g_return_if_fail(builder);
 
     builder->initialized = true;
@@ -29,7 +29,8 @@ fsearch_utf_builder_init(FsearchUtfBuilder *builder, int32_t num_characters) {
 
     builder->string_utf8_is_folded = false;
     builder->string_is_folded_and_normalized = false;
-    builder->num_characters = num_characters;
+    // Ensure there's enough space, since case-folded strings may grow in size.
+    builder->num_characters = 4 * str_len;
     builder->string_utf8_folded = calloc(builder->num_characters, sizeof(char));
     builder->string_utf8_folded_len = 0;
     builder->string_folded = calloc(builder->num_characters, sizeof(UChar));

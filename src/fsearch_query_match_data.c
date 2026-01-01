@@ -126,9 +126,9 @@ fsearch_query_match_data_new(size_t *file_attr_offsets, size_t *folder_attr_offs
     match_data->utf_name_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
     match_data->utf_parent_path_builder = calloc(1, sizeof(FsearchUtfBuilder));
-    fsearch_utf_builder_init(match_data->utf_name_builder, 4 * PATH_MAX);
-    fsearch_utf_builder_init(match_data->utf_path_builder, 4 * PATH_MAX);
-    fsearch_utf_builder_init(match_data->utf_parent_path_builder, 4 * PATH_MAX);
+    fsearch_utf_builder_init(match_data->utf_name_builder, PATH_MAX);
+    fsearch_utf_builder_init(match_data->utf_path_builder, PATH_MAX);
+    fsearch_utf_builder_init(match_data->utf_parent_path_builder, PATH_MAX);
     match_data->path_buffer = g_string_sized_new(PATH_MAX);
     match_data->parent_path_buffer = g_string_sized_new(PATH_MAX);
     match_data->content_type_buffer = g_string_sized_new(PATH_MAX);
