@@ -277,6 +277,98 @@ test_insert_sorted(void) {
     }
 }
 
+static void
+test_steal(void) {
+    const uint32_t count = 20;
+    g_autoptr(DynamicArray) source = darray_new(count);
+    g_autoptr(DynamicArray) dest = darray_new(0);
+
+    for (uint32_t i = 0; i < count; i++) {
+        darray_add_item(source, GINT_TO_POINTER(i));
+    }
+
+    // Steal middle 5 items (indices 5 to 9)
+    const uint32_t n_steal = 6;
+    const uint32_t i_steal = 7;
+    uint32_t stolen = darray_steal(source, i_steal, n_steal, dest);
+    g_assert_cmpuint(stolen, ==, n_steal);
+    g_assert_cmpuint(darray_get_num_items(source), ==, count - n_steal);
+    g_assert_cmpuint(darray_get_num_items(dest), ==, n_steal);
+
+    // Verify content of dest
+    for (uint32_t i = 0; i < darray_get_num_items(dest); i++) {
+        g_assert_cmpint(GPOINTER_TO_INT(darray_get_item(dest, i)), ==, i + i_steal);
+    }
+
+    // Verify content of source (indices shifted)
+    g_assert_cmpint(GPOINTER_TO_INT(darray_get_item(source, i_steal - 1)), ==, i_steal - 1);
+    g_assert_cmpint(GPOINTER_TO_INT(darray_get_item(source, i_steal)), ==, i_steal + n_steal);
+    g_assert_cmpint(GPOINTER_TO_INT(darray_get_item(source, darray_get_num_items(source) - 1)), ==, count - 1);
+}
+
+static bool
+is_even(void *item, void *data) {
+    return (GPOINTER_TO_INT(item) % 2) == 0;
+}
+
+static void
+test_steal_items_func(void) {
+    const uint32_t count = 10;
+    g_autoptr(DynamicArray) source = darray_new(count);
+
+    for (uint32_t i = 0; i < count; i++) {
+        darray_add_item(source, GINT_TO_POINTER(i + 1));
+    }
+
+    g_autoptr(DynamicArray) evens = darray_steal_items(source, is_even, NULL);
+    g_assert_cmpuint(darray_get_num_items(evens), ==, count / 2);
+    g_assert_cmpuint(darray_get_num_items(source), ==, count / 2);
+
+    for (uint32_t i = 0; i < darray_get_num_items(evens); i++) {
+        g_assert_true(is_even(darray_get_item(evens, i), NULL));
+    }
+    for (uint32_t i = 0; i < darray_get_num_items(source); i++) {
+        g_assert_false(is_even(darray_get_item(source, i), NULL));
+    }
+}
+
+static void
+test_range(void) {
+    const uint32_t count = 10;
+    g_autoptr(DynamicArray) array = darray_new(count);
+    for (int i = 0; i < count; i++) {
+        darray_add_item(array, GINT_TO_POINTER(i));
+    }
+
+    const uint32_t n_range = 4;
+    const uint32_t i_range = 3;
+    g_autoptr(DynamicArray) range = darray_get_range(array, i_range, n_range);
+    g_assert_cmpuint(darray_get_num_items(range), ==, n_range);
+    g_assert_cmpint(GPOINTER_TO_INT(darray_get_item(range, 0)), ==, i_range);
+    g_assert_cmpint(GPOINTER_TO_INT(darray_get_item(range, n_range - 1)), ==, i_range + n_range - 1);
+}
+
+static void
+test_copy_ref(void) {
+    const int32_t val = 100;
+    DynamicArray *a1 = darray_new(5);
+    darray_add_item(a1, GINT_TO_POINTER(val));
+
+    // Test ref
+    DynamicArray *a2 = darray_ref(a1);
+    g_assert(a1 == a2);
+    darray_unref(a2);
+
+    // Test copy
+    DynamicArray *a3 = darray_copy(a1);
+    g_assert(a1 != a3);
+    g_assert_cmpuint(darray_get_num_items(a3), ==, 1);
+    g_assert_cmpint(GPOINTER_TO_INT(darray_get_item(a3, 0)), ==, val);
+
+    darray_unref(a3);
+    darray_unref(a1);
+}
+
 int
 main(int argc, char *argv[]) {
     g_test_init(&argc, &argv, NULL);
@@ -284,6 +376,10 @@ main(int argc, char *argv[]) {
     g_test_add_func("/FSearch/array/insert", test_insert);
     g_test_add_func("/FSearch/array/insert_sorted", test_insert_sorted);
     g_test_add_func("/FSearch/array/remove", test_remove);
+    g_test_add_func("/FSearch/array/steal", test_steal);
+    g_test_add_func("/FSearch/array/steal_items_func", test_steal_items_func);
+    g_test_add_func("/FSearch/array/range", test_range);
+    g_test_add_func("/FSearch/array/copy_ref", test_copy_ref);
     g_test_add_func("/FSearch/array/sort", test_sort);
     g_test_add_func("/FSearch/array/search", test_search);
     return g_test_run();
