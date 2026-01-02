@@ -1132,16 +1132,16 @@ database_file_load_sorted_entries(FILE *fp, DynamicArray *src, uint32_t num_src_
     if (fread(indexes, 4, num_src_entries, fp) != num_src_entries) {
         return false;
     }
-    else {
-        for (uint32_t i = 0; i < num_src_entries; i++) {
-            uint32_t idx = indexes[i];
-            void *entry = darray_get_item(src, idx);
-            if (!entry) {
-                return false;
-            }
-            darray_add_item(dest, entry);
+
+    for (uint32_t i = 0; i < num_src_entries; i++) {
+        uint32_t idx = indexes[i];
+        void *entry = darray_get_item(src, idx);
+        if (!entry) {
+            return false;
         }
+        darray_add_item(dest, entry);
     }
+
     return true;
 }
 
