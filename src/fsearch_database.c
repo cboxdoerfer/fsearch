@@ -1425,32 +1425,66 @@ database_file_save_folders(FILE *fp,
 }
 
 static size_t
-database_file_save_indexes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
+database_file_save_includes(FILE* fp, FsearchDatabaseIndexStore* store, bool* write_failed)
+{
     size_t bytes_written = 0;
 
-    // TODO: actually implement storing all index information
-    const uint32_t num_indexes = 0;
-    bytes_written += database_file_write_data(fp, &num_indexes, 4, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save number of indexes: %d", num_indexes);
-        goto out;
+    GPtrArray* includes = fsearch_database_include_manager_get_includes(store->include_manager);
+    const uint32_t num_includes = includes->len;
+    DB_WRITE_VAL(fp, num_includes, "failed to write num_includes: %d", num_includes, write_failed, bytes_written);
+
+    for (int i = 0; i < num_includes; ++i)
+    {
+        FsearchDatabaseInclude* include = g_ptr_array_index(includes, i);
+
+        const uint32_t type = 0;
+        DB_WRITE_VAL(fp, type, "failed to write index type: %d", type, write_failed, bytes_written);
+
+        const int32_t id = fsearch_database_include_get_id(include);
+        DB_WRITE_VAL(fp, id, "failed to write include id: %d", id, write_failed, bytes_written);
+
+        const char* path = fsearch_database_include_get_path(include);
+        const int32_t path_len = strlen(path);
+        DB_WRITE_STRING(fp, path, path_len, "failed to write include path: %s", path, write_failed, bytes_written);
+
+        const uint8_t one_file_system = fsearch_database_include_get_one_file_system(include);
+        DB_WRITE_VAL(fp, one_file_system, "failed to write include one_file_system: %d", one_file_system, write_failed,
+                     bytes_written);
+        const uint8_t is_active = fsearch_database_include_get_active(include);
+        DB_WRITE_VAL(fp, is_active, "failed to write include is_active: %d", is_active, write_failed, bytes_written);
+        const uint8_t is_monitored = fsearch_database_include_get_monitored(include);
+        DB_WRITE_VAL(fp, is_monitored, "failed to write include is_monitored: %d", is_monitored, write_failed,
+                     bytes_written);
+        const uint8_t scan_after_launch = fsearch_database_include_get_scan_after_launch(include);
+        DB_WRITE_VAL(fp, scan_after_launch, "failed to write include scan_after_launch: %d", scan_after_launch,
+                     write_failed, bytes_written);
     }
-out:
     return bytes_written;
 }
 
 static size_t
-database_file_save_excludes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
+database_file_save_excludes(FILE* fp, FsearchDatabaseIndexStore* store, bool* write_failed)
+{
     size_t bytes_written = 0;
 
-    // TODO: actually implement storing all exclude information
-    const uint32_t num_excludes = 0;
-    bytes_written += database_file_write_data(fp, &num_excludes, 4, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save number of indexes: %d", num_excludes);
-        goto out;
+    GPtrArray* excludes = fsearch_database_exclude_manager_get_excludes(store->exclude_manager);
+    const uint32_t num_excludes = excludes->len;
+    DB_WRITE_VAL(fp, num_excludes, "failed to write num_excludes: %d", num_excludes, write_failed, bytes_written);
+
+    for (int i = 0; i < num_excludes; ++i)
+    {
+        FsearchDatabaseExclude* exclude = g_ptr_array_index(excludes, i);
+
+        const uint32_t type = 0;
+        DB_WRITE_VAL(fp, type, "failed to write exclude type: %d", type, write_failed, bytes_written);
+
+        const char* path = fsearch_database_exclude_get_path(exclude);
+        const int32_t path_len = strlen(path);
+        DB_WRITE_STRING(fp, path, path_len, "failed to write exclude path: %s", path, write_failed, bytes_written);
+
+        const uint8_t is_active = fsearch_database_exclude_get_active(exclude);
+        DB_WRITE_VAL(fp, is_active, "failed to write exclude is_active: %d", is_active, write_failed, bytes_written);
     }
-out:
     return bytes_written;
 }
 
@@ -1538,7 +1572,7 @@ database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
                       bytes_written, save_fail);
 
     g_debug("[db_save] saving indices...");
-    bytes_written += database_file_save_indexes(fp, store, &write_failed);
+    bytes_written += database_file_save_includes(fp, store, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }
