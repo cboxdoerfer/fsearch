@@ -771,6 +771,53 @@ index_store_start_monitoring(FsearchDatabaseIndexStore *store) {
 #define DATABASE_MINOR_VERSION 0
 #define DATABASE_MAGIC_NUMBER "FSDB"
 
+#define DB_WRITE_VAL_SIZED(fp, val, size, msg, msg_arg, failed_ptr, bytes_count)   \
+    do {                                                                       \
+        (bytes_count) +=                                                       \
+            database_file_write_data(fp, &(val), size, 1, failed_ptr);  \
+        if (*(failed_ptr)) {                                                   \
+            g_debug("[db_save] " msg, msg_arg);                                \
+            return bytes_count;                                                       \
+        }                                                                      \
+    } while (0)
+
+#define DB_WRITE_VAL(fp, val, msg, msg_arg, failed_ptr, bytes_count)   \
+    do {                                                                       \
+        (bytes_count) +=                                                       \
+            database_file_write_data(fp, &(val), sizeof(val), 1, failed_ptr);  \
+        if (*(failed_ptr)) {                                                   \
+            g_debug("[db_save] " msg, msg_arg);                                \
+            return bytes_count;                                                       \
+        }                                                                      \
+    } while (0)
+
+#define DB_WRITE_VAL_GOTO(fp, val, msg, msg_arg, failed_ptr, bytes_count, glabel)   \
+    do {                                                                       \
+        (bytes_count) +=                                                       \
+            database_file_write_data(fp, &(val), sizeof(val), 1, failed_ptr);  \
+        if (*(failed_ptr)) {                                                   \
+            g_debug("[db_save] " msg, msg_arg);                                \
+            goto glabel;                                                       \
+        }                                                                      \
+    } while (0)
+
+#define DB_WRITE_STRING(fp, str, str_len, msg, msg_arg, failed_ptr, bytes_count)   \
+    do {                                                                       \
+        (bytes_count) +=                                                       \
+            database_file_write_data(fp, &(str_len), sizeof(str_len), 1, failed_ptr);  \
+        if (*(failed_ptr)) {                                                   \
+            g_debug("[db_save] (str_len) " msg, msg_arg);                                \
+            return bytes_count;                                                       \
+        }                                                                      \
+        (bytes_count) +=                                                       \
+            database_file_write_data(fp, str, str_len, 1, failed_ptr);  \
+        if (*(failed_ptr)) {                                                   \
+            g_debug("[db_save] (str) " msg, msg_arg);                                \
+            return bytes_count;                                                       \
+        }                                                                      \
+    } while (0)
+
+
 typedef struct {
     DynamicArray *files[NUM_DATABASE_INDEX_PROPERTIES];
     DynamicArray *folders[NUM_DATABASE_INDEX_PROPERTIES];
@@ -1167,18 +1214,14 @@ database_file_save_entry_super_elements(FILE *fp,
     size_t bytes_written = 0;
     // name_offset: character position after which previous_entry_name and new_entry_name differ
     const uint8_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
-    bytes_written += database_file_write_data(fp, &name_offset, 1, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save name offset");
-        goto out;
-    }
+    DB_WRITE_VAL(fp, name_offset, "failed to write name_offset: %d", name_offset, write_failed, bytes_written);
 
     // name_len: length of the new name characters
     const uint8_t name_len = new_entry_name->len - name_offset;
     bytes_written += database_file_write_data(fp, &name_len, 1, 1, write_failed);
     if (*write_failed == true) {
         g_debug("[db_save] failed to save name length");
-        goto out;
+        return bytes_written;
     }
 
     // append new unique characters to previous_entry_name starting at name_offset
@@ -1191,38 +1234,25 @@ database_file_save_entry_super_elements(FILE *fp,
         bytes_written += database_file_write_data(fp, name, name_len, 1, write_failed);
         if (*write_failed == true) {
             g_debug("[db_save] failed to save name");
-            goto out;
+            return bytes_written;
         }
     }
 
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: file or folder size (folder size: sum of all children sizes)
         const uint64_t size = db_entry_get_size(entry);
-        bytes_written += database_file_write_data(fp, &size, 8, 1, write_failed);
-        if (*write_failed == true) {
-            g_debug("[db_save] failed to save size");
-            goto out;
-        }
+        DB_WRITE_VAL(fp, size, "failed to write size: %d", size, write_failed, bytes_written);
     }
 
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time of file/folder
         const uint64_t mtime = db_entry_get_mtime(entry);
-        bytes_written += database_file_write_data(fp, &mtime, 8, 1, write_failed);
-        if (*write_failed == true) {
-            g_debug("[db_save] failed to save modification time");
-            goto out;
-        }
+        DB_WRITE_VAL(fp, mtime, "failed to write mtime: %d", mtime, write_failed, bytes_written);
     }
 
     // parent_idx: index of parent folder
-    bytes_written += database_file_write_data(fp, &parent_idx, 4, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save parent_idx");
-        goto out;
-    }
+    DB_WRITE_VAL(fp, parent_idx, "failed to write parent_idx: %d", parent_idx, write_failed, bytes_written);
 
-out:
     return bytes_written;
 }
 
@@ -1234,24 +1264,15 @@ database_file_save_header(FILE *fp, bool *write_failed) {
     bytes_written += database_file_write_data(fp, magic, strlen(magic), 1, write_failed);
     if (*write_failed == true) {
         g_debug("[db_save] failed to save magic number");
-        goto out;
+        return bytes_written;
     }
 
     const uint8_t majorver = DATABASE_MAJOR_VERSION;
-    bytes_written += database_file_write_data(fp, &majorver, 1, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save major version number");
-        goto out;
-    }
+    DB_WRITE_VAL(fp, majorver, "failed to write major version: %d", majorver, write_failed, bytes_written);
 
     const uint8_t minorver = DATABASE_MINOR_VERSION;
-    bytes_written += database_file_write_data(fp, &minorver, 1, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save minor version number");
-        goto out;
-    }
+    DB_WRITE_VAL(fp, minorver, "failed to write minor version: %d", minorver, write_failed, bytes_written);
 
-out:
     return bytes_written;
 }
 
@@ -1331,14 +1352,11 @@ database_file_save_sorted_arrays(FILE *fp,
     size_t bytes_written = 0;
     uint32_t num_sorted_arrays = index_store_get_num_fast_sort_indices(store);
 
-    bytes_written += database_file_write_data(fp, &num_sorted_arrays, 4, 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save number of sorted arrays: %d", num_sorted_arrays);
-        goto out;
-    }
+    DB_WRITE_VAL(fp, num_sorted_arrays, "failed to write number of sorted arrays: %d", num_sorted_arrays, write_failed,
+                 bytes_written);
 
     if (num_sorted_arrays < 1) {
-        goto out;
+        return bytes_written;
     }
 
     for (uint32_t id = 1; id < NUM_DATABASE_INDEX_PROPERTIES; id++) {
@@ -1354,25 +1372,20 @@ database_file_save_sorted_arrays(FILE *fp,
         }
 
         // id: this is the id of the sorted files
-        bytes_written += database_file_write_data(fp, &id, 4, 1, write_failed);
-        if (*write_failed == true) {
-            g_debug("[db_save] failed to save sorted arrays id: %d", id);
-            goto out;
-        }
+        DB_WRITE_VAL(fp, id, "failed to write sorted arrays id: %d", id, write_failed, bytes_written);
 
         bytes_written += database_file_save_sorted_entries(fp, folders, num_folders, write_failed);
         if (*write_failed == true) {
             g_debug("[db_save] failed to save sorted folders");
-            goto out;
+            return bytes_written;
         }
         bytes_written += database_file_save_sorted_entries(fp, files, num_files, write_failed);
         if (*write_failed == true) {
             g_debug("[db_save] failed to save sorted files");
-            goto out;
+            return bytes_written;
         }
     }
 
-out:
     return bytes_written;
 }
 
@@ -1391,11 +1404,7 @@ database_file_save_folders(FILE *fp,
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
 
         const uint16_t db_index = db_entry_get_db_index(entry);
-        bytes_written += database_file_write_data(fp, &db_index, 2, 1, write_failed);
-        if (*write_failed == true) {
-            g_debug("[db_save] failed to save folder's database index: %d", db_index);
-            return bytes_written;
-        }
+        DB_WRITE_VAL(fp, db_index, "failed to write db_index: %d", db_index, write_failed, bytes_written);
 
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
@@ -1499,10 +1508,7 @@ database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
 
     g_debug("[db_save] saving database index flags...");
     const uint64_t index_flags = store->flags;
-    bytes_written += database_file_write_data(fp, &index_flags, 8, 1, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
+    DB_WRITE_VAL_GOTO(fp, index_flags, "failed to write index flags: %d", index_flags, &write_failed, bytes_written, save_fail);
 
     g_debug("[db_save] updating folder indices...");
     folder_container = index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
@@ -1511,35 +1517,25 @@ database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
 
     const uint32_t num_folders = darray_get_num_items(folders);
     g_debug("[db_save] saving number of folders: %d", num_folders);
-    bytes_written += database_file_write_data(fp, &num_folders, 4, 1, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
+    DB_WRITE_VAL_GOTO(fp, num_folders, "failed to write num folders: %d", num_folders, &write_failed, bytes_written, save_fail);
 
     file_container = index_store_get_files(store, DATABASE_INDEX_PROPERTY_NAME);
     files = fsearch_database_entries_container_get_joined(file_container);
+
     const uint32_t num_files = darray_get_num_items(files);
     g_debug("[db_save] saving number of files: %d", num_files);
-    bytes_written += database_file_write_data(fp, &num_files, 4, 1, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
+    DB_WRITE_VAL_GOTO(fp, num_files, "failed to write num files: %d", num_files, &write_failed, bytes_written, save_fail);
 
     uint64_t folder_block_size = 0;
     const uint64_t folder_block_size_offset = bytes_written;
     g_debug("[db_save] saving folder block size...");
-    bytes_written += database_file_write_data(fp, &folder_block_size, 8, 1, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
+    DB_WRITE_VAL_GOTO(fp, folder_block_size, "failed to write folder block size: %d", folder_block_size, &write_failed, bytes_written, save_fail);
 
     uint64_t file_block_size = 0;
     const uint64_t file_block_size_offset = bytes_written;
     g_debug("[db_save] saving file block size...");
-    bytes_written += database_file_write_data(fp, &file_block_size, 8, 1, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
+    DB_WRITE_VAL_GOTO(fp, file_block_size, "failed to write file block size: %d", file_block_size, &write_failed,
+                      bytes_written, save_fail);
 
     g_debug("[db_save] saving indices...");
     bytes_written += database_file_save_indexes(fp, store, &write_failed);
@@ -1579,14 +1575,9 @@ database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
         goto save_fail;
     }
     g_debug("[db_save] updating file and folder block size: %" PRIu64 ", %" PRIu64, folder_block_size, file_block_size);
-    bytes_written += database_file_write_data(fp, &folder_block_size, 8, 1, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
-    bytes_written += database_file_write_data(fp, &file_block_size, 8, 1, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
+    DB_WRITE_VAL_GOTO(fp, folder_block_size, "failed to update folder block size: %d", folder_block_size, &write_failed,
+                      bytes_written, save_fail);
+    DB_WRITE_VAL_GOTO(fp, file_block_size, "failed to update file block size: %d", file_block_size, &write_failed, bytes_written, save_fail);
 
     g_debug("[db_save] removing current database file...");
     // remove current database file
