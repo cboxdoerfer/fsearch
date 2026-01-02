@@ -603,6 +603,12 @@ increment_num_folders(FsearchDatabaseEntry *entry) {
 }
 
 void
+db_entry_set_parent_no_update(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent) {
+    g_return_if_fail(entry != NULL);
+    entry->parent = parent;
+}
+
+void
 db_entry_set_parent(FsearchDatabaseEntry *entry, FsearchDatabaseEntry *parent) {
     g_return_if_fail(entry != NULL);
     if (entry->parent) {
