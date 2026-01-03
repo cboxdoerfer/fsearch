@@ -20,7 +20,7 @@
 #include <config.h>
 #endif
 
-#ifndef __MACH__
+#if !defined(__MACH__) && !defined(_WIN32)
 #include <gio/gdesktopappinfo.h>
 #endif
 
@@ -502,6 +502,8 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     }
     #ifdef __MACH__
     g_autoptr(GAppInfo) app_info = NULL;
+    #elif defined(_WIN32)
+    g_autoptr(GAppInfo) app_info = g_app_info_create_from_commandline(app_id, NULL, G_APP_INFO_CREATE_NONE, NULL);
     #else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
     #endif
