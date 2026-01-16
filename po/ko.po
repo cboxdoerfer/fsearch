@@ -8,8 +8,8 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2024-03-26 14:01+0000\n"
-"Last-Translator: han <blitzmaske@gmail.com>\n"
+"PO-Revision-Date: 2026-01-17 03:01+0000\n"
+"Last-Translator: 이연우 <youbot.maguni@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
 "translations/ko/>\n"
 "Language: ko\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"X-Generator: Weblate 5.15.2\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -71,10 +71,8 @@ msgid "Filter support (e.g. only search for audio files)"
 msgstr "필터 지원(예: 오디오 파일만 검색)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
-#, fuzzy
-#| msgid "Exclude hidden files and folders"
 msgid "Exclude certain files and folders"
-msgstr "숨김 파일 과 폴더 제외"
+msgstr "특정 파일과 폴더 제외하기"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Fast sort by name, path, size, modification time and extension"
@@ -85,6 +83,8 @@ msgid ""
 "<em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on "
 "your system."
 msgstr ""
+"<em>참고:</em> Flatpak의 샌드박싱으로 인해 FSearch는 시스템의 모든 파일을 "
+"찾을 수 없습니다."
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:35
 msgid "The default UI layout"
@@ -92,7 +92,7 @@ msgstr "기본 UI 레이아웃"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:41
 msgid "A layout more closely following GNOME HIGs"
-msgstr ""
+msgstr "GNOME HIG를 더 밀접하게 따르는 레이아웃"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 #, fuzzy
@@ -101,46 +101,40 @@ msgid "search"
 msgstr "검색"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
-#, fuzzy
-#| msgid "Search"
 msgid "fsearch"
-msgstr "검색"
+msgstr "fsearch"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
-#, fuzzy
-#| msgid "files?"
 msgid "files"
-msgstr "파일을 삭제하시겠습니까?"
+msgstr "파일"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
-#, fuzzy
-#| msgid "Folders"
 msgid "folders"
 msgstr "폴더"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:53
 msgid "music"
-msgstr ""
+msgstr "음악"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:54
 msgid "video"
-msgstr ""
+msgstr "영상"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:55
 msgid "documents"
-msgstr ""
+msgstr "문서"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:56
 msgid "find"
-msgstr ""
+msgstr "찾기"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:57
 msgid "tool"
-msgstr ""
+msgstr "도구"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:58
 msgid "everything"
-msgstr ""
+msgstr "모든 것"
 
 #. Translators: please do NOT translate this.
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
@@ -173,7 +167,7 @@ msgstr "데이터베이스 업데이트 후 파일 선택 기억"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid "Automatically scroll the result list in rubberband selection mode"
-msgstr ""
+msgstr "Rubberband 선택 모드에서 결과 목록 자동 스크롤"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
@@ -263,106 +257,90 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
 #: src/fsearch.c:916
-#, fuzzy
 msgid "Open a new application window"
-msgstr "다른 프로그램 열기"
+msgstr "새 애플리케이션 창 열기"
 
 #: src/fsearch.c:917
 msgid "Show the application preferences"
-msgstr ""
+msgstr "애플리케이션 환경 설정 표시"
 
 #: src/fsearch.c:918
-#, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
-msgstr "검색 버튼 보이기"
+msgstr "검색 패턴 설정"
 
 #: src/fsearch.c:919
-#, fuzzy
 msgid "Update the database and exit"
-msgstr "데이터베이스 업데이트"
+msgstr "데이터베이스 업데이트 후 종료"
 
 #: src/fsearch.c:920
-#, fuzzy
 msgid "Print version information and exit"
-msgstr "버전 정보 보기"
+msgstr "버전 정보 출력 후 종료"
 
 #: src/fsearch_database.c:646
-#, fuzzy
 msgid "Loading folders…"
-msgstr "데이터베이스 로딩중…"
+msgstr "폴더를 로딩하는 중…"
 
 #: src/fsearch_database.c:654
-#, fuzzy
 msgid "Loading files…"
-msgstr "파일 삭제 중…"
+msgstr "파일을 로딩하는 중…"
 
 #: src/fsearch_database.c:1641 src/fsearch_statusbar.c:71
 #: src/fsearch_statusbar.ui:90
-#, fuzzy
 msgid "Sorting…"
-msgstr "데이터베이스 로딩중…"
+msgstr "나열 중…"
 
 #: src/fsearch_file_utils.c:140
 msgctxt "Will be followed by the path of the file."
 msgid "Error when removing file"
-msgstr ""
+msgstr "파일 삭제 중 문제가 발생했습니다"
 
 #: src/fsearch_file_utils.c:142
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get path"
-msgstr "파일을 열 수 없습니다."
+msgstr "경로 확인에 실패했습니다"
 
 #: src/fsearch_file_utils.c:253
 msgctxt "Will be followed by the file path."
 msgid "Error when getting information from file"
-msgstr ""
+msgstr "파일 정보를 가져올 때 오류가 발생했습니다"
 
 #: src/fsearch_file_utils.c:255
-#, fuzzy
 msgid "Failed to get application information"
-msgstr "다른 프로그램 열기"
+msgstr "애플리케이션 정보를 가져오기에 실패했습니다"
 
 #: src/fsearch_file_utils.c:270
 msgctxt "Will be followed by the content type string."
 msgid "Error when getting information for content type"
-msgstr ""
+msgstr "컨텐츠 유형 정보를 가져올 때 오류가 발생했습니다"
 
 #: src/fsearch_file_utils.c:272
 msgid "No default application registered"
-msgstr ""
+msgstr "기본 애플리케이션이 등록되지 않았습니다"
 
 #: src/fsearch_file_utils.c:496
 msgctxt "Will be followed by the path of the folder."
 msgid "Error when opening parent folder"
-msgstr ""
+msgstr "상위 폴더를 열 때 오류가 발생했습니다"
 
 #: src/fsearch_file_utils.c:498
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to get parent path"
-msgstr "파일을 열 수 없습니다."
+msgstr "상위 경로를 가져오지 못했습니다"
 
 #: src/fsearch_file_utils.c:502
 msgctxt "Will be followed by the path of the folder."
 msgid "Error while opening folder"
-msgstr ""
+msgstr "폴더를 열 때 오류가 발생했습니다"
 
 #: src/fsearch_file_utils.c:505
-#, fuzzy
-#| msgid "Failed to open file"
 msgid "Failed to build open command"
-msgstr "파일을 열 수 없습니다."
+msgstr "열기 명령어를 빌드하지 못했습니다"
 
 #: src/fsearch_file_utils.c:561
-#, fuzzy
 msgid "Folder"
 msgstr "폴더"
 
 #: src/fsearch_file_utils.c:567
 msgid "Unknown Type"
-msgstr ""
+msgstr "알 수 없는 유형"
 
 #: src/fsearch_filter.c:110
 msgid "All"
@@ -377,25 +355,24 @@ msgid "Files"
 msgstr "파일"
 
 #: src/fsearch_filter.c:114
-#, fuzzy
 msgid "Applications"
-msgstr "다른 프로그램"
+msgstr "애플리케이션"
 
 #: src/fsearch_filter.c:115
 msgid "Archives"
-msgstr ""
+msgstr "아카이브"
 
 #: src/fsearch_filter.c:116
 msgid "Audio"
-msgstr ""
+msgstr "오디오"
 
 #: src/fsearch_filter.c:117
 msgid "Documents"
-msgstr ""
+msgstr "문서"
 
 #: src/fsearch_filter.c:118
 msgid "Pictures"
-msgstr ""
+msgstr "사진"
 
 #: src/fsearch_filter.c:119
 msgid "Videos"
@@ -403,58 +380,52 @@ msgstr "동영상"
 
 #: src/fsearch_filter_editor.c:79
 msgid "Macro names must not contain `:` characters."
-msgstr ""
+msgstr "매크로 이름에 `:` 문자가 포함되어서는 안 됩니다."
 
 #: src/fsearch_filter_editor.c:104 src/fsearch_preferences_ui.c:203
 #: src/fsearch_preferences_ui.c:215 src/fsearch_preferences_ui.c:565
 msgid "_Cancel"
-msgstr ""
+msgstr "_취소"
 
 #: src/fsearch_filter_editor.c:105 src/fsearch_preferences_ui.c:566
 msgid "_OK"
-msgstr ""
+msgstr "_OK"
 
 #: src/fsearch_filter_editor.ui:10 src/fsearch_preferences_ui.c:301
 msgid "Edit filter"
-msgstr ""
+msgstr "필터 수정"
 
 #: src/fsearch_filter_editor.ui:50
-#, fuzzy
-#| msgid "Name"
 msgid "Name:"
-msgstr "파일명"
+msgstr "파일명:"
 
 #: src/fsearch_filter_editor.ui:61
 msgid "The unique name of this filter"
-msgstr ""
+msgstr "이 필터의 고유 이름"
 
 #: src/fsearch_filter_editor.ui:64
 msgid "Unique filter name"
-msgstr ""
+msgstr "고유 필터 이름"
 
 #: src/fsearch_filter_editor.ui:73
-#, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
-msgstr "현재 경로에서 검색"
+msgstr "경로에서 검색"
 
 #: src/fsearch_filter_editor.ui:87
 msgid "Enable regular expressions"
-msgstr ""
+msgstr "정규 표현식 사용"
 
 #: src/fsearch_filter_editor.ui:101
-#, fuzzy
-#| msgid "Match Case"
 msgid "Match case"
-msgstr "일치하는 결과"
+msgstr "대소문자 구분"
 
 #: src/fsearch_filter_editor.ui:146
 msgid "Query:"
-msgstr ""
+msgstr "쿼리:"
 
 #: src/fsearch_filter_editor.ui:160
 msgid "Macro:"
-msgstr ""
+msgstr "매크로:"
 
 #: src/fsearch_filter_editor.ui:171
 msgid ""
@@ -462,39 +433,37 @@ msgid ""
 "search entry by typing its text followed by ':'\n"
 "                "
 msgstr ""
+"이 필터의 매크로입니다. 매크로를 사용하면 검색 입력창에 텍스트와 ':'을 "
+"입력하여 이 필터에 접근할 수 있습니다\n"
+"                "
 
 #: src/fsearch_listview_popup.c:35
 msgid "Properties…"
-msgstr ""
+msgstr "속성…"
 
 #: src/fsearch_listview_popup.c:169
-#, fuzzy
 msgid "Other Application…"
-msgstr "다른 프로그램"
+msgstr "다른 프로그램…"
 
 #: src/fsearch_overlay.ui:44
 msgid "Empty Database"
 msgstr "빈 데이터베이스"
 
 #: src/fsearch_overlay.ui:60
-#, fuzzy
 msgid "Add folders"
-msgstr "폴더"
+msgstr "폴더 추가"
 
 #: src/fsearch_overlay.ui:108
-#, fuzzy
 msgid "Loading Database…"
 msgstr "데이터베이스 로딩중…"
 
 #: src/fsearch_overlay.ui:123
-#, fuzzy
 msgid "This won't take long."
-msgstr "작업에 시간이 걸릴 수 있습니다"
+msgstr "오래 걸리지 않을 거예요."
 
 #: src/fsearch_overlay.ui:171 src/fsearch_statusbar.ui:312
-#, fuzzy
 msgid "Updating Database…"
-msgstr "데이터베이스 업데이트"
+msgstr "데이터베이스 업데이트 중…"
 
 #: src/fsearch_overlay.ui:186 src/fsearch_overlay.ui:383
 msgid "This may take a while."
@@ -505,10 +474,8 @@ msgid "Empty Query"
 msgstr "빈 쿼리"
 
 #: src/fsearch_overlay.ui:256
-#, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
-msgstr "<b>Ctrl + F</b>를 누르고 입력 시작"
+msgstr "<b>Ctrl + F</b>를 누르고 입력을 시작하세요."
 
 #: src/fsearch_overlay.ui:304
 msgid "No Results Found"
@@ -520,7 +487,7 @@ msgstr "다른 검색 시도"
 
 #: src/fsearch_overlay.ui:368
 msgid "Sorting results…"
-msgstr ""
+msgstr "결과 정렬 중…"
 
 #: src/fsearch_preferences.ui:73 src/fsearch_window.ui:250 src/menus.ui:84
 msgid "Preferences"
