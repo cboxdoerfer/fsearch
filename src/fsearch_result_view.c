@@ -2,6 +2,10 @@
 
 #include "fsearch_result_view.h"
 
+#ifdef _WIN32
+#include "win32_compat.h"
+#endif
+
 #include "fsearch.h"
 #include "fsearch_config.h"
 #include "fsearch_file_utils.h"
