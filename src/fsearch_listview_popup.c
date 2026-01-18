@@ -178,6 +178,17 @@ listview_popup_menu(GtkWidget *widget, FsearchDatabaseView *db_view) {
     add_file_properties_entry(builder);
 
     GMenu *menu_root = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_popup_menu"));
+
+    FsearchConfig *config = fsearch_application_get_config(FSEARCH_APPLICATION_DEFAULT);
+    if (config->diff_tool_cmd && *config->diff_tool_cmd) {
+        g_autoptr(GMenu) compare_section = g_menu_new();
+        g_autoptr(GMenuItem) compare_item = g_menu_item_new(_("_Compare"), "win.compare-files");
+        g_autoptr(GIcon) icon = g_themed_icon_new("view-dual");
+        g_menu_item_set_icon(compare_item, icon);
+        g_menu_append_item(compare_section, compare_item);
+        g_menu_insert_section(menu_root, 1, NULL, G_MENU_MODEL(compare_section));
+    }
+
     GtkWidget *menu_widget = gtk_menu_new_from_model(G_MENU_MODEL(menu_root));
 
     gtk_menu_attach_to_widget(GTK_MENU(menu_widget), GTK_WIDGET(widget), NULL);
