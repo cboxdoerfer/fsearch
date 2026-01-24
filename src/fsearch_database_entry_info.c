@@ -161,6 +161,7 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
     g_assert(info);
 
     info->flags = flags;
+    info->ref_count = 1;
 
     const uint32_t num_flags = num_flags_set(info->flags);
     if (num_flags == 0) {
@@ -260,7 +261,6 @@ fsearch_database_entry_info_new(FsearchDatabaseEntry *entry,
     val.type = db_entry_get_type(entry);
     g_array_append_val(info->infos, val);
 
-    info->ref_count = 1;
 
     return info;
 }
