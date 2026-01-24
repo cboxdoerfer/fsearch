@@ -152,8 +152,8 @@ fanotify_listener_cb(int fd, GIOCondition condition, gpointer user_data) {
                 file_name = NULL;
             }
 
-            print_fanotify_mask(metadata->mask);
-            g_print(": %s\n", file_name ? file_name : "UNKNOWN");
+            //print_fanotify_mask(metadata->mask);
+            //g_print(": %s\n", file_name ? file_name : "UNKNOWN");
 
             if (!watched_entry) {
                 g_warning("[fanotify_listener] no watched entry for handle found: %llu -> %s",
