@@ -217,6 +217,12 @@ db_scan_folder(const char *path,
         return false;
     }
 
+    struct stat root_st;
+    if (lstat(path, &root_st)) {
+        g_debug("[db_scan] can't stat: %s", path);
+        return false;
+    }
+
     g_autoptr(GString) path_string = g_string_new(path);
     // remove leading path separator '/' for root directory
     if (strcmp(path_string->str, G_DIR_SEPARATOR_S) == 0) {
@@ -225,11 +231,6 @@ db_scan_folder(const char *path,
 
     g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
-
-    struct stat root_st;
-    if (lstat(path, &root_st)) {
-        g_debug("[db_scan] can't stat: %s", path);
-    }
 
     DatabaseWalkContext walk_context = {
         .folders = folders,
