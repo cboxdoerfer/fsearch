@@ -1090,7 +1090,7 @@ database_file_load_files(FILE *fp,
     }
 
     const uint8_t *fb = file_block;
-    // load folders
+    // load files
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
         FsearchDatabaseEntry *entry = NULL;
@@ -1098,7 +1098,7 @@ database_file_load_files(FILE *fp,
                                                                  index_flags,
                                                                  previous_entry_name,
                                                                  &entry,
-                                                                 DATABASE_ENTRY_TYPE_NONE);
+                                                                 DATABASE_ENTRY_TYPE_FILE);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;

@@ -31,7 +31,7 @@ fsearch_query_new(const char *search_term,
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     g_assert(q);
 
-    q->search_term = search_term ? strdup(search_term) : "";
+    q->search_term = strdup(search_term ? search_term : "");
 
     q->query_tree = fsearch_query_node_tree_new(q->search_term, filters, flags);
     if (q->query_tree) {
