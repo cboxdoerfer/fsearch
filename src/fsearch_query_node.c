@@ -262,7 +262,6 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->description = g_string_new("parent");
     node_init_needle(qnode, search_term);
 
     qnode->highlight_func = NULL;
