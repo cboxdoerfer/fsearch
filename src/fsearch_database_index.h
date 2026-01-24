@@ -40,8 +40,8 @@ FsearchDatabaseIndex *
 fsearch_database_index_new_with_content(uint32_t id,
                                         FsearchDatabaseInclude *include,
                                         FsearchDatabaseExcludeManager *exclude_manager,
-                                        DynamicArray *files,
                                         DynamicArray *folders,
+                                        DynamicArray *files,
                                         FsearchDatabaseIndexPropertyFlags flags);
 
 FsearchDatabaseInclude *

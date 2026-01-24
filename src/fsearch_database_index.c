@@ -607,8 +607,8 @@ FsearchDatabaseIndex *
 fsearch_database_index_new_with_content(uint32_t id,
                                         FsearchDatabaseInclude *include,
                                         FsearchDatabaseExcludeManager *exclude_manager,
-                                        DynamicArray *files,
                                         DynamicArray *folders,
+                                        DynamicArray *files,
                                         FsearchDatabaseIndexPropertyFlags flags) {
     FsearchDatabaseIndex *self = g_slice_new0(FsearchDatabaseIndex);
     g_assert(self);
@@ -617,6 +617,19 @@ fsearch_database_index_new_with_content(uint32_t id,
     self->include = fsearch_database_include_ref(include);
     self->exclude_manager = g_object_ref(exclude_manager);
     self->flags = flags;
+
+    self->folder_container = fsearch_database_entries_container_new(folders,
+                                                                    TRUE,
+                                                                    DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                                    DATABASE_INDEX_PROPERTY_NONE,
+                                                                    DATABASE_ENTRY_TYPE_FOLDER,
+                                                                    NULL);
+    self->file_container = fsearch_database_entries_container_new(files,
+                                                                  TRUE,
+                                                                  DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                                  DATABASE_INDEX_PROPERTY_NONE,
+                                                                  DATABASE_ENTRY_TYPE_FILE,
+                                                                  NULL);
 
     self->ref_count = 1;
 
