@@ -120,6 +120,9 @@ static guint signals[NUM_DATABASE_SIGNALS];
 static void
 search_view_free(FsearchDatabaseSearchView *view);
 
+static void
+index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data);
+
 // region GMainLoop helpers
 static gboolean
 thread_quit_func(GMainLoop *loop) {
