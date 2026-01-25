@@ -1230,9 +1230,14 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
             return false;
         }
 
-        int32_t path_len = 0;
+        uint32_t path_len = 0;
         if (!database_file_read_element(&path_len, sizeof(path_len), fp)) {
             g_debug("[db_load] failed to read path_len of include");
+            return false;
+        }
+        // Add sanity check for path length
+        if (path_len > 4 * PATH_MAX) {
+            g_debug("[db_load] path_len is too long: %d", path_len);
             return false;
         }
 
@@ -1293,9 +1298,15 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
             return false;
         }
 
-        int32_t path_len = 0;
+        uint32_t path_len = 0;
         if (!database_file_read_element(&path_len, sizeof(path_len), fp)) {
             g_debug("[db_load] failed to read path_len of exclude");
+            return false;
+        }
+
+        // Add sanity check for path length
+        if (path_len > 4 * PATH_MAX) {
+            g_debug("[db_load] path_len is too long: %d", path_len);
             return false;
         }
 
