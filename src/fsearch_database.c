@@ -3,17 +3,26 @@
 #include "fsearch_database.h"
 
 #include "fsearch_array.h"
+#include "fsearch_database_exclude.h"
+#include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_entries_container.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_entry_info.h"
+#include "fsearch_database_include.h"
+#include "fsearch_database_include_manager.h"
 #include "fsearch_database_index.h"
+#include "fsearch_database_index_event.h"
+#include "fsearch_database_index_properties.h"
 #include "fsearch_database_info.h"
 #include "fsearch_database_search.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_sort.h"
 #include "fsearch_database_work.h"
-#include "fsearch_enums.h"
+#include "fsearch_query.h"
+#include "fsearch_query_match_data.h"
 #include "fsearch_selection.h"
+#include "fsearch_selection_type.h"
+#include "fsearch_result.h"
 #include "fsearch_thread_pool.h"
 
 #include <config.h>
@@ -21,9 +30,22 @@
 #include <malloc.h>
 #endif
 
+#include <glib.h>
+#include <glibconfig.h>
 #include <glib/gi18n.h>
+#include <glib-object.h>
+#include <gio/gio.h>
+#include <gtk/gtkenums.h>
 #include <inttypes.h>
+#include <stddef.h>
+#include <stdint.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdbool.h>
+#include <string.h>
 #include <sys/file.h>
+#include <sys/time.h>
+#include <sys/types.h>
 
 typedef struct {
     GThread *thread;
