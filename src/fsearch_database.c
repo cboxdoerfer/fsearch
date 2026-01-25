@@ -1040,12 +1040,12 @@ database_file_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
 
 static void
 database_file_load_add_to_index_array(GHashTable *index_table, FsearchDatabaseEntry *entry) {
-    const int32_t db_index = db_entry_get_db_index(entry);
-    DynamicArray *index_array = g_hash_table_lookup(index_table, GINT_TO_POINTER(db_index));
+    const uint32_t db_index = db_entry_get_db_index(entry);
+    DynamicArray *index_array = g_hash_table_lookup(index_table, GUINT_TO_POINTER(db_index));
 
     if (!index_array) {
         index_array = darray_new(1024);
-        g_hash_table_insert(index_table, GINT_TO_POINTER(db_index), index_array);
+        g_hash_table_insert(index_table, GUINT_TO_POINTER(db_index), index_array);
     }
     darray_add_item(index_array, entry);
 }
@@ -1610,7 +1610,7 @@ database_file_save_includes(FILE *fp, FsearchDatabaseIndexStore *store, bool *wr
         DB_WRITE_VAL(fp, id, "failed to write include id: %d", id, write_failed, bytes_written);
 
         const char *path = fsearch_database_include_get_path(include);
-        const int32_t path_len = strlen(path);
+        const uint32_t path_len = strlen(path);
         DB_WRITE_STRING(fp, path, path_len, "failed to write include path: %s", path, write_failed, bytes_written);
 
         const uint8_t one_file_system = fsearch_database_include_get_one_file_system(include);
@@ -1655,7 +1655,7 @@ database_file_save_excludes(FILE *fp, FsearchDatabaseIndexStore *store, bool *wr
         DB_WRITE_VAL(fp, type, "failed to write exclude type: %d", type, write_failed, bytes_written);
 
         const char *path = fsearch_database_exclude_get_path(exclude);
-        const int32_t path_len = strlen(path);
+        const uint32_t path_len = strlen(path);
         DB_WRITE_STRING(fp, path, path_len, "failed to write exclude path: %s", path, write_failed, bytes_written);
 
         const uint8_t is_active = fsearch_database_exclude_get_active(exclude);
