@@ -442,7 +442,9 @@ fsearch_application_startup(GApplication *app) {
         config_load_default(self->config);
     }
 
-    self->db = fsearch_database_new(NULL);
+    g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
+    g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
+    self->db = fsearch_database_new(g_steal_pointer(&db_file));
     self->db_state = FSEARCH_DATABASE_STATE_IDLE;
 
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
