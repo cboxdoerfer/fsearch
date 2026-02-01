@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2025-08-31 22:01+0000\n"
+"PO-Revision-Date: 2026-02-02 01:01+0000\n"
 "Last-Translator: Telaneo <post@telaneo.net>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.13.1-dev\n"
+"X-Generator: Weblate 5.16-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -500,7 +500,7 @@ msgstr "Innstillinger"
 
 #: src/fsearch_preferences.ui:142
 msgid "Enable dark theme"
-msgstr "Ifør mørk drakt"
+msgstr "Bruk mørk drakt"
 
 #: src/fsearch_preferences.ui:157
 msgid "Enable client-side decorations (requires restart)"
@@ -516,7 +516,7 @@ msgstr "Husk vindusstørrelse"
 
 #: src/fsearch_preferences.ui:203
 msgid "Exit on Escape"
-msgstr "Avslutt ved Esc"
+msgstr "Avslutt når du trykker Esc"
 
 #: src/fsearch_preferences.ui:240
 msgid "with keyboard shortcuts or menu entries"
