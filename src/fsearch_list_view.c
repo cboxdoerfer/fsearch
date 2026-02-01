@@ -2093,7 +2093,7 @@ fsearch_list_view_update_sort_indicator(FsearchListView *view) {
     fsearch_list_view_reset_sort_indicator(view);
 
     gtk_image_set_from_icon_name(GTK_IMAGE(col->arrow),
-                                 view->sort_type == GTK_SORT_DESCENDING ? "pan-up-symbolic" : "pan-down-symbolic",
+                                 view->sort_type == GTK_SORT_DESCENDING ? "pan-down-symbolic" : "pan-up-symbolic",
                                  GTK_ICON_SIZE_BUTTON);
     gtk_widget_show(col->arrow);
 }
