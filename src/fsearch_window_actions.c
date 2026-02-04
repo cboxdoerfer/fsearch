@@ -38,6 +38,7 @@
 #include "fsearch_file_utils.h"
 #include "fsearch_list_view.h"
 #include "fsearch_statusbar.h"
+#include "fsearch_string_utils.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window_actions.h"
 #include "fsearch_preview.h"
@@ -171,6 +172,24 @@ append_name_to_string(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
+increment_condition_tally(guint *tally,
+                          FsearchDatabaseEntry *entry,
+                          bool (*predicate_func)(FsearchDatabaseEntry *)) {
+    if (!tally || !entry || !predicate_func) {
+        return;
+    }
+
+    if (predicate_func(entry)) {
+        ++(*tally);
+    }
+}
+
+static void
+increment_folder_tally(gpointer key, gpointer value, gpointer user_data) {
+    increment_condition_tally((guint *) user_data, value, db_entry_is_folder);
+}
+
+static void
 fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, gpointer user_data) {
     FsearchApplicationWindow *self = user_data;
 
@@ -237,6 +256,120 @@ save_fail:
     if (file_list) {
         g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
     }
+}
+
+static gboolean
+rename_on_dialog_key_press(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
+    if (event->keyval == GDK_KEY_Escape) {
+        gtk_dialog_response(GTK_DIALOG(widget), GTK_RESPONSE_CANCEL);
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_Return) {
+        gtk_dialog_response(GTK_DIALOG(widget), GTK_RESPONSE_OK);
+        return TRUE;
+    }
+    return FALSE;
+}
+
+typedef struct {
+    gint range_end_pos;
+    gboolean is_first_focus;
+} FsearchRenameFocusContext;
+
+// Replicate the behavior of Nautilus, where the initial selection excludes
+// the filename extension, when present
+static gboolean
+rename_on_entry_focus_in(GtkWidget *entry, GdkEvent *event, gpointer user_data) {
+    FsearchRenameFocusContext *context = (FsearchRenameFocusContext *) user_data;
+    if (context->is_first_focus) {
+        gtk_editable_select_region(GTK_EDITABLE(entry), 0, context->range_end_pos);
+        context->is_first_focus = FALSE;
+        return TRUE;
+    }
+
+    return FALSE;
+}
+
+static void
+fsearch_rename_selection(GSimpleAction *action, GVariant *variant, bool delete, gpointer user_data) {
+    FsearchApplicationWindow *self = user_data;
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(self));
+
+    const guint num_selected_rows = fsearch_application_window_get_num_selected(self);
+    if (num_selected_rows > 1) {
+        g_autoptr(GString) warning_message = g_string_new(NULL);
+        g_string_printf(warning_message, _("Renaming multiple entries at one time is not currently supported."));
+        ui_utils_run_gtk_dialog(GTK_WIDGET(self),
+                                GTK_MESSAGE_INFO,
+                                GTK_BUTTONS_OK,
+                                _("Renaming selection…"),
+                                warning_message->str);
+        return;
+    }
+
+    GList *file_list = NULL;
+    GtkDialog *dialog = NULL;
+
+    fsearch_application_window_selection_for_each(self, prepend_full_path_to_list, &file_list);
+    g_assert(file_list);
+    const gchar *original_name = g_path_get_basename(file_list->data);
+
+    GtkBuilder * builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/fsearch_rename_selection.ui");
+
+    GtkEntry * entry = GTK_ENTRY(gtk_builder_get_object(builder, "new_name_entry"));
+    g_assert(entry);
+    gtk_entry_set_text(entry, original_name);
+
+    const char *extension_pointer = fsearch_string_get_extension(original_name);
+    gint extension_index = (strlen(extension_pointer)) ? extension_index = extension_pointer - original_name - 1 : -1;
+    FsearchRenameFocusContext rename_context = { .is_first_focus = true, .range_end_pos = extension_index };
+    g_signal_connect(entry, "focus-in-event", G_CALLBACK(rename_on_entry_focus_in), &rename_context);
+
+    dialog = GTK_DIALOG(gtk_builder_get_object(builder, "FsearchRenameFileDialog"));
+    g_assert(dialog);
+
+    guint folder_tally = 0;
+    fsearch_application_window_selection_for_each(self, increment_folder_tally, &folder_tally);
+    gtk_window_set_title(GTK_WINDOW(dialog), folder_tally ? _("Rename Folder") : _("Rename File"));
+
+    g_signal_connect(dialog, "key-press-event", G_CALLBACK(rename_on_dialog_key_press), NULL);
+    gtk_window_set_transient_for(GTK_WINDOW(dialog), GTK_WINDOW(self));
+    gint response = gtk_dialog_run(GTK_DIALOG(dialog));
+
+    if (response == GTK_RESPONSE_OK) {
+        const gchar *new_name = gtk_entry_get_text(entry);
+        if (strlen(new_name) && strcmp(new_name, original_name)) {
+            g_autoptr(GString) error_message = g_string_new(NULL);
+
+            if (fsearch_file_utils_rename(file_list->data, new_name, error_message)) {
+                g_autoptr(GString) secondary_message = g_string_new(NULL);
+                g_string_printf(secondary_message, _("[Original name]: %s\n[New name]: %s\n\n%s"),
+                                original_name,
+                                new_name,
+                                _("The database needs to be updated before it becomes aware of this change! "
+                                  "This will be fixed with future updates."));
+                ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                              GTK_MESSAGE_INFO,
+                                              GTK_BUTTONS_OK,
+                                              _("Renamed selection."),
+                                              secondary_message->str,
+                                              G_CALLBACK(gtk_widget_destroy),
+                                              NULL);
+            }
+
+            if (error_message->len > 0) {
+                ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
+                                              GTK_MESSAGE_WARNING,
+                                              GTK_BUTTONS_OK,
+                                              _("Something went wrong."),
+                                              error_message->str,
+                                              G_CALLBACK(gtk_widget_destroy),
+                                              NULL);
+            }
+        }
+    }
+
+    gtk_widget_destroy(GTK_WIDGET(dialog));
+    g_list_free_full(g_steal_pointer(&file_list), (GDestroyNotify)g_free);
 }
 
 static void
@@ -328,6 +461,11 @@ fsearch_window_action_dbus_open_folder(FsearchApplicationWindow *win) {
 static void
 fsearch_window_action_move_to_trash(GSimpleAction *action, GVariant *variant, gpointer user_data) {
     fsearch_delete_selection(action, variant, false, user_data);
+}
+
+static void
+fsearch_window_action_file_rename(GSimpleAction *action, GVariant *variant, gpointer user_data) {
+    fsearch_rename_selection(action, variant, false, user_data);
 }
 
 static void
@@ -905,6 +1043,7 @@ static GActionEntry FsearchWindowActions[] = {
     {"file_properties", fsearch_window_action_file_properties},
     {"move_to_trash", fsearch_window_action_move_to_trash},
     {"delete_selection", fsearch_window_action_delete},
+    {"rename_selection", fsearch_window_action_file_rename},
     {"select_all", fsearch_window_action_select_all},
     {"deselect_all", fsearch_window_action_deselect_all},
     {"invert_selection", fsearch_window_action_invert_selection},
@@ -957,6 +1096,7 @@ fsearch_window_actions_update(FsearchApplicationWindow *self) {
     action_set_enabled(group, "copy_as_text_path_clipboard", num_rows_selected);
     action_set_enabled(group, "cut_clipboard", num_rows_selected);
     action_set_enabled(group, "delete_selection", FALSE);
+    action_set_enabled(group, "rename_selection", num_rows_selected >= 1 ? TRUE : FALSE);
     action_set_enabled(group, "file_properties", has_file_manager_on_bus && num_rows_selected >= 1 ? TRUE : FALSE);
     action_set_enabled(group, "move_to_trash", num_rows_selected);
     action_set_enabled(group, "open", num_rows_selected);
