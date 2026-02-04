@@ -105,6 +105,9 @@ typedef struct {
     GtkToggleButton *exclude_hidden_items_button;
     GtkEntry *exclude_files_entry;
     gchar *exclude_files_str;
+
+    // Applications page
+    GtkEntry *folder_open_cmd_entry;
 } FsearchPreferencesInterface;
 
 enum { COLUMN_NAME, NUM_COLUMNS };
@@ -509,6 +512,12 @@ preferences_ui_get_state(FsearchPreferencesInterface *ui) {
     g_clear_pointer(&new_config->exclude_files, g_strfreev);
     new_config->exclude_files = g_strsplit(gtk_entry_get_text(ui->exclude_files_entry), ";", -1);
 
+    g_clear_pointer(&new_config->folder_open_cmd, g_free);
+    const char *folder_open_cmd_text = gtk_entry_get_text(ui->folder_open_cmd_entry);
+    if (folder_open_cmd_text && strlen(folder_open_cmd_text) > 0) {
+        new_config->folder_open_cmd = g_strdup(folder_open_cmd_text);
+    }
+
     if (new_config->indexes) {
         g_list_free_full(g_steal_pointer(&new_config->indexes), (GDestroyNotify)fsearch_index_free);
     }
@@ -785,6 +794,12 @@ preferences_ui_init(FsearchPreferencesInterface *ui, FsearchPreferencesPage page
     if (new_config->exclude_files) {
         ui->exclude_files_str = g_strjoinv(";", new_config->exclude_files);
         gtk_entry_set_text(ui->exclude_files_entry, ui->exclude_files_str);
+    }
+
+    // Applications page
+    ui->folder_open_cmd_entry = GTK_ENTRY(builder_init_widget(ui->builder, "folder_open_cmd_entry", "help_folder_open_cmd"));
+    if (new_config->folder_open_cmd) {
+        gtk_entry_set_text(ui->folder_open_cmd_entry, new_config->folder_open_cmd);
     }
 }
 
