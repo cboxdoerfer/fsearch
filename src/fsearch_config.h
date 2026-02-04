@@ -27,7 +27,7 @@
 typedef struct _FsearchConfig FsearchConfig;
 
 typedef enum FsearchConfigActionAfterOpen {
-    ACTION_AFTER_OPEN_NOTHING = 0,
+    ACTION_AFTER_OPEN_NOTHING,
     ACTION_AFTER_OPEN_MINIMIZE,
     ACTION_AFTER_OPEN_CLOSE,
     N_ACTIONS_AFTER_OPEN,

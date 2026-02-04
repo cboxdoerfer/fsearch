@@ -22,7 +22,7 @@
 #include <gtk/gtk.h>
 
 typedef enum FsearchPreferencesPage {
-    PREF_PAGE_GENERAL = 0,
+    PREF_PAGE_GENERAL,
     PREF_PAGE_SEARCH,
     PREF_PAGE_DATABASE,
     N_PREF_PAGES,
