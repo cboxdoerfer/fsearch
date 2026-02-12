@@ -9,3 +9,6 @@ insert_final_newline = false
 max_line_length = 120
 tab_width = 8
 trim_trailing_whitespace = true
+
+[COMMIT_EDITMSG]
+max_line_length = 72
