@@ -31,6 +31,7 @@
 #include "fsearch_preferences_ui.h"
 #include "fsearch_ui_utils.h"
 #include "fsearch_window.h"
+#include "fsearch_window_actions.h"
 #include "icon_resources.h"
 #include "ui_resources.h"
 #include "fsearch_preview.h"
@@ -479,6 +480,7 @@ on_preferences_ui_finished(FsearchConfig *new_config) {
         }
         if (config_diff.listview_config_changed) {
             fsearch_application_window_update_listview_config(window);
+            fsearch_window_actions_update(window);
         }
     }
 

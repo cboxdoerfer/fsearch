@@ -214,6 +214,44 @@
                               </packing>
                             </child>
                             <child>
+                              <object class="GtkBox" id="diff_tool_box">
+                                <property name="visible">True</property>
+                                <property name="can-focus">False</property>
+                                <property name="has-tooltip">True</property>
+                                <property name="spacing">6</property>
+                                <child>
+                                  <object class="GtkLabel">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">False</property>
+                                    <property name="label" translatable="yes">Diff tool command:</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">0</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkEntry" id="diff_tool_entry">
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="hexpand">True</property>
+                                    <property name="placeholder-text" translatable="yes">e.g. meld</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">True</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">1</property>
+                                  </packing>
+                                </child>
+                              </object>
+                              <packing>
+                                <property name="expand">False</property>
+                                <property name="fill">True</property>
+                                <property name="position">5</property>
+                              </packing>
+                            </child>
+                            <child>
                               <object class="GtkFrame" id="action_after_file_open_frame">
                                 <property name="visible">True</property>
                                 <property name="can-focus">False</property>
@@ -612,6 +650,22 @@
                                     <property name="expand">False</property>
                                     <property name="fill">True</property>
                                     <property name="position">1</property>
+                                  </packing>
+                                </child>
+                                <child>
+                                  <object class="GtkCheckButton" id="show_dialog_failed_diff">
+                                    <property name="label" translatable="yes">diff tool failed to start</property>
+                                    <property name="visible">True</property>
+                                    <property name="can-focus">True</property>
+                                    <property name="receives-default">False</property>
+                                    <property name="has-tooltip">True</property>
+                                    <property name="margin-start">24</property>
+                                    <property name="draw-indicator">True</property>
+                                  </object>
+                                  <packing>
+                                    <property name="expand">False</property>
+                                    <property name="fill">True</property>
+                                    <property name="position">2</property>
                                   </packing>
                                 </child>
                               </object>
@@ -1508,6 +1562,30 @@ You can configure if those actions should be triggered when the file was opened 
                     <property name="name">page4</property>
                     <property name="title">page4</property>
                     <property name="position">4</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel" id="help_diff_tool">
+                    <property name="visible">True</property>
+                    <property name="can-focus">False</property>
+                    <property name="label" translatable="yes">&lt;b&gt;Diff tool command:&lt;/b&gt;
+
+Specifies the external application to use for comparing file contents. When a command is entered here, a 'Compare' action will become available in the right-click context menu when exactly two files are selected.
+
+FSearch executes this command and appends the two selected file paths as arguments. For example, if you enter &lt;i&gt;meld&lt;/i&gt;, the final command will look like this:
+&lt;i&gt;meld "/path/to/file1" "/path/to/file2"&lt;/i&gt;
+
+Popular comparison tools include: &lt;i&gt;meld, kdiff3, diffuse, code --diff&lt;/i&gt;
+
+The specified tool must be installed and available in your system's PATH.</property>
+                    <property name="use-markup">True</property>
+                    <property name="wrap">True</property>
+                    <property name="selectable">True</property>
+                  </object>
+                  <packing>
+                    <property name="name">page36</property>
+                    <property name="title">page36</property>
+                    <property name="position">36</property>
                   </packing>
                 </child>
                 <child>

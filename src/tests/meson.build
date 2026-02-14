@@ -3,6 +3,7 @@ test_query = executable('test_query', 'test_query.c', dependencies: libfsearch_d
 test_size_utils = executable('test_size_utils', 'test_size_utils.c', dependencies: libfsearch_dep)
 test_string_utils = executable('test_string_utils', 'test_string_utils.c', dependencies: libfsearch_dep)
 test_time_utils = executable('test_time_utils', 'test_time_utils.c', dependencies: libfsearch_dep)
+test_config = executable('test_config', 'test_config.c', dependencies: libfsearch_dep)
 
 test('test_array',
      test_array,
@@ -34,6 +35,13 @@ test('test_string_utils',
 )
 test('test_time_utils',
      test_time_utils,
+     env: [
+       'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
+       'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),
+     ],
+)
+test('test_config',
+     test_config,
      env: [
        'G_TEST_SRCDIR=@0@'.format(meson.current_source_dir()),
        'G_TEST_BUILDDIR=@0@'.format(meson.current_build_dir()),

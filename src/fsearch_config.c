@@ -246,9 +246,11 @@ config_load(FsearchConfig *config) {
 
         // Warning Dialogs
         config->show_dialog_failed_opening = config_load_boolean(key_file, "Dialogs", "show_dialog_failed_opening", true);
+        config->show_dialog_failed_diff = config_load_boolean(key_file, "Dialogs", "show_dialog_failed_diff", true);
 
         // Applications
         config->folder_open_cmd = config_load_string(key_file, "Applications", "folder_open_cmd", NULL);
+        config->diff_tool_cmd = config_load_string(key_file, "Applications", "diff_tool_cmd", NULL);
 
         // Window
         config->restore_window_size = config_load_boolean(key_file, "Interface", "restore_window_size", false);
@@ -368,6 +370,7 @@ config_load_default(FsearchConfig *config) {
     config->action_after_file_open_mouse = false;
     config->exit_on_escape = false;
     config->show_indexing_status = true;
+    config->diff_tool_cmd = NULL;
 
     // Columns
     config->show_listview_icons = true;
@@ -395,6 +398,7 @@ config_load_default(FsearchConfig *config) {
 
     // Warning Dialogs
     config->show_dialog_failed_opening = true;
+    config->show_dialog_failed_diff = true;
 
     // Window
     config->restore_window_size = false;
@@ -548,6 +552,7 @@ config_save(FsearchConfig *config) {
 
     // Warning Dialogs
     g_key_file_set_boolean(key_file, "Dialogs", "show_dialog_failed_opening", config->show_dialog_failed_opening);
+    g_key_file_set_boolean(key_file, "Dialogs", "show_dialog_failed_diff", config->show_dialog_failed_diff);
 
     // Window
     g_key_file_set_boolean(key_file, "Interface", "restore_window_size", config->restore_window_size);
@@ -585,6 +590,11 @@ config_save(FsearchConfig *config) {
     // Applications
     if (config->folder_open_cmd) {
         g_key_file_set_string(key_file, "Applications", "folder_open_cmd", config->folder_open_cmd);
+    }
+    if (config->diff_tool_cmd && *config->diff_tool_cmd) {
+        g_key_file_set_string(key_file, "Applications", "diff_tool_cmd", config->diff_tool_cmd);
+    } else {
+        g_key_file_remove_key(key_file, "Applications", "diff_tool_cmd", NULL);
     }
 
     // Search
@@ -737,7 +747,9 @@ config_cmp(FsearchConfig *c1, FsearchConfig *c2) {
         result.search_config_changed = true;
     }
     if (c1->highlight_search_terms != c2->highlight_search_terms || c1->show_listview_icons != c2->show_listview_icons
-        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips) {
+        || c1->single_click_open != c2->single_click_open || c1->enable_list_tooltips != c2->enable_list_tooltips
+        || g_strcmp0(c1->folder_open_cmd, c2->folder_open_cmd) != 0
+        || g_strcmp0(c1->diff_tool_cmd, c2->diff_tool_cmd) != 0) {
         result.listview_config_changed = true;
     }
 
@@ -772,6 +784,9 @@ config_copy(FsearchConfig *config) {
     if (config->folder_open_cmd) {
         copy->folder_open_cmd = g_strdup(config->folder_open_cmd);
     }
+    if (config->diff_tool_cmd) {
+        copy->diff_tool_cmd = g_strdup(config->diff_tool_cmd);
+    }
     if (config->sort_by) {
         copy->sort_by = g_strdup(config->sort_by);
     }
@@ -795,6 +810,7 @@ config_free(FsearchConfig *config) {
     g_assert(config);
 
     g_clear_pointer(&config->folder_open_cmd, free);
+    g_clear_pointer(&config->diff_tool_cmd, free);
     g_clear_pointer(&config->sort_by, free);
     g_clear_pointer(&config->filters, fsearch_filter_manager_free);
     if (config->indexes) {
