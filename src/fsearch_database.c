@@ -22,9 +22,13 @@
 
 #define G_LOG_DOMAIN "fsearch-database"
 
+#ifdef _WIN32
+#include "win32_compat.h"
+#else
 #include <dirent.h>
 #include <fcntl.h>
 #include <fnmatch.h>
+#endif
 #include <glib/gi18n.h>
 
 #ifdef HAVE_MALLOC_TRIM
@@ -36,11 +40,13 @@
 #include <stdio.h>
 #include <stdint.h>
 #include <string.h>
+#ifndef _WIN32
 #include <sys/file.h>
-#include <sys/stat.h>
 #include <sys/time.h>
-#include <sys/types.h>
 #include <unistd.h>
+#endif
+#include <sys/stat.h>
+#include <sys/types.h>
 
 #include "fsearch_database.h"
 #include "fsearch_database_entry.h"
@@ -1253,10 +1259,18 @@ db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry
 #ifdef AT_NO_AUTOMOUNT
         stat_flags |= AT_NO_AUTOMOUNT;
 #endif
+#ifdef _WIN32
+        // On Windows, use the full path since our dirfd implementation doesn't work properly
+        if (stat(path->str, &st)) {
+            g_debug("[db_scan] can't stat: %s", path->str);
+            continue;
+        }
+#else
         if (fstatat(dir_fd, dent->d_name, &st, stat_flags)) {
             g_debug("[db_scan] can't stat: %s", path->str);
             continue;
         }
+#endif
 
         if (walk_context->one_filesystem && walk_context->root_device_id != st.st_dev) {
             g_debug("[db_scan] different filesystem, skipping: %s", path->str);
@@ -1304,7 +1318,12 @@ db_scan_folder(FsearchDatabase *db,
                GCancellable *cancellable,
                void (*status_cb)(const char *)) {
     g_assert(dname);
+#ifdef _WIN32
+    // On Windows, paths can start with drive letters like "C:\"
+    g_assert(dname && strlen(dname) > 0);
+#else
     g_assert(dname[0] == G_DIR_SEPARATOR);
+#endif
     g_debug("[db_scan] scan path: %s", dname);
 
     if (!g_file_test(dname, G_FILE_TEST_IS_DIR)) {
@@ -1313,10 +1332,12 @@ db_scan_folder(FsearchDatabase *db,
     }
 
     g_autoptr(GString) path = g_string_new(dname);
+#ifndef _WIN32
     // remove leading path separator '/' for root directory
     if (strcmp(path->str, G_DIR_SEPARATOR_S) == 0) {
         g_string_erase(path, 0, 1);
     }
+#endif
 
     g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
