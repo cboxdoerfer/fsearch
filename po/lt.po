@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2024-04-21 22:07+0000\n"
+"PO-Revision-Date: 2026-03-08 17:09+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
 "translations/lt/>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || "
-"n%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
-"X-Generator: Weblate 5.5-dev\n"
+"Plural-Forms: nplurals=4; plural=n==1 ? 0 : n%10>=2 && (n%100<10 || n%100>"
+"=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:5
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -226,13 +226,15 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Improve support for non-Linux systems"
-msgstr ""
+msgstr "Pagerintas ne „Linux“ sistemų palaikymas"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
+"Pridėta parinktis išjungti FSearch, kai paspaudžiamas atšaukimo („Escape“) "
+"klavišas, užuot suskleidžiant programą"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Exclude '/proc' and '/sys' by default"
@@ -241,10 +243,12 @@ msgstr ""
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
+"Atverti kontekstinį meniu, kai paspaudžiami „Meniu“ ar „Lyg2 + F10“ klavišai"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
+"ir daugybė klaidų pataisymų, vertimų atnaujinimų ir mažesnių patobulinimų"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Initial release."
@@ -915,13 +919,6 @@ msgstr ""
 "kelias."
 
 #: src/fsearch_preferences.ui:1624
-#, fuzzy
-#| msgid ""
-#| "<b>Single click to open:</b>\n"
-#| "\n"
-#| "If enabled, a single click will open the selected file/folder. If you "
-#| "only want to select a file/folder while this setting is active, you need "
-#| "to a hold <i>Ctrl</i> at the same time while clicking the file/folder."
 msgid ""
 "<b>Single click to open:</b>\n"
 "\n"
@@ -929,11 +926,12 @@ msgid ""
 "want to select a file/folder while this setting is active, you need to hold "
 "<i>Ctrl</i> at the same time while clicking the file/folder."
 msgstr ""
-"<b>Atidaryti vienu paspaudimu:</b>\n"
+"<b>Atvėrimas vienu spustelėjimu:</b>\n"
 "\n"
-"Jei įgalinta, vienu paspaudimu atidaromas pasirinktas failas / aplankas. Jei "
-"norite pasirinkti failą / aplanką tik tada, kai šis parametras yra aktyvus, "
-"spustelėdami failą / aplanką, tuo pačiu metu laikydami <i>Ctrl</i>."
+"Jei įjungta, vienkartis spustelėjimas atvers pasirinktą failą/aplanką. Jei "
+"šiam nustatymui esant aktyviam norėsite tik žymėti failą ar aplanką, tada, "
+"spusteldami ant failo/aplanko, turėsite tuo pačiu metu laikyti nuspaustą <i>"
+"Vald</i> klavišą."
 
 #: src/fsearch_preferences.ui:1641
 msgid ""
