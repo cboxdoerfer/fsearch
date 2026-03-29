@@ -795,7 +795,7 @@ index_store_start_monitoring(FsearchDatabaseIndexStore *store) {
 // region Database file
 
 #define DATABASE_MAJOR_VERSION 2
-#define DATABASE_MINOR_VERSION 0
+#define DATABASE_MINOR_VERSION 2
 #define DATABASE_MAGIC_NUMBER "FSDB"
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FILE, fclose)
 
@@ -1322,15 +1322,31 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
     }
 
     for (int i = 0; i < num_excludes; ++i) {
-        uint32_t type = 0;
-        if (!database_file_read_element(&type, sizeof(type), fp)) {
+        uint32_t record_type = 0;
+        if (!database_file_read_element(&record_type, sizeof(record_type), fp)) {
             g_debug("[db_load] failed to read type of exclude");
             return false;
         }
 
-        g_autofree char *path = database_file_read_string(fp, 4 * PATH_MAX);
-        if (!path) {
-            g_debug("[db_load] failed to read path of exclude");
+        uint8_t exclude_type = FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED;
+        uint8_t scope = FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH;
+        uint8_t target = FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH;
+        if (!database_file_read_element(&exclude_type, sizeof(exclude_type), fp)) {
+            g_debug("[db_load] failed to read exclude type");
+            return false;
+        }
+        if (!database_file_read_element(&scope, sizeof(scope), fp)) {
+            g_debug("[db_load] failed to read exclude scope");
+            return false;
+        }
+        if (!database_file_read_element(&target, sizeof(target), fp)) {
+            g_debug("[db_load] failed to read exclude target");
+            return false;
+        }
+
+        g_autofree char *pattern = database_file_read_string(fp, 4 * PATH_MAX);
+        if (!pattern) {
+            g_debug("[db_load] failed to read pattern of exclude");
             return false;
         }
 
@@ -1340,9 +1356,21 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
             return false;
         }
 
-        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(path, is_active);
+        g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(pattern,
+                                                                                 is_active,
+                                                                                 (FsearchDatabaseExcludeType)exclude_type,
+                                                                                 (FsearchDatabaseExcludeMatchScope)scope,
+                                                                                 (FsearchDatabaseExcludeTarget)target);
         fsearch_database_exclude_manager_add(exclude_manager, exclude);
     }
+
+    uint8_t exclude_hidden = 0;
+    if (!database_file_read_element(&exclude_hidden, sizeof(exclude_hidden), fp)) {
+        g_debug("[db_load] failed to read exclude hidden setting");
+        return false;
+    }
+    fsearch_database_exclude_manager_set_exclude_hidden(exclude_manager, exclude_hidden);
+
     return true;
 }
 
@@ -1647,23 +1675,54 @@ database_file_save_excludes(FILE *fp, FsearchDatabaseIndexStore *store, bool *wr
     for (int i = 0; i < num_excludes; ++i) {
         FsearchDatabaseExclude *exclude = g_ptr_array_index(excludes, i);
 
-        const uint32_t type = 0;
-        DB_WRITE_VAL(fp, type, "failed to write exclude type: %d", type, write_failed, bytes_written);
+        const uint32_t record_type = 0;
+        DB_WRITE_VAL(fp,
+                     record_type,
+                     "failed to write exclude record type: %d",
+                     record_type,
+                     write_failed,
+                     bytes_written);
 
-        const char *path = fsearch_database_exclude_get_path(exclude);
-        const uint32_t path_len = strlen(path);
-        DB_WRITE_STRING(fp, path, path_len, "failed to write exclude path: %s", path, write_failed, bytes_written);
+        const uint8_t exclude_type = fsearch_database_exclude_get_exclude_type(exclude);
+        DB_WRITE_VAL(fp,
+                     exclude_type,
+                     "failed to write exclude type: %d",
+                     exclude_type,
+                     write_failed,
+                     bytes_written);
+        const uint8_t match_scope = fsearch_database_exclude_get_match_scope(exclude);
+        DB_WRITE_VAL(fp,
+                     match_scope,
+                     "failed to write exclude scope: %d",
+                     match_scope,
+                     write_failed,
+                     bytes_written);
+        const uint8_t target = fsearch_database_exclude_get_target(exclude);
+        DB_WRITE_VAL(fp, target, "failed to write exclude target: %d", target, write_failed, bytes_written);
+
+        const char *pattern = fsearch_database_exclude_get_pattern(exclude);
+        const uint32_t pattern_len = strlen(pattern);
+        DB_WRITE_STRING(fp,
+                        pattern,
+                        pattern_len,
+                        "failed to write exclude pattern: %s",
+                        pattern,
+                        write_failed,
+                        bytes_written);
 
         const uint8_t is_active = fsearch_database_exclude_get_active(exclude);
         DB_WRITE_VAL(fp, is_active, "failed to write exclude is_active: %d", is_active, write_failed, bytes_written);
     }
-    return bytes_written;
-}
 
-static size_t
-database_file_save_exclude_pattern(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
-    // TODO
-    return 0;
+    const uint8_t exclude_hidden = fsearch_database_exclude_manager_get_exclude_hidden(store->exclude_manager);
+    DB_WRITE_VAL(fp,
+                 exclude_hidden,
+                 "failed to write exclude_hidden setting: %d",
+                 exclude_hidden,
+                 write_failed,
+                 bytes_written);
+
+    return bytes_written;
 }
 
 static bool
@@ -1775,11 +1834,6 @@ database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
     }
     g_debug("[db_save] saving excludes...");
     bytes_written += database_file_save_excludes(fp, store, &write_failed);
-    if (write_failed == true) {
-        goto save_fail;
-    }
-    g_debug("[db_save] saving exclude pattern...");
-    bytes_written += database_file_save_exclude_pattern(fp, store, &write_failed);
     if (write_failed == true) {
         goto save_fail;
     }

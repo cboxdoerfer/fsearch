@@ -267,6 +267,15 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         return;
     }
 
+    // Check if entry must be excluded (now that we know whether it's a file or folder)
+    g_autofree char *basename = event->name ? NULL : g_path_get_basename(event->path->str);
+    if (fsearch_database_exclude_manager_excludes(self->exclude_manager,
+                                                  event->path->str,
+                                                  event->name ? event->name->str : basename,
+                                                  is_dir)) {
+        g_debug("[index-%d] monitor create excluded: %s", self->id, event->path->str);
+        return;
+    }
     g_autoptr(DynamicArray) folders = NULL;
     g_autoptr(DynamicArray) files = NULL;
 

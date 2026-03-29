@@ -371,8 +371,7 @@
                                                 <property name="sensitive">False</property>
                                                 <property name="can-focus">True</property>
                                                 <property name="receives-default">True</property>
-                                                <property name="tooltip-text" translatable="yes">Add path to be included
-                                                    in database
+                                                <property name="tooltip-text" translatable="yes">Add fixed path exclude
                                                 </property>
                                                 <property name="image">exclude_add_path_image</property>
                                                 <property name="always-show-image">True</property>
@@ -434,8 +433,7 @@
                                                 <property name="visible">True</property>
                                                 <property name="can-focus">True</property>
                                                 <property name="receives-default">True</property>
-                                                <property name="tooltip-text" translatable="yes">Add path to be excluded
-                                                    from database
+                                                <property name="tooltip-text" translatable="yes">Add exclude rule
                                                 </property>
                                                 <property name="image">exculde_add_image</property>
                                                 <property name="always-show-image">True</property>
@@ -485,49 +483,6 @@
                             </packing>
                         </child>
                         <child>
-                            <object class="GtkBox" id="exclude_files_box">
-                                <property name="visible">True</property>
-                                <property name="can-focus">False</property>
-                                <property name="spacing">4</property>
-                                <child>
-                                    <object class="GtkLabel">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">False</property>
-                                        <property name="tooltip-text" translatable="yes">Supports wildcards. Multiple
-                                            entries must be separated by ';'
-                                        </property>
-                                        <property name="label" translatable="yes">Exclude files:</property>
-                                    </object>
-                                    <packing>
-                                        <property name="expand">False</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">0</property>
-                                    </packing>
-                                </child>
-                                <child>
-                                    <object class="GtkEntry" id="exclude_files_entry">
-                                        <property name="visible">True</property>
-                                        <property name="can-focus">True</property>
-                                        <property name="tooltip-text" translatable="yes">Supports wildcards. Multiple
-                                            entries must be separated by ';'
-                                        </property>
-                                        <property name="placeholder-text" translatable="yes">e.g. ".git;*.tmp"
-                                        </property>
-                                    </object>
-                                    <packing>
-                                        <property name="expand">True</property>
-                                        <property name="fill">True</property>
-                                        <property name="position">1</property>
-                                    </packing>
-                                </child>
-                            </object>
-                            <packing>
-                                <property name="expand">False</property>
-                                <property name="fill">True</property>
-                                <property name="position">1</property>
-                            </packing>
-                        </child>
-                        <child>
                             <object class="GtkCheckButton" id="exclude_hidden_items_button">
                                 <property name="label" translatable="yes">Exclude hidden files and folders</property>
                                 <property name="visible">True</property>
@@ -539,7 +494,7 @@
                             <packing>
                                 <property name="expand">False</property>
                                 <property name="fill">True</property>
-                                <property name="position">2</property>
+                                <property name="position">1</property>
                             </packing>
                         </child>
                     </object>

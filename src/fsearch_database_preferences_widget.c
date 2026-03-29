@@ -24,9 +24,10 @@ struct _FsearchDatabasePreferencesWidget {
     GtkWidget *exclude_path_entry;
     GtkTreeSelection *exclude_selection;
     GtkToggleButton *exclude_hidden_items_button;
-    GtkEntry *exclude_files_entry;
-
-    gchar *exclude_files_str;
+    // Models for dropdown menus
+    GtkListStore *exclude_type_model;
+    GtkListStore *exclude_scope_model;
+    GtkListStore *exclude_target_model;
 };
 
 enum {
@@ -38,7 +39,14 @@ enum {
     NUM_INCLUDE_COLUMNS
 };
 
-enum { COL_EXCLUDE_ACTIVE, COL_EXCLUDE_PATH, NUM_EXCLUDE_COLUMNS };
+enum {
+    COL_EXCLUDE_ACTIVE,
+    COL_EXCLUDE_PATTERN,
+    COL_EXCLUDE_TYPE,
+    COL_EXCLUDE_SCOPE,
+    COL_EXCLUDE_TARGET,
+    NUM_EXCLUDE_COLUMNS
+};
 
 enum { PROP_0, PROP_DATABASE, NUM_PROPERTIES };
 
@@ -191,15 +199,37 @@ on_column_toggled(gchar *path_str, GtkTreeModel *model, int col) {
 }
 
 static void
-exclude_append_row(GtkListStore *store, gboolean active, const char *path) {
+exclude_append_row(GtkListStore *store,
+                   gboolean active,
+                   const char *pattern,
+                   FsearchDatabaseExcludeType type,
+                   FsearchDatabaseExcludeMatchScope scope,
+                   FsearchDatabaseExcludeTarget target) {
     GtkTreeIter iter;
     gtk_list_store_append(store, &iter);
-    gtk_list_store_set(store, &iter, COL_EXCLUDE_ACTIVE, active, COL_EXCLUDE_PATH, path, -1);
+    gtk_list_store_set(store,
+                       &iter,
+                       COL_EXCLUDE_ACTIVE,
+                       active,
+                       COL_EXCLUDE_PATTERN,
+                       pattern,
+                       COL_EXCLUDE_TYPE,
+                       type,
+                       COL_EXCLUDE_SCOPE,
+                       scope,
+                       COL_EXCLUDE_TARGET,
+                       target,
+                       -1);
 }
 
 static void
 on_exclude_append_new_row(GtkListStore *store, const char *path) {
-    exclude_append_row(store, TRUE, path);
+    exclude_append_row(store,
+                       TRUE,
+                       path,
+                       FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                       FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS);
 }
 
 void
@@ -262,11 +292,14 @@ on_include_append_new_row(GtkListStore *store, const char *path) {
 
 static void
 on_exclude_add_button_clicked(GtkButton *button, gpointer user_data) {
+    (void)button;
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(user_data);
-    FsearchPreferencesFileChooserContext *ctx = g_slice_new0(FsearchPreferencesFileChooserContext);
-    ctx->model = self->exclude_model;
-    ctx->row_add_func = on_exclude_append_new_row;
-    run_file_chooser_dialog(button, ctx);
+    exclude_append_row(self->exclude_model,
+                       TRUE,
+                       "",
+                       FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED,
+                       FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH,
+                       FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH);
 }
 
 static void
@@ -294,6 +327,157 @@ static void
 on_column_exclude_active_toggled(GtkCellRendererToggle *cell, gchar *path_str, gpointer data) {
     GtkTreeModel *exclude_model = data;
     on_column_toggled(path_str, exclude_model, COL_EXCLUDE_ACTIVE);
+}
+
+static const char *
+exclude_type_to_label(FsearchDatabaseExcludeType type) {
+    switch (type) {
+    case FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED:
+        return _("Literal");
+    case FSEARCH_DATABASE_EXCLUDE_TYPE_WILDCARD:
+        return _("Wildcard");
+    case FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX:
+        return _("Regex");
+    default:
+        g_assert_not_reached();
+    }
+}
+
+static FsearchDatabaseExcludeType
+exclude_type_from_label(const char *label) {
+    if (g_strcmp0(label, exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_WILDCARD)) == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TYPE_WILDCARD;
+    }
+    if (g_strcmp0(label, exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX)) == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX;
+    }
+    return FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED;
+}
+
+static const char *
+exclude_scope_to_label(FsearchDatabaseExcludeMatchScope scope) {
+    switch (scope) {
+    case FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH:
+        return _("Full Path");
+    case FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME:
+        return _("Basename");
+    default:
+        g_assert_not_reached();
+    }
+}
+
+static FsearchDatabaseExcludeMatchScope
+exclude_scope_from_label(const char *label) {
+    if (g_strcmp0(label, exclude_scope_to_label(FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME)) == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME;
+    }
+    return FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH;
+}
+
+static const char *
+exclude_target_to_label(FsearchDatabaseExcludeTarget target) {
+    switch (target) {
+    case FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH:
+        return _("Files & Folders");
+    case FSEARCH_DATABASE_EXCLUDE_TARGET_FILES:
+        return _("Files");
+    case FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS:
+        return _("Folders");
+    default:
+        g_assert_not_reached();
+    }
+}
+
+static FsearchDatabaseExcludeTarget
+exclude_target_from_label(const char *label) {
+    if (g_strcmp0(label, exclude_target_to_label(FSEARCH_DATABASE_EXCLUDE_TARGET_FILES)) == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TARGET_FILES;
+    }
+    if (g_strcmp0(label, exclude_target_to_label(FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS)) == 0) {
+        return FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS;
+    }
+    return FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH;
+}
+
+static void
+exclude_type_cell_data_func(GtkTreeViewColumn *column,
+                            GtkCellRenderer *renderer,
+                            GtkTreeModel *model,
+                            GtkTreeIter *iter,
+                            gpointer user_data) {
+    gint type = FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED;
+    gtk_tree_model_get(model, iter, COL_EXCLUDE_TYPE, &type, -1);
+    g_object_set(renderer, "text", exclude_type_to_label((FsearchDatabaseExcludeType)type), NULL);
+}
+
+static void
+exclude_scope_cell_data_func(GtkTreeViewColumn *column,
+                             GtkCellRenderer *renderer,
+                             GtkTreeModel *model,
+                             GtkTreeIter *iter,
+                             gpointer user_data) {
+    gint scope = FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH;
+    gtk_tree_model_get(model, iter, COL_EXCLUDE_SCOPE, &scope, -1);
+    g_object_set(renderer, "text", exclude_scope_to_label((FsearchDatabaseExcludeMatchScope)scope), NULL);
+}
+
+static void
+exclude_target_cell_data_func(GtkTreeViewColumn *column,
+                              GtkCellRenderer *renderer,
+                              GtkTreeModel *model,
+                              GtkTreeIter *iter,
+                              gpointer user_data) {
+    gint target = FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH;
+    gtk_tree_model_get(model, iter, COL_EXCLUDE_TARGET, &target, -1);
+    g_object_set(renderer, "text", exclude_target_to_label((FsearchDatabaseExcludeTarget)target), NULL);
+}
+
+static void
+on_column_exclude_pattern_edited(GtkCellRendererText *cell, gchar *path_str, gchar *new_text, gpointer user_data) {
+    GtkListStore *exclude_model = user_data;
+    if (!new_text || *new_text == '\0') {
+        return;
+    }
+
+    GtkTreeIter iter = {};
+    g_autoptr(GtkTreePath) path = gtk_tree_path_new_from_string(path_str);
+    if (!gtk_tree_model_get_iter(GTK_TREE_MODEL(exclude_model), &iter, path)) {
+        return;
+    }
+    gtk_list_store_set(exclude_model, &iter, COL_EXCLUDE_PATTERN, new_text, -1);
+}
+
+static void
+on_column_exclude_type_edited(GtkCellRendererText *cell, gchar *path_str, gchar *new_text, gpointer user_data) {
+    GtkListStore *exclude_model = user_data;
+    GtkTreeIter iter = {};
+    g_autoptr(GtkTreePath) path = gtk_tree_path_new_from_string(path_str);
+    if (!gtk_tree_model_get_iter(GTK_TREE_MODEL(exclude_model), &iter, path)) {
+        return;
+    }
+    gtk_list_store_set(exclude_model, &iter, COL_EXCLUDE_TYPE, exclude_type_from_label(new_text), -1);
+}
+
+static void
+on_column_exclude_scope_edited(GtkCellRendererText *cell, gchar *path_str, gchar *new_text, gpointer user_data) {
+    GtkListStore *exclude_model = user_data;
+    GtkTreeIter iter = {};
+    g_autoptr(GtkTreePath) path = gtk_tree_path_new_from_string(path_str);
+    if (!gtk_tree_model_get_iter(GTK_TREE_MODEL(exclude_model), &iter, path)) {
+        return;
+    }
+    gtk_list_store_set(exclude_model, &iter, COL_EXCLUDE_SCOPE, exclude_scope_from_label(new_text), -1);
+}
+
+static void
+on_column_exclude_target_edited(GtkCellRendererText *cell, gchar *path_str, gchar *new_text, gpointer user_data) {
+    GtkListStore *exclude_model = user_data;
+    GtkTreeIter iter = {};
+    g_autoptr(GtkTreePath) path = gtk_tree_path_new_from_string(path_str);
+    if (!gtk_tree_model_get_iter(GTK_TREE_MODEL(exclude_model), &iter, path)) {
+        return;
+    }
+    gtk_list_store_set(exclude_model, &iter, COL_EXCLUDE_TARGET, exclude_target_from_label(new_text), -1);
 }
 
 static void
@@ -376,8 +560,42 @@ column_toggle_append(GtkTreeView *view,
 }
 
 static void
+column_text_editable_append(GtkTreeView *view,
+                            const char *name,
+                            gboolean expand,
+                            int id,
+                            GCallback cb,
+                            gpointer user_data) {
+    GtkCellRenderer *renderer = gtk_cell_renderer_text_new();
+    g_object_set(renderer, "editable", TRUE, NULL);
+    g_signal_connect(renderer, "edited", cb, user_data);
+
+    GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes(name, renderer, "text", id, NULL);
+    gtk_tree_view_column_set_expand(col, expand);
+    gtk_tree_view_column_set_sort_column_id(col, id);
+    gtk_tree_view_append_column(view, col);
+}
+
+static void
+column_combo_append(GtkTreeView *view,
+                    const char *name,
+                    GtkTreeModel *combo_model,
+                    GCallback edited_cb,
+                    GCallback cell_data_cb,
+                    gpointer user_data) {
+    GtkCellRenderer *renderer = gtk_cell_renderer_combo_new();
+    g_object_set(renderer, "editable", TRUE, "model", combo_model, "text-column", 0, "has-entry", FALSE, NULL);
+    g_signal_connect(renderer, "edited", edited_cb, user_data);
+
+    GtkTreeViewColumn *col = gtk_tree_view_column_new_with_attributes(name, renderer, NULL);
+    gtk_tree_view_column_set_cell_data_func(col, renderer, (GtkTreeCellDataFunc)cell_data_cb, NULL, NULL);
+    gtk_tree_view_append_column(view, col);
+}
+
+static void
 init_exclude_page(FsearchDatabasePreferencesWidget *self) {
-    self->exclude_model = gtk_list_store_new(NUM_EXCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING);
+    self->exclude_model =
+        gtk_list_store_new(NUM_EXCLUDE_COLUMNS, G_TYPE_BOOLEAN, G_TYPE_STRING, G_TYPE_INT, G_TYPE_INT, G_TYPE_INT);
     gtk_tree_view_set_model(self->exclude_list, GTK_TREE_MODEL(self->exclude_model));
     column_toggle_append(self->exclude_list,
                          GTK_TREE_MODEL(self->exclude_model),
@@ -385,7 +603,86 @@ init_exclude_page(FsearchDatabasePreferencesWidget *self) {
                          COL_EXCLUDE_ACTIVE,
                          G_CALLBACK(on_column_exclude_active_toggled),
                          self->exclude_model);
-    column_text_append(self->exclude_list, _("Path"), TRUE, COL_EXCLUDE_PATH);
+    column_text_editable_append(self->exclude_list,
+                                _("Pattern"),
+                                TRUE,
+                                COL_EXCLUDE_PATTERN,
+                                G_CALLBACK(on_column_exclude_pattern_edited),
+                                self->exclude_model);
+
+    self->exclude_type_model = gtk_list_store_new(1, G_TYPE_STRING);
+    self->exclude_scope_model = gtk_list_store_new(1, G_TYPE_STRING);
+    self->exclude_target_model = gtk_list_store_new(1, G_TYPE_STRING);
+
+    GtkTreeIter iter = {};
+    gtk_list_store_append(self->exclude_type_model, &iter);
+    gtk_list_store_set(self->exclude_type_model,
+                       &iter,
+                       0,
+                       exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED),
+                       -1);
+    gtk_list_store_append(self->exclude_type_model, &iter);
+    gtk_list_store_set(self->exclude_type_model,
+                       &iter,
+                       0,
+                       exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_WILDCARD),
+                       -1);
+    gtk_list_store_append(self->exclude_type_model, &iter);
+    gtk_list_store_set(self->exclude_type_model,
+                       &iter,
+                       0,
+                       exclude_type_to_label(FSEARCH_DATABASE_EXCLUDE_TYPE_REGEX),
+                       -1);
+
+    gtk_list_store_append(self->exclude_scope_model, &iter);
+    gtk_list_store_set(self->exclude_scope_model,
+                       &iter,
+                       0,
+                       exclude_scope_to_label(FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH),
+                       -1);
+    gtk_list_store_append(self->exclude_scope_model, &iter);
+    gtk_list_store_set(self->exclude_scope_model,
+                       &iter,
+                       0,
+                       exclude_scope_to_label(FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_BASENAME),
+                       -1);
+    gtk_list_store_append(self->exclude_target_model, &iter);
+    gtk_list_store_set(self->exclude_target_model,
+                       &iter,
+                       0,
+                       exclude_target_to_label(FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH),
+                       -1);
+    gtk_list_store_append(self->exclude_target_model, &iter);
+    gtk_list_store_set(self->exclude_target_model,
+                       &iter,
+                       0,
+                       exclude_target_to_label(FSEARCH_DATABASE_EXCLUDE_TARGET_FILES),
+                       -1);
+    gtk_list_store_append(self->exclude_target_model, &iter);
+    gtk_list_store_set(self->exclude_target_model,
+                       &iter,
+                       0,
+                       exclude_target_to_label(FSEARCH_DATABASE_EXCLUDE_TARGET_FOLDERS),
+                       -1);
+
+    column_combo_append(self->exclude_list,
+                        _("Type"),
+                        GTK_TREE_MODEL(self->exclude_type_model),
+                        G_CALLBACK(on_column_exclude_type_edited),
+                        G_CALLBACK(exclude_type_cell_data_func),
+                        self->exclude_model);
+    column_combo_append(self->exclude_list,
+                        _("Match"),
+                        GTK_TREE_MODEL(self->exclude_scope_model),
+                        G_CALLBACK(on_column_exclude_scope_edited),
+                        G_CALLBACK(exclude_scope_cell_data_func),
+                        self->exclude_model);
+    column_combo_append(self->exclude_list,
+                        _("Applies To"),
+                        GTK_TREE_MODEL(self->exclude_target_model),
+                        G_CALLBACK(on_column_exclude_target_edited),
+                        G_CALLBACK(exclude_target_cell_data_func),
+                        self->exclude_model);
 
     // Workaround for GTK bug: https://gitlab.gnome.org/GNOME/gtk/-/issues/3084
     g_signal_connect(self->exclude_list, "realize", G_CALLBACK(gtk_tree_view_columns_autosize), NULL);
@@ -465,8 +762,13 @@ populate_exclude_page(FsearchDatabasePreferencesWidget *self) {
         FsearchDatabaseExclude *exclude = g_ptr_array_index(excludes, i);
         exclude_append_row(self->exclude_model,
                            fsearch_database_exclude_get_active(exclude),
-                           fsearch_database_exclude_get_path(exclude));
+                           fsearch_database_exclude_get_pattern(exclude),
+                           fsearch_database_exclude_get_exclude_type(exclude),
+                           fsearch_database_exclude_get_match_scope(exclude),
+                           fsearch_database_exclude_get_target(exclude));
     }
+    gtk_toggle_button_set_active(self->exclude_hidden_items_button,
+                                 fsearch_database_exclude_manager_get_exclude_hidden(exclude_manager));
 }
 
 static void
@@ -505,6 +807,9 @@ fsearch_database_preferences_widget_dispose(GObject *object) {
     FsearchDatabasePreferencesWidget *self = FSEARCH_DATABASE_PREFERENCES_WIDGET(object);
 
     g_clear_object(&self->db);
+    g_clear_object(&self->exclude_type_model);
+    g_clear_object(&self->exclude_scope_model);
+    g_clear_object(&self->exclude_target_model);
 
     G_OBJECT_CLASS(fsearch_database_preferences_widget_parent_class)->dispose(object);
 }
@@ -631,16 +936,39 @@ fsearch_database_preferences_widget_get_exclude_manager(FsearchDatabasePreferenc
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
 
     while (valid) {
-        g_autofree gchar *path = NULL;
+        g_autofree gchar *pattern = NULL;
         gboolean active = FALSE;
-        gtk_tree_model_get(model, &iter, COL_EXCLUDE_PATH, &path, COL_EXCLUDE_ACTIVE, &active, -1);
+        gint type = FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED;
+        gint scope = FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH;
+        gint target = FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH;
+        gtk_tree_model_get(model,
+                           &iter,
+                           COL_EXCLUDE_PATTERN,
+                           &pattern,
+                           COL_EXCLUDE_ACTIVE,
+                           &active,
+                           COL_EXCLUDE_TYPE,
+                           &type,
+                           COL_EXCLUDE_SCOPE,
+                           &scope,
+                           COL_EXCLUDE_TARGET,
+                           &target,
+                           -1);
 
-        if (path) {
-            fsearch_database_exclude_manager_add(exclude_manager, fsearch_database_exclude_new(path, active));
+        if (pattern && *pattern) {
+            fsearch_database_exclude_manager_add(exclude_manager,
+                                                 fsearch_database_exclude_new(pattern,
+                                                                              active,
+                                                                              (FsearchDatabaseExcludeType)type,
+                                                                              (FsearchDatabaseExcludeMatchScope)scope,
+                                                                              (FsearchDatabaseExcludeTarget)target));
         }
 
         valid = gtk_tree_model_iter_next(model, &iter);
     }
+    fsearch_database_exclude_manager_set_exclude_hidden(
+        exclude_manager,
+        gtk_toggle_button_get_active(self->exclude_hidden_items_button));
 
     return g_steal_pointer(&exclude_manager);
 }

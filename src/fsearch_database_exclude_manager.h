@@ -22,12 +22,6 @@ fsearch_database_exclude_manager_new_with_defaults(void);
 GPtrArray *
 fsearch_database_exclude_manager_get_excludes(FsearchDatabaseExcludeManager *manager);
 
-GPtrArray *
-fsearch_database_exclude_manager_get_file_patterns(FsearchDatabaseExcludeManager *manager);
-
-GPtrArray *
-fsearch_database_exclude_manager_get_directory_patterns(FsearchDatabaseExcludeManager *manager);
-
 gboolean
 fsearch_database_exclude_manager_get_exclude_hidden(FsearchDatabaseExcludeManager *self);
 
@@ -35,22 +29,10 @@ void
 fsearch_database_exclude_manager_add(FsearchDatabaseExcludeManager *manager, FsearchDatabaseExclude *exclude);
 
 void
-fsearch_database_exclude_manager_add_file_pattern(FsearchDatabaseExcludeManager *manager, const char *pattern);
-
-void
-fsearch_database_exclude_manager_add_directory_pattern(FsearchDatabaseExcludeManager *manager, const char *pattern);
-
-void
 fsearch_database_exclude_manager_set_exclude_hidden(FsearchDatabaseExcludeManager *self, gboolean exclude_hidden);
 
 void
 fsearch_database_exclude_manager_remove(FsearchDatabaseExcludeManager *manager, FsearchDatabaseExclude *exclude);
-
-void
-fsearch_database_exclude_manager_remove_file_pattern(FsearchDatabaseExcludeManager *manager, const char *pattern);
-
-void
-fsearch_database_exclude_manager_remove_directory_pattern(FsearchDatabaseExcludeManager *manager, const char *pattern);
 
 gboolean
 fsearch_database_exclude_manager_excludes(FsearchDatabaseExcludeManager *manager,
