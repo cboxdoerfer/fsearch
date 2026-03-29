@@ -17,21 +17,31 @@ libfsearch_sources = [
     'fsearch_clipboard.c',
     'fsearch_config.c',
     'fsearch_database.c',
+    'fsearch_database_entries_container.c',
     'fsearch_database_entry.c',
+    'fsearch_database_entry_info.c',
+    'fsearch_database_exclude.c',
+    'fsearch_database_exclude_manager.c',
+    'fsearch_database_include.c',
+    'fsearch_database_include_manager.c',
     'fsearch_database_index.c',
+    'fsearch_database_index_event.c',
+    'fsearch_database_info.c',
+    'fsearch_database_preferences_widget.c',
+    'fsearch_database_scan.c',
     'fsearch_database_search.c',
-    'fsearch_database_view.c',
-    'fsearch_exclude_path.c',
+    'fsearch_database_search_info.c',
+    'fsearch_database_sort.c',
+    'fsearch_database_work.c',
     'fsearch_file_utils.c',
     'fsearch_filter.c',
     'fsearch_filter_editor.c',
     'fsearch_filter_manager.c',
-    'fsearch_index.c',
+    'fsearch_filter_preferences_widget.c',
+    'fsearch_folder_monitor_event.c',
     'fsearch_list_view.c',
     'fsearch_listview_popup.c',
-    'fsearch_memory_pool.c',
-    'fsearch_preferences_ui.c',
-    'fsearch_preferences_widgets.c',
+    'fsearch_preferences_dialog.c',
     'fsearch_query.c',
     'fsearch_query_match_data.c',
     'fsearch_query_matchers.c',
@@ -44,7 +54,6 @@ libfsearch_sources = [
     'fsearch_size_utils.c',
     'fsearch_statusbar.c',
     'fsearch_string_utils.c',
-    'fsearch_task.c',
     'fsearch_thread_pool.c',
     'fsearch_time_utils.c',
     'fsearch_ui_utils.c',
@@ -53,6 +62,14 @@ libfsearch_sources = [
     'fsearch_window_actions.c',
     'fsearch_preview.c',
 ]
+
+if have_inotify
+    libfsearch_sources += 'fsearch_folder_monitor_inotify.c'
+endif
+
+if have_fanotify
+    libfsearch_sources += 'fsearch_folder_monitor_fanotify.c'
+endif
 
 if build_machine.system()=='darwin'
     libfsearch_sources+=['strverscmp.c']
@@ -66,9 +83,17 @@ fsearch_deps = [
     dependency('icu-uc', version: '>= 3.8'),
 ]
 
+fsearch_enums_headers = [
+    'fsearch_result.h'
+]
+
+fsearch_enums = gnome.mkenums_simple('fsearch_enums',
+                                     sources : fsearch_enums_headers,
+)
+
 libfsearch = static_library(
     'fsearch',
-    libfsearch_sources,
+    libfsearch_sources + fsearch_enums,
     dependencies: fsearch_deps,
     include_directories: fsearch_include_dirs,
 )

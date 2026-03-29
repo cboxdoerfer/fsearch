@@ -19,6 +19,7 @@
 #define G_LOG_DOMAIN "fsearch-search"
 
 #include "fsearch_database_search.h"
+#include "fsearch_database_entry.h"
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -81,7 +82,7 @@ db_search_worker(void *data) {
     g_assert(ctx);
     g_assert(ctx->results);
 
-    FsearchQueryMatchData *match_data = fsearch_query_match_data_new();
+    FsearchQueryMatchData *match_data = fsearch_query_match_data_new(NULL, NULL);
 
     fsearch_query_match_data_set_thread_id(match_data, ctx->thread_id);
     FsearchQuery *query = ctx->query;
@@ -123,8 +124,8 @@ db_search_entries(FsearchQuery *q,
         return NULL;
     }
     const uint32_t num_threads = (num_entries < THRESHOLD_FOR_PARALLEL_SEARCH || q->wants_single_threaded_search)
-                                   ? 1
-                                   : fsearch_thread_pool_get_num_threads(pool);
+                                     ? 1
+                                     : fsearch_thread_pool_get_num_threads(pool);
     const uint32_t num_items_per_thread = num_entries / num_threads;
 
     DatabaseSearchWorkerContext *thread_data[num_threads];
@@ -139,7 +140,6 @@ db_search_entries(FsearchQuery *q,
 
     GList *threads = fsearch_thread_pool_get_threads(pool);
     for (uint32_t i = 0; i < num_threads; i++) {
-
         thread_data[i] = db_search_worker_context_new(q,
                                                       cancellable,
                                                       entries,
@@ -176,9 +176,6 @@ db_search_entries(FsearchQuery *q,
 
     for (uint32_t i = 0; i < num_threads; i++) {
         DatabaseSearchWorkerContext *ctx = thread_data[i];
-        if (!ctx) {
-            break;
-        }
 
         darray_add_items(results, (void **)ctx->results, ctx->num_results);
 
@@ -189,12 +186,11 @@ db_search_entries(FsearchQuery *q,
 }
 
 DatabaseSearchResult *
-db_search_empty(DynamicArray *folders, DynamicArray *files, FsearchDatabaseIndexType sort_type) {
+db_search_empty(DynamicArray *folders, DynamicArray *files) {
     DatabaseSearchResult *result = calloc(1, sizeof(DatabaseSearchResult));
 
     result->folders = darray_ref(folders);
     result->files = darray_ref(files);
-    result->sort_type = sort_type;
     return result;
 }
 
@@ -203,7 +199,6 @@ db_search(FsearchQuery *q,
           FsearchThreadPool *pool,
           DynamicArray *folders,
           DynamicArray *files,
-          FsearchDatabaseIndexType sort_type,
           GCancellable *cancellable) {
     g_assert(files);
     g_assert(folders);
@@ -225,7 +220,6 @@ db_search(FsearchQuery *q,
     DatabaseSearchResult *result = calloc(1, sizeof(DatabaseSearchResult));
     result->files = files_res;
     result->folders = folders_res;
-    result->sort_type = sort_type;
 
     return result;
 

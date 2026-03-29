@@ -1,13 +1,13 @@
 #pragma once
 
-#include "fsearch_database_view.h"
+#include "fsearch_database.h"
 #include "fsearch_list_view.h"
 
 typedef struct {
-    FsearchDatabaseView *database_view;
+    FsearchDatabase *db;
     FsearchListView *list_view;
 
-    GHashTable *row_cache;
+    GHashTable *item_info_cache;
     GHashTable *pixbuf_cache;
     GHashTable *app_gicon_cache;
 
@@ -15,12 +15,13 @@ typedef struct {
     // when it changes we need to reset the icon cache
     int32_t row_height;
 
-    FsearchDatabaseIndexType sort_order;
+    guint view_id;
+    FsearchDatabaseIndexProperty sort_order;
     GtkSortType sort_type;
 } FsearchResultView;
 
 FsearchResultView *
-fsearch_result_view_new(void);
+fsearch_result_view_new(guint view_id);
 
 void
 fsearch_result_view_free(FsearchResultView *result_view);
@@ -29,7 +30,7 @@ void
 fsearch_result_view_row_cache_reset(FsearchResultView *result_view);
 
 char *
-fsearch_result_view_query_tooltip(FsearchDatabaseView *view,
+fsearch_result_view_query_tooltip(FsearchResultView *view,
                                   uint32_t row,
                                   FsearchListViewColumn *col,
                                   PangoLayout *layout,

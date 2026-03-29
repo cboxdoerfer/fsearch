@@ -31,7 +31,7 @@ fsearch_query_new(const char *search_term,
     FsearchQuery *q = calloc(1, sizeof(FsearchQuery));
     g_assert(q);
 
-    q->search_term = search_term ? strdup(search_term) : "";
+    q->search_term = strdup(search_term ? search_term : "");
 
     q->query_tree = fsearch_query_node_tree_new(q->search_term, filters, flags);
     if (q->query_tree) {
@@ -101,10 +101,12 @@ highlight(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match
         GNode *left = node->children;
         g_assert(left);
         GNode *right = left->next;
-        if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
+        if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_AND
+        ) {
             return highlight(left, entry, match_data, type) && highlight(right, entry, match_data, type);
         }
-        else if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_OR) {
+        else if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_OR
+        ) {
             return highlight(left, entry, match_data, type) || highlight(right, entry, match_data, type);
         }
         else {
@@ -136,10 +138,12 @@ matches(GNode *node, FsearchDatabaseEntry *entry, FsearchQueryMatchData *match_d
         GNode *left = node->children;
         g_assert(left);
         GNode *right = left->next;
-        if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_AND) {
+        if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_AND
+        ) {
             return matches(left, entry, match_data, type) && matches(right, entry, match_data, type);
         }
-        else if (n->operator== FSEARCH_QUERY_NODE_OPERATOR_OR) {
+        else if (n->operator == FSEARCH_QUERY_NODE_OPERATOR_OR
+        ) {
             return matches(left, entry, match_data, type) || matches(right, entry, match_data, type);
         }
         else {

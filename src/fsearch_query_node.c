@@ -6,6 +6,7 @@
 #include "fsearch_size_utils.h"
 #include "fsearch_string_utils.h"
 #include "fsearch_utf.h"
+
 #include <inttypes.h>
 #include <glib.h>
 #include <stdbool.h>
@@ -24,7 +25,7 @@ node_init_needle(FsearchQueryNode *node, const char *needle) {
 
     // set up case folded needle in UTF16 format
     node->needle_builder = calloc(1, sizeof(FsearchUtfBuilder));
-    fsearch_utf_builder_init(node->needle_builder, 8 * node->needle_len);
+    fsearch_utf_builder_init(node->needle_builder, node->needle_len);
     const bool utf_ready = fsearch_utf_builder_normalize_and_fold_case(node->needle_builder, needle);
     g_assert(utf_ready == true);
 }
@@ -102,7 +103,13 @@ fsearch_query_node_new_date_modified(FsearchQueryFlags flags,
         // E.g. dm:=january doesn't mean 1 January 00:00 but the whole January
         comp_type = FSEARCH_QUERY_NODE_COMPARISON_RANGE;
     }
-    return new_numeric_node(dm_start, dm_end, comp_type, "date-modified", fsearch_query_matcher_date_modified, NULL, flags);
+    return new_numeric_node(dm_start,
+                            dm_end,
+                            comp_type,
+                            "date-modified",
+                            fsearch_query_matcher_date_modified,
+                            NULL,
+                            flags);
 }
 
 FsearchQueryNode *
@@ -124,7 +131,13 @@ fsearch_query_node_new_depth(FsearchQueryFlags flags,
                              int64_t child_count_start,
                              int64_t child_count_end,
                              FsearchQueryNodeComparison comp_type) {
-    return new_numeric_node(child_count_start, child_count_end, comp_type, "depth", fsearch_query_matcher_depth, NULL, flags);
+    return new_numeric_node(child_count_start,
+                            child_count_end,
+                            comp_type,
+                            "depth",
+                            fsearch_query_matcher_depth,
+                            NULL,
+                            flags);
 }
 
 FsearchQueryNode *
@@ -154,6 +167,7 @@ fsearch_query_node_new_childfilecount(FsearchQueryFlags flags,
                             NULL,
                             flags);
 }
+
 FsearchQueryNode *
 fsearch_query_node_new_childfoldercount(FsearchQueryFlags flags,
                                         int64_t child_folder_count_start,
@@ -171,14 +185,16 @@ fsearch_query_node_new_childfoldercount(FsearchQueryFlags flags,
 FsearchQueryNode *
 fsearch_query_node_new_operator(FsearchQueryNodeOperator operator) {
     g_assert(operator== FSEARCH_QUERY_NODE_OPERATOR_AND || operator== FSEARCH_QUERY_NODE_OPERATOR_OR ||
-             operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
+        operator== FSEARCH_QUERY_NODE_OPERATOR_NOT);
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
-    qnode->description = g_string_new(operator== FSEARCH_QUERY_NODE_OPERATOR_AND
+    qnode->description = g_string_new(operator == FSEARCH_QUERY_NODE_OPERATOR_AND
                                           ? "AND"
-                                          : (operator== FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT"));
+                                          : (operator == FSEARCH_QUERY_NODE_OPERATOR_OR ? "OR" : "NOT")
+        );
     qnode->type = FSEARCH_QUERY_NODE_TYPE_OPERATOR;
-    qnode->operator= operator;
+    qnode->operator =
+        operator;
     return qnode;
 }
 
@@ -262,14 +278,14 @@ fsearch_query_node_new_parent(const char *search_term, FsearchQueryFlags flags) 
     FsearchQueryNode *qnode = calloc(1, sizeof(FsearchQueryNode));
     g_assert(qnode);
     qnode->type = FSEARCH_QUERY_NODE_TYPE_QUERY;
-    qnode->description = g_string_new("parent");
     node_init_needle(qnode, search_term);
 
     qnode->highlight_func = NULL;
     qnode->flags = flags;
     if (fsearch_string_is_ascii_icase(qnode->needle) || flags & QUERY_FLAG_MATCH_CASE) {
-        qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_strcmp
-                                                           : fsearch_query_matcher_strcasecmp;
+        qnode->search_func = flags & QUERY_FLAG_MATCH_CASE
+                                 ? fsearch_query_matcher_strcmp
+                                 : fsearch_query_matcher_strcasecmp;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)fsearch_query_match_data_get_parent_path_str;
         qnode->description = g_string_new("parent_ascii");
     }
@@ -314,7 +330,8 @@ fsearch_query_node_new_extension(const char *search_term, FsearchQueryFlags flag
     }
     else {
         qnode->needle = g_strdup(search_term);
-        g_auto(GStrv) search_terms = g_strsplit(search_term, ";", -1);
+        g_auto(GStrv)
+            search_terms = g_strsplit(search_term, ";", -1);
         const uint32_t num_search_terms = g_strv_length(search_terms);
         for (uint32_t i = 0; i < num_search_terms; ++i) {
             g_ptr_array_add(qnode->search_term_list, g_strdup(search_terms[i]));
@@ -347,12 +364,14 @@ query_node_new_string_comparison(const char *search_term, FsearchQueryFlags flag
 
     if (fsearch_string_is_ascii_icase(search_term) || flags & QUERY_FLAG_MATCH_CASE) {
         if (flags & QUERY_FLAG_EXACT_MATCH) {
-            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_strcmp
-                                                               : fsearch_query_matcher_strcasecmp;
+            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE
+                                     ? fsearch_query_matcher_strcmp
+                                     : fsearch_query_matcher_strcasecmp;
         }
         else {
-            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE ? fsearch_query_matcher_strstr
-                                                               : fsearch_query_matcher_strcasestr;
+            qnode->search_func = flags & QUERY_FLAG_MATCH_CASE
+                                     ? fsearch_query_matcher_strstr
+                                     : fsearch_query_matcher_strcasestr;
         }
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
                                                                     ? fsearch_query_match_data_get_path_str
@@ -361,8 +380,9 @@ query_node_new_string_comparison(const char *search_term, FsearchQueryFlags flag
         qnode->description = g_string_new("ascii_icase");
     }
     else {
-        qnode->search_func = flags & QUERY_FLAG_EXACT_MATCH ? fsearch_query_matcher_utf_strcasecmp
-                                                            : fsearch_query_matcher_utf_strcasestr;
+        qnode->search_func = flags & QUERY_FLAG_EXACT_MATCH
+                                 ? fsearch_query_matcher_utf_strcasecmp
+                                 : fsearch_query_matcher_utf_strcasestr;
         qnode->haystack_func = (FsearchQueryNodeHaystackFunc *)(flags & QUERY_FLAG_SEARCH_IN_PATH
                                                                     ? fsearch_query_match_data_get_utf_path_builder
                                                                     : fsearch_query_match_data_get_utf_name_builder);
@@ -400,9 +420,9 @@ fsearch_query_node_new(const char *search_term, FsearchQueryFlags flags) {
     const bool has_separator = strchr(search_term, G_DIR_SEPARATOR) ? 1 : 0;
 
     const bool triggers_auto_match_case = !(flags & QUERY_FLAG_MATCH_CASE) && flags & QUERY_FLAG_AUTO_MATCH_CASE
-                                       && fsearch_string_utf8_has_upper(search_term);
+                                          && fsearch_string_utf8_has_upper(search_term);
     const bool triggers_auto_match_path = !(flags & QUERY_FLAG_SEARCH_IN_PATH) && flags & QUERY_FLAG_AUTO_SEARCH_IN_PATH
-                                       && has_separator;
+                                          && has_separator;
 
     if (triggers_auto_match_path) {
         flags |= QUERY_FLAG_SEARCH_IN_PATH;

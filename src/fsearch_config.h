@@ -116,8 +116,6 @@ struct _FsearchConfig {
     bool follow_symlinks;
 
     FsearchFilterManager *filters;
-    GList *indexes;
-    GList *exclude_locations;
     char **exclude_files;
 };
 

@@ -1,112 +1,49 @@
-/*
-   FSearch - A fast file search utility
-   Copyright © 2020 Christian Boxdörfer
-
-   This program is free software; you can redistribute it and/or modify
-   it under the terms of the GNU General Public License as published by
-   the Free Software Foundation; either version 2 of the License, or
-   (at your option) any later version.
-
-   This program is distributed in the hope that it will be useful,
-   but WITHOUT ANY WARRANTY; without even the implied warranty of
-   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-   GNU General Public License for more details.
-
-   You should have received a copy of the GNU General Public License
-   along with this program; if not, see <http://www.gnu.org/licenses/>.
-   */
-
 #pragma once
 
-#include "fsearch_array.h"
-#include "fsearch_database_index.h"
-#include "fsearch_thread_pool.h"
-
 #include <gio/gio.h>
-#include <glib.h>
-#include <stdbool.h>
-#include <stdint.h>
 
-typedef struct FsearchDatabase FsearchDatabase;
+#include "fsearch_database_entry_info.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include_manager.h"
+#include "fsearch_database_info.h"
+#include "fsearch_database_search_info.h"
+#include "fsearch_database_work.h"
+#include "fsearch_result.h"
 
-bool
-db_register_view(FsearchDatabase *db, gpointer view);
+G_BEGIN_DECLS
 
-bool
-db_unregister_view(FsearchDatabase *db, gpointer view);
+#define FSEARCH_TYPE_DATABASE fsearch_database_get_type()
+G_DECLARE_FINAL_TYPE(FsearchDatabase, fsearch_database, FSEARCH, DATABASE, GObject)
 
-bool
-db_load(FsearchDatabase *db, const char *path, void (*status_cb)(const char *));
+typedef void
+(*FsearchDatabaseForeachFunc)(FsearchDatabaseEntry *entry, gpointer user_data);
 
-bool
-db_scan(FsearchDatabase *db, GCancellable *cancellable, void (*status_cb)(const char *));
+void
+fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work);
+
+FsearchResult
+fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out);
+
+FsearchResult
+fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInfo * *info_out);
+
+FsearchResult
+fsearch_database_rescan_and_save_blocking(FsearchDatabase *self);
+
+void
+fsearch_database_selection_foreach(FsearchDatabase *self,
+                                   uint32_t view_id,
+                                   FsearchDatabaseForeachFunc func,
+                                   gpointer user_data);
+
+FsearchResult
+fsearch_database_try_get_item_info(FsearchDatabase *self,
+                                   uint32_t view_id,
+                                   uint32_t idx,
+                                   FsearchDatabaseEntryInfoFlags flags,
+                                   FsearchDatabaseEntryInfo **info_out);
 
 FsearchDatabase *
-db_ref(FsearchDatabase *db);
+fsearch_database_new(GFile *file);
 
-void
-db_unref(FsearchDatabase *db);
-
-FsearchDatabase *
-db_new(GList *includes, GList *excludes, char **exclude_files, bool exclude_hidden);
-
-bool
-db_save(FsearchDatabase *db, const char *path);
-
-time_t
-db_get_timestamp(FsearchDatabase *db);
-
-uint32_t
-db_get_num_files(FsearchDatabase *db);
-
-uint32_t
-db_get_num_folders(FsearchDatabase *db);
-
-uint32_t
-db_get_num_entries(FsearchDatabase *db);
-
-void
-db_unlock(FsearchDatabase *db);
-
-void
-db_lock(FsearchDatabase *db);
-
-bool
-db_try_lock(FsearchDatabase *db);
-
-DynamicArray *
-db_get_folders_copy(FsearchDatabase *db);
-
-DynamicArray *
-db_get_files_copy(FsearchDatabase *db);
-
-DynamicArray *
-db_get_folders(FsearchDatabase *db);
-
-DynamicArray *
-db_get_files(FsearchDatabase *db);
-
-FsearchThreadPool *
-db_get_thread_pool(FsearchDatabase *db);
-
-bool
-db_has_entries_sorted_by_type(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
-
-bool
-db_get_entries_sorted(FsearchDatabase *db,
-                      FsearchDatabaseIndexType requested_sort_type,
-                      FsearchDatabaseIndexType *returned_sort_type,
-                      DynamicArray **folders,
-                      DynamicArray **files);
-
-DynamicArray *
-db_get_folders_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
-
-DynamicArray *
-db_get_files_sorted_copy(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
-
-DynamicArray *
-db_get_folders_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
-
-DynamicArray *
-db_get_files_sorted(FsearchDatabase *db, FsearchDatabaseIndexType sort_type);
+G_END_DECLS

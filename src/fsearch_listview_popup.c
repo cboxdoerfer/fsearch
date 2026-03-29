@@ -16,6 +16,7 @@
    along with this program; if not, see <http://www.gnu.org/licenses/>.
    */
 
+#include "fsearch_database_entry.h"
 #ifdef HAVE_CONFIG_H
 #include <config.h>
 #endif
@@ -60,7 +61,6 @@ should_remove_application_for_application_list(gpointer key, gpointer value, gpo
 
 static void
 refresh_applications_for_content_type(GHashTable *applications, const char *content_type, bool first_run) {
-
     GList *app_infos = g_app_info_get_all_for_type(content_type);
     if (!app_infos) {
         // there are no applications which can open this content type,
@@ -86,12 +86,7 @@ refresh_applications_for_content_type(GHashTable *applications, const char *cont
 }
 
 static void
-intersect_supported_appliations(gpointer key, gpointer value, gpointer user_data) {
-    FsearchDatabaseEntry *entry = value;
-    if (G_UNLIKELY(!entry)) {
-        return;
-    }
-
+intersect_supported_appliations(FsearchDatabaseEntry *entry, gpointer user_data) {
     struct content_type_context *ctx = user_data;
     if (!ctx->first_run && g_hash_table_size(ctx->applications) == 0) {
         // there are already no applications which can open all processed entries,
@@ -99,7 +94,7 @@ intersect_supported_appliations(gpointer key, gpointer value, gpointer user_data
         return;
     }
 
-    if (db_entry_get_type(entry) == DATABASE_ENTRY_TYPE_FOLDER) {
+    if (db_entry_is_folder(entry)) {
         // we already know the content type for folders, so we can use a slightly more
         // efficient and reliable path for them here
         const char *dir_content_type = "inode/directory";
@@ -143,15 +138,14 @@ append_application_to_menu(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-fill_open_with_menu(GtkBuilder *builder, FsearchDatabaseView *db_view) {
-
+fill_open_with_menu(GtkBuilder *builder, FsearchDatabase *db, uint32_t view_id) {
     struct content_type_context content_type_ctx = {};
     content_type_ctx.content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, NULL);
     content_type_ctx.applications = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, g_object_unref);
     content_type_ctx.first_run = true;
     // find applications which can open all selected files
     // this basically computes the intersection of the lists of applications for each entry
-    db_view_selection_for_each(db_view, intersect_supported_appliations, &content_type_ctx);
+    fsearch_database_selection_foreach(db, view_id, intersect_supported_appliations, &content_type_ctx);
     g_hash_table_remove_all(content_type_ctx.content_types);
     g_clear_pointer(&content_type_ctx.content_types, g_hash_table_destroy);
 
@@ -171,10 +165,10 @@ fill_open_with_menu(GtkBuilder *builder, FsearchDatabaseView *db_view) {
 }
 
 gboolean
-listview_popup_menu(GtkWidget *widget, FsearchDatabaseView *db_view) {
+listview_popup_menu(GtkWidget *widget, FsearchDatabase *db, uint32_t view_id) {
     g_autoptr(GtkBuilder) builder = gtk_builder_new_from_resource("/io/github/cboxdoerfer/fsearch/ui/menus.ui");
 
-    fill_open_with_menu(builder, db_view);
+    fill_open_with_menu(builder, db, view_id);
     add_file_properties_entry(builder);
 
     GMenu *menu_root = G_MENU(gtk_builder_get_object(builder, "fsearch_listview_popup_menu"));

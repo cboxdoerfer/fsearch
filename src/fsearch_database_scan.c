@@ -1,0 +1,283 @@
+#define G_LOG_DOMAIN "fsearch-database-scan"
+
+#include "fsearch_database_scan.h"
+
+#include "fsearch_database_entry.h"
+#include "fsearch_database_sort.h"
+
+#include <config.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include <glib/gi18n.h>
+#include <sys/stat.h>
+
+enum {
+    WALK_OK = 0,
+    WALK_BADIO,
+    WALK_CANCEL,
+};
+
+typedef struct DatabaseWalkContext {
+    GString *path;
+    FsearchDatabaseExcludeManager *exclude_manager;
+    DynamicArray *folders;
+    DynamicArray *files;
+    FsearchFolderMonitorFanotify *fanotify_monitor;
+    FsearchFolderMonitorInotify *inotify_monitor;
+    uint32_t index_id;
+    bool one_file_system;
+    GTimer *timer;
+    GMutex *monitor_lock;
+    GCancellable *cancellable;
+    void (*status_cb)(const char *, gpointer);
+    gpointer status_cb_data;
+    ssize_t file_handle_payload;
+    dev_t root_device_id;
+} DatabaseWalkContext;
+
+static void
+watch_folder(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *folder, const char *path) {
+#ifdef HAVE_FANOTIFY
+    if (walk_context->fanotify_monitor) {
+        if (fsearch_folder_monitor_fanotify_watch(walk_context->fanotify_monitor, folder, path)) {
+            return;
+        }
+    }
+#endif
+#ifdef HAVE_INOTIFY
+    if (walk_context->inotify_monitor) {
+        if (fsearch_folder_monitor_inotify_watch(walk_context->inotify_monitor, folder, path)) {
+            return;
+        }
+    }
+#endif
+}
+
+static FsearchDatabaseEntry *
+add_folder(DatabaseWalkContext *walk_context,
+           const char *name,
+           const char *path,
+           time_t mtime,
+           FsearchDatabaseEntry *parent) {
+    FsearchDatabaseEntry *folder_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
+                                                                      | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+                                                                      name,
+                                                                      parent,
+                                                                      DATABASE_ENTRY_TYPE_FOLDER,
+                                                                      DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
+                                                                      mtime,
+                                                                      DATABASE_INDEX_PROPERTY_NONE);
+    if (!folder_entry) {
+        return NULL;
+    }
+    const char *n = NULL;
+    if (db_entry_get_attribute_name(folder_entry, &n)) {
+        g_assert_cmpstr(name, ==, n);
+    }
+    time_t t = 0;
+    if (db_entry_get_attribute(folder_entry,
+                               DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
+                               (void *)&t,
+                               sizeof(time_t))) {
+        g_assert(t == mtime);
+    }
+    watch_folder(walk_context, folder_entry, path);
+    darray_add_item(walk_context->folders, folder_entry);
+
+    return folder_entry;
+}
+
+FsearchDatabaseEntry *
+add_file(DatabaseWalkContext *walk_context, const char *name, off_t size, time_t mtime, FsearchDatabaseEntry *parent) {
+    FsearchDatabaseEntry *file_entry = db_entry_new_with_attributes(DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME
+                                                                    | DATABASE_INDEX_PROPERTY_FLAG_SIZE,
+                                                                    name,
+                                                                    parent,
+                                                                    DATABASE_ENTRY_TYPE_FILE,
+                                                                    DATABASE_INDEX_PROPERTY_SIZE,
+                                                                    size,
+                                                                    DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
+                                                                    mtime,
+                                                                    DATABASE_INDEX_PROPERTY_NONE);
+    if (!file_entry) {
+        return NULL;
+    }
+    const char *n = NULL;
+    if (db_entry_get_attribute_name(file_entry, &n)) {
+        g_assert_cmpstr(name, ==, n);
+    }
+    off_t s = 0;
+    if (db_entry_get_attribute(file_entry, DATABASE_INDEX_PROPERTY_SIZE, (void *)&s, sizeof(off_t))) {
+        g_assert(s == size);
+    }
+    time_t t = 0;
+    if (db_entry_get_attribute(file_entry, DATABASE_INDEX_PROPERTY_MODIFICATION_TIME, (void *)&t, sizeof(time_t))) {
+        g_assert(t == mtime);
+    }
+    darray_add_item(walk_context->files, file_entry);
+
+    return file_entry;
+}
+
+static int
+db_folder_scan_recursive(DatabaseWalkContext *walk_context, FsearchDatabaseEntry *parent) {
+    if (g_cancellable_is_cancelled(walk_context->cancellable)) {
+        g_debug("[db_scan] cancelled");
+        return WALK_CANCEL;
+    }
+
+    GString *path = walk_context->path;
+    g_string_append_c(path, G_DIR_SEPARATOR);
+
+    // remember end of parent path
+    const gsize path_len = path->len;
+
+    DIR *dir = opendir(path->str);
+    if (!dir) {
+        g_debug("[db_scan] failed to open directory: %s", path->str);
+        return WALK_BADIO;
+    }
+
+    const int dir_fd = dirfd(dir);
+
+    const double elapsed_seconds = g_timer_elapsed(walk_context->timer, NULL);
+    if (elapsed_seconds > 0.1) {
+        if (walk_context->status_cb) {
+            walk_context->status_cb(path->str, walk_context->status_cb_data);
+        }
+        g_timer_start(walk_context->timer);
+    }
+
+    struct dirent *dent = NULL;
+    while ((dent = readdir(dir))) {
+        if (g_cancellable_is_cancelled(walk_context->cancellable)) {
+            g_debug("[db_scan] cancelled");
+            g_clear_pointer(&dir, closedir);
+            return WALK_CANCEL;
+        }
+
+        // TODO: we can test for hidden here to avoid stat call
+
+        if (!strcmp(dent->d_name, ".") || !strcmp(dent->d_name, "..")) {
+            continue;
+        }
+        const size_t d_name_len = strlen(dent->d_name);
+        if (d_name_len >= 256) {
+            g_warning("[db_scan] file name too long, skipping: \"%s\" (len: %zd)", dent->d_name, d_name_len);
+            continue;
+        }
+
+        // create full path of file/folder
+        g_string_truncate(path, path_len);
+        g_string_append(path, dent->d_name);
+
+        struct stat st;
+        int stat_flags = AT_SYMLINK_NOFOLLOW;
+#ifdef AT_NO_AUTOMOUNT
+        stat_flags |= AT_NO_AUTOMOUNT;
+#endif
+        if (fstatat(dir_fd, dent->d_name, &st, stat_flags)) {
+            g_debug("[db_scan] can't stat: %s", path->str);
+            continue;
+        }
+
+        if (walk_context->one_file_system && walk_context->root_device_id != st.st_dev) {
+            g_debug("[db_scan] different filesystem, skipping: %s", path->str);
+            continue;
+        }
+
+        const bool is_dir = S_ISDIR(st.st_mode);
+        if (fsearch_database_exclude_manager_excludes(walk_context->exclude_manager, path->str, dent->d_name, is_dir)) {
+            g_debug("[db_scan] excluded: %s", path->str);
+            continue;
+        }
+
+        if (is_dir) {
+            db_folder_scan_recursive(walk_context,
+                                     add_folder(walk_context, dent->d_name, path->str, st.st_mtime, parent));
+        }
+        else {
+            add_file(walk_context, dent->d_name, st.st_size, st.st_mtime, parent);
+        }
+    }
+
+    g_clear_pointer(&dir, closedir);
+    return WALK_OK;
+}
+
+bool
+db_scan_folder(const char *path,
+               FsearchDatabaseEntry *parent,
+               DynamicArray *folders,
+               DynamicArray *files,
+               FsearchDatabaseExcludeManager *exclude_manager,
+               FsearchFolderMonitorFanotify *fanotify_monitor,
+               FsearchFolderMonitorInotify *inotify_monitor,
+               uint32_t index_id,
+               bool one_file_system,
+               GCancellable *cancellable,
+               void (*status_cb)(const char *, gpointer),
+               gpointer status_cb_data) {
+    g_assert(g_path_is_absolute(path));
+    g_debug("[db_scan] scan path: %s", path);
+
+    if (!g_file_test(path, G_FILE_TEST_IS_DIR)) {
+        g_warning("[db_scan] %s doesn't exist", path);
+        return false;
+    }
+
+    struct stat root_st;
+    if (lstat(path, &root_st)) {
+        g_debug("[db_scan] can't stat: %s", path);
+        return false;
+    }
+
+    g_autoptr(GString) path_string = g_string_new(path);
+    // remove leading path separator '/' for root directory
+    if (strcmp(path_string->str, G_DIR_SEPARATOR_S) == 0) {
+        g_string_erase(path_string, 0, 1);
+    }
+
+    g_autoptr(GTimer) timer = g_timer_new();
+    g_timer_start(timer);
+
+    DatabaseWalkContext walk_context = {
+        .folders = folders,
+        .files = files,
+        .fanotify_monitor = fanotify_monitor,
+        .inotify_monitor = inotify_monitor,
+        .exclude_manager = exclude_manager,
+        .path = path_string,
+        .one_file_system = one_file_system,
+        .index_id = index_id,
+        .timer = timer,
+        .cancellable = cancellable,
+        .status_cb = status_cb,
+        .status_cb_data = status_cb_data,
+        .root_device_id = root_st.st_dev,
+        .file_handle_payload = 0,
+    };
+
+    if (!parent) {
+        parent = add_folder(&walk_context, path, path, root_st.st_mtime, NULL);
+    }
+    else {
+        g_autofree char *name = g_path_get_basename(path);
+        parent = add_folder(&walk_context, name, path, root_st.st_mtime, parent);
+    }
+
+    const uint32_t res = db_folder_scan_recursive(&walk_context, parent);
+
+    if (res == WALK_OK) {
+        return true;
+    }
+
+    // TODO: free
+    if (res == WALK_CANCEL) {
+        g_debug("[db_scan] scan cancelled.");
+    }
+    else {
+        g_warning("[db_scan] walk error: %d", res);
+    }
+    return false;
+}

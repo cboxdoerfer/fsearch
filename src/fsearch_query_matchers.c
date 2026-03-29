@@ -1,4 +1,5 @@
 #include "fsearch_query_matchers.h"
+#include "fsearch_database_entry.h"
 #include "fsearch_query_node.h"
 #include <string.h>
 
@@ -84,7 +85,7 @@ uint32_t
 fsearch_query_matcher_childcount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry && db_entry_is_folder(entry)) {
-        const int64_t num_children = db_entry_folder_get_num_children((FsearchDatabaseEntryFolder *)entry);
+        const int64_t num_children = db_entry_folder_get_num_children(entry);
         return cmp_num(num_children, node);
     }
     return 0;
@@ -94,7 +95,7 @@ uint32_t
 fsearch_query_matcher_childfilecount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry && db_entry_is_folder(entry)) {
-        const int64_t num_files = db_entry_folder_get_num_files((FsearchDatabaseEntryFolder *)entry);
+        const int64_t num_files = db_entry_folder_get_num_files(entry);
         return cmp_num(num_files, node);
     }
     return 0;
@@ -104,7 +105,7 @@ uint32_t
 fsearch_query_matcher_childfoldercount(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     FsearchDatabaseEntry *entry = fsearch_query_match_data_get_entry(match_data);
     if (entry && db_entry_is_folder(entry)) {
-        const int64_t num_folders = db_entry_folder_get_num_folders((FsearchDatabaseEntryFolder *)entry);
+        const int64_t num_folders = db_entry_folder_get_num_folders(entry);
         return cmp_num(num_folders, node);
     }
     return 0;
@@ -135,23 +136,23 @@ add_path_highlight(FsearchQueryMatchData *match_data, uint32_t start_idx, uint32
         // the matching part is only in the file name
         pa->start_index -= parent_len;
         pa->end_index = pa->start_index + needle_len;
-        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
+        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_NAME);
         return;
     }
     else if (pa->start_index + needle_len > parent_len) {
         // the matching part spans across the path and name
         pa->end_index = G_MAXUINT;
-        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_PATH);
+        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_PATH);
         PangoAttribute *pa_name = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
         pa_name->start_index = 0;
         pa_name->end_index = pa->start_index + needle_len - parent_len;
-        fsearch_query_match_data_add_highlight(match_data, pa_name, DATABASE_INDEX_TYPE_NAME);
+        fsearch_query_match_data_add_highlight(match_data, pa_name, DATABASE_INDEX_PROPERTY_NAME);
         return;
     }
     else {
         // the matching part is only in the path name
         pa->end_index = pa->start_index + needle_len;
-        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_PATH);
+        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_PATH);
         return;
     }
 }
@@ -189,8 +190,8 @@ fsearch_query_matcher_utf_strcasestr(FsearchQueryNode *node, FsearchQueryMatchDa
                               haystack_builder->string_normalized_folded_len,
                               needle_builder->string_normalized_folded,
                               needle_builder->string_normalized_folded_len)
-                 ? 1
-                 : 0;
+                   ? 1
+                   : 0;
     }
     return 0;
 }
@@ -205,8 +206,8 @@ fsearch_query_matcher_utf_strcasecmp(FsearchQueryNode *node, FsearchQueryMatchDa
                              needle_builder->string_normalized_folded,
                              needle_builder->string_normalized_folded_len,
                              false)
-                 ? 1
-                 : 0;
+                   ? 1
+                   : 0;
     }
     return 0;
 }
@@ -256,10 +257,10 @@ fsearch_query_matcher_highlight_extension(FsearchQueryNode *node, FsearchQueryMa
     PangoAttribute *pa_name = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
     pa_name->start_index = name_len - ext_len;
     pa_name->end_index = G_MAXUINT;
-    fsearch_query_match_data_add_highlight(match_data, pa_name, DATABASE_INDEX_TYPE_NAME);
+    fsearch_query_match_data_add_highlight(match_data, pa_name, DATABASE_INDEX_PROPERTY_NAME);
 
     PangoAttribute *pa_ext = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-    fsearch_query_match_data_add_highlight(match_data, pa_ext, DATABASE_INDEX_TYPE_EXTENSION);
+    fsearch_query_match_data_add_highlight(match_data, pa_ext, DATABASE_INDEX_PROPERTY_EXTENSION);
     return 1;
 }
 
@@ -267,7 +268,7 @@ uint32_t
 fsearch_query_matcher_highlight_size(FsearchQueryNode *node, FsearchQueryMatchData *match_data) {
     if (fsearch_query_matcher_size(node, match_data)) {
         PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_SIZE);
+        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_SIZE);
         return 1;
     }
     return 0;
@@ -297,7 +298,7 @@ fsearch_query_matcher_highlight_regex(FsearchQueryNode *node, FsearchQueryMatchD
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
             pa->start_index = start_idx;
             pa->end_index = end_idx;
-            fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
+            fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_NAME);
         }
         else {
             add_path_highlight(match_data, start_idx, end_idx - start_idx);
@@ -311,19 +312,22 @@ fsearch_query_matcher_highlight_ascii(FsearchQueryNode *node, FsearchQueryMatchD
     const bool search_in_path = node->flags & QUERY_FLAG_SEARCH_IN_PATH;
     const char *haystack = node->haystack_func(match_data);
     if (node->flags & QUERY_FLAG_EXACT_MATCH) {
-        if (node->flags & QUERY_FLAG_MATCH_CASE ? !strcmp(haystack, node->needle) : !strcasecmp(haystack, node->needle)) {
+        if (node->flags & QUERY_FLAG_MATCH_CASE
+                ? !strcmp(haystack, node->needle)
+                : !strcasecmp(haystack, node->needle)) {
             PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-            fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
+            fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_NAME);
             if (search_in_path) {
                 PangoAttribute *pa_path = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
-                fsearch_query_match_data_add_highlight(match_data, pa_path, DATABASE_INDEX_TYPE_PATH);
+                fsearch_query_match_data_add_highlight(match_data, pa_path, DATABASE_INDEX_PROPERTY_PATH);
             }
             return 1;
         }
         return 0;
     }
-    char *dest = node->flags & QUERY_FLAG_MATCH_CASE ? strstr(haystack, node->needle)
-                                                     : strcasestr(haystack, node->needle);
+    char *dest = node->flags & QUERY_FLAG_MATCH_CASE
+                     ? strstr(haystack, node->needle)
+                     : strcasestr(haystack, node->needle);
     if (!dest) {
         return 0;
     }
@@ -335,7 +339,7 @@ fsearch_query_matcher_highlight_ascii(FsearchQueryNode *node, FsearchQueryMatchD
         PangoAttribute *pa = pango_attr_weight_new(PANGO_WEIGHT_BOLD);
         pa->start_index = dest - haystack;
         pa->end_index = pa->start_index + strlen(node->needle);
-        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_TYPE_NAME);
+        fsearch_query_match_data_add_highlight(match_data, pa, DATABASE_INDEX_PROPERTY_NAME);
     }
     return 1;
 }

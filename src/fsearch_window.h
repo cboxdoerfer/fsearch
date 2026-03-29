@@ -23,7 +23,6 @@ along with this program; if not, see <http://www.gnu.org/licenses/>.
 #include <stdbool.h>
 
 #include "fsearch.h"
-#include "fsearch_database.h"
 #include "fsearch_list_view.h"
 #include "fsearch_query.h"
 #include "fsearch_statusbar.h"
@@ -32,7 +31,11 @@ G_BEGIN_DECLS
 
 #define FSEARCH_APPLICATION_WINDOW_TYPE (fsearch_application_window_get_type())
 
-G_DECLARE_FINAL_TYPE(FsearchApplicationWindow, fsearch_application_window, FSEARCH, APPLICATION_WINDOW, GtkApplicationWindow)
+G_DECLARE_FINAL_TYPE(FsearchApplicationWindow,
+                     fsearch_application_window,
+                     FSEARCH,
+                     APPLICATION_WINDOW,
+                     GtkApplicationWindow)
 
 FsearchApplicationWindow *
 fsearch_application_window_new(FsearchApplication *app);
@@ -68,7 +71,7 @@ void
 fsearch_application_window_set_database_index_progress(FsearchApplicationWindow *self, const char *text);
 
 uint32_t
-fsearch_application_window_get_num_results(FsearchApplicationWindow *self);
+fsearch_application_window_get_num_rows(FsearchApplicationWindow *self);
 
 gint
 fsearch_application_window_get_active_filter(FsearchApplicationWindow *self);
@@ -101,7 +104,9 @@ uint32_t
 fsearch_application_window_get_num_selected(FsearchApplicationWindow *self);
 
 void
-fsearch_application_window_selection_for_each(FsearchApplicationWindow *self, GHFunc func, gpointer user_data);
+fsearch_application_window_selection_for_each(FsearchApplicationWindow *self,
+                                              FsearchDatabaseForeachFunc func,
+                                              gpointer user_data);
 
 void
 fsearch_application_window_toggle_app_menu(FsearchApplicationWindow *self);

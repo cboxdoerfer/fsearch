@@ -116,7 +116,8 @@ parse_explicit_date_time_constants(const char *str, struct tm *start, struct tm 
 
                 g_date_add_days(date, 1);
                 g_date_to_struct_tm(date, end);
-            } break;
+            }
+            break;
             case FSEARCH_DATE_TIME_TYPE_DAY:
                 g_date_subtract_days(date, date_constants[i].val);
                 g_date_to_struct_tm(date, start);
@@ -235,8 +236,8 @@ FsearchDateTimeConstant num_constants[] = {
 enum {
     // when it's 14 August, then ...
     FSEARCH_DATE_REFERS_TO_PAST_FINAL, // "last month" means July (1-31)
-    FSEARCH_DATE_REFERS_TO_PAST,       // "past month" means 14 July - 14 August
-    FSEARCH_DATE_REFERS_TO_NOW,        // "this month" means August (1-14)
+    FSEARCH_DATE_REFERS_TO_PAST, // "past month" means 14 July - 14 August
+    FSEARCH_DATE_REFERS_TO_NOW, // "this month" means August (1-14)
 };
 
 FsearchDateTimeConstant prefix_constants[] = {
@@ -272,20 +273,20 @@ FsearchDateTimeConstant suffix_plural_constants[] = {
     {"seconds", .type = FSEARCH_DATE_TIME_TYPE_SECOND},
 };
 
-static void
-print_tm(struct tm *tm) {
-    if (!tm) {
-        return;
-    }
-    g_print("%04d/%02d/%02d %02d:%02d:%02d (%d)\n",
-            tm->tm_year + 1900,
-            tm->tm_mon,
-            tm->tm_mday,
-            tm->tm_hour,
-            tm->tm_min,
-            tm->tm_sec,
-            tm->tm_isdst);
-}
+// static void
+// print_tm(struct tm *tm) {
+//     if (!tm) {
+//         return;
+//     }
+//     g_print("%04d/%02d/%02d %02d:%02d:%02d (%d)\n",
+//             tm->tm_year + 1900,
+//             tm->tm_mon,
+//             tm->tm_mday,
+//             tm->tm_hour,
+//             tm->tm_min,
+//             tm->tm_sec,
+//             tm->tm_isdst);
+// }
 
 static bool
 parse_implicit_date_time_constants(const char *str, struct tm *start, struct tm *end) {

@@ -32,6 +32,7 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <stdio.h>
+#include <sys/stat.h>
 
 const char *data_folder_name = "fsearch";
 
@@ -39,7 +40,10 @@ static void
 launch_uris_ready(GObject *source_object, GAsyncResult *result, gpointer user_data);
 
 static void
-add_error_message_with_format(GString *error_messages, const char *description, const char *item_name, const char *reason) {
+add_error_message_with_format(GString *error_messages,
+                              const char *description,
+                              const char *item_name,
+                              const char *reason) {
     if (!error_messages || !description || !item_name || !reason) {
         return;
     }
@@ -61,7 +65,6 @@ add_error_message(GString *error_messages, const char *error_message) {
 void
 fsearch_file_utils_init_data_dir_path(char *path, size_t len) {
     g_assert(path);
-    g_assert(len >= 0);
 
     const gchar *xdg_data_dir = g_get_user_data_dir();
     snprintf(path, len, "%s/%s", xdg_data_dir, data_folder_name);
@@ -241,12 +244,16 @@ create_uris_launch_context(const char *content_type, GPtrArray *files, FsearchFi
             if (!path) {
                 continue;
             }
-            #ifdef __MACH__
-            GAppInfo *desktop_app_info = g_app_info_create_from_commandline("/usr/bin/open", NULL, G_APP_INFO_CREATE_NONE, NULL);
-            #else
+#ifdef __MACH__
+            GAppInfo *desktop_app_info = g_app_info_create_from_commandline(
+                "/usr/bin/open",
+                NULL,
+                G_APP_INFO_CREATE_NONE,
+                NULL);
+#else
             GDesktopAppInfo *desktop_app_info = g_desktop_app_info_new_from_filename(path);
-            #endif
-            
+#endif
+
             if (!desktop_app_info) {
                 add_error_message_with_format(ctx->error_messages,
                                               C_("Will be followed by the file path.",
@@ -377,7 +384,8 @@ app_is_sandboxed(void) {
     static gsize initialization_value = 0;
 
     if (g_once_init_enter(&initialization_value)) {
-        g_auto(GStrv) env = g_get_environ();
+        g_auto(GStrv)
+            env = g_get_environ();
         if (g_file_test("/.flatpak-info", G_FILE_TEST_EXISTS)) {
             is_sandboxed = true;
         }
@@ -421,7 +429,8 @@ launch_default_for_path(GList *paths,
                         GAppLaunchContext *launch_context,
                         FsearchFileUtilsOpenCallback callback,
                         gpointer callback_data) {
-    FsearchFileUtilsLaunchContext *open_default_ctx = launch_context_new(launch_context, false, callback, callback_data);
+    FsearchFileUtilsLaunchContext *open_default_ctx =
+        launch_context_new(launch_context, false, callback, callback_data);
 
     for (GList *p = paths; p != NULL; p = p->next) {
         g_autoptr(GFile) file = g_file_new_for_path(p->data);
@@ -452,8 +461,7 @@ fsearch_file_utils_open_path_list(GList *paths,
         return launch_default_for_path(paths, app_launch_context, callback, callback_data);
     }
 
-    g_autoptr(GHashTable)
-        content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_ptr_array_unref);
+    g_autoptr(GHashTable) content_types = g_hash_table_new_full(g_str_hash, g_str_equal, g_free, (GDestroyNotify)g_ptr_array_unref);
 
     g_autoptr(GString) error_messages = g_string_new(NULL);
     // Before opening any files, we first group them by their content type
@@ -573,11 +581,11 @@ fsearch_file_utils_get_file_type(const char *name, gboolean is_dir) {
 
 GIcon *
 fsearch_file_utils_get_desktop_file_icon(const char *path) {
-    #ifdef __MACH__
+#ifdef __MACH__
     g_autoptr(GAppInfo) info = NULL;
-    #else
+#else
     g_autoptr(GAppInfo) info = (GAppInfo *)g_desktop_app_info_new_from_filename(path);
-    #endif
+#endif
 
     if (!info) {
         goto default_icon;
@@ -649,8 +657,7 @@ char *
 fsearch_file_utils_get_content_type(const char *path, GError **error) {
     g_assert(path);
     g_autoptr(GFile) file = g_file_new_for_path(path);
-    g_autoptr(GFileInfo)
-        info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, error);
+    g_autoptr(GFileInfo) info = g_file_query_info(file, G_FILE_ATTRIBUTE_STANDARD_CONTENT_TYPE, G_FILE_QUERY_INFO_NONE, NULL, error);
     if (!info) {
         return NULL;
     }
@@ -664,7 +671,7 @@ fsearch_file_utils_get_thumbnail_icon(const char *path) {
     if (!g_file) {
         return NULL;
     }
-    
+
     g_autoptr(GFileInfo) file_info = g_file_query_info(g_file, "thumbnail::path", 0, NULL, NULL);
     if (!file_info) {
         return NULL;
@@ -676,4 +683,26 @@ fsearch_file_utils_get_thumbnail_icon(const char *path) {
     }
 
     return g_icon_new_for_string(thumbnail, NULL);
+}
+
+
+bool
+fsearch_file_utils_get_info(const char *path, time_t *mtime, off_t *size, bool *is_dir) {
+    g_return_val_if_fail(path, false);
+
+    struct stat st;
+    if (lstat(path, &st)) {
+        g_debug("[get_info] can't stat: %s", path);
+        return false;
+    }
+    if (mtime) {
+        *mtime = st.st_mtime;
+    }
+    if (size) {
+        *size = st.st_size;
+    }
+    if (is_dir) {
+        *is_dir = S_ISDIR(st.st_mode) ? true : false;
+    }
+    return true;
 }

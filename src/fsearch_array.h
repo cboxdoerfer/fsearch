@@ -25,8 +25,17 @@
 
 typedef struct DynamicArray DynamicArray;
 
-typedef int32_t (*DynamicArrayCompareFunc)(void *a, void *b);
-typedef int32_t (*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);
+typedef bool
+(*DynamicArrayStealFunc)(void *a, void *data);
+typedef int32_t
+(*DynamicArrayCompareFunc)(void *a, void *b);
+typedef int32_t
+(*DynamicArrayCompareDataFunc)(void *a, void *b, void *data);
+typedef bool
+(*DynamicArrayForEachFunc)(void *, void *data);
+
+void
+darray_for_each(DynamicArray *array, DynamicArrayForEachFunc func, void *data);
 
 bool
 darray_binary_search_with_data(DynamicArray *array,
@@ -60,14 +69,45 @@ darray_get_item_next(DynamicArray *array,
                      void *data,
                      uint32_t *next_idx);
 
+DynamicArray *
+darray_get_range(DynamicArray *array, uint32_t start_idx, uint32_t num_items);
+
 bool
-darray_get_item_idx(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data, uint32_t *index);
+darray_get_item_idx(DynamicArray *array,
+                    void *item,
+                    DynamicArrayCompareDataFunc compare_func,
+                    void *data,
+                    uint32_t *index);
 
 void
 darray_add_items(DynamicArray *array, void **items, uint32_t num_items);
 
 void
+darray_add_array(DynamicArray *dest, DynamicArray *source);
+
+void
 darray_add_item(DynamicArray *array, void *data);
+
+uint32_t
+darray_insert_item_sorted(DynamicArray *array, void *item, DynamicArrayCompareDataFunc compare_func, void *data);
+
+void
+darray_insert_item(DynamicArray *array, void *data, uint32_t index);
+
+uint32_t
+darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements);
+
+uint32_t
+darray_steal(DynamicArray *array, uint32_t index, uint32_t n_elements, DynamicArray *destination);
+
+void
+darray_remove_items_sorted(DynamicArray *array,
+                           DynamicArray *items,
+                           DynamicArrayCompareDataFunc compare_func,
+                           void *data);
+
+DynamicArray *
+darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data);
 
 DynamicArray *
 darray_new(size_t num_items);
@@ -80,3 +120,5 @@ darray_ref(DynamicArray *array);
 
 DynamicArray *
 darray_copy(DynamicArray *array);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(DynamicArray, darray_unref)

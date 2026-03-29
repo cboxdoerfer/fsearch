@@ -1,31 +1,92 @@
 #pragma once
 
-#define DATABASE_INDEX_TYPE_NAME_STRING "Name"
-#define DATABASE_INDEX_TYPE_PATH_STRING "Path"
-#define DATABASE_INDEX_TYPE_SIZE_STRING "Size"
-#define DATABASE_INDEX_TYPE_MODIFICATION_TIME_STRING "Date Modified"
-#define DATABASE_INDEX_TYPE_FILETYPE_STRING "Type"
-#define DATABASE_INDEX_TYPE_EXTENSION_STRING "Extension"
+#include "fsearch_array.h"
+#include "fsearch_database_entry.h"
+#include "fsearch_database_exclude_manager.h"
+#include "fsearch_database_include.h"
+#include "fsearch_database_index_event.h"
+#include "fsearch_database_index_properties.h"
 
-typedef enum {
-    DATABASE_INDEX_FLAG_NAME = 1 << 0,
-    DATABASE_INDEX_FLAG_PATH = 1 << 1,
-    DATABASE_INDEX_FLAG_SIZE = 1 << 2,
-    DATABASE_INDEX_FLAG_MODIFICATION_TIME = 1 << 3,
-    DATABASE_INDEX_FLAG_ACCESS_TIME = 1 << 4,
-    DATABASE_INDEX_FLAG_CREATION_TIME = 1 << 5,
-    DATABASE_INDEX_FLAG_STATUS_CHANGE_TIME = 1 << 6,
-} FsearchDatabaseIndexFlags;
+#include <gio/gio.h>
 
-typedef enum {
-    DATABASE_INDEX_TYPE_NAME,
-    DATABASE_INDEX_TYPE_PATH,
-    DATABASE_INDEX_TYPE_SIZE,
-    DATABASE_INDEX_TYPE_MODIFICATION_TIME,
-    DATABASE_INDEX_TYPE_ACCESS_TIME,
-    DATABASE_INDEX_TYPE_CREATION_TIME,
-    DATABASE_INDEX_TYPE_STATUS_CHANGE_TIME,
-    DATABASE_INDEX_TYPE_FILETYPE,
-    DATABASE_INDEX_TYPE_EXTENSION,
-    NUM_DATABASE_INDEX_TYPES,
-} FsearchDatabaseIndexType;
+G_BEGIN_DECLS
+
+#define FSEARCH_DATABASE_INDEX (fsearch_database_index_get_type())
+
+typedef struct _FsearchDatabaseIndex FsearchDatabaseIndex;
+
+typedef void
+(*FsearchDatabaseIndexEventFunc)(FsearchDatabaseIndex *, FsearchDatabaseIndexEvent *event, gpointer);
+
+GType
+fsearch_database_index_get_type(void);
+
+FsearchDatabaseIndex *
+fsearch_database_index_ref(FsearchDatabaseIndex *self);
+
+void
+fsearch_database_index_unref(FsearchDatabaseIndex *self);
+
+FsearchDatabaseIndex *
+fsearch_database_index_new(uint32_t id,
+                           FsearchDatabaseInclude *include,
+                           FsearchDatabaseExcludeManager *exclude_manager,
+                           FsearchDatabaseIndexPropertyFlags flags,
+                           GMainContext *worker_ctx,
+                           GMainContext *monitor_ctx,
+                           FsearchDatabaseIndexEventFunc event_func,
+                           gpointer event_func_data);
+
+FsearchDatabaseIndex *
+fsearch_database_index_new_with_content(uint32_t id,
+                                        FsearchDatabaseInclude *include,
+                                        FsearchDatabaseExcludeManager *exclude_manager,
+                                        DynamicArray *folders,
+                                        DynamicArray *files,
+                                        FsearchDatabaseIndexPropertyFlags flags);
+
+FsearchDatabaseInclude *
+fsearch_database_index_get_include(FsearchDatabaseIndex *self);
+
+FsearchDatabaseExcludeManager *
+fsearch_database_index_get_exclude_manager(FsearchDatabaseIndex *self);
+
+DynamicArray *
+fsearch_database_index_get_files(FsearchDatabaseIndex *self);
+
+DynamicArray *
+fsearch_database_index_get_folders(FsearchDatabaseIndex *self);
+
+uint32_t
+fsearch_database_index_get_id(FsearchDatabaseIndex *self);
+
+FsearchDatabaseIndexPropertyFlags
+fsearch_database_index_get_flags(FsearchDatabaseIndex *self);
+
+FsearchDatabaseEntry *
+fsearch_database_index_add_file(FsearchDatabaseIndex *self,
+                                const char *name,
+                                off_t size,
+                                time_t mtime,
+                                FsearchDatabaseEntry *parent);
+
+FsearchDatabaseEntry *
+fsearch_database_index_add_folder(FsearchDatabaseIndex *self,
+                                  const char *name,
+                                  const char *path,
+                                  time_t mtime,
+                                  FsearchDatabaseEntry *parent);
+
+void
+fsearch_database_index_lock(FsearchDatabaseIndex *self);
+
+void
+fsearch_database_index_unlock(FsearchDatabaseIndex *self);
+
+bool
+fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellable);
+
+void
+fsearch_database_index_start_monitoring(FsearchDatabaseIndex *self, bool start);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseIndex, fsearch_database_index_unref)

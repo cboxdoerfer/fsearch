@@ -21,14 +21,14 @@ get_next_input_char(FsearchQueryLexer *lexer) {
     return '\0';
 }
 
-static char
-top_char(GQueue *stack) {
-    return (char)GPOINTER_TO_UINT(g_queue_peek_tail(stack));
-}
+// static char
+// top_char(GQueue *stack) {
+//     return (char)GPOINTER_TO_UINT(g_queue_peek_tail(stack));
+// }
 
 static char
 pop_char(GQueue *stack) {
-    return (char)(GPOINTER_TO_UINT(g_queue_pop_tail(stack)));
+    return (char)GPOINTER_TO_UINT(g_queue_pop_tail(stack));
 }
 
 static void

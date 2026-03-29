@@ -94,17 +94,14 @@ confirm_action(GtkWidget *parent, const char *title, const char *question, int l
 static bool
 confirm_file_open_action(GtkWidget *parent, int num_files) {
     char question[1024] = "";
-    snprintf(question, sizeof(question), _("Do you really want to open %d file(s)?"), num_files);
+    snprintf(question, sizeof(question), _("Do you really want to open %'d file(s)?"), num_files);
 
     return confirm_action(parent, _("Opening Files…"), question, 10, num_files);
 }
 
 static void
-prepend_path_uri_to_array(gpointer key, gpointer value, gpointer user_data) {
-    g_return_if_fail(value);
-
+prepend_path_uri_to_array(FsearchDatabaseEntry *entry, gpointer user_data) {
     GPtrArray **file_array = (GPtrArray **)user_data;
-    FsearchDatabaseEntry *entry = value;
     GString *path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
@@ -115,9 +112,9 @@ prepend_path_uri_to_array(gpointer key, gpointer value, gpointer user_data) {
 }
 
 static void
-prepend_string_to_list(GList **string_list,
+prepend_string_to_list(GList * *string_list,
                        FsearchDatabaseEntry *entry,
-                       GString *(*get_string_func)(FsearchDatabaseEntry *)) {
+                       GString * (*get_string_func)(FsearchDatabaseEntry *)) {
     if (!entry || !string_list || !get_string_func) {
         return;
     }
@@ -138,7 +135,9 @@ append_line(GString *str, const char *text) {
 }
 
 static void
-append_line_to_string(GString *buffer, FsearchDatabaseEntry *entry, GString *(*get_string_func)(FsearchDatabaseEntry *)) {
+append_line_to_string(GString *buffer,
+                      FsearchDatabaseEntry *entry,
+                      GString * (*get_string_func)(FsearchDatabaseEntry *)) {
     if (!entry || !buffer || !get_string_func) {
         return;
     }
@@ -151,23 +150,23 @@ append_line_to_string(GString *buffer, FsearchDatabaseEntry *entry, GString *(*g
 }
 
 static void
-prepend_full_path_to_list(gpointer key, gpointer value, gpointer user_data) {
-    prepend_string_to_list(user_data, value, db_entry_get_path_full);
+prepend_full_path_to_list(FsearchDatabaseEntry *entry, gpointer user_data) {
+    prepend_string_to_list(user_data, entry, db_entry_get_path_full);
 }
 
 static void
-append_full_path_to_string(gpointer key, gpointer value, gpointer user_data) {
-    append_line_to_string(user_data, value, db_entry_get_path_full);
+append_full_path_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+    append_line_to_string(user_data, entry, db_entry_get_path_full);
 }
 
 static void
-append_path_to_string(gpointer key, gpointer value, gpointer user_data) {
-    append_line_to_string(user_data, value, db_entry_get_path);
+append_path_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+    append_line_to_string(user_data, entry, db_entry_get_path);
 }
 
 static void
-append_name_to_string(gpointer key, gpointer value, gpointer user_data) {
-    append_line_to_string(user_data, value, db_entry_get_name_for_display);
+append_name_to_string(FsearchDatabaseEntry *entry, gpointer user_data) {
+    append_line_to_string(user_data, entry, db_entry_get_name_for_display);
 }
 
 static void
@@ -182,7 +181,7 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
 
     if (delete || num_selected_rows > 20) {
         g_autoptr(GString) warning_message = g_string_new(NULL);
-        g_string_printf(warning_message, _("Do you really want to remove %d file(s)?"), num_selected_rows);
+        g_string_printf(warning_message, _("Do you really want to remove %'d file(s)?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
@@ -221,14 +220,14 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
     if (num_trashed_or_deleted > 0) {
         g_autoptr(GString) trashed_or_deleted_message = g_string_new(NULL);
         g_string_printf(trashed_or_deleted_message,
-                        delete ? _("Deleted %d file(s).") : _("Moved %d file(s) to the trash."),
+                        delete ? _("Deleted %'d file(s).") : _("Moved %'d file(s) to the trash."),
                         num_trashed_or_deleted);
         ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
                                       GTK_MESSAGE_INFO,
                                       GTK_BUTTONS_OK,
                                       trashed_or_deleted_message->str,
                                       _("The database needs to be updated before it becomes aware of those changes! "
-                                        "This will be fixed with future updates."),
+                                          "This will be fixed with future updates."),
                                       G_CALLBACK(gtk_widget_destroy),
                                       NULL);
     }
@@ -253,7 +252,7 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
 
     if (num_selected_rows > 20) {
         g_autoptr(GString) warning_message = g_string_new(NULL);
-        g_string_printf(warning_message, _("Do you really want to open %d file property windows?"), num_selected_rows);
+        g_string_printf(warning_message, _("Do you really want to open %'d file property windows?"), num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
@@ -268,7 +267,8 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
 
-    g_auto(GStrv) file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
+    g_auto(GStrv)
+        file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
     if (!file_uris) {
         return;
     }
@@ -303,7 +303,8 @@ fsearch_window_action_dbus_open_folder(FsearchApplicationWindow *win) {
     // ensure we have a NULL terminated array
     g_ptr_array_add(file_array, NULL);
 
-    g_auto(GStrv) file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
+    g_auto(GStrv)
+        file_uris = (GStrv)g_ptr_array_free(g_steal_pointer(&file_array), FALSE);
     if (!file_uris) {
         return;
     }
@@ -379,7 +380,7 @@ fsearch_window_action_copy(GSimpleAction *action, GVariant *variant, gpointer us
 }
 
 static void
-copy_selection_as_text(FsearchApplicationWindow *win, GHFunc text_copy_func) {
+copy_selection_as_text(FsearchApplicationWindow *win, FsearchDatabaseForeachFunc text_copy_func) {
     g_autoptr(GString) file_list_buffer = g_string_sized_new(8192);
     fsearch_application_window_selection_for_each(win, text_copy_func, file_list_buffer);
 
@@ -406,10 +407,8 @@ fsearch_window_action_copy_name(GSimpleAction *action, GVariant *variant, gpoint
 }
 
 static void
-collect_selected_entry_parent_path(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
-    g_return_if_fail(paths);
-    g_return_if_fail(entry);
-
+collect_selected_entry_parent_path(FsearchDatabaseEntry *entry, gpointer user_data) {
+    GList **paths = user_data;
     GString *parent_path = db_entry_get_path(entry);
     g_return_if_fail(parent_path);
 
@@ -417,10 +416,8 @@ collect_selected_entry_parent_path(gpointer key, FsearchDatabaseEntry *entry, GL
 }
 
 static void
-collect_selected_entry_path(gpointer key, FsearchDatabaseEntry *entry, GList **paths) {
-    g_return_if_fail(paths);
-    g_return_if_fail(entry);
-
+collect_selected_entry_path(FsearchDatabaseEntry *entry, gpointer user_data) {
+    GList **paths = user_data;
     GString *path = db_entry_get_path_full(entry);
     g_return_if_fail(path);
 
@@ -428,11 +425,7 @@ collect_selected_entry_path(gpointer key, FsearchDatabaseEntry *entry, GList **p
 }
 
 static void
-append_path_to_list(gpointer key, gpointer value, gpointer data) {
-    g_return_if_fail(value);
-
-    FsearchDatabaseEntry *entry = value;
-
+append_path_to_list(FsearchDatabaseEntry *entry, gpointer data) {
     GString *path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
@@ -441,11 +434,7 @@ append_path_to_list(gpointer key, gpointer value, gpointer data) {
 }
 
 static void
-append_file_to_list(gpointer key, gpointer value, gpointer data) {
-    g_return_if_fail(value);
-
-    FsearchDatabaseEntry *entry = value;
-
+append_file_to_list(FsearchDatabaseEntry *entry, gpointer data) {
     g_autoptr(GString) path_full = db_entry_get_path_full(entry);
     g_return_if_fail(path_full);
 
@@ -500,11 +489,11 @@ fsearch_window_action_open_with(GSimpleAction *action, GVariant *variant, gpoint
     if (!app_id) {
         return;
     }
-    #ifdef __MACH__
+#ifdef __MACH__
     g_autoptr(GAppInfo) app_info = NULL;
-    #else
+#else
     g_autoptr(GDesktopAppInfo) app_info = g_desktop_app_info_new(app_id);
-    #endif
+#endif
 
     if (!app_info) {
         return;
@@ -528,7 +517,8 @@ open_path_list_callback(gboolean result, const char *error_message, gpointer use
     else if (error_message) {
         // open failed
         if (ctx->show_dialog_failed_opening) {
-            GtkWindow *win = gtk_application_get_window_by_id(GTK_APPLICATION(FSEARCH_APPLICATION_DEFAULT), ctx->win_id);
+            GtkWindow *win =
+                gtk_application_get_window_by_id(GTK_APPLICATION(FSEARCH_APPLICATION_DEFAULT), ctx->win_id);
             if (win) {
                 ui_utils_run_gtk_dialog_async(GTK_WIDGET(win),
                                               GTK_MESSAGE_WARNING,
@@ -555,10 +545,10 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
 
     GList *paths = NULL;
     if (open_parent_folder && !config->folder_open_cmd) {
-        fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_parent_path, &paths);
+        fsearch_application_window_selection_for_each(win, collect_selected_entry_parent_path, &paths);
     }
     else {
-        fsearch_application_window_selection_for_each(win, (GHFunc)collect_selected_entry_path, &paths);
+        fsearch_application_window_selection_for_each(win, collect_selected_entry_path, &paths);
     }
 
     if (open_parent_folder && config->folder_open_cmd) {
@@ -581,7 +571,7 @@ fsearch_window_action_open_generic(FsearchApplicationWindow *win, bool open_pare
             }
         }
     }
-    else if(open_parent_folder && has_file_manager_on_bus) {
+    else if (open_parent_folder && has_file_manager_on_bus) {
         fsearch_window_action_dbus_open_folder(win);
     }
     else {
@@ -643,7 +633,7 @@ fsearch_window_action_preview(GSimpleAction *action, GVariant *variant, gpointer
 
     GtkWidget *toplevel = gtk_widget_get_toplevel(GTK_WIDGET(self));
 #ifdef GDK_WINDOWING_X11
-    GdkWindow *window = gtk_widget_get_window (toplevel);
+    GdkWindow *window = gtk_widget_get_window(toplevel);
     if (GDK_IS_X11_WINDOW(window)) {
         xid = gdk_x11_window_get_xid(gtk_widget_get_window(toplevel));
     }
@@ -686,8 +676,9 @@ fsearch_window_action_open_with_other(GSimpleAction *action, GVariant *variant, 
 
     GtkWidget *app_chooser_dlg = gtk_app_chooser_dialog_new_for_content_type(GTK_WINDOW(self),
                                                                              GTK_DIALOG_MODAL,
-                                                                             content_type ? content_type
-                                                                                          : "application/octet-stream");
+                                                                             content_type
+                                                                                 ? content_type
+                                                                                 : "application/octet-stream");
     gtk_widget_show(app_chooser_dlg);
 
     GtkWidget *widget = gtk_app_chooser_dialog_get_widget(GTK_APP_CHOOSER_DIALOG(app_chooser_dlg));
@@ -807,7 +798,7 @@ fsearch_window_action_show_path_column(GSimpleAction *action, GVariant *variant,
     FsearchApplicationWindow *self = user_data;
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_PATH);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_PATH);
     if (!col) {
         return;
     }
@@ -823,7 +814,7 @@ fsearch_window_action_show_extension_column(GSimpleAction *action, GVariant *var
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_EXTENSION);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_EXTENSION);
     if (!col) {
         return;
     }
@@ -839,7 +830,7 @@ fsearch_window_action_show_type_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_FILETYPE);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_FILETYPE);
     if (!col) {
         return;
     }
@@ -855,7 +846,7 @@ fsearch_window_action_show_size_column(GSimpleAction *action, GVariant *variant,
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_SIZE);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_PROPERTY_SIZE);
     if (!col) {
         return;
     }
@@ -871,7 +862,8 @@ fsearch_window_action_show_modified_column(GSimpleAction *action, GVariant *vari
     g_simple_action_set_state(action, variant);
     gboolean value = g_variant_get_boolean(variant);
     FsearchListView *list = FSEARCH_LIST_VIEW(fsearch_application_window_get_listview(self));
-    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list, DATABASE_INDEX_TYPE_MODIFICATION_TIME);
+    FsearchListViewColumn *col = fsearch_list_view_get_first_column_for_type(list,
+                                                                             DATABASE_INDEX_PROPERTY_MODIFICATION_TIME);
     if (!col) {
         return;
     }
@@ -932,17 +924,11 @@ static GActionEntry FsearchWindowActions[] = {
 
 void
 fsearch_window_actions_update(FsearchApplicationWindow *self) {
-    const gint num_rows = fsearch_application_window_get_num_results(self);
-
     GActionGroup *group = G_ACTION_GROUP(self);
 
-    FsearchListView *view = fsearch_application_window_get_listview(self);
     const gint active_filter = fsearch_application_window_get_active_filter(self);
-
-    gint num_rows_selected = 0;
-    if (view) {
-        num_rows_selected = fsearch_application_window_get_num_selected(self);
-    }
+    const gint num_rows = fsearch_application_window_get_num_rows(self);
+    const gint num_rows_selected = fsearch_application_window_get_num_selected(self);
 
     const bool has_file_manager_on_bus = fsearch_application_has_file_manager_on_bus(FSEARCH_APPLICATION_DEFAULT);
 

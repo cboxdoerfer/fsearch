@@ -23,8 +23,8 @@
 #include <stdint.h>
 
 typedef struct FsearchThreadPool FsearchThreadPool;
-typedef void (*FsearchThreadPoolFunc)(void *data);
-;
+typedef void
+(*FsearchThreadPoolFunc)(void *data);
 
 typedef enum FsearchThreadStatus { THREAD_IDLE, THREAD_BUSY, THREAD_FINISHED } FsearchThreadStatus;
 
