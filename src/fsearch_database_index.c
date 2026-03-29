@@ -26,6 +26,7 @@ struct _FsearchDatabaseIndex {
     FsearchFolderMonitorInotify *inotify_monitor;
 
     GSource *event_source;
+    GSource *root_reappear_poll_source;
     GMainContext *worker_ctx;
 
     GAsyncQueue *event_queue;
@@ -45,6 +46,8 @@ struct _FsearchDatabaseIndex {
     volatile gint ref_count;
 };
 
+#define ROOT_REAPPEAR_POLL_SECONDS 3
+
 static uint32_t num_file_deletes = 0;
 static uint32_t num_folder_deletes = 0;
 static uint32_t num_file_creates = 0;
@@ -62,6 +65,70 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event);
 
 static void
 process_queued_events(FsearchDatabaseIndex *self);
+
+static void
+propagate_event(FsearchDatabaseIndex *self,
+                FsearchDatabaseIndexEventKind kind,
+                DynamicArray *folders,
+                DynamicArray *files);
+
+static void
+index_stop_root_reappearance_polling(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
+
+    if (self->root_reappear_poll_source) {
+        g_source_destroy(self->root_reappear_poll_source);
+    }
+    g_clear_pointer(&self->root_reappear_poll_source, g_source_unref);
+}
+
+static gboolean
+index_root_reappear_poll_cb(gpointer user_data) {
+    g_return_val_if_fail(user_data, G_SOURCE_REMOVE);
+    FsearchDatabaseIndex *self = user_data;
+
+    g_assert(g_main_context_is_owner(self->worker_ctx));
+
+    const char *root_path = fsearch_database_include_get_path(self->include);
+    if (!g_file_test(root_path, G_FILE_TEST_IS_DIR)) {
+        return G_SOURCE_CONTINUE;
+    }
+
+    g_debug("[index-%d] root folder reappeared, rescanning: %s", self->id, root_path);
+    if (!fsearch_database_index_scan(self, NULL)) {
+        g_debug("[index-%d] rescan after reappear failed, keep polling: %s", self->id, root_path);
+        return G_SOURCE_CONTINUE;
+    }
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(self->folder_container);
+    g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(self->file_container);
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
+
+    index_stop_root_reappearance_polling(self);
+    return G_SOURCE_REMOVE;
+}
+
+static void
+index_start_root_reappearance_polling(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
+
+    if (self->root_reappear_poll_source || !self->worker_ctx) {
+        return;
+    }
+
+    self->root_reappear_poll_source = g_timeout_source_new_seconds(ROOT_REAPPEAR_POLL_SECONDS);
+    g_source_set_priority(self->root_reappear_poll_source, G_PRIORITY_DEFAULT_IDLE);
+    g_source_set_callback(self->root_reappear_poll_source, index_root_reappear_poll_cb, self, NULL);
+    g_source_attach(self->root_reappear_poll_source, self->worker_ctx);
+
+    g_debug("[index-%d] start polling for root folder reappearance every %d seconds", self->id, ROOT_REAPPEAR_POLL_SECONDS);
+}
 
 static void
 propagate_event(FsearchDatabaseIndex *self,
@@ -214,6 +281,7 @@ index_stop_monitoring(FsearchDatabaseIndex *self, FsearchFolderMonitorKind monit
     g_return_if_fail(monitor_kind != FSEARCH_FOLDER_MONITOR_NONE);
     g_return_if_fail(self);
     fsearch_database_index_start_monitoring(self, false);
+    g_atomic_int_set(&self->initialized, 0);
 
     g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(self->folder_container);
     g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(self->file_container);
@@ -455,6 +523,7 @@ process_move_or_delete_self_event(FsearchDatabaseIndex *self, FsearchFolderMonit
     }
     g_debug("move_self: is root: %s", root_path);
     index_stop_monitoring(self, event->monitor_kind);
+    index_start_root_reappearance_polling(self);
 }
 
 static void
@@ -548,6 +617,7 @@ index_free(FsearchDatabaseIndex *self) {
         g_source_destroy(self->event_source);
     }
     g_clear_pointer(&self->event_source, g_source_unref);
+    index_stop_root_reappearance_polling(self);
 
     g_clear_pointer(&self->include, fsearch_database_include_unref);
     g_clear_object(&self->exclude_manager);
