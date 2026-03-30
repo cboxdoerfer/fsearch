@@ -865,16 +865,17 @@ update_folder_indices(DynamicArray *folders) {
     }
 }
 
-static uint8_t
+static uint16_t
 get_name_offset(const char *old, const char *new) {
     if (!old || !new) {
         return 0;
     }
 
-    uint8_t offset = 0;
-    while (old[offset] == new[offset] && old[offset] != '\0' && new
-           [offset] != '\0' && offset < 255
-    ) {
+    uint16_t offset = 0;
+    while (offset < UINT16_MAX
+           && old[offset]
+           && old[offset] == new[offset]
+           ) {
         offset++;
     }
     return offset;
@@ -911,23 +912,21 @@ database_file_load_entry_super_elements_from_memory(const uint8_t *data_block,
                                                     FsearchDatabaseEntry **entry_out,
                                                     FsearchDatabaseEntryType type) {
     // name_offset: character position after which previous_entry_name and entry_name differ
-    uint8_t name_offset = *data_block++;
+    uint16_t name_offset = 0;
+    data_block = copy_bytes_and_return_new_src(&name_offset, data_block, sizeof(name_offset));
 
     // name_len: length of the new name characters
-    uint8_t name_len = *data_block++;
+    uint16_t name_len = 0;
+    data_block = copy_bytes_and_return_new_src(&name_len, data_block, sizeof(name_len));
 
     // erase previous name starting at name_offset
     g_string_erase(previous_entry_name, name_offset, -1);
 
-    char name[256] = "";
     // name: new characters to be appended to previous_entry_name
     if (name_len > 0) {
-        data_block = copy_bytes_and_return_new_src(name, data_block, name_len);
-        name[name_len] = '\0';
+        g_string_append_len(previous_entry_name, (const char *)data_block, name_len);
+        data_block += name_len;
     }
-
-    // now we can build the new full file name
-    g_string_append(previous_entry_name, name);
 
     *entry_out = db_entry_new(index_flags, previous_entry_name->str, NULL, type);
     int64_t size = 0;
@@ -1060,7 +1059,7 @@ database_file_load_folders(FILE *fp,
                            DynamicArray *folders,
                            uint32_t num_folders,
                            uint64_t folder_block_size) {
-    g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
+    g_autoptr(GString) previous_entry_name = g_string_sized_new(1024);
 
     g_autofree uint8_t *folder_block = calloc(folder_block_size + 1, sizeof(uint8_t));
     g_assert(folder_block);
@@ -1127,7 +1126,7 @@ database_file_load_files(FILE *fp,
                          DynamicArray *files,
                          uint32_t num_files,
                          uint64_t file_block_size) {
-    g_autoptr(GString) previous_entry_name = g_string_sized_new(256);
+    g_autoptr(GString) previous_entry_name = g_string_sized_new(1024);
     g_autofree uint8_t *file_block = calloc(file_block_size + 1, sizeof(uint8_t));
     g_assert(file_block);
 
@@ -1400,12 +1399,12 @@ database_file_save_entry_super_elements(FILE *fp,
 
     size_t bytes_written = 0;
     // name_offset: character position after which previous_entry_name and new_entry_name differ
-    const uint8_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
+    const uint16_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
     DB_WRITE_VAL(fp, name_offset, "failed to write name_offset: %d", name_offset, write_failed, bytes_written);
 
     // name_len: length of the new name characters
-    const uint8_t name_len = new_entry_name->len - name_offset;
-    bytes_written += database_file_write_data(fp, &name_len, 1, 1, write_failed);
+    const uint16_t name_len = new_entry_name->len - name_offset;
+    bytes_written += database_file_write_data(fp, &name_len, sizeof(name_len), 1, write_failed);
     if (*write_failed == true) {
         g_debug("[db_save] failed to save name length");
         return bytes_written;
