@@ -2964,9 +2964,10 @@ fsearch_database_finalize(GObject *object) {
     FsearchDatabase *self = (FsearchDatabase *)object;
 
     database_lock(self);
-    g_clear_pointer(&self->work_queue, g_async_queue_unref);
     g_clear_pointer(&self->thread_pool, fsearch_thread_pool_free);
     g_thread_pool_free(g_steal_pointer(&self->io_pool), TRUE, TRUE);
+
+    g_clear_pointer(&self->work_queue, g_async_queue_unref);
 
     g_clear_object(&self->file);
 
