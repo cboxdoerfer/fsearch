@@ -875,7 +875,7 @@ get_name_offset(const char *old, const char *new) {
     while (offset < UINT16_MAX
            && old[offset]
            && old[offset] == new[offset]
-           ) {
+    ) {
         offset++;
     }
     return offset;
@@ -906,11 +906,11 @@ copy_bytes_and_return_new_src(void *dest, const uint8_t *src, size_t len) {
 }
 
 static const uint8_t *
-database_file_load_entry_super_elements_from_memory(const uint8_t *data_block,
-                                                    FsearchDatabaseIndexPropertyFlags index_flags,
-                                                    GString *previous_entry_name,
-                                                    FsearchDatabaseEntry **entry_out,
-                                                    FsearchDatabaseEntryType type) {
+database_file_load_entry(const uint8_t *data_block,
+                         FsearchDatabaseIndexPropertyFlags index_flags,
+                         GString *previous_entry_name,
+                         FsearchDatabaseEntry **entry_out,
+                         FsearchDatabaseEntryType type) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint16_t name_offset = 0;
     data_block = copy_bytes_and_return_new_src(&name_offset, data_block, sizeof(name_offset));
@@ -954,50 +954,6 @@ database_file_read_element(void *restrict ptr, size_t size, FILE *restrict strea
 }
 
 static bool
-database_file_load_entry_super_elements(FILE *fp, FsearchDatabaseEntry *entry, GString *previous_entry_name) {
-    // name_offset: character position after which previous_entry_name and entry_name differ
-    uint8_t name_offset = 0;
-    if (!database_file_read_element(&name_offset, 1, fp)) {
-        g_debug("[db_load] failed to load name offset");
-        return false;
-    }
-
-    // name_len: length of the new name characters
-    uint8_t name_len = 0;
-    if (!database_file_read_element(&name_len, 1, fp)) {
-        g_debug("[db_load] failed to load name length");
-        return false;
-    }
-
-    // erase previous name starting at name_offset
-    g_string_erase(previous_entry_name, name_offset, -1);
-
-    char name[256] = "";
-    // name: new characters to be appended to previous_entry_name
-    if (name_len > 0) {
-        if (!database_file_read_element(name, name_len, fp)) {
-            g_debug("[db_load] failed to load name");
-            return false;
-        }
-        name[name_len] = '\0';
-    }
-
-    // now we can build the new full file name
-    g_string_append(previous_entry_name, name);
-    db_entry_set_name(entry, previous_entry_name->str);
-
-    // size: size of file/folder
-    uint64_t size = 0;
-    if (!database_file_read_element(&size, 8, fp)) {
-        g_debug("[db_load] failed to load size");
-        return false;
-    }
-    db_entry_set_size(entry, (off_t)size);
-
-    return true;
-}
-
-static bool
 database_file_load_header(FILE *fp) {
     char magic[5] = "";
     if (!database_file_read_element(magic, strlen(DATABASE_MAGIC_NUMBER), fp)) {
@@ -1029,15 +985,6 @@ database_file_load_header(FILE *fp) {
         return false;
     }
 
-    return true;
-}
-
-static bool
-database_file_load_parent_idx(FILE *fp, uint32_t *parent_idx) {
-    if (!database_file_read_element(parent_idx, 4, fp)) {
-        g_debug("[db_load] failed to load parent_idx");
-        return false;
-    }
     return true;
 }
 
@@ -1079,11 +1026,11 @@ database_file_load_folders(FILE *fp,
         uint16_t db_index = 0;
         fb = copy_bytes_and_return_new_src(&db_index, fb, 2);
 
-        fb = database_file_load_entry_super_elements_from_memory(fb,
-                                                                 index_flags,
-                                                                 previous_entry_name,
-                                                                 &folder,
-                                                                 DATABASE_ENTRY_TYPE_FOLDER);
+        fb = database_file_load_entry(fb,
+                                      index_flags,
+                                      previous_entry_name,
+                                      &folder,
+                                      DATABASE_ENTRY_TYPE_FOLDER);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -1140,11 +1087,11 @@ database_file_load_files(FILE *fp,
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
         FsearchDatabaseEntry *entry = NULL;
-        fb = database_file_load_entry_super_elements_from_memory(fb,
-                                                                 index_flags,
-                                                                 previous_entry_name,
-                                                                 &entry,
-                                                                 DATABASE_ENTRY_TYPE_FILE);
+        fb = database_file_load_entry(fb,
+                                      index_flags,
+                                      previous_entry_name,
+                                      &entry,
+                                      DATABASE_ENTRY_TYPE_FILE);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
@@ -1356,10 +1303,10 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
         }
 
         g_autoptr(FsearchDatabaseExclude) exclude = fsearch_database_exclude_new(pattern,
-                                                                                 is_active,
-                                                                                 (FsearchDatabaseExcludeType)exclude_type,
-                                                                                 (FsearchDatabaseExcludeMatchScope)scope,
-                                                                                 (FsearchDatabaseExcludeTarget)target);
+            is_active,
+            (FsearchDatabaseExcludeType)exclude_type,
+            (FsearchDatabaseExcludeMatchScope)scope,
+            (FsearchDatabaseExcludeTarget)target);
         fsearch_database_exclude_manager_add(exclude_manager, exclude);
     }
 
@@ -1386,13 +1333,13 @@ database_file_write_data(FILE *fp, const void *data, size_t data_size, size_t nu
 }
 
 static size_t
-database_file_save_entry_super_elements(FILE *fp,
-                                        FsearchDatabaseIndexPropertyFlags index_flags,
-                                        FsearchDatabaseEntry *entry,
-                                        uint32_t parent_idx,
-                                        GString *previous_entry_name,
-                                        GString *new_entry_name,
-                                        bool *write_failed) {
+database_file_save_entry(FILE *fp,
+                         FsearchDatabaseIndexPropertyFlags index_flags,
+                         FsearchDatabaseEntry *entry,
+                         uint32_t parent_idx,
+                         GString *previous_entry_name,
+                         GString *new_entry_name,
+                         bool *write_failed) {
     // init new_entry_name with the name of the current entry
     g_string_assign(new_entry_name, db_entry_get_name_raw(entry));
 
@@ -1478,14 +1425,13 @@ database_file_save_files(FILE *fp,
         db_entry_set_index(entry, i);
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = db_entry_get_index(parent);
-        bytes_written +=
-            database_file_save_entry_super_elements(fp,
-                                                    index_flags,
-                                                    entry,
-                                                    parent_idx,
-                                                    name_prev,
-                                                    name_new,
-                                                    write_failed);
+        bytes_written += database_file_save_entry(fp,
+                                                  index_flags,
+                                                  entry,
+                                                  parent_idx,
+                                                  name_prev,
+                                                  name_new,
+                                                  write_failed);
         if (*write_failed == true)
             return bytes_written;
     }
@@ -1598,14 +1544,13 @@ database_file_save_folders(FILE *fp,
 
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
-        bytes_written +=
-            database_file_save_entry_super_elements(fp,
-                                                    index_flags,
-                                                    entry,
-                                                    parent_idx,
-                                                    name_prev,
-                                                    name_new,
-                                                    write_failed);
+        bytes_written += database_file_save_entry(fp,
+                                                  index_flags,
+                                                  entry,
+                                                  parent_idx,
+                                                  name_prev,
+                                                  name_new,
+                                                  write_failed);
         if (*write_failed == true) {
             return bytes_written;
         }
@@ -2526,7 +2471,9 @@ database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(DynamicArray) folders_new = NULL;
 
     g_autoptr(FsearchDatabaseEntriesContainer) files_fast_sort_index = index_store_get_files(self->store, sort_order);
-    g_autoptr(FsearchDatabaseEntriesContainer) folders_fast_sort_index = index_store_get_folders( self->store, sort_order);
+    g_autoptr(FsearchDatabaseEntriesContainer) folders_fast_sort_index = index_store_get_folders(
+        self->store,
+        sort_order);
 
     g_autoptr(DynamicArray) files_fast_sorted = NULL;
     g_autoptr(DynamicArray) folders_fast_sorted = NULL;
@@ -2714,7 +2661,8 @@ database_modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
     }
 
     g_autoptr(DynamicArray) file_container = fsearch_database_entries_container_get_containers(view->file_container);
-    g_autoptr(DynamicArray) folder_container = fsearch_database_entries_container_get_containers(view->folder_container);
+    g_autoptr(DynamicArray) folder_container =
+        fsearch_database_entries_container_get_containers(view->folder_container);
 
     switch (type) {
     case FSEARCH_SELECTION_TYPE_CLEAR:
@@ -2793,7 +2741,10 @@ scan_thread_cb(gpointer data, gpointer user_data) {
     g_return_if_fail(db);
 
     index_store_start(store, db, NULL);
-    g_autoptr(FsearchDatabaseWork) finished_work = fsearch_database_work_new_scan_finished(store, (void *(*)(void *))index_store_ref, (GDestroyNotify)index_store_unref);
+    g_autoptr(FsearchDatabaseWork) finished_work = fsearch_database_work_new_scan_finished(
+        store,
+        (void *(*)(void *))index_store_ref,
+        (GDestroyNotify)index_store_unref);
     fsearch_database_queue_work(db, finished_work);
     g_clear_pointer(&store, index_store_unref);
 }
