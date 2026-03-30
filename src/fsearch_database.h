@@ -28,7 +28,7 @@ FsearchResult
 fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInfo * *info_out);
 
 FsearchResult
-fsearch_database_rescan_and_save_blocking(FsearchDatabase *self);
+fsearch_database_rescan_blocking(FsearchDatabase *self);
 
 void
 fsearch_database_selection_foreach(FsearchDatabase *self,

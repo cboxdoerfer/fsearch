@@ -664,7 +664,7 @@ database_scan_in_local_instance() {
     g_autofree char *db_file_path = g_build_filename(g_get_user_data_dir(), "fsearch", "fsearch.db", NULL);
     g_autoptr(GFile) db_file = g_file_new_for_path(db_file_path);
     g_autoptr(FsearchDatabase) db = fsearch_database_new(g_steal_pointer(&db_file));
-    FsearchResult result = fsearch_database_rescan_and_save_blocking(db);
+    FsearchResult result = fsearch_database_rescan_blocking(db);
 
     g_timer_stop(timer);
     const double seconds = g_timer_elapsed(timer, NULL);

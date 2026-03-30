@@ -1842,16 +1842,17 @@ save_fail:
 }
 
 static bool
-database_file_load_config(FsearchDatabase *self, const char *file_path, FsearchDatabaseIndexStore **store_out) {
+database_file_load_config(const char *file_path,
+                          FsearchDatabaseIncludeManager **include_manager_out,
+                          FsearchDatabaseExcludeManager **exclude_manager_out,
+                          FsearchDatabaseIndexPropertyFlags *flags_out) {
     g_return_val_if_fail(file_path, false);
-    g_return_val_if_fail(self, false);
 
     g_autoptr(FILE) fp = file_open_locked(file_path, "rb");
     if (!fp) {
         return false;
     }
 
-    g_autoptr(FsearchDatabaseIndexStore) store = NULL;
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
 
@@ -1900,9 +1901,9 @@ database_file_load_config(FsearchDatabase *self, const char *file_path, FsearchD
         goto load_fail;
     }
 
-    store = index_store_new(include_manager, exclude_manager, index_flags, index_event_cb, self);
-
-    *store_out = g_steal_pointer(&store);
+    *include_manager_out = g_steal_pointer(&include_manager);
+    *exclude_manager_out = g_steal_pointer(&exclude_manager);
+    *flags_out = index_flags;
 
     g_clear_pointer(&fp, fclose);
 
@@ -2775,6 +2776,26 @@ database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
 }
 
 static void
+database_rescan_sync(FsearchDatabase *db,
+                     const char *file_path,
+                     FsearchDatabaseIncludeManager *include_manager,
+                     FsearchDatabaseExcludeManager *exclude_manager,
+                     FsearchDatabaseIndexPropertyFlags flags) {
+
+    g_autoptr(FsearchDatabaseIndexStore) store = index_store_new(include_manager,
+                                                                 exclude_manager,
+                                                                 flags,
+                                                                 index_event_cb,
+                                                                 db);
+    g_return_if_fail(store);
+
+    index_store_start(store, db, NULL);
+
+    g_clear_pointer(&db->store, index_store_unref);
+    db->store = index_store_ref(store);
+}
+
+static void
 database_rescan(FsearchDatabase *self) {
     g_return_if_fail(self);
 
@@ -3240,16 +3261,19 @@ fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInf
 }
 
 FsearchResult
-fsearch_database_rescan_and_save_blocking(FsearchDatabase *self) {
+fsearch_database_rescan_blocking(FsearchDatabase *self) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
 
-    if (!self->store) {
-        g_autoptr(FsearchDatabaseIndexStore) store = NULL;
-        database_file_load_config(self, g_file_get_path(self->file), &store);
-        self->store = g_steal_pointer(&store);
-    }
-    database_rescan(self);
-    database_save(self);
+   g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+   g_assert_nonnull(locker);
+
+   g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
+   g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
+   FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_NONE;
+   database_file_load_config(g_file_get_path(self->file), &include_manager, &exclude_manager, &flags);
+   g_autofree char *path = g_file_get_path(self->file);
+   database_rescan_sync(self, path, include_manager, exclude_manager, flags);
+
     return FSEARCH_RESULT_SUCCESS;
 }
 
