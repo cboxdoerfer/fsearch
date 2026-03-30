@@ -1416,8 +1416,8 @@ database_file_save_files(FILE *fp,
                          bool *write_failed) {
     size_t bytes_written = 0;
 
-    g_autoptr(GString) name_prev = g_string_sized_new(256);
-    g_autoptr(GString) name_new = g_string_sized_new(256);
+    g_autoptr(GString) name_prev = g_string_sized_new(1024);
+    g_autoptr(GString) name_new = g_string_sized_new(1024);
 
     for (uint32_t i = 0; i < num_files; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(files, i);
@@ -1533,8 +1533,8 @@ database_file_save_folders(FILE *fp,
                            bool *write_failed) {
     size_t bytes_written = 0;
 
-    g_autoptr(GString) name_prev = g_string_sized_new(256);
-    g_autoptr(GString) name_new = g_string_sized_new(256);
+    g_autoptr(GString) name_prev = g_string_sized_new(1024);
+    g_autoptr(GString) name_new = g_string_sized_new(1024);
 
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
