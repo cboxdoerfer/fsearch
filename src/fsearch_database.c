@@ -1675,11 +1675,6 @@ database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
 
     g_debug("[db_save] saving database to file...");
 
-    //if (!g_file_test(file_path, G_FILE_TEST_IS_DIR)) {
-    //    g_debug("[db_save] database file_path doesn't exist: %s", file_path);
-    //    return false;
-    //}
-
     g_autoptr(GTimer) timer = g_timer_new();
     g_timer_start(timer);
 
