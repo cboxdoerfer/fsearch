@@ -1394,8 +1394,7 @@ database_file_save_entry_super_elements(FILE *fp,
                                         GString *new_entry_name,
                                         bool *write_failed) {
     // init new_entry_name with the name of the current entry
-    g_string_erase(new_entry_name, 0, -1);
-    g_string_append(new_entry_name, db_entry_get_name_raw(entry));
+    g_string_assign(new_entry_name, db_entry_get_name_raw(entry));
 
     size_t bytes_written = 0;
     // name_offset: character position after which previous_entry_name and new_entry_name differ
