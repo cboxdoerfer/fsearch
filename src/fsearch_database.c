@@ -2777,7 +2777,7 @@ database_save(FsearchDatabase *self) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
     g_autofree char *file_path = g_file_get_path(self->file);
-    database_file_save(self->store,file_path);
+    database_file_save(self->store, file_path);
 }
 
 typedef struct {
@@ -2871,7 +2871,11 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     signal_emit0(self, SIGNAL_SCAN_STARTED);
 
-    g_autoptr(FsearchDatabaseIndexStore) store = index_store_new(include_manager, exclude_manager, flags, index_event_cb, self);
+    g_autoptr(FsearchDatabaseIndexStore) store = index_store_new(include_manager,
+                                                                 exclude_manager,
+                                                                 flags,
+                                                                 index_event_cb,
+                                                                 self);
     g_return_if_fail(store);
 
     g_thread_pool_push(self->io_pool, g_steal_pointer(&store), NULL);
@@ -2968,7 +2972,9 @@ database_work_queue_thread(gpointer data) {
             g_assert_not_reached();
         }
 
-        g_debug("[db_worker] finished work '%s' in: %fs.", fsearch_database_work_to_string(work), g_timer_elapsed(timer, NULL));
+        g_debug("[db_worker] finished work '%s' in: %fs.",
+                fsearch_database_work_to_string(work),
+                g_timer_elapsed(timer, NULL));
 
         if (quit) {
             break;
