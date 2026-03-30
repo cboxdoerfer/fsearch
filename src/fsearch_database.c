@@ -929,17 +929,17 @@ database_file_load_entry_super_elements_from_memory(const uint8_t *data_block,
     }
 
     *entry_out = db_entry_new(index_flags, previous_entry_name->str, NULL, type);
-    int64_t size = 0;
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: size of file/folder
+        int64_t size = 0;
         data_block = copy_bytes_and_return_new_src(&size, data_block, sizeof(size));
 
         db_entry_set_size(*entry_out, (off_t)size);
     }
 
-    int64_t mtime = 0;
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time file/folder
+        int64_t mtime = 0;
         data_block = copy_bytes_and_return_new_src(&mtime, data_block, sizeof(mtime));
 
         db_entry_set_mtime(*entry_out, (time_t)mtime);
