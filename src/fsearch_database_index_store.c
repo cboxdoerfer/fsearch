@@ -1,3 +1,5 @@
+#define G_LOG_DOMAIN "fsearch-database-index-store"
+
 #include "fsearch_database_index_store.h"
 
 #include "fsearch_array.h"
