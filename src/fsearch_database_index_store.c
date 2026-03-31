@@ -62,6 +62,8 @@ struct FsearchDatabaseIndexStore {
     bool is_sorted;
     bool running;
 
+    GMutex mutex;
+
     volatile gint ref_count;
 };
 
@@ -192,6 +194,8 @@ index_store_free(FsearchDatabaseIndexStore *store) {
     g_clear_object(&store->include_manager);
     g_clear_object(&store->exclude_manager);
 
+    g_mutex_clear(&store->mutex);
+
     g_slice_free(FsearchDatabaseIndexStore, store);
 }
 
@@ -225,6 +229,8 @@ fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
     store->worker.ctx = g_main_context_new();
     store->worker.loop = g_main_loop_new(store->worker.ctx, FALSE);
     store->worker.thread = g_thread_new("FsearchDatabaseIndexStoreWorker", index_store_worker_thread_func, store);
+
+    g_mutex_init(&store->mutex);
 
     store->ref_count = 1;
 
@@ -445,6 +451,30 @@ fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store) 
     }
 
     index_store_unlock_all_indices(store);
+}
+
+GMutexLocker *
+fsearch_database_index_store_get_locker(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, NULL);
+    return g_mutex_locker_new(&store->mutex);
+}
+
+gboolean
+fsearch_database_index_store_trylock(FsearchDatabaseIndexStore *store) {
+    g_return_val_if_fail(store, FALSE);
+    return g_mutex_trylock(&store->mutex);
+}
+
+void
+fsearch_database_index_store_lock(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
+    g_mutex_lock(&store->mutex);
+}
+
+void
+fsearch_database_index_store_unlock(FsearchDatabaseIndexStore *store) {
+    g_return_if_fail(store);
+    g_mutex_unlock(&store->mutex);
 }
 
 /* Data Accessors */

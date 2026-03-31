@@ -1594,14 +1594,17 @@ database_get_entry_info_non_blocking(FsearchDatabase *self,
 
 static FsearchResult
 database_get_entry_info(FsearchDatabase *self, FsearchDatabaseWork *work, FsearchDatabaseEntryInfo **info_out) {
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    // DB must be locked
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
     return database_get_entry_info_non_blocking(self, work, info_out);
 }
 
 static void
 database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    // DB must be locked
     g_return_if_fail(self);
+    g_return_if_fail(self->store);
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
     const FsearchDatabaseIndexProperty sort_order = fsearch_database_work_sort_get_sort_order(work);
@@ -1610,7 +1613,7 @@ database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
     signal_emit(self, SIGNAL_SORT_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
     fsearch_database_index_store_sort_results(self->store, id, sort_order, sort_type, cancellable);
@@ -1620,7 +1623,9 @@ database_sort(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
 static bool
 database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    // DB must be locked
     g_return_val_if_fail(self, false);
+    g_return_val_if_fail(self->store, false);
 
     const uint32_t id = fsearch_database_work_get_view_id(work);
 
@@ -1629,14 +1634,10 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
     const GtkSortType sort_type = fsearch_database_work_search_get_sort_type(work);
     g_autoptr(GCancellable) cancellable = fsearch_database_work_get_cancellable(work);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
-
-    if (!self->store) {
-        return false;
-    }
-
     signal_emit(self, SIGNAL_SEARCH_STARTED, GUINT_TO_POINTER(id), NULL, 1, NULL, NULL);
+
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
+    g_assert_nonnull(locker);
 
     const bool result = fsearch_database_index_store_search(self->store,
                                                             id,
@@ -1665,6 +1666,7 @@ update_search_views(FsearchDatabase *self) {
     }
 }
 
+// Runs in index store worker thread
 static void
 index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
     FsearchDatabase *self = FSEARCH_DATABASE(user_data);
@@ -1672,9 +1674,11 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
     switch (event->kind) {
     case FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING:
         database_lock(self);
+        fsearch_database_index_store_lock(self->store);
         break;
     case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
         update_search_views(self);
+        fsearch_database_index_store_unlock(self->store);
         signal_emit_database_changed(self, database_get_info(self));
         database_unlock(self);
         break;
@@ -1702,14 +1706,16 @@ index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gp
 
 static void
 database_modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    // DB must be locked
     g_return_if_fail(self);
+    g_return_if_fail(self->store);
     g_return_if_fail(work);
     const uint32_t view_id = fsearch_database_work_get_view_id(work);
     const FsearchSelectionType type = fsearch_database_work_modify_selection_get_type(work);
     const int32_t start_idx = fsearch_database_work_modify_selection_get_start_idx(work);
     const int32_t end_idx = fsearch_database_work_modify_selection_get_end_idx(work);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
     fsearch_database_index_store_modify_selection(self->store, view_id, type, start_idx, end_idx);
@@ -1719,15 +1725,15 @@ database_modify_selection(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
 static void
 database_save(FsearchDatabase *self) {
+    // DB must be locked
     g_return_if_fail(self);
     g_return_if_fail(self->file);
+    g_return_if_fail(self->store);
 
-    // g_autoptr(GFile) db_directory = g_file_get_parent(self->file);
-    // g_autofree gchar *db_directory_path = g_file_get_path(db_directory);
-
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
     g_autofree char *file_path = g_file_get_path(self->file);
+
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
+    g_assert_nonnull(locker);
     database_file_save(self->store, file_path);
 }
 
@@ -1749,16 +1755,17 @@ scan_thread_cb(gpointer data, gpointer user_data) {
 
 static void
 database_scan_finished(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    // DB must be locked
     g_return_if_fail(self);
     g_return_if_fail(work);
 
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_work_scan_finished_get_index_store(work);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
-
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
     self->store = g_steal_pointer(&store);
+
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
+    g_assert_nonnull(locker);
 
     fsearch_database_index_store_start_monitoring(self->store);
 
@@ -1781,7 +1788,7 @@ database_rescan_sync(FsearchDatabase *db,
                      FsearchDatabaseIncludeManager *include_manager,
                      FsearchDatabaseExcludeManager *exclude_manager,
                      FsearchDatabaseIndexPropertyFlags flags) {
-
+    // DB must be locked
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
         exclude_manager,
         flags,
@@ -1797,23 +1804,25 @@ database_rescan_sync(FsearchDatabase *db,
 
 static void
 database_rescan(FsearchDatabase *self) {
+    // DB must be locked
     g_return_if_fail(self);
+    g_return_if_fail(self->store);
 
     signal_emit0(self, SIGNAL_SCAN_STARTED);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
-
-    g_autoptr(FsearchDatabaseIncludeManager) include_manager =
-        fsearch_database_index_store_get_include_manager(self->store);
-    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager =
-        fsearch_database_index_store_get_exclude_manager(self->store);
-    if (!include_manager) {
-        include_manager = fsearch_database_include_manager_new_with_defaults();
+    g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
+    g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
+    if (self->store) {
+        g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
+        g_assert_nonnull(locker);
+        include_manager = fsearch_database_index_store_get_include_manager(self->store);
+        exclude_manager = fsearch_database_index_store_get_exclude_manager(self->store);
     }
-    if (!exclude_manager) {
+    else {
+        include_manager = fsearch_database_include_manager_new_with_defaults();
         exclude_manager = fsearch_database_exclude_manager_new_with_defaults();
     }
+
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
         exclude_manager,
         database_get_flags(self),
@@ -1821,13 +1830,12 @@ database_rescan(FsearchDatabase *self) {
         self);
     g_return_if_fail(store);
 
-    g_clear_pointer(&locker, g_mutex_locker_free);
-
     g_thread_pool_push(self->io_pool, g_steal_pointer(&store), NULL);
 }
 
 static void
 database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
+    // DB must be locked
     g_return_if_fail(self);
     g_return_if_fail(work);
 
@@ -1835,7 +1843,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_work_scan_get_exclude_manager(work);
     const FsearchDatabaseIndexPropertyFlags flags = fsearch_database_work_scan_get_flags(work);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
     if (self->store && fsearch_database_include_manager_equal(database_get_include_manager(self), include_manager)
@@ -1861,6 +1869,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
 static void
 database_load(FsearchDatabase *self) {
+    // DB must be locked
     g_return_if_fail(self);
     g_return_if_fail(self->file);
 
@@ -1868,9 +1877,6 @@ database_load(FsearchDatabase *self) {
 
     g_autoptr(FsearchDatabaseIndexStore) store = NULL;
     const bool res = database_file_load(self, g_file_get_path(self->file), NULL, &store);
-
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
-    g_assert_nonnull(locker);
 
     if (!res) {
         store = fsearch_database_index_store_new(fsearch_database_include_manager_new_with_defaults(),
@@ -1903,6 +1909,10 @@ database_work_queue_thread(gpointer data) {
         g_timer_start(timer);
 
         bool quit = false;
+
+        // Ensure the database is locked while processing work
+        g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+        g_assert_nonnull(locker);
 
         switch (fsearch_database_work_get_kind(work)) {
         case FSEARCH_DATABASE_WORK_QUIT:
@@ -1985,7 +1995,16 @@ fsearch_database_dispose(GObject *object) {
 
     // Notify work queue thread to exit itself
     g_async_queue_push(self->work_queue, fsearch_database_work_new_quit());
-    g_thread_join(self->work_queue_thread);
+
+    // Wait for the work queue thread to exit
+    if (self->work_queue_thread) {
+        g_thread_join(g_steal_pointer(&self->work_queue_thread));
+    }
+
+    // Exit io thread pool
+    if (self->io_pool) {
+        g_thread_pool_free(g_steal_pointer(&self->io_pool), TRUE, TRUE);
+    }
 
     G_OBJECT_CLASS(fsearch_database_parent_class)->dispose(object);
 }
@@ -1994,16 +2013,11 @@ static void
 fsearch_database_finalize(GObject *object) {
     FsearchDatabase *self = (FsearchDatabase *)object;
 
-    database_lock(self);
-    g_clear_pointer(&self->thread_pool, fsearch_thread_pool_free);
-    g_thread_pool_free(g_steal_pointer(&self->io_pool), TRUE, TRUE);
-
     g_clear_pointer(&self->work_queue, g_async_queue_unref);
 
     g_clear_object(&self->file);
 
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);
-    database_unlock(self);
 
     g_mutex_clear(&self->mutex);
 
@@ -2218,9 +2232,10 @@ fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work) {
 FsearchResult
 fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
-    if (!g_mutex_trylock(&self->mutex)) {
+    if (!fsearch_database_index_store_trylock(self->store)) {
         return FSEARCH_RESULT_DB_BUSY;
     }
 
@@ -2234,7 +2249,7 @@ fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, Fs
         res = FSEARCH_RESULT_SUCCESS;
     }
 
-    database_unlock(self);
+    fsearch_database_index_store_unlock(self->store);
 
     return res;
 }
@@ -2246,15 +2261,17 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
                                    FsearchDatabaseEntryInfoFlags flags,
                                    FsearchDatabaseEntryInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
-    if (!g_mutex_trylock(&self->mutex)) {
+    if (!fsearch_database_index_store_trylock(self->store)) {
         return FSEARCH_RESULT_DB_BUSY;
     }
+
     g_autoptr(FsearchDatabaseWork) work = fsearch_database_work_new_get_item_info(view_id, idx, flags);
     FsearchResult res = database_get_entry_info_non_blocking(self, work, info_out);
 
-    database_unlock(self);
+    fsearch_database_index_store_unlock(self->store);
 
     return res;
 }
@@ -2262,15 +2279,16 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
 FsearchResult
 fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
+    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
 
-    if (!g_mutex_trylock(&self->mutex)) {
+    if (!fsearch_database_index_store_trylock(self->store)) {
         return FSEARCH_RESULT_DB_BUSY;
     }
 
     *info_out = database_get_info(self);
 
-    database_unlock(self);
+    fsearch_database_index_store_unlock(self->store);
 
     return FSEARCH_RESULT_SUCCESS;
 }
@@ -2281,7 +2299,6 @@ fsearch_database_rescan_blocking(FsearchDatabase *self) {
 
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
-
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = NULL;
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = NULL;
     FsearchDatabaseIndexPropertyFlags flags = DATABASE_INDEX_PROPERTY_FLAG_NONE;
@@ -2313,9 +2330,10 @@ fsearch_database_selection_foreach(FsearchDatabase *self,
                                    FsearchDatabaseForeachFunc func,
                                    gpointer user_data) {
     g_return_if_fail(FSEARCH_IS_DATABASE(self));
+    g_return_if_fail(self->store);
     g_return_if_fail(func);
 
-    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
     g_assert_nonnull(locker);
 
     FsearchDatabaseSelectionForeachContext ctx = {.func = func, .user_data = user_data};

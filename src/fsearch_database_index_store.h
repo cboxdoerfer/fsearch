@@ -103,6 +103,18 @@ fsearch_database_index_store_has_container(FsearchDatabaseIndexStore *store,
                                            FsearchDatabaseEntriesContainer *container);
 
 // Manipulation
+GMutexLocker *
+fsearch_database_index_store_get_locker(FsearchDatabaseIndexStore *store);
+
+gboolean
+fsearch_database_index_store_trylock(FsearchDatabaseIndexStore *store);
+
+void
+fsearch_database_index_store_lock(FsearchDatabaseIndexStore *store);
+
+void
+fsearch_database_index_store_unlock(FsearchDatabaseIndexStore *store);
+
 void
 fsearch_database_index_store_add_entries(FsearchDatabaseIndexStore *store, DynamicArray *files, DynamicArray *folders);
 
