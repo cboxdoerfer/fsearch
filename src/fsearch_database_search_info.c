@@ -2,6 +2,7 @@
 
 struct _FsearchDatabaseSearchInfo {
     FsearchQuery *query;
+    uint32_t id;
     uint32_t num_files;
     uint32_t num_folders;
     uint32_t num_files_selected;
@@ -39,7 +40,8 @@ fsearch_database_search_info_unref(FsearchDatabaseSearchInfo *info) {
 }
 
 FsearchDatabaseSearchInfo *
-fsearch_database_search_info_new(FsearchQuery *query,
+fsearch_database_search_info_new(uint32_t id,
+                                 FsearchQuery *query,
                                  uint32_t num_files,
                                  uint32_t num_folders,
                                  uint32_t num_files_selected,
@@ -49,6 +51,7 @@ fsearch_database_search_info_new(FsearchQuery *query,
     FsearchDatabaseSearchInfo *info = calloc(1, sizeof(FsearchDatabaseSearchInfo));
     g_assert(info);
 
+    info->id = id;
     info->query = fsearch_query_ref(query);
     info->num_files = num_files;
     info->num_folders = num_folders;
@@ -60,6 +63,12 @@ fsearch_database_search_info_new(FsearchQuery *query,
     info->ref_count = 1;
 
     return info;
+}
+
+uint32_t
+fsearch_database_search_info_get_id(FsearchDatabaseSearchInfo *info) {
+    g_return_val_if_fail(info, 0);
+    return info->id;
 }
 
 uint32_t

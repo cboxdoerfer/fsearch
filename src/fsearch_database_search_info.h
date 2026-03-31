@@ -22,13 +22,17 @@ void
 fsearch_database_search_info_unref(FsearchDatabaseSearchInfo *info);
 
 FsearchDatabaseSearchInfo *
-fsearch_database_search_info_new(FsearchQuery *query,
+fsearch_database_search_info_new(uint32_t id,
+                                 FsearchQuery *query,
                                  uint32_t num_files,
                                  uint32_t num_folders,
                                  uint32_t num_files_selected,
                                  uint32_t num_folders_selected,
                                  FsearchDatabaseIndexProperty sort_order,
                                  GtkSortType sort_type);
+
+uint32_t
+fsearch_database_search_info_get_id(FsearchDatabaseSearchInfo *info);
 
 uint32_t
 fsearch_database_search_info_get_num_files(FsearchDatabaseSearchInfo *info);
