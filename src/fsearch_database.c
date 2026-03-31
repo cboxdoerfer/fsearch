@@ -63,6 +63,8 @@ struct _FsearchDatabase {
     GThreadPool *io_pool;
     FsearchThreadPool *thread_pool;
 
+    GCancellable *cancellable;
+
     FsearchDatabaseIndexStore *store;
 
     GMutex mutex;
@@ -143,6 +145,42 @@ signal_emit_context_new(FsearchDatabase *db,
     return ctx;
 }
 
+const char *
+    signal_type_to_name(FsearchDatabaseSignalType type) {
+    switch (type) {
+    case SIGNAL_LOAD_STARTED:
+        return "SIGNAL_LOAD_STARTED";
+    case SIGNAL_LOAD_FINISHED:
+        return "SIGNAL_LOAD_FINISHED";
+    case SIGNAL_ITEM_INFO_READY:
+        return "SIGNAL_ITEM_INFO_READY";
+    case SIGNAL_SAVE_STARTED:
+        return "SIGNAL_SAVE_STARTED";
+    case SIGNAL_SAVE_FINISHED:
+        return "SIGNAL_SAVE_FINISHED";
+    case SIGNAL_SCAN_STARTED:
+        return "SIGNAL_SCAN_STARTED";
+    case SIGNAL_SCAN_FINISHED:
+        return "SIGNAL_SCAN_FINISHED";
+    case SIGNAL_SEARCH_STARTED:
+        return "SIGNAL_SEARCH_STARTED";
+    case SIGNAL_SEARCH_FINISHED:
+        return "SIGNAL_SEARCH_FINISHED";
+    case SIGNAL_SORT_STARTED:
+        return "SIGNAL_SORT_STARTED";
+    case SIGNAL_SORT_FINISHED:
+        return "SIGNAL_SORT_FINISHED";
+    case SIGNAL_SELECTION_CHANGED:
+        return "SIGNAL_SELECTION_CHANGED";
+    case SIGNAL_DATABASE_CHANGED:
+        return "SIGNAL_DATABASE_CHANGED";
+    case SIGNAL_DATABASE_PROGRESS:
+        return "SIGNAL_DATABASE_PROGRESS";
+    case NUM_DATABASE_SIGNALS:
+        return "UNKOWN";
+    }
+}
+
 static gboolean
 signal_emit_cb(gpointer user_data) {
     FsearchSignalEmitContext *ctx = user_data;
@@ -168,6 +206,10 @@ signal_emit_cb(gpointer user_data) {
 
 static void
 signal_emit0(FsearchDatabase *self, FsearchDatabaseSignalType type) {
+    if (g_cancellable_is_cancelled(self->cancellable)) {
+        g_debug("signal_emit0: cancelling signal %s", signal_type_to_name(type));
+        return;
+    }
     g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, NULL, NULL, 0, NULL, NULL));
 }
 
@@ -179,6 +221,10 @@ signal_emit(FsearchDatabase *self,
             guint n_args,
             GDestroyNotify arg1_free_func,
             GDestroyNotify arg2_free_func) {
+    if (g_cancellable_is_cancelled(self->cancellable)) {
+        g_debug("signal_emit: cancelling signal %s", signal_type_to_name(type));
+        return;
+    }
     g_idle_add(signal_emit_cb, signal_emit_context_new(self, type, arg1, arg2, n_args, arg1_free_func, arg2_free_func));
 }
 
@@ -1744,12 +1790,14 @@ scan_thread_cb(gpointer data, gpointer user_data) {
     g_return_if_fail(store);
     g_return_if_fail(db);
 
-    fsearch_database_index_store_start(store, NULL);
-    g_autoptr(FsearchDatabaseWork) finished_work = fsearch_database_work_new_scan_finished(
-        store,
-        (void *(*)(void *))fsearch_database_index_store_ref,
-        (GDestroyNotify)fsearch_database_index_store_unref);
-    fsearch_database_queue_work(db, finished_work);
+    fsearch_database_index_store_start(store, db->cancellable);
+    if (!g_cancellable_is_cancelled(db->cancellable)) {
+        g_autoptr(FsearchDatabaseWork) finished_work = fsearch_database_work_new_scan_finished(
+            store,
+            (void *(*)(void *))fsearch_database_index_store_ref,
+            (GDestroyNotify)fsearch_database_index_store_unref);
+        fsearch_database_queue_work(db, finished_work);
+    }
     g_clear_pointer(&store, fsearch_database_index_store_unref);
 }
 
@@ -1993,6 +2041,9 @@ static void
 fsearch_database_dispose(GObject *object) {
     FsearchDatabase *self = (FsearchDatabase *)object;
 
+    // Cancel ongoing work
+    g_cancellable_cancel(self->cancellable);
+
     // Notify work queue thread to exit itself
     g_async_queue_push(self->work_queue, fsearch_database_work_new_quit());
 
@@ -2017,7 +2068,11 @@ fsearch_database_finalize(GObject *object) {
 
     g_clear_object(&self->file);
 
-    g_clear_pointer(&self->store, fsearch_database_index_store_unref);
+    // Don't use g_clear_pointer here since index_store_unref will access self->store while terminating
+    fsearch_database_index_store_unref(self->store);
+    self->store = NULL;
+
+    g_clear_object(&self->cancellable);
 
     g_mutex_clear(&self->mutex);
 
@@ -2202,6 +2257,7 @@ fsearch_database_class_init(FsearchDatabaseClass *klass) {
 static void
 fsearch_database_init(FsearchDatabase *self) {
     g_mutex_init(&self->mutex);
+    self->cancellable = g_cancellable_new();
     self->thread_pool = fsearch_thread_pool_init();
     self->io_pool = g_thread_pool_new_full(scan_thread_cb,
                                            self,

@@ -246,7 +246,6 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
                                               FsearchDatabaseIndexPropertyFlags flags,
                                               FsearchDatabaseIndexEventFunc event_func,
                                               gpointer event_func_data) {
-    g_print("new content...\n");
     FsearchDatabaseIndexStore *store = fsearch_database_index_store_new(include_manager,
                                                                         exclude_manager,
                                                                         flags,
@@ -351,6 +350,10 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
         fsearch_database_index_unlock(index);
 
         store->is_sorted = false;
+    }
+
+    if (g_cancellable_is_cancelled(cancellable)) {
+        return;
     }
 
     //signal_emit(db, SIGNAL_DATABASE_PROGRESS, g_strdup(_("Sorting…")), NULL, 1, (GDestroyNotify)free, NULL);
