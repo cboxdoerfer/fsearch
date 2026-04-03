@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2023-01-21 12:24+0100\n"
-"PO-Revision-Date: 2026-03-22 14:09+0000\n"
+"PO-Revision-Date: 2026-04-04 15:09+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -541,7 +541,7 @@ msgstr "閉じる"
 
 #: src/fsearch_preferences.ui:327
 msgid "General:"
-msgstr "一般:"
+msgstr "全般:"
 
 #: src/fsearch_preferences.ui:362
 msgid "Show highlighted search terms"
