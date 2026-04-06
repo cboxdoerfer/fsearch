@@ -248,6 +248,11 @@
             -->
         </section>
         <section id="fsearch_listview_menu_file_properties_section">
+            <item>
+                <attribute name="label" translatable="yes">Rename</attribute>
+                <attribute name="action">win.rename_selection</attribute>
+                <attribute name="accel">F2</attribute>
+            </item>
             <!--
             <item>
                 <attribute name="label" translatable="yes">Properties…</attribute>
