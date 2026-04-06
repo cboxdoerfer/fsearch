@@ -196,9 +196,25 @@ index_store_search_worker(FsearchQuery *query,
 
 }
 
+static void
+index_store_remove_from_store_worker(FsearchDatabaseEntriesContainer *container, DynamicArray *entries) {
+    g_return_if_fail(container);
+    g_return_if_fail(entries);
+
+    for (uint32_t j = 0; j < darray_get_num_items(entries); ++j) {
+        FsearchDatabaseEntry *entry = darray_get_item(entries, j);
+        if (!fsearch_database_entries_container_steal(container, entry)) {
+            g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
+        }
+    }
+}
+
 typedef enum {
     INDEX_STORE_WORKER_POOL_DATA_TYPE_SEARCH = 0,
-    INDEX_STORE_WORKER_POOL_DATA_TYPE_UPDATE,
+    INDEX_STORE_WORKER_POOL_DATA_TYPE_ADD_ENTRIES,
+    INDEX_STORE_WORKER_POOL_DATA_TYPE_REMOVE_ENTRIES,
+    INDEX_STORE_WORKER_POOL_DATA_TYPE_ADD_TO_RESULTS,
+    INDEX_STORE_WORKER_POOL_DATA_TYPE_REMOVE_FROM_RESULTS,
     NUM_INDEX_STORE_WORKER_POOL_DATA_TYPES,
 } IndexStoreWorkerPoolDataType;
 
@@ -215,6 +231,17 @@ typedef struct {
             uint32_t in_end_idx;
             int32_t thread_id;
         } search;
+
+        struct {
+            FsearchDatabaseEntriesContainer *container;
+            DynamicArray *entries;
+        } update_store;
+
+        struct {
+            FsearchDatabaseSearchView *view;
+            DynamicArray *files;
+            DynamicArray *folders;
+        } update_results;
     };
 } IndexStoreWorkerPoolData;
 
@@ -236,7 +263,35 @@ index_store_worker_pool_func(gpointer pool_data, gpointer user_data) {
                                   data->search.in_end_idx,
                                   data->search.cancellable);
         g_async_queue_push(store->worker_pool_collect_queue, data);
+        break;
     }
+    case INDEX_STORE_WORKER_POOL_DATA_TYPE_ADD_ENTRIES: {
+        fsearch_database_entries_container_insert_array(data->update_store.container, data->update_store.entries);
+        g_async_queue_push(store->worker_pool_collect_queue, data);
+        break;
+    }
+    case INDEX_STORE_WORKER_POOL_DATA_TYPE_REMOVE_ENTRIES: {
+        index_store_remove_from_store_worker(data->update_store.container, data->update_store.entries);
+        g_async_queue_push(store->worker_pool_collect_queue, data);
+        break;
+    }
+    case INDEX_STORE_WORKER_POOL_DATA_TYPE_ADD_TO_RESULTS: {
+        fsearch_database_search_view_add(data->update_results.view,
+                                         data->update_results.files,
+                                         data->update_results.folders);
+        g_async_queue_push(store->worker_pool_collect_queue, data);
+        break;
+    }
+    case INDEX_STORE_WORKER_POOL_DATA_TYPE_REMOVE_FROM_RESULTS: {
+        fsearch_database_search_view_remove(data->update_results.view,
+                                            data->update_results.files,
+                                            data->update_results.folders);
+        g_async_queue_push(store->worker_pool_collect_queue, data);
+        break;
+    }
+    default:
+        g_assert_not_reached();
+        break;
     }
 }
 
@@ -626,7 +681,6 @@ fsearch_database_index_store_get_num_folders(FsearchDatabaseIndexStore *store) {
                : 0;
 }
 
-
 FsearchDatabaseIncludeManager *
 fsearch_database_index_store_get_include_manager(FsearchDatabaseIndexStore *store) {
     g_return_val_if_fail(store, NULL);
@@ -672,7 +726,6 @@ fsearch_database_index_store_get_entry_info(FsearchDatabaseIndexStore *store,
                                            flags);
 }
 
-
 uint32_t
 fsearch_database_index_store_get_num_fast_sort_indices(FsearchDatabaseIndexStore *store) {
     g_return_val_if_fail(store, 0);
@@ -716,8 +769,10 @@ fsearch_database_index_store_get_search_infos(FsearchDatabaseIndexStore *store) 
 }
 
 typedef struct {
+    FsearchDatabaseIndexStore *store;
     DynamicArray *folders;
     DynamicArray *files;
+    uint32_t *num_workers;
 } FsearchDatabaseIndexStoreAddRemoveContext;
 
 static void
@@ -728,45 +783,81 @@ search_view_results_add_cb(gpointer key, gpointer value, gpointer user_data) {
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
-    fsearch_database_search_view_add(view, ctx->files, ctx->folders);
+    IndexStoreWorkerPoolData *pool_data = g_new0(IndexStoreWorkerPoolData, 1);
+    pool_data->type = INDEX_STORE_WORKER_POOL_DATA_TYPE_ADD_TO_RESULTS;
+    pool_data->update_results.view = view;
+    pool_data->update_results.files = ctx->files;
+    pool_data->update_results.folders = ctx->folders;
+
+    (*ctx->num_workers)++;
+
+    g_thread_pool_push(ctx->store->worker_pool, pool_data, NULL);
+}
+
+static void
+add_entries(FsearchDatabaseEntriesContainer *container, DynamicArray *entries, GThreadPool *pool, uint32_t *num_workers) {
+    g_return_if_fail(container);
+    g_return_if_fail(entries);
+    g_return_if_fail(pool);
+    g_return_if_fail(num_workers);
+
+    IndexStoreWorkerPoolData *pool_data = g_new0(IndexStoreWorkerPoolData, 1);
+    pool_data->type = INDEX_STORE_WORKER_POOL_DATA_TYPE_ADD_ENTRIES;
+    pool_data->update_store.container = container;
+    pool_data->update_store.entries = entries;
+
+    *num_workers += 1;
+
+    g_thread_pool_push(pool, pool_data, NULL);
 }
 
 void
 fsearch_database_index_store_add_entries(FsearchDatabaseIndexStore *store, DynamicArray *files, DynamicArray *folders) {
     g_return_if_fail(store);
 
-    /* Mutators (called by filesystem monitors) */
+    uint32_t num_workers = 0;
+
     FsearchDatabaseIndexStoreAddRemoveContext ctx = {
+        .store = store,
         .folders = folders,
         .files = files,
+        .num_workers = &num_workers,
     };
 
     g_hash_table_foreach(store->search_results, search_view_results_add_cb, &ctx);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
         if (files && store->file_container[i]) {
-            fsearch_database_entries_container_insert_array(store->file_container[i], files);
+            add_entries(store->file_container[i], files, store->worker_pool, &num_workers);
         }
         if (folders && store->folder_container[i]) {
-            fsearch_database_entries_container_insert_array(store->folder_container[i], folders);
+            add_entries(store->folder_container[i], folders, store->worker_pool, &num_workers);
         }
+    }
+
+    uint32_t collected_wrokers = 0;
+    while (collected_wrokers < num_workers) {
+        g_autofree IndexStoreWorkerPoolData *pool_data = g_async_queue_pop(store->worker_pool_collect_queue);
+        g_assert_nonnull(pool_data);
+        collected_wrokers++;
     }
 }
 
 static void
-remove_entries(FsearchDatabaseEntriesContainer **containers, DynamicArray *entries) {
-    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        FsearchDatabaseEntriesContainer *container = containers[i];
-        if (!container) {
-            continue;
-        }
-        for (uint32_t j = 0; j < darray_get_num_items(entries); ++j) {
-            FsearchDatabaseEntry *entry = darray_get_item(entries, j);
-            if (!fsearch_database_entries_container_steal(container, entry)) {
-                g_debug("store: failed to remove entry: %s", db_entry_get_name_raw_for_display(entry));
-            }
-        }
-    }
+remove_entries(FsearchDatabaseEntriesContainer *container, DynamicArray *entries, GThreadPool *pool, uint32_t *num_workers) {
+    g_return_if_fail(container);
+    g_return_if_fail(entries);
+    g_return_if_fail(pool);
+    g_return_if_fail(num_workers);
+
+    IndexStoreWorkerPoolData *pool_data = g_new0(IndexStoreWorkerPoolData, 1);
+    pool_data->type = INDEX_STORE_WORKER_POOL_DATA_TYPE_REMOVE_ENTRIES;
+    pool_data->update_store.container = container;
+    pool_data->update_store.entries = entries;
+
+    *num_workers += 1;
+
+    g_thread_pool_push(pool, pool_data, NULL);
 }
 
 static void
@@ -777,7 +868,15 @@ search_view_results_remove_cb(gpointer key, gpointer value, gpointer user_data) 
     FsearchDatabaseSearchView *view = value;
     g_return_if_fail(view);
 
-    fsearch_database_search_view_remove(view, ctx->files, ctx->folders);
+    IndexStoreWorkerPoolData *pool_data = g_new0(IndexStoreWorkerPoolData, 1);
+    pool_data->type = INDEX_STORE_WORKER_POOL_DATA_TYPE_REMOVE_FROM_RESULTS;
+    pool_data->update_results.view = view;
+    pool_data->update_results.files = ctx->files;
+    pool_data->update_results.folders = ctx->folders;
+
+    (*ctx->num_workers)++;
+
+    g_thread_pool_push(ctx->store->worker_pool, pool_data, NULL);
 }
 
 void
@@ -786,21 +885,31 @@ fsearch_database_index_store_remove_entries(FsearchDatabaseIndexStore *store,
                                             DynamicArray *folders) {
     g_return_if_fail(store);
 
-    /* Mutators (called by filesystem monitors) */
+    uint32_t num_workers = 0;
+
     FsearchDatabaseIndexStoreAddRemoveContext ctx = {
+        .store = store,
         .folders = folders,
         .files = files,
+        .num_workers = &num_workers,
     };
 
     g_hash_table_foreach(store->search_results, search_view_results_remove_cb, &ctx);
 
     for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; ++i) {
-        if (files) {
-            remove_entries(store->file_container, files);
+        if (files && store->file_container[i]) {
+            remove_entries(store->file_container[i], files, store->worker_pool, &num_workers);
         }
-        if (folders) {
-            remove_entries(store->folder_container, folders);
+        if (folders && store->folder_container[i]) {
+            remove_entries(store->folder_container[i], folders, store->worker_pool, &num_workers);
         }
+    }
+
+    uint32_t collected_wrokers = 0;
+    while (collected_wrokers < num_workers) {
+        g_autofree IndexStoreWorkerPoolData *pool_data = g_async_queue_pop(store->worker_pool_collect_queue);
+        g_assert_nonnull(pool_data);
+        collected_wrokers++;
     }
 
 }
