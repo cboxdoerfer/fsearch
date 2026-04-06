@@ -537,10 +537,10 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
         return;
     }
 
-    g_debug("[index-%d] %s: %s",
-            db_entry_get_db_index(event->watched_entry),
-            fsearch_folder_monitor_event_kind_to_string(event->event_kind),
-            event->path ? event->path->str : "NULL");
+    // g_debug("[index-%d] %s: %s",
+            // db_entry_get_db_index(event->watched_entry),
+            // fsearch_folder_monitor_event_kind_to_string(event->event_kind),
+            // event->path ? event->path->str : "NULL");
 
     switch (event->event_kind) {
     case FSEARCH_FOLDER_MONITOR_EVENT_ATTRIB:

@@ -230,7 +230,6 @@ fsearch_database_entries_container_unref(FsearchDatabaseEntriesContainer *self) 
     g_return_if_fail(self->ref_count > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
-        g_print("[free] container\n");
         for (uint32_t i = 0; i < darray_get_num_items(self->container); ++i) {
             darray_unref(darray_get_item(self->container, i));
         }

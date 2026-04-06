@@ -337,7 +337,6 @@ index_store_free(FsearchDatabaseIndexStore *store) {
     g_slice_free(FsearchDatabaseIndexStore, store);
 }
 
-
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
@@ -424,7 +423,6 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
 
     return store;
 }
-
 
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_ref(FsearchDatabaseIndexStore *store) {
