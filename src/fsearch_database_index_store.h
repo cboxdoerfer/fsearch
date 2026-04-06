@@ -10,7 +10,6 @@
 #include "fsearch_database_search_info.h"
 #include "fsearch_query.h"
 #include "fsearch_selection_type.h"
-#include "fsearch_thread_pool.h"
 
 #include <glib/gmacros.h>
 #include <glib.h>
@@ -134,7 +133,6 @@ fsearch_database_index_store_search(FsearchDatabaseIndexStore *store,
                                     FsearchQuery *query,
                                     FsearchDatabaseIndexProperty sort_order,
                                     GtkSortType sort_type,
-                                    FsearchThreadPool *thread_pool,
                                     GCancellable *cancellable);
 
 void

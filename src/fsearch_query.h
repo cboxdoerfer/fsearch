@@ -30,7 +30,6 @@
 #include "fsearch_query_match_data.h"
 #include "fsearch_query_node.h"
 #include "fsearch_query_tree.h"
-#include "fsearch_thread_pool.h"
 
 typedef struct FsearchQuery {
     char *search_term;

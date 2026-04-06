@@ -17,7 +17,6 @@
 #include "fsearch_query.h"
 #include "fsearch_selection_type.h"
 #include "fsearch_result.h"
-#include "fsearch_thread_pool.h"
 
 #include <config.h>
 #ifdef HAVE_MALLOC_TRIM
@@ -44,7 +43,6 @@ struct _FsearchDatabase {
     GAsyncQueue *work_queue;
 
     GThreadPool *io_pool;
-    FsearchThreadPool *thread_pool;
 
     GCancellable *cancellable;
 
@@ -384,7 +382,6 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
                                                             query,
                                                             sort_order,
                                                             sort_type,
-                                                            self->thread_pool,
                                                             cancellable);
 
     signal_emit_search_finished(self, id, fsearch_database_index_store_get_search_info(self->store, id));
@@ -952,7 +949,6 @@ static void
 fsearch_database_init(FsearchDatabase *self) {
     g_mutex_init(&self->mutex);
     self->cancellable = g_cancellable_new();
-    self->thread_pool = fsearch_thread_pool_init();
     self->io_pool = g_thread_pool_new_full(scan_thread_cb,
                                            self,
                                            (GDestroyNotify)fsearch_database_index_store_unref,
