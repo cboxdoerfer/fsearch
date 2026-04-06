@@ -233,14 +233,14 @@ db_entry_get_type(FsearchDatabaseEntry *entry) {
 void
 db_entry_free_no_unparent(FsearchDatabaseEntry *entry) {
     g_return_if_fail(entry);
-    entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_DELETED;
+    g_clear_pointer(&entry, free);
 }
 
 void
 db_entry_free(FsearchDatabaseEntry *entry) {
     g_return_if_fail(entry);
     db_entry_set_parent(entry, NULL);
-    entry->flags |= FSEARCH_DATABASE_ENTRY_FLAG_DELETED;
+    g_clear_pointer(&entry, free);
 }
 
 void

@@ -267,14 +267,14 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
                 i,
                 DATABASE_INDEX_PROPERTY_NONE,
                 DATABASE_ENTRY_TYPE_FOLDER,
-                NULL);
+                NULL,NULL);
             store->file_container[i] = fsearch_database_entries_container_new(
                 s_files,
                 TRUE,
                 i,
                 DATABASE_INDEX_PROPERTY_NONE,
                 DATABASE_ENTRY_TYPE_FILE,
-                NULL);
+                NULL,NULL);
         }
     }
 
@@ -367,70 +367,70 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
                                                DATABASE_INDEX_PROPERTY_NAME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
-                                               cancellable);
+                                               cancellable,NULL);
     store->file_container[DATABASE_INDEX_PROPERTY_NAME] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_NAME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
-                                               cancellable);
+                                               cancellable,NULL);
     store->folder_container[DATABASE_INDEX_PROPERTY_PATH] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_PATH,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
-                                               cancellable);
+                                               cancellable,NULL);
     store->file_container[DATABASE_INDEX_PROPERTY_PATH] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_PATH,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
-                                               cancellable);
+                                               cancellable,NULL);
     store->folder_container[DATABASE_INDEX_PROPERTY_SIZE] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_SIZE,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
-                                               cancellable);
+                                               cancellable,NULL);
     store->file_container[DATABASE_INDEX_PROPERTY_SIZE] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_SIZE,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
-                                               cancellable);
+                                               cancellable,NULL);
     store->folder_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
-                                               cancellable);
+                                               cancellable,NULL);
     store->file_container[DATABASE_INDEX_PROPERTY_MODIFICATION_TIME] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
-                                               cancellable);
+                                               cancellable,NULL);
     store->folder_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
         fsearch_database_entries_container_new(store_folders,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_EXTENSION,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FOLDER,
-                                               cancellable);
+                                               cancellable,NULL);
     store->file_container[DATABASE_INDEX_PROPERTY_EXTENSION] =
         fsearch_database_entries_container_new(store_files,
                                                FALSE,
                                                DATABASE_INDEX_PROPERTY_EXTENSION,
                                                DATABASE_INDEX_PROPERTY_NONE,
                                                DATABASE_ENTRY_TYPE_FILE,
-                                               cancellable);
+                                               cancellable,NULL);
     store->is_sorted = true;
     index_store_unlock_all_indices(store);
 

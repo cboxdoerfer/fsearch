@@ -20,7 +20,7 @@ fsearch_database_entries_container_new(DynamicArray *array,
                                        FsearchDatabaseIndexProperty sort_order,
                                        FsearchDatabaseIndexProperty secondary_sort_order,
                                        FsearchDatabaseEntryType entry_type,
-                                       GCancellable *cancellable);
+                                       GCancellable *cancellable, GDestroyNotify entry_free_func);
 
 FsearchDatabaseEntriesContainer *
 fsearch_database_entries_container_ref(FsearchDatabaseEntriesContainer *self);

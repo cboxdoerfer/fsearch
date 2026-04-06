@@ -61,13 +61,13 @@ fsearch_database_search_view_new(uint32_t id,
                                                                     sort_order,
                                                                     secondary_sort_order,
                                                                     DATABASE_ENTRY_TYPE_FOLDER,
-                                                                    NULL);
+                                                                    NULL,NULL);
     view->file_container = fsearch_database_entries_container_new(files,
                                                                   TRUE,
                                                                   sort_order,
                                                                   secondary_sort_order,
                                                                   DATABASE_ENTRY_TYPE_FILE,
-                                                                  NULL);
+                                                                  NULL,NULL);
     view->sort_order = sort_order;
     view->secondardy_sort_order = secondary_sort_order;
     view->sort_type = sort_type;
@@ -262,7 +262,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                                                       view->sort_order,
                                                                       view->secondardy_sort_order,
                                                                       DATABASE_ENTRY_TYPE_FILE,
-                                                                      NULL);
+                                                                      NULL,NULL);
         view->sort_type = sort_type;
     }
     if (folders_new) {
@@ -272,7 +272,7 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                                                         view->sort_order,
                                                                         view->secondardy_sort_order,
                                                                         DATABASE_ENTRY_TYPE_FOLDER,
-                                                                        NULL);
+                                                                        NULL,NULL);
         view->sort_type = sort_type;
     }
 }

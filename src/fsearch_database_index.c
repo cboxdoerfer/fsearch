@@ -433,7 +433,8 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     if (files) {
         for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
             FsearchDatabaseEntry *file = darray_get_item(files, i);
-            g_clear_pointer(&file, db_entry_free);
+            // We must skip unparenting because the parent will be deleted as well
+            g_clear_pointer(&file, db_entry_free_no_unparent);
         }
         num_file_deletes += darray_get_num_items(files);
     }
@@ -446,9 +447,11 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         }
         for (uint32_t i = 0; i < darray_get_num_items(folders) - 1; ++i) {
             FsearchDatabaseEntry *folder = darray_get_item(folders, i);
+            // We must skip unparenting because the parent will be deleted as well
             g_clear_pointer(&folder, db_entry_free_no_unparent);
         }
         FsearchDatabaseEntry *last_folder = darray_get_item(folders, darray_get_num_items(folders) - 1);
+        // The last folder, i.e., the folder which was deleted, needs to be deleted properly
         g_clear_pointer(&last_folder, db_entry_free);
         num_folder_deletes += darray_get_num_items(folders);
     }
@@ -700,13 +703,13 @@ fsearch_database_index_new_with_content(uint32_t id,
                                                                     DATABASE_INDEX_PROPERTY_PATH_FULL,
                                                                     DATABASE_INDEX_PROPERTY_NONE,
                                                                     DATABASE_ENTRY_TYPE_FOLDER,
-                                                                    NULL);
+                                                                    NULL,(GDestroyNotify)db_entry_free_no_unparent);
     self->file_container = fsearch_database_entries_container_new(files,
                                                                   TRUE,
                                                                   DATABASE_INDEX_PROPERTY_PATH_FULL,
                                                                   DATABASE_INDEX_PROPERTY_NONE,
                                                                   DATABASE_ENTRY_TYPE_FILE,
-                                                                  NULL);
+                                                                  NULL,(GDestroyNotify)db_entry_free_no_unparent);
 
     self->ref_count = 1;
 
@@ -864,13 +867,13 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                                                                   DATABASE_INDEX_PROPERTY_PATH_FULL,
                                                                   DATABASE_INDEX_PROPERTY_NONE,
                                                                   DATABASE_ENTRY_TYPE_FILE,
-                                                                  NULL);
+                                                                  NULL,(GDestroyNotify)db_entry_free_no_unparent);
     self->folder_container = fsearch_database_entries_container_new(folders,
                                                                     TRUE,
                                                                     DATABASE_INDEX_PROPERTY_PATH_FULL,
                                                                     DATABASE_INDEX_PROPERTY_NONE,
                                                                     DATABASE_ENTRY_TYPE_FOLDER,
-                                                                    NULL);
+                                                                    NULL,(GDestroyNotify)db_entry_free_no_unparent);
 
     g_atomic_int_set(&self->initialized, 1);
 

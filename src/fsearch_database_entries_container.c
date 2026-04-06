@@ -30,6 +30,8 @@ struct _FsearchDatabaseEntriesContainer {
 
     FsearchDatabaseEntryCompareContext *compare_context;
 
+    GDestroyNotify entry_free_func;
+
     volatile gint ref_count;
 };
 
@@ -64,7 +66,7 @@ get_container_for_entry(FsearchDatabaseEntriesContainer *self,
     uint32_t container_idx = 0;
     if (darray_get_num_items(self->container) == 0) {
         // There's no container -> add one
-        darray_insert_item(self->container, darray_new(self->ideal_entries_per_container), 0);
+        darray_insert_item(self->container, darray_new_full(self->ideal_entries_per_container, self->entry_free_func), 0);
         container_idx = 0;
     }
     else if (darray_get_num_items(self->container) == 1) {
@@ -98,13 +100,15 @@ count_num_entries(DynamicArray *containers) {
 }
 
 static DynamicArray *
-split_array(DynamicArray *array, uint32_t ideal_entries_per_array) {
+split_array(DynamicArray *array, uint32_t ideal_entries_per_array, GDestroyNotify entry_free_func) {
     g_assert(array);
 
     const uint32_t num_items = darray_get_num_items(array);
     if (num_items <= ideal_entries_per_array) {
         DynamicArray *splitted = darray_new(1);
-        darray_add_item(splitted, darray_copy(array));
+        DynamicArray *copy = darray_copy(array);
+        darray_set_free_func(copy, entry_free_func);
+        darray_add_item(splitted, copy);
         return splitted;
     }
 
@@ -119,6 +123,7 @@ split_array(DynamicArray *array, uint32_t ideal_entries_per_array) {
     for (uint32_t n = 0; n < num_splits; ++n) {
         DynamicArray *a =
             darray_get_range(array, n * num_items_per_split, n + 1 == num_splits ? UINT32_MAX : num_items_per_split);
+        darray_set_free_func(a, entry_free_func);
         darray_add_item(splitted, a);
     }
 
@@ -144,7 +149,7 @@ balance_container(FsearchDatabaseEntriesContainer *self, DynamicArray *container
         return;
     }
 
-    g_autoptr(DynamicArray) splitted = split_array(container, self->ideal_entries_per_container);
+    g_autoptr(DynamicArray) splitted = split_array(container, self->ideal_entries_per_container, self->entry_free_func);
 
     g_debug("[balance_container] split idx %d with %d entries into %d containers",
             c_idx,
@@ -166,7 +171,8 @@ fsearch_database_entries_container_new(DynamicArray *array,
                                        FsearchDatabaseIndexProperty sort_order,
                                        FsearchDatabaseIndexProperty secondary_sort_order,
                                        FsearchDatabaseEntryType entry_type,
-                                       GCancellable *cancellable) {
+                                       GCancellable *cancellable,
+                                       GDestroyNotify entry_free_func) {
     g_return_val_if_fail(array, NULL);
 
     FsearchDatabaseEntriesContainer *self = g_slice_new0(FsearchDatabaseEntriesContainer);
@@ -194,7 +200,10 @@ fsearch_database_entries_container_new(DynamicArray *array,
     }
 
     self->num_entries = darray_get_num_items(array);
-    self->container = split_array(array, self->ideal_entries_per_container);
+
+    self->entry_free_func = entry_free_func;
+    self->container = split_array(array, self->ideal_entries_per_container, self->entry_free_func);
+
 
     self->ref_count = 1;
 
@@ -217,6 +226,7 @@ fsearch_database_entries_container_unref(FsearchDatabaseEntriesContainer *self) 
     g_return_if_fail(self->ref_count > 0);
 
     if (g_atomic_int_dec_and_test(&self->ref_count)) {
+        g_print("[free] container\n");
         for (uint32_t i = 0; i < darray_get_num_items(self->container); ++i) {
             darray_unref(darray_get_item(self->container, i));
         }
