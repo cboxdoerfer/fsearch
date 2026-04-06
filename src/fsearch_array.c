@@ -35,8 +35,12 @@ struct DynamicArray {
     // data
     void **data;
 
+    GDestroyNotify item_free_func;
+
     volatile int ref_count;
 };
+
+static int items_freed = 0;
 
 static void
 darray_free(DynamicArray *array) {
@@ -45,6 +49,12 @@ darray_free(DynamicArray *array) {
     }
 
     g_debug("[darray_free] freed");
+    if (array->item_free_func) {
+        items_freed += array->num_items;
+        for (uint32_t i = 0; i < array->num_items; ++i) {
+            array->item_free_func(array->data[i]);
+        }
+    }
 
     g_clear_pointer(&array->data, free);
     g_clear_pointer(&array, free);
@@ -206,26 +216,21 @@ darray_new(size_t num_items) {
     DynamicArray *new = calloc(1, sizeof(DynamicArray));
     g_assert(new);
 
-    new
+    new->max_items = num_items;
+    new->num_items = 0;
 
-        ->
-        max_items = num_items;
-    new
-
-        ->
-        num_items = 0;
-
-    new
-
-        ->
-        data = calloc(num_items, sizeof(void *));
+    new->data = calloc(num_items, sizeof(void *));
     g_assert(new->data);
 
-    new
+    new->ref_count = 1;
 
-        ->
-        ref_count = 1;
+    return new;
+}
 
+DynamicArray *
+darray_new_full(size_t num_items, GDestroyNotify item_free_func) {
+    DynamicArray *new = darray_new(num_items);
+    new->item_free_func = item_free_func;
     return new;
 }
 
@@ -687,23 +692,23 @@ darray_copy(DynamicArray *array) {
     DynamicArray *new = calloc(1, sizeof(DynamicArray));
     g_assert(new);
 
-    new
-        ->
-        max_items = array->max_items;
-    new
-        ->
-        num_items = array->num_items;
+    new -> max_items = array->max_items;
+    new -> num_items = array->num_items;
 
-    new
-        ->
-        data = calloc(new->max_items, sizeof(void *));
+    new -> data = calloc(new->max_items, sizeof(void *));
     g_assert(new->data);
 
-    new
-        ->
-        ref_count = 1;
+    new->item_free_func = array->item_free_func;
+
+    new -> ref_count = 1;
 
     memcpy(new->data, array->data, new->num_items * sizeof(void *));
 
     return new;
+}
+
+void
+darray_set_free_func(DynamicArray *array, GDestroyNotify free_func) {
+    g_assert(array);
+    array->item_free_func = free_func;
 }

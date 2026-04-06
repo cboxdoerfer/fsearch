@@ -112,6 +112,9 @@ darray_steal_items(DynamicArray *array, DynamicArrayStealFunc func, void *data);
 DynamicArray *
 darray_new(size_t num_items);
 
+DynamicArray *
+darray_new_full(size_t num_items, GDestroyNotify item_free_func);
+
 void
 darray_unref(DynamicArray *array);
 
@@ -120,5 +123,8 @@ darray_ref(DynamicArray *array);
 
 DynamicArray *
 darray_copy(DynamicArray *array);
+
+void
+darray_set_free_func(DynamicArray *array, GDestroyNotify free_func);
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(DynamicArray, darray_unref)
