@@ -141,6 +141,8 @@ balance_container(FsearchDatabaseEntriesContainer *self, DynamicArray *container
         }
         g_debug("[balance_container] remove empty: %d", c_idx);
         darray_remove(self->container, c_idx, 1);
+        // Make sure to set free_func to NULL, to avoid entries being freed
+        darray_set_free_func(container, NULL);
         g_clear_pointer(&container, darray_unref);
         return;
     }
@@ -157,6 +159,8 @@ balance_container(FsearchDatabaseEntriesContainer *self, DynamicArray *container
             darray_get_num_items(splitted));
 
     darray_remove(self->container, c_idx, 1);
+    // Make sure to set free_func to NULL, to avoid entries being freed
+    darray_set_free_func(container, NULL);
     g_clear_pointer(&container, darray_unref);
 
     for (uint32_t i = 0; i < darray_get_num_items(splitted); ++i) {
