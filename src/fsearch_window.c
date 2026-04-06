@@ -726,6 +726,61 @@ on_listview_row_is_selected(int row, gpointer user_data) {
 }
 
 static void
+map_to_uri_helper(gpointer key, gpointer value, gpointer user_data) {
+    FsearchDatabaseEntry *entry = value;
+    if (G_UNLIKELY(!entry)) {
+        return;
+    }
+
+    GString *path = db_entry_get_path_full(entry);
+    if (G_UNLIKELY(!path)) {
+        g_warning("[map_to_uri_helper] Failed to retrieve path for entry at idx %d", db_entry_get_idx(entry));
+        return;
+    }
+
+    gchar *uri = g_filename_to_uri(path->str, NULL, NULL);
+    if (G_UNLIKELY(!uri)) {
+        g_warning("[map_to_uri_helper] Failed to convert path to URI: %s", path->str);
+        return;
+    }
+
+    GList **acc = user_data;
+    *acc = g_list_prepend(*acc, uri);
+
+    g_string_free(path, TRUE);
+}
+
+static gchar **
+listview_on_drag_data_get(gpointer user_data) {
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
+    FsearchDatabaseView *db_view = win->result_view->database_view;
+    if (!db_view) {
+        g_warning("[listview_on_drag_data_get] Database view is NULL.");
+        return NULL;
+    }
+
+    GList *acc = NULL;
+    db_view_selection_for_each(db_view, map_to_uri_helper, &acc);
+
+    // we prepended to list in the accumulator above since GList, even though doubly linked, does not maintain
+    // a tail pointer, making g_list_append() O(N)
+    // So, we need to populate it backwards into the array.
+    guint uri_array_len = g_list_length(acc) + 1; // +1 since the array needs to be null-terminated
+    gchar **uri_array = g_new(gchar *, uri_array_len);
+    guint i = uri_array_len - 1;
+    uri_array[i--] = NULL;
+    for (GList *l = acc; l != NULL; l = l->next) {
+        uri_array[i--] = l->data;
+    }
+
+    for (gchar **p = uri_array; *p != NULL; p++) {
+        g_debug("[listview_on_drag_data_get] [uris] %s", *p);
+    }
+
+    return uri_array;
+}
+
+static void
 fsearch_application_window_init_overlays(FsearchApplicationWindow *win) {
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
 
@@ -786,6 +841,7 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
                                              on_listview_row_unselect_all,
                                              on_listview_row_num_selected,
                                              win);
+    fsearch_list_view_set_drag_data_get_handler(list_view, listview_on_drag_data_get);
     fsearch_list_view_set_single_click_activate(list_view, config->single_click_open);
     gtk_widget_set_has_tooltip(GTK_WIDGET(list_view), config->enable_list_tooltips);
 
