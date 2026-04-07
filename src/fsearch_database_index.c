@@ -308,17 +308,9 @@ index_stop_monitoring(FsearchDatabaseIndex *self, FsearchFolderMonitorKind monit
     fsearch_database_index_start_monitoring(self, true);
 
     if (files) {
-        for (uint32_t i = 0; i < darray_get_num_items(files); ++i) {
-            FsearchDatabaseEntry *file = darray_get_item(files, i);
-            g_clear_pointer(&file, db_entry_free_no_unparent);
-        }
         num_file_deletes += darray_get_num_items(files);
     }
     if (folders) {
-        for (uint32_t i = 0; i < darray_get_num_items(folders); ++i) {
-            FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-            g_clear_pointer(&folder, db_entry_free_no_unparent);
-        }
         num_folder_deletes += darray_get_num_items(folders);
     }
     g_clear_pointer(&self->file_container, fsearch_database_entries_container_unref);
