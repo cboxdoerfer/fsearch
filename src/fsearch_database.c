@@ -978,8 +978,12 @@ fsearch_database_queue_work(FsearchDatabase *self, FsearchDatabaseWork *work) {
 FsearchResult
 fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, FsearchDatabaseSearchInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
-    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
 
     if (!fsearch_database_index_store_trylock(self->store)) {
         return FSEARCH_RESULT_DB_BUSY;
@@ -1007,8 +1011,12 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
                                    FsearchDatabaseEntryInfoFlags flags,
                                    FsearchDatabaseEntryInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
-    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
 
     if (!fsearch_database_index_store_trylock(self->store)) {
         return FSEARCH_RESULT_DB_BUSY;
@@ -1025,8 +1033,12 @@ fsearch_database_try_get_item_info(FsearchDatabase *self,
 FsearchResult
 fsearch_database_try_get_database_info(FsearchDatabase *self, FsearchDatabaseInfo **info_out) {
     g_return_val_if_fail(self, FSEARCH_RESULT_FAILED);
-    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
     g_return_val_if_fail(info_out, FSEARCH_RESULT_FAILED);
+
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
+    g_assert_nonnull(locker);
+
+    g_return_val_if_fail(self->store, FSEARCH_RESULT_FAILED);
 
     if (!fsearch_database_index_store_trylock(self->store)) {
         return FSEARCH_RESULT_DB_BUSY;
@@ -1076,11 +1088,15 @@ fsearch_database_selection_foreach(FsearchDatabase *self,
                                    FsearchDatabaseForeachFunc func,
                                    gpointer user_data) {
     g_return_if_fail(FSEARCH_IS_DATABASE(self));
-    g_return_if_fail(self->store);
     g_return_if_fail(func);
 
-    g_autoptr(GMutexLocker) locker = fsearch_database_index_store_get_locker(self->store);
+    g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
+
+    g_return_if_fail(self->store);
+
+    g_autoptr(GMutexLocker) store_locker = fsearch_database_index_store_get_locker(self->store);
+    g_assert_nonnull(store_locker);
 
     FsearchDatabaseSelectionForeachContext ctx = {.func = func, .user_data = user_data};
 
