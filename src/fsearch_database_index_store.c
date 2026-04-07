@@ -980,6 +980,10 @@ search_entries(FsearchQuery *query,
                GAsyncQueue *collect_queue,
                GCancellable *cancellable) {
     const uint32_t num_entries = darray_get_num_items(in);
+    if (num_entries == 0) {
+        return darray_new(0);
+    }
+
     const uint32_t num_threads = (num_entries < THRESHOLD_FOR_PARALLEL_SEARCH || query->wants_single_threaded_search)
                                      ? 1
                                      : g_thread_pool_get_num_threads(pool);
