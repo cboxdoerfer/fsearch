@@ -64,7 +64,7 @@ fsearch_database_info_get_num_files(FsearchDatabaseInfo *self) {
 uint32_t
 fsearch_database_info_get_num_folders(FsearchDatabaseInfo *self) {
     g_return_val_if_fail(self, 0);
-    return self->num_files;
+    return self->num_folders;
 }
 
 uint32_t
