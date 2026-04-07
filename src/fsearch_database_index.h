@@ -8,6 +8,13 @@
 #include "fsearch_database_index_properties.h"
 
 #include <gio/gio.h>
+#include <glib-object.h>
+#include <glib.h>
+#include <glib/gmacros.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <sys/types.h>
+#include <time.h>
 
 G_BEGIN_DECLS
 

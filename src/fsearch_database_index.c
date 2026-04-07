@@ -1,8 +1,13 @@
 #define G_LOG_DOMAIN "fsearch-database-index"
 
+#include "fsearch_array.h"
+#include "fsearch_database_include.h"
 #include "fsearch_database_index.h"
+#include "fsearch_database_index_event.h"
+#include "fsearch_database_index_properties.h"
 #include "fsearch_database_entries_container.h"
 #include "fsearch_database_entry.h"
+#include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_scan.h"
 #include "fsearch_file_utils.h"
 #include "fsearch_folder_monitor_event.h"
@@ -10,8 +15,17 @@
 #include "fsearch_folder_monitor_inotify.h"
 
 #include <config.h>
+#include <glib-object.h>
 #include <glib-unix.h>
 #include <glib.h>
+#include <glib/gmacros.h>
+#include <gio/gio.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+#include <stdlib.h>
+#include <sys/types.h>
+#include <time.h>
 
 struct _FsearchDatabaseIndex {
     FsearchDatabaseInclude *include;
@@ -327,7 +341,7 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         return;
     }
 
-    // Check if entry must be excluded (now that we know whether it's a file or folder)
+    // Check if an entry must be excluded (now that we know whether it's a file or folder)
     g_autofree char *basename = event->name ? NULL : g_path_get_basename(event->path->str);
     if (fsearch_database_exclude_manager_excludes(self->exclude_manager,
                                                   event->path->str,
