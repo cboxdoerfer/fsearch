@@ -968,6 +968,11 @@ collect_search_results(IndexStoreWorkerPoolData *data_array[], uint32_t data_arr
     return g_steal_pointer(&search_entries);
 }
 
+static inline uint32_t
+sub_or_zero_u32(uint32_t a, uint32_t b) {
+    return a > b ? a - b : 0;
+}
+
 static DynamicArray *
 search_entries(FsearchQuery *query,
                DynamicArray *in,
@@ -982,7 +987,8 @@ search_entries(FsearchQuery *query,
     IndexStoreWorkerPoolData *pool_data[num_threads + 1] = {};
 
     uint32_t start_pos = 0;
-    uint32_t end_pos = num_items_per_thread - 1;
+    uint32_t end_pos = sub_or_zero_u32(num_items_per_thread, 1);
+    const uint32_t last_end_pos = sub_or_zero_u32(num_entries, 1);
 
     for (uint32_t i = 0; i < num_threads; ++i) {
         pool_data[i] = g_new0(IndexStoreWorkerPoolData, 1);
@@ -992,7 +998,7 @@ search_entries(FsearchQuery *query,
         pool_data[i]->search.cancellable = cancellable;
         pool_data[i]->search.thread_id = (int32_t)i;
         pool_data[i]->search.in_start_idx = start_pos;
-        pool_data[i]->search.in_end_idx = i == num_threads - 1 ? num_entries - 1 : end_pos;
+        pool_data[i]->search.in_end_idx = i == num_threads - 1 ? last_end_pos : end_pos;
         pool_data[i]->search.out = darray_new(end_pos - start_pos + 1);
         g_thread_pool_push(pool, pool_data[i], NULL);
 
