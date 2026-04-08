@@ -158,7 +158,7 @@ signal_type_to_name(FsearchDatabaseSignalType type) {
     case SIGNAL_DATABASE_PROGRESS:
         return "SIGNAL_DATABASE_PROGRESS";
     case NUM_DATABASE_SIGNALS:
-        return "UNKOWN";
+        return "UNKNOWN";
     }
 }
 
@@ -992,7 +992,7 @@ fsearch_database_try_get_search_info(FsearchDatabase *self, uint32_t view_id, Fs
     FsearchResult res = FSEARCH_RESULT_FAILED;
     g_autoptr(FsearchDatabaseSearchInfo) info = fsearch_database_index_store_get_search_info(self->store, view_id);
     if (!info) {
-        res = FSEARCH_RESULT_DB_UNKOWN_SEARCH_VIEW;
+        res = FSEARCH_RESULT_DB_UNKNOWN_SEARCH_VIEW;
     }
     else {
         *info_out = g_steal_pointer(&info);
