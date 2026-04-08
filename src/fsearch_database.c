@@ -955,7 +955,7 @@ fsearch_database_init(FsearchDatabase *self) {
                                            1,
                                            TRUE,
                                            NULL);
-    self->work_queue = g_async_queue_new();
+    self->work_queue = g_async_queue_new_full((GDestroyNotify)fsearch_database_work_unref);
     self->work_queue_thread = g_thread_new("FsearchDatabaseWorkQueue", database_work_queue_thread, self);
 }
 
