@@ -323,7 +323,9 @@ index_store_free(FsearchDatabaseIndexStore *store) {
     }
     g_clear_pointer(&store->worker.ctx, g_main_context_unref);
 
-    g_thread_pool_free(g_steal_pointer(&store->worker_pool), FALSE, FALSE);
+    // Wait for tasks to finish must be TRUE since the worker threads might be using the worker_pool_collect_queue
+    // Hence, make sure to unref the queue only after the pool has been terminated
+    g_thread_pool_free(g_steal_pointer(&store->worker_pool), FALSE, TRUE);
     g_clear_pointer(&store->worker_pool_collect_queue, g_async_queue_unref);
 
     g_clear_pointer(&store->search_results, g_hash_table_unref);
