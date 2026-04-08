@@ -285,7 +285,7 @@ database_file_load_folders(FILE *fp,
     // load folders
     uint32_t idx = 0;
     for (idx = 0; idx < num_folders; idx++) {
-        FsearchDatabaseEntry *folder = NULL;
+        g_autoptr(FsearchDatabaseEntry) folder = NULL;
 
         // db_index: the database index this folder belongs to
         uint16_t db_index = 0;
@@ -322,7 +322,7 @@ database_file_load_folders(FILE *fp,
             // parent_idx and idx are the same (i.e. folder is a root index) so it has no parent
             db_entry_set_parent_no_update(folder, GUINT_TO_POINTER(UINT32_MAX));
         }
-        darray_add_item(folders, folder);
+        darray_add_item(folders, g_steal_pointer(&folder));
     }
 
     // fail if we didn't read the correct number of folders
@@ -366,7 +366,7 @@ database_file_load_files(FILE *fp,
     // load files
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
-        FsearchDatabaseEntry *entry = NULL;
+        g_autoptr(FsearchDatabaseEntry) entry = NULL;
         database_file_load_entry(&cursor,
                                  index_flags,
                                  previous_entry_name,
@@ -390,7 +390,7 @@ database_file_load_files(FILE *fp,
         FsearchDatabaseEntry *parent = darray_get_item(folders, parent_idx);
         db_entry_set_parent(entry, parent);
 
-        darray_add_item(files, entry);
+        darray_add_item(files, g_steal_pointer(&entry));
     }
     // fail if we didn't read the correct number of files
     if (idx != num_files) {

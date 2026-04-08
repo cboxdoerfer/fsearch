@@ -229,3 +229,5 @@ db_entry_is_monitored_inotify(FsearchDatabaseEntry *entry);
 
 FsearchDatabaseEntryFlags
 db_entry_get_flags(FsearchDatabaseEntry *entry);
+
+G_DEFINE_AUTOPTR_CLEANUP_FUNC(FsearchDatabaseEntry, db_entry_free)
