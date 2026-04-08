@@ -994,7 +994,8 @@ search_entries(FsearchQuery *query,
     const uint32_t num_threads = (num_entries < THRESHOLD_FOR_PARALLEL_SEARCH || query->wants_single_threaded_search)
                                      ? 1
                                      : g_thread_pool_get_num_threads(pool);
-    const uint32_t num_items_per_thread = num_entries / num_threads;
+    const uint32_t clamped_num_threads = MIN(num_threads, num_entries);
+    const uint32_t num_items_per_thread = num_entries / clamped_num_threads;
     IndexStoreWorkerPoolData *pool_data[num_threads + 1] = {};
 
     uint32_t start_pos = 0;
