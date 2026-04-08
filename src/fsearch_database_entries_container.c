@@ -343,6 +343,8 @@ fsearch_database_entries_container_steal_descendants(FsearchDatabaseEntriesConta
             // We know the exact number of descendants, and due to the `DATABASE_INDEX_PROPERTY_PATH_FULL` sort type,
             // it is guaranteed that they are all sorted next to each other. Therefore, we can use an optimized code
             // path where we steal them in large chunks, instead of one by one.
+            // It's also safe to not clamp n_elements since darray_steal will only steal the available number of elements
+            // and report the actual amount stolen
             num_known_descendants_stolen += darray_steal(container,
                                                          entry_start_idx,
                                                          num_known_descendants - num_known_descendants_stolen,
