@@ -221,6 +221,15 @@ database_file_load_header(FILE *fp) {
         return false;
     }
 
+    uint8_t is_little_endian = 0;
+    if (!database_file_read_element(&is_little_endian, 1, fp)) {
+        return false;
+    }
+    const uint8_t is_little_endian_host = G_BYTE_ORDER == G_LITTLE_ENDIAN ? 1 : 0;
+    if (is_little_endian != is_little_endian_host) {
+        g_debug("[db_load] invalid architecture: file: %d, host: %d", is_little_endian, is_little_endian_host);
+        return false;
+    }
     return true;
 }
 
@@ -640,6 +649,9 @@ database_file_save_header(FILE *fp, bool *write_failed) {
 
     const uint8_t minorver = DATABASE_MINOR_VERSION;
     DB_WRITE_VAL(fp, minorver, "failed to write minor version: %d", minorver, write_failed, bytes_written);
+
+    const uint8_t is_little_endian = G_BYTE_ORDER == G_LITTLE_ENDIAN ? 1 : 0;
+    DB_WRITE_VAL(fp, is_little_endian, "failed to write architecture: %d", is_little_endian, write_failed, bytes_written);
 
     return bytes_written;
 }
