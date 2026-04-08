@@ -1054,7 +1054,7 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     }
 
     // now that we know the size of the file/folder block we've written, store it in the file header
-    if (fseek(fp, (long int)folder_block_size_offset, SEEK_SET) != 0) {
+    if (fseeko(fp, (off64_t)folder_block_size_offset, SEEK_SET) != 0) {
         goto save_fail;
     }
     g_debug("[db_save] updating file and folder block size: %" PRIu64 ", %" PRIu64, folder_block_size, file_block_size);
