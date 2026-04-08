@@ -135,40 +135,61 @@ file_open_locked(const char *file_path, const char *mode) {
     return file_pointer;
 }
 
-static const uint8_t *
-copy_bytes_and_return_new_src(void *dest, const uint8_t *src, size_t len) {
-    memcpy(dest, src, len);
-    return src + len;
+typedef struct {
+    const uint8_t *ptr;
+    const uint8_t *end;
+    bool error;
+} DatabaseFileReadCursor;
+
+static inline void
+cursor_read(DatabaseFileReadCursor *cursor, void *dest, size_t size) {
+    // If we already failed a previous read, or if this read goes out of bounds, abort.
+    if (cursor->error || cursor->ptr + size > cursor->end) {
+        cursor->error = true;
+        return;
+    }
+    memcpy(dest, cursor->ptr, size);
+    cursor->ptr += size;
 }
 
-static const uint8_t *
-database_file_load_entry(const uint8_t *data_block,
+static void
+database_file_load_entry(DatabaseFileReadCursor *cursor,
                          FsearchDatabaseIndexPropertyFlags index_flags,
                          GString *previous_entry_name,
                          FsearchDatabaseEntry **entry_out,
                          FsearchDatabaseEntryType type) {
     // name_offset: character position after which previous_entry_name and entry_name differ
     uint16_t name_offset = 0;
-    data_block = copy_bytes_and_return_new_src(&name_offset, data_block, sizeof(name_offset));
+    cursor_read(cursor, &name_offset, sizeof(name_offset));
 
     // name_len: length of the new name characters
     uint16_t name_len = 0;
-    data_block = copy_bytes_and_return_new_src(&name_len, data_block, sizeof(name_len));
+    cursor_read(cursor, &name_len, sizeof(name_len));
 
-    // erase previous name starting at name_offset
+    if (cursor->error) {
+        return;
+    }
+
+    // Manually add sanity check since were using g_string_append_len later instead of cursor_read
+    if (cursor->ptr + name_len > cursor->end) {
+        cursor->error = true;
+        return;
+    }
+
+    // erase the previous name starting at name_offset
     g_string_erase(previous_entry_name, name_offset, -1);
 
     // name: new characters to be appended to previous_entry_name
     if (name_len > 0) {
-        g_string_append_len(previous_entry_name, (const char *)data_block, name_len);
-        data_block += name_len;
+        g_string_append_len(previous_entry_name, (const char *)cursor->ptr, name_len);
+        cursor->ptr += name_len;
     }
 
     *entry_out = db_entry_new(index_flags, previous_entry_name->str, NULL, type);
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: size of file/folder
         int64_t size = 0;
-        data_block = copy_bytes_and_return_new_src(&size, data_block, sizeof(size));
+        cursor_read(cursor, &size, sizeof(size));
 
         db_entry_set_size(*entry_out, (off_t)size);
     }
@@ -176,12 +197,10 @@ database_file_load_entry(const uint8_t *data_block,
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time file/folder
         int64_t mtime = 0;
-        data_block = copy_bytes_and_return_new_src(&mtime, data_block, sizeof(mtime));
+        cursor_read(cursor, &mtime, sizeof(mtime));
 
         db_entry_set_mtime(*entry_out, (time_t)mtime);
     }
-
-    return data_block;
 }
 
 static bool
@@ -261,7 +280,8 @@ database_file_load_folders(FILE *fp,
         return false;
     }
 
-    const uint8_t *fb = folder_block;
+    // Initialize the cursor with the allocated block
+    DatabaseFileReadCursor cursor = {folder_block, folder_block + folder_block_size, false};
     // load folders
     uint32_t idx = 0;
     for (idx = 0; idx < num_folders; idx++) {
@@ -269,17 +289,22 @@ database_file_load_folders(FILE *fp,
 
         // db_index: the database index this folder belongs to
         uint16_t db_index = 0;
-        fb = copy_bytes_and_return_new_src(&db_index, fb, 2);
+        cursor_read(&cursor, &db_index, sizeof(db_index));
 
-        fb = database_file_load_entry(fb,
-                                      index_flags,
-                                      previous_entry_name,
-                                      &folder,
-                                      DATABASE_ENTRY_TYPE_FOLDER);
-
+        database_file_load_entry(&cursor,
+                                 index_flags,
+                                 previous_entry_name,
+                                 &folder,
+                                 DATABASE_ENTRY_TYPE_FOLDER);
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
+        cursor_read(&cursor, &parent_idx, sizeof(parent_idx));
+
+        if (cursor.error) {
+            g_debug("[db_load] out of bounds read detected at folder idx: %d", idx);
+            return false;
+        }
+
         if (parent_idx != UINT32_MAX && parent_idx >= num_folders) {
             g_debug("[db_load] Corrupt parent index: %d", parent_idx);
             return false;
@@ -300,17 +325,19 @@ database_file_load_folders(FILE *fp,
         darray_add_item(folders, folder);
     }
 
-    // fail if we didn't read the correct number of bytes
-    if (fb - folder_block != folder_block_size) {
-        g_debug("[db_load] wrong amount of memory read: %zd != %" PRIu64, fb - folder_block, folder_block_size);
-        return false;
-    }
-
     // fail if we didn't read the correct number of folders
     if (idx != num_folders) {
         g_debug("[db_load] failed to read folders (read %d of %d)", idx, num_folders);
         return false;
     }
+    // Did the parsed data exactly match the declared block size?
+    if (cursor.ptr != cursor.end) {
+        g_debug("[db_load] block size mismatch! Parsed %zd bytes, expected %" PRIu64,
+                (size_t)(cursor.ptr - folder_block),
+                folder_block_size);
+        return false;
+    }
+
 
     return true;
 }
@@ -332,21 +359,30 @@ database_file_load_files(FILE *fp,
     }
 
     const uint32_t num_folders = darray_get_num_items(folders);
-    const uint8_t *fb = file_block;
+
+    // Initialize the cursor with the allocated block
+    DatabaseFileReadCursor cursor = {file_block, file_block + file_block_size, false};
+
     // load files
     uint32_t idx = 0;
     for (idx = 0; idx < num_files; idx++) {
         FsearchDatabaseEntry *entry = NULL;
-        fb = database_file_load_entry(fb,
-                                      index_flags,
-                                      previous_entry_name,
-                                      &entry,
-                                      DATABASE_ENTRY_TYPE_FILE);
+        database_file_load_entry(&cursor,
+                                 index_flags,
+                                 previous_entry_name,
+                                 &entry,
+                                 DATABASE_ENTRY_TYPE_FILE);
 
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
-        fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
-        if (parent_idx != -1 && parent_idx >= num_folders) {
+        cursor_read(&cursor, &parent_idx, sizeof(parent_idx));
+
+        if (cursor.error) {
+            g_debug("[db_load] out of bounds read detected at file idx: %d", idx);
+            return false;
+        }
+
+        if (parent_idx != UINT32_MAX && parent_idx >= num_folders) {
             g_debug("[db_load] Corrupt parent index: %d", parent_idx);
             return false;
         }
@@ -356,14 +392,17 @@ database_file_load_files(FILE *fp,
 
         darray_add_item(files, entry);
     }
-    if (fb - file_block != file_block_size) {
-        g_debug("[db_load] wrong amount of memory read: %zd != %" PRIu64, fb - file_block, file_block_size);
+    // fail if we didn't read the correct number of files
+    if (idx != num_files) {
+        g_debug("[db_load] failed to read all files (read %d of %d)", idx, num_folders);
         return false;
     }
 
-    // fail if we didn't read the correct number of files
-    if (idx != num_files) {
-        g_debug("[db_load] failed to read files (read %d of %d)", idx, num_files);
+    // Did the parsed data exactly match the declared block size?
+    if (cursor.ptr != cursor.end) {
+        g_debug("[db_load] block size mismatch! Parsed %zd bytes, expected %" PRIu64,
+                (size_t)(cursor.ptr - file_block),
+                file_block_size);
         return false;
     }
 
