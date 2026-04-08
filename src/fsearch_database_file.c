@@ -273,7 +273,7 @@ database_file_load_folders(FILE *fp,
     g_autoptr(GString) previous_entry_name = g_string_sized_new(1024);
 
     g_autofree uint8_t *folder_block = calloc(folder_block_size + 1, sizeof(uint8_t));
-    g_assert(folder_block);
+    g_return_val_if_fail(folder_block, false);
 
     if (fread(folder_block, sizeof(uint8_t), folder_block_size, fp) != folder_block_size) {
         g_debug("[db_load] failed to read file block");
@@ -351,7 +351,7 @@ database_file_load_files(FILE *fp,
                          uint64_t file_block_size) {
     g_autoptr(GString) previous_entry_name = g_string_sized_new(1024);
     g_autofree uint8_t *file_block = calloc(file_block_size + 1, sizeof(uint8_t));
-    g_assert(file_block);
+    g_return_val_if_fail(file_block, false);
 
     if (fread(file_block, sizeof(uint8_t), file_block_size, fp) != file_block_size) {
         g_debug("[db_load] failed to read file block");
