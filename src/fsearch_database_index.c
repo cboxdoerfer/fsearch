@@ -892,3 +892,9 @@ fsearch_database_index_start_monitoring(FsearchDatabaseIndex *self, bool start) 
 
     g_atomic_int_set(&self->monitor, start);
 }
+
+void
+fsearch_database_index_start_polling(FsearchDatabaseIndex *self) {
+    g_return_if_fail(self);
+    index_start_root_reappearance_polling(self);
+}

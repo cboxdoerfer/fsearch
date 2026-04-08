@@ -221,17 +221,14 @@ fsearch_window_apply_menubar_config(FsearchApplicationWindow *win) {
 }
 
 static void
-fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win) {
+fsearch_window_set_overlay_for_database_state(FsearchApplicationWindow *win, uint32_t num_items) {
     FsearchApplication *app = FSEARCH_APPLICATION_DEFAULT;
-
-    FsearchDatabaseState state = fsearch_application_get_db_state(app);
-    const uint32_t num_items = fsearch_application_get_num_db_entries(app);
-
     if (num_items > 0) {
         show_overlay(win, OVERLAY_RESULTS);
         return;
     }
 
+    FsearchDatabaseState state = fsearch_application_get_db_state(app);
     show_overlay(win, OVERLAY_DATABASE);
     if (state == FSEARCH_DATABASE_STATE_LOADING) {
         show_overlay(win, OVERLAY_DATABASE_LOADING);
@@ -283,7 +280,8 @@ fsearch_window_apply_config(FsearchApplicationWindow *self) {
     fsearch_application_window_apply_statusbar_revealer_config(self);
     apply_filter_config(self);
 
-    fsearch_window_set_overlay_for_database_state(self);
+    const uint32_t num_items = fsearch_application_get_num_db_entries(app);
+    fsearch_window_set_overlay_for_database_state(self, num_items);
 }
 
 static void
@@ -840,6 +838,16 @@ fsearch_application_window_init_listview(FsearchApplicationWindow *win) {
 }
 
 static void
+on_database_changed(FsearchDatabase *db2, FsearchDatabaseInfo *info, gpointer user_data) {
+    FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
+    g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
+
+    const uint32_t num_items = fsearch_database_info_get_num_entries(info);
+
+    fsearch_window_set_overlay_for_database_state(win, num_items);
+}
+
+static void
 on_database_update_finished(FsearchDatabase *db2, FsearchDatabaseInfo *info, gpointer user_data) {
     FsearchApplicationWindow *win = (FsearchApplicationWindow *)user_data;
     g_assert(FSEARCH_IS_APPLICATION_WINDOW(win));
@@ -852,7 +860,10 @@ on_database_update_finished(FsearchDatabase *db2, FsearchDatabaseInfo *info, gpo
     if (update_database_button) {
         gtk_stack_set_visible_child(GTK_STACK(win->popover_update_button_stack), update_database_button);
     }
-    fsearch_window_set_overlay_for_database_state(win);
+
+    const uint32_t num_items = fsearch_database_info_get_num_entries(info);
+
+    fsearch_window_set_overlay_for_database_state(win, num_items);
 
     perform_search(win);
 }
@@ -897,6 +908,7 @@ fsearch_application_window_init(FsearchApplicationWindow *self) {
     g_signal_connect_object(self->db, "sort-finished", G_CALLBACK(on_sort_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-started", G_CALLBACK(on_database_scan_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "scan-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
+    g_signal_connect_object(self->db, "database-changed", G_CALLBACK(on_database_changed), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-started", G_CALLBACK(on_database_load_started), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "load-finished", G_CALLBACK(on_database_update_finished), self, G_CONNECT_AFTER);
     g_signal_connect_object(self->db, "selection-changed", G_CALLBACK(on_selection_changed), self, G_CONNECT_AFTER);

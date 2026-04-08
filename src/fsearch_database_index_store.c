@@ -464,9 +464,10 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
                                                                            store->monitor.ctx,
                                                                            store->event_func,
                                                                            store->event_func_data);
-        if (index && fsearch_database_index_scan(index, cancellable)) {
-            g_ptr_array_add(indices, g_steal_pointer(&index));
+        if (!fsearch_database_index_scan(index, cancellable)) {
+            fsearch_database_index_start_polling(index);
         }
+        g_ptr_array_add(indices, g_steal_pointer(&index));
     }
     if (g_cancellable_is_cancelled(cancellable)) {
         return;
@@ -485,8 +486,12 @@ fsearch_database_index_store_start(FsearchDatabaseIndexStore *store, GCancellabl
         fsearch_database_index_lock(index);
         g_autoptr(DynamicArray) files = fsearch_database_index_get_files(index);
         g_autoptr(DynamicArray) folders = fsearch_database_index_get_folders(index);
-        darray_add_array(store_files, files);
-        darray_add_array(store_folders, folders);
+        if (files) {
+            darray_add_array(store_files, files);
+        }
+        if (folders) {
+            darray_add_array(store_folders, folders);
+        }
 
         fsearch_database_index_unlock(index);
 
