@@ -280,6 +280,10 @@ database_file_load_folders(FILE *fp,
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
         fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
+        if (parent_idx != UINT32_MAX && parent_idx >= num_folders) {
+            g_debug("[db_load] Corrupt parent index: %d", parent_idx);
+            return false;
+        }
 
         if (index_flags & DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX) {
             db_entry_set_db_index(folder, db_index);
@@ -327,6 +331,7 @@ database_file_load_files(FILE *fp,
         return false;
     }
 
+    const uint32_t num_folders = darray_get_num_items(folders);
     const uint8_t *fb = file_block;
     // load files
     uint32_t idx = 0;
@@ -341,6 +346,10 @@ database_file_load_files(FILE *fp,
         // parent_idx: index of parent folder
         uint32_t parent_idx = 0;
         fb = copy_bytes_and_return_new_src(&parent_idx, fb, 4);
+        if (parent_idx != -1 && parent_idx >= num_folders) {
+            g_debug("[db_load] Corrupt parent index: %d", parent_idx);
+            return false;
+        }
 
         FsearchDatabaseEntry *parent = darray_get_item(folders, parent_idx);
         db_entry_set_parent(entry, parent);
