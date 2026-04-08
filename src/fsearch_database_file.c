@@ -291,11 +291,11 @@ database_file_load_folders(FILE *fp,
 
         if (parent_idx != idx) {
             // Until all folders are ready, we have to reference parents by their index
-            db_entry_set_parent_no_update(folder, GINT_TO_POINTER(parent_idx));
+            db_entry_set_parent_no_update(folder, GUINT_TO_POINTER(parent_idx));
         }
         else {
             // parent_idx and idx are the same (i.e. folder is a root index) so it has no parent
-            db_entry_set_parent_no_update(folder, GINT_TO_POINTER(-1));
+            db_entry_set_parent_no_update(folder, GUINT_TO_POINTER(UINT32_MAX));
         }
         darray_add_item(folders, folder);
     }
@@ -1266,9 +1266,8 @@ fsearch_database_file_load(const char *file_path,
     }
     for (uint32_t i = 0; i < num_folders; i++) {
         FsearchDatabaseEntry *folder = darray_get_item(folders, i);
-        const int32_t parent_idx = GPOINTER_TO_INT(db_entry_get_parent(folder));
-        //g_print("loading: %d - %d\n", i, parent_idx);
-        db_entry_set_parent_no_update(folder, parent_idx == -1 ? NULL : darray_get_item(folders, parent_idx));
+        const uint32_t parent_idx = GPOINTER_TO_UINT(db_entry_get_parent(folder));
+        db_entry_set_parent_no_update(folder, parent_idx == UINT32_MAX ? NULL : darray_get_item(folders, parent_idx));
     }
 
     if (status_cb) {
