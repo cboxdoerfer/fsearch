@@ -1219,7 +1219,7 @@ bool
 fsearch_database_file_load(const char *file_path,
                            void (*status_cb)(const char *),
                            FsearchDatabaseIndexStore **store_out,
-                           FsearchDatabaseIndexEventFunc event_func,
+                           FsearchDatabaseIndexStoreEventFunc event_func,
                            void *event_func_user_data) {
     g_return_val_if_fail(file_path, false);
     g_return_val_if_fail(store_out, false);

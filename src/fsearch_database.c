@@ -7,8 +7,6 @@
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_file.h"
 #include "fsearch_database_include_manager.h"
-#include "fsearch_database_index.h"
-#include "fsearch_database_index_event.h"
 #include "fsearch_database_index_store.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_info.h"
@@ -78,7 +76,7 @@ typedef enum FsearchDatabaseSignalType {
 static guint signals[NUM_DATABASE_SIGNALS];
 
 static void
-index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data);
+index_store_event_cb(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexStoreEventKind kind, gpointer data, gpointer user_data);
 
 // endregion
 
@@ -258,6 +256,11 @@ signal_emit_database_changed(FsearchDatabase *self, FsearchDatabaseInfo *info) {
     signal_emit(self, SIGNAL_DATABASE_CHANGED, info, NULL, 1, (GDestroyNotify)fsearch_database_info_unref, NULL);
 }
 
+static void
+signal_emit_database_progress(FsearchDatabase *self, char *text) {
+    signal_emit(self, SIGNAL_DATABASE_PROGRESS, text, NULL, 1, (GDestroyNotify)free, NULL);
+}
+
 // endregion
 
 // region Database private
@@ -390,54 +393,23 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
 }
 
 static void
-update_search_views(FsearchDatabase *self) {
-    g_return_if_fail(self);
-    g_return_if_fail(self->store);
-
-    g_autoptr(GPtrArray) infos = fsearch_database_index_store_get_search_infos(self->store);
-    g_return_if_fail(infos);
-
-    for (uint32_t i = 0; i < infos->len; i++) {
-        FsearchDatabaseSearchInfo *info = g_ptr_array_index(infos, i);
-        signal_emit_selection_changed(self, info);
-    }
-}
-
-// Runs in index store worker thread
-static void
-index_event_cb(FsearchDatabaseIndex *index, FsearchDatabaseIndexEvent *event, gpointer user_data) {
+index_store_event_cb(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexStoreEventKind kind, gpointer data, gpointer user_data) {
+    g_assert(data);
+    g_assert(user_data);
     FsearchDatabase *self = FSEARCH_DATABASE(user_data);
 
-    switch (event->kind) {
-    case FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING:
-        database_lock(self);
-        fsearch_database_index_store_lock(self->store);
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING:
-        update_search_views(self);
-        fsearch_database_index_store_unlock(self->store);
+    switch (kind) {
+    case FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED:
         signal_emit_database_changed(self, database_get_info(self));
-        database_unlock(self);
         break;
-    case FSEARCH_DATABASE_INDEX_EVENT_SCAN_STARTED:
+    case FSEARCH_DATABASE_INDEX_STORE_EVENT_PROGRESS:
+        signal_emit_database_progress(self, (char *)data);
         break;
-    case FSEARCH_DATABASE_INDEX_EVENT_SCAN_FINISHED:
+    case FSEARCH_DATABASE_INDEX_STORE_EVENT_VIEW_CHANGED:
+        signal_emit_selection_changed(self, (FsearchDatabaseSearchInfo *)data);
         break;
-    case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_STARTED:
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_MONITORING_FINISHED:
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED:
-        fsearch_database_index_store_add_entries(self->store, event->entries.files, event->entries.folders);
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED:
-        fsearch_database_index_store_remove_entries(self->store, event->entries.files, event->entries.folders);
-        break;
-    case FSEARCH_DATABASE_INDEX_EVENT_SCANNING:
-        signal_emit(self, SIGNAL_DATABASE_PROGRESS, g_steal_pointer(&event->path), NULL, 1, (GDestroyNotify)free, NULL);
-        break;
-    case NUM_FSEARCH_DATABASE_INDEX_EVENTS:
-        break;
+    default:
+        g_assert_not_reached();
     }
 }
 
@@ -531,7 +503,7 @@ database_rescan_sync(FsearchDatabase *db,
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
         exclude_manager,
         flags,
-        index_event_cb,
+        index_store_event_cb,
         db);
     g_return_if_fail(store);
 
@@ -565,7 +537,7 @@ database_rescan(FsearchDatabase *self) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
         exclude_manager,
         database_get_flags(self),
-        index_event_cb,
+        index_store_event_cb,
         self);
     g_return_if_fail(store);
 
@@ -598,7 +570,7 @@ database_scan(FsearchDatabase *self, FsearchDatabaseWork *work) {
     g_autoptr(FsearchDatabaseIndexStore) store = fsearch_database_index_store_new(include_manager,
         exclude_manager,
         flags,
-        index_event_cb,
+        index_store_event_cb,
         self);
     g_return_if_fail(store);
 
@@ -615,13 +587,13 @@ database_load(FsearchDatabase *self) {
     signal_emit0(self, SIGNAL_LOAD_STARTED);
 
     g_autoptr(FsearchDatabaseIndexStore) store = NULL;
-    const bool res = fsearch_database_file_load(g_file_get_path(self->file), NULL, &store, index_event_cb, self);
+    const bool res = fsearch_database_file_load(g_file_get_path(self->file), NULL, &store, index_store_event_cb, self);
 
     if (!res) {
         store = fsearch_database_index_store_new(fsearch_database_include_manager_new_with_defaults(),
                                                  fsearch_database_exclude_manager_new_with_defaults(),
                                                  database_get_flags(self),
-                                                 index_event_cb,
+                                                 index_store_event_cb,
                                                  self);
     }
     g_clear_pointer(&self->store, fsearch_database_index_store_unref);

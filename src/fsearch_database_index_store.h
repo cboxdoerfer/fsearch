@@ -25,12 +25,25 @@ typedef struct FsearchDatabaseSearchView FsearchDatabaseSearchView;
 
 typedef struct FsearchDatabaseIndexStore FsearchDatabaseIndexStore;
 
+typedef enum {
+    FSEARCH_DATABASE_INDEX_STORE_EVENT_CONTENT_CHANGED,
+    FSEARCH_DATABASE_INDEX_STORE_EVENT_PROGRESS,
+    FSEARCH_DATABASE_INDEX_STORE_EVENT_VIEW_CHANGED,
+    NUM_FSEARCH_DATABASE_STORE_EVENTS,
+} FsearchDatabaseIndexStoreEventKind;
+
+typedef void
+(*FsearchDatabaseIndexStoreEventFunc)(FsearchDatabaseIndexStore *store,
+                                      FsearchDatabaseIndexStoreEventKind kind,
+                                      gpointer data,
+                                      gpointer user_data);
+
 // Object management
 FsearchDatabaseIndexStore *
 fsearch_database_index_store_new(FsearchDatabaseIncludeManager *include_manager,
                                  FsearchDatabaseExcludeManager *exclude_manager,
                                  FsearchDatabaseIndexPropertyFlags flags,
-                                 FsearchDatabaseIndexEventFunc event_func,
+                                 FsearchDatabaseIndexStoreEventFunc event_func,
                                  gpointer event_func_data);
 
 FsearchDatabaseIndexStore *
@@ -40,7 +53,7 @@ fsearch_database_index_store_new_with_content(GPtrArray *indices,
                                               FsearchDatabaseIncludeManager *include_manager,
                                               FsearchDatabaseExcludeManager *exclude_manager,
                                               FsearchDatabaseIndexPropertyFlags flags,
-                                              FsearchDatabaseIndexEventFunc event_func,
+                                              FsearchDatabaseIndexStoreEventFunc event_func,
                                               gpointer event_func_data);
 
 FsearchDatabaseIndexStore *
@@ -94,9 +107,6 @@ fsearch_database_index_store_get_entry_info(FsearchDatabaseIndexStore *store,
 FsearchDatabaseSearchInfo *
 fsearch_database_index_store_get_search_info(FsearchDatabaseIndexStore *store, uint32_t id);
 
-GPtrArray *
-fsearch_database_index_store_get_search_infos(FsearchDatabaseIndexStore *store);
-
 bool
 fsearch_database_index_store_has_container(FsearchDatabaseIndexStore *store,
                                            FsearchDatabaseEntriesContainer *container);
@@ -114,13 +124,6 @@ fsearch_database_index_store_lock(FsearchDatabaseIndexStore *store);
 void
 fsearch_database_index_store_unlock(FsearchDatabaseIndexStore *store);
 
-void
-fsearch_database_index_store_add_entries(FsearchDatabaseIndexStore *store, DynamicArray *files, DynamicArray *folders);
-
-void
-fsearch_database_index_store_remove_entries(FsearchDatabaseIndexStore *store,
-                                            DynamicArray *files,
-                                            DynamicArray *folders);
 void
 fsearch_database_index_store_sort_results(FsearchDatabaseIndexStore *store,
                                           uint32_t id,
