@@ -156,6 +156,63 @@ propagate_event(FsearchDatabaseIndex *self,
     self->event_func(self, event, self->event_func_data);
 }
 
+static inline bool
+is_create_event(FsearchFolderMonitorEventKind kind) {
+    return kind == FSEARCH_FOLDER_MONITOR_EVENT_CREATE ||
+           kind == FSEARCH_FOLDER_MONITOR_EVENT_MOVED_TO ||
+           kind == FSEARCH_FOLDER_MONITOR_EVENT_RESCAN;
+}
+
+static inline bool
+is_delete_event(FsearchFolderMonitorEventKind kind) {
+    return kind == FSEARCH_FOLDER_MONITOR_EVENT_DELETE ||
+           kind == FSEARCH_FOLDER_MONITOR_EVENT_MOVED_FROM;
+}
+
+static inline bool
+is_attrib_event(FsearchFolderMonitorEventKind kind) {
+    return kind == FSEARCH_FOLDER_MONITOR_EVENT_ATTRIB ||
+           kind == FSEARCH_FOLDER_MONITOR_EVENT_CLOSE_WRITE;
+}
+
+static inline bool
+is_special_delete_event(FsearchFolderMonitorEventKind kind) {
+    return kind == FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF ||
+           kind == FSEARCH_FOLDER_MONITOR_EVENT_MOVE_SELF ||
+           kind == FSEARCH_FOLDER_MONITOR_EVENT_UNMOUNT;
+}
+
+static GHashTable *
+get_skippable_events(GPtrArray *events, GPtrArray *folder_delete_events) {
+    g_autoptr(GHashTable) skippable_events = g_hash_table_new(g_direct_hash, g_direct_equal);
+    if (folder_delete_events->len <= 0) {
+        return g_steal_pointer(&skippable_events);
+    }
+
+    for (uint32_t i = 0; i < events->len; ++i) {
+        FsearchFolderMonitorEvent *candidate = g_ptr_array_index(events, i);
+        if (!candidate) {
+            continue;
+        }
+
+        for (uint32_t j = 0; j < folder_delete_events->len; ++j) {
+            FsearchFolderMonitorEvent *folder_to_delete = g_ptr_array_index(folder_delete_events, j);
+            // Check whether candidate->path->str is strictly under deleted_dir.
+            // We require the path to start with deleted_dir followed by '/'
+            // to avoid false matches where deleted_dir is a prefix of an
+            // unrelated sibling name (e.g. /ab matching /abc).
+            const size_t dlen = strlen(folder_to_delete->path->str);
+            if (strncmp(candidate->path->str, folder_to_delete->path->str, dlen) == 0
+                && candidate->path->str[dlen] == '/') {
+                g_hash_table_insert(skippable_events, candidate, NULL);
+                break;
+            }
+        }
+    }
+
+    return g_steal_pointer(&skippable_events);
+}
+
 static void
 process_queued_events(FsearchDatabaseIndex *self) {
     g_return_if_fail(self);
@@ -165,16 +222,42 @@ process_queued_events(FsearchDatabaseIndex *self) {
         return;
     }
 
-    g_autoptr(GTimer) timer = g_timer_new();
-
-    double last_time = 0.0;
-
-    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
+    // 1. Pop all events into an array for faster traversal and build an array for all folders to be removed
+    // The later will be used to detect skippable delete events. For example, a delete event for folder /a makes the
+    // delete event for /a/b obsolete, since by removing /a from the index we also remove all its children
+    g_autoptr(GPtrArray) events = g_ptr_array_new_with_free_func((GDestroyNotify)fsearch_folder_monitor_event_free);
+    g_autoptr(GPtrArray) folder_delete_events = g_ptr_array_new();
     while (true) {
         FsearchFolderMonitorEvent *event = g_async_queue_try_pop(self->event_queue);
         if (!event) {
             break;
         }
+        g_ptr_array_add(events, event);
+        if (event->is_dir && (is_delete_event(event->event_kind) || is_special_delete_event(event->event_kind))) {
+            g_ptr_array_add(folder_delete_events, event);
+        }
+    }
+    // 2. Create a hash table of all events that can be skipped (i.e., they're superseded by another event)
+    g_autoptr(GHashTable) skippable_events = get_skippable_events(events, folder_delete_events);
+
+    // 3. Process events
+    g_autoptr(GTimer) timer = g_timer_new();
+    double last_time = 0.0;
+
+    propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
+
+    uint32_t num_skipped = 0;
+    uint32_t processed_count = 0;
+    for (uint32_t i = 0; i < events->len; i++) {
+        FsearchFolderMonitorEvent *event = g_ptr_array_index(events, i);
+        if (g_hash_table_contains(skippable_events, event)) {
+            // Event can be skipped
+            num_skipped++;
+            continue;
+        }
+
+        processed_count++;
+
         const double elapsed = g_timer_elapsed(timer, NULL);
         if (elapsed - last_time > 0.2) {
             g_debug("interrupt event processing for a while...");
@@ -185,22 +268,25 @@ process_queued_events(FsearchDatabaseIndex *self) {
             propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
         }
         process_event(self, event);
-        g_clear_pointer(&event, fsearch_folder_monitor_event_free);
     }
+
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_END_MODIFYING, NULL, NULL);
 
     const double process_time = g_timer_elapsed(timer, NULL);
     self->max_process_time = MAX(process_time, self->max_process_time);
-    g_debug("processed all events: %d (%d/%d %d/%d %d %d) in %fs (max: %fs)",
-            num_events_queued,
+    g_debug("processed %u of %u queued events: (c: %d/%d d: %d/%d a: %d d: %d s: %d) in %fs (max: %fs)",
+            processed_count,
+            events->len,
             num_folder_creates,
             num_file_creates,
             num_folder_deletes,
             num_file_deletes,
             num_attrib_changes,
             num_descendant_counted,
+            num_skipped,
             process_time,
             self->max_process_time);
+
     num_folder_deletes = 0;
     num_file_deletes = 0;
     num_folder_creates = 0;
@@ -543,11 +629,6 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
         return;
     }
 
-    // g_debug("[index-%d] %s: %s",
-            // db_entry_get_db_index(event->watched_entry),
-            // fsearch_folder_monitor_event_kind_to_string(event->event_kind),
-            // event->path ? event->path->str : "NULL");
-
     switch (event->event_kind) {
     case FSEARCH_FOLDER_MONITOR_EVENT_ATTRIB:
         process_attrib_event(self, event);
@@ -575,7 +656,6 @@ process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
         break;
     case FSEARCH_FOLDER_MONITOR_EVENT_DELETE_SELF:
     case FSEARCH_FOLDER_MONITOR_EVENT_MOVE_SELF:
-        g_print("event self delete/move\n");
         process_move_or_delete_self_event(self, event);
         break;
     case FSEARCH_FOLDER_MONITOR_EVENT_CLOSE_WRITE:
