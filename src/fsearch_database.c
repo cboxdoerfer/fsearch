@@ -394,7 +394,6 @@ database_search(FsearchDatabase *self, FsearchDatabaseWork *work) {
 
 static void
 index_store_event_cb(FsearchDatabaseIndexStore *store, FsearchDatabaseIndexStoreEventKind kind, gpointer data, gpointer user_data) {
-    g_assert(data);
     g_assert(user_data);
     FsearchDatabase *self = FSEARCH_DATABASE(user_data);
 
