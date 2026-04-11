@@ -922,12 +922,20 @@ static void
 fsearch_database_init(FsearchDatabase *self) {
     g_mutex_init(&self->mutex);
     self->cancellable = g_cancellable_new();
+#if GLIB_CHECK_VERSION(2, 70, 0)
     self->io_pool = g_thread_pool_new_full(scan_thread_cb,
                                            self,
                                            (GDestroyNotify)fsearch_database_index_store_unref,
                                            1,
                                            TRUE,
                                            NULL);
+#else
+    self->io_pool = g_thread_pool_new(scan_thread_cb,
+                                           self,
+                                           1,
+                                           TRUE,
+                                           NULL);
+#endif
     self->work_queue = g_async_queue_new_full((GDestroyNotify)fsearch_database_work_unref);
     self->work_queue_thread = g_thread_new("FsearchDatabaseWorkQueue", database_work_queue_thread, self);
 }

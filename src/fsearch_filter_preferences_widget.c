@@ -1,8 +1,16 @@
 #include "fsearch_filter_preferences_widget.h"
 
-#include <glib/gi18n.h>
 
 #include "fsearch_filter_editor.h"
+#include "fsearch_filter_manager.h"
+#include "fsearch_query_flags.h"
+
+#include <glib-object.h>
+#include <glib.h>
+#include <glib/gi18n.h>
+#include <glib/gmacros.h>
+#include <gtk/gtk.h>
+#include <stdint.h>
 
 struct _FsearchFilterPreferencesWidget {
     GtkBox parent_instance;
@@ -24,7 +32,11 @@ enum { COL_FILTER_NAME, COL_FILTER_MACRO, COL_FILTER_QUERY, NUM_FILTER_COLUMNS }
 
 static GParamSpec *properties[NUM_PROPERTIES];
 
+#if GLIB_CHECK_VERSION(2, 70, 0)
 G_DEFINE_FINAL_TYPE(FsearchFilterPreferencesWidget, fsearch_filter_preferences_widget, GTK_TYPE_BOX)
+#else
+G_DEFINE_TYPE(FsearchFilterPreferencesWidget, fsearch_filter_preferences_widget, GTK_TYPE_BOX)
+#endif
 
 static void
 column_text_append(GtkTreeView *view, const char *name, gboolean expand, int id) {
