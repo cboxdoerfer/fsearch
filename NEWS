@@ -1,6 +1,13 @@
 =================
-Version 0.3.alpha0
+Version 0.3-beta1
 =================
+
+* DB rewrite
+* DB: Add support for filesystem monitoring
+* DB: Allow files and folders to be excluded based on fixed patterns, wildcards or regular expressions
+* DB: Store database config in DB file
+* DB: Add checksum to DB file
+* Make icon and file info gathering asynchronous (no UI blocking)
 
 =================
 Version 0.2

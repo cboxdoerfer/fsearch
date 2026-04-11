@@ -76,6 +76,18 @@
     <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.metainfo.xml.in`. -->
     <content_rating type="oars-1.1" />
     <releases>
+        <release date="2026-04-11" version="0.3-beta1">
+            <description>
+                <ul>
+                    <li>DB rewrite</li>
+                    <li>DB: Add support for filesystem monitoring</li>
+                    <li>DB: Allow files and folders to be excluded based on fixed patterns, wildcards or regular expressions</li>
+                    <li>DB: Store database config in DB file</li>
+                    <li>DB: Add checksum to DB file</li>
+                    <li>Make icon and file info gathering asynchronous (no UI blocking)</li>
+                </ul>
+            </description>
+        </release>
         <release date="2022-08-15" version="0.2">
             <description>
                 <ul>
