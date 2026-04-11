@@ -157,6 +157,8 @@ signal_type_to_name(FsearchDatabaseSignalType type) {
         return "SIGNAL_DATABASE_PROGRESS";
     case NUM_DATABASE_SIGNALS:
         return "UNKNOWN";
+    default:
+        g_assert_not_reached();
     }
 }
 
