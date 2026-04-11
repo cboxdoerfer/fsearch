@@ -1,9 +1,25 @@
 #define G_LOG_DOMAIN "fsearch-database-preferences-widget"
 
+#include "fsearch_database.h"
+#include "fsearch_database_info.h"
+#include "fsearch_database_include.h"
+#include "fsearch_database_include_manager.h"
+#include "fsearch_database_exclude.h"
+#include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_preferences_widget.h"
+#include "fsearch_result.h"
 
 #include <config.h>
+#include <gio/gio.h>
+#include <glib-object.h>
+#include <glib.h>
 #include <glib/gi18n.h>
+#include <glib/gmacros.h>
+#include <glib/gtypes.h>
+#include <gtk/gtk.h>
+#include <stdbool.h>
+#include <stdint.h>
+#include <stdio.h>
 
 struct _FsearchDatabasePreferencesWidget {
     GtkBox parent_instance;
