@@ -32,6 +32,7 @@
 #define DATABASE_MAJOR_VERSION 2
 #define DATABASE_MINOR_VERSION 2
 #define DATABASE_MAGIC_NUMBER "FSDB"
+#define DATABASE_CHECKSUM_SIZE 16
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FILE, fclose)
 
@@ -96,6 +97,7 @@ typedef struct {
 
 typedef struct {
     FILE *fp;
+    GChecksum *checksum;
     size_t bytes_written;
     bool error;
 } DatabaseFileWriteCursor;
@@ -108,6 +110,9 @@ cursor_write(DatabaseFileWriteCursor *cursor, const void *src, size_t size) {
     if (fwrite(src, size, 1, cursor->fp) != 1) {
         cursor->error = true;
         return;
+    }
+    if (cursor->checksum) {
+        g_checksum_update(cursor->checksum, src, (gssize)size);
     }
     cursor->bytes_written += size;
 }
@@ -185,14 +190,18 @@ database_file_load_entry(DatabaseFileReadCursor *cursor,
 }
 
 static bool
-database_file_read_element(void *restrict ptr, size_t size, FILE *restrict stream) {
-    return fread(ptr, size, 1, stream) == 1 ? true : false;
+database_file_read_element(void *restrict ptr, size_t size, FILE *restrict stream, GChecksum *checksum) {
+    const bool res = fread(ptr, size, 1, stream) == 1 ? true : false;
+    if (res && checksum) {
+        g_checksum_update(checksum, ptr, (gssize)size);
+    }
+    return res;
 }
 
 static bool
-database_file_load_header(FILE *fp) {
+database_file_load_header(FILE *fp, GChecksum *checksum) {
     char magic[5] = "";
-    if (!database_file_read_element(magic, strlen(DATABASE_MAGIC_NUMBER), fp)) {
+    if (!database_file_read_element(magic, strlen(DATABASE_MAGIC_NUMBER), fp, checksum)) {
         return false;
     }
     magic[4] = '\0';
@@ -202,7 +211,7 @@ database_file_load_header(FILE *fp) {
     }
 
     uint8_t majorver = 0;
-    if (!database_file_read_element(&majorver, 1, fp)) {
+    if (!database_file_read_element(&majorver, 1, fp, checksum)) {
         return false;
     }
     if (majorver != DATABASE_MAJOR_VERSION) {
@@ -212,7 +221,7 @@ database_file_load_header(FILE *fp) {
     }
 
     uint8_t minorver = 0;
-    if (!database_file_read_element(&minorver, 1, fp)) {
+    if (!database_file_read_element(&minorver, 1, fp, checksum)) {
         return false;
     }
     if (minorver > DATABASE_MINOR_VERSION) {
@@ -222,7 +231,7 @@ database_file_load_header(FILE *fp) {
     }
 
     uint8_t is_little_endian = 0;
-    if (!database_file_read_element(&is_little_endian, 1, fp)) {
+    if (!database_file_read_element(&is_little_endian, 1, fp, checksum)) {
         return false;
     }
     const uint8_t is_little_endian_host = G_BYTE_ORDER == G_LITTLE_ENDIAN ? 1 : 0;
@@ -417,14 +426,14 @@ database_file_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, Dynami
     DynamicArray *files = sorted_files[DATABASE_INDEX_PROPERTY_NAME];
     DynamicArray *folders = sorted_folders[DATABASE_INDEX_PROPERTY_NAME];
 
-    if (!database_file_read_element(&num_sorted_arrays, 4, fp)) {
+    if (!database_file_read_element(&num_sorted_arrays, 4, fp, NULL)) {
         g_debug("[db_load] failed to load number of sorted arrays");
         return false;
     }
 
     for (uint32_t i = 0; i < num_sorted_arrays; i++) {
         uint32_t sorted_array_id = 0;
-        if (!database_file_read_element(&sorted_array_id, 4, fp)) {
+        if (!database_file_read_element(&sorted_array_id, 4, fp, NULL)) {
             g_debug("[db_load] failed to load sorted array id");
             return false;
         }
@@ -453,9 +462,9 @@ database_file_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, Dynami
 }
 
 static char *
-database_file_read_string(FILE *fp, size_t max_size) {
+database_file_read_string(FILE *fp, size_t max_size, GChecksum *checksum) {
     uint32_t string_len = 0;
-    if (!database_file_read_element(&string_len, sizeof(string_len), fp)) {
+    if (!database_file_read_element(&string_len, sizeof(string_len), fp, checksum)) {
         return NULL;
     }
     if (string_len > max_size) {
@@ -463,59 +472,59 @@ database_file_read_string(FILE *fp, size_t max_size) {
     }
 
     g_autofree char *path = calloc(string_len + 1, sizeof(char));
-    if (!database_file_read_element(path, string_len, fp)) {
+    if (!database_file_read_element(path, string_len, fp, checksum)) {
         return NULL;
     }
     return g_steal_pointer(&path);
 }
 
 static bool
-database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_manager) {
+database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_manager, GChecksum *checksum) {
     uint32_t num_includes = 0;
-    if (!database_file_read_element(&num_includes, sizeof(num_includes), fp)) {
+    if (!database_file_read_element(&num_includes, sizeof(num_includes), fp, checksum)) {
         g_debug("[db_load] failed to read number of includes");
         return false;
     }
 
     for (int i = 0; i < num_includes; ++i) {
         uint32_t type = 0;
-        if (!database_file_read_element(&type, sizeof(type), fp)) {
+        if (!database_file_read_element(&type, sizeof(type), fp, checksum)) {
             g_debug("[db_load] failed to read type of include");
             return false;
         }
 
         int32_t id = 0;
-        if (!database_file_read_element(&id, sizeof(id), fp)) {
+        if (!database_file_read_element(&id, sizeof(id), fp, checksum)) {
             g_debug("[db_load] failed to read id of include");
             return false;
         }
 
-        g_autofree char *path = database_file_read_string(fp, 4 * PATH_MAX);
+        g_autofree char *path = database_file_read_string(fp, 4 * PATH_MAX, checksum);
         if (!path) {
             g_debug("[db_load] failed to read path of include");
             return false;
         }
 
         uint8_t one_file_system = 0;
-        if (!database_file_read_element(&one_file_system, sizeof(one_file_system), fp)) {
+        if (!database_file_read_element(&one_file_system, sizeof(one_file_system), fp, checksum)) {
             g_debug("[db_load] failed to read path_len of include");
             return false;
         }
 
         uint8_t is_active = 0;
-        if (!database_file_read_element(&is_active, sizeof(is_active), fp)) {
+        if (!database_file_read_element(&is_active, sizeof(is_active), fp, checksum)) {
             g_debug("[db_load] failed to read path_len of include");
             return false;
         }
 
         uint8_t is_monitored = 0;
-        if (!database_file_read_element(&is_monitored, sizeof(is_monitored), fp)) {
+        if (!database_file_read_element(&is_monitored, sizeof(is_monitored), fp, checksum)) {
             g_debug("[db_load] failed to read path_len of include");
             return false;
         }
 
         uint8_t scan_after_launch = 0;
-        if (!database_file_read_element(&scan_after_launch, sizeof(scan_after_launch), fp)) {
+        if (!database_file_read_element(&scan_after_launch, sizeof(scan_after_launch), fp, checksum)) {
             g_debug("[db_load] failed to read path_len of include");
             return false;
         }
@@ -533,16 +542,16 @@ database_file_load_includes(FILE *fp, FsearchDatabaseIncludeManager *include_man
 }
 
 static bool
-database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_manager) {
+database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_manager, GChecksum *checksum) {
     uint32_t num_excludes = 0;
-    if (!database_file_read_element(&num_excludes, sizeof(num_excludes), fp)) {
+    if (!database_file_read_element(&num_excludes, sizeof(num_excludes), fp, checksum)) {
         g_debug("[db_load] failed to read number of excludes");
         return false;
     }
 
     for (int i = 0; i < num_excludes; ++i) {
         uint32_t record_type = 0;
-        if (!database_file_read_element(&record_type, sizeof(record_type), fp)) {
+        if (!database_file_read_element(&record_type, sizeof(record_type), fp, checksum)) {
             g_debug("[db_load] failed to read type of exclude");
             return false;
         }
@@ -550,27 +559,27 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
         uint8_t exclude_type = FSEARCH_DATABASE_EXCLUDE_TYPE_FIXED;
         uint8_t scope = FSEARCH_DATABASE_EXCLUDE_MATCH_SCOPE_FULL_PATH;
         uint8_t target = FSEARCH_DATABASE_EXCLUDE_TARGET_BOTH;
-        if (!database_file_read_element(&exclude_type, sizeof(exclude_type), fp)) {
+        if (!database_file_read_element(&exclude_type, sizeof(exclude_type), fp, checksum)) {
             g_debug("[db_load] failed to read exclude type");
             return false;
         }
-        if (!database_file_read_element(&scope, sizeof(scope), fp)) {
+        if (!database_file_read_element(&scope, sizeof(scope), fp, checksum)) {
             g_debug("[db_load] failed to read exclude scope");
             return false;
         }
-        if (!database_file_read_element(&target, sizeof(target), fp)) {
+        if (!database_file_read_element(&target, sizeof(target), fp, checksum)) {
             g_debug("[db_load] failed to read exclude target");
             return false;
         }
 
-        g_autofree char *pattern = database_file_read_string(fp, 4 * PATH_MAX);
+        g_autofree char *pattern = database_file_read_string(fp, 4 * PATH_MAX, checksum);
         if (!pattern) {
             g_debug("[db_load] failed to read pattern of exclude");
             return false;
         }
 
         uint8_t is_active = 0;
-        if (!database_file_read_element(&is_active, sizeof(is_active), fp)) {
+        if (!database_file_read_element(&is_active, sizeof(is_active), fp, checksum)) {
             g_debug("[db_load] failed to read path_len of exclude");
             return false;
         }
@@ -584,7 +593,7 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
     }
 
     uint8_t exclude_hidden = 0;
-    if (!database_file_read_element(&exclude_hidden, sizeof(exclude_hidden), fp)) {
+    if (!database_file_read_element(&exclude_hidden, sizeof(exclude_hidden), fp, checksum)) {
         g_debug("[db_load] failed to read exclude hidden setting");
         return false;
     }
@@ -891,7 +900,8 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
 
     g_autoptr(FILE) fp = file_open_locked(file_tmp_path->str, "wb");
 
-    DatabaseFileWriteCursor cursor = {.fp = fp, .error = false, .bytes_written = 0};
+    g_autoptr(GChecksum) checksum = g_checksum_new(G_CHECKSUM_MD5);
+    DatabaseFileWriteCursor cursor = {.fp = fp, .error = false, .bytes_written = 0, .checksum = checksum};
 
     if (!fp) {
         g_debug("[db_save] failed to open temporary database file: %s", file_tmp_path->str);
@@ -910,6 +920,17 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     cursor_write(&cursor, &index_flags, sizeof(index_flags));
     if (cursor.error == true) {
         g_debug("[db_save] failed saving index flags");
+        goto save_fail;
+    }
+
+    g_debug("[db_save] saving indices...");
+    database_file_save_includes(&cursor, store);
+    if (cursor.error == true) {
+        goto save_fail;
+    }
+    g_debug("[db_save] saving excludes...");
+    database_file_save_excludes(&cursor, store);
+    if (cursor.error == true) {
         goto save_fail;
     }
 
@@ -935,6 +956,10 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
         goto save_fail;
     }
 
+    // Set checksum to NULL. For performance reasons we don't want to compute the checksum of the larger arrays.
+    // It also must be set to NULL before writing placeholder data for folder and file block sizes and checksum itself
+    cursor.checksum = NULL;
+
     uint64_t folder_block_size = 0;
     const uint64_t folder_block_size_offset = cursor.bytes_written;
     g_debug("[db_save] saving folder block size...");
@@ -953,16 +978,11 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
         goto save_fail;
     }
 
-    g_debug("[db_save] saving indices...");
-    database_file_save_includes(&cursor, store);
-    if (cursor.error == true) {
-        goto save_fail;
-    }
-    g_debug("[db_save] saving excludes...");
-    database_file_save_excludes(&cursor, store);
-    if (cursor.error == true) {
-        goto save_fail;
-    }
+    // Store placeholder for checksum
+    const uint64_t checksum_offset = cursor.bytes_written;
+    uint8_t checksum_placeholder[DATABASE_CHECKSUM_SIZE] = {};
+    cursor_write(&cursor, checksum_placeholder, sizeof(checksum_placeholder));
+
     g_debug("[db_save] saving folders...");
     uint64_t current_cursor_size = cursor.bytes_written;
     database_file_save_folders(&cursor, index_flags, folders, num_folders);
@@ -986,12 +1006,26 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     }
 
     // now that we know the size of the file/folder block we've written, store it in the file header
+    // Make also sure to set the cursor checksum again, so folder and file block size are hashed as well
+    cursor.checksum = checksum;
     if (fseeko(fp, (off64_t)folder_block_size_offset, SEEK_SET) != 0) {
         goto save_fail;
     }
     g_debug("[db_save] updating file and folder block size: %" PRIu64 ", %" PRIu64, folder_block_size, file_block_size);
     cursor_write(&cursor, &folder_block_size, sizeof(folder_block_size));
     cursor_write(&cursor, &file_block_size, sizeof(file_block_size));
+
+    // after writing the folder and file block size, we can
+    if (fseeko(fp, (off64_t)checksum_offset, SEEK_SET) != 0) {
+        goto save_fail;
+    }
+    gsize checksum_buffer_len = DATABASE_CHECKSUM_SIZE;
+    uint8_t checksum_bytes[DATABASE_CHECKSUM_SIZE] = {};
+    g_checksum_get_digest(checksum, checksum_bytes, &checksum_buffer_len);
+
+    // Before writing checksum, unset it again.
+    cursor.checksum = NULL;
+    cursor_write(&cursor, checksum_bytes, sizeof(checksum_bytes));
 
     if (cursor.error == true) {
         goto save_fail;
@@ -1040,48 +1074,65 @@ fsearch_database_file_load_config(const char *file_path,
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_exclude_manager_new();
 
-    if (!database_file_load_header(fp)) {
+    g_autoptr(GChecksum) checksum = g_checksum_new(G_CHECKSUM_MD5);
+
+    if (!database_file_load_header(fp, checksum)) {
         goto load_fail;
     }
 
     uint64_t index_flags = 0;
-    if (!database_file_read_element(&index_flags, sizeof(index_flags), fp)) {
+    if (!database_file_read_element(&index_flags, sizeof(index_flags), fp, checksum)) {
         g_debug("[db_load] failed to read index flags");
         goto load_fail;
     }
 
+    if (!database_file_load_includes(fp, include_manager, checksum)) {
+        g_debug("[db_load] failed to load includes");
+        goto load_fail;
+    }
+    if (!database_file_load_excludes(fp, exclude_manager, checksum)) {
+        g_debug("[db_load] excludes not loaded");
+        goto load_fail;
+    }
+
     uint32_t num_folders = 0;
-    if (!database_file_read_element(&num_folders, sizeof(num_folders), fp)) {
+    if (!database_file_read_element(&num_folders, sizeof(num_folders), fp, checksum)) {
         g_debug("[db_load] failed to read num_folders");
         goto load_fail;
     }
 
     uint32_t num_files = 0;
-    if (!database_file_read_element(&num_files, sizeof(num_files), fp)) {
+    if (!database_file_read_element(&num_files, sizeof(num_files), fp, checksum)) {
         g_debug("[db_load] failed to read num_files");
         goto load_fail;
     }
     g_debug("[db_load] load %d folders, %d files", num_folders, num_files);
 
     uint64_t folder_block_size = 0;
-    if (!database_file_read_element(&folder_block_size, sizeof(folder_block_size), fp)) {
+    if (!database_file_read_element(&folder_block_size, sizeof(folder_block_size), fp, checksum)) {
         g_debug("[db_load] failed to read folder block size");
         goto load_fail;
     }
 
     uint64_t file_block_size = 0;
-    if (!database_file_read_element(&file_block_size, sizeof(file_block_size), fp)) {
+    if (!database_file_read_element(&file_block_size, sizeof(file_block_size), fp, checksum)) {
         g_debug("[db_load] loading file block size: %" PRIu64, file_block_size);
         goto load_fail;
     }
     g_debug("[db_load] folder size: %" PRIu64 ", file size: %" PRIu64, folder_block_size, file_block_size);
 
-    if (!database_file_load_includes(fp, include_manager)) {
-        g_debug("[db_load] failed to load includes");
+    gsize checksum_computed_len = DATABASE_CHECKSUM_SIZE;
+    uint8_t checksum_computed[DATABASE_CHECKSUM_SIZE] = {};
+    g_checksum_get_digest(checksum, checksum_computed, &checksum_computed_len);
+
+    uint8_t checksum_stored[DATABASE_CHECKSUM_SIZE] = {};
+    if (!database_file_read_element(checksum_stored, sizeof(checksum_stored), fp, NULL)) {
+        g_debug("[db_load] loading checksum failed");
         goto load_fail;
     }
-    if (!database_file_load_excludes(fp, exclude_manager)) {
-        g_debug("[db_load] excludes not loaded");
+
+    if (memcmp(checksum_stored, checksum_computed, DATABASE_CHECKSUM_SIZE) != 0) {
+        g_warning("[db_load] Database Metadata Corrupted! MD5 Checksum mismatch.");
         goto load_fail;
     }
 
@@ -1131,48 +1182,65 @@ fsearch_database_file_load(const char *file_path,
                                                                     NULL,
                                                                     (GDestroyNotify)darray_unref);
 
-    if (!database_file_load_header(fp)) {
+    g_autoptr(GChecksum) checksum = g_checksum_new(G_CHECKSUM_MD5);
+
+    if (!database_file_load_header(fp, checksum)) {
         goto load_fail;
     }
 
     uint64_t index_flags = 0;
-    if (!database_file_read_element(&index_flags, sizeof(index_flags), fp)) {
+    if (!database_file_read_element(&index_flags, sizeof(index_flags), fp, checksum)) {
         g_debug("[db_load] failed to read index flags");
         goto load_fail;
     }
 
+    if (!database_file_load_includes(fp, include_manager, checksum)) {
+        g_debug("[db_load] failed to load includes");
+        goto load_fail;
+    }
+    if (!database_file_load_excludes(fp, exclude_manager, checksum)) {
+        g_debug("[db_load] excludes not loaded");
+        goto load_fail;
+    }
+
     uint32_t num_folders = 0;
-    if (!database_file_read_element(&num_folders, sizeof(num_folders), fp)) {
+    if (!database_file_read_element(&num_folders, sizeof(num_folders), fp, checksum)) {
         g_debug("[db_load] failed to read num_folders");
         goto load_fail;
     }
 
     uint32_t num_files = 0;
-    if (!database_file_read_element(&num_files, sizeof(num_files), fp)) {
+    if (!database_file_read_element(&num_files, sizeof(num_files), fp, checksum)) {
         g_debug("[db_load] failed to read num_files");
         goto load_fail;
     }
     g_debug("[db_load] load %d folders, %d files", num_folders, num_files);
 
     uint64_t folder_block_size = 0;
-    if (!database_file_read_element(&folder_block_size, sizeof(folder_block_size), fp)) {
+    if (!database_file_read_element(&folder_block_size, sizeof(folder_block_size), fp, checksum)) {
         g_debug("[db_load] failed to read folder block size");
         goto load_fail;
     }
 
     uint64_t file_block_size = 0;
-    if (!database_file_read_element(&file_block_size, sizeof(file_block_size), fp)) {
+    if (!database_file_read_element(&file_block_size, sizeof(file_block_size), fp, checksum)) {
         g_debug("[db_load] loading file block size: %" PRIu64, file_block_size);
         goto load_fail;
     }
     g_debug("[db_load] folder size: %" PRIu64 ", file size: %" PRIu64, folder_block_size, file_block_size);
 
-    if (!database_file_load_includes(fp, include_manager)) {
-        g_debug("[db_load] failed to load includes");
+    gsize checksum_computed_len = DATABASE_CHECKSUM_SIZE;
+    uint8_t checksum_computed[DATABASE_CHECKSUM_SIZE] = {};
+    g_checksum_get_digest(checksum, checksum_computed, &checksum_computed_len);
+
+    uint8_t checksum_stored[DATABASE_CHECKSUM_SIZE] = {};
+    if (!database_file_read_element(checksum_stored, sizeof(checksum_stored), fp, NULL)) {
+        g_debug("[db_load] loading checksum failed");
         goto load_fail;
     }
-    if (!database_file_load_excludes(fp, exclude_manager)) {
-        g_debug("[db_load] excludes not loaded");
+
+    if (memcmp(checksum_stored, checksum_computed, DATABASE_CHECKSUM_SIZE) != 0) {
+        g_warning("[db_load] Database Metadata Corrupted! MD5 Checksum mismatch.");
         goto load_fail;
     }
 
