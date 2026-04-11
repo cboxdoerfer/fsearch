@@ -48,7 +48,7 @@ darray_free(DynamicArray *array) {
         return;
     }
 
-    g_debug("[darray_free] freed");
+    //g_debug("[darray_free] freed");
     if (array->item_free_func) {
         items_freed += array->num_items;
         for (uint32_t i = 0; i < array->num_items; ++i) {

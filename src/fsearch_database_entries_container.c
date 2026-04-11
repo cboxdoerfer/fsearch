@@ -279,8 +279,8 @@ fsearch_database_entries_container_find(FsearchDatabaseEntriesContainer *self, F
     if (darray_binary_search_with_data(c, entry, self->entry_comp_func, self->compare_context, &idx)) {
         return darray_get_item(c, idx);
     }
-    g_autoptr(GString) path = db_entry_get_path_full(entry);
-    g_debug("[container_find] entry not found: %s", path->str);
+    //g_autoptr(GString) path = db_entry_get_path_full(entry);
+    //g_debug("[container_find] entry not found: %s", path->str);
     return NULL;
 }
 
@@ -304,8 +304,8 @@ fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, 
         balance_container(self, c, c_idx);
         return e;
     }
-    g_autoptr(GString) path = db_entry_get_path_full(entry);
-    g_debug("[container_steal] entry not found: %s", path->str);
+    //g_autoptr(GString) path = db_entry_get_path_full(entry);
+    //g_debug("[container_steal] entry not found: %s", path->str);
     return NULL;
 }
 
