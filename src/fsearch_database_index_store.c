@@ -1013,20 +1013,19 @@ fsearch_database_index_store_sort_results(FsearchDatabaseIndexStore *store,
 }
 
 static DynamicArray *
-collect_search_results(IndexStoreWorkerPoolData *data_array[], uint32_t data_array_len) {
+collect_search_results(DynamicArray *pool_data_array) {
     uint32_t num_entries_found = 0;
-    for (uint32_t i = 0; i < data_array_len; ++i) {
-        IndexStoreWorkerPoolData *data = data_array[i];
+    for (uint32_t i = 0; i < darray_get_num_items(pool_data_array); ++i) {
+        IndexStoreWorkerPoolData *data = darray_get_item(pool_data_array, i);
         num_entries_found += darray_get_num_items(data->search.out);
     }
     g_autoptr(DynamicArray) search_entries = darray_new(num_entries_found);
 
-    for (uint32_t i = 0; i < data_array_len; ++i) {
-        IndexStoreWorkerPoolData *data = data_array[i];
+    for (uint32_t i = 0; i < darray_get_num_items(pool_data_array); ++i) {
+        IndexStoreWorkerPoolData *data = darray_get_item(pool_data_array, i);
         darray_add_array(search_entries, data->search.out);
 
         g_clear_pointer(&data->search.out, darray_unref);
-        g_clear_pointer(&data, free);
     }
 
     return g_steal_pointer(&search_entries);
@@ -1053,35 +1052,37 @@ search_entries(FsearchQuery *query,
                                      : g_thread_pool_get_num_threads(pool);
     const uint32_t clamped_num_threads = MIN(num_threads, num_entries);
     const uint32_t num_items_per_thread = num_entries / clamped_num_threads;
-    IndexStoreWorkerPoolData *pool_data[num_threads + 1] = {};
+    g_autoptr(DynamicArray) pool_data_array = darray_new_full(clamped_num_threads, (GDestroyNotify)g_free);
 
     uint32_t start_pos = 0;
     uint32_t end_pos = sub_or_zero_u32(num_items_per_thread, 1);
     const uint32_t last_end_pos = sub_or_zero_u32(num_entries, 1);
 
-    for (uint32_t i = 0; i < num_threads; ++i) {
-        pool_data[i] = g_new0(IndexStoreWorkerPoolData, 1);
-        pool_data[i]->type = INDEX_STORE_WORKER_POOL_DATA_TYPE_SEARCH;
-        pool_data[i]->search.in = in;
-        pool_data[i]->search.query = query;
-        pool_data[i]->search.cancellable = cancellable;
-        pool_data[i]->search.thread_id = (int32_t)i;
-        pool_data[i]->search.in_start_idx = start_pos;
-        pool_data[i]->search.in_end_idx = i == num_threads - 1 ? last_end_pos : end_pos;
-        pool_data[i]->search.out = darray_new(end_pos - start_pos + 1);
-        g_thread_pool_push(pool, pool_data[i], NULL);
+    for (uint32_t i = 0; i < clamped_num_threads; ++i) {
+        IndexStoreWorkerPoolData *pool_data = g_new0(IndexStoreWorkerPoolData, 1);
+        pool_data->type = INDEX_STORE_WORKER_POOL_DATA_TYPE_SEARCH;
+        pool_data->search.in = in;
+        pool_data->search.query = query;
+        pool_data->search.cancellable = cancellable;
+        pool_data->search.thread_id = (int32_t)i;
+        pool_data->search.in_start_idx = start_pos;
+        pool_data->search.in_end_idx = i == clamped_num_threads - 1 ? last_end_pos : end_pos;
+        pool_data->search.out = darray_new(end_pos - start_pos + 1);
+
+        darray_add_item(pool_data_array, pool_data);
+        g_thread_pool_push(pool, pool_data, NULL);
 
         start_pos = end_pos + 1;
         end_pos += num_items_per_thread;
     }
 
     uint32_t num_threads_collected = 0;
-    while (num_threads_collected < num_threads) {
+    while (num_threads_collected < darray_get_num_items(pool_data_array)) {
         g_async_queue_pop(collect_queue);
         num_threads_collected++;
     }
 
-    return collect_search_results(pool_data, num_threads);
+    return collect_search_results(pool_data_array);
 }
 
 bool
