@@ -35,53 +35,6 @@
 
 G_DEFINE_AUTOPTR_CLEANUP_FUNC(FILE, fclose)
 
-#define DB_WRITE_VAL_SIZED(fp, val, size, msg, msg_arg, failed_ptr, bytes_count)   \
-    do {                                                                       \
-        (bytes_count) +=                                                       \
-            database_file_write_data(fp, &(val), size, 1, failed_ptr);  \
-        if (*(failed_ptr)) {                                                   \
-            g_debug("[db_save] " msg, msg_arg);                                \
-            return bytes_count;                                                       \
-        }                                                                      \
-    } while (0)
-
-#define DB_WRITE_VAL(fp, val, msg, msg_arg, failed_ptr, bytes_count)   \
-    do {                                                                       \
-        (bytes_count) +=                                                       \
-            database_file_write_data(fp, &(val), sizeof(val), 1, failed_ptr);  \
-        if (*(failed_ptr)) {                                                   \
-            g_debug("[db_save] " msg, msg_arg);                                \
-            return bytes_count;                                                       \
-        }                                                                      \
-    } while (0)
-
-#define DB_WRITE_VAL_GOTO(fp, val, msg, msg_arg, failed_ptr, bytes_count, glabel)   \
-    do {                                                                       \
-        (bytes_count) +=                                                       \
-            database_file_write_data(fp, &(val), sizeof(val), 1, failed_ptr);  \
-        if (*(failed_ptr)) {                                                   \
-            g_debug("[db_save] " msg, msg_arg);                                \
-            goto glabel;                                                       \
-        }                                                                      \
-    } while (0)
-
-#define DB_WRITE_STRING(fp, str, str_len, msg, msg_arg, failed_ptr, bytes_count)   \
-    do {                                                                       \
-        (bytes_count) +=                                                       \
-            database_file_write_data(fp, &(str_len), sizeof(str_len), 1, failed_ptr);  \
-        if (*(failed_ptr)) {                                                   \
-            g_debug("[db_save] (str_len) " msg, msg_arg);                                \
-            return bytes_count;                                                       \
-        }                                                                      \
-        (bytes_count) +=                                                       \
-            database_file_write_data(fp, str, str_len, 1, failed_ptr);  \
-        if (*(failed_ptr)) {                                                   \
-            g_debug("[db_save] (str) " msg, msg_arg);                                \
-            return bytes_count;                                                       \
-        }                                                                      \
-    } while (0)
-
-
 typedef struct {
     DynamicArray *files[NUM_DATABASE_INDEX_PROPERTIES];
     DynamicArray *folders[NUM_DATABASE_INDEX_PROPERTIES];
@@ -141,6 +94,32 @@ typedef struct {
     bool error;
 } DatabaseFileReadCursor;
 
+typedef struct {
+    FILE *fp;
+    size_t bytes_written;
+    bool error;
+} DatabaseFileWriteCursor;
+
+static inline void
+cursor_write(DatabaseFileWriteCursor *cursor, const void *src, size_t size) {
+    if (cursor->error) {
+        return;
+    }
+    if (fwrite(src, size, 1, cursor->fp) != 1) {
+        cursor->error = true;
+        return;
+    }
+    cursor->bytes_written += size;
+}
+
+static inline void
+cursor_write_string(DatabaseFileWriteCursor *cursor, const char *str, uint32_t len) {
+    cursor_write(cursor, &len, sizeof(len));
+    if (len > 0) {
+        cursor_write(cursor, str, len);
+    }
+}
+
 static inline void
 cursor_read(DatabaseFileReadCursor *cursor, void *dest, size_t size) {
     // If we already failed a previous read, or if this read goes out of bounds, abort.
@@ -151,6 +130,8 @@ cursor_read(DatabaseFileReadCursor *cursor, void *dest, size_t size) {
     memcpy(dest, cursor->ptr, size);
     cursor->ptr += size;
 }
+
+// region Database-File-Read
 
 static void
 database_file_load_entry(DatabaseFileReadCursor *cursor,
@@ -319,7 +300,7 @@ database_file_load_folders(FILE *fp,
             db_entry_set_parent_no_update(folder, GUINT_TO_POINTER(parent_idx));
         }
         else {
-            // parent_idx and idx are the same (i.e. folder is a root index) so it has no parent
+            // parent_idx and idx are the same (i.e., folder is a root index), so it has no parent
             db_entry_set_parent_no_update(folder, GUINT_TO_POINTER(UINT32_MAX));
         }
         darray_add_item(folders, g_steal_pointer(&folder));
@@ -337,7 +318,6 @@ database_file_load_folders(FILE *fp,
                 folder_block_size);
         return false;
     }
-
 
     return true;
 }
@@ -613,41 +593,27 @@ database_file_load_excludes(FILE *fp, FsearchDatabaseExcludeManager *exclude_man
     return true;
 }
 
-static size_t
-database_file_write_data(FILE *fp, const void *data, size_t data_size, size_t num_elements, bool *write_failed) {
-    if (data_size == 0 || num_elements == 0) {
-        return 0;
-    }
-    if (fwrite(data, data_size, num_elements, fp) != num_elements) {
-        *write_failed = true;
-        return 0;
-    }
-    return data_size * num_elements;
-}
+// endregion
 
-static size_t
-database_file_save_entry(FILE *fp,
+// region Database-File-Write
+
+static void
+database_file_save_entry(DatabaseFileWriteCursor *cursor,
                          FsearchDatabaseIndexPropertyFlags index_flags,
                          FsearchDatabaseEntry *entry,
                          uint32_t parent_idx,
                          GString *previous_entry_name,
-                         GString *new_entry_name,
-                         bool *write_failed) {
+                         GString *new_entry_name) {
     // init new_entry_name with the name of the current entry
     g_string_assign(new_entry_name, db_entry_get_name_raw(entry));
 
-    size_t bytes_written = 0;
     // name_offset: character position after which previous_entry_name and new_entry_name differ
     const uint16_t name_offset = get_name_offset(previous_entry_name->str, new_entry_name->str);
-    DB_WRITE_VAL(fp, name_offset, "failed to write name_offset: %d", name_offset, write_failed, bytes_written);
+    cursor_write(cursor, &name_offset, sizeof(name_offset));
 
     // name_len: length of the new name characters
     const uint16_t name_len = new_entry_name->len - name_offset;
-    bytes_written += database_file_write_data(fp, &name_len, sizeof(name_len), 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save name length");
-        return bytes_written;
-    }
+    cursor_write(cursor, &name_len, sizeof(name_len));
 
     // append new unique characters to previous_entry_name starting at name_offset
     g_string_erase(previous_entry_name, name_offset, -1);
@@ -656,62 +622,45 @@ database_file_save_entry(FILE *fp,
     if (name_len > 0) {
         // name: new characters to be written to file
         const char *name = previous_entry_name->str + name_offset;
-        bytes_written += database_file_write_data(fp, name, name_len, 1, write_failed);
-        if (*write_failed == true) {
-            g_debug("[db_save] failed to save name");
-            return bytes_written;
-        }
+        cursor_write(cursor, name, name_len);
     }
 
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_SIZE) != 0) {
         // size: file or folder size (folder size: sum of all children sizes)
         const uint64_t size = db_entry_get_size(entry);
-        DB_WRITE_VAL(fp, size, "failed to write size: %d", size, write_failed, bytes_written);
+        cursor_write(cursor, &size, sizeof(size));
     }
 
     if ((index_flags & DATABASE_INDEX_PROPERTY_FLAG_MODIFICATION_TIME) != 0) {
         // mtime: modification time of file/folder
         const uint64_t mtime = db_entry_get_mtime(entry);
-        DB_WRITE_VAL(fp, mtime, "failed to write mtime: %d", mtime, write_failed, bytes_written);
+        cursor_write(cursor, &mtime, sizeof(mtime));
     }
 
     // parent_idx: index of parent folder
-    DB_WRITE_VAL(fp, parent_idx, "failed to write parent_idx: %d", parent_idx, write_failed, bytes_written);
-
-    return bytes_written;
+    cursor_write(cursor, &parent_idx, sizeof(parent_idx));
 }
 
-static size_t
-database_file_save_header(FILE *fp, bool *write_failed) {
-    size_t bytes_written = 0;
-
+static void
+database_file_save_header(DatabaseFileWriteCursor *cursor) {
     const char magic[] = DATABASE_MAGIC_NUMBER;
-    bytes_written += database_file_write_data(fp, magic, strlen(magic), 1, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save magic number");
-        return bytes_written;
-    }
+    cursor_write(cursor, magic, strlen(magic));
 
     const uint8_t majorver = DATABASE_MAJOR_VERSION;
-    DB_WRITE_VAL(fp, majorver, "failed to write major version: %d", majorver, write_failed, bytes_written);
+    cursor_write(cursor, &majorver, sizeof(majorver));
 
     const uint8_t minorver = DATABASE_MINOR_VERSION;
-    DB_WRITE_VAL(fp, minorver, "failed to write minor version: %d", minorver, write_failed, bytes_written);
+    cursor_write(cursor, &minorver, sizeof(minorver));
 
     const uint8_t is_little_endian = G_BYTE_ORDER == G_LITTLE_ENDIAN ? 1 : 0;
-    DB_WRITE_VAL(fp, is_little_endian, "failed to write architecture: %d", is_little_endian, write_failed, bytes_written);
-
-    return bytes_written;
+    cursor_write(cursor, &is_little_endian, sizeof(is_little_endian));
 }
 
-static size_t
-database_file_save_files(FILE *fp,
+static void
+database_file_save_files(DatabaseFileWriteCursor *cursor,
                          FsearchDatabaseIndexPropertyFlags index_flags,
                          DynamicArray *files,
-                         uint32_t num_files,
-                         bool *write_failed) {
-    size_t bytes_written = 0;
-
+                         uint32_t num_files) {
     g_autoptr(GString) name_prev = g_string_sized_new(1024);
     g_autoptr(GString) name_new = g_string_sized_new(1024);
 
@@ -721,17 +670,16 @@ database_file_save_files(FILE *fp,
         db_entry_set_index(entry, i);
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = db_entry_get_index(parent);
-        bytes_written += database_file_save_entry(fp,
-                                                  index_flags,
-                                                  entry,
-                                                  parent_idx,
-                                                  name_prev,
-                                                  name_new,
-                                                  write_failed);
-        if (*write_failed == true)
-            return bytes_written;
+        database_file_save_entry(cursor,
+                                 index_flags,
+                                 entry,
+                                 parent_idx,
+                                 name_prev,
+                                 name_new);
+        if (cursor->error) {
+            return;
+        }
     }
-    return bytes_written;
 }
 
 static uint32_t *
@@ -749,46 +697,36 @@ build_sorted_entry_index_list(DynamicArray *entries, uint32_t num_entries) {
     return indexes;
 }
 
-static size_t
-database_file_save_sorted_entries(FILE *fp, DynamicArray *entries, uint32_t num_entries, bool *write_failed) {
+static void
+database_file_save_sorted_entries(DatabaseFileWriteCursor *cursor,
+                                  DynamicArray *entries,
+                                  uint32_t num_entries) {
     if (num_entries < 1) {
         // nothing to write, we're done here
-        return 0;
+        return;
     }
 
     g_autofree uint32_t *sorted_entry_index_list = build_sorted_entry_index_list(entries, num_entries);
     if (!sorted_entry_index_list) {
-        *write_failed = true;
+        cursor->error = true;
         g_debug("[db_save] failed to create sorted index list");
-        return 0;
+        return;
     }
 
-    size_t bytes_written = database_file_write_data(fp, sorted_entry_index_list, 4, num_entries, write_failed);
-    if (*write_failed == true) {
-        g_debug("[db_save] failed to save sorted index list");
-    }
-
-    return bytes_written;
+    cursor_write(cursor, sorted_entry_index_list, sizeof(uint32_t) * num_entries);
 }
 
-static size_t
-database_file_save_sorted_arrays(FILE *fp,
+static void
+database_file_save_sorted_arrays(DatabaseFileWriteCursor *cursor,
                                  FsearchDatabaseIndexStore *store,
                                  uint32_t num_files,
-                                 uint32_t num_folders,
-                                 bool *write_failed) {
-    size_t bytes_written = 0;
+                                 uint32_t num_folders) {
     uint32_t num_sorted_arrays = fsearch_database_index_store_get_num_fast_sort_indices(store);
 
-    DB_WRITE_VAL(fp,
-                 num_sorted_arrays,
-                 "failed to write number of sorted arrays: %d",
-                 num_sorted_arrays,
-                 write_failed,
-                 bytes_written);
+    cursor_write(cursor, &num_sorted_arrays, sizeof(num_sorted_arrays));
 
-    if (num_sorted_arrays < 1) {
-        return bytes_written;
+    if (num_sorted_arrays < 1 || cursor->error) {
+        return;
     }
 
     for (uint32_t id = DATABASE_INDEX_PROPERTY_NAME; id < NUM_DATABASE_INDEX_PROPERTIES; id++) {
@@ -805,31 +743,26 @@ database_file_save_sorted_arrays(FILE *fp,
         }
 
         // id: this is the id of the sorted files
-        DB_WRITE_VAL(fp, id, "failed to write sorted arrays id: %d", id, write_failed, bytes_written);
+        cursor_write(cursor, &id, sizeof(id));
 
-        bytes_written += database_file_save_sorted_entries(fp, folders, num_folders, write_failed);
-        if (*write_failed == true) {
+        database_file_save_sorted_entries(cursor, folders, num_folders);
+        if (cursor->error) {
             g_debug("[db_save] failed to save sorted folders");
-            return bytes_written;
+            return;
         }
-        bytes_written += database_file_save_sorted_entries(fp, files, num_files, write_failed);
-        if (*write_failed == true) {
+        database_file_save_sorted_entries(cursor, files, num_files);
+        if (cursor->error) {
             g_debug("[db_save] failed to save sorted files");
-            return bytes_written;
+            return;
         }
     }
-
-    return bytes_written;
 }
 
-static size_t
-database_file_save_folders(FILE *fp,
+static void
+database_file_save_folders(DatabaseFileWriteCursor *cursor,
                            FsearchDatabaseIndexPropertyFlags index_flags,
                            DynamicArray *folders,
-                           uint32_t num_folders,
-                           bool *write_failed) {
-    size_t bytes_written = 0;
-
+                           uint32_t num_folders) {
     g_autoptr(GString) name_prev = g_string_sized_new(1024);
     g_autoptr(GString) name_new = g_string_sized_new(1024);
 
@@ -837,135 +770,103 @@ database_file_save_folders(FILE *fp,
         FsearchDatabaseEntry *entry = darray_get_item(folders, i);
 
         const uint16_t db_index = db_entry_get_db_index(entry);
-        DB_WRITE_VAL(fp, db_index, "failed to write db_index: %d", db_index, write_failed, bytes_written);
+        cursor_write(cursor, &db_index, sizeof(db_index));
 
         FsearchDatabaseEntry *parent = db_entry_get_parent(entry);
         const uint32_t parent_idx = parent ? db_entry_get_index(parent) : db_entry_get_index(entry);
-        bytes_written += database_file_save_entry(fp,
-                                                  index_flags,
-                                                  entry,
-                                                  parent_idx,
-                                                  name_prev,
-                                                  name_new,
-                                                  write_failed);
-        if (*write_failed == true) {
-            return bytes_written;
+        database_file_save_entry(cursor,
+                                 index_flags,
+                                 entry,
+                                 parent_idx,
+                                 name_prev,
+                                 name_new);
+        if (cursor->error) {
+            return;
         }
     }
 
-    return bytes_written;
+    return;
 }
 
-static size_t
-database_file_save_includes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
-    size_t bytes_written = 0;
-
+static void
+database_file_save_includes(DatabaseFileWriteCursor *cursor,
+                            FsearchDatabaseIndexStore *store) {
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_index_store_get_include_manager(store);
     g_autoptr(GPtrArray) includes = fsearch_database_include_manager_get_includes(include_manager);
     const uint32_t num_includes = includes->len;
-    DB_WRITE_VAL(fp, num_includes, "failed to write num_includes: %d", num_includes, write_failed, bytes_written);
+    cursor_write(cursor, &num_includes, sizeof(num_includes));
 
     for (int i = 0; i < num_includes; ++i) {
+        if (cursor->error) {
+            g_debug("[db_save] failed to save includes");
+            return;
+        }
         FsearchDatabaseInclude *include = g_ptr_array_index(includes, i);
 
         const uint32_t type = 0;
-        DB_WRITE_VAL(fp, type, "failed to write index type: %d", type, write_failed, bytes_written);
+        cursor_write(cursor, &type, sizeof(type));
 
         const int32_t id = fsearch_database_include_get_id(include);
-        DB_WRITE_VAL(fp, id, "failed to write include id: %d", id, write_failed, bytes_written);
+        cursor_write(cursor, &id, sizeof(id));
 
         const char *path = fsearch_database_include_get_path(include);
         const uint32_t path_len = strlen(path);
-        DB_WRITE_STRING(fp, path, path_len, "failed to write include path: %s", path, write_failed, bytes_written);
+        cursor_write_string(cursor, path, path_len);
 
         const uint8_t one_file_system = fsearch_database_include_get_one_file_system(include);
-        DB_WRITE_VAL(fp,
-                     one_file_system,
-                     "failed to write include one_file_system: %d",
-                     one_file_system,
-                     write_failed,
-                     bytes_written);
+        cursor_write(cursor, &one_file_system, sizeof(one_file_system));
+
         const uint8_t is_active = fsearch_database_include_get_active(include);
-        DB_WRITE_VAL(fp, is_active, "failed to write include is_active: %d", is_active, write_failed, bytes_written);
+        cursor_write(cursor, &is_active, sizeof(is_active));
+
         const uint8_t is_monitored = fsearch_database_include_get_monitored(include);
-        DB_WRITE_VAL(fp,
-                     is_monitored,
-                     "failed to write include is_monitored: %d",
-                     is_monitored,
-                     write_failed,
-                     bytes_written);
+        cursor_write(cursor, &is_monitored, sizeof(is_monitored));
+
         const uint8_t scan_after_launch = fsearch_database_include_get_scan_after_launch(include);
-        DB_WRITE_VAL(fp,
-                     scan_after_launch,
-                     "failed to write include scan_after_launch: %d",
-                     scan_after_launch,
-                     write_failed,
-                     bytes_written);
+        cursor_write(cursor, &scan_after_launch, sizeof(scan_after_launch));
     }
-    return bytes_written;
 }
 
-static size_t
-database_file_save_excludes(FILE *fp, FsearchDatabaseIndexStore *store, bool *write_failed) {
-    size_t bytes_written = 0;
-
+static void
+database_file_save_excludes(DatabaseFileWriteCursor *cursor,
+                            FsearchDatabaseIndexStore *store) {
     g_autoptr(FsearchDatabaseExcludeManager) exclude_manager = fsearch_database_index_store_get_exclude_manager(store);
     g_autoptr(GPtrArray) excludes = fsearch_database_exclude_manager_get_excludes(exclude_manager);
     const uint32_t num_excludes = excludes->len;
-    DB_WRITE_VAL(fp, num_excludes, "failed to write num_excludes: %d", num_excludes, write_failed, bytes_written);
+    cursor_write(cursor, &num_excludes, sizeof(num_excludes));
 
     for (int i = 0; i < num_excludes; ++i) {
+        if (cursor->error) {
+            g_debug("[db_save] failed to save excludes");
+            return;
+        }
         FsearchDatabaseExclude *exclude = g_ptr_array_index(excludes, i);
 
         const uint32_t record_type = 0;
-        DB_WRITE_VAL(fp,
-                     record_type,
-                     "failed to write exclude record type: %d",
-                     record_type,
-                     write_failed,
-                     bytes_written);
+        cursor_write(cursor, &record_type, sizeof(record_type));
 
         const uint8_t exclude_type = fsearch_database_exclude_get_exclude_type(exclude);
-        DB_WRITE_VAL(fp,
-                     exclude_type,
-                     "failed to write exclude type: %d",
-                     exclude_type,
-                     write_failed,
-                     bytes_written);
+        cursor_write(cursor, &exclude_type, sizeof(exclude_type));
+
         const uint8_t match_scope = fsearch_database_exclude_get_match_scope(exclude);
-        DB_WRITE_VAL(fp,
-                     match_scope,
-                     "failed to write exclude scope: %d",
-                     match_scope,
-                     write_failed,
-                     bytes_written);
+        cursor_write(cursor, &match_scope, sizeof(match_scope));
+
         const uint8_t target = fsearch_database_exclude_get_target(exclude);
-        DB_WRITE_VAL(fp, target, "failed to write exclude target: %d", target, write_failed, bytes_written);
+        cursor_write(cursor, &target, sizeof(target));
 
         const char *pattern = fsearch_database_exclude_get_pattern(exclude);
         const uint32_t pattern_len = strlen(pattern);
-        DB_WRITE_STRING(fp,
-                        pattern,
-                        pattern_len,
-                        "failed to write exclude pattern: %s",
-                        pattern,
-                        write_failed,
-                        bytes_written);
+        cursor_write_string(cursor, pattern, pattern_len);
 
         const uint8_t is_active = fsearch_database_exclude_get_active(exclude);
-        DB_WRITE_VAL(fp, is_active, "failed to write exclude is_active: %d", is_active, write_failed, bytes_written);
+        cursor_write(cursor, &is_active, sizeof(is_active));
     }
 
     const uint8_t exclude_hidden = fsearch_database_exclude_manager_get_exclude_hidden(exclude_manager);
-    DB_WRITE_VAL(fp,
-                 exclude_hidden,
-                 "failed to write exclude_hidden setting: %d",
-                 exclude_hidden,
-                 write_failed,
-                 bytes_written);
-
-    return bytes_written;
+    cursor_write(cursor, &exclude_hidden, sizeof(exclude_hidden));
 }
+
+// endregion
 
 bool
 fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_path) {
@@ -989,30 +890,28 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     g_debug("[db_save] trying to open temporary database file: %s", file_tmp_path->str);
 
     g_autoptr(FILE) fp = file_open_locked(file_tmp_path->str, "wb");
+
+    DatabaseFileWriteCursor cursor = {.fp = fp, .error = false, .bytes_written = 0};
+
     if (!fp) {
         g_debug("[db_save] failed to open temporary database file: %s", file_tmp_path->str);
         goto save_fail;
     }
 
-    bool write_failed = false;
-
-    size_t bytes_written = 0;
-
     g_debug("[db_save] saving database header...");
-    bytes_written += database_file_save_header(fp, &write_failed);
-    if (write_failed == true) {
+    database_file_save_header(&cursor);
+    if (cursor.error == true) {
+        g_debug("[db_save] failed saving header");
         goto save_fail;
     }
 
     g_debug("[db_save] saving database index flags...");
     const uint64_t index_flags = fsearch_database_index_store_get_flags(store);
-    DB_WRITE_VAL_GOTO(fp,
-                      index_flags,
-                      "failed to write index flags: %d",
-                      index_flags,
-                      &write_failed,
-                      bytes_written,
-                      save_fail);
+    cursor_write(&cursor, &index_flags, sizeof(index_flags));
+    if (cursor.error == true) {
+        g_debug("[db_save] failed saving index flags");
+        goto save_fail;
+    }
 
     g_debug("[db_save] updating folder indices...");
     folder_container = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
@@ -1020,75 +919,69 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     update_folder_indices(folders);
 
     const uint32_t num_folders = darray_get_num_items(folders);
-    g_debug("[db_save] saving number of folders: %d", num_folders);
-    DB_WRITE_VAL_GOTO(fp,
-                      num_folders,
-                      "failed to write num folders: %d",
-                      num_folders,
-                      &write_failed,
-                      bytes_written,
-                      save_fail);
+    cursor_write(&cursor, &num_folders, sizeof(num_folders));
+    if (cursor.error == true) {
+        g_debug("[db_save] failed saving number of folders: %d", num_folders);
+        goto save_fail;
+    }
 
     file_container = fsearch_database_index_store_get_files(store, DATABASE_INDEX_PROPERTY_NAME);
     files = fsearch_database_entries_container_get_joined(file_container);
 
     const uint32_t num_files = darray_get_num_items(files);
-    g_debug("[db_save] saving number of files: %d", num_files);
-    DB_WRITE_VAL_GOTO(fp,
-                      num_files,
-                      "failed to write num files: %d",
-                      num_files,
-                      &write_failed,
-                      bytes_written,
-                      save_fail);
+    cursor_write(&cursor, &num_files, sizeof(num_files));
+    if (cursor.error == true) {
+        g_debug("[db_save] failed saving number of files: %d", num_files);
+        goto save_fail;
+    }
 
     uint64_t folder_block_size = 0;
-    const uint64_t folder_block_size_offset = bytes_written;
+    const uint64_t folder_block_size_offset = cursor.bytes_written;
     g_debug("[db_save] saving folder block size...");
-    DB_WRITE_VAL_GOTO(fp,
-                      folder_block_size,
-                      "failed to write folder block size: %d",
-                      folder_block_size,
-                      &write_failed,
-                      bytes_written,
-                      save_fail);
+    cursor_write(&cursor, &folder_block_size, sizeof(folder_block_size));
+    if (cursor.error == true) {
+        g_debug("[db_save] failed saving folder block size");
+        goto save_fail;
+    }
 
     uint64_t file_block_size = 0;
-    const uint64_t file_block_size_offset = bytes_written;
+    const uint64_t file_block_size_offset = cursor.bytes_written;
     g_debug("[db_save] saving file block size...");
-    DB_WRITE_VAL_GOTO(fp,
-                      file_block_size,
-                      "failed to write file block size: %d",
-                      file_block_size,
-                      &write_failed,
-                      bytes_written,
-                      save_fail);
+    cursor_write(&cursor, &file_block_size, sizeof(file_block_size));
+    if (cursor.error == true) {
+        g_debug("[db_save] failed saving file block size");
+        goto save_fail;
+    }
 
     g_debug("[db_save] saving indices...");
-    bytes_written += database_file_save_includes(fp, store, &write_failed);
-    if (write_failed == true) {
+    database_file_save_includes(&cursor, store);
+    if (cursor.error == true) {
         goto save_fail;
     }
     g_debug("[db_save] saving excludes...");
-    bytes_written += database_file_save_excludes(fp, store, &write_failed);
-    if (write_failed == true) {
+    database_file_save_excludes(&cursor, store);
+    if (cursor.error == true) {
         goto save_fail;
     }
     g_debug("[db_save] saving folders...");
-    folder_block_size = database_file_save_folders(fp, index_flags, folders, num_folders, &write_failed);
-    bytes_written += folder_block_size;
-    if (write_failed == true) {
+    uint64_t current_cursor_size = cursor.bytes_written;
+    database_file_save_folders(&cursor, index_flags, folders, num_folders);
+    if (cursor.error == true) {
         goto save_fail;
     }
+    folder_block_size = cursor.bytes_written - current_cursor_size;
+
     g_debug("[db_save] saving files...");
-    file_block_size = database_file_save_files(fp, index_flags, files, num_files, &write_failed);
-    bytes_written += file_block_size;
-    if (write_failed == true) {
+    current_cursor_size = cursor.bytes_written;
+    database_file_save_files(&cursor, index_flags, files, num_files);
+    if (cursor.error == true) {
         goto save_fail;
     }
+    file_block_size = cursor.bytes_written - current_cursor_size;
+
     g_debug("[db_save] saving sorted arrays...");
-    bytes_written += database_file_save_sorted_arrays(fp, store, num_files, num_folders, &write_failed);
-    if (write_failed == true) {
+    database_file_save_sorted_arrays(&cursor, store, num_files, num_folders);
+    if (cursor.error == true) {
         goto save_fail;
     }
 
@@ -1097,20 +990,12 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
         goto save_fail;
     }
     g_debug("[db_save] updating file and folder block size: %" PRIu64 ", %" PRIu64, folder_block_size, file_block_size);
-    DB_WRITE_VAL_GOTO(fp,
-                      folder_block_size,
-                      "failed to update folder block size: %d",
-                      folder_block_size,
-                      &write_failed,
-                      bytes_written,
-                      save_fail);
-    DB_WRITE_VAL_GOTO(fp,
-                      file_block_size,
-                      "failed to update file block size: %d",
-                      file_block_size,
-                      &write_failed,
-                      bytes_written,
-                      save_fail);
+    cursor_write(&cursor, &folder_block_size, sizeof(folder_block_size));
+    cursor_write(&cursor, &file_block_size, sizeof(file_block_size));
+
+    if (cursor.error == true) {
+        goto save_fail;
+    }
 
     g_debug("[db_save] removing current database file...");
     // remove current database file
