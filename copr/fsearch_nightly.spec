@@ -2,8 +2,8 @@
 
 Name:    fsearch
 Summary: A fast file search utility for Unix-like systems based on GTK 3
-Epoch:   2
-Version: 0.3~alpha0
+Epoch:   0
+Version: 0.3~beta1
 Release: %(date +%%Y%%m%%d)%{?dist}
 License: GPLv2+
 URL:     https://github.com/cboxdoerfer/fsearch
