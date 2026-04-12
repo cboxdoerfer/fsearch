@@ -1292,16 +1292,22 @@ fsearch_database_file_load(const char *file_path,
         const uint32_t id = fsearch_database_include_get_id(include);
         DynamicArray *folder_array_index = g_hash_table_lookup(folder_index_arrays, GINT_TO_POINTER(id));
         DynamicArray *file_array_index = g_hash_table_lookup(file_index_arrays, GINT_TO_POINTER(id));
-        if (folder_array_index && file_array_index) {
-            FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(
-                id,
-                include,
-                exclude_manager,
-                folder_array_index,
-                file_array_index,
-                index_flags);
-            g_ptr_array_add(indices, index);
+        if (!folder_array_index) {
+            folder_array_index = darray_new(0);
+            g_hash_table_insert(folder_index_arrays, GINT_TO_POINTER(id), folder_array_index);
         }
+        if (!file_array_index) {
+            file_array_index = darray_new(0);
+            g_hash_table_insert(file_index_arrays, GINT_TO_POINTER(id), file_array_index);
+        }
+        FsearchDatabaseIndex *index = fsearch_database_index_new_with_content(
+            id,
+            include,
+            exclude_manager,
+            folder_array_index,
+            file_array_index,
+            index_flags);
+        g_ptr_array_add(indices, index);
     }
     *store_out = fsearch_database_index_store_new_with_content(indices,
                                                                sorted_files,
