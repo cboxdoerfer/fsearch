@@ -64,6 +64,8 @@ add_folder(DatabaseWalkContext *walk_context,
                                                                       name,
                                                                       parent,
                                                                       DATABASE_ENTRY_TYPE_FOLDER,
+                                                                      DATABASE_INDEX_PROPERTY_DB_INDEX,
+                                                                      walk_context->index_id,
                                                                       DATABASE_INDEX_PROPERTY_MODIFICATION_TIME,
                                                                       mtime,
                                                                       DATABASE_INDEX_PROPERTY_NONE);
