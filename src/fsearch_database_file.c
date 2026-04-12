@@ -300,9 +300,7 @@ database_file_load_folders(FILE *fp,
             return false;
         }
 
-        if (index_flags & DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX) {
-            db_entry_set_db_index(folder, db_index);
-        }
+        db_entry_set_db_index(folder, db_index);
 
         if (parent_idx != idx) {
             // Until all folders are ready, we have to reference parents by their index
