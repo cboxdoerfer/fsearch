@@ -762,7 +762,7 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
              FsearchDatabaseEntryType type) {
     if (type == DATABASE_ENTRY_TYPE_FOLDER) {
         attribute_flags = attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS
-                          | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES;
+                          | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES | DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX;
     }
     const size_t name_len = name ? strlen(name) : 0;
     const size_t entry_size = entry_get_size_for_flags(attribute_flags, name, name_len);
