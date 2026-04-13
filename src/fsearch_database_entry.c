@@ -493,7 +493,7 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 
     size_t name_offset = 0;
     if (!db_entry_get_attribute_offset(entry_a->attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS
-                                       | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES,
+                                       | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES | DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX,
                                        DATABASE_INDEX_PROPERTY_NAME,
                                        &name_offset)) {
         return 0;
