@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2023-01-24 20:50+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
@@ -288,41 +288,41 @@ msgstr "Oğuz Ersen"
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Performansa ve gelişmiş özelliklere odaklanan bir arama programı"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 msgid "Open a new application window"
 msgstr "Yeni bir uygulama penceresi aç"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 #, fuzzy
 #| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "Yeni bir uygulama penceresi aç"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr "Uygulama tercihlerini göster"
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 msgid "Set the search pattern"
 msgstr "Arama kalıbını ayarla"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 msgid "Update the database and exit"
 msgstr "Veri tabanını güncelle ve çık"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 msgid "Print version information and exit"
 msgstr "Sürüm bilgilerini yazdır ve çık"
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 msgid "Loading folders…"
 msgstr "Klasörler yükleniyor…"
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 msgid "Loading files…"
 msgstr "Dosyalar yükleniyor…"
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Sıralanıyor…"

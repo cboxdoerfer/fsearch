@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2026-01-17 03:01+0000\n"
 "Last-Translator: 이연우 <youbot.maguni@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -279,41 +279,41 @@ msgstr "이정희 <daemul72@gmail.com>"
 msgid "A search utility focusing on performance and advanced features"
 msgstr "성능과 고급 기능에 중점을 둔 검색 프로그램"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 msgid "Open a new application window"
 msgstr "새 애플리케이션 창 열기"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 #, fuzzy
 #| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "새 애플리케이션 창 열기"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr "애플리케이션 환경 설정 표시"
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 msgid "Set the search pattern"
 msgstr "검색 패턴 설정"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 msgid "Update the database and exit"
 msgstr "데이터베이스 업데이트 후 종료"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 msgid "Print version information and exit"
 msgstr "버전 정보 출력 후 종료"
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 msgid "Loading folders…"
 msgstr "폴더를 로딩하는 중…"
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 msgid "Loading files…"
 msgstr "파일을 로딩하는 중…"
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "나열 중…"

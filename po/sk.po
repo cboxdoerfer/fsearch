@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Slovak (FSearch)\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2018-01-02 18:35+0000\n"
 "Last-Translator: Dávid Bolvanský <david.bolvansky@gmail.com>\n"
 "Language-Team: Slovak <https://hosted.weblate.org/projects/fsearch/"
@@ -275,46 +275,46 @@ msgstr ""
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Program na vyhľadávanie súborov zameraný na výkon a pokročilé funkcie"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 #, fuzzy
 msgid "Open a new application window"
 msgstr "Otvoriť s iným programom"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 #, fuzzy
 msgid "Minimize the application window"
 msgstr "Otvoriť s iným programom"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr ""
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 #, fuzzy
 #| msgid "Show Search Button"
 msgid "Set the search pattern"
 msgstr "Zobraziť tlačidlo vyhľadávania"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 #, fuzzy
 msgid "Update the database and exit"
 msgstr "Aktualizovať databázu"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 msgid "Print version information and exit"
 msgstr ""
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 #, fuzzy
 msgid "Loading folders…"
 msgstr "Načítavanie databázy..."
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 #, fuzzy
 msgid "Loading files…"
 msgstr "Vymazávanie súborov..."
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"

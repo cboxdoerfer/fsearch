@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2023-01-24 20:50+0000\n"
 "Last-Translator: gallegonovato <fran-carro@hotmail.es>\n"
 "Language-Team: Spanish <https://hosted.weblate.org/projects/fsearch/"
@@ -297,41 +297,41 @@ msgstr ""
 msgid "A search utility focusing on performance and advanced features"
 msgstr "Una herramienta de búsqueda rápida con prestaciones avanzadas"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 msgid "Open a new application window"
 msgstr "Abrir una ventana nueva de la aplicación"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 #, fuzzy
 #| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "Abrir una ventana nueva de la aplicación"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr "Mostrar las preferencias de la aplicación"
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 msgid "Set the search pattern"
 msgstr "Definir el patrón de búsqueda"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 msgid "Update the database and exit"
 msgstr "Actualizar la base de datos y salir"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 msgid "Print version information and exit"
 msgstr "Mostrar información de la versión y salir"
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 msgid "Loading folders…"
 msgstr "Cargando carpetas…"
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 msgid "Loading files…"
 msgstr "Cargando archivos…"
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Ordenando…"

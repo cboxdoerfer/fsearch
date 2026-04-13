@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2022-06-20 18:14+0000\n"
 "Last-Translator: lepa22 <lepa.22@hotmail.com>\n"
 "Language-Team: Greek <https://hosted.weblate.org/projects/fsearch/"
@@ -309,41 +309,41 @@ msgstr ""
 "Μια εφαρμογή αναζήτησης που δίνει έμφαση στις επιδόσεις και τα προηγμένα "
 "χαρακτηριστικά"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 msgid "Open a new application window"
 msgstr "Άνοιγμα νέου παραθύρου εφαρμογής"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 #, fuzzy
 #| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "Άνοιγμα νέου παραθύρου εφαρμογής"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr "Εμφάνιση των προτιμήσεων της εφαρμογής"
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 msgid "Set the search pattern"
 msgstr "Ορισμός μοτίβου (pattern) αναζήτησης"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 msgid "Update the database and exit"
 msgstr "Ενημέρωση της βάσης δεδομένων και έξοδος"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 msgid "Print version information and exit"
 msgstr "Εμφάνιση πληροφοριών έκδοσης και έξοδος"
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 msgid "Loading folders…"
 msgstr "Φόρτωση φακέλων…"
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 msgid "Loading files…"
 msgstr "Φόρτωση αρχείων…"
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Ταξινόμηση…"

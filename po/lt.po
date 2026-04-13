@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2026-03-08 17:09+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
@@ -288,41 +288,41 @@ msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 "Paieškos programa, kuri susitelkia ties našumu ir išplėstinėmis ypatybėmis"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 msgid "Open a new application window"
 msgstr "Atverti naują programos langą"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 #, fuzzy
 #| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "Atverti naują programos langą"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr "Rodyti programos nuostatas"
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 msgid "Set the search pattern"
 msgstr "Paieškos šablono nustatymas"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 msgid "Update the database and exit"
 msgstr "Atnaujinti duomenų bazę ir išeiti"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 msgid "Print version information and exit"
 msgstr "Rodyti spausdinimo versijos informaciją ir išeiti"
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 msgid "Loading folders…"
 msgstr "Įkeliami aplankai…"
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 msgid "Loading files…"
 msgstr "Įkeliami failai…"
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 msgid "Sorting…"
 msgstr "Rūšiuojama…"

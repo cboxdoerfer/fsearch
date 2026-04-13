@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2020-09-09 07:36+0000\n"
 "Last-Translator: akash rao <akash.rao.ind@gmail.com>\n"
 "Language-Team: Telugu <https://hosted.weblate.org/projects/fsearch/"
@@ -284,47 +284,47 @@ msgstr ""
 msgid "A search utility focusing on performance and advanced features"
 msgstr "పనిచేయు తత్వము మరియు ఆధునిక ఫీచర్ లు గల అన్వేషణా పనిముట్టు"
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 #, fuzzy
 msgid "Open a new application window"
 msgstr "మరొక అప్లికేషను తో తెరువుము"
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 #, fuzzy
 msgid "Minimize the application window"
 msgstr "మరొక అప్లికేషను తో తెరువుము"
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr ""
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 #, fuzzy
 #| msgid "Show Search Button"
 msgid "Set the search pattern"
 msgstr "వెతుకు బటన్ ని చూపుము"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 #, fuzzy
 msgid "Update the database and exit"
 msgstr "డేటాబేస్ ని ఆధునికీకరణ చేయుము"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 #, fuzzy
 msgid "Print version information and exit"
 msgstr "వర్షన్ సమాచారము చూపించుము"
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 #, fuzzy
 msgid "Loading folders…"
 msgstr "డేటాబేస్ ని తెస్తున్నాము…"
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 #, fuzzy
 msgid "Loading files…"
 msgstr "ఫైల్ లని తీసివేస్తున్నాము…"
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"

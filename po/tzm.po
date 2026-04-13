@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.409-8e25-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-12 11:22+0200\n"
+"POT-Creation-Date: 2026-04-13 17:23+0200\n"
 "PO-Revision-Date: 2020-11-04 21:26+0000\n"
 "Last-Translator: Hakim Oubouali <hakim.oubouali.skr@gmail.com>\n"
 "Language-Team: Tamazight (Central Atlas) <https://hosted.weblate.org/"
@@ -282,45 +282,45 @@ msgstr "Ubuεli ḥakim"
 msgid "A search utility focusing on performance and advanced features"
 msgstr ""
 
-#: src/fsearch.c:723
+#: src/fsearch.c:721
 msgid "Open a new application window"
 msgstr ""
 
-#: src/fsearch.c:724
+#: src/fsearch.c:722
 msgid "Minimize the application window"
 msgstr ""
 
-#: src/fsearch.c:725
+#: src/fsearch.c:723
 msgid "Show the application preferences"
 msgstr ""
 
-#: src/fsearch.c:726
+#: src/fsearch.c:724
 #, fuzzy
 #| msgid "Show Search Button"
 msgid "Set the search pattern"
 msgstr "Ssemal abra n urezzu"
 
-#: src/fsearch.c:727
+#: src/fsearch.c:725
 #, fuzzy
 msgid "Update the database and exit"
 msgstr "Sesdɣi tisila n isefka"
 
-#: src/fsearch.c:728
+#: src/fsearch.c:726
 #, fuzzy
 msgid "Print version information and exit"
 msgstr "Ssemal umalen n tleqqimt"
 
-#: src/fsearch_database_file.c:1252
+#: src/fsearch_database_file.c:1250
 #, fuzzy
 msgid "Loading folders…"
 msgstr "Azdam n tsila n isefka…"
 
-#: src/fsearch_database_file.c:1266
+#: src/fsearch_database_file.c:1264
 #, fuzzy
 msgid "Loading files…"
 msgstr "Tukkesa n ifuyla…"
 
-#: src/fsearch_database_index_store.c:730 src/fsearch_statusbar.c:72
+#: src/fsearch_database_index_store.c:727 src/fsearch_statusbar.c:72
 #: src/fsearch_statusbar.ui:90
 #, fuzzy
 msgid "Sorting…"
