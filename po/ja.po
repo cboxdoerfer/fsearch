@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-13 17:23+0200\n"
-"PO-Revision-Date: 2026-04-04 15:09+0000\n"
+"PO-Revision-Date: 2026-04-14 11:18+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -142,29 +142,31 @@ msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
 msgid "DB rewrite"
-msgstr ""
+msgstr "DB のリライト"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "DB: ファイルシステムの監視に対応"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
+"DB: 固定文字列/ワイルドカード/正規表現に基づいてファイルとフォルダーを除外で"
+"きる機能を追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "DB: Store database config in DB file"
-msgstr ""
+msgstr "DB: データベースの設定を DB ファイルに保存するように修正"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "DB: DB ファイルにチェックサムを追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
-msgstr ""
+msgstr "アイコンとファイル情報の取得を非同期に変更 (UI をブロッキングしない)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "New search engine"
@@ -292,10 +294,8 @@ msgid "Open a new application window"
 msgstr "新しいアプリケーションウィンドウを開く"
 
 #: src/fsearch.c:722
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
-msgstr "新しいアプリケーションウィンドウを開く"
+msgstr "アプリケーションウィンドウを最小化する"
 
 #: src/fsearch.c:723
 msgid "Show the application preferences"
@@ -344,33 +344,27 @@ msgstr "選択(_S)"
 
 #: src/fsearch_database_preferences_widget.c:356
 msgid "Literal"
-msgstr ""
+msgstr "文字列"
 
 #: src/fsearch_database_preferences_widget.c:358
-#, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
-msgstr "ワイルドカードへの対応"
+msgstr "ワイルドカード"
 
 #: src/fsearch_database_preferences_widget.c:360
 msgid "Regex"
-msgstr ""
+msgstr "正規表現"
 
 #: src/fsearch_database_preferences_widget.c:381
-#, fuzzy
-#| msgid "Path"
 msgid "Full Path"
-msgstr "パス"
+msgstr "フルパス"
 
 #: src/fsearch_database_preferences_widget.c:383
 msgid "Basename"
-msgstr ""
+msgstr "ファイル/フォルダー名"
 
 #: src/fsearch_database_preferences_widget.c:401
-#, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
-msgstr "フォルダー"
+msgstr "ファイルとフォルダー"
 
 #: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
 msgid "Files"
@@ -387,7 +381,7 @@ msgstr "有効"
 
 #: src/fsearch_database_preferences_widget.c:627
 msgid "Pattern"
-msgstr ""
+msgstr "パターン"
 
 #: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:677
 #: src/menus.ui:275
@@ -395,14 +389,12 @@ msgid "Type"
 msgstr "タイプ"
 
 #: src/fsearch_database_preferences_widget.c:695
-#, fuzzy
-#| msgid "Match case"
 msgid "Match"
-msgstr "大文字小文字を区別"
+msgstr "一致"
 
 #: src/fsearch_database_preferences_widget.c:701
 msgid "Applies To"
-msgstr ""
+msgstr "適用先"
 
 #: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:663
 #: src/menus.ui:219 src/menus.ui:267
@@ -415,17 +407,15 @@ msgstr "単一のファイルシステム"
 
 #: src/fsearch_database_preferences_widget.c:738
 msgid "Monitor"
-msgstr ""
+msgstr "監視"
 
 #: src/fsearch_database_preferences_widget.ui:56
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Rescan database on startup"
-msgstr "起動時にデータベースを更新"
+msgstr "起動時にデータベースを再スキャン"
 
 #: src/fsearch_database_preferences_widget.ui:76
 msgid "Rescan every"
-msgstr ""
+msgstr "次の頻度で再スキャン"
 
 #: src/fsearch_database_preferences_widget.ui:115
 msgid "hour(s) and"
@@ -445,17 +435,13 @@ msgstr "パスを入力…"
 
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
 "データベースに含めるパスを追加\n"
-"                                "
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:294
 msgid "Remove selected path"
@@ -466,52 +452,36 @@ msgid "Include"
 msgstr "含む"
 
 #: src/fsearch_database_preferences_widget.ui:353
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Enter path…\n"
 "                                                "
 msgstr ""
-"データベースに含めるパスを追加\n"
-"                                "
+"パスを入力…\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:374
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
 msgstr ""
-"データベースに含めるパスを追加\n"
-"                                "
+"除外する絶対パスを追加\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:436
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"データベースに含めるパスを追加\n"
-"                                "
+"除外ルールを追加\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:455
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"データベースに含めるパスを追加\n"
-"                                "
+"選択中のパスを削除\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:487
 msgid "Exclude hidden files and folders"
@@ -956,21 +926,6 @@ msgstr ""
 "強制するものもあります。"
 
 #: src/fsearch_preferences.ui:931
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was successfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -991,7 +946,8 @@ msgstr ""
 "ファイル/フォルダーを正常に開いた場合、以下のうちひとつのアクションを実行でき"
 "ます:\n"
 "\t• <b>何もしない:</b> 何もしません。\n"
-"\t• <b>最小化:</b> 現在アクティブな FSearch のウィンドウを最小化します。\n"
+"                        • <b>最小化:</b> 現在アクティブな FSearch の"
+"ウィンドウを最小化します。\n"
 "\t• <b>閉じる:</b> FSearch を終了します。\n"
 "\n"
 "これらのアクションをトリガーするかどうかを、ファイルの開き方ごとに設定できま"
@@ -1435,7 +1391,7 @@ msgstr "データベース"
 
 #: src/fsearch_result_view.c:380
 msgid "Invalid row data"
-msgstr ""
+msgstr "無効な行データ"
 
 #: src/fsearch_statusbar.c:57
 #, c-format
@@ -1623,20 +1579,18 @@ msgid "Select a Filter"
 msgstr "フィルターを選択"
 
 #: src/fsearch_window_actions.c:97
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
+#, c-format
 msgid "Do you really want to open %'d file(s)?"
-msgstr "%d 個のファイルを開いてもよろしいですか?"
+msgstr "%'d 個のファイルを開いてもよろしいですか?"
 
 #: src/fsearch_window_actions.c:99
 msgid "Opening Files…"
 msgstr "ファイルを開いています…"
 
 #: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
+#, c-format
 msgid "Do you really want to remove %'d file(s)?"
-msgstr "%d 個のファイルを削除してもよろしいですか?"
+msgstr "%'d 個のファイルを削除してもよろしいですか?"
 
 #: src/fsearch_window_actions.c:188
 msgid "Deleting files…"
@@ -1652,16 +1606,14 @@ msgid "Something went wrong."
 msgstr "問題が発生しました。"
 
 #: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Deleted %d file(s)."
+#, c-format
 msgid "Deleted %'d file(s)."
-msgstr "%d 個のファイルを削除しました。"
+msgstr "%'d 個のファイルを削除しました。"
 
 #: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Moved %d file(s) to the trash."
+#, c-format
 msgid "Moved %'d file(s) to the trash."
-msgstr "%d 個のファイルをゴミ箱に移動しました。"
+msgstr "%'d 個のファイルをゴミ箱に移動しました。"
 
 #: src/fsearch_window_actions.c:229
 msgid ""
@@ -1672,10 +1624,9 @@ msgstr ""
 "す。これは今後の更新で修正されます。"
 
 #: src/fsearch_window_actions.c:255
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file property windows?"
+#, c-format
 msgid "Do you really want to open %'d file property windows?"
-msgstr "%d 個のファイルのプロパティウィンドウを開いてもよろしいですか?"
+msgstr "%'d 個のファイルのプロパティウィンドウを開いてもよろしいですか?"
 
 #: src/fsearch_window_actions.c:259
 msgid "Opening file properties…"
