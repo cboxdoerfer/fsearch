@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-13 17:23+0200\n"
-"PO-Revision-Date: 2024-11-11 13:00+0000\n"
+"PO-Revision-Date: 2026-04-14 11:18+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
 "translations/he/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"X-Generator: Weblate 5.8.2\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -139,11 +139,11 @@ msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
 msgid "DB rewrite"
-msgstr ""
+msgstr "שכתוב מסד נתונים"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "מסד נתונים: הוספת תמיכה במעקב אחר מערכת קבצים"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid ""
@@ -153,11 +153,11 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "DB: Store database config in DB file"
-msgstr ""
+msgstr "מסד נתונים: אחסון הגדרות מסד נתונים בקובץ מסד נתונים"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "מסד נתונים: הוספת סיכום ביקורת לקובץ מסד נתונים"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
@@ -334,30 +334,24 @@ msgid "Literal"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:358
-#, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
-msgstr "תמיכה בתווי הכללה"
+msgstr "תו הכללה"
 
 #: src/fsearch_database_preferences_widget.c:360
 msgid "Regex"
-msgstr ""
+msgstr "ביטוי רגולרי"
 
 #: src/fsearch_database_preferences_widget.c:381
-#, fuzzy
-#| msgid "Path"
 msgid "Full Path"
-msgstr "נתיב"
+msgstr "נתיב מלא"
 
 #: src/fsearch_database_preferences_widget.c:383
 msgid "Basename"
-msgstr ""
+msgstr "שם יסודי"
 
 #: src/fsearch_database_preferences_widget.c:401
-#, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
-msgstr "תיקיות"
+msgstr "קבצים ותיקיות"
 
 #: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
 msgid "Files"
@@ -412,7 +406,7 @@ msgstr "עדכון מסד הנתונים עם ההפעלה"
 
 #: src/fsearch_database_preferences_widget.ui:76
 msgid "Rescan every"
-msgstr ""
+msgstr "לסרוק מחדש כל"
 
 #: src/fsearch_database_preferences_widget.ui:115
 msgid "hour(s) and"
@@ -432,24 +426,14 @@ msgstr "נא למלא נתיב…"
 
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"<b>הוספת תיקייה למסד הנתונים:</b>\n"
-"\n"
-"                      כפתור זה פותח חלונית בה ניתן לבחור תיקייה שתיכלל במסד "
-"הנתונים לצורכי חיפוש.\n"
-"                    "
+"הוספת נתיב להכללה במסד\n"
+"                                            הנתונים\n"
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:294
 msgid "Remove selected path"
@@ -460,16 +444,12 @@ msgid "Include"
 msgstr "לכלול"
 
 #: src/fsearch_database_preferences_widget.ui:353
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Enter path…\n"
 "                                                "
 msgstr ""
-"הוספת נתיב להכללה במסד הנתונים\n"
-"                                "
+"נא למלא נתיב…\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:374
 #, fuzzy
@@ -484,28 +464,20 @@ msgstr ""
 "                                "
 
 #: src/fsearch_database_preferences_widget.ui:436
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"הוספת נתיב להכללה במסד הנתונים\n"
-"                                "
+"הוספת כלל החרגה\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:455
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"הוספת נתיב להכללה במסד הנתונים\n"
-"                                "
+"הסרת הנתיב הנבחר\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:487
 msgid "Exclude hidden files and folders"
@@ -1409,7 +1381,7 @@ msgstr "מסד נתונים"
 
 #: src/fsearch_result_view.c:380
 msgid "Invalid row data"
-msgstr ""
+msgstr "נתוני שורה שגויים"
 
 #: src/fsearch_statusbar.c:57
 #, c-format
@@ -1597,20 +1569,18 @@ msgid "Select a Filter"
 msgstr "בחירת מסנן"
 
 #: src/fsearch_window_actions.c:97
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
+#, c-format
 msgid "Do you really want to open %'d file(s)?"
-msgstr "לפתוח %d קבצים?"
+msgstr "לפתוח %'d קבצים?"
 
 #: src/fsearch_window_actions.c:99
 msgid "Opening Files…"
 msgstr "קבצים נפתחים…"
 
 #: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
+#, c-format
 msgid "Do you really want to remove %'d file(s)?"
-msgstr "להסיר %d קבצים?"
+msgstr "להסיר %'d קבצים?"
 
 #: src/fsearch_window_actions.c:188
 msgid "Deleting files…"
@@ -1626,16 +1596,14 @@ msgid "Something went wrong."
 msgstr "משהו השתבש."
 
 #: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Deleted %d file(s)."
+#, c-format
 msgid "Deleted %'d file(s)."
-msgstr "נמחקו %d קבצים."
+msgstr "נמחקו %'d קבצים."
 
 #: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Moved %d file(s) to the trash."
+#, c-format
 msgid "Moved %'d file(s) to the trash."
-msgstr "%d קבצים הועברו לאשפה."
+msgstr "%'d קבצים הועברו לאשפה."
 
 #: src/fsearch_window_actions.c:229
 msgid ""
@@ -1646,10 +1614,9 @@ msgstr ""
 "העתידיים."
 
 #: src/fsearch_window_actions.c:255
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file property windows?"
+#, c-format
 msgid "Do you really want to open %'d file property windows?"
-msgstr "לפתוח %d חלונות מאפייני קבצים?"
+msgstr "לפתוח %'d חלונות מאפייני קבצים?"
 
 #: src/fsearch_window_actions.c:259
 msgid "Opening file properties…"

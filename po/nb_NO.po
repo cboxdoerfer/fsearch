@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-13 17:23+0200\n"
-"PO-Revision-Date: 2026-02-02 01:01+0000\n"
+"PO-Revision-Date: 2026-04-14 11:18+0000\n"
 "Last-Translator: Telaneo <post@telaneo.net>\n"
 "Language-Team: Norwegian Bokmål <https://hosted.weblate.org/projects/fsearch/"
 "translations/nb_NO/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 5.16-dev\n"
+"X-Generator: Weblate 5.17-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -140,7 +140,7 @@ msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
 msgid "DB rewrite"
-msgstr ""
+msgstr "Databaseomskriving"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 msgid "DB: Add support for filesystem monitoring"
@@ -287,10 +287,8 @@ msgid "Open a new application window"
 msgstr "Åpne i et nytt vindu"
 
 #: src/fsearch.c:722
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
-msgstr "Åpne i et nytt vindu"
+msgstr "Minimer programvinudet"
 
 #: src/fsearch.c:723
 msgid "Show the application preferences"
@@ -342,30 +340,24 @@ msgid "Literal"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:358
-#, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
-msgstr "Støtte for jokertegn"
+msgstr "Jokertegn"
 
 #: src/fsearch_database_preferences_widget.c:360
 msgid "Regex"
-msgstr ""
+msgstr "Regulæruttrykk"
 
 #: src/fsearch_database_preferences_widget.c:381
-#, fuzzy
-#| msgid "Path"
 msgid "Full Path"
-msgstr "Sti"
+msgstr "Full sti"
 
 #: src/fsearch_database_preferences_widget.c:383
 msgid "Basename"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:401
-#, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
-msgstr "Mapper"
+msgstr "Filer og mapper"
 
 #: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
 msgid "Files"
@@ -382,7 +374,7 @@ msgstr "Aktiv"
 
 #: src/fsearch_database_preferences_widget.c:627
 msgid "Pattern"
-msgstr ""
+msgstr "Mønster"
 
 #: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:677
 #: src/menus.ui:275
@@ -397,7 +389,7 @@ msgstr "Skill mellom store og små bokstaver"
 
 #: src/fsearch_database_preferences_widget.c:701
 msgid "Applies To"
-msgstr ""
+msgstr "Gjelder"
 
 #: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:663
 #: src/menus.ui:219 src/menus.ui:267
@@ -410,7 +402,7 @@ msgstr "Ett filsystem"
 
 #: src/fsearch_database_preferences_widget.c:738
 msgid "Monitor"
-msgstr ""
+msgstr "Overvåk"
 
 #: src/fsearch_database_preferences_widget.ui:56
 #, fuzzy
@@ -420,7 +412,7 @@ msgstr "Oppdater database ved oppstart"
 
 #: src/fsearch_database_preferences_widget.ui:76
 msgid "Rescan every"
-msgstr ""
+msgstr "Skann på nytt hver"
 
 #: src/fsearch_database_preferences_widget.ui:115
 msgid "hour(s) and"
