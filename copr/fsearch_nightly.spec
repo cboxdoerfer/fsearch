@@ -15,7 +15,7 @@ BuildRequires: ninja-build
 BuildRequires: gcc
 BuildRequires: gtk3-devel
 BuildRequires: glib2-devel
-BuildRequires: libappstream-glib
+BuildRequires: appstream
 BuildRequires: desktop-file-utils
 BuildRequires: itstool
 
