@@ -69,9 +69,8 @@
     <url type="vcs-browser">https://github.com/cboxdoerfer/fsearch</url>
     <url type="contribute">https://github.com/cboxdoerfer/fsearch/blob/master/CONTRIBUTING.md</url>
     <url type="contact">https://github.com/cboxdoerfer</url>
-    <!-- Translators: please do NOT translate this. -->
     <developer id="io.github.cboxdoerfer">
-      <name>Christian Boxdörfer</name>
+      <name translate="no">Christian Boxdörfer</name>
     </developer>
     <update_contact>christian.boxdoerfer_at_posteo.de</update_contact>
     <translation type="gettext">fsearch</translation>
