@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-13 17:23+0200\n"
-"PO-Revision-Date: 2023-01-29 13:05+0000\n"
+"PO-Revision-Date: 2026-04-16 09:09+0000\n"
 "Last-Translator: Сергей <asvmail.as@gmail.com>\n"
 "Language-Team: Russian <https://hosted.weblate.org/projects/fsearch/"
 "translations/ru/>\n"
@@ -16,9 +16,9 @@ msgstr ""
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
-"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && "
+"n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2);\n"
+"X-Generator: Weblate 5.17.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -144,29 +144,33 @@ msgstr "Christian Boxdörfer"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
 msgid "DB rewrite"
-msgstr ""
+msgstr "Перезапись базы данных"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "БД: Добавлена поддержка мониторинга файловой системы"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
+"БД: Добавлена функциональность для исключения файлов и папок на основе "
+"фиксированных шаблонов, подстановочных символов или регулярных выражений"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
 msgid "DB: Store database config in DB file"
-msgstr ""
+msgstr "БД: Сохранение конфигурации базы данных в файле базы данных"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "БД: Добавлена контрольная сумма в файл базы данных"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
+"Изменен способ получения информации о файлах и значках на асинхронный (во "
+"избежание блокировки пользовательского интерфейса)"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
 msgid "New search engine"
@@ -299,10 +303,8 @@ msgid "Open a new application window"
 msgstr "Открыть новое окно приложения"
 
 #: src/fsearch.c:722
-#, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
-msgstr "Открыть новое окно приложения"
+msgstr "Свернуть окно приложения"
 
 #: src/fsearch.c:723
 msgid "Show the application preferences"
@@ -351,33 +353,27 @@ msgstr "_Выбрать"
 
 #: src/fsearch_database_preferences_widget.c:356
 msgid "Literal"
-msgstr ""
+msgstr "Литерал"
 
 #: src/fsearch_database_preferences_widget.c:358
-#, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
-msgstr "Поддержка подстановочных знаков"
+msgstr "Подстановочные знаки"
 
 #: src/fsearch_database_preferences_widget.c:360
 msgid "Regex"
-msgstr ""
+msgstr "Регулярное выражение"
 
 #: src/fsearch_database_preferences_widget.c:381
-#, fuzzy
-#| msgid "Path"
 msgid "Full Path"
-msgstr "Путь"
+msgstr "Полный путь"
 
 #: src/fsearch_database_preferences_widget.c:383
 msgid "Basename"
 msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:401
-#, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
-msgstr "Папки"
+msgstr "Файлы & Папки"
 
 #: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
 msgid "Files"
@@ -394,7 +390,7 @@ msgstr "Активно"
 
 #: src/fsearch_database_preferences_widget.c:627
 msgid "Pattern"
-msgstr ""
+msgstr "Шаблон"
 
 #: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:677
 #: src/menus.ui:275
@@ -422,17 +418,15 @@ msgstr "Одна файловая система"
 
 #: src/fsearch_database_preferences_widget.c:738
 msgid "Monitor"
-msgstr ""
+msgstr "Отслеживание"
 
 #: src/fsearch_database_preferences_widget.ui:56
-#, fuzzy
-#| msgid "Update database on start"
 msgid "Rescan database on startup"
-msgstr "Обновлять базу данных при старте"
+msgstr "Пересканировать базу данных при запуске"
 
 #: src/fsearch_database_preferences_widget.ui:76
 msgid "Rescan every"
-msgstr ""
+msgstr "Пересканировать каждые"
 
 #: src/fsearch_database_preferences_widget.ui:115
 msgid "hour(s) and"
@@ -452,25 +446,14 @@ msgstr "Введите путь…"
 
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
-#, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"<b>Добавить папку в базу данных:</b>\n"
-"\n"
-"\tЭта кнопка открывает диалоговое окно, в котором вы можете выбрать папку, "
-"которую хотите включить в базу данных\n"
-"\tдля поиска.\n"
-"                    "
+"Добавить путь для включения \n"
+"                                            в базу данных\n"
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:294
 msgid "Remove selected path"
@@ -481,52 +464,36 @@ msgid "Include"
 msgstr "Включить"
 
 #: src/fsearch_database_preferences_widget.ui:353
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Enter path…\n"
 "                                                "
 msgstr ""
-"Добавить путь для в базу данных\n"
-"                                "
+"Введите путь…\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:374
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
 msgstr ""
-"Добавить путь для в базу данных\n"
-"                                "
+"Добавить фиксированный путь в исключение\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:436
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"Добавить путь для в базу данных\n"
-"                                "
+"Добавить правило исключения\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:455
-#, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Добавить путь для в базу данных\n"
-"                                "
+"Удалить выбранный путь\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:487
 msgid "Exclude hidden files and folders"
@@ -974,21 +941,6 @@ msgstr ""
 "заставляют окно иметь другой размер."
 
 #: src/fsearch_preferences.ui:931
-#, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was successfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1009,7 +961,8 @@ msgstr ""
 "После успешного открытия файла/папки может быть выполнено одно из следующих "
 "действий:\n"
 "\t• <b>Ничего не делать:</b> Не будет произведено никаких действий.\n"
-"\t• <b>Свернуть:</b> Текущее выбранное окно FSearch будет свёрнуто. \n"
+"                        • <b>Свернуть:</b> Текущее выбранное окно FSearch "
+"будет свёрнуто.\n"
 "\t• <b>Закрыть:</b> Выйти из FSearch.\n"
 "\n"
 "Вы можете настроить, какие из этих действий будут выполняться при открытии "
@@ -1034,8 +987,8 @@ msgstr ""
 "<b>Показывать выделением поисковые запросы:</b>\n"
 "\n"
 "Если этот параметр включён, условия поиска будут выделены в окне "
-"результатов. Например, при поиске по запросу «foo» все <i> foo </i> в именах "
-"файлов / папок будут выделены жирным шрифтом:\n"
+"результатов. Например, при поиске по запросу «foo» все <i>foo</i> в именах "
+"файлов/папок будут выделены жирным шрифтом:\n"
 "\n"
 "\t<b>foo</b>bar.txt\n"
 "\tfile.<b>foo</b>\n"
@@ -1312,9 +1265,9 @@ msgstr ""
 "<b>Исключить файлы и папки из базы данных:</b>\n"
 "\n"
 "Это список файлов (или папок), разделённых точкой с запятой, которые вы "
-"хотите исключить из базы данных. Например, <i>.git; .cache; *. Swp </i> "
-"исключит все файлы или папки, которые начинаются с <i> .git </i> или "
-"<i> .cache </i> или заканчиваются на <i> .swp </i>."
+"хотите исключить из базы данных. Например, <i>.git;.cache;*.swp</i> исключит "
+"все файлы или папки, которые начинаются с <i>.git</i> или <i>.cache</i> или "
+"заканчиваются на <i>.swp</i>."
 
 #: src/fsearch_preferences.ui:1328
 msgid ""
@@ -1345,8 +1298,8 @@ msgid ""
 "\n"
 "<i><tt>fsearch --update-database</tt></i>"
 msgstr ""
-"<b> Периодически обновлять базу данных через определенный промежуток "
-"времени: </b>\n"
+"<b>Периодически обновлять базу данных через определенный промежуток "
+"времени:</b>\n"
 "\n"
 "Если этот параметр включён, то база данных будет периодически обновляться с "
 "заданным интервалом времени пока работает FSearch.\n"
@@ -1355,7 +1308,7 @@ msgstr ""
 "запущен, вам следует использовать такие инструменты, как cron или systemd "
 "таймеры, чтобы периодически запускать обновление с помощью:\n"
 "\n"
-"<i> <tt> fsearch --update-database </tt> </i>"
+"<i> <tt>fsearch --update-database</tt> </i>"
 
 #: src/fsearch_preferences.ui:1379
 msgid ""
@@ -1465,7 +1418,7 @@ msgstr "База данных"
 
 #: src/fsearch_result_view.c:380
 msgid "Invalid row data"
-msgstr ""
+msgstr "Неверные данные в строке"
 
 #: src/fsearch_statusbar.c:57
 #, c-format
@@ -1577,7 +1530,7 @@ msgid ""
 "This sort order is not persistent, it will be reset when the search term "
 "changes."
 msgstr ""
-"Сортировка по <b> ТИПУ </b> может занять несколько секунд и привести к "
+"Сортировка по <b>Типу</b> может занять несколько секунд и привести к "
 "большому количеству результатов.\n"
 "\n"
 "Этот порядок сортировки не является постоянным, он будет сброшен при "
@@ -1656,20 +1609,18 @@ msgid "Select a Filter"
 msgstr "Выбрать фильтр"
 
 #: src/fsearch_window_actions.c:97
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
+#, c-format
 msgid "Do you really want to open %'d file(s)?"
-msgstr "Вы действительно хотите открыть %d файл(а/ов)?"
+msgstr "Вы действительно хотите открыть %'d файл(а/ов)?"
 
 #: src/fsearch_window_actions.c:99
 msgid "Opening Files…"
 msgstr "Открыть файл(ы)…"
 
 #: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
+#, c-format
 msgid "Do you really want to remove %'d file(s)?"
-msgstr "Вы действительно хотите удалить %d файл(а/ов)?"
+msgstr "Вы действительно хотите удалить %'d файл(а/ов)?"
 
 #: src/fsearch_window_actions.c:188
 msgid "Deleting files…"
@@ -1685,16 +1636,14 @@ msgid "Something went wrong."
 msgstr "Что-то пошло не так."
 
 #: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Deleted %d file(s)."
+#, c-format
 msgid "Deleted %'d file(s)."
-msgstr "Удалено файлов: %d."
+msgstr "Удалено файлов: %'d."
 
 #: src/fsearch_window_actions.c:223
-#, fuzzy, c-format
-#| msgid "Moved %d file(s) to the trash."
+#, c-format
 msgid "Moved %'d file(s) to the trash."
-msgstr "Перемещено файлов в корзину: %d."
+msgstr "Перемещено файлов в корзину: %'d."
 
 #: src/fsearch_window_actions.c:229
 msgid ""
@@ -1705,10 +1654,9 @@ msgstr ""
 "В дальнейшем это будет исправлено."
 
 #: src/fsearch_window_actions.c:255
-#, fuzzy, c-format
-#| msgid "Do you really want to open %d file property windows?"
+#, c-format
 msgid "Do you really want to open %'d file property windows?"
-msgstr "Вы действительно хотите открыть окно свойств файла %d?"
+msgstr "Вы действительно хотите открыть окно свойств файла %'d?"
 
 #: src/fsearch_window_actions.c:259
 msgid "Opening file properties…"
