@@ -357,7 +357,7 @@ fsearch_folder_monitor_fanotify_watch(FsearchFolderMonitorFanotify *self,
                 continue;
             }
             else if (errno != ENOENT) {
-                g_warning("Could not get file handle for '%s': %m", path, strerror(errno));
+                g_warning("Could not get file handle for '%s': %m", path);
             }
             return false;
         }
