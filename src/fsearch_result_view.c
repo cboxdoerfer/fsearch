@@ -381,14 +381,14 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
 
         pango_layout_set_width(layout, (column->effective_width - 2 * ROW_PADDING_X - dw) * PANGO_SCALE);
         pango_layout_set_alignment(layout, column->alignment);
-        pango_layout_set_ellipsize(layout, column->ellipsize_mode);
+        pango_layout_set_ellipsize(layout, column->ellipsize_mode);        
         gtk_render_layout(context, cr, x + ROW_PADDING_X + dx, rect->y + ROW_PADDING_Y, layout);
         x += column->effective_width;
 
         // Setting the row drag end position so that starting a mouse drag from within the filename (+icon) bounding box will start a drag and drop operation
-        if(column->type == DATABASE_INDEX_TYPE_NAME) {
+        if(column->type == DATABASE_INDEX_PROPERTY_NAME) {
             int width;
-            pango_layout_get_pixel_size(layout, &width, NULL);
+            pango_layout_get_pixel_size(layout, &width, NULL);            
             fsearch_list_view_set_row_drag_end_position(result_view->list_view, row, width + ROW_PADDING_X + dw);
         }
         cairo_restore(cr);

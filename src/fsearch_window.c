@@ -762,10 +762,9 @@ on_listview_row_is_selected(int row, gpointer user_data) {
 }
 
 static void
-append_path_to_uri_list(gpointer key, gpointer value, gpointer userdata) {
-    FsearchDatabaseEntry *e = (FsearchDatabaseEntry *)value;
+append_path_to_uri_list(FsearchDatabaseEntry *entry, gpointer userdata) {    
     GString *uri_list = (GString *)userdata;
-    g_autoptr(GString) path = db_entry_get_path_full(e);
+    g_autoptr(GString) path = db_entry_get_path_full(entry);
     gchar *uri = g_filename_to_uri(path->str, NULL, NULL);
     g_string_append(uri_list, uri);
     g_string_append(uri_list, "\r\n");
@@ -774,11 +773,10 @@ append_path_to_uri_list(gpointer key, gpointer value, gpointer userdata) {
 
 static void
 on_drag_data_get(GtkWidget *widget, GdkDragContext *context, GtkSelectionData *selection_data, guint info, guint time, gpointer user_data) {
-    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);
-    FsearchDatabaseView *view = win->result_view->database_view;
+    FsearchApplicationWindow *win = FSEARCH_APPLICATION_WINDOW(user_data);    
 
     GString *uri_list = g_string_new(NULL);
-    db_view_selection_for_each(view, append_path_to_uri_list, uri_list);
+    fsearch_application_window_selection_for_each(win, append_path_to_uri_list, uri_list);
 
     gtk_selection_data_set(selection_data,
                            gdk_atom_intern("text/uri-list", TRUE),
