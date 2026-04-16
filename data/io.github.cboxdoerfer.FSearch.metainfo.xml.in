@@ -4,7 +4,7 @@
     <id>io.github.cboxdoerfer.FSearch</id>
     <metadata_license>CC-BY-SA-4.0</metadata_license>
     <project_license>GPL-2.0-or-later</project_license>
-    <name>FSearch</name>
+    <name translate="no">FSearch</name>
     <summary>A graphical file search application</summary>
     <description>
         <p>
@@ -14,15 +14,15 @@
         <p>
             There are a lot of features which make searching as efficient and powerful
             as possible. Such as:
-            <ul>
-                <li>Ignore case (e.g. searching for "<code>fsearch</code>" will match "FSearch" as well)</li>
-                <li>Regular expressions</li>
-                <li>Wildcard support</li>
-                <li>Filter support (e.g. only search for audio files)</li>
-                <li>Exclude certain files and folders</li>
-                <li>Fast sort by name, path, size, modification time and extension</li>
-            </ul>
         </p>
+        <ul>
+            <li>Ignore case (e.g. searching for "<code>fsearch</code>" will match "FSearch" as well)</li>
+            <li>Regular expressions</li>
+            <li>Wildcard support</li>
+            <li>Filter support (e.g. only search for audio files)</li>
+            <li>Exclude certain files and folders</li>
+            <li>Fast sort by name, path, size, modification time and extension</li>
+        </ul>
         <p>
             <em>Note:</em> Due to Flatpak's sandboxing, FSearch can't find every file on your system.
         </p>
@@ -69,12 +69,16 @@
     <url type="vcs-browser">https://github.com/cboxdoerfer/fsearch</url>
     <url type="contribute">https://github.com/cboxdoerfer/fsearch/blob/master/CONTRIBUTING.md</url>
     <url type="contact">https://github.com/cboxdoerfer</url>
-    <!-- Translators: please do NOT translate this. -->
-    <developer_name>Christian Boxdörfer</developer_name>
+    <developer id="io.github.cboxdoerfer">
+      <name translate="no">Christian Boxdörfer</name>
+    </developer>
     <update_contact>christian.boxdoerfer_at_posteo.de</update_contact>
     <translation type="gettext">fsearch</translation>
-    <!-- Validate with `appstream-util validate io.github.cboxdoerfer.FSearch.metainfo.xml.in`. -->
     <content_rating type="oars-1.1" />
+    <launchable type="desktop-id">io.github.cboxdoerfer.FSearch.desktop</launchable>
+    <custom>
+        <value key="Purism::form_factor">workstation</value>
+    </custom>
     <releases>
         <release date="2026-04-11" version="0.3-beta1">
             <description>
@@ -122,8 +126,4 @@
             </description>
         </release>
     </releases>
-    <launchable type="desktop-id">io.github.cboxdoerfer.FSearch.desktop</launchable>
-    <custom>
-        <value key="Purism::form_factor">workstation</value>
-    </custom>
 </component>
