@@ -24,6 +24,7 @@
 #include <gio/gdesktopappinfo.h>
 #endif
 
+#include <libintl.h>
 #include <glib/gi18n.h>
 #include <stdint.h>
 #include <gdk/gdk.h>
@@ -94,7 +95,10 @@ confirm_action(GtkWidget *parent, const char *title, const char *question, int l
 static bool
 confirm_file_open_action(GtkWidget *parent, int num_files) {
     char question[1024] = "";
-    snprintf(question, sizeof(question), _("Do you really want to open %'d file(s)?"), num_files);
+    const char *format = ngettext("Do you really want to open %'d file?",
+                                  "Do you really want to open %'d files?",
+                                  num_files);
+    snprintf(question, sizeof(question), format, num_files);
 
     return confirm_action(parent, _("Opening Files…"), question, 10, num_files);
 }
@@ -181,7 +185,10 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
 
     if (delete || num_selected_rows > 20) {
         g_autoptr(GString) warning_message = g_string_new(NULL);
-        g_string_printf(warning_message, _("Do you really want to remove %'d file(s)?"), num_selected_rows);
+        const char *format = ngettext("Do you really want to remove %'d file?",
+                                      "Do you really want to remove %'d files?",
+                                      num_selected_rows);
+        g_string_printf(warning_message, format, num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
@@ -219,8 +226,17 @@ fsearch_delete_selection(GSimpleAction *action, GVariant *variant, bool delete, 
     }
     if (num_trashed_or_deleted > 0) {
         g_autoptr(GString) trashed_or_deleted_message = g_string_new(NULL);
+
+        const char *format;
+        if (delete) {
+            format = ngettext("Deleted %'d file.", "Deleted %'d files.", num_trashed_or_deleted);
+        }
+        else {
+            format = ngettext("Moved %'d file to the trash.", "Moved %'d files to the trash.", num_trashed_or_deleted);
+        }
+
         g_string_printf(trashed_or_deleted_message,
-                        delete ? _("Deleted %'d file(s).") : _("Moved %'d file(s) to the trash."),
+                        format,
                         num_trashed_or_deleted);
         ui_utils_run_gtk_dialog_async(GTK_WIDGET(self),
                                       GTK_MESSAGE_INFO,
@@ -252,7 +268,10 @@ fsearch_window_action_file_properties(GSimpleAction *action, GVariant *variant, 
 
     if (num_selected_rows > 20) {
         g_autoptr(GString) warning_message = g_string_new(NULL);
-        g_string_printf(warning_message, _("Do you really want to open %'d file property windows?"), num_selected_rows);
+        const char *format = ngettext("Do you really want to open %'d file property window?",
+                                      "Do you really want to open %'d file property windows?",
+                                      num_selected_rows);
+        g_string_printf(warning_message, format, num_selected_rows);
         gint response = ui_utils_run_gtk_dialog(GTK_WIDGET(self),
                                                 GTK_MESSAGE_WARNING,
                                                 GTK_BUTTONS_OK_CANCEL,
