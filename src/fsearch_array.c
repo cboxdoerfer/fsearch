@@ -40,8 +40,6 @@ struct DynamicArray {
     volatile int ref_count;
 };
 
-static int items_freed = 0;
-
 static void
 darray_free(DynamicArray *array) {
     if (array == NULL) {
@@ -50,7 +48,6 @@ darray_free(DynamicArray *array) {
 
     //g_debug("[darray_free] freed");
     if (array->item_free_func) {
-        items_freed += array->num_items;
         for (uint32_t i = 0; i < array->num_items; ++i) {
             array->item_free_func(array->data[i]);
         }
