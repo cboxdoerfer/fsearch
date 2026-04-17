@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-13 17:23+0200\n"
-"PO-Revision-Date: 2026-04-14 11:18+0000\n"
+"PO-Revision-Date: 2026-04-17 12:09+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
 "translations/ja/>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-"X-Generator: Weblate 5.17-dev\n"
+"X-Generator: Weblate 5.17.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
@@ -259,9 +259,7 @@ msgstr "Linux 以外のシステムへの対応を改善"
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
-msgstr ""
-"Escape キー押下時にウィンドウ最小化ではなく FSearch を終了するオプションを追"
-"加"
+msgstr "Esc キー押下時にウィンドウ最小化ではなく FSearch を終了するオプションを追加"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Exclude '/proc' and '/sys' by default"
@@ -733,7 +731,7 @@ msgstr "ウィンドウサイズを保持"
 
 #: src/fsearch_preferences.ui:159
 msgid "Exit on Escape"
-msgstr "Escape キーで終了"
+msgstr "Esc キーで終了"
 
 #: src/fsearch_preferences.ui:202
 msgid "with keyboard shortcuts or menu entries"
@@ -1375,10 +1373,10 @@ msgid ""
 "If enabled, FSearch exits when the Escape key is pressed instead of the "
 "window being minimized."
 msgstr ""
-"<b>Escape キーで終了:</b>\n"
+"<b>Esc キーで終了:</b>\n"
 "\n"
-"有効にした場合、Escape を押すと FSearch はウィンドウを最小化する代わりに終了"
-"します。"
+"有効にした場合、Esc を押すと FSearch はウィンドウを最小化するのではなく終了し"
+"ます。"
 
 #: src/fsearch_preferences.ui:1506 src/fsearch_window.ui:290
 #: src/fsearch_window.ui:415 src/menus.ui:150 src/menus.ui:156
@@ -1620,8 +1618,8 @@ msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
-"データベースがこれらの変更を検知する前に、データベースを更新する必要がありま"
-"す。これは今後の更新で修正されます。"
+"データベースがこれらの変更を検知するには、データベースを更新する必要がありま"
+"す。これは今後のアップデートで改善予定です。"
 
 #: src/fsearch_window_actions.c:255
 #, c-format
