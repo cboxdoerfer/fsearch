@@ -12,6 +12,11 @@
 #include "strverscmp.h"
 #endif
 
+#define DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS \
+    (DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS | \
+     DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES | \
+     DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX)
+
 typedef struct FsearchDatabaseEntry {
     FsearchDatabaseEntry *parent;
 
@@ -492,8 +497,9 @@ db_entry_compare_entries_by_path(FsearchDatabaseEntry **a, FsearchDatabaseEntry 
 #endif
 
     size_t name_offset = 0;
-    if (!db_entry_get_attribute_offset(entry_a->attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS
-                                       | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES | DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX,
+    FsearchDatabaseEntry *folder_ref = entry_a->parent ? entry_a->parent : entry_b->parent;
+    const uint32_t folder_flags = folder_ref ? folder_ref->attribute_flags : (entry_a->attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS);
+    if (!db_entry_get_attribute_offset(folder_flags ,
                                        DATABASE_INDEX_PROPERTY_NAME,
                                        &name_offset)) {
         return 0;
@@ -761,8 +767,7 @@ db_entry_new(FsearchDatabaseIndexPropertyFlags attribute_flags,
              FsearchDatabaseEntry *parent,
              FsearchDatabaseEntryType type) {
     if (type == DATABASE_ENTRY_TYPE_FOLDER) {
-        attribute_flags = attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_NUM_FOLDERS
-                          | DATABASE_INDEX_PROPERTY_FLAG_NUM_FILES | DATABASE_INDEX_PROPERTY_FLAG_DB_INDEX;
+        attribute_flags = attribute_flags | DATABASE_INDEX_PROPERTY_FLAG_FOLDER_DEFAULTS;
     }
     const size_t name_len = name ? strlen(name) : 0;
     const size_t entry_size = entry_get_size_for_flags(attribute_flags, name, name_len);
