@@ -26,6 +26,7 @@
 #include <sys/param.h>
 
 #define MAX_SORT_THREADS 8
+#define MERGE_SORT_THRESHOLD 16
 
 struct DynamicArray {
     // number of items in array
@@ -87,16 +88,25 @@ typedef struct {
 } DynamicArraySortContext;
 
 static void
-insertion_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
-    for (uint32_t i = 0; i < array->num_items; ++i) {
+insertion_sort_range(DynamicArray *array,
+                     uint32_t start_idx,
+                     uint32_t end_idx,
+                     DynamicArrayCompareDataFunc comp_func,
+                     void *data) {
+    for (uint32_t i = start_idx + 1; i < end_idx; ++i) {
         void *val_a = array->data[i];
         uint32_t j = i;
-        while (j > 0 && comp_func(&array->data[j - 1], &val_a, data) > 0) {
+        while (j > start_idx && comp_func(&array->data[j - 1], &val_a, data) > 0) {
             array->data[j] = array->data[j - 1];
             j--;
         }
         array->data[j] = val_a;
     }
+}
+
+static void
+insertion_sort(DynamicArray *array, DynamicArrayCompareDataFunc comp_func, void *data) {
+    insertion_sort_range(array, 0, array->num_items, comp_func, data);
 }
 
 static void
@@ -139,6 +149,12 @@ split_merge(DynamicArray *src,
         return;
     }
     if (g_cancellable_is_cancelled(cancellable)) {
+        return;
+    }
+
+    if (end_idx - start_idx <= MERGE_SORT_THRESHOLD) {
+        insertion_sort_range(dest, start_idx, end_idx, comp_func, comp_data);
+        memcpy(src->data + start_idx, dest->data + start_idx, (end_idx - start_idx) * sizeof(void *));
         return;
     }
 
