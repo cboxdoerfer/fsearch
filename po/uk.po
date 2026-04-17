@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
+"POT-Creation-Date: 2026-04-16 19:25+0200\n"
 "PO-Revision-Date: 2025-05-22 16:01+0000\n"
 "Last-Translator: Максим Горпиніч <maksimgorpinic4@gmail.com>\n"
 "Language-Team: Ukrainian <https://hosted.weblate.org/projects/fsearch/"
@@ -20,8 +20,7 @@ msgstr ""
 "n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 "X-Generator: Weblate 5.12-dev\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -50,7 +49,15 @@ msgstr ""
 "FSearch шукає файли і каталоги так легко і швидко, наскільки це можливо. "
 "Просто введіть кілька літер і результати пошуку зʼявляться майже миттєво."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+"Має багато можливостей, що роблять пошук ефективним і потужним, наскільки це "
+"можливо. Як-от:"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -58,23 +65,23 @@ msgstr ""
 "Ігнорування регістру (наприклад, під запит «<code>fsearch</code>» "
 "підпадатиме «FSearch»)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "Регулярні вирази"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "Підтримка шаблонів"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "Підтримка фільтру (наприклад, пошук лише звукових файлів)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "Виключення з пошуку певних файлів і каталогів"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 "Швидке сортування за назвою, шляхом, розміром, часом зміни і розширенням"
@@ -135,80 +142,75 @@ msgstr "засіб"
 msgid "everything"
 msgstr "все"
 
-#. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-msgid "Christian Boxdörfer"
-msgstr "Крістіан Боксдорфер"
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
 msgstr "Новий пошуковий рушій"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Greatly improved highlighting of search terms"
 msgstr "Значно покращене підсвічування пошукових запитів"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "Custom filters"
 msgstr "Власні фільтри"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Improved sort performance"
 msgstr "Покращена продуктивність сортування"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Improved scroll performance"
 msgstr "Покращена продуктивність прокручування"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "Remember file selection after a database update"
 msgstr "Запамʼятовувати виділення файлів після оновлення бази даних"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
 "Автоматично прокручувати список результатів у режимі вибору резинової стрічки"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
 "Інвертуйте виділення за допомогою гумової стрічки, коли натиснуто «Ctrl»"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
 msgstr "Перейти до запису пошуку, коли активується головне вікно"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "Додати фільтр для програм (наприклад, файлів .desktop)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -216,15 +218,15 @@ msgstr ""
 "Додайте опцію для запуску програм безпосередньо замість відкриття "
 "файлів .desktop"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Show application icons for .desktop files"
 msgstr "Показувати значки програми для файлів .desktop"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
 msgstr "Додайте файли .odp і .ods до фільтра документів"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -232,7 +234,7 @@ msgstr ""
 "Меню 'Відкрити за допомогою' тепер показує лише програми, які можуть "
 "працювати з вибраними файлами"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -240,22 +242,22 @@ msgstr ""
 "Покращено відкриття кількох файлів одного типу (тепер вони передаються "
 "додаткам як список, а не один за одним)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
 msgstr "Краща підтримка відкривання файлів у режимі пісочниці"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "Додайте пункти меню з посиланнями на сторінки відстеження проблем, форум і "
 "сторінки пожертв"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
 msgstr "Покращена підтримка систем, відмінних від Linux"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -263,20 +265,20 @@ msgstr ""
 "Додайте опцію виходу з FSearch після натискання Escape замість згортання "
 "вікна"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "Виключити '/proc' і '/sys' за замовчуванням"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "Відкрити контекстне меню, коли натиснуто клавішу «Меню» або «Shift + F10»"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr "і безліч виправлень помилок, оновлень перекладу та менших покращень"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
 msgstr "Початковий випуск."
 
@@ -294,7 +296,6 @@ msgstr "Відкрити нове вікно програми"
 
 #: src/fsearch.c:722
 #, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "Відкрити нове вікно програми"
 
@@ -349,7 +350,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:358
 #, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
 msgstr "Підтримка шаблонів"
 
@@ -359,7 +359,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:381
 #, fuzzy
-#| msgid "Path"
 msgid "Full Path"
 msgstr "Шлях"
 
@@ -369,7 +368,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:401
 #, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
 msgstr "Каталоги"
 
@@ -397,7 +395,6 @@ msgstr "Тип"
 
 #: src/fsearch_database_preferences_widget.c:695
 #, fuzzy
-#| msgid "Match case"
 msgid "Match"
 msgstr "Враховувати регістр"
 
@@ -420,7 +417,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:56
 #, fuzzy
-#| msgid "Update database on start"
 msgid "Rescan database on startup"
 msgstr "Оновляти базу під час запуску"
 
@@ -447,13 +443,6 @@ msgstr "Введіть шлях…"
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
 #, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
@@ -476,9 +465,6 @@ msgstr "Враховувати"
 
 #: src/fsearch_database_preferences_widget.ui:353
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Enter path…\n"
 "                                                "
@@ -488,9 +474,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:374
 #, fuzzy
-#| msgid ""
-#| "Select a Filter\n"
-#| "                                                "
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
@@ -500,9 +483,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:436
 #, fuzzy
-#| msgid ""
-#| "Select a Filter\n"
-#| "                                                "
 msgid ""
 "Add exclude rule\n"
 "                                                "
@@ -512,9 +492,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:455
 #, fuzzy
-#| msgid ""
-#| "Select a Filter\n"
-#| "                                                "
 msgid ""
 "Remove selected path\n"
 "                                                "
@@ -965,20 +942,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:931
 #, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was successfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1629,48 +1592,56 @@ msgstr "Пошук…"
 msgid "Select a Filter"
 msgstr "Обрати фільтр"
 
-#: src/fsearch_window_actions.c:97
+#: src/fsearch_window_actions.c:98
 #, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
-msgid "Do you really want to open %'d file(s)?"
-msgstr "Ви дійсно хочете відкрити стільки (%d) файлів?"
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "Ви дійсно хочете відкрити стільки (%d) файлів?"
+msgstr[1] "Ви дійсно хочете відкрити стільки (%d) файлів?"
+msgstr[2] "Ви дійсно хочете відкрити стільки (%d) файлів?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "Відкриття файлів…"
 
-#: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "Ви справді хочете видалити стільки (%d) файлів?"
-
 #: src/fsearch_window_actions.c:188
+#, fuzzy, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "Ви справді хочете видалити стільки (%d) файлів?"
+msgstr[1] "Ви справді хочете видалити стільки (%d) файлів?"
+msgstr[2] "Ви справді хочете видалити стільки (%d) файлів?"
+
+#: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
 msgstr "Видалення файлів…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:195
 msgid "Moving files to trash…"
 msgstr "Переміщення файлів у смітник…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
+#: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
 msgstr "Щось пішло не так."
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:232
 #, fuzzy, c-format
-#| msgid "Deleted %d file(s)."
-msgid "Deleted %'d file(s)."
-msgstr "Видалено %d файл(ів)."
+msgid "Deleted %'d file."
+msgid_plural "Deleted %'d files."
+msgstr[0] "Видалено %d файл(ів)."
+msgstr[1] "Видалено %d файл(ів)."
+msgstr[2] "Видалено %d файл(ів)."
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:235
 #, fuzzy, c-format
-#| msgid "Moved %d file(s) to the trash."
-msgid "Moved %'d file(s) to the trash."
-msgstr "Переміщено %d файл(ів) у смітник."
+msgid "Moved %'d file to the trash."
+msgid_plural "Moved %'d files to the trash."
+msgstr[0] "Переміщено %d файл(ів) у смітник."
+msgstr[1] "Переміщено %d файл(ів) у смітник."
+msgstr[2] "Переміщено %d файл(ів) у смітник."
 
-#: src/fsearch_window_actions.c:229
+#: src/fsearch_window_actions.c:245
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
@@ -1678,13 +1649,15 @@ msgstr ""
 "Базу даних потрібно оновити, до того, як вона дізнається про ці зміни! Це "
 "буде виправлено в майбутніх оновленнях."
 
-#: src/fsearch_window_actions.c:255
+#: src/fsearch_window_actions.c:271
 #, fuzzy, c-format
-#| msgid "Do you really want to open %d file property windows?"
-msgid "Do you really want to open %'d file property windows?"
-msgstr "Ви справді хочете відкрити %d вікон властивостей файлів?"
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "Ви справді хочете відкрити %d вікон властивостей файлів?"
+msgstr[1] "Ви справді хочете відкрити %d вікон властивостей файлів?"
+msgstr[2] "Ви справді хочете відкрити %d вікон властивостей файлів?"
 
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:278
 msgid "Opening file properties…"
 msgstr "Відкриття властивостей файлів…"
 
@@ -1772,6 +1745,9 @@ msgstr "Шлях + Назва"
 msgid "Move to _Trash"
 msgstr "Перенести в _смітник"
 
+#~ msgid "Christian Boxdörfer"
+#~ msgstr "Крістіан Боксдорфер"
+
 #~ msgid "Saving…"
 #~ msgstr "Зберігання…"
 
@@ -1796,13 +1772,6 @@ msgstr "Перенести в _смітник"
 
 #~ msgid "e.g. \".git;*.tmp\""
 #~ msgstr "напр. \".git;*.tmp\""
-
-#~ msgid ""
-#~ "There are a lot of features which make searching as efficient and "
-#~ "powerful as possible. Such as:"
-#~ msgstr ""
-#~ "Має багато можливостей, що роблять пошук ефективним і потужним, наскільки "
-#~ "це можливо. Як-от:"
 
 #~ msgctxt "Will be followed by the path of the desktop file."
 #~ msgid "Error when launching desktop file"

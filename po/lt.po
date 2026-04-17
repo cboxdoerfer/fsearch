@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
+"POT-Creation-Date: 2026-04-16 19:25+0200\n"
 "PO-Revision-Date: 2026-03-08 17:09+0000\n"
 "Last-Translator: Moo <hazap@hotmail.com>\n"
 "Language-Team: Lithuanian <https://hosted.weblate.org/projects/fsearch/"
@@ -20,8 +20,7 @@ msgstr ""
 "n%100>=20) ? 1 : n%10==0 || (n%100>10 && n%100<20) ? 2 : 3;\n"
 "X-Generator: Weblate 5.17-dev\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -53,7 +52,15 @@ msgstr ""
 "FSearch padeda kuo lengviau ir greičiau rasti failus ir aplankus. Tiesiog "
 "įveskite kelias raides ir paieškos rezultatai pasirodys beveik iš karto."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+"Yra daug funkcijų, kurios daro paiešką kuo efektyvesnę ir galingesnę. "
+"Pavyzdžiui:"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -61,23 +68,23 @@ msgstr ""
 "Nepaisyti didžiųjų ir mažųjų raidžių (pvz., Paieška „<code>fsearch</code>“ "
 "atitiks ir „FSearch“)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "Reguliarusis reiškinys"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "Pakaitos simbolių palaikymas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "Filtravimo palaikymas (pvz., ieškoti tik garso failų)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "Išskirkite tam tikrus failus ir aplankus"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 "Greitas rūšiavimas pagal pavadinimą, kelią, dydį, modifikavimo laiką ir "
@@ -139,94 +146,88 @@ msgstr "įrankis"
 msgid "everything"
 msgstr "viskas"
 
-#. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-msgid "Christian Boxdörfer"
-msgstr "Christian Boxdörfer"
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
 msgstr "Nauja paieškos sistema"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Greatly improved highlighting of search terms"
 msgstr "Žymiai pagerintas paieškos terminų paryškinimas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "Custom filters"
 msgstr "Tinkinti filtrai"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Improved sort performance"
 msgstr "Pagerintas rikiavimo našumas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Improved scroll performance"
 msgstr "Pagerintas slinkimo našumas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "Remember file selection after a database update"
 msgstr "Prisiminti failo pasirinkimą po duomenų bazės atnaujinimo"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
 msgstr "Fokusuoti paieškos įrašą, kai aktyvuojamas pagrindinis langas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 #, fuzzy
-#| msgid "Show the application preferences"
 msgid "Show application icons for .desktop files"
 msgstr "Rodyti programos nuostatas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
 msgstr "Pridėti į dokumentų filtrą .odp ir .ods failus"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -234,26 +235,26 @@ msgstr ""
 "Dabar meniu „Atverti naudojant“ rodo tik programas, kurios gali apdoroti "
 "pasirinktus failus"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
 msgstr "Pagerintas ne „Linux“ sistemų palaikymas"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -261,21 +262,21 @@ msgstr ""
 "Pridėta parinktis išjungti FSearch, kai paspaudžiamas atšaukimo („Escape“) "
 "klavišas, užuot suskleidžiant programą"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "Atverti kontekstinį meniu, kai paspaudžiami „Meniu“ ar „Lyg2 + F10“ klavišai"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "ir daugybė klaidų pataisymų, vertimų atnaujinimų ir mažesnių patobulinimų"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
 msgstr "Pirminis leidimas."
 
@@ -294,7 +295,6 @@ msgstr "Atverti naują programos langą"
 
 #: src/fsearch.c:722
 #, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "Atverti naują programos langą"
 
@@ -349,7 +349,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:358
 #, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
 msgstr "Pakaitos simbolių palaikymas"
 
@@ -359,7 +358,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:381
 #, fuzzy
-#| msgid "Path"
 msgid "Full Path"
 msgstr "Kelias"
 
@@ -369,7 +367,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:401
 #, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
 msgstr "Aplankai"
 
@@ -397,7 +394,6 @@ msgstr "Tipas"
 
 #: src/fsearch_database_preferences_widget.c:695
 #, fuzzy
-#| msgid "Match case"
 msgid "Match"
 msgstr "Skirti didžiąsias ir mažąsias raides"
 
@@ -420,7 +416,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:56
 #, fuzzy
-#| msgid "Update database on start"
 msgid "Rescan database on startup"
 msgstr "Paleidus programą, atnaujinti duomenų bazę"
 
@@ -447,13 +442,6 @@ msgstr "Įveskite kelią…"
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
 #, fuzzy
-#| msgid ""
-#| "<b>Add folder to database:</b>\n"
-#| "\n"
-#| "                      This button opens a dialog where you can select a "
-#| "folder you want to include in the database for\n"
-#| "                      searching.\n"
-#| "                    "
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
@@ -476,9 +464,6 @@ msgstr "Įtraukti"
 
 #: src/fsearch_database_preferences_widget.ui:353
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Enter path…\n"
 "                                                "
@@ -488,9 +473,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:374
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
@@ -500,9 +482,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:436
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add exclude rule\n"
 "                                                "
@@ -512,9 +491,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:455
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Remove selected path\n"
 "                                                "
@@ -968,20 +944,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:931
 #, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was successfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1646,48 +1608,60 @@ msgstr "Ieškoti…"
 msgid "Select a Filter"
 msgstr "Pasirinkti filtrą"
 
-#: src/fsearch_window_actions.c:97
+#: src/fsearch_window_actions.c:98
 #, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
-msgid "Do you really want to open %'d file(s)?"
-msgstr "Ar tikrai norite atverti %d failą(-us)?"
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "Ar tikrai norite atverti %d failą(-us)?"
+msgstr[1] "Ar tikrai norite atverti %d failą(-us)?"
+msgstr[2] "Ar tikrai norite atverti %d failą(-us)?"
+msgstr[3] "Ar tikrai norite atverti %d failą(-us)?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "Atveriami failai…"
 
-#: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "Ar tikrai norite pašalinti %d failą(-us)?"
-
 #: src/fsearch_window_actions.c:188
+#, fuzzy, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "Ar tikrai norite pašalinti %d failą(-us)?"
+msgstr[1] "Ar tikrai norite pašalinti %d failą(-us)?"
+msgstr[2] "Ar tikrai norite pašalinti %d failą(-us)?"
+msgstr[3] "Ar tikrai norite pašalinti %d failą(-us)?"
+
+#: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
 msgstr "Ištrinami failai…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:195
 msgid "Moving files to trash…"
 msgstr "Perkeliami failai į šiukšlinę…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
+#: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
 msgstr "Kažkas nutiko ne taip."
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:232
 #, fuzzy, c-format
-#| msgid "Deleted %d file(s)."
-msgid "Deleted %'d file(s)."
-msgstr "Ištrintas (-i) %d failas (-ai)."
+msgid "Deleted %'d file."
+msgid_plural "Deleted %'d files."
+msgstr[0] "Ištrintas (-i) %d failas (-ai)."
+msgstr[1] "Ištrintas (-i) %d failas (-ai)."
+msgstr[2] "Ištrintas (-i) %d failas (-ai)."
+msgstr[3] "Ištrintas (-i) %d failas (-ai)."
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:235
 #, fuzzy, c-format
-#| msgid "Moved %d file(s) to the trash."
-msgid "Moved %'d file(s) to the trash."
-msgstr "%d failas (-ai) perkeltas (-i) į šiukšliadėžę."
+msgid "Moved %'d file to the trash."
+msgid_plural "Moved %'d files to the trash."
+msgstr[0] "%d failas (-ai) perkeltas (-i) į šiukšliadėžę."
+msgstr[1] "%d failas (-ai) perkeltas (-i) į šiukšliadėžę."
+msgstr[2] "%d failas (-ai) perkeltas (-i) į šiukšliadėžę."
+msgstr[3] "%d failas (-ai) perkeltas (-i) į šiukšliadėžę."
 
-#: src/fsearch_window_actions.c:229
+#: src/fsearch_window_actions.c:245
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
@@ -1695,13 +1669,16 @@ msgstr ""
 "Duomenų bazę reikia atnaujinti, kad ji sužinotų apie šiuos pakeitimus! Tai "
 "bus ištaisyta per būsimus atnaujinimus."
 
-#: src/fsearch_window_actions.c:255
+#: src/fsearch_window_actions.c:271
 #, fuzzy, c-format
-#| msgid "Do you really want to open %d file property windows?"
-msgid "Do you really want to open %'d file property windows?"
-msgstr "Ar tikrai norite atidaryti %d failo savybių langus?"
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "Ar tikrai norite atidaryti %d failo savybių langus?"
+msgstr[1] "Ar tikrai norite atidaryti %d failo savybių langus?"
+msgstr[2] "Ar tikrai norite atidaryti %d failo savybių langus?"
+msgstr[3] "Ar tikrai norite atidaryti %d failo savybių langus?"
 
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:278
 msgid "Opening file properties…"
 msgstr "Atidaromos failo ypatybės…"
 
@@ -1789,6 +1766,9 @@ msgstr "Kelias + pavadinimas"
 msgid "Move to _Trash"
 msgstr "Perkelti į _šiukšlinę"
 
+#~ msgid "Christian Boxdörfer"
+#~ msgstr "Christian Boxdörfer"
+
 #~ msgid "Saving…"
 #~ msgstr "Išsaugoma…"
 
@@ -1815,13 +1795,6 @@ msgstr "Perkelti į _šiukšlinę"
 
 #~ msgid "e.g. \".git;*.tmp\""
 #~ msgstr "pvz., \".git;*.tmp\""
-
-#~ msgid ""
-#~ "There are a lot of features which make searching as efficient and "
-#~ "powerful as possible. Such as:"
-#~ msgstr ""
-#~ "Yra daug funkcijų, kurios daro paiešką kuo efektyvesnę ir galingesnę. "
-#~ "Pavyzdžiui:"
 
 #~ msgctxt "Will be followed by the path of the desktop file."
 #~ msgid "Error when launching desktop file"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
+"POT-Creation-Date: 2026-04-16 19:25+0200\n"
 "PO-Revision-Date: 2026-01-17 03:01+0000\n"
 "Last-Translator: 이연우 <youbot.maguni@gmail.com>\n"
 "Language-Team: Korean <https://hosted.weblate.org/projects/fsearch/"
@@ -19,8 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.15.2\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -51,29 +50,35 @@ msgstr ""
 "립니다. 단지 몇글자를 타이핑 하는것 만으로 거의 즉시 검색 결과가 나타날 것 입"
 "니다."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "정규식"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "와일드카드 지원"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "필터 지원(예: 오디오 파일만 검색)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "특정 파일과 폴더 제외하기"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr "이름, 경로, 크기, 수정 시간 및 확장별 빠른 정렬"
 
@@ -95,7 +100,6 @@ msgstr "GNOME HIG를 더 밀접하게 따르는 레이아웃"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 #, fuzzy
-#| msgid "Search"
 msgid "search"
 msgstr "검색"
 
@@ -135,92 +139,87 @@ msgstr "도구"
 msgid "everything"
 msgstr "모든 것"
 
-#. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-msgid "Christian Boxdörfer"
-msgstr "Christian Boxdörfer"
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
 msgstr "새로운 검색 엔진"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Greatly improved highlighting of search terms"
 msgstr "검색어 하이라이트 표시"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "Custom filters"
 msgstr "사용자 지정 필터"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Improved sort performance"
 msgstr "정렬 성능 개선"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Improved scroll performance"
 msgstr "스크롤 성능 향상"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "Remember file selection after a database update"
 msgstr "데이터베이스 업데이트 후 파일 선택 기억"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "Rubberband 선택 모드에서 결과 목록 자동 스크롤"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "'Ctrl'을 누르면 고무줄 효과 선택 반전하기"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
 msgstr "기본 창이 활성화되면 검색 항목에 집중하기"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "애플리케이션용 필터 추가(예: .desktop 파일)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ".desktop 파일을 여는 대신 응용프로그램을 직접 실행할 수 있는 옵션 추가"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Show application icons for .desktop files"
 msgstr ".desktop files 대한 응용프로그램 아이콘 표시"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
 msgstr ".odp 및 .ods 파일을 문서 필터에 추가"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -228,7 +227,7 @@ msgstr ""
 "이제 '연결 프로그램' 메뉴에 선택한 파일을 처리할 수 있는 애플리케이션만 표시"
 "됩니다."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -236,38 +235,38 @@ msgstr ""
 "같은 유형으로 여러 파일의 개선 (그들은 지금 응용 프로그램에 목록으로 전달, 대"
 "신 하나씩)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
 msgstr "Sandboxed 모드에서 파일을 엽니 다"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr "이슈 트래커, 포럼 및 기부 페이지로 메뉴 항목을 추가"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
 msgstr "Non-Linux 시스템 지원"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr "탈출 대신 눌러 FSearch를 종료하는 옵션 추가"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "기본적으로 '/proc'와 '/sys'를 제외함"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr "'Menu' 키 또는 'Shift + F10'가 눌러지는 컨텍스트 메뉴"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr "및 버그 수정의 톤, 번역 업데이트 및 더 작은 개선"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
 msgstr "초기 릴리즈"
 
@@ -285,7 +284,6 @@ msgstr "새 애플리케이션 창 열기"
 
 #: src/fsearch.c:722
 #, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "새 애플리케이션 창 열기"
 
@@ -342,7 +340,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:358
 #, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
 msgstr "와일드카드 지원"
 
@@ -352,7 +349,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:381
 #, fuzzy
-#| msgid "Path"
 msgid "Full Path"
 msgstr "경로"
 
@@ -362,7 +358,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:401
 #, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
 msgstr "폴더"
 
@@ -390,7 +385,6 @@ msgstr "유형"
 
 #: src/fsearch_database_preferences_widget.c:695
 #, fuzzy
-#| msgid "Match case"
 msgid "Match"
 msgstr "대소문자 구분"
 
@@ -405,7 +399,6 @@ msgstr "경로"
 
 #: src/fsearch_database_preferences_widget.c:731
 #, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
 msgstr "파일 열기"
 
@@ -415,7 +408,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:56
 #, fuzzy
-#| msgid "Update database on start"
 msgid "Rescan database on startup"
 msgstr "시작 시 데이터베이스 업데이트"
 
@@ -638,7 +630,6 @@ msgstr ""
 
 #: src/fsearch_filter_preferences_widget.c:318
 #, fuzzy
-#| msgid "Empty Query"
 msgid "Query"
 msgstr "검색어가 없습니다."
 
@@ -845,7 +836,6 @@ msgstr "쿼리에 하나 이상의 대문자가 포함된 경우 대/소문자 �
 
 #: src/fsearch_preferences.ui:801
 #, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
 msgstr "필터 보이기"
 
@@ -1213,7 +1203,6 @@ msgstr ""
 
 #: src/fsearch_statusbar.c:57
 #, fuzzy, c-format
-#| msgid "%'d Items"
 msgid "%'d Item"
 msgstr "%'d개 항목"
 
@@ -1359,7 +1348,6 @@ msgstr "검색 버튼 표시"
 
 #: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:129
 #, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
 msgstr "FSearch"
 
@@ -1400,58 +1388,63 @@ msgstr "검색"
 msgid "Select a Filter"
 msgstr "필터 선택"
 
-#: src/fsearch_window_actions.c:97
+#: src/fsearch_window_actions.c:98
 #, fuzzy, c-format
-msgid "Do you really want to open %'d file(s)?"
-msgstr "정말 삭제 하시겠습니까?"
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "정말 삭제 하시겠습니까?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:103
 #, fuzzy
 msgid "Opening Files…"
 msgstr "파일 열기"
 
-#: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "정말 삭제 하시겠습니까?"
-
 #: src/fsearch_window_actions.c:188
+#, fuzzy, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "정말 삭제 하시겠습니까?"
+
+#: src/fsearch_window_actions.c:195
 #, fuzzy
 msgid "Deleting files…"
 msgstr "파일 삭제 중…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:195
 #, fuzzy
 msgid "Moving files to trash…"
 msgstr "휴지통으로 이동 중…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
+#: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
 msgstr ""
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:232
 #, fuzzy, c-format
-msgid "Deleted %'d file(s)."
-msgstr "파일 삭제 중…"
+msgid "Deleted %'d file."
+msgid_plural "Deleted %'d files."
+msgstr[0] "파일 삭제 중…"
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:235
 #, fuzzy, c-format
-msgid "Moved %'d file(s) to the trash."
-msgstr "휴지통으로 이동 중…"
+msgid "Moved %'d file to the trash."
+msgid_plural "Moved %'d files to the trash."
+msgstr[0] "휴지통으로 이동 중…"
 
-#: src/fsearch_window_actions.c:229
+#: src/fsearch_window_actions.c:245
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
 
-#: src/fsearch_window_actions.c:255
+#: src/fsearch_window_actions.c:271
 #, fuzzy, c-format
-msgid "Do you really want to open %'d file property windows?"
-msgstr "정말 삭제 하시겠습니까?"
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "정말 삭제 하시겠습니까?"
 
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:278
 #, fuzzy
 msgid "Opening file properties…"
 msgstr "파일 열기"
@@ -1541,6 +1534,9 @@ msgstr ""
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "휴지통으로 이동(_T)"
+
+#~ msgid "Christian Boxdörfer"
+#~ msgstr "Christian Boxdörfer"
 
 #~ msgid "Saving…"
 #~ msgstr "저장…"

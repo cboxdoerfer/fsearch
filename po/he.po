@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
+"POT-Creation-Date: 2026-04-16 19:25+0200\n"
 "PO-Revision-Date: 2026-04-14 11:18+0000\n"
 "Last-Translator: Yaron Shahrabani <sh.yaron@gmail.com>\n"
 "Language-Team: Hebrew <https://hosted.weblate.org/projects/fsearch/"
@@ -19,8 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Weblate 5.17-dev\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -48,7 +47,13 @@ msgstr ""
 "FSearch מסייע לך למצוא קבצים ותיקיות בצורה הקלה והמהירה ביותר. עליך פשוט "
 "להקליד מספר אותיות ותוצאות החיפוש תופענה כמעט מיידית."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr "ישנן מגוון יכולות שהופכות את החיפוש ליעיל ועצמתי במיוחד. כגון:"
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -56,23 +61,23 @@ msgstr ""
 "התעלמות מרישיות (כלומר: חיפוש אחר „<code>fsearch</code>” ימצא גם את "
 "„FSearch”)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "ביטויים רגולריים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "תמיכה בתווי הכללה"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "תמיכה במסננים (כלומר: חיפוש אחר קובצי שמע בלבד)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "להחריג קבצים ותיקיות מסוימים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr "מיון מהיר לפי שם, נתיב, גודל, מועד השינוי האחרון וסיומת"
 
@@ -132,98 +137,93 @@ msgstr "כלי"
 msgid "everything"
 msgstr "הכול"
 
-#. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-msgid "Christian Boxdörfer"
-msgstr "Christian Boxdörfer"
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
 msgstr "שכתוב מסד נתונים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
 msgstr "מסד נתונים: הוספת תמיכה במעקב אחר מערכת קבצים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr "מסד נתונים: אחסון הגדרות מסד נתונים בקובץ מסד נתונים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
 msgstr "מסד נתונים: הוספת סיכום ביקורת לקובץ מסד נתונים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
 msgstr "מנוע חיפוש חדש"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Greatly improved highlighting of search terms"
 msgstr "שיפור משמעותי בהדגשת ביטויי החיפוש"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "Custom filters"
 msgstr "מסננים משלך"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Improved sort performance"
 msgstr "ביצועי הסידור השתפרו"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Improved scroll performance"
 msgstr "ביצועי הגלילה השתפרו"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "Remember file selection after a database update"
 msgstr "לזכור את בחירת הקבצים אחרי עדכון מסד נתונים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "לגלול את רשימת התוצאות אוטומטית במצב בחירה גומייה"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "היפוך הבחירה עם גומייה בעת לחיצה על ‚Ctrl’"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
 msgstr "התמקדות ברשומת החיפה כאשר החלון הראשי מופעל"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "הוספת מסנן ליישומים (למשל: קובצי desktop)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr "הוספת אפשרות להפעיל יישומים ישירות במקום לפתוח קובצי ‎.desktop"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Show application icons for .desktop files"
 msgstr "הצגת סמלי יישומים לקובצי ‎.desktop"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
 msgstr "הוספת קובצי ‎.odp ו־‎.ods למסנן המסמכים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr "התפריט ‚פתיחה עם’ מציג מעתה רק יישומים שיכולים לטפל בקבצים הנבחרים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -231,38 +231,38 @@ msgstr ""
 "פתיחה משופרת של מגוון קבצים מאותו הסוג (הם מועברים כרשימה ליישומים במקום אחד "
 "אחד)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
 msgstr "תמיכה משופרת בפתיחת קבצים במצב התנסות"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr "הוספת פריטי תפריטים עם קישורים לעמודי עוקב התקלות, הפורום והתרומה"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
 msgstr "שיפור התמיכה במערכות שאינן לינוקס"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr "הוספת אפשרות לצאת מ־FSearch בלחיצה על Escape במקום למזער את החלון"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "להחריג את ‚‎/proc’ ו־‚‎/sys’ כברירת מחדל"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr "פתיחת תפריט הקשר בלחיצה על מקש ‚תפריט’ או ‚Shift + F10’"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr "וכמות ענקית של תקלות, עדכוני תרגומים ושיפורים מזעריים"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
 msgstr "מהדורה ראשונית."
 
@@ -280,7 +280,6 @@ msgstr "פתיחת חלון יישום חדש"
 
 #: src/fsearch.c:722
 #, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "פתיחת חלון יישום חדש"
 
@@ -377,7 +376,6 @@ msgstr "סוג"
 
 #: src/fsearch_database_preferences_widget.c:695
 #, fuzzy
-#| msgid "Match case"
 msgid "Match"
 msgstr "התאמת רישיות"
 
@@ -400,7 +398,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:56
 #, fuzzy
-#| msgid "Update database on start"
 msgid "Rescan database on startup"
 msgstr "עדכון מסד הנתונים עם ההפעלה"
 
@@ -453,9 +450,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:374
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
@@ -919,20 +913,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:931
 #, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was successfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1568,44 +1548,52 @@ msgstr "חיפוש…"
 msgid "Select a Filter"
 msgstr "בחירת מסנן"
 
-#: src/fsearch_window_actions.c:97
-#, c-format
-msgid "Do you really want to open %'d file(s)?"
-msgstr "לפתוח %'d קבצים?"
+#: src/fsearch_window_actions.c:98
+#, fuzzy, c-format
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "לפתוח %'d קבצים?"
+msgstr[1] "לפתוח %'d קבצים?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "קבצים נפתחים…"
 
-#: src/fsearch_window_actions.c:184
-#, c-format
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "להסיר %'d קבצים?"
-
 #: src/fsearch_window_actions.c:188
+#, fuzzy, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "להסיר %'d קבצים?"
+msgstr[1] "להסיר %'d קבצים?"
+
+#: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
 msgstr "הקבצים נמחקים…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:195
 msgid "Moving files to trash…"
 msgstr "קבצים מועברים לאשפה…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
+#: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
 msgstr "משהו השתבש."
 
-#: src/fsearch_window_actions.c:223
-#, c-format
-msgid "Deleted %'d file(s)."
-msgstr "נמחקו %'d קבצים."
+#: src/fsearch_window_actions.c:232
+#, fuzzy, c-format
+msgid "Deleted %'d file."
+msgid_plural "Deleted %'d files."
+msgstr[0] "נמחקו %'d קבצים."
+msgstr[1] "נמחקו %'d קבצים."
 
-#: src/fsearch_window_actions.c:223
-#, c-format
-msgid "Moved %'d file(s) to the trash."
-msgstr "%'d קבצים הועברו לאשפה."
+#: src/fsearch_window_actions.c:235
+#, fuzzy, c-format
+msgid "Moved %'d file to the trash."
+msgid_plural "Moved %'d files to the trash."
+msgstr[0] "%'d קבצים הועברו לאשפה."
+msgstr[1] "%'d קבצים הועברו לאשפה."
 
-#: src/fsearch_window_actions.c:229
+#: src/fsearch_window_actions.c:245
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
@@ -1613,12 +1601,14 @@ msgstr ""
 "יש לעדכן את מסד הנתונים בטרם הוא יהיה מודע לשינויים האלה! יתוקן בעדכונים "
 "העתידיים."
 
-#: src/fsearch_window_actions.c:255
-#, c-format
-msgid "Do you really want to open %'d file property windows?"
-msgstr "לפתוח %'d חלונות מאפייני קבצים?"
+#: src/fsearch_window_actions.c:271
+#, fuzzy, c-format
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "לפתוח %'d חלונות מאפייני קבצים?"
+msgstr[1] "לפתוח %'d חלונות מאפייני קבצים?"
 
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:278
 msgid "Opening file properties…"
 msgstr "מאפייני הקובץ נפתחים…"
 
@@ -1706,6 +1696,9 @@ msgstr "נתיב + שם"
 msgid "Move to _Trash"
 msgstr "העברה ל_אשפה"
 
+#~ msgid "Christian Boxdörfer"
+#~ msgstr "Christian Boxdörfer"
+
 #~ msgid "Saving…"
 #~ msgstr "מתבצעת שמירה…"
 
@@ -1730,11 +1723,6 @@ msgstr "העברה ל_אשפה"
 
 #~ msgid "e.g. \".git;*.tmp\""
 #~ msgstr "למשל: „‎.git;*.tmp”"
-
-#~ msgid ""
-#~ "There are a lot of features which make searching as efficient and "
-#~ "powerful as possible. Such as:"
-#~ msgstr "ישנן מגוון יכולות שהופכות את החיפוש ליעיל ועצמתי במיוחד. כגון:"
 
 #~ msgctxt "Will be followed by the path of the desktop file."
 #~ msgid "Error when launching desktop file"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta3.24-8ede-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
+"POT-Creation-Date: 2026-04-16 19:25+0200\n"
 "PO-Revision-Date: 2025-12-12 09:00+0000\n"
 "Last-Translator: \"Tinde (Joke)\" <jouko.tiilikainen@gmail.com>\n"
 "Language-Team: Finnish <https://hosted.weblate.org/projects/fsearch/"
@@ -19,8 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 5.15-dev\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -51,7 +50,13 @@ msgstr ""
 "helposti ja nopeasti. Kirjoita vain muutama kirjain, ja hakutulokset tulevat "
 "näkyviin lähes välittömästi."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -59,23 +64,23 @@ msgstr ""
 "Ei huomioi isoja ja pieniä kirjaimia (esim. haku \"<code>fsearch</code>\" "
 "vastaa myös \"FSearch\" hakua)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "Säännölliset lausekkeet"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "Jokerimerkin tuki"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "Suodatintuki (esim. vain äänitiedostojen haku)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "Ohita tietyt tiedostot ja kansiot"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 "Nopea lajittelu nimen, polun, koon, muokkausajan ja tiedostopäätteen mukaan"
@@ -136,79 +141,74 @@ msgstr "työkalu"
 msgid "everything"
 msgstr "kaikki"
 
-#. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-msgid "Christian Boxdörfer"
-msgstr "Christian Boxdörfer"
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
 msgstr "Uusi hakukone"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Greatly improved highlighting of search terms"
 msgstr "Hakusanojen korostus on parantunut huomattavasti"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "Custom filters"
 msgstr "Mukautetut suodattimet"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Improved sort performance"
 msgstr "Parannettu lajittelun suorituskyky"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Improved scroll performance"
 msgstr "Parempi rullauksen suorituskyky"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "Remember file selection after a database update"
 msgstr "Muista tiedostovalinta tietokannan päivityksen jälkeen"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 #, fuzzy
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "Vieritä tulosluetteloa automaattisesti kuminauhavalintatilassa"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "Käännä valinta kuminauhalla, kun Ctrl-näppäintä painetaan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
 msgstr "Keskity hakukenttään, kun pääikkuna aktivoituu"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "Lisää suodatin sovelluksille (esim. .desktop-tiedostoille)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -216,15 +216,15 @@ msgstr ""
 "Lisätty vaihtoehto sovellusten käynnistämiseen suoraan .desktop-tiedostojen "
 "avaamisen sijaan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Show application icons for .desktop files"
 msgstr "Näytä .desktop-tiedostojen sovelluskuvakkeet"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
 msgstr "Lisää .odp- ja .ods-tiedostot asiakirjasuodattimeen"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -232,7 +232,7 @@ msgstr ""
 "'Avaa sovelluksella' -valikko näyttää nyt vain sovellukset, jotka voivat "
 "käsitellä valittuja tiedostoja"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -240,22 +240,22 @@ msgstr ""
 "Parannettu useiden saman tyyppisten tiedostojen avaamista (ne välitetään nyt "
 "sovelluksille luettelona yksitellen)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
 msgstr "Parempi tuki tiedostojen avaamiselle hiekkalaatikkotilassa"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "Lisää valikkokohtia, joissa on linkit ongelmanseurantaan, foorumille ja "
 "lahjoitussivuille"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
 msgstr "Parempi muiden kuin Linux-järjestelmien tuki"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
@@ -263,22 +263,22 @@ msgstr ""
 "Lisätty vaihtoehto, jolla FSearchistä poistutaan Esc-näppäintä painettaessa "
 "ikkunan pienentämisen sijaan"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "Jätä pois oletusarvoisesti '/proc' ja '/sys'"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "Avaa kontekstivalikko painettaessa 'Menu'-näppäintä tai 'Shift + F10' "
 "-näppäinyhdistelmää"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 "ja paljon virheenkorjauksia, käännöspäivityksiä ja pienempiä parannuksia"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
 msgstr "Ensimmäinen julkaisu."
 
@@ -296,7 +296,6 @@ msgstr "Avaa uusi sovellusikkuna"
 
 #: src/fsearch.c:722
 #, fuzzy
-#| msgid "Open a new application window"
 msgid "Minimize the application window"
 msgstr "Avaa uusi sovellusikkuna"
 
@@ -351,7 +350,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:358
 #, fuzzy
-#| msgid "Wildcard support"
 msgid "Wildcard"
 msgstr "Jokerimerkin tuki"
 
@@ -361,7 +359,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:381
 #, fuzzy
-#| msgid "Path"
 msgid "Full Path"
 msgstr "Polku"
 
@@ -371,7 +368,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:401
 #, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
 msgstr "Kansiot"
 
@@ -399,7 +395,6 @@ msgstr "Tyyppi"
 
 #: src/fsearch_database_preferences_widget.c:695
 #, fuzzy
-#| msgid "Match case"
 msgid "Match"
 msgstr "Sama kirjainkoko"
 
@@ -422,7 +417,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:56
 #, fuzzy
-#| msgid "Update database on start"
 msgid "Rescan database on startup"
 msgstr "Päivitä tietokanta käynnistyksen yhteydessä"
 
@@ -449,9 +443,6 @@ msgstr "Syötä polku…"
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
@@ -470,9 +461,6 @@ msgstr "Sisällytä"
 
 #: src/fsearch_database_preferences_widget.ui:353
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Enter path…\n"
 "                                                "
@@ -482,9 +470,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:374
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
@@ -494,9 +479,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:436
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Add exclude rule\n"
 "                                                "
@@ -506,9 +488,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.ui:455
 #, fuzzy
-#| msgid ""
-#| "Add path to be included in database\n"
-#| "                                "
 msgid ""
 "Remove selected path\n"
 "                                                "
@@ -963,20 +942,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:931
 #, fuzzy
-#| msgid ""
-#| "<b>Behaviour after successfully opening a file:</b>\n"
-#| "\n"
-#| "When a file/folder was successfully opened one of the following actions "
-#| "can be performed:\n"
-#| "\t• <b>Nothing:</b> Nothing happens.\n"
-#| "\t• <b>Minimize:</b> The currently selected FSearch window becomes "
-#| "minimized. \n"
-#| "\t• <b>Close:</b> Quit FSearch.\n"
-#| "\n"
-#| "You can configure if those actions should be triggered when the file was "
-#| "opened with\n"
-#| "\t• <b>keyboard shortcuts or menu entries</b> and/or\n"
-#| "\t• <b>mouse click</b>"
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1636,48 +1601,52 @@ msgstr "Etsi…"
 msgid "Select a Filter"
 msgstr "Valitse suodatin"
 
-#: src/fsearch_window_actions.c:97
+#: src/fsearch_window_actions.c:98
 #, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
-msgid "Do you really want to open %'d file(s)?"
-msgstr "Haluatko todella avata %d tiedosto(n/a)?"
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "Haluatko todella avata %d tiedosto(n/a)?"
+msgstr[1] "Haluatko todella avata %d tiedosto(n/a)?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "Avataan tiedosto(ja)…"
 
-#: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "Haluatko todella poistaa %d tiedosto(n/a)?"
-
 #: src/fsearch_window_actions.c:188
+#, fuzzy, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "Haluatko todella poistaa %d tiedosto(n/a)?"
+msgstr[1] "Haluatko todella poistaa %d tiedosto(n/a)?"
+
+#: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
 msgstr "Poistetaan tiedostoja…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:195
 msgid "Moving files to trash…"
 msgstr "Siirretään tiedostoja roskakoriin…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
+#: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
 msgstr "Jotain meni pieleen."
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:232
 #, fuzzy, c-format
-#| msgid "Deleted %d file(s)."
-msgid "Deleted %'d file(s)."
-msgstr "Poistettu %d tiedosto(a)."
+msgid "Deleted %'d file."
+msgid_plural "Deleted %'d files."
+msgstr[0] "Poistettu %d tiedosto(a)."
+msgstr[1] "Poistettu %d tiedosto(a)."
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:235
 #, fuzzy, c-format
-#| msgid "Moved %d file(s) to the trash."
-msgid "Moved %'d file(s) to the trash."
-msgstr "Siirretty %d tiedosto(t) roskakoriin."
+msgid "Moved %'d file to the trash."
+msgid_plural "Moved %'d files to the trash."
+msgstr[0] "Siirretty %d tiedosto(t) roskakoriin."
+msgstr[1] "Siirretty %d tiedosto(t) roskakoriin."
 
-#: src/fsearch_window_actions.c:229
+#: src/fsearch_window_actions.c:245
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
@@ -1685,13 +1654,14 @@ msgstr ""
 "Tietokanta on päivitettävä ennen kuin se saa tiedon näistä muutoksista! Tämä "
 "korjataan tulevilla päivityksillä."
 
-#: src/fsearch_window_actions.c:255
+#: src/fsearch_window_actions.c:271
 #, fuzzy, c-format
-#| msgid "Do you really want to open %d file property windows?"
-msgid "Do you really want to open %'d file property windows?"
-msgstr "Haluatko todella avata %d tiedoston ominaisuusikkuna(n/t)?"
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "Haluatko todella avata %d tiedoston ominaisuusikkuna(n/t)?"
+msgstr[1] "Haluatko todella avata %d tiedoston ominaisuusikkuna(n/t)?"
 
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:278
 msgid "Opening file properties…"
 msgstr "Avataan tiedoston ominaisuuksia…"
 
@@ -1778,6 +1748,9 @@ msgstr "Polku + Nimi"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "Siirrä _roskakoriin"
+
+#~ msgid "Christian Boxdörfer"
+#~ msgstr "Christian Boxdörfer"
 
 #~ msgid "Saving…"
 #~ msgstr "Tallennetaan…"

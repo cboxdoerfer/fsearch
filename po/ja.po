@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: FSearch 0.1beta\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
+"POT-Creation-Date: 2026-04-16 19:25+0200\n"
 "PO-Revision-Date: 2026-04-17 12:09+0000\n"
 "Last-Translator: Ryo Nakano <ryonakaknock3@gmail.com>\n"
 "Language-Team: Japanese <https://hosted.weblate.org/projects/fsearch/"
@@ -19,8 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 "X-Generator: Weblate 5.17.1-dev\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "FSearch"
 
@@ -51,7 +50,13 @@ msgstr ""
 "FSearch を使うことで、可能な限り簡単かつ高速にファイルとフォルダーを見つけら"
 "れます。数文字入力するだけで、検索結果がほとんど一瞬で表示されます。"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -59,23 +64,23 @@ msgstr ""
 "大文字小文字を区別しない (例: \"<code>fsearch</code>\" を検索すると、"
 "\"FSearch\" にもヒット)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr "正規表現"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr "ワイルドカードへの対応"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr "フィルター検索への対応 (例: オーディオファイルのみを検索)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr "特定のファイルとフォルダーの除外"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr "名前、パス、サイズ、更新日時、拡張子で素早くソート"
 
@@ -135,20 +140,15 @@ msgstr "ツール"
 msgid "everything"
 msgstr "すべて"
 
-#. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-msgid "Christian Boxdörfer"
-msgstr "Christian Boxdörfer"
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
 msgstr "DB のリライト"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
 msgstr "DB: ファイルシステムの監視に対応"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
@@ -156,60 +156,60 @@ msgstr ""
 "DB: 固定文字列/ワイルドカード/正規表現に基づいてファイルとフォルダーを除外で"
 "きる機能を追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr "DB: データベースの設定を DB ファイルに保存するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
 msgstr "DB: DB ファイルにチェックサムを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr "アイコンとファイル情報の取得を非同期に変更 (UI をブロッキングしない)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
 msgstr "新しい検索エンジン"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Greatly improved highlighting of search terms"
 msgstr "検索文字列の強調表示を大幅に改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "Custom filters"
 msgstr "カスタムフィルター"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Improved sort performance"
 msgstr "ソートパフォーマンスを改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Improved scroll performance"
 msgstr "スクロールパフォーマンスを改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "Remember file selection after a database update"
 msgstr "選択中のファイルをデータベース更新後も維持するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr "自由選択モードで自動的に結果リストをスクロールするように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr "自由選択モードで 'Ctrl' を押すと、選択を反転するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
 msgstr ""
 "メインウィンドウがアクティブになった際、検索欄にフォーカスするように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr "アプリケーション (.desktop ファイル) 用のフィルターを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
@@ -217,15 +217,15 @@ msgstr ""
 ".desktop ファイルを開くのではなく、直接アプリケーションを起動するオプションを"
 "追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Show application icons for .desktop files"
 msgstr ".desktop ファイルのアプリケーションアイコンを表示するように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
 msgstr "ドキュメントフィルターに .odp と .ods ファイルを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
@@ -233,7 +233,7 @@ msgstr ""
 "選択したファイルを処理できるアプリケーションだけを'次で開く'メニューに表示す"
 "るように修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
@@ -241,41 +241,42 @@ msgstr ""
 "タイプが同じ複数のファイルを開く処理を改善 (ひとつずつではなくリストとしてア"
 "プリケーションに渡すように修正)"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
 msgstr "サンドボックス内でファイルを開く対応を改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 "イシュートラッカー、フォーラム、寄付ページへのリンクをメニュー項目として追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
 msgstr "Linux 以外のシステムへの対応を改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
-msgstr "Esc キー押下時にウィンドウ最小化ではなく FSearch を終了するオプションを追加"
+msgstr ""
+"Esc キー押下時にウィンドウ最小化ではなく FSearch を終了するオプションを追加"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr "デフォルトで '/proc' と '/sys' を除外"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 "'メニュー'キーまたは 'Shift + F10' の押下時にコンテキストメニューを開くように"
 "修正"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr "そして、大量のバグ修正/翻訳の更新/軽微な改善"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
 msgstr "最初のリリース。"
 
@@ -944,8 +945,8 @@ msgstr ""
 "ファイル/フォルダーを正常に開いた場合、以下のうちひとつのアクションを実行でき"
 "ます:\n"
 "\t• <b>何もしない:</b> 何もしません。\n"
-"                        • <b>最小化:</b> 現在アクティブな FSearch の"
-"ウィンドウを最小化します。\n"
+"                        • <b>最小化:</b> 現在アクティブな FSearch のウィンド"
+"ウを最小化します。\n"
 "\t• <b>閉じる:</b> FSearch を終了します。\n"
 "\n"
 "これらのアクションをトリガーするかどうかを、ファイルの開き方ごとに設定できま"
@@ -1576,44 +1577,48 @@ msgstr "検索…"
 msgid "Select a Filter"
 msgstr "フィルターを選択"
 
-#: src/fsearch_window_actions.c:97
-#, c-format
-msgid "Do you really want to open %'d file(s)?"
-msgstr "%'d 個のファイルを開いてもよろしいですか?"
+#: src/fsearch_window_actions.c:98
+#, fuzzy, c-format
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "%'d 個のファイルを開いてもよろしいですか?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "ファイルを開いています…"
 
-#: src/fsearch_window_actions.c:184
-#, c-format
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "%'d 個のファイルを削除してもよろしいですか?"
-
 #: src/fsearch_window_actions.c:188
+#, fuzzy, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "%'d 個のファイルを削除してもよろしいですか?"
+
+#: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
 msgstr "ファイルを削除しています…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:195
 msgid "Moving files to trash…"
 msgstr "ファイルをゴミ箱に移動しています…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
+#: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
 msgstr "問題が発生しました。"
 
-#: src/fsearch_window_actions.c:223
-#, c-format
-msgid "Deleted %'d file(s)."
-msgstr "%'d 個のファイルを削除しました。"
+#: src/fsearch_window_actions.c:232
+#, fuzzy, c-format
+msgid "Deleted %'d file."
+msgid_plural "Deleted %'d files."
+msgstr[0] "%'d 個のファイルを削除しました。"
 
-#: src/fsearch_window_actions.c:223
-#, c-format
-msgid "Moved %'d file(s) to the trash."
-msgstr "%'d 個のファイルをゴミ箱に移動しました。"
+#: src/fsearch_window_actions.c:235
+#, fuzzy, c-format
+msgid "Moved %'d file to the trash."
+msgid_plural "Moved %'d files to the trash."
+msgstr[0] "%'d 個のファイルをゴミ箱に移動しました。"
 
-#: src/fsearch_window_actions.c:229
+#: src/fsearch_window_actions.c:245
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
@@ -1621,12 +1626,13 @@ msgstr ""
 "データベースがこれらの変更を検知するには、データベースを更新する必要がありま"
 "す。これは今後のアップデートで改善予定です。"
 
-#: src/fsearch_window_actions.c:255
-#, c-format
-msgid "Do you really want to open %'d file property windows?"
-msgstr "%'d 個のファイルのプロパティウィンドウを開いてもよろしいですか?"
+#: src/fsearch_window_actions.c:271
+#, fuzzy, c-format
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "%'d 個のファイルのプロパティウィンドウを開いてもよろしいですか?"
 
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:278
 msgid "Opening file properties…"
 msgstr "ファイルのプロパティを開いています…"
 
@@ -1713,6 +1719,9 @@ msgstr "パス + 名前"
 #: src/menus.ui:236
 msgid "Move to _Trash"
 msgstr "ゴミ箱に移動(_T)"
+
+#~ msgid "Christian Boxdörfer"
+#~ msgstr "Christian Boxdörfer"
 
 #~ msgid "Saving…"
 #~ msgstr "保存しています…"

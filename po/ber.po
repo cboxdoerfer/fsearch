@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: fsearch 0.1beta4.58-6c306-dirty\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-04-13 17:23+0200\n"
+"POT-Creation-Date: 2026-04-16 19:25+0200\n"
 "PO-Revision-Date: 2023-01-24 20:50+0000\n"
 "Last-Translator: ⵣⵓⵀⵉⵔ ⴰⵎⴰⵣⵉⵖ زهير أمازيغ <zouhirdehbi56@gmail.com>\n"
 "Language-Team: Berber <https://hosted.weblate.org/projects/fsearch/"
@@ -19,8 +19,7 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
 "X-Generator: Weblate 4.16-dev\n"
 
-#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:7 src/main.c:35
+#: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
 msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
@@ -48,7 +47,13 @@ msgstr ""
 "ⴰⵔ ⴰⴽ ⵉⵜⵜⴰⵡⵙ FSearch ⴰⴷ ⵜⴰⴼⴷ ⵉⵙⴷⴰⵡⵏ ⴷ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵙⵀⵡⵏ ⴷ ⵓⵙⵔⵉⵔⵔⵉ. ⵖⴰⵙ ⴰⵔⵉ "
 "ⴽⵔⴰ ⵏ ⵉⵙⴽⴽⵉⵍⵏ ⴷ ⴰⴷ ⴰⴽ ⵍⵍⵡⵓⵏⵜ ⵜⵢⴰⴼⵓⵜⵉⵏ ⴷⵖⵢⴰ."
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:18
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:14
+msgid ""
+"There are a lot of features which make searching as efficient and powerful "
+"as possible. Such as:"
+msgstr ""
+
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
 msgid ""
 "Ignore case (e.g. searching for \"<code>fsearch</code>\" will match "
 "\"FSearch\" as well)"
@@ -56,23 +61,23 @@ msgstr ""
 "ⴱⵏⵏⵣ ⵜⵓⵣⵓⵏⵜ (ⵙ ⵓⵎⴷⵢⴰ. ⴰⵔⵣⵣⵓ ⵏ \"<code>fsearch</code>\" ⴰⴷ ⵉⵎⵙⴰⵙⴰ ⴰⵡⴷ ⴰⴽⴷ "
 "\"FSearch\")"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:19
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
 msgid "Regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:20
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
 msgid "Wildcard support"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:21
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
 msgid "Filter support (e.g. only search for audio files)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:22
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
 msgid "Exclude certain files and folders"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:23
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:24
 msgid "Fast sort by name, path, size, modification time and extension"
 msgstr ""
 
@@ -92,25 +97,21 @@ msgstr ""
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:49
 #, fuzzy
-#| msgid "Search"
 msgid "search"
 msgstr "ⵔⵣⵓ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:50
 #, fuzzy
-#| msgid "Search"
 msgid "fsearch"
 msgstr "ⵔⵣⵓ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:51
 #, fuzzy
-#| msgid "Files"
 msgid "files"
 msgstr "ⵉⴼⴰⵢⵍⵓⵜⵏ"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:52
 #, fuzzy
-#| msgid "Folders"
 msgid "folders"
 msgstr "ⵉⵙⴷⴰⵡⵏ"
 
@@ -138,137 +139,131 @@ msgstr ""
 msgid "everything"
 msgstr ""
 
-#. Translators: please do NOT translate this.
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:73
-msgid "Christian Boxdörfer"
-msgstr ""
-
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:82
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:83
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:84
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:85
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:94
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 #, fuzzy
-#| msgid "FSearch"
 msgid "New search engine"
 msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:95
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
 msgid "Greatly improved highlighting of search terms"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:96
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
 msgid "Custom filters"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:97
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
 msgid "Improved sort performance"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
 msgid "Improved scroll performance"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:99
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
 msgid "Remember file selection after a database update"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:100
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
 msgid "Automatically scroll the result list in rubberband selection mode"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:101
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
 msgid "Invert selection with rubber band when 'Ctrl' is pressed"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:102
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
 msgid "Focus search entry when the main window gets activated"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:103
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
 msgid "Add filter for applications (i.e. .desktop files)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:104
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
 msgid ""
 "Add option to launch applications directly instead of opening the .desktop "
 "files"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:105
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
 msgid "Show application icons for .desktop files"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:106
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
 msgid "Add .odp and .ods files to document filter"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:107
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
 msgid ""
 "'Open with' menu now only shows applications which can handle the selected "
 "files"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:108
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
 msgid ""
 "Improved opening of multiple files with the same type (they get now passed "
 "as a list to applications, instead of one by one)"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:109
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
 msgid "Better support for opening files in sandboxed mode"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:110
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
 msgid ""
 "Add menu items with links to the issue tracker, forum and donation pages"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:111
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
 msgid "Improve support for non-Linux systems"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:112
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:116
 msgid ""
 "Add option to exit FSearch when Escape is pressed instead of minimizing the "
 "window"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:113
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:117
 msgid "Exclude '/proc' and '/sys' by default"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:114
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:118
 msgid "Open context menu when 'Menu' key or 'Shift + F10' are pressed"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:115
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:119
 msgid "and tons of bug fixes, translation updates and smaller improvements"
 msgstr ""
 
-#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:121
+#: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:125
 msgid "Initial release."
 msgstr ""
 
@@ -294,7 +289,6 @@ msgstr ""
 
 #: src/fsearch.c:724
 #, fuzzy
-#| msgid "Show Search Button"
 msgid "Set the search pattern"
 msgstr "ⵙⵎⴰⵍ ⴰⴱⴰⵡ ⵏ ⵓⵔⵣⵣⵓ"
 
@@ -354,7 +348,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:381
 #, fuzzy
-#| msgid "Path"
 msgid "Full Path"
 msgstr "ⴰⴱⵔⵉⴷ"
 
@@ -364,7 +357,6 @@ msgstr ""
 
 #: src/fsearch_database_preferences_widget.c:401
 #, fuzzy
-#| msgid "Folders"
 msgid "Files & Folders"
 msgstr "ⵉⵙⴷⴰⵡⵏ"
 
@@ -405,7 +397,6 @@ msgstr "ⴰⴱⵔⵉⴷ"
 
 #: src/fsearch_database_preferences_widget.c:731
 #, fuzzy
-#| msgid "Open File(s)"
 msgid "One Filesystem"
 msgstr "ⵕⵥⵎ (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)"
 
@@ -492,7 +483,6 @@ msgstr ""
 
 #: src/fsearch_file_utils.c:145
 #, fuzzy
-#| msgid "Single click to open"
 msgid "Failed to get path"
 msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
@@ -521,7 +511,6 @@ msgstr ""
 
 #: src/fsearch_file_utils.c:506
 #, fuzzy
-#| msgid "Single click to open"
 msgid "Failed to get parent path"
 msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
@@ -532,7 +521,6 @@ msgstr ""
 
 #: src/fsearch_file_utils.c:513
 #, fuzzy
-#| msgid "Single click to open"
 msgid "Failed to build open command"
 msgstr "ⴰⴷⵔ ⵢⴰⵏ ⵓⵎⴰⵕ ⴰⴼⴰⴷ ⴰⴷ ⵉⵕⵥⵎ"
 
@@ -587,7 +575,6 @@ msgstr ""
 
 #: src/fsearch_filter_editor.ui:50
 #, fuzzy
-#| msgid "Name"
 msgid "Name:"
 msgstr "ⵉⵙⵎ"
 
@@ -601,7 +588,6 @@ msgstr ""
 
 #: src/fsearch_filter_editor.ui:73
 #, fuzzy
-#| msgid "Search in Path"
 msgid "Search in path"
 msgstr "ⴰⵔⵣⵣⵓ ⴳ ⵓⴱⵔⵉⴷ"
 
@@ -657,7 +643,6 @@ msgstr ""
 
 #: src/fsearch_filter_preferences_widget.ui:113
 #, fuzzy
-#| msgid "Select a Filter"
 msgid "Edit selected filter"
 msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
@@ -704,7 +689,6 @@ msgstr ""
 
 #: src/fsearch_overlay.ui:256
 #, fuzzy
-#| msgid "Press <b>Ctrl + F</b> and start typing"
 msgid "Press <b>Ctrl + F</b> and start typing."
 msgstr "ⴰⴷⵔ ⵅ <b>Ctrl + F</b> ⴷ ⵜⴰⵡⵍⴷ ⵜⵜⴰⵔⵉⴷ"
 
@@ -852,7 +836,6 @@ msgstr ""
 
 #: src/fsearch_preferences.ui:801
 #, fuzzy
-#| msgid "Show Filter"
 msgid "Filter:"
 msgstr "ⵙⴽⵏ ⴰⵙⵜⴰⵢ"
 
@@ -1214,7 +1197,6 @@ msgstr ""
 
 #: src/fsearch_statusbar.c:57
 #, fuzzy, c-format
-#| msgid "%'d Items"
 msgid "%'d Item"
 msgstr "%'d ⵉⴼⵔⴷⴰⵙ"
 
@@ -1247,7 +1229,6 @@ msgstr "0 ⵓⴼⵔⴷⵉⵙ"
 
 #: src/fsearch_statusbar.ui:106
 #, fuzzy
-#| msgid "_Cancel"
 msgid "Cancel"
 msgstr "_ⵙⵔ"
 
@@ -1257,7 +1238,6 @@ msgstr ""
 
 #: src/fsearch_statusbar.ui:228
 #, fuzzy
-#| msgid "Select folder"
 msgid "Number of selected folders"
 msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⴷⴰⵡ"
 
@@ -1267,7 +1247,6 @@ msgstr "0/0"
 
 #: src/fsearch_statusbar.ui:253
 #, fuzzy
-#| msgid "Select a Filter"
 msgid "Number of selected files"
 msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
@@ -1361,7 +1340,6 @@ msgstr "ⵙⵎⴰⵍ ⴰⴱⴰⵡ ⵏ ⵓⵔⵣⵣⵓ"
 
 #: src/fsearch_window.ui:275 src/fsearch_window.ui:356 src/menus.ui:129
 #, fuzzy
-#| msgid "FSearch"
 msgid "FSearch Online"
 msgstr "ⴼ-ⵙⵓⵔⵜⵛ"
 
@@ -1401,59 +1379,65 @@ msgstr "ⵔⵣⵓ…"
 msgid "Select a Filter"
 msgstr "ⵙⵜⵉ ⵢⴰⵏ ⵓⵙⵜⵜⴰⵢ"
 
-#: src/fsearch_window_actions.c:97
+#: src/fsearch_window_actions.c:98
 #, fuzzy, c-format
-#| msgid "Do you really want to open %d file(s)?"
-msgid "Do you really want to open %'d file(s)?"
-msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
+msgid "Do you really want to open %'d file?"
+msgid_plural "Do you really want to open %'d files?"
+msgstr[0] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
+msgstr[1] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
 
-#: src/fsearch_window_actions.c:99
+#: src/fsearch_window_actions.c:103
 msgid "Opening Files…"
 msgstr "ⴰⵕⵥⵥⵓⵎ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
-#: src/fsearch_window_actions.c:184
-#, fuzzy, c-format
-#| msgid "Do you really want to remove %d file(s)?"
-msgid "Do you really want to remove %'d file(s)?"
-msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴽⴽⵙ %d (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)?"
-
 #: src/fsearch_window_actions.c:188
+#, fuzzy, c-format
+msgid "Do you really want to remove %'d file?"
+msgid_plural "Do you really want to remove %'d files?"
+msgstr[0] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴽⴽⵙ %d (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)?"
+msgstr[1] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⴽⴽⵙ %d (ⵉ)ⴰⴼⴰⵢⵍⵓ(ⵜⵏ)?"
+
+#: src/fsearch_window_actions.c:195
 msgid "Deleting files…"
 msgstr "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
-#: src/fsearch_window_actions.c:188
+#: src/fsearch_window_actions.c:195
 msgid "Moving files to trash…"
 msgstr "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
 
-#: src/fsearch_window_actions.c:215 src/fsearch_window_actions.c:526
-#: src/fsearch_window_actions.c:567
+#: src/fsearch_window_actions.c:222 src/fsearch_window_actions.c:545
+#: src/fsearch_window_actions.c:586
 msgid "Something went wrong."
 msgstr ""
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:232
 #, fuzzy, c-format
-#| msgid "Deleting files…"
-msgid "Deleted %'d file(s)."
-msgstr "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
+msgid "Deleted %'d file."
+msgid_plural "Deleted %'d files."
+msgstr[0] "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
+msgstr[1] "ⵓⴽⵓⵙ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
 
-#: src/fsearch_window_actions.c:223
+#: src/fsearch_window_actions.c:235
 #, fuzzy, c-format
-#| msgid "Moving files to trash…"
-msgid "Moved %'d file(s) to the trash."
-msgstr "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
+msgid "Moved %'d file to the trash."
+msgid_plural "Moved %'d files to the trash."
+msgstr[0] "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
+msgstr[1] "ⴰⵎⵓⵜⵜⵉ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ ⵙ ⵓⵚⵏⵏⴰⵊ…"
 
-#: src/fsearch_window_actions.c:229
+#: src/fsearch_window_actions.c:245
 msgid ""
 "The database needs to be updated before it becomes aware of those changes! "
 "This will be fixed with future updates."
 msgstr ""
 
-#: src/fsearch_window_actions.c:255
+#: src/fsearch_window_actions.c:271
 #, fuzzy, c-format
-msgid "Do you really want to open %'d file property windows?"
-msgstr "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
+msgid "Do you really want to open %'d file property window?"
+msgid_plural "Do you really want to open %'d file property windows?"
+msgstr[0] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
+msgstr[1] "ⵉⵙ ⵜⵔⵉⴷ ⴰⴷ ⵜⵕⵥⵎⴷ %d ⵉⴼⴰⵢⵍⵓⵜⵏ ⴰ ?"
 
-#: src/fsearch_window_actions.c:259
+#: src/fsearch_window_actions.c:278
 #, fuzzy
 msgid "Opening file properties…"
 msgstr "ⴰⵕⵥⵥⵓⵎ ⵏ ⵉⴼⴰⵢⵍⵓⵜⵏ…"
