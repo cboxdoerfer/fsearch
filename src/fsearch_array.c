@@ -148,17 +148,19 @@ split_merge(DynamicArray *src,
     if (end_idx - 1 <= start_idx) {
         return;
     }
-    if (g_cancellable_is_cancelled(cancellable)) {
-        return;
-    }
 
-    if (end_idx - start_idx <= MERGE_SORT_THRESHOLD) {
+    const uint32_t len = end_idx - start_idx;
+    if (len <= MERGE_SORT_THRESHOLD) {
         insertion_sort_range(dest, start_idx, end_idx, comp_func, comp_data);
         memcpy(src->data + start_idx, dest->data + start_idx, (end_idx - start_idx) * sizeof(void *));
         return;
     }
 
-    const uint32_t center_idx = start_idx + (end_idx - start_idx) / 2;
+    if (g_cancellable_is_cancelled(cancellable)) {
+        return;
+    }
+
+    const uint32_t center_idx = start_idx + len / 2;
     split_merge(dest, src, start_idx, center_idx, cancellable, comp_func, comp_data);
     split_merge(dest, src, center_idx, end_idx, cancellable, comp_func, comp_data);
     merge(src, dest, start_idx, center_idx, end_idx, cancellable, comp_func, comp_data);
