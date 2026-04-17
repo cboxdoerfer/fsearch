@@ -432,6 +432,9 @@ darray_get_item_next(DynamicArray *array,
                      void *data,
                      uint32_t *next_idx) {
     g_assert(array);
+    if (array->num_items == 0) {
+        return NULL;
+    }
     uint32_t index = 0;
     if (!darray_get_item_idx(array, item, compare_func, data, &index)) {
         return NULL;
