@@ -246,7 +246,7 @@ fsearch_result_view_draw_row(FsearchResultView *result_view,
     }
 
     GtkStateFlags flags = gtk_style_context_get_state(context);
-    if (!pending) {
+    if (!pending && info) {
         row_selected = fsearch_database_entry_info_get_selected(info);
     }
     if (row_selected) {

@@ -758,7 +758,7 @@ on_listview_row_is_selected(int row, gpointer user_data) {
                                            FSEARCH_DATABASE_ENTRY_INFO_FLAG_SELECTED,
                                            &info)
         == FSEARCH_RESULT_SUCCESS) {
-        return fsearch_database_entry_info_get_selected(info);
+        return info ? fsearch_database_entry_info_get_selected(info) : FALSE;
     }
     return FALSE;
 }
