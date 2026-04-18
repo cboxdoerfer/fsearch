@@ -386,6 +386,20 @@ darray_steal_or_remove(DynamicArray *array, uint32_t index, uint32_t n_elements,
     return n_elements;
 }
 
+void *
+darray_steal_item(DynamicArray *array, uint32_t idx) {
+    g_assert(array);
+    g_assert(array->data);
+
+    if (idx >= array->num_items) {
+        return NULL;
+    }
+
+    void *item = array->data[idx];
+    darray_remove(array, idx, 1);
+    return item;
+}
+
 uint32_t
 darray_remove(DynamicArray *array, uint32_t index, uint32_t n_elements) {
     g_assert(array);

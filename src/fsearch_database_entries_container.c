@@ -297,8 +297,7 @@ fsearch_database_entries_container_steal(FsearchDatabaseEntriesContainer *self, 
 
     uint32_t idx = 0;
     if (darray_binary_search_with_data(c, entry, self->entry_comp_func, self->compare_context, &idx)) {
-        FsearchDatabaseEntry *e = darray_get_item(c, idx);
-        darray_remove(c, idx, 1);
+        FsearchDatabaseEntry *e = darray_steal_item(c, idx);
         self->num_entries--;
 
         balance_container(self, c, c_idx);
