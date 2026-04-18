@@ -389,21 +389,23 @@ apply_search_info(FsearchApplicationWindow *win, FsearchDatabaseSearchInfo *info
                                     num_folders);
 
     fsearch_result_view_row_cache_reset(win->result_view);
+
+    const bool empty_search = is_empty_search(win);
     if (reset_view) {
         fsearch_list_view_set_config(win->result_view->list_view,
-                                     num_rows,
+                                     empty_search ? 0 : num_rows,
                                      win->result_view->sort_order,
                                      win->result_view->sort_type);
     }
     else {
         fsearch_list_view_update(win->result_view->list_view,
-                                 num_rows,
+                                 empty_search ? 0 : num_rows,
                                  win->result_view->sort_order,
                                  win->result_view->sort_type);
     }
     fsearch_window_actions_update(win);
 
-    if (is_empty_search(win)) {
+    if (empty_search) {
         show_overlay(win, OVERLAY_QUERY_EMPTY);
         gtk_widget_show(win->main_search_overlay_stack);
     }
