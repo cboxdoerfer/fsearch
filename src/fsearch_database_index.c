@@ -5,7 +5,7 @@
 #include "fsearch_database_index.h"
 #include "fsearch_database_index_event.h"
 #include "fsearch_database_index_properties.h"
-#include "fsearch_database_entries_container.h"
+#include "fsearch_database_chunked_array.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_scan.h"
@@ -30,8 +30,8 @@
 struct _FsearchDatabaseIndex {
     FsearchDatabaseInclude *include;
     FsearchDatabaseExcludeManager *exclude_manager;
-    FsearchDatabaseEntriesContainer *folder_container;
-    FsearchDatabaseEntriesContainer *file_container;
+    FsearchDatabaseChunkedArray *folder_chunks;
+    FsearchDatabaseChunkedArray *file_chunks;
 
     FsearchDatabaseIndexPropertyFlags flags;
 
@@ -117,8 +117,8 @@ index_root_reappear_poll_cb(gpointer user_data) {
     g_autoptr(GMutexLocker) locker = g_mutex_locker_new(&self->mutex);
     g_assert_nonnull(locker);
 
-    g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(self->folder_container);
-    g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(self->file_container);
+    g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_get_joined(self->folder_chunks);
+    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_get_joined(self->file_chunks);
 
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_START_MODIFYING, NULL, NULL);
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_CREATED, folders, files);
@@ -141,7 +141,9 @@ index_start_root_reappearance_polling(FsearchDatabaseIndex *self) {
     g_source_set_callback(self->root_reappear_poll_source, index_root_reappear_poll_cb, self, NULL);
     g_source_attach(self->root_reappear_poll_source, self->worker_ctx);
 
-    g_debug("[index-%d] start polling for root folder reappearance every %d seconds", self->id, ROOT_REAPPEAR_POLL_SECONDS);
+    g_debug("[index-%d] start polling for root folder reappearance every %d seconds",
+            self->id,
+            ROOT_REAPPEAR_POLL_SECONDS);
 }
 
 static void
@@ -320,11 +322,11 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
                      event->name ? event->watched_entry : NULL,
                      event->is_dir ? DATABASE_ENTRY_TYPE_FOLDER : DATABASE_ENTRY_TYPE_FILE);
 
-    FsearchDatabaseEntriesContainer *container = event->is_dir ? self->folder_container : self->file_container;
+    FsearchDatabaseChunkedArray *chunks = event->is_dir ? self->folder_chunks : self->file_chunks;
 
     FsearchDatabaseEntry *entry = steal
-                                      ? fsearch_database_entries_container_steal(container, entry_tmp)
-                                      : fsearch_database_entries_container_find(container, entry_tmp);
+                                      ? fsearch_database_chunked_array_steal(chunks, entry_tmp)
+                                      : fsearch_database_chunked_array_find(chunks, entry_tmp);
     // temp entry must be freed properly to make sure its parent gets updated back to its previous state (e.g.
     // regarding num_files/folders)
     g_clear_pointer(&entry_tmp, db_entry_free);
@@ -343,7 +345,7 @@ lookup_entry_for_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *ev
         }
         entry = darray_get_item(array, idx);
     }
-    else { 
+    else {
 #if 0
     for (uint32_t i = 0; i < darray_get_num_items(array); ++i) {
         FsearchDatabaseEntry *e = darray_get_item(array, i);
@@ -383,8 +385,8 @@ index_stop_monitoring(FsearchDatabaseIndex *self, FsearchFolderMonitorKind monit
     fsearch_database_index_start_monitoring(self, false);
     g_atomic_int_set(&self->initialized, 0);
 
-    g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(self->folder_container);
-    g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(self->file_container);
+    g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_get_joined(self->folder_chunks);
+    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_get_joined(self->file_chunks);
     propagate_event(self, FSEARCH_DATABASE_INDEX_EVENT_ENTRY_DELETED, folders, files);
 
 #ifdef HAVE_FANOTIFY
@@ -413,8 +415,8 @@ index_stop_monitoring(FsearchDatabaseIndex *self, FsearchFolderMonitorKind monit
     if (folders) {
         num_folder_deletes += darray_get_num_items(folders);
     }
-    g_clear_pointer(&self->file_container, fsearch_database_entries_container_unref);
-    g_clear_pointer(&self->folder_container, fsearch_database_entries_container_unref);
+    g_clear_pointer(&self->file_chunks, fsearch_database_chunked_array_unref);
+    g_clear_pointer(&self->folder_chunks, fsearch_database_chunked_array_unref);
 }
 
 static void
@@ -454,8 +456,8 @@ process_create_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
                            NULL,
                            NULL,
                            NULL)) {
-            fsearch_database_entries_container_insert_array(self->folder_container, folders);
-            fsearch_database_entries_container_insert_array(self->file_container, files);
+            fsearch_database_chunked_array_insert_array(self->folder_chunks, folders);
+            fsearch_database_chunked_array_insert_array(self->file_chunks, files);
         }
     }
     else {
@@ -499,7 +501,10 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
     g_autoptr(GTimer) timer = g_timer_new();
     FsearchDatabaseEntry *folder_entry_to_remove = entry;
 
-    g_autoptr(DynamicArray) folders = fsearch_database_entries_container_steal_descendants(self->folder_container, folder_entry_to_remove, -1);
+    g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_steal_descendants(
+        self->folder_chunks,
+        folder_entry_to_remove,
+        -1);
 
     // It's worth iterating over all folders to calculate the exact number of file descendants we must find,
     // because this means we can steal the files in huge chunks, which is much faster.
@@ -509,7 +514,10 @@ process_delete_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *even
         num_file_descendants += db_entry_folder_get_num_files(folder_entry);
     }
 
-    g_autoptr(DynamicArray) files = fsearch_database_entries_container_steal_descendants(self->file_container, folder_entry_to_remove, (int32_t)num_file_descendants);
+    g_autoptr(DynamicArray) files = fsearch_database_chunked_array_steal_descendants(
+        self->file_chunks,
+        folder_entry_to_remove,
+        (int32_t)num_file_descendants);
     num_descendant_counted++;
     g_debug("found descendants in %f seconds", g_timer_elapsed(timer, NULL));
 
@@ -623,7 +631,7 @@ process_move_or_delete_self_event(FsearchDatabaseIndex *self, FsearchFolderMonit
 
 static void
 process_event(FsearchDatabaseIndex *self, FsearchFolderMonitorEvent *event) {
-    event->watched_entry = fsearch_database_entries_container_find(self->folder_container, event->watched_entry_copy);
+    event->watched_entry = fsearch_database_chunked_array_find(self->folder_chunks, event->watched_entry_copy);
     if (!event->watched_entry) {
         g_debug("Watched entry no longer present!");
         return;
@@ -713,8 +721,8 @@ index_free(FsearchDatabaseIndex *self) {
 
     g_clear_pointer(&self->event_queue, g_async_queue_unref);
 
-    g_clear_pointer(&self->file_container, fsearch_database_entries_container_unref);
-    g_clear_pointer(&self->folder_container, fsearch_database_entries_container_unref);
+    g_clear_pointer(&self->file_chunks, fsearch_database_chunked_array_unref);
+    g_clear_pointer(&self->folder_chunks, fsearch_database_chunked_array_unref);
 
     g_mutex_clear(&self->mutex);
 
@@ -784,18 +792,20 @@ fsearch_database_index_new_with_content(uint32_t id,
     self->exclude_manager = g_object_ref(exclude_manager);
     self->flags = flags;
 
-    self->folder_container = fsearch_database_entries_container_new(folders,
-                                                                    TRUE,
-                                                                    DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                                    DATABASE_INDEX_PROPERTY_NONE,
-                                                                    DATABASE_ENTRY_TYPE_FOLDER,
-                                                                    NULL,(GDestroyNotify)db_entry_free_no_unparent);
-    self->file_container = fsearch_database_entries_container_new(files,
-                                                                  TRUE,
-                                                                  DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                                  DATABASE_INDEX_PROPERTY_NONE,
-                                                                  DATABASE_ENTRY_TYPE_FILE,
-                                                                  NULL,(GDestroyNotify)db_entry_free_no_unparent);
+    self->folder_chunks = fsearch_database_chunked_array_new(folders,
+                                                             TRUE,
+                                                             DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                             DATABASE_INDEX_PROPERTY_NONE,
+                                                             DATABASE_ENTRY_TYPE_FOLDER,
+                                                             NULL,
+                                                             (GDestroyNotify)db_entry_free_no_unparent);
+    self->file_chunks = fsearch_database_chunked_array_new(files,
+                                                           TRUE,
+                                                           DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                           DATABASE_INDEX_PROPERTY_NONE,
+                                                           DATABASE_ENTRY_TYPE_FILE,
+                                                           NULL,
+                                                           (GDestroyNotify)db_entry_free_no_unparent);
 
     self->ref_count = 1;
 
@@ -837,13 +847,13 @@ fsearch_database_index_get_exclude_manager(FsearchDatabaseIndex *self) {
 DynamicArray *
 fsearch_database_index_get_files(FsearchDatabaseIndex *self) {
     g_return_val_if_fail(self, NULL);
-    return fsearch_database_entries_container_get_joined(self->file_container);
+    return fsearch_database_chunked_array_get_joined(self->file_chunks);
 }
 
 DynamicArray *
 fsearch_database_index_get_folders(FsearchDatabaseIndex *self) {
     g_return_val_if_fail(self, NULL);
-    return fsearch_database_entries_container_get_joined(self->folder_container);
+    return fsearch_database_chunked_array_get_joined(self->folder_chunks);
 }
 
 uint32_t
@@ -883,7 +893,7 @@ fsearch_database_index_add_file(FsearchDatabaseIndex *self,
                                                                     mtime,
                                                                     DATABASE_INDEX_PROPERTY_NONE);
 
-    fsearch_database_entries_container_insert(self->file_container, file_entry);
+    fsearch_database_chunked_array_insert(self->file_chunks, file_entry);
 
     return file_entry;
 }
@@ -906,7 +916,11 @@ scan_status_cb(const char *path, gpointer user_data) {
     if (!self->event_func) {
         return;
     }
-    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(FSEARCH_DATABASE_INDEX_EVENT_SCANNING, NULL, NULL, path);
+    g_autoptr(FsearchDatabaseIndexEvent) event = fsearch_database_index_event_new(
+        FSEARCH_DATABASE_INDEX_EVENT_SCANNING,
+        NULL,
+        NULL,
+        path);
     self->event_func(self, event, self->event_func_data);
 }
 
@@ -948,18 +962,20 @@ fsearch_database_index_scan(FsearchDatabaseIndex *self, GCancellable *cancellabl
                                cancellable,
                                NULL);
 
-    self->file_container = fsearch_database_entries_container_new(files,
-                                                                  TRUE,
-                                                                  DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                                  DATABASE_INDEX_PROPERTY_NONE,
-                                                                  DATABASE_ENTRY_TYPE_FILE,
-                                                                  NULL,(GDestroyNotify)db_entry_free_no_unparent);
-    self->folder_container = fsearch_database_entries_container_new(folders,
-                                                                    TRUE,
-                                                                    DATABASE_INDEX_PROPERTY_PATH_FULL,
-                                                                    DATABASE_INDEX_PROPERTY_NONE,
-                                                                    DATABASE_ENTRY_TYPE_FOLDER,
-                                                                    NULL,(GDestroyNotify)db_entry_free_no_unparent);
+    self->file_chunks = fsearch_database_chunked_array_new(files,
+                                                           TRUE,
+                                                           DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                           DATABASE_INDEX_PROPERTY_NONE,
+                                                           DATABASE_ENTRY_TYPE_FILE,
+                                                           NULL,
+                                                           (GDestroyNotify)db_entry_free_no_unparent);
+    self->folder_chunks = fsearch_database_chunked_array_new(folders,
+                                                             TRUE,
+                                                             DATABASE_INDEX_PROPERTY_PATH_FULL,
+                                                             DATABASE_INDEX_PROPERTY_NONE,
+                                                             DATABASE_ENTRY_TYPE_FOLDER,
+                                                             NULL,
+                                                             (GDestroyNotify)db_entry_free_no_unparent);
 
     g_atomic_int_set(&self->initialized, 1);
 

@@ -3,7 +3,7 @@
 #include "fsearch_array.h"
 #include "fsearch_query.h"
 #include "fsearch_database_entry.h"
-#include "fsearch_database_entries_container.h"
+#include "fsearch_database_chunked_array.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_search_info.h"
 

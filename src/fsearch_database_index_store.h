@@ -1,7 +1,7 @@
 #pragma once
 
 #include "fsearch_array.h"
-#include "fsearch_database_entries_container.h"
+#include "fsearch_database_chunked_array.h"
 #include "fsearch_database_entry_info.h"
 #include "fsearch_database_exclude_manager.h"
 #include "fsearch_database_include_manager.h"
@@ -69,11 +69,11 @@ void
 fsearch_database_index_store_start_monitoring(FsearchDatabaseIndexStore *store);
 
 // Getters
-FsearchDatabaseEntriesContainer *
+FsearchDatabaseChunkedArray *
 fsearch_database_index_store_get_files(FsearchDatabaseIndexStore *store,
                                        FsearchDatabaseIndexProperty sort_order);
 
-FsearchDatabaseEntriesContainer *
+FsearchDatabaseChunkedArray *
 fsearch_database_index_store_get_folders(FsearchDatabaseIndexStore *store,
                                          FsearchDatabaseIndexProperty sort_order);
 
@@ -108,8 +108,8 @@ FsearchDatabaseSearchInfo *
 fsearch_database_index_store_get_search_info(FsearchDatabaseIndexStore *store, uint32_t id);
 
 bool
-fsearch_database_index_store_has_container(FsearchDatabaseIndexStore *store,
-                                           FsearchDatabaseEntriesContainer *container);
+fsearch_database_index_store_has_chunks(FsearchDatabaseIndexStore *store,
+                                        FsearchDatabaseChunkedArray *chunks);
 
 // Manipulation
 GMutexLocker *

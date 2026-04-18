@@ -125,6 +125,12 @@ DynamicArray *
 darray_ref(DynamicArray *array);
 
 DynamicArray *
+darray_copy_borrowed(DynamicArray *array);
+
+DynamicArray *
+darray_take(DynamicArray *array);
+
+DynamicArray *
 darray_copy(DynamicArray *array);
 
 void

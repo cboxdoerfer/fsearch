@@ -177,7 +177,8 @@ merge_sort(DynamicArray *to_sort,
         return;
     }
 
-    g_autoptr(DynamicArray) tmp = darray_copy(to_sort);
+    g_autoptr(DynamicArray) tmp = darray_copy_borrowed(to_sort);
+    tmp->item_free_func = NULL;
     split_merge(tmp, to_sort, 0, to_sort->num_items, cancellable, comp_func, comp_data);
 }
 
@@ -714,6 +715,40 @@ darray_for_each(DynamicArray *array, DynamicArrayForEachFunc func, void *data) {
             break;
         }
     }
+}
+
+DynamicArray *
+darray_copy_borrowed(DynamicArray *array) {
+    if (!array) {
+        return NULL;
+    }
+    DynamicArray *new = calloc(1, sizeof(DynamicArray));
+    g_assert(new);
+
+    new -> max_items = array->max_items;
+    new -> num_items = array->num_items;
+
+    new -> data = calloc(new->max_items, sizeof(void *));
+    g_assert(new->data);
+
+    new->item_free_func = NULL;
+
+    new -> ref_count = 1;
+
+    memcpy(new->data, array->data, new->num_items * sizeof(void *));
+
+    return new;
+}
+
+DynamicArray *
+darray_take(DynamicArray *array) {
+    DynamicArray *new = darray_copy_borrowed(array);
+    g_assert(new);
+
+    new->item_free_func = array->item_free_func;
+    array->item_free_func = NULL;
+
+    return new;
 }
 
 DynamicArray *

@@ -17,7 +17,7 @@ libfsearch_sources = [
     'fsearch_clipboard.c',
     'fsearch_config.c',
     'fsearch_database.c',
-    'fsearch_database_entries_container.c',
+    'fsearch_database_chunked_array.c',
     'fsearch_database_entry.c',
     'fsearch_database_entry_info.c',
     'fsearch_database_exclude.c',

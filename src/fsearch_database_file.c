@@ -3,7 +3,7 @@
 #include "fsearch_database_file.h"
 
 #include "fsearch_array.h"
-#include "fsearch_database_entries_container.h"
+#include "fsearch_database_chunked_array.h"
 #include "fsearch_database_entry.h"
 #include "fsearch_database_exclude.h"
 #include "fsearch_database_exclude_manager.h"
@@ -737,14 +737,14 @@ database_file_save_sorted_arrays(DatabaseFileWriteCursor *cursor,
     }
 
     for (uint32_t id = DATABASE_INDEX_PROPERTY_NAME; id < NUM_DATABASE_INDEX_PROPERTIES; id++) {
-        g_autoptr(FsearchDatabaseEntriesContainer) folder_container =
+        g_autoptr(FsearchDatabaseChunkedArray) folder_chunks =
             fsearch_database_index_store_get_folders(store, id);
-        g_autoptr(FsearchDatabaseEntriesContainer) file_container = fsearch_database_index_store_get_files(store, id);
-        if (!folder_container || !file_container) {
+        g_autoptr(FsearchDatabaseChunkedArray) file_chunks = fsearch_database_index_store_get_files(store, id);
+        if (!folder_chunks || !file_chunks) {
             continue;
         }
-        g_autoptr(DynamicArray) folders = fsearch_database_entries_container_get_joined(folder_container);
-        g_autoptr(DynamicArray) files = fsearch_database_entries_container_get_joined(file_container);
+        g_autoptr(DynamicArray) folders = fsearch_database_chunked_array_get_joined(folder_chunks);
+        g_autoptr(DynamicArray) files = fsearch_database_chunked_array_get_joined(file_chunks);
         if (!files || !folders) {
             continue;
         }
@@ -888,8 +888,8 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     g_autoptr(GString) file_tmp_path = g_string_new(file_path);
     g_string_append(file_tmp_path, ".tmp");
 
-    g_autoptr(FsearchDatabaseEntriesContainer) folder_container = NULL;
-    g_autoptr(FsearchDatabaseEntriesContainer) file_container = NULL;
+    g_autoptr(FsearchDatabaseChunkedArray) folder_chunks = NULL;
+    g_autoptr(FsearchDatabaseChunkedArray) file_chunks = NULL;
 
     g_autoptr(DynamicArray) files = NULL;
     g_autoptr(DynamicArray) folders = NULL;
@@ -933,8 +933,8 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
     }
 
     g_debug("[db_save] updating folder indices...");
-    folder_container = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
-    folders = fsearch_database_entries_container_get_joined(folder_container);
+    folder_chunks = fsearch_database_index_store_get_folders(store, DATABASE_INDEX_PROPERTY_NAME);
+    folders = fsearch_database_chunked_array_get_joined(folder_chunks);
     update_folder_indices(folders);
 
     const uint32_t num_folders = darray_get_num_items(folders);
@@ -944,8 +944,8 @@ fsearch_database_file_save(FsearchDatabaseIndexStore *store, const char *file_pa
         goto save_fail;
     }
 
-    file_container = fsearch_database_index_store_get_files(store, DATABASE_INDEX_PROPERTY_NAME);
-    files = fsearch_database_entries_container_get_joined(file_container);
+    file_chunks = fsearch_database_index_store_get_files(store, DATABASE_INDEX_PROPERTY_NAME);
+    files = fsearch_database_chunked_array_get_joined(file_chunks);
 
     const uint32_t num_files = darray_get_num_items(files);
     cursor_write(&cursor, &num_files, sizeof(num_files));

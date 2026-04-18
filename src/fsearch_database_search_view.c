@@ -4,7 +4,7 @@
 
 #include "fsearch_array.h"
 #include "fsearch_database_entry.h"
-#include "fsearch_database_entries_container.h"
+#include "fsearch_database_chunked_array.h"
 #include "fsearch_database_index_properties.h"
 #include "fsearch_database_search_info.h"
 #include "fsearch_database_sort.h"
@@ -22,8 +22,8 @@
 
 struct FsearchDatabaseSearchView {
     FsearchQuery *query;
-    FsearchDatabaseEntriesContainer *file_container;
-    FsearchDatabaseEntriesContainer *folder_container;
+    FsearchDatabaseChunkedArray *file_chunks;
+    FsearchDatabaseChunkedArray *folder_chunks;
     uint32_t id;
     GtkSortType sort_type;
     FsearchDatabaseIndexProperty sort_order;
@@ -36,8 +36,8 @@ void
 fsearch_database_search_view_free(FsearchDatabaseSearchView *view) {
     g_return_if_fail(view);
     g_clear_pointer(&view->query, fsearch_query_unref);
-    g_clear_pointer(&view->file_container, fsearch_database_entries_container_unref);
-    g_clear_pointer(&view->folder_container, fsearch_database_entries_container_unref);
+    g_clear_pointer(&view->file_chunks, fsearch_database_chunked_array_unref);
+    g_clear_pointer(&view->folder_chunks, fsearch_database_chunked_array_unref);
     g_clear_pointer(&view->file_selection, fsearch_selection_free);
     g_clear_pointer(&view->folder_selection, fsearch_selection_free);
     g_clear_pointer(&view, free);
@@ -56,18 +56,20 @@ fsearch_database_search_view_new(uint32_t id,
     g_assert(view);
     view->id = id;
     view->query = fsearch_query_ref(query);
-    view->folder_container = fsearch_database_entries_container_new(folders,
-                                                                    TRUE,
-                                                                    sort_order,
-                                                                    secondary_sort_order,
-                                                                    DATABASE_ENTRY_TYPE_FOLDER,
-                                                                    NULL,NULL);
-    view->file_container = fsearch_database_entries_container_new(files,
-                                                                  TRUE,
-                                                                  sort_order,
-                                                                  secondary_sort_order,
-                                                                  DATABASE_ENTRY_TYPE_FILE,
-                                                                  NULL,NULL);
+    view->folder_chunks = fsearch_database_chunked_array_new(folders,
+                                                             TRUE,
+                                                             sort_order,
+                                                             secondary_sort_order,
+                                                             DATABASE_ENTRY_TYPE_FOLDER,
+                                                             NULL,
+                                                             NULL);
+    view->file_chunks = fsearch_database_chunked_array_new(files,
+                                                           TRUE,
+                                                           sort_order,
+                                                           secondary_sort_order,
+                                                           DATABASE_ENTRY_TYPE_FILE,
+                                                           NULL,
+                                                           NULL);
     view->sort_order = sort_order;
     view->secondardy_sort_order = secondary_sort_order;
     view->sort_type = sort_type;
@@ -88,13 +90,13 @@ fsearch_database_search_view_new(uint32_t id,
 
 static uint32_t
 search_view_get_num_file_results(FsearchDatabaseSearchView *view) {
-    return view && view->file_container ? fsearch_database_entries_container_get_num_entries(view->file_container) : 0;
+    return view && view->file_chunks ? fsearch_database_chunked_array_get_num_entries(view->file_chunks) : 0;
 }
 
 static uint32_t
 search_view_get_num_folder_results(FsearchDatabaseSearchView *view) {
-    return view && view->folder_container
-               ? fsearch_database_entries_container_get_num_entries(view->folder_container)
+    return view && view->folder_chunks
+               ? fsearch_database_chunked_array_get_num_entries(view->folder_chunks)
                : 0;
 }
 
@@ -108,10 +110,10 @@ get_idx_for_sort_type(uint32_t idx, uint32_t num_files, uint32_t num_folders, Gt
 
 FsearchDatabaseEntry *
 fsearch_database_search_view_get_entry_for_idx(FsearchDatabaseSearchView *view, uint32_t idx) {
-    if (!view->folder_container) {
+    if (!view->folder_chunks) {
         return NULL;
     }
-    if (!view->file_container) {
+    if (!view->file_chunks) {
         return NULL;
     }
     const uint32_t num_folders = search_view_get_num_folder_results(view);
@@ -120,11 +122,11 @@ fsearch_database_search_view_get_entry_for_idx(FsearchDatabaseSearchView *view, 
     idx = get_idx_for_sort_type(idx, num_files, num_folders, view->sort_type);
 
     if (idx < num_folders) {
-        return fsearch_database_entries_container_get_entry(view->folder_container, idx);
+        return fsearch_database_chunked_array_get_entry(view->folder_chunks, idx);
     }
     idx -= num_folders;
     if (idx < num_files) {
-        return fsearch_database_entries_container_get_entry(view->file_container, idx);
+        return fsearch_database_chunked_array_get_entry(view->file_chunks, idx);
     }
     return NULL;
 }
@@ -184,30 +186,30 @@ fsearch_database_search_view_select_range(FsearchDatabaseSearchView *view, int32
 void
 fsearch_database_search_view_select_all(FsearchDatabaseSearchView *view) {
     g_return_if_fail(view);
-    g_autoptr(DynamicArray) file_container = fsearch_database_entries_container_get_containers(view->file_container);
-    g_autoptr(DynamicArray) folder_container =
-        fsearch_database_entries_container_get_containers(view->folder_container);
+    g_autoptr(DynamicArray) file_chunks = fsearch_database_chunked_array_get_chunks(view->file_chunks);
+    g_autoptr(DynamicArray) folder_chunks =
+        fsearch_database_chunked_array_get_chunks(view->folder_chunks);
 
-    for (uint32_t i = 0; i < darray_get_num_items(file_container); ++i) {
-        fsearch_selection_select_all(view->file_selection, darray_get_item(file_container, i));
+    for (uint32_t i = 0; i < darray_get_num_items(file_chunks); ++i) {
+        fsearch_selection_select_all(view->file_selection, darray_get_item(file_chunks, i));
     }
-    for (uint32_t i = 0; i < darray_get_num_items(folder_container); ++i) {
-        fsearch_selection_select_all(view->folder_selection, darray_get_item(folder_container, i));
+    for (uint32_t i = 0; i < darray_get_num_items(folder_chunks); ++i) {
+        fsearch_selection_select_all(view->folder_selection, darray_get_item(folder_chunks, i));
     }
 }
 
 void
 fsearch_database_search_view_invert_selection(FsearchDatabaseSearchView *view) {
     g_return_if_fail(view);
-    g_autoptr(DynamicArray) file_container = fsearch_database_entries_container_get_containers(view->file_container);
-    g_autoptr(DynamicArray) folder_container =
-        fsearch_database_entries_container_get_containers(view->folder_container);
+    g_autoptr(DynamicArray) file_chunks = fsearch_database_chunked_array_get_chunks(view->file_chunks);
+    g_autoptr(DynamicArray) folder_chunks =
+        fsearch_database_chunked_array_get_chunks(view->folder_chunks);
 
-    for (uint32_t i = 0; i < darray_get_num_items(file_container); ++i) {
-        fsearch_selection_invert(view->file_selection, darray_get_item(file_container, i));
+    for (uint32_t i = 0; i < darray_get_num_items(file_chunks); ++i) {
+        fsearch_selection_invert(view->file_selection, darray_get_item(file_chunks, i));
     }
-    for (uint32_t i = 0; i < darray_get_num_items(folder_container); ++i) {
-        fsearch_selection_invert(view->folder_selection, darray_get_item(folder_container, i));
+    for (uint32_t i = 0; i < darray_get_num_items(folder_chunks); ++i) {
+        fsearch_selection_invert(view->folder_selection, darray_get_item(folder_chunks, i));
     }
 }
 
@@ -239,8 +241,8 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
 
     g_autoptr(DynamicArray) files_new = NULL;
     g_autoptr(DynamicArray) folders_new = NULL;
-    g_autoptr(DynamicArray) files_in = fsearch_database_entries_container_get_joined(view->file_container);
-    g_autoptr(DynamicArray) folders_in = fsearch_database_entries_container_get_joined(view->folder_container);
+    g_autoptr(DynamicArray) files_in = fsearch_database_chunked_array_get_joined(view->file_chunks);
+    g_autoptr(DynamicArray) folders_in = fsearch_database_chunked_array_get_joined(view->folder_chunks);
 
     fsearch_database_sort_results(view->sort_order,
                                   view->secondardy_sort_order,
@@ -256,23 +258,25 @@ fsearch_database_search_view_sort(FsearchDatabaseSearchView *view,
                                   cancellable);
 
     if (files_new) {
-        g_clear_pointer(&view->file_container, fsearch_database_entries_container_unref);
-        view->file_container = fsearch_database_entries_container_new(files_new,
-                                                                      TRUE,
-                                                                      view->sort_order,
-                                                                      view->secondardy_sort_order,
-                                                                      DATABASE_ENTRY_TYPE_FILE,
-                                                                      NULL,NULL);
+        g_clear_pointer(&view->file_chunks, fsearch_database_chunked_array_unref);
+        view->file_chunks = fsearch_database_chunked_array_new(files_new,
+                                                               TRUE,
+                                                               view->sort_order,
+                                                               view->secondardy_sort_order,
+                                                               DATABASE_ENTRY_TYPE_FILE,
+                                                               NULL,
+                                                               NULL);
         view->sort_type = sort_type;
     }
     if (folders_new) {
-        g_clear_pointer(&view->folder_container, fsearch_database_entries_container_unref);
-        view->folder_container = fsearch_database_entries_container_new(folders_new,
-                                                                        TRUE,
-                                                                        view->sort_order,
-                                                                        view->secondardy_sort_order,
-                                                                        DATABASE_ENTRY_TYPE_FOLDER,
-                                                                        NULL,NULL);
+        g_clear_pointer(&view->folder_chunks, fsearch_database_chunked_array_unref);
+        view->folder_chunks = fsearch_database_chunked_array_new(folders_new,
+                                                                 TRUE,
+                                                                 view->sort_order,
+                                                                 view->secondardy_sort_order,
+                                                                 DATABASE_ENTRY_TYPE_FOLDER,
+                                                                 NULL,
+                                                                 NULL);
         view->sort_type = sort_type;
     }
 }
@@ -294,8 +298,8 @@ search_view_result_add(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView *v
         return true;
     }
 
-    fsearch_database_entries_container_insert(db_entry_is_folder(entry) ? view->folder_container : view->file_container,
-                                              entry);
+    fsearch_database_chunked_array_insert(db_entry_is_folder(entry) ? view->folder_chunks : view->file_chunks,
+                                          entry);
     return true;
 }
 
@@ -305,19 +309,19 @@ search_view_result_remove(FsearchDatabaseEntry *entry, FsearchDatabaseSearchView
         return true;
     }
 
-    FsearchDatabaseEntriesContainer *container = NULL;
+    FsearchDatabaseChunkedArray *chunks = NULL;
     GHashTable *selection = NULL;
     if (db_entry_is_folder(entry)) {
-        container = view->folder_container;
+        chunks = view->folder_chunks;
         selection = view->folder_selection;
     }
     else {
-        container = view->file_container;
+        chunks = view->file_chunks;
         selection = view->file_selection;
     }
 
     // Remove it from search results
-    fsearch_database_entries_container_steal(container, entry);
+    fsearch_database_chunked_array_steal(chunks, entry);
 
     // Remove it from the selection
     fsearch_selection_unselect(selection, entry);
