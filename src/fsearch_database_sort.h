@@ -1,7 +1,10 @@
 #pragma once
 
 #include "fsearch_array.h"
-#include "fsearch_database_index.h"
+#include "fsearch_database_index_properties.h"
+
+#include <gio/gio.h>
+#include <stdbool.h>
 
 void
 fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
@@ -16,12 +19,6 @@ fsearch_database_sort_results(FsearchDatabaseIndexProperty old_sort_order,
                               FsearchDatabaseIndexProperty *sort_order_out,
                               FsearchDatabaseIndexProperty *secondary_sort_order_out,
                               GCancellable *cancellable);
-
-bool
-fsearch_database_sort(DynamicArray **files_store,
-                      DynamicArray **folders_store,
-                      FsearchDatabaseIndexPropertyFlags flags,
-                      GCancellable *cancellable);
 
 DynamicArrayCompareDataFunc
 fsearch_database_sort_get_compare_func_for_property(FsearchDatabaseIndexProperty property, bool is_dir);
