@@ -3,7 +3,11 @@
 #include <gio/gio.h>
 
 #include "fsearch_array.h"
-#include "fsearch_database_sort.h"
+#include "fsearch_database_index_properties.h"
+#include "fsearch_database_entry.h"
+
+#include <glib.h>
+#include <stdint.h>
 
 G_BEGIN_DECLS
 
