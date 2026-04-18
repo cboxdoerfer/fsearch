@@ -209,8 +209,12 @@ action_about_activated(GSimpleAction *action, GVariant *parameter, gpointer app)
 
 static void
 action_quit_activated(GSimpleAction *action, GVariant *parameter, gpointer app) {
-    // TODO: windows need to be cleaned up manually here
-    g_application_quit(G_APPLICATION(app));
+    // Close all open windows. This ensures that all refernces to the database will be dropped and the database
+    // is properly finalized.
+    GList *windows = gtk_application_get_windows(GTK_APPLICATION(app));
+    for (GList *l = windows; l != NULL; l = l->next) {
+        gtk_window_close(GTK_WINDOW(l->data));
+    }
 }
 
 static void
