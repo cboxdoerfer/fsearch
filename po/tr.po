@@ -9,7 +9,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-04-16 19:25+0200\n"
-"PO-Revision-Date: 2023-01-24 20:50+0000\n"
+"PO-Revision-Date: 2026-04-19 01:10+0000\n"
 "Last-Translator: Oğuz Ersen <oguz@ersen.moe>\n"
 "Language-Team: Turkish <https://hosted.weblate.org/projects/fsearch/"
 "translations/tr/>\n"
@@ -18,7 +18,7 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=n != 1;\n"
-"X-Generator: Weblate 4.16-dev\n"
+"X-Generator: Weblate 5.17.1-dev\n"
 
 #: data/io.github.cboxdoerfer.FSearch.desktop.in.in:4 src/main.c:35
 msgid "FSearch"
@@ -145,29 +145,34 @@ msgstr "her şey"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:86
 msgid "DB rewrite"
-msgstr ""
+msgstr "Veri tabanı yeniden yazıldı"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:87
 msgid "DB: Add support for filesystem monitoring"
-msgstr ""
+msgstr "Veri tabanı: Dosya sistemi izleme desteği eklendi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:88
 msgid ""
 "DB: Allow files and folders to be excluded based on fixed patterns, "
 "wildcards or regular expressions"
 msgstr ""
+"Veri tabanı: Dosya ve klasörlerin sabit kalıplara, joker karakterlere veya "
+"düzenli ifadelere göre hariç tutulmasına izin verildi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:89
 msgid "DB: Store database config in DB file"
 msgstr ""
+"Veri tabanı: Veri tabanı yapılandırması veri tabanı dosyasına kaydedildi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:90
 msgid "DB: Add checksum to DB file"
-msgstr ""
+msgstr "Veri tabanı: Veri tabanı dosyasına sağlama toplamı eklendi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:91
 msgid "Make icon and file info gathering asynchronous (no UI blocking)"
 msgstr ""
+"Simge ve dosya bilgilerinin toplanması (kullanıcı arayüzünü engellemeden) "
+"eşzamansız hale getirildi"
 
 #: data/io.github.cboxdoerfer.FSearch.metainfo.xml.in:98
 msgid "New search engine"
@@ -294,9 +299,8 @@ msgid "Open a new application window"
 msgstr "Yeni bir uygulama penceresi aç"
 
 #: src/fsearch.c:722
-#, fuzzy
 msgid "Minimize the application window"
-msgstr "Yeni bir uygulama penceresi aç"
+msgstr "Uygulama penceresini küçült"
 
 #: src/fsearch.c:723
 msgid "Show the application preferences"
@@ -345,30 +349,27 @@ msgstr "_Seç"
 
 #: src/fsearch_database_preferences_widget.c:356
 msgid "Literal"
-msgstr ""
+msgstr "Gerçek Anlamıyla"
 
 #: src/fsearch_database_preferences_widget.c:358
-#, fuzzy
 msgid "Wildcard"
-msgstr "Joker karakter desteği"
+msgstr "Joker Karakter"
 
 #: src/fsearch_database_preferences_widget.c:360
 msgid "Regex"
-msgstr ""
+msgstr "Düzenli İfade"
 
 #: src/fsearch_database_preferences_widget.c:381
-#, fuzzy
 msgid "Full Path"
-msgstr "Yol"
+msgstr "Tam Yol"
 
 #: src/fsearch_database_preferences_widget.c:383
 msgid "Basename"
-msgstr ""
+msgstr "Temel Ad"
 
 #: src/fsearch_database_preferences_widget.c:401
-#, fuzzy
 msgid "Files & Folders"
-msgstr "Klasörler"
+msgstr "Dosyalar ve Klasörler"
 
 #: src/fsearch_database_preferences_widget.c:403 src/fsearch_filter.c:114
 msgid "Files"
@@ -385,7 +386,7 @@ msgstr "Etkin"
 
 #: src/fsearch_database_preferences_widget.c:627
 msgid "Pattern"
-msgstr ""
+msgstr "Kalıp"
 
 #: src/fsearch_database_preferences_widget.c:689 src/fsearch_window.c:677
 #: src/menus.ui:275
@@ -393,13 +394,12 @@ msgid "Type"
 msgstr "Tür"
 
 #: src/fsearch_database_preferences_widget.c:695
-#, fuzzy
 msgid "Match"
-msgstr "Büyük/küçük harfe duyarlı"
+msgstr "Eşleşme"
 
 #: src/fsearch_database_preferences_widget.c:701
 msgid "Applies To"
-msgstr ""
+msgstr "Uygulanır"
 
 #: src/fsearch_database_preferences_widget.c:728 src/fsearch_window.c:663
 #: src/menus.ui:219 src/menus.ui:267
@@ -412,16 +412,15 @@ msgstr "Bir Dosya Sistemi"
 
 #: src/fsearch_database_preferences_widget.c:738
 msgid "Monitor"
-msgstr ""
+msgstr "İzle"
 
 #: src/fsearch_database_preferences_widget.ui:56
-#, fuzzy
 msgid "Rescan database on startup"
-msgstr "Başlangıçta veri tabanını güncelle"
+msgstr "Başlangıçta veri tabanını yeniden tara"
 
 #: src/fsearch_database_preferences_widget.ui:76
 msgid "Rescan every"
-msgstr ""
+msgstr "Yeniden tarama aralığı"
 
 #: src/fsearch_database_preferences_widget.ui:115
 msgid "hour(s) and"
@@ -441,18 +440,14 @@ msgstr "Yolu girin…"
 
 #: src/fsearch_database_preferences_widget.ui:211
 #: src/fsearch_database_preferences_widget.ui:274
-#, fuzzy
 msgid ""
 "Add path to be included in\n"
 "                                            database\n"
 "                                        "
 msgstr ""
-"<b>Veri tabanına klasör ekle:</b>\n"
-"\n"
-"                      Bu düğme, aramak için veri tabanına dahil etmek "
-"istediğiniz bir klasörü seçebileceğiniz bir iletişim\n"
-"                      kutusu açar.\n"
-"                    "
+"Veri tabanına eklenecek yolu\n"
+"                                            ekleyin\n"
+"                                        "
 
 #: src/fsearch_database_preferences_widget.ui:294
 msgid "Remove selected path"
@@ -463,39 +458,35 @@ msgid "Include"
 msgstr "Dahil et"
 
 #: src/fsearch_database_preferences_widget.ui:353
-#, fuzzy
 msgid ""
 "Enter path…\n"
 "                                                "
 msgstr ""
-"Veri tabanına dahil edilecek yolu ekle\n"
-"                                "
+"Yolu girin…\n"
+"                                                "
 
 #: src/fsearch_database_preferences_widget.ui:374
-#, fuzzy
 msgid ""
 "Add fixed path exclude\n"
 "                                                "
 msgstr ""
-"Bir Filtre Seç\n"
+"Sabit yol hariç tutma ekleyin\n"
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:436
-#, fuzzy
 msgid ""
 "Add exclude rule\n"
 "                                                "
 msgstr ""
-"Bir Filtre Seç\n"
+"Hariç tutma kuralı ekleyin\n"
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:455
-#, fuzzy
 msgid ""
 "Remove selected path\n"
 "                                                "
 msgstr ""
-"Bir Filtre Seç\n"
+"Seçilen yolu kaldırın\n"
 "                                                "
 
 #: src/fsearch_database_preferences_widget.ui:487
@@ -944,7 +935,6 @@ msgstr ""
 "boyuta sahip olmaya zorladığını unutmayın."
 
 #: src/fsearch_preferences.ui:931
-#, fuzzy
 msgid ""
 "<b>Behaviour after successfully opening a file:</b>\n"
 "\n"
@@ -1416,7 +1406,7 @@ msgstr "Veri tabanı"
 
 #: src/fsearch_result_view.c:380
 msgid "Invalid row data"
-msgstr ""
+msgstr "Geçersiz satır verisi"
 
 #: src/fsearch_statusbar.c:57
 #, c-format
@@ -1607,7 +1597,7 @@ msgid "Select a Filter"
 msgstr "Bir Filtre Seç"
 
 #: src/fsearch_window_actions.c:98
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file?"
 msgid_plural "Do you really want to open %'d files?"
 msgstr[0] "%d dosyayı gerçekten açmak istiyor musunuz?"
@@ -1618,7 +1608,7 @@ msgid "Opening Files…"
 msgstr "Dosyalar Açılıyor…"
 
 #: src/fsearch_window_actions.c:188
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to remove %'d file?"
 msgid_plural "Do you really want to remove %'d files?"
 msgstr[0] "%d dosyayı gerçekten kaldırmak istiyor musunuz?"
@@ -1638,14 +1628,14 @@ msgid "Something went wrong."
 msgstr "Bir şeyler yanlış gitti."
 
 #: src/fsearch_window_actions.c:232
-#, fuzzy, c-format
+#, c-format
 msgid "Deleted %'d file."
 msgid_plural "Deleted %'d files."
 msgstr[0] "%d dosya silindi."
 msgstr[1] "%d dosya silindi."
 
 #: src/fsearch_window_actions.c:235
-#, fuzzy, c-format
+#, c-format
 msgid "Moved %'d file to the trash."
 msgid_plural "Moved %'d files to the trash."
 msgstr[0] "%d dosya çöp kutusuna taşındı."
@@ -1660,7 +1650,7 @@ msgstr ""
 "gerekiyor! Bu durum gelecekteki güncellemelerle düzeltilecektir."
 
 #: src/fsearch_window_actions.c:271
-#, fuzzy, c-format
+#, c-format
 msgid "Do you really want to open %'d file property window?"
 msgid_plural "Do you really want to open %'d file property windows?"
 msgstr[0] "%d dosya özelliği penceresini gerçekten açmak istiyor musunuz?"
