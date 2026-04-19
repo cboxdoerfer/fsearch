@@ -418,11 +418,12 @@ database_file_load_sorted_entries(FILE *fp, DynamicArray *src, uint32_t num_src_
 }
 
 static bool
-database_file_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, DynamicArray **sorted_files) {
+database_file_load_sorted_arrays(FILE *fp,
+                                 DynamicArray **sorted_folders,
+                                 DynamicArray **sorted_files,
+                                 DynamicArray *folders,
+                                 DynamicArray *files) {
     uint32_t num_sorted_arrays = 0;
-
-    DynamicArray *files = sorted_files[DATABASE_INDEX_PROPERTY_NAME];
-    DynamicArray *folders = sorted_folders[DATABASE_INDEX_PROPERTY_NAME];
 
     if (!database_file_read_element(&num_sorted_arrays, 4, fp, NULL)) {
         g_debug("[db_load] failed to load number of sorted arrays");
@@ -442,18 +443,20 @@ database_file_load_sorted_arrays(FILE *fp, DynamicArray **sorted_folders, Dynami
         }
 
         const uint32_t num_folders = darray_get_num_items(folders);
-        sorted_folders[sorted_array_id] = darray_new(num_folders);
-        if (!database_file_load_sorted_entries(fp, folders, num_folders, sorted_folders[sorted_array_id])) {
+        g_autoptr(DynamicArray) sorted_folders_array = darray_new(num_folders);
+        if (!database_file_load_sorted_entries(fp, folders, num_folders, sorted_folders_array)) {
             g_debug("[db_load] failed to load sorted folder indexes: %d", sorted_array_id);
             return false;
         }
+        sorted_folders[sorted_array_id] = g_steal_pointer(&sorted_folders_array);
 
         const uint32_t num_files = darray_get_num_items(files);
-        sorted_files[sorted_array_id] = darray_new(num_files);
-        if (!database_file_load_sorted_entries(fp, files, num_files, sorted_files[sorted_array_id])) {
+        g_autoptr(DynamicArray) sorted_files_array = darray_new(num_files);
+        if (!database_file_load_sorted_entries(fp, files, num_files, sorted_files_array)) {
             g_debug("[db_load] failed to load sorted file indexes: %d", sorted_array_id);
             return false;
         }
+        sorted_files[sorted_array_id] = g_steal_pointer(&sorted_files_array);
     }
 
     return true;
@@ -1163,8 +1166,8 @@ fsearch_database_file_load(const char *file_path,
         return false;
     }
 
-    DynamicArray *folders = NULL;
-    DynamicArray *files = NULL;
+    g_autoptr(DynamicArray) folders = NULL;
+    g_autoptr(DynamicArray) files = NULL;
     DynamicArray *sorted_folders[NUM_DATABASE_INDEX_PROPERTIES] = {NULL};
     DynamicArray *sorted_files[NUM_DATABASE_INDEX_PROPERTIES] = {NULL};
     g_autoptr(FsearchDatabaseIncludeManager) include_manager = fsearch_database_include_manager_new();
@@ -1243,8 +1246,7 @@ fsearch_database_file_load(const char *file_path,
     }
 
     // pre-allocate the folders array, so we can later map parent indices to the corresponding pointers
-    sorted_folders[DATABASE_INDEX_PROPERTY_NAME] = darray_new(num_folders);
-    folders = sorted_folders[DATABASE_INDEX_PROPERTY_NAME];
+    folders = darray_new_full(num_folders, (GDestroyNotify)db_entry_free_no_unparent);
 
     if (status_cb) {
         status_cb(_("Loading folders…"));
@@ -1264,17 +1266,18 @@ fsearch_database_file_load(const char *file_path,
         status_cb(_("Loading files…"));
     }
     // load files
-    sorted_files[DATABASE_INDEX_PROPERTY_NAME] = darray_new(num_files);
-    files = sorted_files[DATABASE_INDEX_PROPERTY_NAME];
+    files = darray_new_full(num_files, (GDestroyNotify)db_entry_free_no_unparent);
     if (!database_file_load_files(fp, index_flags, folders, files, num_files, file_block_size)) {
         g_debug("[db_load] failed to load files");
         goto load_fail;
     }
 
-    if (!database_file_load_sorted_arrays(fp, sorted_folders, sorted_files)) {
+    if (!database_file_load_sorted_arrays(fp, sorted_folders, sorted_files, folders, files)) {
         g_debug("[db_load] failed to load sorted arrays");
         goto load_fail;
     }
+    darray_set_free_func(folders, NULL);
+    darray_set_free_func(files, NULL);
 
     DynamicArray *folders_sorted_by_path = sorted_folders[DATABASE_INDEX_PROPERTY_PATH];
     for (uint32_t i = 0; i < darray_get_num_items(folders_sorted_by_path); i++) {
@@ -1318,6 +1321,10 @@ fsearch_database_file_load(const char *file_path,
                                                                event_func,
                                                                event_func_user_data);
 
+    for (uint32_t i = 0; i < NUM_DATABASE_INDEX_PROPERTIES; i++) {
+        g_clear_pointer(&sorted_folders[i], darray_unref);
+        g_clear_pointer(&sorted_files[i], darray_unref);
+    }
     g_clear_pointer(&fp, fclose);
 
     return true;
