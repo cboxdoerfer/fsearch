@@ -461,10 +461,9 @@ index_store_view_changed_cb(gpointer key, gpointer value, gpointer user_data) {
     IndexStoreUpdateViewsContext *ctx = user_data;
     FsearchDatabaseSearchView *view = value;
 
-    g_autoptr(FsearchDatabaseSearchInfo) info = fsearch_database_search_view_get_info(view);
     ctx->event_func(ctx->store,
                     FSEARCH_DATABASE_INDEX_STORE_EVENT_VIEW_CHANGED,
-                    info,
+                    fsearch_database_search_view_get_info(view),
                     ctx->event_func_data);
 }
 
