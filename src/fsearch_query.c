@@ -66,6 +66,7 @@ fsearch_query_free(FsearchQuery *query) {
     g_clear_pointer(&query->filter, fsearch_filter_unref);
     g_clear_pointer(&query->search_term, free);
     g_clear_pointer(&query->query_tree, fsearch_query_node_tree_free);
+    g_clear_pointer(&query->filter_tree, fsearch_query_node_tree_free);
     g_clear_pointer(&query, free);
 }
 
