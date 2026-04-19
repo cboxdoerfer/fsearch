@@ -7,6 +7,7 @@
 
 #define TEXT_HEIGHT_FALLBACK 20
 #define ROW_HEIGHT_DEFAULT 30
+#define MIN_COLUMN_WIDTH 30
 #define COLUMN_RESIZE_AREA_WIDTH 6
 
 typedef enum {
@@ -1145,6 +1146,7 @@ on_fsearch_list_view_header_drag_gesture_update(GtkGestureDrag *gesture,
         FsearchListViewColumn *col = c->data;
         col->width = x - view->x_drag_started;
         col->width = MAX(30, col->width);
+        col->width = MAX(MIN_COLUMN_WIDTH, col->width);
         gtk_widget_queue_resize(GTK_WIDGET(view));
     }
 }
