@@ -247,7 +247,7 @@ signal_emit_selection_changed(FsearchDatabase *self, FsearchDatabaseSearchInfo *
     signal_emit(self,
                 SIGNAL_SELECTION_CHANGED,
                 GUINT_TO_POINTER(fsearch_database_search_info_get_id(info)),
-                fsearch_database_search_info_ref(info),
+                info,
                 2,
                 NULL,
                 (GDestroyNotify)fsearch_database_search_info_unref);
